@@ -1,0 +1,52 @@
+.import-wallet-body{
+.heading{
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 27px;
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  color: #313238;
+  padding-bottom: 30px;
+  .icon-button{
+    padding-left: 5px;
+    background: no-repeat;
+    border: none;
+    outline: none !important;
+  }
+  .icon{
+    width: 18px;
+  }
+}
+  form{
+    .label{
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 150%;
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      color: #2E3239;
+    }
+    textarea{
+      background: #F5F6FA;
+      border: 0px solid;
+    }
+    input {
+      max-width: 300px;
+      margin: auto;
+      background: #F5F6FA;
+      font-size: 14px;
+      line-height: 150%;
+      height: calc(2.3em + .75rem + 2px);
+      border-radius: 0;
+      border: 0px solid;
+      color: #8D9CB5;
+
+      &::placeholder {
+        font-size: 14px;
+        line-height: 150%;
+        color: #8D9CB5;
+      }
+    }
+  }
+
+}

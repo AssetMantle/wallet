@@ -1,0 +1,103 @@
+html, body{
+  font-family: "Montserrat", sans-serif;
+}
+.button{
+  text-align: center;
+  line-height: 180%;
+  border-radius: 0;
+  outline: none !important;
+  border: 1px solid transparent;
+  box-shadow: none !important;
+}
+
+.button.button-primary{
+  background: #E50913;
+  font-weight: bold;
+  font-size: 16.5455px;
+  color: #FFFFFF;
+  border-color: #E50913;
+  padding: .375rem 1.2rem;
+  border-radius: 0;
+}
+
+.button.button-secondary{
+  background: #313238;
+  font-weight: bold;
+  font-size: 16.5455px;
+  color: #FFFFFF;
+  padding: .375rem 1.2rem;
+  border-color: #313238;
+  border-radius: 0;
+}
+
+.flex-center{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.copy-button{
+  outline: none !important;
+  border: 0px solid;
+  width: 28px;
+  height: 28px;
+  background: #EAEBF6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  .icon{
+    width: 16px;
+  }
+}
+
+.modal-custom{
+  .modal-header{
+    border: 0px solid ;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 27px;
+    /* identical to box height */
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    padding: 30px;
+    color: #313238;
+  }
+  .modal-dialog {
+    max-width: 700px;
+  }
+}
+
+.amount-field{
+  display: flex;
+  .range-buttons{
+    margin-left: 10px;
+    display: flex;
+    button{
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 150%;
+      text-align: right;
+      color: #8D9CB5;
+      padding: 10px;
+      &:last-child{
+        margin-left: 10px;
+      }
+    }
+  }
+}
+.form-field {
+  display: flex;
+  align-items: center;
+  padding-bottom: 15px;
+
+  .label {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 150%;
+    margin: 0;
+    color: #2E3239;
+    width: 150px;
+  }
+}
