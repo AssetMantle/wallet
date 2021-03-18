@@ -8,7 +8,7 @@ import { createBrowserHistory } from "history";
 import reportWebVitals from './reportWebVitals';
 import { Router } from "react-router-dom";
 import "../src/assets/scss/index.scss";
-import reducer from './reducers/transactions/delegate';
+import reducer from './reducers';
 import thunk from 'redux-thunk';
 const history = createBrowserHistory();
 

@@ -1,12 +1,37 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import xprt from "../../assets/images/xprt.svg";
 import ModalWithdraw from "../Wallet/ModalWithdraw";
-
-const TokenInfo = () => {
+import {getDelegationsUnbondUrl, getRewardsUrl, getDelegationsUrl} from "../../constants/url";
+import axios from "axios";
+const TokenInfo = () =>{
+const [unbondingDelegations, setUnbondingDelegations] = useState(0);
+    const [totalRewards, setTotalRewards] = useState(0);
+    const [totalDelegations, setTotalDelegations] = useState(0);
+    useEffect(() => {
+        const unbondDelegationsUrl = getDelegationsUnbondUrl('persistence1xfg28czjxsf75x9th4kejrjv3n6t7wfcu6gjpe');
+        const rewardsUrl = getRewardsUrl('persistence1xfg28czjxsf75x9th4kejrjv3n6t7wfcu6gjpe');
+        const delegationsUrl = getDelegationsUrl('persistence1095fgex3h37zl4yjptnsd7qfmspesvav7xhgwt');
+        const fetchInfo = async () => {
+            const unbondingResponse = await axios.get(unbondDelegationsUrl);
+            const rewardsResponse = await axios.get(rewardsUrl);
+            const delegationResponse = await axios.get(delegationsUrl);
+            let delegationResponseList = delegationResponse.data.delegation_responses;
+            let totalDelgations ='';
+            delegationResponseList.forEach((delegation) => {
+                totalDelgations = totalDelgations + (delegation.balance.amount/1000000) ;
+            });
+            console.log(totalDelgations,"totalDelgations")
+            setTotalDelegations(totalDelgations);
+            setUnbondingDelegations(unbondingResponse.data.unbonding_responses[0].entries[0].balance)
+            const fixedRewardsResponse = rewardsResponse.data.total[0].amount /1000000;
+            setTotalRewards(fixedRewardsResponse.toFixed(4))
+        }
+        fetchInfo();
+    }, []);
     const [rewards, setRewards] = useState(false);
     const handleRewards = () => {
         setRewards(true);
-    }
+    };
     return (
         <div className="token-info-section">
             <div className="xprt-info info-box">
@@ -37,11 +62,11 @@ const TokenInfo = () => {
                 <div className="inner-box">
                     <div className="line">
                         <p className="key">Rewards (24h)</p>
-                        <p className="value rewards" onClick={handleRewards}>485.12 XPRT</p>
+                        <p className="value rewards" onClick={handleRewards}>{totalRewards} XPRT</p>
                     </div>
                     <div className="line">
                         <p className="key">Unbonding</p>
-                        <p className="value">1500.45 XPRT</p>
+                        <p className="value">{unbondingDelegations} XPRT</p>
                     </div>
                 </div>
             </div>
