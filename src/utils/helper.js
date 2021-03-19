@@ -9,7 +9,13 @@ function randomNum(min, max) {
     }
     return randomNumbers;
 }
-
+function stringTruncate(str){
+    if(str.length > 30){
+        return str.substr(0,18) + '...' + str.substr(str.length-10, str.length);
+    }
+    return str;
+}
 module.exports = {
     randomNum,
+    stringTruncate,
 };

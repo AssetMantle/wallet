@@ -2,22 +2,47 @@ import {Form, Modal as ReactModal} from 'react-bootstrap';
 import React, {useState, useEffect} from 'react';
 import success from "../../../assets/images/success.svg";
 import icon from "../../../assets/images/icon.svg";
+import {getDelegationsUrl, getValidatorUrl} from "../../../constants/url";
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import axios from "axios";
 const ModalWithdraw = (props) => {
     const [show, setShow] = useState(true);
-    const [amount, setAmount] = useState(0);
+    const [validatorAddress, setValidatorAddress] = useState('');
     const [response, setResponse] = useState(false);
-    const handleAmount = (amount) =>{
-        setAmount(amount)
-    }
+    const [validatorsList, setValidatorsList] = useState([]);
+
+    useEffect(() => {
+        const fetchValidators = async () => {
+            const delegationsUrl = getDelegationsUrl('persistence1095fgex3h37zl4yjptnsd7qfmspesvav7xhgwt');
+            const delegationResponse = await axios.get(delegationsUrl);
+            let delegationResponseList = delegationResponse.data.delegation_responses;
+            let validators = [];
+            for (const item of delegationResponseList) {
+                const validatorUrl = getValidatorUrl(item.delegation.validator_address);
+                const validatorResponse = await axios.get(validatorUrl);
+                validators.push(validatorResponse.data.validator);
+            }
+            setValidatorsList(validators);
+            console.log(validators, "validator_address");
+        };
+        fetchValidators();
+    },[]);
     const handleClose = (amount) =>{
         setShow(false)
         props.setRewards(false)
     }
 
-    const handleAmountChange = (evt) =>{
-        setAmount(evt.target.value)
+    const handleSubmit = async event => {
+        event.preventDefault();
+        const password = event.target.password.value;
+        const mnemonic = event.target.mnemonic.value;
+        console.log(password, mnemonic, validatorAddress, "withdraw form value") //validatorAddress taking stake.
     };
-
+    const onChangeSelect = (evt) =>{
+        setValidatorAddress(evt.target.value)
+        console.log(evt.target.value, "rakji")
+    }
     return (
         <ReactModal
             animation={false}
@@ -32,16 +57,25 @@ const ModalWithdraw = (props) => {
                         Claiming Rewards
                     </ReactModal.Header>
                     <ReactModal.Body className="rewards-modal-body">
-                        <Form>
+                        <Form onSubmit={handleSubmit}>
                             <div className="form-field">
                                 <p className="label">Select Validator</p>
-                                <Form.Control as="select" size="sm" custom>
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                </Form.Control>
+
+                                <Select value={validatorAddress} className="validators-list-selection" onChange={onChangeSelect} displayEmpty>
+                                    <MenuItem value="">
+                                        <em>None</em>
+                                    </MenuItem>
+                                    {
+                                        validatorsList.map((validator, index) => (
+                                            <MenuItem
+                                                key={index + 1}
+                                                className=""
+                                                value={validator.operator_address}>
+                                                {validator.description.moniker}
+                                            </MenuItem>
+                                        ))
+                                    }
+                                </Select>
                             </div>
                             <div className="form-field">
                                 <p className="label">Total Available</p>
@@ -53,11 +87,17 @@ const ModalWithdraw = (props) => {
                             </div>
                             <div className="form-field">
                                 <p className="label">Memo</p>
+                                <Form.Control as="textarea" rows={5} name="mnemonic"
+                                              placeholder="Enter Seed"
+                                              required={true}/>
+                            </div>
+                            <div className="form-field">
+                                <p className="label">Password</p>
                                 <Form.Control
-                                    type="text"
-                                    name="memo"
-                                    placeholder="Insert memo (optional)"
-                                    required={false}
+                                    type="password"
+                                    name="password"
+                                    placeholder="Enter Your Wallet Password"
+                                    required={true}
                                 />
                             </div>
                             <div className="buttons">

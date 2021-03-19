@@ -219,13 +219,16 @@
 
   .receive-container {
     text-align: center;
-
+    border: 1px solid #E3E5F4;
+    padding: 50px;
     .key {
       font-weight: 500;
       font-size: 14px;
       line-height: 150%;
       font-family: 'Poppins', sans-serif;
       color: #8D9CB5;
+      margin: 0;
+      padding: 20px 0 10px 0;
     }
 
     .address {
@@ -269,22 +272,55 @@
         border: none !important;
       }
       .dropdown-menu{
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
+        background: #FFFFFF;
+        border: 1px solid #EAEBF6;
+        padding: 0;
+        border-radius: 0px;
+        .qr-box{
+          width: 80px;
+          height: 80px;
+          margin: auto;
+           canvas {
+            width: 80px !important;
+            height: 80px !important;
+            padding: 5px;
+            background: #FFFFFF;
+          }
+        }
         .info{
           text-align: center;
-          padding: 40px 20px;
+          padding: 20px 20px;
+          .key{
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 150%;
+            color: #8D9CB5;
+          }
           p{
             text-align: center;
           }
           .address{
             display: flex;
             align-items: center;
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 150%;
+            color: #1A73B4;
           }
         }
         .footer{
           display: flex;
           border-top:  1px solid #EAEBF6;
+          .link-close{
+            color: #E50913;
+            cursor: pointer;
+          }
           p{
             flex: 1;
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 180%;
             text-align: center;
             margin: 0;
             padding: 10px 0;
@@ -433,6 +469,7 @@
       border-bottom: 1px solid #E3E5F4;
 
       th {
+        padding: 15px 20px;
         font-weight: 500;
         font-size: 14px;
         line-height: 150%;
@@ -444,6 +481,7 @@
       td {
         font-size: 14px;
         line-height: 150%;
+        padding: 15px 20px;
         color: #272931;
       }
     }
@@ -499,6 +537,17 @@
 .claim-rewards-modal {
   .rewards-modal-body {
     padding: 10px 40px 40px 40px;
+    input, .amount-field, textarea {
+      max-width: 400px;
+      flex: 1;
+    }
+    textarea{
+      background: #F5F6FA;
+      font-size: 14px;
+      border-radius: 0;
+      border: 0px solid;
+      color: #8D9CB5;
+    }
     input {
       margin: 0;
       background: #F5F6FA;
@@ -548,6 +597,24 @@
         background: rgba(141, 156, 181, 0.1);
         padding: 5px 10px;
       }
+    }
+    .validators-list-selection{
+      width: 300px;
+      background: #F5F6FA;
+      font-size: 14px;
+      line-height: 150%;
+      height: calc(2.3em + .75rem + 2px);
+      border-radius: 0;
+      padding-left: 10px;
+      .MuiSelect-select:focus{
+        background-color: transparent;
+      }
+    }
+    .MuiInput-underline::before{
+      border: 0px solid !important;
+    }
+    .MuiInput-underline:after {
+      border-bottom: 0px solid  !important;
     }
   }
 
@@ -654,4 +721,10 @@
 }
 .actions-td{
   display: flex;
+  align-items: center;
+  padding: 5px 10px !important;
+  .button.button-primary{
+    padding: 0.2rem 0.6rem;
+    font-size: 12px;
+  }
 }
