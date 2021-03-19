@@ -109,7 +109,15 @@
         text-align: center;
         color: #2E3239;
       }
-
+.password-group{
+  position: relative;
+  button{
+    outline: none !important;
+    position: absolute;
+    top: 7px;
+    right: 120px;
+  }
+}
       .form-group {
         text-align: center;
 
@@ -129,36 +137,6 @@
             line-height: 150%;
             color: #8D9CB5;
           }
-        }
-      }
-    }
-    .menmonic-list{
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      justify-content: center;
-      .form-control {
-        width: 120px !important;
-        border-radius: 0;
-        margin: 5px;
-        text-align: center;
-        background: #F5F6FA;
-        border-color: #F5F6FA;
-        font-size: 14px;
-        line-height: 150%;
-        color: #2E3239;
-      }
-      .empty-mnemonic{
-        font-weight: 600;
-        font-size: 14px;
-        line-height: 150%;
-        text-align: center;
-        color: #2E3239;
-        background: rgba(255, 255, 255, 0.14);
-        border: 1px solid #E3E5F4;
-        &:focus{
-          border-color: #E50913;
-          box-shadow: none;
         }
       }
     }
@@ -190,25 +168,7 @@
         }
       }
     }
-    .note-section{
-      display: flex;
-      margin-top: 20px;
-      padding: 20px;
-      background: #FEF5F6;
-      align-items: center;
-      .exclamation {
-        padding-right: 25px;
-        .icon{
-          width: 24px;
-        }
-      }
-      p{font-weight: 500;
-        font-size: 12px;
-        line-height: 174%;
-        color: #2E3239;
-        margin: 0;
-      }
-    }
+
     .seed-section{
       .heading{
         font-family: 'Poppins', sans-serif;
@@ -236,5 +196,35 @@
   }
   .note-section{
     justify-content: center;
+  }
+}
+
+.create-wallet-section{
+  background: radial-gradient(99.06% 99.06% at 49.65% 0.94%, #222426 0%, #282932 100%);
+  .create-wallet-modal{
+    height: calc( 100vh - 78px);
+    padding-top: 100px;
+    .create-wallet-body{
+      padding: 40px;
+      max-width: 800px !important;
+      margin: auto;
+      background: #FFFFFF;
+      .buttons{
+        padding-top: 30px;
+        text-align: center;
+        .button-secondary{
+          float: left;
+          padding: .375rem 0.8rem;
+          background: #F0F1F2;
+          border-color: transparent;
+          .icon{
+            width: 20px;
+          }
+        }
+        .button.button-primary{
+          width: 200px;
+        }
+      }
+    }
   }
 }

@@ -1,35 +1,24 @@
 import React, {useState} from "react";
-import {Navbar, NavLink, Nav, NavDropdown, Button} from "react-bootstrap";
+import {Navbar, NavLink, Nav} from "react-bootstrap";
 import logo from "../../assets/images/logo_lite.svg";
 import {useHistory} from "react-router-dom";
 import dark_icon from "../../assets/images/dark_icon.svg";
-import CreateWallet from "../../containers/CreateWallet";
-import ImportWallet from "../../containers/ImpotWallet";
-import wallet from "../../utils/wallet"
+import ModalCreateWallet from "../../containers/CreateWallet/ModalCreateWallet";
 import ModalFaq from "../../containers/Faq";
+
 const Homepage = () => {
     const history = useHistory();
     const [routName, setRoutName] = useState("false");
-    const [response, setResponse] = useState("");
     const [showFaq, setShowFaq] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
-    const handleRoute = (name) =>{
+    const handleRoute = (name) => {
         setRoutName(name);
-    }
+        if (name === "importWallet") {
+            history.push('/import_wallet')
+        }
+    };
     const handleHelp = () => {
         setShowFaq(true)
     };
-    const handleRandomWallet = () =>{
-        const responseData = wallet.createRandomWallet();
-        console.log(responseData, "sdfdf")
-        history.push('/dashboard/wallet');
-        localStorage.setItem('address', responseData.address);
-        localStorage.setItem('mnemonic', responseData.mnemonic);
-        setResponse(responseData);
-        if (responseData.error) {
-            setErrorMessage(responseData.error);
-        }
-    }
 
     return (
         <div className="home-page">
@@ -41,8 +30,10 @@ const Homepage = () => {
                     <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="ml-auto">
-                            <a className="nav-link" href="https://persistence.one/"  target="_blank" rel="noopener noreferrer">Learn More</a>
-                            <NavLink className="nav-link" onClick={handleHelp}  target="_blank" rel="noopener noreferrer">Help</NavLink>
+                            <a className="nav-link" href="https://persistence.one/" target="_blank"
+                               rel="noopener noreferrer">Learn More</a>
+                            <NavLink className="nav-link" onClick={handleHelp} target="_blank"
+                                     rel="noopener noreferrer">Help</NavLink>
                         </Nav>
                     </Navbar.Collapse>
                 </div>
@@ -54,8 +45,10 @@ const Homepage = () => {
                     </h3>
                     <p className="sub-text">Earn upto 35% annual rewards by staking your XPRT</p>
                     <div className="buttons">
-                        <button className="button button-primary" onClick={()=>handleRoute('createWallet')}>Create Wallet</button>
-                        <p onClick={()=>handleRoute('importWallet')} className="import">Import an existing wallet
+                        <button className="button button-primary" onClick={() => handleRoute('createWallet')}>Create
+                            Wallet
+                        </button>
+                        <p onClick={() => handleRoute('importWallet')} className="import">Import an existing wallet
                         </p>
                     </div>
                     <div className="info-boxes">
@@ -68,7 +61,7 @@ const Homepage = () => {
                             <p>XPRT stakers</p>
                         </div>
                     </div>
-                    <p className="border-logo"><img src={dark_icon} alt="dark-icon" /></p>
+                    <p className="border-logo"><img src={dark_icon} alt="dark-icon"/></p>
                 </div>
                 <p className="footer-text">
                     Terms of Use | Persistence Wallet v0.1.0
@@ -76,14 +69,10 @@ const Homepage = () => {
             </div>
             {
                 routName === "createWallet" ?
-                    <CreateWallet setRoutName={setRoutName}/>
+                    <ModalCreateWallet setRoutName={setRoutName}/>
                     : null
             }
-            {
-                routName === "importWallet" ?
-                    <ImportWallet setRoutName={setRoutName}/>
-                    : null
-            }
+
             {showFaq
                 ?
                 <ModalFaq setShowFaq={setShowFaq}/>

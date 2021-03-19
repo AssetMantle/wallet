@@ -42,8 +42,37 @@ function createStore(mnemonic, password) {
         };
     }
 }
+
+function decryptStore(fileData, password) {
+    let hashpwd = fileData.hashpwd
+    let iv = fileData.iv
+    let salt = fileData.salt
+    let crypted = fileData.crypted
+
+    if ( hashpwd === crypto.createHash(passwordHashAlgorithm).update(password).digest("hex") ) {
+        let ivText = Buffer.from(iv, "hex");
+        let encryptedText = Buffer.from(crypted, "hex");
+
+        let decipher = crypto.createDecipheriv(
+            "aes-256-cbc",
+            Buffer.from(salt, "hex"),
+            ivText
+        );
+        let decrypted = decipher.update(encryptedText);
+        decrypted = Buffer.concat([decrypted, decipher.final()]);
+        return {
+            mnemonic: decrypted.toString(),
+        };
+    } else {
+        return {
+            error: "Incorrect password."
+        };
+    }
+}
+
 module.exports = {
     randomNum,
     stringTruncate,
     createStore,
+    decryptStore
 };
