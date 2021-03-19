@@ -13,6 +13,7 @@ const ModalReDelegate = (props) => {
     const handleAmountChange = (evt) =>{
         setAmount(evt.target.value)
     };
+
     const handleClose = () =>{
         setShow(false)
         props.setModalOpen('');
@@ -20,7 +21,11 @@ const ModalReDelegate = (props) => {
 
     const handleSubmit = async event => {
         event.preventDefault()
-        const amount = event.target.amount.value;
+        const password = event.target.password.value;
+        const mnemonic = event.target.mnemonic.value;
+        const toAddress = event.target.toAddress.value;
+        const validatorAddress = 'persistencevaloper15qsq6t6zxg60r3ljnxdpn9c6qpym2uvjl37hpl';
+        console.log(amount,password, mnemonic,toAddress, validatorAddress, "redelegate form value") //amount taking stake.
     };
     const popover = (
         <Popover id="popover-basic">
@@ -47,12 +52,13 @@ const ModalReDelegate = (props) => {
             </Modal.Header>
             <Modal.Body className="delegate-modal-body">
                 <Form onSubmit={handleSubmit}>
+
                     <div className="form-field">
-                        <p className="label">Your password</p>
+                        <p className="label">to Address</p>
                         <Form.Control
                             type="text"
-                            name="amount"
-                            placeholder="Enter Your Wallet Password"
+                            name="toAddress"
+                            placeholder="Enter Validator Address"
                             required={true}
                         />
                     </div>
@@ -82,6 +88,21 @@ const ModalReDelegate = (props) => {
                                 </button>
                             </div>
                         </div>
+                    </div>
+                    <div className="form-field">
+                        <p className="label">Memo</p>
+                        <Form.Control as="textarea" rows={5} name="mnemonic"
+                                      placeholder="Enter Seed"
+                                      required={true}/>
+                    </div>
+                    <div className="form-field">
+                        <p className="label">password</p>
+                        <Form.Control
+                            type="password"
+                            name="password"
+                            placeholder="Enter Your Wallet Password"
+                            required={true}
+                        />
                     </div>
                     <div className="buttons">
                         <button className="button button-primary">Delegate</button>

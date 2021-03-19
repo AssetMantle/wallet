@@ -1,21 +1,36 @@
 import React, {useState} from "react";
-import {Form} from "react-bootstrap";
+import {Form, Modal as ReactModal, Modal, OverlayTrigger} from "react-bootstrap";
 import Persistence from "../../utils/cosmosjsWrapper"
+import Icon from "../../components/Icon";
+import success from "../../assets/images/success.svg";
 
 const Send = () => {
     const [amountField, setAmountField] = useState(0);
+    const [toAddress, setToAddress] = useState('');
+    const [txResponse, setTxResponse] = useState('');
+    const [mnemonicForm, setMnemonicForm] = useState(false);
+    const [show, setShow] = useState(true);
     const handleAmount = (amount) => {
         setAmountField(amount)
+    };
+    const handleClose = () => {
+        setShow(false);
+        setMnemonicForm(false);
     };
     const handleAmountChange = (evt) => {
         setAmountField(evt.target.value)
     };
     const handleSubmit = async event => {
         event.preventDefault()
-        const toAddress = event.target.address.value;
+        setToAddress(event.target.address.value);
+        setMnemonicForm(true);
+    };
+    const handleMnemonicSubmit = (evt) =>{
+        evt.preventDefault()
+        const userMnemonic = evt.target.mnemonic.value;
         const mnemonic = "tank pair spray rely any menu airport shiver boost emerge holiday siege evil grace exile comfort fence mention pig bus cable scissors ability all";
 
-        const persistence = Persistence
+        const persistence = Persistence;
         const address = persistence.getAddress(mnemonic);
         const ecpairPriv = persistence.getECPairPriv(mnemonic);
 
@@ -45,7 +60,9 @@ const Send = () => {
             });
 
             const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
-            persistence.broadcast(signedTx).then(response => console.log(response));
+            persistence.broadcast(signedTx).then(response => {
+                setTxResponse(response)
+                console.log(response.code)});
         })
     };
     return (
@@ -88,20 +105,65 @@ const Send = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="form-field">
-                        <p className="label">Memo</p>
-                        <Form.Control
-                            type="text"
-                            name="memo"
-                            placeholder="Insert memo (optional)"
-                            required={false}
-                        />
-                    </div>
+                    {/*<div className="form-field">*/}
+                    {/*    <p className="label">Memo</p>*/}
+                    {/*    <Form.Control*/}
+                    {/*        type="text"*/}
+                    {/*        name="memo"*/}
+                    {/*        placeholder="Insert memo (optional)"*/}
+                    {/*        required={false}*/}
+                    {/*    />*/}
+                    {/*</div>*/}
                     <div className="buttons">
                         <button className="button button-primary">Send</button>
                     </div>
                 </Form>
             </div>
+
+            {
+                mnemonicForm ?
+                    <Modal show={show} onHide={handleClose} centered className="create-wallet-modal">
+                    {
+                        txResponse === '' ?
+                        <Modal.Body className="create-wallet-body import-wallet-body">
+                            <h3 className="heading">Importing Wallet
+                            </h3>
+                            <Form onSubmit={handleMnemonicSubmit}>
+                                <p className="label">Enter Seed</p>
+                                <Form.Control as="textarea" rows={5} name="mnemonic"
+                                              placeholder="Enter Seed"
+                                              required={true}/>
+                                <div className="buttons">
+                                    <button className="button button-primary">Next</button>
+                                </div>
+                            </Form>
+
+                        </Modal.Body>
+                        : null
+                        }
+                        <>
+                            {
+                                txResponse !== '' ?
+                                    <>
+                                        <Modal.Header className="result-header success">
+                                            Succesfully Send!
+                                        </Modal.Header>
+                                        <Modal.Body className="delegate-modal-body">
+                                            <div className="result-container">
+                                                <img src={success} alt="success-image"/>
+                                                <p className="tx-hash">Tx Hash: CAC4BA3C67482F09B46E129A00A86846567941555685673599559EBB5899DB3C</p>
+                                                <div className="buttons">
+                                                    <button className="button" >Done</button>
+                                                </div>
+                                            </div>
+                                        </Modal.Body>
+                                    </>
+                                    : null
+                            }
+                            </>
+                    </Modal>
+                    : null
+            }
         </div>
     );
 };

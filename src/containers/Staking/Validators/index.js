@@ -35,7 +35,7 @@ const Validators = (props) => {
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
-                                <Dropdown.Item onClick={()=>handleModal('Redelegate')}>Redelegate</Dropdown.Item>
+                                <Dropdown.Item onClick={()=> handleModal('Redelegate')}>Redelegate</Dropdown.Item>
                                 <Dropdown.Item href="#/action-2">Unbond</Dropdown.Item>
                                 <Dropdown.Item href="#/action-3">Claim Rewards</Dropdown.Item>
                             </Dropdown.Menu>

@@ -138,7 +138,7 @@
     border: 1px solid #E3E5F4;
     padding: 50px 100px;
 
-    form {
+    .form-section {
       .form-field {
         display: flex;
         align-items: center;
@@ -455,11 +455,17 @@
     padding: 10px 40px 40px 40px;
 
     form {
-      input, .amount-field {
+      input, .amount-field, textarea {
         max-width: 400px;
         flex: 1;
       }
-
+      textarea{
+        background: #F5F6FA;
+        font-size: 14px;
+        border-radius: 0;
+        border: 0px solid;
+        color: #8D9CB5;
+      }
       input {
         margin: 0;
         background: #F5F6FA;
@@ -487,37 +493,6 @@
       }
     }
 
-
-    .result-container {
-      text-align: center;
-
-      img {
-        width: 85px;
-      }
-
-      .tx-hash {
-        font-size: 14px;
-        line-height: 150%;
-        text-decoration-line: underline;
-        color: #1A73B4;
-        padding: 15px 0;
-      }
-
-      .buttons .button {
-        background: #FFFFFF;
-        border: 1px solid #E3E5F4;
-        width: 100px;
-        padding: 10px;
-      }
-    }
-  }
-
-  .result-header.success {
-    font-weight: 500;
-    font-size: 18px;
-    line-height: 150%;
-    text-align: center;
-    color: #1CB76D;
   }
 }
 

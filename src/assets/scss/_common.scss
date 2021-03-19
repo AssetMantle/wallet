@@ -134,3 +134,34 @@ html, body {
     font-size: 10px;
   }
 }
+
+.result-header.success {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 150%;
+  text-align: center;
+  color: #1CB76D;
+}
+.result-container {
+  text-align: center;
+
+  img {
+    width: 85px;
+  }
+
+  .tx-hash {
+    font-size: 14px;
+    line-height: 150%;
+    text-decoration-line: underline;
+    color: #1A73B4;
+    padding: 15px 0;
+    word-break: break-word;
+  }
+
+  .buttons .button {
+    background: #FFFFFF;
+    border: 1px solid #E3E5F4;
+    width: 100px;
+    padding: 10px;
+  }
+}

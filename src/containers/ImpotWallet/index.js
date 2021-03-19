@@ -14,7 +14,7 @@ const ImportWallet = (props) => {
     const [jsonName, setJsonName] = useState({});
     const [errorMessage, setErrorMessage] = useState("");
     const handleClose = () => {
-        if (!response.error && response.error !== undefined) {
+        if (!response.error || response.error !== undefined) {
             localStorage.setItem('loginToken', 'loggedIn');
             history.push('/dashboard/wallet');
         }
@@ -43,7 +43,7 @@ const ImportWallet = (props) => {
     const popover = (
         <Popover id="popover-basic">
             <Popover.Content>
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium
+                If you wish to import an already existing Persistence wallet, click on import an already existing wallet.
             </Popover.Content>
         </Popover>
     );
@@ -85,19 +85,20 @@ const ImportWallet = (props) => {
                                     <p><b>mnemonic: </b>{response.mnemonic}</p>
                                     <p><b>wallet path: </b>{response.walletPath}</p>
                                     <p><b>address: </b>{response.address}</p>
+                                    <div className="download-section">
+                                        <p className="name">Private Key:</p>
+                                        <div className="key-download">
+                                            <DownloadLink
+                                                label="Download Key File for future use"
+                                                filename="key.json"
+                                                exportFile={() => `${jsonName}`}
+                                            />
+                                            <Icon viewClass="arrow-icon" icon="left-arrow"/>
+                                        </div>
+                                    </div>
                                 </div>
                             }
-                            <div className="download-section">
-                                <p className="name">Private Key:</p>
-                                <div className="key-download">
-                                    <DownloadLink
-                                        label="Download Key File for future use"
-                                        filename="key.json"
-                                        exportFile={() => `${jsonName}`}
-                                    />
-                                    <Icon viewClass="arrow-icon" icon="left-arrow"/>
-                                </div>
-                            </div>
+
                             <div className="buttons">
                                 <button className="button button-primary" onClick={handleClose}>Next</button>
                             </div>
