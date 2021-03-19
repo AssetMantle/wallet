@@ -3,20 +3,21 @@ import React, {useState, useEffect} from 'react';
 import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
 import Persistence from "../../../../utils/cosmosjsWrapper";
+
 const ModalUnbond = (props) => {
     const [amount, setAmount] = useState(0);
     const [show, setShow] = useState(true);
     const [response, setResponse] = useState(false);
 
-    const handleAmount = (amount) =>{
+    const handleAmount = (amount) => {
         setAmount(amount)
     };
 
-    const handleAmountChange = (evt) =>{
+    const handleAmountChange = (evt) => {
         setAmount(evt.target.value)
     };
-    const handleClose = () =>{
-        setShow(false)
+    const handleClose = () => {
+        setShow(false);
         props.setModalOpen('');
     };
     const handleSubmit = async event => {
@@ -27,7 +28,6 @@ const ModalUnbond = (props) => {
         const persistence = Persistence;
         const address = persistence.getAddress(mnemonic);
         const ecpairPriv = persistence.getECPairPriv(mnemonic);
-
 
         persistence.getAccounts(address).then(data => {
             let stdSignMsg = persistence.newStdMsg({
@@ -45,7 +45,7 @@ const ModalUnbond = (props) => {
                     }
                 ],
                 chain_id: persistence.chainId,
-                fee: { amount: [ { amount: String(5000), denom: "uxprt" } ], gas: String(200000) },
+                fee: {amount: [{amount: String(5000), denom: "uxprt"}], gas: String(200000)},
                 memo: "",
                 account_number: String(data.account.account_number),
                 sequence: String(data.account.sequence)
@@ -53,11 +53,12 @@ const ModalUnbond = (props) => {
 
             const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
             persistence.broadcast(signedTx).then(response => {
-                setResponse(response)
-                console.log(response.code)});
-        })
+                setResponse(response);
+                console.log(response.code)
+            });
+        });
 
-        console.log(amount,password, mnemonic, validatorAddress, "delegate form value") //amount taking stake.
+        console.log(amount, password, mnemonic, validatorAddress, "delegate form value") //amount taking stake.
     };
 
     return (

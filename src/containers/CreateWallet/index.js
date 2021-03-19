@@ -4,8 +4,10 @@ import Icon from "../../components/Icon";
 import DownloadLink from "react-download-link";
 import wallet from "../../utils/wallet";
 import helper from "../../utils/helper";
+import {useHistory} from "react-router-dom";
 
 const CreateWallet = (props) => {
+    const history = useHistory();
     const [show, setShow] = useState(true);
     const [showLargeModal, setShowLargeModal] = useState(false);
     const [modal1, setModal1] = useState(true);
@@ -85,10 +87,11 @@ const CreateWallet = (props) => {
         let confirmPassword = event.target.repassword.value;
         if (password === confirmPassword) {
             const responseData = wallet.createRandomWallet();
+            setResponse(responseData);
             let mnemonic = responseData.mnemonic;
             const mnemonicArray = mnemonic.split(' ');
             setMnemonicList(mnemonicArray);
-            let encryptedData = helper.createStore(mnemonic, password)
+            let encryptedData = helper.createStore(mnemonic, password);
             const jsonContent = JSON.stringify(encryptedData);
             setJsonName(jsonContent);
             let randomNumbers = helper.randomNum(1, 24);
@@ -102,7 +105,6 @@ const CreateWallet = (props) => {
                 }
             });
             setRandomMnemonicList(newMnemonicList);
-            console.log(randomNumbers, newMnemonicList, "event.target.value");
             if (responseData.error) {
                 setErrorMessage(responseData.error);
             }
@@ -111,11 +113,11 @@ const CreateWallet = (props) => {
     };
     const handleSubmitMnemonic = () => {
         randomNumberList.map((number, index) => {
-
             let phrase = document.getElementById('mnemonicKey' + number).value;
-            console.log(phrase, mnemonicList[number]);
             if (mnemonicList[number] === phrase) {
-                console.log("success")
+                localStorage.setItem('loginToken', 'loggedIn');
+                localStorage.setItem('address', response.address);
+                history.push('/dashboard/wallet');
             }else
             {
                 setQuizError(true);

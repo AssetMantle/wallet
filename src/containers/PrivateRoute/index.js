@@ -3,7 +3,6 @@ import React from 'react';
 
 const PrivateRoute = ( {component: Component}) => {
     let token = localStorage.getItem('loginToken');
-    console.log(token, "toke")
     return (
         <Route
             render={

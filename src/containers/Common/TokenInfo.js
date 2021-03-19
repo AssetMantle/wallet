@@ -17,14 +17,12 @@ const TokenInfo = () => {
             const rewardsResponse = await axios.get(rewardsUrl);
             const delegationResponse = await axios.get(delegationsUrl);
             let delegationResponseList = delegationResponse.data.delegation_responses;
-            let totalDelgations = 0;
+            let totalDelegationsCount = 0;
             delegationResponseList.forEach((delegation) => {
-                totalDelgations = totalDelgations + (delegation.balance.amount*1);
+                totalDelegationsCount = totalDelegationsCount + (delegation.balance.amount*1);
             });
-            console.log(totalDelgations/1000000, "totalDelgations")
-
-
-            setTotalDelegations(totalDelgations);
+            console.log(totalDelegationsCount/1000000, "totalDelgations")
+            setTotalDelegations(totalDelegationsCount/1000000);
             setUnbondingDelegations(unbondingResponse.data.unbonding_responses[0].entries[0].balance)
             const fixedRewardsResponse = rewardsResponse.data.total[0].amount / 1000000;
             setTotalRewards(fixedRewardsResponse.toFixed(4))
@@ -57,7 +55,7 @@ const TokenInfo = () => {
                     </div>
                     <div className="line">
                         <p className="key">Delegated</p>
-                        <p className="value">50,000 XPRT</p>
+                        <p className="value">{totalDelegations} XPRT</p>
                     </div>
                 </div>
             </div>

@@ -15,11 +15,6 @@ const ImportWallet = (props) => {
     const [jsonName, setJsonName] = useState({});
     const [errorMessage, setErrorMessage] = useState("");
     const handleClose = () => {
-        if (!response.error && response.error !== undefined && response.error !== '') {
-            localStorage.setItem('loginToken', 'loggedIn');
-            localStorage.setItem('address', response.address);
-            history.push('/dashboard/wallet');
-        }
         setShow(false);
         props.setRoutName("");
     };
@@ -33,16 +28,17 @@ const ImportWallet = (props) => {
         if (responseData.error) {
             setErrorMessage(responseData.error);
         }else{
-
             let encryptedData = helper.createStore(responseData.mnemonic, password);
             let jsonContent = JSON.stringify(encryptedData);
             setJsonName(jsonContent);
         }
     };
-    const handleCreateForm = (name) =>{
-        if(name === 'mnemonicForm'){
-            setMnemonicForm(false);
-            setPasswordForm(true);
+    const handleLogin = () =>{
+        setShow(false);
+        if (errorMessage === "") {
+            localStorage.setItem('loginToken', 'loggedIn');
+            localStorage.setItem('address', response.address);
+            history.push('/dashboard/wallet');
         }
     };
     const popover = (
@@ -116,7 +112,7 @@ const ImportWallet = (props) => {
                             }
 
                             <div className="buttons">
-                                <button className="button button-primary" onClick={handleClose}>Next</button>
+                                <button className="button button-primary" onClick={handleLogin}>Next</button>
                             </div>
                         </Modal.Body>
                         : null

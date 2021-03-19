@@ -8,11 +8,11 @@ import ModalWithdraw from "./ModalWithdraw";
 import {getDelegationsUrl, getValidatorUrl} from "../../../constants/url";
 import axios from "axios";
 import Avatar from "./Avatar";
+
 const Validators = (props) => {
     const [modalDelegate, setModalOpen] = useState();
-    const [externalComponent, setExternalComponent] = useState(false);
     const [validatorsList, setValidatorsList] = useState([]);
-    const handleModal = (name) =>{
+    const handleModal = (name) => {
         setModalOpen(name)
     };
     useEffect(() => {
@@ -27,10 +27,9 @@ const Validators = (props) => {
                 validators.push(validatorResponse.data.validator);
             }
             setValidatorsList(validators);
-            console.log(validators, "validator_address");
         };
         fetchValidators();
-    },[]);
+    }, []);
     return (
         <div className="txns-container">
             <Table borderless hover>
@@ -47,23 +46,30 @@ const Validators = (props) => {
                 {
                     validatorsList.map((validator, index) => {
                         let commissionRate = parseFloat(validator.commission.commission_rates.rate);
-                        return(
+                        return (
                             <tr>
-                                <td className="">  <Avatar identity={validator.description.identity}/> {validator.description.moniker}</td>
+                                <td className=""><Avatar
+                                    identity={validator.description.identity}/> {validator.description.moniker}</td>
                                 <td className="">4,250,000 (4.25%)</td>
                                 <td className="">{commissionRate} %</td>
                                 <td className="">{validator.status}</td>
                                 <td className="actions-td">
-                                    <button type="button" className="button button-primary" onClick={()=>handleModal('Delegate', validator.operator_address)}>Delegate</button>
+                                    <button type="button" className="button button-primary"
+                                            onClick={() => handleModal('Delegate', validator.operator_address)}>Delegate
+                                    </button>
                                     <Dropdown className="more-dropdown">
                                         <Dropdown.Toggle variant="success" id="dropdown-basic">
                                             <img src={IconMore} alt="IconMore"/>
                                         </Dropdown.Toggle>
 
                                         <Dropdown.Menu>
-                                            <Dropdown.Item onClick={()=> handleModal('Redelegate', validator.operator_address)}>Redelegate</Dropdown.Item>
-                                            <Dropdown.Item onClick={()=> handleModal('Unbond', validator.operator_address)}>Unbond</Dropdown.Item>
-                                            <Dropdown.Item onClick={()=> handleModal('Withdraw', validator.operator_address)}>Claim Rewards</Dropdown.Item>
+                                            <Dropdown.Item
+                                                onClick={() => handleModal('Redelegate', validator.operator_address)}>Redelegate</Dropdown.Item>
+                                            <Dropdown.Item
+                                                onClick={() => handleModal('Unbond', validator.operator_address)}>Unbond</Dropdown.Item>
+                                            <Dropdown.Item
+                                                onClick={() => handleModal('Withdraw', validator.operator_address)}>Claim
+                                                Rewards</Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>
 
@@ -75,22 +81,22 @@ const Validators = (props) => {
                 </tbody>
             </Table>
             {
-                modalDelegate == 'Delegate' ?
+                modalDelegate === 'Delegate' ?
                     <ModalDelegate setModalOpen={setModalOpen}/>
                     : null
             }
             {
-                modalDelegate == 'Redelegate' ?
+                modalDelegate === 'Redelegate' ?
                     <ModalReDelegate setModalOpen={setModalOpen}/>
                     : null
             }
             {
-                modalDelegate == 'Unbond' ?
+                modalDelegate === 'Unbond' ?
                     <ModalUnbond setModalOpen={setModalOpen}/>
                     : null
             }
             {
-                modalDelegate == 'Withdraw' ?
+                modalDelegate === 'Withdraw' ?
                     <ModalWithdraw setModalOpen={setModalOpen}/>
                     : null
             }

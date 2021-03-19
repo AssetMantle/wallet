@@ -44,7 +44,7 @@ const ModalReDelegate = (props) => {
                                 denom: "uxprt"
                             },
                             delegator_address: address,
-                            validator_dst_address: validatorAddress,
+                            validator_dst_address: toAddress,
                             validator_src_address: validatorAddress
                         }
                     }
