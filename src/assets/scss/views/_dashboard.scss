@@ -656,3 +656,27 @@
     }
   }
 }
+.more-dropdown{
+  button{
+    background-color: transparent !important;
+      border: 0px solid !important;
+    box-shadow: none !important;
+    outline: none !important;
+    &::after{
+      display: none;
+    }
+  }
+  .dropdown-item{
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 150%;
+    color: #8D9CB5;
+  }
+  .dropdown-item.active, .dropdown-item:active{
+    background: transparent;
+    color: #2E3239;
+  }
+}
+.actions-td{
+  display: flex;
+}

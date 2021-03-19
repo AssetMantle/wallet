@@ -3,8 +3,9 @@ import xprt from "../../assets/images/xprt.svg";
 import ModalWithdraw from "../Wallet/ModalWithdraw";
 import {getDelegationsUnbondUrl, getRewardsUrl, getDelegationsUrl} from "../../constants/url";
 import axios from "axios";
-const TokenInfo = () =>{
-const [unbondingDelegations, setUnbondingDelegations] = useState(0);
+
+const TokenInfo = () => {
+    const [unbondingDelegations, setUnbondingDelegations] = useState(0);
     const [totalRewards, setTotalRewards] = useState(0);
     const [totalDelegations, setTotalDelegations] = useState(0);
     useEffect(() => {
@@ -16,14 +17,14 @@ const [unbondingDelegations, setUnbondingDelegations] = useState(0);
             const rewardsResponse = await axios.get(rewardsUrl);
             const delegationResponse = await axios.get(delegationsUrl);
             let delegationResponseList = delegationResponse.data.delegation_responses;
-            let totalDelgations ='';
+            let totalDelgations = '';
             delegationResponseList.forEach((delegation) => {
-                totalDelgations = totalDelgations + (delegation.balance.amount/1000000) ;
+                totalDelgations = totalDelgations + (delegation.balance.amount / 1000000);
             });
-            console.log(totalDelgations,"totalDelgations")
+            console.log(totalDelgations, "totalDelgations")
             setTotalDelegations(totalDelgations);
             setUnbondingDelegations(unbondingResponse.data.unbonding_responses[0].entries[0].balance)
-            const fixedRewardsResponse = rewardsResponse.data.total[0].amount /1000000;
+            const fixedRewardsResponse = rewardsResponse.data.total[0].amount / 1000000;
             setTotalRewards(fixedRewardsResponse.toFixed(4))
         }
         fetchInfo();
@@ -71,7 +72,7 @@ const [unbondingDelegations, setUnbondingDelegations] = useState(0);
                 </div>
             </div>
             {rewards ?
-                <ModalWithdraw/>
+                <ModalWithdraw setRewards={setRewards}/>
                 : null
             }
 

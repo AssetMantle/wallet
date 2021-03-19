@@ -1,35 +1,52 @@
-import { connect } from 'react-redux';
-import {Form, Modal as ReactModal} from 'react-bootstrap';
+import {Form, Modal, OverlayTrigger, Popover} from 'react-bootstrap';
 import React, {useState, useEffect} from 'react';
-import { hideTxDelegateModal } from '../../../../actions/transactions/delegate';
 import success from "../../../../assets/images/success.svg";
+import Icon from "../../../../components/Icon";
 const ModalDelegate = (props) => {
     const [amount, setAmount] = useState(0);
+    const [show, setShow] = useState(true);
     const [response, setResponse] = useState(false);
+
     const handleAmount = (amount) =>{
         setAmount(amount)
-    }
+    };
 
     const handleAmountChange = (evt) =>{
         setAmount(evt.target.value)
+    };
+    const handleClose = () =>{
+        setShow(false)
+        props.setModalOpen('');
+    };
+    const handleSubmit = async event => {
+        event.preventDefault()
+        const amount = event.target.amount.value;
     }
-
+    const popover = (
+        <Popover id="popover-basic">
+            <Popover.Content>
+                Delegate your XPRT to Cosmostation to earn staking rewards. You can claim your staking rewards from the rewards section on the staking interface.
+                <p><b>Note:</b> Unstaking/Unbonding on Persistence takes 21 days.</p>
+            </Popover.Content>
+        </Popover>
+    );
     return (
-        <ReactModal
+        <Modal
             animation={false}
-            backdrop="static"
             centered={true}
-            keyboard={false}
-            show={props.show}
+            show={show}
             className="modal-custom delegate-modal"
-            onHide={props.onHide}>
-            {!response ?
-                <>
-                    <ReactModal.Header>
+            onHide={handleClose}>
+                    <Modal.Header>
                         Delegating to Cosmostation
-                    </ReactModal.Header>
-                    <ReactModal.Body className="delegate-modal-body">
-                        <Form>
+                        <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
+                            <button className="icon-button info"><Icon
+                                viewClass="arrow-right"
+                                icon="info"/></button>
+                        </OverlayTrigger>
+                    </Modal.Header>
+                    <Modal.Body className="delegate-modal-body">
+                        <Form onSubmit={handleSubmit}>
                             <div className="form-field">
                                 <p className="label">Your password</p>
                                 <Form.Control
@@ -70,40 +87,11 @@ const ModalDelegate = (props) => {
                                 <button className="button button-primary">Delegate</button>
                             </div>
                         </Form>
-                    </ReactModal.Body>
-                </>
-                : null
-            }
-            {
-                response ?
-                    <>
-                    <ReactModal.Header className="result-header success">
-                        Succesfully Delegated!
-                    </ReactModal.Header>
-                    <ReactModal.Body className="delegate-modal-body">
-                        <div className="result-container">
-                            <img src={success} alt="success-image"/>
-                            <p className="tx-hash">Tx Hash: CAC4BA3C67482F09B46E129A00A86846567941555685673599559EBB5899DB3C</p>
-                            <div className="buttons">
-                                <button className="button" >Done</button>
-                            </div>
-                        </div>
-                    </ReactModal.Body>
-                    </>
-                    : null
-            }
-        </ReactModal>
+                    </Modal.Body>
+
+        </Modal>
     );
 };
 
-const stateToProps = (state) => {
-    return {
-        show: state.modal,
-    };
-};
 
-const actionsToProps = {
-    onHide: hideTxDelegateModal,
-};
-
-export default connect(stateToProps, actionsToProps)(ModalDelegate);
+export default ModalDelegate;

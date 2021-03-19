@@ -1,7 +1,8 @@
-html, body{
+html, body {
   font-family: "Montserrat", sans-serif;
 }
-.button{
+
+.button {
   text-align: center;
   line-height: 180%;
   border-radius: 0;
@@ -10,7 +11,7 @@ html, body{
   box-shadow: none !important;
 }
 
-.button.button-primary{
+.button.button-primary {
   background: #E50913;
   font-weight: bold;
   font-size: 16.5455px;
@@ -20,7 +21,7 @@ html, body{
   border-radius: 0;
 }
 
-.button.button-secondary{
+.button.button-secondary {
   background: #313238;
   font-weight: bold;
   font-size: 16.5455px;
@@ -30,13 +31,13 @@ html, body{
   border-radius: 0;
 }
 
-.flex-center{
+.flex-center {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.copy-button{
+.copy-button {
   outline: none !important;
   border: 0px solid;
   width: 28px;
@@ -46,14 +47,15 @@ html, body{
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  .icon{
+
+  .icon {
     width: 16px;
   }
 }
 
-.modal-custom{
-  .modal-header{
-    border: 0px solid ;
+.modal-custom {
+  .modal-header {
+    border: 0px solid;
     justify-content: center;
     font-weight: 600;
     font-size: 18px;
@@ -64,29 +66,34 @@ html, body{
     padding: 30px;
     color: #313238;
   }
+
   .modal-dialog {
     max-width: 700px;
   }
 }
 
-.amount-field{
+.amount-field {
   display: flex;
-  .range-buttons{
+
+  .range-buttons {
     margin-left: 10px;
     display: flex;
-    button{
+
+    button {
       font-weight: 600;
       font-size: 14px;
       line-height: 150%;
       text-align: right;
       color: #8D9CB5;
       padding: 10px;
-      &:last-child{
+
+      &:last-child {
         margin-left: 10px;
       }
     }
   }
 }
+
 .form-field {
   display: flex;
   align-items: center;
@@ -99,5 +106,31 @@ html, body{
     margin: 0;
     color: #2E3239;
     width: 150px;
+  }
+}
+
+.not-matched {
+  box-shadow: 0 0 0 0.2rem #e509134d !important;
+}
+
+.icon-button.info {
+  padding-left: 5px;
+  background: no-repeat;
+  border: none;
+  outline: none !important;
+
+  .icon {
+    width: 18px;
+  }
+}
+
+.copy-section{
+  position: relative;
+  .copy-result{
+    position: absolute;
+    top: -15px;
+    width: 100px;
+    right: -30px;
+    font-size: 10px;
   }
 }

@@ -132,6 +132,51 @@
         }
       }
     }
+    .menmonic-list{
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+      .form-control {
+        width: 120px !important;
+        border-radius: 0;
+        margin: 5px;
+        text-align: center;
+        background: #F5F6FA;
+        border-color: #F5F6FA;
+        font-size: 14px;
+        line-height: 150%;
+        color: #2E3239;
+      }
+    }
+    .download-section {
+      padding-top: 20px;
+      .name{
+        text-align: center;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 150%;
+        color: #2E3239;
+        margin: 0;
+      }
+      .key-download {
+        text-align: center;
+        padding: 10px;
+        background: rgba(233, 114, 28, 0.07);
+        max-width: 350px;
+        margin: auto;
+        a{
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 150%;
+          color: #E9721C !important;
+        }
+        .icon {
+          width: 16px;
+          transform: rotate(-90deg);
+        }
+      }
+    }
     .note-section{
       display: flex;
       margin-top: 20px;

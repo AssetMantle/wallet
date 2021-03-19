@@ -6,14 +6,19 @@ import dark_icon from "../../assets/images/dark_icon.svg";
 import CreateWallet from "../../containers/CreateWallet";
 import ImportWallet from "../../containers/ImpotWallet";
 import wallet from "../../utils/wallet"
+import ModalFaq from "../../containers/Faq";
 const Homepage = () => {
     const history = useHistory();
     const [routName, setRoutName] = useState("false");
     const [response, setResponse] = useState("");
+    const [showFaq, setShowFaq] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const handleRoute = (name) =>{
         setRoutName(name);
     }
+    const handleHelp = () => {
+        setShowFaq(true)
+    };
     const handleRandomWallet = () =>{
         const responseData = wallet.createRandomWallet();
         console.log(responseData, "sdfdf")
@@ -25,6 +30,7 @@ const Homepage = () => {
             setErrorMessage(responseData.error);
         }
     }
+
     return (
         <div className="home-page">
             <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -35,8 +41,8 @@ const Homepage = () => {
                     <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="ml-auto">
-                            <NavLink className="nav-link" to="/marketplace">Learn More</NavLink>
-                            <NavLink className="nav-link" to="/faq">Help</NavLink>
+                            <a className="nav-link" href="https://persistence.one/"  target="_blank" rel="noopener noreferrer">Learn More</a>
+                            <NavLink className="nav-link" onClick={handleHelp}  target="_blank" rel="noopener noreferrer">Help</NavLink>
                         </Nav>
                     </Navbar.Collapse>
                 </div>
@@ -44,22 +50,22 @@ const Homepage = () => {
             <div className="home-page-body">
                 <div className="content">
                     <h3 className="heading">
-                        MANAGE YOUR $XPRT TOKENS
+                        Securely store, transfer and stake your XPRT tokens with the Persistence Wallet
                     </h3>
-                    <p className="sub-text">36% APY FOR 1 MONTH ACCOUNT HOLDERS</p>
+                    <p className="sub-text">Earn upto 35% annual rewards by staking your XPRT</p>
                     <div className="buttons">
                         <button className="button button-primary" onClick={()=>handleRoute('createWallet')}>Create Wallet</button>
-                        <button className="button button-secondary" onClick={()=>handleRoute('importWallet')}>Import Wallet</button>
-                        <button className="button button-primary" onClick={()=>handleRandomWallet()}>Random Wallet</button>
+                        <p onClick={()=>handleRoute('importWallet')} className="import">Import an existing wallet
+                        </p>
                     </div>
                     <div className="info-boxes">
                         <div className="info-box first">
-                            <h4>23%</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</p>
+                            <h4>26</h4>
+                            <p>Unique Wallets</p>
                         </div>
                         <div className="info-box second">
-                            <h4>15%</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</p>
+                            <h4>152</h4>
+                            <p>XPRT stakers</p>
                         </div>
                     </div>
                     <p className="border-logo"><img src={dark_icon} alt="dark-icon" /></p>
@@ -70,15 +76,19 @@ const Homepage = () => {
             </div>
             {
                 routName === "createWallet" ?
-                    <CreateWallet/>
+                    <CreateWallet setRoutName={setRoutName}/>
                     : null
             }
             {
                 routName === "importWallet" ?
-                    <ImportWallet/>
+                    <ImportWallet setRoutName={setRoutName}/>
                     : null
             }
-
+            {showFaq
+                ?
+                <ModalFaq setShowFaq={setShowFaq}/>
+                :
+                null}
         </div>
 
 

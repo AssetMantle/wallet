@@ -4,11 +4,17 @@ import {Dropdown} from "react-bootstrap";
 import ReactQRCode from "qrcode.react";
 import Copy from "../../components/Copy";
 import ModalFaq from "../Faq";
+import {useHistory} from "react-router-dom";
 const Header = (props) => {
-    const [show, setShow] = useState(false);
+    const history = useHistory();
+    const [showFaq, setShowFaq] = useState(false);
     const handleHelp = () => {
-        setShow(true)
-    }
+        setShowFaq(true)
+    };
+    const closeWallet = () =>{
+        localStorage.setItem('loginToken', '');
+        history.push('/');
+    };
     return (
         <div className="header">
             <h3 className="title">{props.name}</h3>
@@ -27,7 +33,7 @@ const Header = (props) => {
                             <p className="address">XPR47rueyd4t19hry57v43bx9wef9u39z637s29fuf4y6rhk8ocv <Copy id="XPR47rueyd4t19hry57v43bx9wef9u39z637s29fuf4y6rhk8ocv"/> </p>
                         </div>
                         <div className="footer">
-                            <p>Close Wallet</p>
+                            <p onClick={closeWallet}>Close Wallet</p>
                             <p>Account</p>
                         </div>
                     </Dropdown.Menu>
@@ -37,9 +43,9 @@ const Header = (props) => {
                     viewClass="help"
                     icon="help"/> Help</p>
             </div>
-            {show
+            {showFaq
             ?
-                <ModalFaq/>
+                <ModalFaq setShowFaq={setShowFaq}/>
             :
             null}
         </div>

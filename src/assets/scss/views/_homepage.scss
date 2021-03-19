@@ -19,7 +19,7 @@
     overflow: auto;
     padding-top: 170px;
     .content{
-      max-width: 750px;
+      max-width: 950px;
       margin: auto;
       .heading{
         font-family: 'Poppins', sans-serif;
@@ -41,9 +41,23 @@
       .buttons{
         padding: 50px 0;
         text-align: center;
+        .import{
+          font-size: 14px;
+          line-height: 180%;
+          font-family: 'Poppins', sans-serif;
+          text-decoration-line: underline;
+          color: #FFFFFF;
+          cursor: pointer;
+        }
+        .button-primary{
+          box-shadow: 0 0 10px #e50913!important;
+          &::first-letter{
+            border-top: 2.5px solid #FFFFFF;
+          }
+        }
         .button{
           font-family: 'Poppins', sans-serif;
-          margin: 0 20px 10px 0;
+          margin: 0 0px 10px 0;
         }
       }
       .info-boxes{
@@ -51,6 +65,7 @@
         .info-box{
           display: flex;
           align-items: center;
+          flex: 1;
           h4{
             font-weight: 300;
             font-size: 48px;
@@ -68,6 +83,12 @@
             padding: 20px 50px;
             margin: 0;
           }
+        }
+        .info-box.first{
+          justify-content: flex-end;
+        }
+        .info-box.second{
+          justify-content: flex-start;
         }
       }
       .border-logo{

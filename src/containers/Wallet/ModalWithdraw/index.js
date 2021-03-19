@@ -1,4 +1,3 @@
-import { connect } from 'react-redux';
 import {Form, Modal as ReactModal} from 'react-bootstrap';
 import React, {useState, useEffect} from 'react';
 import success from "../../../assets/images/success.svg";
@@ -12,6 +11,7 @@ const ModalWithdraw = (props) => {
     }
     const handleClose = (amount) =>{
         setShow(false)
+        props.setRewards(false)
     }
 
     const handleAmountChange = (evt) =>{
@@ -21,7 +21,6 @@ const ModalWithdraw = (props) => {
     return (
         <ReactModal
             animation={false}
-            backdrop="static"
             centered={true}
             keyboard={false}
             show={show}

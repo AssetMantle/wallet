@@ -7,15 +7,8 @@
   text-align: center;
   color: #313238;
   padding-bottom: 30px;
-  .icon-button{
-    padding-left: 5px;
-    background: no-repeat;
-    border: none;
-    outline: none !important;
-  }
-  .icon{
-    width: 18px;
-  }
+
+
 }
   form{
     .label{
@@ -48,5 +41,32 @@
       }
     }
   }
-
+  .download-section {
+    padding-top: 20px;
+    .name{
+      text-align: center;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 150%;
+      color: #2E3239;
+      margin: 0;
+    }
+    .key-download {
+      text-align: center;
+      padding: 10px;
+      background: rgba(233, 114, 28, 0.07);
+      max-width: 350px;
+      margin: auto;
+      a{
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 150%;
+        color: #E9721C !important;
+      }
+      .icon {
+        width: 16px;
+        transform: rotate(-90deg);
+      }
+    }
+  }
 }

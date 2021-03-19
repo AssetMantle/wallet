@@ -1,21 +1,20 @@
-import {connect} from 'react-redux';
 import {Tab, Nav, Modal as ReactModal} from 'react-bootstrap';
 import React, {useState, useEffect} from 'react';
 import Icon from "../../components/Icon";
 import WalletFaq from "./WalletFaq";
 import StakingFaq from "./StakingFaq";
-const ModalFaq = () => {
+const ModalFaq = (props) => {
     const [show, setShow] = useState(true);
 
     const handleClose = (amount) => {
         setShow(false)
+        props.setShowFaq(false)
     }
 
 
     return (
         <ReactModal
             animation={false}
-            backdrop="static"
             centered={true}
             keyboard={false}
             show={show}

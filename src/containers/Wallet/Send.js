@@ -6,10 +6,10 @@ const Send = () => {
     const [amountField, setAmountField] = useState(0);
     const handleAmount = (amount) => {
         setAmountField(amount)
-    }
+    };
     const handleAmountChange = (evt) => {
         setAmountField(evt.target.value)
-    }
+    };
     const handleSubmit = async event => {
         event.preventDefault()
         const toAddress = event.target.address.value;
@@ -20,7 +20,6 @@ const Send = () => {
         const ecpairPriv = persistence.getECPairPriv(mnemonic);
 
 
-
         persistence.getAccounts(address).then(data => {
             let stdSignMsg = persistence.newStdMsg({
                 msgs: [
@@ -29,7 +28,7 @@ const Send = () => {
                         value: {
                             amount: [
                                 {
-                                    amount: String(10),
+                                    amount: amountField,
                                     denom: "uxprt"
                                 }
                             ],
@@ -47,54 +46,8 @@ const Send = () => {
 
             const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
             persistence.broadcast(signedTx).then(response => console.log(response));
-
-
-            // const wallet = await Secp256k1HdWallet.fromMnemonic(mnemonic, makeCosmoshubPath(0), "persistence");
-            // const [{address}] = await wallet.getAccounts();
-            //
-            // const client = new CosmosClient(apiUrl);
-            // const {accountNumber, sequence} = await client.getSequence(address);
-            //
-            // const defaultNetworkId = "test-core-1";
-            // const defaultFee = {
-            //     amount: [
-            //         {
-            //             amount: "5000",
-            //             denom: "uxprt",
-            //         },
-            //     ],
-            //     gas: "2000000",
-            // };
-            //
-            // const sendTokensMsg = {
-            //     type: "cosmos-sdk/MsgSend",
-            //     value: {
-            //         from_address: address,
-            //         to_address: toAddress,
-            //         amount: [
-            //             {
-            //                 denom: "uxprt",
-            //                 amount: amountField,
-            //             },
-            //         ],
-            //     },
-            // };
-            //
-            // const signDoc = makeSignDoc(
-            //     [sendTokensMsg],
-            //     defaultFee,
-            //     defaultNetworkId,
-            //     "My first contract on chain",
-            //     accountNumber,
-            //     sequence,
-            // );
-            //
-            // const {signed, signature} = await wallet.sign(address, signDoc);
-            // const signedTx = makeStdTx(signed, signature);
-            //
-            // let broadcastResult = await client.broadcastTx(signedTx);
         })
-    }
+    };
     return (
         <div className="send-container">
             <div className="form-section">
