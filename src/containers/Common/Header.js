@@ -9,12 +9,13 @@ import helper from "../../utils/helper";
 const Header = (props) => {
     const history = useHistory();
     const [showFaq, setShowFaq] = useState(false);
-    let address  = helper.stringTruncate('persistence1095fgex3h37zl4yjptnsd7qfmspesvav7xhgwt');
+    let address  = helper.stringTruncate(localStorage.getItem('address'));
     const handleHelp = () => {
         setShowFaq(true)
     };
     const closeWallet = () =>{
         localStorage.setItem('loginToken', '');
+        localStorage.setItem('address', '');
         history.push('/');
     };
     return (

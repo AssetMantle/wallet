@@ -3,6 +3,7 @@ import {Modal, Form, Button, OverlayTrigger, Popover} from "react-bootstrap";
 import Icon from "../../components/Icon";
 import wallet from "../../utils/wallet";
 import DownloadLink from "react-download-link";
+import helper from "../../utils/helper"
 import {useHistory} from "react-router-dom";
 const ImportWallet = (props) => {
     const history = useHistory();
@@ -14,14 +15,16 @@ const ImportWallet = (props) => {
     const [jsonName, setJsonName] = useState({});
     const [errorMessage, setErrorMessage] = useState("");
     const handleClose = () => {
-        if (!response.error || response.error !== undefined) {
+        if (!response.error && response.error !== undefined && response.error !== '') {
             localStorage.setItem('loginToken', 'loggedIn');
+            localStorage.setItem('address', response.address);
             history.push('/dashboard/wallet');
         }
         setShow(false);
         props.setRoutName("");
     };
     const handleSubmit = async event => {
+        const password = event.target.password.value;
         event.preventDefault();
         setMnemonicForm(false);
         setResponseDataShow(true)
@@ -30,7 +33,9 @@ const ImportWallet = (props) => {
         if (responseData.error) {
             setErrorMessage(responseData.error);
         }else{
-            let jsonContent = JSON.stringify(responseData.mnemonic);
+
+            let encryptedData = helper.createStore(responseData.mnemonic, password);
+            let jsonContent = JSON.stringify(encryptedData);
             setJsonName(jsonContent);
         }
     };
@@ -62,10 +67,21 @@ const ImportWallet = (props) => {
                                     </OverlayTrigger>
                                 </h3>
                                 <Form onSubmit={handleSubmit}>
+                                    <div className="form-field">
+                                        <p className="label">Password</p>
+                                        <Form.Control
+                                            type="password"
+                                            name="password"
+                                            placeholder="Enter Your Wallet Password"
+                                            required={true}
+                                        />
+                                    </div>
+                                    <div className="form-field">
                                     <p className="label">Enter Seed</p>
                                     <Form.Control as="textarea" rows={5} name="mnemonic"
                                                   placeholder="Enter Seed"
                                                   required={true}/>
+                                    </div>
                                     <div className="buttons">
                                         <button className="button button-primary">Next</button>
                                     </div>

@@ -148,6 +148,19 @@
         line-height: 150%;
         color: #2E3239;
       }
+      .empty-mnemonic{
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 150%;
+        text-align: center;
+        color: #2E3239;
+        background: rgba(255, 255, 255, 0.14);
+        border: 1px solid #E3E5F4;
+        &:focus{
+          border-color: #E50913;
+          box-shadow: none;
+        }
+      }
     }
     .download-section {
       padding-top: 20px;
@@ -203,6 +216,7 @@
         line-height: 150%;
         text-align: center;
         color: #2E3239;
+        padding-bottom: 20px;
       }
       .menmonic{
         word-spacing: 20px;
@@ -211,5 +225,16 @@
         text-align: center;
       }
     }
+  }
+}
+.create-wallet-modal.large {
+  .modal-dialog {
+    max-width: 800px !important;
+  }
+  .create-wallet-form-body form{
+    max-width: 500px;
+  }
+  .note-section{
+    justify-content: center;
   }
 }

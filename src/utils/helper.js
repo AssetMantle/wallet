@@ -1,3 +1,5 @@
+const crypto = require("crypto");
+const passwordHashAlgorithm = "sha512";
 function randomNum(min, max) {
     let randomNumbers = [];
     for(var i=0;i<3;i++){
@@ -15,7 +17,33 @@ function stringTruncate(str){
     }
     return str;
 }
+
+function createStore(mnemonic, password) {
+    try {
+        const key = crypto.randomBytes(32);
+        const iv = crypto.randomBytes(16);
+        let cipher = crypto.createCipheriv("aes-256-cbc", Buffer.from(key), iv);
+        let encrypted = cipher.update(mnemonic);
+        encrypted = Buffer.concat([encrypted, cipher.final()]);
+
+        let obj ={
+            "hashpwd": crypto.createHash(passwordHashAlgorithm).update(password).digest("hex"),
+            "iv": iv.toString("hex"),
+            "salt": key.toString("hex"),
+            "crypted": encrypted.toString("hex")
+        }
+        return {
+            Response: obj
+        };
+    } catch (exception) {
+        return {
+            success: false,
+            error: exception.message
+        };
+    }
+}
 module.exports = {
     randomNum,
     stringTruncate,
+    createStore,
 };

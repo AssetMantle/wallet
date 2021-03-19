@@ -107,6 +107,17 @@ html, body {
     color: #2E3239;
     width: 150px;
   }
+  input, .amount-field, textarea {
+    max-width: 400px !important;
+    flex: 1;
+  }
+  textarea{
+    background: #F5F6FA;
+    font-size: 14px;
+    border-radius: 0;
+    border: 0px solid;
+    color: #8D9CB5;
+  }
 }
 
 .not-matched {
@@ -164,4 +175,12 @@ html, body {
     width: 100px;
     padding: 10px;
   }
+}
+
+.quiz-error{
+  margin: 0;
+  padding: 10px 0;
+  text-align: center;
+  color: #E50913;
+  font-weight: 500;
 }
