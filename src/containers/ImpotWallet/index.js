@@ -14,7 +14,7 @@ const ImportWallet = (props) => {
     const [jsonName, setJsonName] = useState({});
     const [errorMessage, setErrorMessage] = useState("");
     const handleClose = () => {
-        if (!response.error) {
+        if (!response.error && response.error !== undefined) {
             localStorage.setItem('loginToken', 'loggedIn');
             history.push('/dashboard/wallet');
         }
