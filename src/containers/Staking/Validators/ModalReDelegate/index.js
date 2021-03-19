@@ -2,9 +2,11 @@ import {Form, Modal, OverlayTrigger, Popover} from 'react-bootstrap';
 import React, {useState, useEffect} from 'react';
 import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
+import Persistence from "../../../../utils/cosmosjsWrapper";
 const ModalReDelegate = (props) => {
     const [amount, setAmount] = useState(0);
     const [show, setShow] = useState(true);
+    const [response, setResponse] = useState(false);
 
     const handleAmount = (amount) => {
         setAmount(amount)
@@ -25,6 +27,40 @@ const ModalReDelegate = (props) => {
         const mnemonic = event.target.mnemonic.value;
         const toAddress = event.target.toAddress.value;
         const validatorAddress = 'persistencevaloper15qsq6t6zxg60r3ljnxdpn9c6qpym2uvjl37hpl';
+
+        const persistence = Persistence;
+        const address = persistence.getAddress(mnemonic);
+        const ecpairPriv = persistence.getECPairPriv(mnemonic);
+
+
+        persistence.getAccounts(address).then(data => {
+            let stdSignMsg = persistence.newStdMsg({
+                msgs: [
+                    {
+                        type: "cosmos-sdk/MsgBeginRedelegate",
+                        value: {
+                            amount: {
+                                amount: String(1000000),
+                                denom: "uxprt"
+                            },
+                            delegator_address: address,
+                            validator_dst_address: validatorAddress,
+                            validator_src_address: validatorAddress
+                        }
+                    }
+                ],
+                chain_id: persistence.chainId,
+                fee: { amount: [ { amount: String(5000), denom: "uxprt" } ], gas: String(200000) },
+                memo: "",
+                account_number: String(data.account.account_number),
+                sequence: String(data.account.sequence)
+            });
+
+            const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
+            persistence.broadcast(signedTx).then(response => {
+                setResponse(response)
+                console.log(response.code)});
+        })
         console.log(amount,password, mnemonic,toAddress, validatorAddress, "redelegate form value") //amount taking stake.
     };
     const popover = (
