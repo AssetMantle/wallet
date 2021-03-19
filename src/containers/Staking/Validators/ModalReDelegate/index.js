@@ -25,7 +25,7 @@ const ModalReDelegate = (props) => {
         event.preventDefault()
         const password = event.target.password.value;
         const mnemonic = event.target.mnemonic.value;
-        const toAddress = event.target.toAddress.value;
+        const toValidatorAddress = event.target.toAddress.value;
         const validatorAddress = 'persistencevaloper15qsq6t6zxg60r3ljnxdpn9c6qpym2uvjl37hpl';
 
         const persistence = Persistence;
@@ -44,7 +44,7 @@ const ModalReDelegate = (props) => {
                                 denom: "uxprt"
                             },
                             delegator_address: address,
-                            validator_dst_address: toAddress,
+                            validator_dst_address: toValidatorAddress,
                             validator_src_address: validatorAddress
                         }
                     }
@@ -61,7 +61,7 @@ const ModalReDelegate = (props) => {
                 setResponse(response)
                 console.log(response.code)});
         })
-        console.log(amount,password, mnemonic,toAddress, validatorAddress, "redelegate form value") //amount taking stake.
+        console.log(amount,password, mnemonic,toValidatorAddress, validatorAddress, "redelegate form value") //amount taking stake.
     };
     const popover = (
         <Popover id="popover-basic">
