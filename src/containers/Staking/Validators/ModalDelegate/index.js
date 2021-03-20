@@ -11,8 +11,7 @@ import {
 import React, {useState, useEffect, useContext} from 'react';
 import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
-import Persistence from "../../../../utils/cosmosjsWrapper";
-import wallet from "../../../../utils/wallet";
+import MakePersistence from "../../../../utils/cosmosjsWrapper";
 
 const ModalDelegate = (props) => {
     const [amount, setAmount] = useState(0);
@@ -81,14 +80,18 @@ const ModalDelegate = (props) => {
         event.preventDefault();
         const mnemonic = event.target.mnemonic.value;
         const validatorAddress = 'persistencevaloper15qsq6t6zxg60r3ljnxdpn9c6qpym2uvjl37hpl';
-        const persistence = Persistence;
-        const address = persistence.getAddress(mnemonic);
-        const ecpairPriv = persistence.getECPairPriv(mnemonic);
+        let accountNumber = 0
+        let addressIndex = 0
+        let bip39Passphrase = ""
         if (advanceMode) {
-            let accountNumber = document.getElementById('delegateAccountNumber').value;
-            let addressIndex = document.getElementById('delegateAccountIndex').value;
-            let bip39Passphrase = document.getElementById('delegatebip39Passphrase').value;
+            accountNumber = document.getElementById('delegateAccountNumber').value;
+            addressIndex = document.getElementById('delegateAccountIndex').value;
+            bip39Passphrase = document.getElementById('delegatebip39Passphrase').value;
         }
+        const persistence = MakePersistence(accountNumber,addressIndex);
+        const address = persistence.getAddress(mnemonic, bip39Passphrase,true);
+        const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
+
         persistence.getAccounts(address).then(data => {
             let stdSignMsg = persistence.newStdMsg({
                 msgs: [
@@ -114,8 +117,7 @@ const ModalDelegate = (props) => {
             const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
             persistence.broadcast(signedTx).then(response => {
                 setResponse(response)
-                console.log(response)
-            });
+                console.log(response.code)});
         });
         console.log(amount, mnemonic, validatorAddress, "delegate form value") //amount taking stake.
     };

@@ -11,7 +11,7 @@ import {
 import React, {useState, useEffect, useContext} from 'react';
 import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
-import Persistence from "../../../../utils/cosmosjsWrapper";
+import MakePersistence from "../../../../utils/cosmosjsWrapper";
 
 const ModalUnbond = (props) => {
     const [amount, setAmount] = useState(0);
@@ -79,14 +79,20 @@ const ModalUnbond = (props) => {
         // const password = event.target.password.value;
         const mnemonic = event.target.mnemonic.value;
         const validatorAddress = 'persistencevaloper15qsq6t6zxg60r3ljnxdpn9c6qpym2uvjl37hpl';
-        const persistence = Persistence;
-        const address = persistence.getAddress(mnemonic);
-        const ecpairPriv = persistence.getECPairPriv(mnemonic);
+
+        let accountNumber = 0
+        let addressIndex = 0
+        let bip39Passphrase = ""
         if (advanceMode) {
-            let accountNumber = document.getElementById('unbondAccountNumber').value;
-            let addressIndex = document.getElementById('unbondAccountIndex').value;
-            let bip39Passphrase = document.getElementById('unbondbip39Passphrase').value;
+             accountNumber = document.getElementById('unbondAccountNumber').value;
+             addressIndex = document.getElementById('unbondAccountIndex').value;
+             bip39Passphrase = document.getElementById('unbondbip39Passphrase').value;
         }
+        const persistence = MakePersistence(accountNumber,addressIndex);
+        const address = persistence.getAddress(mnemonic, bip39Passphrase,true);
+        const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
+
+
         persistence.getAccounts(address).then(data => {
             let stdSignMsg = persistence.newStdMsg({
                 msgs: [
