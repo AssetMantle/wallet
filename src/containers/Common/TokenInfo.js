@@ -42,7 +42,7 @@ const TokenInfo = () => {
                         <p className="total-supply">100,000,000.00</p>
                     </div>
                     <div className="line">
-                        <p className="key">Your balance</p>
+                        <p className="key">Balance XPRT</p>
                         <p className="value">$40,000,000.00</p>
                     </div>
                 </div>
@@ -54,7 +54,7 @@ const TokenInfo = () => {
                         <p className="value"> $0.40</p>
                     </div>
                     <div className="line">
-                        <p className="key">Delegated</p>
+                        <p className="key">Delegated Token</p>
                         <p className="value">{totalDelegations} XPRT</p>
                     </div>
                 </div>
@@ -66,7 +66,7 @@ const TokenInfo = () => {
                         <p className="value rewards" onClick={handleRewards}>{totalRewards} XPRT</p>
                     </div>
                     <div className="line">
-                        <p className="key">Unbonding</p>
+                        <p className="key">Unbonding Token</p>
                         <p className="value">{unbondingDelegations} XPRT</p>
                     </div>
                 </div>

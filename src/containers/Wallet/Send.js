@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Form, Modal as ReactModal, Modal, OverlayTrigger} from "react-bootstrap";
+import {Form, Modal as ReactModal, Modal, OverlayTrigger, Popover} from "react-bootstrap";
 import Persistence from "../../utils/cosmosjsWrapper"
 import Icon from "../../components/Icon";
 import success from "../../assets/images/success.svg";
@@ -16,25 +16,28 @@ const Send = () => {
     const handleClose = () => {
         setShow(false);
         setMnemonicForm(false);
+        setTxResponse('');
+        console.log(show, mnemonicForm)
     };
     const handleAmountChange = (evt) => {
         setAmountField(evt.target.value)
     };
     const handleSubmit = async event => {
-        event.preventDefault()
+        console.log(show,mnemonicForm)
+        event.preventDefault();
         setToAddress(event.target.address.value);
         setMnemonicForm(true);
+        setShow(true);
     };
     const handleMnemonicSubmit = (evt) => {
-        evt.preventDefault()
+        evt.preventDefault();
         const userMnemonic = evt.target.mnemonic.value;
         const mnemonic = "tank pair spray rely any menu airport shiver boost emerge holiday siege evil grace exile comfort fence mention pig bus cable scissors ability all";
 
         const persistence = Persistence;
         const address = persistence.getAddress(mnemonic);
         const ecpairPriv = persistence.getECPairPriv(mnemonic);
-
-
+           ;
         persistence.getAccounts(address).then(data => {
             let stdSignMsg = persistence.newStdMsg({
                 msgs: [
@@ -62,20 +65,32 @@ const Send = () => {
             const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
             persistence.broadcast(signedTx).then(response => {
                 setTxResponse(response)
-                console.log(response.code)
+                console.log(response)
             });
         })
     };
+    const popover = (
+        <Popover id="popover-basic">
+            <Popover.Content>
+                The recipient’s address should start with XPRTa123…..
+            </Popover.Content>
+        </Popover>
+    );
     return (
         <div className="send-container">
             <div className="form-section">
                 <Form onSubmit={handleSubmit}>
                     <div className="form-field">
-                        <p className="label">Recipient Address</p>
+                        <p className="label info">Recipient Address
+                            <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
+                                <button className="icon-button info"><Icon
+                                    viewClass="arrow-right"
+                                    icon="info"/></button>
+                            </OverlayTrigger></p>
                         <Form.Control
                             type="text"
                             name="address"
-                            placeholder="Enter recipient address"
+                            placeholder="Enter Recipient's address "
                             required={true}
                         />
                     </div>
@@ -107,7 +122,7 @@ const Send = () => {
                         </div>
                     </div>
                     <div className="buttons">
-                        <button className="button button-primary">Send</button>
+                        <button className="button button-primary">Send XPRT Tokens</button>
                     </div>
                 </Form>
             </div>
@@ -131,29 +146,42 @@ const Send = () => {
                                     </Form>
 
                                 </Modal.Body>
-                                : null
+                                :           <>
+                                    {
+                                        txResponse.code === undefined ?
+                                            <>
+                                                <Modal.Header className="result-header success">
+                                                    Successfully Send!
+                                                </Modal.Header>
+                                                <Modal.Body className="delegate-modal-body">
+                                                    <div className="result-container">
+                                                        <img src={success} alt="success-image"/>
+                                                        <p className="tx-hash">Tx Hash: {txResponse.txhash}</p>
+                                                        <div className="buttons">
+                                                            <button className="button">Done</button>
+                                                        </div>
+                                                    </div>
+                                                </Modal.Body>
+                                            </>
+                                            :  <>
+                                                <Modal.Header className="result-header error">
+                                                    Failed to Send
+                                                </Modal.Header>
+                                                <Modal.Body className="delegate-modal-body">
+                                                    <div className="result-container">
+                                                        <p className="tx-hash">Tx Hash:
+                                                             {txResponse.txhash}</p>
+                                                        <p>{txResponse.raw_log}</p>
+                                                        <div className="buttons">
+                                                            <button className="button" onClick={handleClose}>Done</button>
+                                                        </div>
+                                                    </div>
+                                                </Modal.Body>
+                                            </>
+                                    }
+                                </>
                         }
-                        <>
-                            {
-                                txResponse !== '' ?
-                                    <>
-                                        <Modal.Header className="result-header success">
-                                            Succesfully Send!
-                                        </Modal.Header>
-                                        <Modal.Body className="delegate-modal-body">
-                                            <div className="result-container">
-                                                <img src={success} alt="success-image"/>
-                                                <p className="tx-hash">Tx Hash:
-                                                    CAC4BA3C67482F09B46E129A00A86846567941555685673599559EBB5899DB3C</p>
-                                                <div className="buttons">
-                                                    <button className="button">Done</button>
-                                                </div>
-                                            </div>
-                                        </Modal.Body>
-                                    </>
-                                    : null
-                            }
-                        </>
+
                     </Modal>
                     : null
             }

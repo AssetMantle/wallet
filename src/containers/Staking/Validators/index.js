@@ -60,7 +60,7 @@ const Validators = (props) => {
                                 <td className="">{validator.status}</td>
                                 <td className="actions-td">
                                     <button type="button" className="button button-primary"
-                                            onClick={() => handleModal('Delegate', validator.operator_address)}>Delegate
+                                            onClick={() => handleModal('Delegate', validator.operator_address)}>Delegate a Validator
                                     </button>
                                     <Dropdown className="more-dropdown">
                                         <Dropdown.Toggle variant="success" id="dropdown-basic">

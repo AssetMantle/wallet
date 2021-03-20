@@ -7,7 +7,7 @@ import Persistence from "../../../../utils/cosmosjsWrapper";
 const ModalUnbond = (props) => {
     const [amount, setAmount] = useState(0);
     const [show, setShow] = useState(true);
-    const [response, setResponse] = useState(false);
+    const [response, setResponse] = useState('');
 
     const handleAmount = (amount) => {
         setAmount(amount)
@@ -19,6 +19,7 @@ const ModalUnbond = (props) => {
     const handleClose = () => {
         setShow(false);
         props.setModalOpen('');
+        setResponse('');
     };
     const handleSubmit = async event => {
         event.preventDefault();
@@ -68,58 +69,97 @@ const ModalUnbond = (props) => {
             show={show}
             className="modal-custom delegate-modal"
             onHide={handleClose}>
-            <Modal.Header>
-                Unbonding to Cosmostation
-            </Modal.Header>
-            <Modal.Body className="delegate-modal-body">
-                <Form onSubmit={handleSubmit}>
-                    <div className="form-field">
-                        <p className="label">Your password</p>
-                        <Form.Control
-                            type="password"
-                            name="password"
-                            placeholder="Enter Your Wallet Password"
-                            required={true}
-                        />
-                    </div>
-                    <div className="form-field">
-                        <p className="label">Send Amount</p>
-                        <div className="amount-field">
-                            <Form.Control
-                                type="number"
-                                name="amount"
-                                placeholder="Send Amount"
-                                value={amount}
-                                onChange={handleAmountChange}
-                                required={true}
-                            />
-                            <div className="range-buttons">
-                                <button type="button" className="button button-range"
-                                        onClick={() => handleAmount(25000000)}>25%
-                                </button>
-                                <button type="button" className="button button-range"
-                                        onClick={() => handleAmount(50000000)}>50%
-                                </button>
-                                <button type="button" className="button button-range"
-                                        onClick={() => handleAmount(75000000)}>75%
-                                </button>
-                                <button type="button" className="button button-range"
-                                        onClick={() => handleAmount(100000000)}>Max
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="form-field">
-                        <p className="label">Memo</p>
-                        <Form.Control as="textarea" rows={3} name="mnemonic"
-                                      placeholder="Enter Seed"
-                                      required={true}/>
-                    </div>
-                    <div className="buttons">
-                        <button className="button button-primary">Unbond</button>
-                    </div>
-                </Form>
-            </Modal.Body>
+            {
+                response === '' ?
+                    <>
+                        <Modal.Header>
+                            Unbonding to Cosmostation
+                        </Modal.Header>
+                        <Modal.Body className="delegate-modal-body">
+                            <Form onSubmit={handleSubmit}>
+                                <div className="form-field">
+                                    <p className="label">Your password</p>
+                                    <Form.Control
+                                        type="password"
+                                        name="password"
+                                        placeholder="Enter Your Wallet Password"
+                                        required={true}
+                                    />
+                                </div>
+                                <div className="form-field">
+                                    <p className="label">Send Amount</p>
+                                    <div className="amount-field">
+                                        <Form.Control
+                                            type="number"
+                                            name="amount"
+                                            placeholder="Send Amount"
+                                            value={amount}
+                                            onChange={handleAmountChange}
+                                            required={true}
+                                        />
+                                        <div className="range-buttons">
+                                            <button type="button" className="button button-range"
+                                                    onClick={() => handleAmount(25000000)}>25%
+                                            </button>
+                                            <button type="button" className="button button-range"
+                                                    onClick={() => handleAmount(50000000)}>50%
+                                            </button>
+                                            <button type="button" className="button button-range"
+                                                    onClick={() => handleAmount(75000000)}>75%
+                                            </button>
+                                            <button type="button" className="button button-range"
+                                                    onClick={() => handleAmount(100000000)}>Max
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="form-field">
+                                    <p className="label">Memo</p>
+                                    <Form.Control as="textarea" rows={3} name="mnemonic"
+                                                  placeholder="Enter Seed"
+                                                  required={true}/>
+                                </div>
+                                <div className="buttons">
+                                    <button className="button button-primary">Unbond</button>
+                                </div>
+                            </Form>
+                        </Modal.Body>
+                    </>
+                    : <>
+                        {
+                            response.code === undefined ?
+                                <>
+                                    <Modal.Header className="result-header success">
+                                        Successfully Unbonded!
+                                    </Modal.Header>
+                                    <Modal.Body className="delegate-modal-body">
+                                        <div className="result-container">
+                                            <img src={success} alt="success-image"/>
+                                            <p className="tx-hash">Tx Hash: {response.txhash}</p>
+                                            <div className="buttons">
+                                                <button className="button">Done</button>
+                                            </div>
+                                        </div>
+                                    </Modal.Body>
+                                </>
+                                :  <>
+                                    <Modal.Header className="result-header error">
+                                        Failed to Unbond
+                                    </Modal.Header>
+                                    <Modal.Body className="delegate-modal-body">
+                                        <div className="result-container">
+                                            <p className="tx-hash">Tx Hash:
+                                                {response.txhash}</p>
+                                            <p>{response.raw_log}</p>
+                                            <div className="buttons">
+                                                <button className="button" onClick={handleClose}>Done</button>
+                                            </div>
+                                        </div>
+                                    </Modal.Body>
+                                </>
+                        }
+                    </>
+            }
 
         </Modal>
     );

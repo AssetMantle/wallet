@@ -74,6 +74,16 @@ html, body {
   }
 }
 
+.faq-modal.modal-custom {
+  .modal-dialog {
+    max-width: 850px;
+  }
+
+  .faq-modal-body {
+    padding: 30px;
+  }
+}
+
 .modal-custom {
   .modal-header {
     border: 0px solid;
@@ -176,6 +186,14 @@ html, body {
   line-height: 150%;
   text-align: center;
   color: #1CB76D;
+}
+
+.result-header.error {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 150%;
+  text-align: center;
+  color: #E50913;
 }
 
 .result-container {

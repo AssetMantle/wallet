@@ -42,24 +42,32 @@ const WalletFaq = () => {
             <Card>
                 <Card.Header>
                     <p>
-                        How do I setup a Persistence Wallet?
+                        How to Create a Persistence Wallet
                     </p>
                     <ContextAwareToggle eventKey="1">Click me!</ContextAwareToggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="1">
-                    <Card.Body><p>You can can either create a new wallet or import an already existing wallet.</p>
-                        <p>To create a new wallet, go to wallet.persistence.one and click on the create wallet option.
-                            You will get a pop-up on how to secure your wallet, please take a moment to read it. After
-                            carefully reading the steps on how to secure your wallet, please enter a password for your
-                            wallet and confirm it in the next step. This password would be required for you to login
-                            into your wallet. You would see a randomly generated 24-word seed phrase, you can also
-                            choose the 12-word seed phrase option (Seed phrase is also called Mnemonic). Copy and
-                            securely store your seed phrase and click next to create your wallet.
-                        </p>
-                        <p>If you already have a persistence wallet and want to Import it, click on import wallet. In
-                            this next step, you are required to input your seed phrase (mnemonic) and then enter your
-                            wallet password to import it and login securely.
-                        </p></Card.Body>
+                    <Card.Body><p>You can either create a wallet or import an already existing Persistence wallet.</p>
+                        <p><b>To create a wallet:</b></p>
+                        <ul>
+                            <li>
+                                From wallet.persistence.one site and click the Create a wallet button
+                            </li>
+                            <li>In the Secure your wallet window, please take a moment to read notes. Click Continue.  Click Next after you go through the notes.
+                            </li>
+                            <li>In the Password window, enter your password for the Persistence wallet.</li>
+                            <li>Re-enter your password to confirm it.</li>
+                            <li>Click Next.</li>
+                            <li>You require this password when you sign into your wallet. </li>
+                            <li>In the Mnemonic window, view the randomly generated 24-word seed phrase, by default. (Seed phrase is also called as Mnemonic). </li>
+                            {/*<li>If you want a 12 word mnemonic, select the 12 button. </li>*/}
+                            <li>Copy and securely store your seed phrase in a location of your choice because you may need it in future.
+                            </li>
+                            <li>Select the Private key json file and copy it in a safe location.</li>
+                            <li>Click Next to create your wallet.</li>
+                            <p><b>Note:</b> If you already have a Persistence wallet, you can import it using the Import an existing wallet button. You will need to use your mnemonic and password</p>
+                        </ul>
+                     </Card.Body>
                 </Accordion.Collapse>
             </Card>
             <Card>
@@ -70,9 +78,10 @@ const WalletFaq = () => {
                     <ContextAwareToggle eventKey="2">Click me!</ContextAwareToggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="2">
-                    <Card.Body><p>The mnemonic (seed phrase) is the readable form of a private key which is a set of
-                        12/24 words which if used in a sequence allows a user to claim ownership of the assets stored in
-                        a wallet</p></Card.Body>
+                    <Card.Body><ul>
+                        <li>The mnemonic (seed phrase) is the readable form of a private key (a set of 12 or 24 words in a specific sequence) allows a user to claim ownership of the assets stored in a wallet.
+                        </li>
+                    </ul></Card.Body>
                 </Accordion.Collapse>
             </Card>
             <Card>

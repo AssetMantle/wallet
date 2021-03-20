@@ -265,7 +265,7 @@ const CreateWallet = () => {
                                 <div className="exclamation"><Icon
                                     viewClass="arrow-right"
                                     icon="exclamation"/></div>
-                                <p>Please securely store the mnemonic for future use</p>
+                                <p>Note and store the mnemonic for future use</p>
                             </div>
                         </div>
                         : null

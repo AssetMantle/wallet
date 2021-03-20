@@ -160,11 +160,11 @@ const ImportWallet = (props) => {
                         <>
                             <div className="create-wallet-body import-wallet-body">
                                 <h3 className="heading">Importing Wallet
-                                    <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
+                              {/*      <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
                                         <button className="icon-button info"><Icon
                                             viewClass="arrow-right"
                                             icon="info"/></button>
-                                    </OverlayTrigger>
+                                    </OverlayTrigger>*/}
                                 </h3>
                                 {
                                     importMnemonic ?
@@ -335,7 +335,7 @@ const ImportWallet = (props) => {
                                 <div className="exclamation"><Icon
                                     viewClass="arrow-right"
                                     icon="exclamation"/></div>
-                                <p>This is your key json file. Please secure in a safe place</p>
+                                <p>Copy and secure your key json file in a safe location.</p>
                             </div>
                         </div>
                         : null
