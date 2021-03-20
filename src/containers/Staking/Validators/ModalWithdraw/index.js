@@ -5,11 +5,12 @@ import Icon from "../../../../components/Icon";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 const ModalWithdraw = (props) => {
     const [show, setShow] = useState(true);
-    const [response, setResponse] = useState(false);
+    const [response, setResponse] = useState('');
 
     const handleClose = () => {
         setShow(false)
         props.setModalOpen('');
+        setResponse('');
     };
     const handleSubmit = async event => {
         event.preventDefault();
@@ -59,31 +60,69 @@ const ModalWithdraw = (props) => {
             show={show}
             className="modal-custom delegate-modal"
             onHide={handleClose}>
-            <Modal.Header>
-                Claiming Rewards
-            </Modal.Header>
-            <Modal.Body className="delegate-modal-body">
-                <Form onSubmit={handleSubmit}>
-                    <div className="form-field">
-                        <p className="label">Your password</p>
-                        <Form.Control
-                            type="password"
-                            name="password"
-                            placeholder="Enter Your Wallet Password"
-                            required={true}
-                        />
-                    </div>
-                    <div className="form-field">
-                        <p className="label">Memo</p>
-                        <Form.Control as="textarea" rows={5} name="mnemonic"
-                                      placeholder="Enter Seed"
-                                      required={true}/>
-                    </div>
-                    <div className="buttons">
-                        <button className="button button-primary">Withdraw</button>
-                    </div>
-                </Form>
-            </Modal.Body>
+            {
+                response === '' ?
+                    <> <Modal.Header>
+                        Claim Staking Rewards
+                    </Modal.Header>
+                        <Modal.Body className="delegate-modal-body">
+                            <Form onSubmit={handleSubmit}>
+                                <div className="form-field">
+                                    <p className="label">Your password</p>
+                                    <Form.Control
+                                        type="password"
+                                        name="password"
+                                        placeholder="Enter Your Wallet Password"
+                                        required={true}
+                                    />
+                                </div>
+                                <div className="form-field">
+                                    <p className="label">Memo</p>
+                                    <Form.Control as="textarea" rows={3} name="mnemonic"
+                                                  placeholder="Enter Seed"
+                                                  required={true}/>
+                                </div>
+                                <div className="buttons">
+                                    <button className="button button-primary">Claim Rewards</button>
+                                </div>
+                            </Form>
+                        </Modal.Body>
+                    </>
+                    : <>
+                        {
+                            response.code === undefined ?
+                                <>
+                                    <Modal.Header className="result-header success">
+                                        Successfully Claimed!
+                                    </Modal.Header>
+                                    <Modal.Body className="delegate-modal-body">
+                                        <div className="result-container">
+                                            <img src={success} alt="success-image"/>
+                                            <p className="tx-hash">Tx Hash: {response.txhash}</p>
+                                            <div className="buttons">
+                                                <button className="button">Done</button>
+                                            </div>
+                                        </div>
+                                    </Modal.Body>
+                                </>
+                                :  <>
+                                    <Modal.Header className="result-header error">
+                                        Failed to Claim
+                                    </Modal.Header>
+                                    <Modal.Body className="delegate-modal-body">
+                                        <div className="result-container">
+                                            <p className="tx-hash">Tx Hash:
+                                                {response.txhash}</p>
+                                            <p>{response.raw_log}</p>
+                                            <div className="buttons">
+                                                <button className="button" onClick={handleClose}>Done</button>
+                                            </div>
+                                        </div>
+                                    </Modal.Body>
+                                </>
+                        }
+                    </>
+            }
 
         </Modal>
     );

@@ -45,7 +45,7 @@
   .wallet-main-section .send-container{
     padding: 0;
     border: 0px solid;
-    form {
+    form,.form-section {
       .form-field{
         display: block;
       }
@@ -66,7 +66,10 @@
       }
     }
   }
-
+  .main-section .side-bar .header-section .logo span{
+    font-size: 6px;
+    bottom: -2px;
+  }
 }
 @media (min-width: 992px) {
   .small-screen-logo {
@@ -97,5 +100,11 @@
     .range-buttons{
       padding-top: 10px;
     }
+  }
+  .wallet-main-section .receive-container{
+    padding: 20px;
+  }
+  .header .profile-section .icon-profile{
+    margin: 0;
   }
 }

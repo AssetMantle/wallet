@@ -6,7 +6,7 @@ import MakePersistence from "../../../../utils/cosmosjsWrapper";
 const ModalDelegate = (props) => {
     const [amount, setAmount] = useState(0);
     const [show, setShow] = useState(true);
-    const [response, setResponse] = useState(false);
+    const [response, setResponse] = useState('');
 
     const handleAmount = (amount) =>{
         setAmount(amount)
@@ -16,8 +16,9 @@ const ModalDelegate = (props) => {
         setAmount(evt.target.value)
     };
     const handleClose = () =>{
-        setShow(false)
+        setShow(false);
         props.setModalOpen('');
+        setResponse('');
     };
     const handleSubmit = async event => {
         event.preventDefault();
@@ -59,14 +60,14 @@ const ModalDelegate = (props) => {
             persistence.broadcast(signedTx).then(response => {
                 setResponse(response)
                 console.log(response.code)});
-        })
+        });
         console.log(amount,password, mnemonic, validatorAddress, "delegate form value") //amount taking stake.
     };
     const popover = (
         <Popover id="popover-basic">
             <Popover.Content>
-                Delegate your XPRT to Cosmostation to earn staking rewards. You can claim your staking rewards from the rewards section on the staking interface.
-                <p><b>Note:</b> Unstaking/Unbonding on Persistence takes 21 days.</p>
+                Delegate your XPRT to Cosmostation to earn staking rewards.
+                <p><b>Note:</b> Unstaking or Unbonding period: 21 days.</p>
             </Popover.Content>
         </Popover>
     );
@@ -77,6 +78,8 @@ const ModalDelegate = (props) => {
             show={show}
             className="modal-custom delegate-modal"
             onHide={handleClose}>
+            {response  === '' ?
+                <>
                     <Modal.Header>
                         Delegating to Cosmostation
                         <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
@@ -100,7 +103,7 @@ const ModalDelegate = (props) => {
                                 <p className="label">Send Amount</p>
                                 <div className="amount-field">
                                     <Form.Control
-                                        type="text"
+                                        type="number"
                                         name="amount"
                                         placeholder="Send Amount"
                                         value={amount}
@@ -125,7 +128,7 @@ const ModalDelegate = (props) => {
                             </div>
                             <div className="form-field">
                                 <p className="label">Memo</p>
-                                <Form.Control as="textarea" rows={5} name="mnemonic"
+                                <Form.Control as="textarea" rows={3} name="mnemonic"
                                               placeholder="Enter Seed"
                                               required={true}/>
                             </div>
@@ -134,6 +137,42 @@ const ModalDelegate = (props) => {
                             </div>
                         </Form>
                     </Modal.Body>
+                </>
+            :  <>
+                    {
+                        response.code === undefined ?
+                            <>
+                                <Modal.Header className="result-header success">
+                                    Successfully Delegated!
+                                </Modal.Header>
+                                <Modal.Body className="delegate-modal-body">
+                                    <div className="result-container">
+                                        <img src={success} alt="success-image"/>
+                                        <p className="tx-hash">Tx Hash: {response.txhash}</p>
+                                        <div className="buttons">
+                                            <button className="button">Done</button>
+                                        </div>
+                                    </div>
+                                </Modal.Body>
+                            </>
+                            :  <>
+                                <Modal.Header className="result-header error">
+                                    Failed to Delegate
+                                </Modal.Header>
+                                <Modal.Body className="delegate-modal-body">
+                                    <div className="result-container">
+                                        <p className="tx-hash">Tx Hash:
+                                            {response.txhash}</p>
+                                        <p>{response.raw_log}</p>
+                                        <div className="buttons">
+                                            <button className="button" onClick={handleClose}>Done</button>
+                                        </div>
+                                    </div>
+                                </Modal.Body>
+                            </>
+                    }
+                </>
+            }
 
         </Modal>
     );

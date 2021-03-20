@@ -8,9 +8,10 @@ import ModalWithdraw from "./ModalWithdraw";
 import {getDelegationsUrl, getValidatorUrl} from "../../../constants/url";
 import axios from "axios";
 import Avatar from "./Avatar";
-
+import Loader from "../../../components/Loader";
 const Validators = (props) => {
     const [modalDelegate, setModalOpen] = useState();
+    const [loading, setLoading] = useState(true);
     const [validatorsList, setValidatorsList] = useState([]);
     const handleModal = (name) => {
         setModalOpen(name)
@@ -27,12 +28,16 @@ const Validators = (props) => {
                 validators.push(validatorResponse.data.validator);
             }
             setValidatorsList(validators);
+            setLoading(false);
         };
         fetchValidators();
     }, []);
+    if (loading) {
+        return <Loader/>;
+    }
     return (
         <div className="txns-container">
-            <Table borderless hover>
+            <Table responsive borderless>
                 <thead>
                 <tr>
                     <th>Validator</th>
@@ -55,7 +60,7 @@ const Validators = (props) => {
                                 <td className="">{validator.status}</td>
                                 <td className="actions-td">
                                     <button type="button" className="button button-primary"
-                                            onClick={() => handleModal('Delegate', validator.operator_address)}>Delegate
+                                            onClick={() => handleModal('Delegate', validator.operator_address)}>Delegate a Validator
                                     </button>
                                     <Dropdown className="more-dropdown">
                                         <Dropdown.Toggle variant="success" id="dropdown-basic">

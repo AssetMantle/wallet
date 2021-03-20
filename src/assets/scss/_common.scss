@@ -1,6 +1,7 @@
 html, body {
   font-family: "Montserrat", sans-serif;
 }
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 12px;
@@ -50,6 +51,12 @@ html, body {
   justify-content: center;
 }
 
+.loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
 .copy-button {
   outline: none !important;
   border: 0px solid;
@@ -61,8 +68,19 @@ html, body {
   justify-content: center;
   border-radius: 50%;
   margin-left: 5px;
+
   .icon {
     width: 16px;
+  }
+}
+
+.faq-modal.modal-custom {
+  .modal-dialog {
+    max-width: 850px;
+  }
+
+  .faq-modal-body {
+    padding: 30px;
   }
 }
 
@@ -120,11 +138,13 @@ html, body {
     color: #2E3239;
     width: 150px;
   }
-  input, .amount-field, textarea {
+
+  input, .amount-field, textarea, .file-upload {
     max-width: 400px !important;
     flex: 1;
   }
-  textarea{
+
+  textarea {
     background: #F5F6FA;
     font-size: 14px;
     border-radius: 0;
@@ -148,9 +168,10 @@ html, body {
   }
 }
 
-.copy-section{
+.copy-section {
   position: relative;
-  .copy-result{
+
+  .copy-result {
     position: absolute;
     top: -15px;
     width: 100px;
@@ -166,6 +187,15 @@ html, body {
   text-align: center;
   color: #1CB76D;
 }
+
+.result-header.error {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 150%;
+  text-align: center;
+  color: #E50913;
+}
+
 .result-container {
   text-align: center;
 
@@ -190,10 +220,68 @@ html, body {
   }
 }
 
-.quiz-error{
+.note-section {
+  display: flex;
+  margin-top: 20px;
+  padding: 20px;
+  background: #FEF5F6;
+  align-items: center;
+
+  .exclamation {
+    padding-right: 25px;
+
+    .icon {
+      width: 24px;
+    }
+  }
+
+  p {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 174%;
+    color: #2E3239;
+    margin: 0;
+  }
+}
+
+.form-error {
   margin: 0;
   padding: 10px 0;
   text-align: center;
   color: #E50913;
   font-weight: 500;
+}
+
+.menmonic-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  .form-control {
+    width: 120px !important;
+    border-radius: 0;
+    margin: 5px;
+    text-align: center;
+    background: #F5F6FA;
+    border-color: #F5F6FA;
+    font-size: 14px;
+    line-height: 150%;
+    color: #2E3239;
+  }
+
+  .empty-mnemonic {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 150%;
+    text-align: center;
+    color: #2E3239;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid #E3E5F4;
+
+    &:focus {
+      border-color: #E50913;
+      box-shadow: none;
+    }
+  }
 }
