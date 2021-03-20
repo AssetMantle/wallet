@@ -25,7 +25,7 @@ const Send = () => {
         setToAddress(event.target.address.value);
         setMnemonicForm(true);
     };
-    const handleMnemonicSubmit = (evt) =>{
+    const handleMnemonicSubmit = (evt) => {
         evt.preventDefault()
         const userMnemonic = evt.target.mnemonic.value;
         const mnemonic = "tank pair spray rely any menu airport shiver boost emerge holiday siege evil grace exile comfort fence mention pig bus cable scissors ability all";
@@ -62,7 +62,8 @@ const Send = () => {
             const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
             persistence.broadcast(signedTx).then(response => {
                 setTxResponse(response)
-                console.log(response.code)});
+                console.log(response.code)
+            });
         })
     };
     return (
@@ -82,7 +83,7 @@ const Send = () => {
                         <p className="label">Send Amount</p>
                         <div className="amount-field">
                             <Form.Control
-                                type="text"
+                                type="number"
                                 name="amount"
                                 placeholder="Send Amount"
                                 value={amountField}
@@ -105,15 +106,6 @@ const Send = () => {
                             </div>
                         </div>
                     </div>
-                    {/*<div className="form-field">*/}
-                    {/*    <p className="label">Memo</p>*/}
-                    {/*    <Form.Control*/}
-                    {/*        type="text"*/}
-                    {/*        name="memo"*/}
-                    {/*        placeholder="Insert memo (optional)"*/}
-                    {/*        required={false}*/}
-                    {/*    />*/}
-                    {/*</div>*/}
                     <div className="buttons">
                         <button className="button button-primary">Send</button>
                     </div>
@@ -123,23 +115,23 @@ const Send = () => {
             {
                 mnemonicForm ?
                     <Modal show={show} onHide={handleClose} centered className="create-wallet-modal">
-                    {
-                        txResponse === '' ?
-                        <Modal.Body className="create-wallet-body import-wallet-body">
-                            <h3 className="heading">Importing Wallet
-                            </h3>
-                            <Form onSubmit={handleMnemonicSubmit}>
-                                <p className="label">Enter Seed</p>
-                                <Form.Control as="textarea" rows={5} name="mnemonic"
-                                              placeholder="Enter Seed"
-                                              required={true}/>
-                                <div className="buttons">
-                                    <button className="button button-primary">Next</button>
-                                </div>
-                            </Form>
+                        {
+                            txResponse === '' ?
+                                <Modal.Body className="create-wallet-body import-wallet-body">
+                                    <h3 className="heading">Importing Wallet
+                                    </h3>
+                                    <Form onSubmit={handleMnemonicSubmit}>
+                                        <p className="label">Enter Seed</p>
+                                        <Form.Control as="textarea" rows={3} name="mnemonic"
+                                                      placeholder="Enter Seed"
+                                                      required={true}/>
+                                        <div className="buttons">
+                                            <button className="button button-primary">Next</button>
+                                        </div>
+                                    </Form>
 
-                        </Modal.Body>
-                        : null
+                                </Modal.Body>
+                                : null
                         }
                         <>
                             {
@@ -151,16 +143,17 @@ const Send = () => {
                                         <Modal.Body className="delegate-modal-body">
                                             <div className="result-container">
                                                 <img src={success} alt="success-image"/>
-                                                <p className="tx-hash">Tx Hash: CAC4BA3C67482F09B46E129A00A86846567941555685673599559EBB5899DB3C</p>
+                                                <p className="tx-hash">Tx Hash:
+                                                    CAC4BA3C67482F09B46E129A00A86846567941555685673599559EBB5899DB3C</p>
                                                 <div className="buttons">
-                                                    <button className="button" >Done</button>
+                                                    <button className="button">Done</button>
                                                 </div>
                                             </div>
                                         </Modal.Body>
                                     </>
                                     : null
                             }
-                            </>
+                        </>
                     </Modal>
                     : null
             }

@@ -71,7 +71,7 @@ const ModalWithdraw = (props) => {
                     </div>
                     <div className="form-field">
                         <p className="label">Memo</p>
-                        <Form.Control as="textarea" rows={5} name="mnemonic"
+                        <Form.Control as="textarea" rows={3} name="mnemonic"
                                       placeholder="Enter Seed"
                                       required={true}/>
                     </div>

@@ -97,7 +97,7 @@ const ModalDelegate = (props) => {
                                 <p className="label">Send Amount</p>
                                 <div className="amount-field">
                                     <Form.Control
-                                        type="text"
+                                        type="number"
                                         name="amount"
                                         placeholder="Send Amount"
                                         value={amount}
@@ -122,7 +122,7 @@ const ModalDelegate = (props) => {
                             </div>
                             <div className="form-field">
                                 <p className="label">Memo</p>
-                                <Form.Control as="textarea" rows={5} name="mnemonic"
+                                <Form.Control as="textarea" rows={3} name="mnemonic"
                                               placeholder="Enter Seed"
                                               required={true}/>
                             </div>

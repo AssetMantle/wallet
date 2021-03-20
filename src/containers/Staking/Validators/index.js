@@ -37,7 +37,7 @@ const Validators = (props) => {
     }
     return (
         <div className="txns-container">
-            <Table borderless hover>
+            <Table responsive borderless>
                 <thead>
                 <tr>
                     <th>Validator</th>

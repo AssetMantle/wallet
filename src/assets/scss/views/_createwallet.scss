@@ -203,7 +203,9 @@
   background: radial-gradient(99.06% 99.06% at 49.65% 0.94%, #222426 0%, #282932 100%);
   .create-wallet-modal{
     height: calc( 100vh - 78px);
-    padding-top: 100px;
+    padding-top: 60px;
+    overflow-y: auto;
+    padding-bottom: 40px;
     .create-wallet-body{
       padding: 40px;
       max-width: 800px !important;

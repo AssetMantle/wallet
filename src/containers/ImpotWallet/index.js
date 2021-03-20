@@ -1,5 +1,14 @@
-import React, {useState} from "react";
-import {Form, OverlayTrigger, Popover} from "react-bootstrap";
+import React, {useContext, useState} from "react";
+import {
+    Form,
+    OverlayTrigger,
+    Popover,
+    Accordion,
+    Card,
+    Button,
+    AccordionContext,
+    useAccordionToggle
+} from "react-bootstrap";
 import Icon from "../../components/Icon";
 import wallet from "../../utils/wallet";
 import DownloadLink from "react-download-link";
@@ -18,20 +27,31 @@ const ImportWallet = (props) => {
     const [response, setResponse] = useState("");
     const [jsonName, setJsonName] = useState({});
     const [errorMessage, setErrorMessage] = useState("");
-
+    const [advanceMode, setAdvanceMode] = useState(false);
+    const [privateAdvanceMode, setPrivateAdvanceMode] = useState(false);
     const handleSubmit = async event => {
         const password = event.target.password.value;
         event.preventDefault();
         setMnemonicForm(false);
-        setResponseDataShow(true)
-        const responseData = wallet.createWallet(event.target.mnemonic.value);
+        setResponseDataShow(true);
+        let responseData;
+        if (advanceMode) {
+            let accountNumber = document.getElementById('accountNumber').value;
+            let addressIndex = document.getElementById('accountIndex').value;
+            const walletPath = wallet.getWalletPath(accountNumber, addressIndex);
+            responseData = wallet.createWallet(event.target.mnemonic.value, walletPath, "");
+            console.log(advanceMode, "ind")
+        } else {
+            responseData = wallet.createWallet(event.target.mnemonic.value);
+        }
+        console.log(responseData, "responseData");
         setResponse(responseData);
-        let mnemonic = responseData.mnemonic;
-        const mnemonicArray = mnemonic.split(' ');
-        setMnemonicList(mnemonicArray);
         if (responseData.error) {
             setErrorMessage(responseData.error);
         } else {
+            let mnemonic = responseData.mnemonic;
+            const mnemonicArray = mnemonic.split(' ');
+            setMnemonicList(mnemonicArray);
             let encryptedData = helper.createStore(responseData.mnemonic, password);
             let jsonContent = JSON.stringify(encryptedData);
             setJsonName(jsonContent);
@@ -48,7 +68,20 @@ const ImportWallet = (props) => {
             if (error.error != null) {
                 setErrorMessage(error.error)
             } else {
-                const responseData = wallet.createWallet(error.mnemonic);
+                let responseData;
+                if (advanceMode) {
+                    // let accountNumber = event.target.privateAccountNumber.value;
+                    // let addressIndex = event.target.privateAccountIndex.value;
+                    // console.log(accountNumber, addressIndex, "Raju")
+                    let accountNumber = document.getElementById('privateAccountIndex').value;
+                    let addressIndex = document.getElementById('privateAccountIndex').value;
+
+                    const walletPath = wallet.getWalletPath(accountNumber, addressIndex);
+                    responseData = wallet.createWallet(error.mnemonic, walletPath, "");
+                } else {
+                    responseData = wallet.createWallet(error.mnemonic);
+                }
+                console.log(responseData,"inside")
                 setResponse(responseData);
                 if (responseData.error) {
                     setErrorMessage(responseData.error);
@@ -76,6 +109,40 @@ const ImportWallet = (props) => {
     const handlePrivateKey = (value) => {
         setImportMnemonic(value);
     };
+
+    function ContextAwareToggle({children, eventKey, callback}) {
+        const currentEventKey = useContext(AccordionContext);
+
+        const decoratedOnClick = useAccordionToggle(
+            eventKey,
+            () => callback && callback(eventKey),
+        );
+        const handleAccordion = (event) => {
+            decoratedOnClick(event);
+            setPrivateAdvanceMode(!privateAdvanceMode)
+            setAdvanceMode(!advanceMode);
+        };
+        const isCurrentEventKey = currentEventKey === eventKey;
+
+        return (
+            <button
+                type="button"
+                className="accordion-button"
+                onClick={handleAccordion}
+            >
+                {isCurrentEventKey ?
+                    <Icon
+                        viewClass="arrow-right"
+                        icon="up-arrow"/>
+                    :
+                    <Icon
+                        viewClass="arrow-right"
+                        icon="down-arrow"/>}
+
+            </button>
+        );
+    }
+
     const popover = (
         <Popover id="popover-basic">
             <Popover.Content>
@@ -115,18 +182,46 @@ const ImportWallet = (props) => {
                                             </div>
                                             <div className="form-field">
                                                 <p className="label">Enter Seed</p>
-                                                <Form.Control as="textarea" rows={5} name="mnemonic"
+                                                <Form.Control as="textarea" rows={3} name="mnemonic"
                                                               placeholder="Enter Seed"
                                                               required={true}/>
                                             </div>
+                                            <Accordion className="advanced-wallet-accordion">
+                                                <Card>
+                                                    <Card.Header>
+                                                        <p>
+                                                            Advanced
+                                                        </p>
+                                                        <ContextAwareToggle eventKey="0">Click me!</ContextAwareToggle>
+                                                    </Card.Header>
+                                                    <Accordion.Collapse eventKey="0">
+                                                        <>
+                                                            <div className="form-field">
+                                                                <p className="label">Account</p>
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    name="accountNumber"
+                                                                    id="accountNumber"
+                                                                    placeholder="Account number"
+                                                                    required={advanceMode ? true : false}
+                                                                />
+                                                            </div>
+                                                            <div className="form-field">
+                                                                <p className="label">Account Index</p>
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    name="accountIndex"
+                                                                    id="accountIndex"
+                                                                    placeholder="Account Index"
+                                                                    required={advanceMode ? true : false}
+                                                                />
+                                                            </div>
+                                                        </>
+                                                    </Accordion.Collapse>
+                                                </Card>
+                                            </Accordion>
                                             <div className="buttons">
                                                 <button className="button button-primary">Next</button>
-                                            </div>
-                                            <div className="note-section">
-                                                <div className="exclamation"><Icon
-                                                    viewClass="arrow-right"
-                                                    icon="exclamation"/></div>
-                                                <p>This is your key json file. Please secure in a safe place</p>
                                             </div>
                                         </Form>
                                         : <Form onSubmit={handlePrivateKeySubmit}>
@@ -146,6 +241,40 @@ const ImportWallet = (props) => {
                                                 <Form.File id="exampleFormControlFile1" name="uploadFile"
                                                            className="file-upload" accept=".json" required={true}/>
                                             </div>
+                                            <Accordion className="advanced-wallet-accordion">
+                                                <Card>
+                                                    <Card.Header>
+                                                        <p>
+                                                            Advanced
+                                                        </p>
+                                                        <ContextAwareToggle eventKey="0">Click me!</ContextAwareToggle>
+                                                    </Card.Header>
+                                                    <Accordion.Collapse eventKey="0">
+                                                        <>
+                                                            <div className="form-field">
+                                                                <p className="label">Account</p>
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    name="privateAccountNumber"
+                                                                    id="privateAccountNumber"
+                                                                    placeholder="Account number"
+                                                                    required={privateAdvanceMode ? true : false}
+                                                                />
+                                                            </div>
+                                                            <div className="form-field">
+                                                                <p className="label">Account Index</p>
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    name="privateAccountIndex"
+                                                                    id="privateAccountIndex"
+                                                                    placeholder="Account Index"
+                                                                    required={privateAdvanceMode ? true : false}
+                                                                />
+                                                            </div>
+                                                        </>
+                                                    </Accordion.Collapse>
+                                                </Card>
+                                            </Accordion>
                                             {errorMessage !== ''
                                                 ? <p className="form-error">{errorMessage}</p>
                                                 : null
@@ -153,12 +282,6 @@ const ImportWallet = (props) => {
                                             }
                                             <div className="buttons">
                                                 <button className="button button-primary">Next</button>
-                                            </div>
-                                            <div className="note-section">
-                                                <div className="exclamation"><Icon
-                                                    viewClass="arrow-right"
-                                                    icon="exclamation"/></div>
-                                                <p>This is your key json file. Please secure in a safe place</p>
                                             </div>
                                         </Form>
 
@@ -207,6 +330,12 @@ const ImportWallet = (props) => {
 
                             <div className="buttons">
                                 <button className="button button-primary" onClick={handleLogin}>Next</button>
+                            </div>
+                            <div className="note-section">
+                                <div className="exclamation"><Icon
+                                    viewClass="arrow-right"
+                                    icon="exclamation"/></div>
+                                <p>This is your key json file. Please secure in a safe place</p>
                             </div>
                         </div>
                         : null

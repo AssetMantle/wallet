@@ -66,22 +66,22 @@
           color: #BEBFC1;
         }
 
-        &:hover {
+      }
 
-          .text {
-            color: #FFFFFF;
-          }
+      .item:hover, .item.active {
 
-          .icon-box {
-            background: #E50913;
+        .text {
+          color: #FFFFFF;
+        }
 
-            .icon {
-              fill: #FFFFFF;
-            }
+        .icon-box {
+          background: #E50913;
+
+          .icon {
+            fill: #FFFFFF;
           }
         }
       }
-
     }
   }
 }
@@ -273,7 +273,9 @@
         background: none !important;
         border: none !important;
       }
-
+      .dropdown-toggle::after{
+        display: none;
+      }
       .dropdown-menu {
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
         background: #FFFFFF;
@@ -489,6 +491,9 @@
         font-size: 14px;
         line-height: 150%;
         color: #8D9CB5;
+        &:first-child{
+          padding-left: 40px;
+        }
       }
     }
 
@@ -498,7 +503,7 @@
         line-height: 150%;
         padding: 15px 20px;
         color: #272931;
-
+        font-family: 'Poppins', sans-serif;
         .moniker-image {
           margin-right: 10px;
           width: 23px;
@@ -508,9 +513,20 @@
         &:first-child {
           display: flex;
           align-items: center;
+          padding-left: 40px;
+          font-size: 14px;
+          line-height: 150%;
+          color: #1A73B4;
         }
       }
     }
+  tr{
+    &:first-child{
+      td{
+        padding-top: 30px;
+      }
+    }
+  }
   }
 }
 
@@ -781,10 +797,19 @@
 .actions-td {
   display: flex;
   align-items: center;
-  padding: 5px 10px !important;
+  padding: 0px !important;
 
   .button.button-primary {
     padding: 0.2rem 0.6rem;
     font-size: 12px;
+  }
+  .dropdown-menu.show{
+    position: absolute;
+    top: 0px !important;
+    left: 0px !important;
+    margin: 0px !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: translate(-129px, 33px) !important;
   }
 }

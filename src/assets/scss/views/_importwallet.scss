@@ -15,7 +15,7 @@
     font-size: 16px;
     font-weight: 600;
     text-decoration: underline;
-    padding-bottom: 20px;
+    margin-bottom: 20px;
   }
 
   form {
@@ -74,6 +74,7 @@
 
   .mnemonic-result {
     padding: 10px 0;
+    word-break: break-word;
     margin: 0;
     text-align: center;
   }
@@ -110,4 +111,33 @@
       }
     }
   }
+}
+.advanced-wallet-accordion{
+.card{
+  border: 0px solid;
+  .card-header{
+    background: transparent;
+    padding:0  0 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    p{
+      margin: 0;
+    }
+  }
+  button{
+    border: 0px;
+    background: transparent;
+    outline: none;
+    .icon
+    {
+      width: 20px;
+    }
+  }
+  .collapse.show{
+    padding: 30px 10px;
+    border: 1px solid #E3E5F4;
+  }
+}
 }
