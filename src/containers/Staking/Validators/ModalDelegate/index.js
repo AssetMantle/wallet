@@ -225,7 +225,7 @@ const ModalDelegate = (props) => {
                                                     name="privateAccountNumber"
                                                     id="delegateAccountNumber"
                                                     placeholder="Account number"
-                                                    required={privateAdvanceMode ? true : false}
+                                                    required={advanceMode ? true : false}
                                                 />
                                             </div>
                                             <div className="form-field">
@@ -235,7 +235,7 @@ const ModalDelegate = (props) => {
                                                     name="privateAccountIndex"
                                                     id="delegateAccountIndex"
                                                     placeholder="Account Index"
-                                                    required={privateAdvanceMode ? true : false}
+                                                    required={advanceMode ? true : false}
                                                 />
                                             </div>
                                             <div className="form-field">
@@ -244,7 +244,7 @@ const ModalDelegate = (props) => {
                                                     type="password"
                                                     name="delegatebip39Passphrase"
                                                     placeholder="Enter bip39Passphrase (optional)"
-                                                    required={true}
+                                                    required={false}
                                                 />
                                             </div>
                                         </>
