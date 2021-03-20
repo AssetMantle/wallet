@@ -20,11 +20,7 @@ function MakePersistence(accountNumber, addressIndex) {
             if (!bip39.validateMnemonic(mnemonic)) throw new Error("mnemonic phrases have invalid checksums");
         }
         const seed = bip39.mnemonicToSeed(mnemonic, bip39passphrase);
-        let node;
-        seed.then( s => {
-             node = bip32.fromSeed(s)
-        })
-        // const node = bip32.fromSeed(seed);
+        const node = bip32.fromSeed(seed);
         const child = node.derivePath(this.path);
         const words = bech32.toWords(child.identifier);
         return bech32.encode(this.bech32MainPrefix, words);
