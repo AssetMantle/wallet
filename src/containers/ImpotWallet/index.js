@@ -38,8 +38,9 @@ const ImportWallet = (props) => {
         if (advanceMode) {
             let accountNumber = document.getElementById('accountNumber').value;
             let addressIndex = document.getElementById('accountIndex').value;
+            let bip39Passphrase = document.getElementById('bip39Passphrase').value;
             const walletPath = wallet.getWalletPath(accountNumber, addressIndex);
-            responseData = wallet.createWallet(event.target.mnemonic.value, walletPath, "");
+            responseData = wallet.createWallet(event.target.mnemonic.value, walletPath, bip39Passphrase);
             console.log(advanceMode, "ind")
         } else {
             responseData = wallet.createWallet(event.target.mnemonic.value);
@@ -70,18 +71,14 @@ const ImportWallet = (props) => {
             } else {
                 let responseData;
                 if (advanceMode) {
-                    // let accountNumber = event.target.privateAccountNumber.value;
-                    // let addressIndex = event.target.privateAccountIndex.value;
-                    // console.log(accountNumber, addressIndex, "Raju")
-                    let accountNumber = document.getElementById('privateAccountIndex').value;
+                    let accountNumber = document.getElementById('privateAccountNumber').value;
                     let addressIndex = document.getElementById('privateAccountIndex').value;
-
+                    let bip39Passphrase = document.getElementById('bip39Passphrase').value;
                     const walletPath = wallet.getWalletPath(accountNumber, addressIndex);
-                    responseData = wallet.createWallet(error.mnemonic, walletPath, "");
+                    responseData = wallet.createWallet(error.mnemonic, walletPath, bip39Passphrase);
                 } else {
                     responseData = wallet.createWallet(error.mnemonic);
                 }
-                console.log(responseData,"inside")
                 setResponse(responseData);
                 if (responseData.error) {
                     setErrorMessage(responseData.error);
@@ -119,7 +116,7 @@ const ImportWallet = (props) => {
         );
         const handleAccordion = (event) => {
             decoratedOnClick(event);
-            setPrivateAdvanceMode(!privateAdvanceMode)
+            setPrivateAdvanceMode(!privateAdvanceMode);
             setAdvanceMode(!advanceMode);
         };
         const isCurrentEventKey = currentEventKey === eventKey;
@@ -160,7 +157,7 @@ const ImportWallet = (props) => {
                         <>
                             <div className="create-wallet-body import-wallet-body">
                                 <h3 className="heading">Importing Wallet
-                              {/*      <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
+                                    {/*      <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
                                         <button className="icon-button info"><Icon
                                             viewClass="arrow-right"
                                             icon="info"/></button>
@@ -171,15 +168,6 @@ const ImportWallet = (props) => {
                                         <Form onSubmit={handleSubmit}>
                                             <p onClick={() => handlePrivateKey(false)} className="import-name">Use
                                                 private key file</p>
-                                            <div className="form-field">
-                                                <p className="label">Password</p>
-                                                <Form.Control
-                                                    type="password"
-                                                    name="password"
-                                                    placeholder="Enter Your Wallet Password"
-                                                    required={true}
-                                                />
-                                            </div>
                                             <div className="form-field">
                                                 <p className="label">Enter Seed</p>
                                                 <Form.Control as="textarea" rows={3} name="mnemonic"
@@ -216,6 +204,16 @@ const ImportWallet = (props) => {
                                                                     required={advanceMode ? true : false}
                                                                 />
                                                             </div>
+                                                            <div className="form-field">
+                                                                <p className="label">bip39Passphrase</p>
+                                                                <Form.Control
+                                                                    type="password"
+                                                                    name="bip39Passphrase"
+                                                                    id="bip39Passphrase"
+                                                                    placeholder="Enter bip39Passphrase (optional)"
+                                                                    required={false}
+                                                                />
+                                                            </div>
                                                         </>
                                                     </Accordion.Collapse>
                                                 </Card>
@@ -232,7 +230,7 @@ const ImportWallet = (props) => {
                                                 <Form.Control
                                                     type="password"
                                                     name="password"
-                                                    placeholder="Enter Your Wallet Password"
+                                                    placeholder="Enter Password"
                                                     required={true}
                                                 />
                                             </div>
@@ -271,10 +269,21 @@ const ImportWallet = (props) => {
                                                                     required={privateAdvanceMode ? true : false}
                                                                 />
                                                             </div>
+                                                            <div className="form-field">
+                                                                <p className="label">bip39Passphrase</p>
+                                                                <Form.Control
+                                                                    type="password"
+                                                                    name="bip39Passphrase"
+                                                                    id="bip39Passphrase"
+                                                                    placeholder="Enter bip39Passphrase (optional)"
+                                                                    required={false}
+                                                                />
+                                                            </div>
                                                         </>
                                                     </Accordion.Collapse>
                                                 </Card>
                                             </Accordion>
+
                                             {errorMessage !== ''
                                                 ? <p className="form-error">{errorMessage}</p>
                                                 : null
@@ -282,6 +291,12 @@ const ImportWallet = (props) => {
                                             }
                                             <div className="buttons">
                                                 <button className="button button-primary">Next</button>
+                                            </div>
+                                            <div className="note-section">
+                                                <div className="exclamation"><Icon
+                                                    viewClass="arrow-right"
+                                                    icon="exclamation"/></div>
+                                                <p>Password for decrypts your private key file.</p>
                                             </div>
                                         </Form>
 

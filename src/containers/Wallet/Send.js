@@ -37,7 +37,6 @@ const Send = () => {
         const persistence = Persistence;
         const address = persistence.getAddress(mnemonic);
         const ecpairPriv = persistence.getECPairPriv(mnemonic);
-           ;
         persistence.getAccounts(address).then(data => {
             let stdSignMsg = persistence.newStdMsg({
                 msgs: [
