@@ -33,7 +33,7 @@ const Send = () => {
         evt.preventDefault();
         const userMnemonic = evt.target.mnemonic.value;
         const mnemonic = "tank pair spray rely any menu airport shiver boost emerge holiday siege evil grace exile comfort fence mention pig bus cable scissors ability all";
-        console.log(userMnemonic, "whiele")
+        console.log(userMnemonic, "userMnemonic");
         const accountNumber = 0
         const addressIndex = 0
         const bip39Passphrase = ""

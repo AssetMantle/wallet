@@ -79,6 +79,7 @@ const ModalWithdraw = (props) => {
     };
     const handleSubmit = async event => {
         event.preventDefault();
+        showSeedModal(false);
         // const password = event.target.password.value;
         const mnemonic = event.target.mnemonic.value;
         console.log(mnemonic, validatorAddress, "withdraw form value") //validatorAddress taking stake.

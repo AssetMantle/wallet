@@ -61,9 +61,9 @@ const Transactions = () => {
                         let ago = moment.utc(timestamp).local().startOf('seconds').fromNow()
                         return (
                             <tr>
-                                <td className="tx-hash">
+                                <td className="tx-hash"><a href={`https://explorer.persistence.one/transactions/${stxn.txhash}`} target="_blank">
                                     {hash}
-                               </td>
+                                </a></td>
                                 <td className="type">send</td>
                                 <td className="result">success</td>
                                 <td className="amount">{amount} {amountDenom}</td>

@@ -78,6 +78,7 @@ const ModalDelegate = (props) => {
 
     const handleSubmit = async event => {
         event.preventDefault();
+        showSeedModal(false);
         const mnemonic = event.target.mnemonic.value;
         const validatorAddress = 'persistencevaloper15qsq6t6zxg60r3ljnxdpn9c6qpym2uvjl37hpl';
         let accountNumber = 0;
