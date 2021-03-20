@@ -30,8 +30,8 @@ const ImportWallet = (props) => {
     const [advanceMode, setAdvanceMode] = useState(false);
     const [privateAdvanceMode, setPrivateAdvanceMode] = useState(false);
     const handleSubmit = async event => {
-        const password = event.target.password.value;
         event.preventDefault();
+        const password = event.target.password.value;
         setMnemonicForm(false);
         setResponseDataShow(true);
         let responseData;
@@ -45,7 +45,7 @@ const ImportWallet = (props) => {
         } else {
             responseData = wallet.createWallet(event.target.mnemonic.value);
         }
-        console.log(responseData, "responseData");
+        console.log(event.target.mnemonic.value, "responseData");
         setResponse(responseData);
         if (responseData.error) {
             setErrorMessage(responseData.error);
@@ -168,6 +168,15 @@ const ImportWallet = (props) => {
                                         <Form onSubmit={handleSubmit}>
                                             <p onClick={() => handlePrivateKey(false)} className="import-name">Use
                                                 private key file</p>
+                                            <div className="form-field">
+                                                <p className="label">Password</p>
+                                                <Form.Control
+                                                    type="password"
+                                                    name="password"
+                                                    placeholder="Enter Password"
+                                                    required={true}
+                                                />
+                                            </div>
                                             <div className="form-field">
                                                 <p className="label">Enter Seed</p>
                                                 <Form.Control as="textarea" rows={3} name="mnemonic"
