@@ -80,9 +80,9 @@ const ModalDelegate = (props) => {
         event.preventDefault();
         const mnemonic = event.target.mnemonic.value;
         const validatorAddress = 'persistencevaloper15qsq6t6zxg60r3ljnxdpn9c6qpym2uvjl37hpl';
-        let accountNumber = 0
-        let addressIndex = 0
-        let bip39Passphrase = ""
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = "";
         if (advanceMode) {
             accountNumber = document.getElementById('delegateAccountNumber').value;
             addressIndex = document.getElementById('delegateAccountIndex').value;
@@ -124,7 +124,7 @@ const ModalDelegate = (props) => {
     const popover = (
         <Popover id="popover-basic">
             <Popover.Content>
-                Delegate your XPRT to Cosmostation to earn staking rewards.
+                Delegate your XPRT to {props.moniker} to earn staking rewards.
                 <p><b>Note:</b> Unstaking or Unbonding period: 21 days.</p>
             </Popover.Content>
         </Popover>
@@ -139,7 +139,7 @@ const ModalDelegate = (props) => {
             {initialModal ?
                 <>
                     <Modal.Header>
-                        Delegating to Cosmostation
+                        Delegating to {props.moniker}
                         <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
                             <button className="icon-button info"><Icon
                                 viewClass="arrow-right"
@@ -193,7 +193,7 @@ const ModalDelegate = (props) => {
             {seedModal ?
                 <>
                     <Modal.Header>
-                        Delegating to Cosmostation
+                        Delegating to {props.moniker}
                         <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
                             <button className="icon-button info"><Icon
                                 viewClass="arrow-right"

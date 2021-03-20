@@ -4,3 +4,5 @@ export const getDelegationsUnbondUrl = (address) => `${API_URL}/cosmos/staking/v
 export const getDelegationsUrl = (address) => `${API_URL}/cosmos/staking/v1beta1/delegations/${address}`;
 export const getValidatorsUrl = () => `${API_URL}/cosmos/staking/v1beta1/validators`;
 export const getValidatorUrl = (address) => `${API_URL}/cosmos/staking/v1beta1/validators/${address}`;
+export const getBalanceUrl = (address) => `${API_URL}/cosmos/bank/v1beta1/balances/${address}`;
+export const getSendTransactionsUrl = (address) => `${API_URL}/txs?message.sender=${address}`;

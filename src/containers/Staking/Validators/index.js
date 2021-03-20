@@ -12,9 +12,13 @@ import Loader from "../../../components/Loader";
 const Validators = (props) => {
     const [modalDelegate, setModalOpen] = useState();
     const [loading, setLoading] = useState(true);
+    const [address, setAddress] = useState('');
+    const [moniker, setMoniker] = useState('');
     const [validatorsList, setValidatorsList] = useState([]);
-    const handleModal = (name) => {
-        setModalOpen(name)
+    const handleModal = (name, address, validator) => {
+        setModalOpen(name);
+        setMoniker(validator);
+        setAddress(address);
     };
     useEffect(() => {
         const fetchValidators = async () => {
@@ -60,7 +64,7 @@ const Validators = (props) => {
                                 <td className="">{validator.status}</td>
                                 <td className="actions-td">
                                     <button type="button" className="button button-primary"
-                                            onClick={() => handleModal('Delegate', validator.operator_address)}>Delegate a Validator
+                                            onClick={() => handleModal('Delegate', validator.operator_address, validator.description.moniker)}>Delegate a Validator
                                     </button>
                                     <Dropdown className="more-dropdown">
                                         <Dropdown.Toggle variant="success" id="dropdown-basic">
@@ -69,11 +73,11 @@ const Validators = (props) => {
 
                                         <Dropdown.Menu>
                                             <Dropdown.Item
-                                                onClick={() => handleModal('Redelegate', validator.operator_address)}>Redelegate</Dropdown.Item>
+                                                onClick={() => handleModal('Redelegate', validator.operator_address, validator.description.moniker)}>Redelegate</Dropdown.Item>
                                             <Dropdown.Item
-                                                onClick={() => handleModal('Unbond', validator.operator_address)}>Unbond</Dropdown.Item>
+                                                onClick={() => handleModal('Unbond', validator.operator_address, validator.description.moniker)}>Unbond</Dropdown.Item>
                                             <Dropdown.Item
-                                                onClick={() => handleModal('Withdraw', validator.operator_address)}>Claim
+                                                onClick={() => handleModal('Withdraw', validator.operator_address, validator.description.moniker)}>Claim
                                                 Rewards</Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>
@@ -87,22 +91,22 @@ const Validators = (props) => {
             </Table>
             {
                 modalDelegate === 'Delegate' ?
-                    <ModalDelegate setModalOpen={setModalOpen}/>
+                    <ModalDelegate setModalOpen={setModalOpen} validatorAddress={address} moniker={moniker}/>
                     : null
             }
             {
                 modalDelegate === 'Redelegate' ?
-                    <ModalReDelegate setModalOpen={setModalOpen}/>
+                    <ModalReDelegate setModalOpen={setModalOpen} validatorAddress={address} moniker={moniker}/>
                     : null
             }
             {
                 modalDelegate === 'Unbond' ?
-                    <ModalUnbond setModalOpen={setModalOpen}/>
+                    <ModalUnbond setModalOpen={setModalOpen} validatorAddress={address} moniker={moniker}/>
                     : null
             }
             {
                 modalDelegate === 'Withdraw' ?
-                    <ModalWithdraw setModalOpen={setModalOpen}/>
+                    <ModalWithdraw setModalOpen={setModalOpen} validatorAddress={address} moniker={moniker}/>
                     : null
             }
         </div>

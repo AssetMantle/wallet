@@ -12,6 +12,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
+
 const ModalReDelegate = (props) => {
     const [amount, setAmount] = useState(0);
     const [show, setShow] = useState(true);
@@ -90,12 +91,12 @@ const ModalReDelegate = (props) => {
         let addressIndex = 0
         let bip39Passphrase = ""
         if (advanceMode) {
-             accountNumber = document.getElementById('redelegateAccountNumber').value;
-             addressIndex = document.getElementById('redelegateAccountIndex').value;
-             bip39Passphrase = document.getElementById('redelegatebip39Passphrase').value;
+            accountNumber = document.getElementById('redelegateAccountNumber').value;
+            addressIndex = document.getElementById('redelegateAccountIndex').value;
+            bip39Passphrase = document.getElementById('redelegatebip39Passphrase').value;
         }
-        const persistence = MakePersistence(accountNumber,addressIndex);
-        const address = persistence.getAddress(mnemonic, bip39Passphrase,true);
+        const persistence = MakePersistence(accountNumber, addressIndex);
+        const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
         const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
 
 
@@ -130,15 +131,7 @@ const ModalReDelegate = (props) => {
         });
         console.log(amount, mnemonic, validatorAddress, "redelegate form value") //amount taking stake.
     };
-    const popover = (
-        <Popover id="popover-basic">
-            <Popover.Content>
-                Delegate your XPRT to Cosmostation to earn staking rewards. You can claim your staking rewards from the
-                rewards section on the staking interface.
-                <p><b>Note:</b> Unstaking/Unbonding on Persistence takes 21 days.</p>
-            </Popover.Content>
-        </Popover>
-    );
+
     return (
         <Modal
             animation={false}
@@ -149,12 +142,7 @@ const ModalReDelegate = (props) => {
             {initialModal ?
                 <>
                     <Modal.Header>
-                        Redelegating to Cosmostation
-                        <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
-                            <button className="icon-button info"><Icon
-                                viewClass="arrow-right"
-                                icon="info"/></button>
-                        </OverlayTrigger>
+                        Redelegating to {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={handleSubmitInitialData}>
@@ -211,12 +199,7 @@ const ModalReDelegate = (props) => {
             {seedModal ?
                 <>
                     <Modal.Header>
-                        Redelegating to Cosmostation
-                        <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
-                            <button className="icon-button info"><Icon
-                                viewClass="arrow-right"
-                                icon="info"/></button>
-                        </OverlayTrigger>
+                        Redelegating to {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={handleSubmit}>

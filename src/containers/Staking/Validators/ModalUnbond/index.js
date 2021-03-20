@@ -135,7 +135,7 @@ const ModalUnbond = (props) => {
             {initialModal ?
                 <>
                     <Modal.Header>
-                        Unbonding to Cosmostation
+                        Unbonding to {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={handleSubmitInitialData}>
@@ -192,7 +192,7 @@ const ModalUnbond = (props) => {
             {seedModal ?
                 <>
                     <Modal.Header>
-                        Unbonding to Cosmostation
+                        Unbonding to {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={handleSubmit}>
