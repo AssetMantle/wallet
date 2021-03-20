@@ -38,5 +38,13 @@
         <symbol id="icon-down-arrow" fill="none" viewBox="0 0 12 12">
             <path d="M12 6A6 6 0 1 0 0 6a6 6 0 0 0 12 0zM2.842 4.863l.896-.884L6 6.235l2.262-2.256.896.89L6 8.027 2.842 4.863z" fill="#8D9CB5" fill-opacity=".48"/>
         </symbol>
+        <symbol id="icon-success" fill="none" viewBox="0 0 14 11">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M13.67 2.239l-7.851 8.166a1.078 1.078 0 0 1-1.574 0L.328 6.295a1.194 1.194 0 0 1 0-1.643 1.078 1.078 0 0 1 1.574 0l3.147 3.287L12.114.595a1.078 1.078 0 0 1 1.573 0c.42.455.42 1.19-.017 1.644z" fill="#4FBE89"/>
+        </symbol>
+        <symbol id="icon-pending" fill="none" viewBox="0 0 16 6">
+            <circle cx="2" cy="4" r="2" fill="#FFC554"/>
+            <circle cx="8" cy="2" r="2" fill="#FFC554"/>
+            <circle cx="14" cy="4" r="2" fill="#FFC554"/>
+        </symbol>
     </defs>
 </svg>

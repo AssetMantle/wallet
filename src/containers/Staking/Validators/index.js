@@ -31,6 +31,7 @@ const Validators = (props) => {
                 const validatorResponse = await axios.get(validatorUrl);
                 validators.push(validatorResponse.data.validator);
             }
+            console.log(validators, "validators")
             setValidatorsList(validators);
             setLoading(false);
         };
@@ -46,15 +47,16 @@ const Validators = (props) => {
                 <tr>
                     <th>Validator</th>
                     <th>Voting Power</th>
-                    <th>Comission</th>
+                    <th>Commission</th>
                     <th>Status</th>
-                    <th>Delegate</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
                 {
                     validatorsList.map((validator, index) => {
-                        let commissionRate = parseFloat(validator.commission.commission_rates.rate);
+                        let commissionRate = validator.commission.commission_rates.rate * 100;
+                        commissionRate = parseFloat(commissionRate.toFixed(2)).toLocaleString();
                         return (
                             <tr>
                                 <td className=""><Avatar

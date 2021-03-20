@@ -206,21 +206,66 @@
           line-height: 150%;
           font-family: 'Poppins', sans-serif;
           color: #8D9CB5;
+          padding: 15px 20px;
+          &:first-child{
+            padding-left: 40px;
+          }
         }
       }
 
       tbody {
+        tr:first-child td {
+          padding-top: 30px;
+        }
         td {
           font-size: 14px;
           line-height: 150%;
-          color: #8D9CB5;
+          padding: 15px 20px;
+          &:first-child{
+            padding-left: 40px;
+            max-width: 150px;
+          }
         }
-
-        .tx-hash {
+        .result{
+          .icon-box{
+            width: 30px;
+            display: flex;
+            border-radius: 7px;
+            padding: 5px;
+            align-items: center;
+            justify-content: center;
+            height: 30px;
+            .icon{
+              width: 16px;
+            }
+          }
+          .icon-box.success{
+            background: #E5F6EE;
+          }
+        }
+        .type{
+          color: #8D9CB5;
+          font-family: 'Poppins', sans-serif;
+        }
+        .tx-hash a{
           color: #1A73B4;
         }
 
         .type {
+          color: #8D9CB5;
+        }
+        .amount{
+          font-family: 'Poppins', sans-serif;
+          font-weight: 500;
+        }
+        .fee{
+          font-family: 'Poppins', sans-serif;
+          color: #8D9CB5;
+        }
+        .height{
+          color: #1A73B4;
+        }
+        .time{
           color: #8D9CB5;
         }
       }

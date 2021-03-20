@@ -4,6 +4,7 @@ import {getDelegationsUrl, getSendTransactionsUrl, getValidatorUrl} from "../../
 import moment from 'moment';
 import axios from "axios";
 import helper from "../../utils/helper";
+import Icon from "../../components/Icon";
 const Transactions = () => {
     const [sendTransactionsList, setSendTransactionsList] = useState([]);
     useEffect(() => {
@@ -65,7 +66,13 @@ const Transactions = () => {
                                     {hash}
                                 </a></td>
                                 <td className="type">send</td>
-                                <td className="result">success</td>
+                                <td className="result">
+                                    <span className="icon-box success">
+                                        <Icon
+                                            viewClass="arrow-right"
+                                            icon="success"/>
+                                    </span>
+                                </td>
                                 <td className="amount">{amount} {amountDenom}</td>
                                 <td className="fee">{fee} {feeDenom}</td>
                                 <td className="height">{height}</td>
