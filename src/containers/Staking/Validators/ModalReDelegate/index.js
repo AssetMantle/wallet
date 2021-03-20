@@ -2,7 +2,7 @@ import {Form, Modal, OverlayTrigger, Popover} from 'react-bootstrap';
 import React, {useState, useEffect} from 'react';
 import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
-import Persistence from "../../../../utils/cosmosjsWrapper";
+import MakePersistence from "../../../../utils/cosmosjsWrapper";
 const ModalReDelegate = (props) => {
     const [amount, setAmount] = useState(0);
     const [show, setShow] = useState(true);
@@ -28,9 +28,13 @@ const ModalReDelegate = (props) => {
         const toValidatorAddress = event.target.toAddress.value;
         const validatorAddress = 'persistencevaloper15qsq6t6zxg60r3ljnxdpn9c6qpym2uvjl37hpl';
 
-        const persistence = Persistence;
-        const address = persistence.getAddress(mnemonic);
-        const ecpairPriv = persistence.getECPairPriv(mnemonic);
+        const accountNumber = 0
+        const addressIndex = 0
+        const bip39Passphrase = ""
+        const persistence = MakePersistence(accountNumber,addressIndex);
+        const address = persistence.getAddress(mnemonic, bip39Passphrase,true);
+        const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
+
 
 
         persistence.getAccounts(address).then(data => {

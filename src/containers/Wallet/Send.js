@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import {Form, Modal as ReactModal, Modal, OverlayTrigger} from "react-bootstrap";
-import Persistence from "../../utils/cosmosjsWrapper"
 import Icon from "../../components/Icon";
 import success from "../../assets/images/success.svg";
+import MakePersistence from "../../utils/cosmosjsWrapper";
 
 const Send = () => {
     const [amountField, setAmountField] = useState(0);
@@ -30,9 +30,12 @@ const Send = () => {
         const userMnemonic = evt.target.mnemonic.value;
         const mnemonic = "tank pair spray rely any menu airport shiver boost emerge holiday siege evil grace exile comfort fence mention pig bus cable scissors ability all";
 
-        const persistence = Persistence;
-        const address = persistence.getAddress(mnemonic);
-        const ecpairPriv = persistence.getECPairPriv(mnemonic);
+        const accountNumber = 0
+        const addressIndex = 0
+        const bip39Passphrase = ""
+        const persistence = MakePersistence(accountNumber,addressIndex);
+        const address = persistence.getAddress(mnemonic, bip39Passphrase,true);
+        const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
 
 
         persistence.getAccounts(address).then(data => {
@@ -52,7 +55,7 @@ const Send = () => {
                         }
                     }
                 ],
-                chain_id: Persistence.chainId,
+                chain_id: persistence.chainId,
                 fee: {amount: [{amount: String(0), denom: "upxrt"}], gas: String(200000)},
                 memo: "",
                 account_number: String(data.account.account_number),
