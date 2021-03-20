@@ -19,7 +19,7 @@ function MakePersistence(accountNumber, addressIndex) {
         if (checkSum) {
             if (!bip39.validateMnemonic(mnemonic)) throw new Error("mnemonic phrases have invalid checksums");
         }
-        const seed = bip39.mnemonicToSeed(mnemonic, bip39passphrase);
+        const seed = bip39.mnemonicToSeedSync(mnemonic, bip39passphrase);
         const node = bip32.fromSeed(seed);
         const child = node.derivePath(this.path);
         const words = bech32.toWords(child.identifier);
@@ -29,7 +29,7 @@ function MakePersistence(accountNumber, addressIndex) {
         if (typeof mnemonic !== "string") {
             throw new Error("mnemonic expects a string")
         }
-        const seed = bip39.mnemonicToSeed(mnemonic, bip39passphrase);
+        const seed = bip39.mnemonicToSeedSync(mnemonic, bip39passphrase);
         const node = bip32.fromSeed(seed);
         const child = node.derivePath(this.path);
         const ecpair = bitcoinjs.ECPair.fromPrivateKey(child.privateKey, {compressed : false})
