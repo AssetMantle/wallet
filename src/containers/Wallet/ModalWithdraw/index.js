@@ -7,6 +7,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import axios from "axios";
 import Icon from "../../../components/Icon";
+import MakePersistence from "../../../utils/cosmosjsWrapper";
+
 const ModalWithdraw = (props) => {
     const [show, setShow] = useState(true);
     const [validatorAddress, setValidatorAddress] = useState('');
@@ -29,14 +31,14 @@ const ModalWithdraw = (props) => {
                 validators.push(validatorResponse.data.validator);
             }
             setValidatorsList(validators);
-            console.log(validators, "validator_address");
         };
         fetchValidators();
-    },[]);
-    const handleClose = (amount) =>{
-        setShow(false)
+    }, []);
+    const handleClose = (amount) => {
+        setShow(false);
         props.setRewards(false)
-    }
+    };
+
     function ContextAwareToggle({children, eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 
@@ -82,14 +84,48 @@ const ModalWithdraw = (props) => {
         showSeedModal(false);
         // const password = event.target.password.value;
         const mnemonic = event.target.mnemonic.value;
-        console.log(mnemonic, validatorAddress, "withdraw form value") //validatorAddress taking stake.
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = "";
+        if (advanceMode) {
+            accountNumber = document.getElementById('claimTotalAccountNumber').value;
+            addressIndex = document.getElementById('claimTotalAccountIndex').value;
+            bip39Passphrase = document.getElementById('claimTotalbip39Passphrase').value;
+        }
+        const persistence = MakePersistence(accountNumber, addressIndex);
+        const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
+        const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
 
+
+        persistence.getAccounts(address).then(data => {
+            let stdSignMsg = persistence.newStdMsg({
+                msgs: [
+                    {
+                        type: "cosmos-sdk/MsgWithdrawDelegationReward",
+                        value: {
+                            delegator_address: address,
+                            validator_address: validatorAddress
+                        }
+                    }
+                ],
+                chain_id: persistence.chainId,
+                fee: {amount: [{amount: String(5000), denom: "uxprt"}], gas: String(200000)},
+                memo: memoContent,
+                account_number: String(data.account.account_number),
+                sequence: String(data.account.sequence)
+            });
+
+            const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
+            persistence.broadcast(signedTx).then(response => {
+                setResponse(response);
+                console.log(response.code)
+            });
+        });
 
     };
-    const onChangeSelect = (evt) =>{
+    const onChangeSelect = (evt) => {
         setValidatorAddress(evt.target.value)
-        console.log(evt.target.value, "rakji")
-    }
+    };
     return (
         <Modal
             animation={false}
@@ -108,7 +144,8 @@ const ModalWithdraw = (props) => {
                             <div className="form-field">
                                 <p className="label">Select Validator</p>
 
-                                <Select value={validatorAddress} className="validators-list-selection" onChange={onChangeSelect} displayEmpty>
+                                <Select value={validatorAddress} className="validators-list-selection"
+                                        onChange={onChangeSelect} displayEmpty>
                                     <MenuItem value="">
                                         <em>None</em>
                                     </MenuItem>
@@ -128,7 +165,7 @@ const ModalWithdraw = (props) => {
                                 <p className="label">Total Available</p>
                                 <div className="available-tokens">
                                     <img src={icon} alt="icon"/>
-                                    <p className="tokens">4.534 <span>XPRT</span></p>
+                                    <p className="tokens">{props.totalRewards} <span>XPRT</span></p>
                                     <p className="usd">=$194.04</p>
                                 </div>
                             </div>

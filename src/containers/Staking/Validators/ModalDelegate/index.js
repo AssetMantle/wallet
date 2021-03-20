@@ -118,9 +118,8 @@ const ModalDelegate = (props) => {
             const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
             persistence.broadcast(signedTx).then(response => {
                 setResponse(response)
-                console.log(response.code)});
+                console.log(response, "delegate response")});
         });
-        console.log(amount, mnemonic, validatorAddress, "delegate form value") //amount taking stake.
     };
     const popover = (
         <Popover id="popover-basic">

@@ -73,9 +73,9 @@ const ModalWithdraw = (props) => {
         const mnemonic = event.target.mnemonic.value;
         const validatorAddress = 'persistencevaloper15qsq6t6zxg60r3ljnxdpn9c6qpym2uvjl37hpl';
 
-        let accountNumber = 0
-        let addressIndex = 0
-        let bip39Passphrase = ""
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = "";
         if (advanceMode) {
             accountNumber = document.getElementById('claimAccountNumber').value;
             addressIndex = document.getElementById('claimAccountIndex').value;
@@ -107,7 +107,7 @@ const ModalWithdraw = (props) => {
             const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
             persistence.broadcast(signedTx).then(response => {
                 setResponse(response);
-                console.log(response.code)
+                console.log(response)
             });
         });
 
@@ -221,7 +221,7 @@ const ModalWithdraw = (props) => {
                 response !== '' && response.code === undefined ?
                     <>
                         <Modal.Header className="result-header success">
-                            Successfully Delegated!
+                            Successfully Claimed Rewards!
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
@@ -239,7 +239,7 @@ const ModalWithdraw = (props) => {
                 response !== '' && response.code !== undefined ?
                     <>
                         <Modal.Header className="result-header error">
-                            Failed to Delegate
+                            Failed to Claimed Rewards
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">

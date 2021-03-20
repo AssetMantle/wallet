@@ -119,7 +119,7 @@ const ModalUnbond = (props) => {
             const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
             persistence.broadcast(signedTx).then(response => {
                 setResponse(response);
-                console.log(response.code)
+                console.log(response)
             });
         });
 
@@ -260,7 +260,7 @@ const ModalUnbond = (props) => {
                 response !== '' && response.code === undefined ?
                     <>
                         <Modal.Header className="result-header success">
-                            Successfully Delegated!
+                            Successfully Unbonded!
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
@@ -278,7 +278,7 @@ const ModalUnbond = (props) => {
                 response !== '' && response.code !== undefined ?
                     <>
                         <Modal.Header className="result-header error">
-                            Failed to Delegate
+                            Failed to Unbonded
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">

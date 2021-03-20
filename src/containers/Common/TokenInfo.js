@@ -76,7 +76,7 @@ const TokenInfo = () => {
                 </div>
             </div>
             {rewards ?
-                <ModalWithdraw setRewards={setRewards}/>
+                <ModalWithdraw setRewards={setRewards} totalRewards={totalRewards}/>
                 : null
             }
 

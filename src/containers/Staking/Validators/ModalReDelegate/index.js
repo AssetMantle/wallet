@@ -127,7 +127,7 @@ const ModalReDelegate = (props) => {
             const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
             persistence.broadcast(signedTx).then(response => {
                 setResponse(response);
-                console.log(response.code)
+                console.log(response)
             });
         });
         console.log(amount, mnemonic, validatorAddress, "redelegate form value") //amount taking stake.
@@ -266,7 +266,7 @@ const ModalReDelegate = (props) => {
                 response !== '' && response.code === undefined ?
                     <>
                         <Modal.Header className="result-header success">
-                            Successfully Delegated!
+                            Successfully Redelegated!
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
@@ -284,7 +284,7 @@ const ModalReDelegate = (props) => {
                 response !== '' && response.code !== undefined ?
                     <>
                         <Modal.Header className="result-header error">
-                            Failed to Delegate
+                            Failed to Redelegated
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
