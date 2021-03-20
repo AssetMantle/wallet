@@ -1,5 +1,14 @@
-import React, {useState} from "react";
-import {Form, Modal, OverlayTrigger, Popover} from "react-bootstrap";
+import React, {useContext, useState} from "react";
+import {
+    Accordion,
+    AccordionContext,
+    Card,
+    Form,
+    Modal,
+    OverlayTrigger,
+    Popover,
+    useAccordionToggle
+} from "react-bootstrap";
 import Icon from "../../components/Icon";
 import success from "../../assets/images/success.svg";
 import MakePersistence from "../../utils/cosmosjsWrapper";
@@ -10,6 +19,7 @@ const Send = () => {
     const [txResponse, setTxResponse] = useState('');
     const [mnemonicForm, setMnemonicForm] = useState(false);
     const [show, setShow] = useState(true);
+    const [advanceMode, setAdvanceMode] = useState(false);
     const handleAmount = (amount) => {
         setAmountField(amount)
     };
@@ -29,6 +39,37 @@ const Send = () => {
         setMnemonicForm(true);
         setShow(true);
     };
+    function ContextAwareToggle({children, eventKey, callback}) {
+        const currentEventKey = useContext(AccordionContext);
+
+        const decoratedOnClick = useAccordionToggle(
+            eventKey,
+            () => callback && callback(eventKey),
+        );
+        const handleAccordion = (event) => {
+            decoratedOnClick(event);
+            setAdvanceMode(!advanceMode);
+        };
+        const isCurrentEventKey = currentEventKey === eventKey;
+
+        return (
+            <button
+                type="button"
+                className="accordion-button"
+                onClick={handleAccordion}
+            >
+                {isCurrentEventKey ?
+                    <Icon
+                        viewClass="arrow-right"
+                        icon="up-arrow"/>
+                    :
+                    <Icon
+                        viewClass="arrow-right"
+                        icon="down-arrow"/>}
+
+            </button>
+        );
+    }
     const handleMnemonicSubmit = (evt) => {
         evt.preventDefault();
         const userMnemonic = evt.target.mnemonic.value;
@@ -40,8 +81,6 @@ const Send = () => {
         const persistence = MakePersistence(accountNumber, addressIndex);
         const address = persistence.getAddress(userMnemonic, bip39Passphrase, true);
         const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
-
-
         persistence.getAccounts(address).then(data => {
             let stdSignMsg = persistence.newStdMsg({
                 msgs: [
@@ -60,7 +99,7 @@ const Send = () => {
                     }
                 ],
                 chain_id: persistence.chainId,
-                fee: {amount: [{amount: String(0), denom: "upxrt"}], gas: String(200000)},
+                fee: {amount: [{amount: String(0), denom: "upxrt"}], gas: String(250000)},
                 memo: "",
                 account_number: String(data.account.account_number),
                 sequence: String(data.account.sequence)
@@ -137,15 +176,61 @@ const Send = () => {
                         {
                             txResponse === '' ?
                                 <Modal.Body className="create-wallet-body import-wallet-body">
-                                    <h3 className="heading">Importing Wallet
+                                    <h3 className="heading">Send Token
                                     </h3>
                                     <Form onSubmit={handleMnemonicSubmit}>
-                                        <p className="label">Enter Seed</p>
-                                        <Form.Control as="textarea" rows={3} name="mnemonic"
-                                                      placeholder="Enter Seed"
-                                                      required={true}/>
+                                        <div className="form-field">
+                                            <p className="label">Mnemonic</p>
+                                            <Form.Control as="textarea" rows={3} name="mnemonic"
+                                                          placeholder="Enter Mnemonic"
+                                                          required={true}/>
+                                        </div>
+                                        <Accordion className="advanced-wallet-accordion">
+                                            <Card>
+                                                <Card.Header>
+                                                    <p>
+                                                        Advanced
+                                                    </p>
+                                                    <ContextAwareToggle eventKey="0">Click me!</ContextAwareToggle>
+                                                </Card.Header>
+                                                <Accordion.Collapse eventKey="0">
+                                                    <>
+                                                        <div className="form-field">
+                                                            <p className="label">Account</p>
+                                                            <Form.Control
+                                                                type="text"
+                                                                name="privateAccountNumber"
+                                                                id="unbondAccountNumber"
+                                                                placeholder="Account number"
+                                                                required={advanceMode ? true : false}
+                                                            />
+                                                        </div>
+                                                        <div className="form-field">
+                                                            <p className="label">Account Index</p>
+                                                            <Form.Control
+                                                                type="text"
+                                                                name="privateAccountIndex"
+                                                                id="unbondAccountIndex"
+                                                                placeholder="Account Index"
+                                                                required={advanceMode ? true : false}
+                                                            />
+                                                        </div>
+                                                        <div className="form-field">
+                                                            <p className="label">bip39Passphrase</p>
+                                                            <Form.Control
+                                                                type="password"
+                                                                name="bip39Passphrase"
+                                                                id="unbondbip39Passphrase"
+                                                                placeholder="Enter bip39Passphrase (optional)"
+                                                                required={false}
+                                                            />
+                                                        </div>
+                                                    </>
+                                                </Accordion.Collapse>
+                                            </Card>
+                                        </Accordion>
                                         <div className="buttons">
-                                            <button className="button button-primary">Next</button>
+                                            <button className="button button-primary">Send</button>
                                         </div>
                                     </Form>
 

@@ -70,9 +70,14 @@ function decryptStore(fileData, password) {
     }
 }
 
+function isActive(item) {
+    return item.jailed === false && item.status === 'BOND_STATUS_BONDED';
+}
+
 module.exports = {
     randomNum,
     stringTruncate,
     createStore,
-    decryptStore
+    decryptStore,
+    isActive
 };

@@ -106,7 +106,7 @@ const ModalUnbond = (props) => {
                     }
                 ],
                 chain_id: persistence.chainId,
-                fee: {amount: [{amount: String(5000), denom: "uxprt"}], gas: String(200000)},
+                fee: {amount: [{amount: String(5000), denom: "uxprt"}], gas: String(250000)},
                 memo: memoContent,
                 account_number: String(data.account.account_number),
                 sequence: String(data.account.sequence)
@@ -176,7 +176,7 @@ const ModalUnbond = (props) => {
                                 <p className="label">Memo</p>
                                 <Form.Control as="textarea" rows={3} name="memo"
                                               placeholder="Enter Memo"
-                                              required={true}/>
+                                              required={false}/>
                             </div>
                             <div className="buttons">
                                 <button className="button button-primary">Next</button>
@@ -197,7 +197,7 @@ const ModalUnbond = (props) => {
                                 <p className="label">Mnemonic</p>
                                 <Form.Control as="textarea" rows={3} name="mnemonic"
                                               placeholder="Enter Mnemonic"
-                                              required={true}/>
+                                              required={false}/>
                             </div>
                             <Accordion className="advanced-wallet-accordion">
                                 <Card>
@@ -236,7 +236,7 @@ const ModalUnbond = (props) => {
                                                     name="bip39Passphrase"
                                                     id="unbondbip39Passphrase"
                                                     placeholder="Enter bip39Passphrase (optional)"
-                                                    required={true}
+                                                    required={false}
                                                 />
                                             </div>
                                         </>

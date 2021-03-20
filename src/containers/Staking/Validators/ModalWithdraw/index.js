@@ -95,7 +95,7 @@ const ModalWithdraw = (props) => {
                     }
                 ],
                 chain_id: persistence.chainId,
-                fee: {amount: [{amount: String(5000), denom: "uxprt"}], gas: String(200000)},
+                fee: {amount: [{amount: String(5000), denom: "uxprt"}], gas: String(250000)},
                 memo: memoContent,
                 account_number: String(data.account.account_number),
                 sequence: String(data.account.sequence)
@@ -136,7 +136,7 @@ const ModalWithdraw = (props) => {
                                 <p className="label">Memo</p>
                                 <Form.Control as="textarea" rows={3} name="memo"
                                               placeholder="Enter Memo"
-                                              required={true}/>
+                                              required={false}/>
                             </div>
                             <div className="buttons">
                                 <button className="button button-primary">Next</button>
