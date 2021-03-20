@@ -201,7 +201,7 @@ const ModalReDelegate = (props) => {
                                               required={true}/>
                             </div>
                             <div className="buttons">
-                                <button className="button button-primary">Delegate</button>
+                                <button className="button button-primary">Next</button>
                             </div>
                         </Form>
                     </Modal.Body>
@@ -270,7 +270,7 @@ const ModalReDelegate = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <button className="button button-primary">Delegate</button>
+                                <button className="button button-primary">Redelegate</button>
                             </div>
                         </Form>
                     </Modal.Body>

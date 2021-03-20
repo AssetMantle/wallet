@@ -24,7 +24,7 @@ function MakePersistence(accountNumber, addressIndex) {
         const child = node.derivePath(this.path);
         const words = bech32.toWords(child.identifier);
         return bech32.encode(this.bech32MainPrefix, words);
-    }
+    };
     Persistence.getECPairPriv = function(mnemonic, bip39passphrase = "") {
         if (typeof mnemonic !== "string") {
             throw new Error("mnemonic expects a string")

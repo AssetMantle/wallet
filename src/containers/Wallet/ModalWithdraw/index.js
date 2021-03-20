@@ -1,17 +1,22 @@
-import {Form, Modal as ReactModal} from 'react-bootstrap';
-import React, {useState, useEffect} from 'react';
+import {Accordion, AccordionContext, Card, Form, Modal, useAccordionToggle} from 'react-bootstrap';
+import React, {useState, useEffect, useContext} from 'react';
 import success from "../../../assets/images/success.svg";
 import icon from "../../../assets/images/icon.svg";
 import {getDelegationsUrl, getValidatorUrl} from "../../../constants/url";
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import axios from "axios";
+import Icon from "../../../components/Icon";
 const ModalWithdraw = (props) => {
     const [show, setShow] = useState(true);
     const [validatorAddress, setValidatorAddress] = useState('');
-    const [response, setResponse] = useState(false);
+    const [response, setResponse] = useState('');
     const [validatorsList, setValidatorsList] = useState([]);
-
+    const [advanceMode, setAdvanceMode] = useState(false);
+    const [privateAdvanceMode, setPrivateAdvanceMode] = useState(false);
+    const [initialModal, setInitialModal] = useState(true);
+    const [seedModal, showSeedModal] = useState(false);
+    const [memoContent, setMemoContent] = useState('');
     useEffect(() => {
         const fetchValidators = async () => {
             const delegationsUrl = getDelegationsUrl('persistence1095fgex3h37zl4yjptnsd7qfmspesvav7xhgwt');
@@ -32,32 +37,73 @@ const ModalWithdraw = (props) => {
         setShow(false)
         props.setRewards(false)
     }
+    function ContextAwareToggle({children, eventKey, callback}) {
+        const currentEventKey = useContext(AccordionContext);
 
+        const decoratedOnClick = useAccordionToggle(
+            eventKey,
+            () => callback && callback(eventKey),
+        );
+        const handleAccordion = (event) => {
+            decoratedOnClick(event);
+            setPrivateAdvanceMode(!privateAdvanceMode);
+            setAdvanceMode(!advanceMode);
+        };
+        const isCurrentEventKey = currentEventKey === eventKey;
+
+        return (
+            <button
+                type="button"
+                className="accordion-button"
+                onClick={handleAccordion}
+            >
+                {isCurrentEventKey ?
+                    <Icon
+                        viewClass="arrow-right"
+                        icon="up-arrow"/>
+                    :
+                    <Icon
+                        viewClass="arrow-right"
+                        icon="down-arrow"/>}
+
+            </button>
+        );
+    }
+
+    const handleSubmitInitialData = async event => {
+        event.preventDefault();
+        const memo = event.target.memo.value;
+        setMemoContent(memo);
+        setInitialModal(false);
+        showSeedModal(true);
+    };
     const handleSubmit = async event => {
         event.preventDefault();
-        const password = event.target.password.value;
+        // const password = event.target.password.value;
         const mnemonic = event.target.mnemonic.value;
-        console.log(password, mnemonic, validatorAddress, "withdraw form value") //validatorAddress taking stake.
+        console.log(mnemonic, validatorAddress, "withdraw form value") //validatorAddress taking stake.
+
+
     };
     const onChangeSelect = (evt) =>{
         setValidatorAddress(evt.target.value)
         console.log(evt.target.value, "rakji")
     }
     return (
-        <ReactModal
+        <Modal
             animation={false}
             centered={true}
             keyboard={false}
             show={show}
             className="modal-custom claim-rewards-modal"
             onHide={handleClose}>
-            {!response ?
+            {initialModal ?
                 <>
-                    <ReactModal.Header>
+                    <Modal.Header>
                         Claiming Rewards
-                    </ReactModal.Header>
-                    <ReactModal.Body className="rewards-modal-body">
-                        <Form onSubmit={handleSubmit}>
+                    </Modal.Header>
+                    <Modal.Body className="rewards-modal-body">
+                        <Form onSubmit={handleSubmitInitialData}>
                             <div className="form-field">
                                 <p className="label">Select Validator</p>
 
@@ -87,46 +133,131 @@ const ModalWithdraw = (props) => {
                             </div>
                             <div className="form-field">
                                 <p className="label">Memo</p>
-                                <Form.Control as="textarea" rows={3} name="mnemonic"
-                                              placeholder="Enter Seed"
+                                <Form.Control as="textarea" rows={3} name="memo"
+                                              placeholder="Enter Memo"
                                               required={true}/>
                             </div>
-                            <div className="form-field">
-                                <p className="label">Password</p>
-                                <Form.Control
-                                    type="password"
-                                    name="password"
-                                    placeholder="Enter Your Wallet Password"
-                                    required={true}
-                                />
-                            </div>
+                            {/*<div className="form-field">*/}
+                            {/*    <p className="label">Password</p>*/}
+                            {/*    <Form.Control*/}
+                            {/*        type="password"*/}
+                            {/*        name="password"*/}
+                            {/*        placeholder="Enter Your Wallet Password"*/}
+                            {/*        required={true}*/}
+                            {/*    />*/}
+                            {/*</div>*/}
                             <div className="buttons">
-                                <button className="button button-primary">Withdraw</button>
+                                <button className="button button-primary">Next</button>
                             </div>
                         </Form>
-                    </ReactModal.Body>
+                    </Modal.Body>
+                </>
+                : null
+            }
+            {seedModal ?
+                <>
+                    <Modal.Header>
+                        Claim Staking Rewards
+                    </Modal.Header>
+                    <Modal.Body className="rewards-modal-body">
+                        <Form onSubmit={handleSubmit}>
+                            <div className="form-field">
+                                <p className="label">Mnemonic</p>
+                                <Form.Control as="textarea" rows={3} name="mnemonic"
+                                              placeholder="Enter Mnemonic"
+                                              required={true}/>
+                            </div>
+                            <Accordion className="advanced-wallet-accordion">
+                                <Card>
+                                    <Card.Header>
+                                        <p>
+                                            Advanced
+                                        </p>
+                                        <ContextAwareToggle eventKey="0">Click me!</ContextAwareToggle>
+                                    </Card.Header>
+                                    <Accordion.Collapse eventKey="0">
+                                        <>
+                                            <div className="form-field">
+                                                <p className="label">Account</p>
+                                                <Form.Control
+                                                    type="text"
+                                                    name="privateAccountNumber"
+                                                    id="claimTotalAccountNumber"
+                                                    placeholder="Account number"
+                                                    required={privateAdvanceMode ? true : false}
+                                                />
+                                            </div>
+                                            <div className="form-field">
+                                                <p className="label">Account Index</p>
+                                                <Form.Control
+                                                    type="text"
+                                                    name="privateAccountIndex"
+                                                    id="claimTotalAccountIndex"
+                                                    placeholder="Account Index"
+                                                    required={privateAdvanceMode ? true : false}
+                                                />
+                                            </div>
+                                            <div className="form-field">
+                                                <p className="label">bip39Passphrase</p>
+                                                <Form.Control
+                                                    type="password"
+                                                    name="bip39Passphrase"
+                                                    id="cclaimTotalbip39Passphrase"
+                                                    placeholder="Enter bip39Passphrase (optional)"
+                                                    required={true}
+                                                />
+                                            </div>
+                                        </>
+                                    </Accordion.Collapse>
+                                </Card>
+                            </Accordion>
+                            <div className="buttons">
+                                <button className="button button-primary">Claim Rewards</button>
+                            </div>
+                        </Form>
+                    </Modal.Body>
+
                 </>
                 : null
             }
             {
-                response ?
+                response !== '' && response.code === undefined ?
                     <>
-                        <ReactModal.Header className="result-header success">
-                            Succesfully Delegated!
-                        </ReactModal.Header>
-                        <ReactModal.Body className="delegate-modal-body">
+                        <Modal.Header className="result-header success">
+                            Successfully Delegated!
+                        </Modal.Header>
+                        <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 <img src={success} alt="success-image"/>
-                                <p className="tx-hash">Tx Hash: CAC4BA3C67482F09B46E129A00A86846567941555685673599559EBB5899DB3C</p>
+                                <p className="tx-hash">Tx Hash: {response.txhash}</p>
                                 <div className="buttons">
-                                    <button className="button" >Done</button>
+                                    <button className="button">Done</button>
                                 </div>
                             </div>
-                        </ReactModal.Body>
+                        </Modal.Body>
                     </>
                     : null
             }
-        </ReactModal>
+            {
+                response !== '' && response.code !== undefined ?
+                    <>
+                        <Modal.Header className="result-header error">
+                            Failed to Delegate
+                        </Modal.Header>
+                        <Modal.Body className="delegate-modal-body">
+                            <div className="result-container">
+                                <p className="tx-hash">Tx Hash:
+                                    {response.txhash}</p>
+                                <p>{response.raw_log}</p>
+                                <div className="buttons">
+                                    <button className="button" onClick={handleClose}>Done</button>
+                                </div>
+                            </div>
+                        </Modal.Body>
+                    </>
+                    : null
+            }
+        </Modal>
     );
 };
 

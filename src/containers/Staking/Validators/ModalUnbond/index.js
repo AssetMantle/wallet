@@ -247,7 +247,7 @@ const ModalUnbond = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <button className="button button-primary">Delegate</button>
+                                <button className="button button-primary">Unbond</button>
                             </div>
                         </Form>
                     </Modal.Body>

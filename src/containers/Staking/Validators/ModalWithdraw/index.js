@@ -143,7 +143,7 @@ const ModalWithdraw = (props) => {
                                               required={true}/>
                             </div>
                             <div className="buttons">
-                                <button className="button button-primary">Claim Rewards</button>
+                                <button className="button button-primary">Next</button>
                             </div>
                         </Form>
                     </Modal.Body>
@@ -208,7 +208,7 @@ const ModalWithdraw = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <button className="button button-primary">Delegate</button>
+                                <button className="button button-primary">Claim Rewards</button>
                             </div>
                         </Form>
                     </Modal.Body>
