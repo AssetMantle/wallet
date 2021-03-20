@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Form, Modal as ReactModal, Modal, OverlayTrigger, Popover} from "react-bootstrap";
+import {Form, Modal, OverlayTrigger, Popover} from "react-bootstrap";
 import Icon from "../../components/Icon";
 import success from "../../assets/images/success.svg";
 import MakePersistence from "../../utils/cosmosjsWrapper";
@@ -23,7 +23,7 @@ const Send = () => {
         setAmountField(evt.target.value)
     };
     const handleSubmit = async event => {
-        console.log(show,mnemonicForm)
+        console.log(show, mnemonicForm)
         event.preventDefault();
         setToAddress(event.target.address.value);
         setMnemonicForm(true);
@@ -37,8 +37,8 @@ const Send = () => {
         const accountNumber = 0
         const addressIndex = 0
         const bip39Passphrase = ""
-        const persistence = MakePersistence(accountNumber,addressIndex);
-        const address = persistence.getAddress(userMnemonic, bip39Passphrase,true);
+        const persistence = MakePersistence(accountNumber, addressIndex);
+        const address = persistence.getAddress(userMnemonic, bip39Passphrase, true);
         const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
 
 
@@ -150,7 +150,7 @@ const Send = () => {
                                     </Form>
 
                                 </Modal.Body>
-                                :           <>
+                                : <>
                                     {
                                         txResponse.code === undefined ?
                                             <>
@@ -167,14 +167,14 @@ const Send = () => {
                                                     </div>
                                                 </Modal.Body>
                                             </>
-                                            :  <>
+                                            : <>
                                                 <Modal.Header className="result-header error">
                                                     Failed to Send
                                                 </Modal.Header>
                                                 <Modal.Body className="delegate-modal-body">
                                                     <div className="result-container">
                                                         <p className="tx-hash">Tx Hash:
-                                                             {txResponse.txhash}</p>
+                                                            {txResponse.txhash}</p>
                                                         <p>{txResponse.raw_log}</p>
                                                         <div className="buttons">
                                                             <button className="button" onClick={handleClose}>Done</button>
