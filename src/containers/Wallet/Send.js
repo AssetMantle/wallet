@@ -38,8 +38,8 @@ const Send = () => {
         const addressIndex = 0
         const bip39Passphrase = ""
         const persistence = MakePersistence(accountNumber,addressIndex);
-        const address = persistence.getAddress(mnemonic, bip39Passphrase,true);
-        const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
+        const address = persistence.getAddress(userMnemonic, bip39Passphrase,true);
+        const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
 
 
         persistence.getAccounts(address).then(data => {
