@@ -15,7 +15,6 @@ const ModalWithdraw = (props) => {
     const [response, setResponse] = useState('');
     const [validatorsList, setValidatorsList] = useState([]);
     const [advanceMode, setAdvanceMode] = useState(false);
-    const [privateAdvanceMode, setPrivateAdvanceMode] = useState(false);
     const [initialModal, setInitialModal] = useState(true);
     const [seedModal, showSeedModal] = useState(false);
     const [memoContent, setMemoContent] = useState('');
@@ -48,7 +47,6 @@ const ModalWithdraw = (props) => {
         );
         const handleAccordion = (event) => {
             decoratedOnClick(event);
-            setPrivateAdvanceMode(!privateAdvanceMode);
             setAdvanceMode(!advanceMode);
         };
         const isCurrentEventKey = currentEventKey === eventKey;
@@ -173,7 +171,7 @@ const ModalWithdraw = (props) => {
                                 <p className="label">Memo</p>
                                 <Form.Control as="textarea" rows={3} name="memo"
                                               placeholder="Enter Memo"
-                                              required={true}/>
+                                              required={false}/>
                             </div>
                             {/*<div className="form-field">*/}
                             {/*    <p className="label">Password</p>*/}
@@ -222,7 +220,7 @@ const ModalWithdraw = (props) => {
                                                     name="privateAccountNumber"
                                                     id="claimTotalAccountNumber"
                                                     placeholder="Account number"
-                                                    required={privateAdvanceMode ? true : false}
+                                                    required={advanceMode ? true : false}
                                                 />
                                             </div>
                                             <div className="form-field">
@@ -232,7 +230,7 @@ const ModalWithdraw = (props) => {
                                                     name="privateAccountIndex"
                                                     id="claimTotalAccountIndex"
                                                     placeholder="Account Index"
-                                                    required={privateAdvanceMode ? true : false}
+                                                    required={advanceMode ? true : false}
                                                 />
                                             </div>
                                             <div className="form-field">
@@ -240,9 +238,9 @@ const ModalWithdraw = (props) => {
                                                 <Form.Control
                                                     type="password"
                                                     name="bip39Passphrase"
-                                                    id="cclaimTotalbip39Passphrase"
+                                                    id="claimTotalbip39Passphrase"
                                                     placeholder="Enter bip39Passphrase (optional)"
-                                                    required={true}
+                                                    required={false}
                                                 />
                                             </div>
                                         </>

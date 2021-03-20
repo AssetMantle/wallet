@@ -21,7 +21,6 @@ const ModalDelegate = (props) => {
     const [seedModal, showSeedModal] = useState(false);
     const [response, setResponse] = useState('');
     const [advanceMode, setAdvanceMode] = useState(false);
-    const [privateAdvanceMode, setPrivateAdvanceMode] = useState(false);
     const handleAmount = (amount) => {
         setAmount(amount)
     };
@@ -35,7 +34,6 @@ const ModalDelegate = (props) => {
         );
         const handleAccordion = (event) => {
             decoratedOnClick(event);
-            setPrivateAdvanceMode(!privateAdvanceMode);
             setAdvanceMode(!advanceMode);
         };
         const isCurrentEventKey = currentEventKey === eventKey;
@@ -180,7 +178,7 @@ const ModalDelegate = (props) => {
                                 <p className="label">Memo</p>
                                 <Form.Control as="textarea" rows={3} name="memo"
                                               placeholder="Enter Memo"
-                                              required={true}/>
+                                              required={false}/>
                             </div>
                             <div className="buttons">
                                 <button className="button button-primary">Next</button>

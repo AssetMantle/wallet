@@ -4,11 +4,9 @@ import {
     Card,
     Form,
     Modal,
-    OverlayTrigger,
-    Popover,
     useAccordionToggle
 } from 'react-bootstrap';
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useContext} from 'react';
 import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
@@ -16,12 +14,12 @@ const ModalWithdraw = (props) => {
     const [show, setShow] = useState(true);
     const [response, setResponse] = useState('');
     const [advanceMode, setAdvanceMode] = useState(false);
-    const [privateAdvanceMode, setPrivateAdvanceMode] = useState(false);
     const [initialModal, setInitialModal] = useState(true);
     const [seedModal, showSeedModal] = useState(false);
     const [memoContent, setMemoContent] = useState('');
+
     const handleClose = () => {
-        setShow(false)
+        setShow(false);
         props.setModalOpen('');
         setResponse('');
     };
@@ -35,7 +33,6 @@ const ModalWithdraw = (props) => {
         );
         const handleAccordion = (event) => {
             decoratedOnClick(event);
-            setPrivateAdvanceMode(!privateAdvanceMode);
             setAdvanceMode(!advanceMode);
         };
         const isCurrentEventKey = currentEventKey === eventKey;
@@ -110,8 +107,6 @@ const ModalWithdraw = (props) => {
                 console.log(response)
             });
         });
-
-        console.log(mnemonic, validatorAddress, "delegate form value") //amount taking stake.
     };
 
     return (
@@ -181,7 +176,7 @@ const ModalWithdraw = (props) => {
                                                     name="privateAccountNumber"
                                                     id="claimAccountNumber"
                                                     placeholder="Account number"
-                                                    required={privateAdvanceMode ? true : false}
+                                                    required={advanceMode ? true : false}
                                                 />
                                             </div>
                                             <div className="form-field">
@@ -191,7 +186,7 @@ const ModalWithdraw = (props) => {
                                                     name="privateAccountIndex"
                                                     id="claimAccountIndex"
                                                     placeholder="Account Index"
-                                                    required={privateAdvanceMode ? true : false}
+                                                    required={advanceMode ? true : false}
                                                 />
                                             </div>
                                             <div className="form-field">
@@ -201,7 +196,7 @@ const ModalWithdraw = (props) => {
                                                     name="bip39Passphrase"
                                                     id="claimbip39Passphrase"
                                                     placeholder="Enter bip39Passphrase (optional)"
-                                                    required={true}
+                                                    required={false}
                                                 />
                                             </div>
                                         </>

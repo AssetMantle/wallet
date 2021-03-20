@@ -23,7 +23,6 @@ const ModalReDelegate = (props) => {
     const [response, setResponse] = useState('');
     const [advanceMode, setAdvanceMode] = useState(false);
 
-    const [privateAdvanceMode, setPrivateAdvanceMode] = useState(false);
     const handleAmount = (amount) => {
         setAmount(amount)
     };
@@ -41,7 +40,6 @@ const ModalReDelegate = (props) => {
         );
         const handleAccordion = (event) => {
             decoratedOnClick(event);
-            setPrivateAdvanceMode(!privateAdvanceMode);
             setAdvanceMode(!advanceMode);
         };
         const isCurrentEventKey = currentEventKey === eventKey;
@@ -208,7 +206,7 @@ const ModalReDelegate = (props) => {
                                 <p className="label">Mnemonic</p>
                                 <Form.Control as="textarea" rows={3} name="mnemonic"
                                               placeholder="Enter Mnemonic"
-                                              required={true}/>
+                                              required={false}/>
                             </div>
                             <Accordion className="advanced-wallet-accordion">
                                 <Card>
@@ -227,7 +225,7 @@ const ModalReDelegate = (props) => {
                                                     name="privateAccountNumber"
                                                     id="redelegateAccountNumber"
                                                     placeholder="Account number"
-                                                    required={privateAdvanceMode ? true : false}
+                                                    required={advanceMode ? true : false}
                                                 />
                                             </div>
                                             <div className="form-field">
@@ -237,7 +235,7 @@ const ModalReDelegate = (props) => {
                                                     name="privateAccountIndex"
                                                     id="redelegateAccountIndex"
                                                     placeholder="Account Index"
-                                                    required={privateAdvanceMode ? true : false}
+                                                    required={advanceMode ? true : false}
                                                 />
                                             </div>
                                             <div className="form-field">
@@ -246,7 +244,7 @@ const ModalReDelegate = (props) => {
                                                     type="password"
                                                     name="redelegatebip39Passphrase"
                                                     placeholder="Enter bip39Passphrase (optional)"
-                                                    required={true}
+                                                    required={false}
                                                 />
                                             </div>
                                         </>

@@ -4,8 +4,6 @@ import {
     Card,
     Form,
     Modal,
-    OverlayTrigger,
-    Popover,
     useAccordionToggle
 } from 'react-bootstrap';
 import React, {useState, useEffect, useContext} from 'react';
@@ -18,7 +16,6 @@ const ModalUnbond = (props) => {
     const [show, setShow] = useState(true);
     const [response, setResponse] = useState('');
     const [advanceMode, setAdvanceMode] = useState(false);
-    const [privateAdvanceMode, setPrivateAdvanceMode] = useState(false);
     const [initialModal, setInitialModal] = useState(true);
     const [seedModal, showSeedModal] = useState(false);
     const [memoContent, setMemoContent] = useState('');
@@ -43,7 +40,6 @@ const ModalUnbond = (props) => {
         );
         const handleAccordion = (event) => {
             decoratedOnClick(event);
-            setPrivateAdvanceMode(!privateAdvanceMode);
             setAdvanceMode(!advanceMode);
         };
         const isCurrentEventKey = currentEventKey === eventKey;
@@ -220,7 +216,7 @@ const ModalUnbond = (props) => {
                                                     name="privateAccountNumber"
                                                     id="unbondAccountNumber"
                                                     placeholder="Account number"
-                                                    required={privateAdvanceMode ? true : false}
+                                                    required={advanceMode ? true : false}
                                                 />
                                             </div>
                                             <div className="form-field">
@@ -230,7 +226,7 @@ const ModalUnbond = (props) => {
                                                     name="privateAccountIndex"
                                                     id="unbondAccountIndex"
                                                     placeholder="Account Index"
-                                                    required={privateAdvanceMode ? true : false}
+                                                    required={advanceMode ? true : false}
                                                 />
                                             </div>
                                             <div className="form-field">
