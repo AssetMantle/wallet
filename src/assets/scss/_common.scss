@@ -34,7 +34,9 @@ html, body {
   padding: .375rem 1.2rem;
   border-radius: 0;
 }
-
+.button:disabled {
+  opacity: 0.6;
+}
 .button.button-secondary {
   background: #313238;
   font-weight: bold;
@@ -284,4 +286,26 @@ html, body {
       box-shadow: none;
     }
   }
+}
+
+.validators-list-selection {
+  width: 300px;
+  background: #F5F6FA;
+  font-size: 14px;
+  line-height: 150%;
+  height: calc(2.3em + .75rem + 2px);
+  border-radius: 0;
+  padding-left: 10px;
+
+  .MuiSelect-select:focus {
+    background-color: transparent;
+  }
+}
+
+.MuiInput-underline::before {
+  border: 0px solid !important;
+}
+
+.MuiInput-underline:after {
+  border-bottom: 0px solid !important;
 }

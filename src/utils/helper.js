@@ -74,10 +74,19 @@ function isActive(item) {
     return item.jailed === false && item.status === 'BOND_STATUS_BONDED';
 }
 
+function ValidateFrom(value){
+    value = value.trim();
+    if (value.length === 0) {
+        return new Error('Length must be greater than 0');
+    }
+    return new Error('');
+};
+
 module.exports = {
     randomNum,
     stringTruncate,
     createStore,
     decryptStore,
-    isActive
+    isActive,
+    ValidateFrom
 };

@@ -12,17 +12,39 @@ import React, {useState, useEffect, useContext} from 'react';
 import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
-
+import {getDelegationsUrl, getValidatorUrl} from "../../../../constants/url";
+import axios from "axios";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import helper from "../../../../utils/helper";
 const ModalReDelegate = (props) => {
     const [amount, setAmount] = useState(0);
     const [show, setShow] = useState(true);
     const [memoContent, setMemoContent] = useState('');
-    const [destinationAddress, setDestinationAddress] = useState('');
     const [initialModal, setInitialModal] = useState(true);
     const [seedModal, showSeedModal] = useState(false);
     const [response, setResponse] = useState('');
+    const [validatorsList, setValidatorsList] = useState([]);
+    const [toValidatorAddress, setToValidatorAddress] = useState('');
     const [advanceMode, setAdvanceMode] = useState(false);
-
+    useEffect(() => {
+        const fetchValidators = async () => {
+            const delegationsUrl = getDelegationsUrl('persistence1095fgex3h37zl4yjptnsd7qfmspesvav7xhgwt');
+            const delegationResponse = await axios.get(delegationsUrl);
+            let delegationResponseList = delegationResponse.data.delegation_responses;
+            let validators = [];
+            for (const item of delegationResponseList) {
+                const validatorUrl = getValidatorUrl(item.delegation.validator_address);
+                const validatorResponse = await axios.get(validatorUrl);
+                console.log(validatorResponse,"RED")
+                if(validatorResponse.data.validator.description.moniker !== props.moniker) {
+                    validators.push(validatorResponse.data.validator);
+                }
+            }
+            setValidatorsList(validators);
+        };
+        fetchValidators();
+    }, []);
     const handleAmount = (amount) => {
         setAmount(amount)
     };
@@ -62,7 +84,9 @@ const ModalReDelegate = (props) => {
             </button>
         );
     }
-
+    const onChangeSelect = (evt) => {
+        setToValidatorAddress(evt.target.value)
+    };
     const handleClose = () => {
         setShow(false)
         props.setModalOpen('');
@@ -72,8 +96,6 @@ const ModalReDelegate = (props) => {
     const handleSubmitInitialData = async event => {
         event.preventDefault();
         const memo = event.target.memo.value;
-        const toValidatorAddress = event.target.toAddress.value;
-        setDestinationAddress(toValidatorAddress);
         setMemoContent(memo);
         setInitialModal(false);
         showSeedModal(true);
@@ -84,7 +106,6 @@ const ModalReDelegate = (props) => {
         showSeedModal(false);
         const mnemonic = event.target.mnemonic.value;
         const validatorAddress = 'persistencevaloper15qsq6t6zxg60r3ljnxdpn9c6qpym2uvjl37hpl';
-
 
         let accountNumber = 0
         let addressIndex = 0
@@ -110,7 +131,7 @@ const ModalReDelegate = (props) => {
                                 denom: "uxprt"
                             },
                             delegator_address: address,
-                            validator_dst_address: destinationAddress,
+                            validator_dst_address: toValidatorAddress,
                             validator_src_address: validatorAddress
                         }
                     }
@@ -130,7 +151,9 @@ const ModalReDelegate = (props) => {
         });
         console.log(amount, mnemonic, validatorAddress, "redelegate form value") //amount taking stake.
     };
-
+    const disabled = (
+        helper.ValidateFrom(toValidatorAddress).message !== ''
+    );
     return (
         <Modal
             animation={false}
@@ -141,24 +164,36 @@ const ModalReDelegate = (props) => {
             {initialModal ?
                 <>
                     <Modal.Header>
-                        Redelegating to {props.moniker}
+                        {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={handleSubmitInitialData}>
                             <div className="form-field">
-                                <p className="label">to Address</p>
-                                <Form.Control
-                                    type="text"
-                                    name="toAddress"
-                                    placeholder="Enter Validator Address"
-                                    required={true}
-                                />
+                                <p className="label">Redelegate to</p>
+                                <Select value={toValidatorAddress} className="validators-list-selection"
+                                        onChange={onChangeSelect} displayEmpty>
+                                    <MenuItem value=""  key={0}>
+                                        <em>Select validator</em>
+                                    </MenuItem>
+                                    {
+                                        validatorsList.map((validator, index) => (
+                                            <MenuItem
+                                                key={index + 1}
+                                                className=""
+                                                value={validator.operator_address}>
+                                                {validator.description.moniker}
+                                            </MenuItem>
+                                        ))
+                                    }
+                                </Select>
                             </div>
+
                             <div className="form-field">
                                 <p className="label">Send Amount</p>
                                 <div className="amount-field">
                                     <Form.Control
                                         type="number"
+                                        min={0}
                                         name="amount"
                                         placeholder="Send Amount"
                                         value={amount}
@@ -188,7 +223,7 @@ const ModalReDelegate = (props) => {
                                               required={false}/>
                             </div>
                             <div className="buttons">
-                                <button className="button button-primary">Next</button>
+                                <button className="button button-primary" disabled={disabled}>Next</button>
                             </div>
                         </Form>
                     </Modal.Body>
@@ -198,7 +233,7 @@ const ModalReDelegate = (props) => {
             {seedModal ?
                 <>
                     <Modal.Header>
-                        Redelegating to {props.moniker}
+                       {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={handleSubmit}>

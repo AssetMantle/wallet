@@ -88,7 +88,7 @@
 
 .content-section {
   flex: 1;
-  overflow: auto;
+  //overflow: auto;
 }
 
 .wallet-main-section {
@@ -130,6 +130,9 @@
 
     .tab-content {
       padding: 50px 100px;
+      position: relative;
+      max-height: 72vh;
+      overflow-y: scroll;
     }
   }
 
@@ -516,7 +519,9 @@
 .validators-section {
   border-top: 1px solid #E3E5F4;
   padding: 50px 100px;
-
+  position: relative;
+  max-height: 72vh;
+  overflow-y: scroll;
   .info {
     display: flex;
     justify-content: space-between;
@@ -713,28 +718,6 @@
         background: rgba(141, 156, 181, 0.1);
         padding: 5px 10px;
       }
-    }
-
-    .validators-list-selection {
-      width: 300px;
-      background: #F5F6FA;
-      font-size: 14px;
-      line-height: 150%;
-      height: calc(2.3em + .75rem + 2px);
-      border-radius: 0;
-      padding-left: 10px;
-
-      .MuiSelect-select:focus {
-        background-color: transparent;
-      }
-    }
-
-    .MuiInput-underline::before {
-      border: 0px solid !important;
-    }
-
-    .MuiInput-underline:after {
-      border-bottom: 0px solid !important;
     }
   }
 

@@ -152,6 +152,7 @@ const ModalDelegate = (props) => {
                                 <div className="amount-field">
                                     <Form.Control
                                         type="number"
+                                        min={0}
                                         name="amount"
                                         placeholder="Send Amount"
                                         value={amount}

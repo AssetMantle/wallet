@@ -20,6 +20,11 @@
 @media (max-width: 1200px) {
   .wallet-main-section .tabs-section .tab-content, .validators-section {
     padding: 30px 60px;
+    max-height: initial;
+    overflow: auto;
+  }
+  .content-section{
+    overflow: auto;
   }
   .token-info-section {
     .info-box{

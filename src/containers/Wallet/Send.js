@@ -75,9 +75,16 @@ const Send = () => {
         const userMnemonic = evt.target.mnemonic.value;
         const mnemonic = "tank pair spray rely any menu airport shiver boost emerge holiday siege evil grace exile comfort fence mention pig bus cable scissors ability all";
         console.log(userMnemonic, "userMnemonic");
-        const accountNumber = 0
-        const addressIndex = 0
-        const bip39Passphrase = ""
+
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = ""
+        if (advanceMode) {
+            accountNumber = document.getElementById('sendAccountNumber').value;
+            addressIndex = document.getElementById('sendAccountIndex').value;
+            bip39Passphrase = document.getElementById('sendbip39Passphrase').value;
+        }
+
         const persistence = MakePersistence(accountNumber, addressIndex);
         const address = persistence.getAddress(userMnemonic, bip39Passphrase, true);
         const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
@@ -142,6 +149,7 @@ const Send = () => {
                         <div className="amount-field">
                             <Form.Control
                                 type="number"
+                                min={0}
                                 name="amount"
                                 placeholder="Send Amount"
                                 value={amountField}
@@ -200,7 +208,7 @@ const Send = () => {
                                                             <Form.Control
                                                                 type="text"
                                                                 name="privateAccountNumber"
-                                                                id="unbondAccountNumber"
+                                                                id="sendAccountNumber"
                                                                 placeholder="Account number"
                                                                 required={advanceMode ? true : false}
                                                             />
@@ -210,7 +218,7 @@ const Send = () => {
                                                             <Form.Control
                                                                 type="text"
                                                                 name="privateAccountIndex"
-                                                                id="unbondAccountIndex"
+                                                                id="sendAccountIndex"
                                                                 placeholder="Account Index"
                                                                 required={advanceMode ? true : false}
                                                             />
@@ -220,7 +228,7 @@ const Send = () => {
                                                             <Form.Control
                                                                 type="password"
                                                                 name="bip39Passphrase"
-                                                                id="unbondbip39Passphrase"
+                                                                id="sendbip39Passphrase"
                                                                 placeholder="Enter bip39Passphrase (optional)"
                                                                 required={false}
                                                             />
