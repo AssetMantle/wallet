@@ -46,5 +46,8 @@
             <circle cx="8" cy="2" r="2" fill="#FFC554"/>
             <circle cx="14" cy="4" r="2" fill="#FFC554"/>
         </symbol>
+        <symbol id="icon-right-coursel" fill="none" viewBox="0 0 11 6">
+            <path d="M10.077 0L5.842 4.25 1.544.094.653 1l5.221 5L11 .875 10.077 0z" fill="#D2D2D2"/>
+        </symbol>
     </defs>
 </svg>

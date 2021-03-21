@@ -20,7 +20,8 @@ const ModalWithdraw = (props) => {
     const [memoContent, setMemoContent] = useState('');
     useEffect(() => {
         const fetchValidators = async () => {
-            const delegationsUrl = getDelegationsUrl('persistence1095fgex3h37zl4yjptnsd7qfmspesvav7xhgwt');
+            const address = localStorage.getItem('address');
+            const delegationsUrl = getDelegationsUrl(address);
             const delegationResponse = await axios.get(delegationsUrl);
             let delegationResponseList = delegationResponse.data.delegation_responses;
             let validators = [];

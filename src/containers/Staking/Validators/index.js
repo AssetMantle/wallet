@@ -12,6 +12,7 @@ import Avatar from "./Avatar";
 import Loader from "../../../components/Loader";
 import Lodash from 'lodash';
 import {act} from "@testing-library/react";
+import Icon from "../../../components/Icon";
 const Validators = (props) => {
     const [modalDelegate, setModalOpen] = useState();
     const [loading, setLoading] = useState(true);
@@ -27,7 +28,9 @@ const Validators = (props) => {
     };
     useEffect(() => {
         const fetchValidators = async () => {
-            const delegationsUrl = getDelegationsUrl('persistence1095fgex3h37zl4yjptnsd7qfmspesvav7xhgwt');
+            const address = localStorage.getItem('address');
+            console.log(address, "loggedIn address")
+            const delegationsUrl = getDelegationsUrl(address);
             const delegationResponse = await axios.get(delegationsUrl);
             let delegationResponseList = delegationResponse.data.delegation_responses;
             let validators = [];
@@ -79,20 +82,39 @@ const Validators = (props) => {
                         return (
                             <tr>
                                 <td className=""><Avatar
-                                    identity={validator.description.identity}/> {validator.description.moniker}</td>
+                                    identity={validator.description.identity}/> {validator.description.moniker} {active}</td>
                                 <td className="">{`${votingPower} (${votingPowerPercentage}%)`}</td>
                                 <td className="">{commissionRate} %</td>
-                                <td className="">{validator.status}</td>
+                                <td className="">
+                                    {active ?
+                                        <span className="icon-box success" title="active">
+                                        <Icon
+                                            viewClass="arrow-right"
+                                            icon="success"/>
+                                        </span>
+                                        :
+                                        <span className="icon-box error" title="Inactive">
+                                        <Icon
+                                            viewClass="arrow-right"
+                                            icon="pending"/>
+                                        </span>
+                                    }
+                                </td>
                                 <td className="actions-td">
-                                    <button type="button" className="button button-primary"
-                                            onClick={() => handleModal('Delegate', validator.operator_address, validator.description.moniker)}>Delegate a Validator
-                                    </button>
                                     <Dropdown className="more-dropdown">
-                                        <Dropdown.Toggle variant="success" id="dropdown-basic">
-                                            <img src={IconMore} alt="IconMore"/>
+                                        <Dropdown.Toggle variant="success" className="button button-primary" id="dropdown-basic">
+                                            Actions <Icon viewClass="arrow-right" icon="right-coursel"/>
                                         </Dropdown.Toggle>
 
                                         <Dropdown.Menu>
+                                            {active ?
+                                                <Dropdown.Item
+                                                    onClick={() => handleModal('Delegate', validator.operator_address, validator.description.moniker)}>
+                                                    Delegate a Validator
+                                                </Dropdown.Item>
+                                                :
+                                                null
+                                            }
                                             <Dropdown.Item
                                                 onClick={() => handleModal('Redelegate', validator.operator_address, validator.description.moniker)}>Redelegate</Dropdown.Item>
                                             <Dropdown.Item

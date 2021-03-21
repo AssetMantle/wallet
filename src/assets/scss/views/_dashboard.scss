@@ -231,21 +231,7 @@
           }
         }
         .result{
-          .icon-box{
-            width: 30px;
-            display: flex;
-            border-radius: 7px;
-            padding: 5px;
-            align-items: center;
-            justify-content: center;
-            height: 30px;
-            .icon{
-              width: 16px;
-            }
-          }
-          .icon-box.success{
-            background: #E5F6EE;
-          }
+
         }
         .type{
           color: #8D9CB5;
@@ -824,7 +810,7 @@
 
 .more-dropdown {
   button {
-    background-color: transparent !important;
+    background-color: #E50913 !important;
     border: 0px solid !important;
     box-shadow: none !important;
     outline: none !important;
@@ -851,11 +837,24 @@
   display: flex;
   align-items: center;
   padding: 0px !important;
-
+  .show.dropdown{
+    .button.button-primary {
+      .icon {
+        transform: rotate(0deg);
+        transition: transform 0.1s linear;
+      }
+    }
+  }
   .button.button-primary {
     padding: 0.2rem 0.6rem;
     font-size: 12px;
     white-space: nowrap;
+    .icon{
+      width: 14px;
+      transform: rotate(-90deg);
+      transition: transform 0.1s linear;
+      margin-bottom: 1px;
+    }
   }
   .dropdown-menu.show{
     position: absolute;

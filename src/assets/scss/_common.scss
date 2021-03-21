@@ -309,3 +309,22 @@ html, body {
 .MuiInput-underline:after {
   border-bottom: 0px solid !important;
 }
+
+.icon-box{
+  width: 30px;
+  display: flex;
+  border-radius: 7px;
+  padding: 5px;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  .icon{
+    width: 16px;
+  }
+}
+.icon-box.success{
+  background: #E5F6EE;
+}
+.icon-box.error{
+  background: #FFEECC;
+}
