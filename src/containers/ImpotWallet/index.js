@@ -31,7 +31,6 @@ const ImportWallet = (props) => {
     const [privateAdvanceMode, setPrivateAdvanceMode] = useState(false);
     const handleSubmit = async event => {
         event.preventDefault();
-        const password = event.target.password.value;
         setMnemonicForm(false);
         setResponseDataShow(true);
         let responseData;
@@ -45,16 +44,6 @@ const ImportWallet = (props) => {
             responseData = wallet.createWallet(event.target.mnemonic.value);
         }
         setResponse(responseData);
-        if (responseData.error) {
-            setErrorMessage(responseData.error);
-        } else {
-            let mnemonic = responseData.mnemonic;
-            const mnemonicArray = mnemonic.split(' ');
-            setMnemonicList(mnemonicArray);
-            let encryptedData = helper.createStore(responseData.mnemonic, password);
-            let jsonContent = JSON.stringify(encryptedData);
-            setJsonName(jsonContent);
-        }
     };
     const handlePrivateKeySubmit = async event => {
         const password = event.target.password.value;
@@ -166,15 +155,6 @@ const ImportWallet = (props) => {
                                         <Form onSubmit={handleSubmit}>
                                             <p onClick={() => handlePrivateKey(false)} className="import-name">Use
                                                 private key file</p>
-                                            <div className="form-field">
-                                                <p className="label">Password</p>
-                                                <Form.Control
-                                                    type="password"
-                                                    name="password"
-                                                    placeholder="Enter Password"
-                                                    required={true}
-                                                />
-                                            </div>
                                             <div className="form-field">
                                                 <p className="label">Enter Seed</p>
                                                 <Form.Control as="textarea" rows={3} name="mnemonic"
@@ -321,44 +301,15 @@ const ImportWallet = (props) => {
                             {errorMessage !== "" ?
                                 <div className="login-error"><p className="error-response">{errorMessage}</p></div>
                                 : <div>
-                                    <div className="menmonic-list">
-                                        {mnemonicList.map((key, index) => {
-                                            return (
-                                                <Form.Control
-                                                    key={index}
-                                                    type="text"
-                                                    value={key}
-                                                    required={true}
-                                                />
-                                            )
-                                        })
-                                        }
-                                    </div>
                                     <p className="mnemonic-result"><b>wallet path: </b>{response.walletPath}</p>
                                     <p className="mnemonic-result"><b>address: </b>{response.address}</p>
-                                    <div className="download-section">
-                                        <p className="name">Private Key:</p>
-                                        <div className="key-download">
-                                            <DownloadLink
-                                                label="Download Key File for future use"
-                                                filename="key.json"
-                                                exportFile={() => `${jsonName}`}
-                                            />
-                                            <Icon viewClass="arrow-icon" icon="left-arrow"/>
-                                        </div>
-                                    </div>
                                 </div>
                             }
 
                             <div className="buttons">
                                 <button className="button button-primary" onClick={handleLogin}>Next</button>
                             </div>
-                            <div className="note-section">
-                                <div className="exclamation"><Icon
-                                    viewClass="arrow-right"
-                                    icon="exclamation"/></div>
-                                <p>Copy and secure your key json file in a safe location.</p>
-                            </div>
+
                         </div>
                         : null
                 }

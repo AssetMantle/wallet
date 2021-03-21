@@ -20,6 +20,7 @@ const Send = () => {
     const [mnemonicForm, setMnemonicForm] = useState(false);
     const [show, setShow] = useState(true);
     const [advanceMode, setAdvanceMode] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     const handleAmount = (amount) => {
         setAmountField(amount)
     };
@@ -88,36 +89,50 @@ const Send = () => {
         const persistence = MakePersistence(accountNumber, addressIndex);
         const address = persistence.getAddress(userMnemonic, bip39Passphrase, true);
         const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
-        persistence.getAccounts(address).then(data => {
-            let stdSignMsg = persistence.newStdMsg({
-                msgs: [
-                    {
-                        type: "cosmos-sdk/MsgSend",
-                        value: {
-                            amount: [
-                                {
-                                    amount: amountField,
-                                    denom: "uxprt"
+        if(address.error === undefined && ecpairPriv.error === undefined) {
+            persistence.getAccounts(address).then(data => {
+                if (data.code === undefined) {
+                    let stdSignMsg = persistence.newStdMsg({
+                        msgs: [
+                            {
+                                type: "cosmos-sdk/MsgSend",
+                                value: {
+                                    amount: [
+                                        {
+                                            amount: amountField,
+                                            denom: "uxprt"
+                                        }
+                                    ],
+                                    from_address: address,
+                                    to_address: toAddress
                                 }
-                            ],
-                            from_address: address,
-                            to_address: toAddress
-                        }
-                    }
-                ],
-                chain_id: persistence.chainId,
-                fee: {amount: [{amount: String(0), denom: "upxrt"}], gas: String(250000)},
-                memo: "",
-                account_number: String(data.account.account_number),
-                sequence: String(data.account.sequence)
-            });
+                            }
+                        ],
+                        chain_id: persistence.chainId,
+                        fee: {amount: [{amount: String(0), denom: "upxrt"}], gas: String(250000)},
+                        memo: "",
+                        account_number: String(data.account.account_number),
+                        sequence: String(data.account.sequence)
+                    });
 
-            const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
-            persistence.broadcast(signedTx).then(response => {
-                setTxResponse(response)
-                console.log(response)
-            });
-        })
+                    const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
+                    persistence.broadcast(signedTx).then(response => {
+                        setTxResponse(response)
+                        console.log(response)
+                    });
+                }
+                else {
+                    setErrorMessage(data.message);
+                }
+            })
+        }else{
+            if(address.error !== undefined){
+                setErrorMessage(address.error)
+            }
+            else {
+                setErrorMessage(ecpairPriv.error)
+            }
+        }
     };
     const popover = (
         <Popover id="popover-basic">
@@ -235,6 +250,11 @@ const Send = () => {
                                                         </div>
                                                     </>
                                                 </Accordion.Collapse>
+                                                {
+                                                    errorMessage !== "" ?
+                                                        <p className="form-error">{errorMessage}</p>
+                                                        : null
+                                                }
                                             </Card>
                                         </Accordion>
                                         <div className="buttons">
@@ -255,7 +275,7 @@ const Send = () => {
                                                         <img src={success} alt="success-image"/>
                                                         <p className="tx-hash">Tx Hash: {txResponse.txhash}</p>
                                                         <div className="buttons">
-                                                            <button className="button">Done</button>
+                                                            <button className="button" onClick={handleClose}>Done</button>
                                                         </div>
                                                     </div>
                                                 </Modal.Body>

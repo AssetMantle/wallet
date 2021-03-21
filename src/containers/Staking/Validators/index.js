@@ -24,7 +24,7 @@ const Validators = (props) => {
         const fetchValidators = async () => {
             const address = localStorage.getItem('address');
             console.log(address, "loggedIn address");
-            const delegationsUrl = getDelegationsUrl('persistence1095fgex3h37zl4yjptnsd7qfmspesvav7xhgwt');
+            const delegationsUrl = getDelegationsUrl(address);
             const delegationResponse = await axios.get(delegationsUrl);
 
             let delegationResponseList = delegationResponse.data.delegation_responses;
