@@ -11,6 +11,7 @@ const TokenInfo = () => {
     const [totalRewards, setTotalRewards] = useState(0);
     const [totalBalance, setTotalBalance] = useState(0);
     const [totalDelegations, setTotalDelegations] = useState(0);
+    const [rewards, setRewards] = useState(false);
     useEffect(() => {
         const address = localStorage.getItem('address');
         const unbondDelegationsUrl = getDelegationsUnbondUrl(address);
@@ -18,47 +19,59 @@ const TokenInfo = () => {
         const delegationsUrl = getDelegationsUrl(address);
         const balanceUrl = getBalanceUrl(address);
         const fetchInfo = async () => {
-            const unbondingResponse = await axios.get(unbondDelegationsUrl);
-            const rewardsResponse = await axios.get(rewardsUrl);
-            const delegationResponse = await axios.get(delegationsUrl);
-            const balanceResponse = await axios.get(balanceUrl);
-            if(delegationResponse.data.delegation_responses.length){
-                const totalDelegationsCount = Lodash.sumBy(delegationResponse.data.delegation_responses, (delegation) => {
-                    return delegation.balance.amount*1;
-                });
-                setTotalDelegations(totalDelegationsCount/1000000);
-                console.log(totalDelegationsCount/1000000, "totalDelgations");
-            }
+            await axios.get(unbondDelegationsUrl).then(response => {
+                if (response.data.unbonding_responses.length) {
+                    const totalUnbond = Lodash.sumBy(response.data.unbonding_responses, (item) => {
+                        if (response.data.unbonding_responses[0].entries.length) {
+                            return response.data.unbonding_responses[0].entries[0].balance;
+                        }
+                    });
+                    setUnbondingDelegations(totalUnbond);
+                }
+            }).catch(error => {
+                console.log(error.response, "error unbondDelegations")
+            });
 
-            if(unbondingResponse.data.unbonding_responses.length){
-               const totalUnbond =  Lodash.sumBy(unbondingResponse.data.unbonding_responses, (item) => {
-                    if(unbondingResponse.data.unbonding_responses[0].entries.length)
-                    {
-                        return unbondingResponse.data.unbonding_responses[0].entries[0].balance;
-                    }
-                });
-                setUnbondingDelegations(totalUnbond);
-            }
+            await axios.get(delegationsUrl).then(response => {
+                if (response.data.delegation_responses.length) {
+                    const totalDelegationsCount = Lodash.sumBy(response.data.delegation_responses, (delegation) => {
+                        return delegation.balance.amount * 1;
+                    });
+                    setTotalDelegations(totalDelegationsCount / 1000000);
+                    console.log(totalDelegationsCount / 1000000, "totalDelgations");
+                }
+            }).catch(error => {
+                console.log(error.response, "error delegationsUrl")
+            });
 
-            if(rewardsResponse.data.total.length){
-                const fixedRewardsResponse = rewardsResponse.data.total[0].amount / 1000000;
-                setTotalRewards(fixedRewardsResponse.toFixed(4));
-            }
-            if(balanceResponse.data.balances.length){
-                const totalBalance = Lodash.sumBy(balanceResponse.data.balances, (balance) => {
-                    return balance.amount*1;
-                });
+            await axios.get(rewardsUrl).then(response => {
+                if (response.data.total.length) {
+                    const fixedRewardsResponse = response.data.total[0].amount / 1000000;
+                    setTotalRewards(fixedRewardsResponse.toFixed(4));
+                }
+            }).catch(error => {
+                console.log(error, "error rewardsResponse")
+            });
 
-                // let USD = totalBalance *rate;
-                // USD = parseFloat(USD.toFixed(2)).toLocaleString();
+            await axios.get(balanceUrl).then(response => {
+                if (response.data.balances.length) {
+                    const totalBalance = Lodash.sumBy(response.data.balances, (balance) => {
+                        return balance.amount * 1;
+                    });
 
-                setTotalBalance(parseFloat((totalBalance / 1000000).toFixed(2)).toLocaleString())
-            }
+                    // let USD = totalBalance *rate;
+                    // USD = parseFloat(USD.toFixed(2)).toLocaleString();
+
+                    setTotalBalance(parseFloat((totalBalance / 1000000).toFixed(2)).toLocaleString())
+                }
+            }).catch(error => {
+                console.log(error, "error balance")
+            });
 
         };
         fetchInfo();
     }, []);
-    const [rewards, setRewards] = useState(false);
+
     const handleRewards = () => {
         setRewards(true);
     };
