@@ -242,6 +242,7 @@ const ModalDelegate = (props) => {
                                                 <Form.Control
                                                     type="password"
                                                     name="delegatebip39Passphrase"
+                                                    id="delegatebip39Passphrase"
                                                     placeholder="Enter bip39Passphrase (optional)"
                                                     required={false}
                                                 />
