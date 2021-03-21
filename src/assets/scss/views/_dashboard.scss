@@ -221,12 +221,13 @@
           padding-top: 30px;
         }
         td {
+          white-space: nowrap;
           font-size: 14px;
           line-height: 150%;
           padding: 15px 20px;
           &:first-child{
             padding-left: 40px;
-            max-width: 150px;
+           width: 150px;
           }
         }
         .result{

@@ -17,6 +17,7 @@ import axios from "axios";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import helper from "../../../../utils/helper";
+
 const ModalReDelegate = (props) => {
     const [amount, setAmount] = useState(0);
     const [show, setShow] = useState(true);
@@ -36,8 +37,8 @@ const ModalReDelegate = (props) => {
             for (const item of delegationResponseList) {
                 const validatorUrl = getValidatorUrl(item.delegation.validator_address);
                 const validatorResponse = await axios.get(validatorUrl);
-                console.log(validatorResponse,"RED")
-                if(validatorResponse.data.validator.description.moniker !== props.moniker) {
+                console.log(validatorResponse, "RED")
+                if (validatorResponse.data.validator.description.moniker !== props.moniker) {
                     validators.push(validatorResponse.data.validator);
                 }
             }
@@ -84,11 +85,12 @@ const ModalReDelegate = (props) => {
             </button>
         );
     }
+
     const onChangeSelect = (evt) => {
         setToValidatorAddress(evt.target.value)
     };
     const handleClose = () => {
-        setShow(false)
+        setShow(false);
         props.setModalOpen('');
         setResponse('');
     };
@@ -105,11 +107,11 @@ const ModalReDelegate = (props) => {
         event.preventDefault();
         showSeedModal(false);
         const mnemonic = event.target.mnemonic.value;
-        const validatorAddress = 'persistencevaloper15qsq6t6zxg60r3ljnxdpn9c6qpym2uvjl37hpl';
+        const validatorAddress = props.validatorAddress;
 
-        let accountNumber = 0
-        let addressIndex = 0
-        let bip39Passphrase = ""
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = "";
         if (advanceMode) {
             accountNumber = document.getElementById('redelegateAccountNumber').value;
             addressIndex = document.getElementById('redelegateAccountIndex').value;
@@ -149,7 +151,6 @@ const ModalReDelegate = (props) => {
                 console.log(response)
             });
         });
-        console.log(amount, mnemonic, validatorAddress, "redelegate form value") //amount taking stake.
     };
     const disabled = (
         helper.ValidateFrom(toValidatorAddress).message !== ''
@@ -172,7 +173,7 @@ const ModalReDelegate = (props) => {
                                 <p className="label">Redelegate to</p>
                                 <Select value={toValidatorAddress} className="validators-list-selection"
                                         onChange={onChangeSelect} displayEmpty>
-                                    <MenuItem value=""  key={0}>
+                                    <MenuItem value="" key={0}>
                                         <em>Select validator</em>
                                     </MenuItem>
                                     {
@@ -233,7 +234,7 @@ const ModalReDelegate = (props) => {
             {seedModal ?
                 <>
                     <Modal.Header>
-                       {props.moniker}
+                        {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={handleSubmit}>

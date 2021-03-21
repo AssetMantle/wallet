@@ -75,11 +75,11 @@ const ModalUnbond = (props) => {
         showSeedModal(false);
         // const password = event.target.password.value;
         const mnemonic = event.target.mnemonic.value;
-        const validatorAddress = 'persistencevaloper15qsq6t6zxg60r3ljnxdpn9c6qpym2uvjl37hpl';
+        const validatorAddress = props.validatorAddress;
 
-        let accountNumber = 0
-        let addressIndex = 0
-        let bip39Passphrase = ""
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = "";
         if (advanceMode) {
              accountNumber = document.getElementById('unbondAccountNumber').value;
              addressIndex = document.getElementById('unbondAccountIndex').value;

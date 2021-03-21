@@ -3,6 +3,8 @@ import xprt from "../../assets/images/xprt.svg";
 import ModalWithdraw from "../Wallet/ModalWithdraw";
 import {getDelegationsUnbondUrl, getRewardsUrl, getDelegationsUrl, getBalanceUrl} from "../../constants/url";
 import axios from "axios";
+import Lodash from "lodash";
+import helper from "../../utils/helper";
 
 const TokenInfo = () => {
     const [unbondingDelegations, setUnbondingDelegations] = useState(0);
@@ -10,26 +12,50 @@ const TokenInfo = () => {
     const [totalBalance, setTotalBalance] = useState(0);
     const [totalDelegations, setTotalDelegations] = useState(0);
     useEffect(() => {
-        const unbondDelegationsUrl = getDelegationsUnbondUrl('persistence1xfg28czjxsf75x9th4kejrjv3n6t7wfcu6gjpe');
-        const rewardsUrl = getRewardsUrl('persistence1xfg28czjxsf75x9th4kejrjv3n6t7wfcu6gjpe');
-        const delegationsUrl = getDelegationsUrl('persistence1095fgex3h37zl4yjptnsd7qfmspesvav7xhgwt');
-        const balanceUrl = getBalanceUrl('persistence1wv9879c57ag7zthrtcvundrw3yvvt0a92wmmhq')
+        const address = localStorage.getItem('address');
+        console.log(address, "address loggedin")
+        const unbondDelegationsUrl = getDelegationsUnbondUrl(address);
+        const rewardsUrl = getRewardsUrl(address);
+        const delegationsUrl = getDelegationsUrl(address);
+        const balanceUrl = getBalanceUrl(address);
         const fetchInfo = async () => {
             const unbondingResponse = await axios.get(unbondDelegationsUrl);
             const rewardsResponse = await axios.get(rewardsUrl);
             const delegationResponse = await axios.get(delegationsUrl);
             const balanceResponse = await axios.get(balanceUrl);
-            let delegationResponseList = delegationResponse.data.delegation_responses;
-            let totalDelegationsCount = 0;
-            delegationResponseList.forEach((delegation) => {
-                totalDelegationsCount = totalDelegationsCount + (delegation.balance.amount*1);
-            });
-            console.log(totalDelegationsCount/1000000, "totalDelgations");
-            setTotalDelegations(totalDelegationsCount/1000000);
-            setUnbondingDelegations(unbondingResponse.data.unbonding_responses[0].entries[0].balance);
-            const fixedRewardsResponse = rewardsResponse.data.total[0].amount / 1000000;
-            setTotalRewards(fixedRewardsResponse.toFixed(4));
-            setTotalBalance(balanceResponse.data.pagination.total)
+            if(delegationResponse.data.delegation_responses.length){
+                const totalDelegationsCount = Lodash.sumBy(delegationResponse.data.delegation_responses, (delegation) => {
+                    return delegation.balance.amount*1;
+                });
+                setTotalDelegations(totalDelegationsCount/1000000);
+                console.log(totalDelegationsCount/1000000, "totalDelgations");
+            }
+
+            if(unbondingResponse.data.unbonding_responses.length){
+               const totalUnbond =  Lodash.sumBy(unbondingResponse.data.unbonding_responses, (item) => {
+                    if(unbondingResponse.data.unbonding_responses[0].entries.length)
+                    {
+                        return unbondingResponse.data.unbonding_responses[0].entries[0].balance;
+                    }
+                });
+                setUnbondingDelegations(totalUnbond);
+            }
+
+            if(rewardsResponse.data.total.length){
+                const fixedRewardsResponse = rewardsResponse.data.total[0].amount / 1000000;
+                setTotalRewards(fixedRewardsResponse.toFixed(4));
+            }
+            if(balanceResponse.data.balances.length){
+                const totalBalance = Lodash.sumBy(balanceResponse.data.balances, (balance) => {
+                    return balance.amount*1;
+                });
+
+                // let USD = totalBalance *rate;
+                // USD = parseFloat(USD.toFixed(2)).toLocaleString();
+
+                setTotalBalance(parseFloat((totalBalance / 1000000).toFixed(2)).toLocaleString())
+            }
+
         };
         fetchInfo();
     }, []);
@@ -47,7 +73,7 @@ const TokenInfo = () => {
                     </div>
                     <div className="line">
                         <p className="key">Balance XPRT</p>
-                        <p className="value">${totalBalance}</p>
+                        <p className="value">{totalBalance}</p>
                     </div>
                 </div>
             </div>

@@ -70,7 +70,7 @@ const ModalDelegate = (props) => {
         event.preventDefault();
         const memo = event.target.memo.value;
         setMemoContent(memo);
-        setInitialModal(false)
+        setInitialModal(false);
         showSeedModal(true);
     };
 
@@ -78,7 +78,7 @@ const ModalDelegate = (props) => {
         event.preventDefault();
         showSeedModal(false);
         const mnemonic = event.target.mnemonic.value;
-        const validatorAddress = 'persistencevaloper15qsq6t6zxg60r3ljnxdpn9c6qpym2uvjl37hpl';
+        const validatorAddress = props.validatorAddress;
         let accountNumber = 0;
         let addressIndex = 0;
         let bip39Passphrase = "";
