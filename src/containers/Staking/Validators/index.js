@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Table, Modal, Dropdown} from "react-bootstrap";
-import {getDelegationsUrl, getValidatorUrl} from "../../../constants/url";
+import {getDelegationsUrl, getValidatorsUrl, getValidatorUrl} from "../../../constants/url";
 import helper from "../../../utils/helper"
 import axios from "axios";
 import Avatar from "./Avatar";
@@ -8,6 +8,7 @@ import Loader from "../../../components/Loader";
 import Lodash from 'lodash';
 import Icon from "../../../components/Icon";
 import ModalActions from "./ModalActions";
+
 const Validators = (props) => {
     const [modalDelegate, setModalOpen] = useState();
     const [loading, setLoading] = useState(true);
@@ -24,16 +25,9 @@ const Validators = (props) => {
         const fetchValidators = async () => {
             const address = localStorage.getItem('address');
             console.log(address, "loggedIn address");
-            const delegationsUrl = getDelegationsUrl(address);
-            const delegationResponse = await axios.get(delegationsUrl);
-
-            let delegationResponseList = delegationResponse.data.delegation_responses;
-            let validators = [];
-            for (const item of delegationResponseList) {
-                const validatorUrl = getValidatorUrl(item.delegation.validator_address);
-                const validatorResponse = await axios.get(validatorUrl);
-                validators.push(validatorResponse.data.validator);
-            }
+            const validatorUrl = getValidatorsUrl();
+            const validatorResponse = await axios.get(validatorUrl);
+            let validators = validatorResponse.data.validators;
             const active = Lodash.sumBy(validators, (item) => {
                 return helper.isActive(item) ? item.tokens : 0;
             });
@@ -75,7 +69,7 @@ const Validators = (props) => {
                         votingPower = parseFloat(votingPower.toFixed(2)).toLocaleString();
                         votingPowerPercentage = parseFloat(votingPowerPercentage.toFixed(2)).toLocaleString();
                         return (
-                            <tr>
+                            <tr key={index}>
                                 <td className=""><Avatar
                                     identity={validator.description.identity}/> {validator.description.moniker}</td>
                                 <td className="">{`${votingPower} (${votingPowerPercentage}%)`}</td>
@@ -97,7 +91,8 @@ const Validators = (props) => {
                                 </td>
                                 <td className="actions-td">
                                     <button
-                                        onClick={() => handleModal('ModalActions', validator)} className="button button-primary">
+                                        onClick={() => handleModal('ModalActions', validator)}
+                                        className="button button-primary">
                                         Actions
                                     </button>
                                 </td>
