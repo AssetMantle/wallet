@@ -278,6 +278,7 @@ const ModalReDelegate = (props) => {
                                                 <Form.Control
                                                     type="password"
                                                     name="redelegatebip39Passphrase"
+                                                    id="redelegatebip39Passphrase"
                                                     placeholder="Enter bip39Passphrase (optional)"
                                                     required={false}
                                                 />
