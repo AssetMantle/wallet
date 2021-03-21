@@ -13,7 +13,6 @@ const TokenInfo = () => {
     const [totalDelegations, setTotalDelegations] = useState(0);
     useEffect(() => {
         const address = localStorage.getItem('address');
-        console.log(address, "address loggedin")
         const unbondDelegationsUrl = getDelegationsUnbondUrl(address);
         const rewardsUrl = getRewardsUrl(address);
         const delegationsUrl = getDelegationsUrl(address);

@@ -28,6 +28,7 @@ const ModalReDelegate = (props) => {
     const [validatorsList, setValidatorsList] = useState([]);
     const [toValidatorAddress, setToValidatorAddress] = useState('');
     const [advanceMode, setAdvanceMode] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     useEffect(() => {
         const fetchValidators = async () => {
             const address = localStorage.getItem('address');
@@ -90,12 +91,19 @@ const ModalReDelegate = (props) => {
     const onChangeSelect = (evt) => {
         setToValidatorAddress(evt.target.value)
     };
+
     const handleClose = () => {
         setShow(false);
         props.setModalOpen('');
+        props.setTxModalShow(false);
+        props.setInitialModal(true);
         setResponse('');
     };
-
+    const handlePrevious = () =>{
+        props.setShow(true);
+        props.setTxModalShow(false);
+        props.setInitialModal(true);
+    };
     const handleSubmitInitialData = async event => {
         event.preventDefault();
         const memo = event.target.memo.value;
@@ -106,7 +114,7 @@ const ModalReDelegate = (props) => {
 
     const handleSubmit = async event => {
         event.preventDefault();
-        showSeedModal(false);
+
         const mnemonic = event.target.mnemonic.value;
         const validatorAddress = props.validatorAddress;
 
@@ -122,50 +130,59 @@ const ModalReDelegate = (props) => {
         const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
         const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
 
+        if(address.error === undefined && ecpairPriv.error === undefined) {
+            persistence.getAccounts(address).then(data => {
+                if (data.code === undefined) {
+                    let stdSignMsg = persistence.newStdMsg({
+                        msgs: [
+                            {
+                                type: "cosmos-sdk/MsgBeginRedelegate",
+                                value: {
+                                    amount: {
+                                        amount: String(1000000),
+                                        denom: "uxprt"
+                                    },
+                                    delegator_address: address,
+                                    validator_dst_address: toValidatorAddress,
+                                    validator_src_address: validatorAddress
+                                }
+                            }
+                        ],
+                        chain_id: persistence.chainId,
+                        fee: {amount: [{amount: String(5000), denom: "uxprt"}], gas: String(250000)},
+                        memo: memoContent,
+                        account_number: String(data.account.account_number),
+                        sequence: String(data.account.sequence)
+                    });
 
-        persistence.getAccounts(address).then(data => {
-            let stdSignMsg = persistence.newStdMsg({
-                msgs: [
-                    {
-                        type: "cosmos-sdk/MsgBeginRedelegate",
-                        value: {
-                            amount: {
-                                amount: String(1000000),
-                                denom: "uxprt"
-                            },
-                            delegator_address: address,
-                            validator_dst_address: toValidatorAddress,
-                            validator_src_address: validatorAddress
-                        }
-                    }
-                ],
-                chain_id: persistence.chainId,
-                fee: {amount: [{amount: String(5000), denom: "uxprt"}], gas: String(250000)},
-                memo: memoContent,
-                account_number: String(data.account.account_number),
-                sequence: String(data.account.sequence)
+                    const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
+                    persistence.broadcast(signedTx).then(response => {
+                        setResponse(response);
+                        console.log(response)
+                    });
+                    showSeedModal(false);
+                }
+                else {
+                    setErrorMessage(data.message);
+                }
             });
-
-            const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
-            persistence.broadcast(signedTx).then(response => {
-                setResponse(response);
-                console.log(response)
-            });
-        });
+        }else{
+            if(address.error !== undefined){
+                setErrorMessage(address.error)
+            }
+            else {
+                setErrorMessage(ecpairPriv.error)
+            }
+        }
     };
     const disabled = (
         helper.ValidateFrom(toValidatorAddress).message !== ''
     );
     return (
-        <Modal
-            animation={false}
-            centered={true}
-            show={show}
-            className="modal-custom delegate-modal"
-            onHide={handleClose}>
+        <>
             {initialModal ?
                 <>
-                    <Modal.Header>
+                    <Modal.Header closeButton>
                         {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
@@ -224,7 +241,12 @@ const ModalReDelegate = (props) => {
                                               placeholder="Enter Memo"
                                               required={false}/>
                             </div>
-                            <div className="buttons">
+                            <div className="buttons navigate-buttons">
+                                <button className="button button-secondary" onClick={() => handlePrevious()}>
+                                    <Icon
+                                        viewClass="arrow-right"
+                                        icon="left-arrow"/>
+                                </button>
                                 <button className="button button-primary" disabled={disabled}>Next</button>
                             </div>
                         </Form>
@@ -234,7 +256,7 @@ const ModalReDelegate = (props) => {
             }
             {seedModal ?
                 <>
-                    <Modal.Header>
+                    <Modal.Header closeButton>
                         {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
@@ -287,6 +309,11 @@ const ModalReDelegate = (props) => {
                                             </div>
                                         </>
                                     </Accordion.Collapse>
+                                    {
+                                        errorMessage !== "" ?
+                                            <p className="form-error">{errorMessage}</p>
+                                            : null
+                                    }
                                 </Card>
                             </Accordion>
                             <div className="buttons">
@@ -301,7 +328,7 @@ const ModalReDelegate = (props) => {
             {
                 response !== '' && response.code === undefined ?
                     <>
-                        <Modal.Header className="result-header success">
+                        <Modal.Header className="result-header success" closeButton>
                             Successfully Redelegated!
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
@@ -309,7 +336,7 @@ const ModalReDelegate = (props) => {
                                 <img src={success} alt="success-image"/>
                                 <p className="tx-hash">Tx Hash: {response.txhash}</p>
                                 <div className="buttons">
-                                    <button className="button">Done</button>
+                                    <button className="button" onClick={props.handleClose}>Done</button>
                                 </div>
                             </div>
                         </Modal.Body>
@@ -319,7 +346,7 @@ const ModalReDelegate = (props) => {
             {
                 response !== '' && response.code !== undefined ?
                     <>
-                        <Modal.Header className="result-header error">
+                        <Modal.Header className="result-header error" closeButton>
                             Failed to Redelegated
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
@@ -337,7 +364,7 @@ const ModalReDelegate = (props) => {
             }
 
 
-        </Modal>
+        </>
     );
 };
 

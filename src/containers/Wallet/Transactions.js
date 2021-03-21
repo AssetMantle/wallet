@@ -14,7 +14,9 @@ const Transactions = () => {
             const sendTxnsUrl = getSendTransactionsUrl(address);
             const sendTxnsResponse = await axios.get(sendTxnsUrl);
             let sendTxnsResponseList = sendTxnsResponse.data.txs;
-            setSendTransactionsList(sendTxnsResponseList);
+            if(sendTxnsResponseList !== undefined){
+                setSendTransactionsList(sendTxnsResponseList);
+            }
         };
         fetchValidators();
     }, []);
@@ -33,7 +35,7 @@ const Transactions = () => {
                 </tr>
                 </thead>
                 <tbody>
-                {
+                {sendTransactionsList.length ?
                     sendTransactionsList.map((stxn, index) => {
                         let hash = helper.stringTruncate(stxn.txhash);
                         let amountDenom = '';
@@ -90,6 +92,7 @@ const Transactions = () => {
                             </tr>
                         )
                     })
+                    : <tr><td colSpan={7} className="text-center"> No Txns Found</td></tr>
                 }
 
 

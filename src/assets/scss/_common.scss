@@ -246,6 +246,12 @@ html, body {
   }
 }
 
+.modal-header button.close{
+  position: absolute;
+  right: 30px;
+  top: 30px;
+}
+
 .form-error {
   margin: 0;
   padding: 10px 0;
@@ -327,4 +333,17 @@ html, body {
 }
 .icon-box.error{
   background: #FFEECC;
+}
+
+.navigate-buttons{
+  .button-secondary{
+    float: left;
+    padding: .375rem 0.8rem;
+    background: #F0F1F2;
+    border-color: transparent;
+    width: auto !important;
+    .icon{
+      width: 20px;
+    }
+  }
 }

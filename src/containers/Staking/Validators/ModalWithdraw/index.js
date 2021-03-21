@@ -10,18 +10,24 @@ import React, {useState, useContext} from 'react';
 import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
+
 const ModalWithdraw = (props) => {
-    const [show, setShow] = useState(true);
     const [response, setResponse] = useState('');
     const [advanceMode, setAdvanceMode] = useState(false);
     const [initialModal, setInitialModal] = useState(true);
     const [seedModal, showSeedModal] = useState(false);
     const [memoContent, setMemoContent] = useState('');
-
+    const [errorMessage, setErrorMessage] = useState("");
     const handleClose = () => {
-        setShow(false);
         props.setModalOpen('');
+        props.setTxModalShow(false);
+        props.setInitialModal(true);
         setResponse('');
+    };
+    const handlePrevious = () => {
+        props.setShow(true);
+        props.setTxModalShow(false);
+        props.setInitialModal(true);
     };
 
     function ContextAwareToggle({children, eventKey, callback}) {
@@ -63,9 +69,9 @@ const ModalWithdraw = (props) => {
         setInitialModal(false);
         showSeedModal(true);
     };
+
     const handleSubmit = async event => {
         event.preventDefault();
-        showSeedModal(false);
         // const password = event.target.password.value;
         const mnemonic = event.target.mnemonic.value;
         const validatorAddress = props.validatorAddress;
@@ -78,47 +84,54 @@ const ModalWithdraw = (props) => {
             addressIndex = document.getElementById('claimAccountIndex').value;
             bip39Passphrase = document.getElementById('claimbip39Passphrase').value;
         }
-        const persistence = MakePersistence(accountNumber,addressIndex);
-        const address = persistence.getAddress(mnemonic, bip39Passphrase,true);
+        const persistence = MakePersistence(accountNumber, addressIndex);
+        const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
         const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
 
+        if (address.error === undefined && ecpairPriv.error === undefined) {
+            persistence.getAccounts(address).then(data => {
+                if (data.code === undefined) {
+                    let stdSignMsg = persistence.newStdMsg({
+                        msgs: [
+                            {
+                                type: "cosmos-sdk/MsgWithdrawDelegationReward",
+                                value: {
+                                    delegator_address: address,
+                                    validator_address: validatorAddress
+                                }
+                            }
+                        ],
+                        chain_id: persistence.chainId,
+                        fee: {amount: [{amount: String(5000), denom: "uxprt"}], gas: String(250000)},
+                        memo: memoContent,
+                        account_number: String(data.account.account_number),
+                        sequence: String(data.account.sequence)
+                    });
 
-        persistence.getAccounts(address).then(data => {
-            let stdSignMsg = persistence.newStdMsg({
-                msgs: [
-                    {
-                        type: "cosmos-sdk/MsgWithdrawDelegationReward",
-                        value: {
-                            delegator_address: address,
-                            validator_address: validatorAddress
-                        }
-                    }
-                ],
-                chain_id: persistence.chainId,
-                fee: {amount: [{amount: String(5000), denom: "uxprt"}], gas: String(250000)},
-                memo: memoContent,
-                account_number: String(data.account.account_number),
-                sequence: String(data.account.sequence)
+                    const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
+                    persistence.broadcast(signedTx).then(response => {
+                        setResponse(response);
+                        console.log(response)
+                    });
+                    showSeedModal(false);
+                } else {
+                    setErrorMessage(data.message);
+                }
             });
-
-            const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
-            persistence.broadcast(signedTx).then(response => {
-                setResponse(response);
-                console.log(response)
-            });
-        });
+        } else {
+            if (address.error !== undefined) {
+                setErrorMessage(address.error)
+            } else {
+                setErrorMessage(ecpairPriv.error)
+            }
+        }
     };
 
     return (
-        <Modal
-            animation={false}
-            centered={true}
-            show={show}
-            className="modal-custom delegate-modal"
-            onHide={handleClose}>
+        <>
             {initialModal ?
                 <>
-                    <Modal.Header>
+                    <Modal.Header closeButton>
                         Claim Staking Rewards
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
@@ -138,7 +151,12 @@ const ModalWithdraw = (props) => {
                                               placeholder="Enter Memo"
                                               required={false}/>
                             </div>
-                            <div className="buttons">
+                            <div className="buttons navigate-buttons">
+                                <button className="button button-secondary" onClick={() => handlePrevious()}>
+                                    <Icon
+                                        viewClass="arrow-right"
+                                        icon="left-arrow"/>
+                                </button>
                                 <button className="button button-primary">Next</button>
                             </div>
                         </Form>
@@ -148,7 +166,7 @@ const ModalWithdraw = (props) => {
             }
             {seedModal ?
                 <>
-                    <Modal.Header>
+                    <Modal.Header closeButton>
                         Claim Staking Rewards
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
@@ -201,6 +219,11 @@ const ModalWithdraw = (props) => {
                                             </div>
                                         </>
                                     </Accordion.Collapse>
+                                    {
+                                        errorMessage !== "" ?
+                                            <p className="form-error">{errorMessage}</p>
+                                            : null
+                                    }
                                 </Card>
                             </Accordion>
                             <div className="buttons">
@@ -215,7 +238,7 @@ const ModalWithdraw = (props) => {
             {
                 response !== '' && response.code === undefined ?
                     <>
-                        <Modal.Header className="result-header success">
+                        <Modal.Header className="result-header success" closeButton>
                             Successfully Claimed Rewards!
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
@@ -223,7 +246,7 @@ const ModalWithdraw = (props) => {
                                 <img src={success} alt="success-image"/>
                                 <p className="tx-hash">Tx Hash: {response.txhash}</p>
                                 <div className="buttons">
-                                    <button className="button">Done</button>
+                                    <button className="button" onClick={props.handleClose}>Done</button>
                                 </div>
                             </div>
                         </Modal.Body>
@@ -233,7 +256,7 @@ const ModalWithdraw = (props) => {
             {
                 response !== '' && response.code !== undefined ?
                     <>
-                        <Modal.Header className="result-header error">
+                        <Modal.Header className="result-header error" closeButton>
                             Failed to Claimed Rewards
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
@@ -249,7 +272,7 @@ const ModalWithdraw = (props) => {
                     </>
                     : null
             }
-        </Modal>
+        </>
     );
 };
 

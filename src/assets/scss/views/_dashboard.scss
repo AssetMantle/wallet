@@ -836,7 +836,7 @@
 .actions-td {
   display: flex;
   align-items: center;
-  padding: 0px !important;
+  padding: 0px 20px !important;
   .show.dropdown{
     .button.button-primary {
       .icon {
@@ -864,5 +864,91 @@
     right: auto !important;
     bottom: auto !important;
     transform: translate(-129px, 33px) !important;
+  }
+}
+
+.actions-modal{
+  .actions-modal-body{
+    padding: 30px;
+    .moniker-box{
+      display: flex;
+      align-items: center;
+      img{
+        width: 60px;
+        margin-right: 20px;
+      }
+      .info{
+        padding: 10px 0;
+        .name{
+          margin: 0;
+          font-size: 20px;
+          font-weight: 500;
+          font-family: 'Poppins', sans-serif;
+        }
+        .commission{
+          font-size: 12px;
+          margin: 0;
+        }
+      }
+
+    }
+    .website{
+      padding: 20px 0 10px 0;
+      .name{
+        font-size: 1rem;
+        font-weight: 500;
+        font-family: 'Poppins', sans-serif;
+        line-height: 1.5;
+        margin-bottom: 3px;
+      }
+      .value{
+        margin: 0;
+      }
+    }
+    .description{
+      padding: 10px 0 10px 0;
+      .name{
+        font-size: 1rem;
+        font-weight: 500;
+        font-family: 'Poppins', sans-serif;
+        line-height: 1.5;
+        margin-bottom: 3px;
+      }
+      .value{
+        margin: 0;
+      }
+    }
+    .buttons-group{
+      padding-top: 15px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      .button-primary{
+        margin: 5px;
+      }
+      .btn-group {
+        margin: 5px;
+        .btn-main{
+          background: #E50913;
+          line-height: 180%;
+          font-weight: bold;
+          font-size: 16.5455px;
+          color: #FFFFFF;
+          padding: .375rem 1.2rem;
+          border-radius: 0;
+          outline: none !important;
+          border: 1px solid #E50913;
+          box-shadow: none !important;
+        }
+        .btn-success{
+          background-color: #be050ef7 !important;
+          border-color: #be050ef7 !important;
+
+        }
+        .btn-success:focus, .btn-success:active{
+          box-shadow: 0 0 0 0.2rem #e5091340 !important;
+        }
+      }
+    }
   }
 }

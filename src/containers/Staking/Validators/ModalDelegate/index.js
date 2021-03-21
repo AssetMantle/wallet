@@ -21,6 +21,7 @@ const ModalDelegate = (props) => {
     const [seedModal, showSeedModal] = useState(false);
     const [response, setResponse] = useState('');
     const [advanceMode, setAdvanceMode] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     const handleAmount = (amount) => {
         setAmount(amount)
     };
@@ -63,9 +64,15 @@ const ModalDelegate = (props) => {
     const handleClose = () => {
         setShow(false);
         props.setModalOpen('');
+        props.setTxModalShow(false);
+        props.setInitialModal(true);
         setResponse('');
     };
-
+    const handlePrevious = () => {
+        props.setShow(true);
+        props.setTxModalShow(false);
+        props.setInitialModal(true);
+    };
     const handleSubmitInitialData = async event => {
         event.preventDefault();
         const memo = event.target.memo.value;
@@ -76,7 +83,6 @@ const ModalDelegate = (props) => {
 
     const handleSubmit = async event => {
         event.preventDefault();
-        showSeedModal(false);
         const mnemonic = event.target.mnemonic.value;
         const validatorAddress = props.validatorAddress;
         let accountNumber = 0;
@@ -87,38 +93,53 @@ const ModalDelegate = (props) => {
             addressIndex = document.getElementById('delegateAccountIndex').value;
             bip39Passphrase = document.getElementById('delegatebip39Passphrase').value;
         }
-        const persistence = MakePersistence(accountNumber,addressIndex);
-        const address = persistence.getAddress(mnemonic, bip39Passphrase,true);
+        const persistence = MakePersistence(accountNumber, addressIndex);
+        const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
         const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
-
-        persistence.getAccounts(address).then(data => {
-            let stdSignMsg = persistence.newStdMsg({
-                msgs: [
-                    {
-                        type: "cosmos-sdk/MsgDelegate",
-                        value: {
-                            amount: {
-                                amount: String(1000000),
-                                denom: "uxprt"
-                            },
-                            delegator_address: address,
-                            validator_address: validatorAddress
-                        }
-                    }
-                ],
-                chain_id: persistence.chainId,
-                fee: {amount: [{amount: String(5000), denom: "uxprt"}], gas: String(250000)},
-                memo: memoContent,
-                account_number: String(data.account.account_number),
-                sequence: String(data.account.sequence)
+        console.log(address.error, "rdsult");
+        if (address.error === undefined && ecpairPriv.error === undefined) {
+            persistence.getAccounts(address).then(data => {
+                if (data.code === undefined) {
+                    let stdSignMsg = persistence.newStdMsg({
+                        msgs: [
+                            {
+                                type: "cosmos-sdk/MsgDelegate",
+                                value: {
+                                    amount: {
+                                        amount: String(1000000),
+                                        denom: "uxprt"
+                                    },
+                                    delegator_address: address,
+                                    validator_address: validatorAddress
+                                }
+                            }
+                        ],
+                        chain_id: persistence.chainId,
+                        fee: {amount: [{amount: String(5000), denom: "uxprt"}], gas: String(250000)},
+                        memo: memoContent,
+                        account_number: String(data.account.account_number),
+                        sequence: String(data.account.sequence)
+                    });
+                    const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
+                    persistence.broadcast(signedTx).then(response => {
+                        setResponse(response)
+                        console.log(response, "delegate response")
+                    });
+                    showSeedModal(false);
+                } else {
+                    setErrorMessage(data.message);
+                }
             });
-
-            const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
-            persistence.broadcast(signedTx).then(response => {
-                setResponse(response)
-                console.log(response, "delegate response")});
-        });
+        } else {
+            if (address.error !== undefined) {
+                setErrorMessage(address.error)
+            }
+            else {
+                setErrorMessage(ecpairPriv.error)
+            }
+        }
     };
+
     const popover = (
         <Popover id="popover-basic">
             <Popover.Content>
@@ -128,15 +149,10 @@ const ModalDelegate = (props) => {
         </Popover>
     );
     return (
-        <Modal
-            animation={false}
-            centered={true}
-            show={show}
-            className="modal-custom delegate-modal"
-            onHide={handleClose}>
+        <>
             {initialModal ?
                 <>
-                    <Modal.Header>
+                    <Modal.Header closeButton>
                         Delegating to {props.moniker}
                         <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
                             <button className="icon-button info"><Icon
@@ -181,7 +197,12 @@ const ModalDelegate = (props) => {
                                               placeholder="Enter Memo"
                                               required={false}/>
                             </div>
-                            <div className="buttons">
+                            <div className="buttons navigate-buttons">
+                                <button className="button button-secondary" onClick={() => handlePrevious()}>
+                                    <Icon
+                                        viewClass="arrow-right"
+                                        icon="left-arrow"/>
+                                </button>
                                 <button className="button button-primary">Next</button>
                             </div>
                         </Form>
@@ -191,7 +212,7 @@ const ModalDelegate = (props) => {
             }
             {seedModal ?
                 <>
-                    <Modal.Header>
+                    <Modal.Header closeButton>
                         Delegating to {props.moniker}
                         <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
                             <button className="icon-button info"><Icon
@@ -249,6 +270,11 @@ const ModalDelegate = (props) => {
                                             </div>
                                         </>
                                     </Accordion.Collapse>
+                                    {
+                                        errorMessage !== "" ?
+                                            <p className="form-error">{errorMessage}</p>
+                                            : null
+                                    }
                                 </Card>
                             </Accordion>
                             <div className="buttons">
@@ -266,7 +292,7 @@ const ModalDelegate = (props) => {
             {
                 response !== '' && response.code === undefined ?
                     <>
-                        <Modal.Header className="result-header success">
+                        <Modal.Header className="result-header success" closeButton>
                             Successfully Delegated!
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
@@ -274,34 +300,32 @@ const ModalDelegate = (props) => {
                                 <img src={success} alt="success-image"/>
                                 <p className="tx-hash">Tx Hash: {response.txhash}</p>
                                 <div className="buttons">
-                                    <button className="button">Done</button>
+                                    <button className="button" onClick={props.handleClose}>Done</button>
                                 </div>
                             </div>
                         </Modal.Body>
                     </>
                     : null
             }{
-             response !== '' && response.code !== undefined ?
-                 <>
-                        <Modal.Header className="result-header error">
-                            Failed to Delegate
-                        </Modal.Header>
-                        <Modal.Body className="delegate-modal-body">
-                            <div className="result-container">
-                                <p className="tx-hash">Tx Hash:
-                                    {response.txhash}</p>
-                                <p>{response.raw_log}</p>
-                                <div className="buttons">
-                                    <button className="button" onClick={handleClose}>Done</button>
-                                </div>
+            response !== '' && response.code !== undefined ?
+                <>
+                    <Modal.Header className="result-header error" closeButton>
+                        Failed to Delegate
+                    </Modal.Header>
+                    <Modal.Body className="delegate-modal-body">
+                        <div className="result-container">
+                            <p className="tx-hash">Tx Hash:
+                                {response.txhash}</p>
+                            <p>{response.raw_log}</p>
+                            <div className="buttons">
+                                <button className="button" onClick={handleClose}>Done</button>
                             </div>
-                        </Modal.Body>
-                    </>
-            : null
-            }
-
-
-        </Modal>
+                        </div>
+                    </Modal.Body>
+                </>
+                : null
+        }
+        </>
     );
 };
 

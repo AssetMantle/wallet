@@ -14,10 +14,18 @@ function MakePersistence(accountNumber, addressIndex) {
     Persistence.setPath("m/44'/750'/" + accountNumber + "'/0/"+ addressIndex);
     Persistence.getAddress = function(mnemonic, bip39passphrase = "", checkSum = true) {
         if (typeof mnemonic !== "string") {
-            throw new Error("mnemonic expects a string")
+            const data = {
+                error:"mnemonic expects a string"
+            };
+            return  data;
         }
         if (checkSum) {
-            if (!bip39.validateMnemonic(mnemonic)) throw new Error("mnemonic phrases have invalid checksums");
+            if (!bip39.validateMnemonic(mnemonic)){
+                const data = {
+                    error:"mnemonic phrases have invalid checksums"
+                };
+                return  data;
+            }
         }
         const seed = bip39.mnemonicToSeedSync(mnemonic, bip39passphrase);
         const node = bip32.fromSeed(seed);
@@ -27,7 +35,10 @@ function MakePersistence(accountNumber, addressIndex) {
     };
     Persistence.getECPairPriv = function(mnemonic, bip39passphrase = "") {
         if (typeof mnemonic !== "string") {
-            throw new Error("mnemonic expects a string")
+            const data = {
+                error:"mnemonic expects a string"
+            };
+            return  data;
         }
         const seed = bip39.mnemonicToSeedSync(mnemonic, bip39passphrase);
         const node = bip32.fromSeed(seed);

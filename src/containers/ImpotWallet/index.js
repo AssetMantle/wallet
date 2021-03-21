@@ -41,11 +41,9 @@ const ImportWallet = (props) => {
             let bip39Passphrase = document.getElementById('bip39Passphrase').value;
             const walletPath = wallet.getWalletPath(accountNumber, addressIndex);
             responseData = wallet.createWallet(event.target.mnemonic.value, walletPath, bip39Passphrase);
-            console.log(advanceMode, "ind")
         } else {
             responseData = wallet.createWallet(event.target.mnemonic.value);
         }
-        console.log(event.target.mnemonic.value, "responseData");
         setResponse(responseData);
         if (responseData.error) {
             setErrorMessage(responseData.error);
