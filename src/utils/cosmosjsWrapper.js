@@ -1,11 +1,11 @@
 import cosmosjs from "@cosmostation/cosmosjs";
+import config from "../utils/config";
 const bip39 = require('bip39');
 const bip32 = require('bip32');
 const bech32 = require('bech32');
 const bitcoinjs = require('bitcoinjs-lib');
-
-const apiUrl = "http://128.199.29.15:1317";
-const chainID = "test-core-1"
+const apiUrl = config.apiUrl;
+const chainID = config.chainID;
 
 function MakePersistence(accountNumber, addressIndex) {
 
