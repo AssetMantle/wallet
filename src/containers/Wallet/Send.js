@@ -1,110 +1,161 @@
-import React, {useState} from "react";
-import {Form} from "react-bootstrap";
-import Persistence from "../../utils/cosmosjsWrapper"
+import React, {useContext, useState} from "react";
+import {
+    Accordion,
+    AccordionContext,
+    Card,
+    Form,
+    Modal,
+    OverlayTrigger,
+    Popover,
+    useAccordionToggle
+} from "react-bootstrap";
+import Icon from "../../components/Icon";
+import success from "../../assets/images/success.svg";
+import MakePersistence from "../../utils/cosmosjsWrapper";
 
 const Send = () => {
     const [amountField, setAmountField] = useState(0);
+    const [toAddress, setToAddress] = useState('');
+    const [txResponse, setTxResponse] = useState('');
+    const [mnemonicForm, setMnemonicForm] = useState(false);
+    const [show, setShow] = useState(true);
+    const [advanceMode, setAdvanceMode] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     const handleAmount = (amount) => {
         setAmountField(amount)
-    }
+    };
+    const handleClose = () => {
+        setShow(false);
+        setMnemonicForm(false);
+        setTxResponse('');
+        console.log(show, mnemonicForm)
+    };
     const handleAmountChange = (evt) => {
         setAmountField(evt.target.value)
-    }
+    };
     const handleSubmit = async event => {
-        event.preventDefault()
-        const toAddress = event.target.address.value;
-        const mnemonic = "tank pair spray rely any menu airport shiver boost emerge holiday siege evil grace exile comfort fence mention pig bus cable scissors ability all";
+        console.log(show, mnemonicForm)
+        event.preventDefault();
+        setToAddress(event.target.address.value);
+        setMnemonicForm(true);
+        setShow(true);
+    };
+    function ContextAwareToggle({children, eventKey, callback}) {
+        const currentEventKey = useContext(AccordionContext);
 
-        const persistence = Persistence
-        const address = persistence.getAddress(mnemonic);
-        const ecpairPriv = persistence.getECPairPriv(mnemonic);
+        const decoratedOnClick = useAccordionToggle(
+            eventKey,
+            () => callback && callback(eventKey),
+        );
+        const handleAccordion = (event) => {
+            decoratedOnClick(event);
+            setAdvanceMode(!advanceMode);
+        };
+        const isCurrentEventKey = currentEventKey === eventKey;
 
+        return (
+            <button
+                type="button"
+                className="accordion-button"
+                onClick={handleAccordion}
+            >
+                {isCurrentEventKey ?
+                    <Icon
+                        viewClass="arrow-right"
+                        icon="up-arrow"/>
+                    :
+                    <Icon
+                        viewClass="arrow-right"
+                        icon="down-arrow"/>}
 
-
-        persistence.getAccounts(address).then(data => {
-            let stdSignMsg = persistence.newStdMsg({
-                msgs: [
-                    {
-                        type: "cosmos-sdk/MsgSend",
-                        value: {
-                            amount: [
-                                {
-                                    amount: String(10),
-                                    denom: "uxprt"
-                                }
-                            ],
-                            from_address: address,
-                            to_address: toAddress
-                        }
-                    }
-                ],
-                chain_id: Persistence.chainId,
-                fee: {amount: [{amount: String(0), denom: "upxrt"}], gas: String(200000)},
-                memo: "",
-                account_number: String(data.account.account_number),
-                sequence: String(data.account.sequence)
-            });
-
-            const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
-            persistence.broadcast(signedTx).then(response => console.log(response));
-
-
-            // const wallet = await Secp256k1HdWallet.fromMnemonic(mnemonic, makeCosmoshubPath(0), "persistence");
-            // const [{address}] = await wallet.getAccounts();
-            //
-            // const client = new CosmosClient(apiUrl);
-            // const {accountNumber, sequence} = await client.getSequence(address);
-            //
-            // const defaultNetworkId = "test-core-1";
-            // const defaultFee = {
-            //     amount: [
-            //         {
-            //             amount: "5000",
-            //             denom: "uxprt",
-            //         },
-            //     ],
-            //     gas: "2000000",
-            // };
-            //
-            // const sendTokensMsg = {
-            //     type: "cosmos-sdk/MsgSend",
-            //     value: {
-            //         from_address: address,
-            //         to_address: toAddress,
-            //         amount: [
-            //             {
-            //                 denom: "uxprt",
-            //                 amount: amountField,
-            //             },
-            //         ],
-            //     },
-            // };
-            //
-            // const signDoc = makeSignDoc(
-            //     [sendTokensMsg],
-            //     defaultFee,
-            //     defaultNetworkId,
-            //     "My first contract on chain",
-            //     accountNumber,
-            //     sequence,
-            // );
-            //
-            // const {signed, signature} = await wallet.sign(address, signDoc);
-            // const signedTx = makeStdTx(signed, signature);
-            //
-            // let broadcastResult = await client.broadcastTx(signedTx);
-        })
+            </button>
+        );
     }
+    const handleMnemonicSubmit = (evt) => {
+        evt.preventDefault();
+        const userMnemonic = evt.target.mnemonic.value;
+        const mnemonic = "tank pair spray rely any menu airport shiver boost emerge holiday siege evil grace exile comfort fence mention pig bus cable scissors ability all";
+        console.log(userMnemonic, "userMnemonic");
+
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = ""
+        if (advanceMode) {
+            accountNumber = document.getElementById('sendAccountNumber').value;
+            addressIndex = document.getElementById('sendAccountIndex').value;
+            bip39Passphrase = document.getElementById('sendbip39Passphrase').value;
+        }
+
+        const persistence = MakePersistence(accountNumber, addressIndex);
+        const address = persistence.getAddress(userMnemonic, bip39Passphrase, true);
+        const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
+        if(address.error === undefined && ecpairPriv.error === undefined) {
+            persistence.getAccounts(address).then(data => {
+                if (data.code === undefined) {
+                    let stdSignMsg = persistence.newStdMsg({
+                        msgs: [
+                            {
+                                type: "cosmos-sdk/MsgSend",
+                                value: {
+                                    amount: [
+                                        {
+                                            amount: amountField,
+                                            denom: "uxprt"
+                                        }
+                                    ],
+                                    from_address: address,
+                                    to_address: toAddress
+                                }
+                            }
+                        ],
+                        chain_id: persistence.chainId,
+                        fee: {amount: [{amount: String(0), denom: "upxrt"}], gas: String(250000)},
+                        memo: "",
+                        account_number: String(data.account.account_number),
+                        sequence: String(data.account.sequence)
+                    });
+
+                    const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
+                    persistence.broadcast(signedTx).then(response => {
+                        setTxResponse(response)
+                        console.log(response)
+                    });
+                }
+                else {
+                    setErrorMessage(data.message);
+                }
+            })
+        }else{
+            if(address.error !== undefined){
+                setErrorMessage(address.error)
+            }
+            else {
+                setErrorMessage(ecpairPriv.error)
+            }
+        }
+    };
+    const popover = (
+        <Popover id="popover-basic">
+            <Popover.Content>
+                The recipient’s address should start with XPRTa123…..
+            </Popover.Content>
+        </Popover>
+    );
     return (
         <div className="send-container">
             <div className="form-section">
                 <Form onSubmit={handleSubmit}>
                     <div className="form-field">
-                        <p className="label">Recipient Address</p>
+                        <p className="label info">Recipient Address
+                            <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
+                                <button className="icon-button info"><Icon
+                                    viewClass="arrow-right"
+                                    icon="info"/></button>
+                            </OverlayTrigger></p>
                         <Form.Control
                             type="text"
                             name="address"
-                            placeholder="Enter recipient address"
+                            placeholder="Enter Recipient's address "
                             required={true}
                         />
                     </div>
@@ -112,7 +163,8 @@ const Send = () => {
                         <p className="label">Send Amount</p>
                         <div className="amount-field">
                             <Form.Control
-                                type="text"
+                                type="number"
+                                min={0}
                                 name="amount"
                                 placeholder="Send Amount"
                                 value={amountField}
@@ -135,20 +187,121 @@ const Send = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="form-field">
-                        <p className="label">Memo</p>
-                        <Form.Control
-                            type="text"
-                            name="memo"
-                            placeholder="Insert memo (optional)"
-                            required={false}
-                        />
-                    </div>
                     <div className="buttons">
-                        <button className="button button-primary">Send</button>
+                        <button className="button button-primary">Send XPRT Tokens</button>
                     </div>
                 </Form>
             </div>
+
+            {
+                mnemonicForm ?
+                    <Modal show={show} onHide={handleClose} centered className="create-wallet-modal">
+                        {
+                            txResponse === '' ?
+                                <Modal.Body className="create-wallet-body import-wallet-body">
+                                    <h3 className="heading">Send Token
+                                    </h3>
+                                    <Form onSubmit={handleMnemonicSubmit}>
+                                        <div className="form-field">
+                                            <p className="label">Mnemonic</p>
+                                            <Form.Control as="textarea" rows={3} name="mnemonic"
+                                                          placeholder="Enter Mnemonic"
+                                                          required={true}/>
+                                        </div>
+                                        <Accordion className="advanced-wallet-accordion">
+                                            <Card>
+                                                <Card.Header>
+                                                    <p>
+                                                        Advanced
+                                                    </p>
+                                                    <ContextAwareToggle eventKey="0">Click me!</ContextAwareToggle>
+                                                </Card.Header>
+                                                <Accordion.Collapse eventKey="0">
+                                                    <>
+                                                        <div className="form-field">
+                                                            <p className="label">Account</p>
+                                                            <Form.Control
+                                                                type="text"
+                                                                name="privateAccountNumber"
+                                                                id="sendAccountNumber"
+                                                                placeholder="Account number"
+                                                                required={advanceMode ? true : false}
+                                                            />
+                                                        </div>
+                                                        <div className="form-field">
+                                                            <p className="label">Account Index</p>
+                                                            <Form.Control
+                                                                type="text"
+                                                                name="privateAccountIndex"
+                                                                id="sendAccountIndex"
+                                                                placeholder="Account Index"
+                                                                required={advanceMode ? true : false}
+                                                            />
+                                                        </div>
+                                                        <div className="form-field">
+                                                            <p className="label">bip39Passphrase</p>
+                                                            <Form.Control
+                                                                type="password"
+                                                                name="bip39Passphrase"
+                                                                id="sendbip39Passphrase"
+                                                                placeholder="Enter bip39Passphrase (optional)"
+                                                                required={false}
+                                                            />
+                                                        </div>
+                                                    </>
+                                                </Accordion.Collapse>
+                                                {
+                                                    errorMessage !== "" ?
+                                                        <p className="form-error">{errorMessage}</p>
+                                                        : null
+                                                }
+                                            </Card>
+                                        </Accordion>
+                                        <div className="buttons">
+                                            <button className="button button-primary">Send</button>
+                                        </div>
+                                    </Form>
+
+                                </Modal.Body>
+                                : <>
+                                    {
+                                        txResponse.code === undefined ?
+                                            <>
+                                                <Modal.Header className="result-header success">
+                                                    Successfully Send!
+                                                </Modal.Header>
+                                                <Modal.Body className="delegate-modal-body">
+                                                    <div className="result-container">
+                                                        <img src={success} alt="success-image"/>
+                                                        <p className="tx-hash">Tx Hash: {txResponse.txhash}</p>
+                                                        <div className="buttons">
+                                                            <button className="button" onClick={handleClose}>Done</button>
+                                                        </div>
+                                                    </div>
+                                                </Modal.Body>
+                                            </>
+                                            : <>
+                                                <Modal.Header className="result-header error">
+                                                    Failed to Send
+                                                </Modal.Header>
+                                                <Modal.Body className="delegate-modal-body">
+                                                    <div className="result-container">
+                                                        <p className="tx-hash">Tx Hash:
+                                                            {txResponse.txhash}</p>
+                                                        <p>{txResponse.raw_log}</p>
+                                                        <div className="buttons">
+                                                            <button className="button" onClick={handleClose}>Done</button>
+                                                        </div>
+                                                    </div>
+                                                </Modal.Body>
+                                            </>
+                                    }
+                                </>
+                        }
+
+                    </Modal>
+                    : null
+            }
         </div>
     );
 };

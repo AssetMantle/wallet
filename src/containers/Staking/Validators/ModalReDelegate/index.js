@@ -12,18 +12,50 @@ import React, {useState, useEffect, useContext} from 'react';
 import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
+import {getDelegationsUrl, getValidatorsUrl, getValidatorUrl} from "../../../../constants/url";
+import axios from "axios";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import helper from "../../../../utils/helper";
+import Lodash from "lodash";
 
-const ModalDelegate = (props) => {
+const ModalReDelegate = (props) => {
     const [amount, setAmount] = useState(0);
     const [show, setShow] = useState(true);
     const [memoContent, setMemoContent] = useState('');
     const [initialModal, setInitialModal] = useState(true);
     const [seedModal, showSeedModal] = useState(false);
     const [response, setResponse] = useState('');
+    const [validatorsList, setValidatorsList] = useState([]);
+    const [toValidatorAddress, setToValidatorAddress] = useState('');
     const [advanceMode, setAdvanceMode] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    useEffect(() => {
+        const fetchValidators = async () => {
+            const address = localStorage.getItem('address');
+            const validatorUrl = getValidatorsUrl();
+                await axios.get(validatorUrl).then(response => {
+                    let validators = response.data.validators;
+
+                    let validatorsArray=[];
+                    validators.forEach((item) => {
+                        if (item.description.moniker !== props.moniker) {
+                            validatorsArray.push(item);
+                        }
+                    });
+                    setValidatorsList(validatorsArray);
+                }).catch(error => {
+                    console.log(error.response, "error delegationsUrl");
+                });
+        };
+        fetchValidators();
+    }, []);
     const handleAmount = (amount) => {
         setAmount(amount)
+    };
+
+    const handleAmountChange = (evt) => {
+        setAmount(evt.target.value)
     };
 
     function ContextAwareToggle({children, eventKey, callback}) {
@@ -58,9 +90,10 @@ const ModalDelegate = (props) => {
         );
     }
 
-    const handleAmountChange = (evt) => {
-        setAmount(evt.target.value)
+    const onChangeSelect = (evt) => {
+        setToValidatorAddress(evt.target.value)
     };
+
     const handleClose = () => {
         setShow(false);
         props.setModalOpen('');
@@ -83,34 +116,37 @@ const ModalDelegate = (props) => {
 
     const handleSubmit = async event => {
         event.preventDefault();
+
         const mnemonic = event.target.mnemonic.value;
         const validatorAddress = props.validatorAddress;
+
         let accountNumber = 0;
         let addressIndex = 0;
         let bip39Passphrase = "";
         if (advanceMode) {
-            accountNumber = document.getElementById('delegateAccountNumber').value;
-            addressIndex = document.getElementById('delegateAccountIndex').value;
-            bip39Passphrase = document.getElementById('delegatebip39Passphrase').value;
+            accountNumber = document.getElementById('redelegateAccountNumber').value;
+            addressIndex = document.getElementById('redelegateAccountIndex').value;
+            bip39Passphrase = document.getElementById('redelegatebip39Passphrase').value;
         }
         const persistence = MakePersistence(accountNumber, addressIndex);
         const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
         const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
-        console.log(address.error, "rdsult");
+
         if (address.error === undefined && ecpairPriv.error === undefined) {
             persistence.getAccounts(address).then(data => {
                 if (data.code === undefined) {
                     let stdSignMsg = persistence.newStdMsg({
                         msgs: [
                             {
-                                type: "cosmos-sdk/MsgDelegate",
+                                type: "cosmos-sdk/MsgBeginRedelegate",
                                 value: {
                                     amount: {
                                         amount: String(1000000),
                                         denom: "uxprt"
                                     },
                                     delegator_address: address,
-                                    validator_address: validatorAddress
+                                    validator_dst_address: toValidatorAddress,
+                                    validator_src_address: validatorAddress
                                 }
                             }
                         ],
@@ -120,10 +156,11 @@ const ModalDelegate = (props) => {
                         account_number: String(data.account.account_number),
                         sequence: String(data.account.sequence)
                     });
+
                     const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
                     persistence.broadcast(signedTx).then(response => {
-                        setResponse(response)
-                        console.log(response, "delegate response")
+                        setResponse(response);
+                        console.log(response)
                     });
                     showSeedModal(false);
                 } else {
@@ -133,35 +170,42 @@ const ModalDelegate = (props) => {
         } else {
             if (address.error !== undefined) {
                 setErrorMessage(address.error)
-            }
-            else {
+            } else {
                 setErrorMessage(ecpairPriv.error)
             }
         }
     };
-
-    const popover = (
-        <Popover id="popover-basic">
-            <Popover.Content>
-                Delegate your XPRT to {props.moniker} to earn staking rewards.
-                <p><b>Note:</b> Unstaking or Unbonding period: 21 days.</p>
-            </Popover.Content>
-        </Popover>
+    const disabled = (
+        helper.ValidateFrom(toValidatorAddress).message !== ''
     );
     return (
         <>
             {initialModal ?
                 <>
                     <Modal.Header closeButton>
-                        Delegating to {props.moniker}
-                        <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
-                            <button className="icon-button info"><Icon
-                                viewClass="arrow-right"
-                                icon="info"/></button>
-                        </OverlayTrigger>
+                        {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={handleSubmitInitialData}>
+                            <div className="form-field">
+                                <p className="label">Redelegate to</p>
+                                <Select value={toValidatorAddress} className="validators-list-selection"
+                                        onChange={onChangeSelect} displayEmpty>
+                                    <MenuItem value="" key={0}>
+                                        <em>Select validator</em>
+                                    </MenuItem>
+                                    {
+                                        validatorsList.map((validator, index) => (
+                                            <MenuItem
+                                                key={index + 1}
+                                                className=""
+                                                value={validator.operator_address}>
+                                                {validator.description.moniker}
+                                            </MenuItem>
+                                        ))
+                                    }
+                                </Select>
+                            </div>
 
                             <div className="form-field">
                                 <p className="label">Send Amount</p>
@@ -203,7 +247,7 @@ const ModalDelegate = (props) => {
                                         viewClass="arrow-right"
                                         icon="left-arrow"/>
                                 </button>
-                                <button className="button button-primary">Next</button>
+                                <button className={props.delegateStatus ? "button button-primary" : "button button-primary disabled"} disabled={props.delegateStatus && disabled}>Next</button>
                             </div>
                         </Form>
                     </Modal.Body>
@@ -213,12 +257,7 @@ const ModalDelegate = (props) => {
             {seedModal ?
                 <>
                     <Modal.Header closeButton>
-                        Delegating to {props.moniker}
-                        <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
-                            <button className="icon-button info"><Icon
-                                viewClass="arrow-right"
-                                icon="info"/></button>
-                        </OverlayTrigger>
+                        {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={handleSubmit}>
@@ -226,7 +265,7 @@ const ModalDelegate = (props) => {
                                 <p className="label">Mnemonic</p>
                                 <Form.Control as="textarea" rows={3} name="mnemonic"
                                               placeholder="Enter Mnemonic"
-                                              required={true}/>
+                                              required={false}/>
                             </div>
                             <Accordion className="advanced-wallet-accordion">
                                 <Card>
@@ -243,7 +282,7 @@ const ModalDelegate = (props) => {
                                                 <Form.Control
                                                     type="text"
                                                     name="privateAccountNumber"
-                                                    id="delegateAccountNumber"
+                                                    id="redelegateAccountNumber"
                                                     placeholder="Account number"
                                                     required={advanceMode ? true : false}
                                                 />
@@ -253,7 +292,7 @@ const ModalDelegate = (props) => {
                                                 <Form.Control
                                                     type="text"
                                                     name="privateAccountIndex"
-                                                    id="delegateAccountIndex"
+                                                    id="redelegateAccountIndex"
                                                     placeholder="Account Index"
                                                     required={advanceMode ? true : false}
                                                 />
@@ -262,8 +301,8 @@ const ModalDelegate = (props) => {
                                                 <p className="label">bip39Passphrase</p>
                                                 <Form.Control
                                                     type="password"
-                                                    name="delegatebip39Passphrase"
-                                                    id="delegatebip39Passphrase"
+                                                    name="redelegatebip39Passphrase"
+                                                    id="redelegatebip39Passphrase"
                                                     placeholder="Enter bip39Passphrase (optional)"
                                                     required={false}
                                                 />
@@ -278,22 +317,19 @@ const ModalDelegate = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <button className="button button-primary">Delegate</button>
+                                <button className="button button-primary">Redelegate</button>
                             </div>
                         </Form>
                     </Modal.Body>
 
                 </>
-
-                :
-                null
-
+                : null
             }
             {
                 response !== '' && response.code === undefined ?
                     <>
                         <Modal.Header className="result-header success" closeButton>
-                            Successfully Delegated!
+                            Successfully Redelegated!
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
@@ -306,28 +342,31 @@ const ModalDelegate = (props) => {
                         </Modal.Body>
                     </>
                     : null
-            }{
-            response !== '' && response.code !== undefined ?
-                <>
-                    <Modal.Header className="result-header error" closeButton>
-                        Failed to Delegate
-                    </Modal.Header>
-                    <Modal.Body className="delegate-modal-body">
-                        <div className="result-container">
-                            <p className="tx-hash">Tx Hash:
-                                {response.txhash}</p>
-                            <p>{response.raw_log}</p>
-                            <div className="buttons">
-                                <button className="button" onClick={handleClose}>Done</button>
+            }
+            {
+                response !== '' && response.code !== undefined ?
+                    <>
+                        <Modal.Header className="result-header error" closeButton>
+                            Failed to Redelegated
+                        </Modal.Header>
+                        <Modal.Body className="delegate-modal-body">
+                            <div className="result-container">
+                                <p className="tx-hash">Tx Hash:
+                                    {response.txhash}</p>
+                                <p>{response.raw_log}</p>
+                                <div className="buttons">
+                                    <button className="button" onClick={handleClose}>Done</button>
+                                </div>
                             </div>
-                        </div>
-                    </Modal.Body>
-                </>
-                : null
-        }
+                        </Modal.Body>
+                    </>
+                    : null
+            }
+
+
         </>
     );
 };
 
 
-export default ModalDelegate;
+export default ModalReDelegate;

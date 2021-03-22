@@ -4,26 +4,30 @@ import {
     Card,
     Form,
     Modal,
-    OverlayTrigger,
-    Popover,
     useAccordionToggle
 } from 'react-bootstrap';
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useContext} from 'react';
 import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 
-const ModalDelegate = (props) => {
-    const [amount, setAmount] = useState(0);
-    const [show, setShow] = useState(true);
-    const [memoContent, setMemoContent] = useState('');
-    const [initialModal, setInitialModal] = useState(true);
-    const [seedModal, showSeedModal] = useState(false);
+const ModalWithdraw = (props) => {
     const [response, setResponse] = useState('');
     const [advanceMode, setAdvanceMode] = useState(false);
+    const [initialModal, setInitialModal] = useState(true);
+    const [seedModal, showSeedModal] = useState(false);
+    const [memoContent, setMemoContent] = useState('');
     const [errorMessage, setErrorMessage] = useState("");
-    const handleAmount = (amount) => {
-        setAmount(amount)
+    const handleClose = () => {
+        props.setModalOpen('');
+        props.setTxModalShow(false);
+        props.setInitialModal(true);
+        setResponse('');
+    };
+    const handlePrevious = () => {
+        props.setShow(true);
+        props.setTxModalShow(false);
+        props.setInitialModal(true);
     };
 
     function ContextAwareToggle({children, eventKey, callback}) {
@@ -58,21 +62,6 @@ const ModalDelegate = (props) => {
         );
     }
 
-    const handleAmountChange = (evt) => {
-        setAmount(evt.target.value)
-    };
-    const handleClose = () => {
-        setShow(false);
-        props.setModalOpen('');
-        props.setTxModalShow(false);
-        props.setInitialModal(true);
-        setResponse('');
-    };
-    const handlePrevious = () => {
-        props.setShow(true);
-        props.setTxModalShow(false);
-        props.setInitialModal(true);
-    };
     const handleSubmitInitialData = async event => {
         event.preventDefault();
         const memo = event.target.memo.value;
@@ -83,32 +72,30 @@ const ModalDelegate = (props) => {
 
     const handleSubmit = async event => {
         event.preventDefault();
+        // const password = event.target.password.value;
         const mnemonic = event.target.mnemonic.value;
         const validatorAddress = props.validatorAddress;
+
         let accountNumber = 0;
         let addressIndex = 0;
         let bip39Passphrase = "";
         if (advanceMode) {
-            accountNumber = document.getElementById('delegateAccountNumber').value;
-            addressIndex = document.getElementById('delegateAccountIndex').value;
-            bip39Passphrase = document.getElementById('delegatebip39Passphrase').value;
+            accountNumber = document.getElementById('claimAccountNumber').value;
+            addressIndex = document.getElementById('claimAccountIndex').value;
+            bip39Passphrase = document.getElementById('claimbip39Passphrase').value;
         }
         const persistence = MakePersistence(accountNumber, addressIndex);
         const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
         const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
-        console.log(address.error, "rdsult");
+
         if (address.error === undefined && ecpairPriv.error === undefined) {
             persistence.getAccounts(address).then(data => {
                 if (data.code === undefined) {
                     let stdSignMsg = persistence.newStdMsg({
                         msgs: [
                             {
-                                type: "cosmos-sdk/MsgDelegate",
+                                type: "cosmos-sdk/MsgWithdrawDelegationReward",
                                 value: {
-                                    amount: {
-                                        amount: String(1000000),
-                                        denom: "uxprt"
-                                    },
                                     delegator_address: address,
                                     validator_address: validatorAddress
                                 }
@@ -120,10 +107,11 @@ const ModalDelegate = (props) => {
                         account_number: String(data.account.account_number),
                         sequence: String(data.account.sequence)
                     });
+
                     const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
                     persistence.broadcast(signedTx).then(response => {
-                        setResponse(response)
-                        console.log(response, "delegate response")
+                        setResponse(response);
+                        console.log(response)
                     });
                     showSeedModal(false);
                 } else {
@@ -133,64 +121,30 @@ const ModalDelegate = (props) => {
         } else {
             if (address.error !== undefined) {
                 setErrorMessage(address.error)
-            }
-            else {
+            } else {
                 setErrorMessage(ecpairPriv.error)
             }
         }
     };
 
-    const popover = (
-        <Popover id="popover-basic">
-            <Popover.Content>
-                Delegate your XPRT to {props.moniker} to earn staking rewards.
-                <p><b>Note:</b> Unstaking or Unbonding period: 21 days.</p>
-            </Popover.Content>
-        </Popover>
-    );
     return (
         <>
             {initialModal ?
                 <>
                     <Modal.Header closeButton>
-                        Delegating to {props.moniker}
-                        <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
-                            <button className="icon-button info"><Icon
-                                viewClass="arrow-right"
-                                icon="info"/></button>
-                        </OverlayTrigger>
+                        Claim Staking Rewards
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={handleSubmitInitialData}>
-
-                            <div className="form-field">
-                                <p className="label">Send Amount</p>
-                                <div className="amount-field">
-                                    <Form.Control
-                                        type="number"
-                                        min={0}
-                                        name="amount"
-                                        placeholder="Send Amount"
-                                        value={amount}
-                                        onChange={handleAmountChange}
-                                        required={true}
-                                    />
-                                    <div className="range-buttons">
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(25000000)}>25%
-                                        </button>
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(50000000)}>50%
-                                        </button>
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(75000000)}>75%
-                                        </button>
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(100000000)}>Max
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                            {/*<div className="form-field">*/}
+                            {/*    <p className="label">Your password</p>*/}
+                            {/*    <Form.Control*/}
+                            {/*        type="password"*/}
+                            {/*        name="password"*/}
+                            {/*        placeholder="Enter Your Wallet Password"*/}
+                            {/*        required={true}*/}
+                            {/*    />*/}
+                            {/*</div>*/}
                             <div className="form-field">
                                 <p className="label">Memo</p>
                                 <Form.Control as="textarea" rows={3} name="memo"
@@ -203,7 +157,7 @@ const ModalDelegate = (props) => {
                                         viewClass="arrow-right"
                                         icon="left-arrow"/>
                                 </button>
-                                <button className="button button-primary">Next</button>
+                                <button className={props.rewards ? "button button-primary" : "button button-primary disabled"} disabled={props.rewards ? true : false}>Next</button>
                             </div>
                         </Form>
                     </Modal.Body>
@@ -213,12 +167,7 @@ const ModalDelegate = (props) => {
             {seedModal ?
                 <>
                     <Modal.Header closeButton>
-                        Delegating to {props.moniker}
-                        <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
-                            <button className="icon-button info"><Icon
-                                viewClass="arrow-right"
-                                icon="info"/></button>
-                        </OverlayTrigger>
+                        Claim Staking Rewards
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={handleSubmit}>
@@ -243,7 +192,7 @@ const ModalDelegate = (props) => {
                                                 <Form.Control
                                                     type="text"
                                                     name="privateAccountNumber"
-                                                    id="delegateAccountNumber"
+                                                    id="claimAccountNumber"
                                                     placeholder="Account number"
                                                     required={advanceMode ? true : false}
                                                 />
@@ -253,7 +202,7 @@ const ModalDelegate = (props) => {
                                                 <Form.Control
                                                     type="text"
                                                     name="privateAccountIndex"
-                                                    id="delegateAccountIndex"
+                                                    id="claimAccountIndex"
                                                     placeholder="Account Index"
                                                     required={advanceMode ? true : false}
                                                 />
@@ -262,8 +211,8 @@ const ModalDelegate = (props) => {
                                                 <p className="label">bip39Passphrase</p>
                                                 <Form.Control
                                                     type="password"
-                                                    name="delegatebip39Passphrase"
-                                                    id="delegatebip39Passphrase"
+                                                    name="bip39Passphrase"
+                                                    id="claimbip39Passphrase"
                                                     placeholder="Enter bip39Passphrase (optional)"
                                                     required={false}
                                                 />
@@ -278,22 +227,19 @@ const ModalDelegate = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <button className="button button-primary">Delegate</button>
+                                <button className="button button-primary">Claim Rewards</button>
                             </div>
                         </Form>
                     </Modal.Body>
 
                 </>
-
-                :
-                null
-
+                : null
             }
             {
                 response !== '' && response.code === undefined ?
                     <>
                         <Modal.Header className="result-header success" closeButton>
-                            Successfully Delegated!
+                            Successfully Claimed Rewards!
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
@@ -306,28 +252,29 @@ const ModalDelegate = (props) => {
                         </Modal.Body>
                     </>
                     : null
-            }{
-            response !== '' && response.code !== undefined ?
-                <>
-                    <Modal.Header className="result-header error" closeButton>
-                        Failed to Delegate
-                    </Modal.Header>
-                    <Modal.Body className="delegate-modal-body">
-                        <div className="result-container">
-                            <p className="tx-hash">Tx Hash:
-                                {response.txhash}</p>
-                            <p>{response.raw_log}</p>
-                            <div className="buttons">
-                                <button className="button" onClick={handleClose}>Done</button>
+            }
+            {
+                response !== '' && response.code !== undefined ?
+                    <>
+                        <Modal.Header className="result-header error" closeButton>
+                            Failed to Claimed Rewards
+                        </Modal.Header>
+                        <Modal.Body className="delegate-modal-body">
+                            <div className="result-container">
+                                <p className="tx-hash">Tx Hash:
+                                    {response.txhash}</p>
+                                <p>{response.raw_log}</p>
+                                <div className="buttons">
+                                    <button className="button" onClick={handleClose}>Done</button>
+                                </div>
                             </div>
-                        </div>
-                    </Modal.Body>
-                </>
-                : null
-        }
+                        </Modal.Body>
+                    </>
+                    : null
+            }
         </>
     );
 };
 
 
-export default ModalDelegate;
+export default ModalWithdraw;

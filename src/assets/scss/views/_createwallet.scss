@@ -31,7 +31,7 @@
     position: relative;
     padding: 15px;
     background: rgba(229, 9, 19, 0.04);
-    p{
+    p, ul li{
       font-weight: 500;
       font-size: 14px;
       line-height: 178.5%;
@@ -109,7 +109,15 @@
         text-align: center;
         color: #2E3239;
       }
-
+.password-group{
+  position: relative;
+  button{
+    outline: none !important;
+    position: absolute;
+    top: 7px;
+    right: 120px;
+  }
+}
       .form-group {
         text-align: center;
 
@@ -132,25 +140,34 @@
         }
       }
     }
-    .note-section{
-      display: flex;
-      margin-top: 20px;
-      padding: 20px;
-      background: #FEF5F6;
-      align-items: center;
-      .exclamation {
-        padding-right: 25px;
-        .icon{
-          width: 24px;
-        }
-      }
-      p{font-weight: 500;
-        font-size: 12px;
-        line-height: 174%;
+    .download-section {
+      .name{
+        text-align: center;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 150%;
         color: #2E3239;
         margin: 0;
       }
+      .key-download {
+        text-align: center;
+        padding: 10px;
+        background: rgba(233, 114, 28, 0.07);
+        max-width: 350px;
+        margin: auto;
+        a{
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 150%;
+          color: #E9721C !important;
+        }
+        .icon {
+          width: 16px;
+          transform: rotate(-90deg);
+        }
+      }
     }
+
     .seed-section{
       .heading{
         font-family: 'Poppins', sans-serif;
@@ -158,6 +175,7 @@
         line-height: 150%;
         text-align: center;
         color: #2E3239;
+        padding-bottom: 20px;
       }
       .menmonic{
         word-spacing: 20px;
@@ -166,5 +184,51 @@
         text-align: center;
       }
     }
+  }
+}
+.create-wallet-modal.large {
+  .modal-dialog {
+    max-width: 800px !important;
+  }
+  .create-wallet-form-body form{
+    max-width: 500px;
+  }
+  .note-section{
+    justify-content: center;
+  }
+}
+
+.create-wallet-section{
+  background: radial-gradient(99.06% 99.06% at 49.65% 0.94%, #222426 0%, #282932 100%);
+  .create-wallet-modal{
+    height: calc( 100vh - 78px);
+    padding-top: 60px;
+    overflow-y: auto;
+    padding-bottom: 40px;
+    .create-wallet-body{
+      padding: 40px;
+      max-width: 900px !important;
+      margin: auto;
+      background: #FFFFFF;
+      .buttons{
+        padding-top: 30px;
+        text-align: center;
+        .button-secondary{
+          float: left;
+          padding: .375rem 0.8rem;
+          background: #F0F1F2;
+          border-color: transparent;
+          .icon{
+            width: 20px;
+          }
+        }
+        .button.button-primary{
+          width: 200px;
+        }
+      }
+    }
+  }
+  .mnemonic-result{
+    text-align: center;
   }
 }

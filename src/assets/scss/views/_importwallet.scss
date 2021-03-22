@@ -1,24 +1,35 @@
-.import-wallet-body{
-.heading{
-  font-weight: 600;
-  font-size: 18px;
-  line-height: 27px;
-  font-family: 'Poppins', sans-serif;
-  text-align: center;
-  color: #313238;
-  padding-bottom: 30px;
-  .icon-button{
-    padding-left: 5px;
-    background: no-repeat;
-    border: none;
-    outline: none !important;
+.import-wallet-body {
+  .heading {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 27px;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    color: #313238;
+    padding-bottom: 30px;
   }
-  .icon{
-    width: 18px;
+
+  .import-name {
+    cursor: pointer;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: underline;
+    margin-bottom: 20px;
+    color: #E50913;
   }
-}
-  form{
-    .label{
+
+  form {
+    .form-field.upload {
+      padding-top: 10px;
+      align-items: baseline;
+    }
+
+    .form-field {
+      justify-content: center;
+    }
+
+    .label {
       font-weight: 500;
       font-size: 14px;
       line-height: 150%;
@@ -26,13 +37,22 @@
       text-align: center;
       color: #2E3239;
     }
-    textarea{
+
+    textarea {
       background: #F5F6FA;
       border: 0px solid;
     }
+
+    .form-control-file {
+      background: transparent;
+
+      &:focus {
+        outline: none;
+      }
+    }
+
     input {
       max-width: 300px;
-      margin: auto;
       background: #F5F6FA;
       font-size: 14px;
       line-height: 150%;
@@ -49,4 +69,76 @@
     }
   }
 
+  .menmonic-list {
+    padding-bottom: 10px;
+  }
+
+  .mnemonic-result {
+    padding: 10px 0;
+    word-break: break-word;
+    margin: 0;
+    text-align: center;
+  }
+
+  .download-section {
+    padding-top: 20px;
+
+    .name {
+      text-align: center;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 150%;
+      color: #2E3239;
+      margin: 0;
+    }
+
+    .key-download {
+      text-align: center;
+      padding: 10px;
+      background: rgba(233, 114, 28, 0.07);
+      max-width: 350px;
+      margin: auto;
+
+      a {
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 150%;
+        color: #E9721C !important;
+      }
+
+      .icon {
+        width: 16px;
+        transform: rotate(-90deg);
+      }
+    }
+  }
+}
+.advanced-wallet-accordion{
+.card{
+  border: 0px solid;
+  .card-header{
+    background: transparent;
+    padding:0  0 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    p{
+      margin: 0;
+    }
+  }
+  button{
+    border: 0px;
+    background: transparent;
+    outline: none;
+    .icon
+    {
+      width: 20px;
+    }
+  }
+  .collapse.show{
+    padding: 30px 10px;
+    border: 1px solid #E3E5F4;
+  }
+}
 }

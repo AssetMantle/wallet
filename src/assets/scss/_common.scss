@@ -1,7 +1,22 @@
-html, body{
+html, body {
   font-family: "Montserrat", sans-serif;
 }
-.button{
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 12px;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 0 solid #fff;
+  //-webkit-box-shadow: inset 0 0 0 20px rgba(0, 0, 0, .24);
+  //box-shadow: inset 0 0 0 20px rgba(0, 0, 0, .24);
+  border-radius: 20px;
+  background: #8D9CB5;
+}
+
+.button {
   text-align: center;
   line-height: 180%;
   border-radius: 0;
@@ -10,7 +25,7 @@ html, body{
   box-shadow: none !important;
 }
 
-.button.button-primary{
+.button.button-primary {
   background: #E50913;
   font-weight: bold;
   font-size: 16.5455px;
@@ -19,8 +34,10 @@ html, body{
   padding: .375rem 1.2rem;
   border-radius: 0;
 }
-
-.button.button-secondary{
+.button:disabled {
+  opacity: 0.6 !important;
+}
+.button.button-secondary {
   background: #313238;
   font-weight: bold;
   font-size: 16.5455px;
@@ -30,13 +47,19 @@ html, body{
   border-radius: 0;
 }
 
-.flex-center{
+.flex-center {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.copy-button{
+.loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.copy-button {
   outline: none !important;
   border: 0px solid;
   width: 28px;
@@ -46,14 +69,26 @@ html, body{
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  .icon{
+  margin-left: 5px;
+
+  .icon {
     width: 16px;
   }
 }
 
-.modal-custom{
-  .modal-header{
-    border: 0px solid ;
+.faq-modal.modal-custom {
+  .modal-dialog {
+    max-width: 850px;
+  }
+
+  .faq-modal-body {
+    padding: 30px;
+  }
+}
+
+.modal-custom {
+  .modal-header {
+    border: 0px solid;
     justify-content: center;
     font-weight: 600;
     font-size: 18px;
@@ -64,29 +99,34 @@ html, body{
     padding: 30px;
     color: #313238;
   }
+
   .modal-dialog {
     max-width: 700px;
   }
 }
 
-.amount-field{
+.amount-field {
   display: flex;
-  .range-buttons{
+
+  .range-buttons {
     margin-left: 10px;
     display: flex;
-    button{
+
+    button {
       font-weight: 600;
       font-size: 14px;
       line-height: 150%;
       text-align: right;
       color: #8D9CB5;
       padding: 10px;
-      &:last-child{
+
+      &:last-child {
         margin-left: 10px;
       }
     }
   }
 }
+
 .form-field {
   display: flex;
   align-items: center;
@@ -99,5 +139,212 @@ html, body{
     margin: 0;
     color: #2E3239;
     width: 150px;
+  }
+
+  input, .amount-field, textarea, .file-upload {
+    max-width: 400px !important;
+    flex: 1;
+  }
+
+  textarea {
+    background: #F5F6FA;
+    font-size: 14px;
+    border-radius: 0;
+    border: 0px solid;
+    color: #8D9CB5;
+  }
+}
+
+.not-matched {
+  box-shadow: 0 0 0 0.2rem #e509134d !important;
+}
+
+.icon-button.info {
+  padding-left: 5px;
+  background: no-repeat;
+  border: none;
+  outline: none !important;
+
+  .icon {
+    width: 18px;
+  }
+}
+
+.copy-section {
+  position: relative;
+
+  .copy-result {
+    position: absolute;
+    top: -15px;
+    width: 100px;
+    right: -30px;
+    font-size: 10px;
+  }
+}
+
+.result-header.success {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 150%;
+  text-align: center;
+  color: #1CB76D;
+}
+
+.result-header.error {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 150%;
+  text-align: center;
+  color: #E50913;
+}
+
+.result-container {
+  text-align: center;
+
+  img {
+    width: 85px;
+  }
+
+  .tx-hash {
+    font-size: 14px;
+    line-height: 150%;
+    text-decoration-line: underline;
+    color: #1A73B4;
+    padding: 15px 0;
+    word-break: break-word;
+  }
+
+  .buttons .button {
+    background: #FFFFFF;
+    border: 1px solid #E3E5F4;
+    width: 100px;
+    padding: 10px;
+  }
+}
+
+.note-section {
+  display: flex;
+  margin-top: 20px;
+  padding: 20px;
+  background: #FEF5F6;
+  align-items: center;
+
+  .exclamation {
+    padding-right: 25px;
+
+    .icon {
+      width: 24px;
+    }
+  }
+
+  p {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 174%;
+    color: #2E3239;
+    margin: 0;
+  }
+}
+
+.modal-header button.close{
+  position: absolute;
+  right: 30px;
+  top: 30px;
+}
+
+.form-error, .error-response {
+  margin: 0;
+  padding: 10px 0;
+  text-align: center;
+  color: #E50913;
+  font-weight: 500;
+}
+
+.menmonic-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-bottom: 15px;
+
+  .form-control {
+    width: 120px !important;
+    border-radius: 0;
+    margin: 5px;
+    text-align: center;
+    background: #F5F6FA;
+    border-color: #F5F6FA;
+    font-size: 14px;
+    line-height: 150%;
+    color: #2E3239;
+  }
+
+  .empty-mnemonic {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 150%;
+    text-align: center;
+    color: #2E3239;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid #E3E5F4;
+
+    &:focus {
+      border-color: #E50913;
+      box-shadow: none;
+    }
+  }
+}
+
+.validators-list-selection {
+  width: 300px;
+  background: #F5F6FA;
+  font-size: 14px;
+  line-height: 150%;
+  height: calc(2.3em + .75rem + 2px);
+  border-radius: 0;
+  padding-left: 10px;
+
+  .MuiSelect-select:focus {
+    background-color: transparent;
+  }
+}
+
+.MuiInput-underline::before {
+  border: 0px solid !important;
+}
+
+.MuiInput-underline:after {
+  border-bottom: 0px solid !important;
+}
+
+.icon-box{
+  width: 30px;
+  display: flex;
+  border-radius: 7px;
+  padding: 5px;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  .icon{
+    width: 16px;
+  }
+}
+.icon-box.success{
+  background: #E5F6EE;
+}
+.icon-box.error{
+  background: #FFEECC;
+}
+
+.navigate-buttons{
+  .button-secondary{
+    float: left;
+    padding: .375rem 0.8rem;
+    background: #F0F1F2;
+    border-color: transparent;
+    width: auto !important;
+    .icon{
+      width: 20px;
+    }
   }
 }
