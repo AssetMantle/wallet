@@ -31,8 +31,6 @@ const ImportWallet = (props) => {
     const [privateAdvanceMode, setPrivateAdvanceMode] = useState(false);
     const handleSubmit = async event => {
         event.preventDefault();
-        setMnemonicForm(false);
-        setResponseDataShow(true);
         let responseData;
         if (advanceMode) {
             let accountNumber = document.getElementById('accountNumber').value;
@@ -42,8 +40,17 @@ const ImportWallet = (props) => {
             responseData = wallet.createWallet(event.target.mnemonic.value, walletPath, bip39Passphrase);
         } else {
             responseData = wallet.createWallet(event.target.mnemonic.value);
+
         }
-        setResponse(responseData);
+        if (responseData.error) {
+            setErrorMessage(responseData.error);
+        } else {
+            setResponse(responseData);
+            setErrorMessage("");
+            setMnemonicForm(false);
+            setResponseDataShow(true);
+        }
+
     };
     const handlePrivateKeySubmit = async event => {
         const password = event.target.password.value;
@@ -66,7 +73,6 @@ const ImportWallet = (props) => {
                 } else {
                     responseData = wallet.createWallet(error.mnemonic);
                 }
-                setResponse(responseData);
                 if (responseData.error) {
                     setErrorMessage(responseData.error);
                 } else {
@@ -76,8 +82,10 @@ const ImportWallet = (props) => {
                     let encryptedData = helper.createStore(responseData.mnemonic, password);
                     let jsonContent = JSON.stringify(encryptedData);
                     setJsonName(jsonContent);
+                    setResponse(responseData);
                     setResponseDataShow(true);
                     setMnemonicForm(false);
+                    setErrorMessage("");
                 }
             }
         };
@@ -93,7 +101,9 @@ const ImportWallet = (props) => {
     const handlePrivateKey = (value) => {
         setImportMnemonic(value);
     };
-
+    const handleRoute = () =>{
+        history.push("/")
+    }
     function ContextAwareToggle({children, eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 
@@ -127,6 +137,10 @@ const ImportWallet = (props) => {
         );
     }
 
+    const handlePrevious = () => {
+        setResponseDataShow(false);
+        setMnemonicForm(true);
+    }
     const popover = (
         <Popover id="popover-basic">
             <Popover.Content>
@@ -205,6 +219,11 @@ const ImportWallet = (props) => {
                                                     </Accordion.Collapse>
                                                 </Card>
                                             </Accordion>
+                                            {errorMessage !== ''
+                                                ? <p className="form-error">{errorMessage}</p>
+                                                : null
+
+                                            }
                                             <div className="buttons">
                                                 <button className="button button-primary">Next</button>
                                             </div>
@@ -307,7 +326,12 @@ const ImportWallet = (props) => {
                             }
 
                             <div className="buttons">
-                                <button className="button button-primary" onClick={handleLogin}>Next</button>
+                                <button className="button button-secondary" onClick={() => handlePrevious(2)}>
+                                    <Icon
+                                        viewClass="arrow-right"
+                                        icon="left-arrow"/>
+                                </button>
+                                <button className="button button-primary" onClick={handleRoute}>Done</button>
                             </div>
 
                         </div>

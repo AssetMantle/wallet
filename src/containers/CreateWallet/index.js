@@ -87,7 +87,7 @@ const CreateWallet = () => {
             if (mnemonicList[number] === phrase) {
                 localStorage.setItem('loginToken', 'loggedIn');
                 localStorage.setItem('address', response.address);
-                history.push('/dashboard/wallet');
+                history.push('/');
             } else {
                 setQuizError(true);
             }
@@ -260,7 +260,7 @@ const CreateWallet = () => {
                                 <p className="form-error">Mnemonic not matched</p>
                                 : null}
                             <div className="buttons">
-                                <button className="button button-primary" onClick={() => handleSubmitMnemonic()}>Next
+                                <button className="button button-primary" onClick={() => handleSubmitMnemonic()}>Done
                                 </button>
                             </div>
                             <div className="note-section">
