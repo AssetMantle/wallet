@@ -113,3 +113,9 @@
     margin: 0;
   }
 }
+
+@media (min-width: 1200px) and (max-width: 1400px) {
+  .txns-container .table-responsive{
+    width: 800px;
+  }
+}

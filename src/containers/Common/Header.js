@@ -30,7 +30,7 @@ const Header = (props) => {
                         </div>
 
                         <p className="key">Wallet Address</p>
-                        <p className="address">{address} <Copy id="XPR47rueyd4t19hry57v43bx9wef9u39z637s29fuf4y6rhk8ocv"/> </p>
+                        <div className="address"><span>{address}</span> <Copy id="XPR47rueyd4t19hry57v43bx9wef9u39z637s29fuf4y6rhk8ocv"/> </div>
                     </div>
                     <div className="footer">
                         <p onClick={closeWallet} className="link-close">Close Wallet</p>
