@@ -21,23 +21,28 @@ const Validators = (props) => {
         setValidator(validator);
     };
     useEffect(() => {
-
         const fetchValidators = async () => {
             const address = localStorage.getItem('address');
             console.log(address, "loggedIn address");
             const validatorUrl = getValidatorsUrl();
-            const validatorResponse = await axios.get(validatorUrl);
-            let validators = validatorResponse.data.validators;
-            const active = Lodash.sumBy(validators, (item) => {
-                return helper.isActive(item) ? item.tokens : 0;
+
+            await axios.get(validatorUrl).then(response => {
+                let validators = response.data.validators;
+                const active = Lodash.sumBy(validators, (item) => {
+                    return helper.isActive(item) ? item.tokens : 0;
+                });
+                setActiveValidators(active);
+                const inactive = Lodash.sumBy(validators, (item) => {
+                    return helper.isActive(item) ? 0 : item.tokens;
+                });
+                setInActiveValidators(inactive);
+                setValidatorsList(validators);
+                setLoading(false);
+            }).catch(error => {
+                console.log(error.response, "unable to loading validators")
+                setLoading(false);
             });
-            setActiveValidators(active);
-            const inactive = Lodash.sumBy(validators, (item) => {
-                return helper.isActive(item) ? 0 : item.tokens;
-            });
-            setInActiveValidators(inactive);
-            setValidatorsList(validators);
-            setLoading(false);
+
         };
         fetchValidators();
     }, []);
@@ -57,7 +62,7 @@ const Validators = (props) => {
                 </tr>
                 </thead>
                 <tbody>
-                {
+                {validatorsList.length ?
                     validatorsList.map((validator, index) => {
                         let commissionRate = validator.commission.commission_rates.rate * 100;
                         commissionRate = parseFloat(commissionRate.toFixed(2)).toLocaleString();
@@ -99,6 +104,7 @@ const Validators = (props) => {
                             </tr>
                         )
                     })
+                    :<tr><td colSpan={5} className="text-center"> No Validators Found</td></tr>
                 }
                 </tbody>
             </Table>

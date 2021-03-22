@@ -5,13 +5,18 @@ import {getDelegationsUnbondUrl, getRewardsUrl, getDelegationsUrl, getBalanceUrl
 import axios from "axios";
 import Lodash from "lodash";
 import helper from "../../utils/helper";
+import loaderImage from "../../assets/images/loader.svg";
 
 const TokenInfo = () => {
     const [unbondingDelegations, setUnbondingDelegations] = useState(0);
-    const [totalRewards, setTotalRewards] = useState(0);
-    const [totalBalance, setTotalBalance] = useState(0);
-    const [totalDelegations, setTotalDelegations] = useState(0);
+    const [totalRewards, setTotalRewards] = useState('0');
+    const [totalBalance, setTotalBalance] = useState('0');
+    const [totalDelegations, setTotalDelegations] = useState('0' );
     const [rewards, setRewards] = useState(false);
+    const [balanceLoading, setBalanceLoading] = useState(true);
+    const [rewardsLoading, setRewardsLoading] = useState(true);
+    const [delegationsLoading, setDelegationsLoading] = useState(true );
+    const [unbondingDelegationsLoading, setUnbondingDelegationsLoading] = useState(true);
     useEffect(() => {
         const address = localStorage.getItem('address');
         const unbondDelegationsUrl = getDelegationsUnbondUrl(address);
@@ -27,8 +32,10 @@ const TokenInfo = () => {
                         }
                     });
                     setUnbondingDelegations(totalUnbond);
+                    setUnbondingDelegationsLoading(false)
                 }
             }).catch(error => {
+                setUnbondingDelegationsLoading(false)
                 console.log(error.response, "error unbondDelegations")
             });
 
@@ -38,9 +45,11 @@ const TokenInfo = () => {
                         return delegation.balance.amount * 1;
                     });
                     setTotalDelegations(totalDelegationsCount / 1000000);
+                    setDelegationsLoading(false)
                     console.log(totalDelegationsCount / 1000000, "totalDelgations");
                 }
             }).catch(error => {
+                setDelegationsLoading(false)
                 console.log(error.response, "error delegationsUrl")
             });
 
@@ -48,8 +57,10 @@ const TokenInfo = () => {
                 if (response.data.total.length) {
                     const fixedRewardsResponse = response.data.total[0].amount / 1000000;
                     setTotalRewards(fixedRewardsResponse.toFixed(4));
+                    setRewardsLoading(false)
                 }
             }).catch(error => {
+                setRewardsLoading(false)
                 console.log(error, "error rewardsResponse")
             });
 
@@ -62,9 +73,11 @@ const TokenInfo = () => {
                     // let USD = totalBalance *rate;
                     // USD = parseFloat(USD.toFixed(2)).toLocaleString();
 
-                    setTotalBalance(parseFloat((totalBalance / 1000000).toFixed(2)).toLocaleString())
+                    setTotalBalance(parseFloat((totalBalance / 1000000).toFixed(2)).toLocaleString());
+                    setBalanceLoading(false)
                 }
             }).catch(error => {
+                setBalanceLoading(false)
                 console.log(error, "error balance")
             });
 
@@ -85,7 +98,11 @@ const TokenInfo = () => {
                     </div>
                     <div className="line">
                         <p className="key">Balance XPRT</p>
-                        <p className="value">{totalBalance}</p>
+                        <p className="value">
+                            {balanceLoading ?
+                                <img src={loaderImage} alt="loader" className="loader"/>
+                            : totalBalance
+                            }</p>
                     </div>
                 </div>
             </div>
@@ -97,7 +114,12 @@ const TokenInfo = () => {
                     </div>
                     <div className="line">
                         <p className="key">Delegated Token</p>
-                        <p className="value">{totalDelegations} XPRT</p>
+                        <p className="value">
+                            {delegationsLoading ?
+                                <img src={loaderImage} alt="loader" className="loader"/>
+                                : <span>{totalDelegations} XPRT</span>
+                            }
+                            </p>
                     </div>
                 </div>
             </div>
@@ -105,11 +127,21 @@ const TokenInfo = () => {
                 <div className="inner-box">
                     <div className="line">
                         <p className="key">Rewards (24h)</p>
-                        <p className="value rewards" onClick={handleRewards}>{totalRewards} XPRT</p>
+                        <p className="value rewards" onClick={handleRewards}>
+                            {rewardsLoading ?
+                                <img src={loaderImage} alt="loader" className="loader"/>
+                                : <span>{totalRewards} XPRT</span>
+                            }
+                           </p>
                     </div>
                     <div className="line">
                         <p className="key">Unbonding Token</p>
-                        <p className="value">{unbondingDelegations} XPRT</p>
+                        <p className="value">
+                            {unbondingDelegationsLoading ?
+                                <img src={loaderImage} alt="loader" className="loader"/>
+                                : <span>{unbondingDelegations} XPRT</span>
+                            }
+                        </p>
                     </div>
                 </div>
             </div>

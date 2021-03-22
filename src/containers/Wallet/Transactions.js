@@ -5,21 +5,31 @@ import moment from 'moment';
 import axios from "axios";
 import helper from "../../utils/helper";
 import Icon from "../../components/Icon";
+import Loader from "../../components/Loader";
 
 const Transactions = () => {
     const [sendTransactionsList, setSendTransactionsList] = useState([]);
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
         const fetchValidators = async () => {
             const address = localStorage.getItem('address');
             const sendTxnsUrl = getSendTransactionsUrl(address);
-            const sendTxnsResponse = await axios.get(sendTxnsUrl);
-            let sendTxnsResponseList = sendTxnsResponse.data.txs;
-            if(sendTxnsResponseList !== undefined){
-                setSendTransactionsList(sendTxnsResponseList);
-            }
+            await axios.get(sendTxnsUrl).then(response => {
+                let sendTxnsResponseList = response.data.txs;
+                if(sendTxnsResponseList !== undefined){
+                    setSendTransactionsList(sendTxnsResponseList);
+                }
+                setLoading(false);
+            }).catch(error => {
+                console.log(error.response, "unable to loading validators")
+                setLoading(false);
+            });
         };
         fetchValidators();
     }, []);
+    if (loading) {
+        return <Loader/>;
+    }
     return (
         <div className="txns-container">
             <Table borderless hover responsive>

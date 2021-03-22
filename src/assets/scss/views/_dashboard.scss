@@ -490,6 +490,19 @@
     .inner-box {
       flex: 1;
     }
+    .line .value{
+      position: relative;
+      min-width: 50px;
+      .loader{
+        width: 32px;
+        height: auto;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
+    }
   }
 
   .xprt-info {
@@ -949,6 +962,64 @@
           box-shadow: 0 0 0 0.2rem #e5091340 !important;
         }
       }
+      .dropdown-menu
+      {
+        .dropdown-item {
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 150%;
+          color: #8D9CB5;
+        }
+
+        .dropdown-item.active, .dropdown-item:active {
+          background: transparent;
+          color: #2E3239;
+        }
+      }
     }
   }
+}
+
+.rdt_TableBody {
+  .rdt_TableRow:first-child .rdt_TableCell{
+    padding-top: 30px;
+  }
+  .rdt_TableRow .rdt_TableCell {
+    white-space: nowrap;
+    font-size: 14px;
+    line-height: 150%;
+    padding: 15px 20px;
+    &:first-child{
+      padding-left: 40px;
+      width: 150px;
+    }
+  }
+  //.result{
+  //
+  //}
+  //.type{
+  //  color: #8D9CB5;
+  //  font-family: 'Poppins', sans-serif;
+  //}
+  //.tx-hash a{
+  //  color: #1A73B4;
+  //}
+  //
+  //.type {
+  //  color: #8D9CB5;
+  //}
+  //.amount{
+  //  font-family: 'Poppins', sans-serif;
+  //  font-weight: 500;
+  //}
+  //.fee{
+  //  font-family: 'Poppins', sans-serif;
+  //  color: #8D9CB5;
+  //}
+  //.height{
+  //  color: #1A73B4;
+  //}
+  //.time{
+  //  color: #8D9CB5;
+  //}
 }
