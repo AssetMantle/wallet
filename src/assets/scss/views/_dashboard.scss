@@ -429,7 +429,33 @@
     }
   }
 }
-
+.tab-header{
+  .left{
+    display: flex;
+    align-items: center;
+    .info-name{
+      padding-right: 10px;
+      margin: 0;
+    }
+    .nav-pills{
+      .nav-link{
+        margin: 0;
+        padding: .3rem 1rem;
+        border-radius: 0;
+        background: none;
+        font-weight: 500;
+        font-size: 14px;
+        color: #55678B;
+        border: 1px solid #DCE9F1;
+      }
+      .nav-link.active, .show>.nav-link{
+        background: #E50913;
+        border: 1px solid #E50913;
+        color: #FFFFFF;
+      }
+    }
+  }
+}
 .token-info-section {
   padding: 40px 40px 40px 30px;
   //display: grid;
@@ -525,7 +551,8 @@
   .info {
     display: flex;
     justify-content: space-between;
-
+  align-items: center;
+    margin-bottom: 20px;
     .info-name {
       font-weight: 600;
       font-size: 18px;
@@ -536,6 +563,7 @@
 
     .info-value {
       font-weight: 500;
+      margin: 0;
       font-size: 14px;
       line-height: 150%;
       font-family: 'Poppins', sans-serif;

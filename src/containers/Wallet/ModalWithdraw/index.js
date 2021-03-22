@@ -8,6 +8,7 @@ import Select from '@material-ui/core/Select';
 import axios from "axios";
 import Icon from "../../../components/Icon";
 import MakePersistence from "../../../utils/cosmosjsWrapper";
+import Lodash from "lodash";
 
 const ModalWithdraw = (props) => {
     const [show, setShow] = useState(true);
@@ -23,15 +24,18 @@ const ModalWithdraw = (props) => {
         const fetchValidators = async () => {
             const address = localStorage.getItem('address');
             const delegationsUrl = getDelegationsUrl(address);
-            const delegationResponse = await axios.get(delegationsUrl);
-            let delegationResponseList = delegationResponse.data.delegation_responses;
-            let validators = [];
-            for (const item of delegationResponseList) {
-                const validatorUrl = getValidatorUrl(item.delegation.validator_address);
-                const validatorResponse = await axios.get(validatorUrl);
-                validators.push(validatorResponse.data.validator);
-            }
-            setValidatorsList(validators);
+            await axios.get(delegationsUrl).then(response => {
+                let delegationResponseList = response.data.delegation_responses;
+                let validators = [];
+                for (const item of delegationResponseList) {
+                    const validatorUrl = getValidatorUrl(item.delegation.validator_address);
+                    const validatorResponse = axios.get(validatorUrl);
+                    validators.push(validatorResponse.data.validator);
+                }
+                setValidatorsList(validators);
+            }).catch(error => {
+                console.log(error.response, "error delegationsUrl")
+            });
         };
         fetchValidators();
     }, []);

@@ -9,10 +9,7 @@ const Staking = () => {
             <Header name="Staking"/>
             <TokenInfo/>
             <div className="validators-section">
-                <div className="info">
-                    <p className="info-name">Choose a Validator</p>
-                    <p className="info-value"><span>Lifetime Rewards: </span>125,000 XPRT</p>
-                </div>
+
                 <Validators/>
             </div>
         </div>

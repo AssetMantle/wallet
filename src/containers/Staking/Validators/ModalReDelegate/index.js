@@ -12,11 +12,12 @@ import React, {useState, useEffect, useContext} from 'react';
 import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
-import {getDelegationsUrl, getValidatorUrl} from "../../../../constants/url";
+import {getDelegationsUrl, getValidatorsUrl, getValidatorUrl} from "../../../../constants/url";
 import axios from "axios";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import helper from "../../../../utils/helper";
+import Lodash from "lodash";
 
 const ModalReDelegate = (props) => {
     const [amount, setAmount] = useState(0);
@@ -32,19 +33,20 @@ const ModalReDelegate = (props) => {
     useEffect(() => {
         const fetchValidators = async () => {
             const address = localStorage.getItem('address');
-            const delegationsUrl = getDelegationsUrl(address);
-            const delegationResponse = await axios.get(delegationsUrl);
-            let delegationResponseList = delegationResponse.data.delegation_responses;
-            let validators = [];
-            for (const item of delegationResponseList) {
-                const validatorUrl = getValidatorUrl(item.delegation.validator_address);
-                const validatorResponse = await axios.get(validatorUrl);
-                console.log(validatorResponse, "RED")
-                if (validatorResponse.data.validator.description.moniker !== props.moniker) {
-                    validators.push(validatorResponse.data.validator);
-                }
-            }
-            setValidatorsList(validators);
+            const validatorUrl = getValidatorsUrl();
+                await axios.get(validatorUrl).then(response => {
+                    let validators = response.data.validators;
+
+                    let validatorsArray=[];
+                    validators.forEach((item) => {
+                        if (item.description.moniker !== props.moniker) {
+                            validatorsArray.push(item);
+                        }
+                    });
+                    setValidatorsList(validatorsArray);
+                }).catch(error => {
+                    console.log(error.response, "error delegationsUrl");
+                });
         };
         fetchValidators();
     }, []);
@@ -99,7 +101,7 @@ const ModalReDelegate = (props) => {
         props.setInitialModal(true);
         setResponse('');
     };
-    const handlePrevious = () =>{
+    const handlePrevious = () => {
         props.setShow(true);
         props.setTxModalShow(false);
         props.setInitialModal(true);
@@ -130,7 +132,7 @@ const ModalReDelegate = (props) => {
         const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
         const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
 
-        if(address.error === undefined && ecpairPriv.error === undefined) {
+        if (address.error === undefined && ecpairPriv.error === undefined) {
             persistence.getAccounts(address).then(data => {
                 if (data.code === undefined) {
                     let stdSignMsg = persistence.newStdMsg({
@@ -161,16 +163,14 @@ const ModalReDelegate = (props) => {
                         console.log(response)
                     });
                     showSeedModal(false);
-                }
-                else {
+                } else {
                     setErrorMessage(data.message);
                 }
             });
-        }else{
-            if(address.error !== undefined){
+        } else {
+            if (address.error !== undefined) {
                 setErrorMessage(address.error)
-            }
-            else {
+            } else {
                 setErrorMessage(ecpairPriv.error)
             }
         }
