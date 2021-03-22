@@ -44,7 +44,7 @@ const ModalCreateWallet = (props) => {
     };
     const handleCreateForm = (name) => {
         if (name === 'createWalletForm') {
-            setModal4(false);
+            setModal1(false);
             setShow(false);
             history.push('/create_wallet')
         }
@@ -61,17 +61,17 @@ const ModalCreateWallet = (props) => {
                             </Modal.Header>
                             <Modal.Body className="create-wallet-body">
                                 <div className="info-box">
-
-                                    <p>Please take a moment to read through this short introduction. It’s very important
-                                        for
-                                        your own security that you understand these warnings. Ignoring this step will
-                                        highly
-                                        increase the chances of your funds being lost or stolen, in which case we won’t
-                                        be
-                                        able to help you.</p>
+                                    <p><b>Take a moment to read through this content for your own safety
+                                    </b></p>
+                                    <ul>
+                                        <li>Securing your wallet</li>
+                                        <li>Users need to securely store their Mnemonic (seed phrase) to prevent loss of funds. Losing or exposing this phrase could potentially lead to users' funds being stolen.</li>
+                                        <li>Users can view and save their mnemonic while creating a wallet
+                                        </li>
+                                    </ul>
                                 </div>
                                 <div className="buttons">
-                                    <button className="button button-primary" onClick={() => handleNext(2)}>Next
+                                    <button className="button button-primary" onClick={() => handleCreateForm("createWalletForm")}>Next
                                     </button>
                                 </div>
                             </Modal.Body>
