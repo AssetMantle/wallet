@@ -331,7 +331,7 @@ const ImportWallet = (props) => {
                                         viewClass="arrow-right"
                                         icon="left-arrow"/>
                                 </button>
-                                <button className="button button-primary" onClick={handleRoute}>Done</button>
+                                <button className="button button-primary" onClick={handleLogin}>Done</button>
                             </div>
 
                         </div>

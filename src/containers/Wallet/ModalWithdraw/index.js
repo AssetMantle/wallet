@@ -9,8 +9,9 @@ import axios from "axios";
 import Icon from "../../../components/Icon";
 import MakePersistence from "../../../utils/cosmosjsWrapper";
 import Lodash from "lodash";
-
+import Actions from "../../../utils/actions";
 const ModalWithdraw = (props) => {
+    const ActionHelper = new Actions();
     const [show, setShow] = useState(true);
     const [validatorAddress, setValidatorAddress] = useState('');
     const [response, setResponse] = useState('');
@@ -18,6 +19,7 @@ const ModalWithdraw = (props) => {
     const [advanceMode, setAdvanceMode] = useState(false);
     const [initialModal, setInitialModal] = useState(true);
     const [seedModal, showSeedModal] = useState(false);
+    const [individualRewards, setIndividualRewards] = useState('');
     const [memoContent, setMemoContent] = useState('');
     const [errorMessage, setErrorMessage] = useState("");
     useEffect(() => {
@@ -143,6 +145,11 @@ const ModalWithdraw = (props) => {
     };
     const onChangeSelect = (evt) => {
         setValidatorAddress(evt.target.value)
+        let rewards = ActionHelper.getValidatorRewards(evt.target.value);
+        rewards.then(function (response) {
+            setIndividualRewards(response);
+            console.log(response, "Rewards")
+        })
     };
     return (
         <Modal
@@ -183,11 +190,18 @@ const ModalWithdraw = (props) => {
                                 </Select>
                             </div>
                             <div className="form-field">
+                                <p className="label"></p>
+                                <div className="available-tokens">
+                                    <p className="tokens">{individualRewards} <span>XPRT</span></p>
+                                    <p className="usd">=${(individualRewards * 0.4).toFixed(4)}</p>
+                                </div>
+                            </div>
+                            <div className="form-field">
                                 <p className="label">Total Available</p>
                                 <div className="available-tokens">
                                     <img src={icon} alt="icon"/>
                                     <p className="tokens">{props.totalRewards} <span>XPRT</span></p>
-                                    <p className="usd">=$194.04</p>
+                                    <p className="usd">=${(props.totalRewards * 0.4).toFixed(4)}</p>
                                 </div>
                             </div>
                             <div className="form-field">

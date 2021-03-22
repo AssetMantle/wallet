@@ -77,7 +77,7 @@ const Validators = (props) => {
                                         </Nav.Item>
                                     </Nav>
                                 </div>
-                                <p className="info-value"><span>Lifetime Rewards: </span>125,000 XPRT</p>
+                                {/*<p className="info-value"><span>Lifetime Rewards: </span>125,000 XPRT</p>*/}
                             </div>
 
                         </div>

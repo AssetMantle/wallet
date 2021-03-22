@@ -510,6 +510,14 @@
       .value.rewards {
         color: #E50913;
         text-decoration: underline;
+        cursor: pointer;
+        span{
+          background: #E50913;
+          color: #ffffff;
+          font-size: 10px;
+          padding: 0px 5px;
+          margin-left: 5px;
+        }
       }
     }
 
