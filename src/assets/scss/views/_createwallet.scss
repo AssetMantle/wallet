@@ -141,7 +141,6 @@
       }
     }
     .download-section {
-      padding-top: 20px;
       .name{
         text-align: center;
         font-weight: 500;
@@ -208,7 +207,7 @@
     padding-bottom: 40px;
     .create-wallet-body{
       padding: 40px;
-      max-width: 800px !important;
+      max-width: 900px !important;
       margin: auto;
       background: #FFFFFF;
       .buttons{
@@ -228,5 +227,8 @@
         }
       }
     }
+  }
+  .mnemonic-result{
+    text-align: center;
   }
 }

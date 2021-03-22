@@ -191,6 +191,8 @@ const CreateWallet = () => {
                                     })
                                     }
                                 </div>
+                                <p className="mnemonic-result"><b>wallet path: </b>{response.walletPath}</p>
+                                <p className="mnemonic-result"><b>address: </b>{response.address}</p>
                                 <div className="download-section">
                                     <p className="name">Private Key:</p>
                                     <div className="key-download">
