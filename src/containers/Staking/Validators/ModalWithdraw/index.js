@@ -157,7 +157,7 @@ const ModalWithdraw = (props) => {
                                         viewClass="arrow-right"
                                         icon="left-arrow"/>
                                 </button>
-                                <button className="button button-primary">Next</button>
+                                <button className={props.rewards ? "button button-primary" : "button button-primary disabled"} disabled={props.rewards ? true : false}>Next</button>
                             </div>
                         </Form>
                     </Modal.Body>

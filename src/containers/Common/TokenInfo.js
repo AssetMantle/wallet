@@ -32,6 +32,7 @@ const TokenInfo = () => {
             });
 
             await axios.get(delegationsUrl).then(response => {
+                console.log(response, "response")
                 if (response.data.delegation_responses.length) {
                     const totalDelegationsCount = Lodash.sumBy(response.data.delegation_responses, (delegation) => {
                         return delegation.balance.amount * 1;

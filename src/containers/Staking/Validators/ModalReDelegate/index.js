@@ -247,7 +247,7 @@ const ModalReDelegate = (props) => {
                                         viewClass="arrow-right"
                                         icon="left-arrow"/>
                                 </button>
-                                <button className="button button-primary" disabled={disabled}>Next</button>
+                                <button className={props.delegateStatus ? "button button-primary" : "button button-primary disabled"} disabled={props.delegateStatus && disabled}>Next</button>
                             </div>
                         </Form>
                     </Modal.Body>

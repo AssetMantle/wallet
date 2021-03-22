@@ -31,6 +31,7 @@ const ValidatorsTable = (props) => {
                 <tbody>
                 {props.validatorsList.length ?
                     props.validatorsList.map((validator, index) => {
+                        console.log(validator, "validators")
                         let commissionRate = validator.commission.commission_rates.rate * 100;
                         commissionRate = parseFloat(commissionRate.toFixed(2)).toLocaleString();
                         const active = helper.isActive(validator);

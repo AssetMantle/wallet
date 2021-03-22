@@ -2,7 +2,7 @@ import {Accordion, AccordionContext, Card, Form, Modal, useAccordionToggle} from
 import React, {useState, useEffect, useContext} from 'react';
 import success from "../../../assets/images/success.svg";
 import icon from "../../../assets/images/icon.svg";
-import {getDelegationsUrl, getValidatorUrl} from "../../../constants/url";
+import {getDelegationsUrl, getRewardsUrl, getValidatorUrl} from "../../../constants/url";
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import axios from "axios";
@@ -21,20 +21,22 @@ const ModalWithdraw = (props) => {
     const [memoContent, setMemoContent] = useState('');
     const [errorMessage, setErrorMessage] = useState("");
     useEffect(() => {
-        const fetchValidators = async () => {
+        const fetchValidators = () => {
             const address = localStorage.getItem('address');
-            const delegationsUrl = getDelegationsUrl(address);
-            await axios.get(delegationsUrl).then(response => {
-                let delegationResponseList = response.data.delegation_responses;
-                let validators = [];
-                for (const item of delegationResponseList) {
-                    const validatorUrl = getValidatorUrl(item.delegation.validator_address);
-                    const validatorResponse = axios.get(validatorUrl);
-                    validators.push(validatorResponse.data.validator);
+            const rewardsUrl = getRewardsUrl(address);
+            axios.get(rewardsUrl).then(response => {
+                if (response.data.rewards.length) {
+                    let rewardsList = response.data.rewards;
+                    for (const item of rewardsList) {
+                        const validatorUrl = getValidatorUrl(item.validator_address);
+                        axios.get(validatorUrl).then(validatorResponse => {
+                            let validator = validatorResponse.data.validator;
+                            setValidatorsList(validatorsList => [...validatorsList, validator]);
+                        })
+                    }
                 }
-                setValidatorsList(validators);
             }).catch(error => {
-                console.log(error.response, "error delegationsUrl")
+                console.log(error, "error rewardsResponse")
             });
         };
         fetchValidators();
@@ -162,9 +164,12 @@ const ModalWithdraw = (props) => {
 
                                 <Select value={validatorAddress} className="validators-list-selection"
                                         onChange={onChangeSelect} displayEmpty>
-                                    <MenuItem value="">
+                                    <MenuItem value="" >
                                         <em>None</em>
                                     </MenuItem>
+                                    {/*<MenuItem value="all" key={0}>*/}
+                                    {/*    <em>all</em>*/}
+                                    {/*</MenuItem>*/}
                                     {
                                         validatorsList.map((validator, index) => (
                                             <MenuItem
