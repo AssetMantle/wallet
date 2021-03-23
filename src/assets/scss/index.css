@@ -685,7 +685,6 @@ html, body {
       color: #8D9CB5; }
       .create-wallet-modal .create-wallet-form-body form input::placeholder {
         font-size: 14px;
-        line-height: 150%;
         color: #8D9CB5; }
       .create-wallet-modal .create-wallet-form-body form input:disabled {
         background-color: #e9ecef; }
@@ -1025,7 +1024,6 @@ html, body {
       color: #8D9CB5; }
       .wallet-main-section .send-container .form-section .form-field .form-control::placeholder {
         font-size: 14px;
-        line-height: 150%;
         color: #8D9CB5; }
   .wallet-main-section .send-container .form-section .buttons {
     padding-top: 15px; }
@@ -1351,7 +1349,6 @@ html, body {
     color: #8D9CB5; }
     .delegate-modal .delegate-modal-body form input::placeholder {
       font-size: 14px;
-      line-height: 150%;
       color: #8D9CB5; }
   .delegate-modal .delegate-modal-body .buttons {
     padding-top: 20px;
@@ -1381,7 +1378,6 @@ html, body {
     color: #8D9CB5; }
     .claim-rewards-modal .rewards-modal-body input::placeholder {
       font-size: 14px;
-      line-height: 150%;
       color: #8D9CB5; }
   .claim-rewards-modal .rewards-modal-body .buttons {
     padding-top: 20px;
