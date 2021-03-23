@@ -123,7 +123,7 @@
     .info {
       text-align: center;
       font-size: 14px;
-      padding: 20px 0;
+      padding:0  0 20px 0;
       color: #8D9CB5;
 
       span {
@@ -149,8 +149,9 @@
         font-size: 14px;
         line-height: 150%;
         font-family: 'Poppins', sans-serif;
-        text-align: center;
+        text-align: right;
         color: #2E3239;
+        margin-right: 30px;
       }
 
 
@@ -227,7 +228,15 @@
       justify-content: center;
       .custom-control{
         margin-right: 20px;
+        .custom-control-label{
+          font-family: 'Poppins', sans-serif;
+          font-size: 16px;
+          line-height: 150%;
+          text-align: center;
+          color: #2E3239;
+        }
       }
+
       .custom-control-input:checked~.custom-control-label::before{
         border-color: #E50913;
         background-color: #E50913;
@@ -265,7 +274,10 @@
   .modal-dialog {
     max-width: 900px !important;
   }
-
+  .create-wallet-form-body .form-privatekey{
+    padding-top: 0;
+  max-width: inherit;
+  }
   .create-wallet-form-body form {
     max-width: 500px;
   }

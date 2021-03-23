@@ -130,8 +130,8 @@ const AdvanceMode = (props) => {
                 : null}
             {response !== "" ?
                 <div>
-                    <p className="mnemonic-result"><b>wallet path: </b>{response.walletPath}</p>
-                    <p className="mnemonic-result"><b>address: </b>{response.address}</p>
+                    <p className="mnemonic-result"><b>Wallet path: </b>{response.walletPath}</p>
+                    <p className="mnemonic-result"><b>Address: </b>{response.address}</p>
                     <div className="note-section">
                         <div className="exclamation"><Icon
                             viewClass="arrow-right"

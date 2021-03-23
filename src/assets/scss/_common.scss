@@ -359,7 +359,7 @@ html, body {
     cursor: pointer;
     display: flex;
     justify-content: center;
-   p {
+   p, a {
       font-weight: 500;
       font-size: 14px;
       line-height: 150%;
@@ -367,10 +367,17 @@ html, body {
      text-decoration: underline;
       margin: 0;
     }
-
+    .icon.icon-download-icon{
+    width: 20px ;
+    transform: rotate(0) !important;
+    margin-bottom: -6px;
+    margin-left: 10px;
+  }
     .icon {
       width: 16px;
-      transform: rotate(-90deg);
+      margin-left: 10px;
+      fill: #E9721C;
+      transform: rotate(180deg);
     }
   }
 
