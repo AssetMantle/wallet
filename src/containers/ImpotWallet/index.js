@@ -129,7 +129,6 @@ const ModalImportWallet = (props) => {
         const handleAccordion = (event) => {
             decoratedOnClick(event);
             setPrivateAdvanceMode(!privateAdvanceMode);
-            console.log(advanceMode, "while click")
             setAdvanceMode(!advanceMode);
         };
         const isCurrentEventKey = currentEventKey === eventKey;
