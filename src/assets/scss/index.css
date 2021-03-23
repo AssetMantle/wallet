@@ -439,6 +439,10 @@ html, body {
   100% {
     opacity: 0;
     visibility: hidden; } }
+.heading.copy {
+  justify-content: center;
+  display: flex; }
+
 /*--------------------------------------------------------------
 # homepage styles
 --------------------------------------------------------------*/
