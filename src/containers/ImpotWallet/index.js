@@ -17,8 +17,12 @@ const ModalImportWallet = (props) => {
     const [show, setShow] = useState(true);
     const history = useHistory();
     const [showFaq, setShowFaq] = useState(false);
+    const [userMnemonic, setUserMnemonic] = useState("");
     const [importMnemonic, setImportMnemonic] = useState(true);
     const [mnemonicForm, setMnemonicForm] = useState(true);
+    const [advancedForm, setAdvancedForm] = useState(false);
+    const [advancedFormResponseData, setAdvancedFormResponseData] = useState("");
+    const [advancedFormResponse, setAdvancedFormResponse] = useState(false);
     const [responseDataShow, setResponseDataShow] = useState(false);
     const [response, setResponse] = useState("");
     const [jsonName, setJsonName] = useState({});
@@ -26,32 +30,13 @@ const ModalImportWallet = (props) => {
     const [advanceMode, setAdvanceMode] = useState(false);
     const [generateKey, setGenerateKey] = useState(false);
     const [privateAdvanceMode, setPrivateAdvanceMode] = useState(false);
+
     const handleSubmit = async event => {
         event.preventDefault();
-        let responseData;
-
-        if (advanceMode) {
-            let accountNumber = document.getElementById('accountNumber').value;
-            let addressIndex = document.getElementById('accountIndex').value;
-            let bip39Passphrase = document.getElementById('bip39Passphrase').value;
-            const walletPath = wallet.getWalletPath(accountNumber, addressIndex);
-            responseData = wallet.createWallet(event.target.mnemonic.value, walletPath, bip39Passphrase);
-
-        } else {
-            responseData = wallet.createWallet(event.target.mnemonic.value);
-
-        }
-        if (responseData.error) {
-            setErrorMessage(responseData.error);
-        } else {
-            setResponse(responseData);
-            setAdvanceMode(false);
-            setPrivateAdvanceMode(false);
-            setErrorMessage("");
-            setMnemonicForm(false);
-            setResponseDataShow(true);
-        }
-
+        setUserMnemonic(event.target.mnemonic.value);
+        setAdvancedForm(true);
+        setMnemonicForm(false);
+        setErrorMessage("");
     };
 
     const handlePrivateKeySubmit = async event => {
@@ -65,26 +50,10 @@ const ModalImportWallet = (props) => {
             if (decryptedData.error != null) {
                 setErrorMessage(decryptedData.error)
             } else {
-                let responseData;
-                if (advanceMode) {
-                    let accountNumber = document.getElementById('privateAccountNumber').value;
-                    let addressIndex = document.getElementById('privateAccountIndex').value;
-                    let bip39Passphrase = document.getElementById('bip39Passphrase').value;
-                    const walletPath = wallet.getWalletPath(accountNumber, addressIndex);
-                    responseData = wallet.createWallet(decryptedData.mnemonic, walletPath, bip39Passphrase);
-                } else {
-                    responseData = wallet.createWallet(decryptedData.mnemonic);
-                }
-                if (responseData.error) {
-                    setErrorMessage(responseData.error);
-                } else {
-                    setAdvanceMode(false);
-                    setPrivateAdvanceMode(false);
-                    setResponse(responseData);
-                    setResponseDataShow(true);
-                    setMnemonicForm(false);
-                    setErrorMessage("");
-                }
+                setUserMnemonic(decryptedData.mnemonic);
+                setAdvancedForm(true)
+                setMnemonicForm(false);
+                setErrorMessage("");
             }
         };
     };
@@ -101,13 +70,13 @@ const ModalImportWallet = (props) => {
         setImportMnemonic(value);
     };
     const handleRoute = (key) => {
-        if (key === 'generateKey') {
+        if (key === "generateKey") {
             setGenerateKey(true);
-            setResponseDataShow(false)
+            setAdvancedForm(false)
         }
         if (key === "hideGenerateKey") {
             setGenerateKey(false);
-            setResponseDataShow(true)
+            setAdvancedForm(true)
         }
     };
 
@@ -144,9 +113,41 @@ const ModalImportWallet = (props) => {
         );
     }
 
-    const handlePrevious = () => {
-        setResponseDataShow(false);
-        setMnemonicForm(true);
+    const handleSubmitAdvance = (event) => {
+        event.preventDefault();
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = "";
+        if (advanceMode) {
+            accountNumber = document.getElementById('accountNumber').value;
+            addressIndex = document.getElementById('accountIndex').value;
+            bip39Passphrase = document.getElementById('bip39Passphrase').value;
+            if (accountNumber === "") {
+                accountNumber = 0;
+            }
+            if (addressIndex === "") {
+                addressIndex = 0;
+            }
+        }
+        const walletPath = wallet.getWalletPath(accountNumber, addressIndex);
+        const responseData = wallet.createWallet(userMnemonic, walletPath, bip39Passphrase);
+        setAdvancedFormResponseData(responseData);
+        setAdvancedForm(false);
+        setAdvancedFormResponse(true)
+        setAdvanceMode(false);
+    };
+    const handlePrevious = (formName) => {
+        if (formName === "advancedForm") {
+            setMnemonicForm(true);
+            setAdvancedForm(false);
+        } else if (formName === "advancedFormResponse") {
+            setAdvancedForm(true);
+            setAdvancedFormResponse(false)
+        } else if (formName === "generateKey") {
+            setGenerateKey(false);
+            setAdvancedFormResponse(true)
+        }
+
     };
 
     const handleClose = () => {
@@ -183,54 +184,7 @@ const ModalImportWallet = (props) => {
                                                               placeholder="Enter Seed"
                                                               required={true}/>
                                             </div>
-                                            <Accordion className="advanced-wallet-accordion">
-                                                <Card>
-                                                    <Card.Header>
-                                                        <p>
-                                                            Advanced
-                                                        </p>
-                                                        <ContextAwareToggle eventKey="0">Click me!</ContextAwareToggle>
-                                                    </Card.Header>
-                                                    <Accordion.Collapse eventKey="0">
-                                                        <>
-                                                            <div className="form-field">
-                                                                <p className="label">Account</p>
-                                                                <Form.Control
-                                                                    type="number"
-                                                                    min={0}
-                                                                    max={4294967295}
-                                                                    name="accountNumber"
-                                                                    id="accountNumber"
-                                                                    placeholder="Account number"
-                                                                    required={advanceMode ? true : false}
-                                                                />
-                                                            </div>
-                                                            <div className="form-field">
-                                                                <p className="label">Account Index</p>
-                                                                <Form.Control
-                                                                    type="number"
-                                                                    min={0}
-                                                                    max={4294967295}
-                                                                    name="accountIndex"
-                                                                    id="accountIndex"
-                                                                    placeholder="Account Index"
-                                                                    required={advanceMode ? true : false}
-                                                                />
-                                                            </div>
-                                                            <div className="form-field">
-                                                                <p className="label">bip39Passphrase</p>
-                                                                <Form.Control
-                                                                    type="password"
-                                                                    name="bip39Passphrase"
-                                                                    id="bip39Passphrase"
-                                                                    placeholder="Enter bip39Passphrase (optional)"
-                                                                    required={false}
-                                                                />
-                                                            </div>
-                                                        </>
-                                                    </Accordion.Collapse>
-                                                </Card>
-                                            </Accordion>
+
                                             {errorMessage !== ''
                                                 ? <p className="form-error">{errorMessage}</p>
                                                 : null
@@ -259,55 +213,6 @@ const ModalImportWallet = (props) => {
                                                 <Form.File id="exampleFormControlFile1" name="uploadFile"
                                                            className="file-upload" accept=".json" required={true}/>
                                             </div>
-                                            <Accordion className="advanced-wallet-accordion">
-                                                <Card>
-                                                    <Card.Header>
-                                                        <p>
-                                                            Advanced
-                                                        </p>
-                                                        <ContextAwareToggle eventKey="0">Click me!</ContextAwareToggle>
-                                                    </Card.Header>
-                                                    <Accordion.Collapse eventKey="0">
-                                                        <>
-                                                            <div className="form-field">
-                                                                <p className="label">Account</p>
-                                                                <Form.Control
-                                                                    type="number"
-                                                                    min={0}
-                                                                    max={4294967295}
-                                                                    name="privateAccountNumber"
-                                                                    id="privateAccountNumber"
-                                                                    placeholder="Account number"
-                                                                    required={privateAdvanceMode ? true : false}
-                                                                />
-                                                            </div>
-                                                            <div className="form-field">
-                                                                <p className="label">Account Index</p>
-                                                                <Form.Control
-                                                                    type="number"
-                                                                    min={0}
-                                                                    max={4294967295}
-                                                                    name="privateAccountIndex"
-                                                                    id="privateAccountIndex"
-                                                                    placeholder="Account Index"
-                                                                    required={privateAdvanceMode ? true : false}
-                                                                />
-                                                            </div>
-                                                            <div className="form-field">
-                                                                <p className="label">bip39Passphrase</p>
-                                                                <Form.Control
-                                                                    type="password"
-                                                                    name="bip39Passphrase"
-                                                                    id="bip39Passphrase"
-                                                                    placeholder="Enter bip39Passphrase (optional)"
-                                                                    required={false}
-                                                                />
-                                                            </div>
-                                                        </>
-                                                    </Accordion.Collapse>
-                                                </Card>
-                                            </Accordion>
-
                                             {errorMessage !== ''
                                                 ? <p className="form-error">{errorMessage}</p>
                                                 : null
@@ -332,17 +237,22 @@ const ModalImportWallet = (props) => {
                         : null
                 }
                 {
-                    responseDataShow ?
+                    advancedForm ?
                         <>
                             <Modal.Header closeButton>
+                                <div className="previous-section">
+                                    <button className="button" onClick={() => handlePrevious("advancedForm")}>
+                                        <Icon
+                                            viewClass="arrow-right"
+                                            icon="left-arrow"/>
+                                    </button>
+                                </div>
                                 <h3 className="heading">Importing Wallet</h3>
                             </Modal.Header>
                             <div className="create-wallet-body import-wallet-body">
                                 {errorMessage !== "" ?
                                     <div className="login-error"><p className="error-response">{errorMessage}</p></div>
                                     : <div>
-                                        <p className="mnemonic-result"><b>Wallet path: </b>{response.walletPath}</p>
-                                        <p className="mnemonic-result"><b>Address: </b>{response.address}</p>
                                         <div className="download-section">
                                             <div className="key-download" onClick={() => handleRoute('generateKey')}>
                                                 <p> Generate Key Store File</p>
@@ -351,15 +261,60 @@ const ModalImportWallet = (props) => {
                                         </div>
                                     </div>
                                 }
+                                <Form onSubmit={handleSubmitAdvance}>
+                                    <Accordion className="advanced-wallet-accordion">
+                                        <Card>
+                                            <Card.Header>
+                                                <p>
+                                                    Advanced
+                                                </p>
+                                                <ContextAwareToggle eventKey="0">Click me!</ContextAwareToggle>
+                                            </Card.Header>
+                                            <Accordion.Collapse eventKey="0">
+                                                <>
+                                                    <div className="form-field">
+                                                        <p className="label">Account</p>
+                                                        <Form.Control
+                                                            type="number"
+                                                            min={0}
+                                                            max={4294967295}
+                                                            name="accountNumber"
+                                                            id="accountNumber"
+                                                            placeholder="Account number"
+                                                            required={false}
+                                                        />
+                                                    </div>
+                                                    <div className="form-field">
+                                                        <p className="label">Account Index</p>
+                                                        <Form.Control
+                                                            type="number"
+                                                            min={0}
+                                                            max={4294967295}
+                                                            name="accountIndex"
+                                                            id="accountIndex"
+                                                            placeholder="Account Index"
+                                                            required={false}
+                                                        />
+                                                    </div>
+                                                    <div className="form-field">
+                                                        <p className="label">bip39Passphrase</p>
+                                                        <Form.Control
+                                                            type="password"
+                                                            name="bip39Passphrase"
+                                                            id="bip39Passphrase"
+                                                            placeholder="Enter bip39Passphrase (optional)"
+                                                            required={false}
+                                                        />
+                                                    </div>
+                                                </>
+                                            </Accordion.Collapse>
+                                        </Card>
+                                    </Accordion>
 
-                                <div className="buttons">
-                                    <button className="button button-secondary" onClick={() => handlePrevious(2)}>
-                                        <Icon
-                                            viewClass="arrow-right"
-                                            icon="left-arrow"/>
-                                    </button>
-                                    <button className="button button-primary" onClick={handleClose}>Done</button>
-                                </div>
+                                    <div className="buttons">
+                                        <button className="button button-primary">Next</button>
+                                    </div>
+                                </Form>
                                 <div className="note-section">
                                     <div className="exclamation"><Icon
                                         viewClass="arrow-right"
@@ -370,21 +325,40 @@ const ModalImportWallet = (props) => {
                         </>
                         : null
                 }
-
-                {generateKey ?
+                {advancedFormResponse ?
                     <>
                         <Modal.Header closeButton>
+                            <div className="previous-section">
+                                <button className="button" onClick={() => handlePrevious("advancedFormResponse")}>
+                                    <Icon
+                                        viewClass="arrow-right"
+                                        icon="left-arrow"/>
+                                </button>
+                            </div>
                             <h3 className="heading">Importing Wallet</h3>
                         </Modal.Header>
-                        <div className="create-wallet-body import-wallet-body">
-                            <GeneratePrivateKey mnemonic={response.mnemonic} handleRoute={handleRoute}
-                                                handleClose={handleClose} routeValue="hideGenerateKey"/>
+                        <div className="create-wallet-body create-wallet-form-body">
+                            <p className="mnemonic-result"><b>Wallet path: </b>{advancedFormResponseData.walletPath}</p>
+                            <p className="mnemonic-result"><b>Address: </b>{advancedFormResponseData.address}</p>
+                            <div className="buttons">
+                                <button className="button button-primary" onClick={handleClose}>Done</button>
+                            </div>
+                            <div className="note-section">
+                                <div className="exclamation"><Icon
+                                    viewClass="arrow-right"
+                                    icon="exclamation"/></div>
+                                <p>Please securely store the wallet path for future use</p>
+                            </div>
 
                         </div>
                     </>
-                    : null
-                }
+                    : null}
             </Modal>
+            {generateKey ?
+                <GeneratePrivateKey mnemonic={props.mnemonic} handleRoute={handleRoute} setGenerateKey={setGenerateKey}
+                                    routeValue="hideGenerateKey" formName="Creating New Wallet"/>
+                : null
+            }
             {showFaq
                 ?
                 <ModalFaq setShowFaq={setShowFaq}/>

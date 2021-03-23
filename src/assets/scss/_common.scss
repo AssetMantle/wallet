@@ -246,10 +246,20 @@ html, body {
   }
 }
 
-.modal-header button.close{
-  position: absolute;
-  right: 30px;
-  top: 30px;
+.modal-header {
+  button.close{
+    position: absolute;
+    right: 30px;
+    top: 30px;
+  }
+  .previous-section .button{
+    position: absolute;
+    left: 30px;
+    top: 30px;
+    .icon{
+      width: 20px;
+    }
+  }
 }
 
 .form-error, .error-response {
