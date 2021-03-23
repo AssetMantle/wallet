@@ -838,7 +838,6 @@ html, body {
     color: #8D9CB5; }
     .import-wallet-body form input::placeholder {
       font-size: 14px;
-      line-height: 150%;
       color: #8D9CB5; }
   .import-wallet-body .menmonic-list {
     padding-bottom: 10px; }
