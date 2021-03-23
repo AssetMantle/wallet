@@ -12,6 +12,7 @@ import helper from "../../../utils/helper";
 const AdvanceMode = (props) => {
     const [show, setShow] = useState(true);
     const [advanceForm, setAdvanceForm] = useState(true);
+    const [responseShow, setResponseShow] = useState(false);
     const [response, setResponse] = useState("");
     const [passphraseError, setPassphraseError] = useState(false);
     const [generateKey, setGenerateKey] = useState(false);
@@ -38,6 +39,7 @@ const AdvanceMode = (props) => {
         const walletPath = wallet.getWalletPath(accountNumber, addressIndex);
         const responseData = wallet.createWallet(props.mnemonic, walletPath, bip39Passphrase);
         setResponse(responseData);
+        setResponseShow(true)
         setAdvanceForm(false);
         setAdvanceMode(false);
     };
@@ -65,6 +67,10 @@ const AdvanceMode = (props) => {
             props.setAccountInfo(false);
             props.setShow(true);
             props.setMnemonicQuiz(true);
+        }
+        if(formName === "response"){
+            setAdvanceForm(true);
+            setResponseShow(false);
         }
     };
 
@@ -195,14 +201,24 @@ const AdvanceMode = (props) => {
                     </>
                     : null
                 }
-                {response !== "" ?
+                {responseShow ?
                     <>
                     <Modal.Header closeButton>
+                        <div className="previous-section">
+                            <button className="button" onClick={() => handlePrevious("response")}>
+                                <Icon
+                                    viewClass="arrow-right"
+                                    icon="left-arrow"/>
+                            </button>
+                        </div>
                         <h3 className="heading">Creating New Wallet</h3>
                     </Modal.Header>
                     <div className="create-wallet-body create-wallet-form-body">
                         <p className="mnemonic-result"><b>Wallet path: </b>{response.walletPath}</p>
                         <p className="mnemonic-result"><b>Address: </b>{response.address}</p>
+                        <div className="buttons">
+                            <button className="button button-primary" onClick={handleClose}>Done</button>
+                        </div>
                         <div className="note-section">
                             <div className="exclamation"><Icon
                                 viewClass="arrow-right"
