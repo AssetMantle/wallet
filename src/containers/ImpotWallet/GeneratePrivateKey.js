@@ -21,26 +21,29 @@ const GeneratePrivateKey = (props) => {
     };
 
     return (
-        <div className="create-wallet-body ">
-            <Form onSubmit={handleSubmit}>
-                <div className="form-field">
-                    <p className="label">Password</p>
-                    <Form.Control
-                        type="password"
-                        name="password"
-                        placeholder="Enter Password"
-                        required={true}
-                    />
-                </div>
+        <div className="create-wallet-body">
+            <Form onSubmit={handleSubmit} className="form-privatekey">
+                {!keyFile ?
+                    <div className="form-field">
+                        <p className="label">Password</p>
+                        <Form.Control
+                            type="password"
+                            name="password"
+                            placeholder="Enter Password"
+                            required={true}
+                        />
+                    </div>
+                    : null
+                }
                 {keyFile ?
                     <div className="download-section">
                         <div className="key-download">
                             <DownloadLink
                                 label="Download Key Store File"
-                                filename="key.json"
+                                filename="KeyStore.json"
                                 exportFile={() => `${jsonName}`}
                             />
-                            <Icon viewClass="arrow-icon" icon="left-arrow"/>
+                            <Icon viewClass="download-icon" icon="download"/>
                         </div>
                     </div>
                     : null}
@@ -85,7 +88,7 @@ const GeneratePrivateKey = (props) => {
                         <div className="exclamation"><Icon
                             viewClass="arrow-right"
                             icon="exclamation"/></div>
-                        <p>This is your key json file. Please secure in a safe place</p>
+                        <p>This is your Key Store json file. Please secure in a safe place</p>
                     </div>
 
                 </>

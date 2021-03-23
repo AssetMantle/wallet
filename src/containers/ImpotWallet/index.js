@@ -19,7 +19,6 @@ const ModalImportWallet = (props) => {
     const [showFaq, setShowFaq] = useState(false);
     const [importMnemonic, setImportMnemonic] = useState(true);
     const [mnemonicForm, setMnemonicForm] = useState(true);
-    const [mnemonicList, setMnemonicList] = useState('');
     const [responseDataShow, setResponseDataShow] = useState(false);
     const [response, setResponse] = useState("");
     const [jsonName, setJsonName] = useState({});
@@ -54,6 +53,7 @@ const ModalImportWallet = (props) => {
         }
 
     };
+
     const handlePrivateKeySubmit = async event => {
         const password = event.target.password.value;
         event.preventDefault();
@@ -61,32 +61,23 @@ const ModalImportWallet = (props) => {
         fileReader.readAsText(event.target.uploadFile.files[0], "UTF-8");
         fileReader.onload = event => {
             const res = JSON.parse(event.target.result);
-            const error = helper.decryptStore(res, password);
-            if (error.error != null) {
-                setErrorMessage(error.error)
+            const decryptedData = helper.decryptStore(res, password);
+            if (decryptedData.error != null) {
+                setErrorMessage(decryptedData.error)
             } else {
                 let responseData;
-                console.log(advanceMode, "advanceMode check")
                 if (advanceMode) {
                     let accountNumber = document.getElementById('privateAccountNumber').value;
                     let addressIndex = document.getElementById('privateAccountIndex').value;
                     let bip39Passphrase = document.getElementById('bip39Passphrase').value;
                     const walletPath = wallet.getWalletPath(accountNumber, addressIndex);
-                    responseData = wallet.createWallet(error.mnemonic, walletPath, bip39Passphrase);
-                    console.log(accountNumber, addressIndex, bip39Passphrase, responseData, "in advance")
+                    responseData = wallet.createWallet(decryptedData.mnemonic, walletPath, bip39Passphrase);
                 } else {
-                    responseData = wallet.createWallet(error.mnemonic);
-                    console.log(responseData, "in adeafuly")
+                    responseData = wallet.createWallet(decryptedData.mnemonic);
                 }
                 if (responseData.error) {
                     setErrorMessage(responseData.error);
                 } else {
-                    let mnemonic = responseData.mnemonic;
-                    const mnemonicArray = mnemonic.split(' ');
-                    setMnemonicList(mnemonicArray);
-                    let encryptedData = helper.createStore(responseData.mnemonic, password);
-                    let jsonContent = JSON.stringify(encryptedData);
-                    setJsonName(jsonContent);
                     setAdvanceMode(false);
                     setPrivateAdvanceMode(false);
                     setResponse(responseData);
@@ -97,6 +88,7 @@ const ModalImportWallet = (props) => {
             }
         };
     };
+
     const handleLogin = () => {
         if (errorMessage === "") {
             localStorage.setItem('loginToken', 'loggedIn');
@@ -159,10 +151,10 @@ const ModalImportWallet = (props) => {
 
     const handleClose = () => {
         setShow(false);
-        if(props.name === "createWallet"){
+        if (props.name === "createWallet") {
             props.setShowImportWallet(false);
             props.handleClose()
-        }else if(props.name ==="homepage"){
+        } else if (props.name === "homepage") {
             props.setRoutName("")
         }
     };
@@ -174,16 +166,17 @@ const ModalImportWallet = (props) => {
                 {
                     mnemonicForm ?
                         <>
+                            <Modal.Header closeButton>
+                                <h3 className="heading">Importing Wallet</h3>
+                            </Modal.Header>
                             <div className="create-wallet-body import-wallet-body">
-                                <Modal.Header closeButton>
-                                    <h3 className="heading">Importing Wallet</h3>
-                                </Modal.Header>
-
                                 {
                                     importMnemonic ?
                                         <Form onSubmit={handleSubmit}>
-                                            <p onClick={() => handlePrivateKey(false)} className="import-name">Use
-                                                private key file</p>
+                                            <div className="text-center">
+                                                <p onClick={() => handlePrivateKey(false)} className="import-name">Use
+                                                    private key file</p>
+                                            </div>
                                             <div className="form-field">
                                                 <p className="label">Enter Seed</p>
                                                 <Form.Control as="textarea" rows={3} name="mnemonic"
@@ -248,8 +241,10 @@ const ModalImportWallet = (props) => {
                                             </div>
                                         </Form>
                                         : <Form onSubmit={handlePrivateKeySubmit}>
-                                            <p onClick={() => handlePrivateKey(true)} className="import-name">Use
-                                                Mnemonic</p>
+                                            <div className="text-center">
+                                                <p onClick={() => handlePrivateKey(true)} className="import-name">Use
+                                                    Mnemonic</p>
+                                            </div>
                                             <div className="form-field">
                                                 <p className="label">Password</p>
                                                 <Form.Control
@@ -260,7 +255,7 @@ const ModalImportWallet = (props) => {
                                                 />
                                             </div>
                                             <div className="form-field upload">
-                                                <p className="label">Upload key file</p>
+                                                <p className="label"> Key Store file</p>
                                                 <Form.File id="exampleFormControlFile1" name="uploadFile"
                                                            className="file-upload" accept=".json" required={true}/>
                                             </div>
@@ -338,46 +333,55 @@ const ModalImportWallet = (props) => {
                 }
                 {
                     responseDataShow ?
-                        <div className="create-wallet-body import-wallet-body">
+                        <>
                             <Modal.Header closeButton>
                                 <h3 className="heading">Importing Wallet</h3>
                             </Modal.Header>
-                            {errorMessage !== "" ?
-                                <div className="login-error"><p className="error-response">{errorMessage}</p></div>
-                                : <div>
-                                    <p className="mnemonic-result"><b>wallet path: </b>{response.walletPath}</p>
-                                    <p className="mnemonic-result"><b>address: </b>{response.address}</p>
-                                    <div className="download-section">
-                                        <div className="key-download" onClick={() => handleRoute('generateKey')}>
-                                            <p> Generate Key Store File</p>
-                                            <Icon viewClass="arrow-icon" icon="left-arrow"/>
+                            <div className="create-wallet-body import-wallet-body">
+                                {errorMessage !== "" ?
+                                    <div className="login-error"><p className="error-response">{errorMessage}</p></div>
+                                    : <div>
+                                        <p className="mnemonic-result"><b>Wallet path: </b>{response.walletPath}</p>
+                                        <p className="mnemonic-result"><b>Address: </b>{response.address}</p>
+                                        <div className="download-section">
+                                            <div className="key-download" onClick={() => handleRoute('generateKey')}>
+                                                <p> Generate Key Store File</p>
+                                                <Icon viewClass="arrow-icon" icon="left-arrow"/>
+                                            </div>
                                         </div>
                                     </div>
+                                }
+
+                                <div className="buttons">
+                                    <button className="button button-secondary" onClick={() => handlePrevious(2)}>
+                                        <Icon
+                                            viewClass="arrow-right"
+                                            icon="left-arrow"/>
+                                    </button>
+                                    <button className="button button-primary" onClick={handleClose}>Done</button>
                                 </div>
-                            }
-
-                            <div className="buttons">
-                                <button className="button button-secondary" onClick={() => handlePrevious(2)}>
-                                    <Icon
+                                <div className="note-section">
+                                    <div className="exclamation"><Icon
                                         viewClass="arrow-right"
-                                        icon="left-arrow"/>
-                                </button>
-                                <button className="button button-primary" onClick={handleClose}>Done</button>
+                                        icon="exclamation"/></div>
+                                    <p>Please securely store the wallet path for future use</p>
+                                </div>
                             </div>
-
-                        </div>
+                        </>
                         : null
                 }
 
                 {generateKey ?
-                    <div className="create-wallet-body import-wallet-body">
+                    <>
                         <Modal.Header closeButton>
                             <h3 className="heading">Importing Wallet</h3>
                         </Modal.Header>
-                        <GeneratePrivateKey mnemonic={response.mnemonic} handleRoute={handleRoute}
-                                            handleClose={handleClose} routeValue="hideGenerateKey"/>
+                        <div className="create-wallet-body import-wallet-body">
+                            <GeneratePrivateKey mnemonic={response.mnemonic} handleRoute={handleRoute}
+                                                handleClose={handleClose} routeValue="hideGenerateKey"/>
 
-                    </div>
+                        </div>
+                    </>
                     : null
                 }
             </Modal>

@@ -157,7 +157,7 @@ const CreateWallet = (props) => {
                                 <p className="form-error">Mnemonic not matched</p>
                                 : null}
                             <div className="buttons">
-                                <button className="button button-primary" onClick={() => handleSubmitMnemonic()}>Done
+                                <button className="button button-primary" onClick={() => handleSubmitMnemonic()}>Submit
                                 </button>
                             </div>
                             <div className="note-section">

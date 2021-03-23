@@ -282,16 +282,23 @@ html, body {
   cursor: pointer;
   display: flex;
   justify-content: center; }
-  .key-download p {
+  .key-download p, .key-download a {
     font-weight: 500;
     font-size: 14px;
     line-height: 150%;
     color: #E9721C !important;
     text-decoration: underline;
     margin: 0; }
+  .key-download .icon.icon-download-icon {
+    width: 20px;
+    transform: rotate(0) !important;
+    margin-bottom: -6px;
+    margin-left: 10px; }
   .key-download .icon {
     width: 16px;
-    transform: rotate(-90deg); }
+    margin-left: 10px;
+    fill: #E9721C;
+    transform: rotate(180deg); }
 
 .passphrase-field {
   position: relative; }
@@ -619,7 +626,7 @@ html, body {
   .create-wallet-modal .create-wallet-form-body .info {
     text-align: center;
     font-size: 14px;
-    padding: 20px 0;
+    padding: 0  0 20px 0;
     color: #8D9CB5; }
     .create-wallet-modal .create-wallet-form-body .info span {
       text-decoration: underline;
@@ -638,8 +645,9 @@ html, body {
       font-size: 14px;
       line-height: 150%;
       font-family: 'Poppins', sans-serif;
-      text-align: center;
-      color: #2E3239; }
+      text-align: right;
+      color: #2E3239;
+      margin-right: 30px; }
     .create-wallet-modal .create-wallet-form-body form .password-group {
       position: relative; }
       .create-wallet-modal .create-wallet-form-body form .password-group button {
@@ -688,6 +696,12 @@ html, body {
     justify-content: center; }
     .create-wallet-modal .create-wallet-form-body .radio-group .custom-control {
       margin-right: 20px; }
+      .create-wallet-modal .create-wallet-form-body .radio-group .custom-control .custom-control-label {
+        font-family: 'Poppins', sans-serif;
+        font-size: 16px;
+        line-height: 150%;
+        text-align: center;
+        color: #2E3239; }
     .create-wallet-modal .create-wallet-form-body .radio-group .custom-control-input:checked ~ .custom-control-label::before {
       border-color: #E50913;
       background-color: #E50913; }
@@ -714,6 +728,9 @@ html, body {
 
 .create-wallet-modal.large .modal-dialog {
   max-width: 900px !important; }
+.create-wallet-modal.large .create-wallet-form-body .form-privatekey {
+  padding-top: 0;
+  max-width: inherit; }
 .create-wallet-modal.large .create-wallet-form-body form {
   max-width: 500px; }
 .create-wallet-modal.large .note-section {
@@ -773,6 +790,7 @@ html, body {
     color: #313238;
     padding-bottom: 30px; }
   .import-wallet-body .import-name {
+    display: inline-block;
     cursor: pointer;
     text-align: center;
     font-size: 16px;
@@ -815,6 +833,7 @@ html, body {
   .import-wallet-body .menmonic-list {
     padding-bottom: 10px; }
   .import-wallet-body .mnemonic-result {
+    font-family: 'Poppins', sans-serif;
     padding: 10px 0;
     word-break: break-word;
     margin: 0;
@@ -839,30 +858,39 @@ html, body {
         font-size: 14px;
         line-height: 150%;
         color: #E9721C !important; }
+      .import-wallet-body .download-section .key-download .icon.icon-download-icon {
+        width: 20px;
+        transform: rotate(0) !important;
+        margin-bottom: -6px;
+        margin-left: 10px; }
       .import-wallet-body .download-section .key-download .icon {
         width: 16px;
-        transform: rotate(-90deg); }
+        margin-left: 10px;
+        fill: #E9721C;
+        transform: rotate(180deg); }
 
-.advanced-wallet-accordion .card {
-  border: 0px solid; }
-  .advanced-wallet-accordion .card .card-header {
-    background: transparent;
-    padding: 0  0 10px 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 0; }
-    .advanced-wallet-accordion .card .card-header p {
-      margin: 0; }
-  .advanced-wallet-accordion .card button {
-    border: 0px;
-    background: transparent;
-    outline: none; }
-    .advanced-wallet-accordion .card button .icon {
-      width: 20px; }
-  .advanced-wallet-accordion .card .collapse.show {
-    padding: 30px 10px;
-    border: 1px solid #E3E5F4; }
+.advanced-wallet-accordion {
+  padding-top: 20px; }
+  .advanced-wallet-accordion .card {
+    border: 0px solid; }
+    .advanced-wallet-accordion .card .card-header {
+      background: transparent;
+      padding: 0  0 10px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 0; }
+      .advanced-wallet-accordion .card .card-header p {
+        margin: 0; }
+    .advanced-wallet-accordion .card button {
+      border: 0px;
+      background: transparent;
+      outline: none; }
+      .advanced-wallet-accordion .card button .icon {
+        width: 20px; }
+    .advanced-wallet-accordion .card .collapse.show {
+      padding: 30px 10px;
+      border: 1px solid #E3E5F4; }
 
 /*--------------------------------------------------------------
 # importwallet styles

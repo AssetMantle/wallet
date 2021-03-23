@@ -28,6 +28,7 @@
   }
 
   .import-name {
+    display: inline-block;
     cursor: pointer;
     text-align: center;
     font-size: 16px;
@@ -92,6 +93,7 @@
   }
 
   .mnemonic-result {
+    font-family: 'Poppins', sans-serif;
     padding: 10px 0;
     word-break: break-word;
     margin: 0;
@@ -123,15 +125,23 @@
         line-height: 150%;
         color: #E9721C !important;
       }
-
+      .icon.icon-download-icon{
+        width: 20px ;
+        transform: rotate(0) !important;
+        margin-bottom: -6px;
+        margin-left: 10px;
+      }
       .icon {
         width: 16px;
-        transform: rotate(-90deg);
+        margin-left: 10px;
+        fill: #E9721C;
+        transform: rotate(180deg);
       }
     }
   }
 }
 .advanced-wallet-accordion{
+  padding-top: 20px;
 .card{
   border: 0px solid;
   .card-header{
