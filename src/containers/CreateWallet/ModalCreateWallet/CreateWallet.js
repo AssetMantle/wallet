@@ -6,6 +6,7 @@ import helper from "../../../utils/helper";
 import {useHistory} from "react-router-dom";
 import ImportWallet from "../../ImpotWallet";
 import AdvanceMode from "./AdvanceMode";
+import Copy from "../../../components/Copy";
 const CreateWallet = (props) => {
     const history = useHistory();
     const [show, setShow] = useState(true);
@@ -115,7 +116,7 @@ const CreateWallet = (props) => {
                             <p className="info">Already Have a wallet? <span onClick={handleRoute}>Import wallet</span>
                             </p>
                             <div className="seed-section">
-                                <h3 className="heading">Mnemonic (Seed Phrase)</h3>
+                                <h3 className="heading copy">Mnemonic (Seed Phrase)  <Copy id={response.mnemonic}/> </h3>
                                 <div className="menmonic-list">
                                     {mnemonicList ?
                                         mnemonicList.map((key, index) => {
@@ -164,7 +165,7 @@ const CreateWallet = (props) => {
                             <p className="info">Already Have a wallet? <span onClick={handleRoute}>Import wallet</span>
                             </p>
                             <div className="seed-section">
-                                <h3 className="heading">Mnemonic (Seed Phrase)</h3>
+                                <h3 className="heading copy">Mnemonic (Seed Phrase)  <Copy id={response.mnemonic}/> </h3>
                                 <div className="menmonic-list">
                                     {randomMnemonicList.map((key, index) => {
                                         if (key !== '') {
