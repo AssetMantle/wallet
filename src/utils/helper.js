@@ -80,13 +80,19 @@ function ValidateFrom(value){
         return new Error('Length must be greater than 0');
     }
     return new Error('');
-};
-
+}
+function ValidatePassphrase(value){
+    if(value.length === 50){
+        return true;
+    }
+    return false;
+}
 module.exports = {
     randomNum,
     stringTruncate,
     createStore,
     decryptStore,
     isActive,
-    ValidateFrom
+    ValidateFrom,
+    ValidatePassphrase
 };

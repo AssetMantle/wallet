@@ -1,23 +1,20 @@
 import React, {useContext, useState} from "react";
 import {
     Form,
-    OverlayTrigger,
-    Popover,
     Accordion,
     Card,
-    Button,
     AccordionContext,
-    useAccordionToggle
+    useAccordionToggle, Modal
 } from "react-bootstrap";
 import Icon from "../../components/Icon";
 import wallet from "../../utils/wallet";
-import DownloadLink from "react-download-link";
 import helper from "../../utils/helper"
 import {useHistory} from "react-router-dom";
-import HomepageHeader from "../Common/HomepageHeader";
 import ModalFaq from "../Faq";
+import GeneratePrivateKey from "./GeneratePrivateKey";
 
-const ImportWallet = (props) => {
+const ModalImportWallet = (props) => {
+    const [show, setShow] = useState(true);
     const history = useHistory();
     const [showFaq, setShowFaq] = useState(false);
     const [importMnemonic, setImportMnemonic] = useState(true);
@@ -28,16 +25,19 @@ const ImportWallet = (props) => {
     const [jsonName, setJsonName] = useState({});
     const [errorMessage, setErrorMessage] = useState("");
     const [advanceMode, setAdvanceMode] = useState(false);
+    const [generateKey, setGenerateKey] = useState(false);
     const [privateAdvanceMode, setPrivateAdvanceMode] = useState(false);
     const handleSubmit = async event => {
         event.preventDefault();
         let responseData;
+
         if (advanceMode) {
             let accountNumber = document.getElementById('accountNumber').value;
             let addressIndex = document.getElementById('accountIndex').value;
             let bip39Passphrase = document.getElementById('bip39Passphrase').value;
             const walletPath = wallet.getWalletPath(accountNumber, addressIndex);
             responseData = wallet.createWallet(event.target.mnemonic.value, walletPath, bip39Passphrase);
+
         } else {
             responseData = wallet.createWallet(event.target.mnemonic.value);
 
@@ -46,6 +46,8 @@ const ImportWallet = (props) => {
             setErrorMessage(responseData.error);
         } else {
             setResponse(responseData);
+            setAdvanceMode(false);
+            setPrivateAdvanceMode(false);
             setErrorMessage("");
             setMnemonicForm(false);
             setResponseDataShow(true);
@@ -64,14 +66,17 @@ const ImportWallet = (props) => {
                 setErrorMessage(error.error)
             } else {
                 let responseData;
+                console.log(advanceMode, "advanceMode check")
                 if (advanceMode) {
                     let accountNumber = document.getElementById('privateAccountNumber').value;
                     let addressIndex = document.getElementById('privateAccountIndex').value;
                     let bip39Passphrase = document.getElementById('bip39Passphrase').value;
                     const walletPath = wallet.getWalletPath(accountNumber, addressIndex);
                     responseData = wallet.createWallet(error.mnemonic, walletPath, bip39Passphrase);
+                    console.log(accountNumber, addressIndex, bip39Passphrase, responseData, "in advance")
                 } else {
                     responseData = wallet.createWallet(error.mnemonic);
+                    console.log(responseData, "in adeafuly")
                 }
                 if (responseData.error) {
                     setErrorMessage(responseData.error);
@@ -82,6 +87,8 @@ const ImportWallet = (props) => {
                     let encryptedData = helper.createStore(responseData.mnemonic, password);
                     let jsonContent = JSON.stringify(encryptedData);
                     setJsonName(jsonContent);
+                    setAdvanceMode(false);
+                    setPrivateAdvanceMode(false);
                     setResponse(responseData);
                     setResponseDataShow(true);
                     setMnemonicForm(false);
@@ -101,9 +108,17 @@ const ImportWallet = (props) => {
     const handlePrivateKey = (value) => {
         setImportMnemonic(value);
     };
-    const handleRoute = () =>{
-        history.push("/")
-    }
+    const handleRoute = (key) => {
+        if (key === 'generateKey') {
+            setGenerateKey(true);
+            setResponseDataShow(false)
+        }
+        if (key === "hideGenerateKey") {
+            setGenerateKey(false);
+            setResponseDataShow(true)
+        }
+    };
+
     function ContextAwareToggle({children, eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 
@@ -114,6 +129,7 @@ const ImportWallet = (props) => {
         const handleAccordion = (event) => {
             decoratedOnClick(event);
             setPrivateAdvanceMode(!privateAdvanceMode);
+            console.log(advanceMode, "while click")
             setAdvanceMode(!advanceMode);
         };
         const isCurrentEventKey = currentEventKey === eventKey;
@@ -140,30 +156,30 @@ const ImportWallet = (props) => {
     const handlePrevious = () => {
         setResponseDataShow(false);
         setMnemonicForm(true);
-    }
-    const popover = (
-        <Popover id="popover-basic">
-            <Popover.Content>
-                If you wish to import an already existing Persistence wallet, click on import an already existing
-                wallet.
-            </Popover.Content>
-        </Popover>
-    );
+    };
+
+    const handleClose = () => {
+        setShow(false);
+        if(props.name === "createWallet"){
+            props.setShowImportWallet(false);
+            props.handleClose()
+        }else if(props.name ==="homepage"){
+            props.setRoutName("")
+        }
+    };
+
     return (
-        <div className="create-wallet-section">
-            <HomepageHeader/>
-            <div className="create-wallet-modal large">
+        <>
+            <Modal backdrop="static" show={show} onHide={handleClose} centered
+                   className="create-wallet-modal large seed">
                 {
                     mnemonicForm ?
                         <>
                             <div className="create-wallet-body import-wallet-body">
-                                <h3 className="heading">Importing Wallet
-                                    {/*      <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
-                                        <button className="icon-button info"><Icon
-                                            viewClass="arrow-right"
-                                            icon="info"/></button>
-                                    </OverlayTrigger>*/}
-                                </h3>
+                                <Modal.Header closeButton>
+                                    <h3 className="heading">Importing Wallet</h3>
+                                </Modal.Header>
+
                                 {
                                     importMnemonic ?
                                         <Form onSubmit={handleSubmit}>
@@ -188,7 +204,9 @@ const ImportWallet = (props) => {
                                                             <div className="form-field">
                                                                 <p className="label">Account</p>
                                                                 <Form.Control
-                                                                    type="text"
+                                                                    type="number"
+                                                                    min={0}
+                                                                    max={4294967295}
                                                                     name="accountNumber"
                                                                     id="accountNumber"
                                                                     placeholder="Account number"
@@ -198,7 +216,9 @@ const ImportWallet = (props) => {
                                                             <div className="form-field">
                                                                 <p className="label">Account Index</p>
                                                                 <Form.Control
-                                                                    type="text"
+                                                                    type="number"
+                                                                    min={0}
+                                                                    max={4294967295}
                                                                     name="accountIndex"
                                                                     id="accountIndex"
                                                                     placeholder="Account Index"
@@ -258,7 +278,9 @@ const ImportWallet = (props) => {
                                                             <div className="form-field">
                                                                 <p className="label">Account</p>
                                                                 <Form.Control
-                                                                    type="text"
+                                                                    type="number"
+                                                                    min={0}
+                                                                    max={4294967295}
                                                                     name="privateAccountNumber"
                                                                     id="privateAccountNumber"
                                                                     placeholder="Account number"
@@ -268,7 +290,9 @@ const ImportWallet = (props) => {
                                                             <div className="form-field">
                                                                 <p className="label">Account Index</p>
                                                                 <Form.Control
-                                                                    type="text"
+                                                                    type="number"
+                                                                    min={0}
+                                                                    max={4294967295}
                                                                     name="privateAccountIndex"
                                                                     id="privateAccountIndex"
                                                                     placeholder="Account Index"
@@ -316,12 +340,20 @@ const ImportWallet = (props) => {
                 {
                     responseDataShow ?
                         <div className="create-wallet-body import-wallet-body">
-                            <h3 className="heading">Importing Wallet</h3>
+                            <Modal.Header closeButton>
+                                <h3 className="heading">Importing Wallet</h3>
+                            </Modal.Header>
                             {errorMessage !== "" ?
                                 <div className="login-error"><p className="error-response">{errorMessage}</p></div>
                                 : <div>
                                     <p className="mnemonic-result"><b>wallet path: </b>{response.walletPath}</p>
                                     <p className="mnemonic-result"><b>address: </b>{response.address}</p>
+                                    <div className="download-section">
+                                        <div className="key-download" onClick={() => handleRoute('generateKey')}>
+                                            <p> Generate Key Store File</p>
+                                            <Icon viewClass="arrow-icon" icon="left-arrow"/>
+                                        </div>
+                                    </div>
                                 </div>
                             }
 
@@ -331,21 +363,32 @@ const ImportWallet = (props) => {
                                         viewClass="arrow-right"
                                         icon="left-arrow"/>
                                 </button>
-                                <button className="button button-primary" onClick={handleRoute}>Done</button>
+                                <button className="button button-primary" onClick={handleClose}>Done</button>
                             </div>
 
                         </div>
                         : null
                 }
 
-            </div>
+                {generateKey ?
+                    <div className="create-wallet-body import-wallet-body">
+                        <Modal.Header closeButton>
+                            <h3 className="heading">Importing Wallet</h3>
+                        </Modal.Header>
+                        <GeneratePrivateKey mnemonic={response.mnemonic} handleRoute={handleRoute}
+                                            handleClose={handleClose} routeValue="hideGenerateKey"/>
+
+                    </div>
+                    : null
+                }
+            </Modal>
             {showFaq
                 ?
                 <ModalFaq setShowFaq={setShowFaq}/>
                 :
                 null}
-        </div>
+        </>
 
     );
 };
-export default ImportWallet;
+export default ModalImportWallet;

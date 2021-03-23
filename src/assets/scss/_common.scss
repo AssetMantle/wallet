@@ -348,3 +348,39 @@ html, body {
     }
   }
 }
+
+
+  .key-download {
+    text-align: center;
+    padding: 10px;
+    background: rgba(233, 114, 28, 0.07);
+    max-width: 350px;
+    margin: 20px auto;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+   p {
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 150%;
+      color: #E9721C !important;
+     text-decoration: underline;
+      margin: 0;
+    }
+
+    .icon {
+      width: 16px;
+      transform: rotate(-90deg);
+    }
+  }
+
+  .passphrase-field{
+    position: relative;
+    .passphrase-error{
+      position: absolute;
+      bottom: -10px;
+      right: auto;
+      color: #ee3b3b;
+      font-size: 10px;
+    }
+  }
