@@ -5,16 +5,17 @@ import {useHistory} from "react-router-dom";
 import dark_icon from "../../assets/images/dark_icon.svg";
 import ModalCreateWallet from "../../containers/CreateWallet/ModalCreateWallet";
 import ModalFaq from "../../containers/Faq";
-
+import ModalImportWallet from "../../containers/ImpotWallet";
+import Footer from "../../components/Footer";
 const Homepage = () => {
     const history = useHistory();
     const [routName, setRoutName] = useState("false");
     const [showFaq, setShowFaq] = useState(false);
     const handleRoute = (name) => {
         setRoutName(name);
-        if (name === "importWallet") {
-            history.push('/import_wallet')
-        }
+        // if (name === "importWallet") {
+        //     history.push('/import_wallet')
+        // }
     };
     const handleHelp = () => {
         setShowFaq(true)
@@ -51,28 +52,23 @@ const Homepage = () => {
                         <p onClick={() => handleRoute('importWallet')} className="import">Import an existing wallet
                         </p>
                     </div>
-                    <div className="info-boxes">
-                        <div className="info-box first">
-                            <h4>26</h4>
-                            <p>Unique Wallets</p>
-                        </div>
-                        <div className="info-box second">
-                            <h4>152</h4>
-                            <p>XPRT stakers</p>
-                        </div>
-                    </div>
                     <p className="border-logo"><img src={dark_icon} alt="dark-icon"/></p>
                 </div>
                 <p className="footer-text">
                     Terms of Use | Persistence Wallet v0.1.0
                 </p>
             </div>
+            <Footer/>
             {
                 routName === "createWallet" ?
                     <ModalCreateWallet setRoutName={setRoutName}/>
                     : null
             }
-
+            {
+                routName === "importWallet" ?
+                    <ModalImportWallet setRoutName={setRoutName} name="homepage"/>
+                    : null
+            }
             {showFaq
                 ?
                 <ModalFaq setShowFaq={setShowFaq}/>

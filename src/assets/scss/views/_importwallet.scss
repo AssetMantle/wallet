@@ -1,4 +1,22 @@
+
 .import-wallet-body {
+  padding: 40px;
+  .buttons{
+    padding-top: 30px;
+    text-align: center;
+    .button-secondary{
+      float: left;
+      padding: .375rem 0.8rem;
+      background: #F0F1F2;
+      border-color: transparent;
+      .icon{
+        width: 20px;
+      }
+    }
+    .button.button-primary{
+      width: 200px;
+    }
+  }
   .heading {
     font-weight: 600;
     font-size: 18px;
