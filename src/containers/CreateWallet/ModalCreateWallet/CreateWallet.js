@@ -73,14 +73,43 @@ const CreateWallet = (props) => {
         setShow(false);
         setShowImportWallet(true)
     };
+    const handlePrevious = (formName) =>{
+        if(formName === "keysForm"){
+            setShow(false);
+            props.setShow(true);
+            props.setModal1(true);
+            props.setCreatWallet(false);
+        }
+        if(formName === "mnemonicQuiz"){
+            setKeysForm(true);
+            setMnemonicQuiz(false)
+        }
+        if(formName === "accountInfo"){
+            setMnemonicQuiz(true)
+            setAccountInfo(false)
+        }
+    };
+    const handleKeypress = e => {
+        if (e.key === "Enter") {
+            handleSubmitMnemonic();
+        }
+    };
     return (
         <div>
             <Modal backdrop="static" show={show} onHide={handleClose} centered className="create-wallet-modal large seed">
-                <Modal.Header closeButton>
-                    <h3 className="heading">Creating New Wallet</h3>
-                </Modal.Header>
                 {
                     keysForm ?
+                        <>
+                        <Modal.Header closeButton>
+                            <div className="previous-section">
+                                <button className="button" onClick={() => handlePrevious("keysForm")}>
+                                    <Icon
+                                        viewClass="arrow-right"
+                                        icon="left-arrow"/>
+                                </button>
+                            </div>
+                            <h3 className="heading">Creating New Wallet</h3>
+                        </Modal.Header>
                         <div className="create-wallet-body create-wallet-form-body">
 
                             <p className="info">Already Have a wallet? <span onClick={handleRoute}>Import wallet</span>
@@ -115,10 +144,22 @@ const CreateWallet = (props) => {
                                 <p>Please securely store the mnemonic for future use</p>
                             </div>
                         </div>
+                        </>
                         : null
                 }
                 {
                     mnemonicQuiz ?
+                        <>
+                        <Modal.Header closeButton>
+                            <div className="previous-section">
+                                <button className="button" onClick={() => handlePrevious("mnemonicQuiz")}>
+                                    <Icon
+                                        viewClass="arrow-right"
+                                        icon="left-arrow"/>
+                                </button>
+                            </div>
+                            <h3 className="heading">Creating New Wallet</h3>
+                        </Modal.Header>
                         <div className="create-wallet-body create-wallet-form-body">
                             <p className="info">Already Have a wallet? <span onClick={handleRoute}>Import wallet</span>
                             </p>
@@ -134,6 +175,7 @@ const CreateWallet = (props) => {
                                                     type="text"
                                                     id={`mnemonicKey${index}`}
                                                     value={key}
+                                                    onKeyPress={handleKeypress}
                                                     required={true}
                                                 />
                                             )
@@ -144,6 +186,7 @@ const CreateWallet = (props) => {
                                                     className="empty-mnemonic"
                                                     type="text"
                                                     id={`mnemonicKey${index}`}
+                                                    onKeyPress={handleKeypress}
                                                     defaultValue={key}
                                                     required={true}
                                                 />
@@ -167,16 +210,14 @@ const CreateWallet = (props) => {
                                 <p>Note and store the mnemonic for future use</p>
                             </div>
                         </div>
+                        </>
                         : null
                 }
-                {accountInfo ?
-                    <div className="create-wallet-body create-wallet-form-body">
-                        <p className="info">Already Have a wallet? <span onClick={handleRoute}>Import wallet</span>
-                        </p>
-                        <AdvanceMode mnemonic={response.mnemonic}/>
-                    </div>
-                : null}
             </Modal>
+                {accountInfo ?
+                    <AdvanceMode mnemonic={response.mnemonic} setAccountInfo={setAccountInfo} setShow={setShow} setMnemonicQuiz={setMnemonicQuiz} handleClose={handleClose}/>
+                    : null
+                }
                 {showImportWallet ?
                     <ImportWallet setShowImportWallet={setShowImportWallet} name="createWallet" handleClose={handleClose}/>
                     : null

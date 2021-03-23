@@ -194,6 +194,12 @@ html, body {
   position: absolute;
   right: 30px;
   top: 30px; }
+.modal-header .previous-section .button {
+  position: absolute;
+  left: 30px;
+  top: 30px; }
+  .modal-header .previous-section .button .icon {
+    width: 20px; }
 
 .form-error, .error-response {
   margin: 0;
