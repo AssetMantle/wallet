@@ -3,7 +3,6 @@ import {Modal} from "react-bootstrap";
 import Icon from "../../../components/Icon";
 import {useHistory} from "react-router-dom";
 import CreateWallet from "./CreateWallet";
-
 const ModalCreateWallet = (props) => {
     const history = useHistory();
     const [show, setShow] = useState(true);
@@ -60,7 +59,7 @@ const ModalCreateWallet = (props) => {
                         modal1 ?
                             <>
                                 <Modal.Header closeButton>
-                                    <h3 className="heading">About Persistence Wallet</h3>
+                                    <p> About Persistence Wallet</p>
                                 </Modal.Header>
                                 <Modal.Body className="create-wallet-body">
                                     <div className="info-box">
@@ -196,8 +195,7 @@ const ModalCreateWallet = (props) => {
             }
             {
                 createWallet ?
-                    <CreateWallet handleClose={handleClose} setShow={setShow} setModal1={setModal1}
-                                  setCreatWallet={setCreatWallet}/>
+                    <CreateWallet handleClose={handleClose} setShow={setShow} setModal1={setModal1} setCreatWallet={setCreatWallet}/>
                     :
                     null
             }
