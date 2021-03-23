@@ -53,14 +53,11 @@ const CreateWallet = (props) => {
     };
 
     const handleSubmitMnemonic = () => {
-        console.log(randomNumberList, "list",mnemonicList);
         randomNumberList.map((number, index) => {
             let phrase = document.getElementById('mnemonicKey' + number).value;
-            console.log(number,phrase, "number",mnemonicList[number]);
             if (mnemonicList[number] !== phrase) {
                 setQuizError(true);
             } else {
-                console.log(index,randomNumberList.length, "mnemonicList[number]");
                 if(index === randomNumberList.length-1){
                     localStorage.setItem('loginToken', 'loggedIn');
                     localStorage.setItem('address', response.address);
@@ -177,12 +174,6 @@ const CreateWallet = (props) => {
                         <p className="info">Already Have a wallet? <span onClick={handleRoute}>Import wallet</span>
                         </p>
                         <AdvanceMode mnemonic={response.mnemonic}/>
-                        <div className="note-section">
-                            <div className="exclamation"><Icon
-                                viewClass="arrow-right"
-                                icon="exclamation"/></div>
-                            <p>Please securely store the mnemonic for future use</p>
-                        </div>
                     </div>
                 : null}
             </Modal>

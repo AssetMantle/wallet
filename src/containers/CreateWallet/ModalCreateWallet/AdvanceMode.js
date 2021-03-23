@@ -132,6 +132,12 @@ const AdvanceMode = (props) => {
                 <div>
                     <p className="mnemonic-result"><b>wallet path: </b>{response.walletPath}</p>
                     <p className="mnemonic-result"><b>address: </b>{response.address}</p>
+                    <div className="note-section">
+                        <div className="exclamation"><Icon
+                            viewClass="arrow-right"
+                            icon="exclamation"/></div>
+                        <p>Please securely store the wallet path for future use</p>
+                    </div>
                 </div>
                 : null}
             {generateKey ?
