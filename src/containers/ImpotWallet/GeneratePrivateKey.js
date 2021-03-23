@@ -36,7 +36,7 @@ const GeneratePrivateKey = (props) => {
                     <div className="download-section">
                         <div className="key-download">
                             <DownloadLink
-                                label="Download Key File"
+                                label="Download Key Store File"
                                 filename="key.json"
                                 exportFile={() => `${jsonName}`}
                             />
@@ -61,7 +61,7 @@ const GeneratePrivateKey = (props) => {
                             <div className="exclamation"><Icon
                                 viewClass="arrow-right"
                                 icon="exclamation"/></div>
-                            <p>Your Password encrypts your private key. This does not act as a seed to
+                            <p>Password for encrypts your private key. This does not act as a seed to
                                 generate your seed.</p>
                         </div>
                     </>
