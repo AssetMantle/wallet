@@ -60,7 +60,7 @@ const ModalImportWallet = (props) => {
     const handleLogin = () => {
         if (errorMessage === "") {
             localStorage.setItem('loginToken', 'loggedIn');
-            localStorage.setItem('address', response.address);
+            localStorage.setItem('address', advancedFormResponseData.address);
             history.push('/dashboard/wallet');
         }
     };
@@ -340,7 +340,7 @@ const ModalImportWallet = (props) => {
                             <p className="mnemonic-result"><b>Wallet path: </b>{advancedFormResponseData.walletPath}</p>
                             <p className="mnemonic-result"><b>Address: </b>{advancedFormResponseData.address}</p>
                             <div className="buttons">
-                                <button className="button button-primary" onClick={handleClose}>Done</button>
+                                <button className="button button-primary" onClick={handleLogin}>Done</button>
                             </div>
                             <div className="note-section">
                                 <div className="exclamation"><Icon

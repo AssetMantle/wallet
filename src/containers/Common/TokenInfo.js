@@ -106,7 +106,7 @@ const TokenInfo = () => {
                 <div className="inner-box">
                     <div className="line">
                         <p className="key">Rewards (24h)</p>
-                        <p className="value rewards" onClick={handleRewards}>{totalRewards} XPRT</p>
+                        <p className="value rewards" onClick={handleRewards}>{totalRewards} XPRT <span>Claim</span></p>
                     </div>
                     <div className="line">
                         <p className="key">Unbonding Token</p>
