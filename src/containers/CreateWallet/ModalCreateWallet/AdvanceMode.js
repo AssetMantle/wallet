@@ -6,7 +6,7 @@ import {
 import {useHistory} from "react-router-dom";
 import wallet from "../../../utils/wallet";
 import Icon from "../../../components/Icon";
-import GeneratePrivateKey from "../../ImpotWallet/GeneratePrivateKey";
+import GeneratePrivateKey from "../../Common/GeneratePrivateKey";
 import helper from "../../../utils/helper";
 
 const AdvanceMode = (props) => {

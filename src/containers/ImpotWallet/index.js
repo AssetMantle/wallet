@@ -11,7 +11,7 @@ import wallet from "../../utils/wallet";
 import helper from "../../utils/helper"
 import {useHistory} from "react-router-dom";
 import ModalFaq from "../Faq";
-import GeneratePrivateKey from "./GeneratePrivateKey";
+import GeneratePrivateKey from "../Common/GeneratePrivateKey";
 
 const ModalImportWallet = (props) => {
     const [show, setShow] = useState(true);
@@ -23,7 +23,6 @@ const ModalImportWallet = (props) => {
     const [advancedForm, setAdvancedForm] = useState(false);
     const [advancedFormResponseData, setAdvancedFormResponseData] = useState("");
     const [advancedFormResponse, setAdvancedFormResponse] = useState(false);
-    const [responseDataShow, setResponseDataShow] = useState(false);
     const [response, setResponse] = useState("");
     const [jsonName, setJsonName] = useState({});
     const [errorMessage, setErrorMessage] = useState("");
@@ -33,10 +32,15 @@ const ModalImportWallet = (props) => {
 
     const handleSubmit = async event => {
         event.preventDefault();
-        setUserMnemonic(event.target.mnemonic.value);
-        setAdvancedForm(true);
-        setMnemonicForm(false);
-        setErrorMessage("");
+        const responseData = wallet.createWallet(event.target.mnemonic.value);
+        if(responseData.error){
+            setErrorMessage(responseData.error);
+        }else{
+            setUserMnemonic(event.target.mnemonic.value);
+            setAdvancedForm(true);
+            setMnemonicForm(false);
+            setErrorMessage("");
+        }
     };
 
     const handlePrivateKeySubmit = async event => {
@@ -51,7 +55,7 @@ const ModalImportWallet = (props) => {
                 setErrorMessage(decryptedData.error)
             } else {
                 setUserMnemonic(decryptedData.mnemonic);
-                setAdvancedForm(true)
+                setAdvancedForm(true);
                 setMnemonicForm(false);
                 setErrorMessage("");
             }
@@ -68,6 +72,7 @@ const ModalImportWallet = (props) => {
 
     const handlePrivateKey = (value) => {
         setImportMnemonic(value);
+        setErrorMessage("");
     };
     const handleRoute = (key) => {
         if (key === "generateKey") {
@@ -133,7 +138,7 @@ const ModalImportWallet = (props) => {
         const responseData = wallet.createWallet(userMnemonic, walletPath, bip39Passphrase);
         setAdvancedFormResponseData(responseData);
         setAdvancedForm(false);
-        setAdvancedFormResponse(true)
+        setAdvancedFormResponse(true);
         setAdvanceMode(false);
     };
     const handlePrevious = (formName) => {
@@ -355,7 +360,7 @@ const ModalImportWallet = (props) => {
                     : null}
             </Modal>
             {generateKey ?
-                <GeneratePrivateKey mnemonic={props.mnemonic} handleRoute={handleRoute} setGenerateKey={setGenerateKey}
+                <GeneratePrivateKey mnemonic={userMnemonic} handleRoute={handleRoute} setGenerateKey={setGenerateKey}
                                     routeValue="hideGenerateKey" formName="Creating New Wallet"/>
                 : null
             }
