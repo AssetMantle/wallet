@@ -245,17 +245,21 @@ html, body {
     margin: 0;
   }
 }
-
+.modal-header.info-modal-header{
+  button.close{
+    top: 20px;
+  }
+}
 .modal-header {
   button.close{
     position: absolute;
     right: 30px;
-    top: 30px;
+    top: 40px;
   }
   .previous-section .button{
     position: absolute;
     left: 30px;
-    top: 30px;
+    top: 40px;
     .icon{
       width: 20px;
     }
