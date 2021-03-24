@@ -190,14 +190,17 @@ html, body {
     color: #2E3239;
     margin: 0; }
 
+.modal-header.info-modal-header button.close {
+  top: 20px; }
+
 .modal-header button.close {
   position: absolute;
   right: 30px;
-  top: 30px; }
+  top: 40px; }
 .modal-header .previous-section .button {
   position: absolute;
   left: 30px;
-  top: 30px; }
+  top: 40px; }
   .modal-header .previous-section .button .icon {
     width: 20px; }
 
@@ -723,7 +726,8 @@ html, body {
 .create-wallet-modal.seed .modal-header {
   background: transparent;
   border: 0px solid;
-  padding-top: 40px; }
+  padding-top: 40px;
+  padding-bottom: 30px; }
   .create-wallet-modal.seed .modal-header .heading {
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
@@ -777,7 +781,7 @@ html, body {
 # importwallet styles
 --------------------------------------------------------------*/
 .import-wallet-body {
-  padding: 40px; }
+  padding: 0 40px 40px 40px; }
   .import-wallet-body .buttons {
     padding-top: 30px;
     text-align: center; }
@@ -805,7 +809,7 @@ html, body {
     font-size: 16px;
     font-weight: 600;
     text-decoration: underline;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     color: #E50913; }
   .import-wallet-body form .form-field.upload {
     padding-top: 10px;

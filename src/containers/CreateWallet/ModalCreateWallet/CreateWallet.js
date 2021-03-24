@@ -111,7 +111,7 @@ const CreateWallet = (props) => {
                                             icon="left-arrow"/>
                                     </button>
                                 </div>
-                                <h3 className="heading">Creating New Wallet</h3>
+                                <h3 className="heading">Create Wallet</h3>
                             </Modal.Header>
                             <div className="create-wallet-body create-wallet-form-body">
 
@@ -163,7 +163,7 @@ const CreateWallet = (props) => {
                                             icon="left-arrow"/>
                                     </button>
                                 </div>
-                                <h3 className="heading">Creating New Wallet</h3>
+                                <h3 className="heading">Create Wallet</h3>
                             </Modal.Header>
                             <div className="create-wallet-body create-wallet-form-body">
                                 <p className="info">Already Have a wallet? <span
