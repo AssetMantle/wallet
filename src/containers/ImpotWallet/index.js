@@ -82,6 +82,10 @@ const ModalImportWallet = (props) => {
             setWithAddress(true);
             setMnemonicForm(false)
         }
+        if(key === "hideWithAddress"){
+            setWithAddress(false);
+            setMnemonicForm(true)
+        }
     };
 
     function ContextAwareToggle({children, eventKey, callback}) {
@@ -367,7 +371,7 @@ const ModalImportWallet = (props) => {
 
             </Modal>
             {withAddress ?
-                    <AddressImport mnemonic={props.mnemonic} handleRoute={handleRoute} setWithAddress={setWithAddress}
+                    <AddressImport mnemonic={props.mnemonic} handleRoute={handleRoute} handleClose={handleClose} setWithAddress={setWithAddress}
                                    routeValue="hideWithAddress"/>
                     : null
             }

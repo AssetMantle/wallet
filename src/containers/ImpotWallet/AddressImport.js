@@ -3,34 +3,45 @@ import {
     Form, Modal,
 } from "react-bootstrap";
 import Icon from "../../components/Icon";
-import DownloadLink from "react-download-link";
-import helper from "../../utils/helper";
-
+import {getAccountUrl} from "../../constants/url";
+import axios from "axios";
+import {useHistory} from "react-router-dom";
 
 const AddressImport = (props) => {
-    const downloadLink = useRef();
-    const [jsonName, setJsonName] = useState({});
-    const [keyFile, setKeyFile] = useState(false);
+    const history = useHistory();
+    const [errorMessage, setErrorMessage] = useState("");
     const [show, setShow] = useState(true);
     const handleSubmit = async event => {
         event.preventDefault();
-        const password = event.target.password.value;
+        setErrorMessage("");
+        const address = event.target.address.value;
+        const url = getAccountUrl(address)
+        await axios.get(url).then(response => {
+            if(response.data.code === undefined){
+                localStorage.setItem('loginToken', 'loggedIn');
+                localStorage.setItem('address', address);
+                history.push('/dashboard/wallet');
+            }
+            setShow(false);
+        }).catch(error => {
+            setErrorMessage(error.response.data.message);
+        });
     };
     const handleClose = () => {
         setShow(false);
-        props.handleRoute(props.routeValue)
+        props.handleClose()
     };
     const handlePrevious = (formName) => {
-        if(formName === "generateKey"){
+        if(formName === "addressImport"){
             setShow(false);
-            props.handleRoute(props.routeValue)
+            props.handleRoute(props.routeValue);
         }
     };
     return (
         <Modal backdrop="static" show={show} onHide={handleClose} centered className="create-wallet-modal large seed">
             <Modal.Header closeButton>
                 <div className="previous-section">
-                    <button className="button" onClick={() => handlePrevious("generateKey")}>
+                    <button className="button" onClick={() => handlePrevious("addressImport")}>
                         <Icon
                             viewClass="arrow-right"
                             icon="left-arrow"/>
@@ -50,8 +61,13 @@ const AddressImport = (props) => {
                             required={true}
                         />
                     </div>
+                    {errorMessage !== ''
+                        ? <p className="form-error">{errorMessage}</p>
+                        : null
+
+                    }
                     <div className="buttons">
-                        <button className="button button-primary">Done</button>
+                        <button className="button button-primary">Submit</button>
                     </div>
                 </Form>
 
