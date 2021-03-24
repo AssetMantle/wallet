@@ -11,7 +11,7 @@ import wallet from "../../utils/wallet";
 import helper from "../../utils/helper"
 import {useHistory} from "react-router-dom";
 import ModalFaq from "../Faq";
-import GeneratePrivateKey from "./GeneratePrivateKey";
+import GeneratePrivateKey from "../Common/GeneratePrivateKey";
 
 const ModalImportWallet = (props) => {
     const [show, setShow] = useState(true);
@@ -23,7 +23,6 @@ const ModalImportWallet = (props) => {
     const [advancedForm, setAdvancedForm] = useState(false);
     const [advancedFormResponseData, setAdvancedFormResponseData] = useState("");
     const [advancedFormResponse, setAdvancedFormResponse] = useState(false);
-    const [responseDataShow, setResponseDataShow] = useState(false);
     const [response, setResponse] = useState("");
     const [jsonName, setJsonName] = useState({});
     const [errorMessage, setErrorMessage] = useState("");
@@ -51,7 +50,7 @@ const ModalImportWallet = (props) => {
                 setErrorMessage(decryptedData.error)
             } else {
                 setUserMnemonic(decryptedData.mnemonic);
-                setAdvancedForm(true)
+                setAdvancedForm(true);
                 setMnemonicForm(false);
                 setErrorMessage("");
             }

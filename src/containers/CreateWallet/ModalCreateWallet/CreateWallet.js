@@ -7,6 +7,7 @@ import {useHistory} from "react-router-dom";
 import ImportWallet from "../../ImpotWallet";
 import AdvanceMode from "./AdvanceMode";
 import Copy from "../../../components/Copy";
+
 const CreateWallet = (props) => {
     const history = useHistory();
     const [show, setShow] = useState(true);
@@ -43,9 +44,9 @@ const CreateWallet = (props) => {
         });
         setRandomMnemonicList(newMnemonicList);
         if (responseData.error) {
-                setErrorMessage(responseData.error);
+            setErrorMessage(responseData.error);
         }
-    },[]);
+    }, []);
     const handleCreateForm = (name) => {
         if (name === "keysForm") {
             setKeysForm(false);
@@ -59,7 +60,7 @@ const CreateWallet = (props) => {
             if (mnemonicList[number] !== phrase) {
                 setQuizError(true);
             } else {
-                if(index === randomNumberList.length-1){
+                if (index === randomNumberList.length - 1) {
                     localStorage.setItem('loginToken', 'loggedIn');
                     localStorage.setItem('address', response.address);
                     setAccountInfo(true);
@@ -74,18 +75,18 @@ const CreateWallet = (props) => {
         setShow(false);
         setShowImportWallet(true)
     };
-    const handlePrevious = (formName) =>{
-        if(formName === "keysForm"){
+    const handlePrevious = (formName) => {
+        if (formName === "keysForm") {
             setShow(false);
             props.setShow(true);
             props.setModal1(true);
             props.setCreatWallet(false);
         }
-        if(formName === "mnemonicQuiz"){
+        if (formName === "mnemonicQuiz") {
             setKeysForm(true);
             setMnemonicQuiz(false)
         }
-        if(formName === "accountInfo"){
+        if (formName === "accountInfo") {
             setMnemonicQuiz(true)
             setAccountInfo(false)
         }
@@ -97,133 +98,140 @@ const CreateWallet = (props) => {
     };
     return (
         <div>
-            <Modal backdrop="static" show={show} onHide={handleClose} centered className="create-wallet-modal large seed">
+            <Modal backdrop="static" show={show} onHide={handleClose} centered
+                   className="create-wallet-modal large seed">
                 {
                     keysForm ?
                         <>
-                        <Modal.Header closeButton>
-                            <div className="previous-section">
-                                <button className="button" onClick={() => handlePrevious("keysForm")}>
-                                    <Icon
-                                        viewClass="arrow-right"
-                                        icon="left-arrow"/>
-                                </button>
-                            </div>
-                            <h3 className="heading">Creating New Wallet</h3>
-                        </Modal.Header>
-                        <div className="create-wallet-body create-wallet-form-body">
+                            <Modal.Header closeButton>
+                                <div className="previous-section">
+                                    <button className="button" onClick={() => handlePrevious("keysForm")}>
+                                        <Icon
+                                            viewClass="arrow-right"
+                                            icon="left-arrow"/>
+                                    </button>
+                                </div>
+                                <h3 className="heading">Creating New Wallet</h3>
+                            </Modal.Header>
+                            <div className="create-wallet-body create-wallet-form-body">
 
-                            <p className="info">Already Have a wallet? <span onClick={handleRoute}>Import wallet</span>
-                            </p>
-                            <div className="seed-section">
-                                <h3 className="heading copy">Mnemonic (Seed Phrase)  <Copy id={response.mnemonic}/> </h3>
-                                <div className="menmonic-list">
-                                    {mnemonicList ?
-                                        mnemonicList.map((key, index) => {
-                                        return (
-                                            <Form.Control
-                                                disabled
-                                                key={index}
-                                                type="text"
-                                                value={key}
-                                                required={true}
-                                            />
-                                        )
-                                    }): null
-                                    }
+                                <p className="info">Already Have a wallet? <span
+                                    onClick={handleRoute}>Import wallet</span>
+                                </p>
+                                <div className="seed-section">
+                                    <h3 className="heading copy">Mnemonic (Seed Phrase) <Copy id={response.mnemonic}/>
+                                    </h3>
+                                    <div className="menmonic-list">
+                                        {mnemonicList ?
+                                            mnemonicList.map((key, index) => {
+                                                return (
+                                                    <Form.Control
+                                                        disabled
+                                                        key={index}
+                                                        type="text"
+                                                        value={key}
+                                                        required={true}
+                                                    />
+                                                )
+                                            }) : null
+                                        }
+                                    </div>
+                                </div>
+                                <div className="buttons">
+                                    <button className="button button-primary"
+                                            onClick={() => handleCreateForm("keysForm")}>Next
+                                    </button>
+                                </div>
+                                <div className="note-section">
+                                    <div className="exclamation"><Icon
+                                        viewClass="arrow-right"
+                                        icon="exclamation"/></div>
+                                    <p>Please securely store the mnemonic for future use</p>
                                 </div>
                             </div>
-                            <div className="buttons">
-                                <button className="button button-primary"
-                                        onClick={() => handleCreateForm("keysForm")}>Next
-                                </button>
-                            </div>
-                            <div className="note-section">
-                                <div className="exclamation"><Icon
-                                    viewClass="arrow-right"
-                                    icon="exclamation"/></div>
-                                <p>Please securely store the mnemonic for future use</p>
-                            </div>
-                        </div>
                         </>
                         : null
                 }
                 {
                     mnemonicQuiz ?
                         <>
-                        <Modal.Header closeButton>
-                            <div className="previous-section">
-                                <button className="button" onClick={() => handlePrevious("mnemonicQuiz")}>
-                                    <Icon
-                                        viewClass="arrow-right"
-                                        icon="left-arrow"/>
-                                </button>
-                            </div>
-                            <h3 className="heading">Creating New Wallet</h3>
-                        </Modal.Header>
-                        <div className="create-wallet-body create-wallet-form-body">
-                            <p className="info">Already Have a wallet? <span onClick={handleRoute}>Import wallet</span>
-                            </p>
-                            <div className="seed-section">
-                                <h3 className="heading copy">Mnemonic (Seed Phrase)  <Copy id={response.mnemonic}/> </h3>
-                                <div className="menmonic-list">
-                                    {randomMnemonicList.map((key, index) => {
-                                        if (key !== '') {
-                                            return (
-                                                <Form.Control
-                                                    disabled
-                                                    key={index}
-                                                    type="text"
-                                                    id={`mnemonicKey${index}`}
-                                                    value={key}
-                                                    onKeyPress={handleKeypress}
-                                                    required={true}
-                                                />
-                                            )
-                                        } else {
-                                            return (
-                                                <Form.Control
-                                                    key={index}
-                                                    className="empty-mnemonic"
-                                                    type="text"
-                                                    id={`mnemonicKey${index}`}
-                                                    onKeyPress={handleKeypress}
-                                                    defaultValue={key}
-                                                    required={true}
-                                                />
-                                            )
+                            <Modal.Header closeButton>
+                                <div className="previous-section">
+                                    <button className="button" onClick={() => handlePrevious("mnemonicQuiz")}>
+                                        <Icon
+                                            viewClass="arrow-right"
+                                            icon="left-arrow"/>
+                                    </button>
+                                </div>
+                                <h3 className="heading">Creating New Wallet</h3>
+                            </Modal.Header>
+                            <div className="create-wallet-body create-wallet-form-body">
+                                <p className="info">Already Have a wallet? <span
+                                    onClick={handleRoute}>Import wallet</span>
+                                </p>
+                                <div className="seed-section">
+                                    <h3 className="heading copy">Mnemonic (Seed Phrase) <Copy id={response.mnemonic}/>
+                                    </h3>
+                                    <div className="menmonic-list">
+                                        {randomMnemonicList.map((key, index) => {
+                                            if (key !== '') {
+                                                return (
+                                                    <Form.Control
+                                                        disabled
+                                                        key={index}
+                                                        type="text"
+                                                        id={`mnemonicKey${index}`}
+                                                        value={key}
+                                                        onKeyPress={handleKeypress}
+                                                        required={true}
+                                                    />
+                                                )
+                                            } else {
+                                                return (
+                                                    <Form.Control
+                                                        key={index}
+                                                        className="empty-mnemonic"
+                                                        type="text"
+                                                        id={`mnemonicKey${index}`}
+                                                        onKeyPress={handleKeypress}
+                                                        defaultValue={key}
+                                                        required={true}
+                                                    />
+                                                )
+                                            }
+                                        })
                                         }
-                                    })
-                                    }
+                                    </div>
+                                </div>
+                                {quizError ?
+                                    <p className="form-error">Mnemonic not matched</p>
+                                    : null}
+                                <div className="buttons">
+                                    <button className="button button-primary"
+                                            onClick={() => handleSubmitMnemonic()}>Submit
+                                    </button>
+                                </div>
+                                <div className="note-section">
+                                    <div className="exclamation"><Icon
+                                        viewClass="arrow-right"
+                                        icon="exclamation"/></div>
+                                    <p>Note and store the mnemonic for future use</p>
                                 </div>
                             </div>
-                            {quizError ?
-                                <p className="form-error">Mnemonic not matched</p>
-                                : null}
-                            <div className="buttons">
-                                <button className="button button-primary" onClick={() => handleSubmitMnemonic()}>Submit
-                                </button>
-                            </div>
-                            <div className="note-section">
-                                <div className="exclamation"><Icon
-                                    viewClass="arrow-right"
-                                    icon="exclamation"/></div>
-                                <p>Note and store the mnemonic for future use</p>
-                            </div>
-                        </div>
                         </>
                         : null
                 }
             </Modal>
-                {accountInfo ?
-                    <AdvanceMode mnemonic={response.mnemonic} setAccountInfo={setAccountInfo} setShow={setShow} setMnemonicQuiz={setMnemonicQuiz} handleClose={handleClose}/>
-                    : null
-                }
-                {showImportWallet ?
-                    <ImportWallet setShowImportWallet={setShowImportWallet} name="createWallet" handleClose={handleClose}/>
-                    : null
-                }
-            </div>
+            {accountInfo ?
+                <AdvanceMode mnemonic={response.mnemonic} setAccountInfo={setAccountInfo} setShow={setShow}
+                             setMnemonicQuiz={setMnemonicQuiz} handleClose={handleClose}/>
+                : null
+            }
+            {showImportWallet ?
+                <ImportWallet setShowImportWallet={setShowImportWallet} name="createWallet" handleClose={handleClose}/>
+                : null
+            }
+        </div>
     );
 };
 export default CreateWallet;
