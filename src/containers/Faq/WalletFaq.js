@@ -104,7 +104,7 @@ const WalletFaq = () => {
                     <ContextAwareToggle eventKey="3">Click me!</ContextAwareToggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="3">
-                    <Card.Body><p>The mnemonic (seed phrase) is the readable form of a private key (a set of 12 or 24 words in a specific sequence) that allows a user to claim ownership of the assets stored in a wallet
+                    <Card.Body><p>Mnemonic is a secret passphrase to recover your private key
                     </p></Card.Body>
                 </Accordion.Collapse>
             </Card>
