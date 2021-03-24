@@ -83,7 +83,7 @@ const GeneratePrivateKey = (props) => {
                                 <div className="exclamation"><Icon
                                     viewClass="arrow-right"
                                     icon="exclamation"/></div>
-                                <p>Password encrypts your private key. This password does not help you generate your seed phrase.</p>
+                                <p>Password encrypts your seed phrase. This password does not help you generate your seed phrase.</p>
                             </div>
                         </>
                         :
