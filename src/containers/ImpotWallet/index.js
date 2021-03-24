@@ -360,7 +360,7 @@ const ModalImportWallet = (props) => {
                     : null}
             </Modal>
             {generateKey ?
-                <GeneratePrivateKey mnemonic={props.mnemonic} handleRoute={handleRoute} setGenerateKey={setGenerateKey}
+                <GeneratePrivateKey mnemonic={userMnemonic} handleRoute={handleRoute} setGenerateKey={setGenerateKey}
                                     routeValue="hideGenerateKey" formName="Creating New Wallet"/>
                 : null
             }
