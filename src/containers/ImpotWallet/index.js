@@ -32,10 +32,15 @@ const ModalImportWallet = (props) => {
 
     const handleSubmit = async event => {
         event.preventDefault();
-        setUserMnemonic(event.target.mnemonic.value);
-        setAdvancedForm(true);
-        setMnemonicForm(false);
-        setErrorMessage("");
+        const responseData = wallet.createWallet(event.target.mnemonic.value);
+        if(responseData.error){
+            setErrorMessage(responseData.error);
+        }else{
+            setUserMnemonic(event.target.mnemonic.value);
+            setAdvancedForm(true);
+            setMnemonicForm(false);
+            setErrorMessage("");
+        }
     };
 
     const handlePrivateKeySubmit = async event => {
@@ -67,6 +72,7 @@ const ModalImportWallet = (props) => {
 
     const handlePrivateKey = (value) => {
         setImportMnemonic(value);
+        setErrorMessage("");
     };
     const handleRoute = (key) => {
         if (key === "generateKey") {
@@ -132,7 +138,7 @@ const ModalImportWallet = (props) => {
         const responseData = wallet.createWallet(userMnemonic, walletPath, bip39Passphrase);
         setAdvancedFormResponseData(responseData);
         setAdvancedForm(false);
-        setAdvancedFormResponse(true)
+        setAdvancedFormResponse(true);
         setAdvanceMode(false);
     };
     const handlePrevious = (formName) => {
