@@ -788,6 +788,8 @@ html, body {
       border-color: transparent; }
       .import-wallet-body .buttons .button-secondary .icon {
         width: 20px; }
+    .import-wallet-body .buttons .button.button-primary.large {
+      width: auto; }
     .import-wallet-body .buttons .button.button-primary {
       width: 200px; }
   .import-wallet-body .heading {

@@ -12,7 +12,7 @@ import helper from "../../utils/helper"
 import {useHistory} from "react-router-dom";
 import ModalFaq from "../Faq";
 import GeneratePrivateKey from "../Common/GeneratePrivateKey";
-
+import AddressImport from "./AddressImport";
 const ModalImportWallet = (props) => {
     const [show, setShow] = useState(true);
     const history = useHistory();
@@ -21,6 +21,7 @@ const ModalImportWallet = (props) => {
     const [importMnemonic, setImportMnemonic] = useState(true);
     const [mnemonicForm, setMnemonicForm] = useState(true);
     const [advancedForm, setAdvancedForm] = useState(false);
+    const [withAddress, setWithAddress] = useState(false);
     const [advancedFormResponseData, setAdvancedFormResponseData] = useState("");
     const [advancedFormResponse, setAdvancedFormResponse] = useState(false);
     const [response, setResponse] = useState("");
@@ -76,6 +77,10 @@ const ModalImportWallet = (props) => {
         if (key === "hideGenerateKey") {
             setGenerateKey(false);
             setAdvancedForm(true)
+        }
+        if(key === "withAddress"){
+            setWithAddress(true);
+            setMnemonicForm(false)
         }
     };
 
@@ -172,27 +177,34 @@ const ModalImportWallet = (props) => {
                             <div className="create-wallet-body import-wallet-body">
                                 {
                                     importMnemonic ?
-                                        <Form onSubmit={handleSubmit}>
-                                            <div className="text-center">
-                                                <p onClick={() => handlePrivateKey(false)} className="import-name">Use
-                                                    private key file</p>
-                                            </div>
-                                            <div className="form-field">
-                                                <p className="label">Enter Seed</p>
-                                                <Form.Control as="textarea" rows={3} name="mnemonic"
-                                                              placeholder="Enter Seed"
-                                                              required={true}/>
-                                            </div>
+                                        <>
+                                            <Form onSubmit={handleSubmit}>
+                                                <div className="text-center">
+                                                    <p onClick={() => handlePrivateKey(false)} className="import-name">Use
+                                                        private key file</p>
+                                                </div>
+                                                <div className="form-field">
+                                                    <p className="label">Enter Seed</p>
+                                                    <Form.Control as="textarea" rows={3} name="mnemonic"
+                                                                  placeholder="Enter Seed"
+                                                                  required={true}/>
+                                                </div>
 
-                                            {errorMessage !== ''
-                                                ? <p className="form-error">{errorMessage}</p>
-                                                : null
+                                                {errorMessage !== ''
+                                                    ? <p className="form-error">{errorMessage}</p>
+                                                    : null
 
-                                            }
+                                                }
+                                                <div className="buttons">
+                                                    <button className="button button-primary" >Next</button>
+                                                </div>
+
+                                            </Form>
                                             <div className="buttons">
-                                                <button className="button button-primary">Next</button>
+                                                <button className="button button-primary large" onClick={()=>handleRoute("withAddress")}>Continue without importing?</button>
                                             </div>
-                                        </Form>
+                                        </>
+
                                         : <Form onSubmit={handlePrivateKeySubmit}>
                                             <div className="text-center">
                                                 <p onClick={() => handlePrivateKey(true)} className="import-name">Use
@@ -352,10 +364,16 @@ const ModalImportWallet = (props) => {
                         </div>
                     </>
                     : null}
+
             </Modal>
+            {withAddress ?
+                    <AddressImport mnemonic={props.mnemonic} handleRoute={handleRoute} setWithAddress={setWithAddress}
+                                   routeValue="hideWithAddress"/>
+                    : null
+            }
             {generateKey ?
                 <GeneratePrivateKey mnemonic={props.mnemonic} handleRoute={handleRoute} setGenerateKey={setGenerateKey}
-                                    routeValue="hideGenerateKey" formName="Creating New Wallet"/>
+                                    routeValue="hideGenerateKey" formName="Importing Wallet"/>
                 : null
             }
             {showFaq
