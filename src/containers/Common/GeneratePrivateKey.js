@@ -102,7 +102,7 @@ const GeneratePrivateKey = (props) => {
                             <div className="exclamation"><Icon
                                 viewClass="arrow-right"
                                 icon="exclamation"/></div>
-                            <p>This is your Key Store json file. Please secure in a safe place</p>
+                            <p>This is your KeyStore json file. Please secure in a safe place</p>
                         </div>
 
                     </>

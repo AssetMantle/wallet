@@ -18,6 +18,7 @@ const ModalImportWallet = (props) => {
     const history = useHistory();
     const [showFaq, setShowFaq] = useState(false);
     const [userMnemonic, setUserMnemonic] = useState("");
+    const [passphraseError, setPassphraseError] = useState(false);
     const [importMnemonic, setImportMnemonic] = useState(true);
     const [mnemonicForm, setMnemonicForm] = useState(true);
     const [advancedForm, setAdvancedForm] = useState(false);
@@ -33,10 +34,15 @@ const ModalImportWallet = (props) => {
 
     const handleSubmit = async event => {
         event.preventDefault();
-        setUserMnemonic(event.target.mnemonic.value);
-        setAdvancedForm(true);
-        setMnemonicForm(false);
-        setErrorMessage("");
+        const responseData = wallet.createWallet(event.target.mnemonic.value);
+        if (responseData.error) {
+            setErrorMessage(responseData.error);
+        } else {
+            setUserMnemonic(event.target.mnemonic.value);
+            setAdvancedForm(true);
+            setMnemonicForm(false);
+            setErrorMessage("");
+        }
     };
 
     const handlePrivateKeySubmit = async event => {
@@ -68,6 +74,7 @@ const ModalImportWallet = (props) => {
 
     const handlePrivateKey = (value) => {
         setImportMnemonic(value);
+        setErrorMessage("");
     };
     const handleRoute = (key) => {
         if (key === "generateKey") {
@@ -141,7 +148,7 @@ const ModalImportWallet = (props) => {
         const responseData = wallet.createWallet(userMnemonic, walletPath, bip39Passphrase);
         setAdvancedFormResponseData(responseData);
         setAdvancedForm(false);
-        setAdvancedFormResponse(true)
+        setAdvancedFormResponse(true);
         setAdvanceMode(false);
     };
     const handlePrevious = (formName) => {
@@ -156,6 +163,11 @@ const ModalImportWallet = (props) => {
             setAdvancedFormResponse(true)
         }
 
+    };
+
+    const handlePassphrase = (evt) => {
+        const result = helper.ValidatePassphrase(evt.target.value);
+        setPassphraseError(result)
     };
 
     const handleClose = () => {
@@ -176,7 +188,7 @@ const ModalImportWallet = (props) => {
                     mnemonicForm ?
                         <>
                             <Modal.Header closeButton>
-                                <h3 className="heading">Importing Wallet</h3>
+                                <h3 className="heading">Import Wallet</h3>
                             </Modal.Header>
                             <div className="create-wallet-body import-wallet-body">
                                 {
@@ -185,12 +197,12 @@ const ModalImportWallet = (props) => {
                                             <Form onSubmit={handleSubmit}>
                                                 <div className="text-center">
                                                     <p onClick={() => handlePrivateKey(false)} className="import-name">Use
-                                                        private key file</p>
+                                                        Private Key (KeyStore.json file)</p>
                                                 </div>
                                                 <div className="form-field">
-                                                    <p className="label">Enter Seed</p>
+                                                    <p className="label">Enter Mnemonic (Seed Phrase)</p>
                                                     <Form.Control as="textarea" rows={3} name="mnemonic"
-                                                                  placeholder="Enter Seed"
+                                                                  placeholder="Seed Phrase"
                                                                   required={true}/>
                                                 </div>
 
@@ -212,7 +224,7 @@ const ModalImportWallet = (props) => {
                                         : <Form onSubmit={handlePrivateKeySubmit}>
                                             <div className="text-center">
                                                 <p onClick={() => handlePrivateKey(true)} className="import-name">Use
-                                                    Mnemonic</p>
+                                                    Mnemonic (Seed Phrase)</p>
                                             </div>
                                             <div className="form-field">
                                                 <p className="label">Password</p>
@@ -224,7 +236,7 @@ const ModalImportWallet = (props) => {
                                                 />
                                             </div>
                                             <div className="form-field upload">
-                                                <p className="label"> Key Store file</p>
+                                                <p className="label"> KeyStore file</p>
                                                 <Form.File id="exampleFormControlFile1" name="uploadFile"
                                                            className="file-upload" accept=".json" required={true}/>
                                             </div>
@@ -240,7 +252,7 @@ const ModalImportWallet = (props) => {
                                                 <div className="exclamation"><Icon
                                                     viewClass="arrow-right"
                                                     icon="exclamation"/></div>
-                                                <p>Password for decrypts your private key file.</p>
+                                                <p> Password decrypts your Private Key (KeyStore file).</p>
                                             </div>
                                         </Form>
 
@@ -262,7 +274,7 @@ const ModalImportWallet = (props) => {
                                             icon="left-arrow"/>
                                     </button>
                                 </div>
-                                <h3 className="heading">Importing Wallet</h3>
+                                <h3 className="heading">Import Wallet</h3>
                             </Modal.Header>
                             <div className="create-wallet-body import-wallet-body">
                                 {errorMessage !== "" ?
@@ -270,7 +282,7 @@ const ModalImportWallet = (props) => {
                                     : <div>
                                         <div className="download-section">
                                             <div className="key-download" onClick={() => handleRoute('generateKey')}>
-                                                <p> Generate Key Store File</p>
+                                                <p> Generate KeyStore File</p>
                                                 <Icon viewClass="arrow-icon" icon="left-arrow"/>
                                             </div>
                                         </div>
@@ -311,15 +323,20 @@ const ModalImportWallet = (props) => {
                                                             required={false}
                                                         />
                                                     </div>
-                                                    <div className="form-field">
+                                                    <div className="form-field passphrase-field">
                                                         <p className="label">bip39Passphrase</p>
                                                         <Form.Control
                                                             type="password"
                                                             name="bip39Passphrase"
+                                                            maxLength="50"
                                                             id="bip39Passphrase"
                                                             placeholder="Enter bip39Passphrase (optional)"
+                                                            onChange={handlePassphrase}
                                                             required={false}
                                                         />
+                                                        {passphraseError ?
+                                                            <span className="passphrase-error">Length should be below 50 characters</span>
+                                                            : null}
                                                     </div>
                                                 </>
                                             </Accordion.Collapse>
@@ -350,7 +367,7 @@ const ModalImportWallet = (props) => {
                                         icon="left-arrow"/>
                                 </button>
                             </div>
-                            <h3 className="heading">Importing Wallet</h3>
+                            <h3 className="heading">Import Wallet</h3>
                         </Modal.Header>
                         <div className="create-wallet-body create-wallet-form-body">
                             <p className="mnemonic-result"><b>Wallet path: </b>{advancedFormResponseData.walletPath}</p>
@@ -376,8 +393,8 @@ const ModalImportWallet = (props) => {
                     : null
             }
             {generateKey ?
-                <GeneratePrivateKey mnemonic={props.mnemonic} handleRoute={handleRoute} setGenerateKey={setGenerateKey}
-                                    routeValue="hideGenerateKey" formName="Importing Wallet"/>
+                <GeneratePrivateKey mnemonic={userMnemonic} handleRoute={handleRoute} setGenerateKey={setGenerateKey}
+                                    routeValue="hideGenerateKey" formName="Import Wallet"/>
                 : null
             }
             {showFaq

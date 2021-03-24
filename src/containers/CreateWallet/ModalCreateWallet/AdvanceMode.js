@@ -126,11 +126,11 @@ const AdvanceMode = (props) => {
                                         icon="left-arrow"/>
                                 </button>
                             </div>
-                            <h3 className="heading">Creating New Wallet</h3>
+                            <h3 className="heading">Create Wallet</h3>
                         </Modal.Header>
                         <div className="create-wallet-body create-wallet-form-body">
                             <div className="key-download" onClick={() => handleRoute('generateKey')}>
-                                <p>Generate Keystore File</p>
+                                <p>Generate KeyStore File</p>
                                 <Icon viewClass="arrow-icon" icon="left-arrow"/>
                             </div>
                             <Form onSubmit={handleSubmit} className="advancemode-form">
@@ -177,7 +177,7 @@ const AdvanceMode = (props) => {
                                                     type="password"
                                                     name="bip39Passphrase"
                                                     id="createbip39Passphrase"
-                                                    maxlength="50"
+                                                    maxLength="50"
                                                     onKeyPress={handleKeypress}
                                                     placeholder="Enter bip39Passphrase (optional)"
                                                     onChange={handlePassphrase}
@@ -211,7 +211,7 @@ const AdvanceMode = (props) => {
                                     icon="left-arrow"/>
                             </button>
                         </div>
-                        <h3 className="heading">Creating New Wallet</h3>
+                        <h3 className="heading">Create Wallet</h3>
                     </Modal.Header>
                     <div className="create-wallet-body create-wallet-form-body">
                         <p className="mnemonic-result"><b>Wallet path: </b>{response.walletPath}</p>
@@ -230,7 +230,7 @@ const AdvanceMode = (props) => {
                     : null}
             </Modal>
             {generateKey ?
-                <GeneratePrivateKey mnemonic={props.mnemonic} handleRoute={handleRoute} setGenerateKey={setGenerateKey} routeValue="hideGenerateKey" formName="Creating New Wallet"/>
+                <GeneratePrivateKey mnemonic={props.mnemonic} handleRoute={handleRoute} setGenerateKey={setGenerateKey} routeValue="hideGenerateKey" formName="Create Wallet"/>
                 : null
             }
         </>

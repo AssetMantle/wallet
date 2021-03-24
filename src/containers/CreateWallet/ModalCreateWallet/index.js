@@ -3,6 +3,7 @@ import {Modal} from "react-bootstrap";
 import Icon from "../../../components/Icon";
 import {useHistory} from "react-router-dom";
 import CreateWallet from "./CreateWallet";
+
 const ModalCreateWallet = (props) => {
     const history = useHistory();
     const [show, setShow] = useState(true);
@@ -58,7 +59,7 @@ const ModalCreateWallet = (props) => {
                     {
                         modal1 ?
                             <>
-                                <Modal.Header closeButton>
+                                <Modal.Header className="info-modal-header" closeButton>
                                     <p> About Persistence Wallet</p>
                                 </Modal.Header>
                                 <Modal.Body className="create-wallet-body">
@@ -66,12 +67,11 @@ const ModalCreateWallet = (props) => {
                                         <p><b>Take a moment to read through this content for your own safety
                                         </b></p>
                                         <ul>
-                                            <li>Securing your wallet</li>
                                             <li>Users need to securely store their Mnemonic (seed phrase) to prevent
                                                 loss of funds. Losing or exposing this phrase could potentially lead to
                                                 users' funds being stolen.
                                             </li>
-                                            <li>Users can view and save their mnemonic while creating a wallet
+                                            <li>Users can view and save their mnemonic while creating a wallet.
                                             </li>
                                         </ul>
                                     </div>
@@ -195,7 +195,8 @@ const ModalCreateWallet = (props) => {
             }
             {
                 createWallet ?
-                    <CreateWallet handleClose={handleClose} setShow={setShow} setModal1={setModal1} setCreatWallet={setCreatWallet}/>
+                    <CreateWallet handleClose={handleClose} setShow={setShow} setModal1={setModal1}
+                                  setCreatWallet={setCreatWallet}/>
                     :
                     null
             }
