@@ -245,11 +245,25 @@ html, body {
     margin: 0;
   }
 }
-
-.modal-header button.close{
-  position: absolute;
-  right: 30px;
-  top: 30px;
+.modal-header.info-modal-header{
+  button.close{
+    top: 20px;
+  }
+}
+.modal-header {
+  button.close{
+    position: absolute;
+    right: 30px;
+    top: 40px;
+  }
+  .previous-section .button{
+    position: absolute;
+    left: 30px;
+    top: 40px;
+    .icon{
+      width: 20px;
+    }
+  }
 }
 
 .form-error, .error-response {
@@ -348,3 +362,46 @@ html, body {
     }
   }
 }
+
+
+  .key-download {
+    text-align: center;
+    padding: 10px;
+    background: rgba(233, 114, 28, 0.07);
+    max-width: 350px;
+    margin: 20px auto;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+   p, a {
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 150%;
+      color: #E9721C !important;
+     text-decoration: underline;
+      margin: 0;
+    }
+    .icon.icon-download-icon{
+    width: 20px ;
+    transform: rotate(0) !important;
+    margin-bottom: -6px;
+    margin-left: 10px;
+  }
+    .icon {
+      width: 16px;
+      margin-left: 10px;
+      fill: #E9721C;
+      transform: rotate(180deg);
+    }
+  }
+
+  .passphrase-field{
+    position: relative;
+    .passphrase-error{
+      position: absolute;
+      bottom: -10px;
+      right: auto;
+      color: #ee3b3b;
+      font-size: 10px;
+    }
+  }

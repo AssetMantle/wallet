@@ -12,6 +12,7 @@
 /build
 .idea
 .env
+.sass-cache
 # misc
 .DS_Store
 .env.local

@@ -1,10 +1,9 @@
-import React, {  useEffect } from 'react';
-import { useLocation, Switch, Route, withRouter } from 'react-router-dom';
+import React from 'react';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import DashboardWallet from "./views/DashboardWallet";
 import Homepage from "./views/Homepage";
 import DashboardStaking from "./views/Staking";
 import PrivateRoute from "./containers/PrivateRoute";
-import CreateWallet from "./containers/CreateWallet";
 import ImportWallet from "./containers/ImpotWallet";
 const App = () => {
   const routes = [{
@@ -19,10 +18,6 @@ const App = () => {
     path: '/dashboard/staking',
     component: DashboardStaking,
     private: true,
-  },{
-    path: '/create_wallet',
-    component: CreateWallet,
-    private: false,
   },{
     path: '/import_wallet',
     component: ImportWallet,

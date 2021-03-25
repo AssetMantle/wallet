@@ -42,30 +42,32 @@ const WalletFaq = () => {
             <Card>
                 <Card.Header>
                     <p>
-                        How to Create a Persistence Wallet
+                        How to create a Persistence wallet?
                     </p>
                     <ContextAwareToggle eventKey="1">Click me!</ContextAwareToggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="1">
-                    <Card.Body><p>You can either create a wallet or import an already existing Persistence wallet.</p>
-                        <p><b>To create a wallet:</b></p>
+                    <Card.Body>
                         <ul>
                             <li>
-                                From wallet.persistence.one site and click the Create a wallet button
+                                Go to wallet.persistence.one site and click the Create Wallet button
                             </li>
-                            <li>In the Secure your wallet window, please take a moment to read notes. Click Continue.  Click Next after you go through the notes.
+                            <li>In the About Persistence Wallet pop-up, read carefully on how to the Secure your wallet
                             </li>
-                            <li>In the Password window, enter your password for the Persistence wallet.</li>
-                            <li>Re-enter your password to confirm it.</li>
-                            <li>Click Next.</li>
-                            <li>You require this password when you sign into your wallet. </li>
-                            <li>In the Mnemonic window, view the randomly generated 24-word seed phrase, by default. (Seed phrase is also called as Mnemonic). </li>
-                            {/*<li>If you want a 12 word mnemonic, select the 12 button. </li>*/}
-                            <li>Copy and securely store your seed phrase in a location of your choice because you may need it in future.
+                            <li>After carefully reading the steps on how to secure your wallet, Click Next
                             </li>
-                            <li>Select the Private key json file and copy it in a safe location.</li>
-                            <li>Click Next to create your wallet.</li>
-                            <p><b>Note:</b> If you already have a Persistence wallet, you can import it using the Import an existing wallet button. You will need to use your mnemonic and password</p>
+                            <li>In the Mnemonic window, you can view a randomly generated 24-word seed phrase (Seed phrase is also called as Mnemonic)
+                            </li>
+                            <li>Copy and securely store your seed phrase in a file location of your choice for future use
+                            </li>
+                            <li>Input the missing fields from the seed phrase
+                            </li>
+                            <li>Click on Generate KeyStore File and enter a password of your choice to encrypt the KeyStore File</li>
+                            <li>Click Submit to download your KeyStore File
+                            </li>
+                            <li>You will be taken back to the generate KeyStore File page. Click Next to generate your wallet
+                            </li>
+                            <li>You have successfully created your Persistence wallet</li>
                         </ul>
                      </Card.Body>
                 </Accordion.Collapse>
@@ -73,53 +75,40 @@ const WalletFaq = () => {
             <Card>
                 <Card.Header>
                     <p>
-                        What is a mnemonic?
+                        How to import an existing Persistence wallet?
                     </p>
                     <ContextAwareToggle eventKey="2">Click me!</ContextAwareToggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="2">
                     <Card.Body><ul>
-                        <li>The mnemonic (seed phrase) is the readable form of a private key (a set of 12 or 24 words in a specific sequence) allows a user to claim ownership of the assets stored in a wallet.
+                        <li>Go to wallet.persistence.one site and click the Import an existing wallet button</li>
+                        <li>You can import your wallet using either your private key (KeyStore.json file) or your Mnemonic (Seed Phrase).
                         </li>
+                        <li>To import wallet using Private Key, click on Use Private Key
+                        </li>
+                        <li>Enter the password used to encrypt your private key. This password will be used to decrypt your KeyStore.json file now</li>
+                        <li>Upload your KeyStore file and click on Next. Click next again to successfully import your wallet</li>
+                        <li>If you wish to import your wallet using your Seed Phrase (Mnemonic), after clicking on Import an existing wallet, input your mnemonic and click next
+                        </li>
+                        <li>You can generate your KeyStore file and save it or you can directly skip to importing your wallet
+                        </li>
+                        <li>Click on Next again to successfully import your wallet</li>
                     </ul></Card.Body>
                 </Accordion.Collapse>
             </Card>
             <Card>
                 <Card.Header>
                     <p>
-                        How do I Stake XPRT?
+                        What is a Mnemonic?
                     </p>
                     <ContextAwareToggle eventKey="3">Click me!</ContextAwareToggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="3">
-                    <Card.Body><p>How do I Stake XPRT?
+                    <Card.Body><p>Mnemonic is a secret passphrase to recover your private key
                     </p></Card.Body>
                 </Accordion.Collapse>
             </Card>
-            <Card>
-                <Card.Header>
-                    <p>
-                        How do I claim staking rewards?
-                    </p>
-                    <ContextAwareToggle eventKey="4">Click me!</ContextAwareToggle>
-                </Card.Header>
-                <Accordion.Collapse eventKey="4">
-                    <Card.Body><p>How do I claim staking rewards?
-                    </p></Card.Body>
-                </Accordion.Collapse>
-            </Card>
-            <Card>
-                <Card.Header>
-                    <p>
-                        How do I redelegate my XPRT to another validator?
-                    </p>
-                    <ContextAwareToggle eventKey="5">Click me!</ContextAwareToggle>
-                </Card.Header>
-                <Accordion.Collapse eventKey="5">
-                    <Card.Body><p>How do I redelegate my XPRT to another validator?
-                    </p></Card.Body>
-                </Accordion.Collapse>
-            </Card>
+
             <Card>
                 <Card.Header>
                     <p>

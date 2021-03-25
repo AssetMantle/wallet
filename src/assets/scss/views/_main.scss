@@ -1,0 +1,182 @@
+.footer {
+  .resources {
+    margin-top: 30px;
+  }
+
+  background: #262B35 !important;
+  padding: 80px 0 0 0;
+
+  .footer-list li a, .footer-list li .inactive {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1.31;
+    color: #70747C;
+  }
+
+  .email {
+    margin-bottom: 20px;
+  }
+
+  .footer-list li {
+    margin: 10px 0;
+
+    a span.mdi {
+      color: #a9a9a9;
+      font-size: 20px;
+
+      img {
+        width: 17px;
+      }
+    }
+  }
+
+  .dark-logo {
+    width: 200px;
+    margin-bottom: 20px;
+  }
+
+  h6 {
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 1.314;
+    color: #FFFFFF;
+  }
+
+  .copy-rights {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 1.314;
+    color: #70747C;
+  }
+
+  .contact-box .mail-chimp-section input {
+    background: #1D2129;
+    border: 0px solid;
+    padding: 10px 10px;
+    font-weight: 500;
+    font-size: 12px;
+    color: #dee2e6;
+  }
+
+  .subscription-result {
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+  }
+
+  .btn-subscribe {
+    opacity: 1 !important;
+    width: 102px;
+    background: #E50913 !important;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.08) !important;
+    border-radius: 0px !important;
+    border: 0px solid !important;
+    font-weight: bold !important;
+    font-size: 12px !important;
+    line-height: 1.8 !important;
+    text-align: center !important;
+    color: #FFFFFF !important;
+    padding: 8px 20px !important;
+  }
+
+  .footer-text {
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    line-height: 1.31;
+    color: #70747C;
+  }
+
+  .social-links-section {
+    ul {
+      display: flex;
+      margin-top: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    padding-top: 15px;
+
+    a {
+      width: 28px;
+      height: 28px;
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
+      border-radius: 50%;
+      justify-content: center;
+      background: #363B46;
+
+      .icon {
+        width: 12px;
+        fill: #FFFFFF;
+      }
+
+      &:hover {
+        background: #525967;
+      }
+    }
+  }
+
+  .footer-bottom-section {
+    margin-top: 20px;
+    border-top: 1px solid #313238
+  }
+
+  .footer-logo-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    .dark-logo {
+      height: 20px;
+      width: 100px;
+      margin: 0;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .contact-us {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+
+    .mail-chimp-section {
+      display: flex;
+      align-items: center;
+      margin: 10px 0 20px 0;
+
+      input {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.show-message {
+  animation: hide-animation 10s ease-in 0s;
+  visibility: hidden;
+}
+
+@keyframes hide-animation {
+  0% {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.heading.copy{
+  justify-content: center;
+  display: flex;
+}

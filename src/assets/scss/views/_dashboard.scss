@@ -177,7 +177,6 @@
 
           &::placeholder {
             font-size: 14px;
-            line-height: 150%;
             color: #8D9CB5;
           }
         }
@@ -374,7 +373,7 @@
           }
         }
 
-        .footer {
+        .dropdown-footer {
           display: flex;
           border-top: 1px solid #EAEBF6;
 
@@ -510,6 +509,14 @@
       .value.rewards {
         color: #E50913;
         text-decoration: underline;
+        cursor: pointer;
+        span{
+          background: #E50913;
+          color: #ffffff;
+          font-size: 10px;
+          padding: 0px 5px;
+          margin-left: 5px;
+        }
       }
     }
 
@@ -656,7 +663,6 @@
 
         &::placeholder {
           font-size: 14px;
-          line-height: 150%;
           color: #8D9CB5;
         }
       }
@@ -703,7 +709,6 @@
 
       &::placeholder {
         font-size: 14px;
-        line-height: 150%;
         color: #8D9CB5;
       }
     }
