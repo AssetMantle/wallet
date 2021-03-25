@@ -18,6 +18,8 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import helper from "../../../../utils/helper";
 import Lodash from "lodash";
+import {fetchValidators} from "../../../../actions/validators";
+import {connect} from "react-redux";
 
 const ModalReDelegate = (props) => {
     const [amount, setAmount] = useState(0);
@@ -368,5 +370,14 @@ const ModalReDelegate = (props) => {
     );
 };
 
+const stateToProps = (state) => {
+    return {
+        validators: state.validators.validators,
+    };
+};
 
-export default ModalReDelegate;
+const actionsToProps = {
+    fetchValidators,
+};
+
+export default connect(stateToProps, actionsToProps)(ModalReDelegate);

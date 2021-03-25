@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Table} from "react-bootstrap";
-import {getSendTransactionsUrl} from "../../constants/url";
 import moment from 'moment';
-import axios from "axios";
 import helper from "../../utils/helper";
 import Icon from "../../components/Icon";
 import Loader from "../../components/Loader";
@@ -10,13 +8,12 @@ import {fetchTransactions} from "../../actions/transactions";
 import {connect} from "react-redux";
 
 const Transactions = (props) => {
-    const [sendTransactionsList, setSendTransactionsList] = useState([]);
-    const [loading, setLoading] = useState(false);
     useEffect(() => {
         const address = localStorage.getItem('address');
         props.fetchTransactions(address);
     }, []);
-    if (loading) {
+
+    if (props.inProgress) {
         return <Loader/>;
     }
     return (
@@ -91,7 +88,9 @@ const Transactions = (props) => {
                             </tr>
                         )
                     })
-                    : <tr><td colSpan={7} className="text-center"> No Txns Found</td></tr>
+                    : <tr>
+                        <td colSpan={7} className="text-center"> No Txns Found</td>
+                    </tr>
                 }
 
 
@@ -103,9 +102,9 @@ const Transactions = (props) => {
 
 
 const stateToProps = (state) => {
-    console.log(state.transactions,"state.delegations.count");
     return {
         list: state.transactions.list,
+        inProgress: state.transactions.inProgress,
     };
 };
 

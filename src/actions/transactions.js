@@ -1,6 +1,16 @@
 import Axios from 'axios';
 import {getSendTransactionsUrl} from "../constants/url";
-import {TRANSACTIONS_FETCH_SUCCESS, TRANSACTIONS_FETCH_ERROR} from "../constants/transactions"
+import {TRANSACTIONS_FETCH_SUCCESS,
+    TRANSACTIONS_FETCH_ERROR,
+    TRANSACTIONS_IN_PROGRESS
+} from "../constants/transactions"
+
+
+export const fetchTransactionsProgress = () => {
+    return {
+        type:  TRANSACTIONS_IN_PROGRESS,
+    };
+};
 
 export const fetchTransactionsSuccess = (list) => {
     return {
@@ -17,8 +27,8 @@ export const fetchTransactionsError = (list) => {
 
 export const fetchTransactions = (address)  => {
     return async dispatch => {
+        dispatch(fetchTransactionsProgress());
         const url = getSendTransactionsUrl(address);
-
         await Axios.get(url)
             .then((res) => {
 

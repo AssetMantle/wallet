@@ -31,7 +31,6 @@ const ValidatorsTable = (props) => {
                 <tbody>
                 {props.validatorsList.length ?
                     props.validatorsList.map((validator, index) => {
-                        console.log(validator, "validators")
                         let commissionRate = validator.commission.commission_rates.rate * 100;
                         commissionRate = parseFloat(commissionRate.toFixed(2)).toLocaleString();
                         const active = helper.isActive(validator);
@@ -40,7 +39,9 @@ const ValidatorsTable = (props) => {
                             ? validator.tokens * 100 / props.activeValidatorsTokens
                             : validator.tokens * 100 / props.inActiveValidatorsTokens;
                         votingPower = parseFloat(votingPower.toFixed(2)).toLocaleString();
-                        votingPowerPercentage = parseFloat(votingPowerPercentage.toFixed(2)).toLocaleString();
+                        // roundOff((validator.tokens * 100/totalBondedAmount).toDouble)%
+                        votingPowerPercentage = Math.round(parseInt(votingPowerPercentage));
+                        // votingPowerPercentage = parseFloat(votingPowerPercentage.toFixed(2)).toDouble();
                         return (
                             <tr key={index}>
                                 <td className=""><Avatar
