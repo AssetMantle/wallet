@@ -1,6 +1,6 @@
 const { SigningCosmosClient } = require("@cosmjs/launchpad");
 
-window.onload = async () => {
+async function KeplerWallet() {
     // Keplr extension injects the offline signer that is compatible with cosmJS.
     // You can get this offline signer from `window.getOfflineSigner(chainId:string)` after load event.
     // And it also injects the helper function to `window.keplr`.
@@ -9,7 +9,6 @@ window.onload = async () => {
         alert("Please install keplr extension");
     } else {
         if (window.keplr.experimentalSuggestChain) {
-            console.log("raju")
             try {
                 // Keplr v0.6.4 introduces an experimental feature that supports the feature to suggests the chain from a webpage.
                 // cosmoshub-3 is integrated to Keplr so the code should return without errors.
@@ -138,6 +137,8 @@ window.onload = async () => {
 
     document.getElementById("address").append(accounts[0].address);
 };
+export default KeplerWallet;
+
 // document.sendForm.onsubmit = () => {
 //     let recipient = document.sendForm.recipient.value;
 //     let amount = document.sendForm.amount.value;
