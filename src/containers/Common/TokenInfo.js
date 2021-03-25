@@ -1,18 +1,22 @@
 import React, {useState, useEffect} from "react";
+import { connect } from 'react-redux';
 import xprt from "../../assets/images/xprt.svg";
 import ModalWithdraw from "../Wallet/ModalWithdraw";
+import {fetchDelegationsCount} from "../../actions/delegations";
 import {getDelegationsUnbondUrl, getRewardsUrl, getDelegationsUrl, getBalanceUrl} from "../../constants/url";
 import axios from "axios";
 import Lodash from "lodash";
+import delegations from "../../reducers/delegations";
 
-const TokenInfo = () => {
+const TokenInfo = (props) => {
     const [unbondingDelegations, setUnbondingDelegations] = useState(0);
     const [totalRewards, setTotalRewards] = useState('0');
     const [totalBalance, setTotalBalance] = useState('0');
     const [totalDelegations, setTotalDelegations] = useState('0' );
     const [rewards, setRewards] = useState(false);
     useEffect(() => {
-        const address = localStorage.getItem('address');
+        let address = localStorage.getItem('address');
+        props.fetchDelegationsCount(address);
         const fetchInfo = async () => {
             const unbondDelegationsUrl = getDelegationsUnbondUrl(address);
             const rewardsUrl = getRewardsUrl(address);
@@ -32,13 +36,11 @@ const TokenInfo = () => {
             });
 
             await axios.get(delegationsUrl).then(response => {
-                console.log(response, "response")
                 if (response.data.delegation_responses.length) {
                     const totalDelegationsCount = Lodash.sumBy(response.data.delegation_responses, (delegation) => {
                         return delegation.balance.amount * 1;
                     });
                     setTotalDelegations(totalDelegationsCount / 1000000);
-                    console.log(totalDelegationsCount / 1000000, "totalDelgations");
                 }
             }).catch(error => {
                 console.log(error.response, "error delegationsUrl")
@@ -98,7 +100,7 @@ const TokenInfo = () => {
                     </div>
                     <div className="line">
                         <p className="key">Delegated Token</p>
-                        <p className="value">{totalDelegations} XPRT</p>
+                        <p className="value">{props.count} XPRT</p>
                     </div>
                 </div>
             </div>
@@ -122,4 +124,16 @@ const TokenInfo = () => {
         </div>
     );
 };
-export default TokenInfo;
+
+const stateToProps = (state) => {
+    return {
+        count: state.delegations.count,
+    };
+};
+
+const actionsToProps = {
+    fetchDelegationsCount,
+};
+
+export default connect(stateToProps, actionsToProps)(TokenInfo);
+

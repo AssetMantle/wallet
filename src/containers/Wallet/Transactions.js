@@ -6,26 +6,15 @@ import axios from "axios";
 import helper from "../../utils/helper";
 import Icon from "../../components/Icon";
 import Loader from "../../components/Loader";
+import {fetchTransactions} from "../../actions/transactions";
+import {connect} from "react-redux";
 
-const Transactions = () => {
+const Transactions = (props) => {
     const [sendTransactionsList, setSendTransactionsList] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
-        const fetchValidators = async () => {
-            const address = localStorage.getItem('address');
-            const sendTxnsUrl = getSendTransactionsUrl(address);
-            await axios.get(sendTxnsUrl).then(response => {
-                let sendTxnsResponseList = response.data.txs;
-                if(sendTxnsResponseList !== undefined){
-                    setSendTransactionsList(sendTxnsResponseList);
-                }
-                setLoading(false);
-            }).catch(error => {
-                console.log(error.response, "unable to loading validators")
-                setLoading(false);
-            });
-        };
-        fetchValidators();
+        const address = localStorage.getItem('address');
+        props.fetchTransactions(address);
     }, []);
     if (loading) {
         return <Loader/>;
@@ -45,8 +34,8 @@ const Transactions = () => {
                 </tr>
                 </thead>
                 <tbody>
-                {sendTransactionsList.length ?
-                    sendTransactionsList.map((stxn, index) => {
+                {props.list.length ?
+                    props.list.map((stxn, index) => {
                         let hash = helper.stringTruncate(stxn.txhash);
                         let amountDenom = '';
                         let amount = 0;
@@ -111,4 +100,17 @@ const Transactions = () => {
         </div>
     );
 };
-export default Transactions
+
+
+const stateToProps = (state) => {
+    console.log(state.transactions,"state.delegations.count");
+    return {
+        list: state.transactions.list,
+    };
+};
+
+const actionsToProps = {
+    fetchTransactions,
+};
+
+export default connect(stateToProps, actionsToProps)(Transactions);
