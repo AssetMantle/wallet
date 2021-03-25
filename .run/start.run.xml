@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="start" type="js.build_tools.npm" nameIsGenerated="true">
+    <package-json value="$PROJECT_DIR$/package.json" />
+    <command value="start" />
+    <node-interpreter value="project" />
+    <envs>
+      <env name="REACT_APP_API_KEY" value="http://128.199.29.15:1317" />
+    </envs>
+    <method v="2" />
+  </configuration>
+</component>
