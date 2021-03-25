@@ -92,8 +92,6 @@ const ModalImportWallet = (props) => {
         if(key === "hideWithAddress"){
             setWithAddress(false);
             setMnemonicForm(true)
-        }if(key === "kepler"){
-            history.push('/kepler')
         }
     };
 
@@ -218,9 +216,7 @@ const ModalImportWallet = (props) => {
                                                 </div>
 
                                             </Form>
-                                            <div className="buttons">
-                                                <button className="button button-primary" onClick={()=>handleRoute("kepler")}>Use Kepler</button>
-                                            </div>
+
                                             <div className="buttons">
                                                 <button className="button button-primary large" onClick={()=>handleRoute("withAddress")}>Continue without importing?</button>
                                             </div>
