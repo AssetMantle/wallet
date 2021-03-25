@@ -154,7 +154,7 @@ export default KeplerWallet;
 //
 //     (async () => {
 //         // See above.
-//         const chainId = "cosmoshub-3";
+//         const chainId = "test-core-1";
 //         await window.keplr.enable(chainId);
 //         const offlineSigner = window.getOfflineSigner(chainId);
 //
@@ -162,13 +162,13 @@ export default KeplerWallet;
 //
 //         // Initialize the gaia api with the offline signer that is injected by Keplr extension.
 //         const cosmJS = new SigningCosmosClient(
-//             "https://node-cosmoshub-3.keplr.app/rest",
+//             "http://128.199.29.15:1317",
 //             accounts[0].address,
 //             offlineSigner
 //         );
 //
 //         const result = await cosmJS.sendTokens(recipient, [{
-//             denom: "uatom",
+//             denom: "uxprt",
 //             amount: amount.toString(),
 //         }]);
 //
