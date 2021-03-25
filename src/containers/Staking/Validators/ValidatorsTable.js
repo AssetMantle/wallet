@@ -4,8 +4,8 @@ import {getDelegationsUrl, getValidatorsUrl, getValidatorUrl} from "../../../con
 import helper from "../../../utils/helper"
 import axios from "axios";
 import Avatar from "./Avatar";
-import Loader from "../../../components/Loader";
-import Lodash from 'lodash';
+import activeIcon from "../../../assets/images/active.svg";
+import inActiveIcon from "../../../assets/images/inactive.svg";
 import Icon from "../../../components/Icon";
 import ModalActions from "./ModalActions";
 
@@ -49,16 +49,12 @@ const ValidatorsTable = (props) => {
                                 <td className="">{commissionRate} %</td>
                                 <td className="">
                                     {active ?
-                                        <span className="icon-box success" title="active">
-                                        <Icon
-                                            viewClass="arrow-right"
-                                            icon="success"/>
+                                        <span className="icon-box" title="active">
+                                            <img src={activeIcon} alt="activeIcon" />
                                         </span>
                                         :
-                                        <span className="icon-box error" title="Inactive">
-                                        <Icon
-                                            viewClass="arrow-right"
-                                            icon="pending"/>
+                                        <span className="icon-box" title="Inactive">
+                                         <img src={inActiveIcon} alt="inActiveIcon" />
                                         </span>
                                     }
                                 </td>

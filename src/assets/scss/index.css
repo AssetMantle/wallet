@@ -792,6 +792,8 @@ html, body {
       border-color: transparent; }
       .import-wallet-body .buttons .button-secondary .icon {
         width: 20px; }
+    .import-wallet-body .buttons .button.button-primary.large {
+      width: auto; }
     .import-wallet-body .buttons .button.button-primary {
       width: 200px; }
   .import-wallet-body .heading {
@@ -1160,13 +1162,13 @@ html, body {
           font-size: 12px;
           line-height: 150%;
           color: #1A73B4; }
-      .header .profile-section .profile-dropdown .dropdown-menu .footer {
+      .header .profile-section .profile-dropdown .dropdown-menu .dropdown-footer {
         display: flex;
         border-top: 1px solid #EAEBF6; }
-        .header .profile-section .profile-dropdown .dropdown-menu .footer .link-close {
+        .header .profile-section .profile-dropdown .dropdown-menu .dropdown-footer .link-close {
           color: #E50913;
           cursor: pointer; }
-        .header .profile-section .profile-dropdown .dropdown-menu .footer p {
+        .header .profile-section .profile-dropdown .dropdown-menu .dropdown-footer p {
           flex: 1;
           font-weight: 500;
           font-size: 12px;
@@ -1174,7 +1176,7 @@ html, body {
           text-align: center;
           margin: 0;
           padding: 10px 0; }
-          .header .profile-section .profile-dropdown .dropdown-menu .footer p:first-child {
+          .header .profile-section .profile-dropdown .dropdown-menu .dropdown-footer p:first-child {
             border-right: 1px solid #EAEBF6; }
     .header .profile-section .icon-profile {
       margin-right: 20px; }
@@ -1252,7 +1254,14 @@ html, body {
         font-family: 'Poppins', sans-serif; }
       .token-info-section .info-box .line .value.rewards {
         color: #E50913;
-        text-decoration: underline; }
+        text-decoration: underline;
+        cursor: pointer; }
+        .token-info-section .info-box .line .value.rewards span {
+          background: #E50913;
+          color: #ffffff;
+          font-size: 10px;
+          padding: 0px 5px;
+          margin-left: 5px; }
     .token-info-section .info-box .inner-box {
       flex: 1; }
     .token-info-section .info-box .line .value {

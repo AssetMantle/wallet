@@ -33,7 +33,7 @@ const Header = (props) => {
                         <p className="key">Wallet Address</p>
                         <div className="address"><span>{addressTruncate}</span> <Copy id={address}/> </div>
                     </div>
-                    <div className="footer">
+                    <div className="dropdown-footer">
                         <p onClick={closeWallet} className="link-close">Close Wallet</p>
                         <p>Account</p>
                     </div>
