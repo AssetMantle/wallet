@@ -21,7 +21,7 @@ const ModalFaq = (props) => {
             className="modal-custom faq-modal"
             onHide={handleClose}>
             <Modal.Header className="result-header">
-                Freaquently Asked Questionis
+                Frequently Asked Questions
             </Modal.Header>
             <Modal.Body className="faq-modal-body">
                 <Tab.Container id="left-tabs-example" defaultActiveKey="first">
