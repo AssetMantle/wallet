@@ -216,6 +216,7 @@ const ModalImportWallet = (props) => {
                                                 </div>
 
                                             </Form>
+
                                             <div className="buttons">
                                                 <button className="button button-primary large" onClick={()=>handleRoute("withAddress")}>Continue without importing?</button>
                                             </div>
