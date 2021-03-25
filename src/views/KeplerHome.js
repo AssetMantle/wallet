@@ -15,6 +15,7 @@ const KeplerHome = () => {
 
         const address = localStorage.getItem('address');
         if(address !== undefined && address !== null && address !== ""){
+            localStorage.setItem('loginMode', 'kepler');
             localStorage.setItem('loginToken', 'loggedIn');
             history.push('/dashboard/wallet');
         }
