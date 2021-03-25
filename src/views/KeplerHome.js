@@ -1,12 +1,23 @@
-import React, {useState} from "react";
-import {Navbar, NavLink, Nav} from "react-bootstrap";
-import logo from "../assets/images/logo_lite.svg";
+import React from "react";
 import "../utils/kepler";
 import KeplerWallet from "../utils/kepler";
+import {useHistory} from "react-router-dom";
 const KeplerHome = () => {
+    const history = useHistory();
     const handleKepler = ()=>{
         const kepler = KeplerWallet();
-        console.log(kepler,"kepler response")
+
+        kepler.then(function (item) {
+            console.log(kepler,"kepler response")
+        }).catch(err => alert(err));
+
+        console.log(localStorage.getItem('address'),"address");
+
+        const address = localStorage.getItem('address');
+        if(address !== undefined && address !== null){
+            localStorage.setItem('loginToken', 'loggedIn');
+            history.push('/dashboard/wallet');
+        }
     };
     return (
         <div className="buttons">
