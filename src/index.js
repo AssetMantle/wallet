@@ -4,7 +4,7 @@ import App from './App';
 import { createBrowserHistory } from "history";
 import reportWebVitals from './reportWebVitals';
 import { Router } from "react-router-dom";
-import "../src/assets/scss/index.scss";
+import "../src/assets/scss/index.css";
 import { Provider } from 'react-redux';
 import { applyMiddleware, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
