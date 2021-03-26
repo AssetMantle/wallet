@@ -13,7 +13,7 @@ const Transactions = (props) => {
         props.fetchTransactions(address);
     }, []);
 
-    if (props.inProgress) {
+    if (props.inProgress && props.list.length) {
         return <Loader/>;
     }
     return (
