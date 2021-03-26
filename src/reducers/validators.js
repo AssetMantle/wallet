@@ -4,7 +4,9 @@ import {
     FETCH_VALIDATORS_ERROR,
     FETCH_INACTIVE_VALIDATORS_SUCCESS,
     FETCH_VALIDATORS_IN_PROGRESS,
-    FETCH_VALIDATORS_SUCCESS
+    FETCH_VALIDATORS_SUCCESS,
+    FETCH_VALIDATOR_ERROR,
+    FETCH_VALIDATOR_SUCCESS
 } from "../constants/validators"
 import Lodash from "lodash";
 
@@ -72,6 +74,14 @@ const validators = (state = [], action) => {
     }
 };
 
+const validator = (state = {}, action) => {
+    if (action.type === FETCH_VALIDATOR_SUCCESS) {
+        return action.data;
+    } else {
+        return state;
+    }
+};
+
 
 export default combineReducers({
     activeList,
@@ -80,4 +90,5 @@ export default combineReducers({
     inActiveVotingPower,
     inProgress,
     validators,
+    validator,
 });

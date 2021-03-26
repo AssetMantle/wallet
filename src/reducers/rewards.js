@@ -2,7 +2,8 @@ import { combineReducers } from 'redux';
 import {
     REWARDS_FETCH_ERROR,
     REWARDS_FETCH_IN_PROGRESS,
-    REWARDS_FETCH_SUCCESS
+    REWARDS_FETCH_SUCCESS,
+    REWARDS_LIST_FETCH_SUCCESS
 } from "../constants/rewards"
 
 const inProgress = (state = false, action) => {
@@ -16,6 +17,14 @@ const inProgress = (state = false, action) => {
             return state;
     }
 };
+
+const list = (state = [], action) => {
+    if (action.type === REWARDS_LIST_FETCH_SUCCESS) {
+        return action.list;
+    }
+    return state;
+};
+
 
 const rewards = (state = 0, action) => {
     if (action.type === REWARDS_FETCH_SUCCESS) {
@@ -35,5 +44,6 @@ const _ = (state = 0, action) => {
 
 export default combineReducers({
     rewards,
+    list,
     _,
 });

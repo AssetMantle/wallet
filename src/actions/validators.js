@@ -1,19 +1,21 @@
 import Axios from 'axios';
-import {getValidatorsUrl} from "../constants/url";
+import {getValidatorsUrl, getValidatorUrl} from "../constants/url";
 import Async from 'async';
 import {
     FETCH_ACTIVE_VALIDATORS_SUCCESS,
     FETCH_VALIDATORS_ERROR,
     FETCH_INACTIVE_VALIDATORS_SUCCESS,
     FETCH_VALIDATORS_IN_PROGRESS,
-    FETCH_VALIDATORS_SUCCESS
+    FETCH_VALIDATORS_SUCCESS,
+    FETCH_VALIDATOR_SUCCESS,
+    FETCH_VALIDATOR_ERROR
 } from "../constants/validators"
 
 import helper from "../utils/helper";
 
 export const fetchValidatorsInProgress = () => {
     return {
-        type:  FETCH_VALIDATORS_IN_PROGRESS,
+        type: FETCH_VALIDATORS_IN_PROGRESS,
     };
 };
 
@@ -47,17 +49,17 @@ export const fetchValidatorsError = (count) => {
 };
 
 
-export const fetchValidators = (address)  => {
+export const fetchValidators = (address) => {
     return async dispatch => {
         dispatch(fetchValidatorsInProgress());
         const url = getValidatorsUrl(address);
         await Axios.get(url)
             .then((res) => {
                 let validators = res.data.validators;
-                let activeValidators=[];
-                let inActiveValidators=[];
+                let activeValidators = [];
+                let inActiveValidators = [];
                 validators.forEach((item) => {
-                    if(helper.isActive(item)) {
+                    if (helper.isActive(item)) {
                         activeValidators.push(item)
                     } else {
                         inActiveValidators.push(item)
@@ -69,6 +71,37 @@ export const fetchValidators = (address)  => {
             })
             .catch((error) => {
                 dispatch(fetchValidatorsError(error.response
+                    ? error.response.data.message
+                    : error.message));
+            });
+    }
+};
+
+export const fetchValidatorSuccess = (data) => {
+    return {
+        type: FETCH_VALIDATOR_SUCCESS,
+        data,
+    };
+};
+
+export const fetchValidatorError = (data) => {
+    return {
+        type: FETCH_VALIDATOR_ERROR,
+        data,
+    };
+};
+
+
+export const fetchValidator = (address) => {
+    return async dispatch => {
+        const url = getValidatorUrl(address);
+        Axios.get(url)
+            .then((res) => {
+
+                dispatch(fetchValidatorSuccess(res.data.validator));
+            })
+            .catch((error) => {
+                dispatch(fetchValidatorError(error.response
                     ? error.response.data.message
                     : error.message));
             });
