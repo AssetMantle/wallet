@@ -12,6 +12,8 @@ import React, {useState, useEffect, useContext} from 'react';
 import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
+import helper from "../../../../utils/helper";
+import KeplerTransaction from "../../../../utils/KeplerTransactions";
 
 const ModalDelegate = (props) => {
     const [amount, setAmount] = useState(0);
@@ -85,57 +87,53 @@ const ModalDelegate = (props) => {
         event.preventDefault();
         const mnemonic = event.target.mnemonic.value;
         const validatorAddress = props.validatorAddress;
-        let accountNumber = 0;
-        let addressIndex = 0;
-        let bip39Passphrase = "";
-        if (advanceMode) {
-            accountNumber = document.getElementById('delegateAccountNumber').value;
-            addressIndex = document.getElementById('delegateAccountIndex').value;
-            bip39Passphrase = document.getElementById('delegatebip39Passphrase').value;
-        }
-        const persistence = MakePersistence(accountNumber, addressIndex);
-        const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
-        const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
-        console.log(address.error, "rdsult");
-        if (address.error === undefined && ecpairPriv.error === undefined) {
-            persistence.getAccounts(address).then(data => {
-                if (data.code === undefined) {
-                    let stdSignMsg = persistence.newStdMsg({
-                        msgs: [
-                            {
-                                type: "cosmos-sdk/MsgDelegate",
-                                value: {
-                                    amount: {
-                                        amount: String(1000000),
-                                        denom: "uxprt"
-                                    },
-                                    delegator_address: address,
-                                    validator_address: validatorAddress
-                                }
-                            }
-                        ],
-                        chain_id: persistence.chainId,
-                        fee: {amount: [{amount: String(5000), denom: "uxprt"}], gas: String(250000)},
-                        memo: memoContent,
-                        account_number: String(data.account.account_number),
-                        sequence: String(data.account.sequence)
-                    });
-                    const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
-                    persistence.broadcast(signedTx).then(response => {
-                        setResponse(response)
-                        console.log(response, "delegate response")
-                    });
-                    showSeedModal(false);
-                } else {
-                    setErrorMessage(data.message);
-                }
-            });
+        const address = localStorage.getItem('address');
+        const mode = localStorage.getItem('loginMode');
+        if(mode === "kepler") {
+            const response = KeplerTransaction(helper.msgs(helper.sendMsg(amount, address, validatorAddress)), helper.fee(5000,250000),memoContent);
+            response.then(result => {
+                console.log(result)
+            }).catch(err => console.log(err.message, "delegate error"))
         } else {
-            if (address.error !== undefined) {
-                setErrorMessage(address.error)
+            let accountNumber = 0;
+            let addressIndex = 0;
+            let bip39Passphrase = "";
+            if (advanceMode) {
+                accountNumber = document.getElementById('delegateAccountNumber').value;
+                addressIndex = document.getElementById('delegateAccountIndex').value;
+                bip39Passphrase = document.getElementById('delegatebip39Passphrase').value;
             }
-            else {
-                setErrorMessage(ecpairPriv.error)
+            const persistence = MakePersistence(accountNumber, addressIndex);
+            const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
+            const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
+            console.log(address.error, "rdsult");
+            if (address.error === undefined && ecpairPriv.error === undefined) {
+                persistence.getAccounts(address).then(data => {
+                    if (data.code === undefined) {
+                        let stdSignMsg = persistence.newStdMsg({
+                            msgs: helper.msgs(helper.delegateMsg(amount, address, validatorAddress)),
+                            fee: helper.fee(5000, 250000),
+                            chain_id: persistence.chainId,
+                            memo: memoContent,
+                            account_number: String(data.account.account_number),
+                            sequence: String(data.account.sequence)
+                        });
+                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
+                        persistence.broadcast(signedTx).then(response => {
+                            setResponse(response)
+                            console.log(response, "delegate response")
+                        });
+                        showSeedModal(false);
+                    } else {
+                        setErrorMessage(data.message);
+                    }
+                });
+            } else {
+                if (address.error !== undefined) {
+                    setErrorMessage(address.error)
+                } else {
+                    setErrorMessage(ecpairPriv.error)
+                }
             }
         }
     };
@@ -318,7 +316,7 @@ const ModalDelegate = (props) => {
                                 {response.txhash}</p>
                             <p>{response.raw_log}</p>
                             <div className="buttons">
-                                <button className="button" onClick={handleClose}>Done</button>
+                                <button className="button" onClick={props.handleClose}>Done</button>
                             </div>
                         </div>
                     </Modal.Body>

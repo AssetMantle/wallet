@@ -12,6 +12,8 @@ import Lodash from "lodash";
 import Actions from "../../../utils/actions";
 import {fetchRewards} from "../../../actions/rewards";
 import {connect} from "react-redux";
+import KeplerTransaction from "../../../utils/KeplerTransactions";
+import helper from "../../../utils/helper";
 
 const ModalWithdraw = (props) => {
     const ActionHelper = new Actions();
@@ -83,53 +85,55 @@ const ModalWithdraw = (props) => {
         event.preventDefault();
         // const password = event.target.password.value;
         const mnemonic = event.target.mnemonic.value;
-        let accountNumber = 0;
-        let addressIndex = 0;
-        let bip39Passphrase = "";
-        if (advanceMode) {
-            accountNumber = document.getElementById('claimTotalAccountNumber').value;
-            addressIndex = document.getElementById('claimTotalAccountIndex').value;
-            bip39Passphrase = document.getElementById('claimTotalbip39Passphrase').value;
-        }
-        const persistence = MakePersistence(accountNumber, addressIndex);
-        const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
-        const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
-
-        if (address.error === undefined && ecpairPriv.error === undefined) {
-            persistence.getAccounts(address).then(data => {
-                if (data.code === undefined) {
-                    let stdSignMsg = persistence.newStdMsg({
-                        msgs: [
-                            {
-                                type: "cosmos-sdk/MsgWithdrawDelegationReward",
-                                value: {
-                                    delegator_address: address,
-                                    validator_address: validatorAddress
-                                }
-                            }
-                        ],
-                        chain_id: persistence.chainId,
-                        fee: {amount: [{amount: String(5000), denom: "uxprt"}], gas: String(250000)},
-                        memo: memoContent,
-                        account_number: String(data.account.account_number),
-                        sequence: String(data.account.sequence)
-                    });
-
-                    const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
-                    persistence.broadcast(signedTx).then(response => {
-                        setResponse(response);
-                        console.log(response.code)
-                    });
-                    showSeedModal(false);
-                } else {
-                    setErrorMessage(data.message);
-                }
-            });
+        const validatorAddress = props.validatorAddress;
+        const address = localStorage.getItem('address');
+        const mode = localStorage.getItem('loginMode');
+        if(mode === "kepler") {
+            const response = KeplerTransaction(helper.msgs(helper.withDrawMsg(address, validatorAddress)), helper.fee(5000,250000), memoContent);
+            response.then(result => {
+                console.log(result)
+            }).catch(err => console.log(err.message, "delegate error"))
         } else {
-            if (address.error !== undefined) {
-                setErrorMessage(address.error)
+            let accountNumber = 0;
+            let addressIndex = 0;
+            let bip39Passphrase = "";
+            if (advanceMode) {
+                accountNumber = document.getElementById('claimTotalAccountNumber').value;
+                addressIndex = document.getElementById('claimTotalAccountIndex').value;
+                bip39Passphrase = document.getElementById('claimTotalbip39Passphrase').value;
+            }
+            const persistence = MakePersistence(accountNumber, addressIndex);
+            const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
+            const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
+
+            if (address.error === undefined && ecpairPriv.error === undefined) {
+                persistence.getAccounts(address).then(data => {
+                    if (data.code === undefined) {
+                        let stdSignMsg = persistence.newStdMsg({
+                            msgs: helper.msgs(helper.withDrawMsg(address, validatorAddress)),
+                            chain_id: persistence.chainId,
+                            fee: helper.fee(5000, 250000),
+                            memo: memoContent,
+                            account_number: String(data.account.account_number),
+                            sequence: String(data.account.sequence)
+                        });
+
+                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
+                        persistence.broadcast(signedTx).then(response => {
+                            setResponse(response);
+                            console.log(response.code)
+                        });
+                        showSeedModal(false);
+                    } else {
+                        setErrorMessage(data.message);
+                    }
+                });
             } else {
-                setErrorMessage(ecpairPriv.error)
+                if (address.error !== undefined) {
+                    setErrorMessage(address.error)
+                } else {
+                    setErrorMessage(ecpairPriv.error)
+                }
             }
         }
 
