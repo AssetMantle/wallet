@@ -5,6 +5,7 @@ import Homepage from "./views/Homepage";
 import DashboardStaking from "./views/Staking";
 import PrivateRoute from "./containers/PrivateRoute";
 import ImportWallet from "./containers/ImpotWallet";
+import KeplerHome from "./views/KeplerHome";
 const App = () => {
   const routes = [{
     path: '/',
@@ -21,6 +22,10 @@ const App = () => {
   },{
     path: '/import_wallet',
     component: ImportWallet,
+    private: false,
+  },{
+    path: '/kepler',
+    component: KeplerHome,
     private: false,
   }];
 
