@@ -138,15 +138,6 @@ const ModalWithdraw = (props) => {
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={handleSubmitInitialData}>
-                            {/*<div className="form-field">*/}
-                            {/*    <p className="label">Your password</p>*/}
-                            {/*    <Form.Control*/}
-                            {/*        type="password"*/}
-                            {/*        name="password"*/}
-                            {/*        placeholder="Enter Your Wallet Password"*/}
-                            {/*        required={true}*/}
-                            {/*    />*/}
-                            {/*</div>*/}
                             <div className="form-field">
                                 <p className="label">Memo</p>
                                 <Form.Control as="textarea" rows={3} name="memo"
@@ -159,7 +150,7 @@ const ModalWithdraw = (props) => {
                                         viewClass="arrow-right"
                                         icon="left-arrow"/>
                                 </button>
-                                <button className={props.rewards ? "button button-primary" : "button button-primary disabled"} disabled={props.rewards ? true : false}>Next</button>
+                                <button className={props.rewards ? "button button-primary" : "button button-primary disabled"} disabled={props.rewards ? false : true}>Next</button>
                             </div>
                         </Form>
                     </Modal.Body>
