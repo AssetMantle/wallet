@@ -134,7 +134,6 @@ async function KeplerWallet() {
         accounts[0].address,
         offlineSigner,
     );
-    alert(accounts[0].address);
     localStorage.setItem('address', accounts[0].address);
 };
 export default KeplerWallet;
