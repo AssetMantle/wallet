@@ -13,6 +13,8 @@ import {useHistory} from "react-router-dom";
 import ModalFaq from "../Faq";
 import GeneratePrivateKey from "../Common/GeneratePrivateKey";
 import AddressImport from "./AddressImport";
+import KeplerHome from "../../views/KeplerHome";
+import KeplerWallet from "../../utils/kepler";
 const ModalImportWallet = (props) => {
     const [show, setShow] = useState(true);
     const history = useHistory();
@@ -179,7 +181,9 @@ const ModalImportWallet = (props) => {
             props.setRoutName("")
         }
     };
-
+    const handleKepler = ()=> {
+        history.push('/kepler');
+    }
     return (
         <>
             <Modal backdrop="static" show={show} onHide={handleClose} centered
@@ -216,7 +220,9 @@ const ModalImportWallet = (props) => {
                                                 </div>
 
                                             </Form>
-
+                                            <div className="buttons">
+                                                <button className="button button-primary" onClick={()=>handleKepler("kepler")}>Use Kepler</button>
+                                            </div>
                                             <div className="buttons">
                                                 <button className="button button-primary large" onClick={()=>handleRoute("withAddress")}>Continue without importing?</button>
                                             </div>

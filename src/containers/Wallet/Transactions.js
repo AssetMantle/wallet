@@ -1,33 +1,19 @@
 import React, {useEffect, useState} from "react";
 import {Table} from "react-bootstrap";
-import {getSendTransactionsUrl} from "../../constants/url";
 import moment from 'moment';
-import axios from "axios";
 import helper from "../../utils/helper";
 import Icon from "../../components/Icon";
 import Loader from "../../components/Loader";
+import {fetchTransactions} from "../../actions/transactions";
+import {connect} from "react-redux";
 
-const Transactions = () => {
-    const [sendTransactionsList, setSendTransactionsList] = useState([]);
-    const [loading, setLoading] = useState(true);
+const Transactions = (props) => {
     useEffect(() => {
-        const fetchValidators = async () => {
-            const address = localStorage.getItem('address');
-            const sendTxnsUrl = getSendTransactionsUrl(address);
-            await axios.get(sendTxnsUrl).then(response => {
-                let sendTxnsResponseList = response.data.txs;
-                if(sendTxnsResponseList !== undefined){
-                    setSendTransactionsList(sendTxnsResponseList);
-                }
-                setLoading(false);
-            }).catch(error => {
-                console.log(error.response, "unable to loading validators")
-                setLoading(false);
-            });
-        };
-        fetchValidators();
+        const address = localStorage.getItem('address');
+        props.fetchTransactions(address);
     }, []);
-    if (loading) {
+
+    if (props.inProgress && props.list.length) {
         return <Loader/>;
     }
     return (
@@ -45,8 +31,8 @@ const Transactions = () => {
                 </tr>
                 </thead>
                 <tbody>
-                {sendTransactionsList.length ?
-                    sendTransactionsList.map((stxn, index) => {
+                {props.list.length ?
+                    props.list.map((stxn, index) => {
                         let hash = helper.stringTruncate(stxn.txhash);
                         let amountDenom = '';
                         let amount = 0;
@@ -102,7 +88,9 @@ const Transactions = () => {
                             </tr>
                         )
                     })
-                    : <tr><td colSpan={7} className="text-center"> No Txns Found</td></tr>
+                    : <tr>
+                        <td colSpan={7} className="text-center"> No Txns Found</td>
+                    </tr>
                 }
 
 
@@ -111,4 +99,17 @@ const Transactions = () => {
         </div>
     );
 };
-export default Transactions
+
+
+const stateToProps = (state) => {
+    return {
+        list: state.transactions.list,
+        inProgress: state.transactions.inProgress,
+    };
+};
+
+const actionsToProps = {
+    fetchTransactions,
+};
+
+export default connect(stateToProps, actionsToProps)(Transactions);
