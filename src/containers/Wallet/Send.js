@@ -13,7 +13,7 @@ import Icon from "../../components/Icon";
 import success from "../../assets/images/success.svg";
 import MakePersistence from "../../utils/cosmosjsWrapper";
 
-const { SigningCosmosClient } = require("@cosmjs/launchpad");
+const {SigningCosmosClient} = require("@cosmjs/launchpad");
 
 const Send = () => {
     const [amountField, setAmountField] = useState(0);
@@ -77,28 +77,14 @@ const Send = () => {
         await window.keplr.enable(chainId);
         const offlineSigner = window.getOfflineSigner(chainId);
         const accounts = await offlineSigner.getAccounts();
-        console.log( accounts[0].address, "result")
+        console.log(accounts[0].address, "result")
         // const address = localStorage.getItem('address');''
         const cosmJS = new SigningCosmosClient(
             "http://128.199.29.15:1317",
             accounts[0].address,
             offlineSigner
         );
-        let rs = await cosmJS.signAndBroadcast([
-            {
-                type: "cosmos-sdk/MsgSend",
-                value: {
-                    amount: [
-                        {
-                            amount: amountField,
-                            denom: "uxprt"
-                        }
-                    ],
-                    from_address: accounts[0].address,
-                    to_address: toAddress
-                }
-            }
-        ], {amount: [{amount: String(0), denom: "upxrt"}], gas: String(250000)}, "").then(result => {
+        let rs = await cosmJS.signAndBroadcast(msgs(sendMsg(amountField,accounts[0].address, toAddress)), fee(0,250000),"").then(result => {
             console.log(result)
         }).catch(err => console.log(err.message, "rtto"))
 
@@ -112,64 +98,48 @@ const Send = () => {
         const mode = localStorage.getItem('loginMode')
         if(mode === "kepler") {
             keplerSend();
-        }
-        else
-            {
-                let accountNumber = 0;
-                let addressIndex = 0;
-                let bip39Passphrase = ""
-                if (advanceMode) {
-                    accountNumber = document.getElementById('sendAccountNumber').value;
-                    addressIndex = document.getElementById('sendAccountIndex').value;
-                    bip39Passphrase = document.getElementById('sendbip39Passphrase').value;
-                }
+        } else {
+            let accountNumber = 0;
+            let addressIndex = 0;
+            let bip39Passphrase = ""
+            if (advanceMode) {
+                accountNumber = document.getElementById('sendAccountNumber').value;
+                addressIndex = document.getElementById('sendAccountIndex').value;
+                bip39Passphrase = document.getElementById('sendbip39Passphrase').value;
+            }
 
-                const persistence = MakePersistence(accountNumber, addressIndex);
-                const address = persistence.getAddress(userMnemonic, bip39Passphrase, true);
-                const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
-                if (address.error === undefined && ecpairPriv.error === undefined) {
-                    persistence.getAccounts(address).then(data => {
-                        if (data.code === undefined) {
-                            let stdSignMsg = persistence.newStdMsg({
-                                msgs: [
-                                    {
-                                        type: "cosmos-sdk/MsgSend",
-                                        value: {
-                                            amount: [
-                                                {
-                                                    amount: amountField,
-                                                    denom: "uxprt"
-                                                }
-                                            ],
-                                            from_address: address,
-                                            to_address: toAddress
-                                        }
-                                    }
-                                ],
-                                chain_id: persistence.chainId,
-                                fee: {amount: [{amount: String(0), denom: "upxrt"}], gas: String(250000)},
-                                memo: "",
-                                account_number: String(data.account.account_number),
-                                sequence: String(data.account.sequence)
-                            });
+            const persistence = MakePersistence(accountNumber, addressIndex);
+            const address = persistence.getAddress(userMnemonic, bip39Passphrase, true);
+            const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
+            if (address.error === undefined && ecpairPriv.error === undefined) {
+                persistence.getAccounts(address).then(data => {
+                    if (data.code === undefined) {
+                        let stdSignMsg = persistence.newStdMsg({
+                            msgs: msgs(sendMsg(amountField,address, toAddress)),
+                            chain_id: persistence.chainId,
+                            fee: fee(0, 250000),
+                            memo: "",
+                            account_number: String(data.account.account_number),
+                            sequence: String(data.account.sequence)
+                        });
 
-                            const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
-                            persistence.broadcast(signedTx).then(response => {
-                                setTxResponse(response)
-                                console.log(response)
-                            });
-                        } else {
-                            setErrorMessage(data.message);
-                        }
-                    })
-                } else {
-                    if (address.error !== undefined) {
-                        setErrorMessage(address.error)
+                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
+                        persistence.broadcast(signedTx).then(response => {
+                            setTxResponse(response)
+                            console.log(response)
+                        });
                     } else {
-                        setErrorMessage(ecpairPriv.error)
+                        setErrorMessage(data.message);
                     }
+                })
+            } else {
+                if (address.error !== undefined) {
+                    setErrorMessage(address.error)
+                } else {
+                    setErrorMessage(ecpairPriv.error)
                 }
             }
+        }
     };
     const popover = (
         <Popover id="popover-basic">
@@ -343,3 +313,27 @@ const Send = () => {
     );
 };
 export default Send;
+
+function sendMsg(amount, fromAddress, toAddress) {
+    return {
+        type: "cosmos-sdk/MsgSend",
+        value: {
+            amount: [
+                {
+                    amount: String(amount),
+                    denom: "uxprt"
+                }
+            ],
+            from_address: fromAddress,
+            to_address: toAddress
+        }
+    }
+}
+
+function msgs(...msg){
+    return msg
+}
+
+function fee(amount, gas= 250000){
+    return {amount: [{amount: String(amount), denom: "upxrt"}], gas: String(gas)}
+}
