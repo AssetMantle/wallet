@@ -10,6 +10,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
+import {connect} from "react-redux";
 
 const ModalUnbond = (props) => {
     const [amount, setAmount] = useState(0);
@@ -147,15 +148,15 @@ const ModalUnbond = (props) => {
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={handleSubmitInitialData}>
-                            {/*<div className="form-field">*/}
-                            {/*    <p className="label">Your password</p>*/}
-                            {/*    <Form.Control*/}
-                            {/*        type="password"*/}
-                            {/*        name="password"*/}
-                            {/*        placeholder="Enter Your Wallet Password"*/}
-                            {/*        required={true}*/}
-                            {/*    />*/}
-                            {/*</div>*/}
+                            <div className="form-field">
+                                <p className="label">Available Amount</p>
+                                <Form.Control
+                                    type="number"
+                                    placeholder="Amount"
+                                    value={props.balance}
+                                    disabled
+                                />
+                            </div>
                             <div className="form-field">
                                 <p className="label">Send Amount</p>
                                 <div className="amount-field">
@@ -196,7 +197,7 @@ const ModalUnbond = (props) => {
                                         viewClass="arrow-right"
                                         icon="left-arrow"/>
                                 </button>
-                                <button className="button button-primary">Next</button>
+                                <button className="button button-primary" disabled={!props.delegateStatus || amount === 0 || amount > props.balance}>Next</button>
                             </div>
                         </Form>
                     </Modal.Body>
@@ -315,5 +316,10 @@ const ModalUnbond = (props) => {
     );
 };
 
+const stateToProps = (state) => {
+    return {
+        balance: state.balance.amount,
+    };
+};
 
-export default ModalUnbond;
+export default connect(stateToProps)(ModalUnbond);

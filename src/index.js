@@ -5,13 +5,26 @@ import { createBrowserHistory } from "history";
 import reportWebVitals from './reportWebVitals';
 import { Router } from "react-router-dom";
 import "../src/assets/scss/index.scss";
+import { Provider } from 'react-redux';
+import { applyMiddleware, createStore } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import thunk from 'redux-thunk';
+import reducer from './reducers';
 const history = createBrowserHistory();
 
+const store = createStore(
+    reducer,
+    composeWithDevTools({
+        trace: true,
+    })(applyMiddleware(thunk)),
+);
 
 ReactDOM.render(
-      <Router history={history}>
-          <App />
-      </Router>,
+    <Provider store={store}>
+        <Router history={history}>
+            <App/>
+        </Router>
+    </Provider>,
   document.getElementById('root')
 );
 

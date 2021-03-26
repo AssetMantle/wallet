@@ -10,6 +10,9 @@ import Icon from "../../../components/Icon";
 import MakePersistence from "../../../utils/cosmosjsWrapper";
 import Lodash from "lodash";
 import Actions from "../../../utils/actions";
+import {fetchRewards} from "../../../actions/rewards";
+import {connect} from "react-redux";
+
 const ModalWithdraw = (props) => {
     const ActionHelper = new Actions();
     const [show, setShow] = useState(true);
@@ -23,25 +26,14 @@ const ModalWithdraw = (props) => {
     const [memoContent, setMemoContent] = useState('');
     const [errorMessage, setErrorMessage] = useState("");
     useEffect(() => {
-        const fetchValidators = () => {
-            const address = localStorage.getItem('address');
-            const rewardsUrl = getRewardsUrl(address);
-            axios.get(rewardsUrl).then(response => {
-                if (response.data.rewards.length) {
-                    let rewardsList = response.data.rewards;
-                    for (const item of rewardsList) {
-                        const validatorUrl = getValidatorUrl(item.validator_address);
-                        axios.get(validatorUrl).then(validatorResponse => {
-                            let validator = validatorResponse.data.validator;
-                            setValidatorsList(validatorsList => [...validatorsList, validator]);
-                        })
-                    }
-                }
-            }).catch(error => {
-                console.log(error, "error rewardsResponse")
-            });
-        };
-        fetchValidators();
+        const address = localStorage.getItem('address');
+        for (const item of props.list) {
+            const validatorUrl = getValidatorUrl(item.validator_address);
+            axios.get(validatorUrl).then(validatorResponse => {
+                let validator = validatorResponse.data.validator;
+                setValidatorsList(validatorsList => [...validatorsList, validator]);
+            })
+        }
     }, []);
     const handleClose = (amount) => {
         setShow(false);
@@ -136,8 +128,7 @@ const ModalWithdraw = (props) => {
         } else {
             if (address.error !== undefined) {
                 setErrorMessage(address.error)
-            }
-            else {
+            } else {
                 setErrorMessage(ecpairPriv.error)
             }
         }
@@ -171,7 +162,7 @@ const ModalWithdraw = (props) => {
 
                                 <Select value={validatorAddress} className="validators-list-selection"
                                         onChange={onChangeSelect} displayEmpty>
-                                    <MenuItem value="" >
+                                    <MenuItem value="">
                                         <em>None</em>
                                     </MenuItem>
                                     {/*<MenuItem value="all" key={0}>*/}
@@ -339,5 +330,10 @@ const ModalWithdraw = (props) => {
     );
 };
 
+const stateToProps = (state) => {
+    return {
+        list: state.rewards.list,
+    };
+};
 
-export default ModalWithdraw;
+export default connect(stateToProps)(ModalWithdraw);

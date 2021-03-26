@@ -13,6 +13,7 @@ import {useHistory} from "react-router-dom";
 import ModalFaq from "../Faq";
 import GeneratePrivateKey from "../Common/GeneratePrivateKey";
 import AddressImport from "./AddressImport";
+import KeplerHome from "../../views/KeplerHome";
 const ModalImportWallet = (props) => {
     const [show, setShow] = useState(true);
     const history = useHistory();
@@ -216,7 +217,7 @@ const ModalImportWallet = (props) => {
                                                 </div>
 
                                             </Form>
-
+                                            <KeplerHome/>
                                             <div className="buttons">
                                                 <button className="button button-primary large" onClick={()=>handleRoute("withAddress")}>Continue without importing?</button>
                                             </div>
