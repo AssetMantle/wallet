@@ -8,11 +8,12 @@ import {
     Popover,
     useAccordionToggle
 } from 'react-bootstrap';
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
-import helper from "../../../../utils/helper";
+import aminoMsgHelper from "../../../../utils/aminoMsgHelper";
+import protoMsgHelper from "../../../../utils/protoMsgHelper";
 import KeplerTransaction from "../../../../utils/KeplerTransactions";
 
 const ModalDelegate = (props) => {
@@ -89,8 +90,8 @@ const ModalDelegate = (props) => {
         const validatorAddress = props.validatorAddress;
         const address = localStorage.getItem('address');
         const mode = localStorage.getItem('loginMode');
-        if(mode === "kepler") {
-            const response = KeplerTransaction(helper.msgs(helper.sendMsg(amount, address, validatorAddress)), helper.fee(5000,250000),memoContent);
+        if (mode === "kepler") {
+            const response = KeplerTransaction([protoMsgHelper.msgDelegate(address, validatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent);
             response.then(result => {
                 console.log(result)
             }).catch(err => console.log(err.message, "delegate error"))
@@ -111,8 +112,8 @@ const ModalDelegate = (props) => {
                 persistence.getAccounts(address).then(data => {
                     if (data.code === undefined) {
                         let stdSignMsg = persistence.newStdMsg({
-                            msgs: helper.msgs(helper.delegateMsg(amount, address, validatorAddress)),
-                            fee: helper.fee(5000, 250000),
+                            msgs: aminoMsgHelper.msgs(aminoMsgHelper.delegateMsg(amount, address, validatorAddress)),
+                            fee: aminoMsgHelper.fee(5000, 250000),
                             chain_id: persistence.chainId,
                             memo: memoContent,
                             account_number: String(data.account.account_number),

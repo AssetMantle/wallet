@@ -14,8 +14,7 @@ import success from "../../assets/images/success.svg";
 import MakePersistence from "../../utils/cosmosjsWrapper";
 import KeplerTransaction from "../../utils/KeplerTransactions";
 import helper from "../../utils/helper";
-import {MsgSend} from "@cosmjs/stargate/build/codec/cosmos/bank/v1beta1/tx";
-import {assertIsBroadcastTxSuccess} from "@cosmjs/stargate";
+import protoMsgHelper from "../../utils/protoMsgHelper";
 
 const {SigningStargateClient} = require("@cosmjs/stargate");
 
@@ -78,42 +77,6 @@ const Send = () => {
         );
     }
 
-    const keplerSend = async () => {
-        const chainId = "test-core-1";
-        await window.keplr.enable(chainId);
-        const offlineSigner = window.getOfflineSigner(chainId);
-        const accounts = await offlineSigner.getAccounts();
-        console.log(accounts[0].address, "result")
-        // const address = localStorage.getItem('address');''
-        const cosmJS = await SigningStargateClient.connectWithSigner(
-            "http://128.199.29.15:26657",
-            offlineSigner
-        )
-
-        const msg = MsgSend.fromPartial({
-            fromAddress: accounts[0].address,
-            toAddress: toAddress,
-            amount: [{
-                denom: "uxprt",
-                amount: "10000",
-            }],
-        });
-        const msgAny = {
-            typeUrl: "/cosmos.bank.v1beta1.MsgSend",
-            value: msg,
-        };
-        const fee = helper.fee(0, 250000)
-        const memo = "Use your power wisely";
-        const result = await cosmJS.signAndBroadcast(
-            accounts[0].address,
-            [msgAny],
-            fee,
-            memo
-        );
-        console.log(result)
-        assertIsBroadcastTxSuccess(result)
-    };
-
     const handleMnemonicSubmit = (evt) => {
         evt.preventDefault();
         const userMnemonic = evt.target.mnemonic.value;
@@ -121,8 +84,8 @@ const Send = () => {
         console.log(userMnemonic, "userMnemonic");
         const address = localStorage.getItem('address');
         const mode = localStorage.getItem('loginMode');
-        if(mode === "kepler") {
-            const response = KeplerTransaction(helper.msgs(helper.sendMsg(amountField,address, toAddress)), helper.fee(0,250000),"");
+        if (mode === "kepler") {
+            const response = KeplerTransaction([protoMsgHelper.msgSend(address, toAddress, amountField)], helper.fee(0, 250000), "");
             response.then(result => {
                 console.log(result)
             }).catch(err => console.log(err.message, "send error"))
@@ -143,7 +106,7 @@ const Send = () => {
                 persistence.getAccounts(address).then(data => {
                     if (data.code === undefined) {
                         let stdSignMsg = persistence.newStdMsg({
-                            msgs: helper.msgs(helper.sendMsg(amountField,address, toAddress)),
+                            msgs: helper.msgs(helper.sendMsg(amountField, address, toAddress)),
                             chain_id: persistence.chainId,
                             fee: helper.fee(0, 250000),
                             memo: "",
