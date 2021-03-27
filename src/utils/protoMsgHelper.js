@@ -79,8 +79,6 @@ function msgWithdraw(delegatorAddress, validatorAddress) {
     };
 }
 
-//stargate end
-
 module.exports = {
     msgSend,
     msgDelegate,
