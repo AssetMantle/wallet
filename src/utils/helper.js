@@ -128,7 +128,7 @@ function delegateMsg(amount, address, validatorAddress) {
     }
 }
 
-function reDelegateMsg(amount, address, validatorAddress, toValidatorAddress) {
+function redelegateMsg(amount, address, validatorAddress, toValidatorAddress) {
     return {
         type: "cosmos-sdk/MsgBeginRedelegate",
         value: {
@@ -176,7 +176,7 @@ module.exports = {
     msgs,
     fee,
     delegateMsg,
-    reDelegateMsg,
+    reDelegateMsg: redelegateMsg,
     unBondMsg,
     withDrawMsg
 };
