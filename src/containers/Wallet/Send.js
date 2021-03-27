@@ -12,8 +12,10 @@ import {
 import Icon from "../../components/Icon";
 import success from "../../assets/images/success.svg";
 import MakePersistence from "../../utils/cosmosjsWrapper";
+import {MsgSend} from "@cosmjs/stargate/build/codec/cosmos/bank/v1beta1/tx";
+import {assertIsBroadcastTxSuccess} from "@cosmjs/stargate";
 
-const {SigningCosmosClient} = require("@cosmjs/launchpad");
+const {SigningStargateClient} = require("@cosmjs/stargate");
 
 const Send = () => {
     const [amountField, setAmountField] = useState(0);
@@ -41,6 +43,7 @@ const Send = () => {
         setMnemonicForm(true);
         setShow(true);
     };
+
     function ContextAwareToggle({children, eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 
@@ -72,22 +75,49 @@ const Send = () => {
             </button>
         );
     }
-    const keplerSend = async () =>{
+
+    const keplerSend = async () => {
         const chainId = "test-core-1";
         await window.keplr.enable(chainId);
         const offlineSigner = window.getOfflineSigner(chainId);
         const accounts = await offlineSigner.getAccounts();
         console.log(accounts[0].address, "result")
         // const address = localStorage.getItem('address');''
-        const cosmJS = new SigningCosmosClient(
-            "http://128.199.29.15:1317",
-            accounts[0].address,
+        const cosmJS = await SigningStargateClient.connectWithSigner(
+            "http://128.199.29.15:26657",
             offlineSigner
-        );
-        let rs = await cosmJS.signAndBroadcast(msgs(sendMsg(amountField,accounts[0].address, toAddress)), fee(0,250000),"").then(result => {
-            console.log(result)
-        }).catch(err => console.log(err.message, "rtto"))
+        )
 
+        const msg = MsgSend.fromPartial({
+            fromAddress: accounts[0].address,
+            toAddress: toAddress,
+            amount: [{
+                denom: "uxprt",
+                amount: "10000",
+            }],
+        });
+        const msgAny = {
+            typeUrl: "/cosmos.bank.v1beta1.MsgSend",
+            value: msg,
+        };
+        const fee = {
+            amount: [
+                {
+                    denom: "uxprt",
+                    amount: "10000",
+                },
+            ],
+            gas: "180000", // 180k
+        };
+        const memo = "Use your power wisely";
+        const result = await cosmJS.signAndBroadcast(
+            accounts[0].address,
+            [msgAny],
+            fee,
+            memo
+        );
+        console.log(result)
+        assertIsBroadcastTxSuccess(result)
     };
 
     const handleMnemonicSubmit = (evt) => {
@@ -96,7 +126,7 @@ const Send = () => {
         const mnemonic = "tank pair spray rely any menu airport shiver boost emerge holiday siege evil grace exile comfort fence mention pig bus cable scissors ability all";
         console.log(userMnemonic, "userMnemonic");
         const mode = localStorage.getItem('loginMode')
-        if(mode === "kepler") {
+        if (mode === "kepler") {
             keplerSend();
         } else {
             let accountNumber = 0;
@@ -115,7 +145,7 @@ const Send = () => {
                 persistence.getAccounts(address).then(data => {
                     if (data.code === undefined) {
                         let stdSignMsg = persistence.newStdMsg({
-                            msgs: msgs(sendMsg(amountField,address, toAddress)),
+                            msgs: msgs(sendMsg(amountField, address, toAddress)),
                             chain_id: persistence.chainId,
                             fee: fee(0, 250000),
                             memo: "",
@@ -330,10 +360,10 @@ function sendMsg(amount, fromAddress, toAddress) {
     }
 }
 
-function msgs(...msg){
+function msgs(...msg) {
     return msg
 }
 
-function fee(amount, gas= 250000){
+function fee(amount, gas = 250000) {
     return {amount: [{amount: String(amount), denom: "upxrt"}], gas: String(gas)}
 }
