@@ -12,6 +12,8 @@ import {
 import Icon from "../../components/Icon";
 import success from "../../assets/images/success.svg";
 import MakePersistence from "../../utils/cosmosjsWrapper";
+import KeplerTransaction from "../../utils/KeplerTransactions";
+import helper from "../../utils/helper";
 import {MsgSend} from "@cosmjs/stargate/build/codec/cosmos/bank/v1beta1/tx";
 import {assertIsBroadcastTxSuccess} from "@cosmjs/stargate";
 
@@ -125,9 +127,13 @@ const Send = () => {
         const userMnemonic = evt.target.mnemonic.value;
         const mnemonic = "tank pair spray rely any menu airport shiver boost emerge holiday siege evil grace exile comfort fence mention pig bus cable scissors ability all";
         console.log(userMnemonic, "userMnemonic");
-        const mode = localStorage.getItem('loginMode')
-        if (mode === "kepler") {
-            keplerSend();
+        const address = localStorage.getItem('address');
+        const mode = localStorage.getItem('loginMode');
+        if(mode === "kepler") {
+            const response = KeplerTransaction(helper.msgs(helper.sendMsg(amountField,address, toAddress)), helper.fee(0,250000),"");
+            response.then(result => {
+                console.log(result)
+            }).catch(err => console.log(err.message, "send error"))
         } else {
             let accountNumber = 0;
             let addressIndex = 0;
@@ -145,9 +151,9 @@ const Send = () => {
                 persistence.getAccounts(address).then(data => {
                     if (data.code === undefined) {
                         let stdSignMsg = persistence.newStdMsg({
-                            msgs: msgs(sendMsg(amountField, address, toAddress)),
+                            msgs: helper.msgs(helper.sendMsg(amountField,address, toAddress)),
                             chain_id: persistence.chainId,
-                            fee: fee(0, 250000),
+                            fee: helper.fee(0, 250000),
                             memo: "",
                             account_number: String(data.account.account_number),
                             sequence: String(data.account.sequence)
@@ -343,27 +349,3 @@ const Send = () => {
     );
 };
 export default Send;
-
-function sendMsg(amount, fromAddress, toAddress) {
-    return {
-        type: "cosmos-sdk/MsgSend",
-        value: {
-            amount: [
-                {
-                    amount: String(amount),
-                    denom: "uxprt"
-                }
-            ],
-            from_address: fromAddress,
-            to_address: toAddress
-        }
-    }
-}
-
-function msgs(...msg) {
-    return msg
-}
-
-function fee(amount, gas = 250000) {
-    return {amount: [{amount: String(amount), denom: "upxrt"}], gas: String(gas)}
-}

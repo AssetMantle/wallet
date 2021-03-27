@@ -14,6 +14,7 @@
     import MenuItem from "@material-ui/core/MenuItem";
     import helper from "../../../../utils/helper";
     import {connect} from "react-redux";
+    import KeplerTransaction from "../../../../utils/KeplerTransactions";
 
     const ModalReDelegate = (props) => {
         const [amount, setAmount] = useState(0);
@@ -95,59 +96,54 @@
 
             const mnemonic = event.target.mnemonic.value;
             const validatorAddress = props.validatorAddress;
-
-            let accountNumber = 0;
-            let addressIndex = 0;
-            let bip39Passphrase = "";
-            if (advanceMode) {
-                accountNumber = document.getElementById('redelegateAccountNumber').value;
-                addressIndex = document.getElementById('redelegateAccountIndex').value;
-                bip39Passphrase = document.getElementById('redelegatebip39Passphrase').value;
-            }
-            const persistence = MakePersistence(accountNumber, addressIndex);
-            const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
-            const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
-
-            if (address.error === undefined && ecpairPriv.error === undefined) {
-                persistence.getAccounts(address).then(data => {
-                    if (data.code === undefined) {
-                        let stdSignMsg = persistence.newStdMsg({
-                            msgs: [
-                                {
-                                    type: "cosmos-sdk/MsgBeginRedelegate",
-                                    value: {
-                                        amount: {
-                                            amount: String(1000000),
-                                            denom: "uxprt"
-                                        },
-                                        delegator_address: address,
-                                        validator_dst_address: toValidatorAddress,
-                                        validator_src_address: validatorAddress
-                                    }
-                                }
-                            ],
-                            chain_id: persistence.chainId,
-                            fee: {amount: [{amount: String(5000), denom: "uxprt"}], gas: String(250000)},
-                            memo: memoContent,
-                            account_number: String(data.account.account_number),
-                            sequence: String(data.account.sequence)
-                        });
-
-                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
-                        persistence.broadcast(signedTx).then(response => {
-                            setResponse(response);
-                            console.log(response)
-                        });
-                        showSeedModal(false);
-                    } else {
-                        setErrorMessage(data.message);
-                    }
-                });
+            const address = localStorage.getItem('address');
+            const mode = localStorage.getItem('loginMode');
+            if(mode === "kepler") {
+                const response = KeplerTransaction(helper.msgs(helper.reDelegateMsg(amount, address, validatorAddress, toValidatorAddress)), helper.fee(5000,250000), memoContent);
+                response.then(result => {
+                    console.log(result)
+                }).catch(err => console.log(err.message, "re delegate error"))
             } else {
-                if (address.error !== undefined) {
-                    setErrorMessage(address.error)
+                let accountNumber = 0;
+                let addressIndex = 0;
+                let bip39Passphrase = "";
+                if (advanceMode) {
+                    accountNumber = document.getElementById('redelegateAccountNumber').value;
+                    addressIndex = document.getElementById('redelegateAccountIndex').value;
+                    bip39Passphrase = document.getElementById('redelegatebip39Passphrase').value;
+                }
+                const persistence = MakePersistence(accountNumber, addressIndex);
+                const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
+                const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
+
+                if (address.error === undefined && ecpairPriv.error === undefined) {
+                    persistence.getAccounts(address).then(data => {
+                        if (data.code === undefined) {
+                            let stdSignMsg = persistence.newStdMsg({
+                                msgs: helper.msgs(helper.reDelegateMsg(amount, address, validatorAddress, toValidatorAddress)),
+                                fee: helper.fee(5000, 250000),
+                                chain_id: persistence.chainId,
+                                memo: memoContent,
+                                account_number: String(data.account.account_number),
+                                sequence: String(data.account.sequence)
+                            });
+
+                            const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
+                            persistence.broadcast(signedTx).then(response => {
+                                setResponse(response);
+                                console.log(response)
+                            });
+                            showSeedModal(false);
+                        } else {
+                            setErrorMessage(data.message);
+                        }
+                    });
                 } else {
-                    setErrorMessage(ecpairPriv.error)
+                    if (address.error !== undefined) {
+                        setErrorMessage(address.error)
+                    } else {
+                        setErrorMessage(ecpairPriv.error)
+                    }
                 }
             }
         };
