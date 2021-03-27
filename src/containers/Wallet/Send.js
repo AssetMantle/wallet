@@ -102,15 +102,7 @@ const Send = () => {
             typeUrl: "/cosmos.bank.v1beta1.MsgSend",
             value: msg,
         };
-        const fee = {
-            amount: [
-                {
-                    denom: "uxprt",
-                    amount: "10000",
-                },
-            ],
-            gas: "180000", // 180k
-        };
+        const fee = helper.fee(0, 250000)
         const memo = "Use your power wisely";
         const result = await cosmJS.signAndBroadcast(
             accounts[0].address,
