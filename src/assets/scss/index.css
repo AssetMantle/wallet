@@ -72,6 +72,9 @@ html, body {
 .faq-modal.modal-custom .faq-modal-body {
   padding: 30px; }
 
+.modal-content {
+  border: 0px solid !important; }
+
 .modal-custom .modal-header {
   border: 0px solid;
   justify-content: center;
