@@ -26,7 +26,6 @@ const Send = () => {
     const [advanceMode, setAdvanceMode] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     let mode = localStorage.getItem('loginMode');
-    console.log(mode)
     let address = localStorage.getItem('address');
     const handleAmount = (amount) => {
         setAmountField(amount)
@@ -35,7 +34,6 @@ const Send = () => {
         setShow(false);
         setMnemonicForm(false);
         setTxResponse('');
-        console.log(show, mnemonicForm)
     };
     const handleAmountChange = (evt) => {
         setAmountField(evt.target.value)
@@ -46,10 +44,13 @@ const Send = () => {
         setMnemonicForm(true);
         setShow(true);
     };
-    const handleSubmitKepler = async event => {
+    const handleSubmitKepler =  event => {
         event.preventDefault();
         const response = transactions.TransactionWithKeplr([protoMsgHelper.prototype.msgSend(address, event.target.address.value, amountField)], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
+            setShow(true);
+            setMnemonicForm(true);
+            setTxResponse(result);
             console.log(result)
         }).catch(err => console.log(err.message, "send error"))
     };
@@ -90,7 +91,6 @@ const Send = () => {
         evt.preventDefault();
         const userMnemonic = evt.target.mnemonic.value;
         const mnemonic = "tank pair spray rely any menu airport shiver boost emerge holiday siege evil grace exile comfort fence mention pig bus cable scissors ability all";
-        console.log(userMnemonic, "userMnemonic");
         let accountNumber = 0;
         let addressIndex = 0;
         let bip39Passphrase = "";
@@ -270,7 +270,9 @@ const Send = () => {
                                                 <Modal.Body className="delegate-modal-body">
                                                     <div className="result-container">
                                                         <img src={success} alt="success-image"/>
-                                                        <p className="tx-hash">Tx Hash: {txResponse.txhash}</p>
+                                                        {mode === "kepler" ?
+                                                            <p className="tx-hash">Tx Hash: {txResponse.transactionHash}</p>
+                                                            : <p className="tx-hash">Tx Hash: {txResponse.txhash}</p>}
                                                         <div className="buttons">
                                                             <button className="button" onClick={handleClose}>Done</button>
                                                         </div>
@@ -283,9 +285,12 @@ const Send = () => {
                                                 </Modal.Header>
                                                 <Modal.Body className="delegate-modal-body">
                                                     <div className="result-container">
-                                                        <p className="tx-hash">Tx Hash:
-                                                            {txResponse.txhash}</p>
-                                                        <p>{txResponse.raw_log}</p>
+                                                        {mode === "kepler" ?
+                                                            <p className="tx-hash">Tx Hash: {txResponse.transactionHash}</p>
+                                                            : <p className="tx-hash">Tx Hash: {txResponse.txhash}</p>}
+                                                        {mode === "kepler" ?
+                                                            <p>{txResponse.rawLog}</p>
+                                                            : <p>{txResponse.raw_log}</p>}
                                                         <div className="buttons">
                                                             <button className="button" onClick={handleClose}>Done</button>
                                                         </div>
@@ -295,9 +300,9 @@ const Send = () => {
                                     }
                                 </>
                         }
-
                     </Modal>
                     : null
+
             }
         </div>
     );

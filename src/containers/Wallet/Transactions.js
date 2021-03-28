@@ -45,7 +45,8 @@ const Transactions = (props) => {
         pagination:false,
         selectableRows: false,
         print:false,
-        download:false
+        download:false,
+        filter: false,
     };
 
     const tableData = props.list && props.list.length > 0
@@ -53,10 +54,10 @@ const Transactions = (props) => {
         props.list.map((stxn, index) => [
             <a
                 href={`https://dev.testnet-explorer.persistence.one/transaction?txHash=${stxn.txhash}`}
-                target="_blank">
+                target="_blank" className="tx-hash">
                 {helper.stringTruncate(stxn.txhash)}
             </a>,
-            (stxn.tx.value.msg[0].type).substr((stxn.tx.value.msg[0].type).indexOf('/') + 4),
+            <span className="type">{(stxn.tx.value.msg[0].type).substr((stxn.tx.value.msg[0].type).indexOf('/') + 4)}</span>,
             <div className="result">
                                     <span className="icon-box success">
                                         <Icon
@@ -65,31 +66,31 @@ const Transactions = (props) => {
                                     </span>
             </div>,
             (stxn.tx.value.msg[0].value.amount !== undefined && stxn.tx.value.msg[0].value.amount.length) ?
-                <div>
+                <div className="amount">
                     {stxn.tx.value.msg[0].value.amount[0].amount}
                     {stxn.tx.value.msg[0].value.amount[0].denom}
                 </div>
                 :
                 (stxn.tx.value.msg[0].value.amount !== undefined && stxn.tx.value.msg[0].value.amount) ?
-                    <div>
+                    <div className="amount">
                         {stxn.tx.value.msg[0].value.amount.amount}
                         {stxn.tx.value.msg[0].value.amount.denom}
                     </div>
                     :
                     (stxn.logs[0].events.find(event => event.type === 'transfer') !== undefined) ?
                         (stxn.logs[0].events.find(event => event.type === 'transfer').attributes.find(item => item.key === 'amount') !== undefined) ?
-                            <div>
+                            <div className="amount">
                                 {stxn.logs[0].events.find(event => event.type === 'transfer').attributes.find(item => item.key === 'amount').value}
                             </div>
                             : ''
                         : '',
             (stxn.tx.value.fee.amount !== undefined && stxn.tx.value.fee.amount.length) ?
-                <div>
+                <div className="fee">
                     {stxn.tx.value.fee.amount[0].amount}
                     {stxn.tx.value.fee.amount[0].denom}
                 </div> : '',
-            stxn.height,
-            moment.utc(stxn.timestamp).local().startOf('seconds').fromNow(),
+            <span className="height">{stxn.height}</span>,
+            <span className="time">{moment.utc(stxn.timestamp).local().startOf('seconds').fromNow()}</span>,
         ])
         :
         [];

@@ -52,7 +52,7 @@ const TokenInfo = (props) => {
                 <div className="inner-box">
                     <div className="line">
                         <p className="key">Rewards (24h)</p>
-                        <p className="value rewards" onClick={handleRewards}>{props.rewards} XPRT <span>Claim</span></p>
+                        <p className="value rewards" onClick={handleRewards}><span className="text">{props.rewards} XPRT</span> <span className="claim">Claim</span></p>
                     </div>
                     <div className="line">
                         <p className="key">Unbonding Token</p>
