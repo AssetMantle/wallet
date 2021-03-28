@@ -1,4 +1,13 @@
-const { SigningStargateClient } = require("@cosmjs/stargate");
+import config from "./config.json";
+
+const {SigningStargateClient} = require("@cosmjs/stargate");
+const restAPI = process.env.REACT_APP_API_KEY;
+const tendermintRPC = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
+const chainID = config.chainID
+const coinType = config.coinType
+const coinName = config.coinName
+const coinDenom = config.coinDenom
+const prefix = config.addressPrefix
 
 async function KeplerWallet() {
     // Keplr extension injects the offline signer that is compatible with cosmJS.
@@ -18,19 +27,19 @@ async function KeplerWallet() {
                 // If the same chain id is already registered, it will resolve and not require the user interactions.
                 await window.keplr.experimentalSuggestChain({
                     // Chain-id of the Cosmos SDK chain.
-                    chainId: "test-core-1",
+                    chainId: chainID,
                     // The name of the chain to be displayed to the user.
                     chainName: "Persistence Testnet",
                     // RPC endpoint of the chain.
-                    rpc: "http://128.199.29.15:26657",
+                    rpc: tendermintRPC,
                     // REST endpoint of the chain.
-                    rest: "http://128.199.29.15:1317",
+                    rest: restAPI,
                     // Staking coin information
                     stakeCurrency: {
                         // Coin denomination to be displayed to the user.
-                        coinDenom: "XPRT",
+                        coinDenom: coinName,
                         // Actual denom (i.e. uatom, uscrt) used by the blockchain.
-                        coinMinimalDenom: "uxprt",
+                        coinMinimalDenom: coinDenom,
                         // # of decimal points to convert minimal denomination to user-facing denomination.
                         coinDecimals: 6,
                         // (Optional) Keplr can show the fiat value of the coin if a coingecko id is provided.
@@ -57,19 +66,19 @@ async function KeplerWallet() {
                     //   bech32PrefixConsPub: string;
                     // }
                     bech32Config: {
-                        bech32PrefixAccAddr: "persistence",
-                        bech32PrefixAccPub: "persistencepub",
-                        bech32PrefixValAddr: "persistencevaloper",
-                        bech32PrefixValPub: "persistencevaloperpub",
-                        bech32PrefixConsAddr: "persistencevalcons",
-                        bech32PrefixConsPub: "persistencevalconspub"
+                        bech32PrefixAccAddr: prefix,
+                        bech32PrefixAccPub: prefix + "pub",
+                        bech32PrefixValAddr: prefix + "valoper",
+                        bech32PrefixValPub: prefix + "valoperpub",
+                        bech32PrefixConsAddr: prefix + "valcons",
+                        bech32PrefixConsPub: prefix + "valconspub"
                     },
                     // List of all coin/tokens used in this chain.
                     currencies: [{
                         // Coin denomination to be displayed to the user.
-                        coinDenom: "XPRT",
+                        coinDenom: coinName,
                         // Actual denom (i.e. uatom, uscrt) used by the blockchain.
-                        coinMinimalDenom: "uxprt",
+                        coinMinimalDenom: coinDenom,
                         // # of decimal points to convert minimal denomination to user-facing denomination.
                         coinDecimals: 6,
                         // (Optional) Keplr can show the fiat value of the coin if a coingecko id is provided.
@@ -79,9 +88,9 @@ async function KeplerWallet() {
                     // List of coin/tokens used as a fee token in this chain.
                     feeCurrencies: [{
                         // Coin denomination to be displayed to the user.
-                        coinDenom: "XPRT",
+                        coinDenom: coinName,
                         // Actual denom (i.e. uatom, uscrt) used by the blockchain.
-                        coinMinimalDenom: "uxprt",
+                        coinMinimalDenom: coinDenom,
                         // # of decimal points to convert minimal denomination to user-facing denomination.
                         coinDecimals: 6,
                         // (Optional) Keplr can show the fiat value of the coin if a coingecko id is provided.
@@ -112,7 +121,7 @@ async function KeplerWallet() {
         }
     }
 
-    const chainId = "test-core-1";
+    const chainId = chainID;
 
     // You should request Keplr to enable the wallet.
     // This method will ask the user whether or not to allow access if they haven't visited this website.
@@ -130,7 +139,7 @@ async function KeplerWallet() {
 
     // Initialize the gaia api with the offline signer that is injected by Keplr extension.
     const cosmJS = SigningStargateClient.connectWithSigner(
-        "http://128.199.29.15:26657",
+        tendermintRPC,
         offlineSigner,
     );
     localStorage.setItem('address', accounts[0].address);
@@ -152,7 +161,7 @@ export default KeplerWallet;
 //
 //     (async () => {
 //         // See above.
-//         const chainId = "test-core-1";
+//         const chainId = chainID;
 //         await window.keplr.enable(chainId);
 //         const offlineSigner = window.getOfflineSigner(chainId);
 //

@@ -6,11 +6,12 @@ const {SigningStargateClient} = require("@cosmjs/stargate");
 const addressPrefix = config.addressPrefix;
 const configChainID = config.chainID;
 const configCoinType = config.coinType;
+const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
 //TODO take from config and env
 async function Transaction(wallet, signerAddress, msgs, fee, memo = "") {
     const cosmJS = await SigningStargateClient.connectWithSigner(
-        "http://128.199.29.15:26657",
+        tendermintRPCURL,
         wallet
     );
     return await cosmJS.signAndBroadcast(signerAddress, msgs, fee, memo)
