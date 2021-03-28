@@ -16,6 +16,7 @@ import aminoMsgHelper from "../../../../utils/aminoMsgHelper";
 import MessagesFile from "../../../../utils/protoMsgHelper";
 import KeplerTransaction from "../../../../utils/KeplerTransactions";
 import helper from "../../../../utils/helper";
+import Loader from "../../../../components/Loader";
 
 const ModalDelegate = (props) => {
     const PropertyMsgHelper = new MessagesFile();
@@ -27,6 +28,8 @@ const ModalDelegate = (props) => {
     const [response, setResponse] = useState('');
     const [advanceMode, setAdvanceMode] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [loader, setLoader] = useState(false);
+    const [importMnemonic, setImportMnemonic] = useState(true);
     const address = localStorage.getItem('address');
     const mode = localStorage.getItem('loginMode');
     const handleAmount = (amount) => {
@@ -83,11 +86,19 @@ const ModalDelegate = (props) => {
     };
 
     const handleSubmitKepler = async event => {
+        setLoader(true);
         event.preventDefault();
+        setInitialModal(false);
         const response = KeplerTransaction([PropertyMsgHelper.msgDelegate(address, props.validatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent);
         response.then(result => {
-            console.log(result)
-        }).catch(err => console.log(err.message, "delegate error"))
+            console.log(result);
+            setResponse(result);
+            setLoader(false)
+        }).catch(err => {
+            setLoader(false);
+            props.handleClose();
+            console.log(err.message, "delegate error")
+        })
     };
 
     const handleSubmitInitialData = async event => {
@@ -98,9 +109,35 @@ const ModalDelegate = (props) => {
         showSeedModal(true);
     };
 
+    function PrivateKeyReader(file, password) {
+        return new Promise(function(resolve, reject) {
+            const fileReader = new FileReader();
+            fileReader.readAsText(file, "UTF-8");
+            fileReader.onload = event => {
+                const res = JSON.parse(event.target.result);
+                const decryptedData = helper.decryptStore(res, password);
+                if (decryptedData.error != null) {
+                    setErrorMessage(decryptedData.error)
+                } else {
+                    resolve(decryptedData.mnemonic);
+                    setErrorMessage("");
+                }
+            };
+        });
+    }
+
     const handleSubmit = async event => {
         event.preventDefault();
-        const mnemonic = event.target.mnemonic.value;
+        let mnemonic;
+        if (importMnemonic) {
+            mnemonic = event.target.mnemonic.value;
+        } else {
+            const password = event.target.password.value;
+            var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
+            await promise.then(function(result) {
+                mnemonic = result;
+            });
+        }
         const validatorAddress = props.validatorAddress;
         let accountNumber = 0;
         let addressIndex = 0;
@@ -113,7 +150,6 @@ const ModalDelegate = (props) => {
         const persistence = MakePersistence(accountNumber, addressIndex);
         const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
         const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
-        console.log(address.error, "rdsult");
         if (address.error === undefined && ecpairPriv.error === undefined) {
             persistence.getAccounts(address).then(data => {
                 if (data.code === undefined) {
@@ -143,7 +179,13 @@ const ModalDelegate = (props) => {
             }
         }
     };
-
+    const handlePrivateKey = (value) => {
+        setImportMnemonic(value);
+        setErrorMessage("");
+    };
+    if (loader) {
+        return <Loader/>;
+    }
     const popover = (
         <Popover id="popover-basic">
             <Popover.Content>
@@ -166,7 +208,6 @@ const ModalDelegate = (props) => {
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
-
                             <div className="form-field">
                                 <p className="label">Send Amount</p>
                                 <div className="amount-field">
@@ -195,19 +236,22 @@ const ModalDelegate = (props) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="form-field">
-                                <p className="label">Memo</p>
-                                <Form.Control as="textarea" rows={3} name="memo"
-                                              placeholder="Enter Memo"
-                                              required={false}/>
-                            </div>
+                            {mode === "normal" ?
+                                <div className="form-field">
+                                    <p className="label">Memo</p>
+                                    <Form.Control as="textarea" rows={3} name="memo"
+                                                  placeholder="Enter Memo"
+                                                  required={false}/>
+                                </div> : null
+                            }
                             <div className="buttons navigate-buttons">
                                 <button className="button button-secondary" onClick={() => handlePrevious()}>
                                     <Icon
                                         viewClass="arrow-right"
                                         icon="left-arrow"/>
                                 </button>
-                                <button className="button button-primary">Next</button>
+                                <button
+                                    className="button button-primary"> {mode === "normal" ? "Next" : "Submit"}</button>
                             </div>
                         </Form>
                     </Modal.Body>
@@ -226,12 +270,45 @@ const ModalDelegate = (props) => {
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={handleSubmit}>
-                            <div className="form-field">
-                                <p className="label">Mnemonic</p>
-                                <Form.Control as="textarea" rows={3} name="mnemonic"
-                                              placeholder="Enter Mnemonic"
-                                              required={true}/>
-                            </div>
+
+                            {
+                                importMnemonic ?
+                                    <>
+                                        <div className="text-center">
+                                            <p onClick={() => handlePrivateKey(false)} className="import-name">Use
+                                                Private Key (KeyStore.json file)</p>
+                                        </div>
+                                        <div className="form-field">
+                                            <p className="label">Mnemonic</p>
+                                            <Form.Control as="textarea" rows={3} name="mnemonic"
+                                                          placeholder="Enter Mnemonic"
+                                                          required={true}/>
+                                        </div>
+                                    </>
+                                    :
+                                    <>
+                                        <div className="text-center">
+                                            <p onClick={() => handlePrivateKey(true)} className="import-name">Use
+                                                Mnemonic (Seed Phrase)</p>
+                                        </div>
+                                        <div className="form-field">
+                                            <p className="label">Password</p>
+                                            <Form.Control
+                                                type="password"
+                                                name="password"
+                                                placeholder="Enter Password"
+                                                required={true}
+                                            />
+                                        </div>
+                                        <div className="form-field upload">
+                                            <p className="label"> KeyStore file</p>
+                                            <Form.File id="exampleFormControlFile1" name="uploadFile"
+                                                       className="file-upload" accept=".json" required={true}/>
+                                        </div>
+
+                                    </>
+
+                            }
                             <Accordion className="advanced-wallet-accordion">
                                 <Card>
                                     <Card.Header>
@@ -302,7 +379,9 @@ const ModalDelegate = (props) => {
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 <img src={success} alt="success-image"/>
-                                <p className="tx-hash">Tx Hash: {response.txhash}</p>
+                                {mode === "kepler" ?
+                                    <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
+                                    : <p className="tx-hash">Tx Hash: {response.txhash}</p>}
                                 <div className="buttons">
                                     <button className="button" onClick={props.handleClose}>Done</button>
                                 </div>

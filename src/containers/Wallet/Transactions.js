@@ -51,7 +51,11 @@ const Transactions = (props) => {
     const tableData = props.list && props.list.length > 0
         ?
         props.list.map((stxn, index) => [
-            helper.stringTruncate(stxn.txhash),
+            <a
+                href={`https://dev.testnet-explorer.persistence.one/transaction?txHash=${stxn.txhash}`}
+                target="_blank">
+                {helper.stringTruncate(stxn.txhash)}
+            </a>,
             (stxn.tx.value.msg[0].type).substr((stxn.tx.value.msg[0].type).indexOf('/') + 4),
             <div className="result">
                                     <span className="icon-box success">
@@ -96,12 +100,12 @@ const Transactions = (props) => {
         if(props.pageNumber[0] <  props.pageNumber[1]) {
             props.fetchTransactions(address, 12, props.pageNumber[0] + 1);
         }
-    }
+    };
     const handlePrevious = () =>{
         if(props.pageNumber[0] > 1) {
             props.fetchTransactions(address, 12, props.pageNumber[0] - 1);
         }
-    }
+    };
     return (
         <div className="txns-container">
             <DataTable
