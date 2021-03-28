@@ -6,96 +6,122 @@ import Icon from "../../components/Icon";
 import Loader from "../../components/Loader";
 import {fetchTransactions} from "../../actions/transactions";
 import {connect} from "react-redux";
-
+import DataTable from "../../components/DataTable";
+import IconButton from "@material-ui/core/IconButton";
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 const Transactions = (props) => {
+    const address = localStorage.getItem('address');
     useEffect(() => {
-        const address = localStorage.getItem('address');
-        props.fetchTransactions(address);
+        props.fetchTransactions(address, 30, 1);
     }, []);
+    const columns = [{
+        name: 'txHash',
+        label: 'Tx Hash',
+    }, {
+        name: 'type',
+        label: 'Type',
+    }, {
+        name: 'result',
+        label: 'Result',
+    }, {
+        name: 'amount',
+        label: 'Amount',
 
-    if (props.inProgress && props.list.length) {
-        return <Loader/>;
-    }
-    return (
-        <div className="txns-container">
-            <Table borderless hover responsive>
-                <thead>
-                <tr>
-                    <th>Tx Hash</th>
-                    <th>Type</th>
-                    <th>Result</th>
-                    <th>Amount</th>
-                    <th>Fee</th>
-                    <th>Height</th>
-                    <th>Time</th>
-                </tr>
-                </thead>
-                <tbody>
-                {props.list.length ?
-                    props.list.map((stxn, index) => {
-                        let hash = helper.stringTruncate(stxn.txhash);
-                        let amountDenom = '';
-                        let amount = 0;
-                        let feeDenom = '';
-                        let fee = 0;
-                        let type = stxn.tx.value.msg[0].type;
-                        type = type.substr(type.indexOf('/') + 4)
-                        if (stxn.tx.value.msg[0].value.amount !== undefined && stxn.tx.value.msg[0].value.amount.length) {
-                            amountDenom = stxn.tx.value.msg[0].value.amount[0].denom;
-                            amount = stxn.tx.value.msg[0].value.amount[0].amount;
+    }, {
+        name: 'fee',
+        label: 'Fee',
+    }, {
+        name: 'height',
+        label: 'Height',
 
-                        } else if (stxn.tx.value.msg[0].value.amount !== undefined && stxn.tx.value.msg[0].value.amount) {
-                            amountDenom = stxn.tx.value.msg[0].value.amount.denom;
-                            amount = stxn.tx.value.msg[0].value.amount.amount;
-                        } else {
-                            let event = stxn.logs[0].events.find(event => event.type === 'transfer');
-                            if (event !== undefined) {
-                                let transferAmount = event.attributes.find(item => item.key === 'amount')
-                                if (transferAmount !== undefined) {
-                                    amount = transferAmount.value;
-                                }
-                            }
-                        }
+    }, {
+        name: 'time',
+        label: 'Time (UTC)',
+    }];
+    const options = {
+        responsive: "standard",
+        filters: false,
+        pagination:false,
+        selectableRows: false,
+        print:false,
+        download:false
+    };
 
-                        if (stxn.tx.value.fee.amount !== undefined && stxn.tx.value.fee.amount.length) {
-                            feeDenom = stxn.tx.value.fee.amount[0].denom;
-                            fee = stxn.tx.value.fee.amount[0].amount;
-                        }
-
-                        let height = stxn.height;
-                        let timestamp = stxn.timestamp;
-
-                        let ago = moment.utc(timestamp).local().startOf('seconds').fromNow()
-                        return (
-                            <tr>
-                                <td className="tx-hash"><a
-                                    href={`https://explorer.persistence.one/transactions/${stxn.txhash}`}
-                                    target="_blank">
-                                    {hash}
-                                </a></td>
-                                <td className="type">{type}</td>
-                                <td className="result">
+    const tableData = props.list && props.list.length > 0
+        ?
+        props.list.map((stxn, index) => [
+            helper.stringTruncate(stxn.txhash),
+            (stxn.tx.value.msg[0].type).substr((stxn.tx.value.msg[0].type).indexOf('/') + 4),
+            <div className="result">
                                     <span className="icon-box success">
                                         <Icon
                                             viewClass="arrow-right"
                                             icon="success"/>
                                     </span>
-                                </td>
-                                <td className="amount">{amount} {amountDenom} </td>
-                                <td className="fee">{fee} {feeDenom}</td>
-                                <td className="height">{height}</td>
-                                <td className="time">{ago}</td>
-                            </tr>
-                        )
-                    })
-                    : <tr>
-                        <td colSpan={7} className="text-center"> No Txns Found</td>
-                    </tr>
-                }
-
-
-                </tbody>
-            </Table>
+            </div>,
+            (stxn.tx.value.msg[0].value.amount !== undefined && stxn.tx.value.msg[0].value.amount.length) ?
+                <div>
+                    {stxn.tx.value.msg[0].value.amount[0].amount}
+                    {stxn.tx.value.msg[0].value.amount[0].denom}
+                </div>
+                :
+                (stxn.tx.value.msg[0].value.amount !== undefined && stxn.tx.value.msg[0].value.amount) ?
+                    <div>
+                        {stxn.tx.value.msg[0].value.amount.amount}
+                        {stxn.tx.value.msg[0].value.amount.denom}
+                    </div>
+                    :
+                    (stxn.logs[0].events.find(event => event.type === 'transfer') !== undefined) ?
+                        (stxn.logs[0].events.find(event => event.type === 'transfer').attributes.find(item => item.key === 'amount') !== undefined) ?
+                            <div>
+                                {stxn.logs[0].events.find(event => event.type === 'transfer').attributes.find(item => item.key === 'amount').value}
+                            </div>
+                            : ''
+                        : '',
+            (stxn.tx.value.fee.amount !== undefined && stxn.tx.value.fee.amount.length) ?
+                <div>
+                    {stxn.tx.value.fee.amount[0].amount}
+                    {stxn.tx.value.fee.amount[0].denom}
+                </div> : '',
+            stxn.height,
+            moment.utc(stxn.timestamp).local().startOf('seconds').fromNow(),
+        ])
+        :
+        [];
+    console.log(tableData, "red")
+    if (props.inProgress && props.list.length) {
+        return <Loader/>;
+    }
+    const handleNext = () =>{
+        if(props.pageNumber[0] <  props.pageNumber[1]) {
+            props.fetchTransactions(address, 12, props.pageNumber[0] + 1);
+        }
+    }
+    const handlePrevious = () =>{
+        if(props.pageNumber[0] > 1) {
+            props.fetchTransactions(address, 12, props.pageNumber[0] - 1);
+        }
+    }
+    return (
+        <div className="txns-container">
+            <DataTable
+                columns={columns}
+                data={tableData}
+                name=""
+                options={options}/>
+            <div className="pagination-custom">
+                <div className="before">
+                    <IconButton aria-label="previous" onClick={handlePrevious} disabled={props.pageNumber[0] > 1 ? false : true}>
+                        <ChevronLeftIcon />
+                    </IconButton>
+                </div>
+                <div>
+                    <IconButton aria-label="next" className="next" onClick={handleNext} disabled={props.pageNumber[0] <  props.pageNumber[1] ? false : true}>
+                        <ChevronRightIcon />
+                    </IconButton>
+                </div>
+            </div>
         </div>
     );
 };
@@ -105,6 +131,7 @@ const stateToProps = (state) => {
     return {
         list: state.transactions.list,
         inProgress: state.transactions.inProgress,
+        pageNumber:state.transactions.pageNumber
     };
 };
 

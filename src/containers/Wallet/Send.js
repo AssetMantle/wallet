@@ -14,6 +14,7 @@ import success from "../../assets/images/success.svg";
 import MakePersistence from "../../utils/cosmosjsWrapper";
 import KeplerTransaction from "../../utils/KeplerTransactions";
 import helper from "../../utils/helper";
+
 const {SigningCosmosClient} = require("@cosmjs/launchpad");
 
 const Send = () => {
@@ -24,6 +25,9 @@ const Send = () => {
     const [show, setShow] = useState(true);
     const [advanceMode, setAdvanceMode] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    let mode = localStorage.getItem('loginMode');
+    console.log(mode)
+    let address = localStorage.getItem('address');
     const handleAmount = (amount) => {
         setAmountField(amount)
     };
@@ -42,6 +46,14 @@ const Send = () => {
         setMnemonicForm(true);
         setShow(true);
     };
+    const handleSubmitKepler = async event => {
+        event.preventDefault();
+        const response = KeplerTransaction(helper.msgs(helper.sendMsg(amountField, address, event.target.address.value)), helper.fee(0, 250000), "");
+        response.then(result => {
+            console.log(result)
+        }).catch(err => console.log(err.message, "send error"))
+    };
+
     function ContextAwareToggle({children, eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 
@@ -79,53 +91,43 @@ const Send = () => {
         const userMnemonic = evt.target.mnemonic.value;
         const mnemonic = "tank pair spray rely any menu airport shiver boost emerge holiday siege evil grace exile comfort fence mention pig bus cable scissors ability all";
         console.log(userMnemonic, "userMnemonic");
-        const address = localStorage.getItem('address');
-        const mode = localStorage.getItem('loginMode');
-        if(mode === "kepler") {
-            const response = KeplerTransaction(helper.msgs(helper.sendMsg(amountField,address, toAddress)), helper.fee(0,250000),"");
-            response.then(result => {
-                console.log(result)
-            }).catch(err => console.log(err.message, "send error"))
-        } else {
-            let accountNumber = 0;
-            let addressIndex = 0;
-            let bip39Passphrase = ""
-            if (advanceMode) {
-                accountNumber = document.getElementById('sendAccountNumber').value;
-                addressIndex = document.getElementById('sendAccountIndex').value;
-                bip39Passphrase = document.getElementById('sendbip39Passphrase').value;
-            }
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = "";
+        if (advanceMode) {
+            accountNumber = document.getElementById('sendAccountNumber').value;
+            addressIndex = document.getElementById('sendAccountIndex').value;
+            bip39Passphrase = document.getElementById('sendbip39Passphrase').value;
+        }
+        const persistence = MakePersistence(accountNumber, addressIndex);
+        const address = persistence.getAddress(userMnemonic, bip39Passphrase, true);
+        const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
+        if (address.error === undefined && ecpairPriv.error === undefined) {
+            persistence.getAccounts(address).then(data => {
+                if (data.code === undefined) {
+                    let stdSignMsg = persistence.newStdMsg({
+                        msgs: helper.msgs(helper.sendMsg(amountField, address, toAddress)),
+                        chain_id: persistence.chainId,
+                        fee: helper.fee(0, 250000),
+                        memo: "",
+                        account_number: String(data.account.account_number),
+                        sequence: String(data.account.sequence)
+                    });
 
-            const persistence = MakePersistence(accountNumber, addressIndex);
-            const address = persistence.getAddress(userMnemonic, bip39Passphrase, true);
-            const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
-            if (address.error === undefined && ecpairPriv.error === undefined) {
-                persistence.getAccounts(address).then(data => {
-                    if (data.code === undefined) {
-                        let stdSignMsg = persistence.newStdMsg({
-                            msgs: helper.msgs(helper.sendMsg(amountField,address, toAddress)),
-                            chain_id: persistence.chainId,
-                            fee: helper.fee(0, 250000),
-                            memo: "",
-                            account_number: String(data.account.account_number),
-                            sequence: String(data.account.sequence)
-                        });
-
-                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
-                        persistence.broadcast(signedTx).then(response => {
-                            setTxResponse(response)
-                            console.log(response)
-                        });
-                    } else {
-                        setErrorMessage(data.message);
-                    }
-                })
-            } else {
-                if (address.error !== undefined) {
-                    setErrorMessage(address.error)
+                    const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
+                    persistence.broadcast(signedTx).then(response => {
+                        setTxResponse(response)
+                        console.log(response)
+                    });
                 } else {
-                    setErrorMessage(ecpairPriv.error)
+                    setErrorMessage(data.message);
                 }
+            })
+        } else {
+            if (address.error !== undefined) {
+                setErrorMessage(address.error)
+            } else {
+                setErrorMessage(ecpairPriv.error)
             }
         }
     };
@@ -139,7 +141,7 @@ const Send = () => {
     return (
         <div className="send-container">
             <div className="form-section">
-                <Form onSubmit={handleSubmit}>
+                <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmit}>
                     <div className="form-field">
                         <p className="label info">Recipient Address
                             <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
