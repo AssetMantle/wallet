@@ -45,4 +45,4 @@ function makeHdPath(accountNumber = "0", addressIndex = "0", coinType = configCo
     return stringToPath("m/44'/" + coinType + "'/" + accountNumber + "'/0/" + addressIndex)
 }
 
-export default {TransactionWithKeplr, TransactionWithMnemonic, makeHdPath, KeplrWallet};
+export default {TransactionWithKeplr, TransactionWithMnemonic, makeHdPath};
