@@ -413,9 +413,12 @@ const ModalReDelegate = (props) => {
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
-                                <p className="tx-hash">Tx Hash:
-                                    {response.txhash}</p>
-                                <p>{response.raw_log}</p>
+                                {mode === "kepler" ?
+                                    <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
+                                    : <p className="tx-hash">Tx Hash: {response.txhash}</p>}
+                                {mode === "kepler" ?
+                                    <p>{response.rawLog}</p>
+                                    : <p>{response.raw_log}</p>}
                                 <div className="buttons">
                                     <button className="button" onClick={props.handleClose}>Done</button>
                                 </div>

@@ -43,7 +43,8 @@ const ValidatorsTable = (props) => {
         pagination: false,
         selectableRows: false,
         print: false,
-        download: false
+        download: false,
+        filter:false
     };
     const tableData = props.validatorsList.length ?
         props.validatorsList.map((validator, index) => [
@@ -61,7 +62,7 @@ const ValidatorsTable = (props) => {
                 }
             </div>
             ,
-            parseFloat((validator.commission.commission_rates.rate * 100).toFixed(2)).toLocaleString(),
+            <span>{`${parseFloat((validator.commission.commission_rates.rate * 100).toFixed(2)).toLocaleString()}%`}</span>,
             <div className="">
                 {helper.isActive(validator) ?
                     <span className="icon-box" title="active">

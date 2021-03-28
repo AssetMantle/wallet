@@ -1012,7 +1012,7 @@ html, body {
   .wallet-main-section .tabs-section .tab-content {
     padding: 50px 100px;
     position: relative;
-    max-height: 72vh;
+    height: 72vh;
     overflow-y: scroll; }
 .wallet-main-section .send-container {
   border: 1px solid #E3E5F4;
@@ -1054,6 +1054,18 @@ html, body {
       min-width: 200px;
       max-width: 400px;
       margin-left: 150px; }
+.wallet-main-section .txns-container .MuiFormControl-root {
+  flex-direction: inherit; }
+.wallet-main-section .txns-container .MuiButton-root {
+  font-weight: 500;
+  font-size: 14px;
+  font-family: 'Poppins', sans-serif;
+  color: #8D9CB5; }
+.wallet-main-section .txns-container .MuiPaper-elevation4 {
+  box-shadow: none;
+  border: 1px solid #E3E5F4; }
+.wallet-main-section .txns-container .MUIDataTableToolbar-icon-22:hover, .wallet-main-section .txns-container .MUIDataTableToolbar-iconActive-23 {
+  color: #E50913; }
 .wallet-main-section .txns-container table {
   border: 1px solid #E3E5F4; }
   .wallet-main-section .txns-container table thead {
@@ -1080,20 +1092,16 @@ html, body {
   .wallet-main-section .txns-container table tbody .type {
     color: #8D9CB5;
     font-family: 'Poppins', sans-serif; }
-  .wallet-main-section .txns-container table tbody .tx-hash a {
+  .wallet-main-section .txns-container table tbody .tx-hash {
     color: #1A73B4; }
   .wallet-main-section .txns-container table tbody .type {
     color: #8D9CB5; }
-  .wallet-main-section .txns-container table tbody .amount {
+  .wallet-main-section .txns-container table tbody .amount, .wallet-main-section .txns-container table tbody .fee, .wallet-main-section .txns-container table tbody .time {
     font-family: 'Poppins', sans-serif;
-    font-weight: 500; }
-  .wallet-main-section .txns-container table tbody .fee {
-    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
     color: #8D9CB5; }
   .wallet-main-section .txns-container table tbody .height {
     color: #1A73B4; }
-  .wallet-main-section .txns-container table tbody .time {
-    color: #8D9CB5; }
 .wallet-main-section .txns-container .pagination-custom {
   display: flex;
   justify-content: flex-end;
@@ -1169,7 +1177,7 @@ html, body {
           background: #FFFFFF; }
       .header .profile-section .profile-dropdown .dropdown-menu .info {
         text-align: center;
-        padding: 20px 20px; }
+        padding: 20px 70px; }
         .header .profile-section .profile-dropdown .dropdown-menu .info .key {
           font-weight: 500;
           font-size: 12px;
@@ -1275,10 +1283,11 @@ html, body {
         color: #2E3239;
         font-family: 'Poppins', sans-serif; }
       .token-info-section .info-box .line .value.rewards {
-        color: #E50913;
-        text-decoration: underline;
         cursor: pointer; }
-        .token-info-section .info-box .line .value.rewards span {
+        .token-info-section .info-box .line .value.rewards .text {
+          color: #4FBE89;
+          text-decoration: underline; }
+        .token-info-section .info-box .line .value.rewards .claim {
           background: #E50913;
           color: #ffffff;
           font-size: 10px;
@@ -1308,7 +1317,7 @@ html, body {
   border-top: 1px solid #E3E5F4;
   padding: 50px 100px;
   position: relative;
-  max-height: 72vh;
+  height: 72vh;
   overflow-y: scroll; }
   .validators-section .info {
     display: flex;
@@ -1330,6 +1339,18 @@ html, body {
       color: #2E3239; }
       .validators-section .info .info-value span {
         color: #8D9CB5; }
+  .validators-section .MuiFormControl-root {
+    flex-direction: inherit; }
+  .validators-section .MuiButton-root {
+    font-weight: 500;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    color: #8D9CB5; }
+  .validators-section .MuiPaper-elevation4 {
+    box-shadow: none;
+    border: 1px solid #E3E5F4; }
+  .validators-section .MUIDataTableToolbar-icon-153:hover, .validators-section .MUIDataTableToolbar-iconActive-154 {
+    color: #E50913; }
   .validators-section table {
     border: 1px solid #E3E5F4; }
     .validators-section table thead {
@@ -1339,7 +1360,8 @@ html, body {
         font-weight: 500;
         font-size: 14px;
         line-height: 150%;
-        color: #8D9CB5; }
+        color: #8D9CB5;
+        font-family: 'Poppins', sans-serif; }
         .validators-section table thead th:first-child {
           padding-left: 40px; }
     .validators-section table tbody td {
