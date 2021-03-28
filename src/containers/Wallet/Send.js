@@ -144,7 +144,7 @@ const Send = () => {
                 <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmit}>
                     <div className="form-field">
                         <p className="label info">Recipient Address
-                            <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
+                            <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
                                 <button className="icon-button info"><Icon
                                     viewClass="arrow-right"
                                     icon="info"/></button>

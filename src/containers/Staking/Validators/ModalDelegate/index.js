@@ -137,6 +137,7 @@ const ModalDelegate = (props) => {
                 mnemonic = result;
             });
         }
+
         const validatorAddress = props.validatorAddress;
         let accountNumber = 0;
         let addressIndex = 0;
@@ -149,6 +150,7 @@ const ModalDelegate = (props) => {
         const persistence = MakePersistence(accountNumber, addressIndex);
         const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
         const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
+        console.log(address.error, "rdsult");
         if (address.error === undefined && ecpairPriv.error === undefined) {
             persistence.getAccounts(address).then(data => {
                 if (data.code === undefined) {
@@ -199,7 +201,7 @@ const ModalDelegate = (props) => {
                 <>
                     <Modal.Header closeButton>
                         Delegating to {props.moniker}
-                        <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
+                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
                             <button className="icon-button info"><Icon
                                 viewClass="arrow-right"
                                 icon="info"/></button>
@@ -261,7 +263,7 @@ const ModalDelegate = (props) => {
                 <>
                     <Modal.Header closeButton>
                         Delegating to {props.moniker}
-                        <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
+                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
                             <button className="icon-button info"><Icon
                                 viewClass="arrow-right"
                                 icon="info"/></button>

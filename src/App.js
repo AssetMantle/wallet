@@ -6,12 +6,9 @@ import DashboardStaking from "./views/Staking";
 import PrivateRoute from "./containers/PrivateRoute";
 import ImportWallet from "./containers/ImpotWallet";
 import KeplerHome from "./views/KeplerHome";
+import RouteNotFound from "./components/RouteNotFound";
 const App = () => {
   const routes = [{
-    path: '/',
-    component: Homepage,
-    private: false,
-  },{
     path: '/dashboard/wallet',
     component: DashboardWallet,
     private: true,
@@ -28,10 +25,15 @@ const App = () => {
     component: KeplerHome,
     private: false,
   }];
-
+  const address = localStorage.getItem('address');
   return (
 
       <Switch>
+            <Route
+                key="/"
+                exact
+                component={address === undefined || address === '' ? withRouter(Homepage) : withRouter(DashboardWallet)}
+                path="/"/> : ""
         {
           routes.map((route) => {
             if (route.private) {
@@ -54,7 +56,7 @@ const App = () => {
             );
           })
         }
-
+        <Route component={RouteNotFound}/>
       </Switch>
   );
 };

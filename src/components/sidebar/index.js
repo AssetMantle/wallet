@@ -45,11 +45,13 @@ const Sidebar = () => {
                             </NavLink>
                         ))
                     }
-                    <li className="item">
+                    <li>
+                        <a href="https://dev.testnet-explorer.persistence.one/" rel="noopener noreferrer" target="_blank" className="item" >
                         <div className="icon-box"><Icon
                             viewClass="arrow-right"
                             icon="explorer"/></div>
                         <span className="text">Explorer</span>
+                        </a>
                     </li>
                 </ul>
             </div>

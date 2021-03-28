@@ -19,6 +19,7 @@ const Header = (props) => {
         localStorage.setItem('address', '');
         localStorage.setItem('loginMode', '');
         history.push('/');
+        window.location.reload();
     };
     const ProfileIcon =  <Icon viewClass="profile" icon="profile"/>
     return (

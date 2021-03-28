@@ -8,6 +8,7 @@ import activeIcon from "../../../assets/images/active.svg";
 import inActiveIcon from "../../../assets/images/inactive.svg";
 import Icon from "../../../components/Icon";
 import ModalActions from "./ModalActions";
+import DataTable from "../../../components/DataTable";
 
 const ValidatorsTable = (props) => {
     const [modalDelegate, setModalOpen] = useState();
@@ -16,63 +17,78 @@ const ValidatorsTable = (props) => {
         setModalOpen(name);
         setValidator(validator);
     };
+    const columns = [{
+        name: 'validator',
+        label: 'Validator',
+        options: {sort: false}
+    }, {
+        name: 'votingPower',
+        label: 'Voting Power',
+    }, {
+        name: 'commission',
+        label: 'Commission',
+
+    }, {
+        name: 'status',
+        label: 'Status',
+        options: {sort: false}
+    }, {
+        name: '',
+        label: '',
+        options: {sort: false}
+    }];
+    const options = {
+        responsive: "standard",
+        filters: false,
+        pagination: false,
+        selectableRows: false,
+        print: false,
+        download: false
+    };
+    const tableData = props.validatorsList.length ?
+        props.validatorsList.map((validator, index) => [
+            <div>
+                <Avatar
+                    identity={validator.description.identity}/>
+                {validator.description.moniker}
+            </div>,
+            <div>
+                {parseFloat((validator.tokens * Math.pow(10, -6)).toFixed(2)).toLocaleString()}
+                {
+                    helper.isActive(validator)
+                        ? `(${Math.round(parseInt(validator.tokens * 100 / props.activeValidatorsTokens))}%)`
+                        : `(${Math.round(parseInt(validator.tokens * 100 / props.inActiveValidatorsTokens))}%)`
+                }
+            </div>
+            ,
+            parseFloat((validator.commission.commission_rates.rate * 100).toFixed(2)).toLocaleString(),
+            <div className="">
+                {helper.isActive(validator) ?
+                    <span className="icon-box" title="active">
+                                            <img src={activeIcon} alt="activeIcon"/>
+                                        </span>
+                    :
+                    <span className="icon-box" title="Inactive">
+                                         <img src={inActiveIcon} alt="inActiveIcon"/>
+                                        </span>
+                }
+            </div>,
+            <div className="actions-td">
+                <button
+                    onClick={() => handleModal('ModalActions', validator)}
+                    className="button button-primary">
+                    Actions
+                </button>
+            </div>
+        ])
+        : [];
     return (
         <div className="txns-container">
-            <Table responsive borderless>
-                <thead>
-                <tr>
-                    <th>Validator</th>
-                    <th>Voting Power</th>
-                    <th>Commission</th>
-                    <th>Status</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                {props.validatorsList.length ?
-                    props.validatorsList.map((validator, index) => {
-                        let commissionRate = validator.commission.commission_rates.rate * 100;
-                        commissionRate = parseFloat(commissionRate.toFixed(2)).toLocaleString();
-                        const active = helper.isActive(validator);
-                        let votingPower = validator.tokens * Math.pow(10, -6);
-                        let votingPowerPercentage = active
-                            ? validator.tokens * 100 / props.activeValidatorsTokens
-                            : validator.tokens * 100 / props.inActiveValidatorsTokens;
-                        votingPower = parseFloat(votingPower.toFixed(2)).toLocaleString();
-                        // roundOff((validator.tokens * 100/totalBondedAmount).toDouble)%
-                        votingPowerPercentage = Math.round(parseInt(votingPowerPercentage));
-                        // votingPowerPercentage = parseFloat(votingPowerPercentage.toFixed(2)).toDouble();
-                        return (
-                            <tr key={index}>
-                                <td className=""><Avatar
-                                    identity={validator.description.identity}/> {validator.description.moniker}</td>
-                                <td className="">{`${votingPower} (${votingPowerPercentage}%)`}</td>
-                                <td className="">{commissionRate} %</td>
-                                <td className="">
-                                    {active ?
-                                        <span className="icon-box" title="active">
-                                            <img src={activeIcon} alt="activeIcon" />
-                                        </span>
-                                        :
-                                        <span className="icon-box" title="Inactive">
-                                         <img src={inActiveIcon} alt="inActiveIcon" />
-                                        </span>
-                                    }
-                                </td>
-                                <td className="actions-td">
-                                    <button
-                                        onClick={() => handleModal('ModalActions', validator)}
-                                        className="button button-primary">
-                                        Actions
-                                    </button>
-                                </td>
-                            </tr>
-                        )
-                    })
-                    :<tr><td></td><td colSpan={4} className="text-center"> No Validators Found</td></tr>
-                }
-                </tbody>
-            </Table>
+            <DataTable
+                columns={columns}
+                data={tableData}
+                name=""
+                options={options}/>
             {
                 modalDelegate === 'ModalActions' ?
                     <ModalActions setModalOpen={setModalOpen} validator={validator}/>

@@ -13,7 +13,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 const Transactions = (props) => {
     const address = localStorage.getItem('address');
     useEffect(() => {
-        props.fetchTransactions(address, 30, 1);
+        props.fetchTransactions(address, 20, 1);
     }, []);
     const columns = [{
         name: 'txHash',
@@ -98,12 +98,12 @@ const Transactions = (props) => {
     }
     const handleNext = () =>{
         if(props.pageNumber[0] <  props.pageNumber[1]) {
-            props.fetchTransactions(address, 12, props.pageNumber[0] + 1);
+            props.fetchTransactions(address, 20, props.pageNumber[0] + 1);
         }
     };
     const handlePrevious = () =>{
         if(props.pageNumber[0] > 1) {
-            props.fetchTransactions(address, 12, props.pageNumber[0] - 1);
+            props.fetchTransactions(address, 20, props.pageNumber[0] - 1);
         }
     };
     return (

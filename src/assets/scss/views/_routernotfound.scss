@@ -1,0 +1,12 @@
+.home-page.pageError{
+  height: 100vh;
+  .text-container{
+    height: calc(100vh - 78px);
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    h3{
+      color: #ffffff;
+    }
+  }
+}
