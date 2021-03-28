@@ -321,6 +321,16 @@ html, body {
     color: #ee3b3b;
     font-size: 10px; }
 
+.import-name {
+  display: inline-block;
+  cursor: pointer;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: underline;
+  margin-bottom: 30px;
+  color: #E50913; }
+
 /*--------------------------------------------------------------
 # main styles
 --------------------------------------------------------------*/
@@ -781,6 +791,19 @@ html, body {
   text-align: center; }
 
 /*--------------------------------------------------------------
+# router not found styles
+--------------------------------------------------------------*/
+.home-page.pageError {
+  height: 100vh; }
+  .home-page.pageError .text-container {
+    height: calc(100vh - 78px);
+    display: flex;
+    justify-content: center;
+    align-content: center; }
+    .home-page.pageError .text-container h3 {
+      color: #ffffff; }
+
+/*--------------------------------------------------------------
 # importwallet styles
 --------------------------------------------------------------*/
 .import-wallet-body {
@@ -807,15 +830,6 @@ html, body {
     text-align: center;
     color: #313238;
     padding-bottom: 30px; }
-  .import-wallet-body .import-name {
-    display: inline-block;
-    cursor: pointer;
-    text-align: center;
-    font-size: 16px;
-    font-weight: 600;
-    text-decoration: underline;
-    margin-bottom: 30px;
-    color: #E50913; }
   .import-wallet-body form .form-field.upload {
     padding-top: 10px;
     align-items: baseline; }
@@ -1339,7 +1353,6 @@ html, body {
         width: 23px;
         border-radius: 50%; }
       .validators-section table tbody td:first-child {
-        display: flex;
         align-items: center;
         padding-left: 40px;
         font-size: 14px;

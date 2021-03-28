@@ -407,3 +407,14 @@ html, body {
       font-size: 10px;
     }
   }
+
+.import-name {
+  display: inline-block;
+  cursor: pointer;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: underline;
+  margin-bottom: 30px;
+  color: #E50913;
+}
