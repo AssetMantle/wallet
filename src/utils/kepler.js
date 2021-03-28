@@ -1,4 +1,4 @@
-const { SigningCosmosClient } = require("@cosmjs/launchpad");
+const { SigningStargateClient } = require("@cosmjs/stargate");
 
 async function KeplerWallet() {
     // Keplr extension injects the offline signer that is compatible with cosmJS.
@@ -125,13 +125,12 @@ async function KeplerWallet() {
     // You can get the address/public keys by `getAccounts` method.
     // It can return the array of address/public key.
     // But, currently, Keplr extension manages only one address/public key pair.
-    // XXX: This line is needed to set the sender address for SigningCosmosClient.
+    // XXX: This line is needed to set the sender address for SigningStargateClient.
     const accounts = await offlineSigner.getAccounts();
 
     // Initialize the gaia api with the offline signer that is injected by Keplr extension.
-    const cosmJS = new SigningCosmosClient(
-        "http://128.199.29.15:1317",
-        accounts[0].address,
+    const cosmJS = SigningStargateClient.connectWithSigner(
+        "http://128.199.29.15:26657",
         offlineSigner,
     );
     localStorage.setItem('address', accounts[0].address);
@@ -160,7 +159,7 @@ export default KeplerWallet;
 //         const accounts = await offlineSigner.getAccounts();
 //
 //         // Initialize the gaia api with the offline signer that is injected by Keplr extension.
-//         const cosmJS = new SigningCosmosClient(
+//         const cosmJS = new SigningStargateClient(
 //             "http://128.199.29.15:1317",
 //             accounts[0].address,
 //             offlineSigner

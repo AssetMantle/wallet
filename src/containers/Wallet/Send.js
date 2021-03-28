@@ -14,7 +14,9 @@ import success from "../../assets/images/success.svg";
 import MakePersistence from "../../utils/cosmosjsWrapper";
 import KeplerTransaction from "../../utils/KeplerTransactions";
 import helper from "../../utils/helper";
-const {SigningCosmosClient} = require("@cosmjs/launchpad");
+import protoMsgHelper from "../../utils/protoMsgHelper";
+
+const {SigningStargateClient} = require("@cosmjs/stargate");
 
 const Send = () => {
     const [amountField, setAmountField] = useState(0);
@@ -42,6 +44,7 @@ const Send = () => {
         setMnemonicForm(true);
         setShow(true);
     };
+
     function ContextAwareToggle({children, eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 
@@ -81,8 +84,8 @@ const Send = () => {
         console.log(userMnemonic, "userMnemonic");
         const address = localStorage.getItem('address');
         const mode = localStorage.getItem('loginMode');
-        if(mode === "kepler") {
-            const response = KeplerTransaction(helper.msgs(helper.sendMsg(amountField,address, toAddress)), helper.fee(0,250000),"");
+        if (mode === "kepler") {
+            const response = KeplerTransaction([protoMsgHelper.msgSend(address, toAddress, amountField)], helper.fee(0, 250000), "");
             response.then(result => {
                 console.log(result)
             }).catch(err => console.log(err.message, "send error"))
@@ -103,7 +106,7 @@ const Send = () => {
                 persistence.getAccounts(address).then(data => {
                     if (data.code === undefined) {
                         let stdSignMsg = persistence.newStdMsg({
-                            msgs: helper.msgs(helper.sendMsg(amountField,address, toAddress)),
+                            msgs: helper.msgs(helper.sendMsg(amountField, address, toAddress)),
                             chain_id: persistence.chainId,
                             fee: helper.fee(0, 250000),
                             memo: "",
