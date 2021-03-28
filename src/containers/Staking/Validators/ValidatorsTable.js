@@ -69,7 +69,7 @@ const ValidatorsTable = (props) => {
                             </tr>
                         )
                     })
-                    :<tr><td colSpan={5} className="text-center"> No Validators Found</td></tr>
+                    :<tr><td></td><td colSpan={4} className="text-center"> No Validators Found</td></tr>
                 }
                 </tbody>
             </Table>

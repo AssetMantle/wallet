@@ -2,6 +2,7 @@ const {SigningStargateClient} = require("@cosmjs/stargate");
 
 //TODO take from config and env
 async function KeplerTransaction(msgs, fee, memo) {
+    console.log(msgs, "delegate")
     const chainId = "test-core-1";
     await window.keplr.enable(chainId);
     const offlineSigner = window.getOfflineSigner(chainId);

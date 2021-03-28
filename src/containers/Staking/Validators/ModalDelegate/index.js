@@ -13,10 +13,12 @@ import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import aminoMsgHelper from "../../../../utils/aminoMsgHelper";
-import protoMsgHelper from "../../../../utils/protoMsgHelper";
+import MessagesFile from "../../../../utils/protoMsgHelper";
 import KeplerTransaction from "../../../../utils/KeplerTransactions";
+import helper from "../../../../utils/helper";
 
 const ModalDelegate = (props) => {
+    const PropertyMsgHelper = new MessagesFile();
     const [amount, setAmount] = useState(0);
     const [show, setShow] = useState(true);
     const [memoContent, setMemoContent] = useState('');
@@ -25,6 +27,8 @@ const ModalDelegate = (props) => {
     const [response, setResponse] = useState('');
     const [advanceMode, setAdvanceMode] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const address = localStorage.getItem('address');
+    const mode = localStorage.getItem('loginMode');
     const handleAmount = (amount) => {
         setAmount(amount)
     };
@@ -71,11 +75,21 @@ const ModalDelegate = (props) => {
         props.setInitialModal(true);
         setResponse('');
     };
+
     const handlePrevious = () => {
         props.setShow(true);
         props.setTxModalShow(false);
         props.setInitialModal(true);
     };
+
+    const handleSubmitKepler = async event => {
+        event.preventDefault();
+        const response = KeplerTransaction([PropertyMsgHelper.msgDelegate(address, props.validatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent);
+        response.then(result => {
+            console.log(result)
+        }).catch(err => console.log(err.message, "delegate error"))
+    };
+
     const handleSubmitInitialData = async event => {
         event.preventDefault();
         const memo = event.target.memo.value;
@@ -88,53 +102,44 @@ const ModalDelegate = (props) => {
         event.preventDefault();
         const mnemonic = event.target.mnemonic.value;
         const validatorAddress = props.validatorAddress;
-        const address = localStorage.getItem('address');
-        const mode = localStorage.getItem('loginMode');
-        if (mode === "kepler") {
-            const response = KeplerTransaction([protoMsgHelper.msgDelegate(address, validatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent);
-            response.then(result => {
-                console.log(result)
-            }).catch(err => console.log(err.message, "delegate error"))
-        } else {
-            let accountNumber = 0;
-            let addressIndex = 0;
-            let bip39Passphrase = "";
-            if (advanceMode) {
-                accountNumber = document.getElementById('delegateAccountNumber').value;
-                addressIndex = document.getElementById('delegateAccountIndex').value;
-                bip39Passphrase = document.getElementById('delegatebip39Passphrase').value;
-            }
-            const persistence = MakePersistence(accountNumber, addressIndex);
-            const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
-            const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
-            console.log(address.error, "rdsult");
-            if (address.error === undefined && ecpairPriv.error === undefined) {
-                persistence.getAccounts(address).then(data => {
-                    if (data.code === undefined) {
-                        let stdSignMsg = persistence.newStdMsg({
-                            msgs: aminoMsgHelper.msgs(aminoMsgHelper.delegateMsg(amount, address, validatorAddress)),
-                            fee: aminoMsgHelper.fee(5000, 250000),
-                            chain_id: persistence.chainId,
-                            memo: memoContent,
-                            account_number: String(data.account.account_number),
-                            sequence: String(data.account.sequence)
-                        });
-                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
-                        persistence.broadcast(signedTx).then(response => {
-                            setResponse(response)
-                            console.log(response, "delegate response")
-                        });
-                        showSeedModal(false);
-                    } else {
-                        setErrorMessage(data.message);
-                    }
-                });
-            } else {
-                if (address.error !== undefined) {
-                    setErrorMessage(address.error)
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = "";
+        if (advanceMode) {
+            accountNumber = document.getElementById('delegateAccountNumber').value;
+            addressIndex = document.getElementById('delegateAccountIndex').value;
+            bip39Passphrase = document.getElementById('delegatebip39Passphrase').value;
+        }
+        const persistence = MakePersistence(accountNumber, addressIndex);
+        const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
+        const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
+        console.log(address.error, "rdsult");
+        if (address.error === undefined && ecpairPriv.error === undefined) {
+            persistence.getAccounts(address).then(data => {
+                if (data.code === undefined) {
+                    let stdSignMsg = persistence.newStdMsg({
+                        msgs: aminoMsgHelper.msgs(aminoMsgHelper.delegateMsg(amount, address, validatorAddress)),
+                        fee: aminoMsgHelper.fee(5000, 250000),
+                        chain_id: persistence.chainId,
+                        memo: memoContent,
+                        account_number: String(data.account.account_number),
+                        sequence: String(data.account.sequence)
+                    });
+                    const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
+                    persistence.broadcast(signedTx).then(response => {
+                        setResponse(response)
+                        console.log(response, "delegate response")
+                    });
+                    showSeedModal(false);
                 } else {
-                    setErrorMessage(ecpairPriv.error)
+                    setErrorMessage(data.message);
                 }
+            });
+        } else {
+            if (address.error !== undefined) {
+                setErrorMessage(address.error)
+            } else {
+                setErrorMessage(ecpairPriv.error)
             }
         }
     };
@@ -160,7 +165,7 @@ const ModalDelegate = (props) => {
                         </OverlayTrigger>
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
-                        <Form onSubmit={handleSubmitInitialData}>
+                        <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
 
                             <div className="form-field">
                                 <p className="label">Send Amount</p>
