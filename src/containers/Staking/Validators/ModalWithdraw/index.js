@@ -5,7 +5,7 @@ import Icon from "../../../../components/Icon";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import aminoMsgHelper from "../../../../utils/aminoMsgHelper";
 import protoMsgHelper from "../../../../utils/protoMsgHelper";
-import KeplerTransaction from "../../../../utils/KeplerTransactions";
+import Transaction from "../../../../utils/transactions";
 
 const ModalWithdraw = (props) => {
     const [response, setResponse] = useState('');
@@ -74,7 +74,7 @@ const ModalWithdraw = (props) => {
         const address = localStorage.getItem('address');
         const mode = localStorage.getItem('loginMode');
         if (mode === "kepler") {
-            const response = KeplerTransaction([protoMsgHelper.msgWithdraw(address, validatorAddress)], aminoMsgHelper.fee(5000, 250000), memoContent);
+            const response = Transaction([protoMsgHelper.msgWithdraw(address, validatorAddress)], aminoMsgHelper.fee(5000, 250000), memoContent);
             response.then(result => {
                 console.log(result)
             }).catch(err => console.log(err.message, "delegate error"))

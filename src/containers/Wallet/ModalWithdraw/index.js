@@ -12,7 +12,7 @@ import Lodash from "lodash";
 import Actions from "../../../utils/actions";
 import {fetchRewards} from "../../../actions/rewards";
 import {connect} from "react-redux";
-import KeplerTransaction from "../../../utils/KeplerTransactions";
+import Transaction from "../../../utils/transactions";
 import helper from "../../../utils/helper";
 
 const ModalWithdraw = (props) => {
@@ -89,7 +89,7 @@ const ModalWithdraw = (props) => {
         const address = localStorage.getItem('address');
         const mode = localStorage.getItem('loginMode');
         if(mode === "kepler") {
-            const response = KeplerTransaction(helper.msgs(helper.withDrawMsg(address, validatorAddress)), helper.fee(5000,250000), memoContent);
+            const response = Transaction(helper.msgs(helper.withDrawMsg(address, validatorAddress)), helper.fee(5000,250000), memoContent);
             response.then(result => {
                 console.log(result)
             }).catch(err => console.log(err.message, "delegate error"))

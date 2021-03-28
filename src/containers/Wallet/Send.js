@@ -12,7 +12,7 @@ import {
 import Icon from "../../components/Icon";
 import success from "../../assets/images/success.svg";
 import MakePersistence from "../../utils/cosmosjsWrapper";
-import KeplerTransaction from "../../utils/KeplerTransactions";
+import Transaction from "../../utils/transactions";
 import helper from "../../utils/helper";
 
 import protoMsgHelper from "../../utils/protoMsgHelper";
@@ -50,7 +50,7 @@ const Send = () => {
     };
     const handleSubmitKepler = async event => {
         event.preventDefault();
-        const response = KeplerTransaction(helper.msgs(helper.sendMsg(amountField, address, event.target.address.value)), helper.fee(0, 250000), "");
+        const response = Transaction(helper.msgs(helper.sendMsg(amountField, address, event.target.address.value)), helper.fee(0, 250000), "");
         response.then(result => {
             console.log(result)
         }).catch(err => console.log(err.message, "send error"))
