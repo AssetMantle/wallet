@@ -14,11 +14,9 @@ import Icon from "../../../../components/Icon";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import aminoMsgHelper from "../../../../utils/aminoMsgHelper";
 import MessagesFile from "../../../../utils/protoMsgHelper";
-import Transaction from "../../../../utils/transactions";
-import helper from "../../../../utils/helper";
+import transactions from "../../../../utils/transactions";
 
 const ModalDelegate = (props) => {
-    const PropertyMsgHelper = new MessagesFile();
     const [amount, setAmount] = useState(0);
     const [show, setShow] = useState(true);
     const [memoContent, setMemoContent] = useState('');
@@ -84,7 +82,7 @@ const ModalDelegate = (props) => {
 
     const handleSubmitKepler = async event => {
         event.preventDefault();
-        const response = Transaction([PropertyMsgHelper.msgDelegate(address, props.validatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent);
+        const response = transactions.TransactionWithKeplr([MessagesFile.prototype.msgDelegate(address, props.validatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent);
         response.then(result => {
             console.log(result)
         }).catch(err => console.log(err.message, "delegate error"))

@@ -18,19 +18,20 @@ async function Transaction(wallet, signerAddress, msgs, fee, memo = "") {
 }
 
 async function TransactionWithKeplr(msgs, fee, memo = "", chainID = configChainID) {
-    const {wallet, address} = KeplrWallet(chainID)
+    const {wallet, address} = await KeplrWallet(chainID)
     return Transaction(wallet, address, msgs, fee, memo)
 }
 
 async function KeplrWallet(chainID = configChainID) {
     await window.keplr.enable(chainID);
     const offlineSigner = window.getOfflineSigner(chainID);
+    console.log(offlineSigner)
     const accounts = await offlineSigner.getAccounts();
-    return [offlineSigner, accounts]
+    return [offlineSigner, accounts[0].address]
 }
 
 async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(), prefix = addressPrefix) {
-    const {wallet, address} = MnemonicWallet(mnemonic,hdpath, prefix)
+    const {wallet, address} = MnemonicWallet(mnemonic, hdpath, prefix)
     return Transaction(wallet, address, msgs, fee, memo)
 }
 
@@ -45,4 +46,4 @@ function makeHdPath(accountNumber = "0", addressIndex = "0", coinType = configCo
     return stringToPath("m/44'/" + coinType + "'/" + accountNumber + "'/0/" + addressIndex)
 }
 
-export default Transaction;
+export default {TransactionWithKeplr, TransactionWithMnemonic, makeHdPath, KeplrWallet};

@@ -130,13 +130,11 @@ async function KeplerWallet() {
     await window.keplr.enable(chainId);
 
     const offlineSigner = window.getOfflineSigner(chainId);
-
     // You can get the address/public keys by `getAccounts` method.
     // It can return the array of address/public key.
     // But, currently, Keplr extension manages only one address/public key pair.
     // XXX: This line is needed to set the sender address for SigningStargateClient.
     const accounts = await offlineSigner.getAccounts();
-
     // Initialize the gaia api with the offline signer that is injected by Keplr extension.
     const cosmJS = SigningStargateClient.connectWithSigner(
         tendermintRPC,

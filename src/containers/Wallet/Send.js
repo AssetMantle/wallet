@@ -12,10 +12,11 @@ import {
 import Icon from "../../components/Icon";
 import success from "../../assets/images/success.svg";
 import MakePersistence from "../../utils/cosmosjsWrapper";
-import Transaction from "../../utils/transactions";
+import transactions from "../../utils/transactions";
 import helper from "../../utils/helper";
 
 import protoMsgHelper from "../../utils/protoMsgHelper";
+import aminoMsgHelper from "../../utils/aminoMsgHelper";
 
 const {SigningStargateClient} = require("@cosmjs/stargate");
 
@@ -50,7 +51,7 @@ const Send = () => {
     };
     const handleSubmitKepler = async event => {
         event.preventDefault();
-        const response = Transaction(helper.msgs(helper.sendMsg(amountField, address, event.target.address.value)), helper.fee(0, 250000), "");
+        const response = transactions.TransactionWithKeplr([protoMsgHelper.prototype.msgSend(amountField, address, event.target.address.value)], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             console.log(result)
         }).catch(err => console.log(err.message, "send error"))

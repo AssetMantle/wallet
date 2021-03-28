@@ -7,6 +7,7 @@ import {connect} from "react-redux";
 import Transaction from "../../../../utils/transactions";
 import aminoMsgHelper from "../../../../utils/aminoMsgHelper";
 import protoMsgHelper from "../../../../utils/protoMsgHelper";
+import transactions from "../../../../utils/transactions";
 
 const ModalUnbond = (props) => {
     const [amount, setAmount] = useState(0);
@@ -82,7 +83,7 @@ const ModalUnbond = (props) => {
         const address = localStorage.getItem('address');
         const mode = localStorage.getItem('loginMode');
         if (mode === "kepler") {
-            const response = Transaction([protoMsgHelper.msgUnbond(address, validatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent);
+            const response = transactions.TransactionWithKeplr([protoMsgHelper.prototype.msgUnbond(address, validatorAddress, amount)], aminoMsgHelper.fee(5000, 250000));
             response.then(result => {
                 console.log(result)
             }).catch(err => console.log(err.message, "delegate error"))

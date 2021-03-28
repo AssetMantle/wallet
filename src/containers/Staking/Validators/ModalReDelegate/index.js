@@ -10,6 +10,7 @@ import aminoMsgHelper from "../../../../utils/aminoMsgHelper";
 import protoMsgHelper from "../../../../utils/protoMsgHelper";
 import {connect} from "react-redux";
 import Transaction from "../../../../utils/transactions";
+import transactions from "../../../../utils/transactions";
 
 const ModalReDelegate = (props) => {
     const [amount, setAmount] = useState(0);
@@ -94,7 +95,7 @@ const ModalReDelegate = (props) => {
         const address = localStorage.getItem('address');
         const mode = localStorage.getItem('loginMode');
         if (mode === "kepler") {
-            const response = Transaction([protoMsgHelper.msgRedelegate(address, validatorAddress, toValidatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent);
+            const response = transactions.TransactionWithKeplr([protoMsgHelper.prototype.msgRedelegate(address, validatorAddress, toValidatorAddress, amount)], aminoMsgHelper.fee(5000, 250000));
             response.then(result => {
                 console.log(result)
             }).catch(err => console.log(err.message, "re delegate error"))
