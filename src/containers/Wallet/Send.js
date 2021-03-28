@@ -12,12 +12,10 @@ import {
 import Icon from "../../components/Icon";
 import success from "../../assets/images/success.svg";
 import MakePersistence from "../../utils/cosmosjsWrapper";
-import KeplerTransaction from "../../utils/KeplerTransactions";
+import transactions from "../../utils/transactions";
 import helper from "../../utils/helper";
-
 import protoMsgHelper from "../../utils/protoMsgHelper";
-
-const {SigningStargateClient} = require("@cosmjs/stargate");
+import aminoMsgHelper from "../../utils/aminoMsgHelper";
 
 const Send = () => {
     const [amountField, setAmountField] = useState(0);
@@ -50,7 +48,7 @@ const Send = () => {
     };
     const handleSubmitKepler = async event => {
         event.preventDefault();
-        const response = KeplerTransaction(helper.msgs(helper.sendMsg(amountField, address, event.target.address.value)), helper.fee(0, 250000), "");
+        const response = transactions.TransactionWithKeplr([protoMsgHelper.prototype.msgSend(address, event.target.address.value, amountField)], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             console.log(result)
         }).catch(err => console.log(err.message, "send error"))
@@ -146,7 +144,7 @@ const Send = () => {
                 <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmit}>
                     <div className="form-field">
                         <p className="label info">Recipient Address
-                            <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
+                            <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
                                 <button className="icon-button info"><Icon
                                     viewClass="arrow-right"
                                     icon="info"/></button>

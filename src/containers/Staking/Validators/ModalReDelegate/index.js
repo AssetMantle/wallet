@@ -7,13 +7,13 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import helper from "../../../../utils/helper";
 import aminoMsgHelper from "../../../../utils/aminoMsgHelper";
-import MessagesFile from "../../../../utils/protoMsgHelper";
+import protoMsgHelper from "../../../../utils/protoMsgHelper";
 import {connect} from "react-redux";
-import KeplerTransaction from "../../../../utils/KeplerTransactions";
+import Transaction from "../../../../utils/transactions";
+import transactions from "../../../../utils/transactions";
 import Loader from "../../../../components/Loader";
 
 const ModalReDelegate = (props) => {
-    const PropertyMsgHelper = new MessagesFile();
     const [amount, setAmount] = useState(0);
     const [show, setShow] = useState(true);
     const [memoContent, setMemoContent] = useState('');
@@ -99,7 +99,7 @@ const ModalReDelegate = (props) => {
         setLoader(true);
         event.preventDefault();
         setInitialModal(false);
-        const response = KeplerTransaction([PropertyMsgHelper.msgRedelegate(address, props.validatorAddress, toValidatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent);
+        const response = transactions.TransactionWithKeplr([protoMsgHelper.prototype.msgRedelegate(address, props.validatorAddress, toValidatorAddress, amount)], aminoMsgHelper.fee(5000, 250000));
         response.then(result => {
             console.log(result);
             setResponse(result);
@@ -142,7 +142,6 @@ const ModalReDelegate = (props) => {
         }
         console.log(mnemonic)
         const validatorAddress = props.validatorAddress;
-
         let accountNumber = 0;
         let addressIndex = 0;
         let bip39Passphrase = "";
@@ -396,8 +395,8 @@ const ModalReDelegate = (props) => {
                             <div className="result-container">
                                 <img src={success} alt="success-image"/>
                                 {mode === "kepler" ?
-                                <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
-                                : <p className="tx-hash">Tx Hash: {response.txhash}</p>}
+                                    <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
+                                    : <p className="tx-hash">Tx Hash: {response.txhash}</p>}
                                 <div className="buttons">
                                     <button className="button" onClick={props.handleClose}>Done</button>
                                 </div>

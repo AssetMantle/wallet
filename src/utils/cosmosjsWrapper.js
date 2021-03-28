@@ -6,11 +6,12 @@ const bech32 = require('bech32');
 const bitcoinjs = require('bitcoinjs-lib');
 const apiUrl = process.env.REACT_APP_API_KEY;
 const chainID = config.chainID;
+const prefix = config.addressPrefix;
 
 function MakePersistence(accountNumber, addressIndex) {
 
     const Persistence = cosmosjs.network(apiUrl, chainID)
-    Persistence.setBech32MainPrefix("persistence");
+    Persistence.setBech32MainPrefix(prefix);
     Persistence.setPath("m/44'/750'/" + accountNumber + "'/0/"+ addressIndex);
     Persistence.getAddress = function(mnemonic, bip39passphrase = "", checkSum = true) {
         if (typeof mnemonic !== "string") {

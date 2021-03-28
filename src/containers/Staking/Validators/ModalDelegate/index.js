@@ -14,12 +14,11 @@ import Icon from "../../../../components/Icon";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import aminoMsgHelper from "../../../../utils/aminoMsgHelper";
 import MessagesFile from "../../../../utils/protoMsgHelper";
-import KeplerTransaction from "../../../../utils/KeplerTransactions";
+import transactions from "../../../../utils/transactions";
 import helper from "../../../../utils/helper";
 import Loader from "../../../../components/Loader";
 
 const ModalDelegate = (props) => {
-    const PropertyMsgHelper = new MessagesFile();
     const [amount, setAmount] = useState(0);
     const [show, setShow] = useState(true);
     const [memoContent, setMemoContent] = useState('');
@@ -89,7 +88,7 @@ const ModalDelegate = (props) => {
         setLoader(true);
         event.preventDefault();
         setInitialModal(false);
-        const response = KeplerTransaction([PropertyMsgHelper.msgDelegate(address, props.validatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent);
+        const response = transactions.TransactionWithKeplr([MessagesFile.prototype.msgDelegate(address, props.validatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent);
         response.then(result => {
             console.log(result);
             setResponse(result);
@@ -202,7 +201,7 @@ const ModalDelegate = (props) => {
                 <>
                     <Modal.Header closeButton>
                         Delegating to {props.moniker}
-                        <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
+                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
                             <button className="icon-button info"><Icon
                                 viewClass="arrow-right"
                                 icon="info"/></button>
@@ -264,7 +263,7 @@ const ModalDelegate = (props) => {
                 <>
                     <Modal.Header closeButton>
                         Delegating to {props.moniker}
-                        <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
+                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
                             <button className="icon-button info"><Icon
                                 viewClass="arrow-right"
                                 icon="info"/></button>
