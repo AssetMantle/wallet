@@ -45,7 +45,6 @@ const ModalActions = (props) => {
             const delegationsUrl = getDelegationsUrl(address);
             axios.get(delegationsUrl).then(response => {
                 let delegationResponseList = response.data.delegation_responses;
-                console.log(delegationResponseList, "response of validator delations")
                 for (const item of delegationResponseList) {
                     if (item.delegation.validator_address === props.validator.operator_address) {
                         setDelegateStatus(true);

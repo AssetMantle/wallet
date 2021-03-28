@@ -1077,6 +1077,11 @@ html, body {
     color: #1A73B4; }
   .wallet-main-section .txns-container table tbody .time {
     color: #8D9CB5; }
+.wallet-main-section .txns-container .pagination-custom {
+  display: flex;
+  justify-content: flex-end;
+  background-color: #fff;
+  border: 1px solid #E3E5F4; }
 .wallet-main-section .receive-container {
   text-align: center;
   border: 1px solid #E3E5F4;
@@ -1767,7 +1772,7 @@ html, body {
   .header .profile-section .icon-profile {
     margin: 0; } }
 @media (min-width: 1200px) and (max-width: 1400px) {
-  .txns-container .table-responsive {
+  .txns-container {
     width: 800px; } }
 
 /*# sourceMappingURL=index.css.map */

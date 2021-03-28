@@ -259,6 +259,12 @@
         }
       }
     }
+    .pagination-custom{
+      display: flex;
+      justify-content: flex-end;
+      background-color: #fff;
+      border: 1px solid #E3E5F4;
+    }
   }
 
   .receive-container {

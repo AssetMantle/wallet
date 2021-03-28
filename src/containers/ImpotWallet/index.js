@@ -68,6 +68,7 @@ const ModalImportWallet = (props) => {
 
     const handleLogin = () => {
         if (errorMessage === "") {
+            localStorage.setItem('loginMode', 'normal');
             localStorage.setItem('loginToken', 'loggedIn');
             localStorage.setItem('address', advancedFormResponseData.address);
             history.push('/dashboard/wallet');
