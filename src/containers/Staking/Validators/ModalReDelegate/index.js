@@ -7,11 +7,13 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import helper from "../../../../utils/helper";
 import aminoMsgHelper from "../../../../utils/aminoMsgHelper";
-import protoMsgHelper from "../../../../utils/protoMsgHelper";
+import MessagesFile from "../../../../utils/protoMsgHelper";
 import {connect} from "react-redux";
 import KeplerTransaction from "../../../../utils/KeplerTransactions";
+import Loader from "../../../../components/Loader";
 
 const ModalReDelegate = (props) => {
+    const PropertyMsgHelper = new MessagesFile();
     const [amount, setAmount] = useState(0);
     const [show, setShow] = useState(true);
     const [memoContent, setMemoContent] = useState('');
@@ -21,6 +23,10 @@ const ModalReDelegate = (props) => {
     const [toValidatorAddress, setToValidatorAddress] = useState("");
     const [advanceMode, setAdvanceMode] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [importMnemonic, setImportMnemonic] = useState(true);
+    const [loader, setLoader] = useState(false);
+    const address = localStorage.getItem('address');
+    const mode = localStorage.getItem('loginMode');
 
     const handleAmount = (amount) => {
         setAmount(amount)
@@ -85,63 +91,103 @@ const ModalReDelegate = (props) => {
         setInitialModal(false);
         showSeedModal(true);
     };
+    const handlePrivateKey = (value) => {
+        setImportMnemonic(value);
+        setErrorMessage("");
+    };
+    const handleSubmitKepler = async event => {
+        setLoader(true);
+        event.preventDefault();
+        setInitialModal(false);
+        const response = KeplerTransaction([PropertyMsgHelper.msgRedelegate(address, props.validatorAddress, toValidatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent);
+        response.then(result => {
+            console.log(result);
+            setResponse(result);
+            setLoader(false)
+        }).catch(err => {
+            setLoader(false);
+            props.handleClose();
+            console.log(err.message, "delegate error")
+        })
+    };
+
+    function PrivateKeyReader(file, password) {
+        return new Promise(function (resolve, reject) {
+            const fileReader = new FileReader();
+            fileReader.readAsText(file, "UTF-8");
+            fileReader.onload = event => {
+                const res = JSON.parse(event.target.result);
+                const decryptedData = helper.decryptStore(res, password);
+                if (decryptedData.error != null) {
+                    setErrorMessage(decryptedData.error)
+                } else {
+                    resolve(decryptedData.mnemonic);
+                    setErrorMessage("");
+                }
+            };
+        });
+    }
 
     const handleSubmit = async event => {
         event.preventDefault();
-
-        const mnemonic = event.target.mnemonic.value;
-        const validatorAddress = props.validatorAddress;
-        const address = localStorage.getItem('address');
-        const mode = localStorage.getItem('loginMode');
-        if (mode === "kepler") {
-            const response = KeplerTransaction([protoMsgHelper.msgRedelegate(address, validatorAddress, toValidatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent);
-            response.then(result => {
-                console.log(result)
-            }).catch(err => console.log(err.message, "re delegate error"))
+        let mnemonic;
+        if (importMnemonic) {
+            mnemonic = event.target.mnemonic.value;
         } else {
-            let accountNumber = 0;
-            let addressIndex = 0;
-            let bip39Passphrase = "";
-            if (advanceMode) {
-                accountNumber = document.getElementById('redelegateAccountNumber').value;
-                addressIndex = document.getElementById('redelegateAccountIndex').value;
-                bip39Passphrase = document.getElementById('redelegatebip39Passphrase').value;
-            }
-            const persistence = MakePersistence(accountNumber, addressIndex);
-            const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
-            const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
+            const password = event.target.password.value;
+            var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
+            await promise.then(function (result) {
+                mnemonic = result;
+            });
+        }
+        console.log(mnemonic)
+        const validatorAddress = props.validatorAddress;
 
-            if (address.error === undefined && ecpairPriv.error === undefined) {
-                persistence.getAccounts(address).then(data => {
-                    if (data.code === undefined) {
-                        let stdSignMsg = persistence.newStdMsg({
-                            msgs: aminoMsgHelper.msgs(aminoMsgHelper.reDelegateMsg(amount, address, validatorAddress, toValidatorAddress)),
-                            fee: aminoMsgHelper.fee(5000, 250000),
-                            chain_id: persistence.chainId,
-                            memo: memoContent,
-                            account_number: String(data.account.account_number),
-                            sequence: String(data.account.sequence)
-                        });
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = "";
+        if (advanceMode) {
+            accountNumber = document.getElementById('redelegateAccountNumber').value;
+            addressIndex = document.getElementById('redelegateAccountIndex').value;
+            bip39Passphrase = document.getElementById('redelegatebip39Passphrase').value;
+        }
+        const persistence = MakePersistence(accountNumber, addressIndex);
+        const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
+        const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
 
-                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
-                        persistence.broadcast(signedTx).then(response => {
-                            setResponse(response);
-                            console.log(response)
-                        });
-                        showSeedModal(false);
-                    } else {
-                        setErrorMessage(data.message);
-                    }
-                });
-            } else {
-                if (address.error !== undefined) {
-                    setErrorMessage(address.error)
+        if (address.error === undefined && ecpairPriv.error === undefined) {
+            persistence.getAccounts(address).then(data => {
+                if (data.code === undefined) {
+                    let stdSignMsg = persistence.newStdMsg({
+                        msgs: aminoMsgHelper.msgs(aminoMsgHelper.reDelegateMsg(amount, address, validatorAddress, toValidatorAddress)),
+                        fee: aminoMsgHelper.fee(5000, 250000),
+                        chain_id: persistence.chainId,
+                        memo: memoContent,
+                        account_number: String(data.account.account_number),
+                        sequence: String(data.account.sequence)
+                    });
+
+                    const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
+                    persistence.broadcast(signedTx).then(response => {
+                        setResponse(response);
+                        console.log(response)
+                    });
+                    showSeedModal(false);
                 } else {
-                    setErrorMessage(ecpairPriv.error)
+                    setErrorMessage(data.message);
                 }
+            });
+        } else {
+            if (address.error !== undefined) {
+                setErrorMessage(address.error)
+            } else {
+                setErrorMessage(ecpairPriv.error)
             }
         }
     };
+    if (loader) {
+        return <Loader/>;
+    }
     const disabled = (
         helper.ValidateFrom(toValidatorAddress).message !== ''
     );
@@ -153,7 +199,7 @@ const ModalReDelegate = (props) => {
                         {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
-                        <Form onSubmit={handleSubmitInitialData}>
+                        <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
                             <div className="form-field">
                                 <p className="label">Redelegate to</p>
                                 <Select value={toValidatorAddress} className="validators-list-selection"
@@ -229,7 +275,7 @@ const ModalReDelegate = (props) => {
                                 <button
                                     className={props.delegateStatus ? "button button-primary" : "button button-primary disabled"}
                                     disabled={!props.delegateStatus || disabled || amount > props.balance || amount === 0}
-                                >Next
+                                >{mode === "normal" ? "Next" : "Submit"}
                                 </button>
                             </div>
                         </Form>
@@ -244,12 +290,44 @@ const ModalReDelegate = (props) => {
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={handleSubmit}>
-                            <div className="form-field">
-                                <p className="label">Mnemonic</p>
-                                <Form.Control as="textarea" rows={3} name="mnemonic"
-                                              placeholder="Enter Mnemonic"
-                                              required={false}/>
-                            </div>
+                            {
+                                importMnemonic ?
+                                    <>
+                                        <div className="text-center">
+                                            <p onClick={() => handlePrivateKey(false)} className="import-name">Use
+                                                Private Key (KeyStore.json file)</p>
+                                        </div>
+                                        <div className="form-field">
+                                            <p className="label">Mnemonic</p>
+                                            <Form.Control as="textarea" rows={3} name="mnemonic"
+                                                          placeholder="Enter Mnemonic"
+                                                          required={true}/>
+                                        </div>
+                                    </>
+                                    :
+                                    <>
+                                        <div className="text-center">
+                                            <p onClick={() => handlePrivateKey(true)} className="import-name">Use
+                                                Mnemonic (Seed Phrase)</p>
+                                        </div>
+                                        <div className="form-field">
+                                            <p className="label">Password</p>
+                                            <Form.Control
+                                                type="password"
+                                                name="password"
+                                                placeholder="Enter Password"
+                                                required={true}
+                                            />
+                                        </div>
+                                        <div className="form-field upload">
+                                            <p className="label"> KeyStore file</p>
+                                            <Form.File id="exampleFormControlFile1" name="uploadFile"
+                                                       className="file-upload" accept=".json" required={true}/>
+                                        </div>
+
+                                    </>
+
+                            }
                             <Accordion className="advanced-wallet-accordion">
                                 <Card>
                                     <Card.Header>
@@ -317,7 +395,9 @@ const ModalReDelegate = (props) => {
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 <img src={success} alt="success-image"/>
-                                <p className="tx-hash">Tx Hash: {response.txhash}</p>
+                                {mode === "kepler" ?
+                                <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
+                                : <p className="tx-hash">Tx Hash: {response.txhash}</p>}
                                 <div className="buttons">
                                     <button className="button" onClick={props.handleClose}>Done</button>
                                 </div>
@@ -338,7 +418,7 @@ const ModalReDelegate = (props) => {
                                     {response.txhash}</p>
                                 <p>{response.raw_log}</p>
                                 <div className="buttons">
-                                    <button className="button" onClick={handleClose}>Done</button>
+                                    <button className="button" onClick={props.handleClose}>Done</button>
                                 </div>
                             </div>
                         </Modal.Body>
