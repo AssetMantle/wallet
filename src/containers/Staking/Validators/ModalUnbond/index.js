@@ -1,18 +1,12 @@
-import {
-    Accordion,
-    AccordionContext,
-    Card,
-    Form,
-    Modal,
-    useAccordionToggle
-} from 'react-bootstrap';
-import React, {useState, useEffect, useContext} from 'react';
+import {Accordion, AccordionContext, Card, Form, Modal, useAccordionToggle} from 'react-bootstrap';
+import React, {useContext, useState} from 'react';
 import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import {connect} from "react-redux";
 import KeplerTransaction from "../../../../utils/KeplerTransactions";
-import helper from "../../../../utils/helper";
+import aminoMsgHelper from "../../../../utils/aminoMsgHelper";
+import protoMsgHelper from "../../../../utils/protoMsgHelper";
 
 const ModalUnbond = (props) => {
     const [amount, setAmount] = useState(0);
@@ -35,11 +29,12 @@ const ModalUnbond = (props) => {
         props.setInitialModal(true);
         setResponse('');
     };
-    const handlePrevious = () =>{
+    const handlePrevious = () => {
         props.setShow(true);
         props.setTxModalShow(false);
         props.setInitialModal(true);
     };
+
     function ContextAwareToggle({children, eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 
@@ -71,6 +66,7 @@ const ModalUnbond = (props) => {
             </button>
         );
     }
+
     const handleSubmitInitialData = async event => {
         event.preventDefault();
         const memo = event.target.memo.value;
@@ -85,8 +81,8 @@ const ModalUnbond = (props) => {
         const validatorAddress = props.validatorAddress;
         const address = localStorage.getItem('address');
         const mode = localStorage.getItem('loginMode');
-        if(mode === "kepler") {
-            const response = KeplerTransaction(helper.msgs(helper.unBondMsg(amount, address, validatorAddress)), helper.fee(5000,250000), memoContent);
+        if (mode === "kepler") {
+            const response = KeplerTransaction([protoMsgHelper.msgUnbond(address, validatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent);
             response.then(result => {
                 console.log(result)
             }).catch(err => console.log(err.message, "delegate error"))
@@ -107,8 +103,8 @@ const ModalUnbond = (props) => {
                 persistence.getAccounts(address).then(data => {
                     if (data.code === undefined) {
                         let stdSignMsg = persistence.newStdMsg({
-                            msgs: helper.msgs(helper.unBondMsg(amount, address, validatorAddress)),
-                            fee: helper.fee(5000, 250000),
+                            msgs: aminoMsgHelper.msgs(aminoMsgHelper.unBondMsg(amount, address, validatorAddress)),
+                            fee: aminoMsgHelper.fee(5000, 250000),
                             chain_id: persistence.chainId,
                             memo: memoContent,
                             account_number: String(data.account.account_number),
@@ -193,7 +189,9 @@ const ModalUnbond = (props) => {
                                         viewClass="arrow-right"
                                         icon="left-arrow"/>
                                 </button>
-                                <button className="button button-primary" disabled={!props.delegateStatus || amount === 0 || amount > props.balance}>Next</button>
+                                <button className="button button-primary"
+                                        disabled={!props.delegateStatus || amount === 0 || amount > props.balance}>Next
+                                </button>
                             </div>
                         </Form>
                     </Modal.Body>

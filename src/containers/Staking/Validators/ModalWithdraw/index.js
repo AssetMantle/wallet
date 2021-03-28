@@ -1,16 +1,10 @@
-import {
-    Accordion,
-    AccordionContext,
-    Card,
-    Form,
-    Modal,
-    useAccordionToggle
-} from 'react-bootstrap';
-import React, {useState, useContext} from 'react';
+import {Accordion, AccordionContext, Card, Form, Modal, useAccordionToggle} from 'react-bootstrap';
+import React, {useContext, useState} from 'react';
 import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
-import helper from "../../../../utils/helper";
+import aminoMsgHelper from "../../../../utils/aminoMsgHelper";
+import protoMsgHelper from "../../../../utils/protoMsgHelper";
 import KeplerTransaction from "../../../../utils/KeplerTransactions";
 
 const ModalWithdraw = (props) => {
@@ -79,8 +73,8 @@ const ModalWithdraw = (props) => {
         const validatorAddress = props.validatorAddress;
         const address = localStorage.getItem('address');
         const mode = localStorage.getItem('loginMode');
-        if(mode === "kepler") {
-            const response = KeplerTransaction(helper.msgs(helper.withDrawMsg(address, validatorAddress)), helper.fee(5000,250000), memoContent);
+        if (mode === "kepler") {
+            const response = KeplerTransaction([protoMsgHelper.msgWithdraw(address, validatorAddress)], aminoMsgHelper.fee(5000, 250000), memoContent);
             response.then(result => {
                 console.log(result)
             }).catch(err => console.log(err.message, "delegate error"))
@@ -101,9 +95,9 @@ const ModalWithdraw = (props) => {
                 persistence.getAccounts(address).then(data => {
                     if (data.code === undefined) {
                         let stdSignMsg = persistence.newStdMsg({
-                            msgs: helper.msgs(helper.withDrawMsg(address, validatorAddress)),
+                            msgs: aminoMsgHelper.msgs(aminoMsgHelper.withDrawMsg(address, validatorAddress)),
                             chain_id: persistence.chainId,
-                            fee: helper.fee(5000, 250000),
+                            fee: aminoMsgHelper.fee(5000, 250000),
                             memo: memoContent,
                             account_number: String(data.account.account_number),
                             sequence: String(data.account.sequence)
@@ -150,7 +144,10 @@ const ModalWithdraw = (props) => {
                                         viewClass="arrow-right"
                                         icon="left-arrow"/>
                                 </button>
-                                <button className={props.rewards ? "button button-primary" : "button button-primary disabled"} disabled={props.rewards ? false : true}>Next</button>
+                                <button
+                                    className={props.rewards ? "button button-primary" : "button button-primary disabled"}
+                                    disabled={props.rewards ? false : true}>Next
+                                </button>
                             </div>
                         </Form>
                     </Modal.Body>

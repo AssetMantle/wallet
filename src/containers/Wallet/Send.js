@@ -15,7 +15,9 @@ import MakePersistence from "../../utils/cosmosjsWrapper";
 import KeplerTransaction from "../../utils/KeplerTransactions";
 import helper from "../../utils/helper";
 
-const {SigningCosmosClient} = require("@cosmjs/launchpad");
+import protoMsgHelper from "../../utils/protoMsgHelper";
+
+const {SigningStargateClient} = require("@cosmjs/stargate");
 
 const Send = () => {
     const [amountField, setAmountField] = useState(0);

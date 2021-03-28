@@ -89,7 +89,6 @@ const Transactions = (props) => {
         ])
         :
         [];
-    console.log(tableData, "red")
     if (props.inProgress && props.list.length) {
         return <Loader/>;
     }
