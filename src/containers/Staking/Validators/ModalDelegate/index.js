@@ -17,6 +17,7 @@ import {DelegateMsg} from "../../../../utils/protoMsgHelper";
 import transactions from "../../../../utils/transactions";
 import helper from "../../../../utils/helper";
 import Loader from "../../../../components/Loader";
+import {connect} from "react-redux";
 
 const ModalDelegate = (props) => {
     const [amount, setAmount] = useState(0);
@@ -235,6 +236,15 @@ const ModalDelegate = (props) => {
                                     </div>
                                 </div>
                             </div>
+                            <div className="form-field">
+                                <p className="label">Available Amount</p>
+                                <Form.Control
+                                    type="number"
+                                    placeholder="Amount"
+                                    value={props.balance}
+                                    disabled
+                                />
+                            </div>
                             {mode === "normal" ?
                                 <div className="form-field">
                                     <p className="label">Memo</p>
@@ -249,8 +259,9 @@ const ModalDelegate = (props) => {
                                         viewClass="arrow-right"
                                         icon="left-arrow"/>
                                 </button>
-                                <button
-                                    className="button button-primary"> {mode === "normal" ? "Next" : "Submit"}</button>
+                                <button className="button button-primary"
+                                        disabled={amount > props.balance || amount === 0 || props.balance === 0}
+                                > {mode === "normal" ? "Next" : "Submit"}</button>
                             </div>
                         </Form>
                     </Modal.Body>
@@ -414,5 +425,10 @@ const ModalDelegate = (props) => {
     );
 };
 
+const stateToProps = (state) => {
+    return {
+        balance: state.balance.amount,
+    };
+};
 
-export default ModalDelegate;
+export default connect(stateToProps)(ModalDelegate);

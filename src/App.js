@@ -32,7 +32,7 @@ const App = () => {
             <Route
                 key="/"
                 exact
-                component={address === undefined || address === '' ? withRouter(Homepage) : withRouter(DashboardWallet)}
+                component={address === undefined || address === null || address === '' ? withRouter(Homepage) : withRouter(DashboardWallet)}
                 path="/"/> : ""
         {
           routes.map((route) => {

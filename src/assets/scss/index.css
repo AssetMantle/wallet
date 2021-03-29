@@ -1674,6 +1674,14 @@ html, body {
     background: #FFFFFF;
     margin: auto;
     padding: 30px; }
+    .kepler-container .info .text {
+      padding: 20px 0; }
+      .kepler-container .info .text p {
+        margin-bottom: 10px; }
+    .kepler-container .info h3 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 24px;
+      padding-bottom: 20px; }
     .kepler-container .info .buttons-list {
       display: flex;
       align-content: center;
