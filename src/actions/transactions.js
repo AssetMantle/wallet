@@ -43,16 +43,16 @@ export const fetchTransactions = (address, limit, pageNumber, stage) => {
         const url = getTransactionsUrl(address, limit, pageNumber);
         await Axios.get(url)
             .then((res) => {
-                if (res.data.page_total === 0) {
+                if (res.data.page_total * 1 === 0) {
                     // say no transactions
-                } else if (res.data.page_total === 1) {
+                } else if (res.data.page_total * 1 === 1) {
                     // show the same page
                     dispatch(fetchPageNumberSuccess(res.data.page_number * 1, res.data.page_total * 1));
                     let sendTxnsResponseList = res.data.txs.reverse();
                     if (sendTxnsResponseList !== undefined) {
                         dispatch(fetchTransactionsSuccess(sendTxnsResponseList));
                     }
-                } else if (res.data.page_total > 1) {
+                } else if (res.data.page_total * 1 > 1) {
                     //impl query last page
                     Axios.get(getTransactionsUrl(address, limit, res.data.page_total)).then(
                         newResponse => {
@@ -60,10 +60,10 @@ export const fetchTransactions = (address, limit, pageNumber, stage) => {
                                 dispatch(fetchPageNumberSuccess(newResponse.data.page_number * 1, newResponse.data.page_total * 1));
                                 let sendTxnsResponseList = newResponse.data.txs.reverse();
                                 if (newResponse.data.count !== limit) {
-                                    Axios.get(getTransactionsUrl(address, limit, (res.data.page_total*1 - 1))).then(
+                                    Axios.get(getTransactionsUrl(address, limit, (res.data.page_total * 1 - 1))).then(
                                         previousTxResponse => {
                                             let previousTxResponseList = previousTxResponse.data.txs.reverse();
-                                            const firstHalf = previousTxResponseList.splice(0, (previousTxResponse.data.count*1 - newResponse.data.count*1 ));
+                                            const firstHalf = previousTxResponseList.splice(0, (previousTxResponse.data.count * 1 - newResponse.data.count * 1));
                                             const finalTxns = sendTxnsResponseList.concat(firstHalf);
                                             dispatch(fetchTransactionsSuccess(finalTxns));
                                         }
