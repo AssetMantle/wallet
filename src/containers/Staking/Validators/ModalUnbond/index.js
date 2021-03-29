@@ -152,6 +152,7 @@ const ModalUnbond = (props) => {
                     const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
                     persistence.broadcast(signedTx).then(response => {
                         setResponse(response);
+                        console.log(response, "unbond")
                     });
                     showSeedModal(false);
                 } else {

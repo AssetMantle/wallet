@@ -28,6 +28,7 @@ const Send = () => {
     const [keplerError, setKeplerError] = useState("");
     const [loader, setLoader] = useState(false);
     const [importMnemonic, setImportMnemonic] = useState(true);
+    const [memoContent, setMemoContent] = useState('');
     let mode = localStorage.getItem('loginMode');
     let address = localStorage.getItem('address');
     const handleAmount = (amount) => {
@@ -44,10 +45,13 @@ const Send = () => {
     const handleSubmit = async event => {
         event.preventDefault();
         setToAddress(event.target.address.value);
+        const memo = event.target.memo.value;
+        setMemoContent(memo);
         setMnemonicForm(true);
         setShow(true);
     };
     const handleSubmitKepler = event => {
+        setShow(true);
         setLoader(true);
         event.preventDefault();
         const response = transactions.TransactionWithKeplr([SendMsg(address, event.target.address.value, amountField)], aminoMsgHelper.fee(0, 250000));
@@ -119,6 +123,8 @@ const Send = () => {
         return <Loader/>;
     }
     const handleMnemonicSubmit = async (evt) => {
+        setLoader(true);
+        setKeplerError('');
         evt.preventDefault();
         let userMnemonic;
         if (importMnemonic) {
@@ -130,7 +136,6 @@ const Send = () => {
                 userMnemonic = result;
             });
         }
-        const mnemonic = "tank pair spray rely any menu airport shiver boost emerge holiday siege evil grace exile comfort fence mention pig bus cable scissors ability all";
         let accountNumber = 0;
         let addressIndex = 0;
         let bip39Passphrase = "";
@@ -139,16 +144,16 @@ const Send = () => {
             addressIndex = document.getElementById('sendAccountIndex').value;
             bip39Passphrase = document.getElementById('sendbip39Passphrase').value;
         }
-        //TODO add memo inplace of "memo"
-        const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, amountField)], aminoMsgHelper.fee(0, 250000), "memo",
+        const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, amountField)], aminoMsgHelper.fee(0, 250000), memoContent,
             userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
         response.then(result => {
+            console.log(result, "send error")
             setMnemonicForm(true);
             setTxResponse(result);
             setLoader(false);
         }).catch(err => {
             setLoader(false);
-            setKeplerError(err.message);
+            setErrorMessage(err.message)
             console.log(err.message, "send error")
         })
         // const persistence = MakePersistence(accountNumber, addressIndex);
@@ -235,6 +240,14 @@ const Send = () => {
                             </div>
                         </div>
                     </div>
+                    {mode === "normal" ?
+                        <div className="form-field">
+                            <p className="label">Memo</p>
+                            <Form.Control as="textarea" rows={3} name="memo"
+                                          placeholder="Enter Memo"
+                                          required={false}/>
+                        </div> : null
+                    }
                     {keplerError !== '' ?
                         <p className="form-error">{keplerError}</p> : null}
                     <div className="buttons">
@@ -360,7 +373,7 @@ const Send = () => {
                                                         <img src={success} alt="success-image"/>
                                                         {mode === "kepler" ?
                                                             <p className="tx-hash">Tx Hash: {txResponse.transactionHash}</p>
-                                                            : <p className="tx-hash">Tx Hash: {txResponse.txhash}</p>}
+                                                            : <p className="tx-hash">Tx Hash: {txResponse.transactionHash}</p>}
                                                         <div className="buttons">
                                                             <button className="button" onClick={handleClose}>Done</button>
                                                         </div>
@@ -375,10 +388,10 @@ const Send = () => {
                                                     <div className="result-container">
                                                         {mode === "kepler" ?
                                                             <p className="tx-hash">Tx Hash: {txResponse.transactionHash}</p>
-                                                            : <p className="tx-hash">Tx Hash: {txResponse.txhash}</p>}
+                                                            : <p className="tx-hash">Tx Hash: {txResponse.transactionHash}</p>}
                                                         {mode === "kepler" ?
                                                             <p>{txResponse.rawLog}</p>
-                                                            : <p>{txResponse.raw_log}</p>}
+                                                            : <p>{txResponse.rawLog}</p>}
                                                         <div className="buttons">
                                                             <button className="button" onClick={handleClose}>Done</button>
                                                         </div>

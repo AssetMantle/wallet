@@ -1036,12 +1036,13 @@ html, body {
         bottom: 0px; }
         .wallet-main-section .send-container .form-section .form-field .label.info button .icon {
           width: 14px; }
+    .wallet-main-section .send-container .form-section .form-field input {
+      height: calc(2.3em + .75rem + 2px); }
     .wallet-main-section .send-container .form-section .form-field .form-control {
       max-width: 500px;
       background: #F5F6FA;
       font-size: 14px;
       line-height: 150%;
-      height: calc(2.3em + .75rem + 2px);
       border-radius: 0;
       border: 0px solid;
       color: #8D9CB5; }
