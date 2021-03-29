@@ -28,7 +28,7 @@ const ModalActions = (props) => {
     const [delegationAmount, setDelegationAmount] = useState('');
     const [moniker, setMoniker] = useState('');
     const [modalDelegate, setModalOpen] = useState();
-    const [rewards, setRewards] = useState(false);
+    const [rewards, setRewards] = useState('');
     const [delegateStatus, setDelegateStatus] = useState(false);
     useEffect(() => {
         let address = localStorage.getItem('address');
@@ -36,7 +36,7 @@ const ModalActions = (props) => {
             const url = getValidatorRewardsUrl(address, props.validator.operator_address);
             axios.get(url).then(response => {
                 if(response.data.rewards[0].amount){
-                    setRewards(true)
+                    setRewards((response.data.rewards[0].amount/1000000).toFixed(6))
                 }
             }).catch(error => {
                 console.log(error.response, "fetchValidatorRewards")
@@ -135,7 +135,7 @@ const ModalActions = (props) => {
                                     <Dropdown.Menu>
                                             <Dropdown.Item
                                                 onClick={() => handleModal('Unbond', props.validator.operator_address, props.validator.description.moniker)}>Unbond</Dropdown.Item>
-                                        {rewards
+                                        {rewards !== ''
                                             ?
                                             <Dropdown.Item
                                                 onClick={() => handleModal('Withdraw', props.validator.operator_address, props.validator.description.moniker)}>Claim
@@ -146,13 +146,6 @@ const ModalActions = (props) => {
                                 </Dropdown>
                             </div>
 
-                            {/*<Dropdown className="more-dropdown">*/}
-                            {/*    <Dropdown.Toggle variant="success" className="button button-primary"*/}
-                            {/*                     id="dropdown-basic">*/}
-                            {/*        Actions <Icon viewClass="arrow-right" icon="right-coursel"/>*/}
-                            {/*    </Dropdown.Toggle>*/}
-
-                            {/*</Dropdown>*/}
                         </Modal.Body>
                     </>
                 </Modal>

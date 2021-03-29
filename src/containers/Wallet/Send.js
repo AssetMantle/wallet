@@ -31,9 +31,7 @@ const Send = () => {
     const [memoContent, setMemoContent] = useState('');
     let mode = localStorage.getItem('loginMode');
     let address = localStorage.getItem('address');
-    const handleAmount = (amount) => {
-        setAmountField(amount)
-    };
+
     const handleClose = () => {
         setShow(false);
         setMnemonicForm(false);
@@ -41,7 +39,12 @@ const Send = () => {
         setErrorMessage("")
     };
     const handleAmountChange = (evt) => {
-        setAmountField(evt.target.value)
+        let rex = /^(?!(0))\d*\.?\d{0,2}$/;
+        if(rex.test(evt.target.value)){
+            setAmountField(evt.target.value)
+        }else{
+            return false
+        }
     };
     const handleSubmit = async event => {
         event.preventDefault();
@@ -55,7 +58,7 @@ const Send = () => {
         setShow(true);
         setLoader(true);
         event.preventDefault();
-        const response = transactions.TransactionWithKeplr([SendMsg(address, event.target.address.value, amountField)], aminoMsgHelper.fee(0, 250000));
+        const response = transactions.TransactionWithKeplr([SendMsg(address, event.target.address.value, (amountField*1000000))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             setMnemonicForm(true);
             setTxResponse(result);
@@ -140,7 +143,7 @@ const Send = () => {
         let addressFromMnemonic = transactions.CheckAddressMisMatch(userMnemonic);
         addressFromMnemonic.then((addressResponse) => {
             console.log(addressResponse)
-            if(address === addressResponse) {
+            if (address === addressResponse) {
                 let accountNumber = 0;
                 let addressIndex = 0;
                 let bip39Passphrase = "";
@@ -149,7 +152,8 @@ const Send = () => {
                     addressIndex = document.getElementById('sendAccountIndex').value;
                     bip39Passphrase = document.getElementById('sendbip39Passphrase').value;
                 }
-                const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, amountField)], aminoMsgHelper.fee(5000, 250000), memoContent,
+                console.log(amountField*1000000)
+                const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, (amountField*1000000))], aminoMsgHelper.fee(5000, 250000), memoContent,
                     userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                 response.then(result => {
                     console.log(result, "send success")
@@ -161,7 +165,7 @@ const Send = () => {
                     setErrorMessage(err.message)
                     console.log(err.message, "send error")
                 })
-            }else{
+            } else {
                 setLoader(false);
                 setErrorMessage("Enter Correct Mnemonic")
             }
@@ -196,31 +200,18 @@ const Send = () => {
                         />
                     </div>
                     <div className="form-field">
-                        <p className="label">Send Amount</p>
+                        <p className="label">Send Amount (XPRT)</p>
                         <div className="amount-field">
                             <Form.Control
                                 type="number"
                                 min={0}
                                 name="amount"
                                 placeholder="Send Amount"
+                                step="any"
                                 value={amountField}
                                 onChange={handleAmountChange}
                                 required={true}
                             />
-                            <div className="range-buttons">
-                                <button type="button" className="button button-range"
-                                        onClick={() => handleAmount(25000000)}>25%
-                                </button>
-                                <button type="button" className="button button-range"
-                                        onClick={() => handleAmount(50000000)}>50%
-                                </button>
-                                <button type="button" className="button button-range"
-                                        onClick={() => handleAmount(75000000)}>75%
-                                </button>
-                                <button type="button" className="button button-range"
-                                        onClick={() => handleAmount(100000000)}>Max
-                                </button>
-                            </div>
                         </div>
                     </div>
                     {mode === "normal" ?

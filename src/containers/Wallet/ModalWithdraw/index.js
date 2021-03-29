@@ -40,7 +40,8 @@ const ModalWithdraw = (props) => {
             })
         }
     }, []);
-    const handleClose = (amount) => {
+
+    const handleClose = () => {
         setShow(false);
         props.setRewards(false)
     };
@@ -132,7 +133,7 @@ const ModalWithdraw = (props) => {
         }
         let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic);
         addressFromMnemonic.then((addressResponse) => {
-            if(address === addressResponse) {
+            if (address === addressResponse) {
                 let accountNumber = 0;
                 let addressIndex = 0;
                 let bip39Passphrase = "";
@@ -164,7 +165,6 @@ const ModalWithdraw = (props) => {
     };
     const onChangeSelect = (evt) => {
         setValidatorAddress(evt.target.value);
-        console.log(evt.target.value)
         let rewards = ActionHelper.getValidatorRewards(evt.target.value);
         rewards.then(function (response) {
             setIndividualRewards(response);
@@ -243,7 +243,7 @@ const ModalWithdraw = (props) => {
                             }
                             <div className="buttons">
                                 <button className="button button-primary"
-                                        disabled={disabled}>{mode === "normal" ? "Next" : "Submit"}</button>
+                                        disabled={disabled || individualRewards === '' || individualRewards === '0.000000'}>{mode === "normal" ? "Next" : "Submit"}</button>
                             </div>
                         </Form>
                     </Modal.Body>
