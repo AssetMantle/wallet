@@ -1674,6 +1674,9 @@ html, body {
       background: transparent;
       color: #2E3239; }
 
+.sign-in-buttons button {
+  width: auto !important; }
+
 .rdt_TableBody .rdt_TableRow:first-child .rdt_TableCell {
   padding-top: 30px; }
 .rdt_TableBody .rdt_TableRow .rdt_TableCell {
@@ -1696,7 +1699,7 @@ html, body {
   overflow: auto;
   padding-top: 170px; }
   .kepler-container .info {
-    max-width: 500px;
+    max-width: 650px;
     background: #FFFFFF;
     margin: auto;
     padding: 30px; }
@@ -1711,7 +1714,8 @@ html, body {
     .kepler-container .info .buttons-list {
       display: flex;
       align-content: center;
-      justify-content: space-between; }
+      justify-content: space-between;
+      flex-wrap: wrap; }
       .kepler-container .info .buttons-list p {
         margin: 0; }
       .kepler-container .info .buttons-list .button {

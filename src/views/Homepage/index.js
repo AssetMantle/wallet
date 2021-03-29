@@ -7,6 +7,7 @@ import ModalCreateWallet from "../../containers/CreateWallet/ModalCreateWallet";
 import ModalFaq from "../../containers/Faq";
 import ModalImportWallet from "../../containers/ImpotWallet";
 import Footer from "../../components/Footer";
+import SignIn from "../../containers/SignIn";
 const Homepage = () => {
     const history = useHistory();
     const [routName, setRoutName] = useState("false");
@@ -31,10 +32,12 @@ const Homepage = () => {
                     <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="ml-auto">
+                            <NavLink className="nav-link" onClick={() => handleRoute('signIn')} target="_blank"
+                               rel="noopener noreferrer">Sign In</NavLink>
                             <a className="nav-link" href="https://persistence.one/" target="_blank"
                                rel="noopener noreferrer">Learn More</a>
-                            <NavLink className="nav-link" onClick={handleHelp} target="_blank"
-                                     rel="noopener noreferrer">Help</NavLink>
+                            <Nav.Link className="nav-link" onClick={handleHelp} target="_blank"
+                                     rel="noopener noreferrer">Help</Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
                 </div>
@@ -67,6 +70,11 @@ const Homepage = () => {
             {
                 routName === "importWallet" ?
                     <ModalImportWallet setRoutName={setRoutName} name="homepage"/>
+                    : null
+            }
+            {
+                routName === "signIn" ?
+                    <SignIn setRoutName={setRoutName} name="homepage"/>
                     : null
             }
             {showFaq

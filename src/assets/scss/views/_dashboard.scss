@@ -1088,7 +1088,11 @@
     }
   }
 }
-
+.sign-in-buttons{
+  button{
+    width: auto !important;
+  }
+}
 .rdt_TableBody {
   .rdt_TableRow:first-child .rdt_TableCell{
     padding-top: 30px;

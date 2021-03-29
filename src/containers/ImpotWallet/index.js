@@ -66,15 +66,6 @@ const ModalImportWallet = (props) => {
         };
     };
 
-    const handleLogin = () => {
-        if (errorMessage === "") {
-            localStorage.setItem('loginMode', 'normal');
-            localStorage.setItem('loginToken', 'loggedIn');
-            localStorage.setItem('address', advancedFormResponseData.address);
-            history.push('/dashboard/wallet');
-        }
-    };
-
     const handlePrivateKey = (value) => {
         setImportMnemonic(value);
         setErrorMessage("");
@@ -88,14 +79,7 @@ const ModalImportWallet = (props) => {
             setGenerateKey(false);
             setAdvancedForm(true)
         }
-        if(key === "withAddress"){
-            setWithAddress(true);
-            setMnemonicForm(false)
-        }
-        if(key === "hideWithAddress"){
-            setWithAddress(false);
-            setMnemonicForm(true)
-        }
+
     };
 
     function ContextAwareToggle({children, eventKey, callback}) {
@@ -182,9 +166,7 @@ const ModalImportWallet = (props) => {
             props.setRoutName("")
         }
     };
-    const handleKepler = ()=> {
-        history.push('/kepler');
-    }
+
     return (
         <>
             <Modal backdrop="static" show={show} onHide={handleClose} centered
@@ -221,12 +203,6 @@ const ModalImportWallet = (props) => {
                                                 </div>
 
                                             </Form>
-                                            <div className="buttons">
-                                                <button className="button button-primary" onClick={()=>handleKepler("kepler")}>Use Kepler</button>
-                                            </div>
-                                            <div className="buttons">
-                                                <button className="button button-primary large" onClick={()=>handleRoute("withAddress")}>Continue without importing?</button>
-                                            </div>
                                         </>
 
                                         : <Form onSubmit={handlePrivateKeySubmit}>
@@ -256,12 +232,7 @@ const ModalImportWallet = (props) => {
                                             <div className="buttons">
                                                 <button className="button button-primary">Next</button>
                                             </div>
-                                            <div className="buttons">
-                                                <button className="button button-primary" onClick={()=>handleKepler("kepler")}>Use Kepler</button>
-                                            </div>
-                                            <div className="buttons">
-                                                <button className="button button-primary large" onClick={()=>handleRoute("withAddress")}>Continue without importing?</button>
-                                            </div>
+
                                             <div className="note-section">
                                                 <div className="exclamation"><Icon
                                                     viewClass="arrow-right"
@@ -387,7 +358,7 @@ const ModalImportWallet = (props) => {
                             <p className="mnemonic-result"><b>Wallet path: </b>{advancedFormResponseData.walletPath}</p>
                             <p className="mnemonic-result"><b>Address: </b>{advancedFormResponseData.address}</p>
                             <div className="buttons">
-                                <button className="button button-primary" onClick={handleLogin}>Done</button>
+                                <button className="button button-primary" onClick={handleClose}>Done</button>
                             </div>
                             <div className="note-section">
                                 <div className="exclamation"><Icon
@@ -401,11 +372,7 @@ const ModalImportWallet = (props) => {
                     : null}
 
             </Modal>
-            {withAddress ?
-                    <AddressImport mnemonic={props.mnemonic} handleRoute={handleRoute} handleClose={handleClose} setWithAddress={setWithAddress}
-                                   routeValue="hideWithAddress"/>
-                    : null
-            }
+
             {generateKey ?
                 <GeneratePrivateKey mnemonic={userMnemonic} handleRoute={handleRoute} setGenerateKey={setGenerateKey}
                                     routeValue="hideGenerateKey" formName="Import Wallet"/>
