@@ -130,29 +130,41 @@ const ModalWithdraw = (props) => {
                 mnemonic = result;
             });
         }
-        let accountNumber = 0;
-        let addressIndex = 0;
-        let bip39Passphrase = "";
-        if (advanceMode) {
-            accountNumber = document.getElementById('claimTotalAccountNumber').value;
-            addressIndex = document.getElementById('claimTotalAccountIndex').value;
-            bip39Passphrase = document.getElementById('claimTotalbip39Passphrase').value;
-        }
-        const response = transactions.TransactionWithMnemonic([WithdrawMsg(address, validatorAddress)], aminoMsgHelper.fee(5000, 250000), memoContent,
-            mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-        response.then(result => {
-            console.log(result, "withdrawMsg success")
-            setResponse(result);
-            setLoader(false);
-            showSeedModal(false);
+        let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic);
+        addressFromMnemonic.then((addressResponse) => {
+            if(address === addressResponse) {
+                let accountNumber = 0;
+                let addressIndex = 0;
+                let bip39Passphrase = "";
+                if (advanceMode) {
+                    accountNumber = document.getElementById('claimTotalAccountNumber').value;
+                    addressIndex = document.getElementById('claimTotalAccountIndex').value;
+                    bip39Passphrase = document.getElementById('claimTotalbip39Passphrase').value;
+                }
+                const response = transactions.TransactionWithMnemonic([WithdrawMsg(address, validatorAddress)], aminoMsgHelper.fee(5000, 250000), memoContent,
+                    mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                response.then(result => {
+                    console.log(result, "withdrawMsg success");
+                    setResponse(result);
+                    setLoader(false);
+                    showSeedModal(false);
+                }).catch(err => {
+                    setLoader(false);
+                    setErrorMessage(err.message);
+                    console.log(err.message, "withdrawMsg error")
+                })
+            } else {
+                setLoader(false);
+                setErrorMessage("Enter Correct Mnemonic")
+            }
         }).catch(err => {
             setLoader(false);
-            setErrorMessage(err.message)
-            console.log(err.message, "withdrawMsg error")
+            setErrorMessage("Enter Correct Mnemonic")
         })
     };
     const onChangeSelect = (evt) => {
         setValidatorAddress(evt.target.value);
+        console.log(evt.target.value)
         let rewards = ActionHelper.getValidatorRewards(evt.target.value);
         rewards.then(function (response) {
             setIndividualRewards(response);

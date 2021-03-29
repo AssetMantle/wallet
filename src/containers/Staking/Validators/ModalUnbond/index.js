@@ -124,27 +124,37 @@ const ModalUnbond = (props) => {
                 mnemonic = result;
             });
         }
+        let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic);
+        addressFromMnemonic.then((addressResponse) => {
+            if(address === addressResponse) {
+                let accountNumber = 0;
+                let addressIndex = 0;
+                let bip39Passphrase = "";
+                if (advanceMode) {
+                    accountNumber = document.getElementById('unbondAccountNumber').value;
+                    addressIndex = document.getElementById('unbondAccountIndex').value;
+                    bip39Passphrase = document.getElementById('unbondbip39Passphrase').value;
+                }
 
-        let accountNumber = 0;
-        let addressIndex = 0;
-        let bip39Passphrase = "";
-        if (advanceMode) {
-            accountNumber = document.getElementById('unbondAccountNumber').value;
-            addressIndex = document.getElementById('unbondAccountIndex').value;
-            bip39Passphrase = document.getElementById('unbondbip39Passphrase').value;
-        }
-
-        const response = transactions.TransactionWithMnemonic([UnbondMsg(address, props.validatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent,
-            mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-        response.then(result => {
-            console.log(result, "unbond success")
-            setResponse(result);
-            setLoader(false);
-            showSeedModal(false);
+                const response = transactions.TransactionWithMnemonic([UnbondMsg(address, props.validatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent,
+                    mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                response.then(result => {
+                    console.log(result, "unbond success")
+                    setResponse(result);
+                    setLoader(false);
+                    showSeedModal(false);
+                }).catch(err => {
+                    setLoader(false);
+                    setErrorMessage(err.message)
+                    console.log(err.message, "unbond error")
+                })
+            } else {
+                setLoader(false);
+                setErrorMessage("Enter Correct Mnemonic")
+            }
         }).catch(err => {
             setLoader(false);
-            setErrorMessage(err.message)
-            console.log(err.message, "unbond error")
+            setErrorMessage("Enter Correct Mnemonic")
         })
     };
     const handlePrivateKey = (value) => {
@@ -168,7 +178,7 @@ const ModalUnbond = (props) => {
                                 <Form.Control
                                     type="number"
                                     placeholder="Amount"
-                                    value={props.balance}
+                                    value={props.delegationAmount}
                                     disabled
                                 />
                             </div>

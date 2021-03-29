@@ -44,6 +44,11 @@ async function MnemonicWalletWithPassphrase(mnemonic, hdPath = makeHdPath(), pas
     return [wallet, firstAccount.address]
 }
 
+async function CheckAddressMisMatch(mnemonic, hdpath = makeHdPath(), bip39Passphrase = "", prefix = addressPrefix) {
+    const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix)
+    return address;
+}
+
 //TODO use this when bip39 passphrase is included in cosmjs.
 async function MnemonicWallet(mnemonic, hdPath = makeHdPath(), prefix = addressPrefix) {
     const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, hdPath, prefix);
@@ -56,4 +61,4 @@ function makeHdPath(accountNumber = "0", addressIndex = "0", coinType = configCo
     return stringToPath("m/44'/" + coinType + "'/" + accountNumber + "'/0/" + addressIndex)
 }
 
-export default {TransactionWithKeplr, TransactionWithMnemonic, makeHdPath};
+export default {TransactionWithKeplr, TransactionWithMnemonic, makeHdPath, CheckAddressMisMatch};
