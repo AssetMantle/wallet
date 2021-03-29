@@ -138,26 +138,37 @@ const ModalReDelegate = (props) => {
                 mnemonic = result;
             });
         }
-        let accountNumber = 0;
-        let addressIndex = 0;
-        let bip39Passphrase = "";
-        if (advanceMode) {
-            accountNumber = document.getElementById('redelegateAccountNumber').value;
-            addressIndex = document.getElementById('redelegateAccountIndex').value;
-            bip39Passphrase = document.getElementById('redelegatebip39Passphrase').value;
-        }
+        let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic);
+        addressFromMnemonic.then((addressResponse) => {
+            if(address === addressResponse) {
+                let accountNumber = 0;
+                let addressIndex = 0;
+                let bip39Passphrase = "";
+                if (advanceMode) {
+                    accountNumber = document.getElementById('redelegateAccountNumber').value;
+                    addressIndex = document.getElementById('redelegateAccountIndex').value;
+                    bip39Passphrase = document.getElementById('redelegatebip39Passphrase').value;
+                }
 
-        const response = transactions.TransactionWithMnemonic([RedelegateMsg(address, props.validatorAddress, toValidatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent,
-            mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-        response.then(result => {
-            console.log(result, "redelegate success")
-            showSeedModal(false);
-            setResponse(result);
-            setLoader(false);
+                const response = transactions.TransactionWithMnemonic([RedelegateMsg(address, props.validatorAddress, toValidatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent,
+                    mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                response.then(result => {
+                    console.log(result, "redelegate success")
+                    showSeedModal(false);
+                    setResponse(result);
+                    setLoader(false);
+                }).catch(err => {
+                    setLoader(false);
+                    setErrorMessage(err.message)
+                    console.log(err.message, "redelegate error")
+                })
+            } else {
+                setLoader(false);
+                setErrorMessage("Enter Correct Mnemonic")
+            }
         }).catch(err => {
             setLoader(false);
-            setErrorMessage(err.message)
-            console.log(err.message, "redelegate error")
+            setErrorMessage("Enter Correct Mnemonic")
         })
     };
     if (loader) {
@@ -203,7 +214,7 @@ const ModalReDelegate = (props) => {
                                 <Form.Control
                                     type="number"
                                     placeholder="Amount"
-                                    value={props.balance}
+                                    value={props.delegationAmount}
                                     disabled
                                 />
                             </div>

@@ -117,26 +117,37 @@ const ModalWithdraw = (props) => {
                 mnemonic = result;
             });
         }
-        let accountNumber = 0;
-        let addressIndex = 0;
-        let bip39Passphrase = "";
-        if (advanceMode) {
-            accountNumber = document.getElementById('claimAccountNumber').value;
-            addressIndex = document.getElementById('claimAccountIndex').value;
-            bip39Passphrase = document.getElementById('claimbip39Passphrase').value;
-        }
+        let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic);
+        addressFromMnemonic.then((addressResponse) => {
+            if(address === addressResponse) {
+                let accountNumber = 0;
+                let addressIndex = 0;
+                let bip39Passphrase = "";
+                if (advanceMode) {
+                    accountNumber = document.getElementById('claimAccountNumber').value;
+                    addressIndex = document.getElementById('claimAccountIndex').value;
+                    bip39Passphrase = document.getElementById('claimbip39Passphrase').value;
+                }
 
-        const response = transactions.TransactionWithMnemonic([WithdrawMsg(address, props.validatorAddress)], aminoMsgHelper.fee(5000, 250000), memoContent,
-            mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-        response.then(result => {
-            console.log(result, "withdrawMsg success")
-            setResponse(result);
-            setLoader(false);
-            showSeedModal(false);
+                const response = transactions.TransactionWithMnemonic([WithdrawMsg(address, props.validatorAddress)], aminoMsgHelper.fee(5000, 250000), memoContent,
+                    mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                response.then(result => {
+                    console.log(result, "withdrawMsg success")
+                    setResponse(result);
+                    setLoader(false);
+                    showSeedModal(false);
+                }).catch(err => {
+                    setLoader(false);
+                    setErrorMessage(err.message)
+                    console.log(err.message, "withdrawMsg error")
+                })
+            } else {
+                setLoader(false);
+                setErrorMessage("Enter Correct Mnemonic")
+            }
         }).catch(err => {
             setLoader(false);
-            setErrorMessage(err.message)
-            console.log(err.message, "withdrawMsg error")
+            setErrorMessage("Enter Correct Mnemonic")
         })
     };
     const handlePrivateKey = (value) => {

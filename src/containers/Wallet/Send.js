@@ -38,6 +38,7 @@ const Send = () => {
         setShow(false);
         setMnemonicForm(false);
         setTxResponse('');
+        setErrorMessage("")
     };
     const handleAmountChange = (evt) => {
         setAmountField(evt.target.value)
@@ -136,25 +137,37 @@ const Send = () => {
                 userMnemonic = result;
             });
         }
-        let accountNumber = 0;
-        let addressIndex = 0;
-        let bip39Passphrase = "";
-        if (advanceMode) {
-            accountNumber = document.getElementById('sendAccountNumber').value;
-            addressIndex = document.getElementById('sendAccountIndex').value;
-            bip39Passphrase = document.getElementById('sendbip39Passphrase').value;
-        }
-        const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, amountField)], aminoMsgHelper.fee(5000, 250000), memoContent,
-            userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-        response.then(result => {
-            console.log(result, "send success")
-            setMnemonicForm(true);
-            setTxResponse(result);
-            setLoader(false);
+        let addressFromMnemonic = transactions.CheckAddressMisMatch(userMnemonic);
+        addressFromMnemonic.then((addressResponse) => {
+            console.log(addressResponse)
+            if(address === addressResponse) {
+                let accountNumber = 0;
+                let addressIndex = 0;
+                let bip39Passphrase = "";
+                if (advanceMode) {
+                    accountNumber = document.getElementById('sendAccountNumber').value;
+                    addressIndex = document.getElementById('sendAccountIndex').value;
+                    bip39Passphrase = document.getElementById('sendbip39Passphrase').value;
+                }
+                const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, amountField)], aminoMsgHelper.fee(5000, 250000), memoContent,
+                    userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                response.then(result => {
+                    console.log(result, "send success")
+                    setMnemonicForm(true);
+                    setTxResponse(result);
+                    setLoader(false);
+                }).catch(err => {
+                    setLoader(false);
+                    setErrorMessage(err.message)
+                    console.log(err.message, "send error")
+                })
+            }else{
+                setLoader(false);
+                setErrorMessage("Enter Correct Mnemonic")
+            }
         }).catch(err => {
             setLoader(false);
-            setErrorMessage(err.message)
-            console.log(err.message, "send error")
+            setErrorMessage("Enter Correct Mnemonic")
         })
     };
     const popover = (
