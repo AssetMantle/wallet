@@ -345,6 +345,7 @@ const ModalWithdraw = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
+                                <p className="fee"> Default fee of 0.005xprt will be cut from the wallet.</p>
                                 <button className="button button-primary">Claim Rewards</button>
                             </div>
                         </Form>
