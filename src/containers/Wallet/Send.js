@@ -31,9 +31,7 @@ const Send = () => {
     const [memoContent, setMemoContent] = useState('');
     let mode = localStorage.getItem('loginMode');
     let address = localStorage.getItem('address');
-    const handleAmount = (amount) => {
-        setAmountField(amount)
-    };
+
     const handleClose = () => {
         setShow(false);
         setMnemonicForm(false);
@@ -140,7 +138,7 @@ const Send = () => {
         let addressFromMnemonic = transactions.CheckAddressMisMatch(userMnemonic);
         addressFromMnemonic.then((addressResponse) => {
             console.log(addressResponse)
-            if(address === addressResponse) {
+            if (address === addressResponse) {
                 let accountNumber = 0;
                 let addressIndex = 0;
                 let bip39Passphrase = "";
@@ -161,7 +159,7 @@ const Send = () => {
                     setErrorMessage(err.message)
                     console.log(err.message, "send error")
                 })
-            }else{
+            } else {
                 setLoader(false);
                 setErrorMessage("Enter Correct Mnemonic")
             }
@@ -207,20 +205,6 @@ const Send = () => {
                                 onChange={handleAmountChange}
                                 required={true}
                             />
-                            <div className="range-buttons">
-                                <button type="button" className="button button-range"
-                                        onClick={() => handleAmount(25000000)}>25%
-                                </button>
-                                <button type="button" className="button button-range"
-                                        onClick={() => handleAmount(50000000)}>50%
-                                </button>
-                                <button type="button" className="button button-range"
-                                        onClick={() => handleAmount(75000000)}>75%
-                                </button>
-                                <button type="button" className="button button-range"
-                                        onClick={() => handleAmount(100000000)}>Max
-                                </button>
-                            </div>
                         </div>
                     </div>
                     {mode === "normal" ?

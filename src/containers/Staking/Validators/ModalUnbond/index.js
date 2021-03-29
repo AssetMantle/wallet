@@ -21,9 +21,6 @@ const ModalUnbond = (props) => {
     const [importMnemonic, setImportMnemonic] = useState(true);
     const address = localStorage.getItem('address');
     const mode = localStorage.getItem('loginMode');
-    const handleAmount = (amount) => {
-        setAmount(amount)
-    };
 
     const handleAmountChange = (evt) => {
         setAmount(evt.target.value)
@@ -194,20 +191,6 @@ const ModalUnbond = (props) => {
                                         onChange={handleAmountChange}
                                         required={true}
                                     />
-                                    <div className="range-buttons">
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(25000000)}>25%
-                                        </button>
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(50000000)}>50%
-                                        </button>
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(75000000)}>75%
-                                        </button>
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(100000000)}>Max
-                                        </button>
-                                    </div>
                                 </div>
                             </div>
                             {mode === "normal" ?

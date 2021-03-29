@@ -31,9 +31,6 @@ const ModalDelegate = (props) => {
     const [importMnemonic, setImportMnemonic] = useState(true);
     const address = localStorage.getItem('address');
     const mode = localStorage.getItem('loginMode');
-    const handleAmount = (amount) => {
-        setAmount(amount)
-    };
 
     function ContextAwareToggle({children, eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
@@ -211,20 +208,6 @@ const ModalDelegate = (props) => {
                                         onChange={handleAmountChange}
                                         required={true}
                                     />
-                                    <div className="range-buttons">
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(25000000)}>25%
-                                        </button>
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(50000000)}>50%
-                                        </button>
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(75000000)}>75%
-                                        </button>
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(100000000)}>Max
-                                        </button>
-                                    </div>
                                 </div>
                             </div>
                             <div className="form-field">
