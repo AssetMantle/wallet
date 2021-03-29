@@ -7,7 +7,7 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import helper from "../../../../utils/helper";
 import aminoMsgHelper from "../../../../utils/aminoMsgHelper";
-import protoMsgHelper from "../../../../utils/protoMsgHelper";
+import {RedelegateMsg} from "../../../../utils/protoMsgHelper";
 import {connect} from "react-redux";
 import Transaction from "../../../../utils/transactions";
 import transactions from "../../../../utils/transactions";
@@ -99,7 +99,7 @@ const ModalReDelegate = (props) => {
         setLoader(true);
         event.preventDefault();
         setInitialModal(false);
-        const response = transactions.TransactionWithKeplr([protoMsgHelper.prototype.msgRedelegate(address, props.validatorAddress, toValidatorAddress, amount)], aminoMsgHelper.fee(5000, 250000));
+        const response = transactions.TransactionWithKeplr([RedelegateMsg(address, props.validatorAddress, toValidatorAddress, amount)], aminoMsgHelper.fee(5000, 250000));
         response.then(result => {
             console.log(result);
             setResponse(result);

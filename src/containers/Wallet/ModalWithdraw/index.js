@@ -12,7 +12,7 @@ import Actions from "../../../utils/actions";
 import {connect} from "react-redux";
 import helper from "../../../utils/helper";
 import Loader from "../../../components/Loader";
-import MessagesFile from "../../../utils/protoMsgHelper";
+import {WithdrawMsg} from "../../../utils/protoMsgHelper";
 import aminoMsgHelper from "../../../utils/aminoMsgHelper";
 import transactions from "../../../utils/transactions";
 
@@ -97,7 +97,7 @@ const ModalWithdraw = (props) => {
         setLoader(true);
         event.preventDefault();
         setInitialModal(false);
-        const response = transactions.TransactionWithKeplr([MessagesFile.prototype.msgWithdraw(address, validatorAddress)], aminoMsgHelper.fee(5000, 250000));
+        const response = transactions.TransactionWithKeplr([WithdrawMsg(address, validatorAddress)], aminoMsgHelper.fee(5000, 250000));
         response.then(result => {
             console.log(result);
             setResponse(result);

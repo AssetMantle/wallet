@@ -13,7 +13,7 @@ import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import aminoMsgHelper from "../../../../utils/aminoMsgHelper";
-import MessagesFile from "../../../../utils/protoMsgHelper";
+import {DelegateMsg} from "../../../../utils/protoMsgHelper";
 import transactions from "../../../../utils/transactions";
 import helper from "../../../../utils/helper";
 import Loader from "../../../../components/Loader";
@@ -88,7 +88,7 @@ const ModalDelegate = (props) => {
         setLoader(true);
         event.preventDefault();
         setInitialModal(false);
-        const response = transactions.TransactionWithKeplr([MessagesFile.prototype.msgDelegate(address, props.validatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent);
+        const response = transactions.TransactionWithKeplr([DelegateMsg(address, props.validatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent);
         response.then(result => {
             console.log(result);
             setResponse(result);
