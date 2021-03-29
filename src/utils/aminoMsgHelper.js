@@ -19,7 +19,7 @@ function msgs(...msg) {
 }
 
 function fee(amount, gas = 250000) {
-    return {amount: [{amount: String(amount), denom: "upxrt"}], gas: String(gas)}
+    return {amount: [{amount: String(amount), denom: "uxprt"}], gas: String(gas)}
 }
 
 function delegateMsg(amount, address, validatorAddress) {
