@@ -116,6 +116,9 @@ const ModalWithdraw = (props) => {
         showSeedModal(true);
     };
     const handleSubmit = async event => {
+
+        setLoader(true);
+
         event.preventDefault();
         let mnemonic;
         if (importMnemonic) {
@@ -139,9 +142,9 @@ const ModalWithdraw = (props) => {
             mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
         response.then(result => {
             console.log(result, "withdrawMsg success")
-            setInitialModal(true);
             setResponse(result);
             setLoader(false);
+            showSeedModal(false);
         }).catch(err => {
             setLoader(false);
             setErrorMessage(err.message)
@@ -160,12 +163,14 @@ const ModalWithdraw = (props) => {
         setImportMnemonic(value);
         setErrorMessage("");
     };
-    if (loader) {
-        return <Loader/>;
-    }
+
     const disabled = (
         helper.ValidateFrom(validatorAddress).message !== ''
     );
+
+    if (loader) {
+        return <Loader/>;
+    }
     return (
         <Modal
             animation={false}
@@ -340,14 +345,14 @@ const ModalWithdraw = (props) => {
                 response !== '' && response.code === undefined ?
                     <>
                         <Modal.Header className="result-header success">
-                            Successfully Delegated!
+                            Successfully Claimed Rewards!
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 <img src={success} alt="success-image"/>
                                 {mode === "kepler" ?
                                     <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
-                                    : <p className="tx-hash">Tx Hash: {response.txhash}</p>}
+                                    : <p className="tx-hash">Tx Hash: {response.transactionHash}</p>}
                                 <div className="buttons">
                                     <button className="button" onClick={handleClose}>Done</button>
                                 </div>
@@ -360,16 +365,16 @@ const ModalWithdraw = (props) => {
                 response !== '' && response.code !== undefined ?
                     <>
                         <Modal.Header className="result-header error">
-                            Failed to Delegate
+                            Failed to Claimed Rewards
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 {mode === "kepler" ?
                                     <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
-                                    : <p className="tx-hash">Tx Hash: {response.txhash}</p>}
+                                    : <p className="tx-hash">Tx Hash: {response.transactionHash}</p>}
                                 {mode === "kepler" ?
                                     <p>{response.rawLog}</p>
-                                    : <p>{response.raw_log}</p>}
+                                    : <p>{response.rawLog}</p>}
                                 <div className="buttons">
                                     <button className="button" onClick={handleClose}>Done</button>
                                 </div>

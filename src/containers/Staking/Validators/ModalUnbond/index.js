@@ -111,6 +111,8 @@ const ModalUnbond = (props) => {
         })
     };
     const handleSubmit = async event => {
+
+        setLoader(true);
         event.preventDefault();
         let mnemonic;
         if (importMnemonic) {
@@ -122,7 +124,7 @@ const ModalUnbond = (props) => {
                 mnemonic = result;
             });
         }
-        const validatorAddress = props.validatorAddress;
+
         let accountNumber = 0;
         let addressIndex = 0;
         let bip39Passphrase = "";
@@ -136,9 +138,9 @@ const ModalUnbond = (props) => {
             mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
         response.then(result => {
             console.log(result, "unbond success")
-            setInitialModal(true);
             setResponse(result);
             setLoader(false);
+            showSeedModal(false);
         }).catch(err => {
             setLoader(false);
             setErrorMessage(err.message)
@@ -336,7 +338,7 @@ const ModalUnbond = (props) => {
                                 <img src={success} alt="success-image"/>
                                 {mode === "kepler" ?
                                     <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
-                                    : <p className="tx-hash">Tx Hash: {response.txhash}</p>}
+                                    : <p className="tx-hash">Tx Hash: {response.transactionHash}</p>}
                                 <div className="buttons">
                                     <button className="button" onClick={props.handleClose}>Done</button>
                                 </div>
@@ -355,12 +357,12 @@ const ModalUnbond = (props) => {
                             <div className="result-container">
                                 {mode === "kepler" ?
                                     <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
-                                    : <p className="tx-hash">Tx Hash: {response.txhash}</p>}
+                                    : <p className="tx-hash">Tx Hash: {response.transactionHash}</p>}
                                 {mode === "kepler" ?
                                     <p>{response.rawLog}</p>
-                                    : <p>{response.raw_log}</p>}
+                                    : <p>{response.rawLog}</p>}
                                 <div className="buttons">
-                                    <button className="button" onClick={handleClose}>Done</button>
+                                    <button className="button" onClick={props.handleClose}>Done</button>
                                 </div>
                             </div>
                         </Modal.Body>

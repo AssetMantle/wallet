@@ -927,10 +927,7 @@ html, body {
 # importwallet styles
 --------------------------------------------------------------*/
 .main-section {
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  display: flex; }
+  height: 100vh; }
   .main-section .side-bar {
     background: #272931;
     width: 250px; }
@@ -1138,20 +1135,56 @@ html, body {
     word-break: break-word; }
 
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 22px 40px 22px 30px;
   border-bottom: 1px solid #E3E5F4; }
+  .header .navbar {
+    background: #222325; }
+    .header .navbar .navbar-nav li a {
+      font-family: "Poppins",sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 1.5;
+      text-align: center;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: #c4c4c4; }
+      .header .navbar .navbar-nav li a .icon {
+        fill: #c4c4c4; }
+    .header .navbar a:hover, .header .navbar a.active {
+      color: #e50913 !important; }
+      .header .navbar a:hover .icon, .header .navbar a.active .icon {
+        fill: #e50913; }
   .header .title {
     font-weight: 600;
     font-size: 18px;
     line-height: 27px;
     margin: 0;
     color: #313238; }
+  .header .nav-item {
+    display: flex;
+    align-items: center; }
+    .header .nav-item .nav-link {
+      display: flex;
+      align-items: center; }
+  .header .help-text {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 21px;
+    /* identical to box height */
+    text-align: right;
+    color: #cccccc; }
+    .header .help-text .icon {
+      fill: #ffffff;
+      margin-right: 5px;
+      width: 14px;
+      height: 14px; }
   .header .profile-section {
     display: flex;
     align-items: center; }
+    .header .profile-section .icon {
+      width: 20px;
+      height: 20px; }
     .header .profile-section .profile-dropdown button {
       padding: 0;
       margin: 0;
@@ -1218,22 +1251,6 @@ html, body {
             border-right: 1px solid #EAEBF6; }
     .header .profile-section .icon-profile {
       margin-right: 20px; }
-    .header .profile-section .icon {
-      width: 20px;
-      height: 20px; }
-    .header .profile-section p {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      font-weight: 500;
-      font-size: 14px;
-      line-height: 21px;
-      /* identical to box height */
-      text-align: right;
-      color: #2E3239; }
-      .header .profile-section p .icon {
-        margin-right: 5px;
-        width: 14px;
-        height: 14px; }
 
 .tab-header .left {
   display: flex;

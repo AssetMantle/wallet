@@ -9,7 +9,6 @@ const Wallet = () => {
 
     return (
         <div className="wallet-main-section">
-            <DashboardHeader name="Wallet"/>
             <TokenInfo/>
             <div className="tabs-section">
                 <Tabs defaultActiveKey="Send" id="uncontrolled-tab-example">

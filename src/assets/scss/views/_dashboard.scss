@@ -1,9 +1,5 @@
 .main-section {
-  position: fixed;
-  width: 100vw;
   height: 100vh;
-  display: flex;
-
   .side-bar {
     background: #272931;
     width: 250px;
@@ -316,12 +312,33 @@
 }
 
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 22px 40px 22px 30px;
   border-bottom: 1px solid #E3E5F4;
+  .navbar{
+    background: #222325;
+    .navbar-nav li{
+      a{
+        font-family: "Poppins",sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 1.5;
+        text-align: center;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: #c4c4c4;
+        .icon{
+          fill: #c4c4c4;;
+        }
 
+      }
+    }
+
+    a:hover, a.active {
+      color: #e50913 !important;
+      .icon{
+        fill: #e50913;;
+      }
+    }
+  }
   .title {
     font-weight: 600;
     font-size: 18px;
@@ -329,11 +346,42 @@
     margin: 0;
     color: #313238;
   }
+  .nav-item{
+    display: flex;
+    align-items: center;
+    .nav-link{
+      display: flex;
+      align-items: center;
+    }
+  }
 
+
+  .help-text{
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 21px;
+    /* identical to box height */
+
+    text-align: right;
+
+    color: #cccccc;
+
+    .icon {
+      fill: #ffffff;
+      margin-right: 5px;
+      width: 14px;
+      height: 14px;
+    }
+  }
   .profile-section {
     display: flex;
     align-items: center;
-
+    .icon {
+      width: 20px;
+      height: 20px;
+    }
     .profile-dropdown {
       button {
         padding: 0;
@@ -429,29 +477,8 @@
       margin-right: 20px;
     }
 
-    .icon {
-      width: 20px;
-      height: 20px;
-    }
 
-    p {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      font-weight: 500;
-      font-size: 14px;
-      line-height: 21px;
-      /* identical to box height */
 
-      text-align: right;
-
-      color: #2E3239;
-
-      .icon {
-        margin-right: 5px;
-        width: 14px;
-        height: 14px;
-      }
-    }
   }
 }
 .tab-header{
