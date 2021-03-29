@@ -27,7 +27,12 @@ const ModalReDelegate = (props) => {
     const mode = localStorage.getItem('loginMode');
 
     const handleAmountChange = (evt) => {
-        setAmount(evt.target.value)
+        let rex = /^(?!(0))\d*\.?\d{0,2}$/;
+        if(rex.test(evt.target.value)){
+            setAmount(evt.target.value)
+        }else{
+            return false
+        }
     };
 
     function ContextAwareToggle({children, eventKey, callback}) {
@@ -93,7 +98,7 @@ const ModalReDelegate = (props) => {
         setLoader(true);
         event.preventDefault();
         setInitialModal(false);
-        const response = transactions.TransactionWithKeplr([RedelegateMsg(address, props.validatorAddress, toValidatorAddress, amount)], aminoMsgHelper.fee(0, 250000));
+        const response = transactions.TransactionWithKeplr([RedelegateMsg(address, props.validatorAddress, toValidatorAddress, (amount*1000000))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             setResponse(result);
             setLoader(false)
@@ -146,7 +151,7 @@ const ModalReDelegate = (props) => {
                     bip39Passphrase = document.getElementById('redelegatebip39Passphrase').value;
                 }
 
-                const response = transactions.TransactionWithMnemonic([RedelegateMsg(address, props.validatorAddress, toValidatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent,
+                const response = transactions.TransactionWithMnemonic([RedelegateMsg(address, props.validatorAddress, toValidatorAddress, (amount*1000000))], aminoMsgHelper.fee(5000, 250000), memoContent,
                     mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                 response.then(result => {
                     console.log(result, "redelegate success")
@@ -215,7 +220,7 @@ const ModalReDelegate = (props) => {
                                 />
                             </div>
                             <div className="form-field">
-                                <p className="label">Send Amount</p>
+                                <p className="label">Send Amount (XPRT)</p>
                                 <div className="amount-field">
                                     <Form.Control
                                         type="number"
@@ -223,6 +228,7 @@ const ModalReDelegate = (props) => {
                                         name="amount"
                                         placeholder="Send Amount"
                                         value={amount}
+                                        step="any"
                                         onChange={handleAmountChange}
                                         required={true}
                                     />

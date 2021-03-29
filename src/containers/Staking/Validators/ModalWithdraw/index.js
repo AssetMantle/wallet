@@ -132,13 +132,13 @@ const ModalWithdraw = (props) => {
                 const response = transactions.TransactionWithMnemonic([WithdrawMsg(address, props.validatorAddress)], aminoMsgHelper.fee(5000, 250000), memoContent,
                     mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                 response.then(result => {
-                    console.log(result, "withdrawMsg success")
+                    console.log(result, "withdrawMsg success");
                     setResponse(result);
                     setLoader(false);
                     showSeedModal(false);
                 }).catch(err => {
                     setLoader(false);
-                    setErrorMessage(err.message)
+                    setErrorMessage(err.message);
                     console.log(err.message, "withdrawMsg error")
                 })
             } else {
@@ -172,6 +172,12 @@ const ModalWithdraw = (props) => {
                                               placeholder="Enter Memo"
                                               required={false}/>
                             </div>
+                            <div className="form-field">
+                                <p className="label">Available</p>
+                                <div className="available-tokens">
+                                    <p className="tokens">{props.rewards} <span>XPRT</span></p>
+                                </div>
+                            </div>
                             <div className="buttons navigate-buttons">
                                 <button className="button button-secondary" onClick={() => handlePrevious()}>
                                     <Icon
@@ -180,7 +186,7 @@ const ModalWithdraw = (props) => {
                                 </button>
                                 <button
                                     className={props.rewards ? "button button-primary" : "button button-primary disabled"}
-                                    disabled={props.rewards ? false : true}> {mode === "normal" ? "Next" : "Submit"}
+                                    disabled={props.rewards === '0.000000'}> {mode === "normal" ? "Next" : "Submit"}
                                 </button>
                             </div>
                         </Form>
