@@ -99,11 +99,16 @@ const Transactions = (props) => {
         return <Loader/>;
     }
     const handleNext = () =>{
+        console.log(props.pageNumber[0], props.pageNumber[1], "previos")
         if(props.pageNumber[0] <  props.pageNumber[1]) {
             props.fetchTransactions(address, 20, props.pageNumber[0] + 1);
         }
+        else if(props.pageNumber[0] > 1 && props.pageNumber[0] === props.pageNumber[1]){
+            props.fetchTransactions(address, 20, props.pageNumber[0] - 1, "Initial");
+        }
     };
     const handlePrevious = () =>{
+
         if(props.pageNumber[0] > 1) {
             props.fetchTransactions(address, 20, props.pageNumber[0] - 1);
         }
@@ -134,6 +139,7 @@ const Transactions = (props) => {
 
 
 const stateToProps = (state) => {
+    console.log(state.transactions.pageNumber)
     return {
         list: state.transactions.list,
         inProgress: state.transactions.inProgress,
