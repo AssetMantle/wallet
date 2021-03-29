@@ -99,7 +99,6 @@ const ModalWithdraw = (props) => {
         setInitialModal(false);
         const response = transactions.TransactionWithKeplr([WithdrawMsg(address, validatorAddress)], aminoMsgHelper.fee(5000, 250000));
         response.then(result => {
-            console.log(result);
             setResponse(result);
             setLoader(false)
         }).catch(err => {
@@ -155,7 +154,6 @@ const ModalWithdraw = (props) => {
                         const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
                         persistence.broadcast(signedTx).then(response => {
                             setResponse(response);
-                            console.log(response.code)
                         });
                         showSeedModal(false);
                     } else {
@@ -175,7 +173,6 @@ const ModalWithdraw = (props) => {
         let rewards = ActionHelper.getValidatorRewards(evt.target.value);
         rewards.then(function (response) {
             setIndividualRewards(response);
-            console.log(response, "Rewards")
         })
     };
 

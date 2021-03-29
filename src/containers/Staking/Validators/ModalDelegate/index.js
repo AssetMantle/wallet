@@ -150,7 +150,6 @@ const ModalDelegate = (props) => {
         const persistence = MakePersistence(accountNumber, addressIndex);
         const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
         const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
-        console.log(address.error, "rdsult");
         if (address.error === undefined && ecpairPriv.error === undefined) {
             persistence.getAccounts(address).then(data => {
                 if (data.code === undefined) {
@@ -164,8 +163,7 @@ const ModalDelegate = (props) => {
                     });
                     const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
                     persistence.broadcast(signedTx).then(response => {
-                        setResponse(response)
-                        console.log(response, "delegate response")
+                        setResponse(response);
                     });
                     showSeedModal(false);
                 } else {
