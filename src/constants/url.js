@@ -9,3 +9,4 @@ export const getSendTransactionsUrl = (address) => `${API_URL}/txs?message.sende
 export const getTransactionsUrl = (address , limit, pageNumber) =>`${API_URL}/txs?message.sender=${address}&limit=${limit}&page=${pageNumber}`;
 export const getValidatorRewardsUrl = (address, validatorAddress) => `${API_URL}/cosmos/distribution/v1beta1/delegators/${address}/rewards/${validatorAddress}`;
 export const getAccountUrl = (address) => `${API_URL}/cosmos/auth/v1beta1/accounts/${address}`;
+export const tokenPriceUrl = () => `https://ascendex.com/api/pro/v1/ticker?symbol=BTMX/USDT`;

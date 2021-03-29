@@ -125,10 +125,15 @@
     }
 
     .tab-content {
-      padding: 50px 100px;
+      padding: 50px 50px 0 5px;
       position: relative;
-      height: 72vh;
+      height: 68vh;
       overflow-y: scroll;
+      &::after {
+        content:'';
+        display:block;
+        padding-bottom:30px;
+      }
     }
   }
 
@@ -328,16 +333,16 @@
         .icon{
           fill: #c4c4c4;;
         }
-
+      }
+      a:hover, a.active {
+        color: #e50913 !important;
+        .icon{
+          fill: #e50913;
+        }
       }
     }
 
-    a:hover, a.active {
-      color: #e50913 !important;
-      .icon{
-        fill: #e50913;;
-      }
-    }
+
   }
   .title {
     font-weight: 600;
@@ -1083,7 +1088,11 @@
     }
   }
 }
-
+.sign-in-buttons{
+  button{
+    width: auto !important;
+  }
+}
 .rdt_TableBody {
   .rdt_TableRow:first-child .rdt_TableCell{
     padding-top: 30px;
