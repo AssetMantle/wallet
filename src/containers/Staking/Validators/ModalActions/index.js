@@ -25,6 +25,7 @@ const ModalActions = (props) => {
     const [response, setResponse] = useState('');
     const [initialModal, setInitialModal] = useState(true);
     const [address, setAddress] = useState('');
+    const [delegationAmount, setDelegationAmount] = useState('');
     const [moniker, setMoniker] = useState('');
     const [modalDelegate, setModalOpen] = useState();
     const [rewards, setRewards] = useState(false);
@@ -45,6 +46,7 @@ const ModalActions = (props) => {
                 let delegationResponseList = response.data.delegation_responses;
                 for (const item of delegationResponseList) {
                     if (item.delegation.validator_address === props.validator.operator_address) {
+                        setDelegationAmount(item.balance.amount);
                         setDelegateStatus(true);
                     }
                 }
@@ -187,6 +189,7 @@ const ModalActions = (props) => {
                                 moniker={moniker}
                                 delegateStatus={delegateStatus}
                                 handleClose={handleClose}
+                                delegationAmount={delegationAmount}
                             />
                             : null
                     }
@@ -201,6 +204,7 @@ const ModalActions = (props) => {
                                 moniker={moniker}
                                 delegateStatus={delegateStatus}
                                 handleClose={handleClose}
+                                delegationAmount={delegationAmount}
                             />
                             : null
                     }

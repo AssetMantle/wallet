@@ -138,26 +138,36 @@ const ModalDelegate = (props) => {
                 mnemonic = result;
             });
         }
-
-        let accountNumber = 0;
-        let addressIndex = 0;
-        let bip39Passphrase = "";
-        if (advanceMode) {
-            accountNumber = document.getElementById('delegateAccountNumber').value;
-            addressIndex = document.getElementById('delegateAccountIndex').value;
-            bip39Passphrase = document.getElementById('delegatebip39Passphrase').value;
-        }
-        const response = transactions.TransactionWithMnemonic([DelegateMsg(address, props.validatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent,
-            mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-        response.then(result => {
-            console.log(result, "delegate success")
-            setResponse(result);
+        let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic);
+        addressFromMnemonic.then((addressResponse) => {
+            if(address === addressResponse) {
+                let accountNumber = 0;
+                let addressIndex = 0;
+                let bip39Passphrase = "";
+                if (advanceMode) {
+                    accountNumber = document.getElementById('delegateAccountNumber').value;
+                    addressIndex = document.getElementById('delegateAccountIndex').value;
+                    bip39Passphrase = document.getElementById('delegatebip39Passphrase').value;
+                }
+                const response = transactions.TransactionWithMnemonic([DelegateMsg(address, props.validatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent,
+                    mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                response.then(result => {
+                    console.log(result, "delegate success")
+                    setResponse(result);
+                    setLoader(false);
+                    showSeedModal(false);
+                }).catch(err => {
+                    setLoader(false);
+                    setErrorMessage(err.message)
+                    console.log(err.message, "delegate error")
+                })
+            }else{
+                    setLoader(false);
+                    setErrorMessage("Enter Correct Mnemonic")
+                }
+            }).catch(err => {
             setLoader(false);
-            showSeedModal(false);
-        }).catch(err => {
-            setLoader(false);
-            setErrorMessage(err.message)
-            console.log(err.message, "delegate error")
+            setErrorMessage("Enter Correct Mnemonic")
         })
     };
     const handlePrivateKey = (value) => {

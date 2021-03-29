@@ -89,7 +89,6 @@
 
 .wallet-main-section {
   .tabs-section {
-    border-top: 1px solid #E3E5F4;
 
     .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
       background: transparent;
@@ -106,6 +105,7 @@
     }
 
     .nav-tabs {
+      border: 1px solid #dee2e6 !important;
       .nav-link {
         border: 0px solid;
         border-radius: 0px;
