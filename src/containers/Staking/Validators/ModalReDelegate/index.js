@@ -126,6 +126,7 @@ const ModalReDelegate = (props) => {
     }
 
     const handleSubmit = async event => {
+        setLoader(true);
         event.preventDefault();
         let mnemonic;
         if (importMnemonic) {
@@ -137,7 +138,6 @@ const ModalReDelegate = (props) => {
                 mnemonic = result;
             });
         }
-        const validatorAddress = props.validatorAddress;
         let accountNumber = 0;
         let addressIndex = 0;
         let bip39Passphrase = "";
@@ -151,7 +151,7 @@ const ModalReDelegate = (props) => {
             mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
         response.then(result => {
             console.log(result, "redelegate success")
-            setInitialModal(true);
+            showSeedModal(false);
             setResponse(result);
             setLoader(false);
         }).catch(err => {
@@ -374,7 +374,7 @@ const ModalReDelegate = (props) => {
                                 <img src={success} alt="success-image"/>
                                 {mode === "kepler" ?
                                     <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
-                                    : <p className="tx-hash">Tx Hash: {response.txhash}</p>}
+                                    : <p className="tx-hash">Tx Hash: {response.transactionHash}</p>}
                                 <div className="buttons">
                                     <button className="button" onClick={props.handleClose}>Done</button>
                                 </div>
@@ -393,10 +393,10 @@ const ModalReDelegate = (props) => {
                             <div className="result-container">
                                 {mode === "kepler" ?
                                     <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
-                                    : <p className="tx-hash">Tx Hash: {response.txhash}</p>}
+                                    : <p className="tx-hash">Tx Hash: {response.transactionHash}</p>}
                                 {mode === "kepler" ?
                                     <p>{response.rawLog}</p>
-                                    : <p>{response.raw_log}</p>}
+                                    : <p>{response.rawLog}</p>}
                                 <div className="buttons">
                                     <button className="button" onClick={props.handleClose}>Done</button>
                                 </div>

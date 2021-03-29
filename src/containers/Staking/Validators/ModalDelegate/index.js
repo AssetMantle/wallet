@@ -126,6 +126,7 @@ const ModalDelegate = (props) => {
     }
 
     const handleSubmit = async event => {
+        setLoader(true);
         event.preventDefault();
         let mnemonic;
         if (importMnemonic) {
@@ -150,9 +151,9 @@ const ModalDelegate = (props) => {
             mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
         response.then(result => {
             console.log(result, "delegate success")
-            setInitialModal(true);
             setResponse(result);
             setLoader(false);
+            showSeedModal(false);
         }).catch(err => {
             setLoader(false);
             setErrorMessage(err.message)
@@ -371,7 +372,7 @@ const ModalDelegate = (props) => {
                                 <img src={success} alt="success-image"/>
                                 {mode === "kepler" ?
                                     <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
-                                    : <p className="tx-hash">Tx Hash: {response.txhash}</p>}
+                                    : <p className="tx-hash">Tx Hash: {response.transactionHash}</p>}
                                 <div className="buttons">
                                     <button className="button" onClick={props.handleClose}>Done</button>
                                 </div>
@@ -389,10 +390,10 @@ const ModalDelegate = (props) => {
                         <div className="result-container">
                             {mode === "kepler" ?
                                 <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
-                                : <p className="tx-hash">Tx Hash: {response.txhash}</p>}
+                                : <p className="tx-hash">Tx Hash: {response.transactionHash}</p>}
                             {mode === "kepler" ?
                                 <p>{response.rawLog}</p>
-                                : <p>{response.raw_log}</p>}
+                                : <p>{response.rawLog}</p>}
                             <div className="buttons">
                                 <button className="button" onClick={props.handleClose}>Done</button>
                             </div>

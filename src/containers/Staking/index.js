@@ -6,10 +6,8 @@ const Staking = () => {
 
     return (
         <div className="staking-main-section">
-            <DashboardHeader name="Staking"/>
             <TokenInfo/>
             <div className="validators-section">
-
                 <Validators/>
             </div>
         </div>
