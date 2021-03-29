@@ -48,6 +48,7 @@ const Send = () => {
         setShow(true);
     };
     const handleSubmitKepler =  event => {
+        setShow(true);
         setLoader(true);
         event.preventDefault();
         const response = transactions.TransactionWithKeplr([SendMsg(address, event.target.address.value, amountField)], aminoMsgHelper.fee(0, 250000));
@@ -127,7 +128,6 @@ const Send = () => {
                 userMnemonic = result;
             });
         }
-        const mnemonic = "tank pair spray rely any menu airport shiver boost emerge holiday siege evil grace exile comfort fence mention pig bus cable scissors ability all";
         let accountNumber = 0;
         let addressIndex = 0;
         let bip39Passphrase = "";
