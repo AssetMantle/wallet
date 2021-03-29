@@ -126,7 +126,6 @@ const ModalWithdraw = (props) => {
                 mnemonic = result;
             });
         }
-        const validatorAddress = props.validatorAddress;
             let accountNumber = 0;
             let addressIndex = 0;
             let bip39Passphrase = "";
@@ -169,7 +168,7 @@ const ModalWithdraw = (props) => {
             }
     };
     const onChangeSelect = (evt) => {
-        setValidatorAddress(evt.target.value)
+        setValidatorAddress(evt.target.value);
         let rewards = ActionHelper.getValidatorRewards(evt.target.value);
         rewards.then(function (response) {
             setIndividualRewards(response);
