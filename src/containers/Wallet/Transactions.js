@@ -89,7 +89,8 @@ const Transactions = (props) => {
                     {stxn.tx.value.fee.amount[0].amount}
                     {stxn.tx.value.fee.amount[0].denom}
                 </div> : '',
-            <span className="height">{stxn.height}</span>,
+            <a href={`https://dev.testnet-explorer.persistence.one/block?height=${stxn.height}`}
+                target="_blank" className="height">{stxn.height}</a>,
             <span className="time">{moment.utc(stxn.timestamp).local().startOf('seconds').fromNow()}</span>,
         ])
         :
@@ -115,6 +116,9 @@ const Transactions = (props) => {
                 name=""
                 options={options}/>
             <div className="pagination-custom">
+                <div className="page-number">
+                    <span>{props.pageNumber[0]} &nbsp;</span> <span> of {props.pageNumber[1]} </span>
+                </div>
                 <div className="before">
                     <IconButton aria-label="previous" onClick={handlePrevious} disabled={props.pageNumber[0] > 1 ? false : true}>
                         <ChevronLeftIcon />

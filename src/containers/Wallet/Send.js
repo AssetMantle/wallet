@@ -14,9 +14,9 @@ import success from "../../assets/images/success.svg";
 import MakePersistence from "../../utils/cosmosjsWrapper";
 import transactions from "../../utils/transactions";
 import helper from "../../utils/helper";
-import protoMsgHelper from "../../utils/protoMsgHelper";
 import aminoMsgHelper from "../../utils/aminoMsgHelper";
-
+import Loader from "../../components/Loader";
+import {SendMsg} from "../../utils/protoMsgHelper";
 const Send = () => {
     const [amountField, setAmountField] = useState(0);
     const [toAddress, setToAddress] = useState('');
@@ -25,6 +25,9 @@ const Send = () => {
     const [show, setShow] = useState(true);
     const [advanceMode, setAdvanceMode] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [keplerError, setKeplerError] = useState("");
+    const [loader, setLoader] = useState(false);
+    const [importMnemonic, setImportMnemonic] = useState(true);
     let mode = localStorage.getItem('loginMode');
     let address = localStorage.getItem('address');
     const handleAmount = (amount) => {
@@ -45,16 +48,36 @@ const Send = () => {
         setShow(true);
     };
     const handleSubmitKepler =  event => {
+        setLoader(true);
         event.preventDefault();
-        const response = transactions.TransactionWithKeplr([protoMsgHelper.prototype.msgSend(address, event.target.address.value, amountField)], aminoMsgHelper.fee(0, 250000));
+        const response = transactions.TransactionWithKeplr([SendMsg(address, event.target.address.value, amountField)], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
-            setShow(true);
             setMnemonicForm(true);
             setTxResponse(result);
+            setLoader(false);
             console.log(result)
-        }).catch(err => console.log(err.message, "send error"))
+        }).catch(err => {
+            setLoader(false);
+            setKeplerError(err.message);
+            console.log(err.message, "send error")
+        })
     };
-
+    function PrivateKeyReader(file, password) {
+        return new Promise(function (resolve, reject) {
+            const fileReader = new FileReader();
+            fileReader.readAsText(file, "UTF-8");
+            fileReader.onload = event => {
+                const res = JSON.parse(event.target.result);
+                const decryptedData = helper.decryptStore(res, password);
+                if (decryptedData.error != null) {
+                    setErrorMessage(decryptedData.error)
+                } else {
+                    resolve(decryptedData.mnemonic);
+                    setErrorMessage("");
+                }
+            };
+        });
+    }
     function ContextAwareToggle({children, eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 
@@ -86,10 +109,25 @@ const Send = () => {
             </button>
         );
     }
-
-    const handleMnemonicSubmit = (evt) => {
+    const handlePrivateKey = (value) => {
+        setImportMnemonic(value);
+        setErrorMessage("");
+    };
+    if (loader) {
+        return <Loader/>;
+    }
+    const handleMnemonicSubmit = async (evt) => {
         evt.preventDefault();
-        const userMnemonic = evt.target.mnemonic.value;
+        let userMnemonic;
+        if (importMnemonic) {
+            userMnemonic = evt.target.mnemonic.value;
+        } else {
+            const password = evt.target.password.value;
+            var promise = PrivateKeyReader(evt.target.uploadFile.files[0], password);
+            await promise.then(function (result) {
+                userMnemonic = result;
+            });
+        }
         const mnemonic = "tank pair spray rely any menu airport shiver boost emerge holiday siege evil grace exile comfort fence mention pig bus cable scissors ability all";
         let accountNumber = 0;
         let addressIndex = 0;
@@ -184,6 +222,8 @@ const Send = () => {
                             </div>
                         </div>
                     </div>
+                    {keplerError !== ''?
+                    <p className="form-error">{keplerError}</p>: null }
                     <div className="buttons">
                         <button className="button button-primary">Send XPRT Tokens</button>
                     </div>
@@ -199,12 +239,44 @@ const Send = () => {
                                     <h3 className="heading">Send Token
                                     </h3>
                                     <Form onSubmit={handleMnemonicSubmit}>
-                                        <div className="form-field">
-                                            <p className="label">Mnemonic</p>
-                                            <Form.Control as="textarea" rows={3} name="mnemonic"
-                                                          placeholder="Enter Mnemonic"
-                                                          required={true}/>
-                                        </div>
+                                        {
+                                            importMnemonic ?
+                                                <>
+                                                    <div className="text-center">
+                                                        <p onClick={() => handlePrivateKey(false)} className="import-name">Use
+                                                            Private Key (KeyStore.json file)</p>
+                                                    </div>
+                                                    <div className="form-field">
+                                                        <p className="label">Mnemonic</p>
+                                                        <Form.Control as="textarea" rows={3} name="mnemonic"
+                                                                      placeholder="Enter Mnemonic"
+                                                                      required={true}/>
+                                                    </div>
+                                                </>
+                                                :
+                                                <>
+                                                    <div className="text-center">
+                                                        <p onClick={() => handlePrivateKey(true)} className="import-name">Use
+                                                            Mnemonic (Seed Phrase)</p>
+                                                    </div>
+                                                    <div className="form-field">
+                                                        <p className="label">Password</p>
+                                                        <Form.Control
+                                                            type="password"
+                                                            name="password"
+                                                            placeholder="Enter Password"
+                                                            required={true}
+                                                        />
+                                                    </div>
+                                                    <div className="form-field upload">
+                                                        <p className="label"> KeyStore file</p>
+                                                        <Form.File id="exampleFormControlFile1" name="uploadFile"
+                                                                   className="file-upload" accept=".json" required={true}/>
+                                                    </div>
+
+                                                </>
+
+                                        }
                                         <Accordion className="advanced-wallet-accordion">
                                             <Card>
                                                 <Card.Header>
