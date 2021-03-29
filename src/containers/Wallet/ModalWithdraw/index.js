@@ -186,6 +186,9 @@ const ModalWithdraw = (props) => {
     if (loader) {
         return <Loader/>;
     }
+    const disabled = (
+        helper.ValidateFrom(validatorAddress).message !== ''
+    );
     return (
         <Modal
             animation={false}
@@ -206,12 +209,9 @@ const ModalWithdraw = (props) => {
 
                                 <Select value={validatorAddress} className="validators-list-selection"
                                         onChange={onChangeSelect} displayEmpty>
-                                    <MenuItem value="">
+                                    <MenuItem value="" key={0}>
                                         <em>None</em>
                                     </MenuItem>
-                                    {/*<MenuItem value="all" key={0}>*/}
-                                    {/*    <em>all</em>*/}
-                                    {/*</MenuItem>*/}
                                     {
                                         validatorsList.map((validator, index) => (
                                             <MenuItem
@@ -239,14 +239,16 @@ const ModalWithdraw = (props) => {
                                     <p className="usd">=${(props.totalRewards * 0.4).toFixed(4)}</p>
                                 </div>
                             </div>
-                            <div className="form-field">
-                                <p className="label">Memo</p>
-                                <Form.Control as="textarea" rows={3} name="memo"
-                                              placeholder="Enter Memo"
-                                              required={false}/>
-                            </div>
+                            {mode === "normal" ?
+                                <div className="form-field">
+                                    <p className="label">Memo</p>
+                                    <Form.Control as="textarea" rows={3} name="memo"
+                                                  placeholder="Enter Memo"
+                                                  required={false}/>
+                                </div> : null
+                            }
                             <div className="buttons">
-                                <button className="button button-primary">{mode === "normal" ? "Next" : "Submit"}</button>
+                                <button className="button button-primary" disabled={disabled}>{mode === "normal" ? "Next" : "Submit"}</button>
                             </div>
                         </Form>
                     </Modal.Body>

@@ -221,12 +221,14 @@ const ModalUnbond = (props) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="form-field">
-                                <p className="label">Memo</p>
-                                <Form.Control as="textarea" rows={3} name="memo"
-                                              placeholder="Enter Memo"
-                                              required={false}/>
-                            </div>
+                            {mode === "normal" ?
+                                <div className="form-field">
+                                    <p className="label">Memo</p>
+                                    <Form.Control as="textarea" rows={3} name="memo"
+                                                  placeholder="Enter Memo"
+                                                  required={false}/>
+                                </div> : null
+                            }
                             <div className="buttons navigate-buttons">
                                 <button className="button button-secondary" onClick={() => handlePrevious()}>
                                     <Icon
