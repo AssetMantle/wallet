@@ -42,33 +42,39 @@ const WalletFaq = () => {
             <Card>
                 <Card.Header>
                     <p>
-                        How to create a Persistence wallet?
+                        How to Create a Persistence Wallet
                     </p>
                     <ContextAwareToggle eventKey="1">Click me!</ContextAwareToggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="1">
                     <Card.Body>
+                        <p>You need to have a Persistence wallet to store or transact or stake your XPRT token. Create a wallet or import an already existing Persistence wallet. To create a wallet:
+                        </p>
+                        <br/>
                         <ul>
                             <li>
-                                Go to wallet.persistence.one site and click the Create Wallet button.
+                                From wallet.persistence.one site and click the <b>Create</b> a wallet button.
                             </li>
-                            <li>In the About Persistence Wallet pop-up, read carefully on how to the Secure your wallet.
+                            <li>In the <b>Secure your wallet</b> window, please take a moment to read notes. Click <b>Continue.</b> After carefully reading the steps on how to secure your wallet, Click <b>Next</b> after you go through the info.
                             </li>
-                            <li>After carefully reading the steps on how to secure your wallet, Click Next.
+                            <li>In the <b>Password</b> window, enter a password for the Persistence wallet.
                             </li>
                             <li>In the Mnemonic window, you can view a randomly generated 24-word seed phrase (Seed phrase is also called as Mnemonic).
                             </li>
-                            <li>Copy and securely store your seed phrase in a file location of your choice for future use.
+                            <li>Enter the password again to confirm.
                             </li>
-                            <li>Input the missing fields from the seed phrase.
+                            <li>Click <b>Next.</b>
                             </li>
-                            <li>Click on Generate KeyStore File and enter a password of your choice to encrypt the KeyStore File</li>
-                            <li>Click Submit to download your KeyStore File.
+                            <p><b>Note:</b> You will require this password when you sign into your wallet. So copy the password in a file. Save and store the file safe.</p>
+                            <li>In the <b>Mnemonic</b> window, you view the randomly generated <b>24-word seed</b> phrase, by default. (Seed phrase is also called as Mnemonic.) If you want a 12 word mnemonic, select the 12 button.
                             </li>
-                            <li>You will be taken back to the generate KeyStore File page. Click Next to generate your wallet.
+                            <li>Copy and securely store your seed phrase in a file location of your choice because you may need it in future.
                             </li>
-                            <li>You have successfully created your Persistence wallet.</li>
+                            <li>Select the <b>Private key json</b> file and copy it in a file and store it in a safe location.
+                            </li>
+                            <li>Click <b>Next</b> to create your wallet</li>
                         </ul>
+                        <p><b>Note:</b> If you already have a Persistence wallet, you can import it using the Import an existing wallet button. You will need to use your mnemonic and password. So keep it handy.</p>
                      </Card.Body>
                 </Accordion.Collapse>
             </Card>
@@ -99,7 +105,7 @@ const WalletFaq = () => {
             <Card>
                 <Card.Header>
                     <p>
-                        What is a Mnemonic?
+                        What is a mnemonic?
                     </p>
                     <ContextAwareToggle eventKey="3">Click me!</ContextAwareToggle>
                 </Card.Header>

@@ -17,7 +17,9 @@ const Header = (props) => {
     const closeWallet = () =>{
         localStorage.setItem('loginToken', '');
         localStorage.setItem('address', '');
+        localStorage.setItem('loginMode', '');
         history.push('/');
+        window.location.reload();
     };
     const ProfileIcon =  <Icon viewClass="profile" icon="profile"/>
     return (

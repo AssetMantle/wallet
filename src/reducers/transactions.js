@@ -2,7 +2,8 @@ import { combineReducers } from 'redux';
 import {
     TRANSACTIONS_FETCH_ERROR,
     TRANSACTIONS_FETCH_SUCCESS,
-    TRANSACTIONS_IN_PROGRESS
+    TRANSACTIONS_IN_PROGRESS,
+    PAGE_NUMBER_FETCH_SUCCESS
 } from "../constants/transactions";
 
 const inProgress = (state = false, action) => {
@@ -32,9 +33,16 @@ const _ = (state = [], action) => {
     }
 };
 
+const pageNumber = (state = 1, action) => {
+    if (action.type === PAGE_NUMBER_FETCH_SUCCESS) {
+        return [action.number, action.totalPages];
+    }
+    return state;
+};
 
 export default combineReducers({
     list,
     _,
     inProgress,
+    pageNumber,
 });

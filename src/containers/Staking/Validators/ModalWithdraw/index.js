@@ -1,15 +1,13 @@
-import {
-    Accordion,
-    AccordionContext,
-    Card,
-    Form,
-    Modal,
-    useAccordionToggle
-} from 'react-bootstrap';
-import React, {useState, useContext} from 'react';
+import {Accordion, AccordionContext, Card, Form, Modal, useAccordionToggle} from 'react-bootstrap';
+import React, {useContext, useState} from 'react';
 import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
+import aminoMsgHelper from "../../../../utils/aminoMsgHelper";
+import {WithdrawMsg} from "../../../../utils/protoMsgHelper";
+import transactions from "../../../../utils/transactions";
+import helper from "../../../../utils/helper";
+import Loader from "../../../../components/Loader";
 
 const ModalWithdraw = (props) => {
     const [response, setResponse] = useState('');
@@ -18,6 +16,11 @@ const ModalWithdraw = (props) => {
     const [seedModal, showSeedModal] = useState(false);
     const [memoContent, setMemoContent] = useState('');
     const [errorMessage, setErrorMessage] = useState("");
+    const [loader, setLoader] = useState(false);
+    const [importMnemonic, setImportMnemonic] = useState(true);
+    const address = localStorage.getItem('address');
+    const mode = localStorage.getItem('loginMode');
+
     const handleClose = () => {
         props.setModalOpen('');
         props.setTxModalShow(false);
@@ -62,6 +65,38 @@ const ModalWithdraw = (props) => {
         );
     }
 
+    function PrivateKeyReader(file, password) {
+        return new Promise(function (resolve, reject) {
+            const fileReader = new FileReader();
+            fileReader.readAsText(file, "UTF-8");
+            fileReader.onload = event => {
+                const res = JSON.parse(event.target.result);
+                const decryptedData = helper.decryptStore(res, password);
+                if (decryptedData.error != null) {
+                    setErrorMessage(decryptedData.error)
+                } else {
+                    resolve(decryptedData.mnemonic);
+                    setErrorMessage("");
+                }
+            };
+        });
+    }
+
+    const handleSubmitKepler = async event => {
+        setLoader(true);
+        event.preventDefault();
+        setInitialModal(false);
+        const response = transactions.TransactionWithKeplr([WithdrawMsg(address, props.validatorAddress)], aminoMsgHelper.fee(5000, 250000));
+        response.then(result => {
+            setResponse(result);
+            setLoader(false)
+        }).catch(err => {
+            setLoader(false);
+            props.handleClose();
+            console.log(err.message, "Withdraw error")
+        })
+    };
+
     const handleSubmitInitialData = async event => {
         event.preventDefault();
         const memo = event.target.memo.value;
@@ -72,10 +107,17 @@ const ModalWithdraw = (props) => {
 
     const handleSubmit = async event => {
         event.preventDefault();
-        // const password = event.target.password.value;
-        const mnemonic = event.target.mnemonic.value;
+        let mnemonic;
+        if (importMnemonic) {
+            mnemonic = event.target.mnemonic.value;
+        } else {
+            const password = event.target.password.value;
+            var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
+            await promise.then(function (result) {
+                mnemonic = result;
+            });
+        }
         const validatorAddress = props.validatorAddress;
-
         let accountNumber = 0;
         let addressIndex = 0;
         let bip39Passphrase = "";
@@ -92,17 +134,9 @@ const ModalWithdraw = (props) => {
             persistence.getAccounts(address).then(data => {
                 if (data.code === undefined) {
                     let stdSignMsg = persistence.newStdMsg({
-                        msgs: [
-                            {
-                                type: "cosmos-sdk/MsgWithdrawDelegationReward",
-                                value: {
-                                    delegator_address: address,
-                                    validator_address: validatorAddress
-                                }
-                            }
-                        ],
+                        msgs: aminoMsgHelper.msgs(aminoMsgHelper.withDrawMsg(address, validatorAddress)),
                         chain_id: persistence.chainId,
-                        fee: {amount: [{amount: String(5000), denom: "uxprt"}], gas: String(250000)},
+                        fee: aminoMsgHelper.fee(5000, 250000),
                         memo: memoContent,
                         account_number: String(data.account.account_number),
                         sequence: String(data.account.sequence)
@@ -111,7 +145,6 @@ const ModalWithdraw = (props) => {
                     const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
                     persistence.broadcast(signedTx).then(response => {
                         setResponse(response);
-                        console.log(response)
                     });
                     showSeedModal(false);
                 } else {
@@ -126,7 +159,13 @@ const ModalWithdraw = (props) => {
             }
         }
     };
-
+    const handlePrivateKey = (value) => {
+        setImportMnemonic(value);
+        setErrorMessage("");
+    };
+    if (loader) {
+        return <Loader/>;
+    }
     return (
         <>
             {initialModal ?
@@ -135,16 +174,7 @@ const ModalWithdraw = (props) => {
                         Claim Staking Rewards
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
-                        <Form onSubmit={handleSubmitInitialData}>
-                            {/*<div className="form-field">*/}
-                            {/*    <p className="label">Your password</p>*/}
-                            {/*    <Form.Control*/}
-                            {/*        type="password"*/}
-                            {/*        name="password"*/}
-                            {/*        placeholder="Enter Your Wallet Password"*/}
-                            {/*        required={true}*/}
-                            {/*    />*/}
-                            {/*</div>*/}
+                        <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
                             <div className="form-field">
                                 <p className="label">Memo</p>
                                 <Form.Control as="textarea" rows={3} name="memo"
@@ -157,7 +187,10 @@ const ModalWithdraw = (props) => {
                                         viewClass="arrow-right"
                                         icon="left-arrow"/>
                                 </button>
-                                <button className={props.rewards ? "button button-primary" : "button button-primary disabled"} disabled={props.rewards ? true : false}>Next</button>
+                                <button
+                                    className={props.rewards ? "button button-primary" : "button button-primary disabled"}
+                                    disabled={props.rewards ? false : true}> {mode === "normal" ? "Next" : "Submit"}
+                                </button>
                             </div>
                         </Form>
                     </Modal.Body>
@@ -171,12 +204,45 @@ const ModalWithdraw = (props) => {
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={handleSubmit}>
-                            <div className="form-field">
-                                <p className="label">Mnemonic</p>
-                                <Form.Control as="textarea" rows={3} name="mnemonic"
-                                              placeholder="Enter Mnemonic"
-                                              required={true}/>
-                            </div>
+                            {
+                                importMnemonic ?
+                                    <>
+                                        <div className="text-center">
+                                            <p onClick={() => handlePrivateKey(false)} className="import-name">Use
+                                                Private Key (KeyStore.json file)</p>
+                                        </div>
+                                        <div className="form-field">
+                                            <p className="label">Mnemonic</p>
+                                            <Form.Control as="textarea" rows={3} name="mnemonic"
+                                                          placeholder="Enter Mnemonic"
+                                                          required={true}/>
+                                        </div>
+                                    </>
+                                    :
+                                    <>
+                                        <div className="text-center">
+                                            <p onClick={() => handlePrivateKey(true)} className="import-name">Use
+                                                Mnemonic (Seed Phrase)</p>
+                                        </div>
+                                        <div className="form-field">
+                                            <p className="label">Password</p>
+                                            <Form.Control
+                                                type="password"
+                                                name="password"
+                                                placeholder="Enter Password"
+                                                required={true}
+                                            />
+                                        </div>
+                                        <div className="form-field upload">
+                                            <p className="label"> KeyStore file</p>
+                                            <Form.File id="exampleFormControlFile1" name="uploadFile"
+                                                       className="file-upload" accept=".json" required={true}/>
+                                        </div>
+
+                                    </>
+
+                            }
+
                             <Accordion className="advanced-wallet-accordion">
                                 <Card>
                                     <Card.Header>
@@ -244,7 +310,9 @@ const ModalWithdraw = (props) => {
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 <img src={success} alt="success-image"/>
-                                <p className="tx-hash">Tx Hash: {response.txhash}</p>
+                                {mode === "kepler" ?
+                                    <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
+                                    : <p className="tx-hash">Tx Hash: {response.txhash}</p>}
                                 <div className="buttons">
                                     <button className="button" onClick={props.handleClose}>Done</button>
                                 </div>
@@ -261,9 +329,12 @@ const ModalWithdraw = (props) => {
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
-                                <p className="tx-hash">Tx Hash:
-                                    {response.txhash}</p>
-                                <p>{response.raw_log}</p>
+                                {mode === "kepler" ?
+                                    <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
+                                    : <p className="tx-hash">Tx Hash: {response.txhash}</p>}
+                                {mode === "kepler" ?
+                                    <p>{response.rawLog}</p>
+                                    : <p>{response.raw_log}</p>}
                                 <div className="buttons">
                                     <button className="button" onClick={handleClose}>Done</button>
                                 </div>

@@ -2,16 +2,19 @@ import {Accordion, AccordionContext, Card, Form, Modal, useAccordionToggle} from
 import React, {useState, useEffect, useContext} from 'react';
 import success from "../../../assets/images/success.svg";
 import icon from "../../../assets/images/icon.svg";
-import {getDelegationsUrl, getRewardsUrl, getValidatorUrl} from "../../../constants/url";
+import {getValidatorUrl} from "../../../constants/url";
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import axios from "axios";
 import Icon from "../../../components/Icon";
 import MakePersistence from "../../../utils/cosmosjsWrapper";
-import Lodash from "lodash";
 import Actions from "../../../utils/actions";
-import {fetchRewards} from "../../../actions/rewards";
 import {connect} from "react-redux";
+import helper from "../../../utils/helper";
+import Loader from "../../../components/Loader";
+import {WithdrawMsg} from "../../../utils/protoMsgHelper";
+import aminoMsgHelper from "../../../utils/aminoMsgHelper";
+import transactions from "../../../utils/transactions";
 
 const ModalWithdraw = (props) => {
     const ActionHelper = new Actions();
@@ -25,8 +28,11 @@ const ModalWithdraw = (props) => {
     const [individualRewards, setIndividualRewards] = useState('');
     const [memoContent, setMemoContent] = useState('');
     const [errorMessage, setErrorMessage] = useState("");
+    const [loader, setLoader] = useState(false);
+    const [importMnemonic, setImportMnemonic] = useState(true);
+    const address = localStorage.getItem('address');
+    const mode = localStorage.getItem('loginMode');
     useEffect(() => {
-        const address = localStorage.getItem('address');
         for (const item of props.list) {
             const validatorUrl = getValidatorUrl(item.validator_address);
             axios.get(validatorUrl).then(validatorResponse => {
@@ -71,7 +77,36 @@ const ModalWithdraw = (props) => {
             </button>
         );
     }
-
+    function PrivateKeyReader(file, password) {
+        return new Promise(function (resolve, reject) {
+            const fileReader = new FileReader();
+            fileReader.readAsText(file, "UTF-8");
+            fileReader.onload = event => {
+                const res = JSON.parse(event.target.result);
+                const decryptedData = helper.decryptStore(res, password);
+                if (decryptedData.error != null) {
+                    setErrorMessage(decryptedData.error)
+                } else {
+                    resolve(decryptedData.mnemonic);
+                    setErrorMessage("");
+                }
+            };
+        });
+    }
+    const handleSubmitKepler = async event => {
+        setLoader(true);
+        event.preventDefault();
+        setInitialModal(false);
+        const response = transactions.TransactionWithKeplr([WithdrawMsg(address, validatorAddress)], aminoMsgHelper.fee(5000, 250000));
+        response.then(result => {
+            setResponse(result);
+            setLoader(false)
+        }).catch(err => {
+            setLoader(false);
+            props.handleClose();
+            console.log(err.message, "Withdraw error")
+        })
+    };
     const handleSubmitInitialData = async event => {
         event.preventDefault();
         const memo = event.target.memo.value;
@@ -81,67 +116,76 @@ const ModalWithdraw = (props) => {
     };
     const handleSubmit = async event => {
         event.preventDefault();
-        // const password = event.target.password.value;
-        const mnemonic = event.target.mnemonic.value;
-        let accountNumber = 0;
-        let addressIndex = 0;
-        let bip39Passphrase = "";
-        if (advanceMode) {
-            accountNumber = document.getElementById('claimTotalAccountNumber').value;
-            addressIndex = document.getElementById('claimTotalAccountIndex').value;
-            bip39Passphrase = document.getElementById('claimTotalbip39Passphrase').value;
-        }
-        const persistence = MakePersistence(accountNumber, addressIndex);
-        const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
-        const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
-
-        if (address.error === undefined && ecpairPriv.error === undefined) {
-            persistence.getAccounts(address).then(data => {
-                if (data.code === undefined) {
-                    let stdSignMsg = persistence.newStdMsg({
-                        msgs: [
-                            {
-                                type: "cosmos-sdk/MsgWithdrawDelegationReward",
-                                value: {
-                                    delegator_address: address,
-                                    validator_address: validatorAddress
-                                }
-                            }
-                        ],
-                        chain_id: persistence.chainId,
-                        fee: {amount: [{amount: String(5000), denom: "uxprt"}], gas: String(250000)},
-                        memo: memoContent,
-                        account_number: String(data.account.account_number),
-                        sequence: String(data.account.sequence)
-                    });
-
-                    const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
-                    persistence.broadcast(signedTx).then(response => {
-                        setResponse(response);
-                        console.log(response.code)
-                    });
-                    showSeedModal(false);
-                } else {
-                    setErrorMessage(data.message);
-                }
-            });
+        let mnemonic;
+        if (importMnemonic) {
+            mnemonic = event.target.mnemonic.value;
         } else {
-            if (address.error !== undefined) {
-                setErrorMessage(address.error)
-            } else {
-                setErrorMessage(ecpairPriv.error)
-            }
+            const password = event.target.password.value;
+            var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
+            await promise.then(function (result) {
+                mnemonic = result;
+            });
         }
+        const validatorAddress = props.validatorAddress;
+            let accountNumber = 0;
+            let addressIndex = 0;
+            let bip39Passphrase = "";
+            if (advanceMode) {
+                accountNumber = document.getElementById('claimTotalAccountNumber').value;
+                addressIndex = document.getElementById('claimTotalAccountIndex').value;
+                bip39Passphrase = document.getElementById('claimTotalbip39Passphrase').value;
+            }
+            const persistence = MakePersistence(accountNumber, addressIndex);
+            const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
+            const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
 
+            if (address.error === undefined && ecpairPriv.error === undefined) {
+                persistence.getAccounts(address).then(data => {
+                    if (data.code === undefined) {
+                        let stdSignMsg = persistence.newStdMsg({
+                            msgs: helper.msgs(helper.withDrawMsg(address, validatorAddress)),
+                            chain_id: persistence.chainId,
+                            fee: helper.fee(5000, 250000),
+                            memo: memoContent,
+                            account_number: String(data.account.account_number),
+                            sequence: String(data.account.sequence)
+                        });
+
+                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
+                        persistence.broadcast(signedTx).then(response => {
+                            setResponse(response);
+                        });
+                        showSeedModal(false);
+                    } else {
+                        setErrorMessage(data.message);
+                    }
+                });
+            } else {
+                if (address.error !== undefined) {
+                    setErrorMessage(address.error)
+                } else {
+                    setErrorMessage(ecpairPriv.error)
+                }
+            }
     };
     const onChangeSelect = (evt) => {
         setValidatorAddress(evt.target.value)
         let rewards = ActionHelper.getValidatorRewards(evt.target.value);
         rewards.then(function (response) {
             setIndividualRewards(response);
-            console.log(response, "Rewards")
         })
     };
+
+    const handlePrivateKey = (value) => {
+        setImportMnemonic(value);
+        setErrorMessage("");
+    };
+    if (loader) {
+        return <Loader/>;
+    }
+    const disabled = (
+        helper.ValidateFrom(validatorAddress).message !== ''
+    );
     return (
         <Modal
             animation={false}
@@ -156,18 +200,15 @@ const ModalWithdraw = (props) => {
                         Claiming Rewards
                     </Modal.Header>
                     <Modal.Body className="rewards-modal-body">
-                        <Form onSubmit={handleSubmitInitialData}>
+                        <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
                             <div className="form-field">
                                 <p className="label">Select Validator</p>
 
                                 <Select value={validatorAddress} className="validators-list-selection"
                                         onChange={onChangeSelect} displayEmpty>
-                                    <MenuItem value="">
+                                    <MenuItem value="" key={0}>
                                         <em>None</em>
                                     </MenuItem>
-                                    {/*<MenuItem value="all" key={0}>*/}
-                                    {/*    <em>all</em>*/}
-                                    {/*</MenuItem>*/}
                                     {
                                         validatorsList.map((validator, index) => (
                                             <MenuItem
@@ -195,23 +236,16 @@ const ModalWithdraw = (props) => {
                                     <p className="usd">=${(props.totalRewards * 0.4).toFixed(4)}</p>
                                 </div>
                             </div>
-                            <div className="form-field">
-                                <p className="label">Memo</p>
-                                <Form.Control as="textarea" rows={3} name="memo"
-                                              placeholder="Enter Memo"
-                                              required={false}/>
-                            </div>
-                            {/*<div className="form-field">*/}
-                            {/*    <p className="label">Password</p>*/}
-                            {/*    <Form.Control*/}
-                            {/*        type="password"*/}
-                            {/*        name="password"*/}
-                            {/*        placeholder="Enter Your Wallet Password"*/}
-                            {/*        required={true}*/}
-                            {/*    />*/}
-                            {/*</div>*/}
+                            {mode === "normal" ?
+                                <div className="form-field">
+                                    <p className="label">Memo</p>
+                                    <Form.Control as="textarea" rows={3} name="memo"
+                                                  placeholder="Enter Memo"
+                                                  required={false}/>
+                                </div> : null
+                            }
                             <div className="buttons">
-                                <button className="button button-primary">Next</button>
+                                <button className="button button-primary" disabled={disabled}>{mode === "normal" ? "Next" : "Submit"}</button>
                             </div>
                         </Form>
                     </Modal.Body>
@@ -225,12 +259,44 @@ const ModalWithdraw = (props) => {
                     </Modal.Header>
                     <Modal.Body className="rewards-modal-body">
                         <Form onSubmit={handleSubmit}>
-                            <div className="form-field">
-                                <p className="label">Mnemonic</p>
-                                <Form.Control as="textarea" rows={3} name="mnemonic"
-                                              placeholder="Enter Mnemonic"
-                                              required={true}/>
-                            </div>
+                            {
+                                importMnemonic ?
+                                    <>
+                                        <div className="text-center">
+                                            <p onClick={() => handlePrivateKey(false)} className="import-name">Use
+                                                Private Key (KeyStore.json file)</p>
+                                        </div>
+                                        <div className="form-field">
+                                            <p className="label">Mnemonic</p>
+                                            <Form.Control as="textarea" rows={3} name="mnemonic"
+                                                          placeholder="Enter Mnemonic"
+                                                          required={true}/>
+                                        </div>
+                                    </>
+                                    :
+                                    <>
+                                        <div className="text-center">
+                                            <p onClick={() => handlePrivateKey(true)} className="import-name">Use
+                                                Mnemonic (Seed Phrase)</p>
+                                        </div>
+                                        <div className="form-field">
+                                            <p className="label">Password</p>
+                                            <Form.Control
+                                                type="password"
+                                                name="password"
+                                                placeholder="Enter Password"
+                                                required={true}
+                                            />
+                                        </div>
+                                        <div className="form-field upload">
+                                            <p className="label"> KeyStore file</p>
+                                            <Form.File id="exampleFormControlFile1" name="uploadFile"
+                                                       className="file-upload" accept=".json" required={true}/>
+                                        </div>
+
+                                    </>
+
+                            }
                             <Accordion className="advanced-wallet-accordion">
                                 <Card>
                                     <Card.Header>
@@ -298,7 +364,9 @@ const ModalWithdraw = (props) => {
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 <img src={success} alt="success-image"/>
-                                <p className="tx-hash">Tx Hash: {response.txhash}</p>
+                                {mode === "kepler" ?
+                                    <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
+                                    : <p className="tx-hash">Tx Hash: {response.txhash}</p>}
                                 <div className="buttons">
                                     <button className="button" onClick={handleClose}>Done</button>
                                 </div>
@@ -315,9 +383,12 @@ const ModalWithdraw = (props) => {
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
-                                <p className="tx-hash">Tx Hash:
-                                    {response.txhash}</p>
-                                <p>{response.raw_log}</p>
+                                {mode === "kepler" ?
+                                    <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
+                                    : <p className="tx-hash">Tx Hash: {response.txhash}</p>}
+                                {mode === "kepler" ?
+                                    <p>{response.rawLog}</p>
+                                    : <p>{response.raw_log}</p>}
                                 <div className="buttons">
                                     <button className="button" onClick={handleClose}>Done</button>
                                 </div>

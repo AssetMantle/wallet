@@ -1,0 +1,32 @@
+.kepler-section{
+  background: radial-gradient(99.06% 99.06% at 49.65% .94%,#222426 0,#282932 100%);
+}
+.kepler-container{
+  height: calc(100vh - 78px);
+  overflow: auto;
+  padding-top: 170px;
+  //min-height: calc(100% - 3.5rem);
+  //max-width: 500px;
+  //height: 300px;
+  //margin: auto;
+  //display: flex;
+  //-ms-flex-align: center;
+  //align-items: center;
+  .info{
+    max-width: 500px;
+    background: #FFFFFF;
+    margin: auto;
+    padding: 30px;
+    .buttons-list{
+      display: flex;
+      align-content: center;
+      justify-content: space-between;
+      p{
+        margin: 0;
+      }
+      .button{
+        line-height: 1.3;
+      }
+    }
+  }
+}

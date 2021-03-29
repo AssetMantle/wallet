@@ -8,10 +8,15 @@ import {
     Popover,
     useAccordionToggle
 } from 'react-bootstrap';
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
+import aminoMsgHelper from "../../../../utils/aminoMsgHelper";
+import {DelegateMsg} from "../../../../utils/protoMsgHelper";
+import transactions from "../../../../utils/transactions";
+import helper from "../../../../utils/helper";
+import Loader from "../../../../components/Loader";
 
 const ModalDelegate = (props) => {
     const [amount, setAmount] = useState(0);
@@ -22,6 +27,10 @@ const ModalDelegate = (props) => {
     const [response, setResponse] = useState('');
     const [advanceMode, setAdvanceMode] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [loader, setLoader] = useState(false);
+    const [importMnemonic, setImportMnemonic] = useState(true);
+    const address = localStorage.getItem('address');
+    const mode = localStorage.getItem('loginMode');
     const handleAmount = (amount) => {
         setAmount(amount)
     };
@@ -68,11 +77,29 @@ const ModalDelegate = (props) => {
         props.setInitialModal(true);
         setResponse('');
     };
+
     const handlePrevious = () => {
         props.setShow(true);
         props.setTxModalShow(false);
         props.setInitialModal(true);
     };
+
+    const handleSubmitKepler = async event => {
+        setLoader(true);
+        event.preventDefault();
+        setInitialModal(false);
+        const response = transactions.TransactionWithKeplr([DelegateMsg(address, props.validatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent);
+        response.then(result => {
+            console.log(result);
+            setResponse(result);
+            setLoader(false)
+        }).catch(err => {
+            setLoader(false);
+            props.handleClose();
+            console.log(err.message, "delegate error")
+        })
+    };
+
     const handleSubmitInitialData = async event => {
         event.preventDefault();
         const memo = event.target.memo.value;
@@ -81,9 +108,36 @@ const ModalDelegate = (props) => {
         showSeedModal(true);
     };
 
+    function PrivateKeyReader(file, password) {
+        return new Promise(function(resolve, reject) {
+            const fileReader = new FileReader();
+            fileReader.readAsText(file, "UTF-8");
+            fileReader.onload = event => {
+                const res = JSON.parse(event.target.result);
+                const decryptedData = helper.decryptStore(res, password);
+                if (decryptedData.error != null) {
+                    setErrorMessage(decryptedData.error)
+                } else {
+                    resolve(decryptedData.mnemonic);
+                    setErrorMessage("");
+                }
+            };
+        });
+    }
+
     const handleSubmit = async event => {
         event.preventDefault();
-        const mnemonic = event.target.mnemonic.value;
+        let mnemonic;
+        if (importMnemonic) {
+            mnemonic = event.target.mnemonic.value;
+        } else {
+            const password = event.target.password.value;
+            var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
+            await promise.then(function(result) {
+                mnemonic = result;
+            });
+        }
+
         const validatorAddress = props.validatorAddress;
         let accountNumber = 0;
         let addressIndex = 0;
@@ -96,34 +150,20 @@ const ModalDelegate = (props) => {
         const persistence = MakePersistence(accountNumber, addressIndex);
         const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
         const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
-        console.log(address.error, "rdsult");
         if (address.error === undefined && ecpairPriv.error === undefined) {
             persistence.getAccounts(address).then(data => {
                 if (data.code === undefined) {
                     let stdSignMsg = persistence.newStdMsg({
-                        msgs: [
-                            {
-                                type: "cosmos-sdk/MsgDelegate",
-                                value: {
-                                    amount: {
-                                        amount: String(1000000),
-                                        denom: "uxprt"
-                                    },
-                                    delegator_address: address,
-                                    validator_address: validatorAddress
-                                }
-                            }
-                        ],
+                        msgs: aminoMsgHelper.msgs(aminoMsgHelper.delegateMsg(amount, address, validatorAddress)),
+                        fee: aminoMsgHelper.fee(5000, 250000),
                         chain_id: persistence.chainId,
-                        fee: {amount: [{amount: String(5000), denom: "uxprt"}], gas: String(250000)},
                         memo: memoContent,
                         account_number: String(data.account.account_number),
                         sequence: String(data.account.sequence)
                     });
                     const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
                     persistence.broadcast(signedTx).then(response => {
-                        setResponse(response)
-                        console.log(response, "delegate response")
+                        setResponse(response);
                     });
                     showSeedModal(false);
                 } else {
@@ -133,13 +173,18 @@ const ModalDelegate = (props) => {
         } else {
             if (address.error !== undefined) {
                 setErrorMessage(address.error)
-            }
-            else {
+            } else {
                 setErrorMessage(ecpairPriv.error)
             }
         }
     };
-
+    const handlePrivateKey = (value) => {
+        setImportMnemonic(value);
+        setErrorMessage("");
+    };
+    if (loader) {
+        return <Loader/>;
+    }
     const popover = (
         <Popover id="popover-basic">
             <Popover.Content>
@@ -154,15 +199,14 @@ const ModalDelegate = (props) => {
                 <>
                     <Modal.Header closeButton>
                         Delegating to {props.moniker}
-                        <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
+                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
                             <button className="icon-button info"><Icon
                                 viewClass="arrow-right"
                                 icon="info"/></button>
                         </OverlayTrigger>
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
-                        <Form onSubmit={handleSubmitInitialData}>
-
+                        <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
                             <div className="form-field">
                                 <p className="label">Send Amount</p>
                                 <div className="amount-field">
@@ -191,19 +235,22 @@ const ModalDelegate = (props) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="form-field">
-                                <p className="label">Memo</p>
-                                <Form.Control as="textarea" rows={3} name="memo"
-                                              placeholder="Enter Memo"
-                                              required={false}/>
-                            </div>
+                            {mode === "normal" ?
+                                <div className="form-field">
+                                    <p className="label">Memo</p>
+                                    <Form.Control as="textarea" rows={3} name="memo"
+                                                  placeholder="Enter Memo"
+                                                  required={false}/>
+                                </div> : null
+                            }
                             <div className="buttons navigate-buttons">
                                 <button className="button button-secondary" onClick={() => handlePrevious()}>
                                     <Icon
                                         viewClass="arrow-right"
                                         icon="left-arrow"/>
                                 </button>
-                                <button className="button button-primary">Next</button>
+                                <button
+                                    className="button button-primary"> {mode === "normal" ? "Next" : "Submit"}</button>
                             </div>
                         </Form>
                     </Modal.Body>
@@ -214,7 +261,7 @@ const ModalDelegate = (props) => {
                 <>
                     <Modal.Header closeButton>
                         Delegating to {props.moniker}
-                        <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
+                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
                             <button className="icon-button info"><Icon
                                 viewClass="arrow-right"
                                 icon="info"/></button>
@@ -222,12 +269,45 @@ const ModalDelegate = (props) => {
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={handleSubmit}>
-                            <div className="form-field">
-                                <p className="label">Mnemonic</p>
-                                <Form.Control as="textarea" rows={3} name="mnemonic"
-                                              placeholder="Enter Mnemonic"
-                                              required={true}/>
-                            </div>
+
+                            {
+                                importMnemonic ?
+                                    <>
+                                        <div className="text-center">
+                                            <p onClick={() => handlePrivateKey(false)} className="import-name">Use
+                                                Private Key (KeyStore.json file)</p>
+                                        </div>
+                                        <div className="form-field">
+                                            <p className="label">Mnemonic</p>
+                                            <Form.Control as="textarea" rows={3} name="mnemonic"
+                                                          placeholder="Enter Mnemonic"
+                                                          required={true}/>
+                                        </div>
+                                    </>
+                                    :
+                                    <>
+                                        <div className="text-center">
+                                            <p onClick={() => handlePrivateKey(true)} className="import-name">Use
+                                                Mnemonic (Seed Phrase)</p>
+                                        </div>
+                                        <div className="form-field">
+                                            <p className="label">Password</p>
+                                            <Form.Control
+                                                type="password"
+                                                name="password"
+                                                placeholder="Enter Password"
+                                                required={true}
+                                            />
+                                        </div>
+                                        <div className="form-field upload">
+                                            <p className="label"> KeyStore file</p>
+                                            <Form.File id="exampleFormControlFile1" name="uploadFile"
+                                                       className="file-upload" accept=".json" required={true}/>
+                                        </div>
+
+                                    </>
+
+                            }
                             <Accordion className="advanced-wallet-accordion">
                                 <Card>
                                     <Card.Header>
@@ -298,7 +378,9 @@ const ModalDelegate = (props) => {
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 <img src={success} alt="success-image"/>
-                                <p className="tx-hash">Tx Hash: {response.txhash}</p>
+                                {mode === "kepler" ?
+                                    <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
+                                    : <p className="tx-hash">Tx Hash: {response.txhash}</p>}
                                 <div className="buttons">
                                     <button className="button" onClick={props.handleClose}>Done</button>
                                 </div>
@@ -314,11 +396,14 @@ const ModalDelegate = (props) => {
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <div className="result-container">
-                            <p className="tx-hash">Tx Hash:
-                                {response.txhash}</p>
-                            <p>{response.raw_log}</p>
+                            {mode === "kepler" ?
+                                <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
+                                : <p className="tx-hash">Tx Hash: {response.txhash}</p>}
+                            {mode === "kepler" ?
+                                <p>{response.rawLog}</p>
+                                : <p>{response.raw_log}</p>}
                             <div className="buttons">
-                                <button className="button" onClick={handleClose}>Done</button>
+                                <button className="button" onClick={props.handleClose}>Done</button>
                             </div>
                         </div>
                     </Modal.Body>

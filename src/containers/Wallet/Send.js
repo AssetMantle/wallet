@@ -12,7 +12,11 @@ import {
 import Icon from "../../components/Icon";
 import success from "../../assets/images/success.svg";
 import MakePersistence from "../../utils/cosmosjsWrapper";
-
+import transactions from "../../utils/transactions";
+import helper from "../../utils/helper";
+import aminoMsgHelper from "../../utils/aminoMsgHelper";
+import Loader from "../../components/Loader";
+import {SendMsg} from "../../utils/protoMsgHelper";
 const Send = () => {
     const [amountField, setAmountField] = useState(0);
     const [toAddress, setToAddress] = useState('');
@@ -21,6 +25,11 @@ const Send = () => {
     const [show, setShow] = useState(true);
     const [advanceMode, setAdvanceMode] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [keplerError, setKeplerError] = useState("");
+    const [loader, setLoader] = useState(false);
+    const [importMnemonic, setImportMnemonic] = useState(true);
+    let mode = localStorage.getItem('loginMode');
+    let address = localStorage.getItem('address');
     const handleAmount = (amount) => {
         setAmountField(amount)
     };
@@ -28,18 +37,46 @@ const Send = () => {
         setShow(false);
         setMnemonicForm(false);
         setTxResponse('');
-        console.log(show, mnemonicForm)
     };
     const handleAmountChange = (evt) => {
         setAmountField(evt.target.value)
     };
     const handleSubmit = async event => {
-        console.log(show, mnemonicForm)
         event.preventDefault();
         setToAddress(event.target.address.value);
         setMnemonicForm(true);
         setShow(true);
     };
+    const handleSubmitKepler =  event => {
+        setLoader(true);
+        event.preventDefault();
+        const response = transactions.TransactionWithKeplr([SendMsg(address, event.target.address.value, amountField)], aminoMsgHelper.fee(0, 250000));
+        response.then(result => {
+            setMnemonicForm(true);
+            setTxResponse(result);
+            setLoader(false);
+        }).catch(err => {
+            setLoader(false);
+            setKeplerError(err.message);
+            console.log(err.message, "send error")
+        })
+    };
+    function PrivateKeyReader(file, password) {
+        return new Promise(function (resolve, reject) {
+            const fileReader = new FileReader();
+            fileReader.readAsText(file, "UTF-8");
+            fileReader.onload = event => {
+                const res = JSON.parse(event.target.result);
+                const decryptedData = helper.decryptStore(res, password);
+                if (decryptedData.error != null) {
+                    setErrorMessage(decryptedData.error)
+                } else {
+                    resolve(decryptedData.mnemonic);
+                    setErrorMessage("");
+                }
+            };
+        });
+    }
     function ContextAwareToggle({children, eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 
@@ -71,45 +108,44 @@ const Send = () => {
             </button>
         );
     }
-    const handleMnemonicSubmit = (evt) => {
+    const handlePrivateKey = (value) => {
+        setImportMnemonic(value);
+        setErrorMessage("");
+    };
+    if (loader) {
+        return <Loader/>;
+    }
+    const handleMnemonicSubmit = async (evt) => {
         evt.preventDefault();
-        const userMnemonic = evt.target.mnemonic.value;
+        let userMnemonic;
+        if (importMnemonic) {
+            userMnemonic = evt.target.mnemonic.value;
+        } else {
+            const password = evt.target.password.value;
+            var promise = PrivateKeyReader(evt.target.uploadFile.files[0], password);
+            await promise.then(function (result) {
+                userMnemonic = result;
+            });
+        }
         const mnemonic = "tank pair spray rely any menu airport shiver boost emerge holiday siege evil grace exile comfort fence mention pig bus cable scissors ability all";
-        console.log(userMnemonic, "userMnemonic");
-
         let accountNumber = 0;
         let addressIndex = 0;
-        let bip39Passphrase = ""
+        let bip39Passphrase = "";
         if (advanceMode) {
             accountNumber = document.getElementById('sendAccountNumber').value;
             addressIndex = document.getElementById('sendAccountIndex').value;
             bip39Passphrase = document.getElementById('sendbip39Passphrase').value;
         }
-
         const persistence = MakePersistence(accountNumber, addressIndex);
         const address = persistence.getAddress(userMnemonic, bip39Passphrase, true);
         const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
-        if(address.error === undefined && ecpairPriv.error === undefined) {
+        if (address.error === undefined && ecpairPriv.error === undefined) {
             persistence.getAccounts(address).then(data => {
                 if (data.code === undefined) {
                     let stdSignMsg = persistence.newStdMsg({
-                        msgs: [
-                            {
-                                type: "cosmos-sdk/MsgSend",
-                                value: {
-                                    amount: [
-                                        {
-                                            amount: amountField,
-                                            denom: "uxprt"
-                                        }
-                                    ],
-                                    from_address: address,
-                                    to_address: toAddress
-                                }
-                            }
-                        ],
+                        msgs: helper.msgs(helper.sendMsg(amountField, address, toAddress)),
                         chain_id: persistence.chainId,
-                        fee: {amount: [{amount: String(0), denom: "upxrt"}], gas: String(250000)},
+                        fee: helper.fee(0, 250000),
                         memo: "",
                         account_number: String(data.account.account_number),
                         sequence: String(data.account.sequence)
@@ -118,18 +154,15 @@ const Send = () => {
                     const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
                     persistence.broadcast(signedTx).then(response => {
                         setTxResponse(response)
-                        console.log(response)
                     });
-                }
-                else {
+                } else {
                     setErrorMessage(data.message);
                 }
             })
-        }else{
-            if(address.error !== undefined){
+        } else {
+            if (address.error !== undefined) {
                 setErrorMessage(address.error)
-            }
-            else {
+            } else {
                 setErrorMessage(ecpairPriv.error)
             }
         }
@@ -144,10 +177,10 @@ const Send = () => {
     return (
         <div className="send-container">
             <div className="form-section">
-                <Form onSubmit={handleSubmit}>
+                <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmit}>
                     <div className="form-field">
                         <p className="label info">Recipient Address
-                            <OverlayTrigger trigger="hover" placement="bottom" overlay={popover}>
+                            <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
                                 <button className="icon-button info"><Icon
                                     viewClass="arrow-right"
                                     icon="info"/></button>
@@ -187,6 +220,8 @@ const Send = () => {
                             </div>
                         </div>
                     </div>
+                    {keplerError !== ''?
+                    <p className="form-error">{keplerError}</p>: null }
                     <div className="buttons">
                         <button className="button button-primary">Send XPRT Tokens</button>
                     </div>
@@ -202,12 +237,44 @@ const Send = () => {
                                     <h3 className="heading">Send Token
                                     </h3>
                                     <Form onSubmit={handleMnemonicSubmit}>
-                                        <div className="form-field">
-                                            <p className="label">Mnemonic</p>
-                                            <Form.Control as="textarea" rows={3} name="mnemonic"
-                                                          placeholder="Enter Mnemonic"
-                                                          required={true}/>
-                                        </div>
+                                        {
+                                            importMnemonic ?
+                                                <>
+                                                    <div className="text-center">
+                                                        <p onClick={() => handlePrivateKey(false)} className="import-name">Use
+                                                            Private Key (KeyStore.json file)</p>
+                                                    </div>
+                                                    <div className="form-field">
+                                                        <p className="label">Mnemonic</p>
+                                                        <Form.Control as="textarea" rows={3} name="mnemonic"
+                                                                      placeholder="Enter Mnemonic"
+                                                                      required={true}/>
+                                                    </div>
+                                                </>
+                                                :
+                                                <>
+                                                    <div className="text-center">
+                                                        <p onClick={() => handlePrivateKey(true)} className="import-name">Use
+                                                            Mnemonic (Seed Phrase)</p>
+                                                    </div>
+                                                    <div className="form-field">
+                                                        <p className="label">Password</p>
+                                                        <Form.Control
+                                                            type="password"
+                                                            name="password"
+                                                            placeholder="Enter Password"
+                                                            required={true}
+                                                        />
+                                                    </div>
+                                                    <div className="form-field upload">
+                                                        <p className="label"> KeyStore file</p>
+                                                        <Form.File id="exampleFormControlFile1" name="uploadFile"
+                                                                   className="file-upload" accept=".json" required={true}/>
+                                                    </div>
+
+                                                </>
+
+                                        }
                                         <Accordion className="advanced-wallet-accordion">
                                             <Card>
                                                 <Card.Header>
@@ -273,7 +340,9 @@ const Send = () => {
                                                 <Modal.Body className="delegate-modal-body">
                                                     <div className="result-container">
                                                         <img src={success} alt="success-image"/>
-                                                        <p className="tx-hash">Tx Hash: {txResponse.txhash}</p>
+                                                        {mode === "kepler" ?
+                                                            <p className="tx-hash">Tx Hash: {txResponse.transactionHash}</p>
+                                                            : <p className="tx-hash">Tx Hash: {txResponse.txhash}</p>}
                                                         <div className="buttons">
                                                             <button className="button" onClick={handleClose}>Done</button>
                                                         </div>
@@ -286,9 +355,12 @@ const Send = () => {
                                                 </Modal.Header>
                                                 <Modal.Body className="delegate-modal-body">
                                                     <div className="result-container">
-                                                        <p className="tx-hash">Tx Hash:
-                                                            {txResponse.txhash}</p>
-                                                        <p>{txResponse.raw_log}</p>
+                                                        {mode === "kepler" ?
+                                                            <p className="tx-hash">Tx Hash: {txResponse.transactionHash}</p>
+                                                            : <p className="tx-hash">Tx Hash: {txResponse.txhash}</p>}
+                                                        {mode === "kepler" ?
+                                                            <p>{txResponse.rawLog}</p>
+                                                            : <p>{txResponse.raw_log}</p>}
                                                         <div className="buttons">
                                                             <button className="button" onClick={handleClose}>Done</button>
                                                         </div>
@@ -298,9 +370,9 @@ const Send = () => {
                                     }
                                 </>
                         }
-
                     </Modal>
                     : null
+
             }
         </div>
     );

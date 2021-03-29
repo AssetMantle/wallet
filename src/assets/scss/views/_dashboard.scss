@@ -131,7 +131,7 @@
     .tab-content {
       padding: 50px 100px;
       position: relative;
-      max-height: 72vh;
+      height: 72vh;
       overflow-y: scroll;
     }
   }
@@ -196,6 +196,22 @@
   }
 
   .txns-container {
+    .MuiFormControl-root{
+      flex-direction: inherit;
+    }
+    .MuiButton-root{
+      font-weight: 500;
+      font-size: 14px;
+      font-family: 'Poppins', sans-serif;
+      color: #8D9CB5;
+    }
+    .MuiPaper-elevation4{
+      box-shadow: none;
+      border: 1px solid #E3E5F4;
+    }
+    .MUIDataTableToolbar-icon-22:hover, .MUIDataTableToolbar-iconActive-23{
+      color: #E50913;
+    }
     table {
       border: 1px solid #E3E5F4;
 
@@ -236,27 +252,35 @@
           color: #8D9CB5;
           font-family: 'Poppins', sans-serif;
         }
-        .tx-hash a{
+        .tx-hash{
           color: #1A73B4;
         }
 
         .type {
           color: #8D9CB5;
         }
-        .amount{
+        .amount, .fee, .time{
           font-family: 'Poppins', sans-serif;
           font-weight: 500;
-        }
-        .fee{
-          font-family: 'Poppins', sans-serif;
           color: #8D9CB5;
         }
         .height{
           color: #1A73B4;
         }
-        .time{
-          color: #8D9CB5;
-        }
+      }
+    }
+    .pagination-custom{
+      display: flex;
+      justify-content: flex-end;
+      background-color: #fff;
+      border: 1px solid #E3E5F4;
+      .page-number{
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        line-height: 150%;
+        font-family: 'Poppins', sans-serif;
+        color: #8D9CB5;
       }
     }
   }
@@ -350,7 +374,7 @@
 
         .info {
           text-align: center;
-          padding: 20px 20px;
+          padding: 20px 70px;
 
           .key {
             font-weight: 500;
@@ -507,10 +531,12 @@
       }
 
       .value.rewards {
-        color: #E50913;
-        text-decoration: underline;
         cursor: pointer;
-        span{
+        .text{
+          color: #4FBE89;
+          text-decoration: underline;
+        }
+        .claim{
           background: #E50913;
           color: #ffffff;
           font-size: 10px;
@@ -553,7 +579,7 @@
   border-top: 1px solid #E3E5F4;
   padding: 50px 100px;
   position: relative;
-  max-height: 72vh;
+  height: 72vh;
   overflow-y: scroll;
   .info {
     display: flex;
@@ -581,7 +607,22 @@
       }
     }
   }
-
+  .MuiFormControl-root{
+    flex-direction: inherit;
+  }
+  .MuiButton-root{
+    font-weight: 500;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    color: #8D9CB5;
+  }
+  .MuiPaper-elevation4{
+    box-shadow: none;
+    border: 1px solid #E3E5F4;
+  }
+  .MUIDataTableToolbar-icon-153:hover, .MUIDataTableToolbar-iconActive-154{
+    color: #E50913;
+  }
   table {
     border: 1px solid #E3E5F4;
 
@@ -594,6 +635,8 @@
         font-size: 14px;
         line-height: 150%;
         color: #8D9CB5;
+        font-family: 'Poppins', sans-serif;
+
         &:first-child{
           padding-left: 40px;
         }
@@ -614,7 +657,6 @@
         }
 
         &:first-child {
-          display: flex;
           align-items: center;
           padding-left: 40px;
           font-size: 14px;
