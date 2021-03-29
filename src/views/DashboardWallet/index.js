@@ -1,15 +1,14 @@
 import React, {useState} from "react";
 import Sidebar from "../../components/sidebar";
 import Wallet from "../../containers/Wallet";
+import DashboardHeader from "../../containers/Common/DashboardHeader";
 const DashboardWallet = () => {
 
     return (
         <div className="main-section">
-            <Sidebar/>
-            <div className="content-section">
+            <DashboardHeader/>
+            <div className="content-section container">
                 <Wallet/>
-            </div>
-            <div>
             </div>
         </div>
     );

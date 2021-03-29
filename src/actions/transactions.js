@@ -43,10 +43,12 @@ export const fetchTransactions = (address, limit, pageNumber, stage) => {
         const url = getTransactionsUrl(address, limit, pageNumber);
         await Axios.get(url)
             .then((res) => {
+                res.data.page_total = res.data.page_total*1;
                 if (res.data.page_total === 0) {
                     // say no transactions
                 } else if (res.data.page_total === 1) {
                     // show the same page
+
                     dispatch(fetchPageNumberSuccess(res.data.page_number * 1, res.data.page_total * 1));
                     let sendTxnsResponseList = res.data.txs.reverse();
                     if (sendTxnsResponseList !== undefined) {
@@ -72,6 +74,7 @@ export const fetchTransactions = (address, limit, pageNumber, stage) => {
                                     dispatch(fetchTransactionsSuccess(sendTxnsResponseList));
                                 }
                             } else {
+
                                 dispatch(fetchPageNumberSuccess(res.data.page_number * 1, res.data.page_total * 1));
                                 let txnsResponseList = res.data.txs.reverse();
                                 if (txnsResponseList !== undefined) {
