@@ -6,7 +6,7 @@ import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import {connect} from "react-redux";
 import Transaction from "../../../../utils/transactions";
 import aminoMsgHelper from "../../../../utils/aminoMsgHelper";
-import MessagesFile from "../../../../utils/protoMsgHelper";
+import {UnbondMsg} from "../../../../utils/protoMsgHelper";
 import transactions from "../../../../utils/transactions";
 import helper from "../../../../utils/helper";
 import Loader from "../../../../components/Loader";
@@ -102,9 +102,8 @@ const ModalUnbond = (props) => {
         setLoader(true);
         event.preventDefault();
         setInitialModal(false);
-        const response = transactions.TransactionWithKeplr([MessagesFile.prototype.msgWithdraw(address, props.validatorAddress)], aminoMsgHelper.fee(5000, 250000));
+        const response = transactions.TransactionWithKeplr([UnbondMsg(address, props.validatorAddress)], aminoMsgHelper.fee(5000, 250000));
         response.then(result => {
-            console.log(result);
             setResponse(result);
             setLoader(false)
         }).catch(err => {
@@ -153,7 +152,6 @@ const ModalUnbond = (props) => {
                     const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
                     persistence.broadcast(signedTx).then(response => {
                         setResponse(response);
-                        console.log(response)
                     });
                     showSeedModal(false);
                 } else {
@@ -221,12 +219,14 @@ const ModalUnbond = (props) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="form-field">
-                                <p className="label">Memo</p>
-                                <Form.Control as="textarea" rows={3} name="memo"
-                                              placeholder="Enter Memo"
-                                              required={false}/>
-                            </div>
+                            {mode === "normal" ?
+                                <div className="form-field">
+                                    <p className="label">Memo</p>
+                                    <Form.Control as="textarea" rows={3} name="memo"
+                                                  placeholder="Enter Memo"
+                                                  required={false}/>
+                                </div> : null
+                            }
                             <div className="buttons navigate-buttons">
                                 <button className="button button-secondary" onClick={() => handlePrevious()}>
                                     <Icon

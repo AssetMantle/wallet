@@ -8,8 +8,8 @@ const msgRedelegateTypeUrl = "/cosmos.staking.v1beta1.MsgBeginRedelegate"
 const msgUnbondTypeUrl = "/cosmos.staking.v1beta1.MsgUndelegate"
 const msgWithdrawRewardsTypeUrl = "/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward"
 
-export default class MessagesFile {
- msgSend(fromAddress, toAddress, amount) {
+
+function SendMsg(fromAddress, toAddress, amount) {
     return {
         typeUrl: msgSendTypeUrl,
         value: MsgSend.fromPartial({
@@ -23,7 +23,8 @@ export default class MessagesFile {
     };
 }
 
- msgDelegate(delegatorAddress, validatorAddress, amount) {
+
+function DelegateMsg(delegatorAddress, validatorAddress, amount) {
     return {
         typeUrl: msgDelegateTypeUrl,
         value: MsgDelegate.fromPartial({
@@ -38,7 +39,7 @@ export default class MessagesFile {
     };
 }
 
- msgRedelegate(delegatorAddress, validatorSrcAddress, validatorDstAddress, amount) {
+function RedelegateMsg(delegatorAddress, validatorSrcAddress, validatorDstAddress, amount) {
     return {
         typeUrl: msgRedelegateTypeUrl,
         value: MsgBeginRedelegate.fromPartial({
@@ -54,7 +55,7 @@ export default class MessagesFile {
     };
 }
 
- msgUnbond(delegatorAddress, validatorAddress, amount) {
+function UnbondMsg(delegatorAddress, validatorAddress, amount) {
     return {
         typeUrl: msgUnbondTypeUrl,
         value: MsgUndelegate.fromPartial({
@@ -70,7 +71,7 @@ export default class MessagesFile {
 
 }
 
- msgWithdraw(delegatorAddress, validatorAddress) {
+function WithdrawMsg(delegatorAddress, validatorAddress) {
     return {
         typeUrl: msgWithdrawRewardsTypeUrl,
         value: MsgWithdrawDelegatorReward.fromPartial({
@@ -79,4 +80,4 @@ export default class MessagesFile {
         }),
     };
 }
-};
+export {SendMsg, DelegateMsg, RedelegateMsg, UnbondMsg, WithdrawMsg}

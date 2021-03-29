@@ -17,9 +17,7 @@ const KeplerHome = () => {
         kepler.then(function (item) {
             const address = helper.stringTruncate(localStorage.getItem("address"));
             setAddress(address);
-            console.log(item, "kepler response")
         }).catch(err => {
-            console.log(err.message, "kepler err")
             setErrorMessage(err.message)
         });
     }, []);
@@ -27,19 +25,9 @@ const KeplerHome = () => {
         setErrorMessage("")
         const kepler = KeplerWallet();
         kepler.then(function (item) {
-            console.log(item, "kepler item")
         }).catch(err => {
             setErrorMessage(err.message)
         });
-        //
-        // console.log(localStorage.getItem('address'),"address");
-        //
-        // // const address = localStorage.getItem('address');
-        // // if(address !== undefined && address !== null && address !== ""){
-        // //     localStorage.setItem('loginMode', 'kepler');
-        // //     localStorage.setItem('loginToken', 'loggedIn');
-        // //     history.push('/dashboard/wallet');
-        // // }
     };
 
     const handleRoute = () => {

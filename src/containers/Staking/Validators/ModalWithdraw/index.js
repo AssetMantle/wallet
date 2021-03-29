@@ -4,7 +4,7 @@ import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import aminoMsgHelper from "../../../../utils/aminoMsgHelper";
-import MessagesFile from "../../../../utils/protoMsgHelper";
+import {WithdrawMsg} from "../../../../utils/protoMsgHelper";
 import transactions from "../../../../utils/transactions";
 import helper from "../../../../utils/helper";
 import Loader from "../../../../components/Loader";
@@ -86,9 +86,8 @@ const ModalWithdraw = (props) => {
         setLoader(true);
         event.preventDefault();
         setInitialModal(false);
-        const response = transactions.TransactionWithKeplr([MessagesFile.prototype.msgWithdraw(address, props.validatorAddress)], aminoMsgHelper.fee(5000, 250000));
+        const response = transactions.TransactionWithKeplr([WithdrawMsg(address, props.validatorAddress)], aminoMsgHelper.fee(5000, 250000));
         response.then(result => {
-            console.log(result);
             setResponse(result);
             setLoader(false)
         }).catch(err => {
@@ -146,7 +145,6 @@ const ModalWithdraw = (props) => {
                     const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
                     persistence.broadcast(signedTx).then(response => {
                         setResponse(response);
-                        console.log(response)
                     });
                     showSeedModal(false);
                 } else {

@@ -274,6 +274,14 @@
       justify-content: flex-end;
       background-color: #fff;
       border: 1px solid #E3E5F4;
+      .page-number{
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        line-height: 150%;
+        font-family: 'Poppins', sans-serif;
+        color: #8D9CB5;
+      }
     }
   }
 
