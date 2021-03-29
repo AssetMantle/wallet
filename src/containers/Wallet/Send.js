@@ -144,10 +144,10 @@ const Send = () => {
             addressIndex = document.getElementById('sendAccountIndex').value;
             bip39Passphrase = document.getElementById('sendbip39Passphrase').value;
         }
-        const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, amountField)], aminoMsgHelper.fee(0, 250000), memoContent,
+        const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, amountField)], aminoMsgHelper.fee(5000, 250000), memoContent,
             userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
         response.then(result => {
-            console.log(result, "send error")
+            console.log(result, "send success")
             setMnemonicForm(true);
             setTxResponse(result);
             setLoader(false);
@@ -156,36 +156,6 @@ const Send = () => {
             setErrorMessage(err.message)
             console.log(err.message, "send error")
         })
-        // const persistence = MakePersistence(accountNumber, addressIndex);
-        // const address = persistence.getAddress(userMnemonic, bip39Passphrase, true);
-        // const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
-        // if (address.error === undefined && ecpairPriv.error === undefined) {
-        //     persistence.getAccounts(address).then(data => {
-        //         if (data.code === undefined) {
-        //             let stdSignMsg = persistence.newStdMsg({
-        //                 msgs: aminoMsgHelper.msgs(aminoMsgHelper.sendMsg(amountField, address, toAddress)),
-        //                 chain_id: persistence.chainId,
-        //                 fee: aminoMsgHelper.fee(0, 250000),
-        //                 memo: "",
-        //                 account_number: String(data.account.account_number),
-        //                 sequence: String(data.account.sequence)
-        //             });
-        //
-        //             const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
-        //             persistence.broadcast(signedTx).then(response => {
-        //                 setTxResponse(response)
-        //             });
-        //         } else {
-        //             setErrorMessage(data.message);
-        //         }
-        //     })
-        // } else {
-        //     if (address.error !== undefined) {
-        //         setErrorMessage(address.error)
-        //     } else {
-        //         setErrorMessage(ecpairPriv.error)
-        //     }
-        // }
     };
     const popover = (
         <Popover id="popover-basic">
@@ -373,7 +343,8 @@ const Send = () => {
                                                         <img src={success} alt="success-image"/>
                                                         {mode === "kepler" ?
                                                             <p className="tx-hash">Tx Hash: {txResponse.transactionHash}</p>
-                                                            : <p className="tx-hash">Tx Hash: {txResponse.transactionHash}</p>}
+                                                            : <p className="tx-hash">Tx
+                                                                Hash: {txResponse.transactionHash}</p>}
                                                         <div className="buttons">
                                                             <button className="button" onClick={handleClose}>Done</button>
                                                         </div>

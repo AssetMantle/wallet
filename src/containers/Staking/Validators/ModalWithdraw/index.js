@@ -2,7 +2,6 @@ import {Accordion, AccordionContext, Card, Form, Modal, useAccordionToggle} from
 import React, {useContext, useState} from 'react';
 import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
-import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import aminoMsgHelper from "../../../../utils/aminoMsgHelper";
 import {WithdrawMsg} from "../../../../utils/protoMsgHelper";
 import transactions from "../../../../utils/transactions";
@@ -86,7 +85,7 @@ const ModalWithdraw = (props) => {
         setLoader(true);
         event.preventDefault();
         setInitialModal(false);
-        const response = transactions.TransactionWithKeplr([WithdrawMsg(address, props.validatorAddress)], aminoMsgHelper.fee(5000, 250000));
+        const response = transactions.TransactionWithKeplr([WithdrawMsg(address, props.validatorAddress)], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             setResponse(result);
             setLoader(false)
@@ -126,38 +125,19 @@ const ModalWithdraw = (props) => {
             addressIndex = document.getElementById('claimAccountIndex').value;
             bip39Passphrase = document.getElementById('claimbip39Passphrase').value;
         }
-        const persistence = MakePersistence(accountNumber, addressIndex);
-        const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
-        const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
 
-        if (address.error === undefined && ecpairPriv.error === undefined) {
-            persistence.getAccounts(address).then(data => {
-                if (data.code === undefined) {
-                    let stdSignMsg = persistence.newStdMsg({
-                        msgs: aminoMsgHelper.msgs(aminoMsgHelper.withDrawMsg(address, validatorAddress)),
-                        chain_id: persistence.chainId,
-                        fee: aminoMsgHelper.fee(5000, 250000),
-                        memo: memoContent,
-                        account_number: String(data.account.account_number),
-                        sequence: String(data.account.sequence)
-                    });
-
-                    const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
-                    persistence.broadcast(signedTx).then(response => {
-                        setResponse(response);
-                    });
-                    showSeedModal(false);
-                } else {
-                    setErrorMessage(data.message);
-                }
-            });
-        } else {
-            if (address.error !== undefined) {
-                setErrorMessage(address.error)
-            } else {
-                setErrorMessage(ecpairPriv.error)
-            }
-        }
+        const response = transactions.TransactionWithMnemonic([WithdrawMsg(address, props.validatorAddress)], aminoMsgHelper.fee(5000, 250000), memoContent,
+            mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+        response.then(result => {
+            console.log(result, "withdrawMsg success")
+            setInitialModal(true);
+            setResponse(result);
+            setLoader(false);
+        }).catch(err => {
+            setLoader(false);
+            setErrorMessage(err.message)
+            console.log(err.message, "withdrawMsg error")
+        })
     };
     const handlePrivateKey = (value) => {
         setImportMnemonic(value);
