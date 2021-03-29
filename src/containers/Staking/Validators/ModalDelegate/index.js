@@ -31,9 +31,6 @@ const ModalDelegate = (props) => {
     const [importMnemonic, setImportMnemonic] = useState(true);
     const address = localStorage.getItem('address');
     const mode = localStorage.getItem('loginMode');
-    const handleAmount = (amount) => {
-        setAmount(amount)
-    };
 
     function ContextAwareToggle({children, eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
@@ -68,7 +65,12 @@ const ModalDelegate = (props) => {
     }
 
     const handleAmountChange = (evt) => {
-        setAmount(evt.target.value)
+        let rex = /^(?!(0))\d*\.?\d{0,2}$/;
+        if(rex.test(evt.target.value)){
+            setAmount(evt.target.value)
+        }else{
+            return false
+        }
     };
     const handleClose = () => {
         setShow(false);
@@ -88,7 +90,7 @@ const ModalDelegate = (props) => {
         setLoader(true);
         event.preventDefault();
         setInitialModal(false);
-        const response = transactions.TransactionWithKeplr([DelegateMsg(address, props.validatorAddress, amount)], aminoMsgHelper.fee(0, 250000), memoContent);
+        const response = transactions.TransactionWithKeplr([DelegateMsg(address, props.validatorAddress, (amount*1000000))], aminoMsgHelper.fee(0, 250000), memoContent);
         response.then(result => {
             console.log(result);
             setResponse(result);
@@ -149,7 +151,7 @@ const ModalDelegate = (props) => {
                     addressIndex = document.getElementById('delegateAccountIndex').value;
                     bip39Passphrase = document.getElementById('delegatebip39Passphrase').value;
                 }
-                const response = transactions.TransactionWithMnemonic([DelegateMsg(address, props.validatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent,
+                const response = transactions.TransactionWithMnemonic([DelegateMsg(address, props.validatorAddress, (amount*1000000))], aminoMsgHelper.fee(5000, 250000), memoContent,
                     mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                 response.then(result => {
                     console.log(result, "delegate success")
@@ -200,7 +202,7 @@ const ModalDelegate = (props) => {
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
                             <div className="form-field">
-                                <p className="label">Send Amount</p>
+                                <p className="label">Send Amount (XPRT)</p>
                                 <div className="amount-field">
                                     <Form.Control
                                         type="number"
@@ -208,23 +210,10 @@ const ModalDelegate = (props) => {
                                         name="amount"
                                         placeholder="Send Amount"
                                         value={amount}
+                                        step="any"
                                         onChange={handleAmountChange}
                                         required={true}
                                     />
-                                    <div className="range-buttons">
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(25000000)}>25%
-                                        </button>
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(50000000)}>50%
-                                        </button>
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(75000000)}>75%
-                                        </button>
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(100000000)}>Max
-                                        </button>
-                                    </div>
                                 </div>
                             </div>
                             <div className="form-field">
