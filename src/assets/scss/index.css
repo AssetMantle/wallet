@@ -1011,7 +1011,7 @@ html, body {
       border-left: 1px solid #EAEBF6;
       border-right: 1px solid #EAEBF6; }
 .wallet-main-section .tabs-section .tab-content {
-  padding: 50px 50px 0 5px;
+  padding: 50px 0px 0 0px;
   position: relative;
   height: 68vh;
   overflow-y: scroll; }
@@ -1146,21 +1146,23 @@ html, body {
   border-bottom: 1px solid #E3E5F4; }
   .header .navbar {
     background: #222325; }
-    .header .navbar .navbar-nav li a {
-      font-family: "Poppins",sans-serif;
-      font-weight: 700;
-      font-size: 14px;
-      line-height: 1.5;
-      text-align: center;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: #c4c4c4; }
-      .header .navbar .navbar-nav li a .icon {
-        fill: #c4c4c4; }
-    .header .navbar .navbar-nav li a:hover, .header .navbar .navbar-nav li a.active {
-      color: #e50913 !important; }
-      .header .navbar .navbar-nav li a:hover .icon, .header .navbar .navbar-nav li a.active .icon {
-        fill: #e50913; }
+    .header .navbar .navbar-nav li {
+      cursor: pointer; }
+      .header .navbar .navbar-nav li a {
+        font-family: "Poppins", sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 1.5;
+        text-align: center;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: #c4c4c4; }
+        .header .navbar .navbar-nav li a .icon {
+          fill: #c4c4c4; }
+      .header .navbar .navbar-nav li a:hover, .header .navbar .navbar-nav li a.active {
+        color: #e50913 !important; }
+        .header .navbar .navbar-nav li a:hover .icon, .header .navbar .navbar-nav li a.active .icon {
+          fill: #e50913; }
   .header .title {
     font-weight: 600;
     font-size: 18px;
@@ -1283,6 +1285,10 @@ html, body {
 .token-info-section {
   padding: 40px 40px 40px 30px;
   display: flex; }
+  .token-info-section .xprt-info {
+    padding-left: 0 !important; }
+  .token-info-section .rewards-info {
+    padding-right: 0 !important; }
   .token-info-section .info-box {
     flex: 1;
     display: flex;
@@ -1348,7 +1354,7 @@ html, body {
 
 .validators-section {
   border-top: 1px solid #E3E5F4;
-  padding: 50px 100px;
+  padding: 50px 10px;
   position: relative;
   height: 72vh;
   overflow-y: scroll; }
@@ -1785,7 +1791,7 @@ html, body {
     padding: 30px 60px; } }
 @media (max-width: 1200px) {
   .wallet-main-section .tabs-section .tab-content, .validators-section {
-    padding: 30px 60px 0 30px;
+    padding: 30px 0px 0 0px;
     max-height: initial;
     overflow: auto; }
     .wallet-main-section .tabs-section .tab-content::after, .validators-section::after {
@@ -1858,8 +1864,5 @@ html, body {
 
   .header .profile-section .icon-profile {
     margin: 0; } }
-@media (min-width: 1200px) and (max-width: 1400px) {
-  .txns-container {
-    width: 800px; } }
 
 /*# sourceMappingURL=index.css.map */
