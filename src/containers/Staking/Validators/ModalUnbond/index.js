@@ -102,7 +102,7 @@ const ModalUnbond = (props) => {
         setLoader(true);
         event.preventDefault();
         setInitialModal(false);
-        const response = transactions.TransactionWithKeplr([UnbondMsg(address, props.validatorAddress)], aminoMsgHelper.fee(5000, 250000));
+        const response = transactions.TransactionWithKeplr([UnbondMsg(address, props.validatorAddress, amount)], aminoMsgHelper.fee(5000, 250000));
         response.then(result => {
             setResponse(result);
             setLoader(false)

@@ -37,6 +37,7 @@ export const fetchTransactionsError = (list) => {
 };
 
 export const fetchTransactions = (address, limit, pageNumber, stage) => {
+
     return async dispatch => {
         dispatch(fetchTransactionsProgress());
         const url = getTransactionsUrl(address, limit, pageNumber);
@@ -59,10 +60,10 @@ export const fetchTransactions = (address, limit, pageNumber, stage) => {
                                 dispatch(fetchPageNumberSuccess(newResponse.data.page_number * 1, newResponse.data.page_total * 1));
                                 let sendTxnsResponseList = newResponse.data.txs.reverse();
                                 if (newResponse.data.count !== limit) {
-                                    Axios.get(getTransactionsUrl(address, limit, (res.data.page_total - 1))).then(
+                                    Axios.get(getTransactionsUrl(address, limit, (res.data.page_total*1 - 1))).then(
                                         previousTxResponse => {
                                             let previousTxResponseList = previousTxResponse.data.txs.reverse();
-                                            const firstHalf = previousTxResponseList.splice(0, (newResponse.data.count * 1));
+                                            const firstHalf = previousTxResponseList.splice(0, (previousTxResponse.data.count*1 - newResponse.data.count*1 ));
                                             const finalTxns = sendTxnsResponseList.concat(firstHalf);
                                             dispatch(fetchTransactionsSuccess(finalTxns));
                                         }
