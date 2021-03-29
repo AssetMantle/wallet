@@ -144,7 +144,7 @@ const Send = () => {
             addressIndex = document.getElementById('sendAccountIndex').value;
             bip39Passphrase = document.getElementById('sendbip39Passphrase').value;
         }
-        const response = await transactions.TransactionWithMnemonic([SendMsg(address, toAddress, amountField)], aminoMsgHelper.fee(5000, 250000), memoContent,
+        const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, amountField)], aminoMsgHelper.fee(5000, 250000), memoContent,
             userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
         response.then(result => {
             console.log(result, "send success")
