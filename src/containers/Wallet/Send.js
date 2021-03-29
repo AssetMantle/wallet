@@ -55,7 +55,6 @@ const Send = () => {
             setMnemonicForm(true);
             setTxResponse(result);
             setLoader(false);
-            console.log(result)
         }).catch(err => {
             setLoader(false);
             setKeplerError(err.message);
@@ -155,7 +154,6 @@ const Send = () => {
                     const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
                     persistence.broadcast(signedTx).then(response => {
                         setTxResponse(response)
-                        console.log(response)
                     });
                 } else {
                     setErrorMessage(data.message);

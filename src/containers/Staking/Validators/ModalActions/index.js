@@ -31,16 +31,14 @@ const ModalActions = (props) => {
     const [delegateStatus, setDelegateStatus] = useState(false);
     useEffect(() => {
         let address = localStorage.getItem('address');
-        console.log(address, props.validator.operator_address, "props.validator.operator_address terd")
         const fetchValidatorRewards = async () => {
             const url = getValidatorRewardsUrl(address, props.validator.operator_address);
             axios.get(url).then(response => {
-                console.log(response.data.rewards[0].amount, "validator rewards")
                 if(response.data.rewards[0].amount){
                     setRewards(true)
                 }
             }).catch(error => {
-                console.log(error.response, "red terd")
+                console.log(error.response, "fetchValidatorRewards")
             });
             const delegationsUrl = getDelegationsUrl(address);
             axios.get(delegationsUrl).then(response => {

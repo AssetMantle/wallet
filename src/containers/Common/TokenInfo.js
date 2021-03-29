@@ -11,7 +11,6 @@ const TokenInfo = (props) => {
     const [rewards, setRewards] = useState(false);
     useEffect(() => {
         let address = localStorage.getItem('address');
-        console.log(address, "info")
         props.fetchDelegationsCount(address);
         props.fetchBalance(address);
         props.fetchRewards(address);
