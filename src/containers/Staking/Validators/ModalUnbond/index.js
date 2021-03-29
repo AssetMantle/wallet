@@ -2,12 +2,10 @@ import {Accordion, AccordionContext, Card, Form, Modal, useAccordionToggle} from
 import React, {useContext, useState} from 'react';
 import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
-import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import {connect} from "react-redux";
-import Transaction from "../../../../utils/transactions";
+import transactions from "../../../../utils/transactions";
 import aminoMsgHelper from "../../../../utils/aminoMsgHelper";
 import {UnbondMsg} from "../../../../utils/protoMsgHelper";
-import transactions from "../../../../utils/transactions";
 import helper from "../../../../utils/helper";
 import Loader from "../../../../components/Loader";
 
@@ -102,7 +100,7 @@ const ModalUnbond = (props) => {
         setLoader(true);
         event.preventDefault();
         setInitialModal(false);
-        const response = transactions.TransactionWithKeplr([UnbondMsg(address, props.validatorAddress, amount)], aminoMsgHelper.fee(5000, 250000));
+        const response = transactions.TransactionWithKeplr([UnbondMsg(address, props.validatorAddress, amount)], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             setResponse(result);
             setLoader(false)
@@ -133,38 +131,19 @@ const ModalUnbond = (props) => {
             addressIndex = document.getElementById('unbondAccountIndex').value;
             bip39Passphrase = document.getElementById('unbondbip39Passphrase').value;
         }
-        const persistence = MakePersistence(accountNumber, addressIndex);
-        const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
-        const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
 
-        if (address.error === undefined && ecpairPriv.error === undefined) {
-            persistence.getAccounts(address).then(data => {
-                if (data.code === undefined) {
-                    let stdSignMsg = persistence.newStdMsg({
-                        msgs: aminoMsgHelper.msgs(aminoMsgHelper.unBondMsg(amount, address, validatorAddress)),
-                        fee: aminoMsgHelper.fee(5000, 250000),
-                        chain_id: persistence.chainId,
-                        memo: memoContent,
-                        account_number: String(data.account.account_number),
-                        sequence: String(data.account.sequence)
-                    });
-
-                    const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
-                    persistence.broadcast(signedTx).then(response => {
-                        setResponse(response);
-                    });
-                    showSeedModal(false);
-                } else {
-                    setErrorMessage(data.message);
-                }
-            });
-        } else {
-            if (address.error !== undefined) {
-                setErrorMessage(address.error)
-            } else {
-                setErrorMessage(ecpairPriv.error)
-            }
-        }
+        const response = transactions.TransactionWithMnemonic([UnbondMsg(address, props.validatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent,
+            mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+        response.then(result => {
+            console.log(result, "unbond success")
+            setInitialModal(true);
+            setResponse(result);
+            setLoader(false);
+        }).catch(err => {
+            setLoader(false);
+            setErrorMessage(err.message)
+            console.log(err.message, "unbond error")
+        })
     };
     const handlePrivateKey = (value) => {
         setImportMnemonic(value);
@@ -234,7 +213,7 @@ const ModalUnbond = (props) => {
                                         icon="left-arrow"/>
                                 </button>
                                 <button className="button button-primary"
-                                        disabled={!props.delegateStatus || amount === 0 }>
+                                        disabled={!props.delegateStatus || amount === 0}>
                                     {mode === "normal" ? "Next" : "Submit"}
                                 </button>
                             </div>

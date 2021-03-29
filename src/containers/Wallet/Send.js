@@ -11,12 +11,12 @@ import {
 } from "react-bootstrap";
 import Icon from "../../components/Icon";
 import success from "../../assets/images/success.svg";
-import MakePersistence from "../../utils/cosmosjsWrapper";
 import transactions from "../../utils/transactions";
 import helper from "../../utils/helper";
 import aminoMsgHelper from "../../utils/aminoMsgHelper";
 import Loader from "../../components/Loader";
 import {SendMsg} from "../../utils/protoMsgHelper";
+
 const Send = () => {
     const [amountField, setAmountField] = useState(0);
     const [toAddress, setToAddress] = useState('');
@@ -28,6 +28,7 @@ const Send = () => {
     const [keplerError, setKeplerError] = useState("");
     const [loader, setLoader] = useState(false);
     const [importMnemonic, setImportMnemonic] = useState(true);
+    const [memoContent, setMemoContent] = useState('');
     let mode = localStorage.getItem('loginMode');
     let address = localStorage.getItem('address');
     const handleAmount = (amount) => {
@@ -44,10 +45,13 @@ const Send = () => {
     const handleSubmit = async event => {
         event.preventDefault();
         setToAddress(event.target.address.value);
+        const memo = event.target.memo.value;
+        setMemoContent(memo);
         setMnemonicForm(true);
         setShow(true);
     };
-    const handleSubmitKepler =  event => {
+    const handleSubmitKepler = event => {
+        setShow(true);
         setLoader(true);
         event.preventDefault();
         const response = transactions.TransactionWithKeplr([SendMsg(address, event.target.address.value, amountField)], aminoMsgHelper.fee(0, 250000));
@@ -61,6 +65,7 @@ const Send = () => {
             console.log(err.message, "send error")
         })
     };
+
     function PrivateKeyReader(file, password) {
         return new Promise(function (resolve, reject) {
             const fileReader = new FileReader();
@@ -77,6 +82,7 @@ const Send = () => {
             };
         });
     }
+
     function ContextAwareToggle({children, eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 
@@ -108,6 +114,7 @@ const Send = () => {
             </button>
         );
     }
+
     const handlePrivateKey = (value) => {
         setImportMnemonic(value);
         setErrorMessage("");
@@ -116,6 +123,8 @@ const Send = () => {
         return <Loader/>;
     }
     const handleMnemonicSubmit = async (evt) => {
+        setLoader(true);
+        setKeplerError('');
         evt.preventDefault();
         let userMnemonic;
         if (importMnemonic) {
@@ -127,7 +136,6 @@ const Send = () => {
                 userMnemonic = result;
             });
         }
-        const mnemonic = "tank pair spray rely any menu airport shiver boost emerge holiday siege evil grace exile comfort fence mention pig bus cable scissors ability all";
         let accountNumber = 0;
         let addressIndex = 0;
         let bip39Passphrase = "";
@@ -136,36 +144,18 @@ const Send = () => {
             addressIndex = document.getElementById('sendAccountIndex').value;
             bip39Passphrase = document.getElementById('sendbip39Passphrase').value;
         }
-        const persistence = MakePersistence(accountNumber, addressIndex);
-        const address = persistence.getAddress(userMnemonic, bip39Passphrase, true);
-        const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
-        if (address.error === undefined && ecpairPriv.error === undefined) {
-            persistence.getAccounts(address).then(data => {
-                if (data.code === undefined) {
-                    let stdSignMsg = persistence.newStdMsg({
-                        msgs: aminoMsgHelper.msgs(aminoMsgHelper.sendMsg(amountField, address, toAddress)),
-                        chain_id: persistence.chainId,
-                        fee: aminoMsgHelper.fee(0, 250000),
-                        memo: "",
-                        account_number: String(data.account.account_number),
-                        sequence: String(data.account.sequence)
-                    });
-
-                    const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
-                    persistence.broadcast(signedTx).then(response => {
-                        setTxResponse(response)
-                    });
-                } else {
-                    setErrorMessage(data.message);
-                }
-            })
-        } else {
-            if (address.error !== undefined) {
-                setErrorMessage(address.error)
-            } else {
-                setErrorMessage(ecpairPriv.error)
-            }
-        }
+        const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, amountField)], aminoMsgHelper.fee(5000, 250000), memoContent,
+            userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+        response.then(result => {
+            console.log(result, "send success")
+            setMnemonicForm(true);
+            setTxResponse(result);
+            setLoader(false);
+        }).catch(err => {
+            setLoader(false);
+            setErrorMessage(err.message)
+            console.log(err.message, "send error")
+        })
     };
     const popover = (
         <Popover id="popover-basic">
@@ -220,8 +210,16 @@ const Send = () => {
                             </div>
                         </div>
                     </div>
-                    {keplerError !== ''?
-                    <p className="form-error">{keplerError}</p>: null }
+                    {mode === "normal" ?
+                        <div className="form-field">
+                            <p className="label">Memo</p>
+                            <Form.Control as="textarea" rows={3} name="memo"
+                                          placeholder="Enter Memo"
+                                          required={false}/>
+                        </div> : null
+                    }
+                    {keplerError !== '' ?
+                        <p className="form-error">{keplerError}</p> : null}
                     <div className="buttons">
                         <button className="button button-primary">Send XPRT Tokens</button>
                     </div>
@@ -241,7 +239,8 @@ const Send = () => {
                                             importMnemonic ?
                                                 <>
                                                     <div className="text-center">
-                                                        <p onClick={() => handlePrivateKey(false)} className="import-name">Use
+                                                        <p onClick={() => handlePrivateKey(false)}
+                                                           className="import-name">Use
                                                             Private Key (KeyStore.json file)</p>
                                                     </div>
                                                     <div className="form-field">
@@ -254,7 +253,8 @@ const Send = () => {
                                                 :
                                                 <>
                                                     <div className="text-center">
-                                                        <p onClick={() => handlePrivateKey(true)} className="import-name">Use
+                                                        <p onClick={() => handlePrivateKey(true)}
+                                                           className="import-name">Use
                                                             Mnemonic (Seed Phrase)</p>
                                                     </div>
                                                     <div className="form-field">
@@ -269,7 +269,8 @@ const Send = () => {
                                                     <div className="form-field upload">
                                                         <p className="label"> KeyStore file</p>
                                                         <Form.File id="exampleFormControlFile1" name="uploadFile"
-                                                                   className="file-upload" accept=".json" required={true}/>
+                                                                   className="file-upload" accept=".json"
+                                                                   required={true}/>
                                                     </div>
 
                                                 </>
@@ -342,7 +343,8 @@ const Send = () => {
                                                         <img src={success} alt="success-image"/>
                                                         {mode === "kepler" ?
                                                             <p className="tx-hash">Tx Hash: {txResponse.transactionHash}</p>
-                                                            : <p className="tx-hash">Tx Hash: {txResponse.txhash}</p>}
+                                                            : <p className="tx-hash">Tx
+                                                                Hash: {txResponse.transactionHash}</p>}
                                                         <div className="buttons">
                                                             <button className="button" onClick={handleClose}>Done</button>
                                                         </div>
@@ -357,10 +359,10 @@ const Send = () => {
                                                     <div className="result-container">
                                                         {mode === "kepler" ?
                                                             <p className="tx-hash">Tx Hash: {txResponse.transactionHash}</p>
-                                                            : <p className="tx-hash">Tx Hash: {txResponse.txhash}</p>}
+                                                            : <p className="tx-hash">Tx Hash: {txResponse.transactionHash}</p>}
                                                         {mode === "kepler" ?
                                                             <p>{txResponse.rawLog}</p>
-                                                            : <p>{txResponse.raw_log}</p>}
+                                                            : <p>{txResponse.rawLog}</p>}
                                                         <div className="buttons">
                                                             <button className="button" onClick={handleClose}>Done</button>
                                                         </div>

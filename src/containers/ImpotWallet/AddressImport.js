@@ -20,6 +20,7 @@ const AddressImport = (props) => {
             if(response.data.code === undefined){
                 localStorage.setItem('loginToken', 'loggedIn');
                 localStorage.setItem('address', address);
+                localStorage.setItem('loginMode', 'normal');
                 history.push('/dashboard/wallet');
             }
             setShow(false);

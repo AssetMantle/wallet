@@ -1,6 +1,6 @@
-import {DirectSecp256k1HdWallet} from "@cosmjs/proto-signing";
+import {DirectSecp256k1HdWallet, DirectSecp256k1Wallet} from "@cosmjs/proto-signing";
 import config from "./config.json";
-import {stringToPath} from "@cosmjs/crypto";
+import {Bip39, EnglishMnemonic, Slip10, Slip10Curve, stringToPath} from "@cosmjs/crypto";
 
 const {SigningStargateClient} = require("@cosmjs/stargate");
 const addressPrefix = config.addressPrefix;
@@ -29,13 +29,24 @@ async function KeplrWallet(chainID = configChainID) {
     return [offlineSigner, accounts[0].address]
 }
 
-async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(), prefix = addressPrefix) {
-    const [wallet, address] = MnemonicWallet(mnemonic, hdpath, prefix)
+async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(), bip39Passphrase = "", prefix = addressPrefix) {
+    const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix)
     return Transaction(wallet, address, msgs, fee, memo)
 }
 
-async function MnemonicWallet(mnemonic, hdpath, prefix = addressPrefix) {
-    const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, hdpath, prefix);
+// TODO remove this function; use MnemonicWallet instead.
+async function MnemonicWalletWithPassphrase(mnemonic, hdPath = makeHdPath(), password = "", prefix = addressPrefix) {
+    const mnemonicChecked = new EnglishMnemonic(mnemonic);
+    const seed = await Bip39.mnemonicToSeed(mnemonicChecked, password);
+    const {privkey} = Slip10.derivePath(Slip10Curve.Secp256k1, seed, hdPath);
+    const wallet = await DirectSecp256k1Wallet.fromKey(privkey, prefix)
+    const [firstAccount] = await wallet.getAccounts();
+    return [wallet, firstAccount.address]
+}
+
+//TODO use this when bip39 passphrase is included in cosmjs.
+async function MnemonicWallet(mnemonic, hdPath = makeHdPath(), prefix = addressPrefix) {
+    const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, hdPath, prefix);
     const [firstAccount] = await wallet.getAccounts();
     return [wallet, firstAccount.address]
 

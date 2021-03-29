@@ -165,12 +165,14 @@
             }
           }
         }
+        input{
+          height: calc(2.3em + .75rem + 2px);
+        }
         .form-control {
           max-width: 500px;
           background: #F5F6FA;
           font-size: 14px;
           line-height: 150%;
-          height: calc(2.3em + .75rem + 2px);
           border-radius: 0;
           border: 0px solid;
           color: #8D9CB5;

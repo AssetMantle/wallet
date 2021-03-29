@@ -13,7 +13,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 const Transactions = (props) => {
     const address = localStorage.getItem('address');
     useEffect(() => {
-        props.fetchTransactions(address, 20, 1);
+        props.fetchTransactions(address, 20, 1, "Initial");
     }, []);
     const columns = [{
         name: 'txHash',
@@ -116,16 +116,14 @@ const Transactions = (props) => {
                 name=""
                 options={options}/>
             <div className="pagination-custom">
-                <div className="page-number">
-                    <span>{props.pageNumber[0]} &nbsp;</span> <span> of {props.pageNumber[1]} </span>
-                </div>
+
                 <div className="before">
-                    <IconButton aria-label="previous" onClick={handlePrevious} disabled={props.pageNumber[0] > 1 ? false : true}>
+                    <IconButton aria-label="previous" onClick={handleNext} disabled={props.pageNumber[0] === props.pageNumber[1] ? true : false}>
                         <ChevronLeftIcon />
                     </IconButton>
                 </div>
                 <div>
-                    <IconButton aria-label="next" className="next" onClick={handleNext} disabled={props.pageNumber[0] <  props.pageNumber[1] ? false : true}>
+                    <IconButton aria-label="next" className="next" onClick={handlePrevious} disabled={props.pageNumber[0] > 1 ? false : true}>
                         <ChevronRightIcon />
                     </IconButton>
                 </div>
