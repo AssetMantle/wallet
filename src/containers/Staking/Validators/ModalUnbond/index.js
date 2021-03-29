@@ -177,7 +177,7 @@ const ModalUnbond = (props) => {
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
                             <div className="form-field">
-                                <p className="label">Available Amount</p>
+                                <p className="label">Delegation Amount</p>
                                 <Form.Control
                                     type="number"
                                     placeholder="Amount"
@@ -319,6 +319,7 @@ const ModalUnbond = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
+                                <p className="fee"> Default fee of 0.005xprt will be cut from the wallet.</p>
                                 <button className="button button-primary">Unbond</button>
                             </div>
                         </Form>

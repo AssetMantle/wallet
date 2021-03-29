@@ -211,7 +211,7 @@ const ModalReDelegate = (props) => {
                                 </Select>
                             </div>
                             <div className="form-field">
-                                <p className="label">Available Amount</p>
+                                <p className="label">Delegation Amount</p>
                                 <Form.Control
                                     type="number"
                                     placeholder="Amount"
@@ -354,6 +354,7 @@ const ModalReDelegate = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
+                                <p className="fee"> Default fee of 0.005xprt will be cut from the wallet.</p>
                                 <button className="button button-primary">Redelegate</button>
                             </div>
                         </Form>

@@ -89,6 +89,10 @@ html, body {
 .modal-custom .modal-dialog {
   max-width: 700px; }
 
+.fee {
+  font-size: 12px;
+  font-family: 'Poppins', sans-serif; }
+
 .amount-field {
   display: flex; }
   .amount-field .range-buttons {
@@ -1007,10 +1011,14 @@ html, body {
       border-left: 1px solid #EAEBF6;
       border-right: 1px solid #EAEBF6; }
 .wallet-main-section .tabs-section .tab-content {
-  padding: 50px 100px;
+  padding: 50px 50px 0 5px;
   position: relative;
-  height: 72vh;
+  height: 68vh;
   overflow-y: scroll; }
+  .wallet-main-section .tabs-section .tab-content::after {
+    content: '';
+    display: block;
+    padding-bottom: 30px; }
 .wallet-main-section .send-container {
   border: 1px solid #E3E5F4;
   padding: 50px 100px; }
@@ -1149,9 +1157,9 @@ html, body {
       color: #c4c4c4; }
       .header .navbar .navbar-nav li a .icon {
         fill: #c4c4c4; }
-    .header .navbar a:hover, .header .navbar a.active {
+    .header .navbar .navbar-nav li a:hover, .header .navbar .navbar-nav li a.active {
       color: #e50913 !important; }
-      .header .navbar a:hover .icon, .header .navbar a.active .icon {
+      .header .navbar .navbar-nav li a:hover .icon, .header .navbar .navbar-nav li a.active .icon {
         fill: #e50913; }
   .header .title {
     font-weight: 600;
@@ -1758,6 +1766,9 @@ html, body {
 /*--------------------------------------------------------------
 # dashboard mediaqueries styles
 --------------------------------------------------------------*/
+@media (max-width: 1300px) {
+  .header .profile-section .profile-dropdown .dropdown-menu .info {
+    padding: 20px 30px; } }
 @media (max-width: 1400px) {
   .token-info-section {
     padding: 25px; }
@@ -1770,9 +1781,13 @@ html, body {
     padding: 30px 60px; } }
 @media (max-width: 1200px) {
   .wallet-main-section .tabs-section .tab-content, .validators-section {
-    padding: 30px 60px;
+    padding: 30px 60px 0 30px;
     max-height: initial;
     overflow: auto; }
+    .wallet-main-section .tabs-section .tab-content::after, .validators-section::after {
+      content: '';
+      display: block;
+      padding-bottom: 30px; }
 
   .content-section {
     overflow: auto; }
@@ -1816,9 +1831,6 @@ html, body {
   .small-screen-logo {
     display: none; } }
 @media (max-width: 768px) {
-  .wallet-main-section .tabs-section .tab-content, .validators-section {
-    padding: 20px; }
-
   .token-info-section {
     padding: 0; }
 
