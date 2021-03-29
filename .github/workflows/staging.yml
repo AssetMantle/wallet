@@ -27,6 +27,7 @@ jobs:
       env:
         CI: false
         REACT_APP_API_KEY: ${{ secrets.STAGING_REST_ENDPOINT }}
+        REACT_APP_TENDERMINT_RPC_ENDPOINT: ${{ secrets.STAGING_RPC_ENDPOINT }}
     - name: zip up the build
       uses: montudor/action-zip@v0.1.0
       with:
