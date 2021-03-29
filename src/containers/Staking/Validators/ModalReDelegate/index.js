@@ -2,14 +2,12 @@ import {Accordion, AccordionContext, Card, Form, Modal, useAccordionToggle} from
 import React, {useContext, useState} from 'react';
 import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
-import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import helper from "../../../../utils/helper";
 import aminoMsgHelper from "../../../../utils/aminoMsgHelper";
 import {RedelegateMsg} from "../../../../utils/protoMsgHelper";
 import {connect} from "react-redux";
-import Transaction from "../../../../utils/transactions";
 import transactions from "../../../../utils/transactions";
 import Loader from "../../../../components/Loader";
 
@@ -99,7 +97,7 @@ const ModalReDelegate = (props) => {
         setLoader(true);
         event.preventDefault();
         setInitialModal(false);
-        const response = transactions.TransactionWithKeplr([RedelegateMsg(address, props.validatorAddress, toValidatorAddress, amount)], aminoMsgHelper.fee(5000, 250000));
+        const response = transactions.TransactionWithKeplr([RedelegateMsg(address, props.validatorAddress, toValidatorAddress, amount)], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             setResponse(result);
             setLoader(false)
@@ -128,6 +126,7 @@ const ModalReDelegate = (props) => {
     }
 
     const handleSubmit = async event => {
+        setLoader(true);
         event.preventDefault();
         let mnemonic;
         if (importMnemonic) {
@@ -139,7 +138,6 @@ const ModalReDelegate = (props) => {
                 mnemonic = result;
             });
         }
-        const validatorAddress = props.validatorAddress;
         let accountNumber = 0;
         let addressIndex = 0;
         let bip39Passphrase = "";
@@ -148,38 +146,19 @@ const ModalReDelegate = (props) => {
             addressIndex = document.getElementById('redelegateAccountIndex').value;
             bip39Passphrase = document.getElementById('redelegatebip39Passphrase').value;
         }
-        const persistence = MakePersistence(accountNumber, addressIndex);
-        const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
-        const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
 
-        if (address.error === undefined && ecpairPriv.error === undefined) {
-            persistence.getAccounts(address).then(data => {
-                if (data.code === undefined) {
-                    let stdSignMsg = persistence.newStdMsg({
-                        msgs: aminoMsgHelper.msgs(aminoMsgHelper.reDelegateMsg(amount, address, validatorAddress, toValidatorAddress)),
-                        fee: aminoMsgHelper.fee(5000, 250000),
-                        chain_id: persistence.chainId,
-                        memo: memoContent,
-                        account_number: String(data.account.account_number),
-                        sequence: String(data.account.sequence)
-                    });
-
-                    const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
-                    persistence.broadcast(signedTx).then(response => {
-                        setResponse(response);
-                    });
-                    showSeedModal(false);
-                } else {
-                    setErrorMessage(data.message);
-                }
-            });
-        } else {
-            if (address.error !== undefined) {
-                setErrorMessage(address.error)
-            } else {
-                setErrorMessage(ecpairPriv.error)
-            }
-        }
+        const response = transactions.TransactionWithMnemonic([RedelegateMsg(address, props.validatorAddress, toValidatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent,
+            mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+        response.then(result => {
+            console.log(result, "redelegate success")
+            showSeedModal(false);
+            setResponse(result);
+            setLoader(false);
+        }).catch(err => {
+            setLoader(false);
+            setErrorMessage(err.message)
+            console.log(err.message, "redelegate error")
+        })
     };
     if (loader) {
         return <Loader/>;
@@ -272,7 +251,7 @@ const ModalReDelegate = (props) => {
                                 </button>
                                 <button
                                     className={props.delegateStatus ? "button button-primary" : "button button-primary disabled"}
-                                    disabled={!props.delegateStatus || disabled  || amount === 0 }
+                                    disabled={!props.delegateStatus || disabled || amount === 0}
                                 >{mode === "normal" ? "Next" : "Submit"}
                                 </button>
                             </div>
@@ -395,7 +374,7 @@ const ModalReDelegate = (props) => {
                                 <img src={success} alt="success-image"/>
                                 {mode === "kepler" ?
                                     <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
-                                    : <p className="tx-hash">Tx Hash: {response.txhash}</p>}
+                                    : <p className="tx-hash">Tx Hash: {response.transactionHash}</p>}
                                 <div className="buttons">
                                     <button className="button" onClick={props.handleClose}>Done</button>
                                 </div>
@@ -414,10 +393,10 @@ const ModalReDelegate = (props) => {
                             <div className="result-container">
                                 {mode === "kepler" ?
                                     <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
-                                    : <p className="tx-hash">Tx Hash: {response.txhash}</p>}
+                                    : <p className="tx-hash">Tx Hash: {response.transactionHash}</p>}
                                 {mode === "kepler" ?
                                     <p>{response.rawLog}</p>
-                                    : <p>{response.raw_log}</p>}
+                                    : <p>{response.rawLog}</p>}
                                 <div className="buttons">
                                     <button className="button" onClick={props.handleClose}>Done</button>
                                 </div>
