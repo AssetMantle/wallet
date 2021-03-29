@@ -234,7 +234,7 @@ const ModalUnbond = (props) => {
                                         icon="left-arrow"/>
                                 </button>
                                 <button className="button button-primary"
-                                        disabled={!props.delegateStatus || amount === 0 || amount > props.balance}>
+                                        disabled={!props.delegateStatus || amount === 0 }>
                                     {mode === "normal" ? "Next" : "Submit"}
                                 </button>
                             </div>

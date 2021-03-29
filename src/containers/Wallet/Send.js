@@ -143,9 +143,9 @@ const Send = () => {
             persistence.getAccounts(address).then(data => {
                 if (data.code === undefined) {
                     let stdSignMsg = persistence.newStdMsg({
-                        msgs: helper.msgs(helper.sendMsg(amountField, address, toAddress)),
+                        msgs: aminoMsgHelper.msgs(aminoMsgHelper.sendMsg(amountField, address, toAddress)),
                         chain_id: persistence.chainId,
-                        fee: helper.fee(0, 250000),
+                        fee: aminoMsgHelper.fee(0, 250000),
                         memo: "",
                         account_number: String(data.account.account_number),
                         sequence: String(data.account.sequence)

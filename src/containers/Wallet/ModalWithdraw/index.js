@@ -143,9 +143,9 @@ const ModalWithdraw = (props) => {
                 persistence.getAccounts(address).then(data => {
                     if (data.code === undefined) {
                         let stdSignMsg = persistence.newStdMsg({
-                            msgs: helper.msgs(helper.withDrawMsg(address, validatorAddress)),
+                            msgs: aminoMsgHelper.msgs(aminoMsgHelper.withDrawMsg(address, validatorAddress)),
                             chain_id: persistence.chainId,
-                            fee: helper.fee(5000, 250000),
+                            fee: aminoMsgHelper.fee(5000, 250000),
                             memo: memoContent,
                             account_number: String(data.account.account_number),
                             sequence: String(data.account.sequence)
