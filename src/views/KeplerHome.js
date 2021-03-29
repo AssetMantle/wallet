@@ -11,7 +11,7 @@ const KeplerHome = () => {
     const history = useHistory();
     const [errorMessage, setErrorMessage] = useState("");
     const [showFaq, setShowFaq] = useState(false);
-    const [address, setAddress]= useState("");
+    const [address, setAddress] = useState("");
     useEffect(() => {
         const kepler = KeplerWallet();
         kepler.then(function (item) {
@@ -25,15 +25,17 @@ const KeplerHome = () => {
         setErrorMessage("")
         const kepler = KeplerWallet();
         kepler.then(function (item) {
+            const address = helper.stringTruncate(localStorage.getItem("address"));
+            setAddress(address);
         }).catch(err => {
             setErrorMessage(err.message)
         });
     };
 
     const handleRoute = () => {
-            localStorage.setItem('loginMode', 'kepler');
-            localStorage.setItem('loginToken', 'loggedIn');
-            history.push('/dashboard/wallet');
+        localStorage.setItem('loginMode', 'kepler');
+        localStorage.setItem('loginToken', 'loggedIn');
+        history.push('/dashboard/wallet');
     };
 
     const handleHelp = () => {
@@ -65,12 +67,12 @@ const KeplerHome = () => {
                         <>
                             <div className="buttons">
                                 <button className="button button-primary" onClick={() => handleKepler()}>Connect
-
                                 </button>
                             </div>
-
-                            <p>There was an error connecting to the Keplr extension:</p>
-                            <p>{errorMessage}</p>
+                            <div className="text">
+                                <p>There was an error connecting to the Keplr extension:</p>
+                                <p className="form-error">{errorMessage}</p>
+                            </div>
                         </>
                         :
                         <>
@@ -78,8 +80,8 @@ const KeplerHome = () => {
                             <p>Below account we've received from the Keplr browser extension.</p>
                             <div className="buttons-list">
                                 <p>{address}</p>
-                                    <button className="button button-primary" onClick={() => handleRoute()}>Use
-                                    </button>
+                                <button className="button button-primary" onClick={() => handleRoute()}>Use
+                                </button>
                             </div>
                         </>
                     }

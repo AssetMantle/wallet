@@ -6,10 +6,10 @@ import Copy from "../../components/Copy";
 import ModalFaq from "../Faq";
 import {useHistory} from "react-router-dom";
 import helper from "../../utils/helper";
-const Header = (props) => {
+const DashboardHeader = (props) => {
     const history = useHistory();
     const [showFaq, setShowFaq] = useState(false);
-    let address = localStorage.getItem('address');
+    const address = localStorage.getItem('address');
     let addressTruncate  = helper.stringTruncate(address);
     const handleHelp = () => {
         setShowFaq(true)
@@ -52,4 +52,4 @@ const Header = (props) => {
         </div>
     );
 };
-export default Header;
+export default DashboardHeader;

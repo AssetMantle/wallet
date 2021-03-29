@@ -256,6 +256,12 @@ const ModalImportWallet = (props) => {
                                             <div className="buttons">
                                                 <button className="button button-primary">Next</button>
                                             </div>
+                                            <div className="buttons">
+                                                <button className="button button-primary" onClick={()=>handleKepler("kepler")}>Use Kepler</button>
+                                            </div>
+                                            <div className="buttons">
+                                                <button className="button button-primary large" onClick={()=>handleRoute("withAddress")}>Continue without importing?</button>
+                                            </div>
                                             <div className="note-section">
                                                 <div className="exclamation"><Icon
                                                     viewClass="arrow-right"

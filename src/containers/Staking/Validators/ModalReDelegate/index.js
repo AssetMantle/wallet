@@ -272,7 +272,7 @@ const ModalReDelegate = (props) => {
                                 </button>
                                 <button
                                     className={props.delegateStatus ? "button button-primary" : "button button-primary disabled"}
-                                    disabled={!props.delegateStatus || disabled || amount > props.balance || amount === 0}
+                                    disabled={!props.delegateStatus || disabled  || amount === 0 }
                                 >{mode === "normal" ? "Next" : "Submit"}
                                 </button>
                             </div>
