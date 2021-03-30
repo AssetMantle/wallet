@@ -87,6 +87,7 @@ const ModalWithdraw = (props) => {
                 const decryptedData = helper.decryptStore(res, password);
                 if (decryptedData.error != null) {
                     setErrorMessage(decryptedData.error)
+                    setLoader(false);
                 } else {
                     resolve(decryptedData.mnemonic);
                     setErrorMessage("");
@@ -105,7 +106,7 @@ const ModalWithdraw = (props) => {
             setLoader(false)
         }).catch(err => {
             setLoader(false);
-            props.handleClose();
+            props.setRewards(false)
             console.log(err.message, "Withdraw error")
         })
     };

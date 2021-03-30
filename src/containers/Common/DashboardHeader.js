@@ -1,12 +1,13 @@
 import React, {useState} from "react";
 import Icon from "../../components/Icon";
-import {NavLink, withRouter, useHistory} from 'react-router-dom';
+import {NavLink, useHistory} from 'react-router-dom';
 import {Nav, Navbar, NavDropdown} from "react-bootstrap";
 import ReactQRCode from "qrcode.react";
 import Copy from "../../components/Copy";
 import ModalFaq from "../Faq";
 import helper from "../../utils/helper";
 import logo from "../../assets/images/logo_lite.svg";
+import config from "../../utils/config";
 
 const DashboardHeader = (props) => {
     const history = useHistory();
@@ -58,8 +59,19 @@ const DashboardHeader = (props) => {
                                 </NavLink>
                             </li>
                             <li className="nav-item link">
+                                <a className="nav-link primary-medium-color" href={config.explorerUrl}
+                                   rel="noopener noreferrer" target="_blank">
+                                    <div className="icon-box">
+                                        <Icon
+                                            viewClass="icon"
+                                            icon="explorer"/>
+                                    </div>
+                                    Explorer
+                                </a>
+                            </li>
+                            <li className="nav-item link">
                                 <a className="nav-link primary-medium-color"
-                                         onClick={handleHelp}>
+                                   onClick={handleHelp}>
                                     <div className="icon-box">
                                         <Icon
                                             viewClass="icon"

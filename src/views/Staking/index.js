@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import Sidebar from "../../components/sidebar";
 import Staking from "../../containers/Staking";
 import DashboardHeader from "../../containers/Common/DashboardHeader";
 const DashboardStaking = () => {

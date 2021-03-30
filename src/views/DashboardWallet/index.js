@@ -1,5 +1,4 @@
-import React, {useState} from "react";
-import Sidebar from "../../components/sidebar";
+import React from "react";
 import Wallet from "../../containers/Wallet";
 import DashboardHeader from "../../containers/Common/DashboardHeader";
 const DashboardWallet = () => {

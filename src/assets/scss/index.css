@@ -50,6 +50,7 @@ html, body {
 
 .loader {
   position: absolute;
+  z-index: 2;
   top: 50%;
   left: 50%; }
 
@@ -1329,8 +1330,8 @@ html, body {
         .token-info-section .info-box .line .value.rewards .claim {
           background: #E50913;
           color: #ffffff;
-          font-size: 10px;
-          padding: 0px 5px;
+          font-size: 12px;
+          padding: 3px 10px;
           margin-left: 5px; }
     .token-info-section .info-box .inner-box {
       flex: 1; }
@@ -1701,7 +1702,7 @@ html, body {
   background: radial-gradient(99.06% 99.06% at 49.65% 0.94%, #222426 0, #282932 100%); }
 
 .kepler-container {
-  height: calc(100vh - 78px);
+  height: calc(100vh - 62px);
   overflow: auto;
   padding-top: 170px; }
   .kepler-container .info {

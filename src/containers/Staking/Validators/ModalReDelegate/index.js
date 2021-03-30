@@ -27,8 +27,9 @@ const ModalReDelegate = (props) => {
     const mode = localStorage.getItem('loginMode');
 
     const handleAmountChange = (evt) => {
-        let rex = /^(?!(0))\d*\.?\d{0,2}$/;
-        if(rex.test(evt.target.value)){
+        let rex = /^\d*\.?\d{0,2}$/;
+        let NumberRegex = /^((?!(0))[0-9])$/;
+        if (rex.test(evt.target.value) || NumberRegex.test(evt.target.value)) {
             setAmount(evt.target.value)
         }else{
             return false
@@ -117,7 +118,8 @@ const ModalReDelegate = (props) => {
                 const res = JSON.parse(event.target.result);
                 const decryptedData = helper.decryptStore(res, password);
                 if (decryptedData.error != null) {
-                    setErrorMessage(decryptedData.error)
+                    setErrorMessage(decryptedData.error);
+                    setLoader(false);
                 } else {
                     resolve(decryptedData.mnemonic);
                     setErrorMessage("");
