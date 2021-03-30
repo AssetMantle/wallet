@@ -3,8 +3,6 @@ import {
     Form, Modal,
 } from "react-bootstrap";
 import Icon from "../../components/Icon";
-import {getAccountUrl} from "../../constants/url";
-import axios from "axios";
 import {useHistory} from "react-router-dom";
 
 const AddressImport = (props) => {
@@ -15,25 +13,22 @@ const AddressImport = (props) => {
         event.preventDefault();
         setErrorMessage("");
         const address = event.target.address.value;
-        const url = getAccountUrl(address)
-        await axios.get(url).then(response => {
-            if(response.data.code === undefined){
-                localStorage.setItem('loginToken', 'loggedIn');
-                localStorage.setItem('address', address);
-                localStorage.setItem('loginMode', 'normal');
-                history.push('/dashboard/wallet');
-            }
+        if (address.startsWith("persistence1") && address.length === 50) {
+            localStorage.setItem('loginToken', 'loggedIn');
+            localStorage.setItem('address', address);
+            localStorage.setItem('loginMode', 'normal');
+            history.push('/dashboard/wallet');
             setShow(false);
-        }).catch(error => {
-            setErrorMessage(error.response.data.message);
-        });
+        } else {
+            setErrorMessage("Enter Valid Address");
+        }
     };
     const handleClose = () => {
         setShow(false);
         props.handleClose()
     };
     const handlePrevious = (formName) => {
-        if(formName === "addressImport"){
+        if (formName === "addressImport") {
             setShow(false);
             props.setShow(true);
             props.setWithAddress(false)
