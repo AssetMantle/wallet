@@ -57,7 +57,6 @@ export const fetchTransactions = (address, limit, pageNumber, stage) => {
                     Axios.get(getTransactionsUrl(address, limit, res.data.page_total*1)).then(
                         newResponse => {
                             if (stage === "Initial" || pageNumber === res.data.page_total*1) {
-
                                 dispatch(fetchPageNumberSuccess(newResponse.data.page_number * 1, newResponse.data.page_total * 1));
                                 let sendTxnsResponseList = newResponse.data.txs.reverse();
                                 if (newResponse.data.count !== limit) {

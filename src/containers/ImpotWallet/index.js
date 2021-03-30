@@ -166,7 +166,14 @@ const ModalImportWallet = (props) => {
             props.setRoutName("")
         }
     };
-
+    const handleKepler = () => {
+        history.push({
+            pathname : '/kepler',
+            state : {
+                currentPath: "importWallet",
+            }
+        });
+    };
     return (
         <>
             <Modal backdrop="static" show={show} onHide={handleClose} centered
@@ -199,6 +206,10 @@ const ModalImportWallet = (props) => {
 
                                                 }
                                                 <div className="buttons">
+                                                    <button className="button button-primary" onClick={() => handleKepler("kepler")}>Use Kepler
+                                                    </button>
+                                                </div>
+                                                <div className="buttons">
                                                     <button className="button button-primary" >Next</button>
                                                 </div>
 
@@ -229,6 +240,10 @@ const ModalImportWallet = (props) => {
                                                 : null
 
                                             }
+                                            <div className="buttons">
+                                                <button className="button button-primary" onClick={() => handleKepler("kepler")}>Use Kepler
+                                                </button>
+                                            </div>
                                             <div className="buttons">
                                                 <button className="button button-primary">Next</button>
                                             </div>
