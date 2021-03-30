@@ -64,7 +64,7 @@ const DashboardHeader = (props) => {
                                     <div className="icon-box">
                                         <Icon
                                             viewClass="icon"
-                                            icon="help"/>
+                                            icon="explorer"/>
                                     </div>
                                     Explorer
                                 </a>
