@@ -31,9 +31,6 @@ const ModalDelegate = (props) => {
     const [importMnemonic, setImportMnemonic] = useState(true);
     const address = localStorage.getItem('address');
     const mode = localStorage.getItem('loginMode');
-    const handleAmount = (amount) => {
-        setAmount(amount)
-    };
 
     function ContextAwareToggle({children, eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
@@ -68,7 +65,12 @@ const ModalDelegate = (props) => {
     }
 
     const handleAmountChange = (evt) => {
-        setAmount(evt.target.value)
+        let rex = /^(?!(0))\d*\.?\d{0,2}$/;
+        if(rex.test(evt.target.value)){
+            setAmount(evt.target.value)
+        }else{
+            return false
+        }
     };
     const handleClose = () => {
         setShow(false);
@@ -88,7 +90,7 @@ const ModalDelegate = (props) => {
         setLoader(true);
         event.preventDefault();
         setInitialModal(false);
-        const response = transactions.TransactionWithKeplr([DelegateMsg(address, props.validatorAddress, amount)], aminoMsgHelper.fee(0, 250000), memoContent);
+        const response = transactions.TransactionWithKeplr([DelegateMsg(address, props.validatorAddress, (amount*1000000))], aminoMsgHelper.fee(0, 250000), memoContent);
         response.then(result => {
             console.log(result);
             setResponse(result);
@@ -138,26 +140,36 @@ const ModalDelegate = (props) => {
                 mnemonic = result;
             });
         }
-
-        let accountNumber = 0;
-        let addressIndex = 0;
-        let bip39Passphrase = "";
-        if (advanceMode) {
-            accountNumber = document.getElementById('delegateAccountNumber').value;
-            addressIndex = document.getElementById('delegateAccountIndex').value;
-            bip39Passphrase = document.getElementById('delegatebip39Passphrase').value;
-        }
-        const response = transactions.TransactionWithMnemonic([DelegateMsg(address, props.validatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent,
-            mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-        response.then(result => {
-            console.log(result, "delegate success")
-            setResponse(result);
+        let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic);
+        addressFromMnemonic.then((addressResponse) => {
+            if(address === addressResponse) {
+                let accountNumber = 0;
+                let addressIndex = 0;
+                let bip39Passphrase = "";
+                if (advanceMode) {
+                    accountNumber = document.getElementById('delegateAccountNumber').value;
+                    addressIndex = document.getElementById('delegateAccountIndex').value;
+                    bip39Passphrase = document.getElementById('delegatebip39Passphrase').value;
+                }
+                const response = transactions.TransactionWithMnemonic([DelegateMsg(address, props.validatorAddress, (amount*1000000))], aminoMsgHelper.fee(5000, 250000), memoContent,
+                    mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                response.then(result => {
+                    console.log(result, "delegate success")
+                    setResponse(result);
+                    setLoader(false);
+                    showSeedModal(false);
+                }).catch(err => {
+                    setLoader(false);
+                    setErrorMessage(err.message)
+                    console.log(err.message, "delegate error")
+                })
+            }else{
+                    setLoader(false);
+                    setErrorMessage("Enter Correct Mnemonic")
+                }
+            }).catch(err => {
             setLoader(false);
-            showSeedModal(false);
-        }).catch(err => {
-            setLoader(false);
-            setErrorMessage(err.message)
-            console.log(err.message, "delegate error")
+            setErrorMessage("Enter Correct Mnemonic")
         })
     };
     const handlePrivateKey = (value) => {
@@ -190,7 +202,7 @@ const ModalDelegate = (props) => {
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
                             <div className="form-field">
-                                <p className="label">Send Amount</p>
+                                <p className="label">Delegation Amount(XPRT)</p>
                                 <div className="amount-field">
                                     <Form.Control
                                         type="number"
@@ -198,27 +210,14 @@ const ModalDelegate = (props) => {
                                         name="amount"
                                         placeholder="Send Amount"
                                         value={amount}
+                                        step="any"
                                         onChange={handleAmountChange}
                                         required={true}
                                     />
-                                    <div className="range-buttons">
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(25000000)}>25%
-                                        </button>
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(50000000)}>50%
-                                        </button>
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(75000000)}>75%
-                                        </button>
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(100000000)}>Max
-                                        </button>
-                                    </div>
                                 </div>
                             </div>
                             <div className="form-field">
-                                <p className="label">Available Amount</p>
+                                <p className="label">Balance(XPRT)</p>
                                 <Form.Control
                                     type="number"
                                     placeholder="Amount"
@@ -350,6 +349,7 @@ const ModalDelegate = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
+                                <p className="fee"> Default fee of 0.005xprt will be cut from the wallet.</p>
                                 <button className="button button-primary">Delegate</button>
                             </div>
                         </Form>

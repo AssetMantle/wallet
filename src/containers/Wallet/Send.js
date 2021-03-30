@@ -31,16 +31,20 @@ const Send = () => {
     const [memoContent, setMemoContent] = useState('');
     let mode = localStorage.getItem('loginMode');
     let address = localStorage.getItem('address');
-    const handleAmount = (amount) => {
-        setAmountField(amount)
-    };
+
     const handleClose = () => {
         setShow(false);
         setMnemonicForm(false);
         setTxResponse('');
+        setErrorMessage("")
     };
     const handleAmountChange = (evt) => {
-        setAmountField(evt.target.value)
+        let rex = /^(?!(0))\d*\.?\d{0,2}$/;
+        if(rex.test(evt.target.value)){
+            setAmountField(evt.target.value)
+        }else{
+            return false
+        }
     };
     const handleSubmit = async event => {
         event.preventDefault();
@@ -54,7 +58,7 @@ const Send = () => {
         setShow(true);
         setLoader(true);
         event.preventDefault();
-        const response = transactions.TransactionWithKeplr([SendMsg(address, event.target.address.value, amountField)], aminoMsgHelper.fee(0, 250000));
+        const response = transactions.TransactionWithKeplr([SendMsg(address, event.target.address.value, (amountField*1000000))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             setMnemonicForm(true);
             setTxResponse(result);
@@ -136,25 +140,38 @@ const Send = () => {
                 userMnemonic = result;
             });
         }
-        let accountNumber = 0;
-        let addressIndex = 0;
-        let bip39Passphrase = "";
-        if (advanceMode) {
-            accountNumber = document.getElementById('sendAccountNumber').value;
-            addressIndex = document.getElementById('sendAccountIndex').value;
-            bip39Passphrase = document.getElementById('sendbip39Passphrase').value;
-        }
-        const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, amountField)], aminoMsgHelper.fee(5000, 250000), memoContent,
-            userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-        response.then(result => {
-            console.log(result, "send success")
-            setMnemonicForm(true);
-            setTxResponse(result);
-            setLoader(false);
+        let addressFromMnemonic = transactions.CheckAddressMisMatch(userMnemonic);
+        addressFromMnemonic.then((addressResponse) => {
+            console.log(addressResponse)
+            if (address === addressResponse) {
+                let accountNumber = 0;
+                let addressIndex = 0;
+                let bip39Passphrase = "";
+                if (advanceMode) {
+                    accountNumber = document.getElementById('sendAccountNumber').value;
+                    addressIndex = document.getElementById('sendAccountIndex').value;
+                    bip39Passphrase = document.getElementById('sendbip39Passphrase').value;
+                }
+                console.log(amountField*1000000)
+                const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, (amountField*1000000))], aminoMsgHelper.fee(5000, 250000), memoContent,
+                    userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                response.then(result => {
+                    console.log(result, "send success")
+                    setMnemonicForm(true);
+                    setTxResponse(result);
+                    setLoader(false);
+                }).catch(err => {
+                    setLoader(false);
+                    setErrorMessage(err.message)
+                    console.log(err.message, "send error")
+                })
+            } else {
+                setLoader(false);
+                setErrorMessage("Enter Correct Mnemonic")
+            }
         }).catch(err => {
             setLoader(false);
-            setErrorMessage(err.message)
-            console.log(err.message, "send error")
+            setErrorMessage("Enter Correct Mnemonic")
         })
     };
     const popover = (
@@ -183,31 +200,18 @@ const Send = () => {
                         />
                     </div>
                     <div className="form-field">
-                        <p className="label">Send Amount</p>
+                        <p className="label">Send Amount (XPRT)</p>
                         <div className="amount-field">
                             <Form.Control
                                 type="number"
                                 min={0}
                                 name="amount"
                                 placeholder="Send Amount"
+                                step="any"
                                 value={amountField}
                                 onChange={handleAmountChange}
                                 required={true}
                             />
-                            <div className="range-buttons">
-                                <button type="button" className="button button-range"
-                                        onClick={() => handleAmount(25000000)}>25%
-                                </button>
-                                <button type="button" className="button button-range"
-                                        onClick={() => handleAmount(50000000)}>50%
-                                </button>
-                                <button type="button" className="button button-range"
-                                        onClick={() => handleAmount(75000000)}>75%
-                                </button>
-                                <button type="button" className="button button-range"
-                                        onClick={() => handleAmount(100000000)}>Max
-                                </button>
-                            </div>
                         </div>
                     </div>
                     {mode === "normal" ?
@@ -221,7 +225,7 @@ const Send = () => {
                     {keplerError !== '' ?
                         <p className="form-error">{keplerError}</p> : null}
                     <div className="buttons">
-                        <button className="button button-primary">Send XPRT Tokens</button>
+                        <button className="button button-primary">Send</button>
                     </div>
                 </Form>
             </div>
@@ -326,8 +330,10 @@ const Send = () => {
                                             </Card>
                                         </Accordion>
                                         <div className="buttons">
+                                            <p className="fee"> Default fee of 0.005xprt will be cut from the wallet.</p>
                                             <button className="button button-primary">Send</button>
                                         </div>
+
                                     </Form>
 
                                 </Modal.Body>

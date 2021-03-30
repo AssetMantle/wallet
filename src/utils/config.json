@@ -3,5 +3,6 @@
   "addressPrefix": "persistence",
   "coinType": "750",
   "coinDenom": "uxprt",
-  "coinName": "XPRT"
+  "coinName": "XPRT",
+  "uxprtValue": 1000000
 }

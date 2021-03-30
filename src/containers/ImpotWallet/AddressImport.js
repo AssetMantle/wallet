@@ -35,7 +35,8 @@ const AddressImport = (props) => {
     const handlePrevious = (formName) => {
         if(formName === "addressImport"){
             setShow(false);
-            props.handleRoute(props.routeValue);
+            props.setShow(true);
+            props.setWithAddress(false)
         }
     };
     return (

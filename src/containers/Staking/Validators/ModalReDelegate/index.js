@@ -26,12 +26,13 @@ const ModalReDelegate = (props) => {
     const address = localStorage.getItem('address');
     const mode = localStorage.getItem('loginMode');
 
-    const handleAmount = (amount) => {
-        setAmount(amount)
-    };
-
     const handleAmountChange = (evt) => {
-        setAmount(evt.target.value)
+        let rex = /^(?!(0))\d*\.?\d{0,2}$/;
+        if(rex.test(evt.target.value)){
+            setAmount(evt.target.value)
+        }else{
+            return false
+        }
     };
 
     function ContextAwareToggle({children, eventKey, callback}) {
@@ -97,7 +98,7 @@ const ModalReDelegate = (props) => {
         setLoader(true);
         event.preventDefault();
         setInitialModal(false);
-        const response = transactions.TransactionWithKeplr([RedelegateMsg(address, props.validatorAddress, toValidatorAddress, amount)], aminoMsgHelper.fee(0, 250000));
+        const response = transactions.TransactionWithKeplr([RedelegateMsg(address, props.validatorAddress, toValidatorAddress, (amount*1000000))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             setResponse(result);
             setLoader(false)
@@ -138,26 +139,37 @@ const ModalReDelegate = (props) => {
                 mnemonic = result;
             });
         }
-        let accountNumber = 0;
-        let addressIndex = 0;
-        let bip39Passphrase = "";
-        if (advanceMode) {
-            accountNumber = document.getElementById('redelegateAccountNumber').value;
-            addressIndex = document.getElementById('redelegateAccountIndex').value;
-            bip39Passphrase = document.getElementById('redelegatebip39Passphrase').value;
-        }
+        let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic);
+        addressFromMnemonic.then((addressResponse) => {
+            if(address === addressResponse) {
+                let accountNumber = 0;
+                let addressIndex = 0;
+                let bip39Passphrase = "";
+                if (advanceMode) {
+                    accountNumber = document.getElementById('redelegateAccountNumber').value;
+                    addressIndex = document.getElementById('redelegateAccountIndex').value;
+                    bip39Passphrase = document.getElementById('redelegatebip39Passphrase').value;
+                }
 
-        const response = transactions.TransactionWithMnemonic([RedelegateMsg(address, props.validatorAddress, toValidatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent,
-            mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-        response.then(result => {
-            console.log(result, "redelegate success")
-            showSeedModal(false);
-            setResponse(result);
-            setLoader(false);
+                const response = transactions.TransactionWithMnemonic([RedelegateMsg(address, props.validatorAddress, toValidatorAddress, (amount*1000000))], aminoMsgHelper.fee(5000, 250000), memoContent,
+                    mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                response.then(result => {
+                    console.log(result, "redelegate success")
+                    showSeedModal(false);
+                    setResponse(result);
+                    setLoader(false);
+                }).catch(err => {
+                    setLoader(false);
+                    setErrorMessage(err.message)
+                    console.log(err.message, "redelegate error")
+                })
+            } else {
+                setLoader(false);
+                setErrorMessage("Enter Correct Mnemonic")
+            }
         }).catch(err => {
             setLoader(false);
-            setErrorMessage(err.message)
-            console.log(err.message, "redelegate error")
+            setErrorMessage("Enter Correct Mnemonic")
         })
     };
     if (loader) {
@@ -171,7 +183,7 @@ const ModalReDelegate = (props) => {
             {initialModal ?
                 <>
                     <Modal.Header closeButton>
-                        {props.moniker}
+                        redelegating from {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
@@ -199,16 +211,16 @@ const ModalReDelegate = (props) => {
                                 </Select>
                             </div>
                             <div className="form-field">
-                                <p className="label">Available Amount</p>
+                                <p className="label"> Delegation Amount(XPRT)</p>
                                 <Form.Control
                                     type="number"
                                     placeholder="Amount"
-                                    value={props.balance}
+                                    value={props.delegationAmount}
                                     disabled
                                 />
                             </div>
                             <div className="form-field">
-                                <p className="label">Send Amount</p>
+                                <p className="label">Redelegation Amount(XPRT)</p>
                                 <div className="amount-field">
                                     <Form.Control
                                         type="number"
@@ -216,23 +228,10 @@ const ModalReDelegate = (props) => {
                                         name="amount"
                                         placeholder="Send Amount"
                                         value={amount}
+                                        step="any"
                                         onChange={handleAmountChange}
                                         required={true}
                                     />
-                                    <div className="range-buttons">
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(25000000)}>25%
-                                        </button>
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(50000000)}>50%
-                                        </button>
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(75000000)}>75%
-                                        </button>
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(100000000)}>Max
-                                        </button>
-                                    </div>
                                 </div>
                             </div>
                             {mode === "normal" ?
@@ -263,7 +262,7 @@ const ModalReDelegate = (props) => {
             {seedModal ?
                 <>
                     <Modal.Header closeButton>
-                        {props.moniker}
+                        redelegating from {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={handleSubmit}>
@@ -355,6 +354,7 @@ const ModalReDelegate = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
+                                <p className="fee"> Default fee of 0.005xprt will be cut from the wallet.</p>
                                 <button className="button button-primary">Redelegate</button>
                             </div>
                         </Form>

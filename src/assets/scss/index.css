@@ -89,6 +89,10 @@ html, body {
 .modal-custom .modal-dialog {
   max-width: 700px; }
 
+.fee {
+  font-size: 12px;
+  font-family: 'Poppins', sans-serif; }
+
 .amount-field {
   display: flex; }
   .amount-field .range-buttons {
@@ -983,16 +987,16 @@ html, body {
 .content-section {
   flex: 1; }
 
-.wallet-main-section .tabs-section {
-  border-top: 1px solid #E3E5F4; }
-  .wallet-main-section .tabs-section .nav-tabs .nav-item.show .nav-link, .wallet-main-section .tabs-section .nav-tabs .nav-link.active {
-    background: transparent;
-    color: #272931; }
-  .wallet-main-section .tabs-section .nav-tabs .nav-link.active {
-    border-bottom: 2px solid #272931; }
-  .wallet-main-section .tabs-section .nav-tabs .nav-link:focus, .wallet-main-section .tabs-section .nav-tabs .nav-link:hover {
-    outline: none;
-    border-bottom: 2px solid #272931; }
+.wallet-main-section .tabs-section .nav-tabs .nav-item.show .nav-link, .wallet-main-section .tabs-section .nav-tabs .nav-link.active {
+  background: transparent;
+  color: #272931; }
+.wallet-main-section .tabs-section .nav-tabs .nav-link.active {
+  border-bottom: 2px solid #272931; }
+.wallet-main-section .tabs-section .nav-tabs .nav-link:focus, .wallet-main-section .tabs-section .nav-tabs .nav-link:hover {
+  outline: none;
+  border-bottom: 2px solid #272931; }
+.wallet-main-section .tabs-section .nav-tabs {
+  border: 1px solid #dee2e6 !important; }
   .wallet-main-section .tabs-section .nav-tabs .nav-link {
     border: 0px solid;
     border-radius: 0px;
@@ -1006,11 +1010,15 @@ html, body {
     .wallet-main-section .tabs-section .nav-tabs .nav-link:nth-child(2) {
       border-left: 1px solid #EAEBF6;
       border-right: 1px solid #EAEBF6; }
-  .wallet-main-section .tabs-section .tab-content {
-    padding: 50px 100px;
-    position: relative;
-    height: 72vh;
-    overflow-y: scroll; }
+.wallet-main-section .tabs-section .tab-content {
+  padding: 50px 0px 0 0px;
+  position: relative;
+  height: 68vh;
+  overflow-y: scroll; }
+  .wallet-main-section .tabs-section .tab-content::after {
+    content: '';
+    display: block;
+    padding-bottom: 30px; }
 .wallet-main-section .send-container {
   border: 1px solid #E3E5F4;
   padding: 50px 100px; }
@@ -1138,21 +1146,23 @@ html, body {
   border-bottom: 1px solid #E3E5F4; }
   .header .navbar {
     background: #222325; }
-    .header .navbar .navbar-nav li a {
-      font-family: "Poppins",sans-serif;
-      font-weight: 700;
-      font-size: 14px;
-      line-height: 1.5;
-      text-align: center;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: #c4c4c4; }
-      .header .navbar .navbar-nav li a .icon {
-        fill: #c4c4c4; }
-    .header .navbar a:hover, .header .navbar a.active {
-      color: #e50913 !important; }
-      .header .navbar a:hover .icon, .header .navbar a.active .icon {
-        fill: #e50913; }
+    .header .navbar .navbar-nav li {
+      cursor: pointer; }
+      .header .navbar .navbar-nav li a {
+        font-family: "Poppins", sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 1.5;
+        text-align: center;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: #c4c4c4; }
+        .header .navbar .navbar-nav li a .icon {
+          fill: #c4c4c4; }
+      .header .navbar .navbar-nav li a:hover, .header .navbar .navbar-nav li a.active {
+        color: #e50913 !important; }
+        .header .navbar .navbar-nav li a:hover .icon, .header .navbar .navbar-nav li a.active .icon {
+          fill: #e50913; }
   .header .title {
     font-weight: 600;
     font-size: 18px;
@@ -1275,6 +1285,10 @@ html, body {
 .token-info-section {
   padding: 40px 40px 40px 30px;
   display: flex; }
+  .token-info-section .xprt-info {
+    padding-left: 0 !important; }
+  .token-info-section .rewards-info {
+    padding-right: 0 !important; }
   .token-info-section .info-box {
     flex: 1;
     display: flex;
@@ -1340,7 +1354,7 @@ html, body {
 
 .validators-section {
   border-top: 1px solid #E3E5F4;
-  padding: 50px 100px;
+  padding: 50px 10px;
   position: relative;
   height: 72vh;
   overflow-y: scroll; }
@@ -1666,6 +1680,9 @@ html, body {
       background: transparent;
       color: #2E3239; }
 
+.sign-in-buttons button {
+  width: auto !important; }
+
 .rdt_TableBody .rdt_TableRow:first-child .rdt_TableCell {
   padding-top: 30px; }
 .rdt_TableBody .rdt_TableRow .rdt_TableCell {
@@ -1688,7 +1705,7 @@ html, body {
   overflow: auto;
   padding-top: 170px; }
   .kepler-container .info {
-    max-width: 500px;
+    max-width: 650px;
     background: #FFFFFF;
     margin: auto;
     padding: 30px; }
@@ -1703,7 +1720,8 @@ html, body {
     .kepler-container .info .buttons-list {
       display: flex;
       align-content: center;
-      justify-content: space-between; }
+      justify-content: space-between;
+      flex-wrap: wrap; }
       .kepler-container .info .buttons-list p {
         margin: 0; }
       .kepler-container .info .buttons-list .button {
@@ -1758,6 +1776,9 @@ html, body {
 /*--------------------------------------------------------------
 # dashboard mediaqueries styles
 --------------------------------------------------------------*/
+@media (max-width: 1300px) {
+  .header .profile-section .profile-dropdown .dropdown-menu .info {
+    padding: 20px 30px; } }
 @media (max-width: 1400px) {
   .token-info-section {
     padding: 25px; }
@@ -1770,9 +1791,13 @@ html, body {
     padding: 30px 60px; } }
 @media (max-width: 1200px) {
   .wallet-main-section .tabs-section .tab-content, .validators-section {
-    padding: 30px 60px;
+    padding: 30px 0px 0 0px;
     max-height: initial;
     overflow: auto; }
+    .wallet-main-section .tabs-section .tab-content::after, .validators-section::after {
+      content: '';
+      display: block;
+      padding-bottom: 30px; }
 
   .content-section {
     overflow: auto; }
@@ -1816,9 +1841,6 @@ html, body {
   .small-screen-logo {
     display: none; } }
 @media (max-width: 768px) {
-  .wallet-main-section .tabs-section .tab-content, .validators-section {
-    padding: 20px; }
-
   .token-info-section {
     padding: 0; }
 
@@ -1842,8 +1864,5 @@ html, body {
 
   .header .profile-section .icon-profile {
     margin: 0; } }
-@media (min-width: 1200px) and (max-width: 1400px) {
-  .txns-container {
-    width: 800px; } }
 
 /*# sourceMappingURL=index.css.map */

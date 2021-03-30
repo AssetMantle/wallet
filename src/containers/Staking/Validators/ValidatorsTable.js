@@ -33,8 +33,8 @@ const ValidatorsTable = (props) => {
         label: 'Status',
         options: {sort: false}
     }, {
-        name: '',
-        label: '',
+        name: 'actions',
+        label: 'Actions',
         options: {sort: false}
     }];
     const options = {

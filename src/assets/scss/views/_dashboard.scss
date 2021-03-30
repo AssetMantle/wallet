@@ -1,5 +1,6 @@
 .main-section {
   height: 100vh;
+
   .side-bar {
     background: #272931;
     width: 250px;
@@ -89,7 +90,6 @@
 
 .wallet-main-section {
   .tabs-section {
-    border-top: 1px solid #E3E5F4;
 
     .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
       background: transparent;
@@ -106,6 +106,8 @@
     }
 
     .nav-tabs {
+      border: 1px solid #dee2e6 !important;
+
       .nav-link {
         border: 0px solid;
         border-radius: 0px;
@@ -125,10 +127,16 @@
     }
 
     .tab-content {
-      padding: 50px 100px;
+      padding: 50px 0px 0 0px;
       position: relative;
-      height: 72vh;
+      height: 68vh;
       overflow-y: scroll;
+
+      &::after {
+        content: '';
+        display: block;
+        padding-bottom: 30px;
+      }
     }
   }
 
@@ -151,19 +159,24 @@
           font-family: 'Poppins', sans-serif;
           color: #2E3239;
         }
-        .label.info{
+
+        .label.info {
           position: relative;
-          button{
+
+          button {
             position: absolute;
             bottom: 0px;
-            .icon{
+
+            .icon {
               width: 14px;
             }
           }
         }
-        input{
+
+        input {
           height: calc(2.3em + .75rem + 2px);
         }
+
         .form-control {
           max-width: 500px;
           background: #F5F6FA;
@@ -194,22 +207,26 @@
   }
 
   .txns-container {
-    .MuiFormControl-root{
+    .MuiFormControl-root {
       flex-direction: inherit;
     }
-    .MuiButton-root{
+
+    .MuiButton-root {
       font-weight: 500;
       font-size: 14px;
       font-family: 'Poppins', sans-serif;
       color: #8D9CB5;
     }
-    .MuiPaper-elevation4{
+
+    .MuiPaper-elevation4 {
       box-shadow: none;
       border: 1px solid #E3E5F4;
     }
-    .MUIDataTableToolbar-icon-22:hover, .MUIDataTableToolbar-iconActive-23{
+
+    .MUIDataTableToolbar-icon-22:hover, .MUIDataTableToolbar-iconActive-23 {
       color: #E50913;
     }
+
     table {
       border: 1px solid #E3E5F4;
 
@@ -223,7 +240,8 @@
           font-family: 'Poppins', sans-serif;
           color: #8D9CB5;
           padding: 15px 20px;
-          &:first-child{
+
+          &:first-child {
             padding-left: 40px;
           }
         }
@@ -233,46 +251,55 @@
         tr:first-child td {
           padding-top: 30px;
         }
+
         td {
           white-space: nowrap;
           font-size: 14px;
           line-height: 150%;
           padding: 15px 20px;
-          &:first-child{
+
+          &:first-child {
             padding-left: 40px;
-           width: 150px;
+            width: 150px;
           }
         }
-        .result{
+
+        .result {
 
         }
-        .type{
+
+        .type {
           color: #8D9CB5;
           font-family: 'Poppins', sans-serif;
         }
-        .tx-hash{
+
+        .tx-hash {
           color: #1A73B4;
         }
 
         .type {
           color: #8D9CB5;
         }
-        .amount, .fee, .time{
+
+        .amount, .fee, .time {
           font-family: 'Poppins', sans-serif;
           font-weight: 500;
           color: #8D9CB5;
         }
-        .height{
+
+        .height {
           color: #1A73B4;
         }
       }
     }
-    .pagination-custom{
+
+    .pagination-custom {
       display: flex;
       justify-content: flex-end;
       background-color: #fff;
       border: 1px solid #E3E5F4;
-      .page-number{
+
+      .page-number {
         display: flex;
         align-items: center;
         font-size: 14px;
@@ -313,11 +340,15 @@
 
 .header {
   border-bottom: 1px solid #E3E5F4;
-  .navbar{
+
+  .navbar {
     background: #222325;
-    .navbar-nav li{
-      a{
-        font-family: "Poppins",sans-serif;
+
+    .navbar-nav li {
+      cursor: pointer;
+
+      a {
+        font-family: "Poppins", sans-serif;
         font-weight: 700;
         font-size: 14px;
         line-height: 1.5;
@@ -325,20 +356,24 @@
         letter-spacing: .1em;
         text-transform: uppercase;
         color: #c4c4c4;
-        .icon{
+
+        .icon {
           fill: #c4c4c4;;
         }
+      }
 
+      a:hover, a.active {
+        color: #e50913 !important;
+
+        .icon {
+          fill: #e50913;
+        }
       }
     }
 
-    a:hover, a.active {
-      color: #e50913 !important;
-      .icon{
-        fill: #e50913;;
-      }
-    }
+
   }
+
   .title {
     font-weight: 600;
     font-size: 18px;
@@ -346,17 +381,19 @@
     margin: 0;
     color: #313238;
   }
-  .nav-item{
+
+  .nav-item {
     display: flex;
     align-items: center;
-    .nav-link{
+
+    .nav-link {
       display: flex;
       align-items: center;
     }
   }
 
 
-  .help-text{
+  .help-text {
     font-family: 'Poppins', sans-serif;
     margin: 0;
     font-weight: 500;
@@ -375,13 +412,16 @@
       height: 14px;
     }
   }
+
   .profile-section {
     display: flex;
     align-items: center;
+
     .icon {
       width: 20px;
       height: 20px;
     }
+
     .profile-dropdown {
       button {
         padding: 0;
@@ -391,9 +431,11 @@
         background: none !important;
         border: none !important;
       }
-      .dropdown-toggle::after{
+
+      .dropdown-toggle::after {
         display: none;
       }
+
       .dropdown-menu {
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
         background: #FFFFFF;
@@ -478,19 +520,21 @@
     }
 
 
-
   }
 }
-.tab-header{
-  .left{
+
+.tab-header {
+  .left {
     display: flex;
     align-items: center;
-    .info-name{
+
+    .info-name {
       padding-right: 10px;
       margin: 0;
     }
-    .nav-pills{
-      .nav-link{
+
+    .nav-pills {
+      .nav-link {
         margin: 0;
         padding: .3rem 1rem;
         border-radius: 0;
@@ -500,7 +544,8 @@
         color: #55678B;
         border: 1px solid #DCE9F1;
       }
-      .nav-link.active, .show>.nav-link{
+
+      .nav-link.active, .show > .nav-link {
         background: #E50913;
         border: 1px solid #E50913;
         color: #FFFFFF;
@@ -508,12 +553,18 @@
     }
   }
 }
+
 .token-info-section {
   padding: 40px 40px 40px 30px;
-  //display: grid;
-  //grid-template-columns: repeat(3, minmax(0, 1fr));
-  //justify-items: center;
   display: flex;
+
+  .xprt-info {
+    padding-left: 0 !important;
+  }
+
+  .rewards-info {
+    padding-right: 0 !important;
+  }
 
   .info-box {
     flex: 1;
@@ -561,11 +612,13 @@
 
       .value.rewards {
         cursor: pointer;
-        .text{
+
+        .text {
           color: #4FBE89;
           text-decoration: underline;
         }
-        .claim{
+
+        .claim {
           background: #E50913;
           color: #ffffff;
           font-size: 10px;
@@ -578,10 +631,12 @@
     .inner-box {
       flex: 1;
     }
-    .line .value{
+
+    .line .value {
       position: relative;
       min-width: 50px;
-      .loader{
+
+      .loader {
         width: 32px;
         height: auto;
         position: absolute;
@@ -606,15 +661,17 @@
 
 .validators-section {
   border-top: 1px solid #E3E5F4;
-  padding: 50px 100px;
+  padding: 50px 10px;
   position: relative;
   height: 72vh;
   overflow-y: scroll;
+
   .info {
     display: flex;
     justify-content: space-between;
-  align-items: center;
+    align-items: center;
     margin-bottom: 20px;
+
     .info-name {
       font-weight: 600;
       font-size: 18px;
@@ -636,22 +693,27 @@
       }
     }
   }
-  .MuiFormControl-root{
+
+  .MuiFormControl-root {
     flex-direction: inherit;
   }
-  .MuiButton-root{
+
+  .MuiButton-root {
     font-weight: 500;
     font-size: 14px;
     font-family: 'Poppins', sans-serif;
     color: #8D9CB5;
   }
-  .MuiPaper-elevation4{
+
+  .MuiPaper-elevation4 {
     box-shadow: none;
     border: 1px solid #E3E5F4;
   }
-  .MUIDataTableToolbar-icon-153:hover, .MUIDataTableToolbar-iconActive-154{
+
+  .MUIDataTableToolbar-icon-153:hover, .MUIDataTableToolbar-iconActive-154 {
     color: #E50913;
   }
+
   table {
     border: 1px solid #E3E5F4;
 
@@ -666,7 +728,7 @@
         color: #8D9CB5;
         font-family: 'Poppins', sans-serif;
 
-        &:first-child{
+        &:first-child {
           padding-left: 40px;
         }
       }
@@ -679,6 +741,7 @@
         padding: 15px 20px;
         color: #272931;
         font-family: 'Poppins', sans-serif;
+
         .moniker-image {
           margin-right: 10px;
           width: 23px;
@@ -694,13 +757,14 @@
         }
       }
     }
-  tr{
-    &:first-child{
-      td{
-        padding-top: 30px;
+
+    tr {
+      &:first-child {
+        td {
+          padding-top: 30px;
+        }
       }
     }
-  }
   }
 }
 
@@ -907,13 +971,15 @@
 
     .card-body {
       padding-top: 0;
-      ul li{
+
+      ul li {
         font-weight: normal;
         font-size: 13px;
         line-height: 183.5%;
         margin: 0;
         color: #5F646C;
       }
+
       p {
         font-weight: normal;
         font-size: 13px;
@@ -954,7 +1020,8 @@
   display: flex;
   align-items: center;
   padding: 0px 20px !important;
-  .show.dropdown{
+
+  .show.dropdown {
     .button.button-primary {
       .icon {
         transform: rotate(0deg);
@@ -962,18 +1029,21 @@
       }
     }
   }
+
   .button.button-primary {
     padding: 0.2rem 0.6rem;
     font-size: 12px;
     white-space: nowrap;
-    .icon{
+
+    .icon {
       width: 14px;
       transform: rotate(-90deg);
       transition: transform 0.1s linear;
       margin-bottom: 1px;
     }
   }
-  .dropdown-menu.show{
+
+  .dropdown-menu.show {
     position: absolute;
     top: 0px !important;
     left: 0px !important;
@@ -984,68 +1054,83 @@
   }
 }
 
-.actions-modal{
-  .actions-modal-body{
+.actions-modal {
+  .actions-modal-body {
     padding: 30px;
-    .moniker-box{
+
+    .moniker-box {
       display: flex;
       align-items: center;
-      img{
+
+      img {
         width: 60px;
         margin-right: 20px;
       }
-      .info{
+
+      .info {
         padding: 10px 0;
-        .name{
+
+        .name {
           margin: 0;
           font-size: 20px;
           font-weight: 500;
           font-family: 'Poppins', sans-serif;
         }
-        .commission{
+
+        .commission {
           font-size: 12px;
           margin: 0;
         }
       }
 
     }
-    .website{
+
+    .website {
       padding: 20px 0 10px 0;
-      .name{
+
+      .name {
         font-size: 1rem;
         font-weight: 500;
         font-family: 'Poppins', sans-serif;
         line-height: 1.5;
         margin-bottom: 3px;
       }
-      .value{
+
+      .value {
         margin: 0;
       }
     }
-    .description{
+
+    .description {
       padding: 10px 0 10px 0;
-      .name{
+
+      .name {
         font-size: 1rem;
         font-weight: 500;
         font-family: 'Poppins', sans-serif;
         line-height: 1.5;
         margin-bottom: 3px;
       }
-      .value{
+
+      .value {
         margin: 0;
       }
     }
-    .buttons-group{
+
+    .buttons-group {
       padding-top: 15px;
       display: flex;
       align-items: center;
       flex-wrap: wrap;
-      .button-primary{
+
+      .button-primary {
         margin: 5px;
       }
+
       .btn-group {
         margin: 5px;
-        .btn-main{
+
+        .btn-main {
           background: #E50913;
           line-height: 180%;
           font-weight: bold;
@@ -1057,17 +1142,19 @@
           border: 1px solid #E50913;
           box-shadow: none !important;
         }
-        .btn-success{
+
+        .btn-success {
           background-color: #be050ef7 !important;
           border-color: #be050ef7 !important;
 
         }
-        .btn-success:focus, .btn-success:active{
+
+        .btn-success:focus, .btn-success:active {
           box-shadow: 0 0 0 0.2rem #e5091340 !important;
         }
       }
-      .dropdown-menu
-      {
+
+      .dropdown-menu {
         .dropdown-item {
           font-weight: 500;
           font-size: 14px;
@@ -1084,20 +1171,29 @@
   }
 }
 
+.sign-in-buttons {
+  button {
+    width: auto !important;
+  }
+}
+
 .rdt_TableBody {
-  .rdt_TableRow:first-child .rdt_TableCell{
+  .rdt_TableRow:first-child .rdt_TableCell {
     padding-top: 30px;
   }
+
   .rdt_TableRow .rdt_TableCell {
     white-space: nowrap;
     font-size: 14px;
     line-height: 150%;
     padding: 15px 20px;
-    &:first-child{
+
+    &:first-child {
       padding-left: 40px;
       width: 150px;
     }
   }
+
   //.result{
   //
   //}

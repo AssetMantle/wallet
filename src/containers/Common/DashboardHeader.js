@@ -81,7 +81,7 @@ const DashboardHeader = (props) => {
                                     </div>
                                     <div className="dropdown-footer">
                                         <p onClick={closeWallet} className="link-close">Close Wallet</p>
-                                        <p>Account</p>
+                                        {/*<p>Account</p>*/}
                                     </div>
                                 </NavDropdown>
                             </li>

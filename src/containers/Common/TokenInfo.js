@@ -15,6 +15,7 @@ const TokenInfo = (props) => {
         props.fetchBalance(address);
         props.fetchRewards(address);
         props.fetchUnbondDelegations(address);
+
     }, []);
 
     const handleRewards = () => {
@@ -24,14 +25,18 @@ const TokenInfo = (props) => {
         <div className="token-info-section">
             <div className="xprt-info info-box">
                 <div className="inner-box">
+                    {/*<div className="line">*/}
+                    {/*    <img src={xprt} alt="xprt"/>*/}
+                    {/*    <p className="total-supply">100,000,000.00</p>*/}
+                    {/*</div>*/}
                     <div className="line">
-                        <img src={xprt} alt="xprt"/>
-                        <p className="total-supply">100,000,000.00</p>
+                        <p className="key">Balance</p>
+                        <p className="value">
+                            {props.balance} XPRT</p>
                     </div>
                     <div className="line">
-                        <p className="key">Balance XPRT</p>
-                        <p className="value">
-                            {props.balance}</p>
+                        <p className="key">Balance in USD</p>
+                        <p className="value">${(props.balance * 0.4).toFixed(6)}</p>
                     </div>
                 </div>
             </div>
@@ -50,7 +55,7 @@ const TokenInfo = (props) => {
             <div className="rewards-info info-box">
                 <div className="inner-box">
                     <div className="line">
-                        <p className="key">Rewards (24h)</p>
+                        <p className="key">Rewards</p>
                         <p className="value rewards" onClick={handleRewards}><span className="text">{props.rewards} XPRT</span> <span className="claim">Claim</span></p>
                     </div>
                     <div className="line">

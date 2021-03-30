@@ -15,7 +15,7 @@ const KeplerHome = () => {
     useEffect(() => {
         const kepler = KeplerWallet();
         kepler.then(function (item) {
-            const address = helper.stringTruncate(localStorage.getItem("address"));
+            const address = localStorage.getItem("address");
             setAddress(address);
         }).catch(err => {
             setErrorMessage(err.message)
@@ -25,7 +25,7 @@ const KeplerHome = () => {
         setErrorMessage("")
         const kepler = KeplerWallet();
         kepler.then(function (item) {
-            const address = helper.stringTruncate(localStorage.getItem("address"));
+            const address = localStorage.getItem("address");
             setAddress(address);
         }).catch(err => {
             setErrorMessage(err.message)

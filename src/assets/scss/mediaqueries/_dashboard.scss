@@ -1,6 +1,8 @@
-@media (min-width: 1600px)
+@media (max-width: 1300px)
 {
-
+  .header .profile-section .profile-dropdown .dropdown-menu .info{
+    padding: 20px 30px;
+  }
 }
 
 @media (max-width: 1400px) {
@@ -19,9 +21,14 @@
 }
 @media (max-width: 1200px) {
   .wallet-main-section .tabs-section .tab-content, .validators-section {
-    padding: 30px 60px;
+    padding: 30px 0px 0 0px;
     max-height: initial;
     overflow: auto;
+    &::after {
+      content:'';
+      display:block;
+      padding-bottom:30px;
+    }
   }
   .content-section{
     overflow: auto;
@@ -82,9 +89,6 @@
   }
 }
 @media (max-width: 768px){
-  .wallet-main-section .tabs-section .tab-content, .validators-section{
-    padding: 20px;
-  }
   .token-info-section{
     padding: 0  ;
   }
@@ -114,8 +118,3 @@
   }
 }
 
-@media (min-width: 1200px) and (max-width: 1400px) {
-  .txns-container{
-    width: 800px;
-  }
-}

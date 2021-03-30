@@ -21,13 +21,16 @@ const ModalUnbond = (props) => {
     const [importMnemonic, setImportMnemonic] = useState(true);
     const address = localStorage.getItem('address');
     const mode = localStorage.getItem('loginMode');
-    const handleAmount = (amount) => {
-        setAmount(amount)
-    };
 
     const handleAmountChange = (evt) => {
-        setAmount(evt.target.value)
+        let rex = /^(?!(0))\d*\.?\d{0,2}$/;
+        if(rex.test(evt.target.value)){
+            setAmount(evt.target.value)
+        }else{
+            return false
+        }
     };
+
     const handleClose = () => {
         props.setModalOpen('');
         props.setTxModalShow(false);
@@ -100,7 +103,7 @@ const ModalUnbond = (props) => {
         setLoader(true);
         event.preventDefault();
         setInitialModal(false);
-        const response = transactions.TransactionWithKeplr([UnbondMsg(address, props.validatorAddress, amount)], aminoMsgHelper.fee(0, 250000));
+        const response = transactions.TransactionWithKeplr([UnbondMsg(address, props.validatorAddress, (amount*1000000))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             setResponse(result);
             setLoader(false)
@@ -124,27 +127,37 @@ const ModalUnbond = (props) => {
                 mnemonic = result;
             });
         }
+        let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic);
+        addressFromMnemonic.then((addressResponse) => {
+            if(address === addressResponse) {
+                let accountNumber = 0;
+                let addressIndex = 0;
+                let bip39Passphrase = "";
+                if (advanceMode) {
+                    accountNumber = document.getElementById('unbondAccountNumber').value;
+                    addressIndex = document.getElementById('unbondAccountIndex').value;
+                    bip39Passphrase = document.getElementById('unbondbip39Passphrase').value;
+                }
 
-        let accountNumber = 0;
-        let addressIndex = 0;
-        let bip39Passphrase = "";
-        if (advanceMode) {
-            accountNumber = document.getElementById('unbondAccountNumber').value;
-            addressIndex = document.getElementById('unbondAccountIndex').value;
-            bip39Passphrase = document.getElementById('unbondbip39Passphrase').value;
-        }
-
-        const response = transactions.TransactionWithMnemonic([UnbondMsg(address, props.validatorAddress, amount)], aminoMsgHelper.fee(5000, 250000), memoContent,
-            mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-        response.then(result => {
-            console.log(result, "unbond success")
-            setResponse(result);
-            setLoader(false);
-            showSeedModal(false);
+                const response = transactions.TransactionWithMnemonic([UnbondMsg(address, props.validatorAddress, (amount*1000000))], aminoMsgHelper.fee(5000, 250000), memoContent,
+                    mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                response.then(result => {
+                    console.log(result, "unbond success")
+                    setResponse(result);
+                    setLoader(false);
+                    showSeedModal(false);
+                }).catch(err => {
+                    setLoader(false);
+                    setErrorMessage(err.message)
+                    console.log(err.message, "unbond error")
+                })
+            } else {
+                setLoader(false);
+                setErrorMessage("Enter Correct Mnemonic")
+            }
         }).catch(err => {
             setLoader(false);
-            setErrorMessage(err.message)
-            console.log(err.message, "unbond error")
+            setErrorMessage("Enter Correct Mnemonic")
         })
     };
     const handlePrivateKey = (value) => {
@@ -159,21 +172,21 @@ const ModalUnbond = (props) => {
             {initialModal ?
                 <>
                     <Modal.Header closeButton>
-                        Unbonding to {props.moniker}
+                        unbonding from {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
                             <div className="form-field">
-                                <p className="label">Available Amount</p>
+                                <p className="label">Delegation Amount</p>
                                 <Form.Control
                                     type="number"
                                     placeholder="Amount"
-                                    value={props.balance}
+                                    value={props.delegationAmount}
                                     disabled
                                 />
                             </div>
                             <div className="form-field">
-                                <p className="label">Send Amount</p>
+                                <p className="label"> Unbound Amount(XPRT)</p>
                                 <div className="amount-field">
                                     <Form.Control
                                         type="number"
@@ -181,23 +194,10 @@ const ModalUnbond = (props) => {
                                         name="amount"
                                         placeholder="Send Amount"
                                         value={amount}
+                                        step="any"
                                         onChange={handleAmountChange}
                                         required={true}
                                     />
-                                    <div className="range-buttons">
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(25000000)}>25%
-                                        </button>
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(50000000)}>50%
-                                        </button>
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(75000000)}>75%
-                                        </button>
-                                        <button type="button" className="button button-range"
-                                                onClick={() => handleAmount(100000000)}>Max
-                                        </button>
-                                    </div>
                                 </div>
                             </div>
                             {mode === "normal" ?
@@ -227,7 +227,7 @@ const ModalUnbond = (props) => {
             {seedModal ?
                 <>
                     <Modal.Header closeButton>
-                        Unbonding to {props.moniker}
+                        unbonding from {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={handleSubmit}>
@@ -319,6 +319,7 @@ const ModalUnbond = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
+                                <p className="fee"> Default fee of 0.005xprt will be cut from the wallet.</p>
                                 <button className="button button-primary">Unbond</button>
                             </div>
                         </Form>
@@ -351,7 +352,7 @@ const ModalUnbond = (props) => {
                 response !== '' && response.code !== undefined ?
                     <>
                         <Modal.Header className="result-header error" closeButton>
-                            Failed to Unbonded
+                            Failed to Unbond
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">

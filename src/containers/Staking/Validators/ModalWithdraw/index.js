@@ -117,26 +117,37 @@ const ModalWithdraw = (props) => {
                 mnemonic = result;
             });
         }
-        let accountNumber = 0;
-        let addressIndex = 0;
-        let bip39Passphrase = "";
-        if (advanceMode) {
-            accountNumber = document.getElementById('claimAccountNumber').value;
-            addressIndex = document.getElementById('claimAccountIndex').value;
-            bip39Passphrase = document.getElementById('claimbip39Passphrase').value;
-        }
+        let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic);
+        addressFromMnemonic.then((addressResponse) => {
+            if(address === addressResponse) {
+                let accountNumber = 0;
+                let addressIndex = 0;
+                let bip39Passphrase = "";
+                if (advanceMode) {
+                    accountNumber = document.getElementById('claimAccountNumber').value;
+                    addressIndex = document.getElementById('claimAccountIndex').value;
+                    bip39Passphrase = document.getElementById('claimbip39Passphrase').value;
+                }
 
-        const response = transactions.TransactionWithMnemonic([WithdrawMsg(address, props.validatorAddress)], aminoMsgHelper.fee(5000, 250000), memoContent,
-            mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-        response.then(result => {
-            console.log(result, "withdrawMsg success")
-            setResponse(result);
-            setLoader(false);
-            showSeedModal(false);
+                const response = transactions.TransactionWithMnemonic([WithdrawMsg(address, props.validatorAddress)], aminoMsgHelper.fee(5000, 250000), memoContent,
+                    mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                response.then(result => {
+                    console.log(result, "withdrawMsg success");
+                    setResponse(result);
+                    setLoader(false);
+                    showSeedModal(false);
+                }).catch(err => {
+                    setLoader(false);
+                    setErrorMessage(err.message);
+                    console.log(err.message, "withdrawMsg error")
+                })
+            } else {
+                setLoader(false);
+                setErrorMessage("Enter Correct Mnemonic")
+            }
         }).catch(err => {
             setLoader(false);
-            setErrorMessage(err.message)
-            console.log(err.message, "withdrawMsg error")
+            setErrorMessage("Enter Correct Mnemonic")
         })
     };
     const handlePrivateKey = (value) => {
@@ -161,6 +172,12 @@ const ModalWithdraw = (props) => {
                                               placeholder="Enter Memo"
                                               required={false}/>
                             </div>
+                            <div className="form-field">
+                                <p className="label">Available</p>
+                                <div className="available-tokens">
+                                    <p className="tokens">{props.rewards} <span>XPRT</span></p>
+                                </div>
+                            </div>
                             <div className="buttons navigate-buttons">
                                 <button className="button button-secondary" onClick={() => handlePrevious()}>
                                     <Icon
@@ -169,7 +186,7 @@ const ModalWithdraw = (props) => {
                                 </button>
                                 <button
                                     className={props.rewards ? "button button-primary" : "button button-primary disabled"}
-                                    disabled={props.rewards ? false : true}> {mode === "normal" ? "Next" : "Submit"}
+                                    disabled={props.rewards === '0.000000'}> {mode === "normal" ? "Next" : "Submit"}
                                 </button>
                             </div>
                         </Form>
@@ -273,6 +290,7 @@ const ModalWithdraw = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
+                                <p className="fee"> Default fee of 0.005xprt will be cut from the wallet.</p>
                                 <button className="button button-primary">Claim Rewards</button>
                             </div>
                         </Form>

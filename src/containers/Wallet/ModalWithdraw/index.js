@@ -40,7 +40,8 @@ const ModalWithdraw = (props) => {
             })
         }
     }, []);
-    const handleClose = (amount) => {
+
+    const handleClose = () => {
         setShow(false);
         props.setRewards(false)
     };
@@ -130,25 +131,36 @@ const ModalWithdraw = (props) => {
                 mnemonic = result;
             });
         }
-        let accountNumber = 0;
-        let addressIndex = 0;
-        let bip39Passphrase = "";
-        if (advanceMode) {
-            accountNumber = document.getElementById('claimTotalAccountNumber').value;
-            addressIndex = document.getElementById('claimTotalAccountIndex').value;
-            bip39Passphrase = document.getElementById('claimTotalbip39Passphrase').value;
-        }
-        const response = transactions.TransactionWithMnemonic([WithdrawMsg(address, validatorAddress)], aminoMsgHelper.fee(5000, 250000), memoContent,
-            mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-        response.then(result => {
-            console.log(result, "withdrawMsg success")
-            setResponse(result);
-            setLoader(false);
-            showSeedModal(false);
+        let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic);
+        addressFromMnemonic.then((addressResponse) => {
+            if (address === addressResponse) {
+                let accountNumber = 0;
+                let addressIndex = 0;
+                let bip39Passphrase = "";
+                if (advanceMode) {
+                    accountNumber = document.getElementById('claimTotalAccountNumber').value;
+                    addressIndex = document.getElementById('claimTotalAccountIndex').value;
+                    bip39Passphrase = document.getElementById('claimTotalbip39Passphrase').value;
+                }
+                const response = transactions.TransactionWithMnemonic([WithdrawMsg(address, validatorAddress)], aminoMsgHelper.fee(5000, 250000), memoContent,
+                    mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                response.then(result => {
+                    console.log(result, "withdrawMsg success");
+                    setResponse(result);
+                    setLoader(false);
+                    showSeedModal(false);
+                }).catch(err => {
+                    setLoader(false);
+                    setErrorMessage(err.message);
+                    console.log(err.message, "withdrawMsg error")
+                })
+            } else {
+                setLoader(false);
+                setErrorMessage("Enter Correct Mnemonic")
+            }
         }).catch(err => {
             setLoader(false);
-            setErrorMessage(err.message)
-            console.log(err.message, "withdrawMsg error")
+            setErrorMessage("Enter Correct Mnemonic")
         })
     };
     const onChangeSelect = (evt) => {
@@ -231,7 +243,7 @@ const ModalWithdraw = (props) => {
                             }
                             <div className="buttons">
                                 <button className="button button-primary"
-                                        disabled={disabled}>{mode === "normal" ? "Next" : "Submit"}</button>
+                                        disabled={disabled || individualRewards === '' || individualRewards === '0.000000'}>{mode === "normal" ? "Next" : "Submit"}</button>
                             </div>
                         </Form>
                     </Modal.Body>
@@ -333,6 +345,7 @@ const ModalWithdraw = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
+                                <p className="fee"> Default fee of 0.005xprt will be cut from the wallet.</p>
                                 <button className="button button-primary">Claim Rewards</button>
                             </div>
                         </Form>
