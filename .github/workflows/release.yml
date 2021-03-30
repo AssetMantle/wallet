@@ -24,6 +24,8 @@ jobs:
         CI: false
         REACT_APP_API_KEY: ${{ secrets.PRODUCTION_REST_ENDPOINT }}
         REACT_APP_TENDERMINT_RPC_ENDPOINT: ${{ secrets.PRODUCTION_RPC_ENDPOINT }}
+        REACT_APP_EXPLORER_API: ${{ secrets.PRODUCTION_EXPLORER }}
+        REACT_APP_MAIL_CHIMP_URL: ${{ secrets.PRODUCTION_MAILCHIMP }}
     - name: zip up the build
       uses: montudor/action-zip@v0.1.0
       with:
