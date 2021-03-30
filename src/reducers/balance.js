@@ -20,7 +20,7 @@ const inProgress = (state = false, action) => {
 
 const amount = (state = 0, action) => {
     if (action.type === BALANCE_FETCH_SUCCESS) {
-        return (action.data*1);
+        return (action.data);
     }
     return state;
 };

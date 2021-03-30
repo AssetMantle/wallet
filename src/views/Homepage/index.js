@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import {Navbar, NavLink, Nav} from "react-bootstrap";
 import logo from "../../assets/images/logo_lite.svg";
-import {useHistory} from "react-router-dom";
 import dark_icon from "../../assets/images/dark_icon.svg";
 import ModalCreateWallet from "../../containers/CreateWallet/ModalCreateWallet";
 import ModalFaq from "../../containers/Faq";
@@ -9,14 +8,11 @@ import ModalImportWallet from "../../containers/ImpotWallet";
 import Footer from "../../components/Footer";
 import SignIn from "../../containers/SignIn";
 const Homepage = () => {
-    const history = useHistory();
+
     const [routName, setRoutName] = useState("false");
     const [showFaq, setShowFaq] = useState(false);
     const handleRoute = (name) => {
         setRoutName(name);
-        // if (name === "importWallet") {
-        //     history.push('/import_wallet')
-        // }
     };
     const handleHelp = () => {
         setShowFaq(true)

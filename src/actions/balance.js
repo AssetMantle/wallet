@@ -14,6 +14,7 @@ export const fetchBalanceProgress = () => {
     };
 };
 export const fetchBalanceSuccess = (data) => {
+
     return {
         type: BALANCE_FETCH_SUCCESS,
         data,
@@ -36,7 +37,7 @@ export const fetchBalance = (address)  => {
                     const totalBalance = Lodash.sumBy(res.data.balances, (balance) => {
                         return balance.amount * 1;
                     });
-                    dispatch(fetchBalanceSuccess(parseFloat((totalBalance / 1000000).toFixed(2)).toLocaleString()));
+                    dispatch(fetchBalanceSuccess(parseFloat((totalBalance / 1000000).toFixed(2))));
                 }
             })
             .catch((error) => {

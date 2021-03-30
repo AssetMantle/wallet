@@ -16,8 +16,8 @@ import helper from "../../utils/helper";
 import aminoMsgHelper from "../../utils/aminoMsgHelper";
 import Loader from "../../components/Loader";
 import {SendMsg} from "../../utils/protoMsgHelper";
-import config from "../../utils/config";
 import {connect} from "react-redux";
+const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const Send = (props) => {
     const [amountField, setAmountField] = useState(0);
@@ -359,7 +359,7 @@ const Send = (props) => {
                                                     <div className="result-container">
                                                         <img src={success} alt="success-image"/>
                                                         <a
-                                                            href={`${config.explorerUrl}/transaction?txHash=${txResponse.transactionHash}`}
+                                                            href={`${EXPLORER_API}/transaction?txHash=${txResponse.transactionHash}`}
                                                             target="_blank" className="tx-hash">Tx
                                                             Hash: {txResponse.transactionHash}</a>
                                                         <div className="buttons">
@@ -375,7 +375,7 @@ const Send = (props) => {
                                                 <Modal.Body className="delegate-modal-body">
                                                     <div className="result-container">
                                                         <a
-                                                            href={`${config.explorerUrl}/transaction?txHash=${txResponse.transactionHash}`}
+                                                            href={`${EXPLORER_API}/transaction?txHash=${txResponse.transactionHash}`}
                                                             target="_blank" className="tx-hash">Tx
                                                             Hash: {txResponse.transactionHash}</a>
                                                         {mode === "kepler" ?

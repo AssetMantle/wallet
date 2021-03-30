@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import {getValidatorsUrl, getValidatorUrl} from "../constants/url";
-import Async from 'async';
+
 import {
     FETCH_ACTIVE_VALIDATORS_SUCCESS,
     FETCH_VALIDATORS_ERROR,

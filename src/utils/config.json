@@ -4,6 +4,5 @@
   "coinType": "750",
   "coinDenom": "uxprt",
   "coinName": "XPRT",
-  "uxprtValue": 1000000,
-  "explorerUrl": "https://dev.testnet-explorer.persistence.one"
+  "uxprtValue": 1000000
 }
