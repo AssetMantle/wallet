@@ -9,8 +9,8 @@ import DataTable from "../../components/DataTable";
 import IconButton from "@material-ui/core/IconButton";
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import config from "../../utils/config";
 
+const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const Transactions = (props) => {
     const address = localStorage.getItem('address');
     useEffect(() => {
@@ -54,7 +54,7 @@ const Transactions = (props) => {
         ?
         props.list.map((stxn, index) => [
             <a
-                href={`${config.explorerUrl}/transaction?txHash=${stxn.txhash}`}
+                href={`${EXPLORER_API}/transaction?txHash=${stxn.txhash}`}
                 target="_blank" className="tx-hash">
                 {helper.stringTruncate(stxn.txhash)}
             </a>,
@@ -91,7 +91,7 @@ const Transactions = (props) => {
                     {stxn.tx.value.fee.amount[0].amount}
                     {stxn.tx.value.fee.amount[0].denom}
                 </div> : '',
-            <a href={`${config.explorerUrl}/block?height=${stxn.height}`}
+            <a href={`${EXPLORER_API}/block?height=${stxn.height}`}
                target="_blank" className="height">{stxn.height}</a>,
             <span className="time">{moment.utc(stxn.timestamp).local().startOf('seconds').fromNow()}</span>,
         ])

@@ -164,6 +164,9 @@ html, body {
   text-align: center;
   color: #E50913; }
 
+.navbar-nav .nav-link {
+  margin-bottom: 0; }
+
 .result-container {
   text-align: center; }
   .result-container a {

@@ -7,8 +7,8 @@ import {WithdrawMsg} from "../../../../utils/protoMsgHelper";
 import transactions from "../../../../utils/transactions";
 import helper from "../../../../utils/helper";
 import Loader from "../../../../components/Loader";
-import config from "../../../../utils/config";
 
+const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalWithdraw = (props) => {
     const [response, setResponse] = useState('');
     const [advanceMode, setAdvanceMode] = useState(false);
@@ -317,7 +317,7 @@ const ModalWithdraw = (props) => {
                             <div className="result-container">
                                 <img src={success} alt="success-image"/>
                                 <a
-                                    href={`${config.explorerUrl}/transaction?txHash=${response.transactionHash}`}
+                                    href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
                                     target="_blank" className="tx-hash">Tx
                                     Hash: {response.transactionHash}</a>
                                 <div className="buttons">
@@ -337,7 +337,7 @@ const ModalWithdraw = (props) => {
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 <a
-                                    href={`${config.explorerUrl}/transaction?txHash=${response.transactionHash}`}
+                                    href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
                                     target="_blank" className="tx-hash">Tx
                                     Hash: {response.transactionHash}</a>
                                 {mode === "kepler" ?

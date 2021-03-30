@@ -7,8 +7,8 @@ import Copy from "../../components/Copy";
 import ModalFaq from "../Faq";
 import helper from "../../utils/helper";
 import logo from "../../assets/images/logo_bold.svg";
-import config from "../../utils/config";
 
+const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const DashboardHeader = (props) => {
     const history = useHistory();
     const [showFaq, setShowFaq] = useState(false);
@@ -59,7 +59,7 @@ const DashboardHeader = (props) => {
                                 </NavLink>
                             </li>
                             <li className="nav-item link">
-                                <a className="nav-link primary-medium-color" href={config.explorerUrl}
+                                <a className="nav-link primary-medium-color" href={EXPLORER_API}
                                    rel="noopener noreferrer" target="_blank">
                                     <div className="icon-box">
                                         <Icon
