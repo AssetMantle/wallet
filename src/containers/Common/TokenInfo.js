@@ -30,13 +30,14 @@ const TokenInfo = (props) => {
                     {/*    <p className="total-supply">100,000,000.00</p>*/}
                     {/*</div>*/}
                     <div className="line">
-                        <p className="key">Balance XPRT</p>
+                        <p className="key">Balance</p>
                         <p className="value">
-                            {props.balance}</p>
+                            {props.balance} XPRT</p>
                     </div>
                     <div className="line">
-                        <p className="key">Balance in USD</p>
-                        <p className="value">${(props.balance * 0.4).toFixed(6)}</p>
+                    <p className="key">Delegated</p>
+                        <p className="value">{props.delegations} XPRT</p>
+                     
                     </div>
                 </div>
             </div>
@@ -47,8 +48,8 @@ const TokenInfo = (props) => {
                         <p className="value"> $0.40</p>
                     </div>
                     <div className="line">
-                        <p className="key">Delegated Token</p>
-                        <p className="value">{props.delegations} XPRT</p>
+                    <p className="key">Current Value</p>
+                        <p className="value">${(props.balance * 0.4).toFixed(6)}</p>
                     </div>
                 </div>
             </div>
