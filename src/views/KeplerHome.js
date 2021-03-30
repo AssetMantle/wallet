@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import "../utils/kepler";
 import KeplerWallet from "../utils/kepler";
-import {useHistory} from "react-router-dom";
-import {Nav, Navbar, NavLink} from "react-bootstrap";
+import {useHistory , NavLink} from "react-router-dom";
+import {Nav, Navbar} from "react-bootstrap";
 import logo from "../assets/images/logo_lite.svg";
 import ModalFaq from "../containers/Faq";
 
@@ -45,16 +45,16 @@ const KeplerHome = (props) => {
         <div className="kepler-section">
             <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
                 <div className="container">
-                    <Navbar.Brand><Nav.Link>
+                    <Navbar.Brand><NavLink to="/">
                         <img src={logo} alt="logo"/>
-                    </Nav.Link></Navbar.Brand>
+                    </NavLink></Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="ml-auto">
                             <a className="nav-link" href="https://persistence.one/" target="_blank"
                                rel="noopener noreferrer">Learn More</a>
-                            <NavLink className="nav-link" onClick={handleHelp} target="_blank"
-                                     rel="noopener noreferrer">Help</NavLink>
+                            <a className="nav-link" onClick={handleHelp} target="_blank"
+                                     rel="noopener noreferrer">Help</a>
                         </Nav>
                     </Navbar.Collapse>
                 </div>

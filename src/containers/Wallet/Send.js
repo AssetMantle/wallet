@@ -42,6 +42,7 @@ const Send = () => {
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         let NumberRegex = /^((?!(0))[0-9])$/;
+        console.log(rex.test(evt.target.value), NumberRegex.test(evt.target.value))
         if (rex.test(evt.target.value) || NumberRegex.test(evt.target.value)) {
             setAmountField(evt.target.value)
         } else {

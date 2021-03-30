@@ -1701,7 +1701,7 @@ html, body {
   background: radial-gradient(99.06% 99.06% at 49.65% 0.94%, #222426 0, #282932 100%); }
 
 .kepler-container {
-  height: calc(100vh - 78px);
+  height: calc(100vh - 62px);
   overflow: auto;
   padding-top: 170px; }
   .kepler-container .info {

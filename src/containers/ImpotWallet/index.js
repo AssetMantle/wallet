@@ -167,14 +167,12 @@ const ModalImportWallet = (props) => {
         }
     };
     const handleKepler = () => {
-        history.push(
-            {
-                pathname : '/Kepler',
-                state :{
-                    currentPath : "importWallet",
-                }
+        history.push({
+            pathname : '/kepler',
+            state : {
+                currentPath: "importWallet",
             }
-        );
+        });
     };
     return (
         <>

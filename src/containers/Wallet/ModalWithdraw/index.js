@@ -106,7 +106,7 @@ const ModalWithdraw = (props) => {
             setLoader(false)
         }).catch(err => {
             setLoader(false);
-            props.handleClose();
+            props.setRewards(false)
             console.log(err.message, "Withdraw error")
         })
     };
