@@ -5,9 +5,8 @@ import {useHistory} from "react-router-dom";
 import {Nav, Navbar, NavLink} from "react-bootstrap";
 import logo from "../assets/images/logo_lite.svg";
 import ModalFaq from "../containers/Faq";
-import helper from "../utils/helper";
 
-const KeplerHome = () => {
+const KeplerHome = (props) => {
     const history = useHistory();
     const [errorMessage, setErrorMessage] = useState("");
     const [showFaq, setShowFaq] = useState(false);
@@ -80,8 +79,13 @@ const KeplerHome = () => {
                             <p>Below account we've received from the Keplr browser extension.</p>
                             <div className="buttons-list">
                                 <p>{address}</p>
-                                <button className="button button-primary" onClick={() => handleRoute()}>Use
-                                </button>
+                                {props.location.state !== undefined ? props.location.state.currentPath !== "importWallet"  ?
+                                    <button className="button button-primary" onClick={() => handleRoute()}>Use
+                                    </button>
+                                    : null
+                                    : <button className="button button-primary" onClick={() => handleRoute()}>Use
+                                    </button>
+                                }
                             </div>
                         </>
                     }

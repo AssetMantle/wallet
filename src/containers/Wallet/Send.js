@@ -16,6 +16,7 @@ import helper from "../../utils/helper";
 import aminoMsgHelper from "../../utils/aminoMsgHelper";
 import Loader from "../../components/Loader";
 import {SendMsg} from "../../utils/protoMsgHelper";
+import config from "../../utils/config";
 
 const Send = () => {
     const [amountField, setAmountField] = useState(0);
@@ -39,18 +40,21 @@ const Send = () => {
         setErrorMessage("")
     };
     const handleAmountChange = (evt) => {
-        let rex = /^(?!(0))\d*\.?\d{0,2}$/;
-        if(rex.test(evt.target.value)){
+        let rex = /^\d*\.?\d{0,2}$/;
+        let NumberRegex = /^((?!(0))[0-9])$/;
+        if (rex.test(evt.target.value) || NumberRegex.test(evt.target.value)) {
             setAmountField(evt.target.value)
-        }else{
+        } else {
             return false
         }
     };
     const handleSubmit = async event => {
         event.preventDefault();
         setToAddress(event.target.address.value);
-        const memo = event.target.memo.value;
-        setMemoContent(memo);
+        if(mode === "normal"){
+            const memo = event.target.memo.value;
+            setMemoContent(memo);
+        }
         setMnemonicForm(true);
         setShow(true);
     };
@@ -58,7 +62,7 @@ const Send = () => {
         setShow(true);
         setLoader(true);
         event.preventDefault();
-        const response = transactions.TransactionWithKeplr([SendMsg(address, event.target.address.value, (amountField*1000000))], aminoMsgHelper.fee(0, 250000));
+        const response = transactions.TransactionWithKeplr([SendMsg(address, event.target.address.value, (amountField * 1000000))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             setMnemonicForm(true);
             setTxResponse(result);
@@ -69,23 +73,6 @@ const Send = () => {
             console.log(err.message, "send error")
         })
     };
-
-    function PrivateKeyReader(file, password) {
-        return new Promise(function (resolve, reject) {
-            const fileReader = new FileReader();
-            fileReader.readAsText(file, "UTF-8");
-            fileReader.onload = event => {
-                const res = JSON.parse(event.target.result);
-                const decryptedData = helper.decryptStore(res, password);
-                if (decryptedData.error != null) {
-                    setErrorMessage(decryptedData.error)
-                } else {
-                    resolve(decryptedData.mnemonic);
-                    setErrorMessage("");
-                }
-            };
-        });
-    }
 
     function ContextAwareToggle({children, eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
@@ -126,6 +113,26 @@ const Send = () => {
     if (loader) {
         return <Loader/>;
     }
+
+    function PrivateKeyReader(file, password) {
+        return new Promise(function (resolve, reject) {
+            const fileReader = new FileReader();
+            fileReader.readAsText(file, "UTF-8");
+            fileReader.onload = event => {
+                const res = JSON.parse(event.target.result);
+                const decryptedData = helper.decryptStore(res, password);
+                console.log(decryptedData,"Red")
+                if (decryptedData.error != null) {
+                    setErrorMessage(decryptedData.error)
+                    setLoader(false);
+                } else {
+                    resolve(decryptedData.mnemonic);
+                    setErrorMessage("");
+                }
+            };
+        });
+    }
+
     const handleMnemonicSubmit = async (evt) => {
         setLoader(true);
         setKeplerError('');
@@ -152,8 +159,8 @@ const Send = () => {
                     addressIndex = document.getElementById('sendAccountIndex').value;
                     bip39Passphrase = document.getElementById('sendbip39Passphrase').value;
                 }
-                console.log(amountField*1000000)
-                const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, (amountField*1000000))], aminoMsgHelper.fee(5000, 250000), memoContent,
+                console.log(amountField * 1000000)
+                const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, (amountField * 1000000))], aminoMsgHelper.fee(5000, 250000), memoContent,
                     userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                 response.then(result => {
                     console.log(result, "send success")
@@ -330,7 +337,8 @@ const Send = () => {
                                             </Card>
                                         </Accordion>
                                         <div className="buttons">
-                                            <p className="fee"> Default fee of 0.005xprt will be cut from the wallet.</p>
+                                            <p className="fee"> Default fee of 0.005xprt will be cut from the
+                                                wallet.</p>
                                             <button className="button button-primary">Send</button>
                                         </div>
 
@@ -348,7 +356,10 @@ const Send = () => {
                                                     <div className="result-container">
                                                         <img src={success} alt="success-image"/>
                                                         {mode === "kepler" ?
-                                                            <p className="tx-hash">Tx Hash: {txResponse.transactionHash}</p>
+                                                            <a
+                                                                href={`${config.explorerUrl}/transaction?txHash=${txResponse.transactionHash}`}
+                                                                target="_blank" className="tx-hash">Tx
+                                                                Hash: {txResponse.transactionHash}</a>
                                                             : <p className="tx-hash">Tx
                                                                 Hash: {txResponse.transactionHash}</p>}
                                                         <div className="buttons">
