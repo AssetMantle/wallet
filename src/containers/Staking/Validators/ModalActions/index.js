@@ -101,7 +101,8 @@ const ModalActions = (props) => {
                                 props.validator.description.website !== "" ?
                                     <div className="website">
                                         <p className="name">website</p>
-                                        <p className="value"><a href={`http://${props.validator.description.website}`}
+                                        <p className="value"><a href={props.validator.description.website}
+                                                                rel="noopener noreferrer"
                                                                 target="_blank">{props.validator.description.website}</a>
                                         </p>
                                     </div>
@@ -130,22 +131,6 @@ const ModalActions = (props) => {
                                         onClick={() => handleModal('Redelegate', props.validator.operator_address, props.validator.description.moniker)}
                                 >Redelegate
                                 </button>
-                                {/*<Dropdown as={ButtonGroup}>*/}
-                                {/*    <button className="btn-main"*/}
-                                {/*            onClick={() => handleModal('Redelegate', props.validator.operator_address, props.validator.description.moniker)}*/}
-                                {/*    >Redelegate*/}
-                                {/*    </button>*/}
-                                {/*    <Dropdown.Toggle split variant="success" id="dropdown-split-basic"/>*/}
-                                {/*    <Dropdown.Menu>*/}
-                                {/*        {rewards !== ''*/}
-                                {/*            ?*/}
-                                {/*            <Dropdown.Item*/}
-                                {/*                onClick={() => handleModal('Withdraw', props.validator.operator_address, props.validator.description.moniker)}>Claim*/}
-                                {/*                Rewards</Dropdown.Item>*/}
-                                {/*            : null}*/}
-
-                                {/*    </Dropdown.Menu>*/}
-                                {/*</Dropdown>*/}
 
                                 <button
                                     onClick={() => handleModal('Delegate', props.validator.operator_address, props.validator.description.moniker)}

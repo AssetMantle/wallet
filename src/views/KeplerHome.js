@@ -53,8 +53,8 @@ const KeplerHome = (props) => {
                         <Nav className="ml-auto">
                             <a className="nav-link" href="https://persistence.one/" target="_blank"
                                rel="noopener noreferrer">Learn More</a>
-                            <a className="nav-link" onClick={handleHelp} target="_blank"
-                                     rel="noopener noreferrer">Help</a>
+                            <p className="nav-link" onClick={handleHelp} target="_blank"
+                                     rel="noopener noreferrer">Help</p>
                         </Nav>
                     </Navbar.Collapse>
                 </div>

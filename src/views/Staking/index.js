@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import Staking from "../../containers/Staking";
 import DashboardHeader from "../../containers/Common/DashboardHeader";
 const DashboardStaking = () => {

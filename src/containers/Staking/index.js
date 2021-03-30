@@ -1,5 +1,4 @@
-import React, {useState} from "react";
-import DashboardHeader from "../Common/DashboardHeader";
+import React from "react";
 import TokenInfo from "../Common/TokenInfo";
 import Validators from "./Validators";
 const Staking = () => {
