@@ -183,7 +183,7 @@ const ModalReDelegate = (props) => {
             {initialModal ?
                 <>
                     <Modal.Header closeButton>
-                        {props.moniker}
+                        redelegating from {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
@@ -211,7 +211,7 @@ const ModalReDelegate = (props) => {
                                 </Select>
                             </div>
                             <div className="form-field">
-                                <p className="label">Delegation Amount</p>
+                                <p className="label"> Delegation Amount(XPRT)</p>
                                 <Form.Control
                                     type="number"
                                     placeholder="Amount"
@@ -220,7 +220,7 @@ const ModalReDelegate = (props) => {
                                 />
                             </div>
                             <div className="form-field">
-                                <p className="label">Send Amount (XPRT)</p>
+                                <p className="label">Redelegation Amount(XPRT)</p>
                                 <div className="amount-field">
                                     <Form.Control
                                         type="number"
@@ -262,7 +262,7 @@ const ModalReDelegate = (props) => {
             {seedModal ?
                 <>
                     <Modal.Header closeButton>
-                        {props.moniker}
+                        redelegating from {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={handleSubmit}>

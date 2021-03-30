@@ -35,8 +35,8 @@ const ModalActions = (props) => {
         const fetchValidatorRewards = async () => {
             const url = getValidatorRewardsUrl(address, props.validator.operator_address);
             axios.get(url).then(response => {
-                if(response.data.rewards[0].amount){
-                    setRewards((response.data.rewards[0].amount/1000000).toFixed(6))
+                if (response.data.rewards[0].amount) {
+                    setRewards((response.data.rewards[0].amount / 1000000).toFixed(6))
                 }
             }).catch(error => {
                 console.log(error.response, "fetchValidatorRewards")
@@ -46,7 +46,7 @@ const ModalActions = (props) => {
                 let delegationResponseList = response.data.delegation_responses;
                 for (const item of delegationResponseList) {
                     if (item.delegation.validator_address === props.validator.operator_address) {
-                        setDelegationAmount(item.balance.amount/10000000);
+                        setDelegationAmount(item.balance.amount / 10000000);
                         setDelegateStatus(true);
                     }
                 }
@@ -126,24 +126,41 @@ const ModalActions = (props) => {
                                     :
                                     null
                                 }
-                                <Dropdown as={ButtonGroup}>
-                                    <button className="btn-main"
-                                            onClick={() => handleModal('Redelegate', props.validator.operator_address, props.validator.description.moniker)}
-                                            >Redelegate
-                                    </button>
-                                    <Dropdown.Toggle split variant="success" id="dropdown-split-basic"/>
-                                    <Dropdown.Menu>
-                                            <Dropdown.Item
-                                                onClick={() => handleModal('Unbond', props.validator.operator_address, props.validator.description.moniker)}>Unbond</Dropdown.Item>
-                                        {rewards !== ''
-                                            ?
-                                            <Dropdown.Item
-                                                onClick={() => handleModal('Withdraw', props.validator.operator_address, props.validator.description.moniker)}>Claim
-                                                Rewards</Dropdown.Item>
-                                            : null}
+                                <button className="button button-primary"
+                                        onClick={() => handleModal('Redelegate', props.validator.operator_address, props.validator.description.moniker)}
+                                >Redelegate
+                                </button>
+                                {/*<Dropdown as={ButtonGroup}>*/}
+                                {/*    <button className="btn-main"*/}
+                                {/*            onClick={() => handleModal('Redelegate', props.validator.operator_address, props.validator.description.moniker)}*/}
+                                {/*    >Redelegate*/}
+                                {/*    </button>*/}
+                                {/*    <Dropdown.Toggle split variant="success" id="dropdown-split-basic"/>*/}
+                                {/*    <Dropdown.Menu>*/}
+                                {/*        {rewards !== ''*/}
+                                {/*            ?*/}
+                                {/*            <Dropdown.Item*/}
+                                {/*                onClick={() => handleModal('Withdraw', props.validator.operator_address, props.validator.description.moniker)}>Claim*/}
+                                {/*                Rewards</Dropdown.Item>*/}
+                                {/*            : null}*/}
 
-                                    </Dropdown.Menu>
-                                </Dropdown>
+                                {/*    </Dropdown.Menu>*/}
+                                {/*</Dropdown>*/}
+
+                                <button
+                                    onClick={() => handleModal('Delegate', props.validator.operator_address, props.validator.description.moniker)}
+                                    className="button button-primary">
+                                    Unbond
+                                </button>
+                                {rewards !== ''
+                                    ?
+                                    <button
+                                        onClick={() => handleModal('Withdraw', props.validator.operator_address, props.validator.description.moniker)}
+                                        className="button button-primary">
+                                        Claim Rewards
+                                    </button>
+                                    : null}
+
                             </div>
 
                         </Modal.Body>
