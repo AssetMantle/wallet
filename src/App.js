@@ -27,9 +27,7 @@ const App = () => {
         private: false,
     }];
     const address = localStorage.getItem('address');
-    window.onbeforeunload = function () {
-        localStorage.clear();
-    }
+
     return (
 
         <Switch>
