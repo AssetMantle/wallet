@@ -202,7 +202,7 @@ const ModalDelegate = (props) => {
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
                             <div className="form-field">
-                                <p className="label">Send Amount (XPRT)</p>
+                                <p className="label">Delegation Amount(XPRT)</p>
                                 <div className="amount-field">
                                     <Form.Control
                                         type="number"
@@ -217,7 +217,7 @@ const ModalDelegate = (props) => {
                                 </div>
                             </div>
                             <div className="form-field">
-                                <p className="label">Available Amount</p>
+                                <p className="label">Balance(XPRT)</p>
                                 <Form.Control
                                     type="number"
                                     placeholder="Amount"

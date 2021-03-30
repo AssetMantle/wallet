@@ -225,7 +225,7 @@ const Send = () => {
                     {keplerError !== '' ?
                         <p className="form-error">{keplerError}</p> : null}
                     <div className="buttons">
-                        <button className="button button-primary">Send XPRT Tokens</button>
+                        <button className="button button-primary">Send</button>
                     </div>
                 </Form>
             </div>

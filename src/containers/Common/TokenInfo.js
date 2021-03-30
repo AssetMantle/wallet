@@ -30,9 +30,9 @@ const TokenInfo = (props) => {
                     {/*    <p className="total-supply">100,000,000.00</p>*/}
                     {/*</div>*/}
                     <div className="line">
-                        <p className="key">Balance XPRT</p>
+                        <p className="key">Balance</p>
                         <p className="value">
-                            {props.balance}</p>
+                            {props.balance} XPRT</p>
                     </div>
                     <div className="line">
                         <p className="key">Balance in USD</p>
