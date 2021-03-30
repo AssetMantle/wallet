@@ -185,7 +185,7 @@ const Send = () => {
     const popover = (
         <Popover id="popover-basic">
             <Popover.Content>
-                The recipient’s address should start with XPRTa123…..
+                The recipient’s address should start with  persistenceXXXXXXXX....
             </Popover.Content>
         </Popover>
     );
