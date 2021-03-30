@@ -17,6 +17,7 @@ import transactions from "../../../../utils/transactions";
 import helper from "../../../../utils/helper";
 import Loader from "../../../../components/Loader";
 import {connect} from "react-redux";
+import config from "../../../../utils/config";
 
 const ModalDelegate = (props) => {
     const [amount, setAmount] = useState(0);
@@ -69,7 +70,7 @@ const ModalDelegate = (props) => {
         let NumberRegex = /^((?!(0))[0-9])$/;
         if (rex.test(evt.target.value) || NumberRegex.test(evt.target.value)) {
             setAmount(evt.target.value)
-        }else{
+        } else {
             return false
         }
     };
@@ -92,9 +93,8 @@ const ModalDelegate = (props) => {
         setLoader(true);
         event.preventDefault();
         setInitialModal(false);
-        const response = transactions.TransactionWithKeplr([DelegateMsg(address, props.validatorAddress, (amount*1000000))], aminoMsgHelper.fee(0, 250000), memoContent);
+        const response = transactions.TransactionWithKeplr([DelegateMsg(address, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(0, 250000), memoContent);
         response.then(result => {
-            console.log(result);
             setResponse(result);
             setLoader(false)
         }).catch(err => {
@@ -131,6 +131,7 @@ const ModalDelegate = (props) => {
     }
 
     const handleSubmit = async event => {
+
         setLoader(true);
         event.preventDefault();
         let mnemonic;
@@ -143,36 +144,39 @@ const ModalDelegate = (props) => {
                 mnemonic = result;
             });
         }
-        let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic);
+
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = "";
+        if (advanceMode) {
+            accountNumber = document.getElementById('delegateAccountNumber').value;
+            addressIndex = document.getElementById('delegateAccountIndex').value;
+            bip39Passphrase = document.getElementById('delegatebip39Passphrase').value;
+        }
+        let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+
         addressFromMnemonic.then((addressResponse) => {
-            if(address === addressResponse) {
-                let accountNumber = 0;
-                let addressIndex = 0;
-                let bip39Passphrase = "";
-                if (advanceMode) {
-                    accountNumber = document.getElementById('delegateAccountNumber').value;
-                    addressIndex = document.getElementById('delegateAccountIndex').value;
-                    bip39Passphrase = document.getElementById('delegatebip39Passphrase').value;
-                }
-                const response = transactions.TransactionWithMnemonic([DelegateMsg(address, props.validatorAddress, (amount*1000000))], aminoMsgHelper.fee(5000, 250000), memoContent,
+            if (address === addressResponse) {
+                const response = transactions.TransactionWithMnemonic([DelegateMsg(address, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(5000, 250000), memoContent,
                     mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                 response.then(result => {
-                    console.log(result, "delegate success")
                     setResponse(result);
                     setLoader(false);
                     showSeedModal(false);
                 }).catch(err => {
                     setLoader(false);
-                    setErrorMessage(err.message)
+                    setErrorMessage(err.message);
                     console.log(err.message, "delegate error")
                 })
-            }else{
-                    setLoader(false);
-                    setErrorMessage("Enter Correct Mnemonic")
-                }
-            }).catch(err => {
+            } else {
+                setLoader(false);
+                setAdvanceMode(false);
+                setErrorMessage("Please check mnemonic or wallet path")
+            }
+        }).catch(err => {
             setLoader(false);
-            setErrorMessage("Enter Correct Mnemonic")
+            setAdvanceMode(false);
+            setErrorMessage("Please check mnemonic or wallet path")
         })
     };
     const handlePrivateKey = (value) => {
@@ -243,7 +247,7 @@ const ModalDelegate = (props) => {
                                         icon="left-arrow"/>
                                 </button>
                                 <button className="button button-primary"
-                                        disabled={amount > props.balance || amount === 0 || props.balance === 0}
+                                        disabled={amount > (props.balance * 1) || amount === 0 || (props.balance * 1) === 0}
                                 > {mode === "normal" ? "Next" : "Submit"}</button>
                             </div>
                         </Form>
@@ -373,9 +377,10 @@ const ModalDelegate = (props) => {
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 <img src={success} alt="success-image"/>
-                                {mode === "kepler" ?
-                                    <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
-                                    : <p className="tx-hash">Tx Hash: {response.transactionHash}</p>}
+                                <a
+                                    href={`${config.explorerUrl}/transaction?txHash=${response.transactionHash}`}
+                                    target="_blank" className="tx-hash">Tx
+                                    Hash: {response.transactionHash}</a>
                                 <div className="buttons">
                                     <button className="button" onClick={props.handleClose}>Done</button>
                                 </div>
@@ -391,9 +396,10 @@ const ModalDelegate = (props) => {
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <div className="result-container">
-                            {mode === "kepler" ?
-                                <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
-                                : <p className="tx-hash">Tx Hash: {response.transactionHash}</p>}
+                            <a
+                                href={`${config.explorerUrl}/transaction?txHash=${response.transactionHash}`}
+                                target="_blank" className="tx-hash">Tx
+                                Hash: {response.transactionHash}</a>
                             {mode === "kepler" ?
                                 <p>{response.rawLog}</p>
                                 : <p>{response.rawLog}</p>}

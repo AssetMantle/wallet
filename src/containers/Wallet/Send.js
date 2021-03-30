@@ -17,8 +17,9 @@ import aminoMsgHelper from "../../utils/aminoMsgHelper";
 import Loader from "../../components/Loader";
 import {SendMsg} from "../../utils/protoMsgHelper";
 import config from "../../utils/config";
+import {connect} from "react-redux";
 
-const Send = () => {
+const Send = (props) => {
     const [amountField, setAmountField] = useState(0);
     const [toAddress, setToAddress] = useState('');
     const [txResponse, setTxResponse] = useState('');
@@ -41,9 +42,7 @@ const Send = () => {
     };
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
-        let NumberRegex = /^((?!(0))[0-9])$/;
-        console.log(rex.test(evt.target.value), NumberRegex.test(evt.target.value))
-        if (rex.test(evt.target.value) || NumberRegex.test(evt.target.value)) {
+        if (rex.test(evt.target.value)) {
             setAmountField(evt.target.value)
         } else {
             return false
@@ -52,7 +51,7 @@ const Send = () => {
     const handleSubmit = async event => {
         event.preventDefault();
         setToAddress(event.target.address.value);
-        if(mode === "normal"){
+        if (mode === "normal") {
             const memo = event.target.memo.value;
             setMemoContent(memo);
         }
@@ -122,7 +121,6 @@ const Send = () => {
             fileReader.onload = event => {
                 const res = JSON.parse(event.target.result);
                 const decryptedData = helper.decryptStore(res, password);
-                console.log(decryptedData,"Red")
                 if (decryptedData.error != null) {
                     setErrorMessage(decryptedData.error)
                     setLoader(false);
@@ -135,6 +133,7 @@ const Send = () => {
     }
 
     const handleMnemonicSubmit = async (evt) => {
+        console.log(advanceMode, "advanceMode")
         setLoader(true);
         setKeplerError('');
         evt.preventDefault();
@@ -148,23 +147,21 @@ const Send = () => {
                 userMnemonic = result;
             });
         }
-        let addressFromMnemonic = transactions.CheckAddressMisMatch(userMnemonic);
+
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = "";
+        if (advanceMode) {
+            accountNumber = document.getElementById('sendAccountNumber').value;
+            addressIndex = document.getElementById('sendAccountIndex').value;
+            bip39Passphrase = document.getElementById('sendbip39Passphrase').value;
+        }
+        let addressFromMnemonic = transactions.CheckAddressMisMatch(userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
         addressFromMnemonic.then((addressResponse) => {
-            console.log(addressResponse)
             if (address === addressResponse) {
-                let accountNumber = 0;
-                let addressIndex = 0;
-                let bip39Passphrase = "";
-                if (advanceMode) {
-                    accountNumber = document.getElementById('sendAccountNumber').value;
-                    addressIndex = document.getElementById('sendAccountIndex').value;
-                    bip39Passphrase = document.getElementById('sendbip39Passphrase').value;
-                }
-                console.log(amountField * 1000000)
                 const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, (amountField * 1000000))], aminoMsgHelper.fee(5000, 250000), memoContent,
                     userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                 response.then(result => {
-                    console.log(result, "send success")
                     setMnemonicForm(true);
                     setTxResponse(result);
                     setLoader(false);
@@ -175,17 +172,20 @@ const Send = () => {
                 })
             } else {
                 setLoader(false);
-                setErrorMessage("Enter Correct Mnemonic")
+                setAdvanceMode(false);
+                setErrorMessage("Please check mnemonic or wallet path")
             }
         }).catch(err => {
             setLoader(false);
-            setErrorMessage("Enter Correct Mnemonic")
+            setAdvanceMode(false);
+            setErrorMessage("Please check mnemonic or wallet path")
         })
     };
+
     const popover = (
         <Popover id="popover-basic">
             <Popover.Content>
-                The recipient’s address should start with  persistenceXXXXXXXX....
+                The recipient’s address should start with persistenceXXXXXXXX....
             </Popover.Content>
         </Popover>
     );
@@ -233,7 +233,9 @@ const Send = () => {
                     {keplerError !== '' ?
                         <p className="form-error">{keplerError}</p> : null}
                     <div className="buttons">
-                        <button className="button button-primary">Send</button>
+                        <button className="button button-primary"
+                                disabled={amountField > (props.balance * 1) || amountField === 0 || (props.balance * 1) === 0}>Send
+                        </button>
                     </div>
                 </Form>
             </div>
@@ -302,27 +304,27 @@ const Send = () => {
                                                             <p className="label">Account</p>
                                                             <Form.Control
                                                                 type="text"
-                                                                name="privateAccountNumber"
+                                                                name="sendAccountNumber"
                                                                 id="sendAccountNumber"
                                                                 placeholder="Account number"
-                                                                required={advanceMode ? true : false}
+                                                                required={advanceMode}
                                                             />
                                                         </div>
                                                         <div className="form-field">
                                                             <p className="label">Account Index</p>
                                                             <Form.Control
                                                                 type="text"
-                                                                name="privateAccountIndex"
+                                                                name="sendAccountIndex"
                                                                 id="sendAccountIndex"
                                                                 placeholder="Account Index"
-                                                                required={advanceMode ? true : false}
+                                                                required={advanceMode}
                                                             />
                                                         </div>
                                                         <div className="form-field">
                                                             <p className="label">bip39Passphrase</p>
                                                             <Form.Control
                                                                 type="password"
-                                                                name="bip39Passphrase"
+                                                                name="sendbip39Passphrase"
                                                                 id="sendbip39Passphrase"
                                                                 placeholder="Enter bip39Passphrase (optional)"
                                                                 required={false}
@@ -356,13 +358,10 @@ const Send = () => {
                                                 <Modal.Body className="delegate-modal-body">
                                                     <div className="result-container">
                                                         <img src={success} alt="success-image"/>
-                                                        {mode === "kepler" ?
-                                                            <a
-                                                                href={`${config.explorerUrl}/transaction?txHash=${txResponse.transactionHash}`}
-                                                                target="_blank" className="tx-hash">Tx
-                                                                Hash: {txResponse.transactionHash}</a>
-                                                            : <p className="tx-hash">Tx
-                                                                Hash: {txResponse.transactionHash}</p>}
+                                                        <a
+                                                            href={`${config.explorerUrl}/transaction?txHash=${txResponse.transactionHash}`}
+                                                            target="_blank" className="tx-hash">Tx
+                                                            Hash: {txResponse.transactionHash}</a>
                                                         <div className="buttons">
                                                             <button className="button" onClick={handleClose}>Done</button>
                                                         </div>
@@ -375,9 +374,10 @@ const Send = () => {
                                                 </Modal.Header>
                                                 <Modal.Body className="delegate-modal-body">
                                                     <div className="result-container">
-                                                        {mode === "kepler" ?
-                                                            <p className="tx-hash">Tx Hash: {txResponse.transactionHash}</p>
-                                                            : <p className="tx-hash">Tx Hash: {txResponse.transactionHash}</p>}
+                                                        <a
+                                                            href={`${config.explorerUrl}/transaction?txHash=${txResponse.transactionHash}`}
+                                                            target="_blank" className="tx-hash">Tx
+                                                            Hash: {txResponse.transactionHash}</a>
                                                         {mode === "kepler" ?
                                                             <p>{txResponse.rawLog}</p>
                                                             : <p>{txResponse.rawLog}</p>}
@@ -397,4 +397,11 @@ const Send = () => {
         </div>
     );
 };
-export default Send;
+
+const stateToProps = (state) => {
+    return {
+        balance: state.balance.amount,
+    };
+};
+
+export default connect(stateToProps)(Send);

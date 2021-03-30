@@ -21,16 +21,13 @@ export const fetchTokenPriceError = (data) => {
 
 export const fetchTokenPrice = () => (dispatch) => {
     const url = tokenPriceUrl();
-
      Axios.get(url)
         .then((res) => {
-            console.log(res,"raju")
-            if (res.data) {
+            if (res.data.close) {
                 dispatch(fetchTokenPriceSuccess());
             }
         })
         .catch((error) => {
-            console.log(error.message,"raju")
             dispatch(fetchTokenPriceError(error.response
                 ? error.response.data.message
                 : error.message));

@@ -7,6 +7,7 @@ import {WithdrawMsg} from "../../../../utils/protoMsgHelper";
 import transactions from "../../../../utils/transactions";
 import helper from "../../../../utils/helper";
 import Loader from "../../../../components/Loader";
+import config from "../../../../utils/config";
 
 const ModalWithdraw = (props) => {
     const [response, setResponse] = useState('');
@@ -118,18 +119,18 @@ const ModalWithdraw = (props) => {
                 mnemonic = result;
             });
         }
-        let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic);
-        addressFromMnemonic.then((addressResponse) => {
-            if(address === addressResponse) {
-                let accountNumber = 0;
-                let addressIndex = 0;
-                let bip39Passphrase = "";
-                if (advanceMode) {
-                    accountNumber = document.getElementById('claimAccountNumber').value;
-                    addressIndex = document.getElementById('claimAccountIndex').value;
-                    bip39Passphrase = document.getElementById('claimbip39Passphrase').value;
-                }
 
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = "";
+        if (advanceMode) {
+            accountNumber = document.getElementById('claimAccountNumber').value;
+            addressIndex = document.getElementById('claimAccountIndex').value;
+            bip39Passphrase = document.getElementById('claimbip39Passphrase').value;
+        }
+        let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+        addressFromMnemonic.then((addressResponse) => {
+            if (address === addressResponse) {
                 const response = transactions.TransactionWithMnemonic([WithdrawMsg(address, props.validatorAddress)], aminoMsgHelper.fee(5000, 250000), memoContent,
                     mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                 response.then(result => {
@@ -144,11 +145,13 @@ const ModalWithdraw = (props) => {
                 })
             } else {
                 setLoader(false);
-                setErrorMessage("Enter Correct Mnemonic")
+                setAdvanceMode(false);
+                setErrorMessage("Please check mnemonic or wallet path")
             }
         }).catch(err => {
             setLoader(false);
-            setErrorMessage("Enter Correct Mnemonic")
+            setAdvanceMode(false);
+            setErrorMessage("Please check mnemonic or wallet path")
         })
     };
     const handlePrivateKey = (value) => {
@@ -168,17 +171,21 @@ const ModalWithdraw = (props) => {
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
                             <div className="form-field">
-                                <p className="label">Memo</p>
-                                <Form.Control as="textarea" rows={3} name="memo"
-                                              placeholder="Enter Memo"
-                                              required={false}/>
-                            </div>
-                            <div className="form-field">
                                 <p className="label">Available</p>
                                 <div className="available-tokens">
                                     <p className="tokens">{props.rewards} <span>XPRT</span></p>
                                 </div>
                             </div>
+                            {
+                                mode === "normal" ?
+                                    <div className="form-field">
+                                        <p className="label">Memo</p>
+                                        <Form.Control as="textarea" rows={3} name="memo"
+                                                      placeholder="Enter Memo"
+                                                      required={false}/>
+                                    </div>
+                                    : null
+                            }
                             <div className="buttons navigate-buttons">
                                 <button className="button button-secondary" onClick={() => handlePrevious()}>
                                     <Icon
@@ -309,9 +316,10 @@ const ModalWithdraw = (props) => {
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 <img src={success} alt="success-image"/>
-                                {mode === "kepler" ?
-                                    <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
-                                    : <p className="tx-hash">Tx Hash: {response.transactionHash}</p>}
+                                <a
+                                    href={`${config.explorerUrl}/transaction?txHash=${response.transactionHash}`}
+                                    target="_blank" className="tx-hash">Tx
+                                    Hash: {response.transactionHash}</a>
                                 <div className="buttons">
                                     <button className="button" onClick={props.handleClose}>Done</button>
                                 </div>
@@ -328,9 +336,10 @@ const ModalWithdraw = (props) => {
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
-                                {mode === "kepler" ?
-                                    <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
-                                    : <p className="tx-hash">Tx Hash: {response.transactionHash}</p>}
+                                <a
+                                    href={`${config.explorerUrl}/transaction?txHash=${response.transactionHash}`}
+                                    target="_blank" className="tx-hash">Tx
+                                    Hash: {response.transactionHash}</a>
                                 {mode === "kepler" ?
                                     <p>{response.rawLog}</p>
                                     : <p>{response.rawLog}</p>}
