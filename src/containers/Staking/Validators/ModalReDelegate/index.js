@@ -10,6 +10,7 @@ import {RedelegateMsg} from "../../../../utils/protoMsgHelper";
 import {connect} from "react-redux";
 import transactions from "../../../../utils/transactions";
 import Loader from "../../../../components/Loader";
+import config from "../../../../utils/config";
 
 const ModalReDelegate = (props) => {
     const [amount, setAmount] = useState(0);
@@ -31,7 +32,7 @@ const ModalReDelegate = (props) => {
         let NumberRegex = /^((?!(0))[0-9])$/;
         if (rex.test(evt.target.value) || NumberRegex.test(evt.target.value)) {
             setAmount(evt.target.value)
-        }else{
+        } else {
             return false
         }
     };
@@ -99,7 +100,7 @@ const ModalReDelegate = (props) => {
         setLoader(true);
         event.preventDefault();
         setInitialModal(false);
-        const response = transactions.TransactionWithKeplr([RedelegateMsg(address, props.validatorAddress, toValidatorAddress, (amount*1000000))], aminoMsgHelper.fee(0, 250000));
+        const response = transactions.TransactionWithKeplr([RedelegateMsg(address, props.validatorAddress, toValidatorAddress, (amount * 1000000))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             setResponse(result);
             setLoader(false)
@@ -129,51 +130,53 @@ const ModalReDelegate = (props) => {
     }
 
     const handleSubmit = async event => {
-        setLoader(true);
-        event.preventDefault();
-        let mnemonic;
-        if (importMnemonic) {
-            mnemonic = event.target.mnemonic.value;
-        } else {
-            const password = event.target.password.value;
-            var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
-            await promise.then(function (result) {
-                mnemonic = result;
-            });
-        }
-        let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic);
-        addressFromMnemonic.then((addressResponse) => {
-            if(address === addressResponse) {
-                let accountNumber = 0;
-                let addressIndex = 0;
-                let bip39Passphrase = "";
-                if (advanceMode) {
-                    accountNumber = document.getElementById('redelegateAccountNumber').value;
-                    addressIndex = document.getElementById('redelegateAccountIndex').value;
-                    bip39Passphrase = document.getElementById('redelegatebip39Passphrase').value;
-                }
-
-                const response = transactions.TransactionWithMnemonic([RedelegateMsg(address, props.validatorAddress, toValidatorAddress, (amount*1000000))], aminoMsgHelper.fee(5000, 250000), memoContent,
-                    mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-                response.then(result => {
-                    console.log(result, "redelegate success")
-                    showSeedModal(false);
-                    setResponse(result);
-                    setLoader(false);
-                }).catch(err => {
-                    setLoader(false);
-                    setErrorMessage(err.message)
-                    console.log(err.message, "redelegate error")
-                })
+            setLoader(true);
+            event.preventDefault();
+            let mnemonic;
+            if (importMnemonic) {
+                mnemonic = event.target.mnemonic.value;
             } else {
-                setLoader(false);
-                setErrorMessage("Enter Correct Mnemonic")
+                const password = event.target.password.value;
+                var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
+                await promise.then(function (result) {
+                    mnemonic = result;
+                });
             }
-        }).catch(err => {
-            setLoader(false);
-            setErrorMessage("Enter Correct Mnemonic")
-        })
-    };
+
+            let accountNumber = 0;
+            let addressIndex = 0;
+            let bip39Passphrase = "";
+            if (advanceMode) {
+                accountNumber = document.getElementById('redelegateAccountNumber').value;
+                addressIndex = document.getElementById('redelegateAccountIndex').value;
+                bip39Passphrase = document.getElementById('redelegatebip39Passphrase').value;
+            }
+            let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+            addressFromMnemonic.then((addressResponse) => {
+                if (address === addressResponse) {
+                    const response = transactions.TransactionWithMnemonic([RedelegateMsg(address, props.validatorAddress, toValidatorAddress, (amount * 1000000))], aminoMsgHelper.fee(5000, 250000), memoContent,
+                        mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                    response.then(result => {
+                        showSeedModal(false);
+                        setResponse(result);
+                        setLoader(false);
+                    }).catch(err => {
+                        setLoader(false);
+                        setErrorMessage(err.message)
+                        console.log(err.message, "redelegate error")
+                    })
+                } else {
+                    setLoader(false);
+                    setAdvanceMode(false);
+                    setErrorMessage("Please check mnemonic or wallet path")
+                }
+            }).catch(err => {
+                setLoader(false);
+                setAdvanceMode(false);
+                setErrorMessage("Please check mnemonic or wallet path")
+            })
+        }
+    ;
     if (loader) {
         return <Loader/>;
     }
@@ -272,7 +275,8 @@ const ModalReDelegate = (props) => {
                                 importMnemonic ?
                                     <>
                                         <div className="text-center">
-                                            <p onClick={() => handlePrivateKey(false)} className="import-name">Use
+                                            <p onClick={() => handlePrivateKey(false)}
+                                               className="import-name">Use
                                                 Private Key (KeyStore.json file)</p>
                                         </div>
                                         <div className="form-field">
@@ -285,7 +289,8 @@ const ModalReDelegate = (props) => {
                                     :
                                     <>
                                         <div className="text-center">
-                                            <p onClick={() => handlePrivateKey(true)} className="import-name">Use
+                                            <p onClick={() => handlePrivateKey(true)}
+                                               className="import-name">Use
                                                 Mnemonic (Seed Phrase)</p>
                                         </div>
                                         <div className="form-field">
@@ -374,9 +379,10 @@ const ModalReDelegate = (props) => {
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 <img src={success} alt="success-image"/>
-                                {mode === "kepler" ?
-                                    <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
-                                    : <p className="tx-hash">Tx Hash: {response.transactionHash}</p>}
+                                <a
+                                    href={`${config.explorerUrl}/transaction?txHash=${response.transactionHash}`}
+                                    target="_blank" className="tx-hash">Tx
+                                    Hash: {response.transactionHash}</a>
                                 <div className="buttons">
                                     <button className="button" onClick={props.handleClose}>Done</button>
                                 </div>
@@ -393,9 +399,10 @@ const ModalReDelegate = (props) => {
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
-                                {mode === "kepler" ?
-                                    <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
-                                    : <p className="tx-hash">Tx Hash: {response.transactionHash}</p>}
+                                <a
+                                    href={`${config.explorerUrl}/transaction?txHash=${response.transactionHash}`}
+                                    target="_blank" className="tx-hash">Tx
+                                    Hash: {response.transactionHash}</a>
                                 {mode === "kepler" ?
                                     <p>{response.rawLog}</p>
                                     : <p>{response.rawLog}</p>}

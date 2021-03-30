@@ -6,7 +6,7 @@ import ReactQRCode from "qrcode.react";
 import Copy from "../../components/Copy";
 import ModalFaq from "../Faq";
 import helper from "../../utils/helper";
-import logo from "../../assets/images/logo_lite.svg";
+import logo from "../../assets/images/logo_bold.svg";
 import config from "../../utils/config";
 
 const DashboardHeader = (props) => {

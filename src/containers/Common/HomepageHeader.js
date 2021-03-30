@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import { Nav, Navbar, NavLink} from "react-bootstrap";
 import ModalFaq from "../Faq";
 import {useHistory} from "react-router-dom";
-import logo from "../../assets/images/logo_lite.svg";
+import logo from "../../assets/images/logo_bold.svg";
 const HomepageHeader = () => {
     const history = useHistory();
     const [showFaq, setShowFaq] = useState(false);

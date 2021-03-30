@@ -6,14 +6,14 @@ import {
 
 const count = (state = 0, action) => {
     if (action.type === DELEGATIONS_FETCH_SUCCESS) {
-        return action.count;
+        return (action.count*1);
     }
     return state;
 };
 
 const _ = (state = 0, action) => {
     if (action.type === DELEGATIONS_FETCH_SUCCESS) {
-        return action.count;
+        return (action.count*1);
     } else {
         return state;
     }

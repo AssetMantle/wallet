@@ -132,17 +132,17 @@ const ModalWithdraw = (props) => {
                 mnemonic = result;
             });
         }
-        let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic);
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = "";
+        if (advanceMode) {
+            accountNumber = document.getElementById('claimTotalAccountNumber').value;
+            addressIndex = document.getElementById('claimTotalAccountIndex').value;
+            bip39Passphrase = document.getElementById('claimTotalbip39Passphrase').value;
+        }
+        let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
         addressFromMnemonic.then((addressResponse) => {
             if (address === addressResponse) {
-                let accountNumber = 0;
-                let addressIndex = 0;
-                let bip39Passphrase = "";
-                if (advanceMode) {
-                    accountNumber = document.getElementById('claimTotalAccountNumber').value;
-                    addressIndex = document.getElementById('claimTotalAccountIndex').value;
-                    bip39Passphrase = document.getElementById('claimTotalbip39Passphrase').value;
-                }
                 const response = transactions.TransactionWithMnemonic([WithdrawMsg(address, validatorAddress)], aminoMsgHelper.fee(5000, 250000), memoContent,
                     mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                 response.then(result => {
@@ -157,11 +157,13 @@ const ModalWithdraw = (props) => {
                 })
             } else {
                 setLoader(false);
-                setErrorMessage("Enter Correct Mnemonic")
+                setAdvanceMode(false);
+                setErrorMessage("Please check mnemonic or wallet path")
             }
         }).catch(err => {
             setLoader(false);
-            setErrorMessage("Enter Correct Mnemonic")
+            setAdvanceMode(false);
+            setErrorMessage("Please check mnemonic or wallet path")
         })
     };
     const onChangeSelect = (evt) => {
