@@ -172,7 +172,7 @@ const ModalUnbond = (props) => {
             {initialModal ?
                 <>
                     <Modal.Header closeButton>
-                        Unbonding to {props.moniker}
+                        unbonding from {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
@@ -186,7 +186,7 @@ const ModalUnbond = (props) => {
                                 />
                             </div>
                             <div className="form-field">
-                                <p className="label">Send Amount (XPRT)</p>
+                                <p className="label"> Unbound Amount(XPRT)</p>
                                 <div className="amount-field">
                                     <Form.Control
                                         type="number"
@@ -227,7 +227,7 @@ const ModalUnbond = (props) => {
             {seedModal ?
                 <>
                     <Modal.Header closeButton>
-                        Unbonding to {props.moniker}
+                        unbonding from {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={handleSubmit}>
@@ -352,7 +352,7 @@ const ModalUnbond = (props) => {
                 response !== '' && response.code !== undefined ?
                     <>
                         <Modal.Header className="result-header error" closeButton>
-                            Failed to Unbonded
+                            Failed to Unbond
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
