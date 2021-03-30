@@ -166,6 +166,8 @@ html, body {
 
 .result-container {
   text-align: center; }
+  .result-container a {
+    display: block; }
   .result-container img {
     width: 85px; }
   .result-container .tx-hash {
@@ -1014,7 +1016,7 @@ html, body {
 .wallet-main-section .tabs-section .tab-content {
   padding: 50px 0px 0 0px;
   position: relative;
-  height: 68vh;
+  height: 66vh;
   overflow-y: scroll; }
   .wallet-main-section .tabs-section .tab-content::after {
     content: '';

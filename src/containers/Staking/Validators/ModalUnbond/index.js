@@ -8,6 +8,7 @@ import aminoMsgHelper from "../../../../utils/aminoMsgHelper";
 import {UnbondMsg} from "../../../../utils/protoMsgHelper";
 import helper from "../../../../utils/helper";
 import Loader from "../../../../components/Loader";
+import config from "../../../../utils/config";
 
 const ModalUnbond = (props) => {
     const [amount, setAmount] = useState(0);
@@ -27,7 +28,7 @@ const ModalUnbond = (props) => {
         let NumberRegex = /^((?!(0))[0-9])$/;
         if (rex.test(evt.target.value) || NumberRegex.test(evt.target.value)) {
             setAmount(evt.target.value)
-        }else{
+        } else {
             return false
         }
     };
@@ -105,7 +106,7 @@ const ModalUnbond = (props) => {
         setLoader(true);
         event.preventDefault();
         setInitialModal(false);
-        const response = transactions.TransactionWithKeplr([UnbondMsg(address, props.validatorAddress, (amount*1000000))], aminoMsgHelper.fee(0, 250000));
+        const response = transactions.TransactionWithKeplr([UnbondMsg(address, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             setResponse(result);
             setLoader(false)
@@ -129,22 +130,21 @@ const ModalUnbond = (props) => {
                 mnemonic = result;
             });
         }
-        let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic);
-        addressFromMnemonic.then((addressResponse) => {
-            if(address === addressResponse) {
-                let accountNumber = 0;
-                let addressIndex = 0;
-                let bip39Passphrase = "";
-                if (advanceMode) {
-                    accountNumber = document.getElementById('unbondAccountNumber').value;
-                    addressIndex = document.getElementById('unbondAccountIndex').value;
-                    bip39Passphrase = document.getElementById('unbondbip39Passphrase').value;
-                }
 
-                const response = transactions.TransactionWithMnemonic([UnbondMsg(address, props.validatorAddress, (amount*1000000))], aminoMsgHelper.fee(5000, 250000), memoContent,
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = "";
+        if (advanceMode) {
+            accountNumber = document.getElementById('unbondAccountNumber').value;
+            addressIndex = document.getElementById('unbondAccountIndex').value;
+            bip39Passphrase = document.getElementById('unbondbip39Passphrase').value;
+        }
+        let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+        addressFromMnemonic.then((addressResponse) => {
+            if (address === addressResponse) {
+                const response = transactions.TransactionWithMnemonic([UnbondMsg(address, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(5000, 250000), memoContent,
                     mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                 response.then(result => {
-                    console.log(result, "unbond success")
                     setResponse(result);
                     setLoader(false);
                     showSeedModal(false);
@@ -155,11 +155,13 @@ const ModalUnbond = (props) => {
                 })
             } else {
                 setLoader(false);
-                setErrorMessage("Enter Correct Mnemonic")
+                setAdvanceMode(false);
+                setErrorMessage("Please check mnemonic or wallet path")
             }
         }).catch(err => {
             setLoader(false);
-            setErrorMessage("Enter Correct Mnemonic")
+            setAdvanceMode(false);
+            setErrorMessage("Please check mnemonic or wallet path")
         })
     };
     const handlePrivateKey = (value) => {
@@ -339,9 +341,10 @@ const ModalUnbond = (props) => {
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 <img src={success} alt="success-image"/>
-                                {mode === "kepler" ?
-                                    <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
-                                    : <p className="tx-hash">Tx Hash: {response.transactionHash}</p>}
+                                <a
+                                    href={`${config.explorerUrl}/transaction?txHash=${response.transactionHash}`}
+                                    target="_blank" className="tx-hash">Tx
+                                    Hash: {response.transactionHash}</a>
                                 <div className="buttons">
                                     <button className="button" onClick={props.handleClose}>Done</button>
                                 </div>
@@ -358,9 +361,10 @@ const ModalUnbond = (props) => {
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
-                                {mode === "kepler" ?
-                                    <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
-                                    : <p className="tx-hash">Tx Hash: {response.transactionHash}</p>}
+                                <a
+                                    href={`${config.explorerUrl}/transaction?txHash=${response.transactionHash}`}
+                                    target="_blank" className="tx-hash">Tx
+                                    Hash: {response.transactionHash}</a>
                                 {mode === "kepler" ?
                                     <p>{response.rawLog}</p>
                                     : <p>{response.rawLog}</p>}

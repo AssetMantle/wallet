@@ -14,7 +14,6 @@ async function Transaction(wallet, signerAddress, msgs, fee, memo = "") {
         tendermintRPCURL,
         wallet
     );
-    console.log(msgs, fee)
     return await cosmJS.signAndBroadcast(signerAddress, msgs, fee, memo)
 }
 

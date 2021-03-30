@@ -91,7 +91,7 @@ const CustomForm = ({status, message, onValidated}) => {
 };
 
 const Mailchimp = () => {
-    const url = mailURl
+    const url = mailURl;
     return (
         <MailchimpSubscribe
             url={url}

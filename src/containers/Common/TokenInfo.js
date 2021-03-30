@@ -6,6 +6,7 @@ import {fetchDelegationsCount} from "../../actions/delegations";
 import {fetchBalance} from "../../actions/balance";
 import {fetchRewards} from "../../actions/rewards";
 import {fetchUnbondDelegations} from "../../actions/unbond";
+import {fetchTokenPrice} from "../../actions/tokenPrice";
 
 const TokenInfo = (props) => {
     const [rewards, setRewards] = useState(false);
@@ -15,6 +16,7 @@ const TokenInfo = (props) => {
         props.fetchBalance(address);
         props.fetchRewards(address);
         props.fetchUnbondDelegations(address);
+        props.fetchTokenPrice();
 
     }, []);
 
@@ -25,10 +27,6 @@ const TokenInfo = (props) => {
         <div className="token-info-section">
             <div className="xprt-info info-box">
                 <div className="inner-box">
-                    {/*<div className="line">*/}
-                    {/*    <img src={xprt} alt="xprt"/>*/}
-                    {/*    <p className="total-supply">100,000,000.00</p>*/}
-                    {/*</div>*/}
                     <div className="line">
                         <p className="key">Balance</p>
                         <p className="value">
@@ -45,11 +43,11 @@ const TokenInfo = (props) => {
                 <div className="inner-box">
                     <div className="line">
                         <p className="key">Current Price</p>
-                        <p className="value"> $0.40</p>
+                        <p className="value"> ${props.tokenPrice}</p>
                     </div>
                     <div className="line">
                     <p className="key">Current Value</p>
-                        <p className="value">${(props.balance * 0.4).toFixed(6)}</p>
+                        <p className="value">${((props.balance*1) * 0.4).toFixed(6)}</p>
                     </div>
                 </div>
             </div>
@@ -84,6 +82,7 @@ const stateToProps = (state) => {
         balance: state.balance.amount,
         rewards: state.rewards.rewards,
         unbond: state.unbond.unbond,
+        tokenPrice:state.tokenPrice.tokenPrice
     };
 };
 
@@ -92,6 +91,7 @@ const actionsToProps = {
     fetchBalance,
     fetchRewards,
     fetchUnbondDelegations,
+    fetchTokenPrice,
 };
 
 export default connect(stateToProps, actionsToProps)(TokenInfo);
