@@ -131,7 +131,9 @@
       position: relative;
       height: 66vh;
       overflow-y: scroll;
-
+      .tab-content{
+        height: auto;
+      }
       &::after {
         content: '';
         display: block;
