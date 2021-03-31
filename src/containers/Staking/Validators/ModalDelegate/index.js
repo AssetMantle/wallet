@@ -155,18 +155,18 @@ const ModalDelegate = (props) => {
         const persistence = MakePersistence(accountNumber, addressIndex);
         const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
         const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
-        console.log(address.error, "rdsult");
         if (address.error === undefined && ecpairPriv.error === undefined) {
             if(address === loginAddress) {
                 persistence.getAccounts(address).then(data => {
                     if (data.code === undefined) {
+                        let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
                         let stdSignMsg = persistence.newStdMsg({
                             msgs: aminoMsgHelper.msgs(aminoMsgHelper.delegateMsg((amount * 1000000), address, props.validatorAddress)),
                             fee: aminoMsgHelper.fee(5000, 250000),
                             chain_id: persistence.chainId,
                             memo: memoContent,
-                            account_number: String(data.account.account_number),
-                            sequence: String(data.account.sequence)
+                            account_number: String(accountNumber),
+                            sequence: String(sequence)
                         });
                         const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
                         persistence.broadcast(signedTx).then(response => {
@@ -410,7 +410,7 @@ const ModalDelegate = (props) => {
                                         Hash: {response.transactionHash}</a>
                                     :
                                     <a
-                                        href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
+                                        href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
                                         target="_blank" className="tx-hash">Tx
                                         Hash: {response.txhash}</a>
                                 }
@@ -441,7 +441,7 @@ const ModalDelegate = (props) => {
                                 <>
                                     <p>{response.raw_log}</p>
                                     <a
-                                        href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
+                                        href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
                                         target="_blank" className="tx-hash">Tx
                                         Hash: {response.txhash}</a>
                                 </>

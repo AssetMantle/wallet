@@ -166,7 +166,7 @@ const Send = (props) => {
                     if (data.code === undefined) {
                         let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
                         let stdSignMsg = persistence.newStdMsg({
-                            msgs: aminoMsgHelper.msgs(aminoMsgHelper.sendMsg(amountField * 1000000, address, toAddress)),
+                            msgs: aminoMsgHelper.msgs(aminoMsgHelper.sendMsg((amountField * 1000000), address, toAddress)),
                             chain_id: persistence.chainId,
                             fee: aminoMsgHelper.fee(5000, 250000),
                             memo: memoContent,
@@ -389,7 +389,7 @@ const Send = (props) => {
                                                                 Hash: {txResponse.transactionHash}</a>
                                                             :
                                                             <a
-                                                                href={`${EXPLORER_API}/transaction?txHash=${txResponse.transactionHash}`}
+                                                                href={`${EXPLORER_API}/transaction?txHash=${txResponse.txhash}`}
                                                                 target="_blank" className="tx-hash">Tx
                                                                 Hash: {txResponse.txhash}</a>
                                                         }
@@ -419,7 +419,7 @@ const Send = (props) => {
                                                             <>
                                                                 <p>{txResponse.raw_log}</p>
                                                                 <a
-                                                                    href={`${EXPLORER_API}/transaction?txHash=${txResponse.transactionHash}`}
+                                                                    href={`${EXPLORER_API}/transaction?txHash=${txResponse.txhash}`}
                                                                     target="_blank" className="tx-hash">Tx
                                                                     Hash: {txResponse.txhash}</a>
                                                             </>

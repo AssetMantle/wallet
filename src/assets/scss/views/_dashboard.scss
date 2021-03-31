@@ -133,6 +133,9 @@
       overflow-y: scroll;
       .tab-content{
         height: auto;
+        &::after {
+          padding-bottom: 0px;
+        }
       }
       &::after {
         content: '';
