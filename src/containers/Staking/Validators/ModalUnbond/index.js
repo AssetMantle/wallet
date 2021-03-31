@@ -9,6 +9,7 @@ import {UnbondMsg} from "../../../../utils/protoMsgHelper";
 import helper from "../../../../utils/helper";
 import Loader from "../../../../components/Loader";
 import config from "../../../../utils/config";
+import MakePersistence from "../../../../utils/cosmosjsWrapper";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalUnbond = (props) => {
     const [amount, setAmount] = useState(0);
@@ -20,7 +21,7 @@ const ModalUnbond = (props) => {
     const [errorMessage, setErrorMessage] = useState("");
     const [loader, setLoader] = useState(false);
     const [importMnemonic, setImportMnemonic] = useState(true);
-    const address = localStorage.getItem('address');
+    const loginAddress = localStorage.getItem('address');
     const mode = localStorage.getItem('loginMode');
 
     const handleAmountChange = (evt) => {
@@ -105,7 +106,7 @@ const ModalUnbond = (props) => {
         setLoader(true);
         event.preventDefault();
         setInitialModal(false);
-        const response = transactions.TransactionWithKeplr([UnbondMsg(address, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(0, 250000));
+        const response = transactions.TransactionWithKeplr([UnbondMsg(loginAddress, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             setResponse(result);
             setLoader(false)
@@ -138,31 +139,57 @@ const ModalUnbond = (props) => {
             addressIndex = event.target.unbondAccountIndex.value;
             bip39Passphrase = event.target.unbondbip39Passphrase.value;
         }
-        let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-        addressFromMnemonic.then((addressResponse) => {
-            if (address === addressResponse) {
-                const response = transactions.TransactionWithMnemonic([UnbondMsg(address, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(5000, 250000), memoContent,
-                    mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-                response.then(result => {
-                    setResponse(result);
-                    setLoader(false);
-                    showSeedModal(false);
-                    setAdvanceMode(false);
-                }).catch(err => {
-                    setLoader(false);
-                    setErrorMessage(err.message)
-                    console.log(err.message, "unbond error")
-                })
+        const persistence = MakePersistence(accountNumber, addressIndex);
+        const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
+        const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
+        if (address.error === undefined && ecpairPriv.error === undefined) {
+            if (address === loginAddress) {
+                persistence.getAccounts(address).then(data => {
+                    if (data.code === undefined) {
+                        let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
+                        let stdSignMsg = persistence.newStdMsg({
+                            msgs: aminoMsgHelper.msgs(aminoMsgHelper.unBondMsg((amount * 1000000), address, props.validatorAddress)),
+                            fee: aminoMsgHelper.fee(5000, 250000),
+                            chain_id: persistence.chainId,
+                            memo: memoContent,
+                            account_number: String(accountNumber),
+                            sequence: String(sequence)
+                        });
+                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
+                        persistence.broadcast(signedTx).then(response => {
+                            setResponse(response);
+                            setLoader(false);
+                            showSeedModal(false);
+                            setAdvanceMode(false);
+                            console.log(response, "delegate response")
+                        }).catch(err => {
+                            setLoader(false);
+                            setErrorMessage(err.message);
+                            console.log(err.message, "delegate error")
+                        });
+                        showSeedModal(false);
+                    } else {
+                        setLoader(false);
+                        setAdvanceMode(false);
+                        setErrorMessage(data.message);
+                    }
+                });
             } else {
                 setLoader(false);
                 setAdvanceMode(false);
-                setErrorMessage("Please check mnemonic or wallet path")
+                setErrorMessage("Mnemonic not matched")
             }
-        }).catch(err => {
-            setLoader(false);
-            setAdvanceMode(false);
-            setErrorMessage("Please check mnemonic or wallet path")
-        })
+        } else {
+            if (address.error !== undefined) {
+                setLoader(false);
+                setAdvanceMode(false);
+                setErrorMessage(address.error)
+            } else {
+                setLoader(false);
+                setAdvanceMode(false);
+                setErrorMessage(ecpairPriv.error)
+            }
+        }
     };
     const handlePrivateKey = (value) => {
         setImportMnemonic(value);
@@ -341,10 +368,17 @@ const ModalUnbond = (props) => {
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 <img src={success} alt="success-image"/>
-                                <a
-                                    href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
-                                    target="_blank" className="tx-hash">Tx
-                                    Hash: {response.transactionHash}</a>
+                                {mode === "kepler" ?
+                                    <a
+                                        href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
+                                        target="_blank" className="tx-hash">Tx
+                                        Hash: {response.transactionHash}</a>
+                                    :
+                                    <a
+                                        href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
+                                        target="_blank" className="tx-hash">Tx
+                                        Hash: {response.txhash}</a>
+                                }
                                 <div className="buttons">
                                     <button className="button" onClick={props.handleClose}>Done</button>
                                 </div>
@@ -361,13 +395,23 @@ const ModalUnbond = (props) => {
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
-                                <a
-                                    href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
-                                    target="_blank" className="tx-hash">Tx
-                                    Hash: {response.transactionHash}</a>
                                 {mode === "kepler" ?
-                                    <p>{response.rawLog}</p>
-                                    : <p>{response.rawLog}</p>}
+                                    <>
+                                        <p>{response.rawLog}</p>
+                                        <a
+                                            href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
+                                            target="_blank" className="tx-hash">Tx
+                                            Hash: {response.transactionHash}</a>
+                                    </>
+                                    :
+                                    <>
+                                        <p>{response.raw_log}</p>
+                                        <a
+                                            href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
+                                            target="_blank" className="tx-hash">Tx
+                                            Hash: {response.txhash}</a>
+                                    </>
+                                }
                                 <div className="buttons">
                                     <button className="button" onClick={props.handleClose}>Done</button>
                                 </div>
