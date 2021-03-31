@@ -17,6 +17,7 @@ import aminoMsgHelper from "../../utils/aminoMsgHelper";
 import Loader from "../../components/Loader";
 import {SendMsg} from "../../utils/protoMsgHelper";
 import {connect} from "react-redux";
+import MakePersistence from "../../utils/cosmosjsWrapper";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const Send = (props) => {
@@ -32,7 +33,7 @@ const Send = (props) => {
     const [importMnemonic, setImportMnemonic] = useState(true);
     const [memoContent, setMemoContent] = useState('');
     let mode = localStorage.getItem('loginMode');
-    let address = localStorage.getItem('address');
+    let loginAddress = localStorage.getItem('address');
 
     const handleClose = () => {
         setShow(false);
@@ -62,7 +63,7 @@ const Send = (props) => {
         setShow(true);
         setLoader(true);
         event.preventDefault();
-        const response = transactions.TransactionWithKeplr([SendMsg(address, event.target.address.value, (amountField * 1000000))], aminoMsgHelper.fee(0, 250000));
+        const response = transactions.TransactionWithKeplr([SendMsg(loginAddress, event.target.address.value, (amountField * 1000000))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             setMnemonicForm(true);
             setTxResponse(result);
@@ -155,30 +156,49 @@ const Send = (props) => {
             addressIndex = evt.target.sendAccountIndex.value;
             bip39Passphrase = evt.target.sendbip39Passphrase.value;
         }
-        let addressFromMnemonic = transactions.CheckAddressMisMatch(userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-        addressFromMnemonic.then((addressResponse) => {
-            if (address === addressResponse) {
-                const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, (amountField * 1000000))], aminoMsgHelper.fee(5000, 250000), memoContent,
-                    userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-                response.then(result => {
-                    setMnemonicForm(true);
-                    setTxResponse(result);
-                    setLoader(false);
-                    setAdvanceMode(false);
-                }).catch(err => {
-                    setLoader(false);
-                    setErrorMessage(err.message)
+
+        const persistence = MakePersistence(accountNumber, addressIndex);
+        const address = persistence.getAddress(userMnemonic, bip39Passphrase, true);
+        const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
+        if (address.error === undefined && ecpairPriv.error === undefined) {
+            if(address === loginAddress) {
+                persistence.getAccounts(address).then(data => {
+                    if (data.code === undefined) {
+                        let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
+                        let stdSignMsg = persistence.newStdMsg({
+                            msgs: aminoMsgHelper.msgs(aminoMsgHelper.sendMsg(amountField * 1000000, address, toAddress)),
+                            chain_id: persistence.chainId,
+                            fee: aminoMsgHelper.fee(5000, 250000),
+                            memo: "",
+                            account_number: String(accountNumber),
+                            sequence: String(sequence)
+                        });
+
+                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
+                        persistence.broadcast(signedTx).then(response => {
+                            setTxResponse(response);
+                            console.log(response);
+                            setLoader(false);
+                            setAdvanceMode(false);
+                            setMnemonicForm(true);
+                        });
+                    } else {
+                        setLoader(false);
+                        setAdvanceMode(false);
+                        setErrorMessage(data.message);
+                    }
                 })
-            } else {
+            }else {
                 setLoader(false);
-                setAdvanceMode(false);
-                setErrorMessage("Please check mnemonic or wallet path")
+                setErrorMessage("Mnemonic not matched")
             }
-        }).catch(err => {
-            setLoader(false);
-            setAdvanceMode(false);
-            setErrorMessage("Please check mnemonic or wallet path")
-        })
+        } else {
+            if (address.error !== undefined) {
+                setErrorMessage(address.error)
+            } else {
+                setErrorMessage(ecpairPriv.error)
+            }
+        }
     };
 
     const popover = (
@@ -357,10 +377,18 @@ const Send = (props) => {
                                                 <Modal.Body className="delegate-modal-body">
                                                     <div className="result-container">
                                                         <img src={success} alt="success-image"/>
-                                                        <a
-                                                            href={`${EXPLORER_API}/transaction?txHash=${txResponse.transactionHash}`}
-                                                            target="_blank" className="tx-hash">Tx
-                                                            Hash: {txResponse.transactionHash}</a>
+                                                        {mode === "kepler" ?
+                                                            <a
+                                                                href={`${EXPLORER_API}/transaction?txHash=${txResponse.transactionHash}`}
+                                                                target="_blank" className="tx-hash">Tx
+                                                                Hash: {txResponse.transactionHash}</a>
+                                                            :
+                                                            <a
+                                                                href={`${EXPLORER_API}/transaction?txHash=${txResponse.transactionHash}`}
+                                                                target="_blank" className="tx-hash">Tx
+                                                                Hash: {txResponse.txhash}</a>
+                                                        }
+
                                                         <div className="buttons">
                                                             <button className="button" onClick={handleClose}>Done</button>
                                                         </div>
@@ -373,13 +401,24 @@ const Send = (props) => {
                                                 </Modal.Header>
                                                 <Modal.Body className="delegate-modal-body">
                                                     <div className="result-container">
-                                                        <a
-                                                            href={`${EXPLORER_API}/transaction?txHash=${txResponse.transactionHash}`}
-                                                            target="_blank" className="tx-hash">Tx
-                                                            Hash: {txResponse.transactionHash}</a>
+
                                                         {mode === "kepler" ?
-                                                            <p>{txResponse.rawLog}</p>
-                                                            : <p>{txResponse.rawLog}</p>}
+                                                            <>
+                                                                <p>{txResponse.rawLog}</p>
+                                                                <a
+                                                                    href={`${EXPLORER_API}/transaction?txHash=${txResponse.transactionHash}`}
+                                                                    target="_blank" className="tx-hash">Tx
+                                                                    Hash: {txResponse.transactionHash}</a>
+                                                            </>
+                                                            :
+                                                            <>
+                                                                <p>{txResponse.raw_log}</p>
+                                                                <a
+                                                                    href={`${EXPLORER_API}/transaction?txHash=${txResponse.transactionHash}`}
+                                                                    target="_blank" className="tx-hash">Tx
+                                                                    Hash: {txResponse.txhash}</a>
+                                                            </>
+                                                        }
                                                         <div className="buttons">
                                                             <button className="button" onClick={handleClose}>Done</button>
                                                         </div>
@@ -396,6 +435,8 @@ const Send = (props) => {
         </div>
     );
 };
+
+
 
 const stateToProps = (state) => {
     return {

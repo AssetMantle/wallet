@@ -146,10 +146,11 @@ const ModalReDelegate = (props) => {
             let addressIndex = 0;
             let bip39Passphrase = "";
             if (advanceMode) {
-                accountNumber = document.getElementById('redelegateAccountNumber').value;
-                addressIndex = document.getElementById('redelegateAccountIndex').value;
-                bip39Passphrase = document.getElementById('redelegatebip39Passphrase').value;
+                accountNumber = event.target.redelegateAccountNumber.value;
+                addressIndex = event.target.redelegateAccountIndex.value;
+                bip39Passphrase = event.target.redelegatebip39Passphrase.value;
             }
+
             let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
             addressFromMnemonic.then((addressResponse) => {
                 if (address === addressResponse) {
@@ -159,6 +160,7 @@ const ModalReDelegate = (props) => {
                         showSeedModal(false);
                         setResponse(result);
                         setLoader(false);
+                        setAdvanceMode(false);
                     }).catch(err => {
                         setLoader(false);
                         setErrorMessage(err.message)
@@ -324,7 +326,7 @@ const ModalReDelegate = (props) => {
                                                 <p className="label">Account</p>
                                                 <Form.Control
                                                     type="text"
-                                                    name="privateAccountNumber"
+                                                    name="redelegateAccountNumber"
                                                     id="redelegateAccountNumber"
                                                     placeholder="Account number"
                                                     required={advanceMode ? true : false}
@@ -334,7 +336,7 @@ const ModalReDelegate = (props) => {
                                                 <p className="label">Account Index</p>
                                                 <Form.Control
                                                     type="text"
-                                                    name="privateAccountIndex"
+                                                    name="redelegateAccountIndex"
                                                     id="redelegateAccountIndex"
                                                     placeholder="Account Index"
                                                     required={advanceMode ? true : false}
