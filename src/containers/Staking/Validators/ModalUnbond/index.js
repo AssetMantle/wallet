@@ -148,7 +148,7 @@ const ModalUnbond = (props) => {
                     if (data.code === undefined) {
                         let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
                         let stdSignMsg = persistence.newStdMsg({
-                            msgs: aminoMsgHelper.msgs(aminoMsgHelper.unBondMsg(amount, address, props.validatorAddress)),
+                            msgs: aminoMsgHelper.msgs(aminoMsgHelper.unBondMsg((amount * 1000000), address, props.validatorAddress)),
                             fee: aminoMsgHelper.fee(5000, 250000),
                             chain_id: persistence.chainId,
                             memo: memoContent,
