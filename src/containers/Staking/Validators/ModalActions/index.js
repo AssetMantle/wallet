@@ -46,7 +46,7 @@ const ModalActions = (props) => {
                 let delegationResponseList = response.data.delegation_responses;
                 for (const item of delegationResponseList) {
                     if (item.delegation.validator_address === props.validator.operator_address) {
-                        setDelegationAmount(item.balance.amount / 10000000);
+                        setDelegationAmount(item.balance.amount / 1000000);
                         setDelegateStatus(true);
                     }
                 }
