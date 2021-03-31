@@ -389,7 +389,7 @@ const Send = (props) => {
                                                                 Hash: {txResponse.transactionHash}</a>
                                                             :
                                                             <a
-                                                                href={`${EXPLORER_API}/transaction?txHash=${txResponse.transactionHash}`}
+                                                                href={`${EXPLORER_API}/transaction?txHash=${txResponse.txhash}`}
                                                                 target="_blank" className="tx-hash">Tx
                                                                 Hash: {txResponse.txhash}</a>
                                                         }
@@ -419,7 +419,7 @@ const Send = (props) => {
                                                             <>
                                                                 <p>{txResponse.raw_log}</p>
                                                                 <a
-                                                                    href={`${EXPLORER_API}/transaction?txHash=${txResponse.transactionHash}`}
+                                                                    href={`${EXPLORER_API}/transaction?txHash=${txResponse.txhash}`}
                                                                     target="_blank" className="tx-hash">Tx
                                                                     Hash: {txResponse.txhash}</a>
                                                             </>

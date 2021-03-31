@@ -415,7 +415,7 @@ const ModalReDelegate = (props) => {
                                         Hash: {response.transactionHash}</a>
                                     :
                                     <a
-                                        href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
+                                        href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
                                         target="_blank" className="tx-hash">Tx
                                         Hash: {response.txhash}</a>
                                 }
@@ -447,7 +447,7 @@ const ModalReDelegate = (props) => {
                                     <>
                                         <p>{response.raw_log}</p>
                                         <a
-                                            href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
+                                            href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
                                             target="_blank" className="tx-hash">Tx
                                             Hash: {response.txhash}</a>
                                     </>
