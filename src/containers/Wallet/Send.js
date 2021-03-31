@@ -33,7 +33,7 @@ const Send = (props) => {
     const [importMnemonic, setImportMnemonic] = useState(true);
     const [memoContent, setMemoContent] = useState('');
     let mode = localStorage.getItem('loginMode');
-    let address = localStorage.getItem('address');
+    let loginAddress = localStorage.getItem('address');
 
     const handleClose = () => {
         setShow(false);
@@ -63,7 +63,7 @@ const Send = (props) => {
         setShow(true);
         setLoader(true);
         event.preventDefault();
-        const response = transactions.TransactionWithKeplr([SendMsg(address, event.target.address.value, (amountField * 1000000))], aminoMsgHelper.fee(0, 250000));
+        const response = transactions.TransactionWithKeplr([SendMsg(loginAddress, event.target.address.value, (amountField * 1000000))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             setMnemonicForm(true);
             setTxResponse(result);
@@ -161,32 +161,37 @@ const Send = (props) => {
         const address = persistence.getAddress(userMnemonic, bip39Passphrase, true);
         const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
         if (address.error === undefined && ecpairPriv.error === undefined) {
-            persistence.getAccounts(address).then(data => {
-                if (data.code === undefined) {
-                    let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
-                    let stdSignMsg = persistence.newStdMsg({
-                        msgs: aminoMsgHelper.msgs(aminoMsgHelper.sendMsg(amountField * 1000000, address, toAddress)),
-                        chain_id: persistence.chainId,
-                        fee: aminoMsgHelper.fee(5000, 250000),
-                        memo: "",
-                        account_number: String(accountNumber),
-                        sequence: String(sequence)
-                    });
+            if(address === loginAddress) {
+                persistence.getAccounts(address).then(data => {
+                    if (data.code === undefined) {
+                        let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
+                        let stdSignMsg = persistence.newStdMsg({
+                            msgs: aminoMsgHelper.msgs(aminoMsgHelper.sendMsg(amountField * 1000000, address, toAddress)),
+                            chain_id: persistence.chainId,
+                            fee: aminoMsgHelper.fee(5000, 250000),
+                            memo: "",
+                            account_number: String(accountNumber),
+                            sequence: String(sequence)
+                        });
 
-                    const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
-                    persistence.broadcast(signedTx).then(response => {
-                        setTxResponse(response);
-                        console.log(response);
+                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
+                        persistence.broadcast(signedTx).then(response => {
+                            setTxResponse(response);
+                            console.log(response);
+                            setLoader(false);
+                            setAdvanceMode(false);
+                            setMnemonicForm(true);
+                        });
+                    } else {
                         setLoader(false);
                         setAdvanceMode(false);
-                        setMnemonicForm(true);
-                    });
-                } else {
-                    setLoader(false);
-                    setAdvanceMode(false);
-                    setErrorMessage(data.message);
-                }
-            })
+                        setErrorMessage(data.message);
+                    }
+                })
+            }else {
+                setLoader(false);
+                setErrorMessage("Mnemonic not matched")
+            }
         } else {
             if (address.error !== undefined) {
                 setErrorMessage(address.error)
