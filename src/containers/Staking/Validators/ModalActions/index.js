@@ -133,7 +133,7 @@ const ModalActions = (props) => {
                                 </button>
 
                                 <button
-                                    onClick={() => handleModal('Delegate', props.validator.operator_address, props.validator.description.moniker)}
+                                    onClick={() => handleModal('Unbond', props.validator.operator_address, props.validator.description.moniker)}
                                     className="button button-primary">
                                     Unbond
                                 </button>
