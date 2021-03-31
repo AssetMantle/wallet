@@ -169,7 +169,7 @@ const Send = (props) => {
                             msgs: aminoMsgHelper.msgs(aminoMsgHelper.sendMsg(amountField * 1000000, address, toAddress)),
                             chain_id: persistence.chainId,
                             fee: aminoMsgHelper.fee(5000, 250000),
-                            memo: "",
+                            memo: memoContent,
                             account_number: String(accountNumber),
                             sequence: String(sequence)
                         });
@@ -190,12 +190,17 @@ const Send = (props) => {
                 })
             }else {
                 setLoader(false);
+                setAdvanceMode(false);
                 setErrorMessage("Mnemonic not matched")
             }
         } else {
             if (address.error !== undefined) {
+                setLoader(false);
+                setAdvanceMode(false);
                 setErrorMessage(address.error)
             } else {
+                setLoader(false);
+                setAdvanceMode(false);
                 setErrorMessage(ecpairPriv.error)
             }
         }
