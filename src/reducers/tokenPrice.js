@@ -6,16 +6,16 @@ import {
 
 
 
-const tokenPrice = (state = "0.4", action) => {
+const tokenPrice = (state = 0.4, action) => {
     if (action.type === TOKEN_PRICE_FETCH_SUCCESS) {
-        return action.data;
+        return (action.data*1);
     }
     return state;
 };
 
 const _ = (state = {}, action) => {
     if (action.type === TOKEN_PRICE_FETCH_ERROR) {
-        return action.data;
+        return (action.data*1);
     } else {
         return state;
     }

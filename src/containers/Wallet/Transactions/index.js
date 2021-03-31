@@ -16,7 +16,7 @@ const Transactions = (props) => {
                                     <Nav.Link eventKey="active">Send</Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
-                                    <Nav.Link eventKey="inactive">Receive</Nav.Link>
+                                    <Nav.Link eventKey="inactive">Received</Nav.Link>
                                 </Nav.Item>
                             </Nav>
                         </div>

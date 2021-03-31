@@ -225,7 +225,7 @@ const ModalWithdraw = (props) => {
                                 <p className="label"></p>
                                 <div className="available-tokens">
                                     <p className="tokens">{individualRewards} <span>XPRT</span></p>
-                                    <p className="usd">=${(individualRewards * 0.4).toFixed(4)}</p>
+                                    <p className="usd">=${(individualRewards * props.tokenPrice).toFixed(4)}</p>
                                 </div>
                             </div>
                             <div className="form-field">
@@ -233,7 +233,7 @@ const ModalWithdraw = (props) => {
                                 <div className="available-tokens">
                                     <img src={icon} alt="icon"/>
                                     <p className="tokens">{props.totalRewards} <span>XPRT</span></p>
-                                    <p className="usd">=${(props.totalRewards * 0.4).toFixed(4)}</p>
+                                    <p className="usd">=${(props.totalRewards * props.tokenPrice).toFixed(4)}</p>
                                 </div>
                             </div>
                             {mode === "normal" ?
@@ -406,6 +406,7 @@ const ModalWithdraw = (props) => {
 const stateToProps = (state) => {
     return {
         list: state.rewards.list,
+        tokenPrice:state.tokenPrice.tokenPrice
     };
 };
 
