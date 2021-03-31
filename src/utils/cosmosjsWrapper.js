@@ -11,7 +11,6 @@ const prefix = config.addressPrefix;
 function MakePersistence(accountNumber, addressIndex) {
 
     const Persistence = cosmosjs.network(apiUrl, chainID)
-    Persistence.setBech32MainPrefix("persistence");
     Persistence.setBech32MainPrefix(prefix);
     Persistence.setPath("m/44'/750'/" + accountNumber + "'/0/"+ addressIndex);
     Persistence.getAddress = function(mnemonic, bip39passphrase = "", checkSum = true) {
@@ -48,11 +47,14 @@ function MakePersistence(accountNumber, addressIndex) {
         const ecpair = bitcoinjs.ECPair.fromPrivateKey(child.privateKey, {compressed : false})
         return ecpair.privateKey;
     }
+
     Persistence.getAccounts = function (address) {
         let accountsApi = "/cosmos/auth/v1beta1/accounts/";
         return fetch(this.url + accountsApi + address)
             .then(response => response.json())
+
     }
     return Persistence
 }
+
 export default MakePersistence

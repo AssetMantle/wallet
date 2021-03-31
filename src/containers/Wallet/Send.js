@@ -18,7 +18,6 @@ import Loader from "../../components/Loader";
 import {SendMsg} from "../../utils/protoMsgHelper";
 import {connect} from "react-redux";
 import MakePersistence from "../../utils/cosmosjsWrapper";
-
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const Send = (props) => {
@@ -164,7 +163,7 @@ const Send = (props) => {
         if (address.error === undefined && ecpairPriv.error === undefined) {
             persistence.getAccounts(address).then(data => {
                 if (data.code === undefined) {
-                    let [accountNumber, sequence] = getAccountAndSequence(data);
+                    let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
                     let stdSignMsg = persistence.newStdMsg({
                         msgs: aminoMsgHelper.msgs(aminoMsgHelper.sendMsg(amountField * 1000000, address, toAddress)),
                         chain_id: persistence.chainId,
@@ -432,15 +431,7 @@ const Send = (props) => {
     );
 };
 
-function getAccountAndSequence(authResponse) {
-    if (authResponse.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
-        return [authResponse.account.base_vesting_account.base_account.account_number, authResponse.account.base_vesting_account.base_account.sequence]
-    } else if (authResponse.account["@type"] === "/cosmos.auth.v1beta1.BaseAccount") {
-        return [authResponse.account.account_number, authResponse.account.sequence]
-    } else {
-        return [-1, -1]
-    }
-}
+
 
 const stateToProps = (state) => {
     return {
