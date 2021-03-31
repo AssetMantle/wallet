@@ -134,9 +134,9 @@ const ModalUnbond = (props) => {
         let addressIndex = 0;
         let bip39Passphrase = "";
         if (advanceMode) {
-            accountNumber = document.getElementById('unbondAccountNumber').value;
-            addressIndex = document.getElementById('unbondAccountIndex').value;
-            bip39Passphrase = document.getElementById('unbondbip39Passphrase').value;
+            accountNumber = event.target.unbondAccountNumber.value;
+            addressIndex = event.target.unbondAccountIndex.value;
+            bip39Passphrase = event.target.unbondbip39Passphrase.value;
         }
         let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
         addressFromMnemonic.then((addressResponse) => {
@@ -147,6 +147,7 @@ const ModalUnbond = (props) => {
                     setResponse(result);
                     setLoader(false);
                     showSeedModal(false);
+                    setAdvanceMode(false);
                 }).catch(err => {
                     setLoader(false);
                     setErrorMessage(err.message)
@@ -286,7 +287,7 @@ const ModalUnbond = (props) => {
                                                 <p className="label">Account</p>
                                                 <Form.Control
                                                     type="text"
-                                                    name="privateAccountNumber"
+                                                    name="unbondAccountNumber"
                                                     id="unbondAccountNumber"
                                                     placeholder="Account number"
                                                     required={advanceMode ? true : false}
@@ -296,7 +297,7 @@ const ModalUnbond = (props) => {
                                                 <p className="label">Account Index</p>
                                                 <Form.Control
                                                     type="text"
-                                                    name="privateAccountIndex"
+                                                    name="unbondAccountIndex"
                                                     id="unbondAccountIndex"
                                                     placeholder="Account Index"
                                                     required={advanceMode ? true : false}
@@ -306,7 +307,7 @@ const ModalUnbond = (props) => {
                                                 <p className="label">bip39Passphrase</p>
                                                 <Form.Control
                                                     type="password"
-                                                    name="bip39Passphrase"
+                                                    name="unbondbip39Passphrase"
                                                     id="unbondbip39Passphrase"
                                                     placeholder="Enter bip39Passphrase (optional)"
                                                     required={false}

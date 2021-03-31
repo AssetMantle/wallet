@@ -148,10 +148,11 @@ const ModalDelegate = (props) => {
         let addressIndex = 0;
         let bip39Passphrase = "";
         if (advanceMode) {
-            accountNumber = document.getElementById('delegateAccountNumber').value;
-            addressIndex = document.getElementById('delegateAccountIndex').value;
-            bip39Passphrase = document.getElementById('delegatebip39Passphrase').value;
+            accountNumber = event.target.delegateAccountNumber.value;
+            addressIndex = event.target.delegateAccountIndex.value;
+            bip39Passphrase = event.target.delegatebip39Passphrase.value;
         }
+
         let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
 
         addressFromMnemonic.then((addressResponse) => {
@@ -162,6 +163,7 @@ const ModalDelegate = (props) => {
                     setResponse(result);
                     setLoader(false);
                     showSeedModal(false);
+                    setAdvanceMode(false);
                 }).catch(err => {
                     setLoader(false);
                     setErrorMessage(err.message);
@@ -319,7 +321,7 @@ const ModalDelegate = (props) => {
                                                 <p className="label">Account</p>
                                                 <Form.Control
                                                     type="text"
-                                                    name="privateAccountNumber"
+                                                    name="delegateAccountNumber"
                                                     id="delegateAccountNumber"
                                                     placeholder="Account number"
                                                     required={advanceMode ? true : false}
@@ -329,7 +331,7 @@ const ModalDelegate = (props) => {
                                                 <p className="label">Account Index</p>
                                                 <Form.Control
                                                     type="text"
-                                                    name="privateAccountIndex"
+                                                    name="delegateAccountIndex"
                                                     id="delegateAccountIndex"
                                                     placeholder="Account Index"
                                                     required={advanceMode ? true : false}

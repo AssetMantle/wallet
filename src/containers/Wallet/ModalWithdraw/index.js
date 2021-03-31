@@ -136,9 +136,9 @@ const ModalWithdraw = (props) => {
         let addressIndex = 0;
         let bip39Passphrase = "";
         if (advanceMode) {
-            accountNumber = document.getElementById('claimTotalAccountNumber').value;
-            addressIndex = document.getElementById('claimTotalAccountIndex').value;
-            bip39Passphrase = document.getElementById('claimTotalbip39Passphrase').value;
+            accountNumber = event.target.claimTotalAccountNumber.value;
+            addressIndex = event.target.claimTotalAccountIndex.value;
+            bip39Passphrase = event.target.claimTotalbip39Passphrase.value;
         }
         let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
         addressFromMnemonic.then((addressResponse) => {
@@ -146,10 +146,10 @@ const ModalWithdraw = (props) => {
                 const response = transactions.TransactionWithMnemonic([WithdrawMsg(address, validatorAddress)], aminoMsgHelper.fee(5000, 250000), memoContent,
                     mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                 response.then(result => {
-                    console.log(result, "withdrawMsg success");
                     setResponse(result);
                     setLoader(false);
                     showSeedModal(false);
+                    setAdvanceMode(false);
                 }).catch(err => {
                     setLoader(false);
                     setErrorMessage(err.message);
@@ -312,7 +312,7 @@ const ModalWithdraw = (props) => {
                                                 <p className="label">Account</p>
                                                 <Form.Control
                                                     type="text"
-                                                    name="privateAccountNumber"
+                                                    name="claimTotalAccountNumber"
                                                     id="claimTotalAccountNumber"
                                                     placeholder="Account number"
                                                     required={advanceMode ? true : false}
@@ -322,7 +322,7 @@ const ModalWithdraw = (props) => {
                                                 <p className="label">Account Index</p>
                                                 <Form.Control
                                                     type="text"
-                                                    name="privateAccountIndex"
+                                                    name="claimTotalAccountIndex"
                                                     id="claimTotalAccountIndex"
                                                     placeholder="Account Index"
                                                     required={advanceMode ? true : false}
@@ -332,7 +332,7 @@ const ModalWithdraw = (props) => {
                                                 <p className="label">bip39Passphrase</p>
                                                 <Form.Control
                                                     type="password"
-                                                    name="bip39Passphrase"
+                                                    name="claimTotalbip39Passphrase"
                                                     id="claimTotalbip39Passphrase"
                                                     placeholder="Enter bip39Passphrase (optional)"
                                                     required={false}

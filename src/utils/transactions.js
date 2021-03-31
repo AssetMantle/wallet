@@ -61,4 +61,14 @@ function makeHdPath(accountNumber = "0", addressIndex = "0", coinType = configCo
     return stringToPath("m/44'/" + coinType + "'/" + accountNumber + "'/0/" + addressIndex)
 }
 
-export default {TransactionWithKeplr, TransactionWithMnemonic, makeHdPath, CheckAddressMisMatch};
+function getAccountNumberAndSequence(authResponse) {
+    if (authResponse.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
+        return [authResponse.account.base_vesting_account.base_account.account_number, authResponse.account.base_vesting_account.base_account.sequence]
+    } else if (authResponse.account["@type"] === "/cosmos.auth.v1beta1.BaseAccount") {
+        return [authResponse.account.account_number, authResponse.account.sequence]
+    } else {
+        return [-1, -1]
+    }
+}
+
+export default {TransactionWithKeplr, TransactionWithMnemonic, makeHdPath, CheckAddressMisMatch, getAccountNumberAndSequence};
