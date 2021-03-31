@@ -133,7 +133,6 @@ const Send = (props) => {
     }
 
     const handleMnemonicSubmit = async (evt) => {
-        console.log(advanceMode, "advanceMode")
         setLoader(true);
         setKeplerError('');
         evt.preventDefault();
@@ -152,9 +151,9 @@ const Send = (props) => {
         let addressIndex = 0;
         let bip39Passphrase = "";
         if (advanceMode) {
-            accountNumber = document.getElementById('sendAccountNumber').value;
-            addressIndex = document.getElementById('sendAccountIndex').value;
-            bip39Passphrase = document.getElementById('sendbip39Passphrase').value;
+            accountNumber = evt.target.sendAccountNumber.value;
+            addressIndex = evt.target.sendAccountIndex.value;
+            bip39Passphrase = evt.target.sendbip39Passphrase.value;
         }
         let addressFromMnemonic = transactions.CheckAddressMisMatch(userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
         addressFromMnemonic.then((addressResponse) => {
@@ -165,10 +164,10 @@ const Send = (props) => {
                     setMnemonicForm(true);
                     setTxResponse(result);
                     setLoader(false);
+                    setAdvanceMode(false);
                 }).catch(err => {
                     setLoader(false);
                     setErrorMessage(err.message)
-                    console.log(err.message, "send error")
                 })
             } else {
                 setLoader(false);

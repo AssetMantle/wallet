@@ -1017,7 +1017,7 @@ html, body {
       border-left: 1px solid #EAEBF6;
       border-right: 1px solid #EAEBF6; }
 .wallet-main-section .tabs-section .tab-content {
-  padding: 50px 0px 0 0px;
+  padding: 30px 0px 0 0px;
   position: relative;
   height: 66vh;
   overflow-y: scroll; }

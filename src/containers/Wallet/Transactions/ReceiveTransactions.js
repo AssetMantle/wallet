@@ -14,7 +14,7 @@ const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ReceiveTransactions = (props) => {
     const address = localStorage.getItem('address');
     useEffect(() => {
-        props.fetchReceiveTransactions(address, 10, 1);
+        props.fetchReceiveTransactions(address, 5, 1);
     }, []);
     const columns = [{
         name: 'txHash',
@@ -101,13 +101,13 @@ const ReceiveTransactions = (props) => {
         return <Loader/>;
     }
     const handleNext = () => {
-        if(!helper.CheckLastPage(props.pageNumber[0], 10, props.pageNumber[1])) {
-            props.fetchReceiveTransactions(address, 10, props.pageNumber[0] + 1);
+        if(!helper.CheckLastPage(props.pageNumber[0], 5, props.pageNumber[1])) {
+            props.fetchReceiveTransactions(address, 5, props.pageNumber[0] + 1);
         }
     };
     const handlePrevious = () => {
         if (props.pageNumber[0] > 1) {
-            props.fetchReceiveTransactions(address, 10, props.pageNumber[0] - 1);
+            props.fetchReceiveTransactions(address, 5, props.pageNumber[0] - 1);
         }
     };
     return (
@@ -126,7 +126,7 @@ const ReceiveTransactions = (props) => {
                     </IconButton>
                 </div>
                 <div>
-                    <IconButton aria-label="next" className="next" onClick={handleNext} disabled={helper.CheckLastPage(props.pageNumber[0], 10, props.pageNumber[1])?true : false}>
+                    <IconButton aria-label="next" className="next" onClick={handleNext} disabled={helper.CheckLastPage(props.pageNumber[0], 5, props.pageNumber[1])?true : false}>
                         <ChevronRightIcon/>
                     </IconButton>
                 </div>
