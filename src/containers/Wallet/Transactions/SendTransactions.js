@@ -14,7 +14,7 @@ const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const SendTransactions = (props) => {
     const address = localStorage.getItem('address');
     useEffect(() => {
-        props.fetchTransactions(address, 20, 1, "Initial");
+        props.fetchTransactions(address, 10, 1, "Initial");
     }, []);
     const columns = [{
         name: 'txHash',
@@ -59,7 +59,7 @@ const SendTransactions = (props) => {
                 {helper.stringTruncate(stxn.txhash)}
             </a>,
             <span
-                className="type">{(stxn.tx.value.msg[0].type).substr((stxn.tx.value.msg[0].type).indexOf('/') + 4)}</span>,
+                className="type">{(stxn.tx.body.messages[0]["@type"]).substr((stxn.tx.body.messages[0]["@type"]).indexOf('v1beta1.') + 11)}</span>,
             <div className="result">
                                     <span className="icon-box success">
                                         <Icon
@@ -67,16 +67,16 @@ const SendTransactions = (props) => {
                                             icon="success"/>
                                     </span>
             </div>,
-            (stxn.tx.value.msg[0].value.amount !== undefined && stxn.tx.value.msg[0].value.amount.length) ?
+            (stxn.tx.body.messages[0].amount !== undefined && stxn.tx.body.messages[0].amount.length) ?
                 <div className="amount">
-                    {stxn.tx.value.msg[0].value.amount[0].amount}
-                    {stxn.tx.value.msg[0].value.amount[0].denom}
+                    {stxn.tx.body.messages[0].amount[0].amount}
+                    {stxn.tx.body.messages[0].amount[0].denom}
                 </div>
                 :
-                (stxn.tx.value.msg[0].value.amount !== undefined && stxn.tx.value.msg[0].value.amount) ?
+                (stxn.tx.body.messages[0].amount !== undefined && stxn.tx.body.messages[0].amount) ?
                     <div className="amount">
-                        {stxn.tx.value.msg[0].value.amount.amount}
-                        {stxn.tx.value.msg[0].value.amount.denom}
+                        {stxn.tx.body.messages[0].amount.amount}
+                        {stxn.tx.body.messages[0].amount.denom}
                     </div>
                     :
                     (stxn.logs[0].events.find(event => event.type === 'transfer') !== undefined) ?
@@ -86,10 +86,10 @@ const SendTransactions = (props) => {
                             </div>
                             : ''
                         : '',
-            (stxn.tx.value.fee.amount !== undefined && stxn.tx.value.fee.amount.length) ?
+            (stxn.tx.auth_info.fee.amount !== undefined && stxn.tx.auth_info.fee.amount.length) ?
                 <div className="fee">
-                    {stxn.tx.value.fee.amount[0].amount}
-                    {stxn.tx.value.fee.amount[0].denom}
+                    {stxn.tx.auth_info.fee.amount[0].amount}
+                    {stxn.tx.auth_info.fee.amount[0].denom}
                 </div> : '',
             <a href={`${EXPLORER_API}/block?height=${stxn.height}`}
                target="_blank" className="height">{stxn.height}</a>,
@@ -101,18 +101,15 @@ const SendTransactions = (props) => {
         return <Loader/>;
     }
     const handleNext = () => {
-        if (props.pageNumber[0] < props.pageNumber[1]) {
-            props.fetchTransactions(address, 20, props.pageNumber[0] + 1);
-        } else if (props.pageNumber[0] > 1 && props.pageNumber[0] === props.pageNumber[1]) {
-            props.fetchTransactions(address, 20, props.pageNumber[0] - 1, "Initial");
+        if(!helper.CheckLastPage(props.pageNumber[0], 10, props.pageNumber[1])) {
+            props.fetchTransactions(address, 10, props.pageNumber[0] + 1);
         }
     };
     const handlePrevious = () => {
-
         if (props.pageNumber[0] > 1) {
-            props.fetchTransactions(address, 20, props.pageNumber[0] - 1);
+            props.fetchTransactions(address, 10, props.pageNumber[0] - 1);
         }
-    };
+    }
     return (
         <div className="txns-container">
             <DataTable
@@ -123,14 +120,13 @@ const SendTransactions = (props) => {
             <div className="pagination-custom">
 
                 <div className="before">
-                    <IconButton aria-label="previous" onClick={handleNext}
-                                disabled={props.pageNumber[0] === props.pageNumber[1] ? true : false}>
+                    <IconButton aria-label="previous" onClick={handlePrevious}
+                                disabled={props.pageNumber[0] > 1 ? false : true}>
                         <ChevronLeftIcon/>
                     </IconButton>
                 </div>
                 <div>
-                    <IconButton aria-label="next" className="next" onClick={handlePrevious}
-                                disabled={props.pageNumber[0] > 1 ? false : true}>
+                    <IconButton aria-label="next" className="next" onClick={handleNext} disabled={helper.CheckLastPage(props.pageNumber[0], 10, props.pageNumber[1])?true : false}>
                         <ChevronRightIcon/>
                     </IconButton>
                 </div>
