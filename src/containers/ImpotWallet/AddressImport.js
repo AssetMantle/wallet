@@ -44,7 +44,7 @@ const AddressImport = (props) => {
                             icon="left-arrow"/>
                     </button>
                 </div>
-                <h3 className="heading">Importing Wallet</h3>
+                <h3 className="heading">SignIn</h3>
             </Modal.Header>
             <div className="create-wallet-body create-wallet-form-body">
                 <Form onSubmit={handleSubmit} className="form-privatekey">
