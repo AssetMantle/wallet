@@ -45,7 +45,11 @@ export const fetchTransactions = (address, limit, pageNumber) => {
     return async dispatch => {
         dispatch(fetchTransactionsProgress());
         const url = getSendTransactionsUrl(address, limit, pageNumber);
-        const result = await Axios.get(url);
+        const result = await Axios.get(url).catch((error) => {
+            dispatch(fetchTransactionsError(error.response
+                ? error.response.data.message
+                : error.message));
+        });
         let txnsResponseList = result.data.result.txs;
         dispatch(fetchPageNumberSuccess(pageNumber, result.data.result.total_count));
         let txnList = [];
@@ -90,7 +94,11 @@ export const fetchReceiveTransactions = (address, limit, pageNumber) => {
     return async dispatch => {
         dispatch(fetchReceiveTransactionsProgress());
         const url = getReceiveTransactionsUrl(address, limit, pageNumber);
-        const result = await Axios.get(url);
+        const result = await Axios.get(url).catch((error) => {
+            dispatch(fetchReceiveTransactionsError(error.response
+                ? error.response.data.message
+                : error.message));
+        });
         let txnsResponseList = result.data.result.txs;
         dispatch(fetchReceivePageNumberSuccess(pageNumber, result.data.result.total_count));
         let txnList = [];
