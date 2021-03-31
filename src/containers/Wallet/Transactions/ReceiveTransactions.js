@@ -14,10 +14,7 @@ const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ReceiveTransactions = (props) => {
     const address = localStorage.getItem('address');
     useEffect(() => {
-          const  fetchReceive = async () => {
-          await props.fetchReceiveTransactions(address, 10, 1);
-        }
-        fetchReceive();
+        props.fetchReceiveTransactions(address, 10, 1);
     }, []);
     const columns = [{
         name: 'txHash',
@@ -107,13 +104,12 @@ const ReceiveTransactions = (props) => {
         if(!helper.CheckLastPage(props.pageNumber[0], 10, props.pageNumber[1])) {
             props.fetchReceiveTransactions(address, 10, props.pageNumber[0] + 1);
         }
-        // if(props.pageNumber[1]/10 === props.pageNumber[0])
-    }
+    };
     const handlePrevious = () => {
         if (props.pageNumber[0] > 1) {
             props.fetchReceiveTransactions(address, 10, props.pageNumber[0] - 1);
         }
-    }
+    };
     return (
         <div className="txns-container">
             <DataTable

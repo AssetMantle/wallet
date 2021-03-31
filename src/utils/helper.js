@@ -84,7 +84,7 @@ function ValidateFrom(value) {
 }
 
 function CheckLastPage(pageNumber, limit , totalPages) {
-    if(totalPages/limit < pageNumber){
+    if(totalPages/limit <= pageNumber){
         return true;
     }else {
         return false;
