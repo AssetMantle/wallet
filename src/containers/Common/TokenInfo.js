@@ -47,7 +47,7 @@ const TokenInfo = (props) => {
                     </div>
                     <div className="line">
                     <p className="key">Current Value</p>
-                        <p className="value">${((props.balance) * 0.4).toFixed(2)}</p>
+                        <p className="value">${(props.balance * props.tokenPrice).toFixed(2)}</p>
                     </div>
                 </div>
             </div>

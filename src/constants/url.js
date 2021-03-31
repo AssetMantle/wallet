@@ -1,12 +1,14 @@
 const API_URL = process.env.REACT_APP_API_KEY;
+const RPC_URL =  process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 export const getRewardsUrl = (address) => `${API_URL}/cosmos/distribution/v1beta1/delegators/${address}/rewards`;
 export const getDelegationsUnbondUrl = (address) => `${API_URL}/cosmos/staking/v1beta1/delegators/${address}/unbonding_delegations`;
 export const getDelegationsUrl = (address) => `${API_URL}/cosmos/staking/v1beta1/delegations/${address}`;
 export const getValidatorsUrl = () => `${API_URL}/cosmos/staking/v1beta1/validators`;
 export const getValidatorUrl = (address) => `${API_URL}/cosmos/staking/v1beta1/validators/${address}`;
 export const getBalanceUrl = (address) => `${API_URL}/cosmos/bank/v1beta1/balances/${address}`;
-export const getSendTransactionsUrl = (address) => `${API_URL}/txs?message.sender=${address}`;
-export const getTransactionsUrl = (address , limit, pageNumber) =>`${API_URL}/txs?message.sender=${address}&limit=${limit}&page=${pageNumber}`;
+export const getTxnUrl = (hash) => `${API_URL}/cosmos/tx/v1beta1/txs/${hash}`;
+export const getSendTransactionsUrl  = (address , limit, pageNumber) =>`${RPC_URL}/tx_search?query="message.sender='${address}'"&order_by="desc"&prove=true&page=${pageNumber}&per_page=${limit}`;
+export const getReceiveTransactionsUrl  = (address , limit, pageNumber) =>`${RPC_URL}/tx_search?query="transfer.recipient='${address}'"&order_by="desc"&prove=true&page=${pageNumber}&per_page=${limit}`;
+// export const getReceiveTransactionsUrl  = (address , limit, pageNumber) =>`${API_URL}/txs?transfer.recipient=${address}&limit=${limit}&page=${pageNumber}`;
 export const getValidatorRewardsUrl = (address, validatorAddress) => `${API_URL}/cosmos/distribution/v1beta1/delegators/${address}/rewards/${validatorAddress}`;
 export const getAccountUrl = (address) => `${API_URL}/cosmos/auth/v1beta1/accounts/${address}`;
-export const tokenPriceUrl = () => `https://ascendex.com/api/pro/v1/ticker?symbol=XPRT/USDT`;

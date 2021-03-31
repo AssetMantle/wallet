@@ -22,7 +22,7 @@
 @media (max-width: 1200px) {
   .wallet-main-section .tabs-section .tab-content, .validators-section {
     padding: 30px 0px 0 0px;
-    max-height: initial;
+    height: auto;
     overflow: auto;
     &::after {
       content:'';

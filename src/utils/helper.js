@@ -83,6 +83,13 @@ function ValidateFrom(value) {
     return new Error('');
 }
 
+function CheckLastPage(pageNumber, limit , totalPages) {
+    if(totalPages/limit <= pageNumber){
+        return true;
+    }else {
+        return false;
+    }
+}
 function ValidatePassphrase(value) {
     if (value.length === 50) {
         return true;
@@ -98,4 +105,5 @@ module.exports = {
     isActive,
     ValidateFrom,
     ValidatePassphrase,
+    CheckLastPage,
 };
