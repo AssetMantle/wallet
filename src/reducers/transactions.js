@@ -3,7 +3,11 @@ import {
     TRANSACTIONS_FETCH_ERROR,
     TRANSACTIONS_FETCH_SUCCESS,
     TRANSACTIONS_IN_PROGRESS,
-    PAGE_NUMBER_FETCH_SUCCESS
+    PAGE_NUMBER_FETCH_SUCCESS,
+    RECEIVE_PAGE_NUMBER_FETCH_SUCCESS,
+    RECEIVE_TRANSACTIONS_FETCH_ERROR,
+    RECEIVE_TRANSACTIONS_FETCH_SUCCESS,
+    RECEIVE_TRANSACTIONS_IN_PROGRESS
 } from "../constants/transactions";
 
 const inProgress = (state = false, action) => {
@@ -40,9 +44,40 @@ const pageNumber = (state = 1, action) => {
     return state;
 };
 
+const inReceiveTxnProgress = (state = false, action) => {
+    switch (action.type) {
+        case RECEIVE_TRANSACTIONS_IN_PROGRESS:
+            return true;
+        case RECEIVE_TRANSACTIONS_FETCH_SUCCESS:
+        case RECEIVE_TRANSACTIONS_FETCH_ERROR:
+            return false;
+        default:
+            return state;
+    }
+};
+
+const receiveTxnList = (state = [], action) => {
+    if (action.type === RECEIVE_TRANSACTIONS_FETCH_SUCCESS) {
+        return action.list;
+    }
+    return state;
+};
+
+
+const receiveTxnPageNumber = (state = 1, action) => {
+    if (action.type === RECEIVE_PAGE_NUMBER_FETCH_SUCCESS) {
+        return [action.number, action.totalPages];
+    }
+    return state;
+};
+
+
 export default combineReducers({
     list,
     _,
     inProgress,
     pageNumber,
+    inReceiveTxnProgress,
+    receiveTxnList,
+    receiveTxnPageNumber
 });

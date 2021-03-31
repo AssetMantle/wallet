@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {Tab, Tabs} from "react-bootstrap";
 import Send from "./Send";
 import Receive from "./Receive";
-import Transactions from "./Transactions";
+import Transactions from "./Transactions/index"
 import DashboardHeader from "../Common/DashboardHeader";
 import TokenInfo from "../Common/TokenInfo";
 const Wallet = () => {

@@ -1,10 +1,14 @@
 import Axios from 'axios';
-import {getTransactionsUrl} from "../constants/url";
+import {getSendTransactionsUrl, getReceiveTransactionsUrl} from "../constants/url";
 import {
     PAGE_NUMBER_FETCH_SUCCESS,
     TRANSACTIONS_FETCH_ERROR,
     TRANSACTIONS_FETCH_SUCCESS,
-    TRANSACTIONS_IN_PROGRESS
+    TRANSACTIONS_IN_PROGRESS,
+    RECEIVE_PAGE_NUMBER_FETCH_SUCCESS,
+    RECEIVE_TRANSACTIONS_FETCH_ERROR,
+    RECEIVE_TRANSACTIONS_FETCH_SUCCESS,
+    RECEIVE_TRANSACTIONS_IN_PROGRESS
 } from "../constants/transactions"
 
 
@@ -37,10 +41,9 @@ export const fetchTransactionsError = (list) => {
 };
 
 export const fetchTransactions = (address, limit, pageNumber, stage) => {
-
     return async dispatch => {
         dispatch(fetchTransactionsProgress());
-        const url = getTransactionsUrl(address, limit, pageNumber);
+        const url = getSendTransactionsUrl(address, limit, pageNumber);
         await Axios.get(url)
             .then((res) => {
                 if (res.data.page_total * 1 === 0) {
@@ -54,13 +57,13 @@ export const fetchTransactions = (address, limit, pageNumber, stage) => {
                     }
                 } else if (res.data.page_total * 1 > 1) {
                     //impl query last page
-                    Axios.get(getTransactionsUrl(address, limit, res.data.page_total*1)).then(
+                    Axios.get(getSendTransactionsUrl(address, limit, res.data.page_total*1)).then(
                         newResponse => {
                             if (stage === "Initial" || pageNumber === res.data.page_total*1) {
                                 dispatch(fetchPageNumberSuccess(newResponse.data.page_number * 1, newResponse.data.page_total * 1));
                                 let sendTxnsResponseList = newResponse.data.txs.reverse();
                                 if (newResponse.data.count !== limit) {
-                                    Axios.get(getTransactionsUrl(address, limit, (res.data.page_total * 1 - 1))).then(
+                                    Axios.get(getSendTransactionsUrl(address, limit, (res.data.page_total * 1 - 1))).then(
                                         previousTxResponse => {
                                             let previousTxResponseList = previousTxResponse.data.txs.reverse();
                                             const firstHalf = previousTxResponseList.splice(0, (previousTxResponse.data.count * 1 - newResponse.data.count * 1));
@@ -84,6 +87,90 @@ export const fetchTransactions = (address, limit, pageNumber, stage) => {
             })
             .catch((error) => {
                 dispatch(fetchTransactionsError(error.response
+                    ? error.response.data.message
+                    : error.message));
+            });
+    }
+}
+
+export const fetchReceiveTransactionsProgress = () => {
+    return {
+        type: RECEIVE_TRANSACTIONS_IN_PROGRESS,
+    };
+};
+
+export const fetchReceivePageNumberSuccess = (number, totalPages) => {
+    return {
+        type: RECEIVE_PAGE_NUMBER_FETCH_SUCCESS,
+        number,
+        totalPages
+    };
+};
+
+
+export const fetchReceiveTransactionsSuccess = (list) => {
+    return {
+        type: RECEIVE_TRANSACTIONS_FETCH_SUCCESS,
+        list,
+    };
+};
+export const fetchReceiveTransactionsError = (list) => {
+    return {
+        type: RECEIVE_TRANSACTIONS_FETCH_ERROR,
+        list,
+    };
+};
+
+export const fetchReceiveTransactions = (address, limit, pageNumber, stage) => {
+    return async dispatch => {
+        dispatch(fetchReceiveTransactionsProgress());
+        const url = getReceiveTransactionsUrl(address, limit, pageNumber);
+        await Axios.get(url)
+            .then((res) => {
+                console.log(res, "receive response");
+                if (res.data.page_total * 1 === 0) {
+                    // say no transactions
+                } else if (res.data.page_total * 1 === 1) {
+                    // show the same page
+                    dispatch(fetchReceivePageNumberSuccess(res.data.page_number * 1, res.data.page_total * 1));
+                    let sendTxnsResponseList = res.data.txs.reverse();
+                    if (sendTxnsResponseList !== undefined) {
+                        dispatch(fetchReceiveTransactionsSuccess(sendTxnsResponseList));
+                    }
+                } else if (res.data.page_total * 1 > 1) {
+                    //impl query last page
+                    Axios.get(getReceiveTransactionsUrl(address, limit, res.data.page_total*1)).then(
+                        newResponse => {
+
+                            if (stage === "Initial" || pageNumber === res.data.page_total*1) {
+                                dispatch(fetchReceivePageNumberSuccess(newResponse.data.page_number * 1, newResponse.data.page_total * 1));
+                                let sendTxnsResponseList = newResponse.data.txs.reverse();
+                                if (newResponse.data.count !== limit) {
+                                    Axios.get(getReceiveTransactionsUrl(address, limit, (res.data.page_total * 1 - 1))).then(
+                                        previousTxResponse => {
+                                            let previousTxResponseList = previousTxResponse.data.txs.reverse();
+                                            const firstHalf = previousTxResponseList.splice(0, (previousTxResponse.data.count * 1 - newResponse.data.count * 1));
+                                            const finalTxns = sendTxnsResponseList.concat(firstHalf);
+                                            console.log(finalTxns, "receive response");
+                                            dispatch(fetchReceiveTransactionsSuccess(finalTxns));
+                                        }
+                                    )
+                                } else {
+                                    dispatch(fetchReceiveTransactionsSuccess(sendTxnsResponseList));
+                                }
+                            } else {
+                                dispatch(fetchReceivePageNumberSuccess(res.data.page_number * 1, res.data.page_total * 1));
+                                let txnsResponseList = res.data.txs.reverse();
+                                if (txnsResponseList !== undefined) {
+                                    dispatch(fetchReceiveTransactionsSuccess(txnsResponseList));
+                                }
+                            }
+                        }
+                    )
+                }
+            })
+            .catch((error) => {
+                dispatch(fetchReceiveTransactionsError(error.response
                     ? error.response.data.message
                     : error.message));
             });

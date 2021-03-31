@@ -1,20 +1,20 @@
 import React, {useEffect, useState} from "react";
 import moment from 'moment';
-import helper from "../../utils/helper";
-import Icon from "../../components/Icon";
-import Loader from "../../components/Loader";
-import {fetchTransactions} from "../../actions/transactions";
+import helper from "../../../utils/helper";
+import Icon from "../../../components/Icon";
+import Loader from "../../../components/Loader";
+import {fetchReceiveTransactions} from "../../../actions/transactions";
 import {connect} from "react-redux";
-import DataTable from "../../components/DataTable";
+import DataTable from "../../../components/DataTable";
 import IconButton from "@material-ui/core/IconButton";
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
-const Transactions = (props) => {
+const ReceiveTransactions = (props) => {
     const address = localStorage.getItem('address');
     useEffect(() => {
-        props.fetchTransactions(address, 20, 1, "Initial");
+        props.fetchReceiveTransactions(address, 20, 1, "Initial");
     }, []);
     const columns = [{
         name: 'txHash',
@@ -102,15 +102,15 @@ const Transactions = (props) => {
     }
     const handleNext = () => {
         if (props.pageNumber[0] < props.pageNumber[1]) {
-            props.fetchTransactions(address, 20, props.pageNumber[0] + 1);
+            props.fetchReceiveTransactions(address, 20, props.pageNumber[0] + 1);
         } else if (props.pageNumber[0] > 1 && props.pageNumber[0] === props.pageNumber[1]) {
-            props.fetchTransactions(address, 20, props.pageNumber[0] - 1, "Initial");
+            props.fetchReceiveTransactions(address, 20, props.pageNumber[0] - 1, "Initial");
         }
     };
     const handlePrevious = () => {
 
         if (props.pageNumber[0] > 1) {
-            props.fetchTransactions(address, 20, props.pageNumber[0] - 1);
+            props.fetchReceiveTransactions(address, 20, props.pageNumber[0] - 1);
         }
     };
     return (
@@ -142,14 +142,14 @@ const Transactions = (props) => {
 
 const stateToProps = (state) => {
     return {
-        list: state.transactions.list,
-        inProgress: state.transactions.inProgress,
-        pageNumber: state.transactions.pageNumber
+        list: state.transactions.receiveTxnList,
+        inProgress: state.transactions.inReceiveTxnProgress,
+        pageNumber: state.transactions.receiveTxnPageNumber
     };
 };
 
 const actionsToProps = {
-    fetchTransactions,
+    fetchReceiveTransactions,
 };
 
-export default connect(stateToProps, actionsToProps)(Transactions);
+export default connect(stateToProps, actionsToProps)(ReceiveTransactions);
