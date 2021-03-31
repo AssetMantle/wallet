@@ -57,8 +57,8 @@ const ValidatorsTable = (props) => {
                 {parseFloat((validator.tokens * Math.pow(10, -6)).toFixed(2)).toLocaleString()}
                 {
                     helper.isActive(validator)
-                        ? `(${Math.round(parseInt(validator.tokens * 100 / props.activeValidatorsTokens))}%)`
-                        : `(${Math.round(parseInt(validator.tokens * 100 / props.inActiveValidatorsTokens))}%)`
+                        ? `(${parseFloat((validator.tokens * 100 / props.activeValidatorsTokens)).toFixed(2).toLocaleString()}%)`
+                        : `(${parseFloat((validator.tokens * 100 / props.inActiveValidatorsTokens)).toFixed(2).toLocaleString()}%)`
                 }
             </div>
             ,
