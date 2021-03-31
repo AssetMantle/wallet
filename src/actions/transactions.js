@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import {getSendTransactionsUrl, getReceiveTransactionsUrl} from "../constants/url";
+import {getSendTransactionsUrl, getReceiveTransactionsUrl, getTxnUrl} from "../constants/url";
 import {
     PAGE_NUMBER_FETCH_SUCCESS,
     TRANSACTIONS_FETCH_ERROR,
@@ -28,6 +28,7 @@ export const fetchPageNumberSuccess = (number, totalPages) => {
 
 
 export const fetchTransactionsSuccess = (list) => {
+
     return {
         type: TRANSACTIONS_FETCH_SUCCESS,
         list,
@@ -46,43 +47,21 @@ export const fetchTransactions = (address, limit, pageNumber, stage) => {
         const url = getSendTransactionsUrl(address, limit, pageNumber);
         await Axios.get(url)
             .then((res) => {
-                if (res.data.page_total * 1 === 0) {
-                    // say no transactions
-                } else if (res.data.page_total * 1 === 1) {
-                    // show the same page
-                    dispatch(fetchPageNumberSuccess(res.data.page_number * 1, res.data.page_total * 1));
-                    let sendTxnsResponseList = res.data.txs.reverse();
-                    if (sendTxnsResponseList !== undefined) {
-                        dispatch(fetchTransactionsSuccess(sendTxnsResponseList));
-                    }
-                } else if (res.data.page_total * 1 > 1) {
-                    //impl query last page
-                    Axios.get(getSendTransactionsUrl(address, limit, res.data.page_total*1)).then(
-                        newResponse => {
-                            if (stage === "Initial" || pageNumber === res.data.page_total*1) {
-                                dispatch(fetchPageNumberSuccess(newResponse.data.page_number * 1, newResponse.data.page_total * 1));
-                                let sendTxnsResponseList = newResponse.data.txs.reverse();
-                                if (newResponse.data.count !== limit) {
-                                    Axios.get(getSendTransactionsUrl(address, limit, (res.data.page_total * 1 - 1))).then(
-                                        previousTxResponse => {
-                                            let previousTxResponseList = previousTxResponse.data.txs.reverse();
-                                            const firstHalf = previousTxResponseList.splice(0, (previousTxResponse.data.count * 1 - newResponse.data.count * 1));
-                                            const finalTxns = sendTxnsResponseList.concat(firstHalf);
-                                            dispatch(fetchTransactionsSuccess(finalTxns));
-                                        }
-                                    )
-                                } else {
-                                    dispatch(fetchTransactionsSuccess(sendTxnsResponseList));
+                //impl query last page
+                dispatch(fetchPageNumberSuccess(pageNumber, res.data.result.total_count));
+                let txnsResponseList = res.data.result.txs;
+                let txnList = [];
+                if (txnsResponseList !== undefined) {
+                    txnsResponseList.map((tx, index) => {
+                        Axios.get(getTxnUrl(tx.hash)).then(
+                            newResponse => {
+                                txnList.push(newResponse.data.tx_response);
+                                if (index === (txnsResponseList.length - 1)) {
+                                    dispatch(fetchTransactionsSuccess(txnList));
                                 }
-                            } else {
-                                dispatch(fetchPageNumberSuccess(res.data.page_number * 1, res.data.page_total * 1));
-                                let txnsResponseList = res.data.txs.reverse();
-                                if (txnsResponseList !== undefined) {
-                                    dispatch(fetchTransactionsSuccess(txnsResponseList));
-                                }
-                            }
-                        }
-                    )
+                            })
+
+                    });
                 }
             })
             .catch((error) => {
@@ -121,56 +100,60 @@ export const fetchReceiveTransactionsError = (list) => {
     };
 };
 
-export const fetchReceiveTransactions = (address, limit, pageNumber, stage) => {
+// export const fetchReceiveTransactions = (address, limit, pageNumber) => {
+//     return async dispatch => {
+//         dispatch(fetchReceiveTransactionsProgress());
+//         const url = getReceiveTransactionsUrl(address, limit, pageNumber);
+//          Axios.get(url)
+//             .then((res) => {
+//                 //impl query last page
+//                 dispatch(fetchReceivePageNumberSuccess(pageNumber, res.data.result.total_count));
+//                 let txnsResponseList = res.data.result.txs;
+//                 let txnList = [];
+//                 if (txnsResponseList !== undefined) {
+//                     txnsResponseList.map((tx, index) => {
+//                          Axios.get(getTxnUrl(tx.hash)).then(
+//                             newResponse => {
+//                                 txnList.push(newResponse.data.tx_response);
+//                                 if (index === (txnsResponseList.length - 1)) {
+//                                     console.log(txnList)
+//                                     dispatch(fetchReceiveTransactionsSuccess(txnList));
+//                                 }
+//                             })
+//
+//                     });
+//                 }
+//             })
+//             .catch((error) => {
+//                 dispatch(fetchReceiveTransactionsError(error.response
+//                     ? error.response.data.message
+//                     : error.message));
+//             });
+//     }
+// }
+
+export const fetchReceiveTransactions = (address, limit, pageNumber) => {
     return async dispatch => {
         dispatch(fetchReceiveTransactionsProgress());
         const url = getReceiveTransactionsUrl(address, limit, pageNumber);
-        await Axios.get(url)
-            .then((res) => {
-                if (res.data.page_total * 1 === 0) {
-                    // say no transactions
-                } else if (res.data.page_total * 1 === 1) {
-                    // show the same page
-                    dispatch(fetchReceivePageNumberSuccess(res.data.page_number * 1, res.data.page_total * 1));
-                    let sendTxnsResponseList = res.data.txs.reverse();
-                    if (sendTxnsResponseList !== undefined) {
-                        dispatch(fetchReceiveTransactionsSuccess(sendTxnsResponseList));
-                    }
-                } else if (res.data.page_total * 1 > 1) {
-                    //impl query last page
-                    Axios.get(getReceiveTransactionsUrl(address, limit, res.data.page_total*1)).then(
-                        newResponse => {
-
-                            if (stage === "Initial" || pageNumber === res.data.page_total*1) {
-                                dispatch(fetchReceivePageNumberSuccess(newResponse.data.page_number * 1, newResponse.data.page_total * 1));
-                                let sendTxnsResponseList = newResponse.data.txs.reverse();
-                                if (newResponse.data.count !== limit) {
-                                    Axios.get(getReceiveTransactionsUrl(address, limit, (res.data.page_total * 1 - 1))).then(
-                                        previousTxResponse => {
-                                            let previousTxResponseList = previousTxResponse.data.txs.reverse();
-                                            const firstHalf = previousTxResponseList.splice(0, (previousTxResponse.data.count * 1 - newResponse.data.count * 1));
-                                            const finalTxns = sendTxnsResponseList.concat(firstHalf);
-                                            dispatch(fetchReceiveTransactionsSuccess(finalTxns));
-                                        }
-                                    )
-                                } else {
-                                    dispatch(fetchReceiveTransactionsSuccess(sendTxnsResponseList));
-                                }
-                            } else {
-                                dispatch(fetchReceivePageNumberSuccess(res.data.page_number * 1, res.data.page_total * 1));
-                                let txnsResponseList = res.data.txs.reverse();
-                                if (txnsResponseList !== undefined) {
-                                    dispatch(fetchReceiveTransactionsSuccess(txnsResponseList));
-                                }
-                            }
-                        }
-                    )
+        const rr = await Axios.get(url)
+        //impl query last page
+        dispatch(fetchReceivePageNumberSuccess(pageNumber, rr.data.result.total_count));
+        let txnsResponseList = rr.data.result.txs;
+        let txnList = [];
+        if (txnsResponseList !== undefined) {
+            txnsResponseList.map(async (tx, index) => {
+                const txHashResult = await Axios.get(getTxnUrl(tx.hash))
+                txnList.push(txHashResult.data.tx_response);
+                console.log(txnsResponseList.length, index)
+                if (index === (txnsResponseList.length - 1)) {
+                    console.log(txnList)
+                    dispatch(fetchReceiveTransactionsSuccess(txnList));
                 }
-            })
-            .catch((error) => {
-                dispatch(fetchReceiveTransactionsError(error.response
-                    ? error.response.data.message
-                    : error.message));
+
             });
+        }
+
+
     }
 }
