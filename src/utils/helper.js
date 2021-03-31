@@ -83,8 +83,8 @@ function ValidateFrom(value) {
     return new Error('');
 }
 
-function CheckLastPage(pageNumber, limit , totalPages) {
-    if(totalPages/limit <= pageNumber){
+function CheckLastPage(pageNumber, limit , totalTransactions) {
+    if(totalTransactions/limit <= pageNumber){
         return true;
     }else {
         return false;
