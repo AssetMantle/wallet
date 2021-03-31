@@ -14,6 +14,9 @@ import Loader from "../../../components/Loader";
 import {WithdrawMsg} from "../../../utils/protoMsgHelper";
 import aminoMsgHelper from "../../../utils/aminoMsgHelper";
 import transactions from "../../../utils/transactions";
+import MakePersistence from "../../../utils/cosmosjsWrapper";
+
+const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const ModalWithdraw = (props) => {
     const ActionHelper = new Actions();
@@ -29,7 +32,7 @@ const ModalWithdraw = (props) => {
     const [errorMessage, setErrorMessage] = useState("");
     const [loader, setLoader] = useState(false);
     const [importMnemonic, setImportMnemonic] = useState(true);
-    const address = localStorage.getItem('address');
+    const loginAddress = localStorage.getItem('address');
     const mode = localStorage.getItem('loginMode');
     useEffect(() => {
         for (const item of props.list) {
@@ -100,7 +103,7 @@ const ModalWithdraw = (props) => {
         setLoader(true);
         event.preventDefault();
         setInitialModal(false);
-        const response = transactions.TransactionWithKeplr([WithdrawMsg(address, validatorAddress)], aminoMsgHelper.fee(5000, 250000));
+        const response = transactions.TransactionWithKeplr([WithdrawMsg(loginAddress, validatorAddress)], aminoMsgHelper.fee(5000, 250000));
         response.then(result => {
             setResponse(result);
             setLoader(false)
@@ -140,31 +143,57 @@ const ModalWithdraw = (props) => {
             addressIndex = event.target.claimTotalAccountIndex.value;
             bip39Passphrase = event.target.claimTotalbip39Passphrase.value;
         }
-        let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-        addressFromMnemonic.then((addressResponse) => {
-            if (address === addressResponse) {
-                const response = transactions.TransactionWithMnemonic([WithdrawMsg(address, validatorAddress)], aminoMsgHelper.fee(5000, 250000), memoContent,
-                    mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-                response.then(result => {
-                    setResponse(result);
-                    setLoader(false);
-                    showSeedModal(false);
-                    setAdvanceMode(false);
-                }).catch(err => {
-                    setLoader(false);
-                    setErrorMessage(err.message);
-                    console.log(err.message, "withdrawMsg error")
-                })
+        const persistence = MakePersistence(accountNumber, addressIndex);
+        const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
+        const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
+        if (address.error === undefined && ecpairPriv.error === undefined) {
+            if (address === loginAddress) {
+                persistence.getAccounts(address).then(data => {
+                    if (data.code === undefined) {
+                        let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
+                        let stdSignMsg = persistence.newStdMsg({
+                            msgs: aminoMsgHelper.msgs(aminoMsgHelper.withDrawMsg(address, validatorAddress)),
+                            chain_id: persistence.chainId,
+                            fee: aminoMsgHelper.fee(5000, 250000),
+                            memo: memoContent,
+                            account_number: String(accountNumber),
+                            sequence: String(sequence)
+                        });
+                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
+                        persistence.broadcast(signedTx).then(response => {
+                            setResponse(response);
+                            setLoader(false);
+                            showSeedModal(false);
+                            setAdvanceMode(false);
+                            console.log(response, "delegate response")
+                        }).catch(err => {
+                            setLoader(false);
+                            setErrorMessage(err.message);
+                            console.log(err.message, "delegate error")
+                        });
+                        showSeedModal(false);
+                    } else {
+                        setLoader(false);
+                        setAdvanceMode(false);
+                        setErrorMessage(data.message);
+                    }
+                });
             } else {
                 setLoader(false);
                 setAdvanceMode(false);
-                setErrorMessage("Please check mnemonic or wallet path")
+                setErrorMessage("Mnemonic not matched")
             }
-        }).catch(err => {
-            setLoader(false);
-            setAdvanceMode(false);
-            setErrorMessage("Please check mnemonic or wallet path")
-        })
+        } else {
+            if (address.error !== undefined) {
+                setLoader(false);
+                setAdvanceMode(false);
+                setErrorMessage(address.error)
+            } else {
+                setLoader(false);
+                setAdvanceMode(false);
+                setErrorMessage(ecpairPriv.error)
+            }
+        }
     };
     const onChangeSelect = (evt) => {
         setValidatorAddress(evt.target.value);
@@ -367,8 +396,16 @@ const ModalWithdraw = (props) => {
                             <div className="result-container">
                                 <img src={success} alt="success-image"/>
                                 {mode === "kepler" ?
-                                    <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
-                                    : <p className="tx-hash">Tx Hash: {response.transactionHash}</p>}
+                                    <a
+                                        href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
+                                        target="_blank" className="tx-hash">Tx
+                                        Hash: {response.transactionHash}</a>
+                                    :
+                                    <a
+                                        href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
+                                        target="_blank" className="tx-hash">Tx
+                                        Hash: {response.txhash}</a>
+                                }
                                 <div className="buttons">
                                     <button className="button" onClick={handleClose}>Done</button>
                                 </div>
@@ -386,11 +423,22 @@ const ModalWithdraw = (props) => {
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 {mode === "kepler" ?
-                                    <p className="tx-hash">Tx Hash: {response.transactionHash}</p>
-                                    : <p className="tx-hash">Tx Hash: {response.transactionHash}</p>}
-                                {mode === "kepler" ?
-                                    <p>{response.rawLog}</p>
-                                    : <p>{response.rawLog}</p>}
+                                    <>
+                                        <p>{response.rawLog}</p>
+                                        <a
+                                            href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
+                                            target="_blank" className="tx-hash">Tx
+                                            Hash: {response.transactionHash}</a>
+                                    </>
+                                    :
+                                    <>
+                                        <p>{response.raw_log}</p>
+                                        <a
+                                            href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
+                                            target="_blank" className="tx-hash">Tx
+                                            Hash: {response.txhash}</a>
+                                    </>
+                                }
                                 <div className="buttons">
                                     <button className="button" onClick={handleClose}>Done</button>
                                 </div>
@@ -406,7 +454,7 @@ const ModalWithdraw = (props) => {
 const stateToProps = (state) => {
     return {
         list: state.rewards.list,
-        tokenPrice:state.tokenPrice.tokenPrice
+        tokenPrice: state.tokenPrice.tokenPrice
     };
 };
 
