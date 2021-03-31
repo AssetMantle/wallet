@@ -127,7 +127,6 @@ export const fetchReceiveTransactions = (address, limit, pageNumber, stage) => {
         const url = getReceiveTransactionsUrl(address, limit, pageNumber);
         await Axios.get(url)
             .then((res) => {
-                console.log(res, "receive response");
                 if (res.data.page_total * 1 === 0) {
                     // say no transactions
                 } else if (res.data.page_total * 1 === 1) {
@@ -151,7 +150,6 @@ export const fetchReceiveTransactions = (address, limit, pageNumber, stage) => {
                                             let previousTxResponseList = previousTxResponse.data.txs.reverse();
                                             const firstHalf = previousTxResponseList.splice(0, (previousTxResponse.data.count * 1 - newResponse.data.count * 1));
                                             const finalTxns = sendTxnsResponseList.concat(firstHalf);
-                                            console.log(finalTxns, "receive response");
                                             dispatch(fetchReceiveTransactionsSuccess(finalTxns));
                                         }
                                     )
