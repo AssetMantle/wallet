@@ -1,10 +1,11 @@
 import Axios from 'axios';
-import {tokenPriceUrl} from "../constants/url";
 
 import {
     TOKEN_PRICE_FETCH_ERROR,
     TOKEN_PRICE_FETCH_SUCCESS,
 } from "../constants/tokenPrice"
+
+const PROXY_API = process.env.REACT_APP_PROXY_API;
 
 export const fetchTokenPriceSuccess = (data) => {
     return {
@@ -20,11 +21,11 @@ export const fetchTokenPriceError = (data) => {
 };
 
 export const fetchTokenPrice = () => (dispatch) => {
-    const url = tokenPriceUrl();
+    const url = `${PROXY_API}/ascendExTicker?symbol=XPRT/USDT`;
      Axios.get(url)
         .then((res) => {
-            if (res.data.close) {
-                dispatch(fetchTokenPriceSuccess());
+            if (res.data.data.close) {
+                dispatch(fetchTokenPriceSuccess(res.data.data.close));
             }
         })
         .catch((error) => {
