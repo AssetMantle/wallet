@@ -30,7 +30,7 @@ jobs:
         REACT_APP_TENDERMINT_RPC_ENDPOINT: ${{ secrets.STAGING_RPC_ENDPOINT }}
         REACT_APP_EXPLORER_API: ${{ secrets.STAGING_EXPLORER }}
         REACT_APP_MAIL_CHIMP_URL: ${{ secrets.STAGING_MAILCHIMP }}
-        REACT_APP_PROXY_API: ${{ PROXY_API }}
+        REACT_APP_PROXY_API: ${{ secrets.PROXY_API }}
     - name: zip up the build
       uses: montudor/action-zip@v0.1.0
       with:
