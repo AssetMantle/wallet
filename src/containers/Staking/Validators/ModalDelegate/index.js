@@ -17,7 +17,7 @@ import transactions from "../../../../utils/transactions";
 import helper from "../../../../utils/helper";
 import Loader from "../../../../components/Loader";
 import {connect} from "react-redux";
-
+import MakePersistence from "../../../../utils/cosmosjsWrapper";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalDelegate = (props) => {
     const [amount, setAmount] = useState(0);
@@ -30,7 +30,7 @@ const ModalDelegate = (props) => {
     const [errorMessage, setErrorMessage] = useState("");
     const [loader, setLoader] = useState(false);
     const [importMnemonic, setImportMnemonic] = useState(true);
-    const address = localStorage.getItem('address');
+    const loginAddress = localStorage.getItem('address');
     const mode = localStorage.getItem('loginMode');
 
     function ContextAwareToggle({children, eventKey, callback}) {
@@ -67,7 +67,7 @@ const ModalDelegate = (props) => {
 
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
-        if (rex.test(evt.target.value)){
+        if (rex.test(evt.target.value)) {
             setAmount(evt.target.value)
         } else {
             return false
@@ -92,7 +92,7 @@ const ModalDelegate = (props) => {
         setLoader(true);
         event.preventDefault();
         setInitialModal(false);
-        const response = transactions.TransactionWithKeplr([DelegateMsg(address, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(0, 250000), memoContent);
+        const response = transactions.TransactionWithKeplr([DelegateMsg(loginAddress, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(0, 250000), memoContent);
         response.then(result => {
             setResponse(result);
             setLoader(false)
@@ -152,33 +152,58 @@ const ModalDelegate = (props) => {
             addressIndex = event.target.delegateAccountIndex.value;
             bip39Passphrase = event.target.delegatebip39Passphrase.value;
         }
-
-        let addressFromMnemonic = transactions.CheckAddressMisMatch(mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-
-        addressFromMnemonic.then((addressResponse) => {
-            if (address === addressResponse) {
-                const response = transactions.TransactionWithMnemonic([DelegateMsg(address, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(5000, 250000), memoContent,
-                    mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-                response.then(result => {
-                    setResponse(result);
-                    setLoader(false);
-                    showSeedModal(false);
-                    setAdvanceMode(false);
-                }).catch(err => {
-                    setLoader(false);
-                    setErrorMessage(err.message);
-                    console.log(err.message, "delegate error")
-                })
+        const persistence = MakePersistence(accountNumber, addressIndex);
+        const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
+        const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
+        console.log(address.error, "rdsult");
+        if (address.error === undefined && ecpairPriv.error === undefined) {
+            if(address === loginAddress) {
+                persistence.getAccounts(address).then(data => {
+                    if (data.code === undefined) {
+                        let stdSignMsg = persistence.newStdMsg({
+                            msgs: aminoMsgHelper.msgs(aminoMsgHelper.delegateMsg((amount * 1000000), address, props.validatorAddress)),
+                            fee: aminoMsgHelper.fee(5000, 250000),
+                            chain_id: persistence.chainId,
+                            memo: memoContent,
+                            account_number: String(data.account.account_number),
+                            sequence: String(data.account.sequence)
+                        });
+                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
+                        persistence.broadcast(signedTx).then(response => {
+                            setResponse(response);
+                            setLoader(false);
+                            showSeedModal(false);
+                            setAdvanceMode(false);
+                            console.log(response, "delegate response")
+                        }).catch(err => {
+                            setLoader(false);
+                            setErrorMessage(err.message);
+                            console.log(err.message, "delegate error")
+                        })
+                        showSeedModal(false);
+                    } else {
+                        setLoader(false);
+                        setAdvanceMode(false);
+                        setErrorMessage(data.message);
+                    }
+                });
+            }else {
+                setLoader(false);
+                setAdvanceMode(false);
+                setErrorMessage("Mnemonic not matched")
+            }
+        } else {
+            if (address.error !== undefined) {
+                setLoader(false);
+                setAdvanceMode(false);
+                setErrorMessage(address.error)
             } else {
                 setLoader(false);
                 setAdvanceMode(false);
-                setErrorMessage("Please check mnemonic or wallet path")
+                setErrorMessage(ecpairPriv.error)
             }
-        }).catch(err => {
-            setLoader(false);
-            setAdvanceMode(false);
-            setErrorMessage("Please check mnemonic or wallet path")
-        })
+        }
+
     };
     const handlePrivateKey = (value) => {
         setImportMnemonic(value);
@@ -378,10 +403,17 @@ const ModalDelegate = (props) => {
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 <img src={success} alt="success-image"/>
-                                <a
-                                    href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
-                                    target="_blank" className="tx-hash">Tx
-                                    Hash: {response.transactionHash}</a>
+                                {mode === "kepler" ?
+                                    <a
+                                        href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
+                                        target="_blank" className="tx-hash">Tx
+                                        Hash: {response.transactionHash}</a>
+                                    :
+                                    <a
+                                        href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
+                                        target="_blank" className="tx-hash">Tx
+                                        Hash: {response.txhash}</a>
+                                }
                                 <div className="buttons">
                                     <button className="button" onClick={props.handleClose}>Done</button>
                                 </div>
@@ -397,13 +429,23 @@ const ModalDelegate = (props) => {
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <div className="result-container">
-                            <a
-                                href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
-                                target="_blank" className="tx-hash">Tx
-                                Hash: {response.transactionHash}</a>
                             {mode === "kepler" ?
-                                <p>{response.rawLog}</p>
-                                : <p>{response.rawLog}</p>}
+                                <>
+                                    <p>{response.rawLog}</p>
+                                    <a
+                                        href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
+                                        target="_blank" className="tx-hash">Tx
+                                        Hash: {response.transactionHash}</a>
+                                </>
+                                :
+                                <>
+                                    <p>{response.raw_log}</p>
+                                    <a
+                                        href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
+                                        target="_blank" className="tx-hash">Tx
+                                        Hash: {response.txhash}</a>
+                                </>
+                            }
                             <div className="buttons">
                                 <button className="button" onClick={props.handleClose}>Done</button>
                             </div>
