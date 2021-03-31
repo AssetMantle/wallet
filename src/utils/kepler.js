@@ -5,6 +5,7 @@ const restAPI = process.env.REACT_APP_API_KEY;
 const tendermintRPC = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 const chainID = config.chainID
 const coinType = config.coinType
+const chainName = config.chainName
 const coinName = config.coinName
 const coinDenom = config.coinDenom
 const prefix = config.addressPrefix
@@ -29,7 +30,7 @@ async function KeplerWallet() {
                     // Chain-id of the Cosmos SDK chain.
                     chainId: chainID,
                     // The name of the chain to be displayed to the user.
-                    chainName: "Persistence Testnet",
+                    chainName: chainName,
                     // RPC endpoint of the chain.
                     rpc: tendermintRPC,
                     // REST endpoint of the chain.
