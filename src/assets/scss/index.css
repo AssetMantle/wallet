@@ -1026,6 +1026,8 @@ html, body {
   overflow-y: scroll; }
   .wallet-main-section .tabs-section .tab-content .tab-content {
     height: auto; }
+    .wallet-main-section .tabs-section .tab-content .tab-content::after {
+      padding-bottom: 0px; }
   .wallet-main-section .tabs-section .tab-content::after {
     content: '';
     display: block;
