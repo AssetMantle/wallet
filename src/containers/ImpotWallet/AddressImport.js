@@ -19,12 +19,14 @@ const AddressImport = (props) => {
         const address = event.target.address.value;
         persistence.getAccounts(address).then(data => {
             if (data.code === undefined) {
-                if (data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
+                if (data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount" ||
+                    data.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount" ||
+                    data.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
                     localStorage.setItem('fee', config.vestingAccountFee);
                 } else {
                     localStorage.setItem('fee', config.defaultFee);
                 }
-            }else{
+            } else {
                 localStorage.setItem('fee', config.defaultFee);
             }
         });
