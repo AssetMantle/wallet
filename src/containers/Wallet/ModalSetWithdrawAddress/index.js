@@ -122,9 +122,7 @@ const ModalSetWithdrawAddress = (props) => {
         showSeedModal(true);
     };
     const handleSubmit = async event => {
-
         setLoader(true);
-
         event.preventDefault();
         let mnemonic;
         if (importMnemonic) {
@@ -202,10 +200,6 @@ const ModalSetWithdrawAddress = (props) => {
         setErrorMessage("");
     };
 
-    const disabled = (
-        helper.ValidateFrom(validatorAddress).message !== ''
-    );
-
     if (loader) {
         return <Loader/>;
     }
@@ -242,7 +236,7 @@ const ModalSetWithdrawAddress = (props) => {
                                 </div> : null
                             }
                             <div className="buttons">
-                                <button className="button button-primary"
+                                <button className="button button-primary" disabled={!props.status}
                                        >{mode === "normal" ? "Next" : "Submit"}</button>
                             </div>
                         </Form>
@@ -422,7 +416,8 @@ const ModalSetWithdrawAddress = (props) => {
 const stateToProps = (state) => {
     return {
         list: state.rewards.list,
-        tokenPrice: state.tokenPrice.tokenPrice
+        tokenPrice: state.tokenPrice.tokenPrice,
+        status: state.delegations.status,
     };
 };
 
