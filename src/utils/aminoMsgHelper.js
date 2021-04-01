@@ -75,6 +75,16 @@ function withDrawMsg(address, validatorAddress) {
     }
 }
 
+function setWithdrawAddressMsg(delegator_address, withdraw_address) {
+    return {
+        type: "cosmos-sdk/MsgModifyWithdrawAddress",
+        value: {
+            delegator_address: delegator_address,
+            withdraw_address: withdraw_address
+        }
+    }
+}
+
 module.exports = {
     sendMsg,
     msgs,
@@ -82,5 +92,6 @@ module.exports = {
     delegateMsg,
     reDelegateMsg: redelegateMsg,
     unBondMsg,
-    withDrawMsg
+    withDrawMsg,
+    setWithdrawAddressMsg,
 };
