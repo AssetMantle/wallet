@@ -154,12 +154,12 @@ const ModalWithdraw = (props) => {
                         let stdSignMsg = persistence.newStdMsg({
                             msgs: aminoMsgHelper.msgs(aminoMsgHelper.withDrawMsg(address, validatorAddress)),
                             chain_id: persistence.chainId,
-                            fee: aminoMsgHelper.fee(5000, 250000),
+                            fee: aminoMsgHelper.fee(localStorage.getItem('fee'), 250000),
                             memo: memoContent,
                             account_number: String(accountNumber),
                             sequence: String(sequence)
                         });
-                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
+                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv, "block");
                         persistence.broadcast(signedTx).then(response => {
                             setResponse(response);
                             setLoader(false);
@@ -377,7 +377,7 @@ const ModalWithdraw = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <p className="fee"> Default fee of 0.005xprt will be cut from the wallet.</p>
+                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee'))/1000000}xprt will be cut from the wallet.</p>
                                 <button className="button button-primary">Claim Rewards</button>
                             </div>
                         </Form>
@@ -432,7 +432,7 @@ const ModalWithdraw = (props) => {
                                     </>
                                     :
                                     <>
-                                        <p>{response.raw_log}</p>
+                                        <p>{response.raw_log === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : response.raw_log}</p>
                                         <a
                                             href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
                                             target="_blank" className="tx-hash">Tx

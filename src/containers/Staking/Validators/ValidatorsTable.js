@@ -53,14 +53,7 @@ const ValidatorsTable = (props) => {
                     identity={validator.description.identity}/>
                 {validator.description.moniker}
             </div>,
-            <div>
-                {parseFloat((validator.tokens * Math.pow(10, -6)).toFixed(2)).toLocaleString()}
-                {
-                    helper.isActive(validator)
-                        ? `(${parseFloat((validator.tokens * 100 / props.activeValidatorsTokens)).toFixed(2).toLocaleString()}%)`
-                        : `(${parseFloat((validator.tokens * 100 / props.inActiveValidatorsTokens)).toFixed(2).toLocaleString()}%)`
-                }
-            </div>
+                parseFloat((validator.tokens * Math.pow(10, -6)).toFixed(2)).toLocaleString()
             ,
             <span>{`${parseFloat((validator.commission.commission_rates.rate * 100).toFixed(2)).toLocaleString()}%`}</span>,
             <div className="">

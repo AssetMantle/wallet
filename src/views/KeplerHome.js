@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from "react";
 import "../utils/kepler";
 import KeplerWallet from "../utils/kepler";
-import {useHistory , NavLink} from "react-router-dom";
+import {useHistory, NavLink} from "react-router-dom";
 import {Nav, Navbar} from "react-bootstrap";
 import logo from "../assets/images/logo_lite.svg";
 import ModalFaq from "../containers/Faq";
+import MakePersistence from "../utils/cosmosjsWrapper";
+import config from "../utils/config";
 
 const KeplerHome = (props) => {
     const history = useHistory();
@@ -32,9 +34,25 @@ const KeplerHome = (props) => {
     };
 
     const handleRoute = () => {
-        localStorage.setItem('loginMode', 'kepler');
-        localStorage.setItem('loginToken', 'loggedIn');
-        history.push('/dashboard/wallet');
+        const persistence = MakePersistence(0, 0);
+        const address = localStorage.getItem("address");
+        persistence.getAccounts(address).then(data => {
+            if (data.code === undefined) {
+                if (data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
+                    setErrorMessage("PeriodicVestingAccount is currently not supported with kepler, you can use " +
+                        "browser extension to send tokens.")
+                } else {
+                    localStorage.setItem('loginMode', 'kepler');
+                    localStorage.setItem('loginToken', 'loggedIn');
+                    history.push('/dashboard/wallet');
+                }
+            } else {
+                localStorage.setItem('loginMode', 'kepler');
+                localStorage.setItem('loginToken', 'loggedIn');
+                history.push('/dashboard/wallet');
+            }
+        });
+
     };
 
     const handleHelp = () => {
@@ -54,7 +72,7 @@ const KeplerHome = (props) => {
                             <a className="nav-link" href="https://persistence.one/" target="_blank"
                                rel="noopener noreferrer">Learn More</a>
                             <p className="nav-link" onClick={handleHelp} target="_blank"
-                                     rel="noopener noreferrer">Help</p>
+                               rel="noopener noreferrer">Help</p>
                         </Nav>
                     </Navbar.Collapse>
                 </div>
@@ -79,7 +97,7 @@ const KeplerHome = (props) => {
                             <p>Below account we've received from the Keplr browser extension.</p>
                             <div className="buttons-list">
                                 <p>{address}</p>
-                                {props.location.state !== undefined ? props.location.state.currentPath !== "importWallet"  ?
+                                {props.location.state !== undefined ? props.location.state.currentPath !== "importWallet" ?
                                     <button className="button button-primary" onClick={() => handleRoute()}>Use
                                     </button>
                                     : null

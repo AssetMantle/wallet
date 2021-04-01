@@ -32,7 +32,7 @@ const SignIn = (props) => {
                         <h3 className="heading"> SignIn</h3>
                     </Modal.Header>
                     <Modal.Body className="create-wallet-body create-wallet-form-body sign-in-buttons">
-                        <div className="buttons hidden">
+                        <div className="buttons">
                             <button className="button button-primary" onClick={() => handleKepler("kepler")}>Use Kepler
                             </button>
                         </div>
