@@ -1,17 +1,14 @@
 import {Accordion, AccordionContext, Card, Form, Modal, useAccordionToggle} from 'react-bootstrap';
 import React, {useContext, useEffect, useState} from 'react';
 import success from "../../../assets/images/success.svg";
-import icon from "../../../assets/images/icon.svg";
 import {getValidatorUrl} from "../../../constants/url";
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
 import axios from "axios";
 import Icon from "../../../components/Icon";
 import Actions from "../../../utils/actions";
 import {connect} from "react-redux";
 import helper from "../../../utils/helper";
 import Loader from "../../../components/Loader";
-import {WithdrawMsg} from "../../../utils/protoMsgHelper";
+import {SetWithDrawAddressMsg} from "../../../utils/protoMsgHelper";
 import aminoMsgHelper from "../../../utils/aminoMsgHelper";
 import transactions from "../../../utils/transactions";
 import MakePersistence from "../../../utils/cosmosjsWrapper";
@@ -100,10 +97,11 @@ const ModalSetWithdrawAddress = (props) => {
     }
 
     const handleSubmitKepler = async event => {
+
         setLoader(true);
         event.preventDefault();
         setInitialModal(false);
-        const response = transactions.TransactionWithKeplr([WithdrawMsg(loginAddress, validatorAddress)], aminoMsgHelper.fee(5000, 250000));
+        const response = transactions.TransactionWithKeplr([SetWithDrawAddressMsg(loginAddress, validatorAddress)], aminoMsgHelper.fee(5000, 250000));
         response.then(result => {
             setResponse(result);
             setLoader(false)
