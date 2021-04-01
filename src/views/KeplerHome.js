@@ -53,7 +53,9 @@ const KeplerHome = (props) => {
                 localStorage.setItem('loginToken', 'loggedIn');
                 history.push('/dashboard/wallet');
             }
-        });
+        }).catch(err => {
+            setErrorMessage(err.message);
+        })
 
     };
 

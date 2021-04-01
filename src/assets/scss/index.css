@@ -1035,6 +1035,8 @@ html, body {
 .wallet-main-section .send-container {
   border: 1px solid #E3E5F4;
   padding: 50px 100px; }
+  .wallet-main-section .send-container .form-error {
+    text-align: left; }
   .wallet-main-section .send-container .form-section .form-field {
     display: flex;
     align-items: center;
