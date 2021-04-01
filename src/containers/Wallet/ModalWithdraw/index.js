@@ -154,7 +154,7 @@ const ModalWithdraw = (props) => {
                         let stdSignMsg = persistence.newStdMsg({
                             msgs: aminoMsgHelper.msgs(aminoMsgHelper.withDrawMsg(address, validatorAddress)),
                             chain_id: persistence.chainId,
-                            fee: aminoMsgHelper.fee(5000, 250000),
+                            fee: aminoMsgHelper.fee(0, 250000),
                             memo: memoContent,
                             account_number: String(accountNumber),
                             sequence: String(sequence)
