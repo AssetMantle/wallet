@@ -162,7 +162,7 @@ const ModalReDelegate = (props) => {
                             let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
                             let stdSignMsg = persistence.newStdMsg({
                                 msgs: aminoMsgHelper.msgs(aminoMsgHelper.reDelegateMsg((amount * 1000000), address, props.validatorAddress, toValidatorAddress)),
-                                fee: aminoMsgHelper.fee(5000, 250000),
+                                fee: aminoMsgHelper.fee(0, 250000),
                                 chain_id: persistence.chainId,
                                 memo: memoContent,
                                 account_number: String(accountNumber),
