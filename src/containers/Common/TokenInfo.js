@@ -7,9 +7,10 @@ import {fetchBalance} from "../../actions/balance";
 import {fetchRewards} from "../../actions/rewards";
 import {fetchUnbondDelegations} from "../../actions/unbond";
 import {fetchTokenPrice} from "../../actions/tokenPrice";
-
+import ModalSetWithdrawAddress from "../Wallet/ModalSetWithdrawAddress";
 const TokenInfo = (props) => {
     const [rewards, setRewards] = useState(false);
+    const [withdraw, setWithDraw] = useState(false);
     useEffect(() => {
         let address = localStorage.getItem('address');
         props.fetchDelegationsCount(address);
@@ -20,8 +21,12 @@ const TokenInfo = (props) => {
 
     }, []);
 
-    const handleRewards = () => {
-        setRewards(true);
+    const handleRewards = (key) => {
+        if(key === "rewards") {
+            setRewards(true);
+        } else if(key === "setWithDraw") {
+            setWithDraw(true);
+        }
     };
     return (
         <div className="token-info-section">
@@ -55,11 +60,11 @@ const TokenInfo = (props) => {
                 <div className="inner-box">
                     <div className="line">
                         <p className="key">Rewards</p>
-                       
+                        <p className="value rewards" onClick={()=>handleRewards("rewards")}><span className="claim">Claim</span></p>
                     </div>
                     <div className="line">
                         <p className="value">{props.rewards} XPRT</p>
-                        <p className="value rewards" onClick={handleRewards}><span className="claim">Claim</span></p>
+                        <p className="value rewards" onClick={()=>handleRewards("setWithDraw")} title="Claim your rewards in a separate account."><span className="claim">Set withdraw Address</span></p>
                     </div>
                     <div className="line">
                         <p className="key">Unbonding Token</p>
@@ -69,6 +74,10 @@ const TokenInfo = (props) => {
             </div>
             {rewards ?
                 <ModalWithdraw setRewards={setRewards} totalRewards={props.rewards}/>
+                : null
+            }
+            {withdraw ?
+                <ModalSetWithdrawAddress setWithDraw={setWithDraw} totalRewards={props.rewards}/>
                 : null
             }
 
