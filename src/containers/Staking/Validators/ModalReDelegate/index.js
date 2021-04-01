@@ -151,7 +151,6 @@ const ModalReDelegate = (props) => {
                 addressIndex = event.target.redelegateAccountIndex.value;
                 bip39Passphrase = event.target.redelegatebip39Passphrase.value;
             }
-
             const persistence = MakePersistence(accountNumber, addressIndex);
             const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
             const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
@@ -174,11 +173,9 @@ const ModalReDelegate = (props) => {
                                 setLoader(false);
                                 showSeedModal(false);
                                 setAdvanceMode(false);
-                                console.log(response, "delegate response")
                             }).catch(err => {
                                 setLoader(false);
                                 setErrorMessage(err.message);
-                                console.log(err.message, "delegate error")
                             })
                             showSeedModal(false);
                         } else {
@@ -186,7 +183,11 @@ const ModalReDelegate = (props) => {
                             setAdvanceMode(false);
                             setErrorMessage(data.message);
                         }
-                    });
+                    }).catch(err => {
+                        setLoader(false);
+                        setAdvanceMode(false);
+                        setErrorMessage(err.message);
+                    })
                 } else {
                     setLoader(false);
                     setAdvanceMode(false);

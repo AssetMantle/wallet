@@ -148,7 +148,9 @@
   .send-container {
     border: 1px solid #E3E5F4;
     padding: 50px 100px;
-
+    .form-error{
+      text-align: left;
+    }
     .form-section {
       .form-field {
         display: flex;

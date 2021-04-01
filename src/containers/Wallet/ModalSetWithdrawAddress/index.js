@@ -97,11 +97,10 @@ const ModalSetWithdrawAddress = (props) => {
     }
 
     const handleSubmitKepler = async event => {
-
         setLoader(true);
         event.preventDefault();
         setInitialModal(false);
-        const response = transactions.TransactionWithKeplr([SetWithDrawAddressMsg(loginAddress, validatorAddress)], aminoMsgHelper.fee(5000, 250000));
+        const response = transactions.TransactionWithKeplr([SetWithDrawAddressMsg(loginAddress, event.target.withdrawalAddress.value)], aminoMsgHelper.fee(5000, 250000));
         response.then(result => {
             setResponse(result);
             setLoader(false)
@@ -245,7 +244,7 @@ const ModalSetWithdrawAddress = (props) => {
             {seedModal ?
                 <>
                     <Modal.Header>
-                        Claim Staking Rewards
+                        Set Rewards Withdraw Address
                     </Modal.Header>
                     <Modal.Body className="rewards-modal-body">
                         <Form onSubmit={handleSubmit}>

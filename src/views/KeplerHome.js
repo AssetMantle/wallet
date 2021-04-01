@@ -38,7 +38,9 @@ const KeplerHome = (props) => {
         const address = localStorage.getItem("address");
         persistence.getAccounts(address).then(data => {
             if (data.code === undefined) {
-                if (data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
+                if (data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount" ||
+                    data.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount" ||
+                    data.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
                     setErrorMessage("PeriodicVestingAccount is currently not supported with kepler, you can use " +
                         "browser extension to send tokens.")
                 } else {
@@ -51,7 +53,9 @@ const KeplerHome = (props) => {
                 localStorage.setItem('loginToken', 'loggedIn');
                 history.push('/dashboard/wallet');
             }
-        });
+        }).catch(err => {
+            setErrorMessage(err.message);
+        })
 
     };
 

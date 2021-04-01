@@ -7,6 +7,7 @@ import {
     UNBOND_DELEGATIONS_FETCH_SUCCESS
 } from "../constants/unbond"
 import Lodash from "lodash";
+import balance from "../reducers/balance";
 
 export const fetchUnbondDelegationsProgress = () => {
     return {
@@ -34,8 +35,11 @@ export const fetchUnbondDelegations = (address) => {
             .then((res) => {
                 if (res.data.unbonding_responses.length) {
                     const totalUnbond = Lodash.sumBy(res.data.unbonding_responses, (item) => {
-                        if (res.data.unbonding_responses[0].entries.length) {
-                            return parseInt(res.data.unbonding_responses[0].entries[0].balance);
+                        if (item.entries.length) {
+                          const entriesSum = Lodash.sumBy(item.entries, (entry) => {
+                                return parseInt(entry["balance"])
+                            });
+                            return entriesSum;
                         }
                     });
                     dispatch(fetchUnbondDelegationsSuccess(totalUnbond / 1000000));

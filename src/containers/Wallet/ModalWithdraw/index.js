@@ -165,11 +165,9 @@ const ModalWithdraw = (props) => {
                             setLoader(false);
                             showSeedModal(false);
                             setAdvanceMode(false);
-                            console.log(response, "delegate response")
                         }).catch(err => {
                             setLoader(false);
                             setErrorMessage(err.message);
-                            console.log(err.message, "delegate error")
                         });
                         showSeedModal(false);
                     } else {
@@ -177,7 +175,11 @@ const ModalWithdraw = (props) => {
                         setAdvanceMode(false);
                         setErrorMessage(data.message);
                     }
-                });
+                }).catch(err => {
+                    setLoader(false);
+                    setAdvanceMode(false);
+                    setErrorMessage(err.message);
+                })
             } else {
                 setLoader(false);
                 setAdvanceMode(false);
@@ -377,7 +379,8 @@ const ModalWithdraw = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee'))/1000000}xprt will be cut from the wallet.</p>
+                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee')) / 1000000}xprt
+                                    will be cut from the wallet.</p>
                                 <button className="button button-primary">Claim Rewards</button>
                             </div>
                         </Form>
