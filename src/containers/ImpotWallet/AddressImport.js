@@ -4,6 +4,8 @@ import {
 } from "react-bootstrap";
 import Icon from "../../components/Icon";
 import {useHistory} from "react-router-dom";
+import config from "../../utils/config";
+import MakePersistence from "../../utils/cosmosjsWrapper";
 
 const AddressImport = (props) => {
     const history = useHistory();
@@ -12,7 +14,21 @@ const AddressImport = (props) => {
     const handleSubmit = async event => {
         event.preventDefault();
         setErrorMessage("");
+        //TODO FIND THE BETTER WAY TO IMPLEMENT
+        const persistence = MakePersistence(0, 0);
         const address = event.target.address.value;
+        persistence.getAccounts(address).then(data => {
+            if (data.code === undefined) {
+                if (data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
+                    localStorage.setItem('fee', config.vestingAccountFee);
+                } else {
+                    localStorage.setItem('fee', config.defaultFee);
+                }
+            }else{
+                localStorage.setItem('fee', config.defaultFee);
+            }
+        });
+
         if (address.startsWith("persistence1") && address.length === 50) {
             localStorage.setItem('loginToken', 'loggedIn');
             localStorage.setItem('address', address);

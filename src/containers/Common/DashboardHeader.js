@@ -21,6 +21,7 @@ const DashboardHeader = (props) => {
         localStorage.setItem('loginToken', '');
         localStorage.setItem('address', '');
         localStorage.setItem('loginMode', '');
+        localStorage.setItem('fee','');
         history.push('/');
         window.location.reload();
     };
