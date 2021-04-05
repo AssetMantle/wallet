@@ -84,19 +84,16 @@ function ValidateFrom(value) {
 }
 
 function CheckLastPage(pageNumber, limit , totalTransactions) {
-    if(totalTransactions/limit <= pageNumber){
-        return true;
-    }else {
-        return false;
-    }
+    return totalTransactions / limit <= pageNumber;
 }
 function ValidatePassphrase(value) {
-    if (value.length === 50) {
-        return true;
-    }
-    return false;
-}
+    return value.length === 50;
 
+}
+function ValidateAddress(address) {
+    return address.startsWith("persistence1") && address === 50;
+
+}
 module.exports = {
     randomNum,
     stringTruncate,
@@ -106,4 +103,5 @@ module.exports = {
     ValidateFrom,
     ValidatePassphrase,
     CheckLastPage,
+    ValidateAddress
 };

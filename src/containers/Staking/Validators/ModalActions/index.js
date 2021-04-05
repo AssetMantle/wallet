@@ -22,6 +22,7 @@ const ModalActions = (props) => {
     const [rewards, setRewards] = useState('');
     const [delegateStatus, setDelegateStatus] = useState(false);
     useEffect(() => {
+        console.log(props.validator.operator_address)
         let address = localStorage.getItem('address');
         const fetchValidatorRewards = async () => {
             const url = getValidatorRewardsUrl(address, props.validator.operator_address);

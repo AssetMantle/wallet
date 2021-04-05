@@ -18,6 +18,7 @@ import helper from "../../../../utils/helper";
 import Loader from "../../../../components/Loader";
 import {connect} from "react-redux";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
+import config from "../../../../config";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalDelegate = (props) => {
     const [amount, setAmount] = useState(0);
@@ -106,9 +107,16 @@ const ModalDelegate = (props) => {
     const handleSubmitInitialData = async event => {
         event.preventDefault();
         const memo = event.target.memo.value;
-        setMemoContent(memo);
-        setInitialModal(false);
-        showSeedModal(true);
+        let memoCheck = transactions.mnemonicValidation(memo, loginAddress)
+        if(memoCheck){
+            setErrorMessage("you entered your mnemonic as memo")
+        }
+        else {
+            setErrorMessage("");
+            setMemoContent(memo);
+            setInitialModal(false);
+            showSeedModal(true);
+        }
     };
 
     function PrivateKeyReader(file, password) {
@@ -168,7 +176,7 @@ const ModalDelegate = (props) => {
                             account_number: String(accountNumber),
                             sequence: String(sequence)
                         });
-                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv, "block");
+                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv, config.modeType);
                         persistence.broadcast(signedTx).then(response => {
                             setResponse(response);
                             setLoader(false);
@@ -267,6 +275,11 @@ const ModalDelegate = (props) => {
                                                   placeholder="Enter Memo"
                                                   required={false}/>
                                 </div> : null
+                            }
+                            {
+                                errorMessage !== "" ?
+                                    <p className="form-error">{errorMessage}</p>
+                                    : null
                             }
                             <div className="buttons navigate-buttons">
                                 <button className="button button-secondary" onClick={() => handlePrevious()}>

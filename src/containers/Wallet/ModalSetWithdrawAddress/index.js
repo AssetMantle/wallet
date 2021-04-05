@@ -12,7 +12,7 @@ import {SetWithDrawAddressMsg} from "../../../utils/protoMsgHelper";
 import aminoMsgHelper from "../../../utils/aminoMsgHelper";
 import transactions from "../../../utils/transactions";
 import MakePersistence from "../../../utils/cosmosjsWrapper";
-
+import config from "../../../config";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const ModalSetWithdrawAddress = (props) => {
@@ -113,10 +113,17 @@ const ModalSetWithdrawAddress = (props) => {
     const handleSubmitInitialData = async event => {
         event.preventDefault();
         const memo = event.target.memo.value;
-        setValidatorAddress(event.target.withdrawalAddress.value);
-        setMemoContent(memo);
-        setInitialModal(false);
-        showSeedModal(true);
+        let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
+        if (memoCheck) {
+            setErrorMessage("you entered your mnemonic as memo")
+        } else {
+            setValidatorAddress(event.target.withdrawalAddress.value);
+            setMemoContent(memo);
+            setInitialModal(false);
+            showSeedModal(true);
+            setErrorMessage("")
+        }
+
     };
     const handleSubmit = async event => {
         setLoader(true);
@@ -155,7 +162,7 @@ const ModalSetWithdrawAddress = (props) => {
                             account_number: String(accountNumber),
                             sequence: String(sequence)
                         });
-                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv, "block");
+                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv, config.modeType);
                         persistence.broadcast(signedTx).then(response => {
                             setResponse(response);
                             setLoader(false);
@@ -232,9 +239,14 @@ const ModalSetWithdrawAddress = (props) => {
                                                   required={false}/>
                                 </div> : null
                             }
+                            {
+                                errorMessage !== "" ?
+                                    <p className="form-error">{errorMessage}</p>
+                                    : null
+                            }
                             <div className="buttons">
                                 <button className="button button-primary" disabled={!props.status}
-                                       >{mode === "normal" ? "Next" : "Submit"}</button>
+                                >{mode === "normal" ? "Next" : "Submit"}</button>
                             </div>
                         </Form>
                     </Modal.Body>
@@ -336,7 +348,8 @@ const ModalSetWithdrawAddress = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee'))/1000000}xprt will be cut from the wallet.</p>
+                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee')) / 1000000}xprt
+                                    will be cut from the wallet.</p>
                                 <button className="button button-primary">Claim Rewards</button>
                             </div>
                         </Form>

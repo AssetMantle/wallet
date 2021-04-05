@@ -37,10 +37,10 @@ const TokenInfo = (props) => {
                         <p className="value">
                             {props.balance} XPRT</p>
                     </div>
-                    {/*<div className="line">*/}
-                    {/*    <p className="key">Total Balance</p>*/}
-                    {/*    <p className="value">{props.delegations + props.balance +props.unbond} XPRT</p>*/}
-                    {/*</div>*/}
+                    <div className="line">
+                        <p className="key">Total Balance</p>
+                        <p className="value">{props.delegations + props.balance +props.unbond} XPRT</p>
+                    </div>
                     <div className="line">
                     <p className="key">Delegated</p>
                         <p className="value">{props.delegations} XPRT</p>

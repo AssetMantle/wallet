@@ -17,6 +17,7 @@ import aminoMsgHelper from "../../utils/aminoMsgHelper";
 import Loader from "../../components/Loader";
 import {SendMsg} from "../../utils/protoMsgHelper";
 import {connect} from "react-redux";
+import config from "../../config";
 import MakePersistence from "../../utils/cosmosjsWrapper";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -174,7 +175,7 @@ const Send = (props) => {
                             sequence: String(sequence)
                         });
 
-                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv, "block");
+                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv, config.modeType);
                         persistence.broadcast(signedTx).then(response => {
                             setTxResponse(response);
                             console.log(response);

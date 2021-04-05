@@ -7,5 +7,6 @@
   "coinName": "XPRT",
   "uxprtValue": 1000000,
   "defaultFee": "5000",
-  "vestingAccountFee": "0"
+  "vestingAccountFee": "0",
+  "modeType": "block"
 }

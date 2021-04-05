@@ -15,7 +15,7 @@ const Wallet = () => {
                     <Tab eventKey="Send" title="Send">
                        <Send/>
                     </Tab>
-                    <Tab eventKey="Recieve" title="Recieve">
+                    <Tab eventKey="Receive" title="Receive">
                         <Receive/>
                     </Tab>
                     <Tab eventKey="Transactions" title="Transactions">

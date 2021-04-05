@@ -1,15 +1,12 @@
-import React, {useRef, useState} from "react";
+import React, { useState} from "react";
 import {
     Form, Modal,
 } from "react-bootstrap";
 import Icon from "../../components/Icon";
-import DownloadLink from "react-download-link";
 import helper from "../../utils/helper";
 
 
 const GeneratePrivateKey = (props) => {
-    const downloadLink = useRef();
-    const [jsonName, setJsonName] = useState({});
     const [keyFile, setKeyFile] = useState(false);
     const [show, setShow] = useState(true);
     const handleSubmit = async event => {
@@ -18,7 +15,6 @@ const GeneratePrivateKey = (props) => {
         const mnemonic = props.mnemonic;
         let encryptedData = helper.createStore(mnemonic, password);
         let jsonContent = JSON.stringify(encryptedData.Response);
-        setJsonName(jsonContent);
         setKeyFile(true)
         downloadFile(jsonContent)
     };

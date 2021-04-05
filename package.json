@@ -1,6 +1,6 @@
 {
   "name": "pwallet",
-  "version": "0.1.0",
+  "version": "0.1.6",
   "private": true,
   "dependencies": {
     "@cosmjs/stargate": "^0.24.1",
