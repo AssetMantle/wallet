@@ -9,7 +9,6 @@ import KeplerHome from "./views/KeplerHome";
 import RouteNotFound from "./components/RouteNotFound";
 import config from "./config"
 
-const version = require('../package.json');
 const App = () => {
     const history = useHistory();
     const routes = [{
@@ -30,7 +29,6 @@ const App = () => {
         private: false,
     }];
     let address = '';
-    console.log(version.version);
     useEffect(() => {
         if (config.version !== "0.1.4") {
             localStorage.clear();
