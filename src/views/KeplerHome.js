@@ -6,6 +6,7 @@ import {Nav, Navbar} from "react-bootstrap";
 import logo from "../assets/images/logo_lite.svg";
 import ModalFaq from "../containers/Faq";
 import MakePersistence from "../utils/cosmosjsWrapper";
+import config from "../config";
 
 const KeplerHome = () => {
     const history = useHistory();
@@ -43,13 +44,15 @@ const KeplerHome = () => {
                     setErrorMessage("PeriodicVestingAccount is currently not supported with kepler, you can use " +
                         "browser extension to send tokens.")
                 } else {
-                    localStorage.setItem('loginMode', 'kepler');
                     localStorage.setItem('loginToken', 'loggedIn');
+                    localStorage.setItem('version', config.version);
+                    localStorage.setItem('loginMode', 'kepler');
                     history.push('/dashboard/wallet');
                 }
             } else {
-                localStorage.setItem('loginMode', 'kepler');
                 localStorage.setItem('loginToken', 'loggedIn');
+                localStorage.setItem('version', config.version);
+                localStorage.setItem('loginMode', 'kepler');
                 history.push('/dashboard/wallet');
             }
         }).catch(err => {

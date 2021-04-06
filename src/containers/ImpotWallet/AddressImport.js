@@ -35,6 +35,7 @@ const AddressImport = (props) => {
             localStorage.setItem('loginToken', 'loggedIn');
             localStorage.setItem('address', address);
             localStorage.setItem('loginMode', 'normal');
+            localStorage.setItem('version', config.version);
             history.push('/dashboard/wallet');
             setShow(false);
         } else {
