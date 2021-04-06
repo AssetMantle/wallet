@@ -33,12 +33,12 @@ const ModalFaq = (props) => {
                                         <p>Wallet</p>
                                     </Nav.Link>
                                 </div>
-                                {/*<div className="box">*/}
-                                {/*    <Nav.Link eventKey="second"><Icon*/}
-                                {/*        viewClass="arrow-right"*/}
-                                {/*        icon="staking"/>*/}
-                                {/*    <p>Staking</p></Nav.Link>*/}
-                                {/*</div>*/}
+                                <div className="box">
+                                    <Nav.Link eventKey="second"><Icon
+                                        viewClass="arrow-right"
+                                        icon="staking"/>
+                                    <p>Staking</p></Nav.Link>
+                                </div>
                             </Nav>
                             <Tab.Content>
                                 <Tab.Pane eventKey="first">
