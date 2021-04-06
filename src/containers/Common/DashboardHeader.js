@@ -13,7 +13,10 @@ const DashboardHeader = (props) => {
     const history = useHistory();
     const [showFaq, setShowFaq] = useState(false);
     const address = localStorage.getItem('address');
-    let addressTruncate = helper.stringTruncate(address);
+    let addressTruncate
+    if(address !== null) {
+        addressTruncate = helper.stringTruncate(address);
+    }
     const handleHelp = () => {
         setShowFaq(true)
     };
@@ -21,6 +24,7 @@ const DashboardHeader = (props) => {
         localStorage.setItem('loginToken', '');
         localStorage.setItem('address', '');
         localStorage.setItem('loginMode', '');
+        localStorage.setItem('fee','');
         history.push('/');
         window.location.reload();
     };

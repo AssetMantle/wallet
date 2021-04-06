@@ -1,10 +1,11 @@
 import {DirectSecp256k1HdWallet, DirectSecp256k1Wallet} from "@cosmjs/proto-signing";
-import config from "./config.json";
+import config from "../config.json";
 import {Bip39, EnglishMnemonic, Slip10, Slip10Curve, stringToPath} from "@cosmjs/crypto";
+import MakePersistence from "./cosmosjsWrapper";
 
 const {SigningStargateClient} = require("@cosmjs/stargate");
 const addressPrefix = config.addressPrefix;
-const configChainID = config.chainID;
+const configChainID = process.env.REACT_APP_CHAIN_ID;
 const configCoinType = config.coinType;
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
@@ -64,6 +65,10 @@ function makeHdPath(accountNumber = "0", addressIndex = "0", coinType = configCo
 function getAccountNumberAndSequence(authResponse) {
     if (authResponse.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
         return [authResponse.account.base_vesting_account.base_account.account_number, authResponse.account.base_vesting_account.base_account.sequence]
+    } else if (authResponse.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount") {
+        return [authResponse.account.base_vesting_account.base_account.account_number, authResponse.account.base_vesting_account.base_account.sequence]
+    } else if (authResponse.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
+        return [authResponse.account.base_vesting_account.base_account.account_number, authResponse.account.base_vesting_account.base_account.sequence]
     } else if (authResponse.account["@type"] === "/cosmos.auth.v1beta1.BaseAccount") {
         return [authResponse.account.account_number, authResponse.account.sequence]
     } else {
@@ -71,4 +76,9 @@ function getAccountNumberAndSequence(authResponse) {
     }
 }
 
-export default {TransactionWithKeplr, TransactionWithMnemonic, makeHdPath, CheckAddressMisMatch, getAccountNumberAndSequence};
+function mnemonicValidation(memo, loginAddress) {
+    const persistence = MakePersistence(0, 0);
+    const address = persistence.getAddress(memo, "", true);
+    return address === loginAddress;
+}
+export default {TransactionWithKeplr, TransactionWithMnemonic, makeHdPath, CheckAddressMisMatch, getAccountNumberAndSequence, mnemonicValidation};

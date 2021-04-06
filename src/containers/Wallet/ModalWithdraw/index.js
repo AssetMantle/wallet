@@ -15,7 +15,7 @@ import {WithdrawMsg} from "../../../utils/protoMsgHelper";
 import aminoMsgHelper from "../../../utils/aminoMsgHelper";
 import transactions from "../../../utils/transactions";
 import MakePersistence from "../../../utils/cosmosjsWrapper";
-
+import config from "../../../config";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const ModalWithdraw = (props) => {
@@ -116,9 +116,16 @@ const ModalWithdraw = (props) => {
     const handleSubmitInitialData = async event => {
         event.preventDefault();
         const memo = event.target.memo.value;
-        setMemoContent(memo);
-        setInitialModal(false);
-        showSeedModal(true);
+        let memoCheck = transactions.mnemonicValidation(memo, loginAddress)
+        if(memoCheck){
+            setErrorMessage("you entered your mnemonic as memo")
+        }
+       else {
+            setErrorMessage("")
+            setMemoContent(memo);
+            setInitialModal(false);
+            showSeedModal(true);
+        }
     };
     const handleSubmit = async event => {
 
@@ -154,22 +161,20 @@ const ModalWithdraw = (props) => {
                         let stdSignMsg = persistence.newStdMsg({
                             msgs: aminoMsgHelper.msgs(aminoMsgHelper.withDrawMsg(address, validatorAddress)),
                             chain_id: persistence.chainId,
-                            fee: aminoMsgHelper.fee(0, 250000),
+                            fee: aminoMsgHelper.fee(localStorage.getItem('fee'), 250000),
                             memo: memoContent,
                             account_number: String(accountNumber),
                             sequence: String(sequence)
                         });
-                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv);
+                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv, config.modeType);
                         persistence.broadcast(signedTx).then(response => {
                             setResponse(response);
                             setLoader(false);
                             showSeedModal(false);
                             setAdvanceMode(false);
-                            console.log(response, "delegate response")
                         }).catch(err => {
                             setLoader(false);
                             setErrorMessage(err.message);
-                            console.log(err.message, "delegate error")
                         });
                         showSeedModal(false);
                     } else {
@@ -177,7 +182,11 @@ const ModalWithdraw = (props) => {
                         setAdvanceMode(false);
                         setErrorMessage(data.message);
                     }
-                });
+                }).catch(err => {
+                    setLoader(false);
+                    setAdvanceMode(false);
+                    setErrorMessage(err.message);
+                })
             } else {
                 setLoader(false);
                 setAdvanceMode(false);
@@ -272,6 +281,11 @@ const ModalWithdraw = (props) => {
                                                   placeholder="Enter Memo"
                                                   required={false}/>
                                 </div> : null
+                            }
+                            {
+                                errorMessage !== "" ?
+                                    <p className="form-error">{errorMessage}</p>
+                                    : null
                             }
                             <div className="buttons">
                                 <button className="button button-primary"
@@ -377,7 +391,8 @@ const ModalWithdraw = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <p className="fee"> Default fee of 0.005xprt will be cut from the wallet.</p>
+                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee')) / 1000000}xprt
+                                    will be cut from the wallet.</p>
                                 <button className="button button-primary">Claim Rewards</button>
                             </div>
                         </Form>
@@ -432,7 +447,7 @@ const ModalWithdraw = (props) => {
                                     </>
                                     :
                                     <>
-                                        <p>{response.raw_log}</p>
+                                        <p>{response.raw_log === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : response.raw_log}</p>
                                         <a
                                             href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
                                             target="_blank" className="tx-hash">Tx

@@ -1,14 +1,12 @@
-import config from "./config.json";
-
+import config from "../config.json";
 const {SigningStargateClient} = require("@cosmjs/stargate");
 const restAPI = process.env.REACT_APP_API_KEY;
 const tendermintRPC = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
-const chainID = config.chainID
-const coinType = config.coinType
-const chainName = config.chainName
-const coinName = config.coinName
-const coinDenom = config.coinDenom
-const prefix = config.addressPrefix
+const chainID = process.env.REACT_APP_CHAIN_ID;
+const chainName = process.env.REACT_APP_CHAIN_NAME;
+const coinName = config.coinName;
+const coinDenom = config.coinDenom;
+const prefix = config.addressPrefix;
 
 async function KeplerWallet() {
     // Keplr extension injects the offline signer that is compatible with cosmJS.

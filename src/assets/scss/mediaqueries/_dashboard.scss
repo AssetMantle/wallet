@@ -82,6 +82,10 @@
     font-size: 6px;
     bottom: -2px;
   }
+  .header .profile-section .profile-dropdown .dropdown-menu{
+    top:100% !important;
+    transform: initial !important;
+  }
 }
 @media (min-width: 992px) {
   .small-screen-logo {

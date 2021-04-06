@@ -19,26 +19,33 @@ const SendTransactions = (props) => {
     const columns = [{
         name: 'txHash',
         label: 'Tx Hash',
+        options: {sort: false}
     }, {
         name: 'type',
         label: 'Type',
+        options: {sort: false}
     }, {
         name: 'result',
         label: 'Result',
+        options: {sort: false}
     }, {
         name: 'amount',
         label: 'Amount',
+        options: {sort: false}
 
     }, {
         name: 'fee',
         label: 'Fee',
+        options: {sort: false}
     }, {
         name: 'height',
         label: 'Height',
+        options: {sort: false}
 
     }, {
         name: 'time',
         label: 'Time (UTC)',
+        options: {sort: false}
     }];
     const options = {
         responsive: "standard",

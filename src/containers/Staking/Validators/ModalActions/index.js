@@ -1,16 +1,8 @@
 import {
-    Accordion,
-    AccordionContext,
-    Card, Dropdown,
-    Form,
-    Button,
     Modal,
-    ButtonGroup,
-    useAccordionToggle
 } from 'react-bootstrap';
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect} from 'react';
 import Avatar from "../Avatar";
-import Icon from "../../../../components/Icon";
 import helper from "../../../../utils/helper";
 import ModalReDelegate from "../ModalReDelegate";
 import ModalUnbond from "../ModalUnbond";
@@ -22,7 +14,6 @@ import axios from "axios";
 const ModalActions = (props) => {
     const [show, setShow] = useState(true);
     const [txModalShow, setTxModalShow] = useState(false);
-    const [response, setResponse] = useState('');
     const [initialModal, setInitialModal] = useState(true);
     const [address, setAddress] = useState('');
     const [delegationAmount, setDelegationAmount] = useState('');
@@ -39,7 +30,9 @@ const ModalActions = (props) => {
                     setRewards((response.data.rewards[0].amount / 1000000).toFixed(6))
                 }
             }).catch(error => {
-                console.log(error.response, "fetchValidatorRewards")
+                console.log(error.response
+                    ? error.response.data.message
+                    : error.message)
             });
             const delegationsUrl = getDelegationsUrl(address);
             axios.get(delegationsUrl).then(response => {
@@ -50,9 +43,10 @@ const ModalActions = (props) => {
                         setDelegateStatus(true);
                     }
                 }
-
             }).catch(error => {
-                console.log(error.response, "error delegationsUrl")
+                console.log(error.response
+                    ? error.response.data.message
+                    : error.message)
             });
         };
         fetchValidatorRewards();
@@ -60,9 +54,7 @@ const ModalActions = (props) => {
 
     const handleClose = () => {
         setShow(false);
-
         props.setModalOpen('');
-        setResponse('');
     };
     const handleModal = (name, address, validatorMoniker) => {
         setShow(false);

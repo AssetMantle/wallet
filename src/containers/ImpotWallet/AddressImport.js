@@ -4,7 +4,9 @@ import {
 } from "react-bootstrap";
 import Icon from "../../components/Icon";
 import {useHistory} from "react-router-dom";
-
+import config from "../../config";
+import MakePersistence from "../../utils/cosmosjsWrapper";
+import helper from "../../utils/helper"
 const AddressImport = (props) => {
     const history = useHistory();
     const [errorMessage, setErrorMessage] = useState("");
@@ -12,8 +14,24 @@ const AddressImport = (props) => {
     const handleSubmit = async event => {
         event.preventDefault();
         setErrorMessage("");
+        //TODO FIND THE BETTER WAY TO IMPLEMENT
+        const persistence = MakePersistence(0, 0);
         const address = event.target.address.value;
-        if (address.startsWith("persistence1") && address.length === 50) {
+        persistence.getAccounts(address).then(data => {
+            if (data.code === undefined) {
+                if (data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount" ||
+                    data.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount" ||
+                    data.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
+                    localStorage.setItem('fee', config.vestingAccountFee);
+                } else {
+                    localStorage.setItem('fee', config.defaultFee);
+                }
+            } else {
+                localStorage.setItem('fee', config.defaultFee);
+            }
+        });
+
+        if (helper.ValidateAddress(address)) {
             localStorage.setItem('loginToken', 'loggedIn');
             localStorage.setItem('address', address);
             localStorage.setItem('loginMode', 'normal');

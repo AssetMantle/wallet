@@ -24,10 +24,11 @@ const ValidatorsTable = (props) => {
     }, {
         name: 'votingPower',
         label: 'Voting Power',
+        options: {sort: false}
     }, {
         name: 'commission',
         label: 'Commission',
-
+        options: {sort: false}
     }, {
         name: 'status',
         label: 'Status',
