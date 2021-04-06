@@ -13,6 +13,7 @@ import {useHistory} from "react-router-dom";
 import ModalFaq from "../Faq";
 import GeneratePrivateKey from "../Common/GeneratePrivateKey";
 import config from "../../config"
+import MakePersistence from "../../utils/cosmosjsWrapper";
 
 const ModalImportWallet = (props) => {
     const [show, setShow] = useState(true);
@@ -156,6 +157,20 @@ const ModalImportWallet = (props) => {
         setPassphraseError(result)
     };
     const handleLogin = () => {
+        const persistence = MakePersistence(0, 0);
+        persistence.getAccounts(advancedFormResponseData.address).then(data => {
+            if (data.code === undefined) {
+                if (data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount" ||
+                    data.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount" ||
+                    data.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
+                    localStorage.setItem('fee', config.vestingAccountFee);
+                } else {
+                    localStorage.setItem('fee', config.defaultFee);
+                }
+            } else {
+                localStorage.setItem('fee', config.defaultFee);
+            }
+        });
         localStorage.setItem('loginToken', 'loggedIn');
         localStorage.setItem('address', advancedFormResponseData.address);
         localStorage.setItem('loginMode', 'normal');

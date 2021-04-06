@@ -127,7 +127,7 @@
     }
 
     .tab-content {
-      padding: 30px 0px 0 0px;
+      padding: 25px 0px 0 0px;
       position: relative;
       height: 64vh;
       overflow-y: scroll;
@@ -140,7 +140,7 @@
       &::after {
         content: '';
         display: block;
-        padding-bottom: 30px;
+        padding-bottom: 25px;
       }
     }
   }
