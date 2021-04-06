@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import {combineReducers} from 'redux';
 import {
     REWARDS_FETCH_ERROR,
     REWARDS_FETCH_IN_PROGRESS,

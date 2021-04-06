@@ -13,7 +13,7 @@ const Copy = (props) => {
     return (
         <div className="copy-section">
             <CopyToClipboard onCopy={onCopy} text={props.id}>
-               <button className="copy-button"> <Icon
+                <button className="copy-button"><Icon
                     viewClass="copy"
                     icon="copy"/></button>
             </CopyToClipboard>

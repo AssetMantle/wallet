@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from "react";
 import {connect} from 'react-redux';
-import xprt from "../../assets/images/xprt.svg";
 import ModalWithdraw from "../Wallet/ModalWithdraw";
 import {fetchDelegationsCount} from "../../actions/delegations";
 import {fetchBalance} from "../../actions/balance";
@@ -62,11 +61,11 @@ const TokenInfo = (props) => {
                 <div className="inner-box">
                     <div className="line">
                         <p className="key">Amount under vesting</p>
-                        <p className="value"> {vestingAmount}</p>
+                        <p className="value"> {vestingAmount} XPRT</p>
                     </div>
                     <div className="line">
                         <p className="key">Transferable Amount</p>
-                        <p className="value"> {transferableAmount}</p>
+                        <p className="value"> {transferableAmount} XPRT</p>
                     </div>
                     <div className="line">
                         <p className="key">Current Price</p>

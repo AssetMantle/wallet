@@ -3,7 +3,6 @@ import {
     Accordion, AccordionContext, Card,
     Form, Modal, useAccordionToggle,
 } from "react-bootstrap";
-import {useHistory} from "react-router-dom";
 import wallet from "../../../utils/wallet";
 import Icon from "../../../components/Icon";
 import GeneratePrivateKey from "../../Common/GeneratePrivateKey";
@@ -17,7 +16,6 @@ const AdvanceMode = (props) => {
     const [passphraseError, setPassphraseError] = useState(false);
     const [generateKey, setGenerateKey] = useState(false);
     const [advanceMode, setAdvanceMode] = useState(false);
-    const history = useHistory();
 
     const handleSubmit = (event) => {
         event.preventDefault();

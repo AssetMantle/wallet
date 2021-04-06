@@ -1,6 +1,5 @@
 import Axios from 'axios';
 import {getRewardsUrl} from "../constants/url";
-import Async from 'async';
 import {
     REWARDS_FETCH_ERROR,
     REWARDS_FETCH_IN_PROGRESS,
@@ -10,12 +9,12 @@ import {
 
 export const fetchRewardsProgress = () => {
     return {
-        type:  REWARDS_FETCH_IN_PROGRESS,
+        type: REWARDS_FETCH_IN_PROGRESS,
     };
 };
 export const fetchRewardsListProgress = (list) => {
     return {
-        type:  REWARDS_LIST_FETCH_SUCCESS,
+        type: REWARDS_LIST_FETCH_SUCCESS,
         list
     };
 };
@@ -32,7 +31,7 @@ export const fetchRewardsError = (data) => {
     };
 };
 
-export const fetchRewards = (address)  => {
+export const fetchRewards = (address) => {
     return async dispatch => {
         dispatch(fetchRewardsProgress());
         const url = getRewardsUrl(address);

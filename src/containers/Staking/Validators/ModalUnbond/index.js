@@ -10,6 +10,7 @@ import helper from "../../../../utils/helper";
 import Loader from "../../../../components/Loader";
 import config from "../../../../config";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
+
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalUnbond = (props) => {
     const [amount, setAmount] = useState(0);
@@ -26,7 +27,7 @@ const ModalUnbond = (props) => {
 
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
-        if (rex.test(evt.target.value)){
+        if (rex.test(evt.target.value)) {
             setAmount(evt.target.value)
         } else {
             return false
@@ -99,10 +100,9 @@ const ModalUnbond = (props) => {
         event.preventDefault();
         const memo = event.target.memo.value;
         let memoCheck = transactions.mnemonicValidation(memo, loginAddress)
-        if(memoCheck){
+        if (memoCheck) {
             setErrorMessage("you entered your mnemonic as memo")
-        }
-        else {
+        } else {
             setErrorMessage("");
             setMemoContent(memo);
             setInitialModal(false);
@@ -364,7 +364,8 @@ const ModalUnbond = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee'))/1000000}xprt will be cut from the wallet.</p>
+                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee')) / 1000000}xprt
+                                    will be cut from the wallet.</p>
                                 <button className="button button-primary">Unbond</button>
                             </div>
                         </Form>

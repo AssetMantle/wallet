@@ -94,7 +94,7 @@ function getAccountVestingAmount(account, currentEpochTime) {
     return accountVestingAmount;
 }
 
-async function getTransferableVestingAmount(address , balance) {
+async function getTransferableVestingAmount(address, balance) {
     const persistence = MakePersistence(0, 0);
     const vestingAmountData = await persistence.getAccounts(address);
     const currentEpochTime = Math.floor(new Date().getTime() / 1000);
@@ -117,4 +117,4 @@ async function getTransferableVestingAmount(address , balance) {
     return [vestingAmount, transferableAmount]
 }
 
-export default { getTransferableVestingAmount };
+export default {getTransferableVestingAmount};

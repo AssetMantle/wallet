@@ -9,6 +9,7 @@ import helper from "../../../../utils/helper";
 import Loader from "../../../../components/Loader";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import config from "../../../../config";
+
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalWithdraw = (props) => {
     const [response, setResponse] = useState('');
@@ -103,10 +104,9 @@ const ModalWithdraw = (props) => {
         event.preventDefault();
         const memo = event.target.memo.value;
         let memoCheck = transactions.mnemonicValidation(memo, loginAddress)
-        if(memoCheck){
+        if (memoCheck) {
             setErrorMessage("you entered your mnemonic as memo")
-        }
-        else {
+        } else {
             setErrorMessage("");
             setMemoContent(memo);
             setInitialModal(false);
@@ -339,7 +339,8 @@ const ModalWithdraw = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee'))/1000000}xprt will be cut from the wallet.</p>
+                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee')) / 1000000}xprt
+                                    will be cut from the wallet.</p>
                                 <button className="button button-primary">Claim Rewards</button>
                             </div>
                         </Form>

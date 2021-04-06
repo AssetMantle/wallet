@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import moment from 'moment';
 import helper from "../../../utils/helper";
 import Icon from "../../../components/Icon";
@@ -55,6 +55,7 @@ const SendTransactions = (props) => {
         print: false,
         download: false,
         filter: false,
+        search:false
     };
 
     const tableData = props.list && props.list.length > 0

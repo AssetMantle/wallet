@@ -1,6 +1,5 @@
 import Axios from 'axios';
 import {getDelegationsUnbondUrl} from "../constants/url";
-import Async from 'async';
 import {
     UNBOND_DELEGATIONS_FETCH_ERROR,
     UNBOND_DELEGATIONS_FETCH_IN_PROGRESS,
@@ -36,7 +35,7 @@ export const fetchUnbondDelegations = (address) => {
                 if (res.data.unbonding_responses.length) {
                     const totalUnbond = Lodash.sumBy(res.data.unbonding_responses, (item) => {
                         if (item.entries.length) {
-                          const entriesSum = Lodash.sumBy(item.entries, (entry) => {
+                            const entriesSum = Lodash.sumBy(item.entries, (entry) => {
                                 return parseInt(entry["balance"])
                             });
                             return entriesSum;

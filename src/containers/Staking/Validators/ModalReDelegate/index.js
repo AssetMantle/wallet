@@ -12,6 +12,7 @@ import transactions from "../../../../utils/transactions";
 import Loader from "../../../../components/Loader";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import config from "../../../../config";
+
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalReDelegate = (props) => {
     const [amount, setAmount] = useState(0);
@@ -80,29 +81,32 @@ const ModalReDelegate = (props) => {
         props.setInitialModal(true);
         setResponse('');
     };
+
     const handlePrevious = () => {
         props.setShow(true);
         props.setTxModalShow(false);
         props.setInitialModal(true);
     };
+
     const handleSubmitInitialData = async event => {
         event.preventDefault();
         const memo = event.target.memo.value;
         let memoCheck = transactions.mnemonicValidation(memo, loginAddress)
-        if(memoCheck){
+        if (memoCheck) {
             setErrorMessage("you entered your mnemonic as memo")
-        }
-        else {
+        } else {
             setErrorMessage("");
             setMemoContent(memo);
             setInitialModal(false);
             showSeedModal(true);
         }
     };
+
     const handlePrivateKey = (value) => {
         setImportMnemonic(value);
         setErrorMessage("");
     };
+
     const handleSubmitKepler = async event => {
         setLoader(true);
         event.preventDefault();
@@ -403,7 +407,8 @@ const ModalReDelegate = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee'))/1000000}xprt will be cut from the wallet.</p>
+                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee')) / 1000000}xprt
+                                    will be cut from the wallet.</p>
                                 <button className="button button-primary">Redelegate</button>
                             </div>
                         </Form>

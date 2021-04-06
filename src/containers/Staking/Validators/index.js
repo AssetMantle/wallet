@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {Tab, Nav,} from "react-bootstrap";
 import Loader from "../../../components/Loader";
 import ValidatorsTable from "./ValidatorsTable";
