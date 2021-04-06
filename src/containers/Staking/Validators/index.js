@@ -4,6 +4,7 @@ import Loader from "../../../components/Loader";
 import ValidatorsTable from "./ValidatorsTable";
 import {fetchValidators} from "../../../actions/validators";
 import {connect} from "react-redux";
+import InfoRefresh from "../../Refresh";
 
 const Validators = (props) => {
     useEffect(() => {
@@ -31,6 +32,9 @@ const Validators = (props) => {
                                 </Nav.Item>
                             </Nav>
                         </div>
+                       <div>
+                           <InfoRefresh/>
+                       </div>
                         {/*<p className="info-value"><span>Lifetime Rewards: </span>125,000 XPRT</p>*/}
                     </div>
 

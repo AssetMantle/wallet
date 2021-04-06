@@ -5,6 +5,7 @@ import Receive from "./Receive";
 import Transactions from "./Transactions/index"
 import DashboardHeader from "../Common/DashboardHeader";
 import TokenInfo from "../Common/TokenInfo";
+import InfoRefresh from "../Refresh";
 const Wallet = () => {
 
     return (
@@ -21,10 +22,13 @@ const Wallet = () => {
                     <Tab eventKey="Transactions" title="Transactions">
                         <Transactions/>
                     </Tab>
+
                 </Tabs>
+                <div>
+                    <InfoRefresh/>
+                </div>
             </div>
-            <div>
-            </div>
+
         </div>
     );
 };
