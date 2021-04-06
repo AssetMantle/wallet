@@ -11,7 +11,7 @@ import config from "./config"
 
 const App = () => {
     const history = useHistory();
-    const [address, setAddress] = useState("");
+    // const [address, setAddress] = useState("");
     const routes = [{
         path: '/dashboard/wallet',
         component: DashboardWallet,
@@ -29,17 +29,14 @@ const App = () => {
         component: KeplerHome,
         private: false,
     }];
-    useEffect(() => {
-        const version = localStorage.getItem('version');
-        if (version == null || config.version !== version) {
-            localStorage.clear();
-            history.push('/');
-        } else {
-            const address = localStorage.getItem('address');
-            setAddress(address)
-        }
-    }, []);
-
+    let address;
+    const version = localStorage.getItem('version');
+    if (version == null || config.version !== version) {
+        localStorage.clear();
+        history.push('/');
+    } else {
+        address = localStorage.getItem('address');
+    }
     return (
         <Switch>
             <Route
