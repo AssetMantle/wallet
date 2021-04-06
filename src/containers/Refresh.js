@@ -25,7 +25,7 @@ const InfoRefresh = (props) => {
     return (
         <IconButton
             className={inProgress ? 'refresh-button refresh-start' : 'refresh-button'}
-            onClick={handleRefresh}>
+            onClick={handleRefresh} title="Refresh">
             <RefreshIcon/>
         </IconButton>
     );
