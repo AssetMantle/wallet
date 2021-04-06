@@ -7,7 +7,7 @@ import logo from "../assets/images/logo_lite.svg";
 import ModalFaq from "../containers/Faq";
 import MakePersistence from "../utils/cosmosjsWrapper";
 
-const KeplerHome = (props) => {
+const KeplerHome = () => {
     const history = useHistory();
     const [errorMessage, setErrorMessage] = useState("");
     const [showFaq, setShowFaq] = useState(false);
@@ -100,13 +100,9 @@ const KeplerHome = (props) => {
                             <p>Below account we've received from the Keplr browser extension.</p>
                             <div className="buttons-list">
                                 <p>{address}</p>
-                                {props.location.state !== undefined ? props.location.state.currentPath !== "importWallet" ?
-                                    <button className="button button-primary" onClick={() => handleRoute()}>Use
-                                    </button>
-                                    : null
-                                    : <button className="button button-primary" onClick={() => handleRoute()}>Use
-                                    </button>
-                                }
+                                <button className="button button-primary" onClick={() => handleRoute()}>Use
+                                </button>
+
                             </div>
                         </>
                     }
