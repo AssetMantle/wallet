@@ -83,17 +83,19 @@ function ValidateFrom(value) {
     return new Error('');
 }
 
-function CheckLastPage(pageNumber, limit , totalTransactions) {
+function CheckLastPage(pageNumber, limit, totalTransactions) {
     return totalTransactions / limit <= pageNumber;
 }
+
 function ValidatePassphrase(value) {
     return value.length === 50;
 
 }
-function ValidateAddress(address) {
-    return address.startsWith("persistence1") && address === 50;
 
+function ValidateAddress(address) {
+    return address.startsWith("persistence1") && address.length === 50;
 }
+
 module.exports = {
     randomNum,
     stringTruncate,
