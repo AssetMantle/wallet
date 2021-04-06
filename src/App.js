@@ -7,7 +7,9 @@ import PrivateRoute from "./containers/PrivateRoute";
 import ImportWallet from "./containers/ImpotWallet";
 import KeplerHome from "./views/KeplerHome";
 import RouteNotFound from "./components/RouteNotFound";
-const version = require('../package.json')
+import config from "./config"
+
+const version = require('../package.json');
 const App = () => {
     const history = useHistory();
     const routes = [{
@@ -30,10 +32,10 @@ const App = () => {
     let address = '';
     console.log(version.version);
     useEffect(() => {
-        if(version.version !== "0.1.6"){
+        if (config.version !== "0.1.4") {
             localStorage.clear();
             history.push('/');
-        }else {
+        } else {
             address = localStorage.getItem('address')
         }
     }, []);

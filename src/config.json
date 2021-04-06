@@ -8,5 +8,6 @@
   "uxprtValue": 1000000,
   "defaultFee": "5000",
   "vestingAccountFee": "0",
-  "modeType": "block"
+  "modeType": "block",
+  "version": "0.1.4"
 }
