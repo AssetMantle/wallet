@@ -45,7 +45,8 @@ const ValidatorsTable = (props) => {
         selectableRows: false,
         print: false,
         download: false,
-        filter:false
+        filter:false,
+        search:false
     };
     const tableData = props.validatorsList.length ?
         props.validatorsList.map((validator, index) => [
