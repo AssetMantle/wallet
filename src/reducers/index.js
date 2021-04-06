@@ -5,7 +5,6 @@ import validators from "./validators";
 import balance from "./balance";
 import rewards from "./rewards";
 import unbond from "./unbond";
-import authentication from "./authentication";
 import tokenPrice from "./tokenPrice";
 export default combineReducers({
     delegations,
@@ -14,6 +13,5 @@ export default combineReducers({
     balance,
     rewards,
     unbond,
-    authentication,
     tokenPrice
 });

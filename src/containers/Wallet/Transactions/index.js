@@ -1,10 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {Tab, Nav,} from "react-bootstrap";
-import {connect} from "react-redux";
 import SendTransactions from "./SendTransactions";
 import ReceiveTransactions from "./ReceiveTransactions";
-const Transactions = (props) => {
 
+const Transactions = () => {
     return (
         <div className="txns-container">
             <Tab.Container id="left-tabs-example" defaultActiveKey="active">
@@ -26,10 +25,10 @@ const Transactions = (props) => {
                 </div>
                 <Tab.Content>
                     <Tab.Pane eventKey="active">
-                        <SendTransactions />
+                        <SendTransactions/>
                     </Tab.Pane>
                     <Tab.Pane eventKey="inactive">
-                        <ReceiveTransactions />
+                        <ReceiveTransactions/>
                     </Tab.Pane>
                 </Tab.Content>
             </Tab.Container>
@@ -37,13 +36,5 @@ const Transactions = (props) => {
     );
 };
 
-const stateToProps = (state) => {
-    return {
 
-    };
-};
-
-const actionsToProps = {
-};
-
-export default connect(stateToProps, actionsToProps)(Transactions);
+export default Transactions;

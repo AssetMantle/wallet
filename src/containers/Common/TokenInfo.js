@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from "react";
 import {connect} from 'react-redux';
-import xprt from "../../assets/images/xprt.svg";
 import ModalWithdraw from "../Wallet/ModalWithdraw";
 import {fetchDelegationsCount} from "../../actions/delegations";
 import {fetchBalance} from "../../actions/balance";

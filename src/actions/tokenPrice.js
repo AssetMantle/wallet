@@ -22,7 +22,7 @@ export const fetchTokenPriceError = (data) => {
 
 export const fetchTokenPrice = () => (dispatch) => {
     const url = `${PROXY_API}/ascendExTicker?symbol=XPRT/USDT`;
-     Axios.get(url)
+    Axios.get(url)
         .then((res) => {
             if (res.data.data.close) {
                 dispatch(fetchTokenPriceSuccess(res.data.data.close));

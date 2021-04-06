@@ -1,4 +1,5 @@
 import config from "../config.json";
+
 const {SigningStargateClient} = require("@cosmjs/stargate");
 const restAPI = process.env.REACT_APP_API_KEY;
 const tendermintRPC = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;

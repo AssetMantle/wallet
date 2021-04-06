@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {Switch, Route, withRouter, useHistory} from 'react-router-dom';
 import DashboardWallet from "./views/DashboardWallet";
 import Homepage from "./views/Homepage";
@@ -11,7 +11,6 @@ import config from "./config"
 
 const App = () => {
     const history = useHistory();
-    // const [address, setAddress] = useState("");
     const routes = [{
         path: '/dashboard/wallet',
         component: DashboardWallet,
@@ -29,6 +28,7 @@ const App = () => {
         component: KeplerHome,
         private: false,
     }];
+
     let address;
     const version = localStorage.getItem('version');
     if (version == null || config.version !== version) {
@@ -37,6 +37,7 @@ const App = () => {
     } else {
         address = localStorage.getItem('address');
     }
+
     return (
         <Switch>
             <Route

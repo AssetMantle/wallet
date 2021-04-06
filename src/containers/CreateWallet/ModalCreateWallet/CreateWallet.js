@@ -137,6 +137,11 @@ const CreateWallet = (props) => {
                                         }
                                     </div>
                                 </div>
+                                {errorMessage !== ''
+                                    ? <p className="form-error">{errorMessage}</p>
+                                    : null
+
+                                }
                                 <div className="buttons">
                                     <button className="button button-primary"
                                             onClick={() => handleCreateForm("keysForm")}>Next

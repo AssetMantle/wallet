@@ -4,7 +4,6 @@ import success from "../../../assets/images/success.svg";
 import {getValidatorUrl} from "../../../constants/url";
 import axios from "axios";
 import Icon from "../../../components/Icon";
-import Actions from "../../../utils/actions";
 import {connect} from "react-redux";
 import helper from "../../../utils/helper";
 import Loader from "../../../components/Loader";
@@ -13,10 +12,10 @@ import aminoMsgHelper from "../../../utils/aminoMsgHelper";
 import transactions from "../../../utils/transactions";
 import MakePersistence from "../../../utils/cosmosjsWrapper";
 import config from "../../../config";
+
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const ModalSetWithdrawAddress = (props) => {
-    const ActionHelper = new Actions();
     const [show, setShow] = useState(true);
     const [validatorAddress, setValidatorAddress] = useState('');
     const [response, setResponse] = useState('');
@@ -24,7 +23,6 @@ const ModalSetWithdrawAddress = (props) => {
     const [advanceMode, setAdvanceMode] = useState(false);
     const [initialModal, setInitialModal] = useState(true);
     const [seedModal, showSeedModal] = useState(false);
-    const [individualRewards, setIndividualRewards] = useState('');
     const [memoContent, setMemoContent] = useState('');
     const [errorMessage, setErrorMessage] = useState("");
     const [loader, setLoader] = useState(false);

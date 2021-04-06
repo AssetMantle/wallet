@@ -1,6 +1,5 @@
 import Axios from 'axios';
 import {getBalanceUrl} from "../constants/url";
-import Async from 'async';
 import {
     BALANCE_FETCH_SUCCESS,
     BALANCE_FETCH_ERROR,
@@ -10,7 +9,7 @@ import Lodash from "lodash";
 
 export const fetchBalanceProgress = () => {
     return {
-        type:  BALANCE_FETCH_IN_PROGRESS,
+        type: BALANCE_FETCH_IN_PROGRESS,
     };
 };
 export const fetchBalanceSuccess = (data) => {
@@ -27,7 +26,7 @@ export const fetchBalanceError = (data) => {
     };
 };
 
-export const fetchBalance = (address)  => {
+export const fetchBalance = (address) => {
     return async dispatch => {
         dispatch(fetchBalanceProgress());
         const url = getBalanceUrl(address);

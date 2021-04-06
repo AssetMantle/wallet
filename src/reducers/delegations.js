@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import {combineReducers} from 'redux';
 import {
     DELEGATIONS_FETCH_ERROR,
     DELEGATIONS_FETCH_SUCCESS,
@@ -7,7 +7,7 @@ import {
 
 const count = (state = 0, action) => {
     if (action.type === DELEGATIONS_FETCH_SUCCESS) {
-        return (action.count*1);
+        return (action.count * 1);
     }
     return state;
 };
@@ -21,7 +21,7 @@ const status = (state = false, action) => {
 
 const _ = (state = 0, action) => {
     if (action.type === DELEGATIONS_FETCH_SUCCESS) {
-        return (action.count*1);
+        return (action.count * 1);
     } else {
         return state;
     }
