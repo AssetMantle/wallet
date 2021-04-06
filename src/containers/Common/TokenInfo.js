@@ -62,11 +62,11 @@ const TokenInfo = (props) => {
                 <div className="inner-box">
                     <div className="line">
                         <p className="key">Amount under vesting</p>
-                        <p className="value"> {vestingAmount}</p>
+                        <p className="value"> {vestingAmount} XPRT</p>
                     </div>
                     <div className="line">
                         <p className="key">Transferable Amount</p>
-                        <p className="value"> {transferableAmount}</p>
+                        <p className="value"> {transferableAmount} XPRT</p>
                     </div>
                     <div className="line">
                         <p className="key">Current Price</p>
