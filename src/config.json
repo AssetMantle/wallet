@@ -9,5 +9,5 @@
   "defaultFee": "5000",
   "vestingAccountFee": "0",
   "modeType": "block",
-  "version": "0.1.4"
+  "version": "0.1.6"
 }
