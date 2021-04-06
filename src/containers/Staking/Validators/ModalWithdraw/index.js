@@ -8,7 +8,7 @@ import transactions from "../../../../utils/transactions";
 import helper from "../../../../utils/helper";
 import Loader from "../../../../components/Loader";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
-
+import config from "../../../../config";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalWithdraw = (props) => {
     const [response, setResponse] = useState('');
@@ -102,9 +102,16 @@ const ModalWithdraw = (props) => {
     const handleSubmitInitialData = async event => {
         event.preventDefault();
         const memo = event.target.memo.value;
-        setMemoContent(memo);
-        setInitialModal(false);
-        showSeedModal(true);
+        let memoCheck = transactions.mnemonicValidation(memo, loginAddress)
+        if(memoCheck){
+            setErrorMessage("you entered your mnemonic as memo")
+        }
+        else {
+            setErrorMessage("");
+            setMemoContent(memo);
+            setInitialModal(false);
+            showSeedModal(true);
+        }
     };
 
     const handleSubmit = async event => {
@@ -145,7 +152,7 @@ const ModalWithdraw = (props) => {
                             account_number: String(accountNumber),
                             sequence: String(sequence)
                         });
-                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv, "block");
+                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv, config.modeType);
                         persistence.broadcast(signedTx).then(response => {
                             setResponse(response);
                             setLoader(false);
@@ -213,6 +220,11 @@ const ModalWithdraw = (props) => {
                                                       placeholder="Enter Memo"
                                                       required={false}/>
                                     </div>
+                                    : null
+                            }
+                            {
+                                errorMessage !== "" ?
+                                    <p className="form-error">{errorMessage}</p>
                                     : null
                             }
                             <div className="buttons navigate-buttons">

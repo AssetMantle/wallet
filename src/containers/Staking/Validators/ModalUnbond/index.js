@@ -8,7 +8,7 @@ import aminoMsgHelper from "../../../../utils/aminoMsgHelper";
 import {UnbondMsg} from "../../../../utils/protoMsgHelper";
 import helper from "../../../../utils/helper";
 import Loader from "../../../../components/Loader";
-import config from "../../../../utils/config";
+import config from "../../../../config";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalUnbond = (props) => {
@@ -98,9 +98,16 @@ const ModalUnbond = (props) => {
     const handleSubmitInitialData = async event => {
         event.preventDefault();
         const memo = event.target.memo.value;
-        setMemoContent(memo);
-        setInitialModal(false);
-        showSeedModal(true);
+        let memoCheck = transactions.mnemonicValidation(memo, loginAddress)
+        if(memoCheck){
+            setErrorMessage("you entered your mnemonic as memo")
+        }
+        else {
+            setErrorMessage("");
+            setMemoContent(memo);
+            setInitialModal(false);
+            showSeedModal(true);
+        }
     };
     const handleSubmitKepler = async event => {
         setLoader(true);
@@ -155,7 +162,7 @@ const ModalUnbond = (props) => {
                             account_number: String(accountNumber),
                             sequence: String(sequence)
                         });
-                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv, "block");
+                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv, config.modeType);
                         persistence.broadcast(signedTx).then(response => {
                             setResponse(response);
                             setLoader(false);
@@ -240,6 +247,11 @@ const ModalUnbond = (props) => {
                                                   placeholder="Enter Memo"
                                                   required={false}/>
                                 </div> : null
+                            }
+                            {
+                                errorMessage !== "" ?
+                                    <p className="form-error">{errorMessage}</p>
+                                    : null
                             }
                             <div className="buttons navigate-buttons">
                                 <button className="button button-secondary" onClick={() => handlePrevious()}>

@@ -156,7 +156,13 @@ const ModalImportWallet = (props) => {
         const result = helper.ValidatePassphrase(evt.target.value);
         setPassphraseError(result)
     };
-
+    const handleLogin  = () =>{
+        localStorage.setItem('loginToken', 'loggedIn');
+        localStorage.setItem('address', advancedFormResponseData.address);
+        localStorage.setItem('loginMode', 'normal');
+        setShow(false);
+        history.push('/dashboard/wallet');
+    };
     const handleClose = () => {
         setShow(false);
         if (props.name === "createWallet") {
@@ -372,7 +378,7 @@ const ModalImportWallet = (props) => {
                             <p className="mnemonic-result"><b>Wallet path: </b>{advancedFormResponseData.walletPath}</p>
                             <p className="mnemonic-result"><b>Address: </b>{advancedFormResponseData.address}</p>
                             <div className="buttons">
-                                <button className="button button-primary" onClick={handleClose}>Done</button>
+                                <button className="button button-primary" onClick={handleLogin}>Done</button>
                             </div>
                             <div className="note-section">
                                 <div className="exclamation"><Icon

@@ -6,7 +6,6 @@ import {Nav, Navbar} from "react-bootstrap";
 import logo from "../assets/images/logo_lite.svg";
 import ModalFaq from "../containers/Faq";
 import MakePersistence from "../utils/cosmosjsWrapper";
-import config from "../utils/config";
 
 const KeplerHome = (props) => {
     const history = useHistory();

@@ -180,3 +180,33 @@
   justify-content: center;
   display: flex;
 }
+
+.refresh-button {
+ outline: none !important;
+  position: absolute !important;
+  top: 3px;
+  right: 12px;
+}
+
+.refresh-button {
+  fill: #ffffff;
+}
+@keyframes rotate {
+
+  from {
+    transform: rotate(0deg)
+  }
+  to {
+    transform: rotate(360deg)
+  }
+
+}
+.refresh-start svg {
+
+  animation-name: rotate;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-play-state: running;
+
+}

@@ -13,7 +13,10 @@ const DashboardHeader = (props) => {
     const history = useHistory();
     const [showFaq, setShowFaq] = useState(false);
     const address = localStorage.getItem('address');
-    let addressTruncate = helper.stringTruncate(address);
+    let addressTruncate
+    if(address !== null) {
+        addressTruncate = helper.stringTruncate(address);
+    }
     const handleHelp = () => {
         setShowFaq(true)
     };

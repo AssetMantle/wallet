@@ -1,9 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import icon from '../../assets/images/footer_logo.svg'
 import whitepaper from '../../assets/images/whitepaper.pdf'
 import Mailchimp from "./MailChimp";
-import {Link} from 'react-router-dom';
-import {OverlayTrigger, Tooltip, Dropdown} from 'react-bootstrap'
+import {OverlayTrigger, Tooltip} from 'react-bootstrap'
 import Icon from "../Icon";
 
 const socialList = [

@@ -4,9 +4,9 @@ import {
 } from "react-bootstrap";
 import Icon from "../../components/Icon";
 import {useHistory} from "react-router-dom";
-import config from "../../utils/config";
+import config from "../../config";
 import MakePersistence from "../../utils/cosmosjsWrapper";
-
+import helper from "../../utils/helper"
 const AddressImport = (props) => {
     const history = useHistory();
     const [errorMessage, setErrorMessage] = useState("");
@@ -31,7 +31,7 @@ const AddressImport = (props) => {
             }
         });
 
-        if (address.startsWith("persistence1") && address.length === 50) {
+        if (helper.ValidateAddress(address)) {
             localStorage.setItem('loginToken', 'loggedIn');
             localStorage.setItem('address', address);
             localStorage.setItem('loginMode', 'normal');

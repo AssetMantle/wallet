@@ -83,18 +83,17 @@ function ValidateFrom(value) {
     return new Error('');
 }
 
-function CheckLastPage(pageNumber, limit , totalTransactions) {
-    if(totalTransactions/limit <= pageNumber){
-        return true;
-    }else {
-        return false;
-    }
+function CheckLastPage(pageNumber, limit, totalTransactions) {
+    return totalTransactions / limit <= pageNumber;
 }
+
 function ValidatePassphrase(value) {
-    if (value.length === 50) {
-        return true;
-    }
-    return false;
+    return value.length === 50;
+
+}
+
+function ValidateAddress(address) {
+    return address.startsWith("persistence1") && address.length === 50;
 }
 
 module.exports = {
@@ -106,4 +105,5 @@ module.exports = {
     ValidateFrom,
     ValidatePassphrase,
     CheckLastPage,
+    ValidateAddress
 };

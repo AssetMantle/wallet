@@ -1,5 +1,5 @@
-import React from 'react';
-import {Switch, Route, withRouter} from 'react-router-dom';
+import React, {useEffect} from 'react';
+import {Switch, Route, withRouter, useHistory} from 'react-router-dom';
 import DashboardWallet from "./views/DashboardWallet";
 import Homepage from "./views/Homepage";
 import DashboardStaking from "./views/Staking";
@@ -7,8 +7,11 @@ import PrivateRoute from "./containers/PrivateRoute";
 import ImportWallet from "./containers/ImpotWallet";
 import KeplerHome from "./views/KeplerHome";
 import RouteNotFound from "./components/RouteNotFound";
+import config from "./config"
 
+const version = require('../package.json');
 const App = () => {
+    const history = useHistory();
     const routes = [{
         path: '/dashboard/wallet',
         component: DashboardWallet,
@@ -26,7 +29,16 @@ const App = () => {
         component: KeplerHome,
         private: false,
     }];
-    const address = localStorage.getItem('address');
+    let address = '';
+    console.log(version.version);
+    useEffect(() => {
+        if (config.version !== "0.1.4") {
+            localStorage.clear();
+            history.push('/');
+        } else {
+            address = localStorage.getItem('address')
+        }
+    }, []);
 
     return (
 
