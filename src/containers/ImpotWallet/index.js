@@ -12,9 +12,8 @@ import helper from "../../utils/helper"
 import {useHistory} from "react-router-dom";
 import ModalFaq from "../Faq";
 import GeneratePrivateKey from "../Common/GeneratePrivateKey";
-import AddressImport from "./AddressImport";
-import KeplerHome from "../../views/KeplerHome";
-import KeplerWallet from "../../utils/kepler";
+import config from "../../config"
+
 const ModalImportWallet = (props) => {
     const [show, setShow] = useState(true);
     const history = useHistory();
@@ -156,10 +155,11 @@ const ModalImportWallet = (props) => {
         const result = helper.ValidatePassphrase(evt.target.value);
         setPassphraseError(result)
     };
-    const handleLogin  = () =>{
+    const handleLogin = () => {
         localStorage.setItem('loginToken', 'loggedIn');
         localStorage.setItem('address', advancedFormResponseData.address);
         localStorage.setItem('loginMode', 'normal');
+        localStorage.setItem('version', config.version);
         setShow(false);
         history.push('/dashboard/wallet');
     };
@@ -191,7 +191,8 @@ const ModalImportWallet = (props) => {
                                         <>
                                             <Form onSubmit={handleSubmit}>
                                                 <div className="text-center">
-                                                    <p onClick={() => handlePrivateKey(false)} className="import-name">Use
+                                                    <p onClick={() => handlePrivateKey(false)}
+                                                       className="import-name">Use
                                                         Private Key (KeyStore.json file)</p>
                                                 </div>
                                                 <div className="form-field">
@@ -208,10 +209,11 @@ const ModalImportWallet = (props) => {
                                                 }
 
                                                 <div className="buttons">
-                                                    <button className="button button-primary" >Next</button>
+                                                    <button className="button button-primary">Next</button>
                                                 </div>
                                                 <div className="buttons">
-                                                    <button className="button button-primary" onClick={() => handleKepler("kepler")}>Use Kepler
+                                                    <button className="button button-primary"
+                                                            onClick={() => handleKepler("kepler")}>Use Kepler
                                                     </button>
                                                 </div>
                                             </Form>
@@ -245,7 +247,8 @@ const ModalImportWallet = (props) => {
                                                 <button className="button button-primary">Next</button>
                                             </div>
                                             <div className="buttons">
-                                                <button className="button button-primary" onClick={() => handleKepler("kepler")}>Use Kepler
+                                                <button className="button button-primary"
+                                                        onClick={() => handleKepler("kepler")}>Use Kepler
                                                 </button>
                                             </div>
                                             <div className="note-section">
