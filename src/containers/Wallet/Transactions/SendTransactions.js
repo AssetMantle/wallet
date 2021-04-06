@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import moment from 'moment';
 import helper from "../../../utils/helper";
 import Icon from "../../../components/Icon";

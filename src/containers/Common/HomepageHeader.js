@@ -1,10 +1,9 @@
 import React, {useState} from "react";
-import { Nav, Navbar, NavLink} from "react-bootstrap";
+import {Nav, Navbar, NavLink} from "react-bootstrap";
 import ModalFaq from "../Faq";
-import {useHistory} from "react-router-dom";
 import logo from "../../assets/images/logo_bold.svg";
+
 const HomepageHeader = () => {
-    const history = useHistory();
     const [showFaq, setShowFaq] = useState(false);
     const handleHelp = () => {
         setShowFaq(true)
@@ -20,8 +19,10 @@ const HomepageHeader = () => {
                     <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="ml-auto">
-                            <a className="nav-link" href="https://persistence.one/"  target="_blank" rel="noopener noreferrer">Learn More</a>
-                            <NavLink className="nav-link" onClick={handleHelp} target="_blank" rel="noopener noreferrer">Help</NavLink>
+                            <a className="nav-link" href="https://persistence.one/" target="_blank"
+                               rel="noopener noreferrer">Learn More</a>
+                            <NavLink className="nav-link" onClick={handleHelp} target="_blank"
+                                     rel="noopener noreferrer">Help</NavLink>
                         </Nav>
                     </Navbar.Collapse>
                 </div>

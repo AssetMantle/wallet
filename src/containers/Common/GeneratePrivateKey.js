@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, {useState} from "react";
 import {
     Form, Modal,
 } from "react-bootstrap";
@@ -36,7 +36,7 @@ const GeneratePrivateKey = (props) => {
         props.handleRoute(props.routeValue)
     };
     const handlePrevious = (formName) => {
-        if(formName === "generateKey"){
+        if (formName === "generateKey") {
             setShow(false);
             props.setGenerateKey(false);
             props.handleRoute(props.routeValue)
@@ -79,7 +79,8 @@ const GeneratePrivateKey = (props) => {
                                 <div className="exclamation"><Icon
                                     viewClass="arrow-right"
                                     icon="exclamation"/></div>
-                                <p>Password encrypts your seed phrase. This password does not help you generate your seed phrase.</p>
+                                <p>Password encrypts your seed phrase. This password does not help you generate your
+                                    seed phrase.</p>
                             </div>
                         </>
                         :

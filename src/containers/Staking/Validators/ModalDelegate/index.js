@@ -19,6 +19,7 @@ import Loader from "../../../../components/Loader";
 import {connect} from "react-redux";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import config from "../../../../config";
+
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalDelegate = (props) => {
     const [amount, setAmount] = useState(0);
@@ -108,10 +109,9 @@ const ModalDelegate = (props) => {
         event.preventDefault();
         const memo = event.target.memo.value;
         let memoCheck = transactions.mnemonicValidation(memo, loginAddress)
-        if(memoCheck){
+        if (memoCheck) {
             setErrorMessage("you entered your mnemonic as memo")
-        }
-        else {
+        } else {
             setErrorMessage("");
             setMemoContent(memo);
             setInitialModal(false);
@@ -164,7 +164,7 @@ const ModalDelegate = (props) => {
         const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
         const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
         if (address.error === undefined && ecpairPriv.error === undefined) {
-            if(address === loginAddress) {
+            if (address === loginAddress) {
                 persistence.getAccounts(address).then(data => {
                     if (data.code === undefined) {
                         let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
@@ -197,7 +197,7 @@ const ModalDelegate = (props) => {
                     setAdvanceMode(false);
                     setErrorMessage(err.message);
                 })
-            }else {
+            } else {
                 setLoader(false);
                 setAdvanceMode(false);
                 setErrorMessage("Mnemonic not matched")
@@ -397,7 +397,8 @@ const ModalDelegate = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee'))/1000000}xprt will be cut from the wallet.</p>
+                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee')) / 1000000}xprt
+                                    will be cut from the wallet.</p>
                                 <button className="button button-primary">Delegate</button>
                             </div>
                         </Form>

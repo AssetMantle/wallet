@@ -1,6 +1,5 @@
-import {Tab, Nav, Modal} from 'react-bootstrap';
+import {Modal} from 'react-bootstrap';
 import React, {useState} from 'react';
-import Icon from "../../components/Icon";
 import AddressImport from "../ImpotWallet/AddressImport";
 import {useHistory} from "react-router-dom";
 
@@ -22,7 +21,8 @@ const SignIn = (props) => {
 
     const handleKepler = () => {
         history.push('/kepler');
-    }
+    };
+
     return (
         <>
             <Modal backdrop="static" show={show} onHide={handleClose} centered

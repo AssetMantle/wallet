@@ -1,6 +1,5 @@
 import Axios from 'axios';
 import {getDelegationsUrl} from "../constants/url";
-import Async from 'async';
 import {DELEGATIONS_FETCH_SUCCESS, DELEGATIONS_FETCH_ERROR, DELEGATIONS_STATUS_SUCCESS} from "../constants/delegations"
 import Lodash from "lodash";
 

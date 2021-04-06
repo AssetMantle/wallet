@@ -19,6 +19,7 @@ import {SendMsg} from "../../utils/protoMsgHelper";
 import {connect} from "react-redux";
 import config from "../../config";
 import MakePersistence from "../../utils/cosmosjsWrapper";
+
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const Send = (props) => {
@@ -162,7 +163,7 @@ const Send = (props) => {
         const address = persistence.getAddress(userMnemonic, bip39Passphrase, true);
         const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
         if (address.error === undefined && ecpairPriv.error === undefined) {
-            if(address === loginAddress) {
+            if (address === loginAddress) {
                 persistence.getAccounts(address).then(data => {
                     if (data.code === undefined) {
                         let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
@@ -189,7 +190,7 @@ const Send = (props) => {
                         setErrorMessage(data.message);
                     }
                 })
-            }else {
+            } else {
                 setLoader(false);
                 setAdvanceMode(false);
                 setErrorMessage("Mnemonic not matched")
@@ -365,7 +366,9 @@ const Send = (props) => {
                                             </Card>
                                         </Accordion>
                                         <div className="buttons">
-                                            <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee'))/1000000}xprt will be cut from the wallet.</p>
+                                            <p className="fee"> Default fee
+                                                of {parseInt(localStorage.getItem('fee')) / 1000000}xprt will be cut
+                                                from the wallet.</p>
                                             <button className="button button-primary">Send</button>
                                         </div>
 
@@ -440,7 +443,6 @@ const Send = (props) => {
         </div>
     );
 };
-
 
 
 const stateToProps = (state) => {

@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import {combineReducers} from 'redux';
 import {
     TRANSACTIONS_FETCH_ERROR,
     TRANSACTIONS_FETCH_SUCCESS,

@@ -1,12 +1,8 @@
-import React, {useEffect, useState} from "react";
-import {Table, Modal, Dropdown, Tab, Nav,} from "react-bootstrap";
-import {getDelegationsUrl, getValidatorsUrl, getValidatorUrl} from "../../../constants/url";
+import React, {useState} from "react";
 import helper from "../../../utils/helper"
-import axios from "axios";
 import Avatar from "./Avatar";
 import activeIcon from "../../../assets/images/active.svg";
 import inActiveIcon from "../../../assets/images/inactive.svg";
-import Icon from "../../../components/Icon";
 import ModalActions from "./ModalActions";
 import DataTable from "../../../components/DataTable";
 

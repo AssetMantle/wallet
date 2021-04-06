@@ -81,4 +81,12 @@ function mnemonicValidation(memo, loginAddress) {
     const address = persistence.getAddress(memo, "", true);
     return address === loginAddress;
 }
-export default {TransactionWithKeplr, TransactionWithMnemonic, makeHdPath, CheckAddressMisMatch, getAccountNumberAndSequence, mnemonicValidation};
+
+export default {
+    TransactionWithKeplr,
+    TransactionWithMnemonic,
+    makeHdPath,
+    CheckAddressMisMatch,
+    getAccountNumberAndSequence,
+    mnemonicValidation
+};
