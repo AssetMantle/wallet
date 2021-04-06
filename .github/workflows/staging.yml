@@ -31,6 +31,8 @@ jobs:
         REACT_APP_EXPLORER_API: ${{ secrets.STAGING_EXPLORER }}
         REACT_APP_MAIL_CHIMP_URL: ${{ secrets.STAGING_MAILCHIMP }}
         REACT_APP_PROXY_API: ${{ secrets.PROXY_API }}
+        REACT_APP_CHAIN_ID: ${{ secrets.STAGING_CHAIN_ID }}
+        REACT_APP_CHAIN_NAME: ${{ secrets.STAGING_CHAIN_NAME }}
     - name: zip up the build
       uses: montudor/action-zip@v0.1.0
       with:
