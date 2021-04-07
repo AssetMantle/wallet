@@ -12,7 +12,7 @@ const Transactions = () => {
                         <div className="left">
                             <Nav variant="pills">
                                 <Nav.Item>
-                                    <Nav.Link eventKey="active">sent</Nav.Link>
+                                    <Nav.Link eventKey="active">Sent</Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
                                     <Nav.Link eventKey="inactive">Received</Nav.Link>
