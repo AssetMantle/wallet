@@ -242,7 +242,7 @@ const AdvanceMode = (props) => {
                         <p className="mnemonic-result"><b>Wallet path: </b>{response.walletPath}</p>
                         <p className="mnemonic-result"><b>Address: </b>{response.address}</p>
                         <div className="buttons">
-                            <button className="button button-primary" onClick={handleLogin}>Done</button>
+                            <button className="button button-primary" onClick={handleLogin}>Login</button>
                         </div>
                         <div className="note-section">
                             <div className="exclamation"><Icon
