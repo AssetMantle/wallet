@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import ReactQRCode from 'qrcode.react';
 import Copy from "../../components/Copy";
 const Receive = () => {

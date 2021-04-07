@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import {combineReducers} from 'redux';
 import {
     BALANCE_FETCH_SUCCESS,
     BALANCE_FETCH_ERROR,
@@ -27,7 +27,7 @@ const amount = (state = 0, action) => {
 
 const _ = (state = 0, action) => {
     if (action.type === BALANCE_FETCH_ERROR) {
-        return (action.data*1);
+        return (action.data * 1);
     } else {
         return state;
     }

@@ -1,3 +1,5 @@
+import MakePersistence from "./cosmosjsWrapper";
+
 const config = require('../config');
 
 const periodicVesting = "/cosmos.vesting.v1beta1.PeriodicVestingAccount"
@@ -92,4 +94,27 @@ function getAccountVestingAmount(account, currentEpochTime) {
     return accountVestingAmount;
 }
 
-export default { getAccountVestingAmount };
+async function getTransferableVestingAmount(address, balance) {
+    const persistence = MakePersistence(0, 0);
+    const vestingAmountData = await persistence.getAccounts(address);
+    const currentEpochTime = Math.floor(new Date().getTime() / 1000);
+    let vestingAmount = 0;
+    let transferableAmount = 0;
+    if (vestingAmountData.code === undefined) {
+        const amount = getAccountVestingAmount(vestingAmountData.account, currentEpochTime) / 1000000;
+        if (balance > amount) {
+            vestingAmount = amount;
+        } else {
+            vestingAmount = balance;
+        }
+
+        if ((balance - amount) < 0) {
+            transferableAmount = 0;
+        } else {
+            transferableAmount = balance - amount;
+        }
+    }
+    return [vestingAmount, transferableAmount]
+}
+
+export default {getTransferableVestingAmount};

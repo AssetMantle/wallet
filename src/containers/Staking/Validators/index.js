@@ -1,11 +1,14 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {Tab, Nav,} from "react-bootstrap";
 import Loader from "../../../components/Loader";
 import ValidatorsTable from "./ValidatorsTable";
 import {fetchValidators} from "../../../actions/validators";
 import {connect} from "react-redux";
+import InfoRefresh from "../../Refresh";
+import {useTranslation} from "react-i18next";
 
 const Validators = (props) => {
+    const {t} = useTranslation();
     useEffect(() => {
         const address = localStorage.getItem('address');
         props.fetchValidators(address);
@@ -21,16 +24,19 @@ const Validators = (props) => {
                 <div className="tab-header">
                     <div className="info">
                         <div className="left">
-                            <p className="info-name">Choose a Validator</p>
+                            <p className="info-name"> {t("CHOOSE_VALIDATOR")}</p>
                             <Nav variant="pills">
                                 <Nav.Item>
-                                    <Nav.Link eventKey="active">Active</Nav.Link>
+                                    <Nav.Link eventKey="active"> {t("ACTIVE")}</Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
-                                    <Nav.Link eventKey="inactive">Inactive</Nav.Link>
+                                    <Nav.Link eventKey="inactive"> {t("IN_ACTIVE")}</Nav.Link>
                                 </Nav.Item>
                             </Nav>
                         </div>
+                       <div>
+                           <InfoRefresh/>
+                       </div>
                         {/*<p className="info-value"><span>Lifetime Rewards: </span>125,000 XPRT</p>*/}
                     </div>
 

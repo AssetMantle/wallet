@@ -11,6 +11,7 @@ i18n
         resources: {
             English: English,
         },
+
         fallbackLng: "English",
         debug: true,
 
@@ -21,7 +22,7 @@ i18n
         keySeparator: false, // we use content as keys
 
         interpolation: {
-            escapeValue: false
+            escapeValue: true
         }
     });
 

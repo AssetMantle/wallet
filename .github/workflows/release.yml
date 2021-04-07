@@ -27,6 +27,8 @@ jobs:
         REACT_APP_EXPLORER_API: ${{ secrets.PRODUCTION_EXPLORER }}
         REACT_APP_MAIL_CHIMP_URL: ${{ secrets.PRODUCTION_MAILCHIMP }}
         REACT_APP_PROXY_API: ${{ secrets.PROXY_API }}
+        REACT_APP_CHAIN_ID: ${{ secrets.PRODUCTION_CHAIN_ID }}
+        REACT_APP_CHAIN_NAME: ${{ secrets.PRODUCTION_CHAIN_NAME }}
     - name: zip up the build
       uses: montudor/action-zip@v0.1.0
       with:

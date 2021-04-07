@@ -12,8 +12,11 @@ import transactions from "../../../../utils/transactions";
 import Loader from "../../../../components/Loader";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import config from "../../../../config";
+import {useTranslation} from "react-i18next";
+
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalReDelegate = (props) => {
+    const {t} = useTranslation();
     const [amount, setAmount] = useState(0);
     const [show, setShow] = useState(true);
     const [memoContent, setMemoContent] = useState('');
@@ -80,29 +83,32 @@ const ModalReDelegate = (props) => {
         props.setInitialModal(true);
         setResponse('');
     };
+
     const handlePrevious = () => {
         props.setShow(true);
         props.setTxModalShow(false);
         props.setInitialModal(true);
     };
+
     const handleSubmitInitialData = async event => {
         event.preventDefault();
         const memo = event.target.memo.value;
         let memoCheck = transactions.mnemonicValidation(memo, loginAddress)
-        if(memoCheck){
+        if (memoCheck) {
             setErrorMessage("you entered your mnemonic as memo")
-        }
-        else {
+        } else {
             setErrorMessage("");
             setMemoContent(memo);
             setInitialModal(false);
             showSeedModal(true);
         }
     };
+
     const handlePrivateKey = (value) => {
         setImportMnemonic(value);
         setErrorMessage("");
     };
+
     const handleSubmitKepler = async event => {
         setLoader(true);
         event.preventDefault();
@@ -234,7 +240,7 @@ const ModalReDelegate = (props) => {
                                 <Select value={toValidatorAddress} className="validators-list-selection"
                                         onChange={onChangeSelect} displayEmpty>
                                     <MenuItem value="" key={0}>
-                                        <em>Select validator</em>
+                                        <em>{t("SELECT_VALIDATOR")}</em>
                                     </MenuItem>
                                     {
                                         props.validators.map((validator, index) => {
@@ -253,22 +259,22 @@ const ModalReDelegate = (props) => {
                                 </Select>
                             </div>
                             <div className="form-field">
-                                <p className="label"> Delegation Amount(XPRT)</p>
+                                <p className="label">{t("DELEGATION_AMOUNT")} (XPRT)</p>
                                 <Form.Control
                                     type="number"
-                                    placeholder="Amount"
+                                    placeholder={t("AMOUNT")}
                                     value={props.delegationAmount}
                                     disabled
                                 />
                             </div>
                             <div className="form-field">
-                                <p className="label">Redelegation Amount(XPRT)</p>
+                                <p className="label">{t("REDELEGATION_AMOUNT")} (XPRT)</p>
                                 <div className="amount-field">
                                     <Form.Control
                                         type="number"
                                         min={0}
                                         name="amount"
-                                        placeholder="Send Amount"
+                                        placeholder={t("SEND_AMOUNT")}
                                         value={amount}
                                         step="any"
                                         onChange={handleAmountChange}
@@ -278,9 +284,9 @@ const ModalReDelegate = (props) => {
                             </div>
                             {mode === "normal" ?
                                 <div className="form-field">
-                                    <p className="label">Memo</p>
+                                    <p className="label">{t("MEMO")}</p>
                                     <Form.Control as="textarea" rows={3} name="memo"
-                                                  placeholder="Enter Memo"
+                                                  placeholder={t("ENTER_MEMO")}
                                                   required={false}/>
                                 </div> : null
                             }
@@ -318,13 +324,12 @@ const ModalReDelegate = (props) => {
                                     <>
                                         <div className="text-center">
                                             <p onClick={() => handlePrivateKey(false)}
-                                               className="import-name">Use
-                                                Private Key (KeyStore.json file)</p>
+                                               className="import-name">{t("USE_PRIVATE_KEY")} (KeyStore.json file)</p>
                                         </div>
                                         <div className="form-field">
-                                            <p className="label">Mnemonic</p>
+                                            <p className="label">{t("MNEMONIC")}</p>
                                             <Form.Control as="textarea" rows={3} name="mnemonic"
-                                                          placeholder="Enter Mnemonic"
+                                                          placeholder={t("ENTER_MNEMONIC")}
                                                           required={true}/>
                                         </div>
                                     </>
@@ -332,15 +337,14 @@ const ModalReDelegate = (props) => {
                                     <>
                                         <div className="text-center">
                                             <p onClick={() => handlePrivateKey(true)}
-                                               className="import-name">Use
-                                                Mnemonic (Seed Phrase)</p>
+                                               className="import-name">{t("USE_MNEMONIC")} ({t("SEED_PHRASE")})</p>
                                         </div>
                                         <div className="form-field">
-                                            <p className="label">Password</p>
+                                            <p className="label">{t("PASSWORD")}</p>
                                             <Form.Control
                                                 type="password"
                                                 name="password"
-                                                placeholder="Enter Password"
+                                                placeholder={t("ENTER_PASSWORD")}
                                                 required={true}
                                             />
                                         </div>
@@ -357,39 +361,39 @@ const ModalReDelegate = (props) => {
                                 <Card>
                                     <Card.Header>
                                         <p>
-                                            Advanced
+                                            {t("ADVANCED")}
                                         </p>
                                         <ContextAwareToggle eventKey="0">Click me!</ContextAwareToggle>
                                     </Card.Header>
                                     <Accordion.Collapse eventKey="0">
                                         <>
                                             <div className="form-field">
-                                                <p className="label">Account</p>
+                                                <p className="label">{t("ACCOUNT")}</p>
                                                 <Form.Control
                                                     type="text"
                                                     name="redelegateAccountNumber"
                                                     id="redelegateAccountNumber"
-                                                    placeholder="Account number"
+                                                    placeholder={t("ACCOUNT_NUMBER")}
                                                     required={advanceMode ? true : false}
                                                 />
                                             </div>
                                             <div className="form-field">
-                                                <p className="label">Account Index</p>
+                                                <p className="label">{t("ACCOUNT_INDEX")}</p>
                                                 <Form.Control
                                                     type="text"
                                                     name="redelegateAccountIndex"
                                                     id="redelegateAccountIndex"
-                                                    placeholder="Account Index"
+                                                    placeholder={t("ACCOUNT_INDEX")}
                                                     required={advanceMode ? true : false}
                                                 />
                                             </div>
                                             <div className="form-field">
-                                                <p className="label">bip39Passphrase</p>
+                                                <p className="label">{t("BIP_PASSPHRASE")}</p>
                                                 <Form.Control
                                                     type="password"
                                                     name="redelegatebip39Passphrase"
                                                     id="redelegatebip39Passphrase"
-                                                    placeholder="Enter bip39Passphrase (optional)"
+                                                    placeholder={t("ENTER_BIP_PASSPHRASE")}
                                                     required={false}
                                                 />
                                             </div>
@@ -403,8 +407,9 @@ const ModalReDelegate = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee'))/1000000}xprt will be cut from the wallet.</p>
-                                <button className="button button-primary">Redelegate</button>
+                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee')) / 1000000}xprt
+                                    will be cut from the wallet.</p>
+                                <button className="button button-primary">{t("REDELEGATE")}</button>
                             </div>
                         </Form>
                     </Modal.Body>
@@ -416,7 +421,7 @@ const ModalReDelegate = (props) => {
                 response !== '' && response.code === undefined ?
                     <>
                         <Modal.Header className="result-header success" closeButton>
-                            Successfully Redelegated!
+                            {t("SUCCESSFULL_REDELEGATED")}
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
@@ -444,7 +449,7 @@ const ModalReDelegate = (props) => {
                 response !== '' && response.code !== undefined ?
                     <>
                         <Modal.Header className="result-header error" closeButton>
-                            Failed to Redelegated
+                            {t("FAILED_REDELEGATE")}
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">

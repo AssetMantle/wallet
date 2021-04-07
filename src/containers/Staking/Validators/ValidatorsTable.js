@@ -1,12 +1,8 @@
-import React, {useEffect, useState} from "react";
-import {Table, Modal, Dropdown, Tab, Nav,} from "react-bootstrap";
-import {getDelegationsUrl, getValidatorsUrl, getValidatorUrl} from "../../../constants/url";
+import React, {useState} from "react";
 import helper from "../../../utils/helper"
-import axios from "axios";
 import Avatar from "./Avatar";
 import activeIcon from "../../../assets/images/active.svg";
 import inActiveIcon from "../../../assets/images/inactive.svg";
-import Icon from "../../../components/Icon";
 import ModalActions from "./ModalActions";
 import DataTable from "../../../components/DataTable";
 
@@ -20,15 +16,40 @@ const ValidatorsTable = (props) => {
     const columns = [{
         name: 'validator',
         label: 'Validator',
-        options: {sort: false}
+        options: {
+            sortCompare: (order) => {
+                return (obj1, obj2) => {
+                    let val1 = obj1.data.props.children[1];
+                    let val2 = obj2.data.props.children[1];
+                    return (val1.length - val2.length) * (order === 'asc' ? 1 : -1);
+                };
+            }
+
+        }
     }, {
         name: 'votingPower',
         label: 'Voting Power',
-        options: {sort: false}
+        options: {
+            sortCompare: (order) => {
+                return (obj1, obj2) => {
+                    let val1 = parseInt(obj1.data.props.children[0]);
+                    let val2 = parseInt(obj2.data.props.children[0]);
+                    return (val1 - val2) * (order === 'asc' ? 1 : -1);
+                };
+            }
+        }
     }, {
         name: 'commission',
         label: 'Commission',
-        options: {sort: false}
+        options: {
+            sortCompare: (order) => {
+                return (obj1, obj2) => {
+                    let val1 = parseInt(obj1.data.props.children[0]);
+                    let val2 = parseInt(obj2.data.props.children[0]);
+                    return (val1 - val2) * (order === 'asc' ? 1 : -1);
+                };
+            }
+        }
     }, {
         name: 'status',
         label: 'Status',
@@ -38,15 +59,7 @@ const ValidatorsTable = (props) => {
         label: 'Actions',
         options: {sort: false}
     }];
-    const options = {
-        responsive: "standard",
-        filters: false,
-        pagination: false,
-        selectableRows: false,
-        print: false,
-        download: false,
-        filter:false
-    };
+
     const tableData = props.validatorsList.length ?
         props.validatorsList.map((validator, index) => [
             <div>
@@ -55,7 +68,7 @@ const ValidatorsTable = (props) => {
                 {validator.description.moniker}
             </div>,
             <div>
-                {parseFloat((validator.tokens * Math.pow(10, -6)).toFixed(2)).toLocaleString()}
+                {parseFloat((validator.tokens * Math.pow(10, -6)).toFixed(2))}
                 {
                     helper.isActive(validator)
                         ? `(${parseFloat((validator.tokens * 100 / props.activeValidatorsTokens)).toFixed(2).toLocaleString()}%)`
@@ -63,7 +76,7 @@ const ValidatorsTable = (props) => {
                 }
             </div>
             ,
-            <span>{`${parseFloat((validator.commission.commission_rates.rate * 100).toFixed(2)).toLocaleString()}%`}</span>,
+            <span>{`${parseFloat((validator.commission.commission_rates.rate * 100).toFixed(2))}`} %</span>,
             <div className="">
                 {helper.isActive(validator) ?
                     <span className="icon-box" title="active">
@@ -84,6 +97,18 @@ const ValidatorsTable = (props) => {
             </div>
         ])
         : [];
+
+    const options = {
+        responsive: "standard",
+        filters: false,
+        pagination: false,
+        selectableRows: false,
+        print: false,
+        download: false,
+        filter: false,
+        search: false,
+    };
+
     return (
         <div className="txns-container">
             <DataTable

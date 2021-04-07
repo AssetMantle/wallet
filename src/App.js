@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Switch, Route, withRouter, useHistory} from 'react-router-dom';
 import DashboardWallet from "./views/DashboardWallet";
 import Homepage from "./views/Homepage";
@@ -7,7 +7,8 @@ import PrivateRoute from "./containers/PrivateRoute";
 import ImportWallet from "./containers/ImpotWallet";
 import KeplerHome from "./views/KeplerHome";
 import RouteNotFound from "./components/RouteNotFound";
-const version = require('../package.json')
+import config from "./config"
+
 const App = () => {
     const history = useHistory();
     const routes = [{
@@ -27,25 +28,23 @@ const App = () => {
         component: KeplerHome,
         private: false,
     }];
-    let address = '';
-    console.log(version.version);
-    useEffect(() => {
-        if(version.version !== "0.1.6"){
-            localStorage.clear();
-            history.push('/');
-        }else {
-            address = localStorage.getItem('address')
-        }
-    }, []);
+
+    let address;
+    const version = localStorage.getItem('version');
+    if (version == null || config.version !== version) {
+        localStorage.clear();
+        history.push('/');
+    } else {
+        address = localStorage.getItem('address');
+    }
 
     return (
-
         <Switch>
             <Route
                 key="/"
                 exact
                 component={address === undefined || address === null || address === '' ? withRouter(Homepage) : withRouter(DashboardWallet)}
-                path="/"/> : ""
+                path="/"/>
             {
                 routes.map((route) => {
                     if (route.private) {

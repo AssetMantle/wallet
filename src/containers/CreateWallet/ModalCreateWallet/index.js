@@ -1,11 +1,11 @@
 import React, {useState} from "react";
 import {Modal} from "react-bootstrap";
 import Icon from "../../../components/Icon";
-import {useHistory} from "react-router-dom";
 import CreateWallet from "./CreateWallet";
+import {useTranslation} from "react-i18next";
 
 const ModalCreateWallet = (props) => {
-    const history = useHistory();
+    const {t} = useTranslation();
     const [show, setShow] = useState(true);
     const [createWallet, setCreatWallet] = useState(false);
     const [modal1, setModal1] = useState(true);
@@ -60,24 +60,22 @@ const ModalCreateWallet = (props) => {
                         modal1 ?
                             <>
                                 <Modal.Header className="info-modal-header" closeButton>
-                                    <p> About Persistence Wallet</p>
+                                    <p>{t("ABOUT_WALLET")}</p>
                                 </Modal.Header>
                                 <Modal.Body className="create-wallet-body">
                                     <div className="info-box">
-                                        <p><b>Take a moment to read through this content for your own safety
+                                        <p><b>{t("SIGNUP_NOTE_HEADING")}
                                         </b></p>
                                         <ul>
-                                            <li>Users need to securely store their Mnemonic (seed phrase) to prevent
-                                                loss of funds. Losing or exposing this phrase could potentially lead to
-                                                users' funds being stolen.
+                                            <li>{t("SIGNUP_NOTE_TEXT1")}
                                             </li>
-                                            <li>Users can view and save their mnemonic while creating a wallet.
+                                            <li>{t("SIGNUP_NOTE_TEXT2")}
                                             </li>
                                         </ul>
                                     </div>
                                     <div className="buttons">
                                         <button className="button button-primary"
-                                                onClick={() => handleCreateForm("createWalletForm")}>Next
+                                                onClick={() => handleCreateForm("createWalletForm")}>{t("NEXT")}
                                         </button>
                                     </div>
                                 </Modal.Body>

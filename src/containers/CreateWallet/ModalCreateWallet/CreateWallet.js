@@ -3,13 +3,13 @@ import {Form, Modal} from "react-bootstrap";
 import Icon from "../../../components/Icon";
 import wallet from "../../../utils/wallet";
 import helper from "../../../utils/helper";
-import {useHistory} from "react-router-dom";
 import ImportWallet from "../../ImpotWallet";
 import AdvanceMode from "./AdvanceMode";
 import Copy from "../../../components/Copy";
+import {useTranslation} from "react-i18next";
 
 const CreateWallet = (props) => {
-    const history = useHistory();
+    const {t} = useTranslation();
     const [show, setShow] = useState(true);
     const [showImportWallet, setShowImportWallet] = useState(false);
     const [mnemonicQuiz, setMnemonicQuiz] = useState(false);
@@ -111,15 +111,15 @@ const CreateWallet = (props) => {
                                             icon="left-arrow"/>
                                     </button>
                                 </div>
-                                <h3 className="heading">Create Wallet</h3>
+                                <h3 className="heading">{t("CREATE_WALLET")}</h3>
                             </Modal.Header>
                             <div className="create-wallet-body create-wallet-form-body">
 
-                                <p className="info">Already Have a wallet? <span
-                                    onClick={handleRoute}>Import wallet</span>
+                                <p className="info">{t("ALREADY_HAVE_WALLET")} <span
+                                    onClick={handleRoute}>{t("IMPORT_WALLET")}</span>
                                 </p>
                                 <div className="seed-section">
-                                    <h3 className="heading copy">Mnemonic (Seed Phrase) <Copy id={response.mnemonic}/>
+                                    <h3 className="heading copy">{t("MNEMONIC")} ({t("SEED_PHRASE")}) <Copy id={response.mnemonic}/>
                                     </h3>
                                     <div className="menmonic-list">
                                         {mnemonicList ?
@@ -137,16 +137,21 @@ const CreateWallet = (props) => {
                                         }
                                     </div>
                                 </div>
+                                {errorMessage !== ''
+                                    ? <p className="form-error">{errorMessage}</p>
+                                    : null
+
+                                }
                                 <div className="buttons">
                                     <button className="button button-primary"
-                                            onClick={() => handleCreateForm("keysForm")}>Next
+                                            onClick={() => handleCreateForm("keysForm")}>{t("NEXT")}
                                     </button>
                                 </div>
                                 <div className="note-section">
                                     <div className="exclamation"><Icon
                                         viewClass="arrow-right"
                                         icon="exclamation"/></div>
-                                    <p>Please securely store the mnemonic for future use</p>
+                                    <p>{t("SEED_WARNING")}</p>
                                 </div>
                             </div>
                         </>
@@ -163,14 +168,14 @@ const CreateWallet = (props) => {
                                             icon="left-arrow"/>
                                     </button>
                                 </div>
-                                <h3 className="heading">Create Wallet</h3>
+                                <h3 className="heading">{t("CREATE_WALLET")}</h3>
                             </Modal.Header>
                             <div className="create-wallet-body create-wallet-form-body">
-                                <p className="info">Already Have a wallet? <span
-                                    onClick={handleRoute}>Import wallet</span>
+                                <p className="info">{t("ALREADY_HAVE_WALLET")} <span
+                                    onClick={handleRoute}>{t("IMPORT_WALLET")}</span>
                                 </p>
                                 <div className="seed-section">
-                                    <h3 className="heading copy">Mnemonic (Seed Phrase) <Copy id={response.mnemonic}/>
+                                    <h3 className="heading copy">{t("MNEMONIC")} (Seed Phrase) <Copy id={response.mnemonic}/>
                                     </h3>
                                     <div className="menmonic-list">
                                         {randomMnemonicList.map((key, index) => {
@@ -204,18 +209,18 @@ const CreateWallet = (props) => {
                                     </div>
                                 </div>
                                 {quizError ?
-                                    <p className="form-error">Mnemonic not matched</p>
+                                    <p className="form-error">{t("MNEMONIC")} not matched</p>
                                     : null}
                                 <div className="buttons">
                                     <button className="button button-primary"
-                                            onClick={() => handleSubmitMnemonic()}>Submit
+                                            onClick={() => handleSubmitMnemonic()}>{t("SUBMIT")}
                                     </button>
                                 </div>
                                 <div className="note-section">
                                     <div className="exclamation"><Icon
                                         viewClass="arrow-right"
                                         icon="exclamation"/></div>
-                                    <p>Note and store the mnemonic for future use</p>
+                                    <p>{t("SEED_WARNING")}</p>
                                 </div>
                             </div>
                         </>

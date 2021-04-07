@@ -6,8 +6,11 @@ import {Nav, Navbar} from "react-bootstrap";
 import logo from "../assets/images/logo_lite.svg";
 import ModalFaq from "../containers/Faq";
 import MakePersistence from "../utils/cosmosjsWrapper";
+import config from "../config";
+import {useTranslation} from "react-i18next";
 
-const KeplerHome = (props) => {
+const KeplerHome = () => {
+    const {t} = useTranslation();
     const history = useHistory();
     const [errorMessage, setErrorMessage] = useState("");
     const [showFaq, setShowFaq] = useState(false);
@@ -21,6 +24,7 @@ const KeplerHome = (props) => {
             setErrorMessage(err.message)
         });
     }, []);
+
     const handleKepler = () => {
         setErrorMessage("")
         const kepler = KeplerWallet();
@@ -43,13 +47,15 @@ const KeplerHome = (props) => {
                     setErrorMessage("PeriodicVestingAccount is currently not supported with kepler, you can use " +
                         "browser extension to send tokens.")
                 } else {
-                    localStorage.setItem('loginMode', 'kepler');
                     localStorage.setItem('loginToken', 'loggedIn');
+                    localStorage.setItem('version', config.version);
+                    localStorage.setItem('loginMode', 'kepler');
                     history.push('/dashboard/wallet');
                 }
             } else {
-                localStorage.setItem('loginMode', 'kepler');
                 localStorage.setItem('loginToken', 'loggedIn');
+                localStorage.setItem('version', config.version);
+                localStorage.setItem('loginMode', 'kepler');
                 history.push('/dashboard/wallet');
             }
         }).catch(err => {
@@ -73,40 +79,36 @@ const KeplerHome = (props) => {
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="ml-auto">
                             <a className="nav-link" href="https://persistence.one/" target="_blank"
-                               rel="noopener noreferrer">Learn More</a>
+                               rel="noopener noreferrer">{t("LEARN_MORE")}</a>
                             <p className="nav-link" onClick={handleHelp} target="_blank"
-                               rel="noopener noreferrer">Help</p>
+                               rel="noopener noreferrer">{t("HELP")}</p>
                         </Nav>
                     </Navbar.Collapse>
                 </div>
             </Navbar>
             <div className="kepler-container">
                 <div className="info">
-                    <h3>Use Keplr Browser Extension</h3>
+                    <h3>{t("USE_KEPLER_BROWSER_EXTENSION")}</h3>
                     {errorMessage !== "" ?
                         <>
                             <div className="buttons">
-                                <button className="button button-primary" onClick={() => handleKepler()}>Connect
+                                <button className="button button-primary" onClick={() => handleKepler()}>{t("CONNECT")}
                                 </button>
                             </div>
                             <div className="text">
-                                <p>There was an error connecting to the Keplr extension:</p>
+                                <p>{t("KEPLER_ERROR")}</p>
                                 <p className="form-error">{errorMessage}</p>
                             </div>
                         </>
                         :
                         <>
 
-                            <p>Below account we've received from the Keplr browser extension.</p>
+                            <p>{t("KEPLER_ACCOUNT_NOTE")}</p>
                             <div className="buttons-list">
                                 <p>{address}</p>
-                                {props.location.state !== undefined ? props.location.state.currentPath !== "importWallet" ?
-                                    <button className="button button-primary" onClick={() => handleRoute()}>Use
-                                    </button>
-                                    : null
-                                    : <button className="button button-primary" onClick={() => handleRoute()}>Use
-                                    </button>
-                                }
+                                <button className="button button-primary" onClick={() => handleRoute()}>{t("USE")}
+                                </button>
+
                             </div>
                         </>
                     }

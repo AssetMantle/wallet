@@ -19,9 +19,12 @@ import {SendMsg} from "../../utils/protoMsgHelper";
 import {connect} from "react-redux";
 import config from "../../config";
 import MakePersistence from "../../utils/cosmosjsWrapper";
+import {useTranslation} from "react-i18next";
+
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const Send = (props) => {
+    const {t} = useTranslation();
     const [amountField, setAmountField] = useState(0);
     const [toAddress, setToAddress] = useState('');
     const [txResponse, setTxResponse] = useState('');
@@ -162,7 +165,7 @@ const Send = (props) => {
         const address = persistence.getAddress(userMnemonic, bip39Passphrase, true);
         const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
         if (address.error === undefined && ecpairPriv.error === undefined) {
-            if(address === loginAddress) {
+            if (address === loginAddress) {
                 persistence.getAccounts(address).then(data => {
                     if (data.code === undefined) {
                         let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
@@ -189,7 +192,7 @@ const Send = (props) => {
                         setErrorMessage(data.message);
                     }
                 })
-            }else {
+            } else {
                 setLoader(false);
                 setAdvanceMode(false);
                 setErrorMessage("Mnemonic not matched")
@@ -249,9 +252,9 @@ const Send = (props) => {
                     </div>
                     {mode === "normal" ?
                         <div className="form-field">
-                            <p className="label">Memo</p>
+                            <p className="label">{t("MEMO")}</p>
                             <Form.Control as="textarea" rows={3} name="memo"
-                                          placeholder="Enter Memo"
+                                          placeholder={t("ENTER_MEMO")}
                                           required={false}/>
                         </div> : null
                     }
@@ -279,13 +282,12 @@ const Send = (props) => {
                                                 <>
                                                     <div className="text-center">
                                                         <p onClick={() => handlePrivateKey(false)}
-                                                           className="import-name">Use
-                                                            Private Key (KeyStore.json file)</p>
+                                                           className="import-name">{t("USE_PRIVATE_KEY")} (KeyStore.json file)</p>
                                                     </div>
                                                     <div className="form-field">
-                                                        <p className="label">Mnemonic</p>
+                                                        <p className="label">{t("MNEMONIC")}</p>
                                                         <Form.Control as="textarea" rows={3} name="mnemonic"
-                                                                      placeholder="Enter Mnemonic"
+                                                                      placeholder={t("ENTER_MNEMONIC")}
                                                                       required={true}/>
                                                     </div>
                                                 </>
@@ -293,15 +295,14 @@ const Send = (props) => {
                                                 <>
                                                     <div className="text-center">
                                                         <p onClick={() => handlePrivateKey(true)}
-                                                           className="import-name">Use
-                                                            Mnemonic (Seed Phrase)</p>
+                                                           className="import-name">{t("USE_MNEMONIC")} ({t("SEED_PHRASE")})</p>
                                                     </div>
                                                     <div className="form-field">
-                                                        <p className="label">Password</p>
+                                                        <p className="label">{t("PASSWORD")}</p>
                                                         <Form.Control
                                                             type="password"
                                                             name="password"
-                                                            placeholder="Enter Password"
+                                                            placeholder={t("ENTER_PASSWORD")}
                                                             required={true}
                                                         />
                                                     </div>
@@ -326,32 +327,32 @@ const Send = (props) => {
                                                 <Accordion.Collapse eventKey="0">
                                                     <>
                                                         <div className="form-field">
-                                                            <p className="label">Account</p>
+                                                            <p className="label">{t("ACCOUNT")}</p>
                                                             <Form.Control
                                                                 type="text"
                                                                 name="sendAccountNumber"
                                                                 id="sendAccountNumber"
-                                                                placeholder="Account number"
+                                                                placeholder={t("ACCOUNT_NUMBER")}
                                                                 required={advanceMode}
                                                             />
                                                         </div>
                                                         <div className="form-field">
-                                                            <p className="label">Account Index</p>
+                                                            <p className="label">{t("ACCOUNT_INDEX")}</p>
                                                             <Form.Control
                                                                 type="text"
                                                                 name="sendAccountIndex"
                                                                 id="sendAccountIndex"
-                                                                placeholder="Account Index"
+                                                                placeholder={t("ACCOUNT_INDEX")}
                                                                 required={advanceMode}
                                                             />
                                                         </div>
                                                         <div className="form-field">
-                                                            <p className="label">bip39Passphrase</p>
+                                                            <p className="label">{t("BIP_PASSPHRASE")}</p>
                                                             <Form.Control
                                                                 type="password"
                                                                 name="sendbip39Passphrase"
                                                                 id="sendbip39Passphrase"
-                                                                placeholder="Enter bip39Passphrase (optional)"
+                                                                placeholder={t("ENTER_BIP_PASSPHRASE")}
                                                                 required={false}
                                                             />
                                                         </div>
@@ -365,7 +366,9 @@ const Send = (props) => {
                                             </Card>
                                         </Accordion>
                                         <div className="buttons">
-                                            <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee'))/1000000}xprt will be cut from the wallet.</p>
+                                            <p className="fee"> Default fee
+                                                of {parseInt(localStorage.getItem('fee')) / 1000000}xprt will be cut
+                                                from the wallet.</p>
                                             <button className="button button-primary">Send</button>
                                         </div>
 
@@ -440,7 +443,6 @@ const Send = (props) => {
         </div>
     );
 };
-
 
 
 const stateToProps = (state) => {

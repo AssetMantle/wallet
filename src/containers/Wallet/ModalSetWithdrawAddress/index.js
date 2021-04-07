@@ -4,7 +4,6 @@ import success from "../../../assets/images/success.svg";
 import {getValidatorUrl} from "../../../constants/url";
 import axios from "axios";
 import Icon from "../../../components/Icon";
-import Actions from "../../../utils/actions";
 import {connect} from "react-redux";
 import helper from "../../../utils/helper";
 import Loader from "../../../components/Loader";
@@ -13,10 +12,12 @@ import aminoMsgHelper from "../../../utils/aminoMsgHelper";
 import transactions from "../../../utils/transactions";
 import MakePersistence from "../../../utils/cosmosjsWrapper";
 import config from "../../../config";
+import {useTranslation} from "react-i18next";
+
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const ModalSetWithdrawAddress = (props) => {
-    const ActionHelper = new Actions();
+    const {t} = useTranslation();
     const [show, setShow] = useState(true);
     const [validatorAddress, setValidatorAddress] = useState('');
     const [response, setResponse] = useState('');
@@ -24,7 +25,6 @@ const ModalSetWithdrawAddress = (props) => {
     const [advanceMode, setAdvanceMode] = useState(false);
     const [initialModal, setInitialModal] = useState(true);
     const [seedModal, showSeedModal] = useState(false);
-    const [individualRewards, setIndividualRewards] = useState('');
     const [memoContent, setMemoContent] = useState('');
     const [errorMessage, setErrorMessage] = useState("");
     const [loader, setLoader] = useState(false);
@@ -218,24 +218,24 @@ const ModalSetWithdrawAddress = (props) => {
             {initialModal ?
                 <>
                     <Modal.Header>
-                        Set Rewards Withdraw Address
+                        {t("SET_REWARDS_WITHDRAW_ADDRESS")}
                     </Modal.Header>
                     <Modal.Body className="rewards-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
                             <div className="form-field">
-                                <p className="label">Withdrawal Address</p>
+                                <p className="label">{t("WITHDRAW_ADDRESS")}</p>
                                 <Form.Control
                                     type="text"
                                     name="withdrawalAddress"
-                                    placeholder="Enter Withdrawal Address"
+                                    placeholder={t("ENTER_WITHDRAW_ADDRESS")}
                                     required={true}
                                 />
                             </div>
                             {mode === "normal" ?
                                 <div className="form-field">
-                                    <p className="label">Memo</p>
+                                    <p className="label">{t("MEMO")}</p>
                                     <Form.Control as="textarea" rows={3} name="memo"
-                                                  placeholder="Enter Memo"
+                                                  placeholder={t("ENTER_MEMO")}
                                                   required={false}/>
                                 </div> : null
                             }
@@ -256,7 +256,7 @@ const ModalSetWithdrawAddress = (props) => {
             {seedModal ?
                 <>
                     <Modal.Header>
-                        Set Rewards Withdraw Address
+                        {t("SET_REWARDS_WITHDRAW_ADDRESS")}
                     </Modal.Header>
                     <Modal.Body className="rewards-modal-body">
                         <Form onSubmit={handleSubmit}>
@@ -264,28 +264,26 @@ const ModalSetWithdrawAddress = (props) => {
                                 importMnemonic ?
                                     <>
                                         <div className="text-center">
-                                            <p onClick={() => handlePrivateKey(false)} className="import-name">Use
-                                                Private Key (KeyStore.json file)</p>
+                                            <p onClick={() => handlePrivateKey(false)} className="import-name">{t("USE_PRIVATE_KEY")} (KeyStore.json file)</p>
                                         </div>
                                         <div className="form-field">
-                                            <p className="label">Mnemonic</p>
+                                            <p className="label">{t("MNEMONIC")}</p>
                                             <Form.Control as="textarea" rows={3} name="mnemonic"
-                                                          placeholder="Enter Mnemonic"
+                                                          placeholder={t("ENTER_MNEMONIC")}
                                                           required={true}/>
                                         </div>
                                     </>
                                     :
                                     <>
                                         <div className="text-center">
-                                            <p onClick={() => handlePrivateKey(true)} className="import-name">Use
-                                                Mnemonic (Seed Phrase)</p>
+                                            <p onClick={() => handlePrivateKey(true)} className="import-name">{t("USE_MNEMONIC")} ({t("SEED_PHRASE")})</p>
                                         </div>
                                         <div className="form-field">
-                                            <p className="label">Password</p>
+                                            <p className="label">{t("PASSWORD")}</p>
                                             <Form.Control
                                                 type="password"
                                                 name="password"
-                                                placeholder="Enter Password"
+                                                placeholder={t("ENTER_PASSWORD")}
                                                 required={true}
                                             />
                                         </div>
@@ -302,39 +300,39 @@ const ModalSetWithdrawAddress = (props) => {
                                 <Card>
                                     <Card.Header>
                                         <p>
-                                            Advanced
+                                            {t("ADVANCED")}
                                         </p>
                                         <ContextAwareToggle eventKey="0">Click me!</ContextAwareToggle>
                                     </Card.Header>
                                     <Accordion.Collapse eventKey="0">
                                         <>
                                             <div className="form-field">
-                                                <p className="label">Account</p>
+                                                <p className="label">{t("ACCOUNT")}</p>
                                                 <Form.Control
                                                     type="text"
                                                     name="claimTotalAccountNumber"
                                                     id="claimTotalAccountNumber"
-                                                    placeholder="Account number"
+                                                    placeholder={t("ACCOUNT_NUMBER")}
                                                     required={advanceMode ? true : false}
                                                 />
                                             </div>
                                             <div className="form-field">
-                                                <p className="label">Account Index</p>
+                                                <p className="label">{t("ACCOUNT_INDEX")}</p>
                                                 <Form.Control
                                                     type="text"
                                                     name="claimTotalAccountIndex"
                                                     id="claimTotalAccountIndex"
-                                                    placeholder="Account Index"
+                                                    placeholder={t("ACCOUNT_INDEX")}
                                                     required={advanceMode ? true : false}
                                                 />
                                             </div>
                                             <div className="form-field">
-                                                <p className="label">bip39Passphrase</p>
+                                                <p className="label">{t("BIP_PASSPHRASE")}</p>
                                                 <Form.Control
                                                     type="password"
                                                     name="claimTotalbip39Passphrase"
                                                     id="claimTotalbip39Passphrase"
-                                                    placeholder="Enter bip39Passphrase (optional)"
+                                                    placeholder={t("ENTER_BIP_PASSPHRASE")}
                                                     required={false}
                                                 />
                                             </div>
@@ -350,7 +348,7 @@ const ModalSetWithdrawAddress = (props) => {
                             <div className="buttons">
                                 <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee')) / 1000000}xprt
                                     will be cut from the wallet.</p>
-                                <button className="button button-primary">Claim Rewards</button>
+                                <button className="button button-primary">{t("CLAIM_REWARDS")}</button>
                             </div>
                         </Form>
                     </Modal.Body>
@@ -362,7 +360,7 @@ const ModalSetWithdrawAddress = (props) => {
                 response !== '' && response.code === undefined ?
                     <>
                         <Modal.Header className="result-header success">
-                            Successfully Claimed Rewards!
+                            {t("SUCCESSFULLY_CLAIMED")}
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
@@ -379,7 +377,7 @@ const ModalSetWithdrawAddress = (props) => {
                                         Hash: {response.txhash}</a>
                                 }
                                 <div className="buttons">
-                                    <button className="button" onClick={handleClose}>Done</button>
+                                    <button className="button" onClick={handleClose}>{t("DONE")}</button>
                                 </div>
                             </div>
                         </Modal.Body>
@@ -390,7 +388,7 @@ const ModalSetWithdrawAddress = (props) => {
                 response !== '' && response.code !== undefined ?
                     <>
                         <Modal.Header className="result-header error">
-                            Failed to Claimed Rewards
+                            {t("FAILED_CLAIMING")}
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
@@ -412,7 +410,7 @@ const ModalSetWithdrawAddress = (props) => {
                                     </>
                                 }
                                 <div className="buttons">
-                                    <button className="button" onClick={handleClose}>Done</button>
+                                    <button className="button" onClick={handleClose}> {t("DONE")}</button>
                                 </div>
                             </div>
                         </Modal.Body>
