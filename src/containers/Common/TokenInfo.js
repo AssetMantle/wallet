@@ -46,7 +46,7 @@ const TokenInfo = (props) => {
                         <p className="value">{props.delegations + props.balance + props.unbond} XPRT</p>
                     </div>
                     <div className="line">
-                        <p className="key">Amount available to delegate</p>
+                        <p className="key">Delegatable balance</p>
                         <p className="value">
                             {props.balance} XPRT</p>
                     </div>
@@ -60,7 +60,7 @@ const TokenInfo = (props) => {
             <div className="price-info info-box">
                 <div className="inner-box">
                     <div className="line">
-                        <p className="key">Amount under vesting</p>
+                        <p className="key">Vesting balance</p>
                         <p className="value"> {vestingAmount} XPRT</p>
                     </div>
                     <div className="line">
