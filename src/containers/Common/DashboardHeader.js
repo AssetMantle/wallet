@@ -13,7 +13,7 @@ const DashboardHeader = (props) => {
     const history = useHistory();
     const [showFaq, setShowFaq] = useState(false);
     const address = localStorage.getItem('address');
-    let addressTruncate
+    let addressTruncate;
     if(address !== null) {
         addressTruncate = helper.stringTruncate(address);
     }
@@ -25,6 +25,7 @@ const DashboardHeader = (props) => {
         localStorage.setItem('address', '');
         localStorage.setItem('loginMode', '');
         localStorage.setItem('fee','');
+        localStorage.setItem('keplerAddress', '');
         history.push('/');
         window.location.reload();
     };

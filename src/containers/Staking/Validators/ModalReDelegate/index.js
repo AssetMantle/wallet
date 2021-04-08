@@ -110,15 +110,14 @@ const ModalReDelegate = (props) => {
     const handleSubmitKepler = async event => {
         setLoader(true);
         event.preventDefault();
-        setInitialModal(false);
         const response = transactions.TransactionWithKeplr([RedelegateMsg(loginAddress, props.validatorAddress, toValidatorAddress, (amount * 1000000))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
+            setInitialModal(false);
+            setLoader(false);
             setResponse(result);
-            setLoader(false)
         }).catch(err => {
             setLoader(false);
-            props.handleClose();
-            console.log(err.message, "delegate error")
+            setErrorMessage(err.message);
         })
     };
 
@@ -229,7 +228,7 @@ const ModalReDelegate = (props) => {
             {initialModal ?
                 <>
                     <Modal.Header closeButton>
-                        redelegating from {props.moniker}
+                        Redelegate from {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
@@ -313,7 +312,7 @@ const ModalReDelegate = (props) => {
             {seedModal ?
                 <>
                     <Modal.Header closeButton>
-                        redelegating from {props.moniker}
+                        Redelegate from {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={handleSubmit}>

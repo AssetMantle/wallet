@@ -269,7 +269,8 @@ html, body {
   button.close{
     position: absolute;
     right: 30px;
-    top: 40px;
+    top: 30px;
+    outline: none !important;
   }
   .previous-section .button{
     position: absolute;
