@@ -99,15 +99,14 @@ const ModalSetWithdrawAddress = (props) => {
     const handleSubmitKepler = async event => {
         setLoader(true);
         event.preventDefault();
-        setInitialModal(false);
         const response = transactions.TransactionWithKeplr([SetWithDrawAddressMsg(loginAddress, event.target.withdrawalAddress.value)], aminoMsgHelper.fee(5000, 250000));
         response.then(result => {
+            setInitialModal(false);
             setResponse(result);
             setLoader(false)
         }).catch(err => {
             setLoader(false);
-            props.setWithDraw(false)
-            console.log(err.message, "Withdraw error")
+            setErrorMessage(err.message);
         })
     };
     const handleSubmitInitialData = async event => {
@@ -212,13 +211,14 @@ const ModalSetWithdrawAddress = (props) => {
             animation={false}
             centered={true}
             keyboard={false}
+            backdrop="static"
             show={show}
             className="modal-custom claim-rewards-modal"
             onHide={handleClose}>
             {initialModal ?
                 <>
-                    <Modal.Header>
-                        {t("SET_REWARDS_WITHDRAW_ADDRESS")}
+                    <Modal.Header closeButton>
+                        Set Rewards Withdraw Address
                     </Modal.Header>
                     <Modal.Body className="rewards-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
@@ -255,7 +255,7 @@ const ModalSetWithdrawAddress = (props) => {
             }
             {seedModal ?
                 <>
-                    <Modal.Header>
+                    <Modal.Header closeButton>
                         {t("SET_REWARDS_WITHDRAW_ADDRESS")}
                     </Modal.Header>
                     <Modal.Body className="rewards-modal-body">
@@ -359,7 +359,7 @@ const ModalSetWithdrawAddress = (props) => {
             {
                 response !== '' && response.code === undefined ?
                     <>
-                        <Modal.Header className="result-header success">
+                        <Modal.Header className="result-header success" closeButton>
                             {t("SUCCESSFULLY_CLAIMED")}
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
@@ -387,7 +387,7 @@ const ModalSetWithdrawAddress = (props) => {
             {
                 response !== '' && response.code !== undefined ?
                     <>
-                        <Modal.Header className="result-header error">
+                        <Modal.Header className="result-header error" closeButton>
                             {t("FAILED_CLAIMING")}
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">

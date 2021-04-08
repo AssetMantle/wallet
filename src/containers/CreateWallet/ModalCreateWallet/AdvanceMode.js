@@ -7,10 +7,14 @@ import wallet from "../../../utils/wallet";
 import Icon from "../../../components/Icon";
 import GeneratePrivateKey from "../../Common/GeneratePrivateKey";
 import helper from "../../../utils/helper";
+import MakePersistence from "../../../utils/cosmosjsWrapper";
+import config from "../../../config";
+import {useHistory} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 
 const AdvanceMode = (props) => {
     const {t} = useTranslation();
+    const history = useHistory();
     const [show, setShow] = useState(true);
     const [advanceForm, setAdvanceForm] = useState(true);
     const [responseShow, setResponseShow] = useState(false);
@@ -60,6 +64,29 @@ const AdvanceMode = (props) => {
     const handleClose = () => {
         setShow(false);
         props.handleClose();
+    };
+    const handleLogin = () => {
+        const persistence = MakePersistence(0, 0);
+        persistence.getAccounts(response.address).then(data => {
+            if (data.code === undefined) {
+                if (data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount" ||
+                    data.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount" ||
+                    data.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
+                    localStorage.setItem('fee', config.vestingAccountFee);
+                } else {
+                    localStorage.setItem('fee', config.defaultFee);
+                }
+            } else {
+                localStorage.setItem('fee', config.defaultFee);
+            }
+        });
+        localStorage.setItem('loginToken', 'loggedIn');
+        localStorage.setItem('address', response.address);
+        localStorage.setItem('loginMode', 'normal');
+        localStorage.setItem('version', config.version);
+        setShow(false);
+        props.handleClose();
+        history.push('/dashboard/wallet');
     };
     const handlePrevious = (formName) => {
         if(formName === "advanceForm"){
@@ -217,7 +244,7 @@ const AdvanceMode = (props) => {
                         <p className="mnemonic-result"><b>{t("WALLET_PATH")}: </b>{response.walletPath}</p>
                         <p className="mnemonic-result"><b>{t("ADDRESS")}: </b>{response.address}</p>
                         <div className="buttons">
-                            <button className="button button-primary" onClick={handleClose}>Done</button>
+                            <button className="button button-primary" onClick={handleLogin}>Login</button>
                         </div>
                         <div className="note-section">
                             <div className="exclamation"><Icon

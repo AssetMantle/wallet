@@ -210,3 +210,90 @@
   animation-play-state: running;
 
 }
+
+
+.network-check {
+  position: absolute;
+  width: 100%;
+  background: #dee2e6f0;
+  z-index: 999;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  h3{
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+  }
+  p{
+    margin: 0;
+  }
+}
+
+.stage {
+  position: relative;
+  width: 500px;
+  height: 280px;
+}
+
+.bouncer-holder {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  opacity: 0.1;
+}
+
+.bouncer-holder {
+  -webkit-animation: travel 3s ease-in infinite alternate;
+  -o-animation:  travel 3s ease-in infinite alternate;
+  animation:  travel 3s ease-in infinite alternate;
+}
+
+.bouncer {
+  position: absolute;
+  bottom: 0;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  //background: #E3287D;
+  //background: -webkit-radial-gradient(60% 40%, circle, rgba(255,255,255,0.8), #E3287D 50%) #E3287D;
+  //background: -moz-radial-gradient(60% 40%, circle, rgba(255,255,255,0.8), #E3287D 50%) #E3287D;
+  //background: -o-radial-gradient(60% 40%, circle, rgba(255,255,255,0.8), #E3287D 50%) #E3287D;
+  //background: -ms-radial-gradient(60% 40%, circle, rgba(255,255,255,0.8), #E3287D 50%) #E3287D;
+  //background: radial-gradient(60% 40%, circle, rgba(255,255,255,0.8), #E3287D 50%) #E3287D;
+  -webkit-animation: bounce 3.5s infinite;
+  -o-animation:  bounce 3.5s infinite;
+  animation:  bounce 3.5s infinite;
+}
+
+@-webkit-keyframes travel {
+  from { left: 0; }
+  to   { left: calc(100% - 30px)}
+}
+
+@keyframes travel {
+  from { left: 0; }
+  to   { left: calc(100% - 30px)}
+}
+
+@-webkit-keyframes bounce {
+  from, to  {
+    bottom: 0;
+    -webkit-animation-timing-function: ease-out;
+  }
+  50% {
+    bottom: 220px;
+    -webkit-animation-timing-function: ease-in;
+  }
+}
+@keyframes bounce {
+  from, to  {
+    bottom: 0;
+    animation-timing-function: ease-out;
+  }
+  50% {
+    bottom: calc(100% - 30px);
+    animation-timing-function: ease-in;
+  }
+}

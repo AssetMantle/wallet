@@ -104,25 +104,23 @@ const ModalWithdraw = (props) => {
     const handleSubmitKepler = async event => {
         setLoader(true);
         event.preventDefault();
-        setInitialModal(false);
         const response = transactions.TransactionWithKeplr([WithdrawMsg(loginAddress, validatorAddress)], aminoMsgHelper.fee(5000, 250000));
         response.then(result => {
+            setInitialModal(false);
             setResponse(result);
             setLoader(false)
         }).catch(err => {
             setLoader(false);
-            props.setRewards(false)
-            console.log(err.message, "Withdraw error")
+            setErrorMessage(err.message);
         })
     };
     const handleSubmitInitialData = async event => {
         event.preventDefault();
         const memo = event.target.memo.value;
         let memoCheck = transactions.mnemonicValidation(memo, loginAddress)
-        if(memoCheck){
+        if (memoCheck) {
             setErrorMessage("you entered your mnemonic as memo")
-        }
-       else {
+        } else {
             setErrorMessage("")
             setMemoContent(memo);
             setInitialModal(false);
@@ -230,19 +228,20 @@ const ModalWithdraw = (props) => {
         <Modal
             animation={false}
             centered={true}
+            backdrop="static"
             keyboard={false}
             show={show}
             className="modal-custom claim-rewards-modal"
             onHide={handleClose}>
             {initialModal ?
                 <>
-                    <Modal.Header>
+                    <Modal.Header closeButton>
                         {t("CLAIM_STAKING_REWARDS")}
                     </Modal.Header>
                     <Modal.Body className="rewards-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
                             <div className="form-field">
-                                <p className="label">Select Validator</p>
+                                <p className="label">Validator</p>
 
                                 <Select value={validatorAddress} className="validators-list-selection"
                                         onChange={onChangeSelect} displayEmpty>
@@ -300,7 +299,7 @@ const ModalWithdraw = (props) => {
             }
             {seedModal ?
                 <>
-                    <Modal.Header>
+                    <Modal.Header closeButton>
                         {t("CLAIM_STAKING_REWARDS")}
                     </Modal.Header>
                     <Modal.Body className="rewards-modal-body">
@@ -404,7 +403,7 @@ const ModalWithdraw = (props) => {
             {
                 response !== '' && response.code === undefined ?
                     <>
-                        <Modal.Header className="result-header success">
+                        <Modal.Header className="result-header success" closeButton>
                             {t("SUCCESSFULLY_CLAIMED")}
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
@@ -432,7 +431,7 @@ const ModalWithdraw = (props) => {
             {
                 response !== '' && response.code !== undefined ?
                     <>
-                        <Modal.Header className="result-header error">
+                        <Modal.Header className="result-header error" closeButton>
                             {t("FAILED_CLAIMING")}
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">

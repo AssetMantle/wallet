@@ -19,10 +19,11 @@ const ModalFaq = (props) => {
             animation={false}
             centered={true}
             show={show}
+            backdrop="static"
             size="lg"
             className="modal-custom faq-modal"
             onHide={handleClose}>
-            <Modal.Header className="result-header">
+            <Modal.Header className="result-header" closeButton>
                 {t("FAQ")}
             </Modal.Header>
             <Modal.Body className="faq-modal-body">

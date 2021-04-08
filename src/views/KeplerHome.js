@@ -18,7 +18,7 @@ const KeplerHome = () => {
     useEffect(() => {
         const kepler = KeplerWallet();
         kepler.then(function (item) {
-            const address = localStorage.getItem("address");
+            const address = localStorage.getItem("keplerAddress");
             setAddress(address);
         }).catch(err => {
             setErrorMessage(err.message)
@@ -29,7 +29,7 @@ const KeplerHome = () => {
         setErrorMessage("")
         const kepler = KeplerWallet();
         kepler.then(function (item) {
-            const address = localStorage.getItem("address");
+            const address = localStorage.getItem("keplerAddress");
             setAddress(address);
         }).catch(err => {
             setErrorMessage(err.message)
@@ -38,7 +38,7 @@ const KeplerHome = () => {
 
     const handleRoute = () => {
         const persistence = MakePersistence(0, 0);
-        const address = localStorage.getItem("address");
+        const address = localStorage.getItem("keplerAddress");
         persistence.getAccounts(address).then(data => {
             if (data.code === undefined) {
                 if (data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount" ||
@@ -47,12 +47,14 @@ const KeplerHome = () => {
                     setErrorMessage("PeriodicVestingAccount is currently not supported with kepler, you can use " +
                         "browser extension to send tokens.")
                 } else {
+                    localStorage.setItem('address', address);
                     localStorage.setItem('loginToken', 'loggedIn');
                     localStorage.setItem('version', config.version);
                     localStorage.setItem('loginMode', 'kepler');
                     history.push('/dashboard/wallet');
                 }
             } else {
+                localStorage.setItem('address', address);
                 localStorage.setItem('loginToken', 'loggedIn');
                 localStorage.setItem('version', config.version);
                 localStorage.setItem('loginMode', 'kepler');

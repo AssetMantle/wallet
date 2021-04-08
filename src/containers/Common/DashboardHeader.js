@@ -8,14 +8,14 @@ import ModalFaq from "../Faq";
 import helper from "../../utils/helper";
 import logo from "../../assets/images/logo_bold.svg";
 import {useTranslation} from "react-i18next";
-
+import MenuIcon from '@material-ui/icons/Menu';
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const DashboardHeader = () => {
     const {t} = useTranslation();
     const history = useHistory();
     const [showFaq, setShowFaq] = useState(false);
     const address = localStorage.getItem('address');
-    let addressTruncate
+    let addressTruncate;
     if (address !== null) {
         addressTruncate = helper.stringTruncate(address);
     }
@@ -27,6 +27,7 @@ const DashboardHeader = () => {
         localStorage.setItem('address', '');
         localStorage.setItem('loginMode', '');
         localStorage.setItem('fee', '');
+        localStorage.setItem('keplerAddress', '');
         history.push('/');
         window.location.reload();
     };
@@ -38,7 +39,10 @@ const DashboardHeader = () => {
                     <Navbar.Brand><Nav.Link href="/">
                         <img src={logo} alt="logo"/>
                     </Nav.Link></Navbar.Brand>
-                    <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
+                    <Navbar.Toggle aria-controls="responsive-navbar-nav">
+                    <MenuIcon/>
+                    </Navbar.Toggle>
+
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="ml-auto">
                             <li className="nav-item link">

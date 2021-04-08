@@ -54,7 +54,7 @@ const TokenInfo = (props) => {
                     </div>
 
                     <div className="line">
-                        <p className="key">{t("DELEGATED")}</p>
+                        <p className="key">{t("DELEGATED_AMOUNT")}</p>
                         <p className="value">{props.delegations} XPRT</p>
                     </div>
                 </div>
@@ -85,12 +85,12 @@ const TokenInfo = (props) => {
                     <div className="line">
                         <p className="key">{t("REWARDS")}</p>
                         <p className="value rewards" onClick={() => handleRewards("rewards")}><span
-                            className="claim">Claim</span></p>
+                            className="claim">{t("CLAIM")}</span></p>
                     </div>
                     <div className="line">
                         <p className="value">{props.rewards} XPRT</p>
                         <p className="value rewards" onClick={() => handleRewards("setWithDraw")}
-                           title="Claim your rewards in a separate account."><span className="claim">Set withdraw Address</span>
+                           title="Set separate address for claiming rewards"><span className="claim">{t("SET_WITHDRAW_ADDRESS")}</span>
                         </p>
                     </div>
                     <div className="line">

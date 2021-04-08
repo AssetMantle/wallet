@@ -114,15 +114,15 @@ const ModalUnbond = (props) => {
     const handleSubmitKepler = async event => {
         setLoader(true);
         event.preventDefault();
-        setInitialModal(false);
+
         const response = transactions.TransactionWithKeplr([UnbondMsg(loginAddress, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
+            setInitialModal(false);
             setResponse(result);
             setLoader(false)
         }).catch(err => {
             setLoader(false);
-            props.handleClose();
-            console.log(err.message, "Redelegate error")
+            setErrorMessage(err.message);
         })
     };
     const handleSubmit = async event => {
@@ -214,7 +214,7 @@ const ModalUnbond = (props) => {
             {initialModal ?
                 <>
                     <Modal.Header closeButton>
-                        unbonding from {props.moniker}
+                        Unbond from {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
@@ -274,7 +274,7 @@ const ModalUnbond = (props) => {
             {seedModal ?
                 <>
                     <Modal.Header closeButton>
-                        unbonding from {props.moniker}
+                        Unbond from {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={handleSubmit}>

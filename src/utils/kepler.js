@@ -140,6 +140,6 @@ async function KeplerWallet() {
         tendermintRPC,
         offlineSigner,
     );
-    localStorage.setItem('address', accounts[0].address);
+    localStorage.setItem('keplerAddress', accounts[0].address);
 };
 export default KeplerWallet;

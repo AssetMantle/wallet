@@ -18,7 +18,7 @@ const ModalActions = (props) => {
     const [txModalShow, setTxModalShow] = useState(false);
     const [initialModal, setInitialModal] = useState(true);
     const [address, setAddress] = useState('');
-    const [delegationAmount, setDelegationAmount] = useState('');
+    const [delegationAmount, setDelegationAmount] = useState('0');
     const [moniker, setMoniker] = useState('');
     const [modalDelegate, setModalOpen] = useState();
     const [rewards, setRewards] = useState('');

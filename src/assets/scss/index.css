@@ -212,7 +212,8 @@ html, body {
 .modal-header button.close {
   position: absolute;
   right: 30px;
-  top: 40px; }
+  top: 30px;
+  outline: none !important; }
 .modal-header .previous-section .button {
   position: absolute;
   left: 30px;
@@ -493,6 +494,72 @@ html, body {
   animation-timing-function: linear;
   animation-play-state: running; }
 
+.network-check {
+  position: absolute;
+  width: 100%;
+  background: #dee2e6f0;
+  z-index: 999;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+  .network-check h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px; }
+  .network-check p {
+    margin: 0; }
+
+.stage {
+  position: relative;
+  width: 500px;
+  height: 280px; }
+
+.bouncer-holder {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  opacity: 0.1; }
+
+.bouncer-holder {
+  -webkit-animation: travel 3s ease-in infinite alternate;
+  -o-animation: travel 3s ease-in infinite alternate;
+  animation: travel 3s ease-in infinite alternate; }
+
+.bouncer {
+  position: absolute;
+  bottom: 0;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  -webkit-animation: bounce 3.5s infinite;
+  -o-animation: bounce 3.5s infinite;
+  animation: bounce 3.5s infinite; }
+
+@-webkit-keyframes travel {
+  from {
+    left: 0; }
+  to {
+    left: calc(100% - 30px); } }
+@keyframes travel {
+  from {
+    left: 0; }
+  to {
+    left: calc(100% - 30px); } }
+@-webkit-keyframes bounce {
+  from, to {
+    bottom: 0;
+    -webkit-animation-timing-function: ease-out; }
+  50% {
+    bottom: 220px;
+    -webkit-animation-timing-function: ease-in; } }
+@keyframes bounce {
+  from, to {
+    bottom: 0;
+    animation-timing-function: ease-out; }
+  50% {
+    bottom: calc(100% - 30px);
+    animation-timing-function: ease-in; } }
 /*--------------------------------------------------------------
 # homepage styles
 --------------------------------------------------------------*/
@@ -1184,6 +1251,9 @@ html, body {
   border-bottom: 1px solid #E3E5F4; }
   .header .navbar {
     background: #222325; }
+    .header .navbar .navbar-toggler {
+      fill: #ffffff;
+      outline: none !important; }
     .header .navbar .navbar-nav li {
       cursor: pointer; }
       .header .navbar .navbar-nav li a {
