@@ -166,7 +166,6 @@ const ModalImportWallet = (props) => {
                     data.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount" ||
                     data.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
                     localStorage.setItem('fee', config.vestingAccountFee);
-                    localStorage.setItem('vestingAccountType', data.account["@type"]);
                 } else {
                     localStorage.setItem('fee', config.defaultFee);
                 }
