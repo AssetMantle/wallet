@@ -121,16 +121,19 @@ const ModalActions = (props) => {
                                     :
                                     null
                                 }
-                                <button className="button button-primary"
-                                        onClick={() => handleModal('Redelegate', props.validator.operator_address, props.validator.description.moniker)}
-                                >{t("REDELEGATE")}
-                                </button>
-
-                                <button
-                                    onClick={() => handleModal('Unbond', props.validator.operator_address, props.validator.description.moniker)}
-                                    className="button button-primary">
-                                    {t("UNBOND")}
-                                </button>
+                                {delegateStatus ?
+                                    <button className="button button-primary"
+                                            onClick={() => handleModal('Redelegate', props.validator.operator_address, props.validator.description.moniker)}
+                                    >{t("REDELEGATE")}
+                                    </button>
+                                    : ""}
+                                {delegateStatus ?
+                                    <button
+                                        onClick={() => handleModal('Unbond', props.validator.operator_address, props.validator.description.moniker)}
+                                        className="button button-primary">
+                                        {t("UNBOND")}
+                                    </button>
+                                    : ""}
                                 {rewards !== ''
                                     ?
                                     <button
