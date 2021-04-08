@@ -16,6 +16,7 @@ import aminoMsgHelper from "../../../utils/aminoMsgHelper";
 import transactions from "../../../utils/transactions";
 import MakePersistence from "../../../utils/cosmosjsWrapper";
 import config from "../../../config";
+
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const ModalWithdraw = (props) => {
@@ -102,25 +103,23 @@ const ModalWithdraw = (props) => {
     const handleSubmitKepler = async event => {
         setLoader(true);
         event.preventDefault();
-        setInitialModal(false);
         const response = transactions.TransactionWithKeplr([WithdrawMsg(loginAddress, validatorAddress)], aminoMsgHelper.fee(5000, 250000));
         response.then(result => {
+            setInitialModal(false);
             setResponse(result);
             setLoader(false)
         }).catch(err => {
             setLoader(false);
-            props.setRewards(false)
-            console.log(err.message, "Withdraw error")
+            setErrorMessage(err.message);
         })
     };
     const handleSubmitInitialData = async event => {
         event.preventDefault();
         const memo = event.target.memo.value;
         let memoCheck = transactions.mnemonicValidation(memo, loginAddress)
-        if(memoCheck){
+        if (memoCheck) {
             setErrorMessage("you entered your mnemonic as memo")
-        }
-       else {
+        } else {
             setErrorMessage("")
             setMemoContent(memo);
             setInitialModal(false);

@@ -110,15 +110,14 @@ const ModalReDelegate = (props) => {
     const handleSubmitKepler = async event => {
         setLoader(true);
         event.preventDefault();
-        setInitialModal(false);
         const response = transactions.TransactionWithKeplr([RedelegateMsg(loginAddress, props.validatorAddress, toValidatorAddress, (amount * 1000000))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
+            setInitialModal(false);
+            setLoader(false);
             setResponse(result);
-            setLoader(false)
         }).catch(err => {
             setLoader(false);
-            props.handleClose();
-            console.log(err.message, "delegate error")
+            setErrorMessage(err.message);
         })
     };
 

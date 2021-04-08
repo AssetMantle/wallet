@@ -88,15 +88,14 @@ const ModalWithdraw = (props) => {
     const handleSubmitKepler = async event => {
         setLoader(true);
         event.preventDefault();
-        setInitialModal(false);
         const response = transactions.TransactionWithKeplr([WithdrawMsg(loginAddress, props.validatorAddress)], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
+            setInitialModal(false);
             setResponse(result);
             setLoader(false)
         }).catch(err => {
             setLoader(false);
-            props.handleClose();
-            console.log(err.message, "Withdraw error")
+            setErrorMessage(err.message);
         })
     };
 
