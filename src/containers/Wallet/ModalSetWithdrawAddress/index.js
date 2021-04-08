@@ -210,12 +210,13 @@ const ModalSetWithdrawAddress = (props) => {
             animation={false}
             centered={true}
             keyboard={false}
+            backdrop="static"
             show={show}
             className="modal-custom claim-rewards-modal"
             onHide={handleClose}>
             {initialModal ?
                 <>
-                    <Modal.Header>
+                    <Modal.Header closeButton>
                         Set Rewards Withdraw Address
                     </Modal.Header>
                     <Modal.Body className="rewards-modal-body">
@@ -253,7 +254,7 @@ const ModalSetWithdrawAddress = (props) => {
             }
             {seedModal ?
                 <>
-                    <Modal.Header>
+                    <Modal.Header closeButton>
                         Set Rewards Withdraw Address
                     </Modal.Header>
                     <Modal.Body className="rewards-modal-body">
@@ -359,7 +360,7 @@ const ModalSetWithdrawAddress = (props) => {
             {
                 response !== '' && response.code === undefined ?
                     <>
-                        <Modal.Header className="result-header success">
+                        <Modal.Header className="result-header success" closeButton>
                             Successfully Claimed Rewards!
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
@@ -387,7 +388,7 @@ const ModalSetWithdrawAddress = (props) => {
             {
                 response !== '' && response.code !== undefined ?
                     <>
-                        <Modal.Header className="result-header error">
+                        <Modal.Header className="result-header error" closeButton>
                             Failed to Claimed Rewards
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">

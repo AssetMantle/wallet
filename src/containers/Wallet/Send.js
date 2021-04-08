@@ -234,7 +234,7 @@ const Send = (props) => {
                         />
                     </div>
                     <div className="form-field">
-                        <p className="label">Send Amount (XPRT)</p>
+                        <p className="label">Amount (XPRT)</p>
                         <div className="amount-field">
                             <Form.Control
                                 type="number"
@@ -268,12 +268,14 @@ const Send = (props) => {
 
             {
                 mnemonicForm ?
-                    <Modal show={show} onHide={handleClose} centered className="create-wallet-modal">
+                    <Modal show={show} onHide={handleClose}  backdrop="static" centered className="modal-custom">
                         {
                             txResponse === '' ?
+                                <>
+                                <Modal.Header closeButton>
+                                    Send Token
+                                </Modal.Header>
                                 <Modal.Body className="create-wallet-body import-wallet-body">
-                                    <h3 className="heading">Send Token
-                                    </h3>
                                     <Form onSubmit={handleMnemonicSubmit}>
                                         {
                                             importMnemonic ?
@@ -375,6 +377,7 @@ const Send = (props) => {
                                     </Form>
 
                                 </Modal.Body>
+                                </>
                                 : <>
                                     {
                                         txResponse.code === undefined ?

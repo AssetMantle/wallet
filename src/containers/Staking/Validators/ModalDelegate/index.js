@@ -235,7 +235,7 @@ const ModalDelegate = (props) => {
             {initialModal ?
                 <>
                     <Modal.Header closeButton>
-                        Delegating to {props.moniker}
+                        Delegate to {props.moniker}
                         <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
                             <button className="icon-button info"><Icon
                                 viewClass="arrow-right"
@@ -299,7 +299,7 @@ const ModalDelegate = (props) => {
             {seedModal ?
                 <>
                     <Modal.Header closeButton>
-                        Delegating to {props.moniker}
+                        Delegate to {props.moniker}
                         <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
                             <button className="icon-button info"><Icon
                                 viewClass="arrow-right"

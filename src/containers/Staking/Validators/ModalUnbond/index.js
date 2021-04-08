@@ -212,7 +212,7 @@ const ModalUnbond = (props) => {
             {initialModal ?
                 <>
                     <Modal.Header closeButton>
-                        unbonding from {props.moniker}
+                        Unbond from {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
@@ -272,7 +272,7 @@ const ModalUnbond = (props) => {
             {seedModal ?
                 <>
                     <Modal.Header closeButton>
-                        unbonding from {props.moniker}
+                        Unbond from {props.moniker}
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={handleSubmit}>
