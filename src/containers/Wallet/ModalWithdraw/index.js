@@ -228,19 +228,20 @@ const ModalWithdraw = (props) => {
         <Modal
             animation={false}
             centered={true}
+            backdrop="static"
             keyboard={false}
             show={show}
             className="modal-custom claim-rewards-modal"
             onHide={handleClose}>
             {initialModal ?
                 <>
-                    <Modal.Header>
+                    <Modal.Header closeButton>
                         Claiming Rewards
                     </Modal.Header>
                     <Modal.Body className="rewards-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
                             <div className="form-field">
-                                <p className="label">Select Validator</p>
+                                <p className="label">Validator</p>
 
                                 <Select value={validatorAddress} className="validators-list-selection"
                                         onChange={onChangeSelect} displayEmpty>
@@ -298,7 +299,7 @@ const ModalWithdraw = (props) => {
             }
             {seedModal ?
                 <>
-                    <Modal.Header>
+                    <Modal.Header closeButton>
                         Claim Staking Rewards
                     </Modal.Header>
                     <Modal.Body className="rewards-modal-body">
@@ -404,7 +405,7 @@ const ModalWithdraw = (props) => {
             {
                 response !== '' && response.code === undefined ?
                     <>
-                        <Modal.Header className="result-header success">
+                        <Modal.Header className="result-header success" closeButton>
                             Successfully Claimed Rewards!
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
@@ -432,7 +433,7 @@ const ModalWithdraw = (props) => {
             {
                 response !== '' && response.code !== undefined ?
                     <>
-                        <Modal.Header className="result-header error">
+                        <Modal.Header className="result-header error" closeButton>
                             Failed to Claimed Rewards
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">

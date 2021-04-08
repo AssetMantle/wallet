@@ -22,7 +22,7 @@ const Validators = (props) => {
                 <div className="tab-header">
                     <div className="info">
                         <div className="left">
-                            <p className="info-name">Choose a Validator</p>
+                            <p className="info-name">Validators</p>
                             <Nav variant="pills">
                                 <Nav.Item>
                                     <Nav.Link eventKey="active">Active</Nav.Link>
