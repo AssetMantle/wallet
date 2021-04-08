@@ -92,11 +92,15 @@ const ModalWithdraw = (props) => {
         event.preventDefault();
         const response = transactions.TransactionWithKeplr([WithdrawMsg(loginAddress, props.validatorAddress)], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
+            if(result.code !== undefined){
+                helper.AccountChangeCheck(result.rawLog)
+            }
             setInitialModal(false);
             setResponse(result);
             setLoader(false)
         }).catch(err => {
             setLoader(false);
+            helper.AccountChangeCheck(err.message);
             setErrorMessage(err.message);
         })
     };

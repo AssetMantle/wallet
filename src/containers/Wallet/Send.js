@@ -69,12 +69,16 @@ const Send = (props) => {
         event.preventDefault();
         const response = transactions.TransactionWithKeplr([SendMsg(loginAddress, event.target.address.value, (amountField * 1000000))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
+            if(result.code !== undefined){
+                helper.AccountChangeCheck(result.rawLog)
+            }
             setMnemonicForm(true);
             setTxResponse(result);
             setLoader(false);
         }).catch(err => {
             setLoader(false);
             setKeplerError(err.message);
+            helper.AccountChangeCheck(err.message)
             console.log(err.message, "send error")
         })
     };

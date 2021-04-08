@@ -9,8 +9,8 @@ import {fetchTokenPrice} from "../../actions/tokenPrice";
 import ModalSetWithdrawAddress from "../Wallet/ModalSetWithdrawAddress";
 import vestingAccount from "../../utils/vestingAmount";
 import {useTranslation} from "react-i18next";
-
-
+import ModalViewUnbondDetails from "./ModalViewUnbondDetails";
+import ModalViewVestingDetails from "./ModalViewVestingDetails";
 const TokenInfo = (props) => {
     const {t} = useTranslation();
     const [rewards, setRewards] = useState(false);
@@ -45,7 +45,7 @@ const TokenInfo = (props) => {
                 <div className="inner-box">
                     <div className="line">
                         <p className="key">{t("TOTAL_BALANCE")}</p>
-                        <p className="value">{props.delegations + props.balance + props.unbond} XPRT</p>
+                        <p className="value" title={props.delegations + props.balance + props.unbond}>{(props.delegations + props.balance + props.unbond).toFixed(2)} XPRT</p>
                     </div>
                     <div className="line">
                         <p className="key">{t("AVAILABLE_DELEGATE_AMOUNT")}</p>
@@ -55,7 +55,7 @@ const TokenInfo = (props) => {
 
                     <div className="line">
                         <p className="key">{t("DELEGATED_AMOUNT")}</p>
-                        <p className="value">{props.delegations} XPRT</p>
+                        <p className="value" title={props.delegations}>{props.delegations.toFixed(2)} XPRT</p>
                     </div>
                 </div>
             </div>
@@ -63,11 +63,17 @@ const TokenInfo = (props) => {
                 <div className="inner-box">
                     <div className="line">
                         <p className="key">{t("AMOUNT_UNDER_VESTING")}</p>
-                        <p className="value"> {vestingAmount} XPRT</p>
+                        <p className="value" title={vestingAmount}> {vestingAmount.toFixed(2)} XPRT
+                            {
+                                vestingAmount > 0 ?
+                                    <ModalViewVestingDetails />
+                                    : ""
+                            }
+                        </p>
                     </div>
                     <div className="line">
                         <p className="key">{t("TRANSFERABLE_AMOUNT")}</p>
-                        <p className="value"> {transferableAmount} XPRT</p>
+                        <p className="value" title={transferableAmount}> {transferableAmount.toFixed(2)} XPRT</p>
                     </div>
                     <div className="line">
                         <p className="key">{t("CURRENT_PRICE")}</p>
@@ -95,7 +101,13 @@ const TokenInfo = (props) => {
                     </div>
                     <div className="line">
                         <p className="key">{t("UNBONDING_TOKEN")}</p>
-                        <p className="value">{props.unbond} XPRT</p>
+                        <p className="value" title={props.unbond}>{props.unbond.toFixed(2)} XPRT
+                            {
+                                props.unbond > 0 ?
+                                    <ModalViewUnbondDetails />
+                                    : ""
+                            }
+                        </p>
                     </div>
                 </div>
             </div>

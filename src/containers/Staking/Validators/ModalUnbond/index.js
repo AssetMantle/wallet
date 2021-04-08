@@ -117,11 +117,15 @@ const ModalUnbond = (props) => {
 
         const response = transactions.TransactionWithKeplr([UnbondMsg(loginAddress, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
+            if(result.code !== undefined){
+                helper.AccountChangeCheck(result.rawLog)
+            }
             setInitialModal(false);
             setResponse(result);
             setLoader(false)
         }).catch(err => {
             setLoader(false);
+            helper.AccountChangeCheck(err.message);
             setErrorMessage(err.message);
         })
     };

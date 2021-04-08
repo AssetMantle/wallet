@@ -213,7 +213,7 @@ let English = {
         "SUCCESSFULL_DELEGATED": "Successfully Delegated!",
         "FAILED_DELEGATE": "Failed to Delegate",
         "SUCCESSFULL_REDELEGATED": "Successfully Redelegated!",
-        "FAILED_REDELEGATE": "Failed to Redelegated",
+        "FAILED_REDELEGATE": "Failed to Redelegate",
         "SUCCESSFULL_UNBOND": "Successfully Unbonded!",
         "FAILED_UNBOND": "Failed to Unbond",
         "SUCCESSFULL_SEND": "",

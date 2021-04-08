@@ -114,11 +114,15 @@ const ModalReDelegate = (props) => {
         event.preventDefault();
         const response = transactions.TransactionWithKeplr([RedelegateMsg(loginAddress, props.validatorAddress, toValidatorAddress, (amount * 1000000))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
+            if(result.code !== undefined){
+                helper.AccountChangeCheck(result.rawLog)
+            }
             setInitialModal(false);
             setLoader(false);
             setResponse(result);
         }).catch(err => {
             setLoader(false);
+            helper.AccountChangeCheck(err.message);
             setErrorMessage(err.message);
         })
     };

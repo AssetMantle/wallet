@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from "react";
-import "../utils/kepler";
-import KeplerWallet from "../utils/kepler";
+import "../../utils/kepler";
+import KeplerWallet from "../../utils/kepler";
 import {useHistory, NavLink} from "react-router-dom";
 import {Nav, Navbar} from "react-bootstrap";
-import logo from "../assets/images/logo_lite.svg";
-import ModalFaq from "../containers/Faq";
-import MakePersistence from "../utils/cosmosjsWrapper";
-import config from "../config";
+import logo from "../../assets/images/logo_lite.svg";
+import ModalFaq from "../../containers/Faq";
+import MakePersistence from "../../utils/cosmosjsWrapper";
+import config from "../../config";
 import {useTranslation} from "react-i18next";
-
+import ModalKeplerInstall from "./ModalKeplerInstall";
 const KeplerHome = () => {
     const {t} = useTranslation();
     const history = useHistory();
@@ -16,17 +16,19 @@ const KeplerHome = () => {
     const [showFaq, setShowFaq] = useState(false);
     const [address, setAddress] = useState("");
     useEffect(() => {
+        setErrorMessage("");
         const kepler = KeplerWallet();
         kepler.then(function (item) {
             const address = localStorage.getItem("keplerAddress");
             setAddress(address);
         }).catch(err => {
+            console.log("red")
             setErrorMessage(err.message)
         });
     }, []);
 
     const handleKepler = () => {
-        setErrorMessage("")
+        setErrorMessage("");
         const kepler = KeplerWallet();
         kepler.then(function (item) {
             const address = localStorage.getItem("keplerAddress");
@@ -69,7 +71,6 @@ const KeplerHome = () => {
     const handleHelp = () => {
         setShowFaq(true)
     };
-
     return (
         <div className="kepler-section">
             <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -97,10 +98,16 @@ const KeplerHome = () => {
                                 <button className="button button-primary" onClick={() => handleKepler()}>{t("CONNECT")}
                                 </button>
                             </div>
-                            <div className="text">
-                                <p>{t("KEPLER_ERROR")}</p>
-                                <p className="form-error">{errorMessage}</p>
-                            </div>
+                            {
+                                errorMessage === "install keplr extension" ?
+                                    <ModalKeplerInstall/>
+                                    :
+                                    <div className="text">
+                                        <p>{t("KEPLER_ERROR")}</p>
+                                        <p className="form-error">{errorMessage}</p>
+                                    </div>
+                            }
+
                         </>
                         :
                         <>

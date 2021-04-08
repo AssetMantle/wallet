@@ -176,13 +176,13 @@
   }
 }
 
-.heading.copy{
+.heading.copy {
   justify-content: center;
   display: flex;
 }
 
 .refresh-button {
- outline: none !important;
+  outline: none !important;
   position: absolute !important;
   top: 3px;
   right: 12px;
@@ -191,6 +191,7 @@
 .refresh-button {
   fill: #ffffff;
 }
+
 @keyframes rotate {
 
   from {
@@ -201,6 +202,7 @@
   }
 
 }
+
 .refresh-start svg {
 
   animation-name: rotate;
@@ -221,11 +223,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  h3{
+
+  h3 {
     font-family: 'Poppins', sans-serif;
     font-size: 20px;
   }
-  p{
+
+  p {
     margin: 0;
   }
 }
@@ -246,8 +250,8 @@
 
 .bouncer-holder {
   -webkit-animation: travel 3s ease-in infinite alternate;
-  -o-animation:  travel 3s ease-in infinite alternate;
-  animation:  travel 3s ease-in infinite alternate;
+  -o-animation: travel 3s ease-in infinite alternate;
+  animation: travel 3s ease-in infinite alternate;
 }
 
 .bouncer {
@@ -263,22 +267,30 @@
   //background: -ms-radial-gradient(60% 40%, circle, rgba(255,255,255,0.8), #E3287D 50%) #E3287D;
   //background: radial-gradient(60% 40%, circle, rgba(255,255,255,0.8), #E3287D 50%) #E3287D;
   -webkit-animation: bounce 3.5s infinite;
-  -o-animation:  bounce 3.5s infinite;
-  animation:  bounce 3.5s infinite;
+  -o-animation: bounce 3.5s infinite;
+  animation: bounce 3.5s infinite;
 }
 
 @-webkit-keyframes travel {
-  from { left: 0; }
-  to   { left: calc(100% - 30px)}
+  from {
+    left: 0;
+  }
+  to {
+    left: calc(100% - 30px)
+  }
 }
 
 @keyframes travel {
-  from { left: 0; }
-  to   { left: calc(100% - 30px)}
+  from {
+    left: 0;
+  }
+  to {
+    left: calc(100% - 30px)
+  }
 }
 
 @-webkit-keyframes bounce {
-  from, to  {
+  from, to {
     bottom: 0;
     -webkit-animation-timing-function: ease-out;
   }
@@ -287,13 +299,68 @@
     -webkit-animation-timing-function: ease-in;
   }
 }
+
 @keyframes bounce {
-  from, to  {
+  from, to {
     bottom: 0;
     animation-timing-function: ease-out;
   }
   50% {
     bottom: calc(100% - 30px);
     animation-timing-function: ease-in;
+  }
+}
+
+.unbonding-schedule-list {
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  line-height: 2;
+  color: #70747C;
+}
+.icon-button{
+  cursor: pointer;
+}
+.kepler-modal {
+  .modal-dialog{
+    max-width: 500px;
+  }
+  .kepler-modal-body {
+    padding: 40px;
+    p{
+      text-align: center;
+    }
+    .installed-note{
+      padding: 20px 0;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .chrome-box {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      .chrome-link{
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 200px;
+        height: 160px;
+        border-radius: 6px;
+        box-shadow: 0 0 32px 0 rgba(136,152,170,0.15);
+        border: solid 1px rgba(0,0,0,0.05);
+        p{
+          font-size: 16px;
+          line-height: 1.75;
+          letter-spacing: -0.3px;
+          text-align: center;
+          color: #525f7f;
+        }
+      }
+      img {
+        width: 80px;
+        height: 80px;
+      }
+    }
   }
 }

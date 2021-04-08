@@ -5,7 +5,7 @@ import Homepage from "./views/Homepage";
 import DashboardStaking from "./views/Staking";
 import PrivateRoute from "./containers/PrivateRoute";
 import ImportWallet from "./containers/ImpotWallet";
-import KeplerHome from "./views/KeplerHome";
+import KeplerHome from "./views/Kepler/KeplerHome";
 import RouteNotFound from "./components/RouteNotFound";
 import config from "./config"
 import icon_white from "./assets/images/icon_white.svg"

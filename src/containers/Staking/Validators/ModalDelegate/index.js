@@ -97,11 +97,15 @@ const ModalDelegate = (props) => {
         event.preventDefault();
         const response = transactions.TransactionWithKeplr([DelegateMsg(loginAddress, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(0, 250000), memoContent);
         response.then(result => {
+            if(result.code !== undefined){
+                helper.AccountChangeCheck(result.rawLog)
+            }
             setResponse(result);
             setLoader(false)
             setInitialModal(false);
         }).catch(err => {
             setLoader(false);
+            helper.AccountChangeCheck(err.message);
             setErrorMessage(err.message);
         })
     };

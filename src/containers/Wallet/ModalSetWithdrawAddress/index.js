@@ -13,6 +13,7 @@ import transactions from "../../../utils/transactions";
 import MakePersistence from "../../../utils/cosmosjsWrapper";
 import config from "../../../config";
 import {useTranslation} from "react-i18next";
+import {fetchWithdrawAddress} from "../../../actions/withdrawAddress";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -32,6 +33,7 @@ const ModalSetWithdrawAddress = (props) => {
     const loginAddress = localStorage.getItem('address');
     const mode = localStorage.getItem('loginMode');
     useEffect(() => {
+        props.fetchWithdrawAddress(loginAddress)
         for (const item of props.list) {
             const validatorUrl = getValidatorUrl(item.validator_address);
             axios.get(validatorUrl).then(validatorResponse => {
@@ -101,11 +103,15 @@ const ModalSetWithdrawAddress = (props) => {
         event.preventDefault();
         const response = transactions.TransactionWithKeplr([SetWithDrawAddressMsg(loginAddress, event.target.withdrawalAddress.value)], aminoMsgHelper.fee(5000, 250000));
         response.then(result => {
+            if(result.code !== undefined){
+                helper.AccountChangeCheck(result.rawLog)
+            }
             setInitialModal(false);
             setResponse(result);
             setLoader(false)
         }).catch(err => {
             setLoader(false);
+            helper.AccountChangeCheck(err.message);
             setErrorMessage(err.message);
         })
     };
@@ -222,6 +228,15 @@ const ModalSetWithdrawAddress = (props) => {
                     </Modal.Header>
                     <Modal.Body className="rewards-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
+                            <div className="form-field">
+                                <p className="label">Current rewards withdrawal address</p>
+                                <Form.Control
+                                    type="text"
+                                    name="withdrawalAddress"
+                                    placeholder={t("ENTER_WITHDRAW_ADDRESS")}
+                                    value={props.withdrawAddress}
+                                />
+                            </div>
                             <div className="form-field">
                                 <p className="label">{t("WITHDRAW_ADDRESS")}</p>
                                 <Form.Control
@@ -426,7 +441,12 @@ const stateToProps = (state) => {
         list: state.rewards.list,
         tokenPrice: state.tokenPrice.tokenPrice,
         status: state.delegations.status,
+        withdrawAddress : state.withdrawAddress.withdrawAddress
     };
 };
 
-export default connect(stateToProps)(ModalSetWithdrawAddress);
+const actionsToProps = {
+    fetchWithdrawAddress
+};
+
+export default connect(stateToProps, actionsToProps)(ModalSetWithdrawAddress);
