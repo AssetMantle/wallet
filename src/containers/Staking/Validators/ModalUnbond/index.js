@@ -10,9 +10,11 @@ import helper from "../../../../utils/helper";
 import Loader from "../../../../components/Loader";
 import config from "../../../../config";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
+import {useTranslation} from "react-i18next";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalUnbond = (props) => {
+    const {t} = useTranslation();
     const [amount, setAmount] = useState(0);
     const [response, setResponse] = useState('');
     const [advanceMode, setAdvanceMode] = useState(false);
@@ -115,11 +117,15 @@ const ModalUnbond = (props) => {
 
         const response = transactions.TransactionWithKeplr([UnbondMsg(loginAddress, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
+            if(result.code !== undefined){
+                helper.AccountChangeCheck(result.rawLog)
+            }
             setInitialModal(false);
             setResponse(result);
             setLoader(false)
         }).catch(err => {
             setLoader(false);
+            helper.AccountChangeCheck(err.message);
             setErrorMessage(err.message);
         })
     };
@@ -217,22 +223,22 @@ const ModalUnbond = (props) => {
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
                             <div className="form-field">
-                                <p className="label">Delegation Amount</p>
+                                <p className="label">{t("DELEGATION_AMOUNT")}</p>
                                 <Form.Control
                                     type="number"
-                                    placeholder="Amount"
+                                    placeholder={t("AMOUNT")}
                                     value={props.delegationAmount}
                                     disabled
                                 />
                             </div>
                             <div className="form-field">
-                                <p className="label"> Unbound Amount(XPRT)</p>
+                                <p className="label">{t("UNBOND_AMOUNT")}(XPRT)</p>
                                 <div className="amount-field">
                                     <Form.Control
                                         type="number"
                                         min={0}
                                         name="amount"
-                                        placeholder="Send Amount"
+                                        placeholder={t("SEND_AMOUNT")}
                                         value={amount}
                                         step="any"
                                         onChange={handleAmountChange}
@@ -242,9 +248,9 @@ const ModalUnbond = (props) => {
                             </div>
                             {mode === "normal" ?
                                 <div className="form-field">
-                                    <p className="label">Memo</p>
+                                    <p className="label">{t("MEMO")}</p>
                                     <Form.Control as="textarea" rows={3} name="memo"
-                                                  placeholder="Enter Memo"
+                                                  placeholder={t("ENTER_MEMO")}
                                                   required={false}/>
                                 </div> : null
                             }
@@ -280,28 +286,28 @@ const ModalUnbond = (props) => {
                                 importMnemonic ?
                                     <>
                                         <div className="text-center">
-                                            <p onClick={() => handlePrivateKey(false)} className="import-name">Use
-                                                Private Key (KeyStore.json file)</p>
+                                            <p onClick={() => handlePrivateKey(false)}
+                                               className="import-name">{t("USE_PRIVATE_KEY")} (KeyStore.json file)</p>
                                         </div>
                                         <div className="form-field">
-                                            <p className="label">Mnemonic</p>
+                                            <p className="label">{t("MNEMONIC")}</p>
                                             <Form.Control as="textarea" rows={3} name="mnemonic"
-                                                          placeholder="Enter Mnemonic"
+                                                          placeholder={t("ENTER_MNEMONIC")}
                                                           required={true}/>
                                         </div>
                                     </>
                                     :
                                     <>
                                         <div className="text-center">
-                                            <p onClick={() => handlePrivateKey(true)} className="import-name">Use
-                                                Mnemonic (Seed Phrase)</p>
+                                            <p onClick={() => handlePrivateKey(true)}
+                                               className="import-name">{t("USE_MNEMONIC")} ({t("SEED_PHRASE")})</p>
                                         </div>
                                         <div className="form-field">
-                                            <p className="label">Password</p>
+                                            <p className="label">{t("PASSWORD")}</p>
                                             <Form.Control
                                                 type="password"
                                                 name="password"
-                                                placeholder="Enter Password"
+                                                placeholder={t("ENTER_PASSWORD")}
                                                 required={true}
                                             />
                                         </div>
@@ -318,39 +324,39 @@ const ModalUnbond = (props) => {
                                 <Card>
                                     <Card.Header>
                                         <p>
-                                            Advanced
+                                            ({t("ADVANCED")})
                                         </p>
                                         <ContextAwareToggle eventKey="0">Click me!</ContextAwareToggle>
                                     </Card.Header>
                                     <Accordion.Collapse eventKey="0">
                                         <>
                                             <div className="form-field">
-                                                <p className="label">Account</p>
+                                                <p className="label">{t("ACCOUNT")}</p>
                                                 <Form.Control
                                                     type="text"
                                                     name="unbondAccountNumber"
                                                     id="unbondAccountNumber"
-                                                    placeholder="Account number"
+                                                    placeholder={t("ACCOUNT_NUMBER")}
                                                     required={advanceMode ? true : false}
                                                 />
                                             </div>
                                             <div className="form-field">
-                                                <p className="label">Account Index</p>
+                                                <p className="label">{t("ACCOUNT_INDEX")}</p>
                                                 <Form.Control
                                                     type="text"
                                                     name="unbondAccountIndex"
                                                     id="unbondAccountIndex"
-                                                    placeholder="Account Index"
+                                                    placeholder={t("ACCOUNT_INDEX")}
                                                     required={advanceMode ? true : false}
                                                 />
                                             </div>
                                             <div className="form-field">
-                                                <p className="label">bip39Passphrase</p>
+                                                <p className="label">{t("BIP_PASSPHRASE")}</p>
                                                 <Form.Control
                                                     type="password"
                                                     name="unbondbip39Passphrase"
                                                     id="unbondbip39Passphrase"
-                                                    placeholder="Enter bip39Passphrase (optional)"
+                                                    placeholder={t("ENTER_BIP_PASSPHRASE")}
                                                     required={false}
                                                 />
                                             </div>
@@ -378,7 +384,7 @@ const ModalUnbond = (props) => {
                 response !== '' && response.code === undefined ?
                     <>
                         <Modal.Header className="result-header success" closeButton>
-                            Successfully Unbonded!
+                            {t("SUCCESSFULL_UNBOND")}
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
@@ -395,7 +401,7 @@ const ModalUnbond = (props) => {
                                         Hash: {response.txhash}</a>
                                 }
                                 <div className="buttons">
-                                    <button className="button" onClick={props.handleClose}>Done</button>
+                                    <button className="button" onClick={props.handleClose}>{t("DONE")}</button>
                                 </div>
                             </div>
                         </Modal.Body>
@@ -406,7 +412,7 @@ const ModalUnbond = (props) => {
                 response !== '' && response.code !== undefined ?
                     <>
                         <Modal.Header className="result-header error" closeButton>
-                            Failed to Unbond
+                            {t("FAILED_UNBOND")}
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
@@ -428,7 +434,7 @@ const ModalUnbond = (props) => {
                                     </>
                                 }
                                 <div className="buttons">
-                                    <button className="button" onClick={props.handleClose}>Done</button>
+                                    <button className="button" onClick={props.handleClose}> {t("DONE")}</button>
                                 </div>
                             </div>
                         </Modal.Body>

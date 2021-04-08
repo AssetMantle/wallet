@@ -3,7 +3,9 @@ import React, {useState} from 'react';
 import Icon from "../../components/Icon";
 import WalletFaq from "./WalletFaq";
 import StakingFaq from "./StakingFaq";
+import {useTranslation} from "react-i18next";
 const ModalFaq = (props) => {
+    const {t} = useTranslation();
     const [show, setShow] = useState(true);
 
     const handleClose = (amount) => {
@@ -22,7 +24,7 @@ const ModalFaq = (props) => {
             className="modal-custom faq-modal"
             onHide={handleClose}>
             <Modal.Header className="result-header" closeButton>
-                Frequently Asked Questions
+                {t("FAQ")}
             </Modal.Header>
             <Modal.Body className="faq-modal-body">
                 <Tab.Container id="left-tabs-example" defaultActiveKey="first">

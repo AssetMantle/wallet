@@ -10,8 +10,10 @@ import ModalWithdraw from "../ModalWithdraw";
 import ModalDelegate from "../ModalDelegate";
 import {getDelegationsUrl, getValidatorRewardsUrl} from "../../../../constants/url";
 import axios from "axios";
+import {useTranslation} from "react-i18next";
 
 const ModalActions = (props) => {
+    const {t} = useTranslation();
     const [show, setShow] = useState(true);
     const [txModalShow, setTxModalShow] = useState(false);
     const [initialModal, setInitialModal] = useState(true);
@@ -86,13 +88,13 @@ const ModalActions = (props) => {
                                     identity={props.validator.description.identity}/>
                                 <div className="info">
                                     <p className="name">{props.validator.description.moniker}</p>
-                                    <p className="commission">Commission - {commissionRate}%</p>
+                                    <p className="commission"> {t("COMMISSION")} - {commissionRate}%</p>
                                 </div>
                             </div>
                             {
                                 props.validator.description.website !== "" ?
                                     <div className="website">
-                                        <p className="name">website</p>
+                                        <p className="name">{t("WEBSITE")}</p>
                                         <p className="value"><a href={props.validator.description.website}
                                                                 rel="noopener noreferrer"
                                                                 target="_blank">{props.validator.description.website}</a>
@@ -103,7 +105,7 @@ const ModalActions = (props) => {
                             {
                                 props.validator.description.details !== "" ?
                                     <div className="description">
-                                        <p className="name">Description</p>
+                                        <p className="name">{t("DESCRIPTION")}</p>
                                         <p className="value">{props.validator.description.details}</p>
                                     </div>
                                     : null
@@ -114,27 +116,30 @@ const ModalActions = (props) => {
                                     <button
                                         onClick={() => handleModal('Delegate', props.validator.operator_address, props.validator.description.moniker)}
                                         className="button button-primary">
-                                        Delegate
+                                        {t("DELEGATE")}
                                     </button>
                                     :
                                     null
                                 }
-                                <button className="button button-primary"
-                                        onClick={() => handleModal('Redelegate', props.validator.operator_address, props.validator.description.moniker)}
-                                >Redelegate
-                                </button>
-
-                                <button
-                                    onClick={() => handleModal('Unbond', props.validator.operator_address, props.validator.description.moniker)}
-                                    className="button button-primary">
-                                    Unbond
-                                </button>
+                                {delegateStatus ?
+                                    <button className="button button-primary"
+                                            onClick={() => handleModal('Redelegate', props.validator.operator_address, props.validator.description.moniker)}
+                                    >{t("REDELEGATE")}
+                                    </button>
+                                    : ""}
+                                {delegateStatus ?
+                                    <button
+                                        onClick={() => handleModal('Unbond', props.validator.operator_address, props.validator.description.moniker)}
+                                        className="button button-primary">
+                                        {t("UNBOND")}
+                                    </button>
+                                    : ""}
                                 {rewards !== ''
                                     ?
                                     <button
                                         onClick={() => handleModal('Withdraw', props.validator.operator_address, props.validator.description.moniker)}
                                         className="button button-primary">
-                                        Claim Rewards
+                                        {t("CLAIM_REWARDS")}
                                     </button>
                                     : null}
 

@@ -5,8 +5,10 @@ import ValidatorsTable from "./ValidatorsTable";
 import {fetchValidators} from "../../../actions/validators";
 import {connect} from "react-redux";
 import InfoRefresh from "../../Refresh";
+import {useTranslation} from "react-i18next";
 
 const Validators = (props) => {
+    const {t} = useTranslation();
     useEffect(() => {
         const address = localStorage.getItem('address');
         props.fetchValidators(address);
@@ -25,10 +27,10 @@ const Validators = (props) => {
                             <p className="info-name">Validators</p>
                             <Nav variant="pills">
                                 <Nav.Item>
-                                    <Nav.Link eventKey="active">Active</Nav.Link>
+                                    <Nav.Link eventKey="active"> {t("ACTIVE")}</Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
-                                    <Nav.Link eventKey="inactive">Inactive</Nav.Link>
+                                    <Nav.Link eventKey="inactive"> {t("IN_ACTIVE")}</Nav.Link>
                                 </Nav.Item>
                             </Nav>
                         </div>

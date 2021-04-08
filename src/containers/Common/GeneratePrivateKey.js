@@ -4,9 +4,11 @@ import {
 } from "react-bootstrap";
 import Icon from "../../components/Icon";
 import helper from "../../utils/helper";
+import {useTranslation} from "react-i18next";
 
 
 const GeneratePrivateKey = (props) => {
+    const {t} = useTranslation();
     const [keyFile, setKeyFile] = useState(false);
     const [show, setShow] = useState(true);
     const handleSubmit = async event => {
@@ -58,11 +60,11 @@ const GeneratePrivateKey = (props) => {
                 <Form onSubmit={handleSubmit} className="form-privatekey">
                     {!keyFile ?
                         <div className="form-field">
-                            <p className="label">Password</p>
+                            <p className="label"> {t("PASSWORD")}</p>
                             <Form.Control
                                 type="password"
                                 name="password"
-                                placeholder="Enter Password"
+                                placeholder={t("ENTER_PASSWORD")}
                                 required={true}
                             />
                         </div>
@@ -73,14 +75,13 @@ const GeneratePrivateKey = (props) => {
 
                         <>
                             <div className="buttons">
-                                <button className="button button-primary">Submit</button>
+                                <button className="button button-primary">{t("SUBMIT")}</button>
                             </div>
                             <div className="note-section">
                                 <div className="exclamation"><Icon
                                     viewClass="arrow-right"
                                     icon="exclamation"/></div>
-                                <p>Password encrypts your seed phrase. This password does not help you generate your
-                                    seed phrase.</p>
+                                <p>{t("PRIVATE_KEY_PASSWORD_NOTE")}</p>
                             </div>
                         </>
                         :
@@ -92,13 +93,13 @@ const GeneratePrivateKey = (props) => {
                 {keyFile ?
                     <>
                         <div className="buttons">
-                            <button className="button button-primary" onClick={handleClose}>Done</button>
+                            <button className="button button-primary" onClick={handleClose}>{t("DONE")}</button>
                         </div>
                         <div className="note-section">
                             <div className="exclamation"><Icon
                                 viewClass="arrow-right"
                                 icon="exclamation"/></div>
-                            <p>This is your KeyStore json file. Please secure in a safe place</p>
+                            <p>{t("KEYSTORE_FILE_NOTE")}</p>
                         </div>
 
                     </>

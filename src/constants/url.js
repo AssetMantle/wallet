@@ -12,3 +12,4 @@ export const getReceiveTransactionsUrl  = (address , limit, pageNumber) =>`${RPC
 // export const getReceiveTransactionsUrl  = (address , limit, pageNumber) =>`${API_URL}/txs?transfer.recipient=${address}&limit=${limit}&page=${pageNumber}`;
 export const getValidatorRewardsUrl = (address, validatorAddress) => `${API_URL}/cosmos/distribution/v1beta1/delegators/${address}/rewards/${validatorAddress}`;
 export const getAccountUrl = (address) => `${API_URL}/cosmos/auth/v1beta1/accounts/${address}`;
+export const getWithdrawAddressUrl = (address) => `${API_URL}/cosmos/distribution/v1beta1/delegators/${address}/withdraw_address`;

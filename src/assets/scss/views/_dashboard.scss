@@ -350,7 +350,10 @@
 
   .navbar {
     background: #222325;
-
+    .navbar-toggler{
+      fill: #ffffff;
+      outline: none !important;
+    }
     .navbar-nav li {
       cursor: pointer;
 

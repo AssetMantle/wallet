@@ -7,7 +7,9 @@ import {useHistory} from "react-router-dom";
 import config from "../../config";
 import MakePersistence from "../../utils/cosmosjsWrapper";
 import helper from "../../utils/helper"
+import {useTranslation} from "react-i18next";
 const AddressImport = (props) => {
+    const {t} = useTranslation();
     const history = useHistory();
     const [errorMessage, setErrorMessage] = useState("");
     const [show, setShow] = useState(true);
@@ -63,17 +65,17 @@ const AddressImport = (props) => {
                             icon="left-arrow"/>
                     </button>
                 </div>
-                <h3 className="heading">SignIn</h3>
+                <h3 className="heading">{t("SIGN_IN")}</h3>
             </Modal.Header>
             <div className="create-wallet-body create-wallet-form-body">
                 <Form onSubmit={handleSubmit} className="form-privatekey">
                     <div className="form-field">
-                        <p className="label">Address</p>
+                        <p className="label">{t("ADDRESS")}</p>
                         <Form.Control
                             type="text"
                             name="address"
                             id="addressImport"
-                            placeholder="Enter Address"
+                            placeholder={t("ENTER_ADDRESS")}
                             required={true}
                         />
                     </div>
@@ -83,7 +85,7 @@ const AddressImport = (props) => {
 
                     }
                     <div className="buttons">
-                        <button className="button button-primary">Submit</button>
+                        <button className="button button-primary">{t("SUBMIT")}</button>
                     </div>
                 </Form>
 

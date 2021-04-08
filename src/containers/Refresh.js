@@ -7,6 +7,7 @@ import {fetchUnbondDelegations} from "../actions/unbond";
 import {fetchTokenPrice} from "../actions/tokenPrice";
 import IconButton from '@material-ui/core/IconButton';
 import RefreshIcon from '@material-ui/icons/Refresh';
+import {fetchTransactions, fetchReceiveTransactions} from "../actions/transactions";
 
 const InfoRefresh = (props) => {
     const [inProgress, setInProgress] = useState(false);
@@ -21,6 +22,8 @@ const InfoRefresh = (props) => {
         props.fetchRewards(address);
         props.fetchUnbondDelegations(address);
         props.fetchTokenPrice();
+        props.fetchTransactions(address);
+        props.fetchReceiveTransactions(address);
     };
     return (
         <IconButton
@@ -29,7 +32,8 @@ const InfoRefresh = (props) => {
             <RefreshIcon/>
         </IconButton>
     );
-}
+};
+
 const stateToProps = (state) => {
     return {
         delegations: state.delegations.count,
@@ -46,6 +50,8 @@ const actionsToProps = {
     fetchRewards,
     fetchUnbondDelegations,
     fetchTokenPrice,
+    fetchTransactions,
+    fetchReceiveTransactions
 };
 
 export default connect(stateToProps, actionsToProps)(InfoRefresh);
