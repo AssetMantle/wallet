@@ -494,6 +494,116 @@ html, body {
   animation-timing-function: linear;
   animation-play-state: running; }
 
+.network-check {
+  position: absolute;
+  width: 100%;
+  background: #dee2e6f0;
+  z-index: 999;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+  .network-check h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px; }
+  .network-check p {
+    margin: 0; }
+
+.stage {
+  position: relative;
+  width: 500px;
+  height: 280px; }
+
+.bouncer-holder {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  opacity: 0.1; }
+
+.bouncer-holder {
+  -webkit-animation: travel 3s ease-in infinite alternate;
+  -o-animation: travel 3s ease-in infinite alternate;
+  animation: travel 3s ease-in infinite alternate; }
+
+.bouncer {
+  position: absolute;
+  bottom: 0;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  -webkit-animation: bounce 3.5s infinite;
+  -o-animation: bounce 3.5s infinite;
+  animation: bounce 3.5s infinite; }
+
+@-webkit-keyframes travel {
+  from {
+    left: 0; }
+  to {
+    left: calc(100% - 30px); } }
+@keyframes travel {
+  from {
+    left: 0; }
+  to {
+    left: calc(100% - 30px); } }
+@-webkit-keyframes bounce {
+  from, to {
+    bottom: 0;
+    -webkit-animation-timing-function: ease-out; }
+  50% {
+    bottom: 220px;
+    -webkit-animation-timing-function: ease-in; } }
+@keyframes bounce {
+  from, to {
+    bottom: 0;
+    animation-timing-function: ease-out; }
+  50% {
+    bottom: calc(100% - 30px);
+    animation-timing-function: ease-in; } }
+.unbonding-schedule-list {
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  line-height: 2;
+  color: #70747C; }
+
+.icon-button {
+  cursor: pointer; }
+
+.kepler-modal .modal-dialog {
+  max-width: 500px; }
+.kepler-modal .kepler-modal-body {
+  padding: 40px; }
+  .kepler-modal .kepler-modal-body p {
+    text-align: center; }
+  .kepler-modal .kepler-modal-body .installed-note {
+    padding: 20px 0;
+    cursor: pointer;
+    font-weight: 500; }
+  .kepler-modal .kepler-modal-body .chrome-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: center; }
+    .kepler-modal .kepler-modal-body .chrome-box .chrome-link {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 200px;
+      height: 160px;
+      border-radius: 6px;
+      box-shadow: 0 0 32px 0 rgba(136, 152, 170, 0.15);
+      border: solid 1px rgba(0, 0, 0, 0.05); }
+      .kepler-modal .kepler-modal-body .chrome-box .chrome-link p {
+        font-size: 16px;
+        line-height: 1.75;
+        letter-spacing: -0.3px;
+        text-align: center;
+        color: #525f7f; }
+    .kepler-modal .kepler-modal-body .chrome-box img {
+      width: 80px;
+      height: 80px; }
+
 /*--------------------------------------------------------------
 # homepage styles
 --------------------------------------------------------------*/
@@ -1185,6 +1295,9 @@ html, body {
   border-bottom: 1px solid #E3E5F4; }
   .header .navbar {
     background: #222325; }
+    .header .navbar .navbar-toggler {
+      fill: #ffffff;
+      outline: none !important; }
     .header .navbar .navbar-nav li {
       cursor: pointer; }
       .header .navbar .navbar-nav li a {

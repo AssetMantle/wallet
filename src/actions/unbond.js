@@ -3,7 +3,8 @@ import {getDelegationsUnbondUrl} from "../constants/url";
 import {
     UNBOND_DELEGATIONS_FETCH_ERROR,
     UNBOND_DELEGATIONS_FETCH_IN_PROGRESS,
-    UNBOND_DELEGATIONS_FETCH_SUCCESS
+    UNBOND_DELEGATIONS_FETCH_SUCCESS,
+    UNBOND_DELEGATIONS_LIST
 } from "../constants/unbond"
 import Lodash from "lodash";
 import balance from "../reducers/balance";
@@ -25,6 +26,12 @@ export const fetchUnbondDelegationsError = (data) => {
         data,
     };
 };
+export const fetchUnbondDelegationsList = (list) => {
+    return {
+        type: UNBOND_DELEGATIONS_LIST,
+        list,
+    };
+};
 
 export const fetchUnbondDelegations = (address) => {
     return async dispatch => {
@@ -33,6 +40,7 @@ export const fetchUnbondDelegations = (address) => {
         await Axios.get(url)
             .then((res) => {
                 if (res.data.unbonding_responses.length) {
+                    dispatch(fetchUnbondDelegationsList(res.data.unbonding_responses));
                     const totalUnbond = Lodash.sumBy(res.data.unbonding_responses, (item) => {
                         if (item.entries.length) {
                             const entriesSum = Lodash.sumBy(item.entries, (entry) => {

@@ -81,10 +81,10 @@ function getAccountVestingAmount(account, currentEpochTime) {
             accountVestingAmount = getPeriodicVestingAmount(account, currentEpochTime);
             break;
         case delayedVesting:
-            accountVestingAmount = getDelayedVestingAmount(account, currentEpochTime)
+            accountVestingAmount = getDelayedVestingAmount(account, currentEpochTime);
             break;
         case continuousVesting:
-            accountVestingAmount = getContinuousVestingAmount(account, currentEpochTime)
+            accountVestingAmount = getContinuousVestingAmount(account, currentEpochTime);
             break;
         case baseAccount:
             accountVestingAmount = 0;

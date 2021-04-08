@@ -7,14 +7,16 @@ import Copy from "../../components/Copy";
 import ModalFaq from "../Faq";
 import helper from "../../utils/helper";
 import logo from "../../assets/images/logo_bold.svg";
-
+import {useTranslation} from "react-i18next";
+import MenuIcon from '@material-ui/icons/Menu';
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
-const DashboardHeader = (props) => {
+const DashboardHeader = () => {
+    const {t} = useTranslation();
     const history = useHistory();
     const [showFaq, setShowFaq] = useState(false);
     const address = localStorage.getItem('address');
     let addressTruncate;
-    if(address !== null) {
+    if (address !== null) {
         addressTruncate = helper.stringTruncate(address);
     }
     const handleHelp = () => {
@@ -24,7 +26,7 @@ const DashboardHeader = (props) => {
         localStorage.setItem('loginToken', '');
         localStorage.setItem('address', '');
         localStorage.setItem('loginMode', '');
-        localStorage.setItem('fee','');
+        localStorage.setItem('fee', '');
         localStorage.setItem('keplerAddress', '');
         history.push('/');
         window.location.reload();
@@ -37,7 +39,10 @@ const DashboardHeader = (props) => {
                     <Navbar.Brand><Nav.Link href="/">
                         <img src={logo} alt="logo"/>
                     </Nav.Link></Navbar.Brand>
-                    <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
+                    <Navbar.Toggle aria-controls="responsive-navbar-nav">
+                    <MenuIcon/>
+                    </Navbar.Toggle>
+
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="ml-auto">
                             <li className="nav-item link">
@@ -49,7 +54,7 @@ const DashboardHeader = (props) => {
                                             icon="wallet"
                                         />
                                     </div>
-                                    Wallet
+                                    {t("WALLET")}
                                 </NavLink>
                             </li>
                             <li className="nav-item link">
@@ -60,7 +65,7 @@ const DashboardHeader = (props) => {
                                             viewClass="icon"
                                             icon="staking"/>
                                     </div>
-                                    Staking
+                                    {t("STAKING")}
                                 </NavLink>
                             </li>
                             <li className="nav-item link">
@@ -71,7 +76,7 @@ const DashboardHeader = (props) => {
                                             viewClass="icon"
                                             icon="explorer"/>
                                     </div>
-                                    Explorer
+                                    {t("EXPLORER")}
                                 </a>
                             </li>
                             <li className="nav-item link">
@@ -82,7 +87,7 @@ const DashboardHeader = (props) => {
                                             viewClass="icon"
                                             icon="help"/>
                                     </div>
-                                    Help
+                                    {t("HELP")}
                                 </a>
                             </li>
                             <li className="profile-section">
@@ -92,12 +97,12 @@ const DashboardHeader = (props) => {
                                             <ReactQRCode value="persistence1095fgex3h37zl4yjptnsd7qfmspesvav7xhgwt"/>
                                         </div>
 
-                                        <p className="key">Wallet Address</p>
+                                        <p className="key"> {t("WALLET_ADDRESS")}</p>
                                         <div className="address"><span>{addressTruncate}</span> <Copy id={address}/>
                                         </div>
                                     </div>
                                     <div className="dropdown-footer">
-                                        <p onClick={closeWallet} className="link-close">Close Wallet</p>
+                                        <p onClick={closeWallet} className="link-close">{t("CLOSE_WALLET")}</p>
                                         {/*<p>Account</p>*/}
                                     </div>
                                 </NavDropdown>

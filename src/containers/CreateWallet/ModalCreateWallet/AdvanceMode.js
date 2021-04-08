@@ -10,8 +10,10 @@ import helper from "../../../utils/helper";
 import MakePersistence from "../../../utils/cosmosjsWrapper";
 import config from "../../../config";
 import {useHistory} from "react-router-dom";
+import {useTranslation} from "react-i18next";
 
 const AdvanceMode = (props) => {
+    const {t} = useTranslation();
     const history = useHistory();
     const [show, setShow] = useState(true);
     const [advanceForm, setAdvanceForm] = useState(true);
@@ -71,6 +73,7 @@ const AdvanceMode = (props) => {
                     data.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount" ||
                     data.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
                     localStorage.setItem('fee', config.vestingAccountFee);
+                    localStorage.setItem('vestingAccountType', data.account["@type"]);
                 } else {
                     localStorage.setItem('fee', config.defaultFee);
                 }
@@ -151,11 +154,11 @@ const AdvanceMode = (props) => {
                                         icon="left-arrow"/>
                                 </button>
                             </div>
-                            <h3 className="heading">Create Wallet</h3>
+                            <h3 className="heading">{t("CREATE_WALLET")}</h3>
                         </Modal.Header>
                         <div className="create-wallet-body create-wallet-form-body">
                             <div className="key-download" onClick={() => handleRoute('generateKey')}>
-                                <p>Generate KeyStore File</p>
+                                <p>{t("GENERATE_KEY_STORE")}</p>
                                 <Icon viewClass="arrow-icon" icon="left-arrow"/>
                             </div>
                             <Form onSubmit={handleSubmit} className="advancemode-form">
@@ -163,7 +166,7 @@ const AdvanceMode = (props) => {
                                 <Card>
                                     <Card.Header>
                                         <p>
-                                            Advanced
+                                            {t("ADVANCED")}
                                         </p>
                                         <ContextAwareToggle eventKey="0">Click me!</ContextAwareToggle>
                                     </Card.Header>
@@ -171,7 +174,7 @@ const AdvanceMode = (props) => {
                                         <>
 
                                             <div className="form-field">
-                                                <p className="label">Account</p>
+                                                <p className="label">{t("ACCOUNT")}</p>
                                                 <Form.Control
                                                     type="number"
                                                     min={0}
@@ -179,12 +182,12 @@ const AdvanceMode = (props) => {
                                                     name="accountNumber"
                                                     id="createAccountNumber"
                                                     onKeyPress={handleKeypress}
-                                                    placeholder="Account number"
+                                                    placeholder={t("ACCOUNT_NUMBER")}
                                                     required={false}
                                                 />
                                             </div>
                                             <div className="form-field">
-                                                <p className="label">Account Index</p>
+                                                <p className="label">{t("ACCOUNT_INDEX")}</p>
                                                 <Form.Control
                                                     type="number"
                                                     min={0}
@@ -192,24 +195,24 @@ const AdvanceMode = (props) => {
                                                     name="accountIndex"
                                                     id="createAccountIndex"
                                                     onKeyPress={handleKeypress}
-                                                    placeholder="Account Index"
+                                                    placeholder={t("ACCOUNT_INDEX")}
                                                     required={false}
                                                 />
                                             </div>
                                             <div className="form-field passphrase-field">
-                                                <p className="label">bip39Passphrase</p>
+                                                <p className="label">{t("BIP_PASSPHRASE")}</p>
                                                 <Form.Control
                                                     type="password"
                                                     name="bip39Passphrase"
                                                     id="createbip39Passphrase"
                                                     maxLength="50"
                                                     onKeyPress={handleKeypress}
-                                                    placeholder="Enter bip39Passphrase (optional)"
+                                                    placeholder={t("ENTER_BIP_PASSPHRASE")}
                                                     onChange={handlePassphrase}
                                                     required={false}
                                                 />
                                                 {passphraseError ?
-                                                    <span className="passphrase-error">Length should be below 50 characters</span>
+                                                    <span className="passphrase-error">{t("BIP_PASSPHRASE_ERROR")}</span>
                                                     : null}
                                             </div>
 
@@ -218,7 +221,7 @@ const AdvanceMode = (props) => {
                                 </Card>
                             </Accordion>
                                 <div className="buttons">
-                                    <button className="button button-primary">Next
+                                    <button className="button button-primary">{t("NEXT")}
                                     </button>
                                 </div>
                             </Form>
@@ -236,11 +239,11 @@ const AdvanceMode = (props) => {
                                     icon="left-arrow"/>
                             </button>
                         </div>
-                        <h3 className="heading">Create Wallet</h3>
+                        <h3 className="heading">{t("CREATE_WALLET")}</h3>
                     </Modal.Header>
                     <div className="create-wallet-body create-wallet-form-body">
-                        <p className="mnemonic-result"><b>Wallet path: </b>{response.walletPath}</p>
-                        <p className="mnemonic-result"><b>Address: </b>{response.address}</p>
+                        <p className="mnemonic-result"><b>{t("WALLET_PATH")}: </b>{response.walletPath}</p>
+                        <p className="mnemonic-result"><b>{t("ADDRESS")}: </b>{response.address}</p>
                         <div className="buttons">
                             <button className="button button-primary" onClick={handleLogin}>Login</button>
                         </div>
@@ -248,7 +251,7 @@ const AdvanceMode = (props) => {
                             <div className="exclamation"><Icon
                                 viewClass="arrow-right"
                                 icon="exclamation"/></div>
-                            <p>Please securely store the wallet path for future use</p>
+                            <p>{t("WALLET_PATH_WARNING")}</p>
                         </div>
                     </div>
                     </>
