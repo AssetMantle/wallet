@@ -45,17 +45,17 @@ const TokenInfo = (props) => {
                 <div className="inner-box">
                     <div className="line">
                         <p className="key">{t("TOTAL_BALANCE")}</p>
-                        <p className="value" title={props.delegations + props.balance + props.unbond}>{(props.delegations + props.balance + props.unbond).toFixed(2)} XPRT</p>
+                        <p className="value" title={props.delegations + props.balance + props.unbond}>{(props.delegations + props.balance + props.unbond).toFixed(3)} XPRT</p>
                     </div>
                     <div className="line">
                         <p className="key">{t("AVAILABLE_DELEGATE_AMOUNT")}</p>
                         <p className="value">
-                            {props.balance} XPRT</p>
+                            {props.balance.toFixed(3)} XPRT</p>
                     </div>
 
                     <div className="line">
                         <p className="key">{t("DELEGATED_AMOUNT")}</p>
-                        <p className="value" title={props.delegations}>{props.delegations.toFixed(2)} XPRT</p>
+                        <p className="value" title={props.delegations}>{props.delegations.toFixed(3)} XPRT</p>
                     </div>
                 </div>
             </div>
@@ -63,7 +63,7 @@ const TokenInfo = (props) => {
                 <div className="inner-box">
                     <div className="line">
                         <p className="key">{t("AMOUNT_UNDER_VESTING")}</p>
-                        <p className="value" title={vestingAmount}> {vestingAmount.toFixed(2)} XPRT
+                        <p className="value" title={vestingAmount}> {vestingAmount.toFixed(3)} XPRT
                             {
                                 vestingAmount > 0 ?
                                     <ModalViewVestingDetails />
@@ -73,7 +73,7 @@ const TokenInfo = (props) => {
                     </div>
                     <div className="line">
                         <p className="key">{t("TRANSFERABLE_AMOUNT")}</p>
-                        <p className="value" title={transferableAmount}> {transferableAmount.toFixed(2)} XPRT</p>
+                        <p className="value" title={transferableAmount}> {transferableAmount.toFixed(3)} XPRT</p>
                     </div>
                     <div className="line">
                         <p className="key">{t("CURRENT_PRICE")}</p>
@@ -81,7 +81,7 @@ const TokenInfo = (props) => {
                     </div>
                     <div className="line">
                         <p className="key">{t("CURRENT_VALUE")}</p>
-                        <p className="value">${(props.balance * props.tokenPrice).toFixed(2)}</p>
+                        <p className="value">${(props.balance * props.tokenPrice).toFixed(3)}</p>
                     </div>
 
                 </div>
@@ -101,7 +101,7 @@ const TokenInfo = (props) => {
                     </div>
                     <div className="line">
                         <p className="key">{t("UNBONDING_TOKEN")}</p>
-                        <p className="value" title={props.unbond}>{props.unbond.toFixed(2)} XPRT
+                        <p className="value" title={props.unbond}>{props.unbond.toFixed(3)} XPRT
                             {
                                 props.unbond > 0 ?
                                     <ModalViewUnbondDetails />

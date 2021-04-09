@@ -59,9 +59,20 @@ const Send = (props) => {
         if (mode === "normal") {
             const memo = event.target.memo.value;
             setMemoContent(memo);
+            let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
+            if (memoCheck) {
+                setKeplerError("you entered your mnemonic as memo")
+            }else {
+                setKeplerError('');
+                setMnemonicForm(true);
+                setShow(true);
+            }
+        }else {
+            setKeplerError('');
+            setMnemonicForm(true);
+            setShow(true);
         }
-        setMnemonicForm(true);
-        setShow(true);
+
     };
     const handleSubmitKepler = event => {
         setShow(true);
