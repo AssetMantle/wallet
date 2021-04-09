@@ -232,7 +232,7 @@ const ModalSetWithdrawAddress = (props) => {
                                 <p className="label">Current rewards withdrawal address</p>
                                 <Form.Control
                                     type="text"
-                                    name="withdrawalAddress"
+                                    name="currentWithdrawalAddress"
                                     placeholder={t("ENTER_WITHDRAW_ADDRESS")}
                                     value={props.withdrawAddress}
                                 />
