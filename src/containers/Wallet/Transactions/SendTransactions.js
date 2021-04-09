@@ -14,7 +14,7 @@ const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const SendTransactions = (props) => {
     const address = localStorage.getItem('address');
     useEffect(() => {
-        props.fetchTransactions(address, 5, 1, "Initial");
+        props.fetchTransactions(address, 5, 1);
     }, []);
     const columns = [{
         name: 'txHash',
