@@ -212,7 +212,7 @@ const ModalImportWallet = (props) => {
                                                        className="import-name">{t("USE_PRIVATE_KEY")} (KeyStore.json file)</p>
                                                 </div>
                                                 <div className="form-field">
-                                                    <p className="label">{t("ENTER_MNEMONIC")} ({t("SEED_PHRASE")})</p>
+                                                    <p className="label">{t("ENTER_MNEMONIC")}</p>
                                                     <Form.Control as="textarea" rows={3} name="mnemonic"
                                                                   placeholder={t("SEED_PHRASE")}
                                                                   required={true}/>

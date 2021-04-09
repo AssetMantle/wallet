@@ -249,9 +249,12 @@ const ModalUnbond = (props) => {
                             {mode === "normal" ?
                                 <div className="form-field">
                                     <p className="label">{t("MEMO")}</p>
-                                    <Form.Control as="textarea" rows={3} name="memo"
-                                                  placeholder={t("ENTER_MEMO")}
-                                                  required={false}/>
+                                    <Form.Control
+                                        type="text"
+                                        name="memo"
+                                        placeholder={t("ENTER_MEMO")}
+                                        required={false}
+                                    />
                                 </div> : null
                             }
                             {
