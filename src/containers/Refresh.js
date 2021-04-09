@@ -22,8 +22,8 @@ const InfoRefresh = (props) => {
         props.fetchRewards(address);
         props.fetchUnbondDelegations(address);
         props.fetchTokenPrice();
-        props.fetchTransactions(address);
-        props.fetchReceiveTransactions(address);
+        props.fetchTransactions(address, 5, 1);
+        props.fetchReceiveTransactions(address, 5, 1);
     };
     return (
         <IconButton

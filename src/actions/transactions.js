@@ -50,14 +50,16 @@ export const fetchTransactions = (address, limit, pageNumber) => {
                 ? error.response.data.message
                 : error.message));
         });
-        let txnsResponseList = result.data.result.txs;
-        dispatch(fetchPageNumberSuccess(pageNumber, result.data.result.total_count));
-        let txnList = [];
-        for (let i = 0; i < txnsResponseList.length; i++) {
-            let txHashResult = await Axios.get(getTxnUrl(txnsResponseList[i].hash));
-            txnList.push(txHashResult.data.tx_response)
+        if(result !== undefined) {
+            let txnsResponseList = result.data.result.txs;
+            dispatch(fetchPageNumberSuccess(pageNumber, result.data.result.total_count));
+            let txnList = [];
+            for (let i = 0; i < txnsResponseList.length; i++) {
+                let txHashResult = await Axios.get(getTxnUrl(txnsResponseList[i].hash));
+                txnList.push(txHashResult.data.tx_response)
+            }
+            dispatch(fetchTransactionsSuccess(txnList))
         }
-        dispatch(fetchTransactionsSuccess(txnList))
     }
 };
 
@@ -99,13 +101,15 @@ export const fetchReceiveTransactions = (address, limit, pageNumber) => {
                 ? error.response.data.message
                 : error.message));
         });
-        let txnsResponseList = result.data.result.txs;
-        dispatch(fetchReceivePageNumberSuccess(pageNumber, result.data.result.total_count));
-        let txnList = [];
-        for (let i = 0; i < txnsResponseList.length; i++) {
-            let txHashResult = await Axios.get(getTxnUrl(txnsResponseList[i].hash));
-            txnList.push(txHashResult.data.tx_response)
+        if(result !== undefined){
+            let txnsResponseList = result.data.result.txs;
+            dispatch(fetchReceivePageNumberSuccess(pageNumber, result.data.result.total_count));
+            let txnList = [];
+            for (let i = 0; i < txnsResponseList.length; i++) {
+                let txHashResult = await Axios.get(getTxnUrl(txnsResponseList[i].hash));
+                txnList.push(txHashResult.data.tx_response)
+            }
+            dispatch(fetchReceiveTransactionsSuccess(txnList))
         }
-        dispatch(fetchReceiveTransactionsSuccess(txnList))
     }
 };
