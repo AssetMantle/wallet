@@ -129,8 +129,6 @@ const StakingFaq = () => {
                             <li> {t("STAKING_FAQ47")}</li>
                             <li> {t("STAKING_FAQ48")}</li>
                             <li> {t("STAKING_FAQ49")}</li>
-                            <li> {t("STAKING_FAQ410")}
-                            </li>
                         </ul>
                     </Card.Body>
                 </Accordion.Collapse>
