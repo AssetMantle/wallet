@@ -65,7 +65,7 @@ const WalletFaq = () => {
                             </li>
                             <li>  {t("FAQ26")}
                             </li>
-                            <p>  {t("FAQ27")}</p>
+                            <li>  {t("FAQ27")}</li>
                             <li>  {t("FAQ28")}
                             </li>
                             <li>  {t("FAQ29")}
@@ -75,33 +75,35 @@ const WalletFaq = () => {
                             <li>{t("FAQ211")}</li>
                         </ul>
                         <p>  {t("FAQ212")}</p>
+                        <p>  {t("FAQ213")}</p>
+                        <p>  {t("FAQ214")}</p>
                      </Card.Body>
                 </Accordion.Collapse>
             </Card>
-            <Card>
-                <Card.Header>
-                    <p>
-                        {t("FAQ3")}
-                    </p>
-                    <ContextAwareToggle eventKey="2">Click me!</ContextAwareToggle>
-                </Card.Header>
-                <Accordion.Collapse eventKey="2">
-                    <Card.Body><ul>
-                        <li>{t("FAQ31")}</li>
-                        <li>{t("FAQ32")}
-                        </li>
-                        <li>{t("FAQ33")}
-                        </li>
-                        <li>{t("FAQ34")}</li>
-                        <li>{t("FAQ35")}</li>
-                        <li>{t("FAQ36")}
-                        </li>
-                        <li>{t("FAQ37")}
-                        </li>
-                        <li>{t("FAQ38")}</li>
-                    </ul></Card.Body>
-                </Accordion.Collapse>
-            </Card>
+            {/*<Card>*/}
+            {/*    <Card.Header>*/}
+            {/*        <p>*/}
+            {/*            {t("FAQ3")}*/}
+            {/*        </p>*/}
+            {/*        <ContextAwareToggle eventKey="2">Click me!</ContextAwareToggle>*/}
+            {/*    </Card.Header>*/}
+            {/*    <Accordion.Collapse eventKey="2">*/}
+            {/*        <Card.Body><ul>*/}
+            {/*            <li>{t("FAQ31")}</li>*/}
+            {/*            <li>{t("FAQ32")}*/}
+            {/*            </li>*/}
+            {/*            <li>{t("FAQ33")}*/}
+            {/*            </li>*/}
+            {/*            <li>{t("FAQ34")}</li>*/}
+            {/*            <li>{t("FAQ35")}</li>*/}
+            {/*            <li>{t("FAQ36")}*/}
+            {/*            </li>*/}
+            {/*            <li>{t("FAQ37")}*/}
+            {/*            </li>*/}
+            {/*            <li>{t("FAQ38")}</li>*/}
+            {/*        </ul></Card.Body>*/}
+            {/*    </Accordion.Collapse>*/}
+            {/*</Card>*/}
             <Card>
                 <Card.Header>
                     <p>
