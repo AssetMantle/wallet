@@ -16,18 +16,20 @@ let English = {
             "                        network. Staking rewards for XPRT are expected to be in the range of ~30-40%.",
         "FAQ2": "How to Create a Persistence Wallet",
         "FAQ2_INFO": "You need to have a Persistence wallet to store or transact or stake your XPRT token. Create a wallet or import an already existing Persistence wallet. To create a wallet:",
-        "FAQ21": "From wallet.persistence.one site and click the Create a wallet button.",
-        "FAQ22": "In the Secure your wallet window, please take a moment to read notes. Click Continue. After carefully reading the steps on how to secure your wallet, Click Next after you go through the info.",
-        "FAQ23": "In the Password window, enter a password for the Persistence wallet.",
-        "FAQ24": "In the Mnemonic window, you can view a randomly generated 24-word seed phrase (Seed phrase is also called as Mnemonic).",
-        "FAQ25": "Enter the password again to confirm.",
-        "FAQ26": "Click Next.",
-        "FAQ27": "Note: You will require this password when you sign into your wallet. So copy the password in a file. Save and store the file safe.",
-        "FAQ28": "In the Mnemonic window, you view the randomly generated 24-word seed phrase, by default. (Seed phrase is also called as Mnemonic.) If you want a 12 word mnemonic, select the 12 button.",
-        "FAQ29": "Copy and securely store your seed phrase in a file location of your choice because you may need it in future.",
+        "FAQ21": "From wallet.persistence.one website and click the Create a wallet button. Please take a moment to carefully read notes about Persistence wallet.",
+        "FAQ22": "Click Next; the Create Wallet window appears.",
+        "FAQ23": "You can view the randomly generated mnemonic (seed phrase). Click the Copy icon and paste it in a file location of your choice because you will need the seed phrase now in the next step of the task and in future too.",
+        "FAQ24": "Click Next.",
+        "FAQ25": "You need to confirm fill in the missing terms of your mnemonic (seed phrase) in the same order. Click Submit",
+        "FAQ26": "If the mnemonic matches, you can generate the KeyStore File. Secure the keystore json file in a safe location of your choice.",
+        "FAQ27": "Optionally, click Advanced to create the HD (Hierarchical Deterministic) Wallet path and enter the Account, Account Index, and bip39Passphrase.",
+        "FAQ28": "Enter Password to encrypt your mnemonic (seed phrase). Note that this password does not help you generate your mnemonic (seed phrase).",
+        "FAQ29": "Click Submit. The wallet path and wallet address are displayed. Ensure that you note the wallet path for future use.",
         "FAQ210": "Select the Private key json file and copy it in a file and store it in a safe location.",
-        "FAQ211": "Click Next to create your wallet",
-        "FAQ212": "Note: If you already have a Persistence wallet, you can import it using the Import an existing wallet button. You will need to use your mnemonic and password. So keep it handy.",
+        "FAQ211": "Click Done.",
+        "FAQ212": "Note that your wallet address is public and does not require any privacy. However, all your transactions are secure and require your password for keystore.json file.",
+        "FAQ213":"If you already have a Persistence wallet, you can import it using the Import an existing wallet button. You will need to use your mnemonic and password. So keep it handy when you import a wallet.",
+        "FAQ214":"Keplr is a simple, open-source browser extension wallet for our ecosystem. You can add Keplr extension to your browser and sign into your wallet.",
         "FAQ3": "How to import an existing Persistence wallet?",
         "FAQ31": "Go to wallet.persistence.one site and click the Import an existing wallet button.",
         "FAQ32": "You can import your wallet using either your private key (KeyStore.json file) or your Mnemonic (Seed Phrase).",
@@ -37,87 +39,55 @@ let English = {
         "FAQ36": "If you wish to import your wallet using your Seed Phrase (Mnemonic), after clicking on Import an existing wallet, input your mnemonic and click next.",
         "FAQ37": "You can generate your KeyStore file and save it or you can directly skip to importing your wallet.",
         "FAQ38": "Click on Next again to successfully import your wallet.",
-        "FAQ4": " What is a mnemonic?",
-        "FAQ4A": "Mnemonic is a secret passphrase to recover your private key.",
+        "FAQ4": "What’s a mnemonic?",
+        "FAQ4A": "A mnemonic is a secret passphrase to recover your private key.",
         "FAQ5": "Telegram Chat",
         "FAQ5A": "Have any more questions? Please feel free to ask more questions in our telegram group.",
-        "STAKING_FAQ1": "Sending XPRT Token",
-        "STAKING_FAQ11": " Review the XPRT token in your wallet. You may want to send some XPRT token to someone who\n" +
-            "                            has a persistence wallet",
-        "STAKING_FAQ12": "From the Wallet page, Send tab, copy and paste Recipient Address.\n" +
-            "                                You obtain their wallet address off the application.",
+        "STAKING_FAQ1": "How to send XPRT token",
+        "STAKING_FAQ11": "Review the XPRT token in your wallet. You may want to send some XPRT token to someone who has a persistence wallet.",
+        "STAKING_FAQ12": "From the Wallet page, Send tab, copy and paste Recipient Address. You obtain their wallet address off the application.",
         "STAKING_FAQ13": "Enter the XPRT Token in the Amount field.",
         "STAKING_FAQ14": "Optionally, enter your comments or remarks in Memo.",
-        "STAKING_FAQ15": "The application calculates the transaction fee in XPRT token and is deducted from your\n" +
-            "                                wallet.",
+        "STAKING_FAQ15": "The application calculates the transaction fee in XPRT token and is deducted from your wallet.",
         "STAKING_FAQ16": "Click Send.",
-        "STAKING_FAQ17": "Enter your password or mnemonic. Or toggle to upload your keystore json file. A\n" +
-            "confirmation message appears after the successful sending of the XPRT token. The\n" +
-            "transaction hash link is provided. You can click the link and view the transaction\n" +
-            "details or you can review the details under\n" +
-            "the Transactions tab. Note: Failed transactions don’t appear in\n" +
-            "the Transactions tab.",
+        "STAKING_FAQ17": "You require your wallet password, mnemonic or keystore json file. Copy paste your mnemonic and then enter the password. Alternatively, toggle to upload your keystore json file and then enter your password. A confirmation message appears after the successful sending of the XPRT token. Click the transaction hash link and view the transaction details or you can review the details under the Transactions tab.",
         "STAKING_FAQ18": "Click Done to return to the Wallet page.",
-        "STAKING_FAQ2": "How to Delegate XPRT Token",
-        "STAKING_FAQ21": "Delegate your XPRT token to a validator such as Cosmostation, StakeFish, and so on. As\n" +
-            "                        you stake your tokens, you can earn rewards too.",
-        "STAKING_FAQ22": "From the Staking page, Active tab, select a validator and then select\n" +
-            "the Actions button.",
-        "STAKING_FAQ23": "A window appears with the validator name, commission percentage, and actions you can\n" +
-            "perform. Click Delegate.",
-        "STAKING_FAQ24": "In the Delegating to \"VALIDATOR\" window, enter the delegation XPRT token amount. The\n" +
-            "                                Balance XPRT is displayed.",
+        "STAKING_FAQ2": "How to delegate XPRT token",
+        "STAKING_FAQ21": "Delegate your XPRT token to a validator such as Cosmostation, StakeFish, and so on. As you stake your tokens, you can earn rewards too.",
+        "STAKING_FAQ22": "From the Staking page, Active tab, select a validator and then select the Actions button.",
+        "STAKING_FAQ23": "A window appears with the validator name, commission percentage, and actions you can perform. Click Delegate.",
+        "STAKING_FAQ24": "In the Delegating to \"VALIDATOR\" window, enter the delegation XPRT token amount. The Balance XPRT is displayed.",
         "STAKING_FAQ25": "Optionally, enter your comments or remarks in Memo.",
         "STAKING_FAQ26": "Click Submit",
         "STAKING_FAQ27": "Enter your wallet Password.",
-        "STAKING_FAQ28": "Click Submit. A confirmation message appears after the successful delegation of the XPRT token. The transaction hash link is provided. You can click the link and view the\n" +
-            "transaction details or you can review the delegation details under\n" +
-            "the Transactions tab.",
-        "STAKING_FAQ3": " When do I claim the rewards?",
-        "STAKING_FAQ31": "You can delegate your XPRT to more than one validator. You can claim rewards from all\n" +
-            "                        the validators by using the Claim button that is adjacent to the Rewards in the\n" +
-            "                        wallet details or you can claim staking rewards from a single validator transaction:",
+        "STAKING_FAQ28": "Click Submit. A confirmation message appears after the successful delegation of the XPRT token. The transaction hash link is provided. You can click the link and view the transaction details or you can review the delegation details under the Transactions tab.",
+        "STAKING_FAQ3": " When and where do I claim the staking rewards",
+        "STAKING_FAQ31": "After you can delegate your XPRT, you get your staking rewards. You can claim the rewards from all the validators by using the Claim button that is adjacent to the Rewards in the wallet details region or you can claim staking rewards from a single validator transaction in the Staking page,",
         "STAKING_FAQ32": "In the Claiming Rewards window, select Validator.",
-        "STAKING_FAQ33": "The value of each XPRT token is indicated in USD. The total available XPRT also is\n" +
-            "                                displayed.",
-        "STAKING_FAQ34": "Specify the comments or remarks in Memo.",
+        "STAKING_FAQ33": "The value of each XPRT token is indicated in USD. The total available XPRT also is displayed.",
+        "STAKING_FAQ34": "Specify the comments or remarks in Memo. You can’t claim your rewards from a validator partially.",
         "STAKING_FAQ35": "Click Next and enter your Password.",
         "STAKING_FAQ36": "Click Submit. Your rewards appear in the wallet details region.",
         "STAKING_FAQ4": "How can I redelegate XPRT to another validator?",
-        "STAKING_FAQ41": "After you delegate your XPRT token with a validator and for some reason, you may want\n" +
-            "                        to redelegate the XPRT to another validator, you can redelegate the XPRT by selecting the\n" +
-            "                        transaction in the Staking page:",
-        "STAKING_FAQ42": "From the Staking page, Active tab, select a validator transaction and\n" +
-            "                                click\n" +
-            "                                the Actions button.",
-        "STAKING_FAQ43": "A window appears with the validator name, commission percentage, and actions you can\n" +
-            "                                perform. Click Redelegate",
+        "STAKING_FAQ41": "After you delegate your XPRT token with a validator and for some reason, you may want to redelegate the XPRT to another validator. You can redelegate the XPRT by selecting the transaction in the Staking page:",
+        "STAKING_FAQ42": "From the Staking page, Active or Inactive tabs, select the validator from whom you want to redelegate and then select the Actions button.",
+        "STAKING_FAQ43": "A window appears with the validator name, commission percentage, and actions you can perform. Click Redelegate.",
         "STAKING_FAQ44": "In the Redelegating from \"VALIDATOR\" window, select validator name\n" +
             "                                to Redelegate the XPRT.",
-        "STAKING_FAQ45": "Enter the Delegation Amount.",
-        "STAKING_FAQ46": "Enter the Redelegation XPRT Amount.",
-        "STAKING_FAQ47": "Optionally, enter your comments or remarks in Memo.",
-        "STAKING_FAQ48": "Click Next.",
-        "STAKING_FAQ49": "Enter your wallet Password.",
-        "STAKING_FAQ410": "Click Submit. A confirmation message appears after the successful redelegation of\n" +
-            "                                the\n" +
-            "                                XPRT token. The transaction hash link is provided. You can click the link and view the\n" +
-            "                                transaction details or you can review the delegation details under\n" +
-            "                                the Transactions tab.",
-        "STAKING_FAQ5": "How and when can I unbond the XPRT token?",
-        "STAKING_FAQ51": "After you delegate the XPRT token, they are in the bonding period of 21 days. You can\n" +
-            "                        unbond them earlier by selecting the transaction in the Active or Inactive tab of the\n" +
-            "                        Staking page.",
-        "STAKING_FAQ52": "After selecting the transaction and click Actions .",
+        "STAKING_FAQ45": "The Delegation Amount is displayed for your reference. Enter the Redelegation XPRT Amount. You can’t redelegate more than the delegated amount. If you redelegate a portion of the amount, the remaining XPRT token, will be with the initial validator.",
+        "STAKING_FAQ46": "Optionally, enter your comments or remarks in Memo.",
+        "STAKING_FAQ47": "Click Next.",
+        "STAKING_FAQ48": "Enter your wallet Password.",
+        "STAKING_FAQ49": "Click Submit. A confirmation message appears after the successful redelegation of the XPRT token. The transaction hash link is provided. You can click the link and view the transaction details or you can review the delegation details under the Transactions tab.",
+        "STAKING_FAQ5": "How and when can I unbond the XPRT token",
+        "STAKING_FAQ51": "After you delegate the XPRT token, they are in the bonding period of 21 days. You can unbond them earlier by selecting the transaction in the Active or Inactive tab of the Staking page.",
+        "STAKING_FAQ52": "After selecting the transaction and click Actions.",
         "STAKING_FAQ53": "In the validator window click Unbond. Note the commission percentage of the validator.",
         "STAKING_FAQ54": "In the Unbond from \"VALIDATOR\" window, specify  Delegation Amount.",
         "STAKING_FAQ55": "Enter Unbound XPRT Amount to unbond.",
         "STAKING_FAQ56": "Enter a note or remarks in the Memo field.",
-        "STAKING_FAQ57": "Click Next. If your transaction isn’t eligible for unbonding, then the Next button is\n" +
-            "                                dimmed.",
-        "STAKING_FAQ58": "Enter your password and click Submit. The transaction hash appears and you can\n" +
-            "                                find the details when you click the link.",
-
+        "STAKING_FAQ57": "Click Next. If your transaction isn’t eligible for unbonding, then the Next button isn’t enabled.",
+        "STAKING_FAQ58": "Enter your password and click Submit. The transaction hash appears and you can find the details when you click the link.",
 
         "WALLET": "Wallet",
         "IMPORT_WALLET": "Import Wallet",
