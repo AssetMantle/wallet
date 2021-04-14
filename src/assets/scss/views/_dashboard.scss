@@ -351,8 +351,10 @@
   .navbar {
     background: #222325;
     .navbar-toggler{
-      fill: #ffffff;
       outline: none !important;
+      svg{
+        fill: #ffffff;
+      }
     }
     .navbar-nav li {
       cursor: pointer;

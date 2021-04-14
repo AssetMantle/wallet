@@ -153,7 +153,7 @@ let English = {
         "TOTAL_AVAILABLE": "Total Available",
         "MEMO": "Memo",
         "ENTER_MEMO": "Enter Memo",
-        "SET_WITHDRAW_ADDRESS": "Set Withdraw Address",
+        "SET_WITHDRAW_ADDRESS": "Setup Address",
         "WITHDRAW_ADDRESS": "Withdraw Address",
         "ENTER_WITHDRAW_ADDRESS": "Enter Withdraw Address",
         "SET_REWARDS_WITHDRAW_ADDRESS": "Set Rewards Withdraw Address",

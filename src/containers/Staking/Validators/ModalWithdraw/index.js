@@ -212,9 +212,9 @@ const ModalWithdraw = (props) => {
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
                             <div className="form-field">
-                                <p className="label">{t("AVAILABLE")}</p>
+                                <p className="label">{t("AVAILABLE")} (XPRT)</p>
                                 <div className="available-tokens">
-                                    <p className="tokens">{props.rewards} <span>XPRT</span></p>
+                                    <p className={props.rewards === '0' ? "empty info-data" : "info-data"}>{props.rewards}</p>
                                 </div>
                             </div>
                             {
@@ -243,7 +243,7 @@ const ModalWithdraw = (props) => {
                                 </button>
                                 <button
                                     className={props.rewards ? "button button-primary" : "button button-primary disabled"}
-                                    disabled={props.rewards === '0.000000'}> {mode === "normal" ? t("NEXT") : t("SUBMIT")}
+                                    disabled={props.rewards === '0'}> {mode === "normal" ? t("NEXT") : t("SUBMIT")}
                                 </button>
                             </div>
                         </Form>
