@@ -142,6 +142,11 @@ html, body {
 .not-matched {
   box-shadow: 0 0 0 0.2rem #e509134d !important; }
 
+.button-link {
+  font-weight: 500;
+  color: #e50913;
+  text-decoration: underline; }
+
 .icon-button.info {
   padding-left: 5px;
   background: no-repeat;
@@ -1470,6 +1475,8 @@ html, body {
       padding-bottom: 10px; }
       .token-info-section .info-box .line .info-heading {
         font-weight: 500; }
+      .token-info-section .info-box .line .info-heading.not-show {
+        visibility: hidden; }
       .token-info-section .info-box .line img {
         padding-right: 15px; }
       .token-info-section .info-box .line p {

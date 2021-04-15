@@ -596,6 +596,9 @@
       .info-heading{
         font-weight: 500;
       }
+      .info-heading.not-show{
+        visibility: hidden;
+      }
       img {
         padding-right: 15px;
       }

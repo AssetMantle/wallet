@@ -108,7 +108,7 @@ const DashboardHeader = () => {
                                     </div>
                                 </NavDropdown>
                             </li>
-                            <li className="nav-item link"><Darktheme/></li>
+                            {/*<li className="nav-item link"><Darktheme/></li>*/}
 
                         </Nav>
                     </Navbar.Collapse>
