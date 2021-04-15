@@ -247,7 +247,7 @@
           font-family: 'Poppins', sans-serif;
           color: #8D9CB5;
           padding: 15px 20px;
-
+          background: transparent !important;
           &:first-child {
             padding-left: 40px;
           }
@@ -744,7 +744,7 @@
         line-height: 150%;
         color: #8D9CB5;
         font-family: 'Poppins', sans-serif;
-
+        background: transparent !important;
         &:first-child {
           padding-left: 40px;
         }

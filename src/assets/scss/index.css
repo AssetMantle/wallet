@@ -611,6 +611,13 @@ html, body {
       width: 80px;
       height: 80px; }
 
+.dark-mode-button {
+  background: transparent;
+  border: 0;
+  outline: none !important; }
+  .dark-mode-button .icon {
+    width: 20px; }
+
 /*--------------------------------------------------------------
 # homepage styles
 --------------------------------------------------------------*/
@@ -1237,7 +1244,8 @@ html, body {
       line-height: 150%;
       font-family: 'Poppins', sans-serif;
       color: #8D9CB5;
-      padding: 15px 20px; }
+      padding: 15px 20px;
+      background: transparent !important; }
       .wallet-main-section .txns-container table thead th:first-child {
         padding-left: 40px; }
   .wallet-main-section .txns-container table tbody tr:first-child td {
@@ -1563,7 +1571,8 @@ html, body {
         font-size: 14px;
         line-height: 150%;
         color: #8D9CB5;
-        font-family: 'Poppins', sans-serif; }
+        font-family: 'Poppins', sans-serif;
+        background: transparent !important; }
         .validators-section table thead th:first-child {
           padding-left: 40px; }
     .validators-section table tbody td {
@@ -1944,7 +1953,7 @@ html, body {
     padding: 20px 30px; } }
 @media (max-width: 1400px) {
   .token-info-section {
-    padding: 25px; }
+    padding: 25px 0; }
     .token-info-section .info-box {
       padding: 0px 20px; }
     .token-info-section .xprt-info .total-supply {
@@ -1979,6 +1988,8 @@ html, body {
         border-top: 0px solid #EAEBF6;
         border-right: 0px solid #EAEBF6;
         border-left: 0px solid #EAEBF6; }
+    .token-info-section .xprt-info {
+      padding-left: 10px !important; }
 
   .wallet-main-section .send-container {
     padding: 0;
@@ -2016,8 +2027,15 @@ html, body {
     font-size: 14px;
     line-height: normal; } }
 @media (max-width: 576px) {
+  .validators-section .info .refresh-button {
+    padding: 8px !important;
+    right: 0; }
+
   .wallet-main-section .tabs-section .nav-tabs .nav-link {
-    padding: 0.6rem 0.6rem; }
+    padding: 0.6rem 0.6rem;
+    font-size: 12px; }
+  .wallet-main-section .tabs-section .refresh-button {
+    padding: 8px !important; }
 
   .token-info-section .info-box .line img {
     width: 75px; }
