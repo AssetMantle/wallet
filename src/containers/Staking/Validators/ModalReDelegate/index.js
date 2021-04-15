@@ -263,12 +263,7 @@ const ModalReDelegate = (props) => {
                             </div>
                             <div className="form-field">
                                 <p className="label">{t("DELEGATION_AMOUNT")} (XPRT)</p>
-                                <Form.Control
-                                    type="number"
-                                    placeholder={t("AMOUNT")}
-                                    value={props.delegationAmount}
-                                    disabled
-                                />
+                                <p className={props.delegationAmount === '0' ? "empty info-data" : "info-data"}>{props.delegationAmount}</p>
                             </div>
                             <div className="form-field">
                                 <p className="label">{t("REDELEGATION_AMOUNT")} (XPRT)</p>

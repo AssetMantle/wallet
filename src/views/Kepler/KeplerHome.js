@@ -9,6 +9,7 @@ import MakePersistence from "../../utils/cosmosjsWrapper";
 import config from "../../config";
 import {useTranslation} from "react-i18next";
 import ModalKeplerInstall from "./ModalKeplerInstall";
+import Loader from "../../components/Loader";
 const KeplerHome = () => {
     const {t} = useTranslation();
     const history = useHistory();
@@ -114,7 +115,14 @@ const KeplerHome = () => {
 
                             <p>{t("KEPLER_ACCOUNT_NOTE")}</p>
                             <div className="buttons-list">
-                                <p>{address}</p>
+                                {
+                                    address !== ""
+                                        ?
+                                        <p>{address}</p>
+                                        : <p>Fetching Address..</p>
+
+                                }
+
                                 <button className="button button-primary" onClick={() => handleRoute()}>{t("USE")}
                                 </button>
 

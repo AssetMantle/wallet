@@ -266,12 +266,7 @@ const ModalDelegate = (props) => {
                             </div>
                             <div className="form-field">
                                 <p className="label"> {t("BALANCE")} (XPRT)</p>
-                                <Form.Control
-                                    type="number"
-                                    placeholder="Amount"
-                                    value={props.balance}
-                                    disabled
-                                />
+                                <p className={props.balance === 0 ? "empty info-data" : "info-data"}>{props.balance}</p>
                             </div>
                             {mode === "normal" ?
                                 <div className="form-field">

@@ -366,12 +366,7 @@ const ModalImportWallet = (props) => {
                                         <button className="button button-primary">{t("NEXT")}</button>
                                     </div>
                                 </Form>
-                                <div className="note-section">
-                                    <div className="exclamation"><Icon
-                                        viewClass="arrow-right"
-                                        icon="exclamation"/></div>
-                                    <p>{t("WALLET_PATH_WARNING")}</p>
-                                </div>
+
                             </div>
                         </>
                         : null

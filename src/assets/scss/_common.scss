@@ -151,11 +151,18 @@ html, body {
     width: 150px;
   }
 
-  input, .amount-field, textarea, .file-upload {
+  input, .amount-field, textarea, .file-upload, .info-data {
     max-width: 400px !important;
     flex: 1;
   }
-
+  .info-data{
+    margin: 0;
+    font-weight: 500;
+    font-size: 16px;
+  }
+  .info-data.empty{
+    color: #e50a2a;
+  }
   textarea {
     background: #F5F6FA;
     font-size: 14px;

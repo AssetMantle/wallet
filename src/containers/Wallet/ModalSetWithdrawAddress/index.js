@@ -224,12 +224,12 @@ const ModalSetWithdrawAddress = (props) => {
             {initialModal ?
                 <>
                     <Modal.Header closeButton>
-                        Set Rewards Withdraw Address
+                        Setup Rewards Withdrawal Address
                     </Modal.Header>
                     <Modal.Body className="rewards-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
                             <div className="form-field">
-                                <p className="label">Current rewards withdrawal address</p>
+                                <p className="label">Current Address</p>
                                 <Form.Control
                                     type="text"
                                     name="currentWithdrawalAddress"
@@ -238,13 +238,17 @@ const ModalSetWithdrawAddress = (props) => {
                                 />
                             </div>
                             <div className="form-field">
-                                <p className="label">{t("WITHDRAW_ADDRESS")}</p>
+                                <p className="label">Revised Address</p>
                                 <Form.Control
                                     type="text"
                                     name="withdrawalAddress"
                                     placeholder={t("ENTER_WITHDRAW_ADDRESS")}
                                     required={true}
                                 />
+                            </div>
+                            <div className="form-field">
+                                <p className="label"> Delegations (XPRT)</p>
+                                <p className={props.delegations === 0 ? "empty info-data" : "info-data"}>{props.delegations}</p>
                             </div>
                             {mode === "normal" ?
                                 <div className="form-field">
@@ -274,7 +278,7 @@ const ModalSetWithdrawAddress = (props) => {
             {seedModal ?
                 <>
                     <Modal.Header closeButton>
-                        {t("SET_REWARDS_WITHDRAW_ADDRESS")}
+                        Setup Rewards Withdrawal Address
                     </Modal.Header>
                     <Modal.Body className="rewards-modal-body">
                         <Form onSubmit={handleSubmit}>
@@ -444,6 +448,7 @@ const stateToProps = (state) => {
         list: state.rewards.list,
         tokenPrice: state.tokenPrice.tokenPrice,
         status: state.delegations.status,
+        delegations: state.delegations.count,
         withdrawAddress : state.withdrawAddress.withdrawAddress
     };
 };

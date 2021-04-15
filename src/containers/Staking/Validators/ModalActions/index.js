@@ -21,7 +21,7 @@ const ModalActions = (props) => {
     const [delegationAmount, setDelegationAmount] = useState('0');
     const [moniker, setMoniker] = useState('');
     const [modalDelegate, setModalOpen] = useState();
-    const [rewards, setRewards] = useState('');
+    const [rewards, setRewards] = useState('0');
     const [delegateStatus, setDelegateStatus] = useState(false);
     useEffect(() => {
         let address = localStorage.getItem('address');
@@ -121,27 +121,20 @@ const ModalActions = (props) => {
                                     :
                                     null
                                 }
-                                {delegateStatus ?
                                     <button className="button button-primary"
                                             onClick={() => handleModal('Redelegate', props.validator.operator_address, props.validator.description.moniker)}
                                     >{t("REDELEGATE")}
                                     </button>
-                                    : ""}
-                                {delegateStatus ?
                                     <button
                                         onClick={() => handleModal('Unbond', props.validator.operator_address, props.validator.description.moniker)}
                                         className="button button-primary">
                                         {t("UNBOND")}
                                     </button>
-                                    : ""}
-                                {rewards !== ''
-                                    ?
                                     <button
                                         onClick={() => handleModal('Withdraw', props.validator.operator_address, props.validator.description.moniker)}
                                         className="button button-primary">
                                         {t("CLAIM_REWARDS")}
                                     </button>
-                                    : null}
 
                             </div>
 
