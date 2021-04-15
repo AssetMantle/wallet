@@ -223,14 +223,10 @@ const ModalUnbond = (props) => {
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
                             <div className="form-field">
-                                <p className="label">{t("DELEGATION_AMOUNT")}</p>
-                                <Form.Control
-                                    type="number"
-                                    placeholder={t("AMOUNT")}
-                                    value={props.delegationAmount}
-                                    disabled
-                                />
+                                <p className="label">{t("DELEGATION_AMOUNT")} (XPRT)</p>
+                                <p className={props.delegationAmount === '0' ? "empty info-data" : "info-data"}>{props.delegationAmount}</p>
                             </div>
+
                             <div className="form-field">
                                 <p className="label">{t("UNBOND_AMOUNT")}(XPRT)</p>
                                 <div className="amount-field">

@@ -129,7 +129,7 @@
     .tab-content {
       padding: 25px 0px 0 0px;
       position: relative;
-      height: 64vh;
+      height: 63vh;
       overflow-y: scroll;
       .tab-content{
         height: auto;
@@ -351,8 +351,10 @@
   .navbar {
     background: #222325;
     .navbar-toggler{
-      fill: #ffffff;
       outline: none !important;
+      svg{
+        fill: #ffffff;
+      }
     }
     .navbar-nav li {
       cursor: pointer;
@@ -584,15 +586,16 @@
     padding: 0px 50px;
 
     &:nth-child(2) {
-      border-right: 1px solid #EAEBF6;;
-      border-left: 1px solid #EAEBF6;;
+      border-right: 1px solid #EAEBF6;
     }
 
     .line {
       display: flex;
       justify-content: space-between;
       padding-bottom: 10px;
-
+      .info-heading{
+        font-weight: 500;
+      }
       img {
         padding-right: 15px;
       }

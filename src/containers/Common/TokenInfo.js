@@ -44,17 +44,21 @@ const TokenInfo = (props) => {
             <div className="xprt-info info-box">
                 <div className="inner-box">
                     <div className="line">
-                        <p className="key">{t("TOTAL_BALANCE")}</p>
+                        <p className="info-heading">Wallet Balances</p>
+                        <p className="value" ></p>
+                    </div>
+                    <div className="line">
+                        <p className="key">Total</p>
                         <p className="value" title={props.delegations + props.balance + props.unbond}>{(props.delegations + props.balance + props.unbond).toFixed(3)} XPRT</p>
                     </div>
                     <div className="line">
-                        <p className="key">{t("AVAILABLE_DELEGATE_AMOUNT")}</p>
+                        <p className="key">Delegatable</p>
                         <p className="value">
                             {props.balance.toFixed(3)} XPRT</p>
                     </div>
 
                     <div className="line">
-                        <p className="key">{t("DELEGATED_AMOUNT")}</p>
+                        <p className="key">Delegated</p>
                         <p className="value" title={props.delegations}>{props.delegations.toFixed(3)} XPRT</p>
                     </div>
                 </div>
@@ -62,7 +66,7 @@ const TokenInfo = (props) => {
             <div className="price-info info-box">
                 <div className="inner-box">
                     <div className="line">
-                        <p className="key">{t("AMOUNT_UNDER_VESTING")}</p>
+                        <p className="key">Vesting</p>
                         <p className="value" title={vestingAmount}> {vestingAmount.toFixed(3)} XPRT
                             {
                                 vestingAmount > 0 ?
@@ -72,7 +76,7 @@ const TokenInfo = (props) => {
                         </p>
                     </div>
                     <div className="line">
-                        <p className="key">{t("TRANSFERABLE_AMOUNT")}</p>
+                        <p className="key">Transferable</p>
                         <p className="value" title={transferableAmount}> {transferableAmount.toFixed(3)} XPRT</p>
                     </div>
                     <div className="line">
@@ -81,13 +85,14 @@ const TokenInfo = (props) => {
                     </div>
                     <div className="line">
                         <p className="key">{t("CURRENT_VALUE")}</p>
-                        <p className="value">${(props.balance * props.tokenPrice).toFixed(3)}</p>
+                        <p className="value">${((props.delegations + props.balance + props.unbond) * props.tokenPrice).toFixed(3)}</p>
                     </div>
 
                 </div>
             </div>
             <div className="rewards-info info-box">
                 <div className="inner-box">
+
                     <div className="line">
                         <p className="key">{t("REWARDS")}</p>
                         <p className="value rewards" onClick={() => handleRewards("rewards")}><span
