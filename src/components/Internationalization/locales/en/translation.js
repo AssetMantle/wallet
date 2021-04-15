@@ -140,7 +140,7 @@ let English = {
         "TOTAL_BALANCE": "Total Balance",
         "DELEGATED": "Delegated",
         "CURRENT_PRICE": "Current Price",
-        "CURRENT_VALUE": "Current Value",
+        "CURRENT_VALUE": "Current USDT Value",
         "AMOUNT_UNDER_VESTING": "Vesting Balance",
         "TRANSFERABLE_AMOUNT": "Transferable Amount",
         "REWARDS": "Rewards",

@@ -1162,7 +1162,7 @@ html, body {
   .wallet-main-section .tabs-section .tab-content {
     padding: 25px 0px 0 0px;
     position: relative;
-    height: 64vh;
+    height: 63vh;
     overflow-y: scroll; }
     .wallet-main-section .tabs-section .tab-content .tab-content {
       height: auto; }
@@ -1455,12 +1455,13 @@ html, body {
     justify-content: center;
     padding: 0px 50px; }
     .token-info-section .info-box:nth-child(2) {
-      border-right: 1px solid #EAEBF6;
-      border-left: 1px solid #EAEBF6; }
+      border-right: 1px solid #EAEBF6; }
     .token-info-section .info-box .line {
       display: flex;
       justify-content: space-between;
       padding-bottom: 10px; }
+      .token-info-section .info-box .line .info-heading {
+        font-weight: 500; }
       .token-info-section .info-box .line img {
         padding-right: 15px; }
       .token-info-section .info-box .line p {
@@ -1975,6 +1976,7 @@ html, body {
       padding: 10px; }
       .token-info-section .info-box:nth-child(2) {
         border: 1px solid #EAEBF6;
+        border-top: 0px solid #EAEBF6;
         border-right: 0px solid #EAEBF6;
         border-left: 0px solid #EAEBF6; }
 
