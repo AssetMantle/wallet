@@ -6,11 +6,11 @@ import {fetchBalance} from "../../actions/balance";
 import {fetchRewards} from "../../actions/rewards";
 import {fetchUnbondDelegations} from "../../actions/unbond";
 import {fetchTokenPrice} from "../../actions/tokenPrice";
-import ModalSetWithdrawAddress from "../Wallet/ModalSetWithdrawAddress";
 import vestingAccount from "../../utils/vestingAmount";
 import {useTranslation} from "react-i18next";
 import ModalViewUnbondDetails from "./ModalViewUnbondDetails";
 import ModalViewVestingDetails from "./ModalViewVestingDetails";
+import ModalViewAmountDetails from "./ModalVIewAmountDetails";
 
 const TokenInfo = (props) => {
     const {t} = useTranslation();
@@ -51,15 +51,26 @@ const TokenInfo = (props) => {
                     <div className="line">
                         <p className="key">Total</p>
                         <p className="value"
-                           title={props.delegations + props.balance + props.unbond}>{(props.delegations + props.balance + props.unbond).toFixed(3)} XPRT</p>
+                           title={props.delegations + props.balance + props.unbond}>{(props.delegations + props.balance + props.unbond).toFixed(3)} XPRT<span
+                            className="inner-grid-icon">
+                            {
+                                props.list.length > 1 ?
+                                    <ModalViewAmountDetails/>
+                                    : ""
+                            }
+                            </span>
+                        </p>
                     </div>
                     <div className="line">
                         <p className="key">{t("CURRENT_PRICE")}</p>
-                        <p className="value"> ${props.tokenPrice}</p>
+                        <p className="value"> ${props.tokenPrice} <span
+                            className="inner-grid-icon"></span></p>
                     </div>
                     <div className="line">
                         <p className="key">{t("CURRENT_VALUE")}</p>
-                        <p className="value">${((props.delegations + props.balance + props.unbond) * props.tokenPrice).toFixed(3)}</p>
+                        <p className="value">${((props.delegations + props.balance + props.unbond) * props.tokenPrice).toFixed(3)}
+                            <span
+                                className="inner-grid-icon"></span></p>
                     </div>
 
                 </div>
@@ -84,12 +95,13 @@ const TokenInfo = (props) => {
                     </div>
                     <div className="line">
                         <p className="key">Transferable</p>
-                        <p className="value" title={transferableAmount}> {transferableAmount.toFixed(3)} XPRT <span className="inner-grid-icon"></span></p>
+                        <p className="value" title={transferableAmount}> {transferableAmount.toFixed(3)} XPRT<span
+                            className="inner-grid-icon"></span></p>
                     </div>
                     <div className="line">
                         <p className="key">Delegatable</p>
                         <p className="value">
-                            {props.balance.toFixed(3)} XPRT <span className="inner-grid-icon"></span></p>
+                            {props.balance.toFixed(3)} XPRT<span className="inner-grid-icon"></span></p>
                     </div>
 
                 </div>
@@ -102,7 +114,8 @@ const TokenInfo = (props) => {
                     </div>
                     <div className="line">
                         <p className="key">Delegated</p>
-                        <p className="value" title={props.delegations}>{props.delegations.toFixed(3)} XPRT <span className="inner-grid"></span></p>
+                        <p className="value" title={props.delegations}>{props.delegations.toFixed(3)} XPRT<span
+                            className="inner-grid"></span></p>
                     </div>
                     <div className="line">
                         <p className="key">{t("REWARDS")}</p>
@@ -111,8 +124,8 @@ const TokenInfo = (props) => {
                     </div>
                     <div className="line">
                         <p className="key">{t("UNBONDING_TOKEN")}</p>
-                        <p className="value" title={props.unbond}>{props.unbond.toFixed(3)} XPRT
-                            <span className="inner-grid">
+                        <p className="value" title={props.unbond}>{props.unbond.toFixed(3)} XPRT<span
+                            className="inner-grid">
                             {
                                 props.unbond > 0 ?
                                     <ModalViewUnbondDetails/>
@@ -139,7 +152,8 @@ const stateToProps = (state) => {
         balance: state.balance.amount,
         rewards: state.rewards.rewards,
         unbond: state.unbond.unbond,
-        tokenPrice: state.tokenPrice.tokenPrice
+        tokenPrice: state.tokenPrice.tokenPrice,
+        list: state.balance.list,
     };
 };
 

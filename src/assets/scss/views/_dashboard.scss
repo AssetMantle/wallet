@@ -373,8 +373,7 @@
           fill: #c4c4c4;;
         }
       }
-
-      a:hover, a.active {
+      a:hover, a.active , a:focus{
         color: #e50913 !important;
 
         .icon {

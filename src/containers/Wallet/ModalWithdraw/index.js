@@ -286,7 +286,6 @@ const ModalWithdraw = (props) => {
                                 <div className="form-field">
                                     <p className="label">Total Available</p>
                                     <div className="available-tokens">
-                                        <img src={icon} alt="icon"/>
                                         <p className="tokens">{props.totalRewards} <span>XPRT</span></p>
                                         <p className="usd">=${(props.totalRewards * props.tokenPrice).toFixed(4)}</p>
                                     </div>
