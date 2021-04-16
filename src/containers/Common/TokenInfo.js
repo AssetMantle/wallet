@@ -73,21 +73,23 @@ const TokenInfo = (props) => {
                     <div className="line">
                         <p className="key">Vesting</p>
                         <p className="value" title={vestingAmount}> {vestingAmount.toFixed(3)} XPRT
+                            <span className="inner-grid-icon">
                             {
                                 vestingAmount > 0 ?
                                     <ModalViewVestingDetails/>
                                     : ""
                             }
+                            </span>
                         </p>
                     </div>
                     <div className="line">
                         <p className="key">Transferable</p>
-                        <p className="value" title={transferableAmount}> {transferableAmount.toFixed(3)} XPRT</p>
+                        <p className="value" title={transferableAmount}> {transferableAmount.toFixed(3)} XPRT <span className="inner-grid-icon"></span></p>
                     </div>
                     <div className="line">
                         <p className="key">Delegatable</p>
                         <p className="value">
-                            {props.balance.toFixed(3)} XPRT</p>
+                            {props.balance.toFixed(3)} XPRT <span className="inner-grid-icon"></span></p>
                     </div>
 
                 </div>
@@ -100,21 +102,23 @@ const TokenInfo = (props) => {
                     </div>
                     <div className="line">
                         <p className="key">Delegated</p>
-                        <p className="value" title={props.delegations}>{props.delegations.toFixed(3)} XPRT</p>
+                        <p className="value" title={props.delegations}>{props.delegations.toFixed(3)} XPRT <span className="inner-grid"></span></p>
                     </div>
                     <div className="line">
                         <p className="key">{t("REWARDS")}</p>
                         <p className="value rewards" onClick={() => handleRewards("rewards")}>{props.rewards} XPRT<span
-                            className="claim">{t("CLAIM")}</span></p>
+                            className="claim inner-grid">{t("CLAIM")}</span></p>
                     </div>
                     <div className="line">
                         <p className="key">{t("UNBONDING_TOKEN")}</p>
                         <p className="value" title={props.unbond}>{props.unbond.toFixed(3)} XPRT
+                            <span className="inner-grid">
                             {
                                 props.unbond > 0 ?
                                     <ModalViewUnbondDetails/>
                                     : ""
                             }
+                            </span>
                         </p>
                     </div>
 

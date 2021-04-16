@@ -356,6 +356,16 @@ html, body {
   margin-bottom: 30px;
   color: #E50913; }
 
+.inner-grid-icon {
+  display: inline-block;
+  width: 30px;
+  text-align: center; }
+
+.inner-grid {
+  display: inline-block;
+  width: 60px;
+  text-align: center; }
+
 /*--------------------------------------------------------------
 # main styles
 --------------------------------------------------------------*/
@@ -1194,7 +1204,7 @@ html, body {
     align-items: center;
     padding-bottom: 15px; }
     .wallet-main-section .send-container .form-section .form-field .label {
-      margin: 0;
+      margin: 0 15px 0 0;
       width: 155px;
       font-weight: 500;
       font-size: 14px;
@@ -1468,7 +1478,8 @@ html, body {
     justify-content: center;
     padding: 0px 50px; }
     .token-info-section .info-box:nth-child(2) {
-      border-right: 1px solid #EAEBF6; }
+      border-right: 1px solid #EAEBF6;
+      padding: 0px 20px; }
     .token-info-section .info-box .line {
       display: flex;
       justify-content: space-between;
@@ -1506,6 +1517,7 @@ html, body {
           color: #ffffff;
           font-size: 12px;
           padding: 3px 10px;
+          display: inline !important;
           margin-left: 5px; }
     .token-info-section .info-box .inner-box {
       flex: 1; }

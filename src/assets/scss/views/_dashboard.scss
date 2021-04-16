@@ -158,7 +158,7 @@
         padding-bottom: 15px;
 
         .label {
-          margin: 0;
+          margin: 0 15px 0 0;
           width: 155px;
           font-weight: 500;
           font-size: 14px;
@@ -587,6 +587,7 @@
 
     &:nth-child(2) {
       border-right: 1px solid #EAEBF6;
+      padding: 0px 20px;
     }
 
     .line {
@@ -639,6 +640,7 @@
           color: #ffffff;
           font-size: 12px;
           padding: 3px 10px;
+          display: inline !important;
           margin-left: 5px;
         }
       }
