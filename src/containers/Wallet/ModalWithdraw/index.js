@@ -17,6 +17,8 @@ import transactions from "../../../utils/transactions";
 import MakePersistence from "../../../utils/cosmosjsWrapper";
 import config from "../../../config";
 import {useTranslation} from "react-i18next";
+import ModalSetWithdrawAddress from "../ModalSetWithdrawAddress";
+
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const ModalWithdraw = (props) => {
@@ -34,6 +36,7 @@ const ModalWithdraw = (props) => {
     const [errorMessage, setErrorMessage] = useState("");
     const [loader, setLoader] = useState(false);
     const [importMnemonic, setImportMnemonic] = useState(true);
+    const [withdraw, setWithDraw] = useState(false);
     const loginAddress = localStorage.getItem('address');
     const mode = localStorage.getItem('loginMode');
     useEffect(() => {
@@ -106,7 +109,7 @@ const ModalWithdraw = (props) => {
         event.preventDefault();
         const response = transactions.TransactionWithKeplr([WithdrawMsg(loginAddress, validatorAddress)], aminoMsgHelper.fee(5000, 250000));
         response.then(result => {
-            if(result.code !== undefined){
+            if (result.code !== undefined) {
                 helper.AccountChangeCheck(result.rawLog)
             }
             setInitialModal(false);
@@ -228,253 +231,279 @@ const ModalWithdraw = (props) => {
     if (loader) {
         return <Loader/>;
     }
+
+    const handleRewards = (key) => {
+        if (key === "setWithDraw") {
+            setWithDraw(true);
+            setShow(false);
+        }
+    };
+
     return (
-        <Modal
-            animation={false}
-            centered={true}
-            backdrop="static"
-            keyboard={false}
-            show={show}
-            className="modal-custom claim-rewards-modal"
-            onHide={handleClose}>
-            {initialModal ?
-                <>
-                    <Modal.Header closeButton>
-                        {t("CLAIM_STAKING_REWARDS")}
-                    </Modal.Header>
-                    <Modal.Body className="rewards-modal-body">
-                        <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
-                            <div className="form-field">
-                                <p className="label">Validator</p>
-
-                                <Select value={validatorAddress} className="validators-list-selection"
-                                        onChange={onChangeSelect} displayEmpty>
-                                    <MenuItem value="" key={0}>
-                                        <em>None</em>
-                                    </MenuItem>
-                                    {
-                                        validatorsList.map((validator, index) => (
-                                            <MenuItem
-                                                key={index + 1}
-                                                className=""
-                                                value={validator.operator_address}>
-                                                {validator.description.moniker}
-                                            </MenuItem>
-                                        ))
-                                    }
-                                </Select>
-                            </div>
-                            <div className="form-field">
-                                <p className="label"></p>
-                                <div className="available-tokens">
-                                    <p className="tokens">{individualRewards} <span>XPRT</span></p>
-                                    <p className="usd">=${(individualRewards * props.tokenPrice).toFixed(4)}</p>
-                                </div>
-                            </div>
-                            <div className="form-field">
-                                <p className="label">Total Available</p>
-                                <div className="available-tokens">
-                                    <img src={icon} alt="icon"/>
-                                    <p className="tokens">{props.totalRewards} <span>XPRT</span></p>
-                                    <p className="usd">=${(props.totalRewards * props.tokenPrice).toFixed(4)}</p>
-                                </div>
-                            </div>
-                            {mode === "normal" ?
-                                <div className="form-field">
-                                    <p className="label">{t("MEMO")}</p>
-                                    <Form.Control
-                                        type="text"
-                                        name="memo"
-                                        placeholder={t("ENTER_MEMO")}
-                                        required={false}
-                                    />
-                                </div> : null
-                            }
-                            {
-                                errorMessage !== "" ?
-                                    <p className="form-error">{errorMessage}</p>
-                                    : null
-                            }
-                            <div className="buttons">
-                                <button className="button button-primary"
-                                        disabled={disabled || individualRewards === '' || individualRewards === '0.000000'}>{mode === "normal" ? "Next" : "Submit"}</button>
-                            </div>
-                        </Form>
-                    </Modal.Body>
-                </>
-                : null
-            }
-            {seedModal ?
-                <>
-                    <Modal.Header closeButton>
-                        {t("CLAIM_STAKING_REWARDS")}
-                    </Modal.Header>
-                    <Modal.Body className="rewards-modal-body">
-                        <Form onSubmit={handleSubmit}>
-                            {
-                                importMnemonic ?
-                                    <>
-                                        <div className="text-center">
-                                            <p onClick={() => handlePrivateKey(false)} className="import-name">{t("USE_PRIVATE_KEY")} (KeyStore.json file)</p>
-                                        </div>
-                                        <div className="form-field">
-                                            <p className="label">{t("MNEMONIC")}</p>
-                                            <Form.Control as="textarea" rows={3} name="mnemonic"
-                                                          placeholder={t("ENTER_MNEMONIC")}
-                                                          required={true}/>
-                                        </div>
-                                    </>
-                                    :
-                                    <>
-                                        <div className="text-center">
-                                            <p onClick={() => handlePrivateKey(true)} className="import-name">{t("USE_MNEMONIC")} ({t("SEED_PHRASE")})</p>
-                                        </div>
-                                        <div className="form-field">
-                                            <p className="label">{t("PASSWORD")}</p>
-                                            <Form.Control
-                                                type="password"
-                                                name="password"
-                                                placeholder={t("ENTER_PASSWORD")}
-                                                required={true}
-                                            />
-                                        </div>
-                                        <div className="form-field upload">
-                                            <p className="label"> KeyStore file</p>
-                                            <Form.File id="exampleFormControlFile1" name="uploadFile"
-                                                       className="file-upload" accept=".json" required={true}/>
-                                        </div>
-
-                                    </>
-
-                            }
-                            <Accordion className="advanced-wallet-accordion">
-                                <Card>
-                                    <Card.Header>
-                                        <p>
-                                            {t("ADVANCED")}
-                                        </p>
-                                        <ContextAwareToggle eventKey="0">Click me!</ContextAwareToggle>
-                                    </Card.Header>
-                                    <Accordion.Collapse eventKey="0">
-                                        <>
-                                            <div className="form-field">
-                                                <p className="label">{t("ACCOUNT")}</p>
-                                                <Form.Control
-                                                    type="text"
-                                                    name="claimTotalAccountNumber"
-                                                    id="claimTotalAccountNumber"
-                                                    placeholder={t("ACCOUNT_NUMBER")}
-                                                    required={advanceMode ? true : false}
-                                                />
-                                            </div>
-                                            <div className="form-field">
-                                                <p className="label">{t("ACCOUNT_INDEX")}</p>
-                                                <Form.Control
-                                                    type="text"
-                                                    name="claimTotalAccountIndex"
-                                                    id="claimTotalAccountIndex"
-                                                    placeholder={t("ACCOUNT_INDEX")}
-                                                    required={advanceMode ? true : false}
-                                                />
-                                            </div>
-                                            <div className="form-field">
-                                                <p className="label">{t("BIP_PASSPHRASE")}</p>
-                                                <Form.Control
-                                                    type="password"
-                                                    name="claimTotalbip39Passphrase"
-                                                    id="claimTotalbip39Passphrase"
-                                                    placeholder={t("ENTER_BIP_PASSPHRASE")}
-                                                    required={false}
-                                                />
-                                            </div>
-                                        </>
-                                    </Accordion.Collapse>
-                                    {
-                                        errorMessage !== "" ?
-                                            <p className="form-error">{errorMessage}</p>
-                                            : null
-                                    }
-                                </Card>
-                            </Accordion>
-                            <div className="buttons">
-                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee')) / 1000000}xprt
-                                    will be cut from the wallet.</p>
-                                <button className="button button-primary">{t("CLAIM_REWARDS")}</button>
-                            </div>
-                        </Form>
-                    </Modal.Body>
-
-                </>
-                : null
-            }
-            {
-                response !== '' && response.code === undefined ?
+        <>
+            <Modal
+                animation={false}
+                centered={true}
+                backdrop="static"
+                keyboard={false}
+                show={show}
+                className="modal-custom claim-rewards-modal"
+                onHide={handleClose}>
+                {initialModal ?
                     <>
-                        <Modal.Header className="result-header success" closeButton>
-                            {t("SUCCESSFULLY_CLAIMED")}
+                        <Modal.Header closeButton>
+                            {t("CLAIM_STAKING_REWARDS")}
                         </Modal.Header>
-                        <Modal.Body className="delegate-modal-body">
-                            <div className="result-container">
-                                <img src={success} alt="success-image"/>
-                                {mode === "kepler" ?
-                                    <a
-                                        href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
-                                        target="_blank" className="tx-hash">Tx
-                                        Hash: {response.transactionHash}</a>
-                                    :
-                                    <a
-                                        href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
-                                        target="_blank" className="tx-hash">Tx
-                                        Hash: {response.txhash}</a>
-                                }
-                                <div className="buttons">
-                                    <button className="button" onClick={handleClose}>{t("DONE")}</button>
+                        <Modal.Body className="rewards-modal-body">
+                            <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
+                                <div className="form-field">
+                                    <p className="label">Validator</p>
+
+                                    <Select value={validatorAddress} className="validators-list-selection"
+                                            onChange={onChangeSelect} displayEmpty>
+                                        <MenuItem value="" key={0}>
+                                            <em>None</em>
+                                        </MenuItem>
+                                        {
+                                            validatorsList.map((validator, index) => (
+                                                <MenuItem
+                                                    key={index + 1}
+                                                    className=""
+                                                    value={validator.operator_address}>
+                                                    {validator.description.moniker}
+                                                </MenuItem>
+                                            ))
+                                        }
+                                    </Select>
                                 </div>
-                            </div>
+                                <div className="form-field">
+                                    <p className="label"></p>
+                                    <div className="available-tokens">
+                                        <p className="tokens">{individualRewards} <span>XPRT</span></p>
+                                        <p className="usd">=${(individualRewards * props.tokenPrice).toFixed(4)}</p>
+                                    </div>
+                                </div>
+                                <div className="form-field">
+                                    <p className="label">Total Available</p>
+                                    <div className="available-tokens">
+                                        <img src={icon} alt="icon"/>
+                                        <p className="tokens">{props.totalRewards} <span>XPRT</span></p>
+                                        <p className="usd">=${(props.totalRewards * props.tokenPrice).toFixed(4)}</p>
+                                    </div>
+                                </div>
+                                {mode === "normal" ?
+                                    <div className="form-field">
+                                        <p className="label">{t("MEMO")}</p>
+                                        <Form.Control
+                                            type="text"
+                                            name="memo"
+                                            placeholder={t("ENTER_MEMO")}
+                                            required={false}
+                                        />
+                                    </div> : null
+                                }
+                                {
+                                    errorMessage !== "" ?
+                                        <p className="form-error">{errorMessage}</p>
+                                        : null
+                                }
+
+                                <div className="buttons">
+                                    <button className="button button-primary"
+                                            disabled={disabled || individualRewards === '' || individualRewards === '0.000000'}>{mode === "normal" ? "Next" : "Submit"}</button>
+                                </div>
+                                <div className="buttons">
+                                    <p className="button-link" type="button"
+                                       onClick={() => handleRewards("setWithDraw")}>
+                                        {t("SET_WITHDRAW_ADDRESS")}
+                                    </p>
+                                </div>
+                            </Form>
                         </Modal.Body>
                     </>
                     : null
-            }
-            {
-                response !== '' && response.code !== undefined ?
+                }
+                {seedModal ?
                     <>
-                        <Modal.Header className="result-header error" closeButton>
-                            {t("FAILED_CLAIMING")}
+                        <Modal.Header closeButton>
+                            {t("CLAIM_STAKING_REWARDS")}
                         </Modal.Header>
-                        <Modal.Body className="delegate-modal-body">
-                            <div className="result-container">
-                                {mode === "kepler" ?
-                                    <>
-                                        <p>{response.rawLog}</p>
+                        <Modal.Body className="rewards-modal-body">
+                            <Form onSubmit={handleSubmit}>
+                                {
+                                    importMnemonic ?
+                                        <>
+                                            <div className="text-center">
+                                                <p onClick={() => handlePrivateKey(false)}
+                                                   className="import-name">{t("USE_PRIVATE_KEY")} (KeyStore.json
+                                                    file)</p>
+                                            </div>
+                                            <div className="form-field">
+                                                <p className="label">{t("MNEMONIC")}</p>
+                                                <Form.Control as="textarea" rows={3} name="mnemonic"
+                                                              placeholder={t("ENTER_MNEMONIC")}
+                                                              required={true}/>
+                                            </div>
+                                        </>
+                                        :
+                                        <>
+                                            <div className="text-center">
+                                                <p onClick={() => handlePrivateKey(true)}
+                                                   className="import-name">{t("USE_MNEMONIC")} ({t("SEED_PHRASE")})</p>
+                                            </div>
+                                            <div className="form-field">
+                                                <p className="label">{t("PASSWORD")}</p>
+                                                <Form.Control
+                                                    type="password"
+                                                    name="password"
+                                                    placeholder={t("ENTER_PASSWORD")}
+                                                    required={true}
+                                                />
+                                            </div>
+                                            <div className="form-field upload">
+                                                <p className="label"> KeyStore file</p>
+                                                <Form.File id="exampleFormControlFile1" name="uploadFile"
+                                                           className="file-upload" accept=".json" required={true}/>
+                                            </div>
+
+                                        </>
+
+                                }
+                                <Accordion className="advanced-wallet-accordion">
+                                    <Card>
+                                        <Card.Header>
+                                            <p>
+                                                {t("ADVANCED")}
+                                            </p>
+                                            <ContextAwareToggle eventKey="0">Click me!</ContextAwareToggle>
+                                        </Card.Header>
+                                        <Accordion.Collapse eventKey="0">
+                                            <>
+                                                <div className="form-field">
+                                                    <p className="label">{t("ACCOUNT")}</p>
+                                                    <Form.Control
+                                                        type="text"
+                                                        name="claimTotalAccountNumber"
+                                                        id="claimTotalAccountNumber"
+                                                        placeholder={t("ACCOUNT_NUMBER")}
+                                                        required={advanceMode ? true : false}
+                                                    />
+                                                </div>
+                                                <div className="form-field">
+                                                    <p className="label">{t("ACCOUNT_INDEX")}</p>
+                                                    <Form.Control
+                                                        type="text"
+                                                        name="claimTotalAccountIndex"
+                                                        id="claimTotalAccountIndex"
+                                                        placeholder={t("ACCOUNT_INDEX")}
+                                                        required={advanceMode ? true : false}
+                                                    />
+                                                </div>
+                                                <div className="form-field">
+                                                    <p className="label">{t("BIP_PASSPHRASE")}</p>
+                                                    <Form.Control
+                                                        type="password"
+                                                        name="claimTotalbip39Passphrase"
+                                                        id="claimTotalbip39Passphrase"
+                                                        placeholder={t("ENTER_BIP_PASSPHRASE")}
+                                                        required={false}
+                                                    />
+                                                </div>
+                                            </>
+                                        </Accordion.Collapse>
+                                        {
+                                            errorMessage !== "" ?
+                                                <p className="form-error">{errorMessage}</p>
+                                                : null
+                                        }
+                                    </Card>
+                                </Accordion>
+                                <div className="buttons">
+                                    <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee')) / 1000000}xprt
+                                        will be cut from the wallet.</p>
+                                    <button className="button button-primary">{t("CLAIM_REWARDS")}</button>
+                                </div>
+                            </Form>
+                        </Modal.Body>
+
+                    </>
+                    : null
+                }
+                {
+                    response !== '' && response.code === undefined ?
+                        <>
+                            <Modal.Header className="result-header success" closeButton>
+                                {t("SUCCESSFULLY_CLAIMED")}
+                            </Modal.Header>
+                            <Modal.Body className="delegate-modal-body">
+                                <div className="result-container">
+                                    <img src={success} alt="success-image"/>
+                                    {mode === "kepler" ?
                                         <a
                                             href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
                                             target="_blank" className="tx-hash">Tx
                                             Hash: {response.transactionHash}</a>
-                                    </>
-                                    :
-                                    <>
-                                        <p>{response.raw_log === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : response.raw_log}</p>
+                                        :
                                         <a
                                             href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
                                             target="_blank" className="tx-hash">Tx
                                             Hash: {response.txhash}</a>
-                                    </>
-                                }
-                                <div className="buttons">
-                                    <button className="button" onClick={handleClose}>{t("DONE")}</button>
+                                    }
+                                    <div className="buttons">
+                                        <button className="button" onClick={handleClose}>{t("DONE")}</button>
+                                    </div>
                                 </div>
-                            </div>
-                        </Modal.Body>
-                    </>
-                    : null
+                            </Modal.Body>
+                        </>
+                        : null
+                }
+                {
+                    response !== '' && response.code !== undefined ?
+                        <>
+                            <Modal.Header className="result-header error" closeButton>
+                                {t("FAILED_CLAIMING")}
+                            </Modal.Header>
+                            <Modal.Body className="delegate-modal-body">
+                                <div className="result-container">
+                                    {mode === "kepler" ?
+                                        <>
+                                            <p>{response.rawLog}</p>
+                                            <a
+                                                href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
+                                                target="_blank" className="tx-hash">Tx
+                                                Hash: {response.transactionHash}</a>
+                                        </>
+                                        :
+                                        <>
+                                            <p>{response.raw_log === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : response.raw_log}</p>
+                                            <a
+                                                href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
+                                                target="_blank" className="tx-hash">Tx
+                                                Hash: {response.txhash}</a>
+                                        </>
+                                    }
+                                    <div className="buttons">
+                                        <button className="button" onClick={handleClose}>{t("DONE")}</button>
+                                    </div>
+                                </div>
+                            </Modal.Body>
+                        </>
+                        : null
+                }
+            </Modal>
+            {withdraw ?
+                <ModalSetWithdrawAddress setWithDraw={setWithDraw} handleClose={handleClose}
+                                         totalRewards={props.rewards} setShow={setShow}/>
+                : null
             }
-        </Modal>
+        </>
     );
 };
 
 const stateToProps = (state) => {
     return {
         list: state.rewards.list,
+        rewards: state.rewards.rewards,
         tokenPrice: state.tokenPrice.tokenPrice
     };
 };

@@ -45,6 +45,7 @@ const ModalSetWithdrawAddress = (props) => {
 
     const handleClose = () => {
         setShow(false);
+        props.handleClose();
         props.setWithDraw(false)
     };
 
@@ -235,7 +236,7 @@ const ModalSetWithdrawAddress = (props) => {
                                     name="currentWithdrawalAddress"
                                     placeholder={t("ENTER_WITHDRAW_ADDRESS")}
                                     value={props.withdrawAddress}
-                                />
+                                    readOnly/>
                             </div>
                             <div className="form-field">
                                 <p className="label">Revised Address</p>
