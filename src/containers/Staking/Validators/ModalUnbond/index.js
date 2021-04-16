@@ -30,7 +30,7 @@ const ModalUnbond = (props) => {
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
-            setAmount(evt.target.value)
+            setAmount(evt.target.value*1)
         } else {
             return false
         }
@@ -224,7 +224,7 @@ const ModalUnbond = (props) => {
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
                             <div className="form-field">
                                 <p className="label">{t("DELEGATION_AMOUNT")} (XPRT)</p>
-                                <p className={props.delegationAmount === '0' ? "empty info-data" : "info-data"}>{props.delegationAmount}</p>
+                                <p className={props.delegationAmount === 0 ? "empty info-data" : "info-data"}>{props.delegationAmount}</p>
                             </div>
 
                             <div className="form-field">
@@ -235,7 +235,7 @@ const ModalUnbond = (props) => {
                                         min={0}
                                         name="amount"
                                         placeholder={t("SEND_AMOUNT")}
-                                        value={amount}
+                                        defaultValue={amount || ''}
                                         step="any"
                                         onChange={handleAmountChange}
                                         required={true}
@@ -259,13 +259,13 @@ const ModalUnbond = (props) => {
                                     : null
                             }
                             <div className="buttons navigate-buttons">
-                                <button className="button button-secondary" onClick={() => handlePrevious()}>
+                                <button className="button button-secondary" type="button" onClick={() => handlePrevious()}>
                                     <Icon
                                         viewClass="arrow-right"
                                         icon="left-arrow"/>
                                 </button>
                                 <button className="button button-primary"
-                                        disabled={!props.delegateStatus || amount === 0}>
+                                        disabled={!props.delegateStatus || amount === 0 || amount > props.delegationAmount}>
                                     {mode === "normal" ? "Next" : "Submit"}
                                 </button>
                             </div>

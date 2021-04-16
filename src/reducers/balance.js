@@ -2,7 +2,8 @@ import {combineReducers} from 'redux';
 import {
     BALANCE_FETCH_SUCCESS,
     BALANCE_FETCH_ERROR,
-    BALANCE_FETCH_IN_PROGRESS
+    BALANCE_FETCH_IN_PROGRESS,
+    BALANCE_LIST_FETCH_SUCCESS
 } from "../constants/balance"
 
 
@@ -34,7 +35,16 @@ const _ = (state = 0, action) => {
 };
 
 
+const list = (state = [], action) => {
+    if (action.type === BALANCE_LIST_FETCH_SUCCESS) {
+        return action.list;
+    }
+    return state;
+};
+
+
 export default combineReducers({
     amount,
     _,
+    list,
 });

@@ -11,6 +11,8 @@ import ModalDelegate from "../ModalDelegate";
 import {getDelegationsUrl, getValidatorRewardsUrl} from "../../../../constants/url";
 import axios from "axios";
 import {useTranslation} from "react-i18next";
+import ModalSetWithdrawAddress from "../../../Wallet/ModalSetWithdrawAddress";
+import {connect} from "react-redux";
 
 const ModalActions = (props) => {
     const {t} = useTranslation();
@@ -18,11 +20,12 @@ const ModalActions = (props) => {
     const [txModalShow, setTxModalShow] = useState(false);
     const [initialModal, setInitialModal] = useState(true);
     const [address, setAddress] = useState('');
-    const [delegationAmount, setDelegationAmount] = useState('0');
+    const [delegationAmount, setDelegationAmount] = useState(0);
     const [moniker, setMoniker] = useState('');
     const [modalDelegate, setModalOpen] = useState();
     const [rewards, setRewards] = useState('0');
     const [delegateStatus, setDelegateStatus] = useState(false);
+    const [withdraw, setWithDraw] = useState(false);
     useEffect(() => {
         let address = localStorage.getItem('address');
         const fetchValidatorRewards = async () => {
@@ -70,6 +73,15 @@ const ModalActions = (props) => {
     let commissionRate = props.validator.commission.commission_rates.rate * 100;
     commissionRate = parseFloat(commissionRate.toFixed(2)).toLocaleString();
     let active = helper.isActive(props.validator);
+
+    const handleRewards = () => {
+            setInitialModal(false);
+            setShow(false);
+            setTxModalShow(false);
+            setWithDraw(true);
+
+    };
+
     return (
 
         <>
@@ -204,16 +216,27 @@ const ModalActions = (props) => {
                                 moniker={moniker}
                                 rewards={rewards}
                                 handleClose={handleClose}
+                                handleRewards={handleRewards}
                             />
                             : null
                     }
                 </Modal>
             }
-
+            {withdraw ?
+                <ModalSetWithdrawAddress setWithDraw={setWithDraw} handleClose={handleClose}
+                                         totalRewards={props.rewards} />
+                : null
+            }
 
         </>
     );
 };
 
 
-export default ModalActions;
+const stateToProps = (state) => {
+    return {
+        rewards: state.rewards.rewards,
+    };
+};
+export default connect(stateToProps)(ModalActions);
+
