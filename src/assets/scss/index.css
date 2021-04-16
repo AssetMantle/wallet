@@ -587,6 +587,8 @@ html, body {
   font-size: 16px;
   line-height: 2;
   color: #70747C; }
+  .unbonding-schedule-list .amount {
+    font-weight: 500; }
 
 .icon-button {
   cursor: pointer; }
