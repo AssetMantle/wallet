@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import "../../utils/kepler";
 import KeplerWallet from "../../utils/kepler";
 import {useHistory, NavLink} from "react-router-dom";
-import {Nav, Navbar} from "react-bootstrap";
+import {Modal, Nav, Navbar} from "react-bootstrap";
 import logo from "../../assets/images/logo_lite.svg";
 import ModalFaq from "../../containers/Faq";
 import MakePersistence from "../../utils/cosmosjsWrapper";
@@ -10,6 +10,7 @@ import config from "../../config";
 import {useTranslation} from "react-i18next";
 import ModalKeplerInstall from "./ModalKeplerInstall";
 import Loader from "../../components/Loader";
+import Icon from "../../components/Icon";
 const KeplerHome = () => {
     const {t} = useTranslation();
     const history = useHistory();
@@ -47,8 +48,7 @@ const KeplerHome = () => {
                 if (data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount" ||
                     data.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount" ||
                     data.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
-                    setErrorMessage("PeriodicVestingAccount is currently not supported with kepler, you can use " +
-                        "browser extension to send tokens.")
+                    setErrorMessage("Vesting Accounts are not supported by keplr")
                 } else {
                     localStorage.setItem('address', address);
                     localStorage.setItem('loginToken', 'loggedIn');
@@ -68,7 +68,9 @@ const KeplerHome = () => {
         })
 
     };
-
+    const handlePrevious = () => {
+        history.push('/');
+    };
     const handleHelp = () => {
         setShowFaq(true)
     };
@@ -92,7 +94,17 @@ const KeplerHome = () => {
             </Navbar>
             <div className="kepler-container">
                 <div className="info">
-                    <h3>{t("USE_KEPLER_BROWSER_EXTENSION")}</h3>
+                    <div className="header-info">
+                        <div className="previous-section">
+                            <button className="button" onClick={() => handlePrevious("keysForm")}>
+                                <Icon
+                                    viewClass="arrow-right"
+                                    icon="left-arrow"/>
+                            </button>
+                        </div>
+                        <h3>{t("USE_KEPLER_BROWSER_EXTENSION")}</h3>
+                    </div>
+                    <div className="info-body">
                     {errorMessage !== "" ?
                         <>
                             <div className="buttons">
@@ -129,6 +141,7 @@ const KeplerHome = () => {
                             </div>
                         </>
                     }
+                    </div>
                 </div>
             </div>
             {showFaq

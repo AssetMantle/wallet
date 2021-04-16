@@ -84,12 +84,13 @@ const TokenInfo = (props) => {
                     </div>
                     <div className="line">
                         <p className="key">Transferable</p>
-                        <p className="value" title={transferableAmount}> {transferableAmount.toFixed(3)} XPRT <span className="inner-grid-icon"></span></p>
+                        <p className="value" title={transferableAmount}> {transferableAmount.toFixed(3)} XPRT<span
+                            className="inner-grid-icon"></span></p>
                     </div>
                     <div className="line">
                         <p className="key">Delegatable</p>
                         <p className="value">
-                            {props.balance.toFixed(3)} XPRT <span className="inner-grid-icon"></span></p>
+                            {props.balance.toFixed(3)} XPRT<span className="inner-grid-icon"></span></p>
                     </div>
 
                 </div>
@@ -102,7 +103,8 @@ const TokenInfo = (props) => {
                     </div>
                     <div className="line">
                         <p className="key">Delegated</p>
-                        <p className="value" title={props.delegations}>{props.delegations.toFixed(3)} XPRT <span className="inner-grid"></span></p>
+                        <p className="value" title={props.delegations}>{props.delegations.toFixed(3)} XPRT<span
+                            className="inner-grid"></span></p>
                     </div>
                     <div className="line">
                         <p className="key">{t("REWARDS")}</p>
@@ -111,8 +113,8 @@ const TokenInfo = (props) => {
                     </div>
                     <div className="line">
                         <p className="key">{t("UNBONDING_TOKEN")}</p>
-                        <p className="value" title={props.unbond}>{props.unbond.toFixed(3)} XPRT
-                            <span className="inner-grid">
+                        <p className="value" title={props.unbond}>{props.unbond.toFixed(3)} XPRT<span
+                            className="inner-grid">
                             {
                                 props.unbond > 0 ?
                                     <ModalViewUnbondDetails/>

@@ -10,6 +10,8 @@ import Loader from "../../../../components/Loader";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import config from "../../../../config";
 import {useTranslation} from "react-i18next";
+import ModalSetWithdrawAddress from "../../../Wallet/ModalSetWithdrawAddress";
+import {connect} from "react-redux";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalWithdraw = (props) => {
@@ -22,6 +24,7 @@ const ModalWithdraw = (props) => {
     const [errorMessage, setErrorMessage] = useState("");
     const [loader, setLoader] = useState(false);
     const [importMnemonic, setImportMnemonic] = useState(true);
+    const [withdraw, setWithDraw] = useState(false);
     const loginAddress = localStorage.getItem('address');
     const mode = localStorage.getItem('loginMode');
 
@@ -202,6 +205,13 @@ const ModalWithdraw = (props) => {
     if (loader) {
         return <Loader/>;
     }
+
+    const handleRewards = (key) => {
+        if (key === "setWithDraw") {
+            props.handleRewards();
+        }
+    };
+
     return (
         <>
             {initialModal ?
@@ -245,6 +255,12 @@ const ModalWithdraw = (props) => {
                                     className={props.rewards ? "button button-primary" : "button button-primary disabled"}
                                     disabled={props.rewards === '0'}> {mode === "normal" ? t("NEXT") : t("SUBMIT")}
                                 </button>
+                            </div>
+                            <div className="buttons">
+                                <p className="button-link" type="button"
+                                   onClick={() => handleRewards("setWithDraw")}>
+                                    {t("SET_WITHDRAW_ADDRESS")}
+                                </p>
                             </div>
                         </Form>
                     </Modal.Body>
@@ -417,6 +433,7 @@ const ModalWithdraw = (props) => {
                     </>
                     : null
             }
+
         </>
     );
 };

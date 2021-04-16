@@ -34,7 +34,7 @@ const ModalReDelegate = (props) => {
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
-            setAmount(evt.target.value)
+            setAmount(evt.target.value*1)
         } else {
             return false
         }
@@ -263,7 +263,7 @@ const ModalReDelegate = (props) => {
                             </div>
                             <div className="form-field">
                                 <p className="label">{t("DELEGATION_AMOUNT")} (XPRT)</p>
-                                <p className={props.delegationAmount === '0' ? "empty info-data" : "info-data"}>{props.delegationAmount}</p>
+                                <p className={props.delegationAmount === 0 ? "empty info-data" : "info-data"}>{props.delegationAmount}</p>
                             </div>
                             <div className="form-field">
                                 <p className="label">{t("REDELEGATION_AMOUNT")} (XPRT)</p>
@@ -273,7 +273,7 @@ const ModalReDelegate = (props) => {
                                         min={0}
                                         name="amount"
                                         placeholder={t("SEND_AMOUNT")}
-                                        value={amount}
+                                        defaultValue={amount || ''}
                                         step="any"
                                         onChange={handleAmountChange}
                                         required={true}
@@ -304,7 +304,7 @@ const ModalReDelegate = (props) => {
                                 </button>
                                 <button
                                     className={props.delegateStatus ? "button button-primary" : "button button-primary disabled"}
-                                    disabled={!props.delegateStatus || disabled || amount === 0}
+                                    disabled={!props.delegateStatus || disabled || amount === 0 || amount > props.delegationAmount}
                                 >{mode === "normal" ? "Next" : "Submit"}
                                 </button>
                             </div>
