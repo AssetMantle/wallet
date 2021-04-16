@@ -9,6 +9,7 @@ import helper from "../../utils/helper";
 import logo from "../../assets/images/logo_bold.svg";
 import {useTranslation} from "react-i18next";
 import MenuIcon from '@material-ui/icons/Menu';
+import Darktheme from "../Darktheme";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const DashboardHeader = () => {
     const {t} = useTranslation();
@@ -107,7 +108,7 @@ const DashboardHeader = () => {
                                     </div>
                                 </NavDropdown>
                             </li>
-
+                            {/*<li className="nav-item link"><Darktheme/></li>*/}
 
                         </Nav>
                     </Navbar.Collapse>

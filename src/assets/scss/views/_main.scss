@@ -365,3 +365,12 @@
     }
   }
 }
+
+.dark-mode-button{
+  background: transparent;
+  border: 0;
+  outline: none !important;
+  .icon{
+    width: 20px;
+  }
+}

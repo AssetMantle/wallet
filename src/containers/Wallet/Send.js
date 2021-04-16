@@ -266,7 +266,7 @@ const Send = (props) => {
                         </div>
                     </div>
                     <div className="form-field">
-                        <p className="label">{t("AVAILABLE_DELEGATE_AMOUNT")} (XPRT)</p>
+                        <p className="label">Transferable Amount (XPRT)</p>
                         <p className={props.balance === 0 ? "empty info-data" : "info-data"}>{props.balance}</p>
                     </div>
                     {mode === "normal" ?

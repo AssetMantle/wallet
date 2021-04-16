@@ -142,6 +142,11 @@ html, body {
 .not-matched {
   box-shadow: 0 0 0 0.2rem #e509134d !important; }
 
+.button-link {
+  font-weight: 500;
+  color: #e50913;
+  text-decoration: underline; }
+
 .icon-button.info {
   padding-left: 5px;
   background: no-repeat;
@@ -350,6 +355,16 @@ html, body {
   text-decoration: underline;
   margin-bottom: 30px;
   color: #E50913; }
+
+.inner-grid-icon {
+  display: inline-block;
+  width: 30px;
+  text-align: center; }
+
+.inner-grid {
+  display: inline-block;
+  width: 60px;
+  text-align: center; }
 
 /*--------------------------------------------------------------
 # main styles
@@ -610,6 +625,13 @@ html, body {
     .kepler-modal .kepler-modal-body .chrome-box img {
       width: 80px;
       height: 80px; }
+
+.dark-mode-button {
+  background: transparent;
+  border: 0;
+  outline: none !important; }
+  .dark-mode-button .icon {
+    width: 20px; }
 
 /*--------------------------------------------------------------
 # homepage styles
@@ -1182,7 +1204,7 @@ html, body {
     align-items: center;
     padding-bottom: 15px; }
     .wallet-main-section .send-container .form-section .form-field .label {
-      margin: 0;
+      margin: 0 15px 0 0;
       width: 155px;
       font-weight: 500;
       font-size: 14px;
@@ -1237,7 +1259,8 @@ html, body {
       line-height: 150%;
       font-family: 'Poppins', sans-serif;
       color: #8D9CB5;
-      padding: 15px 20px; }
+      padding: 15px 20px;
+      background: transparent !important; }
       .wallet-main-section .txns-container table thead th:first-child {
         padding-left: 40px; }
   .wallet-main-section .txns-container table tbody tr:first-child td {
@@ -1455,13 +1478,16 @@ html, body {
     justify-content: center;
     padding: 0px 50px; }
     .token-info-section .info-box:nth-child(2) {
-      border-right: 1px solid #EAEBF6; }
+      border-right: 1px solid #EAEBF6;
+      padding: 0px 20px; }
     .token-info-section .info-box .line {
       display: flex;
       justify-content: space-between;
       padding-bottom: 10px; }
       .token-info-section .info-box .line .info-heading {
         font-weight: 500; }
+      .token-info-section .info-box .line .info-heading.not-show {
+        visibility: hidden; }
       .token-info-section .info-box .line img {
         padding-right: 15px; }
       .token-info-section .info-box .line p {
@@ -1491,6 +1517,7 @@ html, body {
           color: #ffffff;
           font-size: 12px;
           padding: 3px 10px;
+          display: inline !important;
           margin-left: 5px; }
     .token-info-section .info-box .inner-box {
       flex: 1; }
@@ -1563,7 +1590,8 @@ html, body {
         font-size: 14px;
         line-height: 150%;
         color: #8D9CB5;
-        font-family: 'Poppins', sans-serif; }
+        font-family: 'Poppins', sans-serif;
+        background: transparent !important; }
         .validators-section table thead th:first-child {
           padding-left: 40px; }
     .validators-section table tbody td {
@@ -1944,7 +1972,7 @@ html, body {
     padding: 20px 30px; } }
 @media (max-width: 1400px) {
   .token-info-section {
-    padding: 25px; }
+    padding: 25px 0; }
     .token-info-section .info-box {
       padding: 0px 20px; }
     .token-info-section .xprt-info .total-supply {
@@ -1979,6 +2007,8 @@ html, body {
         border-top: 0px solid #EAEBF6;
         border-right: 0px solid #EAEBF6;
         border-left: 0px solid #EAEBF6; }
+    .token-info-section .xprt-info {
+      padding-left: 10px !important; }
 
   .wallet-main-section .send-container {
     padding: 0;
@@ -2016,8 +2046,15 @@ html, body {
     font-size: 14px;
     line-height: normal; } }
 @media (max-width: 576px) {
+  .validators-section .info .refresh-button {
+    padding: 8px !important;
+    right: 0; }
+
   .wallet-main-section .tabs-section .nav-tabs .nav-link {
-    padding: 0.6rem 0.6rem; }
+    padding: 0.6rem 0.6rem;
+    font-size: 12px; }
+  .wallet-main-section .tabs-section .refresh-button {
+    padding: 8px !important; }
 
   .token-info-section .info-box .line img {
     width: 75px; }

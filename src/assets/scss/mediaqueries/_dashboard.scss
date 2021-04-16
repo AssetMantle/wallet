@@ -7,7 +7,7 @@
 
 @media (max-width: 1400px) {
   .token-info-section{
-    padding: 25px;
+    padding: 25px 0;
     .info-box{
       padding: 0px 20px;
     }
@@ -54,6 +54,9 @@
         border-left: 0px solid #EAEBF6;
       }
     }
+   .xprt-info{
+     padding-left: 10px !important;
+   }
   }
   .wallet-main-section .send-container{
     padding: 0;
@@ -103,8 +106,18 @@
   }
 }
 @media (max-width: 576px){
-  .wallet-main-section .tabs-section .nav-tabs .nav-link{
+  .validators-section .info .refresh-button {
+      padding: 8px !important;
+    right: 0;
+  }
+  .wallet-main-section .tabs-section{
+    .nav-tabs .nav-link{
       padding: 0.6rem 0.6rem;
+      font-size: 12px;
+    }
+    .refresh-button{
+      padding: 8px !important;
+    }
   }
   .token-info-section .info-box .line img{
     width: 75px;
