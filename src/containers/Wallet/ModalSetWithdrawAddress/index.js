@@ -41,6 +41,12 @@ const ModalSetWithdrawAddress = (props) => {
     const [importMnemonic, setImportMnemonic] = useState(true);
     const loginAddress = localStorage.getItem('address');
     const mode = localStorage.getItem('loginMode');
+    const [memoStatus, setMemoStatus] = useState(false);
+
+    const handleMemoChange = () => {
+        setMemoStatus(!memoStatus);
+    };
+
     useEffect(() => {
         props.fetchWithdrawAddress(loginAddress)
         for (const item of props.list) {
@@ -134,7 +140,10 @@ const ModalSetWithdrawAddress = (props) => {
     };
     const handleSubmitInitialData = async event => {
         event.preventDefault();
-        const memo = event.target.memo.value;
+        let memo = "";
+        if (memoStatus) {
+            memo = event.target.memo.value;
+        }
         let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
         if (memoCheck) {
             setErrorMessage("you entered your mnemonic as memo")
@@ -290,21 +299,45 @@ const ModalSetWithdrawAddress = (props) => {
                                 <p className={props.delegations === 0 ? "empty info-data" : "info-data"}>{props.delegations}</p>
                             </div>
                             {mode === "normal" ?
-                                <div className="form-field">
-                                    <p className="label">{t("MEMO")}<OverlayTrigger trigger={['hover', 'focus']}
-                                                                                    placement="bottom"
-                                                                                    overlay={popoverMemo}>
-                                        <button className="icon-button info"><Icon
-                                            viewClass="arrow-right"
-                                            icon="info"/></button>
-                                    </OverlayTrigger></p>
-                                    <Form.Control
-                                        type="text"
-                                        name="memo"
-                                        placeholder={t("ENTER_MEMO")}
-                                        required={false}
-                                    />
-                                </div> : null
+                                <>
+                                    <div className="memo-dropdown-section">
+                                        <p onClick={handleMemoChange} className="memo-dropdown"><span
+                                            className="text">{t("ADVANCED")} </span>
+                                            {memoStatus ?
+                                                <Icon
+                                                    viewClass="arrow-right"
+                                                    icon="up-arrow"/>
+                                                :
+                                                <Icon
+                                                    viewClass="arrow-right"
+                                                    icon="down-arrow"/>}
+                                        </p>
+                                        <OverlayTrigger trigger={['hover', 'focus']}
+                                                        placement="bottom"
+                                                        overlay={popoverMemo}>
+                                            <button className="icon-button info" type="button"><Icon
+                                                viewClass="arrow-right"
+                                                icon="info"/></button>
+                                        </OverlayTrigger>
+                                    </div>
+                                    {memoStatus ?
+                                        <div className="form-field">
+                                            <p className="label">{t("MEMO")}
+                                                <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
+                                                                overlay={popoverMemo}>
+                                                    <button className="icon-button info" type="button"><Icon
+                                                        viewClass="arrow-right"
+                                                        icon="info"/></button>
+                                                </OverlayTrigger></p>
+                                            <Form.Control
+                                                type="text"
+                                                name="memo"
+                                                placeholder={t("ENTER_MEMO")}
+                                                required={false}
+                                            />
+                                        </div> : ""
+                                    }
+                                </> : null
                             }
                             {
                                 errorMessage !== "" ?

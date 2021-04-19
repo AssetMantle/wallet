@@ -152,7 +152,7 @@ let English = {
         "SELECT_VALIDATOR": "Select Validator",
         "TOTAL_AVAILABLE": "Total Available",
         "MEMO": "Memo",
-        "ENTER_MEMO": "Enter Memo (Optional)",
+        "ENTER_MEMO": "Enter Memo(Optional)",
         "SET_WITHDRAW_ADDRESS": "Setup another Reward Withdrawal address",
         "WITHDRAW_ADDRESS": "Withdraw Address",
         "ENTER_WITHDRAW_ADDRESS": "Enter Withdraw Address",

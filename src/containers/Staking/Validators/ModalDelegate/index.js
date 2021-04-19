@@ -36,7 +36,11 @@ const ModalDelegate = (props) => {
     const [importMnemonic, setImportMnemonic] = useState(true);
     const loginAddress = localStorage.getItem('address');
     const mode = localStorage.getItem('loginMode');
+    const [memoStatus, setMemoStatus] = useState(false);
 
+    const handleMemoChange = () => {
+        setMemoStatus(!memoStatus);
+    };
     function ContextAwareToggle({children, eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 
@@ -119,7 +123,10 @@ const ModalDelegate = (props) => {
 
     const handleSubmitInitialData = async event => {
         event.preventDefault();
-        const memo = event.target.memo.value;
+        let memo = "";
+        if (memoStatus) {
+            memo = event.target.memo.value;
+        }
         let memoCheck = transactions.mnemonicValidation(memo, loginAddress)
         if (memoCheck) {
             setErrorMessage("you entered your mnemonic as memo")
@@ -270,7 +277,7 @@ const ModalDelegate = (props) => {
                     <Modal.Header closeButton>
                         Delegate to {props.moniker}
                         <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
-                            <button className="icon-button info"><Icon
+                            <button className="icon-button info" type="button"><Icon
                                 viewClass="arrow-right"
                                 icon="info"/></button>
                         </OverlayTrigger>
@@ -292,25 +299,48 @@ const ModalDelegate = (props) => {
                                     />
                                     <span className={props.balance === 0 ? "empty info-data" : "info-data"}><span
                                         className="title">{t("BALANCE")}:</span> <span
-                                        className="value">{props.balance}(XPRT)</span> </span>
+                                        className="value">{props.balance} XPRT</span> </span>
                                 </div>
                             </div>
 
                             {mode === "normal" ?
-                                <div className="form-field">
-                                    <p className="label info">{t("MEMO")}
+                                <>
+                                    <div className="memo-dropdown-section">
+                                        <p onClick={handleMemoChange} className="memo-dropdown"><span className="text">{t("ADVANCED")}  </span>
+                                            {memoStatus ?
+                                                <Icon
+                                                    viewClass="arrow-right"
+                                                    icon="up-arrow"/>
+                                                :
+                                                <Icon
+                                                    viewClass="arrow-right"
+                                                    icon="down-arrow"/>}
+                                        </p>
                                         <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popoverMemo}>
-                                            <button className="icon-button info"><Icon
+                                            <button className="icon-button info" type="button"><Icon
                                                 viewClass="arrow-right"
                                                 icon="info"/></button>
-                                        </OverlayTrigger></p>
-                                    <Form.Control
-                                        type="text"
-                                        name="memo"
-                                        placeholder={t("ENTER_MEMO")}
-                                        required={false}
-                                    />
-                                </div> : null
+                                        </OverlayTrigger>
+                                    </div>
+                                    {memoStatus ?
+                                        <div className="form-field">
+                                            <p className="label info">{t("MEMO")}
+                                                <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popoverMemo}>
+                                                    <button className="icon-button info" type="button"><Icon
+                                                        viewClass="arrow-right"
+                                                        icon="info"/></button>
+                                                </OverlayTrigger></p>
+                                            <Form.Control
+                                                type="text"
+                                                name="memo"
+                                                placeholder={t("ENTER_MEMO")}
+                                                required={false}
+                                            />
+                                        </div>
+                                        : ""
+                                    }
+                                </>
+                                : null
                             }
                             {
                                 errorMessage !== "" ?
@@ -337,7 +367,7 @@ const ModalDelegate = (props) => {
                     <Modal.Header closeButton>
                         Delegate to {props.moniker}
                         <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
-                            <button className="icon-button info"><Icon
+                            <button className="icon-button info" type="button"><Icon
                                 viewClass="arrow-right"
                                 icon="info"/></button>
                         </OverlayTrigger>

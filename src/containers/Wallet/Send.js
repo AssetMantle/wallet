@@ -31,6 +31,7 @@ const Send = (props) => {
     const [mnemonicForm, setMnemonicForm] = useState(false);
     const [show, setShow] = useState(true);
     const [advanceMode, setAdvanceMode] = useState(false);
+    const [memoStatus, setMemoStatus] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [keplerError, setKeplerError] = useState("");
     const [loader, setLoader] = useState(false);
@@ -58,7 +59,7 @@ const Send = (props) => {
         const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
         if (encryptedMnemonic !== null) {
             setImportMnemonic(false)
-        }else{
+        } else {
             setImportMnemonic(true);
         }
     }, []);
@@ -67,11 +68,14 @@ const Send = (props) => {
         event.preventDefault();
         setToAddress(event.target.address.value);
         if (mode === "normal") {
-            const memo = event.target.memo.value;
+            let memo = "";
+            if (memoStatus) {
+                memo = event.target.memo.value;
+            }
             setMemoContent(memo);
             let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
             if (memoCheck) {
-                setKeplerError("you entered your mnemonic as memo")
+                setKeplerError("You entered your mnemonic as memo")
             } else {
                 setKeplerError('');
                 setMnemonicForm(true);
@@ -262,6 +266,9 @@ const Send = (props) => {
         </Popover>
     );
 
+    const handleMemoChange = () => {
+        setMemoStatus(!memoStatus);
+    };
 
     return (
         <div className="send-container">
@@ -270,7 +277,7 @@ const Send = (props) => {
                     <div className="form-field">
                         <p className="label info">Recipient Address
                             <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
-                                <button className="icon-button info"><Icon
+                                <button className="icon-button info" type="button"><Icon
                                     viewClass="arrow-right"
                                     icon="info"/></button>
                             </OverlayTrigger></p>
@@ -296,25 +303,54 @@ const Send = (props) => {
                             />
                             <span className={props.balance === 0 ? "empty info-data" : "info-data"}><span
                                 className="title">Transferable Amount:</span> <span
-                                className="value">{props.balance}(XPRT)</span> </span>
+                                className="value">{props.balance} XPRT</span> </span>
                         </div>
                     </div>
 
                     {mode === "normal" ?
-                        <div className="form-field">
-                            <p className="label info">{t("MEMO")}
-                                <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popoverMemo}>
-                                    <button className="icon-button info"><Icon
+                        <>
+                            <div className="memo-dropdown-section">
+                                <p onClick={handleMemoChange} className="memo-dropdown"><span
+                                    className="text">{t("ADVANCED")} </span>
+                                    {memoStatus ?
+                                        <Icon
+                                            viewClass="arrow-right"
+                                            icon="up-arrow"/>
+                                        :
+                                        <Icon
+                                            viewClass="arrow-right"
+                                            icon="down-arrow"/>}
+
+                                </p>
+                                <OverlayTrigger trigger={['hover', 'focus']}
+                                                placement="bottom"
+                                                overlay={popoverMemo}>
+                                    <button className="icon-button info" type="button"><Icon
                                         viewClass="arrow-right"
                                         icon="info"/></button>
-                                </OverlayTrigger></p>
-                            <Form.Control
-                                type="text"
-                                name="memo"
-                                placeholder={t("ENTER_MEMO")}
-                                required={false}
-                            />
-                        </div> : null
+                                </OverlayTrigger>
+                            </div>
+
+                            {memoStatus ?
+                                <div className="form-field">
+                                    <p className="label info">{t("MEMO")}
+                                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
+                                                        overlay={popoverMemo}>
+                                            <button className="icon-button info" type="button"><Icon
+                                                viewClass="arrow-right"
+                                                icon="info"/></button>
+                                        </OverlayTrigger></p>
+                                    <Form.Control
+                                        type="text"
+                                        name="memo"
+                                        placeholder={t("ENTER_MEMO")}
+                                        required={false}
+                                    />
+                                </div>
+                                : ""}
+
+                        </>
+                        : null
                     }
                     {keplerError !== '' ?
                         <p className="form-error">{keplerError}</p> : null}
@@ -338,7 +374,7 @@ const Send = (props) => {
                                     <Modal.Body className="create-wallet-body import-wallet-body">
                                         <Form onSubmit={handleMnemonicSubmit}>
                                             {
-                                                importMnemonic?
+                                                importMnemonic ?
                                                     <>
                                                         <div className="form-field upload">
                                                             <p className="label"> KeyStore file</p>
