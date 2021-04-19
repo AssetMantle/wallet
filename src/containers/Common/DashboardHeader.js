@@ -10,11 +10,13 @@ import logo from "../../assets/images/logo_bold.svg";
 import {useTranslation} from "react-i18next";
 import MenuIcon from '@material-ui/icons/Menu';
 import Darktheme from "../Darktheme";
+import GenerateKeyStore from "../GenerateKeyStore";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const DashboardHeader = () => {
     const {t} = useTranslation();
     const history = useHistory();
     const [showFaq, setShowFaq] = useState(false);
+    const [showKeyStore, setShowKeyStore] = useState(false);
     const address = localStorage.getItem('address');
     let addressTruncate;
     if (address !== null) {
@@ -31,6 +33,9 @@ const DashboardHeader = () => {
         localStorage.setItem('keplerAddress', '');
         history.push('/');
         window.location.reload();
+    };
+    const handleKeyStore = () =>{
+        setShowKeyStore(true)
     };
     const ProfileIcon = <Icon viewClass="profile" icon="profile"/>
     return (
@@ -104,7 +109,7 @@ const DashboardHeader = () => {
                                     </div>
                                     <div className="dropdown-footer">
                                         <p onClick={closeWallet} className="link-close">{t("CLOSE_WALLET")}</p>
-                                        {/*<p>Account</p>*/}
+                                        <p onClick={handleKeyStore}>Generate KeyStore</p>
                                     </div>
                                 </NavDropdown>
                             </li>
@@ -117,6 +122,11 @@ const DashboardHeader = () => {
             {showFaq
                 ?
                 <ModalFaq setShowFaq={setShowFaq}/>
+                :
+                null}
+            {showKeyStore
+                ?
+                <GenerateKeyStore setShowKeyStore={setShowKeyStore}/>
                 :
                 null}
         </div>
