@@ -10,11 +10,13 @@ import logo from "../../assets/images/logo_bold.svg";
 import {useTranslation} from "react-i18next";
 import MenuIcon from '@material-ui/icons/Menu';
 import Darktheme from "../Darktheme";
+import GenerateKeyStore from "../GenerateKeyStore";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const DashboardHeader = () => {
     const {t} = useTranslation();
     const history = useHistory();
     const [showFaq, setShowFaq] = useState(false);
+    const [showKeyStore, setShowKeyStore] = useState(false);
     const address = localStorage.getItem('address');
     let addressTruncate;
     if (address !== null) {
@@ -24,13 +26,12 @@ const DashboardHeader = () => {
         setShowFaq(true)
     };
     const closeWallet = () => {
-        localStorage.setItem('loginToken', '');
-        localStorage.setItem('address', '');
-        localStorage.setItem('loginMode', '');
-        localStorage.setItem('fee', '');
-        localStorage.setItem('keplerAddress', '');
+        localStorage.clear();
         history.push('/');
         window.location.reload();
+    };
+    const handleKeyStore = () =>{
+        setShowKeyStore(true)
     };
     const ProfileIcon = <Icon viewClass="profile" icon="profile"/>
     return (
@@ -78,6 +79,11 @@ const DashboardHeader = () => {
                                             icon="explorer"/>
                                     </div>
                                     {t("EXPLORER")}
+                                    <div className="icon-box">
+                                        <Icon
+                                            viewClass="icon"
+                                            icon="export"/>
+                                    </div>
                                 </a>
                             </li>
                             <li className="nav-item link">
@@ -104,7 +110,7 @@ const DashboardHeader = () => {
                                     </div>
                                     <div className="dropdown-footer">
                                         <p onClick={closeWallet} className="link-close">{t("CLOSE_WALLET")}</p>
-                                        {/*<p>Account</p>*/}
+                                        <p onClick={handleKeyStore}>Generate KeyStore</p>
                                     </div>
                                 </NavDropdown>
                             </li>
@@ -117,6 +123,11 @@ const DashboardHeader = () => {
             {showFaq
                 ?
                 <ModalFaq setShowFaq={setShowFaq}/>
+                :
+                null}
+            {showKeyStore
+                ?
+                <GenerateKeyStore setShowKeyStore={setShowKeyStore}/>
                 :
                 null}
         </div>

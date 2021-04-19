@@ -1,5 +1,14 @@
-import {Accordion, AccordionContext, Card, Form, Modal, useAccordionToggle} from 'react-bootstrap';
-import React, {useContext, useState} from 'react';
+import {
+    Accordion,
+    AccordionContext,
+    Card,
+    Form,
+    Modal,
+    Popover,
+    useAccordionToggle,
+    OverlayTrigger,
+} from 'react-bootstrap';
+import React, {useContext, useEffect, useState} from 'react';
 import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
 import {connect} from "react-redux";
@@ -30,7 +39,7 @@ const ModalUnbond = (props) => {
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
-            setAmount(evt.target.value*1)
+            setAmount(evt.target.value * 1)
         } else {
             return false
         }
@@ -80,12 +89,22 @@ const ModalUnbond = (props) => {
         );
     }
 
+    useEffect(() => {
+        const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
+        if (encryptedMnemonic !== null) {
+            setImportMnemonic(false)
+        } else {
+            setImportMnemonic(true);
+        }
+    }, []);
+
     function PrivateKeyReader(file, password) {
         return new Promise(function (resolve, reject) {
             const fileReader = new FileReader();
             fileReader.readAsText(file, "UTF-8");
             fileReader.onload = event => {
                 const res = JSON.parse(event.target.result);
+                localStorage.setItem('encryptedMnemonic', event.target.result);
                 const decryptedData = helper.decryptStore(res, password);
                 if (decryptedData.error != null) {
                     setErrorMessage(decryptedData.error);
@@ -117,7 +136,7 @@ const ModalUnbond = (props) => {
 
         const response = transactions.TransactionWithKeplr([UnbondMsg(loginAddress, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
-            if(result.code !== undefined){
+            if (result.code !== undefined) {
                 helper.AccountChangeCheck(result.rawLog)
             }
             setInitialModal(false);
@@ -135,75 +154,88 @@ const ModalUnbond = (props) => {
         event.preventDefault();
         let mnemonic;
         if (importMnemonic) {
-            mnemonic = event.target.mnemonic.value;
-        } else {
             const password = event.target.password.value;
             var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
             await promise.then(function (result) {
+                setImportMnemonic(false)
                 mnemonic = result;
             });
+        } else {
+            const password = event.target.password.value;
+            const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
+            const res = JSON.parse(encryptedMnemonic);
+            const decryptedData = helper.decryptStore(res, password);
+            if (decryptedData.error != null) {
+                setErrorMessage(decryptedData.error)
+            } else {
+                mnemonic = decryptedData.mnemonic;
+                setErrorMessage("");
+            }
         }
-
-        let accountNumber = 0;
-        let addressIndex = 0;
-        let bip39Passphrase = "";
-        if (advanceMode) {
-            accountNumber = event.target.unbondAccountNumber.value;
-            addressIndex = event.target.unbondAccountIndex.value;
-            bip39Passphrase = event.target.unbondbip39Passphrase.value;
-        }
-        const persistence = MakePersistence(accountNumber, addressIndex);
-        const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
-        const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
-        if (address.error === undefined && ecpairPriv.error === undefined) {
-            if (address === loginAddress) {
-                persistence.getAccounts(address).then(data => {
-                    if (data.code === undefined) {
-                        let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
-                        let stdSignMsg = persistence.newStdMsg({
-                            msgs: aminoMsgHelper.msgs(aminoMsgHelper.unBondMsg((amount * 1000000), address, props.validatorAddress)),
-                            fee: aminoMsgHelper.fee(localStorage.getItem('fee'), 250000),
-                            chain_id: persistence.chainId,
-                            memo: memoContent,
-                            account_number: String(accountNumber),
-                            sequence: String(sequence)
-                        });
-                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv, config.modeType);
-                        persistence.broadcast(signedTx).then(response => {
-                            setResponse(response);
-                            setLoader(false);
+        if (mnemonic !== undefined) {
+            let accountNumber = 0;
+            let addressIndex = 0;
+            let bip39Passphrase = "";
+            if (advanceMode) {
+                accountNumber = event.target.unbondAccountNumber.value;
+                addressIndex = event.target.unbondAccountIndex.value;
+                bip39Passphrase = event.target.unbondbip39Passphrase.value;
+            }
+            const persistence = MakePersistence(accountNumber, addressIndex);
+            const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
+            const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
+            if (address.error === undefined && ecpairPriv.error === undefined) {
+                if (address === loginAddress) {
+                    persistence.getAccounts(address).then(data => {
+                        if (data.code === undefined) {
+                            let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
+                            let stdSignMsg = persistence.newStdMsg({
+                                msgs: aminoMsgHelper.msgs(aminoMsgHelper.unBondMsg((amount * 1000000), address, props.validatorAddress)),
+                                fee: aminoMsgHelper.fee(localStorage.getItem('fee'), 250000),
+                                chain_id: persistence.chainId,
+                                memo: memoContent,
+                                account_number: String(accountNumber),
+                                sequence: String(sequence)
+                            });
+                            const signedTx = persistence.sign(stdSignMsg, ecpairPriv, config.modeType);
+                            persistence.broadcast(signedTx).then(response => {
+                                setResponse(response);
+                                setLoader(false);
+                                showSeedModal(false);
+                                setAdvanceMode(false);
+                            }).catch(err => {
+                                setLoader(false);
+                                setErrorMessage(err.message);
+                            });
                             showSeedModal(false);
-                            setAdvanceMode(false);
-                        }).catch(err => {
+                        } else {
                             setLoader(false);
-                            setErrorMessage(err.message);
-                        });
-                        showSeedModal(false);
-                    } else {
+                            setAdvanceMode(false);
+                            setErrorMessage(data.message);
+                        }
+                    }).catch(err => {
                         setLoader(false);
                         setAdvanceMode(false);
-                        setErrorMessage(data.message);
-                    }
-                }).catch(err => {
+                        setErrorMessage(err.message);
+                    })
+                } else {
                     setLoader(false);
                     setAdvanceMode(false);
-                    setErrorMessage(err.message);
-                })
+                    setErrorMessage("Mnemonic not matched")
+                }
             } else {
-                setLoader(false);
-                setAdvanceMode(false);
-                setErrorMessage("Mnemonic not matched")
+                if (address.error !== undefined) {
+                    setLoader(false);
+                    setAdvanceMode(false);
+                    setErrorMessage(address.error)
+                } else {
+                    setLoader(false);
+                    setAdvanceMode(false);
+                    setErrorMessage(ecpairPriv.error)
+                }
             }
         } else {
-            if (address.error !== undefined) {
-                setLoader(false);
-                setAdvanceMode(false);
-                setErrorMessage(address.error)
-            } else {
-                setLoader(false);
-                setAdvanceMode(false);
-                setErrorMessage(ecpairPriv.error)
-            }
+            setLoader(false);
         }
     };
     const handlePrivateKey = (value) => {
@@ -213,6 +245,14 @@ const ModalUnbond = (props) => {
     if (loader) {
         return <Loader/>;
     }
+
+    const popoverMemo = (
+        <Popover id="popover-memo">
+            <Popover.Content>
+                {t("MEMO_NOTE")}
+            </Popover.Content>
+        </Popover>
+    );
     return (
         <>
             {initialModal ?
@@ -222,11 +262,6 @@ const ModalUnbond = (props) => {
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
-                            <div className="form-field">
-                                <p className="label">{t("DELEGATION_AMOUNT")} (XPRT)</p>
-                                <p className={props.delegationAmount === 0 ? "empty info-data" : "info-data"}>{props.delegationAmount}</p>
-                            </div>
-
                             <div className="form-field">
                                 <p className="label">{t("UNBOND_AMOUNT")}(XPRT)</p>
                                 <div className="amount-field">
@@ -240,11 +275,20 @@ const ModalUnbond = (props) => {
                                         onChange={handleAmountChange}
                                         required={true}
                                     />
+                                    <span className={props.delegationAmount === 0 ? "empty info-data" : "info-data"}><span
+                                        className="title">{t("DELEGATION_AMOUNT")}:</span> <span
+                                        className="value">{props.delegationAmount}(XPRT)</span> </span>
                                 </div>
                             </div>
                             {mode === "normal" ?
                                 <div className="form-field">
-                                    <p className="label">{t("MEMO")}</p>
+                                    <p className="label info">{t("MEMO")}
+                                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
+                                                        overlay={popoverMemo}>
+                                            <button className="icon-button info"><Icon
+                                                viewClass="arrow-right"
+                                                icon="info"/></button>
+                                        </OverlayTrigger></p>
                                     <Form.Control
                                         type="text"
                                         name="memo"
@@ -259,7 +303,8 @@ const ModalUnbond = (props) => {
                                     : null
                             }
                             <div className="buttons navigate-buttons">
-                                <button className="button button-secondary" type="button" onClick={() => handlePrevious()}>
+                                <button className="button button-secondary" type="button"
+                                        onClick={() => handlePrevious()}>
                                     <Icon
                                         viewClass="arrow-right"
                                         icon="left-arrow"/>
@@ -284,22 +329,10 @@ const ModalUnbond = (props) => {
                             {
                                 importMnemonic ?
                                     <>
-                                        <div className="text-center">
-                                            <p onClick={() => handlePrivateKey(false)}
-                                               className="import-name">{t("USE_PRIVATE_KEY")} (KeyStore.json file)</p>
-                                        </div>
-                                        <div className="form-field">
-                                            <p className="label">{t("MNEMONIC")}</p>
-                                            <Form.Control as="textarea" rows={3} name="mnemonic"
-                                                          placeholder={t("ENTER_MNEMONIC")}
-                                                          required={true}/>
-                                        </div>
-                                    </>
-                                    :
-                                    <>
-                                        <div className="text-center">
-                                            <p onClick={() => handlePrivateKey(true)}
-                                               className="import-name">{t("USE_MNEMONIC")} ({t("SEED_PHRASE")})</p>
+                                        <div className="form-field upload">
+                                            <p className="label"> KeyStore file</p>
+                                            <Form.File id="exampleFormControlFile1" name="uploadFile"
+                                                       className="file-upload" accept=".json" required={true}/>
                                         </div>
                                         <div className="form-field">
                                             <p className="label">{t("PASSWORD")}</p>
@@ -310,12 +343,18 @@ const ModalUnbond = (props) => {
                                                 required={true}
                                             />
                                         </div>
-                                        <div className="form-field upload">
-                                            <p className="label"> KeyStore file</p>
-                                            <Form.File id="exampleFormControlFile1" name="uploadFile"
-                                                       className="file-upload" accept=".json" required={true}/>
+                                    </>
+                                    :
+                                    <>
+                                        <div className="form-field">
+                                            <p className="label">{t("PASSWORD")}</p>
+                                            <Form.Control
+                                                type="password"
+                                                name="password"
+                                                placeholder={t("ENTER_PASSWORD")}
+                                                required={true}
+                                            />
                                         </div>
-
                                     </>
 
                             }

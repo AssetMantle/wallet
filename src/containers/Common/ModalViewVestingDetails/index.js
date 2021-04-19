@@ -56,7 +56,7 @@ const ModalViewVestingDetails = (props) => {
                     Vesting Schedule
                 </Modal.Header>
                 <Modal.Body className="faq-modal-body">
-                    <ul>
+                    <ul className="modal-list-data">
                         {showContinuesVesting ?
                             response.base_vesting_account !== undefined ?
                                 <li className="unbonding-schedule-list">Unlocking {parseInt(response.base_vesting_account.original_vesting[0].amount) / 1000000} XPRT
@@ -66,34 +66,35 @@ const ModalViewVestingDetails = (props) => {
 
                             : ""
                         }
-                    {showPeriodicVesting ?
-                        <>
-                            <p>Your vesting schedule is as follows</p>
-                            {response.base_vesting_account.original_vesting.length ?
-                                <>
-                                    <p>Total vesting
-                                        tokens {parseInt(response.base_vesting_account.original_vesting[0].amount) / 1000000} at
-                                        Date {(new Date(parseInt(response.start_time) * 1000)).toUTCString()}</p>
-                                    {
-                                        response.vesting_periods.length ?
-                                            response.vesting_periods.map((period, index) => {
-                                                let vestingPeriod = parseInt(response.start_time);
-                                                for (var i = 0; i <= index; i++) {
-                                                    vestingPeriod = vestingPeriod + parseInt(response.vesting_periods[i].length);
-                                                }
-                                                return (
-                                                    <li className="unbonding-schedule-list">Unlocking tokens {period.amount[0].amount / 1000000} XPRT at
-                                                        Date {(new Date(vestingPeriod * 1000)).toUTCString()}</li>
-                                                )
-                                            })
-                                            : ""
-                                    }
-                                </>
-                                : ""
-                            }
-                        </>
-                        : ""
-                    }
+                        {showPeriodicVesting ?
+                            <>
+                                <p>Your vesting schedule is as follows</p>
+                                {response.base_vesting_account.original_vesting.length ?
+                                    <>
+                                        <p>Total vesting
+                                            tokens {parseInt(response.base_vesting_account.original_vesting[0].amount) / 1000000} at
+                                            Date {(new Date(parseInt(response.start_time) * 1000)).toUTCString()}</p>
+                                        {
+                                            response.vesting_periods.length ?
+                                                response.vesting_periods.map((period, index) => {
+                                                    let vestingPeriod = parseInt(response.start_time);
+                                                    for (var i = 0; i <= index; i++) {
+                                                        vestingPeriod = vestingPeriod + parseInt(response.vesting_periods[i].length);
+                                                    }
+                                                    return (
+                                                        <li className="unbonding-schedule-list">Unlocking
+                                                            tokens {period.amount[0].amount / 1000000} XPRT at
+                                                            Date {(new Date(vestingPeriod * 1000)).toUTCString()}</li>
+                                                    )
+                                                })
+                                                : ""
+                                        }
+                                    </>
+                                    : ""
+                                }
+                            </>
+                            : ""
+                        }
                         {showDelayedVesting ?
                             response.base_vesting_account !== undefined ?
                                 <li className="unbonding-schedule-list">Unlocking {parseInt(response.base_vesting_account.original_vesting[0].amount) / 1000000} XPRT
@@ -108,7 +109,7 @@ const ModalViewVestingDetails = (props) => {
 
                 </Modal.Body>
             </Modal>
-            <VisibilityIcon onClick={handleModal} className="icon-button"/>
+            <span className="view-button" onClick={handleModal}>View</span>
         </>
 
     );
