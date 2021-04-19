@@ -26,11 +26,7 @@ const DashboardHeader = () => {
         setShowFaq(true)
     };
     const closeWallet = () => {
-        localStorage.setItem('loginToken', '');
-        localStorage.setItem('address', '');
-        localStorage.setItem('loginMode', '');
-        localStorage.setItem('fee', '');
-        localStorage.setItem('keplerAddress', '');
+        localStorage.clear();
         history.push('/');
         window.location.reload();
     };
@@ -83,6 +79,11 @@ const DashboardHeader = () => {
                                             icon="explorer"/>
                                     </div>
                                     {t("EXPLORER")}
+                                    <div className="icon-box">
+                                        <Icon
+                                            viewClass="icon"
+                                            icon="export"/>
+                                    </div>
                                 </a>
                             </li>
                             <li className="nav-item link">

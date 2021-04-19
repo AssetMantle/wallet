@@ -79,7 +79,15 @@ html, body {
     width: 16px;
   }
 }
+.list-modal.modal-custom {
+  .modal-dialog {
+    max-width: 700px;
+  }
 
+  .list-modal-body {
+    padding:0px 100px 30px 100px;
+  }
+}
 .faq-modal.modal-custom {
   .modal-dialog {
     max-width: 850px;
@@ -116,7 +124,6 @@ html, body {
   font-family: 'Poppins', sans-serif;
 }
 .amount-field {
-  display: flex;
 
   .range-buttons {
     margin-left: 10px;
@@ -159,6 +166,20 @@ html, body {
     margin: 0;
     font-weight: 500;
     font-size: 16px;
+    .title{
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 150%;
+      color: #8D9CB5;
+    }
+    .value{
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 150%;
+      color: #2E3239;
+    }
   }
   .info-data.empty{
     color: #e50a2a;
@@ -189,7 +210,7 @@ html, body {
   outline: none !important;
 
   .icon {
-    width: 18px;
+    width: 14px;
   }
 }
 
@@ -339,7 +360,8 @@ html, body {
 }
 
 .validators-list-selection {
-  width: 300px;
+  max-width: 400px !important;
+  flex: 1;
   background: #F5F6FA;
   font-size: 14px;
   line-height: 150%;
@@ -447,12 +469,22 @@ html, body {
 }
 .inner-grid-icon{
   display: inline-block;
-  width: 30px;
+  width: 40px;
   text-align: center;
 }
 .inner-grid{
   display: inline-block;
   width: 60px;
   text-align: center;
+}
+.view-button{
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 180%;
+  text-decoration-line: underline;
+  color: #5F646C;
+  cursor: pointer;
+  padding: 0px 5px;
 }
 

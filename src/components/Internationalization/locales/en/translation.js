@@ -28,8 +28,8 @@ let English = {
         "FAQ210": "Select the Private key json file and copy it in a file and store it in a safe location.",
         "FAQ211": "Click Done.",
         "FAQ212": "Note that your wallet address is public and does not require any privacy. However, all your transactions are secure and require your password for keystore.json file.",
-        "FAQ213":"If you already have a Persistence wallet, you can import it using the Import an existing wallet button. You will need to use your mnemonic and password. So keep it handy when you import a wallet.",
-        "FAQ214":"Keplr is a simple, open-source browser extension wallet for our ecosystem. You can add Keplr extension to your browser and sign into your wallet.",
+        "FAQ213": "If you already have a Persistence wallet, you can import it using the Import an existing wallet button. You will need to use your mnemonic and password. So keep it handy when you import a wallet.",
+        "FAQ214": "Keplr is a simple, open-source browser extension wallet for our ecosystem. You can add Keplr extension to your browser and sign into your wallet.",
         "FAQ3": "How to import an existing Persistence wallet?",
         "FAQ31": "Go to wallet.persistence.one site and click the Import an existing wallet button.",
         "FAQ32": "You can import your wallet using either your private key (KeyStore.json file) or your Mnemonic (Seed Phrase).",
@@ -192,6 +192,11 @@ let English = {
         "REDELEGATION_AMOUNT": "Redelegation Amount",
         "AMOUNT": "Amount",
         "UNBOND_AMOUNT": " Unbound Amount",
+        "MEMO_NOTE": "The Memo field is an optional field that is usually used by centralized exchanges to identify a transaction in order to credit an account. Never input any kind of sensitive information (such as your wallet password or the Mnemonic) in the MEMO field",
+        "VESTING_NOTE":"Vesting balance shows the maximum amount that will be locked as per the vesting schedule. These coins can be delegated or un-delegated but are non-transferable until these coins are vested (unlocked).",
+        "DELEGATABLE_NOTE":"The amount of XPRT that can be delegated. This is the sum of all balances that haven’t been delegated yet. Delegatable Balance = (Transferable/Vested + amount under Vesting) - (Delegated+Unbonding)",
+        "TRANSFERABLE_NOTE":"The amount of XPRT that is available to be transferred at any given time",
+        "SETUP_ADDRESS_NOTE":"Claim your staking rewards and withdraw them to another address",
 
 
     }

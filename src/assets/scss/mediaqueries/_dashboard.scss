@@ -6,10 +6,10 @@
 }
 
 @media (max-width: 1400px) {
-  .token-info-section{
+  .token-info-section .token-info-section-body{
     padding: 25px 0;
     .info-box{
-      padding: 0px 20px;
+      padding: 15px 20px;
     }
     .xprt-info .total-supply {
       font-size: 26px;
@@ -33,9 +33,9 @@
   .content-section{
     overflow: auto;
   }
-  .token-info-section {
+  .token-info-section .token-info-section-body {
     .info-box{
-      padding: 0px 10px;
+      padding: 10px 10px;
     }
     .xprt-info .total-supply {
       font-size: 18px;
@@ -43,13 +43,15 @@
   }
 }
 @media (max-width: 991px){
-  .token-info-section{
+  .token-info-section .token-info-section-body{
     display: block;
+    padding-top: 0;
     .info-box{
       padding: 10px;
+      border: 0px solid;
       &:nth-child(2){
+        margin: 0;
         border: 1px solid #EAEBF6;
-        border-top: 0px solid #EAEBF6;
         border-right: 0px solid #EAEBF6;
         border-left: 0px solid #EAEBF6;
       }
@@ -97,7 +99,7 @@
   }
 }
 @media (max-width: 768px){
-  .token-info-section{
+  .token-info-section .token-info-section-body{
     padding: 0  ;
   }
   .validators-section .info .info-name{
@@ -119,7 +121,7 @@
       padding: 8px !important;
     }
   }
-  .token-info-section .info-box .line img{
+  .token-info-section .token-info-section-body .info-box .line img{
     width: 75px;
   }
   .amount-field{

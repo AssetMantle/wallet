@@ -103,6 +103,7 @@ async function getTransferableVestingAmount(address, balance) {
     if (vestingAmountData.code === undefined) {
         const amount = getAccountVestingAmount(vestingAmountData.account, currentEpochTime) / 1000000;
         vestingAmount = amount;
+        console.log(amount, balance, "Red")
         if ((balance - amount) < 0) {
             transferableAmount = 0;
         } else {

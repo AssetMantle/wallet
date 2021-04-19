@@ -50,6 +50,12 @@ const ModalSetWithdrawAddress = (props) => {
                 setValidatorsList(validatorsList => [...validatorsList, validator]);
             })
         }
+        const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
+        if (encryptedMnemonic !== null) {
+            setImportMnemonic(false)
+        } else {
+            setImportMnemonic(true);
+        }
     }, []);
 
     const handleClose = () => {
@@ -96,6 +102,7 @@ const ModalSetWithdrawAddress = (props) => {
             fileReader.readAsText(file, "UTF-8");
             fileReader.onload = event => {
                 const res = JSON.parse(event.target.result);
+                localStorage.setItem('encryptedMnemonic', event.target.result);
                 const decryptedData = helper.decryptStore(res, password);
                 if (decryptedData.error != null) {
                     setErrorMessage(decryptedData.error)
@@ -113,7 +120,7 @@ const ModalSetWithdrawAddress = (props) => {
         event.preventDefault();
         const response = transactions.TransactionWithKeplr([SetWithDrawAddressMsg(loginAddress, event.target.withdrawalAddress.value)], aminoMsgHelper.fee(5000, 250000));
         response.then(result => {
-            if(result.code !== undefined){
+            if (result.code !== undefined) {
                 helper.AccountChangeCheck(result.rawLog)
             }
             setInitialModal(false);
@@ -145,72 +152,86 @@ const ModalSetWithdrawAddress = (props) => {
         event.preventDefault();
         let mnemonic;
         if (importMnemonic) {
-            mnemonic = event.target.mnemonic.value;
-        } else {
             const password = event.target.password.value;
             var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
             await promise.then(function (result) {
+                setImportMnemonic(false)
                 mnemonic = result;
             });
-        }
-        let accountNumber = 0;
-        let addressIndex = 0;
-        let bip39Passphrase = "";
-        if (advanceMode) {
-            accountNumber = event.target.claimTotalAccountNumber.value;
-            addressIndex = event.target.claimTotalAccountIndex.value;
-            bip39Passphrase = event.target.claimTotalbip39Passphrase.value;
-        }
-        const persistence = MakePersistence(accountNumber, addressIndex);
-        const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
-        const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
-        if (address.error === undefined && ecpairPriv.error === undefined) {
-            if (address === loginAddress) {
-                persistence.getAccounts(address).then(data => {
-                    if (data.code === undefined) {
-                        let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
-                        let stdSignMsg = persistence.newStdMsg({
-                            msgs: aminoMsgHelper.msgs(aminoMsgHelper.setWithdrawAddressMsg(address, validatorAddress)),
-                            chain_id: persistence.chainId,
-                            fee: aminoMsgHelper.fee(localStorage.getItem('fee'), 250000),
-                            memo: memoContent,
-                            account_number: String(accountNumber),
-                            sequence: String(sequence)
-                        });
-                        const signedTx = persistence.sign(stdSignMsg, ecpairPriv, config.modeType);
-                        persistence.broadcast(signedTx).then(response => {
-                            setResponse(response);
-                            setLoader(false);
-                            showSeedModal(false);
-                            setAdvanceMode(false);
-                            console.log(response, "delegate response")
-                        }).catch(err => {
-                            setLoader(false);
-                            setErrorMessage(err.message);
-                            console.log(err.message, "delegate error")
-                        });
-                        showSeedModal(false);
-                    } else {
-                        setLoader(false);
-                        setAdvanceMode(false);
-                        setErrorMessage(data.message);
-                    }
-                });
+        } else {
+            const password = event.target.password.value;
+            const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
+            const res = JSON.parse(encryptedMnemonic);
+            const decryptedData = helper.decryptStore(res, password);
+            if (decryptedData.error != null) {
+                setErrorMessage(decryptedData.error)
             } else {
-                setLoader(false);
-                setAdvanceMode(false);
-                setErrorMessage("Mnemonic not matched")
+                mnemonic = decryptedData.mnemonic;
+                setErrorMessage("");
+            }
+        }
+        if (mnemonic !== undefined) {
+            let accountNumber = 0;
+            let addressIndex = 0;
+            let bip39Passphrase = "";
+            if (advanceMode) {
+                accountNumber = event.target.claimTotalAccountNumber.value;
+                addressIndex = event.target.claimTotalAccountIndex.value;
+                bip39Passphrase = event.target.claimTotalbip39Passphrase.value;
+            }
+            const persistence = MakePersistence(accountNumber, addressIndex);
+            const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
+            const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
+            if (address.error === undefined && ecpairPriv.error === undefined) {
+                if (address === loginAddress) {
+                    persistence.getAccounts(address).then(data => {
+                        if (data.code === undefined) {
+                            let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
+                            let stdSignMsg = persistence.newStdMsg({
+                                msgs: aminoMsgHelper.msgs(aminoMsgHelper.setWithdrawAddressMsg(address, validatorAddress)),
+                                chain_id: persistence.chainId,
+                                fee: aminoMsgHelper.fee(localStorage.getItem('fee'), 250000),
+                                memo: memoContent,
+                                account_number: String(accountNumber),
+                                sequence: String(sequence)
+                            });
+                            const signedTx = persistence.sign(stdSignMsg, ecpairPriv, config.modeType);
+                            persistence.broadcast(signedTx).then(response => {
+                                setResponse(response);
+                                setLoader(false);
+                                showSeedModal(false);
+                                setAdvanceMode(false);
+                                console.log(response, "delegate response")
+                            }).catch(err => {
+                                setLoader(false);
+                                setErrorMessage(err.message);
+                                console.log(err.message, "delegate error")
+                            });
+                            showSeedModal(false);
+                        } else {
+                            setLoader(false);
+                            setAdvanceMode(false);
+                            setErrorMessage(data.message);
+                        }
+                    });
+                } else {
+                    setLoader(false);
+                    setAdvanceMode(false);
+                    setErrorMessage("Mnemonic not matched")
+                }
+            } else {
+                if (address.error !== undefined) {
+                    setLoader(false);
+                    setAdvanceMode(false);
+                    setErrorMessage(address.error)
+                } else {
+                    setLoader(false);
+                    setAdvanceMode(false);
+                    setErrorMessage(ecpairPriv.error)
+                }
             }
         } else {
-            if (address.error !== undefined) {
-                setLoader(false);
-                setAdvanceMode(false);
-                setErrorMessage(address.error)
-            } else {
-                setLoader(false);
-                setAdvanceMode(false);
-                setErrorMessage(ecpairPriv.error)
-            }
+            setLoader(false);
         }
     };
 
@@ -226,7 +247,7 @@ const ModalSetWithdrawAddress = (props) => {
     const popoverMemo = (
         <Popover id="popover-memo">
             <Popover.Content>
-                This is not the mnemonic and it isn’t required unless asked for
+                {t("MEMO_NOTE")}
             </Popover.Content>
         </Popover>
     );
@@ -270,7 +291,9 @@ const ModalSetWithdrawAddress = (props) => {
                             </div>
                             {mode === "normal" ?
                                 <div className="form-field">
-                                    <p className="label">{t("MEMO")}<OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popoverMemo}>
+                                    <p className="label">{t("MEMO")}<OverlayTrigger trigger={['hover', 'focus']}
+                                                                                    placement="bottom"
+                                                                                    overlay={popoverMemo}>
                                         <button className="icon-button info"><Icon
                                             viewClass="arrow-right"
                                             icon="info"/></button>
@@ -307,20 +330,10 @@ const ModalSetWithdrawAddress = (props) => {
                             {
                                 importMnemonic ?
                                     <>
-                                        <div className="text-center">
-                                            <p onClick={() => handlePrivateKey(false)} className="import-name">{t("USE_PRIVATE_KEY")} (KeyStore.json file)</p>
-                                        </div>
-                                        <div className="form-field">
-                                            <p className="label">{t("MNEMONIC")}</p>
-                                            <Form.Control as="textarea" rows={3} name="mnemonic"
-                                                          placeholder={t("ENTER_MNEMONIC")}
-                                                          required={true}/>
-                                        </div>
-                                    </>
-                                    :
-                                    <>
-                                        <div className="text-center">
-                                            <p onClick={() => handlePrivateKey(true)} className="import-name">{t("USE_MNEMONIC")} ({t("SEED_PHRASE")})</p>
+                                        <div className="form-field upload">
+                                            <p className="label"> KeyStore file</p>
+                                            <Form.File id="exampleFormControlFile1" name="uploadFile"
+                                                       className="file-upload" accept=".json" required={true}/>
                                         </div>
                                         <div className="form-field">
                                             <p className="label">{t("PASSWORD")}</p>
@@ -331,12 +344,18 @@ const ModalSetWithdrawAddress = (props) => {
                                                 required={true}
                                             />
                                         </div>
-                                        <div className="form-field upload">
-                                            <p className="label"> KeyStore file</p>
-                                            <Form.File id="exampleFormControlFile1" name="uploadFile"
-                                                       className="file-upload" accept=".json" required={true}/>
+                                    </>
+                                    :
+                                    <>
+                                        <div className="form-field">
+                                            <p className="label">{t("PASSWORD")}</p>
+                                            <Form.Control
+                                                type="password"
+                                                name="password"
+                                                placeholder={t("ENTER_PASSWORD")}
+                                                required={true}
+                                            />
                                         </div>
-
                                     </>
 
                             }
@@ -471,7 +490,7 @@ const stateToProps = (state) => {
         tokenPrice: state.tokenPrice.tokenPrice,
         status: state.delegations.status,
         delegations: state.delegations.count,
-        withdrawAddress : state.withdrawAddress.withdrawAddress
+        withdrawAddress: state.withdrawAddress.withdrawAddress
     };
 };
 
