@@ -35,7 +35,10 @@ const GeneratePrivateKey = (props) => {
 
     const handleClose = () => {
         setShow(false);
-        props.handleRoute(props.routeValue)
+        props.handleRoute(props.routeValue);
+        if(props.formName === "Generate KeyStore File"){
+            props.handleClose();
+        }
     };
     const handlePrevious = (formName) => {
         if (formName === "generateKey") {

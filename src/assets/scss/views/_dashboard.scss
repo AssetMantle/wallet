@@ -361,16 +361,15 @@
 
       a {
         font-family: "Poppins", sans-serif;
-        font-weight: 700;
+        font-weight: 600;
         font-size: 14px;
         line-height: 1.5;
         text-align: center;
         letter-spacing: .1em;
-        text-transform: uppercase;
-        color: #c4c4c4;
+        color: #5F646C;
 
         .icon {
-          fill: #c4c4c4;;
+          fill: #5F646C;;
         }
       }
       a:hover, a.active , a:focus{
@@ -566,33 +565,44 @@
 }
 
 .token-info-section {
-  padding: 40px 40px 40px 30px;
-  display: flex;
-
-  .xprt-info {
-    padding-left: 0 !important;
+  padding: 40px 0px 40px 0px;
+  .token-info-section-body{
+    display: flex;
   }
-
-  .rewards-info {
-    padding-right: 0 !important;
+  .info-heading{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 150%;
+    color: #2E3239;
   }
+  //.xprt-info {
+  //  padding-left: 0 !important;
+  //}
+  //
+  //.rewards-info {
+  //  padding-right: 0 !important;
+  //}
 
   .info-box {
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0px 50px;
-
+    padding: 20px 30px;
+    border: 1px solid #EAEBF6;
     &:nth-child(2) {
-      border-right: 1px solid #EAEBF6;
-      padding: 0px 20px;
+      //padding: 0px 20px;
+      margin: 0 20px;
     }
 
     .line {
       display: flex;
       justify-content: space-between;
       padding-bottom: 10px;
+      &:nth-child(3) {
+      padding-bottom: 0;
+      }
       .info-heading{
         font-weight: 500;
       }
@@ -627,7 +637,6 @@
       }
 
       .value.rewards {
-        cursor: pointer;
 
         .text {
           color: #4FBE89;
@@ -635,8 +644,9 @@
         }
 
         .claim {
-          background: #E50913;
-          color: #ffffff;
+          cursor: pointer;
+          background: rgba(29, 158, 97, 0.15);
+          color: #1D9E61;
           font-size: 12px;
           padding: 3px 10px;
           display: inline !important;
@@ -881,7 +891,7 @@
     .available-tokens {
       display: flex;
       align-items: center;
-
+      font-family: 'Poppins', sans-serif;
       p {
         margin: 0;
       }
@@ -889,7 +899,7 @@
       .tokens {
         padding: 0px 10px;
         font-weight: bold;
-        font-size: 18px;
+        font-size: 14px;
         line-height: 150%;
         color: #2E3239;
 
@@ -904,8 +914,6 @@
         font-size: 14px;
         line-height: 150%;
         color: #2E3239;
-        background: rgba(141, 156, 181, 0.1);
-        padding: 5px 10px;
       }
     }
   }

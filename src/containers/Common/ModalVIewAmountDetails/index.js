@@ -28,22 +28,22 @@ const ModalViewAmountDetails = (props) => {
                     Tokens received via IBC
                 </Modal.Header>
                 <Modal.Body className="faq-modal-body">
-                    <ul>
+                    <ul className="modal-list-data">
                         {props.list ?
                             props.list.map((item, index) => {
                                 if (item.denom !== 'uxprt') {
-                                return (
-                                    <li className="unbonding-schedule-list" key={index}><span
-                                        className="amount">{item.amount / 1000000}</span> <span
-                                        className="date">{item.denom}</span></li>
-                                )
-                            }
+                                    return (
+                                        <li className="" key={index}><span
+                                            className="amount">{item.amount / 1000000}</span> <span
+                                            className="date">{item.denom}</span></li>
+                                    )
+                                }
                             }) : null
                         }
                     </ul>
                 </Modal.Body>
             </Modal>
-            <VisibilityIcon onClick={handleModal} className="icon-button"/>
+            <span className="view-button" onClick={handleModal}>View</span>
         </>
 
     );

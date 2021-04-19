@@ -1,5 +1,14 @@
-import {Accordion, AccordionContext, Card, Form, Modal, useAccordionToggle} from 'react-bootstrap';
-import React, {useContext, useState} from 'react';
+import {
+    Accordion,
+    AccordionContext,
+    Card,
+    Form,
+    Modal,
+    OverlayTrigger,
+    Popover,
+    useAccordionToggle
+} from 'react-bootstrap';
+import React, {useContext, useEffect, useState} from 'react';
 import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
 import Select from "@material-ui/core/Select";
@@ -71,7 +80,14 @@ const ModalReDelegate = (props) => {
             </button>
         );
     }
-
+    useEffect(() => {
+        const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
+        if (encryptedMnemonic !== null) {
+            setImportMnemonic(false)
+        }else{
+            setImportMnemonic(true);
+        }
+    }, []);
     const onChangeSelect = (evt) => {
         setToValidatorAddress(evt.target.value)
     };
@@ -133,6 +149,7 @@ const ModalReDelegate = (props) => {
             fileReader.readAsText(file, "UTF-8");
             fileReader.onload = event => {
                 const res = JSON.parse(event.target.result);
+                localStorage.setItem('encryptedMnemonic', event.target.result);
                 const decryptedData = helper.decryptStore(res, password);
                 if (decryptedData.error != null) {
                     setErrorMessage(decryptedData.error);
@@ -150,15 +167,25 @@ const ModalReDelegate = (props) => {
             event.preventDefault();
             let mnemonic;
             if (importMnemonic) {
-                mnemonic = event.target.mnemonic.value;
-            } else {
                 const password = event.target.password.value;
                 var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
                 await promise.then(function (result) {
+                    setImportMnemonic(false)
                     mnemonic = result;
                 });
+            } else {
+                const password = event.target.password.value;
+                const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
+                const res = JSON.parse(encryptedMnemonic);
+                const decryptedData = helper.decryptStore(res, password);
+                if (decryptedData.error != null) {
+                    setErrorMessage(decryptedData.error)
+                } else {
+                    mnemonic = decryptedData.mnemonic;
+                    setErrorMessage("");
+                }
             }
-
+        if (mnemonic !== undefined) {
             let accountNumber = 0;
             let addressIndex = 0;
             let bip39Passphrase = "";
@@ -220,14 +247,23 @@ const ModalReDelegate = (props) => {
                     setErrorMessage(ecpairPriv.error)
                 }
             }
-
+        } else {
+            setLoader(false);
         }
-    ;
+        };
     if (loader) {
         return <Loader/>;
     }
     const disabled = (
         helper.ValidateFrom(toValidatorAddress).message !== ''
+    );
+
+    const popoverMemo = (
+        <Popover id="popover-memo">
+            <Popover.Content>
+                {t("MEMO_NOTE")}
+            </Popover.Content>
+        </Popover>
     );
     return (
         <>
@@ -262,10 +298,6 @@ const ModalReDelegate = (props) => {
                                 </Select>
                             </div>
                             <div className="form-field">
-                                <p className="label">{t("DELEGATION_AMOUNT")} (XPRT)</p>
-                                <p className={props.delegationAmount === 0 ? "empty info-data" : "info-data"}>{props.delegationAmount}</p>
-                            </div>
-                            <div className="form-field">
                                 <p className="label">{t("REDELEGATION_AMOUNT")} (XPRT)</p>
                                 <div className="amount-field">
                                     <Form.Control
@@ -278,11 +310,19 @@ const ModalReDelegate = (props) => {
                                         onChange={handleAmountChange}
                                         required={true}
                                     />
+                                    <span className={props.delegationAmount === 0 ? "empty info-data" : "info-data"}><span
+                                        className="title">{t("DELEGATION_AMOUNT")}:</span> <span
+                                        className="value">{props.delegationAmount}(XPRT)</span> </span>
                                 </div>
                             </div>
                             {mode === "normal" ?
                                 <div className="form-field">
-                                    <p className="label">{t("MEMO")}</p>
+                                    <p className="label info">{t("MEMO")}
+                                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popoverMemo}>
+                                            <button className="icon-button info"><Icon
+                                                viewClass="arrow-right"
+                                                icon="info"/></button>
+                                        </OverlayTrigger></p>
                                     <Form.Control
                                         type="text"
                                         name="memo"
@@ -323,22 +363,10 @@ const ModalReDelegate = (props) => {
                             {
                                 importMnemonic ?
                                     <>
-                                        <div className="text-center">
-                                            <p onClick={() => handlePrivateKey(false)}
-                                               className="import-name">{t("USE_PRIVATE_KEY")} (KeyStore.json file)</p>
-                                        </div>
-                                        <div className="form-field">
-                                            <p className="label">{t("MNEMONIC")}</p>
-                                            <Form.Control as="textarea" rows={3} name="mnemonic"
-                                                          placeholder={t("ENTER_MNEMONIC")}
-                                                          required={true}/>
-                                        </div>
-                                    </>
-                                    :
-                                    <>
-                                        <div className="text-center">
-                                            <p onClick={() => handlePrivateKey(true)}
-                                               className="import-name">{t("USE_MNEMONIC")} ({t("SEED_PHRASE")})</p>
+                                        <div className="form-field upload">
+                                            <p className="label"> KeyStore file</p>
+                                            <Form.File id="exampleFormControlFile1" name="uploadFile"
+                                                       className="file-upload" accept=".json" required={true}/>
                                         </div>
                                         <div className="form-field">
                                             <p className="label">{t("PASSWORD")}</p>
@@ -349,12 +377,18 @@ const ModalReDelegate = (props) => {
                                                 required={true}
                                             />
                                         </div>
-                                        <div className="form-field upload">
-                                            <p className="label"> KeyStore file</p>
-                                            <Form.File id="exampleFormControlFile1" name="uploadFile"
-                                                       className="file-upload" accept=".json" required={true}/>
+                                    </>
+                                    :
+                                    <>
+                                        <div className="form-field">
+                                            <p className="label">{t("PASSWORD")}</p>
+                                            <Form.Control
+                                                type="password"
+                                                name="password"
+                                                placeholder={t("ENTER_PASSWORD")}
+                                                required={true}
+                                            />
                                         </div>
-
                                     </>
 
                             }

@@ -310,17 +310,46 @@
     animation-timing-function: ease-in;
   }
 }
-
-.unbonding-schedule-list {
+.list-modal-body{
   width: 100%;
-  font-family: 'Poppins', sans-serif;
-  font-size: 16px;
-  line-height: 2;
-  color: #70747C;
-  .amount{
-    font-weight: 500;
+  margin: auto;
+  .unbonding-schedule-list-header{
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 20px;
+    border-bottom: 1px solid #E3E5F4;
+    p{
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 150%;
+      margin: 0;
+      color: #8D9CB5;
+    }
+  }
+  .unbonding-schedule-list {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    &:hover{
+      background: #F5F6FA;
+    }
+    p{
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 150%;
+      text-align: right;
+      color: #2E3239;
+      margin: 0;
+    }
+    .amount{
+      font-weight: 500;
+    }
   }
 }
+
 .icon-button{
   cursor: pointer;
 }
@@ -376,4 +405,11 @@
   .icon{
     width: 20px;
   }
+}
+
+.modal-list-data li{
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: #8D9CB5;
 }

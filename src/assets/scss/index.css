@@ -71,6 +71,11 @@ html, body {
   .copy-button .icon {
     width: 16px; }
 
+.list-modal.modal-custom .modal-dialog {
+  max-width: 700px; }
+.list-modal.modal-custom .list-modal-body {
+  padding: 0px 100px 30px 100px; }
+
 .faq-modal.modal-custom .modal-dialog {
   max-width: 850px; }
 .faq-modal.modal-custom .faq-modal-body {
@@ -97,20 +102,18 @@ html, body {
   font-size: 12px;
   font-family: 'Poppins', sans-serif; }
 
-.amount-field {
+.amount-field .range-buttons {
+  margin-left: 10px;
   display: flex; }
-  .amount-field .range-buttons {
-    margin-left: 10px;
-    display: flex; }
-    .amount-field .range-buttons button {
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 150%;
-      text-align: right;
-      color: #8D9CB5;
-      padding: 10px; }
-      .amount-field .range-buttons button:last-child {
-        margin-left: 10px; }
+  .amount-field .range-buttons button {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 150%;
+    text-align: right;
+    color: #8D9CB5;
+    padding: 10px; }
+    .amount-field .range-buttons button:last-child {
+      margin-left: 10px; }
 
 .form-field {
   display: flex;
@@ -130,6 +133,18 @@ html, body {
     margin: 0;
     font-weight: 500;
     font-size: 16px; }
+    .form-field .info-data .title {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 150%;
+      color: #8D9CB5; }
+    .form-field .info-data .value {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 150%;
+      color: #2E3239; }
   .form-field .info-data.empty {
     color: #e50a2a; }
   .form-field textarea {
@@ -154,7 +169,7 @@ html, body {
   border: none;
   outline: none !important; }
   .icon-button.info .icon {
-    width: 18px; }
+    width: 14px; }
 
 .copy-section {
   position: relative; }
@@ -269,7 +284,8 @@ html, body {
       box-shadow: none; }
 
 .validators-list-selection {
-  width: 300px;
+  max-width: 400px !important;
+  flex: 1;
   background: #F5F6FA;
   font-size: 14px;
   line-height: 150%;
@@ -359,13 +375,23 @@ html, body {
 
 .inner-grid-icon {
   display: inline-block;
-  width: 30px;
+  width: 40px;
   text-align: center; }
 
 .inner-grid {
   display: inline-block;
   width: 60px;
   text-align: center; }
+
+.view-button {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 180%;
+  text-decoration-line: underline;
+  color: #5F646C;
+  cursor: pointer;
+  padding: 0px 5px; }
 
 /*--------------------------------------------------------------
 # main styles
@@ -582,14 +608,38 @@ html, body {
   50% {
     bottom: calc(100% - 30px);
     animation-timing-function: ease-in; } }
-.unbonding-schedule-list {
+.list-modal-body {
   width: 100%;
-  font-family: 'Poppins', sans-serif;
-  font-size: 16px;
-  line-height: 2;
-  color: #70747C; }
-  .unbonding-schedule-list .amount {
-    font-weight: 500; }
+  margin: auto; }
+  .list-modal-body .unbonding-schedule-list-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 20px;
+    border-bottom: 1px solid #E3E5F4; }
+    .list-modal-body .unbonding-schedule-list-header p {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 150%;
+      margin: 0;
+      color: #8D9CB5; }
+  .list-modal-body .unbonding-schedule-list {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px; }
+    .list-modal-body .unbonding-schedule-list:hover {
+      background: #F5F6FA; }
+    .list-modal-body .unbonding-schedule-list p {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 150%;
+      text-align: right;
+      color: #2E3239;
+      margin: 0; }
+    .list-modal-body .unbonding-schedule-list .amount {
+      font-weight: 500; }
 
 .icon-button {
   cursor: pointer; }
@@ -635,6 +685,12 @@ html, body {
   outline: none !important; }
   .dark-mode-button .icon {
     width: 20px; }
+
+.modal-list-data li {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: #8D9CB5; }
 
 /*--------------------------------------------------------------
 # homepage styles
@@ -1335,15 +1391,14 @@ html, body {
       cursor: pointer; }
       .header .navbar .navbar-nav li a {
         font-family: "Poppins", sans-serif;
-        font-weight: 700;
+        font-weight: 600;
         font-size: 14px;
         line-height: 1.5;
         text-align: center;
         letter-spacing: .1em;
-        text-transform: uppercase;
-        color: #c4c4c4; }
+        color: #5F646C; }
         .header .navbar .navbar-nav li a .icon {
-          fill: #c4c4c4; }
+          fill: #5F646C; }
       .header .navbar .navbar-nav li a:hover, .header .navbar .navbar-nav li a.active, .header .navbar .navbar-nav li a:focus {
         color: #e50913 !important; }
         .header .navbar .navbar-nav li a:hover .icon, .header .navbar .navbar-nav li a.active .icon, .header .navbar .navbar-nav li a:focus .icon {
@@ -1468,25 +1523,30 @@ html, body {
     color: #FFFFFF; }
 
 .token-info-section {
-  padding: 40px 40px 40px 30px;
-  display: flex; }
-  .token-info-section .xprt-info {
-    padding-left: 0 !important; }
-  .token-info-section .rewards-info {
-    padding-right: 0 !important; }
+  padding: 40px 0px 40px 0px; }
+  .token-info-section .token-info-section-body {
+    display: flex; }
+  .token-info-section .info-heading {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 150%;
+    color: #2E3239; }
   .token-info-section .info-box {
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0px 50px; }
+    padding: 20px 30px;
+    border: 1px solid #EAEBF6; }
     .token-info-section .info-box:nth-child(2) {
-      border-right: 1px solid #EAEBF6;
-      padding: 0px 20px; }
+      margin: 0 20px; }
     .token-info-section .info-box .line {
       display: flex;
       justify-content: space-between;
       padding-bottom: 10px; }
+      .token-info-section .info-box .line:nth-child(3) {
+        padding-bottom: 0; }
       .token-info-section .info-box .line .info-heading {
         font-weight: 500; }
       .token-info-section .info-box .line .info-heading.not-show {
@@ -1510,18 +1570,17 @@ html, body {
         text-align: right;
         color: #2E3239;
         font-family: 'Poppins', sans-serif; }
-      .token-info-section .info-box .line .value.rewards {
-        cursor: pointer; }
-        .token-info-section .info-box .line .value.rewards .text {
-          color: #4FBE89;
-          text-decoration: underline; }
-        .token-info-section .info-box .line .value.rewards .claim {
-          background: #E50913;
-          color: #ffffff;
-          font-size: 12px;
-          padding: 3px 10px;
-          display: inline !important;
-          margin-left: 5px; }
+      .token-info-section .info-box .line .value.rewards .text {
+        color: #4FBE89;
+        text-decoration: underline; }
+      .token-info-section .info-box .line .value.rewards .claim {
+        cursor: pointer;
+        background: rgba(29, 158, 97, 0.15);
+        color: #1D9E61;
+        font-size: 12px;
+        padding: 3px 10px;
+        display: inline !important;
+        margin-left: 5px; }
     .token-info-section .info-box .inner-box {
       flex: 1; }
     .token-info-section .info-box .line .value {
@@ -1675,13 +1734,14 @@ html, body {
       width: 200px; }
   .claim-rewards-modal .rewards-modal-body .available-tokens {
     display: flex;
-    align-items: center; }
+    align-items: center;
+    font-family: 'Poppins', sans-serif; }
     .claim-rewards-modal .rewards-modal-body .available-tokens p {
       margin: 0; }
     .claim-rewards-modal .rewards-modal-body .available-tokens .tokens {
       padding: 0px 10px;
       font-weight: bold;
-      font-size: 18px;
+      font-size: 14px;
       line-height: 150%;
       color: #2E3239; }
       .claim-rewards-modal .rewards-modal-body .available-tokens .tokens span {
@@ -1691,9 +1751,7 @@ html, body {
       font-weight: 500;
       font-size: 14px;
       line-height: 150%;
-      color: #2E3239;
-      background: rgba(141, 156, 181, 0.1);
-      padding: 5px 10px; }
+      color: #2E3239; }
 
 .faq-modal-body .nav-pills {
   justify-content: center;
@@ -1987,11 +2045,11 @@ html, body {
   .header .profile-section .profile-dropdown .dropdown-menu .info {
     padding: 20px 30px; } }
 @media (max-width: 1400px) {
-  .token-info-section {
+  .token-info-section .token-info-section-body {
     padding: 25px 0; }
-    .token-info-section .info-box {
-      padding: 0px 20px; }
-    .token-info-section .xprt-info .total-supply {
+    .token-info-section .token-info-section-body .info-box {
+      padding: 15px 20px; }
+    .token-info-section .token-info-section-body .xprt-info .total-supply {
       font-size: 26px; }
 
   .wallet-main-section .send-container {
@@ -2009,21 +2067,23 @@ html, body {
   .content-section {
     overflow: auto; }
 
-  .token-info-section .info-box {
-    padding: 0px 10px; }
-  .token-info-section .xprt-info .total-supply {
+  .token-info-section .token-info-section-body .info-box {
+    padding: 10px 10px; }
+  .token-info-section .token-info-section-body .xprt-info .total-supply {
     font-size: 18px; } }
 @media (max-width: 991px) {
-  .token-info-section {
-    display: block; }
-    .token-info-section .info-box {
-      padding: 10px; }
-      .token-info-section .info-box:nth-child(2) {
+  .token-info-section .token-info-section-body {
+    display: block;
+    padding-top: 0; }
+    .token-info-section .token-info-section-body .info-box {
+      padding: 10px;
+      border: 0px solid; }
+      .token-info-section .token-info-section-body .info-box:nth-child(2) {
+        margin: 0;
         border: 1px solid #EAEBF6;
-        border-top: 0px solid #EAEBF6;
         border-right: 0px solid #EAEBF6;
         border-left: 0px solid #EAEBF6; }
-    .token-info-section .xprt-info {
+    .token-info-section .token-info-section-body .xprt-info {
       padding-left: 10px !important; }
 
   .wallet-main-section .send-container {
@@ -2055,7 +2115,7 @@ html, body {
   .small-screen-logo {
     display: none; } }
 @media (max-width: 768px) {
-  .token-info-section {
+  .token-info-section .token-info-section-body {
     padding: 0; }
 
   .validators-section .info .info-name {
@@ -2072,7 +2132,7 @@ html, body {
   .wallet-main-section .tabs-section .refresh-button {
     padding: 8px !important; }
 
-  .token-info-section .info-box .line img {
+  .token-info-section .token-info-section-body .info-box .line img {
     width: 75px; }
 
   .amount-field {
