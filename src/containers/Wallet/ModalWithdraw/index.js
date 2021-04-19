@@ -1,4 +1,13 @@
-import {Accordion, AccordionContext, Card, Form, Modal, useAccordionToggle} from 'react-bootstrap';
+import {
+    Accordion,
+    AccordionContext,
+    Card,
+    Form,
+    Modal,
+    OverlayTrigger,
+    Popover,
+    useAccordionToggle
+} from 'react-bootstrap';
 import React, {useContext, useEffect, useState} from 'react';
 import success from "../../../assets/images/success.svg";
 import icon from "../../../assets/images/icon.svg";
@@ -238,7 +247,13 @@ const ModalWithdraw = (props) => {
             setShow(false);
         }
     };
-
+    const popoverMemo = (
+        <Popover id="popover-memo">
+            <Popover.Content>
+              sample
+            </Popover.Content>
+        </Popover>
+    );
     return (
         <>
             <Modal
@@ -292,7 +307,11 @@ const ModalWithdraw = (props) => {
                                 </div>
                                 {mode === "normal" ?
                                     <div className="form-field">
-                                        <p className="label">{t("MEMO")}</p>
+                                        <p className="label">{t("MEMO")}<OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popoverMemo}>
+                                            <button className="icon-button info"><Icon
+                                                viewClass="arrow-right"
+                                                icon="info"/></button>
+                                        </OverlayTrigger></p>
                                         <Form.Control
                                             type="text"
                                             name="memo"
@@ -314,7 +333,11 @@ const ModalWithdraw = (props) => {
                                 <div className="buttons">
                                     <p className="button-link" type="button"
                                        onClick={() => handleRewards("setWithDraw")}>
-                                        {t("SET_WITHDRAW_ADDRESS")}
+                                        {t("SET_WITHDRAW_ADDRESS")} <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popoverMemo}>
+                                        <button className="icon-button info"><Icon
+                                            viewClass="arrow-right"
+                                            icon="info"/></button>
+                                    </OverlayTrigger>
                                     </p>
                                 </div>
                             </Form>

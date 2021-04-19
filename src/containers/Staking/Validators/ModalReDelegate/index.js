@@ -1,4 +1,13 @@
-import {Accordion, AccordionContext, Card, Form, Modal, useAccordionToggle} from 'react-bootstrap';
+import {
+    Accordion,
+    AccordionContext,
+    Card,
+    Form,
+    Modal,
+    OverlayTrigger,
+    Popover,
+    useAccordionToggle
+} from 'react-bootstrap';
 import React, {useContext, useState} from 'react';
 import success from "../../../../assets/images/success.svg";
 import Icon from "../../../../components/Icon";
@@ -229,6 +238,14 @@ const ModalReDelegate = (props) => {
     const disabled = (
         helper.ValidateFrom(toValidatorAddress).message !== ''
     );
+
+    const popoverMemo = (
+        <Popover id="popover-memo">
+            <Popover.Content>
+                This is not the mnemonic and it isn’t required unless asked for
+            </Popover.Content>
+        </Popover>
+    );
     return (
         <>
             {initialModal ?
@@ -282,7 +299,12 @@ const ModalReDelegate = (props) => {
                             </div>
                             {mode === "normal" ?
                                 <div className="form-field">
-                                    <p className="label">{t("MEMO")}</p>
+                                    <p className="label info">{t("MEMO")}
+                                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popoverMemo}>
+                                            <button className="icon-button info"><Icon
+                                                viewClass="arrow-right"
+                                                icon="info"/></button>
+                                        </OverlayTrigger></p>
                                     <Form.Control
                                         type="text"
                                         name="memo"
