@@ -145,7 +145,8 @@ html, body {
 .button-link {
   font-weight: 500;
   color: #e50913;
-  text-decoration: underline; }
+  text-decoration: underline;
+  display: inline; }
 
 .icon-button.info {
   padding-left: 5px;

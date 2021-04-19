@@ -123,7 +123,7 @@ const TokenInfo = (props) => {
                             className="claim inner-grid">{t("CLAIM")}</span></p>
                     </div>
                     <div className="line">
-                        <p className="key">{t("UNBONDING_TOKEN")}</p>
+                        <p className="key">{t("UNBONDING")}</p>
                         <p className="value" title={props.unbond}>{props.unbond.toFixed(3)} XPRT<span
                             className="inner-grid">
                             {
