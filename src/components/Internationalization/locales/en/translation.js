@@ -144,7 +144,7 @@ let English = {
         "AMOUNT_UNDER_VESTING": "Vesting Balance",
         "TRANSFERABLE_AMOUNT": "Transferable Amount",
         "REWARDS": "Rewards",
-        "UNBONDING_TOKEN": "Unbonding Token  ",
+        "UNBONDING": "Unbonding",
         "AVAILABLE_DELEGATE_AMOUNT": "Delegatable Balance",
         "DELEGATED_AMOUNT": "Delegated Amount",
         "CLAIM": "Claim",
