@@ -104,7 +104,7 @@ const TokenInfo = (props) => {
                             <p className="key">Vesting
                                 <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
                                                 overlay={popoverVesting}>
-                                    <button className="icon-button info"><Icon
+                                    <button className="icon-button info" type="button"><Icon
                                         viewClass="arrow-right"
                                         icon="info"/></button>
                                 </OverlayTrigger>
@@ -124,7 +124,7 @@ const TokenInfo = (props) => {
                             <p className="key">Transferable
                                 <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
                                                 overlay={popoverTransferable}>
-                                    <button className="icon-button info"><Icon
+                                    <button className="icon-button info" type="button"><Icon
                                         viewClass="arrow-right"
                                         icon="info"/></button>
                                 </OverlayTrigger>
@@ -136,7 +136,7 @@ const TokenInfo = (props) => {
                             <p className="key">Delegatable
                                 <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
                                                 overlay={popoverDelegatable}>
-                                    <button className="icon-button info"><Icon
+                                    <button className="icon-button info" type="button"><Icon
                                         viewClass="arrow-right"
                                         icon="info"/></button>
                                 </OverlayTrigger>

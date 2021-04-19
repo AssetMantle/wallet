@@ -23,7 +23,7 @@ const ModalActions = (props) => {
     const [delegationAmount, setDelegationAmount] = useState(0);
     const [moniker, setMoniker] = useState('');
     const [modalDelegate, setModalOpen] = useState();
-    const [rewards, setRewards] = useState('0');
+    const [rewards, setRewards] = useState(0);
     const [delegateStatus, setDelegateStatus] = useState(false);
     const [withdraw, setWithDraw] = useState(false);
     useEffect(() => {
