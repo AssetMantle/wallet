@@ -20,7 +20,8 @@ html, body {
   border-radius: 0;
   outline: none !important;
   border: 1px solid transparent;
-  box-shadow: none !important; }
+  box-shadow: none !important;
+  font-family: 'Poppins', sans-serif; }
 
 .button.button-primary {
   background: #E50913;
@@ -211,6 +212,7 @@ html, body {
     padding: 15px 0;
     word-break: break-word; }
   .result-container .buttons .button {
+    font-family: 'Poppins', sans-serif;
     background: #FFFFFF;
     border: 1px solid #E3E5F4;
     width: 100px;
@@ -691,6 +693,24 @@ html, body {
   font-weight: 500;
   font-size: 14px;
   color: #8D9CB5; }
+
+.memo-dropdown-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 500px;
+  margin-bottom: 15px; }
+
+.memo-dropdown {
+  margin: 0;
+  text-align: center;
+  cursor: pointer; }
+  .memo-dropdown .text {
+    font-weight: 500;
+    font-size: 14px;
+    color: #8D9CB5; }
+  .memo-dropdown .icon {
+    width: 20px; }
 
 /*--------------------------------------------------------------
 # homepage styles
@@ -1396,11 +1416,12 @@ html, body {
         line-height: 1.5;
         text-align: center;
         letter-spacing: .1em;
-        color: #5F646C; }
+        color: #5F646C;
+        padding: .5rem 1rem; }
         .header .navbar .navbar-nav li a .icon {
           fill: #5F646C; }
       .header .navbar .navbar-nav li a:hover, .header .navbar .navbar-nav li a.active, .header .navbar .navbar-nav li a:focus {
-        color: #e50913 !important; }
+        color: #ffffff !important; }
         .header .navbar .navbar-nav li a:hover .icon, .header .navbar .navbar-nav li a.active .icon, .header .navbar .navbar-nav li a:focus .icon {
           fill: #e50913; }
   .header .title {
@@ -1523,7 +1544,7 @@ html, body {
     color: #FFFFFF; }
 
 .token-info-section {
-  padding: 40px 0px 40px 0px; }
+  padding: 25px 0px 25px 0px; }
   .token-info-section .token-info-section-body {
     display: flex; }
   .token-info-section .info-heading {

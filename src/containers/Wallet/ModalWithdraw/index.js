@@ -48,7 +48,11 @@ const ModalWithdraw = (props) => {
     const [withdraw, setWithDraw] = useState(false);
     const loginAddress = localStorage.getItem('address');
     const mode = localStorage.getItem('loginMode');
+    const [memoStatus, setMemoStatus] = useState(false);
 
+    const handleMemoChange = () => {
+        setMemoStatus(!memoStatus);
+    };
     useEffect(() => {
         for (const item of props.list) {
             const validatorUrl = getValidatorUrl(item.validator_address);
@@ -140,7 +144,10 @@ const ModalWithdraw = (props) => {
     };
     const handleSubmitInitialData = async event => {
         event.preventDefault();
-        const memo = event.target.memo.value;
+        let memo = "";
+        if (memoStatus) {
+            memo = event.target.memo.value;
+        }
         let memoCheck = transactions.mnemonicValidation(memo, loginAddress)
         if (memoCheck) {
             setErrorMessage("you entered your mnemonic as memo")
@@ -338,21 +345,46 @@ const ModalWithdraw = (props) => {
                                 </div>
 
                                 {mode === "normal" ?
-                                    <div className="form-field">
-                                        <p className="label">{t("MEMO")}<OverlayTrigger trigger={['hover', 'focus']}
-                                                                                        placement="bottom"
-                                                                                        overlay={popoverMemo}>
-                                            <button className="icon-button info"><Icon
-                                                viewClass="arrow-right"
-                                                icon="info"/></button>
-                                        </OverlayTrigger></p>
-                                        <Form.Control
-                                            type="text"
-                                            name="memo"
-                                            placeholder={t("ENTER_MEMO")}
-                                            required={false}
-                                        />
-                                    </div> : null
+                                    <>
+                                        <div className="memo-dropdown-section">
+                                            <p onClick={handleMemoChange} className="memo-dropdown"><span
+                                                className="text">{t("ADVANCED")} </span>
+                                                {memoStatus ?
+                                                    <Icon
+                                                        viewClass="arrow-right"
+                                                        icon="up-arrow"/>
+                                                    :
+                                                    <Icon
+                                                        viewClass="arrow-right"
+                                                        icon="down-arrow"/>}
+                                            </p>
+                                            <OverlayTrigger trigger={['hover', 'focus']}
+                                                            placement="bottom"
+                                                            overlay={popoverMemo}>
+                                                <button className="icon-button info" type="button"><Icon
+                                                    viewClass="arrow-right"
+                                                    icon="info"/></button>
+                                            </OverlayTrigger>
+                                        </div>
+                                        {memoStatus ?
+                                            <div className="form-field">
+                                                <p className="label">{t("MEMO")}<OverlayTrigger
+                                                    trigger={['hover', 'focus']}
+                                                    placement="bottom"
+                                                    overlay={popoverMemo}>
+                                                    <button className="icon-button info" type="button"><Icon
+                                                        viewClass="arrow-right"
+                                                        icon="info"/></button>
+                                                </OverlayTrigger></p>
+                                                <Form.Control
+                                                    type="text"
+                                                    name="memo"
+                                                    placeholder={t("ENTER_MEMO")}
+                                                    required={false}
+                                                />
+                                            </div> : ""
+                                        }
+                                    </> : null
                                 }
                                 {
                                     errorMessage !== "" ?
@@ -367,13 +399,13 @@ const ModalWithdraw = (props) => {
                                 <div className="buttons">
                                     <p className="button-link" type="button"
                                        onClick={() => handleRewards("setWithDraw")}>
-                                        {t("SET_WITHDRAW_ADDRESS")} <OverlayTrigger trigger={['hover', 'focus']}
-                                                                                    placement="bottom"
-                                                                                    overlay={popoverSetupAddress}>
-                                        <button className="icon-button info"><Icon
-                                            viewClass="arrow-right"
-                                            icon="info"/></button>
-                                    </OverlayTrigger>
+                                        {t("SET_WITHDRAW_ADDRESS")}
+                                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
+                                                        overlay={popoverSetupAddress}>
+                                            <button className="icon-button info" type="button"><Icon
+                                                viewClass="arrow-right"
+                                                icon="info"/></button>
+                                        </OverlayTrigger>
                                     </p>
                                 </div>
                             </Form>
