@@ -107,7 +107,7 @@ const AdvanceMode = (props) => {
         }
     };
 
-    function ContextAwareToggle({children, eventKey, callback}) {
+    function ContextAwareToggle({eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 
         const decoratedOnClick = useAccordionToggle(

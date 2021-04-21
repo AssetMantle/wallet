@@ -46,4 +46,5 @@ export default combineReducers({
     unbond,
     _,
     list,
+    inProgress
 });

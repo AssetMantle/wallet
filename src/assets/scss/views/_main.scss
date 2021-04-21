@@ -188,10 +188,6 @@
   right: 12px;
 }
 
-.refresh-button {
-  fill: #ffffff;
-}
-
 @keyframes rotate {
 
   from {
@@ -347,7 +343,6 @@
       font-size: 14px;
       line-height: 150%;
       text-align: right;
-      color: #2E3239;
       margin: 0;
     }
 
@@ -419,7 +414,7 @@
   outline: none !important;
 
   .icon {
-    width: 20px;
+    width: 18px;
   }
 }
 

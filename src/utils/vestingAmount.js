@@ -15,13 +15,13 @@ const continuousVesting = "/cosmos.vesting.v1beta1.ContinuousVestingAccount"
 * const accountsResponse = persistence.getAccounts(inputAddress);
 * const vestingAmount = getAccountVestingAmount(accountsResponse.account, currentEpochTime)
 */
-function getAuthAccountAddress(account) {
-    if (account["@type"] !== baseAccount) {
-        return account.address;
-    } else {
-        return account.base_vesting_account.base_account.address;
-    }
-}
+// function getAuthAccountAddress(account) {
+//     if (account["@type"] !== baseAccount) {
+//         return account.address;
+//     } else {
+//         return account.base_vesting_account.base_account.address;
+//     }
+// }
 
 function getUXPRT_Balance(amountList) {
     let balance = 0;
@@ -112,4 +112,4 @@ async function getTransferableVestingAmount(address, balance) {
     return [vestingAmount, transferableAmount]
 }
 
-export default {getTransferableVestingAmount};
+export default {getTransferableVestingAmount, getAccountVestingAmount};

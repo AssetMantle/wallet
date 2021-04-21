@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {connect} from 'react-redux';
 import {fetchDelegationsCount} from "../actions/delegations";
-import {fetchBalance} from "../actions/balance";
+import {fetchBalance, fetchTransferableVestingAmount} from "../actions/balance";
 import {fetchRewards} from "../actions/rewards";
 import {fetchUnbondDelegations} from "../actions/unbond";
 import {fetchTokenPrice} from "../actions/tokenPrice";
@@ -24,6 +24,7 @@ const InfoRefresh = (props) => {
         props.fetchTokenPrice();
         props.fetchTransactions(address, 5, 1);
         props.fetchReceiveTransactions(address, 5, 1);
+        props.fetchTransferableVestingAmount(address);
     };
     return (
         <IconButton
@@ -51,7 +52,8 @@ const actionsToProps = {
     fetchUnbondDelegations,
     fetchTokenPrice,
     fetchTransactions,
-    fetchReceiveTransactions
+    fetchReceiveTransactions,
+    fetchTransferableVestingAmount
 };
 
 export default connect(stateToProps, actionsToProps)(InfoRefresh);

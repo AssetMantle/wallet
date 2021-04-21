@@ -130,8 +130,18 @@ html, body {
 .fee {
   font-size: 12px;
   font-family: 'Poppins', sans-serif;
+  text-align: center;
 }
-
+.amount-error{
+  font-size: 12px;
+  font-family: 'Poppins', sans-serif;
+  margin: 10px 0;
+  color: #e51f0c;
+}
+.error-amount-field{
+  color: #e51f0c !important;
+  box-shadow: 0 0 0 0.2rem #e51f0c38 !important;
+}
 .amount-field {
 
   .range-buttons {
@@ -294,7 +304,6 @@ html, body {
   display: flex;
   margin-top: 20px;
   padding: 20px;
-  background: #FEF5F6;
   align-items: center;
 
   .exclamation {
@@ -309,7 +318,6 @@ html, body {
     font-weight: 500;
     font-size: 12px;
     line-height: 174%;
-    color: #2E3239;
     margin: 0;
   }
 }
@@ -322,10 +330,13 @@ html, body {
 
 .modal-header {
   button.close {
+    font-weight: 500;
+    text-shadow: none;
     position: absolute;
     right: 30px;
     top: 30px;
     outline: none !important;
+    font-size: 34px;
   }
 
   .previous-section .button {
@@ -431,7 +442,6 @@ html, body {
   .button-secondary {
     float: left;
     padding: .375rem 0.8rem;
-    background: #F0F1F2;
     border-color: transparent;
     width: auto !important;
 

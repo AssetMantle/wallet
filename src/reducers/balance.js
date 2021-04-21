@@ -3,7 +3,9 @@ import {
     BALANCE_FETCH_SUCCESS,
     BALANCE_FETCH_ERROR,
     BALANCE_FETCH_IN_PROGRESS,
-    BALANCE_LIST_FETCH_SUCCESS
+    BALANCE_LIST_FETCH_SUCCESS,
+    TRANSFERABLE_BALANCE_LIST_FETCH_SUCCESS,
+    VESTING_BALANCE_FETCH_SUCCESS
 } from "../constants/balance"
 
 
@@ -42,9 +44,25 @@ const list = (state = [], action) => {
     return state;
 };
 
+const transferableAmount = (state = 0, action) => {
+    if (action.type === TRANSFERABLE_BALANCE_LIST_FETCH_SUCCESS) {
+        return action.data;
+    }
+    return state;
+};
+
+const vestingAmount = (state = 0, action) => {
+    if (action.type === VESTING_BALANCE_FETCH_SUCCESS) {
+        return action.data;
+    }
+    return state;
+};
 
 export default combineReducers({
     amount,
     _,
     list,
+    transferableAmount,
+    vestingAmount,
+    inProgress
 });

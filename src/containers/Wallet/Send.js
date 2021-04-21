@@ -20,6 +20,7 @@ import {connect} from "react-redux";
 import config from "../../config";
 import MakePersistence from "../../utils/cosmosjsWrapper";
 import {useTranslation} from "react-i18next";
+import FeeContainer from "../../components/Fee";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -36,6 +37,7 @@ const Send = (props) => {
     const [keplerError, setKeplerError] = useState("");
     const [loader, setLoader] = useState(false);
     const [importMnemonic, setImportMnemonic] = useState(true);
+    const [checkAmountError, setCheckAmountError] = useState(false);
     const [memoContent, setMemoContent] = useState('');
     let mode = localStorage.getItem('loginMode');
     let loginAddress = localStorage.getItem('address');
@@ -49,7 +51,12 @@ const Send = (props) => {
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
-            setAmountField(evt.target.value)
+            setAmountField(evt.target.value);
+            if (props.transferableAmount < (amountField * 1 + parseInt(localStorage.getItem('fee')) / 1000000)) {
+                setCheckAmountError(true)
+            } else {
+                setCheckAmountError(false)
+            }
         } else {
             return false
         }
@@ -103,12 +110,11 @@ const Send = (props) => {
         }).catch(err => {
             setLoader(false);
             setKeplerError(err.message);
-            helper.AccountChangeCheck(err.message)
-            console.log(err.message, "send error")
+            helper.AccountChangeCheck(err.message);
         })
     };
 
-    function ContextAwareToggle({children, eventKey, callback}) {
+    function ContextAwareToggle({eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 
         const decoratedOnClick = useAccordionToggle(
@@ -145,7 +151,7 @@ const Send = (props) => {
     }
 
     function PrivateKeyReader(file, password) {
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve) {
             const fileReader = new FileReader();
             fileReader.readAsText(file, "UTF-8");
             fileReader.onload = event => {
@@ -173,7 +179,6 @@ const Send = (props) => {
             const password = evt.target.password.value;
             var promise = PrivateKeyReader(evt.target.uploadFile.files[0], password);
             await promise.then(function (result) {
-                setImportMnemonic(false)
                 userMnemonic = result;
             });
         } else {
@@ -205,6 +210,7 @@ const Send = (props) => {
             const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
+                    setImportMnemonic(false)
                     persistence.getAccounts(address).then(data => {
                         if (data.code === undefined) {
                             let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
@@ -298,12 +304,13 @@ const Send = (props) => {
                                 placeholder="Send Amount"
                                 step="any"
                                 value={amountField}
+                                className={checkAmountError ? "error-amount-field" : ""}
                                 onChange={handleAmountChange}
                                 required={true}
                             />
-                            <span className={props.balance === 0 ? "empty info-data" : "info-data"}><span
-                                className="title">Transferable Amount:</span> <span
-                                className="value">{props.balance} XPRT</span> </span>
+                            <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data"}><span
+                                className="title">Transferable Balance:</span> <span
+                                className="value">{props.transferableAmount} XPRT</span> </span>
                         </div>
                     </div>
 
@@ -355,8 +362,9 @@ const Send = (props) => {
                     {keplerError !== '' ?
                         <p className="form-error">{keplerError}</p> : null}
                     <div className="buttons">
+                        <FeeContainer/>
                         <button className="button button-primary"
-                                disabled={amountField > (props.balance * 1) || amountField === 0 || (props.balance * 1) === 0}>Send
+                                disabled={props.transferableAmount < (amountField * 1 + parseInt(localStorage.getItem('fee')) / 1000000) || amountField === 0 || props.transferableAmount === 0}>Send
                         </button>
                     </div>
                 </Form>
@@ -459,9 +467,6 @@ const Send = (props) => {
                                                 </Card>
                                             </Accordion>
                                             <div className="buttons">
-                                                <p className="fee"> Default fee
-                                                    of {parseInt(localStorage.getItem('fee')) / 1000000}xprt will be cut
-                                                    from the wallet.</p>
                                                 <button className="button button-primary">Send</button>
                                             </div>
 
@@ -482,12 +487,14 @@ const Send = (props) => {
                                                         {mode === "kepler" ?
                                                             <a
                                                                 href={`${EXPLORER_API}/transaction?txHash=${txResponse.transactionHash}`}
-                                                                target="_blank" className="tx-hash">Tx
+                                                                target="_blank" className="tx-hash"
+                                                                rel="noopener noreferrer">Tx
                                                                 Hash: {txResponse.transactionHash}</a>
                                                             :
                                                             <a
                                                                 href={`${EXPLORER_API}/transaction?txHash=${txResponse.txhash}`}
-                                                                target="_blank" className="tx-hash">Tx
+                                                                target="_blank" className="tx-hash"
+                                                                rel="noopener noreferrer">Tx
                                                                 Hash: {txResponse.txhash}</a>
                                                         }
 
@@ -509,7 +516,8 @@ const Send = (props) => {
                                                                 <p>{txResponse.rawLog}</p>
                                                                 <a
                                                                     href={`${EXPLORER_API}/transaction?txHash=${txResponse.transactionHash}`}
-                                                                    target="_blank" className="tx-hash">Tx
+                                                                    target="_blank" className="tx-hash"
+                                                                    rel="noopener noreferrer">Tx
                                                                     Hash: {txResponse.transactionHash}</a>
                                                             </>
                                                             :
@@ -517,7 +525,8 @@ const Send = (props) => {
                                                                 <p>{txResponse.raw_log === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : txResponse.raw_log}</p>
                                                                 <a
                                                                     href={`${EXPLORER_API}/transaction?txHash=${txResponse.txhash}`}
-                                                                    target="_blank" className="tx-hash">Tx
+                                                                    target="_blank" className="tx-hash"
+                                                                    rel="noopener noreferrer">Tx
                                                                     Hash: {txResponse.txhash}</a>
                                                             </>
                                                         }
@@ -542,6 +551,7 @@ const Send = (props) => {
 const stateToProps = (state) => {
     return {
         balance: state.balance.amount,
+        transferableAmount: state.balance.transferableAmount,
     };
 };
 

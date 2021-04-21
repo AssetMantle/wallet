@@ -1,14 +1,10 @@
-import {Form, Modal} from 'react-bootstrap';
+import {Modal} from 'react-bootstrap';
 import React, {useEffect, useState} from 'react';
-import {useTranslation} from "react-i18next";
-import VisibilityIcon from '@material-ui/icons/Visibility';
 import {connect} from "react-redux";
 import {getAccountUrl} from "../../../constants/url"
 import axios from "axios";
-import Lodash from "lodash";
 
-const ModalViewVestingDetails = (props) => {
-    const {t} = useTranslation();
+const ModalViewVestingDetails = () => {
     const [show, setShow] = useState(false);
     const [showContinuesVesting, setShowContinuesVesting] = useState(false);
     const [showPeriodicVesting, setShowPeriodicVesting] = useState(false);
@@ -82,7 +78,7 @@ const ModalViewVestingDetails = (props) => {
                                                         vestingPeriod = vestingPeriod + parseInt(response.vesting_periods[i].length);
                                                     }
                                                     return (
-                                                        <li className="unbonding-schedule-list">Unlocking
+                                                        <li className="unbonding-schedule-list" key={index}>Unlocking
                                                             tokens {period.amount[0].amount / 1000000} XPRT at
                                                             Date {(new Date(vestingPeriod * 1000)).toUTCString()}</li>
                                                     )

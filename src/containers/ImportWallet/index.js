@@ -26,11 +26,8 @@ const ModalImportWallet = (props) => {
     const [importMnemonic, setImportMnemonic] = useState(true);
     const [mnemonicForm, setMnemonicForm] = useState(true);
     const [advancedForm, setAdvancedForm] = useState(false);
-    const [withAddress, setWithAddress] = useState(false);
     const [advancedFormResponseData, setAdvancedFormResponseData] = useState("");
     const [advancedFormResponse, setAdvancedFormResponse] = useState(false);
-    const [response, setResponse] = useState("");
-    const [jsonName, setJsonName] = useState({});
     const [errorMessage, setErrorMessage] = useState("");
     const [advanceMode, setAdvanceMode] = useState(false);
     const [generateKey, setGenerateKey] = useState(false);
@@ -84,7 +81,7 @@ const ModalImportWallet = (props) => {
 
     };
 
-    function ContextAwareToggle({children, eventKey, callback}) {
+    function ContextAwareToggle({eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 
         const decoratedOnClick = useAccordionToggle(

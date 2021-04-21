@@ -1,22 +1,17 @@
-import React, {useContext, useState} from "react";
+import React, {useState} from "react";
 import {
     Form,
      Modal
 } from "react-bootstrap";
 import wallet from "../../utils/wallet";
-import {useHistory} from "react-router-dom";
 import GeneratePrivateKey from "../Common/GeneratePrivateKey";
 import {useTranslation} from "react-i18next";
 
 const GenerateKeyStore = (props) => {
     const {t} = useTranslation();
     const [show, setShow] = useState(true);
-    const history = useHistory();
-    const [showFaq, setShowFaq] = useState(false);
     const [userMnemonic, setUserMnemonic] = useState("");
-    const [importMnemonic, setImportMnemonic] = useState(true);
     const [mnemonicForm, setMnemonicForm] = useState(true);
-    const [advancedForm, setAdvancedForm] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [generateKey, setGenerateKey] = useState(false);
 
@@ -34,15 +29,9 @@ const GenerateKeyStore = (props) => {
         }
     };
 
-    const handlePrivateKey = (value) => {
-        setImportMnemonic(value);
-        setErrorMessage("");
-    };
-
     const handleRoute = (key) => {
         if (key === "generateKey") {
             setGenerateKey(true);
-            setAdvancedForm(false)
         }
         if (key === "hideGenerateKeyStore") {
             setGenerateKey(false);

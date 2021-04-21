@@ -2,11 +2,10 @@ import React, {useState, useEffect} from "react";
 import {connect} from 'react-redux';
 import ModalWithdraw from "../Wallet/ModalWithdraw";
 import {fetchDelegationsCount} from "../../actions/delegations";
-import {fetchBalance} from "../../actions/balance";
+import {fetchBalance, fetchTransferableVestingAmount} from "../../actions/balance";
 import {fetchRewards} from "../../actions/rewards";
 import {fetchUnbondDelegations} from "../../actions/unbond";
 import {fetchTokenPrice} from "../../actions/tokenPrice";
-import vestingAccount from "../../utils/vestingAmount";
 import {useTranslation} from "react-i18next";
 import ModalViewUnbondDetails from "./ModalViewUnbondDetails";
 import ModalViewVestingDetails from "./ModalViewVestingDetails";
@@ -17,9 +16,6 @@ import {OverlayTrigger, Popover} from "react-bootstrap";
 const TokenInfo = (props) => {
     const {t} = useTranslation();
     const [rewards, setRewards] = useState(false);
-    const [withdraw, setWithDraw] = useState(false);
-    const [vestingAmount, setVestingAmount] = useState(0);
-    const [transferableAmount, setTransferableAmount] = useState(0);
     let address = localStorage.getItem('address');
 
     useEffect(() => {
@@ -28,18 +24,12 @@ const TokenInfo = (props) => {
         props.fetchRewards(address);
         props.fetchUnbondDelegations(address);
         props.fetchTokenPrice();
+        props.fetchTransferableVestingAmount(address);
     }, []);
-
-    vestingAccount.getTransferableVestingAmount(address, props.balance).then((vestingDetails) => {
-        setVestingAmount(vestingDetails[0]);
-        setTransferableAmount(vestingDetails[1]);
-    });
 
     const handleRewards = (key) => {
         if (key === "rewards") {
             setRewards(true);
-        } else if (key === "setWithDraw") {
-            setWithDraw(true);
         }
     };
     const popoverVesting = (
@@ -109,15 +99,15 @@ const TokenInfo = (props) => {
                                         icon="info"/></button>
                                 </OverlayTrigger>
                             </p>
-                            <p className="value" title={vestingAmount}>
+                            <p className="value" title={props.vestingAmount}>
                                    <span className="inner-grid-icon">
                                     {
-                                        vestingAmount > 0 ?
+                                        props.vestingAmount > 0 ?
                                             <ModalViewVestingDetails/>
                                             : ""
                                     }
                                     </span>
-                                {vestingAmount.toFixed(3)} XPRT
+                                {props.vestingAmount.toFixed(3)} XPRT
                             </p>
                         </div>
                         <div className="line">
@@ -129,8 +119,8 @@ const TokenInfo = (props) => {
                                         icon="info"/></button>
                                 </OverlayTrigger>
                             </p>
-                            <p className="value" title={transferableAmount}><span className="inner-grid-icon"></span>
-                                {transferableAmount.toFixed(3)} XPRT</p>
+                            <p className="value" title={props.transferableAmount}><span className="inner-grid-icon"></span>
+                                {props.transferableAmount.toFixed(3)} XPRT</p>
                         </div>
                         <div className="line">
                             <p className="key">Delegatable
@@ -194,6 +184,8 @@ const stateToProps = (state) => {
         unbond: state.unbond.unbond,
         tokenPrice: state.tokenPrice.tokenPrice,
         list: state.balance.list,
+        transferableAmount:state.balance.transferableAmount,
+        vestingAmount:state.balance.vestingAmount
     };
 };
 
@@ -203,6 +195,7 @@ const actionsToProps = {
     fetchRewards,
     fetchUnbondDelegations,
     fetchTokenPrice,
+    fetchTransferableVestingAmount
 };
 
 export default connect(stateToProps, actionsToProps)(TokenInfo);

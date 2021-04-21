@@ -2,7 +2,7 @@ import React, {useContext} from "react";
 import {Accordion, Card, useAccordionToggle, AccordionContext} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
 
-function ContextAwareToggle({children, eventKey, callback}) {
+function ContextAwareToggle({eventKey, callback}) {
     const currentEventKey = useContext(AccordionContext);
 
     const decoratedOnClick = useAccordionToggle(
@@ -80,30 +80,6 @@ const WalletFaq = () => {
                      </Card.Body>
                 </Accordion.Collapse>
             </Card>
-            {/*<Card>*/}
-            {/*    <Card.Header>*/}
-            {/*        <p>*/}
-            {/*            {t("FAQ3")}*/}
-            {/*        </p>*/}
-            {/*        <ContextAwareToggle eventKey="2">Click me!</ContextAwareToggle>*/}
-            {/*    </Card.Header>*/}
-            {/*    <Accordion.Collapse eventKey="2">*/}
-            {/*        <Card.Body><ul>*/}
-            {/*            <li>{t("FAQ31")}</li>*/}
-            {/*            <li>{t("FAQ32")}*/}
-            {/*            </li>*/}
-            {/*            <li>{t("FAQ33")}*/}
-            {/*            </li>*/}
-            {/*            <li>{t("FAQ34")}</li>*/}
-            {/*            <li>{t("FAQ35")}</li>*/}
-            {/*            <li>{t("FAQ36")}*/}
-            {/*            </li>*/}
-            {/*            <li>{t("FAQ37")}*/}
-            {/*            </li>*/}
-            {/*            <li>{t("FAQ38")}</li>*/}
-            {/*        </ul></Card.Body>*/}
-            {/*    </Accordion.Collapse>*/}
-            {/*</Card>*/}
             <Card>
                 <Card.Header>
                     <p>

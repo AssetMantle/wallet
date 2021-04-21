@@ -43,7 +43,7 @@ const socialList = [
     },
 ];
 
-const Footer = (props) => {
+const Footer = () => {
 
     return (
         <>
@@ -106,7 +106,7 @@ const Footer = (props) => {
                                             {
                                                 socialList.map((item, index) => (
                                                     <OverlayTrigger
-                                                        key={item.iconName}
+                                                        key={index}
                                                         placement="bottom"
                                                         overlay={
                                                             <Tooltip id={`tooltip-${item.iconName}}`}>

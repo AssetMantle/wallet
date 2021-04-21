@@ -46,4 +46,5 @@ export default combineReducers({
     rewards,
     list,
     _,
+    inProgress
 });

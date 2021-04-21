@@ -10,7 +10,6 @@ import {
 } from 'react-bootstrap';
 import React, {useContext, useEffect, useState} from 'react';
 import success from "../../../assets/images/success.svg";
-import icon from "../../../assets/images/icon.svg";
 import {getValidatorUrl} from "../../../constants/url";
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
@@ -27,6 +26,7 @@ import MakePersistence from "../../../utils/cosmosjsWrapper";
 import config from "../../../config";
 import {useTranslation} from "react-i18next";
 import ModalSetWithdrawAddress from "../ModalSetWithdrawAddress";
+import FeeContainer from "../../../components/Fee";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -74,7 +74,7 @@ const ModalWithdraw = (props) => {
         props.setRewards(false)
     };
 
-    function ContextAwareToggle({children, eventKey, callback}) {
+    function ContextAwareToggle({eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 
         const decoratedOnClick = useAccordionToggle(
@@ -107,7 +107,7 @@ const ModalWithdraw = (props) => {
     }
 
     function PrivateKeyReader(file, password) {
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve) {
             const fileReader = new FileReader();
             fileReader.readAsText(file, "UTF-8");
             fileReader.onload = event => {
@@ -168,7 +168,6 @@ const ModalWithdraw = (props) => {
             const password = event.target.password.value;
             var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
             await promise.then(function (result) {
-                setImportMnemonic(false)
                 mnemonic = result;
             });
         } else {
@@ -197,6 +196,7 @@ const ModalWithdraw = (props) => {
             const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
+                    setImportMnemonic(false);
                     persistence.getAccounts(address).then(data => {
                         if (data.code === undefined) {
                             let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
@@ -257,11 +257,6 @@ const ModalWithdraw = (props) => {
         })
     };
 
-    const handlePrivateKey = (value) => {
-        setImportMnemonic(value);
-        setErrorMessage("");
-    };
-
     const disabled = (
         helper.ValidateFrom(validatorAddress).message !== ''
     );
@@ -291,6 +286,10 @@ const ModalWithdraw = (props) => {
             </Popover.Content>
         </Popover>
     );
+    const checkAmountError = (
+        props.transferableAmount < (parseInt(localStorage.getItem('fee')) / 1000000)
+    );
+
     return (
         <>
             <Modal
@@ -393,8 +392,9 @@ const ModalWithdraw = (props) => {
                                 }
 
                                 <div className="buttons">
+                                    <FeeContainer/>
                                     <button className="button button-primary"
-                                            disabled={disabled || individualRewards === '' || individualRewards === '0.000000'}>{mode === "normal" ? "Next" : "Submit"}</button>
+                                            disabled={checkAmountError || disabled || individualRewards === '' || individualRewards === '0.000000'}>{mode === "normal" ? "Next" : "Submit"}</button>
                                 </div>
                                 <div className="buttons">
                                     <p className="button-link" type="button"
@@ -430,12 +430,12 @@ const ModalWithdraw = (props) => {
                                             </div>
                                             <div className="form-field">
                                                 <p className="label">{t("PASSWORD")}</p>
-                                                <Form.Control
-                                                    type="password"
-                                                    name="password"
-                                                    placeholder={t("ENTER_PASSWORD")}
-                                                    required={true}
-                                                />
+                                                    <Form.Control
+                                                        type="password"
+                                                        name="password"
+                                                        placeholder={t("ENTER_PASSWORD")}
+                                                        required={true}
+                                                    />
                                             </div>
                                         </>
                                         :
@@ -503,8 +503,6 @@ const ModalWithdraw = (props) => {
                                     </Card>
                                 </Accordion>
                                 <div className="buttons">
-                                    <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee')) / 1000000}xprt
-                                        will be cut from the wallet.</p>
                                     <button className="button button-primary">{t("CLAIM_REWARDS")}</button>
                                 </div>
                             </Form>
@@ -525,12 +523,12 @@ const ModalWithdraw = (props) => {
                                     {mode === "kepler" ?
                                         <a
                                             href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
-                                            target="_blank" className="tx-hash">Tx
+                                            target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                             Hash: {response.transactionHash}</a>
                                         :
                                         <a
                                             href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
-                                            target="_blank" className="tx-hash">Tx
+                                            target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                             Hash: {response.txhash}</a>
                                     }
                                     <div className="buttons">
@@ -554,7 +552,7 @@ const ModalWithdraw = (props) => {
                                             <p>{response.rawLog}</p>
                                             <a
                                                 href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
-                                                target="_blank" className="tx-hash">Tx
+                                                target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                                 Hash: {response.transactionHash}</a>
                                         </>
                                         :
@@ -562,7 +560,7 @@ const ModalWithdraw = (props) => {
                                             <p>{response.raw_log === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : response.raw_log}</p>
                                             <a
                                                 href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
-                                                target="_blank" className="tx-hash">Tx
+                                                target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                                 Hash: {response.txhash}</a>
                                         </>
                                     }
@@ -588,7 +586,9 @@ const stateToProps = (state) => {
     return {
         list: state.rewards.list,
         rewards: state.rewards.rewards,
-        tokenPrice: state.tokenPrice.tokenPrice
+        balance: state.balance.amount,
+        tokenPrice: state.tokenPrice.tokenPrice,
+        transferableAmount: state.balance.transferableAmount,
     };
 };
 

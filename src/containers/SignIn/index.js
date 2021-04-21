@@ -1,6 +1,6 @@
 import {Modal} from 'react-bootstrap';
 import React, {useState} from 'react';
-import AddressImport from "../ImpotWallet/AddressImport";
+import AddressImport from "../ImportWallet/AddressImport";
 import {useHistory} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 
