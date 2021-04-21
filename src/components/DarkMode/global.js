@@ -157,5 +157,11 @@ export const GlobalStyles = createGlobalStyle`
       .note-section p{
     color: ${({theme}) => theme.noteFontColor};
     }
+    .header .profile-section .profile-dropdown .dropdown-menu .dropdown-footer .generate-keystore{
+       color: ${({theme}) => theme.lineValueColor};
+    }
+    .modal-header button.close{
+     color: ${({theme}) => theme.lineValueColor};
+    }
 `;
 

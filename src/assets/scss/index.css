@@ -248,10 +248,13 @@ html, body {
   top: 20px; }
 
 .modal-header button.close {
+  font-weight: 500;
+  text-shadow: none;
   position: absolute;
   right: 30px;
   top: 30px;
-  outline: none !important; }
+  outline: none !important;
+  font-size: 34px; }
 .modal-header .previous-section .button {
   position: absolute;
   left: 30px;
