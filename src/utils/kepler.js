@@ -1,6 +1,5 @@
 import config from "../config.json";
 
-const {SigningStargateClient} = require("@cosmjs/stargate");
 const restAPI = process.env.REACT_APP_API_KEY;
 const tendermintRPC = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 const chainID = process.env.REACT_APP_CHAIN_ID;
@@ -135,11 +134,11 @@ async function KeplerWallet() {
         // XXX: This line is needed to set the sender address for SigningStargateClient.
         const accounts = await offlineSigner.getAccounts();
         // Initialize the gaia api with the offline signer that is injected by Keplr extension.
-        const cosmJS = SigningStargateClient.connectWithSigner(
-            tendermintRPC,
-            offlineSigner,
-        );
+        // const cosmJS = SigningStargateClient.connectWithSigner(
+        //     tendermintRPC,
+        //     offlineSigner,
+        // );
         localStorage.setItem('keplerAddress', accounts[0].address);
 
-};
+}
 export default KeplerWallet;

@@ -7,7 +7,6 @@ import {
     UNBOND_DELEGATIONS_LIST
 } from "../constants/unbond"
 import Lodash from "lodash";
-import balance from "../reducers/balance";
 
 export const fetchUnbondDelegationsProgress = () => {
     return {

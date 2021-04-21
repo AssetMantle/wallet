@@ -8,7 +8,7 @@ const ModalFaq = (props) => {
     const {t} = useTranslation();
     const [show, setShow] = useState(true);
 
-    const handleClose = (amount) => {
+    const handleClose = () => {
         setShow(false);
         props.setShowFaq(false);
     };

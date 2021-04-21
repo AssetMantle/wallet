@@ -1,15 +1,10 @@
-import {Form, Modal} from 'react-bootstrap';
+import {Modal} from 'react-bootstrap';
 import React, {useState} from 'react';
-import {useTranslation} from "react-i18next";
 import chrome from "../../assets/images/chrome.svg"
-const ModalKeplerInstall = (props) => {
-    const {t} = useTranslation();
+const ModalKeplerInstall = () => {
     const [show, setShow] = useState(true);
     const handleClose = () => {
         setShow(false);
-    };
-    const handleModal = () => {
-        setShow(true);
     };
 
     return (

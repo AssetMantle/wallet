@@ -11,5 +11,4 @@ const DataTable = (props) => {
     );
 };
 
-
 export default DataTable;

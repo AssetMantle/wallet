@@ -19,9 +19,8 @@ import Loader from "../../../../components/Loader";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import config from "../../../../config";
 import {useTranslation} from "react-i18next";
-import ModalSetWithdrawAddress from "../../../Wallet/ModalSetWithdrawAddress";
 import {connect} from "react-redux";
-
+import FeeContainer from "../../../../components/Fee";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalWithdraw = (props) => {
     const {t} = useTranslation();
@@ -33,7 +32,6 @@ const ModalWithdraw = (props) => {
     const [errorMessage, setErrorMessage] = useState("");
     const [loader, setLoader] = useState(false);
     const [importMnemonic, setImportMnemonic] = useState(true);
-    const [withdraw, setWithDraw] = useState(false);
     const loginAddress = localStorage.getItem('address');
     const mode = localStorage.getItem('loginMode');
     const [memoStatus, setMemoStatus] = useState(false);
@@ -53,7 +51,7 @@ const ModalWithdraw = (props) => {
         props.setInitialModal(true);
     };
 
-    function ContextAwareToggle({children, eventKey, callback}) {
+    function ContextAwareToggle({eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 
         const decoratedOnClick = useAccordionToggle(
@@ -95,7 +93,7 @@ const ModalWithdraw = (props) => {
     }, []);
 
     function PrivateKeyReader(file, password) {
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve) {
             const fileReader = new FileReader();
             fileReader.readAsText(file, "UTF-8");
             fileReader.onload = event => {
@@ -156,7 +154,6 @@ const ModalWithdraw = (props) => {
             const password = event.target.password.value;
             var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
             await promise.then(function (result) {
-                setImportMnemonic(false)
                 mnemonic = result;
             });
         } else {
@@ -185,6 +182,7 @@ const ModalWithdraw = (props) => {
             const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
+                    setImportMnemonic(false);
                     persistence.getAccounts(address).then(data => {
                         if (data.code === undefined) {
                             let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
@@ -237,10 +235,7 @@ const ModalWithdraw = (props) => {
             setLoader(false);
         }
     };
-    const handlePrivateKey = (value) => {
-        setImportMnemonic(value);
-        setErrorMessage("");
-    };
+
     if (loader) {
         return <Loader/>;
     }
@@ -264,6 +259,10 @@ const ModalWithdraw = (props) => {
             </Popover.Content>
         </Popover>
     );
+
+    const checkAmountError = (
+        props.transferableAmount < (parseInt(localStorage.getItem('fee')) / 1000000)
+    );
     return (
         <>
             {initialModal ?
@@ -276,30 +275,31 @@ const ModalWithdraw = (props) => {
                             <div className="form-field">
                                 <p className="label">{t("AVAILABLE")} (XPRT)</p>
                                 <div className="available-tokens">
-                                    <p className={props.rewards === '0' ? "empty info-data" : "info-data"}>{props.rewards}</p>
+                                    <p className={props.rewards === 0 ? "empty info-data" : "info-data"}>{props.rewards}</p>
                                 </div>
                             </div>
                             {
                                 mode === "normal" ?
                                     <>
-                                    <div className="memo-dropdown-section">
-                                        <p onClick={handleMemoChange} className="memo-dropdown"><span className="text">{t("ADVANCED")} </span>
-                                            {memoStatus ?
-                                                <Icon
+                                        <div className="memo-dropdown-section">
+                                            <p onClick={handleMemoChange} className="memo-dropdown"><span
+                                                className="text">{t("ADVANCED")} </span>
+                                                {memoStatus ?
+                                                    <Icon
+                                                        viewClass="arrow-right"
+                                                        icon="up-arrow"/>
+                                                    :
+                                                    <Icon
+                                                        viewClass="arrow-right"
+                                                        icon="down-arrow"/>}
+                                            </p>
+                                            <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
+                                                            overlay={popoverMemo}>
+                                                <button className="icon-button info" type="button"><Icon
                                                     viewClass="arrow-right"
-                                                    icon="up-arrow"/>
-                                                :
-                                                <Icon
-                                                    viewClass="arrow-right"
-                                                    icon="down-arrow"/>}
-                                        </p>
-                                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
-                                                        overlay={popoverMemo}>
-                                            <button className="icon-button info" type="button"><Icon
-                                                viewClass="arrow-right"
-                                                icon="info"/></button>
-                                        </OverlayTrigger>
-                                    </div>
+                                                    icon="info"/></button>
+                                            </OverlayTrigger>
+                                        </div>
                                         {memoStatus ?
                                             <div className="form-field">
                                                 <p className="label info">{t("MEMO")}
@@ -327,6 +327,7 @@ const ModalWithdraw = (props) => {
                                     : null
                             }
                             <div className="buttons navigate-buttons">
+                                <FeeContainer/>
                                 <button className="button button-secondary" onClick={() => handlePrevious()}>
                                     <Icon
                                         viewClass="arrow-right"
@@ -334,7 +335,7 @@ const ModalWithdraw = (props) => {
                                 </button>
                                 <button
                                     className={props.rewards ? "button button-primary" : "button button-primary disabled"}
-                                    disabled={props.rewards === '0'}> {mode === "normal" ? t("NEXT") : t("SUBMIT")}
+                                    disabled={checkAmountError || props.rewards === 0}> {mode === "normal" ? t("NEXT") : t("SUBMIT")}
                                 </button>
                             </div>
                             <div className="buttons">
@@ -372,31 +373,28 @@ const ModalWithdraw = (props) => {
                                         </div>
                                         <div className="form-field">
                                             <p className="label">{t("PASSWORD")}</p>
-                                            <Form.Control
-                                                type="password"
-                                                name="password"
-                                                placeholder={t("ENTER_PASSWORD")}
-                                                required={true}
-                                            />
+                                                <Form.Control
+                                                    type="password"
+                                                    name="password"
+                                                    placeholder={t("ENTER_PASSWORD")}
+                                                    required={true}
+                                                />
                                         </div>
                                     </>
                                     :
                                     <>
                                         <div className="form-field">
                                             <p className="label">{t("PASSWORD")}</p>
-                                            <Form.Control
-                                                type="password"
-                                                name="password"
-                                                placeholder={t("ENTER_PASSWORD")}
-                                                required={true}
-                                            />
+                                                <Form.Control
+                                                    type="password"
+                                                    name="password"
+                                                    placeholder={t("ENTER_PASSWORD")}
+                                                    required={true}
+                                                />
                                         </div>
-
-
                                     </>
 
                             }
-
                             <Accordion className="advanced-wallet-accordion">
                                 <Card>
                                     <Card.Header>
@@ -447,13 +445,12 @@ const ModalWithdraw = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee')) / 1000000}xprt
-                                    will be cut from the wallet.</p>
-                                <button className="button button-primary">Claim Rewards</button>
+                                <button className="button button-primary">Claim
+                                    Rewards
+                                </button>
                             </div>
                         </Form>
                     </Modal.Body>
-
                 </>
                 : null
             }
@@ -469,16 +466,17 @@ const ModalWithdraw = (props) => {
                                 {mode === "kepler" ?
                                     <a
                                         href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
-                                        target="_blank" className="tx-hash">Tx
+                                        target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                         Hash: {response.transactionHash}</a>
                                     :
                                     <a
                                         href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
-                                        target="_blank" className="tx-hash">Tx
+                                        target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                         Hash: {response.txhash}</a>
                                 }
                                 <div className="buttons">
-                                    <button className="button" onClick={props.handleClose}>{t("DONE")}</button>
+                                    <button className="button"
+                                            onClick={props.handleClose}>{t("DONE")}</button>
                                 </div>
                             </div>
                         </Modal.Body>
@@ -498,7 +496,7 @@ const ModalWithdraw = (props) => {
                                         <p>{response.rawLog}</p>
                                         <a
                                             href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
-                                            target="_blank" className="tx-hash">Tx
+                                            target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                             Hash: {response.transactionHash}</a>
                                     </>
                                     :
@@ -506,12 +504,13 @@ const ModalWithdraw = (props) => {
                                         <p>{response.raw_log === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : response.raw_log}</p>
                                         <a
                                             href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
-                                            target="_blank" className="tx-hash">Tx
+                                            target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                             Hash: {response.txhash}</a>
                                     </>
                                 }
                                 <div className="buttons">
-                                    <button className="button" onClick={handleClose}> {t("DONE")}</button>
+                                    <button className="button"
+                                            onClick={handleClose}> {t("DONE")}</button>
                                 </div>
                             </div>
                         </Modal.Body>
@@ -522,6 +521,10 @@ const ModalWithdraw = (props) => {
         </>
     );
 };
-
-
-export default ModalWithdraw;
+const stateToProps = (state) => {
+    return {
+        balance: state.balance.amount,
+        transferableAmount: state.balance.transferableAmount,
+    };
+};
+export default connect(stateToProps)(ModalWithdraw);

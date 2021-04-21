@@ -9,7 +9,7 @@ import helper from "../../utils/helper";
 import logo from "../../assets/images/logo_bold.svg";
 import {useTranslation} from "react-i18next";
 import MenuIcon from '@material-ui/icons/Menu';
-import Darktheme from "../Darktheme";
+import Darktheme from "../DarkTheme";
 import GenerateKeyStore from "../GenerateKeyStore";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const DashboardHeader = () => {
@@ -110,11 +110,11 @@ const DashboardHeader = () => {
                                     </div>
                                     <div className="dropdown-footer">
                                         <p onClick={closeWallet} className="link-close">{t("CLOSE_WALLET")}</p>
-                                        <p onClick={handleKeyStore}>Generate KeyStore</p>
+                                        <p onClick={handleKeyStore} className="generate-keystore">Generate KeyStore</p>
                                     </div>
                                 </NavDropdown>
                             </li>
-                            {/*<li className="nav-item link"><Darktheme/></li>*/}
+                            <li className="nav-item link"><Darktheme/></li>
 
                         </Nav>
                     </Navbar.Collapse>

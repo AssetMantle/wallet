@@ -10,8 +10,6 @@ import {
 } from 'react-bootstrap';
 import React, {useContext, useEffect, useState} from 'react';
 import success from "../../../assets/images/success.svg";
-import {getValidatorUrl} from "../../../constants/url";
-import axios from "axios";
 import Icon from "../../../components/Icon";
 import {connect} from "react-redux";
 import helper from "../../../utils/helper";
@@ -23,6 +21,7 @@ import MakePersistence from "../../../utils/cosmosjsWrapper";
 import config from "../../../config";
 import {useTranslation} from "react-i18next";
 import {fetchWithdrawAddress} from "../../../actions/withdrawAddress";
+import FeeContainer from "../../../components/Fee";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -31,7 +30,6 @@ const ModalSetWithdrawAddress = (props) => {
     const [show, setShow] = useState(true);
     const [validatorAddress, setValidatorAddress] = useState('');
     const [response, setResponse] = useState('');
-    const [validatorsList, setValidatorsList] = useState([]);
     const [advanceMode, setAdvanceMode] = useState(false);
     const [initialModal, setInitialModal] = useState(true);
     const [seedModal, showSeedModal] = useState(false);
@@ -49,13 +47,6 @@ const ModalSetWithdrawAddress = (props) => {
 
     useEffect(() => {
         props.fetchWithdrawAddress(loginAddress)
-        for (const item of props.list) {
-            const validatorUrl = getValidatorUrl(item.validator_address);
-            axios.get(validatorUrl).then(validatorResponse => {
-                let validator = validatorResponse.data.validator;
-                setValidatorsList(validatorsList => [...validatorsList, validator]);
-            })
-        }
         const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
         if (encryptedMnemonic !== null) {
             setImportMnemonic(false)
@@ -70,7 +61,7 @@ const ModalSetWithdrawAddress = (props) => {
         props.setWithDraw(false)
     };
 
-    function ContextAwareToggle({children, eventKey, callback}) {
+    function ContextAwareToggle({eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 
         const decoratedOnClick = useAccordionToggle(
@@ -103,7 +94,7 @@ const ModalSetWithdrawAddress = (props) => {
     }
 
     function PrivateKeyReader(file, password) {
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve) {
             const fileReader = new FileReader();
             fileReader.readAsText(file, "UTF-8");
             fileReader.onload = event => {
@@ -164,7 +155,6 @@ const ModalSetWithdrawAddress = (props) => {
             const password = event.target.password.value;
             var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
             await promise.then(function (result) {
-                setImportMnemonic(false)
                 mnemonic = result;
             });
         } else {
@@ -193,6 +183,7 @@ const ModalSetWithdrawAddress = (props) => {
             const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
+                    setImportMnemonic(false);
                     persistence.getAccounts(address).then(data => {
                         if (data.code === undefined) {
                             let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
@@ -244,11 +235,6 @@ const ModalSetWithdrawAddress = (props) => {
         }
     };
 
-    const handlePrivateKey = (value) => {
-        setImportMnemonic(value);
-        setErrorMessage("");
-    };
-
     if (loader) {
         return <Loader/>;
     }
@@ -260,6 +246,11 @@ const ModalSetWithdrawAddress = (props) => {
             </Popover.Content>
         </Popover>
     );
+
+    const checkAmountError = (
+        props.transferableAmount < (parseInt(localStorage.getItem('fee')) / 1000000)
+    );
+
     return (
         <Modal
             animation={false}
@@ -345,7 +336,8 @@ const ModalSetWithdrawAddress = (props) => {
                                     : null
                             }
                             <div className="buttons">
-                                <button className="button button-primary" disabled={!props.status}
+                                <FeeContainer/>
+                                <button className="button button-primary" disabled={checkAmountError || !props.status}
                                 >{mode === "normal" ? "Next" : "Submit"}</button>
                             </div>
                         </Form>
@@ -442,8 +434,6 @@ const ModalSetWithdrawAddress = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee')) / 1000000}xprt
-                                    will be cut from the wallet.</p>
                                 <button className="button button-primary">{t("CLAIM_REWARDS")}</button>
                             </div>
                         </Form>
@@ -464,12 +454,12 @@ const ModalSetWithdrawAddress = (props) => {
                                 {mode === "kepler" ?
                                     <a
                                         href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
-                                        target="_blank" className="tx-hash">Tx
+                                        target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                         Hash: {response.transactionHash}</a>
                                     :
                                     <a
                                         href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
-                                        target="_blank" className="tx-hash">Tx
+                                        target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                         Hash: {response.txhash}</a>
                                 }
                                 <div className="buttons">
@@ -493,7 +483,7 @@ const ModalSetWithdrawAddress = (props) => {
                                         <p>{response.rawLog}</p>
                                         <a
                                             href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
-                                            target="_blank" className="tx-hash">Tx
+                                            target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                             Hash: {response.transactionHash}</a>
                                     </>
                                     :
@@ -501,7 +491,7 @@ const ModalSetWithdrawAddress = (props) => {
                                         <p>{response.raw_log === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : response.raw_log}</p>
                                         <a
                                             href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
-                                            target="_blank" className="tx-hash">Tx
+                                            target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                             Hash: {response.txhash}</a>
                                     </>
                                 }
@@ -523,7 +513,8 @@ const stateToProps = (state) => {
         tokenPrice: state.tokenPrice.tokenPrice,
         status: state.delegations.status,
         delegations: state.delegations.count,
-        withdrawAddress: state.withdrawAddress.withdrawAddress
+        withdrawAddress: state.withdrawAddress.withdrawAddress,
+        transferableAmount: state.balance.transferableAmount,
     };
 };
 

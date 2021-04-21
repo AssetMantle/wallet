@@ -1,7 +1,6 @@
 import {combineReducers} from 'redux';
 import {
 FETCH_WITHDRAW_ADDRESS_SUCCESS,
-    FETCH_WITHDRAW_ADDRESS_ERROR
 } from "../constants/withdrawAddress"
 
 const withdrawAddress = (state = "", action) => {

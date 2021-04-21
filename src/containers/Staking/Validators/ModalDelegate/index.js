@@ -20,12 +20,13 @@ import {connect} from "react-redux";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import config from "../../../../config";
 import {useTranslation} from "react-i18next";
+import FeeContainer from "../../../../components/Fee";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
+
 const ModalDelegate = (props) => {
     const {t} = useTranslation();
     const [amount, setAmount] = useState(0);
-    const [show, setShow] = useState(true);
     const [memoContent, setMemoContent] = useState('');
     const [initialModal, setInitialModal] = useState(true);
     const [seedModal, showSeedModal] = useState(false);
@@ -41,7 +42,8 @@ const ModalDelegate = (props) => {
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
     };
-    function ContextAwareToggle({children, eventKey, callback}) {
+
+    function ContextAwareToggle({eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 
         const decoratedOnClick = useAccordionToggle(
@@ -72,11 +74,13 @@ const ModalDelegate = (props) => {
             </button>
         );
     }
+
     useEffect(() => {
+        console.log("coming agian")
         const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
         if (encryptedMnemonic !== null) {
             setImportMnemonic(false)
-        }else{
+        } else {
             setImportMnemonic(true);
         }
     }, []);
@@ -87,14 +91,6 @@ const ModalDelegate = (props) => {
         } else {
             return false
         }
-    };
-
-    const handleClose = () => {
-        setShow(false);
-        props.setModalOpen('');
-        props.setTxModalShow(false);
-        props.setInitialModal(true);
-        setResponse('');
     };
 
     const handlePrevious = () => {
@@ -108,7 +104,7 @@ const ModalDelegate = (props) => {
         event.preventDefault();
         const response = transactions.TransactionWithKeplr([DelegateMsg(loginAddress, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(0, 250000), memoContent);
         response.then(result => {
-            if(result.code !== undefined){
+            if (result.code !== undefined) {
                 helper.AccountChangeCheck(result.rawLog)
             }
             setResponse(result);
@@ -139,7 +135,7 @@ const ModalDelegate = (props) => {
     };
 
     function PrivateKeyReader(file, password) {
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve) {
             const fileReader = new FileReader();
             fileReader.readAsText(file, "UTF-8");
             fileReader.onload = event => {
@@ -147,7 +143,7 @@ const ModalDelegate = (props) => {
                 localStorage.setItem('encryptedMnemonic', event.target.result);
                 const decryptedData = helper.decryptStore(res, password);
                 if (decryptedData.error != null) {
-                    setErrorMessage(decryptedData.error)
+                    setErrorMessage(decryptedData.error);
                     setLoader(false);
                 } else {
                     resolve(decryptedData.mnemonic);
@@ -165,7 +161,6 @@ const ModalDelegate = (props) => {
             const password = event.target.password.value;
             var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
             await promise.then(function (result) {
-                setImportMnemonic(false)
                 mnemonic = result;
             });
         } else {
@@ -194,6 +189,7 @@ const ModalDelegate = (props) => {
             const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
+                    setImportMnemonic(false);
                     persistence.getAccounts(address).then(data => {
                         if (data.code === undefined) {
                             let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
@@ -246,10 +242,7 @@ const ModalDelegate = (props) => {
             setLoader(false);
         }
     };
-    const handlePrivateKey = (value) => {
-        setImportMnemonic(value);
-        setErrorMessage("");
-    };
+
     if (loader) {
         return <Loader/>;
     }
@@ -270,6 +263,9 @@ const ModalDelegate = (props) => {
         </Popover>
     );
 
+    const checkAmountError = (
+        props.transferableAmount < (parseInt(localStorage.getItem('fee')) / 1000000)
+    );
     return (
         <>
             {initialModal ?
@@ -294,6 +290,7 @@ const ModalDelegate = (props) => {
                                         placeholder={t("SEND_AMOUNT")}
                                         value={amount}
                                         step="any"
+                                        className={amount > props.balance ? "error-amount-field" : ""}
                                         onChange={handleAmountChange}
                                         required={true}
                                     />
@@ -306,7 +303,8 @@ const ModalDelegate = (props) => {
                             {mode === "normal" ?
                                 <>
                                     <div className="memo-dropdown-section">
-                                        <p onClick={handleMemoChange} className="memo-dropdown"><span className="text">{t("ADVANCED")}  </span>
+                                        <p onClick={handleMemoChange} className="memo-dropdown"><span
+                                            className="text">{t("ADVANCED")}  </span>
                                             {memoStatus ?
                                                 <Icon
                                                     viewClass="arrow-right"
@@ -316,7 +314,8 @@ const ModalDelegate = (props) => {
                                                     viewClass="arrow-right"
                                                     icon="down-arrow"/>}
                                         </p>
-                                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popoverMemo}>
+                                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
+                                                        overlay={popoverMemo}>
                                             <button className="icon-button info" type="button"><Icon
                                                 viewClass="arrow-right"
                                                 icon="info"/></button>
@@ -325,7 +324,8 @@ const ModalDelegate = (props) => {
                                     {memoStatus ?
                                         <div className="form-field">
                                             <p className="label info">{t("MEMO")}
-                                                <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popoverMemo}>
+                                                <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
+                                                                overlay={popoverMemo}>
                                                     <button className="icon-button info" type="button"><Icon
                                                         viewClass="arrow-right"
                                                         icon="info"/></button>
@@ -347,14 +347,16 @@ const ModalDelegate = (props) => {
                                     <p className="form-error">{errorMessage}</p>
                                     : null
                             }
+
                             <div className="buttons navigate-buttons">
+                                <FeeContainer/>
                                 <button className="button button-secondary" onClick={() => handlePrevious()}>
                                     <Icon
                                         viewClass="arrow-right"
                                         icon="left-arrow"/>
                                 </button>
                                 <button className="button button-primary"
-                                        disabled={amount > (props.balance * 1) || amount === 0 || (props.balance * 1) === 0}
+                                        disabled={amount > props.balance || checkAmountError || amount === 0 || (props.balance * 1) === 0}
                                 > {mode === "normal" ? "Next" : "Submit"}</button>
                             </div>
                         </Form>
@@ -459,8 +461,6 @@ const ModalDelegate = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee')) / 1000000}xprt
-                                    will be cut from the wallet.</p>
                                 <button className="button button-primary">{t("DELEGATE")}</button>
                             </div>
                         </Form>
@@ -484,12 +484,12 @@ const ModalDelegate = (props) => {
                                 {mode === "kepler" ?
                                     <a
                                         href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
-                                        target="_blank" className="tx-hash">Tx
+                                        target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                         Hash: {response.transactionHash}</a>
                                     :
                                     <a
                                         href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
-                                        target="_blank" className="tx-hash">Tx
+                                        target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                         Hash: {response.txhash}</a>
                                 }
                                 <div className="buttons">
@@ -512,7 +512,7 @@ const ModalDelegate = (props) => {
                                     <p>{response.rawLog}</p>
                                     <a
                                         href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
-                                        target="_blank" className="tx-hash">Tx
+                                        target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                         Hash: {response.transactionHash}</a>
                                 </>
                                 :
@@ -520,7 +520,7 @@ const ModalDelegate = (props) => {
                                     <p>{response.raw_log === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : response.raw_log}</p>
                                     <a
                                         href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
-                                        target="_blank" className="tx-hash">Tx
+                                        target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                         Hash: {response.txhash}</a>
                                 </>
                             }
@@ -539,6 +539,7 @@ const ModalDelegate = (props) => {
 const stateToProps = (state) => {
     return {
         balance: state.balance.amount,
+        transferableAmount: state.balance.transferableAmount,
     };
 };
 

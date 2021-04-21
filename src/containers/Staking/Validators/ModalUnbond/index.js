@@ -20,6 +20,7 @@ import Loader from "../../../../components/Loader";
 import config from "../../../../config";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import {useTranslation} from "react-i18next";
+import FeeContainer from "../../../../components/Fee";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalUnbond = (props) => {
@@ -50,19 +51,13 @@ const ModalUnbond = (props) => {
         }
     };
 
-    const handleClose = () => {
-        props.setModalOpen('');
-        props.setTxModalShow(false);
-        props.setInitialModal(true);
-        setResponse('');
-    };
     const handlePrevious = () => {
         props.setShow(true);
         props.setTxModalShow(false);
         props.setInitialModal(true);
     };
 
-    function ContextAwareToggle({children, eventKey, callback}) {
+    function ContextAwareToggle({ eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 
         const decoratedOnClick = useAccordionToggle(
@@ -104,7 +99,7 @@ const ModalUnbond = (props) => {
     }, []);
 
     function PrivateKeyReader(file, password) {
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve) {
             const fileReader = new FileReader();
             fileReader.readAsText(file, "UTF-8");
             fileReader.onload = event => {
@@ -141,7 +136,6 @@ const ModalUnbond = (props) => {
     const handleSubmitKepler = async event => {
         setLoader(true);
         event.preventDefault();
-
         const response = transactions.TransactionWithKeplr([UnbondMsg(loginAddress, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             if (result.code !== undefined) {
@@ -157,7 +151,6 @@ const ModalUnbond = (props) => {
         })
     };
     const handleSubmit = async event => {
-
         setLoader(true);
         event.preventDefault();
         let mnemonic;
@@ -165,7 +158,6 @@ const ModalUnbond = (props) => {
             const password = event.target.password.value;
             var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
             await promise.then(function (result) {
-                setImportMnemonic(false)
                 mnemonic = result;
             });
         } else {
@@ -194,6 +186,7 @@ const ModalUnbond = (props) => {
             const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
+                    setImportMnemonic(false);
                     persistence.getAccounts(address).then(data => {
                         if (data.code === undefined) {
                             let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
@@ -246,10 +239,7 @@ const ModalUnbond = (props) => {
             setLoader(false);
         }
     };
-    const handlePrivateKey = (value) => {
-        setImportMnemonic(value);
-        setErrorMessage("");
-    };
+
     if (loader) {
         return <Loader/>;
     }
@@ -261,6 +251,11 @@ const ModalUnbond = (props) => {
             </Popover.Content>
         </Popover>
     );
+
+    const checkAmountError = (
+        props.transferableAmount < (parseInt(localStorage.getItem('fee')) / 1000000)
+    );
+
     return (
         <>
             {initialModal ?
@@ -280,6 +275,7 @@ const ModalUnbond = (props) => {
                                         placeholder={t("SEND_AMOUNT")}
                                         defaultValue={amount || ''}
                                         step="any"
+                                        className={amount > props.delegationAmount ? "error-amount-field" : ""}
                                         onChange={handleAmountChange}
                                         required={true}
                                     />
@@ -335,6 +331,7 @@ const ModalUnbond = (props) => {
                                     : null
                             }
                             <div className="buttons navigate-buttons">
+                                <FeeContainer/>
                                 <button className="button button-secondary" type="button"
                                         onClick={() => handlePrevious()}>
                                     <Icon
@@ -342,7 +339,7 @@ const ModalUnbond = (props) => {
                                         icon="left-arrow"/>
                                 </button>
                                 <button className="button button-primary"
-                                        disabled={!props.delegateStatus || amount === 0 || amount > props.delegationAmount}>
+                                        disabled={checkAmountError || !props.delegateStatus || amount === 0 || amount > props.delegationAmount}>
                                     {mode === "normal" ? "Next" : "Submit"}
                                 </button>
                             </div>
@@ -440,8 +437,6 @@ const ModalUnbond = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee')) / 1000000}xprt
-                                    will be cut from the wallet.</p>
                                 <button className="button button-primary">Unbond</button>
                             </div>
                         </Form>
@@ -462,12 +457,12 @@ const ModalUnbond = (props) => {
                                 {mode === "kepler" ?
                                     <a
                                         href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
-                                        target="_blank" className="tx-hash">Tx
+                                        target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                         Hash: {response.transactionHash}</a>
                                     :
                                     <a
                                         href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
-                                        target="_blank" className="tx-hash">Tx
+                                        target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                         Hash: {response.txhash}</a>
                                 }
                                 <div className="buttons">
@@ -491,7 +486,7 @@ const ModalUnbond = (props) => {
                                         <p>{response.rawLog}</p>
                                         <a
                                             href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
-                                            target="_blank" className="tx-hash">Tx
+                                            target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                             Hash: {response.transactionHash}</a>
                                     </>
                                     :
@@ -499,7 +494,7 @@ const ModalUnbond = (props) => {
                                         <p>{response.raw_log === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : response.raw_log}</p>
                                         <a
                                             href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
-                                            target="_blank" className="tx-hash">Tx
+                                            target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                             Hash: {response.txhash}</a>
                                     </>
                                 }
@@ -518,6 +513,7 @@ const ModalUnbond = (props) => {
 const stateToProps = (state) => {
     return {
         balance: state.balance.amount,
+        transferableAmount: state.balance.transferableAmount,
     };
 };
 

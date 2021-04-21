@@ -22,12 +22,12 @@ import Loader from "../../../../components/Loader";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import config from "../../../../config";
 import {useTranslation} from "react-i18next";
+import FeeContainer from "../../../../components/Fee";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalReDelegate = (props) => {
     const {t} = useTranslation();
     const [amount, setAmount] = useState(0);
-    const [show, setShow] = useState(true);
     const [memoContent, setMemoContent] = useState('');
     const [initialModal, setInitialModal] = useState(true);
     const [seedModal, showSeedModal] = useState(false);
@@ -53,7 +53,7 @@ const ModalReDelegate = (props) => {
         }
     };
 
-    function ContextAwareToggle({children, eventKey, callback}) {
+    function ContextAwareToggle({eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 
         const decoratedOnClick = useAccordionToggle(
@@ -96,14 +96,6 @@ const ModalReDelegate = (props) => {
         setToValidatorAddress(evt.target.value)
     };
 
-    const handleClose = () => {
-        setShow(false);
-        props.setModalOpen('');
-        props.setTxModalShow(false);
-        props.setInitialModal(true);
-        setResponse('');
-    };
-
     const handlePrevious = () => {
         props.setShow(true);
         props.setTxModalShow(false);
@@ -127,11 +119,6 @@ const ModalReDelegate = (props) => {
         }
     };
 
-    const handlePrivateKey = (value) => {
-        setImportMnemonic(value);
-        setErrorMessage("");
-    };
-
     const handleSubmitKepler = async event => {
         setLoader(true);
         event.preventDefault();
@@ -151,7 +138,7 @@ const ModalReDelegate = (props) => {
     };
 
     function PrivateKeyReader(file, password) {
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve) {
             const fileReader = new FileReader();
             fileReader.readAsText(file, "UTF-8");
             fileReader.onload = event => {
@@ -177,7 +164,6 @@ const ModalReDelegate = (props) => {
                 const password = event.target.password.value;
                 var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
                 await promise.then(function (result) {
-                    setImportMnemonic(false)
                     mnemonic = result;
                 });
             } else {
@@ -206,6 +192,7 @@ const ModalReDelegate = (props) => {
             const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
+                    setImportMnemonic(false);
                     persistence.getAccounts(address).then(data => {
                         if (data.code === undefined) {
                             let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
@@ -272,6 +259,9 @@ const ModalReDelegate = (props) => {
             </Popover.Content>
         </Popover>
     );
+    const checkAmountError = (
+        props.transferableAmount < (parseInt(localStorage.getItem('fee')) / 1000000)
+    );
     return (
         <>
             {initialModal ?
@@ -314,6 +304,7 @@ const ModalReDelegate = (props) => {
                                         placeholder={t("SEND_AMOUNT")}
                                         defaultValue={amount || ''}
                                         step="any"
+                                        className={amount > props.delegationAmount ? "error-amount-field" : ""}
                                         onChange={handleAmountChange}
                                         required={true}
                                     />
@@ -368,14 +359,15 @@ const ModalReDelegate = (props) => {
                                     : null
                             }
                             <div className="buttons navigate-buttons">
+                                <FeeContainer/>
                                 <button className="button button-secondary" onClick={() => handlePrevious()}>
                                     <Icon
                                         viewClass="arrow-right"
                                         icon="left-arrow"/>
                                 </button>
                                 <button
-                                    className={props.delegateStatus ? "button button-primary" : "button button-primary disabled"}
-                                    disabled={!props.delegateStatus || disabled || amount === 0 || amount > props.delegationAmount}
+                                    className="button button-primary"
+                                    disabled={checkAmountError || !props.delegateStatus || disabled || amount === 0 || amount > props.delegationAmount}
                                 >{mode === "normal" ? "Next" : "Submit"}
                                 </button>
                             </div>
@@ -473,8 +465,7 @@ const ModalReDelegate = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee')) / 1000000}xprt
-                                    will be cut from the wallet.</p>
+
                                 <button className="button button-primary">{t("REDELEGATE")}</button>
                             </div>
                         </Form>
@@ -495,12 +486,12 @@ const ModalReDelegate = (props) => {
                                 {mode === "kepler" ?
                                     <a
                                         href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
-                                        target="_blank" className="tx-hash">Tx
+                                        target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                         Hash: {response.transactionHash}</a>
                                     :
                                     <a
                                         href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
-                                        target="_blank" className="tx-hash">Tx
+                                        target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                         Hash: {response.txhash}</a>
                                 }
                                 <div className="buttons">
@@ -524,7 +515,7 @@ const ModalReDelegate = (props) => {
                                         <p>{response.rawLog}</p>
                                         <a
                                             href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
-                                            target="_blank" className="tx-hash">Tx
+                                            target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                             Hash: {response.transactionHash}</a>
                                     </>
                                     :
@@ -532,7 +523,7 @@ const ModalReDelegate = (props) => {
                                         <p>{response.raw_log === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : response.raw_log}</p>
                                         <a
                                             href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
-                                            target="_blank" className="tx-hash">Tx
+                                            target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                             Hash: {response.txhash}</a>
                                     </>
                                 }
@@ -554,6 +545,7 @@ const stateToProps = (state) => {
     return {
         validators: state.validators.validators,
         balance: state.balance.amount,
+        transferableAmount: state.balance.transferableAmount,
     };
 };
 

@@ -1,11 +1,8 @@
-import {Form, Modal} from 'react-bootstrap';
+import {Modal} from 'react-bootstrap';
 import React, {useState} from 'react';
-import {useTranslation} from "react-i18next";
-import VisibilityIcon from '@material-ui/icons/Visibility';
 import {connect} from "react-redux";
 
 const ModalViewUnbondDetails = (props) => {
-    const {t} = useTranslation();
     const [show, setShow] = useState(false);
     const handleClose = () => {
         setShow(false);
@@ -33,12 +30,12 @@ const ModalViewUnbondDetails = (props) => {
                                 <p>Date</p>
                             </div>
                     {props.list ?
-                        props.list.map((item, index) => {
+                        props.list.map((item) => {
                             return (
                                 item.entries.length ?
                                     item.entries.map((entry, entryIndex) => {
                                         return (
-                                            <div className="unbonding-schedule-list">
+                                            <div className="unbonding-schedule-list" key={entryIndex}>
                                                 <p><span className="amount">{entry.balance / 1000000} XPRT</span></p>
                                                 <p><span className="date">{new Date (entry["completion_time"]).toUTCString()}</span></p>
                                             </div>

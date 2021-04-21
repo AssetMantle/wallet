@@ -130,8 +130,8 @@
     .tab-content {
       padding: 25px 0px 0 0px;
       position: relative;
-      height: 63vh;
-      overflow-y: scroll;
+      height: 59vh;
+      overflow-y: auto;
 
       .tab-content {
         height: auto;
@@ -209,11 +209,13 @@
 
       .buttons {
         padding-top: 15px;
-
+        margin-left: 150px;
+        .fee{
+          text-align: left;
+        }
         .button {
           min-width: 200px;
           max-width: 400px;
-          margin-left: 150px;
         }
       }
     }
@@ -241,8 +243,6 @@
     }
 
     table {
-      border: 1px solid #E3E5F4;
-
       thead {
         border-bottom: 1px solid #E3E5F4;
 
@@ -310,9 +310,9 @@
     .pagination-custom {
       display: flex;
       justify-content: flex-end;
-      background-color: #fff;
-      border: 1px solid #E3E5F4;
-
+      button{
+        outline:none !important;
+      }
       .page-number {
         display: flex;
         align-items: center;
@@ -353,8 +353,6 @@
 }
 
 .header {
-  border-bottom: 1px solid #E3E5F4;
-
   .navbar {
     background: #222325;
 
@@ -459,8 +457,7 @@
 
       .dropdown-menu {
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
-        background: #FFFFFF;
-        border: 1px solid #EAEBF6;
+        border: 1px solid;
         padding: 0;
         border-radius: 0px;
         position: absolute;
@@ -512,7 +509,7 @@
 
         .dropdown-footer {
           display: flex;
-          border-top: 1px solid #EAEBF6;
+          border-top: 1px solid;
 
           .link-close {
             color: #E50913;
@@ -529,7 +526,7 @@
             padding: 10px 0;
 
             &:first-child {
-              border-right: 1px solid #EAEBF6;
+              border-right: 1px solid;
             }
           }
         }
@@ -563,7 +560,7 @@
         font-weight: 500;
         font-size: 14px;
         color: #55678B;
-        border: 1px solid #DCE9F1;
+        border: 1px solid;
       }
 
       .nav-link.active, .show > .nav-link {
@@ -587,7 +584,6 @@
     font-weight: 600;
     font-size: 14px;
     line-height: 150%;
-    color: #2E3239;
   }
 
   //.xprt-info {
@@ -604,8 +600,7 @@
     align-items: center;
     justify-content: center;
     padding: 20px 30px;
-    border: 1px solid #EAEBF6;
-
+    border:1px solid;
     &:nth-child(2) {
       //padding: 0px 20px;
       margin: 0 20px;
@@ -651,7 +646,6 @@
         font-size: 14px;
         line-height: 150%;
         text-align: right;
-        color: #2E3239;
         font-family: 'Poppins', sans-serif;
       }
 
@@ -707,9 +701,9 @@
 
 .validators-section {
   border-top: 1px solid #E3E5F4;
-  padding: 50px 10px;
+  padding: 30px 10px;
   position: relative;
-  height: 68vh;
+  height: 66vh;
   overflow-y: scroll;
 
   .info {
@@ -723,7 +717,6 @@
       font-weight: 600;
       font-size: 18px;
       line-height: 27px;
-      color: #313238;
       font-family: 'Poppins', sans-serif;
     }
 
@@ -776,10 +769,12 @@
         font-weight: 500;
         font-size: 14px;
         line-height: 150%;
-        color: #8D9CB5;
+        color: #8D9CB5 !important;
         font-family: 'Poppins', sans-serif;
         background: transparent !important;
-
+        span button{
+          outline: none !important;
+        }
         &:first-child {
           padding-left: 40px;
         }
@@ -791,7 +786,6 @@
         font-size: 14px;
         line-height: 150%;
         padding: 15px 20px;
-        color: #272931;
         font-family: 'Poppins', sans-serif;
 
         .moniker-image {
@@ -831,7 +825,6 @@
       }
 
       textarea {
-        background: #F5F6FA;
         font-size: 14px;
         border-radius: 0;
         border: 0px solid;
@@ -840,7 +833,6 @@
 
       input {
         margin: 0;
-        background: #F5F6FA;
         font-size: 14px;
         line-height: 150%;
         height: calc(2.3em + .75rem + 2px);
@@ -935,7 +927,6 @@
         font-weight: 500;
         font-size: 14px;
         line-height: 150%;
-        color: #2E3239;
       }
     }
   }
@@ -961,7 +952,7 @@
         padding: 15px 30px;
         text-align: center;
         background: none !important;
-        border: 1px solid #E3E5F4;
+        border: 1px solid;
         margin-right: 15px;
 
       }
@@ -974,7 +965,6 @@
         /* identical to box height, or 21px */
         text-align: center;
         padding-top: 15px;
-        color: #2E3239;
       }
 
       .icon {
@@ -991,8 +981,9 @@
   .accordion {
     .card {
       border: 0px solid;
-      border-bottom: 1px solid #E3E5F4;
+      border-bottom: 1px solid;
       border-radius: 0px;
+      background: transparent;
     }
 
     .card-header {
@@ -1036,7 +1027,6 @@
         font-size: 13px;
         line-height: 183.5%;
         margin: 0;
-        color: #5F646C;
       }
     }
   }

@@ -1,6 +1,5 @@
 import {combineReducers} from 'redux';
 import {
-    DELEGATIONS_FETCH_ERROR,
     DELEGATIONS_FETCH_SUCCESS,
     DELEGATIONS_STATUS_SUCCESS
 } from "../constants/delegations";
