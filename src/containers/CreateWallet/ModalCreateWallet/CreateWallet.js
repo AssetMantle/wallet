@@ -3,7 +3,7 @@ import {Form, Modal} from "react-bootstrap";
 import Icon from "../../../components/Icon";
 import wallet from "../../../utils/wallet";
 import helper from "../../../utils/helper";
-import ImportWallet from "../../ImpotWallet";
+import ImportWallet from "../../ImportWallet";
 import AdvanceMode from "./AdvanceMode";
 import Copy from "../../../components/Copy";
 import {useTranslation} from "react-i18next";

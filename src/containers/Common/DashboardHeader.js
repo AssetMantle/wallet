@@ -9,7 +9,7 @@ import helper from "../../utils/helper";
 import logo from "../../assets/images/logo_bold.svg";
 import {useTranslation} from "react-i18next";
 import MenuIcon from '@material-ui/icons/Menu';
-import Darktheme from "../Darktheme";
+import Darktheme from "../DarkTheme";
 import GenerateKeyStore from "../GenerateKeyStore";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const DashboardHeader = () => {

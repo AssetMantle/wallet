@@ -4,7 +4,7 @@ import logo from "../../assets/images/logo_bold.svg";
 import dark_icon from "../../assets/images/dark_icon.svg";
 import ModalCreateWallet from "../../containers/CreateWallet/ModalCreateWallet";
 import ModalFaq from "../../containers/Faq";
-import ModalImportWallet from "../../containers/ImpotWallet";
+import ModalImportWallet from "../../containers/ImportWallet";
 import Footer from "../../components/Footer";
 import SignIn from "../../containers/SignIn";
 import {useTranslation} from "react-i18next";
