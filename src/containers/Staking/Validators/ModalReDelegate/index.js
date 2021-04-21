@@ -28,7 +28,6 @@ const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalReDelegate = (props) => {
     const {t} = useTranslation();
     const [amount, setAmount] = useState(0);
-    const [show, setShow] = useState(true);
     const [memoContent, setMemoContent] = useState('');
     const [initialModal, setInitialModal] = useState(true);
     const [seedModal, showSeedModal] = useState(false);
@@ -54,7 +53,7 @@ const ModalReDelegate = (props) => {
         }
     };
 
-    function ContextAwareToggle({children, eventKey, callback}) {
+    function ContextAwareToggle({eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 
         const decoratedOnClick = useAccordionToggle(
@@ -97,14 +96,6 @@ const ModalReDelegate = (props) => {
         setToValidatorAddress(evt.target.value)
     };
 
-    const handleClose = () => {
-        setShow(false);
-        props.setModalOpen('');
-        props.setTxModalShow(false);
-        props.setInitialModal(true);
-        setResponse('');
-    };
-
     const handlePrevious = () => {
         props.setShow(true);
         props.setTxModalShow(false);
@@ -128,11 +119,6 @@ const ModalReDelegate = (props) => {
         }
     };
 
-    const handlePrivateKey = (value) => {
-        setImportMnemonic(value);
-        setErrorMessage("");
-    };
-
     const handleSubmitKepler = async event => {
         setLoader(true);
         event.preventDefault();
@@ -152,7 +138,7 @@ const ModalReDelegate = (props) => {
     };
 
     function PrivateKeyReader(file, password) {
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve) {
             const fileReader = new FileReader();
             fileReader.readAsText(file, "UTF-8");
             fileReader.onload = event => {
@@ -500,12 +486,12 @@ const ModalReDelegate = (props) => {
                                 {mode === "kepler" ?
                                     <a
                                         href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
-                                        target="_blank" className="tx-hash">Tx
+                                        target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                         Hash: {response.transactionHash}</a>
                                     :
                                     <a
                                         href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
-                                        target="_blank" className="tx-hash">Tx
+                                        target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                         Hash: {response.txhash}</a>
                                 }
                                 <div className="buttons">
@@ -529,7 +515,7 @@ const ModalReDelegate = (props) => {
                                         <p>{response.rawLog}</p>
                                         <a
                                             href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
-                                            target="_blank" className="tx-hash">Tx
+                                            target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                             Hash: {response.transactionHash}</a>
                                     </>
                                     :
@@ -537,7 +523,7 @@ const ModalReDelegate = (props) => {
                                         <p>{response.raw_log === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : response.raw_log}</p>
                                         <a
                                             href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
-                                            target="_blank" className="tx-hash">Tx
+                                            target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                             Hash: {response.txhash}</a>
                                     </>
                                 }

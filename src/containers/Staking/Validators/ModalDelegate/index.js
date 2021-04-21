@@ -23,10 +23,10 @@ import {useTranslation} from "react-i18next";
 import FeeContainer from "../../../../components/Fee";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
+
 const ModalDelegate = (props) => {
     const {t} = useTranslation();
     const [amount, setAmount] = useState(0);
-    const [show, setShow] = useState(true);
     const [memoContent, setMemoContent] = useState('');
     const [initialModal, setInitialModal] = useState(true);
     const [seedModal, showSeedModal] = useState(false);
@@ -42,7 +42,7 @@ const ModalDelegate = (props) => {
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
     };
-    function ContextAwareToggle({children, eventKey, callback}) {
+    function ContextAwareToggle({eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 
         const decoratedOnClick = useAccordionToggle(
@@ -90,14 +90,6 @@ const ModalDelegate = (props) => {
         }
     };
 
-    const handleClose = () => {
-        setShow(false);
-        props.setModalOpen('');
-        props.setTxModalShow(false);
-        props.setInitialModal(true);
-        setResponse('');
-    };
-
     const handlePrevious = () => {
         props.setShow(true);
         props.setTxModalShow(false);
@@ -140,7 +132,7 @@ const ModalDelegate = (props) => {
     };
 
     function PrivateKeyReader(file, password) {
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve) {
             const fileReader = new FileReader();
             fileReader.readAsText(file, "UTF-8");
             fileReader.onload = event => {
@@ -247,10 +239,7 @@ const ModalDelegate = (props) => {
             setLoader(false);
         }
     };
-    const handlePrivateKey = (value) => {
-        setImportMnemonic(value);
-        setErrorMessage("");
-    };
+
     if (loader) {
         return <Loader/>;
     }
@@ -489,12 +478,12 @@ const ModalDelegate = (props) => {
                                 {mode === "kepler" ?
                                     <a
                                         href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
-                                        target="_blank" className="tx-hash">Tx
+                                        target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                         Hash: {response.transactionHash}</a>
                                     :
                                     <a
                                         href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
-                                        target="_blank" className="tx-hash">Tx
+                                        target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                         Hash: {response.txhash}</a>
                                 }
                                 <div className="buttons">
@@ -517,7 +506,7 @@ const ModalDelegate = (props) => {
                                     <p>{response.rawLog}</p>
                                     <a
                                         href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
-                                        target="_blank" className="tx-hash">Tx
+                                        target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                         Hash: {response.transactionHash}</a>
                                 </>
                                 :
@@ -525,7 +514,7 @@ const ModalDelegate = (props) => {
                                     <p>{response.raw_log === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : response.raw_log}</p>
                                     <a
                                         href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
-                                        target="_blank" className="tx-hash">Tx
+                                        target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                         Hash: {response.txhash}</a>
                                 </>
                             }

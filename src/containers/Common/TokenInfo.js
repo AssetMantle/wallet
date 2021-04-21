@@ -6,7 +6,6 @@ import {fetchBalance, fetchTransferableVestingAmount} from "../../actions/balanc
 import {fetchRewards} from "../../actions/rewards";
 import {fetchUnbondDelegations} from "../../actions/unbond";
 import {fetchTokenPrice} from "../../actions/tokenPrice";
-import vestingAccount from "../../utils/vestingAmount";
 import {useTranslation} from "react-i18next";
 import ModalViewUnbondDetails from "./ModalViewUnbondDetails";
 import ModalViewVestingDetails from "./ModalViewVestingDetails";
@@ -17,9 +16,6 @@ import {OverlayTrigger, Popover} from "react-bootstrap";
 const TokenInfo = (props) => {
     const {t} = useTranslation();
     const [rewards, setRewards] = useState(false);
-    const [withdraw, setWithDraw] = useState(false);
-    const [vestingAmount, setVestingAmount] = useState(0);
-    const [transferableAmount, setTransferableAmount] = useState(0);
     let address = localStorage.getItem('address');
 
     useEffect(() => {
@@ -34,8 +30,6 @@ const TokenInfo = (props) => {
     const handleRewards = (key) => {
         if (key === "rewards") {
             setRewards(true);
-        } else if (key === "setWithDraw") {
-            setWithDraw(true);
         }
     };
     const popoverVesting = (
@@ -105,7 +99,7 @@ const TokenInfo = (props) => {
                                         icon="info"/></button>
                                 </OverlayTrigger>
                             </p>
-                            <p className="value" title={vestingAmount}>
+                            <p className="value" title={props.vestingAmount}>
                                    <span className="inner-grid-icon">
                                     {
                                         props.vestingAmount > 0 ?

@@ -63,5 +63,6 @@ export default combineReducers({
     _,
     list,
     transferableAmount,
-    vestingAmount
+    vestingAmount,
+    inProgress
 });

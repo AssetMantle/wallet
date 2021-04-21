@@ -2,7 +2,7 @@ import React, {useContext} from "react";
 import {Accordion, Card, useAccordionToggle, AccordionContext} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
 
-function ContextAwareToggle({children, eventKey, callback}) {
+function ContextAwareToggle({ eventKey, callback}) {
     const currentEventKey = useContext(AccordionContext);
 
     const decoratedOnClick = useAccordionToggle(

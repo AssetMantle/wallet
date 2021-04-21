@@ -62,12 +62,12 @@ const ValidatorsTable = (props) => {
 
     const tableData = props.validatorsList.length ?
         props.validatorsList.map((validator, index) => [
-            <div>
+            <div key={index}>
                 <Avatar
                     identity={validator.description.identity}/>
                 {validator.description.moniker}
             </div>,
-            <div className="voting">
+            <div className="voting" key={index}>
                 {parseFloat((validator.tokens * Math.pow(10, -6)).toFixed(2))}
                 {
                     helper.isActive(validator)
@@ -76,8 +76,8 @@ const ValidatorsTable = (props) => {
                 }
             </div>
             ,
-            <span className="voting">{`${parseFloat((validator.commission.commission_rates.rate * 100).toFixed(2))}`} %</span>,
-            <div className="">
+            <span className="voting" key={index}>{`${parseFloat((validator.commission.commission_rates.rate * 100).toFixed(2))}`} %</span>,
+            <div className="" key={index}>
                 {helper.isActive(validator) ?
                     <span className="icon-box" title="active">
                                             <img src={activeIcon} alt="activeIcon"/>
@@ -88,7 +88,7 @@ const ValidatorsTable = (props) => {
                                         </span>
                 }
             </div>,
-            <div className="actions-td">
+            <div className="actions-td" key={index}>
                 <button
                     onClick={() => handleModal('ModalActions', validator)}
                     className="button button-primary">

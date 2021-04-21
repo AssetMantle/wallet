@@ -1,4 +1,4 @@
-import {DirectSecp256k1HdWallet, DirectSecp256k1Wallet} from "@cosmjs/proto-signing";
+import {DirectSecp256k1Wallet} from "@cosmjs/proto-signing";
 import config from "../config.json";
 import {Bip39, EnglishMnemonic, Slip10, Slip10Curve, stringToPath} from "@cosmjs/crypto";
 import MakePersistence from "./cosmosjsWrapper";
@@ -45,18 +45,13 @@ async function MnemonicWalletWithPassphrase(mnemonic, hdPath = makeHdPath(), pas
     return [wallet, firstAccount.address]
 }
 
-async function CheckAddressMisMatch(mnemonic, hdpath = makeHdPath(), bip39Passphrase = "", prefix = addressPrefix) {
-    const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix)
-    return address;
-}
-
 //TODO use this when bip39 passphrase is included in cosmjs.
-async function MnemonicWallet(mnemonic, hdPath = makeHdPath(), prefix = addressPrefix) {
-    const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, hdPath, prefix);
-    const [firstAccount] = await wallet.getAccounts();
-    return [wallet, firstAccount.address]
-
-}
+// async function MnemonicWallet(mnemonic, hdPath = makeHdPath(), prefix = addressPrefix) {
+//     const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, hdPath, prefix);
+//     const [firstAccount] = await wallet.getAccounts();
+//     return [wallet, firstAccount.address]
+//
+// }
 
 function makeHdPath(accountNumber = "0", addressIndex = "0", coinType = configCoinType) {
     return stringToPath("m/44'/" + coinType + "'/" + accountNumber + "'/0/" + addressIndex)
@@ -86,7 +81,6 @@ export default {
     TransactionWithKeplr,
     TransactionWithMnemonic,
     makeHdPath,
-    CheckAddressMisMatch,
     getAccountNumberAndSequence,
     mnemonicValidation
 };

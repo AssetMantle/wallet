@@ -130,8 +130,8 @@
     .tab-content {
       padding: 25px 0px 0 0px;
       position: relative;
-      height: 63vh;
-      overflow-y: scroll;
+      height: 59vh;
+      overflow-y: auto;
 
       .tab-content {
         height: auto;
@@ -704,7 +704,7 @@
   border-top: 1px solid #E3E5F4;
   padding: 50px 10px;
   position: relative;
-  height: 68vh;
+  height: 66vh;
   overflow-y: scroll;
 
   .info {

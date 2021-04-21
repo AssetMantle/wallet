@@ -109,7 +109,7 @@ const Send = (props) => {
         })
     };
 
-    function ContextAwareToggle({children, eventKey, callback}) {
+    function ContextAwareToggle({eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 
         const decoratedOnClick = useAccordionToggle(
@@ -146,7 +146,7 @@ const Send = (props) => {
     }
 
     function PrivateKeyReader(file, password) {
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve) {
             const fileReader = new FileReader();
             fileReader.readAsText(file, "UTF-8");
             fileReader.onload = event => {
@@ -484,12 +484,12 @@ const Send = (props) => {
                                                         {mode === "kepler" ?
                                                             <a
                                                                 href={`${EXPLORER_API}/transaction?txHash=${txResponse.transactionHash}`}
-                                                                target="_blank" className="tx-hash">Tx
+                                                                target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                                                 Hash: {txResponse.transactionHash}</a>
                                                             :
                                                             <a
                                                                 href={`${EXPLORER_API}/transaction?txHash=${txResponse.txhash}`}
-                                                                target="_blank" className="tx-hash">Tx
+                                                                target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                                                 Hash: {txResponse.txhash}</a>
                                                         }
 
@@ -511,7 +511,7 @@ const Send = (props) => {
                                                                 <p>{txResponse.rawLog}</p>
                                                                 <a
                                                                     href={`${EXPLORER_API}/transaction?txHash=${txResponse.transactionHash}`}
-                                                                    target="_blank" className="tx-hash">Tx
+                                                                    target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                                                     Hash: {txResponse.transactionHash}</a>
                                                             </>
                                                             :
@@ -519,7 +519,7 @@ const Send = (props) => {
                                                                 <p>{txResponse.raw_log === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : txResponse.raw_log}</p>
                                                                 <a
                                                                     href={`${EXPLORER_API}/transaction?txHash=${txResponse.txhash}`}
-                                                                    target="_blank" className="tx-hash">Tx
+                                                                    target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                                                     Hash: {txResponse.txhash}</a>
                                                             </>
                                                         }

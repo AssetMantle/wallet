@@ -1,11 +1,8 @@
-import {Form, Modal} from 'react-bootstrap';
+import {Modal} from 'react-bootstrap';
 import React, {useState} from 'react';
-import {useTranslation} from "react-i18next";
-import VisibilityIcon from '@material-ui/icons/Visibility';
 import {connect} from "react-redux";
 
 const ModalViewAmountDetails = (props) => {
-    const {t} = useTranslation();
     const [show, setShow] = useState(false);
     const handleClose = () => {
         setShow(false);

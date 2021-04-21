@@ -8,7 +8,7 @@ function simulateNetworkRequest() {
     return new Promise((resolve) => setTimeout(resolve, 500));
 }
 
-const CustomForm = ({status, message, onValidated}) => {
+const CustomForm = ({status, onValidated}) => {
     const [isLoading, setLoading] = useState(false);
     const [disable, setDisable] = useState(true);
     let email;

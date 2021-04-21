@@ -28,7 +28,6 @@ export const fetchPageNumberSuccess = (number, totalPages) => {
 
 
 export const fetchTransactionsSuccess = (list) => {
-
     return {
         type: TRANSACTIONS_FETCH_SUCCESS,
         list,

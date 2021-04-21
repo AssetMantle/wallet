@@ -5,7 +5,6 @@ import {
     FETCH_INACTIVE_VALIDATORS_SUCCESS,
     FETCH_VALIDATORS_IN_PROGRESS,
     FETCH_VALIDATORS_SUCCESS,
-    FETCH_VALIDATOR_ERROR,
     FETCH_VALIDATOR_SUCCESS
 } from "../constants/validators"
 import Lodash from "lodash";

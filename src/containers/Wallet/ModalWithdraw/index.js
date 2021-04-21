@@ -10,7 +10,6 @@ import {
 } from 'react-bootstrap';
 import React, {useContext, useEffect, useState} from 'react';
 import success from "../../../assets/images/success.svg";
-import icon from "../../../assets/images/icon.svg";
 import {getValidatorUrl} from "../../../constants/url";
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
@@ -75,7 +74,7 @@ const ModalWithdraw = (props) => {
         props.setRewards(false)
     };
 
-    function ContextAwareToggle({children, eventKey, callback}) {
+    function ContextAwareToggle({eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 
         const decoratedOnClick = useAccordionToggle(
@@ -108,7 +107,7 @@ const ModalWithdraw = (props) => {
     }
 
     function PrivateKeyReader(file, password) {
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve) {
             const fileReader = new FileReader();
             fileReader.readAsText(file, "UTF-8");
             fileReader.onload = event => {
@@ -256,11 +255,6 @@ const ModalWithdraw = (props) => {
         rewards.then(function (response) {
             setIndividualRewards(response);
         })
-    };
-
-    const handlePrivateKey = (value) => {
-        setImportMnemonic(value);
-        setErrorMessage("");
     };
 
     const disabled = (
@@ -540,12 +534,12 @@ const ModalWithdraw = (props) => {
                                     {mode === "kepler" ?
                                         <a
                                             href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
-                                            target="_blank" className="tx-hash">Tx
+                                            target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                             Hash: {response.transactionHash}</a>
                                         :
                                         <a
                                             href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
-                                            target="_blank" className="tx-hash">Tx
+                                            target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                             Hash: {response.txhash}</a>
                                     }
                                     <div className="buttons">
@@ -569,7 +563,7 @@ const ModalWithdraw = (props) => {
                                             <p>{response.rawLog}</p>
                                             <a
                                                 href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
-                                                target="_blank" className="tx-hash">Tx
+                                                target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                                 Hash: {response.transactionHash}</a>
                                         </>
                                         :
@@ -577,7 +571,7 @@ const ModalWithdraw = (props) => {
                                             <p>{response.raw_log === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : response.raw_log}</p>
                                             <a
                                                 href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
-                                                target="_blank" className="tx-hash">Tx
+                                                target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                                 Hash: {response.txhash}</a>
                                         </>
                                     }

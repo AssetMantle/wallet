@@ -2,14 +2,13 @@ import React, {useEffect, useState} from "react";
 import "../../utils/kepler";
 import KeplerWallet from "../../utils/kepler";
 import {useHistory, NavLink} from "react-router-dom";
-import {Modal, Nav, Navbar} from "react-bootstrap";
+import {Nav, Navbar} from "react-bootstrap";
 import logo from "../../assets/images/logo_lite.svg";
 import ModalFaq from "../../containers/Faq";
 import MakePersistence from "../../utils/cosmosjsWrapper";
 import config from "../../config";
 import {useTranslation} from "react-i18next";
 import ModalKeplerInstall from "./ModalKeplerInstall";
-import Loader from "../../components/Loader";
 import Icon from "../../components/Icon";
 const KeplerHome = () => {
     const {t} = useTranslation();
@@ -20,11 +19,10 @@ const KeplerHome = () => {
     useEffect(() => {
         setErrorMessage("");
         const kepler = KeplerWallet();
-        kepler.then(function (item) {
+        kepler.then(function () {
             const address = localStorage.getItem("keplerAddress");
             setAddress(address);
         }).catch(err => {
-            console.log("red")
             setErrorMessage(err.message)
         });
     }, []);
@@ -32,7 +30,7 @@ const KeplerHome = () => {
     const handleKepler = () => {
         setErrorMessage("");
         const kepler = KeplerWallet();
-        kepler.then(function (item) {
+        kepler.then(function () {
             const address = localStorage.getItem("keplerAddress");
             setAddress(address);
         }).catch(err => {

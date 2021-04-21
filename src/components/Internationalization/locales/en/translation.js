@@ -1,6 +1,3 @@
-import {Modal} from "react-bootstrap";
-import React from "react";
-
 let English = {
     translations: {
         "HOME_PAGE_TEXT": "Securely store, transfer and stake your XPRT tokens with the Persistence Wallet",
