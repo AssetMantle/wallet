@@ -4,7 +4,7 @@ import DashboardWallet from "./views/DashboardWallet";
 import Homepage from "./views/Homepage";
 import DashboardStaking from "./views/Staking";
 import PrivateRoute from "./containers/PrivateRoute";
-import ImportWallet from "./containers/ImpotWallet";
+import ImportWallet from "./containers/ImportWallet";
 import KeplerHome from "./views/Kepler/KeplerHome";
 import RouteNotFound from "./components/RouteNotFound";
 import config from "./config"
