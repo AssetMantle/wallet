@@ -373,35 +373,24 @@ const ModalWithdraw = (props) => {
                                         </div>
                                         <div className="form-field">
                                             <p className="label">{t("PASSWORD")}</p>
-                                            <div className="amount-field">
                                                 <Form.Control
                                                     type="password"
                                                     name="password"
                                                     placeholder={t("ENTER_PASSWORD")}
                                                     required={true}
                                                 />
-                                                <span className={props.balance === 0 ? "empty info-data" : "info-data"}><span
-                                                    className="title">Available Balance:</span> <span
-                                                    className="value">{props.balance} XPRT</span> </span>
-                                            </div>
                                         </div>
                                     </>
                                     :
                                     <>
                                         <div className="form-field">
                                             <p className="label">{t("PASSWORD")}</p>
-                                            <div className="amount-field">
                                                 <Form.Control
                                                     type="password"
                                                     name="password"
                                                     placeholder={t("ENTER_PASSWORD")}
                                                     required={true}
                                                 />
-                                                <span
-                                                    className={props.balance === 0 ? "empty info-data" : "info-data"}><span
-                                                    className="title">Available Balance:</span> <span
-                                                    className="value">{props.balance} XPRT</span> </span>
-                                            </div>
                                         </div>
                                     </>
 
@@ -456,7 +445,7 @@ const ModalWithdraw = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <button className="button button-primary" disabled={props.balance < 0.005}>Claim
+                                <button className="button button-primary">Claim
                                     Rewards
                                 </button>
                             </div>
