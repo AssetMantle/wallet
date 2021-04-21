@@ -1,7 +1,7 @@
 import React from 'react';
-import {useDarkMode} from '../../components/darkmode/useDarkMode'
-import {lightTheme, darkTheme} from '../../components/darkmode/theme';
-import {GlobalStyles} from '../../components/darkmode/global';
+import {useDarkMode} from '../../components/DarkMode/useDarkMode'
+import {lightTheme, darkTheme} from '../../components/DarkMode/theme';
+import {GlobalStyles} from '../../components/DarkMode/global';
 import {ThemeProvider} from 'styled-components';
 import Icon from "../../components/Icon";
 
