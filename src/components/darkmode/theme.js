@@ -14,6 +14,12 @@ export const lightTheme = {
     infoBoxBorder:'#EAEBF6',
     votingPowerColor:'#272931',
     inputBackground:'#F5F6FA',
+    refreshButtonColor:'#6c757d',
+    modalBorderColor:'#E3E5F4',
+    backButtonBgColor:'#F0F1F2',
+    profileDropDownBorder:'#EAEBF6',
+    noteBackground:'#FEF5F6',
+    noteFontColor:'#2E3239'
 };
 
 export const darkTheme = {
@@ -32,4 +38,10 @@ export const darkTheme = {
     infoBoxBorder:'#4244465c',
     votingPowerColor:'#94979b',
     inputBackground:'#2e3239',
+    refreshButtonColor:'#8D9CB5',
+    modalBorderColor:'#94979b52',
+    backButtonBgColor:'#495057',
+    profileDropDownBorder:'#4244465c',
+    noteBackground:'#2e3239',
+    noteFontColor:'#e50913a1'
 };

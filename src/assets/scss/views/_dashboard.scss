@@ -457,8 +457,7 @@
 
       .dropdown-menu {
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
-        background: #FFFFFF;
-        border: 1px solid #EAEBF6;
+        border: 1px solid;
         padding: 0;
         border-radius: 0px;
         position: absolute;
@@ -510,7 +509,7 @@
 
         .dropdown-footer {
           display: flex;
-          border-top: 1px solid #EAEBF6;
+          border-top: 1px solid;
 
           .link-close {
             color: #E50913;
@@ -527,7 +526,7 @@
             padding: 10px 0;
 
             &:first-child {
-              border-right: 1px solid #EAEBF6;
+              border-right: 1px solid;
             }
           }
         }
@@ -561,7 +560,7 @@
         font-weight: 500;
         font-size: 14px;
         color: #55678B;
-        border: 1px solid #DCE9F1;
+        border: 1px solid;
       }
 
       .nav-link.active, .show > .nav-link {
@@ -601,7 +600,7 @@
     align-items: center;
     justify-content: center;
     padding: 20px 30px;
-
+    border:1px solid;
     &:nth-child(2) {
       //padding: 0px 20px;
       margin: 0 20px;
@@ -702,7 +701,7 @@
 
 .validators-section {
   border-top: 1px solid #E3E5F4;
-  padding: 50px 10px;
+  padding: 30px 10px;
   position: relative;
   height: 66vh;
   overflow-y: scroll;
@@ -928,7 +927,6 @@
         font-weight: 500;
         font-size: 14px;
         line-height: 150%;
-        color: #2E3239;
       }
     }
   }
@@ -954,7 +952,7 @@
         padding: 15px 30px;
         text-align: center;
         background: none !important;
-        border: 1px solid #E3E5F4;
+        border: 1px solid;
         margin-right: 15px;
 
       }
@@ -967,7 +965,6 @@
         /* identical to box height, or 21px */
         text-align: center;
         padding-top: 15px;
-        color: #2E3239;
       }
 
       .icon {
@@ -984,8 +981,9 @@
   .accordion {
     .card {
       border: 0px solid;
-      border-bottom: 1px solid #E3E5F4;
+      border-bottom: 1px solid;
       border-radius: 0px;
+      background: transparent;
     }
 
     .card-header {
@@ -1029,7 +1027,6 @@
         font-size: 13px;
         line-height: 183.5%;
         margin: 0;
-        color: #5F646C;
       }
     }
   }

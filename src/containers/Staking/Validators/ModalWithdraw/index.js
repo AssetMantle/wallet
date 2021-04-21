@@ -154,7 +154,6 @@ const ModalWithdraw = (props) => {
             const password = event.target.password.value;
             var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
             await promise.then(function (result) {
-                setImportMnemonic(false)
                 mnemonic = result;
             });
         } else {
@@ -183,6 +182,7 @@ const ModalWithdraw = (props) => {
             const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
+                    setImportMnemonic(false);
                     persistence.getAccounts(address).then(data => {
                         if (data.code === undefined) {
                             let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
@@ -275,7 +275,7 @@ const ModalWithdraw = (props) => {
                             <div className="form-field">
                                 <p className="label">{t("AVAILABLE")} (XPRT)</p>
                                 <div className="available-tokens">
-                                    <p className={props.rewards === '0' ? "empty info-data" : "info-data"}>{props.rewards}</p>
+                                    <p className={props.rewards === 0 ? "empty info-data" : "info-data"}>{props.rewards}</p>
                                 </div>
                             </div>
                             {
@@ -335,7 +335,7 @@ const ModalWithdraw = (props) => {
                                 </button>
                                 <button
                                     className={props.rewards ? "button button-primary" : "button button-primary disabled"}
-                                    disabled={checkAmountError || props.rewards === '0'}> {mode === "normal" ? t("NEXT") : t("SUBMIT")}
+                                    disabled={checkAmountError || props.rewards === 0}> {mode === "normal" ? t("NEXT") : t("SUBMIT")}
                                 </button>
                             </div>
                             <div className="buttons">

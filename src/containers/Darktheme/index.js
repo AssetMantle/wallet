@@ -11,20 +11,12 @@ const Darktheme = () => {
     return (
         <ThemeProvider theme={themeMode}>
             <GlobalStyles/>
-            <button onClick={toggleTheme} className="dark-mode-button">
+            <button onClick={toggleTheme} className="dark-mode-button" title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}>
                 <Icon
                     viewClass="icon"
                     icon={theme === 'light' ? 'dayMode' : 'darkMode'}
                 />
             </button>
-                {/*<Form.Check*/}
-                {/*    custom*/}
-                {/*    onChange={toggleTheme}*/}
-                {/*    type="switch"*/}
-                {/*    id="custom-switch"*/}
-                {/*    checked={theme === 'light' ? true : false}*/}
-                {/*    label={theme === 'light' ? 'LightMode' : 'DarkMode'}*/}
-                {/*/>*/}
         </ThemeProvider>
     );
 };

@@ -4,7 +4,14 @@
     padding: 20px 30px;
   }
 }
-
+@media (min-width: 1201px) and (max-width: 1400px){
+  .validators-section{
+    height: 60vh;
+  }
+  .wallet-main-section .tabs-section .tab-content{
+    height: 55vh;
+  }
+}
 @media (max-width: 1400px) {
   .token-info-section .token-info-section-body{
     padding: 25px 0;
@@ -51,9 +58,9 @@
       border: 0px solid;
       &:nth-child(2){
         margin: 0;
-        border: 1px solid #EAEBF6;
-        border-right: 0px solid #EAEBF6;
-        border-left: 0px solid #EAEBF6;
+        border: 1px solid;
+        border-right: 0px solid;
+        border-left: 0px solid;
       }
     }
    .xprt-info{
@@ -61,13 +68,13 @@
    }
   }
   .wallet-main-section .send-container{
-    padding: 0;
+    padding: 25px;
     border: 0px solid;
     form,.form-section {
       .form-field{
         display: block;
       }
-      .buttons .button{
+      .buttons {
         margin: 0;
       }
     }

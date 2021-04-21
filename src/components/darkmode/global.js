@@ -45,7 +45,10 @@ export const GlobalStyles = createGlobalStyle`
     color: ${({theme}) => theme.infoHeadingColor};
     }
     .token-info-section .info-box{
-    border:1px solid ${({theme}) => theme.tableBorderColor};
+    border-color:${({theme}) => theme.tableBorderColor};
+    }
+    .tab-header .left .nav-pills .nav-link{
+      border-color:${({theme}) => theme.tableBorderColor};
     }
     .token-info-section .info-box .line .value{
      color: ${({theme}) => theme.lineValueColor};
@@ -65,7 +68,7 @@ export const GlobalStyles = createGlobalStyle`
     .modal-content{
         background-color: ${({theme}) => theme.tableBackground} !important; 
     }
-    .modal-custom .modal-header{
+    .modal-custom .modal-header, .create-wallet-modal.seed .modal-header .heading{
      color: ${({theme}) => theme.lineValueColor};
     }
     .pagination-custom .buttons button svg{
@@ -93,7 +96,10 @@ export const GlobalStyles = createGlobalStyle`
     .fee{
      color: ${({theme}) => theme.infoHeadingColor};
     }
-    .form-control{
+    .validators-list-selection{
+     color: ${({theme}) => theme.lineValueColor};
+    }
+    .form-control, .validators-list-selection, .claim-rewards-modal .rewards-modal-body input{
         background-color: ${({theme}) => theme.inputBackground} !important;
     }
     .list-modal-body .unbonding-schedule-list p{
@@ -101,6 +107,55 @@ export const GlobalStyles = createGlobalStyle`
     }   
     .claim-rewards-modal .rewards-modal-body .available-tokens .tokens{
      color: ${({theme}) => theme.lineValueColor};
+    }
+    .refresh-button svg{
+        fill:${({theme}) => theme.refreshButtonColor} !important;
+    }
+    .form-field .info-data .value{
+     color: ${({theme}) => theme.lineValueColor};
+    }
+    .wallet-main-section .receive-container .address{
+    color: ${({theme}) => theme.lineValueColor};
+    }
+    .faq-modal-body .nav-pills .box .nav-link{
+     border-color: ${({theme}) => theme.modalBorderColor};
+    }
+    .faq-modal-body .nav-pills .box p{
+     color: ${({theme}) => theme.lineValueColor};
+    }
+    .faq-modal-body .accordion .card{
+        border-color: ${({theme}) => theme.modalBorderColor};
+    }
+    .faq-modal-body .accordion .card-header p{
+      color: ${({theme}) => theme.lineValueColor};
+    }
+    .faq-modal-body .accordion .card-body p{
+        color: ${({theme}) => theme.lineValueColor};
+    }
+    .claim-rewards-modal .rewards-modal-body .available-tokens .usd{
+    color: ${({theme}) => theme.lineValueColor};
+    }
+    .navigate-buttons .button-secondary, .modal-header .previous-section .button{
+     background: ${({theme}) => theme.backButtonBgColor};
+    }
+    .navigate-buttons .button-secondary .icon, .modal-header .previous-section .button .icon{
+    fill:${({theme}) => theme.refreshButtonColor} !important;
+    }
+    .header .profile-section .profile-dropdown .dropdown-menu{
+     background: ${({theme}) => theme.tableBackground};
+      border-color: ${({theme}) => theme.profileDropDownBorder};
+    }
+    .header .profile-section .profile-dropdown .dropdown-menu .dropdown-footer{
+     border-color: ${({theme}) => theme.profileDropDownBorder};
+    }
+    .header .profile-section .profile-dropdown .dropdown-menu .dropdown-footer p:first-child{
+     border-color: ${({theme}) => theme.profileDropDownBorder};
+    }
+    .note-section{
+    background: ${({theme}) => theme.noteBackground};
+    }
+      .note-section p{
+    color: ${({theme}) => theme.noteFontColor};
     }
 `;
 

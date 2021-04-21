@@ -233,7 +233,6 @@ html, body {
   display: flex;
   margin-top: 20px;
   padding: 20px;
-  background: #FEF5F6;
   align-items: center; }
   .note-section .exclamation {
     padding-right: 25px; }
@@ -243,7 +242,6 @@ html, body {
     font-weight: 500;
     font-size: 12px;
     line-height: 174%;
-    color: #2E3239;
     margin: 0; }
 
 .modal-header.info-modal-header button.close {
@@ -334,7 +332,6 @@ html, body {
 .navigate-buttons .button-secondary {
   float: left;
   padding: .375rem 0.8rem;
-  background: #F0F1F2;
   border-color: transparent;
   width: auto !important; }
   .navigate-buttons .button-secondary .icon {
@@ -540,9 +537,6 @@ html, body {
   top: 3px;
   right: 12px; }
 
-.refresh-button {
-  fill: #ffffff; }
-
 @keyframes rotate {
   from {
     transform: rotate(0deg); }
@@ -696,7 +690,7 @@ html, body {
   border: 0;
   outline: none !important; }
   .dark-mode-button .icon {
-    width: 20px; }
+    width: 18px; }
 
 .modal-list-data li {
   font-family: 'Poppins', sans-serif;
@@ -1476,8 +1470,7 @@ html, body {
     display: none; }
   .header .profile-section .profile-dropdown .dropdown-menu {
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
-    background: #FFFFFF;
-    border: 1px solid #EAEBF6;
+    border: 1px solid;
     padding: 0;
     border-radius: 0px;
     position: absolute;
@@ -1515,7 +1508,7 @@ html, body {
         color: #1A73B4; }
     .header .profile-section .profile-dropdown .dropdown-menu .dropdown-footer {
       display: flex;
-      border-top: 1px solid #EAEBF6; }
+      border-top: 1px solid; }
       .header .profile-section .profile-dropdown .dropdown-menu .dropdown-footer .link-close {
         color: #E50913;
         cursor: pointer; }
@@ -1528,7 +1521,7 @@ html, body {
         margin: 0;
         padding: 10px 0; }
         .header .profile-section .profile-dropdown .dropdown-menu .dropdown-footer p:first-child {
-          border-right: 1px solid #EAEBF6; }
+          border-right: 1px solid; }
   .header .profile-section .icon-profile {
     margin-right: 20px; }
 
@@ -1546,7 +1539,7 @@ html, body {
     font-weight: 500;
     font-size: 14px;
     color: #55678B;
-    border: 1px solid #DCE9F1; }
+    border: 1px solid; }
   .tab-header .left .nav-pills .nav-link.active, .tab-header .left .nav-pills .show > .nav-link {
     background: #E50913;
     border: 1px solid #E50913;
@@ -1566,7 +1559,8 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px 30px; }
+    padding: 20px 30px;
+    border: 1px solid; }
     .token-info-section .info-box:nth-child(2) {
       margin: 0 20px; }
     .token-info-section .info-box .line {
@@ -1630,7 +1624,7 @@ html, body {
 
 .validators-section {
   border-top: 1px solid #E3E5F4;
-  padding: 50px 10px;
+  padding: 30px 10px;
   position: relative;
   height: 66vh;
   overflow-y: scroll; }
@@ -1775,8 +1769,7 @@ html, body {
     .claim-rewards-modal .rewards-modal-body .available-tokens .usd {
       font-weight: 500;
       font-size: 14px;
-      line-height: 150%;
-      color: #2E3239; }
+      line-height: 150%; }
 
 .faq-modal-body .nav-pills {
   justify-content: center;
@@ -1790,7 +1783,7 @@ html, body {
     padding: 15px 30px;
     text-align: center;
     background: none !important;
-    border: 1px solid #E3E5F4;
+    border: 1px solid;
     margin-right: 15px; }
   .faq-modal-body .nav-pills .box p {
     margin: 0;
@@ -1799,8 +1792,7 @@ html, body {
     line-height: 150%;
     /* identical to box height, or 21px */
     text-align: center;
-    padding-top: 15px;
-    color: #2E3239; }
+    padding-top: 15px; }
   .faq-modal-body .nav-pills .box .icon {
     width: 28px; }
 .faq-modal-body .tab-content {
@@ -1808,8 +1800,9 @@ html, body {
   overflow: auto; }
 .faq-modal-body .accordion .card {
   border: 0px solid;
-  border-bottom: 1px solid #E3E5F4;
-  border-radius: 0px; }
+  border-bottom: 1px solid;
+  border-radius: 0px;
+  background: transparent; }
 .faq-modal-body .accordion .card-header {
   display: flex;
   border: 0px solid;
@@ -1841,8 +1834,7 @@ html, body {
     font-weight: normal;
     font-size: 13px;
     line-height: 183.5%;
-    margin: 0;
-    color: #5F646C; }
+    margin: 0; }
 
 .more-dropdown button {
   background-color: #E50913 !important;
@@ -2069,6 +2061,12 @@ html, body {
 @media (max-width: 1300px) {
   .header .profile-section .profile-dropdown .dropdown-menu .info {
     padding: 20px 30px; } }
+@media (min-width: 1201px) and (max-width: 1400px) {
+  .validators-section {
+    height: 60vh; }
+
+  .wallet-main-section .tabs-section .tab-content {
+    height: 55vh; } }
 @media (max-width: 1400px) {
   .token-info-section .token-info-section-body {
     padding: 25px 0; }
@@ -2105,18 +2103,18 @@ html, body {
       border: 0px solid; }
       .token-info-section .token-info-section-body .info-box:nth-child(2) {
         margin: 0;
-        border: 1px solid #EAEBF6;
-        border-right: 0px solid #EAEBF6;
-        border-left: 0px solid #EAEBF6; }
+        border: 1px solid;
+        border-right: 0px solid;
+        border-left: 0px solid; }
     .token-info-section .token-info-section-body .xprt-info {
       padding-left: 10px !important; }
 
   .wallet-main-section .send-container {
-    padding: 0;
+    padding: 25px;
     border: 0px solid; }
     .wallet-main-section .send-container form .form-field, .wallet-main-section .send-container .form-section .form-field {
       display: block; }
-    .wallet-main-section .send-container form .buttons .button, .wallet-main-section .send-container .form-section .buttons .button {
+    .wallet-main-section .send-container form .buttons, .wallet-main-section .send-container .form-section .buttons {
       margin: 0; }
 
   .large-screen-logo {

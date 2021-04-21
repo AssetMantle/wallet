@@ -136,7 +136,6 @@ const ModalUnbond = (props) => {
     const handleSubmitKepler = async event => {
         setLoader(true);
         event.preventDefault();
-
         const response = transactions.TransactionWithKeplr([UnbondMsg(loginAddress, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             if (result.code !== undefined) {
@@ -152,7 +151,6 @@ const ModalUnbond = (props) => {
         })
     };
     const handleSubmit = async event => {
-
         setLoader(true);
         event.preventDefault();
         let mnemonic;
@@ -160,7 +158,6 @@ const ModalUnbond = (props) => {
             const password = event.target.password.value;
             var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
             await promise.then(function (result) {
-                setImportMnemonic(false)
                 mnemonic = result;
             });
         } else {
@@ -189,6 +186,7 @@ const ModalUnbond = (props) => {
             const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
+                    setImportMnemonic(false);
                     persistence.getAccounts(address).then(data => {
                         if (data.code === undefined) {
                             let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);

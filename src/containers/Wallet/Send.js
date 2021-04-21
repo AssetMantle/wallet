@@ -37,6 +37,7 @@ const Send = (props) => {
     const [keplerError, setKeplerError] = useState("");
     const [loader, setLoader] = useState(false);
     const [importMnemonic, setImportMnemonic] = useState(true);
+    const [checkAmountError, setCheckAmountError] = useState(false);
     const [memoContent, setMemoContent] = useState('');
     let mode = localStorage.getItem('loginMode');
     let loginAddress = localStorage.getItem('address');
@@ -50,7 +51,12 @@ const Send = (props) => {
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
-            setAmountField(evt.target.value)
+            setAmountField(evt.target.value);
+            if (props.transferableAmount < (amountField * 1 + parseInt(localStorage.getItem('fee')) / 1000000)) {
+                setCheckAmountError(true)
+            } else {
+                setCheckAmountError(false)
+            }
         } else {
             return false
         }
@@ -105,7 +111,6 @@ const Send = (props) => {
             setLoader(false);
             setKeplerError(err.message);
             helper.AccountChangeCheck(err.message);
-            console.log(err.message, "send error")
         })
     };
 
@@ -174,7 +179,6 @@ const Send = (props) => {
             const password = evt.target.password.value;
             var promise = PrivateKeyReader(evt.target.uploadFile.files[0], password);
             await promise.then(function (result) {
-                setImportMnemonic(false)
                 userMnemonic = result;
             });
         } else {
@@ -206,6 +210,7 @@ const Send = (props) => {
             const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
+                    setImportMnemonic(false)
                     persistence.getAccounts(address).then(data => {
                         if (data.code === undefined) {
                             let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
@@ -270,9 +275,7 @@ const Send = (props) => {
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
     };
-    const checkAmountError = (
-        props.transferableAmount < (amountField*1 + parseInt(localStorage.getItem('fee')) / 1000000)
-    );
+
     return (
         <div className="send-container">
             <div className="form-section">
@@ -361,7 +364,7 @@ const Send = (props) => {
                     <div className="buttons">
                         <FeeContainer/>
                         <button className="button button-primary"
-                                disabled={props.transferableAmount < (amountField*1 + parseInt(localStorage.getItem('fee')) / 1000000)  || amountField === 0 || props.transferableAmount === 0}>Send
+                                disabled={props.transferableAmount < (amountField * 1 + parseInt(localStorage.getItem('fee')) / 1000000) || amountField === 0 || props.transferableAmount === 0}>Send
                         </button>
                     </div>
                 </Form>
@@ -484,12 +487,14 @@ const Send = (props) => {
                                                         {mode === "kepler" ?
                                                             <a
                                                                 href={`${EXPLORER_API}/transaction?txHash=${txResponse.transactionHash}`}
-                                                                target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
+                                                                target="_blank" className="tx-hash"
+                                                                rel="noopener noreferrer">Tx
                                                                 Hash: {txResponse.transactionHash}</a>
                                                             :
                                                             <a
                                                                 href={`${EXPLORER_API}/transaction?txHash=${txResponse.txhash}`}
-                                                                target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
+                                                                target="_blank" className="tx-hash"
+                                                                rel="noopener noreferrer">Tx
                                                                 Hash: {txResponse.txhash}</a>
                                                         }
 
@@ -511,7 +516,8 @@ const Send = (props) => {
                                                                 <p>{txResponse.rawLog}</p>
                                                                 <a
                                                                     href={`${EXPLORER_API}/transaction?txHash=${txResponse.transactionHash}`}
-                                                                    target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
+                                                                    target="_blank" className="tx-hash"
+                                                                    rel="noopener noreferrer">Tx
                                                                     Hash: {txResponse.transactionHash}</a>
                                                             </>
                                                             :
@@ -519,7 +525,8 @@ const Send = (props) => {
                                                                 <p>{txResponse.raw_log === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : txResponse.raw_log}</p>
                                                                 <a
                                                                     href={`${EXPLORER_API}/transaction?txHash=${txResponse.txhash}`}
-                                                                    target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
+                                                                    target="_blank" className="tx-hash"
+                                                                    rel="noopener noreferrer">Tx
                                                                     Hash: {txResponse.txhash}</a>
                                                             </>
                                                         }

@@ -42,6 +42,7 @@ const ModalDelegate = (props) => {
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
     };
+
     function ContextAwareToggle({eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 
@@ -73,11 +74,13 @@ const ModalDelegate = (props) => {
             </button>
         );
     }
+
     useEffect(() => {
+        console.log("coming agian")
         const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
         if (encryptedMnemonic !== null) {
             setImportMnemonic(false)
-        }else{
+        } else {
             setImportMnemonic(true);
         }
     }, []);
@@ -101,7 +104,7 @@ const ModalDelegate = (props) => {
         event.preventDefault();
         const response = transactions.TransactionWithKeplr([DelegateMsg(loginAddress, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(0, 250000), memoContent);
         response.then(result => {
-            if(result.code !== undefined){
+            if (result.code !== undefined) {
                 helper.AccountChangeCheck(result.rawLog)
             }
             setResponse(result);
@@ -140,7 +143,7 @@ const ModalDelegate = (props) => {
                 localStorage.setItem('encryptedMnemonic', event.target.result);
                 const decryptedData = helper.decryptStore(res, password);
                 if (decryptedData.error != null) {
-                    setErrorMessage(decryptedData.error)
+                    setErrorMessage(decryptedData.error);
                     setLoader(false);
                 } else {
                     resolve(decryptedData.mnemonic);
@@ -158,7 +161,6 @@ const ModalDelegate = (props) => {
             const password = event.target.password.value;
             var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
             await promise.then(function (result) {
-                setImportMnemonic(false)
                 mnemonic = result;
             });
         } else {
@@ -187,6 +189,7 @@ const ModalDelegate = (props) => {
             const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
+                    setImportMnemonic(false);
                     persistence.getAccounts(address).then(data => {
                         if (data.code === undefined) {
                             let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
@@ -300,7 +303,8 @@ const ModalDelegate = (props) => {
                             {mode === "normal" ?
                                 <>
                                     <div className="memo-dropdown-section">
-                                        <p onClick={handleMemoChange} className="memo-dropdown"><span className="text">{t("ADVANCED")}  </span>
+                                        <p onClick={handleMemoChange} className="memo-dropdown"><span
+                                            className="text">{t("ADVANCED")}  </span>
                                             {memoStatus ?
                                                 <Icon
                                                     viewClass="arrow-right"
@@ -310,7 +314,8 @@ const ModalDelegate = (props) => {
                                                     viewClass="arrow-right"
                                                     icon="down-arrow"/>}
                                         </p>
-                                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popoverMemo}>
+                                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
+                                                        overlay={popoverMemo}>
                                             <button className="icon-button info" type="button"><Icon
                                                 viewClass="arrow-right"
                                                 icon="info"/></button>
@@ -319,7 +324,8 @@ const ModalDelegate = (props) => {
                                     {memoStatus ?
                                         <div className="form-field">
                                             <p className="label info">{t("MEMO")}
-                                                <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popoverMemo}>
+                                                <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
+                                                                overlay={popoverMemo}>
                                                     <button className="icon-button info" type="button"><Icon
                                                         viewClass="arrow-right"
                                                         icon="info"/></button>
