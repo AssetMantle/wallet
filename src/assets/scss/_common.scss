@@ -130,8 +130,18 @@ html, body {
 .fee {
   font-size: 12px;
   font-family: 'Poppins', sans-serif;
+  text-align: center;
 }
-
+.amount-error{
+  font-size: 12px;
+  font-family: 'Poppins', sans-serif;
+  margin: 10px 0;
+  color: #e51f0c;
+}
+.error-amount-field{
+  color: #e51f0c !important;
+  box-shadow: 0 0 0 0.2rem #e51f0c38 !important;
+}
 .amount-field {
 
   .range-buttons {

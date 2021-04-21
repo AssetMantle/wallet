@@ -20,6 +20,7 @@ import {connect} from "react-redux";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import config from "../../../../config";
 import {useTranslation} from "react-i18next";
+import FeeContainer from "../../../../components/Fee";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalDelegate = (props) => {
@@ -270,6 +271,9 @@ const ModalDelegate = (props) => {
         </Popover>
     );
 
+    const checkAmountError = (
+        props.transferableAmount < (parseInt(localStorage.getItem('fee')) / 1000000)
+    );
     return (
         <>
             {initialModal ?
@@ -294,6 +298,7 @@ const ModalDelegate = (props) => {
                                         placeholder={t("SEND_AMOUNT")}
                                         value={amount}
                                         step="any"
+                                        className={amount > props.balance ? "error-amount-field" : ""}
                                         onChange={handleAmountChange}
                                         required={true}
                                     />
@@ -347,14 +352,16 @@ const ModalDelegate = (props) => {
                                     <p className="form-error">{errorMessage}</p>
                                     : null
                             }
+
                             <div className="buttons navigate-buttons">
+                                <FeeContainer/>
                                 <button className="button button-secondary" onClick={() => handlePrevious()}>
                                     <Icon
                                         viewClass="arrow-right"
                                         icon="left-arrow"/>
                                 </button>
                                 <button className="button button-primary"
-                                        disabled={amount > (props.balance * 1) || amount === 0 || (props.balance * 1) === 0}
+                                        disabled={amount > props.balance || checkAmountError || amount === 0 || (props.balance * 1) === 0}
                                 > {mode === "normal" ? "Next" : "Submit"}</button>
                             </div>
                         </Form>
@@ -459,8 +466,6 @@ const ModalDelegate = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee')) / 1000000}xprt
-                                    will be cut from the wallet.</p>
                                 <button className="button button-primary">{t("DELEGATE")}</button>
                             </div>
                         </Form>
@@ -539,6 +544,7 @@ const ModalDelegate = (props) => {
 const stateToProps = (state) => {
     return {
         balance: state.balance.amount,
+        transferableAmount: state.balance.transferableAmount,
     };
 };
 

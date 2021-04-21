@@ -21,7 +21,7 @@ import config from "../../../../config";
 import {useTranslation} from "react-i18next";
 import ModalSetWithdrawAddress from "../../../Wallet/ModalSetWithdrawAddress";
 import {connect} from "react-redux";
-
+import FeeContainer from "../../../../components/Fee";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalWithdraw = (props) => {
     const {t} = useTranslation();
@@ -264,6 +264,10 @@ const ModalWithdraw = (props) => {
             </Popover.Content>
         </Popover>
     );
+
+    const checkAmountError = (
+        props.transferableAmount < (parseInt(localStorage.getItem('fee')) / 1000000)
+    );
     return (
         <>
             {initialModal ?
@@ -282,24 +286,25 @@ const ModalWithdraw = (props) => {
                             {
                                 mode === "normal" ?
                                     <>
-                                    <div className="memo-dropdown-section">
-                                        <p onClick={handleMemoChange} className="memo-dropdown"><span className="text">{t("ADVANCED")} </span>
-                                            {memoStatus ?
-                                                <Icon
+                                        <div className="memo-dropdown-section">
+                                            <p onClick={handleMemoChange} className="memo-dropdown"><span
+                                                className="text">{t("ADVANCED")} </span>
+                                                {memoStatus ?
+                                                    <Icon
+                                                        viewClass="arrow-right"
+                                                        icon="up-arrow"/>
+                                                    :
+                                                    <Icon
+                                                        viewClass="arrow-right"
+                                                        icon="down-arrow"/>}
+                                            </p>
+                                            <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
+                                                            overlay={popoverMemo}>
+                                                <button className="icon-button info" type="button"><Icon
                                                     viewClass="arrow-right"
-                                                    icon="up-arrow"/>
-                                                :
-                                                <Icon
-                                                    viewClass="arrow-right"
-                                                    icon="down-arrow"/>}
-                                        </p>
-                                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
-                                                        overlay={popoverMemo}>
-                                            <button className="icon-button info" type="button"><Icon
-                                                viewClass="arrow-right"
-                                                icon="info"/></button>
-                                        </OverlayTrigger>
-                                    </div>
+                                                    icon="info"/></button>
+                                            </OverlayTrigger>
+                                        </div>
                                         {memoStatus ?
                                             <div className="form-field">
                                                 <p className="label info">{t("MEMO")}
@@ -327,6 +332,7 @@ const ModalWithdraw = (props) => {
                                     : null
                             }
                             <div className="buttons navigate-buttons">
+                                <FeeContainer/>
                                 <button className="button button-secondary" onClick={() => handlePrevious()}>
                                     <Icon
                                         viewClass="arrow-right"
@@ -334,7 +340,7 @@ const ModalWithdraw = (props) => {
                                 </button>
                                 <button
                                     className={props.rewards ? "button button-primary" : "button button-primary disabled"}
-                                    disabled={props.rewards === '0'}> {mode === "normal" ? t("NEXT") : t("SUBMIT")}
+                                    disabled={checkAmountError || props.rewards === '0'}> {mode === "normal" ? t("NEXT") : t("SUBMIT")}
                                 </button>
                             </div>
                             <div className="buttons">
@@ -372,31 +378,39 @@ const ModalWithdraw = (props) => {
                                         </div>
                                         <div className="form-field">
                                             <p className="label">{t("PASSWORD")}</p>
-                                            <Form.Control
-                                                type="password"
-                                                name="password"
-                                                placeholder={t("ENTER_PASSWORD")}
-                                                required={true}
-                                            />
+                                            <div className="amount-field">
+                                                <Form.Control
+                                                    type="password"
+                                                    name="password"
+                                                    placeholder={t("ENTER_PASSWORD")}
+                                                    required={true}
+                                                />
+                                                <span className={props.balance === 0 ? "empty info-data" : "info-data"}><span
+                                                    className="title">Available Balance:</span> <span
+                                                    className="value">{props.balance} XPRT</span> </span>
+                                            </div>
                                         </div>
                                     </>
                                     :
                                     <>
                                         <div className="form-field">
                                             <p className="label">{t("PASSWORD")}</p>
-                                            <Form.Control
-                                                type="password"
-                                                name="password"
-                                                placeholder={t("ENTER_PASSWORD")}
-                                                required={true}
-                                            />
+                                            <div className="amount-field">
+                                                <Form.Control
+                                                    type="password"
+                                                    name="password"
+                                                    placeholder={t("ENTER_PASSWORD")}
+                                                    required={true}
+                                                />
+                                                <span
+                                                    className={props.balance === 0 ? "empty info-data" : "info-data"}><span
+                                                    className="title">Available Balance:</span> <span
+                                                    className="value">{props.balance} XPRT</span> </span>
+                                            </div>
                                         </div>
-
-
                                     </>
 
                             }
-
                             <Accordion className="advanced-wallet-accordion">
                                 <Card>
                                     <Card.Header>
@@ -447,13 +461,12 @@ const ModalWithdraw = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee')) / 1000000}xprt
-                                    will be cut from the wallet.</p>
-                                <button className="button button-primary">Claim Rewards</button>
+                                <button className="button button-primary" disabled={props.balance < 0.005}>Claim
+                                    Rewards
+                                </button>
                             </div>
                         </Form>
                     </Modal.Body>
-
                 </>
                 : null
             }
@@ -478,7 +491,8 @@ const ModalWithdraw = (props) => {
                                         Hash: {response.txhash}</a>
                                 }
                                 <div className="buttons">
-                                    <button className="button" onClick={props.handleClose}>{t("DONE")}</button>
+                                    <button className="button"
+                                            onClick={props.handleClose}>{t("DONE")}</button>
                                 </div>
                             </div>
                         </Modal.Body>
@@ -511,7 +525,8 @@ const ModalWithdraw = (props) => {
                                     </>
                                 }
                                 <div className="buttons">
-                                    <button className="button" onClick={handleClose}> {t("DONE")}</button>
+                                    <button className="button"
+                                            onClick={handleClose}> {t("DONE")}</button>
                                 </div>
                             </div>
                         </Modal.Body>
@@ -522,6 +537,10 @@ const ModalWithdraw = (props) => {
         </>
     );
 };
-
-
-export default ModalWithdraw;
+const stateToProps = (state) => {
+    return {
+        balance: state.balance.amount,
+        transferableAmount: state.balance.transferableAmount,
+    };
+};
+export default connect(stateToProps)(ModalWithdraw);

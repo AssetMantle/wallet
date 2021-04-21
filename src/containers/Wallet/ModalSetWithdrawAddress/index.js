@@ -23,6 +23,7 @@ import MakePersistence from "../../../utils/cosmosjsWrapper";
 import config from "../../../config";
 import {useTranslation} from "react-i18next";
 import {fetchWithdrawAddress} from "../../../actions/withdrawAddress";
+import FeeContainer from "../../../components/Fee";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -260,6 +261,11 @@ const ModalSetWithdrawAddress = (props) => {
             </Popover.Content>
         </Popover>
     );
+
+    const checkAmountError = (
+        props.transferableAmount < (parseInt(localStorage.getItem('fee')) / 1000000)
+    );
+
     return (
         <Modal
             animation={false}
@@ -345,7 +351,8 @@ const ModalSetWithdrawAddress = (props) => {
                                     : null
                             }
                             <div className="buttons">
-                                <button className="button button-primary" disabled={!props.status}
+                                <FeeContainer/>
+                                <button className="button button-primary" disabled={checkAmountError || !props.status}
                                 >{mode === "normal" ? "Next" : "Submit"}</button>
                             </div>
                         </Form>
@@ -442,8 +449,6 @@ const ModalSetWithdrawAddress = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee')) / 1000000}xprt
-                                    will be cut from the wallet.</p>
                                 <button className="button button-primary">{t("CLAIM_REWARDS")}</button>
                             </div>
                         </Form>
@@ -523,7 +528,8 @@ const stateToProps = (state) => {
         tokenPrice: state.tokenPrice.tokenPrice,
         status: state.delegations.status,
         delegations: state.delegations.count,
-        withdrawAddress: state.withdrawAddress.withdrawAddress
+        withdrawAddress: state.withdrawAddress.withdrawAddress,
+        transferableAmount: state.balance.transferableAmount,
     };
 };
 

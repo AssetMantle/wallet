@@ -67,7 +67,7 @@ const ValidatorsTable = (props) => {
                     identity={validator.description.identity}/>
                 {validator.description.moniker}
             </div>,
-            <div>
+            <div className="voting">
                 {parseFloat((validator.tokens * Math.pow(10, -6)).toFixed(2))}
                 {
                     helper.isActive(validator)
@@ -76,7 +76,7 @@ const ValidatorsTable = (props) => {
                 }
             </div>
             ,
-            <span>{`${parseFloat((validator.commission.commission_rates.rate * 100).toFixed(2))}`} %</span>,
+            <span className="voting">{`${parseFloat((validator.commission.commission_rates.rate * 100).toFixed(2))}`} %</span>,
             <div className="">
                 {helper.isActive(validator) ?
                     <span className="icon-box" title="active">

@@ -22,6 +22,7 @@ import Loader from "../../../../components/Loader";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import config from "../../../../config";
 import {useTranslation} from "react-i18next";
+import FeeContainer from "../../../../components/Fee";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalReDelegate = (props) => {
@@ -272,6 +273,9 @@ const ModalReDelegate = (props) => {
             </Popover.Content>
         </Popover>
     );
+    const checkAmountError = (
+        props.transferableAmount < (parseInt(localStorage.getItem('fee')) / 1000000)
+    );
     return (
         <>
             {initialModal ?
@@ -314,6 +318,7 @@ const ModalReDelegate = (props) => {
                                         placeholder={t("SEND_AMOUNT")}
                                         defaultValue={amount || ''}
                                         step="any"
+                                        className={amount > props.delegationAmount ? "error-amount-field" : ""}
                                         onChange={handleAmountChange}
                                         required={true}
                                     />
@@ -368,14 +373,15 @@ const ModalReDelegate = (props) => {
                                     : null
                             }
                             <div className="buttons navigate-buttons">
+                                <FeeContainer/>
                                 <button className="button button-secondary" onClick={() => handlePrevious()}>
                                     <Icon
                                         viewClass="arrow-right"
                                         icon="left-arrow"/>
                                 </button>
                                 <button
-                                    className={props.delegateStatus ? "button button-primary" : "button button-primary disabled"}
-                                    disabled={!props.delegateStatus || disabled || amount === 0 || amount > props.delegationAmount}
+                                    className="button button-primary"
+                                    disabled={checkAmountError || !props.delegateStatus || disabled || amount === 0 || amount > props.delegationAmount}
                                 >{mode === "normal" ? "Next" : "Submit"}
                                 </button>
                             </div>
@@ -473,8 +479,7 @@ const ModalReDelegate = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee')) / 1000000}xprt
-                                    will be cut from the wallet.</p>
+
                                 <button className="button button-primary">{t("REDELEGATE")}</button>
                             </div>
                         </Form>
@@ -554,6 +559,7 @@ const stateToProps = (state) => {
     return {
         validators: state.validators.validators,
         balance: state.balance.amount,
+        transferableAmount: state.balance.transferableAmount,
     };
 };
 

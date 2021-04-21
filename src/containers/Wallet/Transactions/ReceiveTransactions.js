@@ -127,13 +127,13 @@ const ReceiveTransactions = (props) => {
                 options={options}/>
             <div className="pagination-custom">
 
-                <div className="before">
+                <div className="before buttons">
                     <IconButton aria-label="previous" onClick={handlePrevious}
                                 disabled={props.pageNumber[0] > 1 ? false : true}>
                         <ChevronLeftIcon/>
                     </IconButton>
                 </div>
-                <div>
+                <div className="before buttons">
                     <IconButton aria-label="next" className="next" onClick={handleNext} disabled={helper.CheckLastPage(props.pageNumber[0], 5, props.pageNumber[1])?true : false}>
                         <ChevronRightIcon/>
                     </IconButton>

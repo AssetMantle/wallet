@@ -112,4 +112,4 @@ async function getTransferableVestingAmount(address, balance) {
     return [vestingAmount, transferableAmount]
 }
 
-export default {getTransferableVestingAmount};
+export default {getTransferableVestingAmount, getAccountVestingAmount};

@@ -27,6 +27,7 @@ import MakePersistence from "../../../utils/cosmosjsWrapper";
 import config from "../../../config";
 import {useTranslation} from "react-i18next";
 import ModalSetWithdrawAddress from "../ModalSetWithdrawAddress";
+import FeeContainer from "../../../components/Fee";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -291,6 +292,10 @@ const ModalWithdraw = (props) => {
             </Popover.Content>
         </Popover>
     );
+    const checkAmountError = (
+        props.transferableAmount < (parseInt(localStorage.getItem('fee')) / 1000000)
+    );
+
     return (
         <>
             <Modal
@@ -393,8 +398,9 @@ const ModalWithdraw = (props) => {
                                 }
 
                                 <div className="buttons">
+                                    <FeeContainer/>
                                     <button className="button button-primary"
-                                            disabled={disabled || individualRewards === '' || individualRewards === '0.000000'}>{mode === "normal" ? "Next" : "Submit"}</button>
+                                            disabled={checkAmountError || disabled || individualRewards === '' || individualRewards === '0.000000'}>{mode === "normal" ? "Next" : "Submit"}</button>
                                 </div>
                                 <div className="buttons">
                                     <p className="button-link" type="button"
@@ -430,24 +436,35 @@ const ModalWithdraw = (props) => {
                                             </div>
                                             <div className="form-field">
                                                 <p className="label">{t("PASSWORD")}</p>
-                                                <Form.Control
-                                                    type="password"
-                                                    name="password"
-                                                    placeholder={t("ENTER_PASSWORD")}
-                                                    required={true}
-                                                />
+                                                <div className="amount-field">
+                                                    <Form.Control
+                                                        type="password"
+                                                        name="password"
+                                                        placeholder={t("ENTER_PASSWORD")}
+                                                        required={true}
+                                                    />
+                                                    <span className={props.balance === 0 ? "empty info-data" : "info-data"}><span
+                                                        className="title">Available Balance:</span> <span
+                                                        className="value">{props.balance} XPRT</span> </span>
+                                                </div>
+
                                             </div>
                                         </>
                                         :
                                         <>
                                             <div className="form-field">
                                                 <p className="label">{t("PASSWORD")}</p>
+                                                <div className="amount-field">
                                                 <Form.Control
                                                     type="password"
                                                     name="password"
                                                     placeholder={t("ENTER_PASSWORD")}
                                                     required={true}
                                                 />
+                                                <span className={props.balance === 0 ? "empty info-data" : "info-data"}><span
+                                                    className="title">Available Balance:</span> <span
+                                                    className="value">{props.balance} XPRT</span> </span>
+                                                </div>
                                             </div>
 
                                         </>
@@ -503,9 +520,7 @@ const ModalWithdraw = (props) => {
                                     </Card>
                                 </Accordion>
                                 <div className="buttons">
-                                    <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee')) / 1000000}xprt
-                                        will be cut from the wallet.</p>
-                                    <button className="button button-primary">{t("CLAIM_REWARDS")}</button>
+                                    <button className="button button-primary" disabled={props.balance < 0.005}>{t("CLAIM_REWARDS")}</button>
                                 </div>
                             </Form>
                         </Modal.Body>
@@ -588,7 +603,9 @@ const stateToProps = (state) => {
     return {
         list: state.rewards.list,
         rewards: state.rewards.rewards,
-        tokenPrice: state.tokenPrice.tokenPrice
+        balance: state.balance.amount,
+        tokenPrice: state.tokenPrice.tokenPrice,
+        transferableAmount: state.balance.transferableAmount,
     };
 };
 

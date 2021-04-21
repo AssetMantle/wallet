@@ -20,6 +20,7 @@ import {connect} from "react-redux";
 import config from "../../config";
 import MakePersistence from "../../utils/cosmosjsWrapper";
 import {useTranslation} from "react-i18next";
+import FeeContainer from "../../components/Fee";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -103,7 +104,7 @@ const Send = (props) => {
         }).catch(err => {
             setLoader(false);
             setKeplerError(err.message);
-            helper.AccountChangeCheck(err.message)
+            helper.AccountChangeCheck(err.message);
             console.log(err.message, "send error")
         })
     };
@@ -269,7 +270,9 @@ const Send = (props) => {
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
     };
-
+    const checkAmountError = (
+        props.transferableAmount < (amountField*1 + parseInt(localStorage.getItem('fee')) / 1000000)
+    );
     return (
         <div className="send-container">
             <div className="form-section">
@@ -298,12 +301,13 @@ const Send = (props) => {
                                 placeholder="Send Amount"
                                 step="any"
                                 value={amountField}
+                                className={checkAmountError ? "error-amount-field" : ""}
                                 onChange={handleAmountChange}
                                 required={true}
                             />
-                            <span className={props.balance === 0 ? "empty info-data" : "info-data"}><span
-                                className="title">Transferable Amount:</span> <span
-                                className="value">{props.balance} XPRT</span> </span>
+                            <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data"}><span
+                                className="title">Transferable Balance:</span> <span
+                                className="value">{props.transferableAmount} XPRT</span> </span>
                         </div>
                     </div>
 
@@ -355,8 +359,9 @@ const Send = (props) => {
                     {keplerError !== '' ?
                         <p className="form-error">{keplerError}</p> : null}
                     <div className="buttons">
+                        <FeeContainer/>
                         <button className="button button-primary"
-                                disabled={amountField > (props.balance * 1) || amountField === 0 || (props.balance * 1) === 0}>Send
+                                disabled={props.transferableAmount < (amountField*1 + parseInt(localStorage.getItem('fee')) / 1000000)  || amountField === 0 || props.transferableAmount === 0}>Send
                         </button>
                     </div>
                 </Form>
@@ -459,9 +464,6 @@ const Send = (props) => {
                                                 </Card>
                                             </Accordion>
                                             <div className="buttons">
-                                                <p className="fee"> Default fee
-                                                    of {parseInt(localStorage.getItem('fee')) / 1000000}xprt will be cut
-                                                    from the wallet.</p>
                                                 <button className="button button-primary">Send</button>
                                             </div>
 
@@ -542,6 +544,7 @@ const Send = (props) => {
 const stateToProps = (state) => {
     return {
         balance: state.balance.amount,
+        transferableAmount: state.balance.transferableAmount,
     };
 };
 

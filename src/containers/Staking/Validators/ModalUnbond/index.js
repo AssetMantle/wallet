@@ -20,6 +20,7 @@ import Loader from "../../../../components/Loader";
 import config from "../../../../config";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import {useTranslation} from "react-i18next";
+import FeeContainer from "../../../../components/Fee";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalUnbond = (props) => {
@@ -261,6 +262,11 @@ const ModalUnbond = (props) => {
             </Popover.Content>
         </Popover>
     );
+
+    const checkAmountError = (
+        props.transferableAmount < (parseInt(localStorage.getItem('fee')) / 1000000)
+    );
+
     return (
         <>
             {initialModal ?
@@ -280,6 +286,7 @@ const ModalUnbond = (props) => {
                                         placeholder={t("SEND_AMOUNT")}
                                         defaultValue={amount || ''}
                                         step="any"
+                                        className={amount > props.delegationAmount ? "error-amount-field" : ""}
                                         onChange={handleAmountChange}
                                         required={true}
                                     />
@@ -335,6 +342,7 @@ const ModalUnbond = (props) => {
                                     : null
                             }
                             <div className="buttons navigate-buttons">
+                                <FeeContainer/>
                                 <button className="button button-secondary" type="button"
                                         onClick={() => handlePrevious()}>
                                     <Icon
@@ -342,7 +350,7 @@ const ModalUnbond = (props) => {
                                         icon="left-arrow"/>
                                 </button>
                                 <button className="button button-primary"
-                                        disabled={!props.delegateStatus || amount === 0 || amount > props.delegationAmount}>
+                                        disabled={checkAmountError || !props.delegateStatus || amount === 0 || amount > props.delegationAmount}>
                                     {mode === "normal" ? "Next" : "Submit"}
                                 </button>
                             </div>
@@ -440,8 +448,6 @@ const ModalUnbond = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <p className="fee"> Default fee of {parseInt(localStorage.getItem('fee')) / 1000000}xprt
-                                    will be cut from the wallet.</p>
                                 <button className="button button-primary">Unbond</button>
                             </div>
                         </Form>
@@ -518,6 +524,7 @@ const ModalUnbond = (props) => {
 const stateToProps = (state) => {
     return {
         balance: state.balance.amount,
+        transferableAmount: state.balance.transferableAmount,
     };
 };
 

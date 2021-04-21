@@ -8,6 +8,12 @@ export const lightTheme = {
     lineValueColor:'#2E3239',
     labelColor:'#2E3239',
     modalHeaderColor:'#313238',
+    tableRowBorder:'#e0e0e0',
+    paginationIconColor:'#757575',
+    paginationDisabledIconColor:'rgba(0, 0, 0, 0.26)',
+    infoBoxBorder:'#EAEBF6',
+    votingPowerColor:'#272931',
+    inputBackground:'#F5F6FA',
 };
 
 export const darkTheme = {
@@ -20,4 +26,10 @@ export const darkTheme = {
     lineValueColor:'#94979b',
     labelColor:'#8D9CB5',
     modalHeaderColor:'#2E3239',
+    tableRowBorder:'#4244465c',
+    paginationIconColor:'#e9ecef',
+    paginationDisabledIconColor:'#e9ecef7d',
+    infoBoxBorder:'#4244465c',
+    votingPowerColor:'#94979b',
+    inputBackground:'#2e3239',
 };
