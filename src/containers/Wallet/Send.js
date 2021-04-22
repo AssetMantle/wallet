@@ -301,7 +301,7 @@ const Send = (props) => {
                                 type="number"
                                 min={0}
                                 name="amount"
-                                placeholder="Send Amount"
+                                placeholder={t("SEND_AMOUNT")}
                                 step="any"
                                 value={amountField}
                                 className={checkAmountError ? "error-amount-field" : ""}
