@@ -19,7 +19,8 @@ export const lightTheme = {
     backButtonBgColor:'#F0F1F2',
     profileDropDownBorder:'#EAEBF6',
     noteBackground:'#FEF5F6',
-    noteFontColor:'#2E3239'
+    noteFontColor:'#2E3239',
+    copyIconColor:'#2E3239',
 };
 
 export const darkTheme = {
@@ -43,5 +44,6 @@ export const darkTheme = {
     backButtonBgColor:'#495057',
     profileDropDownBorder:'#4244465c',
     noteBackground:'#2e3239',
-    noteFontColor:'#e50913a1'
+    noteFontColor:'#e50913a1',
+    copyIconColor:'#8D9CB5',
 };

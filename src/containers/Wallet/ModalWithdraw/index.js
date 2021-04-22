@@ -40,7 +40,7 @@ const ModalWithdraw = (props) => {
     const [advanceMode, setAdvanceMode] = useState(false);
     const [initialModal, setInitialModal] = useState(true);
     const [seedModal, showSeedModal] = useState(false);
-    const [individualRewards, setIndividualRewards] = useState('');
+    const [individualRewards, setIndividualRewards] = useState(0);
     const [memoContent, setMemoContent] = useState('');
     const [errorMessage, setErrorMessage] = useState("");
     const [loader, setLoader] = useState(false);
@@ -253,6 +253,7 @@ const ModalWithdraw = (props) => {
         setValidatorAddress(evt.target.value);
         let rewards = ActionHelper.getValidatorRewards(evt.target.value);
         rewards.then(function (response) {
+            console.log(response,"individualRewards");
             setIndividualRewards(response);
         });
     };
@@ -310,7 +311,7 @@ const ModalWithdraw = (props) => {
                                 <div className="form-field">
                                     <p className="label">Total Available</p>
                                     <div className="available-tokens">
-                                        <p className="tokens">{props.totalRewards} XPRT</p>
+                                        <p className="tokens" title={props.totalRewards}>{props.totalRewards.toFixed(4)} XPRT</p>
                                         <p className="usd">= ${(props.totalRewards * props.tokenPrice).toFixed(4)}</p>
                                     </div>
                                 </div>
@@ -394,7 +395,7 @@ const ModalWithdraw = (props) => {
                                 <div className="buttons">
                                     <FeeContainer/>
                                     <button className="button button-primary"
-                                        disabled={checkAmountError || disabled || individualRewards === '' || individualRewards === '0.000000'}>{mode === "normal" ? "Next" : "Submit"}</button>
+                                        disabled={checkAmountError || disabled || individualRewards === 0}>{mode === "normal" ? "Next" : "Submit"}</button>
                                 </div>
                                 <div className="buttons">
                                     <p className="button-link" type="button"
