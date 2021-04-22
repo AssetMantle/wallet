@@ -253,7 +253,6 @@ const ModalWithdraw = (props) => {
         setValidatorAddress(evt.target.value);
         let rewards = ActionHelper.getValidatorRewards(evt.target.value);
         rewards.then(function (response) {
-            console.log(response,"individualRewards");
             setIndividualRewards(response);
         });
     };
