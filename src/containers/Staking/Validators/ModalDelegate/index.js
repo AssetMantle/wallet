@@ -261,9 +261,8 @@ const ModalDelegate = (props) => {
             </Popover.Content>
         </Popover>
     );
-
     const checkAmountError = (
-        props.transferableAmount < (parseInt(localStorage.getItem('fee')) / 1000000)
+        props.transferableAmount < (parseInt(localStorage.getItem('fee')) / 1000000) + (amount*1)
     );
     return (
         <>
@@ -286,7 +285,7 @@ const ModalDelegate = (props) => {
                                         type="number"
                                         min={0}
                                         name="amount"
-                                        placeholder={t("SEND_AMOUNT")}
+                                        placeholder={t("DELEGATION_AMOUNT")}
                                         value={amount}
                                         step="any"
                                         className={amount > props.balance ? "error-amount-field" : ""}
