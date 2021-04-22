@@ -76,7 +76,6 @@ const ModalDelegate = (props) => {
     }
 
     useEffect(() => {
-        console.log("coming agian")
         const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
         if (encryptedMnemonic !== null) {
             setImportMnemonic(false)

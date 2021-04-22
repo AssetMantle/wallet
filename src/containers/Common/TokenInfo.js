@@ -12,6 +12,7 @@ import ModalViewVestingDetails from "./ModalViewVestingDetails";
 import ModalViewAmountDetails from "./ModalVIewAmountDetails";
 import Icon from "../../components/Icon";
 import {OverlayTrigger, Popover} from "react-bootstrap";
+import transactions from "../../utils/transactions";
 
 const TokenInfo = (props) => {
     const {t} = useTranslation();
@@ -25,6 +26,7 @@ const TokenInfo = (props) => {
         props.fetchUnbondDelegations(address);
         props.fetchTokenPrice();
         props.fetchTransferableVestingAmount(address);
+        transactions.updateFee(address);
     }, []);
 
     const handleRewards = (key) => {
@@ -147,7 +149,7 @@ const TokenInfo = (props) => {
                         <div className="line">
                             <p className="key">{t("REWARDS")}</p>
                             <p className="value rewards"><span onClick={() => handleRewards("rewards")}
-                                                               className="claim inner-grid">{t("CLAIM")}</span> {props.rewards} XPRT
+                                                               className="claim inner-grid">{t("CLAIM")}</span><span title={props.rewards}> {props.rewards.toFixed(3)}XPRT</span>
                             </p>
                         </div>
                         <div className="line">

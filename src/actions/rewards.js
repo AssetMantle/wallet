@@ -41,8 +41,8 @@ export const fetchRewards = (address) => {
                     dispatch(fetchRewardsListProgress(res.data.rewards))
                 }
                 if (res.data.total.length) {
-                    const fixedRewardsResponse = res.data.total[0].amount / 1000000;
-                    dispatch(fetchRewardsSuccess(fixedRewardsResponse.toFixed(4)));
+                    const fixedRewardsResponse = (res.data.total[0].amount*1) / 1000000;
+                    dispatch(fetchRewardsSuccess(fixedRewardsResponse));
                 }
             })
             .catch((error) => {

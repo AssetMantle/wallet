@@ -201,7 +201,6 @@ const ModalSetWithdrawAddress = (props) => {
                                 setLoader(false);
                                 showSeedModal(false);
                                 setAdvanceMode(false);
-                                console.log(response, "delegate response")
                             }).catch(err => {
                                 setLoader(false);
                                 setErrorMessage(err.message);

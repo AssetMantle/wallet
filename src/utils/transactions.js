@@ -77,10 +77,28 @@ function mnemonicValidation(memo, loginAddress) {
     return address === loginAddress;
 }
 
+function updateFee(address) {
+    const persistence = MakePersistence(0, 0);
+    persistence.getAccounts(address).then(data => {
+        if (data.code === undefined) {
+            if (data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount" ||
+                data.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount" ||
+                data.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
+                localStorage.setItem('fee', config.vestingAccountFee);
+            } else {
+                localStorage.setItem('fee', config.defaultFee);
+            }
+        } else {
+            localStorage.setItem('fee', config.defaultFee);
+        }
+    });
+}
+
 export default {
     TransactionWithKeplr,
     TransactionWithMnemonic,
     makeHdPath,
     getAccountNumberAndSequence,
-    mnemonicValidation
+    mnemonicValidation,
+    updateFee
 };

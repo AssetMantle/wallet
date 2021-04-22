@@ -97,7 +97,6 @@ export const fetchValidator = (address) => {
         const url = getValidatorUrl(address);
         Axios.get(url)
             .then((res) => {
-
                 dispatch(fetchValidatorSuccess(res.data.validator));
             })
             .catch((error) => {

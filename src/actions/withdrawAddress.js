@@ -24,7 +24,6 @@ export const fetchWithdrawAddress = (address) => {
         await Axios.get(url)
             .then((res) => {
                 if (res.data.withdraw_address) {
-
                     dispatch(fetchAddressSuccess(res.data.withdraw_address));
                 }
             })
