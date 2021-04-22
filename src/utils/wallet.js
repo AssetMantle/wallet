@@ -2,9 +2,9 @@ const bip39 = require("bip39");
 const bip32 = require("bip32");
 const tmSig = require("@tendermint/sig");
 
-const coinType = 750
-const defaultWalletPath = "m/44'/" + coinType + "'/0'/0/0"
-const prefix = "persistence"
+const coinType = 750;
+const defaultWalletPath = "m/44'/" + coinType + "'/0'/0/0";
+const prefix = "persistence";
 
 // This function is not for use. Use only createRandomWallet, createWallet and getWalletPath
 function getWallet(mnemonic, walletPath, bip39Passphrase = "") {
@@ -22,7 +22,7 @@ function getWallet(mnemonic, walletPath, bip39Passphrase = "") {
         return {
             success: false,
             error: e.message
-        }
+        };
     }
 }
 
@@ -38,14 +38,14 @@ function createWallet(mnemonic, walletPath = defaultWalletPath, bip39Passphrase 
         return {
             success: false,
             error: "Invalid mnemonic."
-        }
+        };
     }
 }
 
 // account: Account number for HD derivation
 // addressIndex: Address index number for HD derivation
 function getWalletPath(account = 0, addressIndex = 0) {
-    return "m/44'/" + coinType + "'/" + account + "'/0/" + addressIndex
+    return "m/44'/" + coinType + "'/" + account + "'/0/" + addressIndex;
 }
 
 module.exports = {
@@ -54,4 +54,4 @@ module.exports = {
     defaultWalletPath,
     getWalletPath,
     prefix
-}
+};

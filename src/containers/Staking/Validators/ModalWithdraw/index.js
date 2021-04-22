@@ -86,7 +86,7 @@ const ModalWithdraw = (props) => {
     useEffect(() => {
         const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
         if (encryptedMnemonic !== null) {
-            setImportMnemonic(false)
+            setImportMnemonic(false);
         } else {
             setImportMnemonic(true);
         }
@@ -101,7 +101,7 @@ const ModalWithdraw = (props) => {
                 localStorage.setItem('encryptedMnemonic', event.target.result);
                 const decryptedData = helper.decryptStore(res, password);
                 if (decryptedData.error != null) {
-                    setErrorMessage(decryptedData.error)
+                    setErrorMessage(decryptedData.error);
                     setLoader(false);
                 } else {
                     resolve(decryptedData.mnemonic);
@@ -117,16 +117,16 @@ const ModalWithdraw = (props) => {
         const response = transactions.TransactionWithKeplr([WithdrawMsg(loginAddress, props.validatorAddress)], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             if (result.code !== undefined) {
-                helper.AccountChangeCheck(result.rawLog)
+                helper.AccountChangeCheck(result.rawLog);
             }
             setInitialModal(false);
             setResponse(result);
-            setLoader(false)
+            setLoader(false);
         }).catch(err => {
             setLoader(false);
             helper.AccountChangeCheck(err.message);
             setErrorMessage(err.message);
-        })
+        });
     };
 
     const handleSubmitInitialData = async event => {
@@ -135,9 +135,9 @@ const ModalWithdraw = (props) => {
         if (memoStatus) {
             memo = event.target.memo.value;
         }
-        let memoCheck = transactions.mnemonicValidation(memo, loginAddress)
+        let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
         if (memoCheck) {
-            setErrorMessage("you entered your mnemonic as memo")
+            setErrorMessage("you entered your mnemonic as memo");
         } else {
             setErrorMessage("");
             setMemoContent(memo);
@@ -162,7 +162,7 @@ const ModalWithdraw = (props) => {
             const res = JSON.parse(encryptedMnemonic);
             const decryptedData = helper.decryptStore(res, password);
             if (decryptedData.error != null) {
-                setErrorMessage(decryptedData.error)
+                setErrorMessage(decryptedData.error);
             } else {
                 mnemonic = decryptedData.mnemonic;
                 setErrorMessage("");
@@ -214,21 +214,21 @@ const ModalWithdraw = (props) => {
                         setLoader(false);
                         setAdvanceMode(false);
                         setErrorMessage(err.message);
-                    })
+                    });
                 } else {
                     setLoader(false);
                     setAdvanceMode(false);
-                    setErrorMessage("Mnemonic not matched")
+                    setErrorMessage("Mnemonic not matched");
                 }
             } else {
                 if (address.error !== undefined) {
                     setLoader(false);
                     setAdvanceMode(false);
-                    setErrorMessage(address.error)
+                    setErrorMessage(address.error);
                 } else {
                     setLoader(false);
                     setAdvanceMode(false);
-                    setErrorMessage(ecpairPriv.error)
+                    setErrorMessage(ecpairPriv.error);
                 }
             }
         } else {
@@ -275,7 +275,7 @@ const ModalWithdraw = (props) => {
                             <div className="form-field">
                                 <p className="label">{t("AVAILABLE")} (XPRT)</p>
                                 <div className="available-tokens">
-                                    <p className={props.rewards === 0 ? "empty info-data" : "info-data"}>{props.rewards}</p>
+                                    <p className={props.rewards === 0 ? "empty info-data" : "info-data"}>{props.rewards.toFixed(3)}</p>
                                 </div>
                             </div>
                             {
@@ -284,17 +284,17 @@ const ModalWithdraw = (props) => {
                                         <div className="memo-dropdown-section">
                                             <p onClick={handleMemoChange} className="memo-dropdown"><span
                                                 className="text">{t("ADVANCED")} </span>
-                                                {memoStatus ?
-                                                    <Icon
-                                                        viewClass="arrow-right"
-                                                        icon="up-arrow"/>
-                                                    :
-                                                    <Icon
-                                                        viewClass="arrow-right"
-                                                        icon="down-arrow"/>}
+                                            {memoStatus ?
+                                                <Icon
+                                                    viewClass="arrow-right"
+                                                    icon="up-arrow"/>
+                                                :
+                                                <Icon
+                                                    viewClass="arrow-right"
+                                                    icon="down-arrow"/>}
                                             </p>
                                             <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
-                                                            overlay={popoverMemo}>
+                                                overlay={popoverMemo}>
                                                 <button className="icon-button info" type="button"><Icon
                                                     viewClass="arrow-right"
                                                     icon="info"/></button>
@@ -304,7 +304,7 @@ const ModalWithdraw = (props) => {
                                             <div className="form-field">
                                                 <p className="label info">{t("MEMO")}
                                                     <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
-                                                                    overlay={popoverMemo}>
+                                                        overlay={popoverMemo}>
                                                         <button className="icon-button info" type="button"><Icon
                                                             viewClass="arrow-right"
                                                             icon="info"/></button>
@@ -334,17 +334,17 @@ const ModalWithdraw = (props) => {
                                         icon="left-arrow"/>
                                 </button>
                                 <button
-                                    className={props.rewards ? "button button-primary" : "button button-primary disabled"}
+                                    className="button button-primary"
                                     disabled={checkAmountError || props.rewards === 0}> {mode === "normal" ? t("NEXT") : t("SUBMIT")}
                                 </button>
                             </div>
                             <div className="buttons">
                                 <p className="button-link" type="button"
-                                   onClick={() => handleRewards("setWithDraw")}>
+                                    onClick={() => handleRewards("setWithDraw")}>
                                     {t("SET_WITHDRAW_ADDRESS")}
                                     <OverlayTrigger trigger={['hover', 'focus']}
-                                                    placement="bottom"
-                                                    overlay={popoverSetupAddress}>
+                                        placement="bottom"
+                                        overlay={popoverSetupAddress}>
                                         <button className="icon-button info" type="button"><Icon
                                             viewClass="arrow-right"
                                             icon="info"/></button>
@@ -369,28 +369,28 @@ const ModalWithdraw = (props) => {
                                         <div className="form-field upload">
                                             <p className="label"> KeyStore file</p>
                                             <Form.File id="exampleFormControlFile1" name="uploadFile"
-                                                       className="file-upload" accept=".json" required={true}/>
+                                                className="file-upload" accept=".json" required={true}/>
                                         </div>
                                         <div className="form-field">
                                             <p className="label">{t("PASSWORD")}</p>
-                                                <Form.Control
-                                                    type="password"
-                                                    name="password"
-                                                    placeholder={t("ENTER_PASSWORD")}
-                                                    required={true}
-                                                />
+                                            <Form.Control
+                                                type="password"
+                                                name="password"
+                                                placeholder={t("ENTER_PASSWORD")}
+                                                required={true}
+                                            />
                                         </div>
                                     </>
                                     :
                                     <>
                                         <div className="form-field">
                                             <p className="label">{t("PASSWORD")}</p>
-                                                <Form.Control
-                                                    type="password"
-                                                    name="password"
-                                                    placeholder={t("ENTER_PASSWORD")}
-                                                    required={true}
-                                                />
+                                            <Form.Control
+                                                type="password"
+                                                name="password"
+                                                placeholder={t("ENTER_PASSWORD")}
+                                                required={true}
+                                            />
                                         </div>
                                     </>
 
@@ -476,7 +476,7 @@ const ModalWithdraw = (props) => {
                                 }
                                 <div className="buttons">
                                     <button className="button"
-                                            onClick={props.handleClose}>{t("DONE")}</button>
+                                        onClick={props.handleClose}>{t("DONE")}</button>
                                 </div>
                             </div>
                         </Modal.Body>
@@ -510,7 +510,7 @@ const ModalWithdraw = (props) => {
                                 }
                                 <div className="buttons">
                                     <button className="button"
-                                            onClick={handleClose}> {t("DONE")}</button>
+                                        onClick={handleClose}> {t("DONE")}</button>
                                 </div>
                             </div>
                         </Modal.Body>

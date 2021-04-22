@@ -46,26 +46,26 @@ const Send = (props) => {
         setShow(false);
         setMnemonicForm(false);
         setTxResponse('');
-        setErrorMessage("")
+        setErrorMessage("");
     };
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
             setAmountField(evt.target.value);
             if (props.transferableAmount < (amountField * 1 + parseInt(localStorage.getItem('fee')) / 1000000)) {
-                setCheckAmountError(true)
+                setCheckAmountError(true);
             } else {
-                setCheckAmountError(false)
+                setCheckAmountError(false);
             }
         } else {
-            return false
+            return false;
         }
     };
 
     useEffect(() => {
         const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
         if (encryptedMnemonic !== null) {
-            setImportMnemonic(false)
+            setImportMnemonic(false);
         } else {
             setImportMnemonic(true);
         }
@@ -82,7 +82,7 @@ const Send = (props) => {
             setMemoContent(memo);
             let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
             if (memoCheck) {
-                setKeplerError("You entered your mnemonic as memo")
+                setKeplerError("You entered your mnemonic as memo");
             } else {
                 setKeplerError('');
                 setMnemonicForm(true);
@@ -102,7 +102,7 @@ const Send = (props) => {
         const response = transactions.TransactionWithKeplr([SendMsg(loginAddress, event.target.address.value, (amountField * 1000000))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             if (result.code !== undefined) {
-                helper.AccountChangeCheck(result.rawLog)
+                helper.AccountChangeCheck(result.rawLog);
             }
             setMnemonicForm(true);
             setTxResponse(result);
@@ -111,7 +111,7 @@ const Send = (props) => {
             setLoader(false);
             setKeplerError(err.message);
             helper.AccountChangeCheck(err.message);
-        })
+        });
     };
 
     function ContextAwareToggle({eventKey, callback}) {
@@ -159,7 +159,7 @@ const Send = (props) => {
                 localStorage.setItem('encryptedMnemonic', event.target.result);
                 const decryptedData = helper.decryptStore(res, password);
                 if (decryptedData.error != null) {
-                    setErrorMessage(decryptedData.error)
+                    setErrorMessage(decryptedData.error);
                     setLoader(false);
                 } else {
                     resolve(decryptedData.mnemonic);
@@ -187,7 +187,7 @@ const Send = (props) => {
             const res = JSON.parse(encryptedMnemonic);
             const decryptedData = helper.decryptStore(res, password);
             if (decryptedData.error != null) {
-                setErrorMessage(decryptedData.error)
+                setErrorMessage(decryptedData.error);
             } else {
                 userMnemonic = decryptedData.mnemonic;
                 setErrorMessage("");
@@ -210,7 +210,7 @@ const Send = (props) => {
             const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
-                    setImportMnemonic(false)
+                    setImportMnemonic(false);
                     persistence.getAccounts(address).then(data => {
                         if (data.code === undefined) {
                             let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
@@ -235,21 +235,21 @@ const Send = (props) => {
                             setAdvanceMode(false);
                             setErrorMessage(data.message);
                         }
-                    })
+                    });
                 } else {
                     setLoader(false);
                     setAdvanceMode(false);
-                    setErrorMessage("Mnemonic not matched")
+                    setErrorMessage("Mnemonic not matched");
                 }
             } else {
                 if (address.error !== undefined) {
                     setLoader(false);
                     setAdvanceMode(false);
-                    setErrorMessage(address.error)
+                    setErrorMessage(address.error);
                 } else {
                     setLoader(false);
                     setAdvanceMode(false);
-                    setErrorMessage(ecpairPriv.error)
+                    setErrorMessage(ecpairPriv.error);
                 }
             }
         } else {
@@ -319,19 +319,19 @@ const Send = (props) => {
                             <div className="memo-dropdown-section">
                                 <p onClick={handleMemoChange} className="memo-dropdown"><span
                                     className="text">{t("ADVANCED")} </span>
-                                    {memoStatus ?
-                                        <Icon
-                                            viewClass="arrow-right"
-                                            icon="up-arrow"/>
-                                        :
-                                        <Icon
-                                            viewClass="arrow-right"
-                                            icon="down-arrow"/>}
+                                {memoStatus ?
+                                    <Icon
+                                        viewClass="arrow-right"
+                                        icon="up-arrow"/>
+                                    :
+                                    <Icon
+                                        viewClass="arrow-right"
+                                        icon="down-arrow"/>}
 
                                 </p>
                                 <OverlayTrigger trigger={['hover', 'focus']}
-                                                placement="bottom"
-                                                overlay={popoverMemo}>
+                                    placement="bottom"
+                                    overlay={popoverMemo}>
                                     <button className="icon-button info" type="button"><Icon
                                         viewClass="arrow-right"
                                         icon="info"/></button>
@@ -342,7 +342,7 @@ const Send = (props) => {
                                 <div className="form-field">
                                     <p className="label info">{t("MEMO")}
                                         <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
-                                                        overlay={popoverMemo}>
+                                            overlay={popoverMemo}>
                                             <button className="icon-button info" type="button"><Icon
                                                 viewClass="arrow-right"
                                                 icon="info"/></button>
@@ -364,7 +364,7 @@ const Send = (props) => {
                     <div className="buttons">
                         <FeeContainer/>
                         <button className="button button-primary"
-                                disabled={props.transferableAmount < (amountField * 1 + parseInt(localStorage.getItem('fee')) / 1000000) || amountField === 0 || props.transferableAmount === 0}>Send
+                            disabled={props.transferableAmount < (amountField * 1 + parseInt(localStorage.getItem('fee')) / 1000000) || amountField === 0 || props.transferableAmount === 0}>Send
                         </button>
                     </div>
                 </Form>
@@ -387,8 +387,8 @@ const Send = (props) => {
                                                         <div className="form-field upload">
                                                             <p className="label"> KeyStore file</p>
                                                             <Form.File id="exampleFormControlFile1" name="uploadFile"
-                                                                       className="file-upload" accept=".json"
-                                                                       required={true}/>
+                                                                className="file-upload" accept=".json"
+                                                                required={true}/>
                                                         </div>
                                                         <div className="form-field">
                                                             <p className="label">{t("PASSWORD")}</p>

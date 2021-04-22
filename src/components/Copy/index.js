@@ -3,11 +3,11 @@ import React, {useState} from 'react';
 import Icon from "../Icon";
 
 const Copy = (props) => {
-    const [copyValue, setCopyValue] = useState(false)
+    const [copyValue, setCopyValue] = useState(false);
     const onCopy = () => {
-        setCopyValue(true)
+        setCopyValue(true);
         setTimeout(() => {
-            setCopyValue(false)
+            setCopyValue(false);
         }, 1000);
     };
     return (

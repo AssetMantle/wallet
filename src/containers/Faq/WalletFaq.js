@@ -77,7 +77,7 @@ const WalletFaq = () => {
                         <p>  {t("FAQ212")}</p>
                         <p>  {t("FAQ213")}</p>
                         <p>  {t("FAQ214")}</p>
-                     </Card.Body>
+                    </Card.Body>
                 </Accordion.Collapse>
             </Card>
             <Card>
@@ -103,12 +103,12 @@ const WalletFaq = () => {
                 <Accordion.Collapse eventKey="5">
                     <Card.Body><p>{t("FAQ5A")}
                         <a href="https://t.me/PersistenceOneChat" rel="noopener noreferrer" target="_blank"
-                           title="Community Chat"> (PersistenceOneChat)</a>
+                            title="Community Chat"> (PersistenceOneChat)</a>
                     </p></Card.Body>
                 </Accordion.Collapse>
             </Card>
         </Accordion>
 
-    )
-}
+    );
+};
 export default WalletFaq;

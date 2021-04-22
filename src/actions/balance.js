@@ -7,7 +7,7 @@ import {
     BALANCE_LIST_FETCH_SUCCESS,
     TRANSFERABLE_BALANCE_LIST_FETCH_SUCCESS,
     VESTING_BALANCE_FETCH_SUCCESS
-} from "../constants/balance"
+} from "../constants/balance";
 import MakePersistence from "../utils/cosmosjsWrapper";
 import vestingAccount from "../utils/vestingAmount";
 export const fetchBalanceProgress = () => {
@@ -16,7 +16,6 @@ export const fetchBalanceProgress = () => {
     };
 };
 export const fetchBalanceSuccess = (data) => {
-
     return {
         type: BALANCE_FETCH_SUCCESS,
         data,
@@ -47,9 +46,9 @@ export const fetchBalance = (address) => {
                     res.data.balances.forEach((item) => {
                         if(item.denom === 'uxprt'){
                             const totalBalance = item.amount*1;
-                            dispatch(fetchBalanceSuccess(parseFloat((totalBalance / 1000000))));
+                            dispatch(fetchBalanceSuccess((totalBalance / 1000000)));
                         }
-                    })
+                    });
                 }
             })
             .catch((error) => {
@@ -57,7 +56,7 @@ export const fetchBalance = (address) => {
                     ? error.response.data.message
                     : error.message));
             });
-    }
+    };
 };
 
 export const fetchTransferableBalanceSuccess = (data) => {
@@ -88,7 +87,7 @@ export const fetchTransferableVestingAmount = (address)=> {
                     if (res.data.balances.length) {
                         res.data.balances.forEach((item) => {
                             if(item.denom === 'uxprt'){
-                                const balance = parseFloat((item.amount*1/1000000));
+                                const balance = (item.amount*1/1000000);
                                 const amount = vestingAccount.getAccountVestingAmount(vestingAmountData.account, currentEpochTime) / 1000000;
                                 vestingAmount = amount;
                                 if ((balance - amount) < 0) {
@@ -99,7 +98,7 @@ export const fetchTransferableVestingAmount = (address)=> {
                                 dispatch(fetchTransferableBalanceSuccess(transferableAmount));
                                 dispatch(fetchVestingBalanceSuccess(vestingAmount));
                             }
-                        })
+                        });
                     }
                 })
                 .catch((error) => {
@@ -109,5 +108,5 @@ export const fetchTransferableVestingAmount = (address)=> {
                 });
 
         }
-    }
+    };
 };

@@ -17,8 +17,8 @@ const GeneratePrivateKey = (props) => {
         const mnemonic = props.mnemonic;
         let encryptedData = helper.createStore(mnemonic, password);
         let jsonContent = JSON.stringify(encryptedData.Response);
-        setKeyFile(true)
-        downloadFile(jsonContent)
+        setKeyFile(true);
+        downloadFile(jsonContent);
     };
     const downloadFile = async (jsonContent) => {
         const json = jsonContent;
@@ -44,7 +44,7 @@ const GeneratePrivateKey = (props) => {
         if (formName === "generateKey") {
             setShow(false);
             props.setGenerateKey(false);
-            props.handleRoute(props.routeValue)
+            props.handleRoute(props.routeValue);
         }
     };
     return (

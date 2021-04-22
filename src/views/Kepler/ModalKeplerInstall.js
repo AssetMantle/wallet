@@ -1,6 +1,6 @@
 import {Modal} from 'react-bootstrap';
 import React, {useState} from 'react';
-import chrome from "../../assets/images/chrome.svg"
+import chrome from "../../assets/images/chrome.svg";
 const ModalKeplerInstall = () => {
     const [show, setShow] = useState(true);
     const handleClose = () => {

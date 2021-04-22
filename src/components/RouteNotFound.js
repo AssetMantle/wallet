@@ -7,7 +7,7 @@ const RouteNotFound = () => {
     const [showFaq, setShowFaq] = useState(false);
 
     const handleHelp = () => {
-        setShowFaq(true)
+        setShowFaq(true);
     };
     return (
         <div className="home-page pageError">
@@ -20,9 +20,9 @@ const RouteNotFound = () => {
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="ml-auto">
                             <a className="nav-link" href="https://persistence.one/" target="_blank"
-                               rel="noopener noreferrer">Learn More</a>
+                                rel="noopener noreferrer">Learn More</a>
                             <NavLink className="nav-link" onClick={handleHelp} target="_blank"
-                                     rel="noopener noreferrer">Help</NavLink>
+                                rel="noopener noreferrer">Help</NavLink>
                         </Nav>
                     </Navbar.Collapse>
                 </div>
@@ -37,5 +37,5 @@ const RouteNotFound = () => {
                 null}
         </div>
     );
-}
+};
 export default RouteNotFound;

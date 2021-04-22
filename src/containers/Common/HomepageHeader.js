@@ -6,7 +6,7 @@ import logo from "../../assets/images/logo_bold.svg";
 const HomepageHeader = () => {
     const [showFaq, setShowFaq] = useState(false);
     const handleHelp = () => {
-        setShowFaq(true)
+        setShowFaq(true);
     };
 
     return (
@@ -20,9 +20,9 @@ const HomepageHeader = () => {
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="ml-auto">
                             <a className="nav-link" href="https://persistence.one/" target="_blank"
-                               rel="noopener noreferrer">Learn More</a>
+                                rel="noopener noreferrer">Learn More</a>
                             <NavLink className="nav-link" onClick={handleHelp} target="_blank"
-                                     rel="noopener noreferrer">Help</NavLink>
+                                rel="noopener noreferrer">Help</NavLink>
                         </Nav>
                     </Navbar.Collapse>
                 </div>

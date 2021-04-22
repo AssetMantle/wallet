@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import MailchimpSubscribe from "react-mailchimp-subscribe"
+import MailchimpSubscribe from "react-mailchimp-subscribe";
 import {Button, Spinner} from "react-bootstrap";
 
 let mailURl = process.env.REACT_APP_MAIL_CHIMP_URL;
@@ -14,16 +14,16 @@ const CustomForm = ({status, onValidated}) => {
     let email;
     const onKeyPress = (e) => {
         if (e.which === 13) {
-            submit()
+            submit();
         }
     };
 
     const handleChange = (e) => {
         var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
         if (pattern.test(e.target.value)) {
-            setDisable(false)
+            setDisable(false);
         } else {
-            setDisable(true)
+            setDisable(true);
         }
     };
 
@@ -104,6 +104,6 @@ const Mailchimp = () => {
             )}
         />
     );
-}
+};
 
 export default Mailchimp;

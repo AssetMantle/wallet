@@ -17,7 +17,7 @@ const SignIn = (props) => {
     const handleRoute = (key) => {
         if (key === "withAddress") {
             setWithAddress(true);
-            setShow(false)
+            setShow(false);
         }
     };
 
@@ -28,7 +28,7 @@ const SignIn = (props) => {
     return (
         <>
             <Modal backdrop="static" show={show} onHide={handleClose} centered
-                   className="create-wallet-modal seed">
+                className="create-wallet-modal seed">
                 <>
                     <Modal.Header closeButton>
                         <h3 className="heading"> {t("SIGN_IN")}</h3>
@@ -40,7 +40,7 @@ const SignIn = (props) => {
                         </div>
                         <div className="buttons">
                             <button className="button button-primary large"
-                                    onClick={() => handleRoute("withAddress")}>{t("CONTINUE_WITH_ADDRESS")}
+                                onClick={() => handleRoute("withAddress")}>{t("CONTINUE_WITH_ADDRESS")}
                             </button>
                         </div>
                     </Modal.Body>
@@ -48,7 +48,7 @@ const SignIn = (props) => {
             </Modal>
             {withAddress ?
                 <AddressImport setWithAddress={setWithAddress} handleClose={handleClose} setShow={setShow}
-                              />
+                />
                 : null
             }
         </>

@@ -33,7 +33,7 @@ const ModalViewAmountDetails = (props) => {
                                         <li className="" key={index}><span
                                             className="amount">{item.amount / 1000000}</span> <span
                                             className="date">{item.denom}</span></li>
-                                    )
+                                    );
                                 }
                             }) : null
                         }

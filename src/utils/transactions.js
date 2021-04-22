@@ -15,24 +15,24 @@ async function Transaction(wallet, signerAddress, msgs, fee, memo = "") {
         tendermintRPCURL,
         wallet
     );
-    return await cosmJS.signAndBroadcast(signerAddress, msgs, fee, memo)
+    return await cosmJS.signAndBroadcast(signerAddress, msgs, fee, memo);
 }
 
 async function TransactionWithKeplr(msgs, fee, memo = "", chainID = configChainID) {
-    const [wallet, address] = await KeplrWallet(chainID)
-    return Transaction(wallet, address, msgs, fee, memo)
+    const [wallet, address] = await KeplrWallet(chainID);
+    return Transaction(wallet, address, msgs, fee, memo);
 }
 
 async function KeplrWallet(chainID = configChainID) {
     await window.keplr.enable(chainID);
     const offlineSigner = window.getOfflineSigner(chainID);
     const accounts = await offlineSigner.getAccounts();
-    return [offlineSigner, accounts[0].address]
+    return [offlineSigner, accounts[0].address];
 }
 
 async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(), bip39Passphrase = "", prefix = addressPrefix) {
-    const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix)
-    return Transaction(wallet, address, msgs, fee, memo)
+    const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix);
+    return Transaction(wallet, address, msgs, fee, memo);
 }
 
 // TODO remove this function; use MnemonicWallet instead.
@@ -40,9 +40,9 @@ async function MnemonicWalletWithPassphrase(mnemonic, hdPath = makeHdPath(), pas
     const mnemonicChecked = new EnglishMnemonic(mnemonic);
     const seed = await Bip39.mnemonicToSeed(mnemonicChecked, password);
     const {privkey} = Slip10.derivePath(Slip10Curve.Secp256k1, seed, hdPath);
-    const wallet = await DirectSecp256k1Wallet.fromKey(privkey, prefix)
+    const wallet = await DirectSecp256k1Wallet.fromKey(privkey, prefix);
     const [firstAccount] = await wallet.getAccounts();
-    return [wallet, firstAccount.address]
+    return [wallet, firstAccount.address];
 }
 
 //TODO use this when bip39 passphrase is included in cosmjs.
@@ -54,20 +54,20 @@ async function MnemonicWalletWithPassphrase(mnemonic, hdPath = makeHdPath(), pas
 // }
 
 function makeHdPath(accountNumber = "0", addressIndex = "0", coinType = configCoinType) {
-    return stringToPath("m/44'/" + coinType + "'/" + accountNumber + "'/0/" + addressIndex)
+    return stringToPath("m/44'/" + coinType + "'/" + accountNumber + "'/0/" + addressIndex);
 }
 
 function getAccountNumberAndSequence(authResponse) {
     if (authResponse.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
-        return [authResponse.account.base_vesting_account.base_account.account_number, authResponse.account.base_vesting_account.base_account.sequence]
+        return [authResponse.account.base_vesting_account.base_account.account_number, authResponse.account.base_vesting_account.base_account.sequence];
     } else if (authResponse.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount") {
-        return [authResponse.account.base_vesting_account.base_account.account_number, authResponse.account.base_vesting_account.base_account.sequence]
+        return [authResponse.account.base_vesting_account.base_account.account_number, authResponse.account.base_vesting_account.base_account.sequence];
     } else if (authResponse.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
-        return [authResponse.account.base_vesting_account.base_account.account_number, authResponse.account.base_vesting_account.base_account.sequence]
+        return [authResponse.account.base_vesting_account.base_account.account_number, authResponse.account.base_vesting_account.base_account.sequence];
     } else if (authResponse.account["@type"] === "/cosmos.auth.v1beta1.BaseAccount") {
-        return [authResponse.account.account_number, authResponse.account.sequence]
+        return [authResponse.account.account_number, authResponse.account.sequence];
     } else {
-        return [-1, -1]
+        return [-1, -1];
     }
 }
 
@@ -77,10 +77,28 @@ function mnemonicValidation(memo, loginAddress) {
     return address === loginAddress;
 }
 
+function updateFee(address) {
+    const persistence = MakePersistence(0, 0);
+    persistence.getAccounts(address).then(data => {
+        if (data.code === undefined) {
+            if (data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount" ||
+                data.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount" ||
+                data.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
+                localStorage.setItem('fee', config.vestingAccountFee);
+            } else {
+                localStorage.setItem('fee', config.defaultFee);
+            }
+        } else {
+            localStorage.setItem('fee', config.defaultFee);
+        }
+    });
+}
+
 export default {
     TransactionWithKeplr,
     TransactionWithMnemonic,
     makeHdPath,
     getAccountNumberAndSequence,
-    mnemonicValidation
+    mnemonicValidation,
+    updateFee
 };

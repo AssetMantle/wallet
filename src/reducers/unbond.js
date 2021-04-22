@@ -4,17 +4,17 @@ import {
     UNBOND_DELEGATIONS_FETCH_IN_PROGRESS,
     UNBOND_DELEGATIONS_FETCH_SUCCESS,
     UNBOND_DELEGATIONS_LIST
-} from "../constants/unbond"
+} from "../constants/unbond";
 
 const inProgress = (state = false, action) => {
     switch (action.type) {
-        case UNBOND_DELEGATIONS_FETCH_IN_PROGRESS:
-            return true;
-        case UNBOND_DELEGATIONS_FETCH_SUCCESS:
-        case UNBOND_DELEGATIONS_FETCH_ERROR:
-            return false;
-        default:
-            return state;
+    case UNBOND_DELEGATIONS_FETCH_IN_PROGRESS:
+        return true;
+    case UNBOND_DELEGATIONS_FETCH_SUCCESS:
+    case UNBOND_DELEGATIONS_FETCH_ERROR:
+        return false;
+    default:
+        return state;
     }
 };
 

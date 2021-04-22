@@ -25,10 +25,10 @@ const ModalViewUnbondDetails = (props) => {
                     Unbonding Schedule
                 </Modal.Header>
                 <Modal.Body className="list-modal-body">
-                            <div className="unbonding-schedule-list-header">
-                                <p>To be Unbonded</p>
-                                <p>Date</p>
-                            </div>
+                    <div className="unbonding-schedule-list-header">
+                        <p>To be Unbonded</p>
+                        <p>Date</p>
+                    </div>
                     {props.list ?
                         props.list.map((item) => {
                             return (
@@ -39,10 +39,10 @@ const ModalViewUnbondDetails = (props) => {
                                                 <p><span className="amount">{entry.balance / 1000000} XPRT</span></p>
                                                 <p><span className="date">{new Date (entry["completion_time"]).toUTCString()}</span></p>
                                             </div>
-                                        )
+                                        );
                                     })
                                     : ""
-                            )
+                            );
                         }) : null
                     }
                 </Modal.Body>
