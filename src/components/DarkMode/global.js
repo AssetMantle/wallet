@@ -163,5 +163,11 @@ export const GlobalStyles = createGlobalStyle`
     .modal-header button.close{
      color: ${({theme}) => theme.lineValueColor};
     }
+    .available-tokens .info-data{
+      color: ${({theme}) => theme.lineValueColor};
+    }
+    .header .profile-section .profile-dropdown .copy-button .icon{
+      fill:${({theme}) => theme.copyIconColor};
+    }
 `;
 

@@ -2,7 +2,7 @@
 # common styles
 --------------------------------------------------------------*/
 html, body {
-  font-family: "Montserrat", sans-serif; }
+  font-family: 'Poppins', sans-serif; }
 
 ::-webkit-scrollbar {
   width: 6px;
@@ -1496,6 +1496,8 @@ html, body {
       text-align: center;
       padding: 20px 70px; }
       .header .profile-section .profile-dropdown .dropdown-menu .info .key {
+        margin: 10px 0;
+        font-family: 'Poppins', sans-serif;
         font-weight: 500;
         font-size: 12px;
         line-height: 150%;
