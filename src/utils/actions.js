@@ -7,7 +7,9 @@ export default class Actions {
         const url = getValidatorRewardsUrl(address, validatorAddress);
         let amount = 0;
         await axios.get(url).then(response => {
-            amount = ((response.data.rewards[0].amount*1) / 1000000).toFixed(6);
+            if(response.data.rewards.length){
+                amount = ((response.data.rewards[0].amount*1) / 1000000).toFixed(6);
+            }
         }).catch(error => {
             console.log(error.response);
         });
