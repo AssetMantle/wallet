@@ -17,7 +17,7 @@ const Homepage = () => {
         setRoutName(name);
     };
     const handleHelp = () => {
-        setShowFaq(true)
+        setShowFaq(true);
     };
 
     return (
@@ -31,11 +31,11 @@ const Homepage = () => {
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="ml-auto">
                             <NavLink className="nav-link" onClick={() => handleRoute('signIn')} target="_blank"
-                                     rel="noopener noreferrer">{t("SIGN_IN")}</NavLink>
+                                rel="noopener noreferrer">{t("SIGN_IN")}</NavLink>
                             <a className="nav-link" href="https://persistence.one/" target="_blank"
-                               rel="noopener noreferrer">  {t("LEARN_MORE")}</a>
+                                rel="noopener noreferrer">  {t("LEARN_MORE")}</a>
                             <Nav.Link className="nav-link" onClick={handleHelp} target="_blank"
-                                      rel="noopener noreferrer">{t("HELP")}</Nav.Link>
+                                rel="noopener noreferrer">{t("HELP")}</Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
                 </div>
@@ -81,6 +81,6 @@ const Homepage = () => {
         </div>
 
 
-    )
+    );
 };
 export default Homepage;

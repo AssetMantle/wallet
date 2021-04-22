@@ -6,18 +6,18 @@ import {
     BALANCE_LIST_FETCH_SUCCESS,
     TRANSFERABLE_BALANCE_LIST_FETCH_SUCCESS,
     VESTING_BALANCE_FETCH_SUCCESS
-} from "../constants/balance"
+} from "../constants/balance";
 
 
 const inProgress = (state = false, action) => {
     switch (action.type) {
-        case BALANCE_FETCH_IN_PROGRESS:
-            return true;
-        case BALANCE_FETCH_SUCCESS:
-        case BALANCE_FETCH_ERROR:
-            return false;
-        default:
-            return state;
+    case BALANCE_FETCH_IN_PROGRESS:
+        return true;
+    case BALANCE_FETCH_SUCCESS:
+    case BALANCE_FETCH_ERROR:
+        return false;
+    default:
+        return state;
     }
 };
 

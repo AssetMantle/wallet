@@ -8,6 +8,7 @@ import {fetchTokenPrice} from "../actions/tokenPrice";
 import IconButton from '@material-ui/core/IconButton';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import {fetchTransactions, fetchReceiveTransactions} from "../actions/transactions";
+import transactions from "../utils/transactions";
 
 const InfoRefresh = (props) => {
     const [inProgress, setInProgress] = useState(false);
@@ -15,7 +16,7 @@ const InfoRefresh = (props) => {
     const handleRefresh = () => {
         setInProgress(true);
         setTimeout(() => {
-            setInProgress(false)
+            setInProgress(false);
         }, 1000);
         props.fetchDelegationsCount(address);
         props.fetchBalance(address);
@@ -25,6 +26,7 @@ const InfoRefresh = (props) => {
         props.fetchTransactions(address, 5, 1);
         props.fetchReceiveTransactions(address, 5, 1);
         props.fetchTransferableVestingAmount(address);
+        transactions.updateFee(address);
     };
     return (
         <IconButton

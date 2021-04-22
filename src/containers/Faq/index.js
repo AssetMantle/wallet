@@ -28,29 +28,29 @@ const ModalFaq = (props) => {
             </Modal.Header>
             <Modal.Body className="faq-modal-body">
                 <Tab.Container id="left-tabs-example" defaultActiveKey="first">
-                            <Nav variant="pills">
-                                <div className="box">
-                                    <Nav.Link eventKey="first"><Icon
-                                        viewClass="arrow-right"
-                                        icon="wallet"/>
-                                        <p>Wallet</p>
-                                    </Nav.Link>
-                                </div>
-                                <div className="box">
-                                    <Nav.Link eventKey="second"><Icon
-                                        viewClass="arrow-right"
-                                        icon="staking"/>
-                                    <p>Staking</p></Nav.Link>
-                                </div>
-                            </Nav>
-                            <Tab.Content>
-                                <Tab.Pane eventKey="first">
-                                <WalletFaq/>
-                                </Tab.Pane>
-                                <Tab.Pane eventKey="second">
-                                    <StakingFaq/>
-                                </Tab.Pane>
-                            </Tab.Content>
+                    <Nav variant="pills">
+                        <div className="box">
+                            <Nav.Link eventKey="first"><Icon
+                                viewClass="arrow-right"
+                                icon="wallet"/>
+                            <p>Wallet</p>
+                            </Nav.Link>
+                        </div>
+                        <div className="box">
+                            <Nav.Link eventKey="second"><Icon
+                                viewClass="arrow-right"
+                                icon="staking"/>
+                            <p>Staking</p></Nav.Link>
+                        </div>
+                    </Nav>
+                    <Tab.Content>
+                        <Tab.Pane eventKey="first">
+                            <WalletFaq/>
+                        </Tab.Pane>
+                        <Tab.Pane eventKey="second">
+                            <StakingFaq/>
+                        </Tab.Pane>
+                    </Tab.Content>
                 </Tab.Container>
             </Modal.Body>
         </Modal>

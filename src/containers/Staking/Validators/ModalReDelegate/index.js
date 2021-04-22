@@ -47,9 +47,9 @@ const ModalReDelegate = (props) => {
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
-            setAmount(evt.target.value*1)
+            setAmount(evt.target.value*1);
         } else {
-            return false
+            return false;
         }
     };
 
@@ -87,13 +87,13 @@ const ModalReDelegate = (props) => {
     useEffect(() => {
         const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
         if (encryptedMnemonic !== null) {
-            setImportMnemonic(false)
+            setImportMnemonic(false);
         }else{
             setImportMnemonic(true);
         }
     }, []);
     const onChangeSelect = (evt) => {
-        setToValidatorAddress(evt.target.value)
+        setToValidatorAddress(evt.target.value);
     };
 
     const handlePrevious = () => {
@@ -110,7 +110,7 @@ const ModalReDelegate = (props) => {
         }
         let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
         if (memoCheck) {
-            setErrorMessage("you entered your mnemonic as memo")
+            setErrorMessage("you entered your mnemonic as memo");
         } else {
             setErrorMessage("");
             setMemoContent(memo);
@@ -125,7 +125,7 @@ const ModalReDelegate = (props) => {
         const response = transactions.TransactionWithKeplr([RedelegateMsg(loginAddress, props.validatorAddress, toValidatorAddress, (amount * 1000000))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             if(result.code !== undefined){
-                helper.AccountChangeCheck(result.rawLog)
+                helper.AccountChangeCheck(result.rawLog);
             }
             setInitialModal(false);
             setLoader(false);
@@ -134,7 +134,7 @@ const ModalReDelegate = (props) => {
             setLoader(false);
             helper.AccountChangeCheck(err.message);
             setErrorMessage(err.message);
-        })
+        });
     };
 
     function PrivateKeyReader(file, password) {
@@ -157,27 +157,27 @@ const ModalReDelegate = (props) => {
     }
 
     const handleSubmit = async event => {
-            setLoader(true);
-            event.preventDefault();
-            let mnemonic;
-            if (importMnemonic) {
-                const password = event.target.password.value;
-                var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
-                await promise.then(function (result) {
-                    mnemonic = result;
-                });
+        setLoader(true);
+        event.preventDefault();
+        let mnemonic;
+        if (importMnemonic) {
+            const password = event.target.password.value;
+            var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
+            await promise.then(function (result) {
+                mnemonic = result;
+            });
+        } else {
+            const password = event.target.password.value;
+            const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
+            const res = JSON.parse(encryptedMnemonic);
+            const decryptedData = helper.decryptStore(res, password);
+            if (decryptedData.error != null) {
+                setErrorMessage(decryptedData.error);
             } else {
-                const password = event.target.password.value;
-                const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
-                const res = JSON.parse(encryptedMnemonic);
-                const decryptedData = helper.decryptStore(res, password);
-                if (decryptedData.error != null) {
-                    setErrorMessage(decryptedData.error)
-                } else {
-                    mnemonic = decryptedData.mnemonic;
-                    setErrorMessage("");
-                }
+                mnemonic = decryptedData.mnemonic;
+                setErrorMessage("");
             }
+        }
         if (mnemonic !== undefined) {
             let accountNumber = 0;
             let addressIndex = 0;
@@ -213,7 +213,7 @@ const ModalReDelegate = (props) => {
                             }).catch(err => {
                                 setLoader(false);
                                 setErrorMessage(err.message);
-                            })
+                            });
                             showSeedModal(false);
                         } else {
                             setLoader(false);
@@ -224,27 +224,27 @@ const ModalReDelegate = (props) => {
                         setLoader(false);
                         setAdvanceMode(false);
                         setErrorMessage(err.message);
-                    })
+                    });
                 } else {
                     setLoader(false);
                     setAdvanceMode(false);
-                    setErrorMessage("Mnemonic not matched")
+                    setErrorMessage("Mnemonic not matched");
                 }
             } else {
                 if (address.error !== undefined) {
                     setLoader(false);
                     setAdvanceMode(false);
-                    setErrorMessage(address.error)
+                    setErrorMessage(address.error);
                 } else {
                     setLoader(false);
                     setAdvanceMode(false);
-                    setErrorMessage(ecpairPriv.error)
+                    setErrorMessage(ecpairPriv.error);
                 }
             }
         } else {
             setLoader(false);
         }
-        };
+    };
     if (loader) {
         return <Loader/>;
     }
@@ -274,7 +274,7 @@ const ModalReDelegate = (props) => {
                             <div className="form-field">
                                 <p className="label">Redelegate to</p>
                                 <Select value={toValidatorAddress} className="validators-list-selection"
-                                        onChange={onChangeSelect} displayEmpty>
+                                    onChange={onChangeSelect} displayEmpty>
                                     <MenuItem value="" key={0}>
                                         <em>{t("SELECT_VALIDATOR")}</em>
                                     </MenuItem>
@@ -288,7 +288,7 @@ const ModalReDelegate = (props) => {
                                                         value={validator.operator_address}>
                                                         {validator.description.moniker}
                                                     </MenuItem>
-                                                )
+                                                );
                                             }
                                         })
                                     }
@@ -315,29 +315,29 @@ const ModalReDelegate = (props) => {
                             </div>
                             {mode === "normal" ?
                                 <>
-                                <div className="memo-dropdown-section">
-                                    <p onClick={handleMemoChange} className="memo-dropdown"><span className="text">{t("ADVANCED")} </span>
-                                        {memoStatus ?
-                                            <Icon
+                                    <div className="memo-dropdown-section">
+                                        <p onClick={handleMemoChange} className="memo-dropdown"><span className="text">{t("ADVANCED")} </span>
+                                            {memoStatus ?
+                                                <Icon
+                                                    viewClass="arrow-right"
+                                                    icon="up-arrow"/>
+                                                :
+                                                <Icon
+                                                    viewClass="arrow-right"
+                                                    icon="down-arrow"/>}
+                                        </p>
+                                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
+                                            overlay={popoverMemo}>
+                                            <button className="icon-button info" type="button"><Icon
                                                 viewClass="arrow-right"
-                                                icon="up-arrow"/>
-                                            :
-                                            <Icon
-                                                viewClass="arrow-right"
-                                                icon="down-arrow"/>}
-                                    </p>
-                                    <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
-                                                    overlay={popoverMemo}>
-                                        <button className="icon-button info" type="button"><Icon
-                                            viewClass="arrow-right"
-                                            icon="info"/></button>
-                                    </OverlayTrigger>
-                                </div>
+                                                icon="info"/></button>
+                                        </OverlayTrigger>
+                                    </div>
                                     {memoStatus ?
                                         <div className="form-field">
                                             <p className="label info">{t("MEMO")}
                                                 <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
-                                                                overlay={popoverMemo}>
+                                                    overlay={popoverMemo}>
                                                     <button className="icon-button info" type="button"><Icon
                                                         viewClass="arrow-right"
                                                         icon="info"/></button>
@@ -389,7 +389,7 @@ const ModalReDelegate = (props) => {
                                         <div className="form-field upload">
                                             <p className="label"> KeyStore file</p>
                                             <Form.File id="exampleFormControlFile1" name="uploadFile"
-                                                       className="file-upload" accept=".json" required={true}/>
+                                                className="file-upload" accept=".json" required={true}/>
                                         </div>
                                         <div className="form-field">
                                             <p className="label">{t("PASSWORD")}</p>

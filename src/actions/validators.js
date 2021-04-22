@@ -9,7 +9,7 @@ import {
     FETCH_VALIDATORS_SUCCESS,
     FETCH_VALIDATOR_SUCCESS,
     FETCH_VALIDATOR_ERROR
-} from "../constants/validators"
+} from "../constants/validators";
 
 import helper from "../utils/helper";
 
@@ -60,9 +60,9 @@ export const fetchValidators = (address) => {
                 let inActiveValidators = [];
                 validators.forEach((item) => {
                     if (helper.isActive(item)) {
-                        activeValidators.push(item)
+                        activeValidators.push(item);
                     } else {
-                        inActiveValidators.push(item)
+                        inActiveValidators.push(item);
                     }
                 });
                 dispatch(fetchTotalValidatorsSuccess(validators));
@@ -74,7 +74,7 @@ export const fetchValidators = (address) => {
                     ? error.response.data.message
                     : error.message));
             });
-    }
+    };
 };
 
 export const fetchValidatorSuccess = (data) => {
@@ -97,7 +97,6 @@ export const fetchValidator = (address) => {
         const url = getValidatorUrl(address);
         Axios.get(url)
             .then((res) => {
-
                 dispatch(fetchValidatorSuccess(res.data.validator));
             })
             .catch((error) => {
@@ -105,5 +104,5 @@ export const fetchValidator = (address) => {
                     ? error.response.data.message
                     : error.message));
             });
-    }
+    };
 };

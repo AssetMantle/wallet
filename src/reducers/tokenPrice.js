@@ -2,7 +2,7 @@ import {combineReducers} from 'redux';
 import {
     TOKEN_PRICE_FETCH_SUCCESS,
     TOKEN_PRICE_FETCH_ERROR,
-} from "../constants/tokenPrice"
+} from "../constants/tokenPrice";
 
 
 const tokenPrice = (state = 0.4, action) => {

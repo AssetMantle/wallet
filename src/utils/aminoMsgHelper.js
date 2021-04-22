@@ -11,15 +11,15 @@ function sendMsg(amount, fromAddress, toAddress) {
             from_address: fromAddress,
             to_address: toAddress
         }
-    }
+    };
 }
 
 function msgs(...msg) {
-    return msg
+    return msg;
 }
 
 function fee(amount, gas = 250000) {
-    return {amount: [{amount: String(amount), denom: "uxprt"}], gas: String(gas)}
+    return {amount: [{amount: String(amount), denom: "uxprt"}], gas: String(gas)};
 }
 
 function delegateMsg(amount, address, validatorAddress) {
@@ -33,7 +33,7 @@ function delegateMsg(amount, address, validatorAddress) {
             delegator_address: address,
             validator_address: validatorAddress
         }
-    }
+    };
 }
 
 function redelegateMsg(amount, address, validatorAddress, toValidatorAddress) {
@@ -48,7 +48,7 @@ function redelegateMsg(amount, address, validatorAddress, toValidatorAddress) {
             validator_dst_address: toValidatorAddress,
             validator_src_address: validatorAddress
         }
-    }
+    };
 }
 
 function unBondMsg(amount, address, validatorAddress) {
@@ -62,7 +62,7 @@ function unBondMsg(amount, address, validatorAddress) {
             delegator_address: address,
             validator_address: validatorAddress
         }
-    }
+    };
 }
 
 function withDrawMsg(address, validatorAddress) {
@@ -72,7 +72,7 @@ function withDrawMsg(address, validatorAddress) {
             delegator_address: address,
             validator_address: validatorAddress
         }
-    }
+    };
 }
 
 function setWithdrawAddressMsg(delegator_address, withdraw_address) {
@@ -82,7 +82,7 @@ function setWithdrawAddressMsg(delegator_address, withdraw_address) {
             delegator_address: delegator_address,
             withdraw_address: withdraw_address
         }
-    }
+    };
 }
 
 module.exports = {

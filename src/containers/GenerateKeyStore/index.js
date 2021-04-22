@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {
     Form,
-     Modal
+    Modal
 } from "react-bootstrap";
 import wallet from "../../utils/wallet";
 import GeneratePrivateKey from "../Common/GeneratePrivateKey";
@@ -47,16 +47,16 @@ const GenerateKeyStore = (props) => {
         props.setShowKeyStore(false);
         if (props.name === "createWallet") {
             props.setShowImportWallet(false);
-            props.handleClose()
+            props.handleClose();
         } else if (props.name === "homepage") {
-            props.setRoutName("")
+            props.setRoutName("");
         }
     };
 
     return (
         <>
             <Modal backdrop="static" show={show} onHide={handleClose} centered
-                   className="create-wallet-modal large seed">
+                className="create-wallet-modal large seed">
                 {
                     mnemonicForm ?
                         <>
@@ -68,8 +68,8 @@ const GenerateKeyStore = (props) => {
                                     <div className="form-field">
                                         <p className="label">{t("ENTER_MNEMONIC")}</p>
                                         <Form.Control as="textarea" rows={3} name="mnemonic"
-                                                      placeholder={t("SEED_PHRASE")}
-                                                      required={true}/>
+                                            placeholder={t("SEED_PHRASE")}
+                                            required={true}/>
                                     </div>
 
                                     {errorMessage !== ''
@@ -92,7 +92,7 @@ const GenerateKeyStore = (props) => {
 
             {generateKey ?
                 <GeneratePrivateKey mnemonic={userMnemonic} handleRoute={handleRoute} setGenerateKey={setGenerateKey}
-                                    routeValue="hideGenerateKeyStore" formName="Generate KeyStore File" handleClose={handleClose}/>
+                    routeValue="hideGenerateKeyStore" formName="Generate KeyStore File" handleClose={handleClose}/>
                 : null
             }
         </>

@@ -5,7 +5,7 @@ import {
     REWARDS_FETCH_IN_PROGRESS,
     REWARDS_FETCH_SUCCESS,
     REWARDS_LIST_FETCH_SUCCESS
-} from "../constants/rewards"
+} from "../constants/rewards";
 
 export const fetchRewardsProgress = () => {
     return {
@@ -38,11 +38,11 @@ export const fetchRewards = (address) => {
         await Axios.get(url)
             .then((res) => {
                 if (res.data.rewards.length) {
-                    dispatch(fetchRewardsListProgress(res.data.rewards))
+                    dispatch(fetchRewardsListProgress(res.data.rewards));
                 }
                 if (res.data.total.length) {
-                    const fixedRewardsResponse = res.data.total[0].amount / 1000000;
-                    dispatch(fetchRewardsSuccess(fixedRewardsResponse.toFixed(4)));
+                    const fixedRewardsResponse = (res.data.total[0].amount*1) / 1000000;
+                    dispatch(fetchRewardsSuccess(fixedRewardsResponse));
                 }
             })
             .catch((error) => {
@@ -50,5 +50,5 @@ export const fetchRewards = (address) => {
                     ? error.response.data.message
                     : error.message));
             });
-    }
+    };
 };

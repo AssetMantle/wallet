@@ -144,24 +144,24 @@ const StakingFaq = () => {
                     <Card.Body><p>   {t("STAKING_FAQ51")}
                     </p>
 
-                        <ul>
-                            <li>{t("STAKING_FAQ52")}
-                            </li>
-                            <li> {t("STAKING_FAQ53")}
-                            </li>
-                            <li> {t("STAKING_FAQ54")}</li>
-                            <li> {t("STAKING_FAQ55")}</li>
-                            <li> {t("STAKING_FAQ56")}</li>
-                            <li> {t("STAKING_FAQ57")}
-                            </li>
-                            <li> {t("STAKING_FAQ58")}
-                            </li>
-                        </ul>
+                    <ul>
+                        <li>{t("STAKING_FAQ52")}
+                        </li>
+                        <li> {t("STAKING_FAQ53")}
+                        </li>
+                        <li> {t("STAKING_FAQ54")}</li>
+                        <li> {t("STAKING_FAQ55")}</li>
+                        <li> {t("STAKING_FAQ56")}</li>
+                        <li> {t("STAKING_FAQ57")}
+                        </li>
+                        <li> {t("STAKING_FAQ58")}
+                        </li>
+                    </ul>
                     </Card.Body>
                 </Accordion.Collapse>
             </Card>
         </Accordion>
 
-    )
-}
+    );
+};
 export default StakingFaq;

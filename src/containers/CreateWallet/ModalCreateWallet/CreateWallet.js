@@ -50,7 +50,7 @@ const CreateWallet = (props) => {
     const handleCreateForm = (name) => {
         if (name === "keysForm") {
             setKeysForm(false);
-            setMnemonicQuiz(true)
+            setMnemonicQuiz(true);
         }
     };
 
@@ -67,13 +67,13 @@ const CreateWallet = (props) => {
                     setMnemonicQuiz(false);
                 }
             }
-        })
+        });
 
     };
 
     const handleRoute = () => {
         setShow(false);
-        setShowImportWallet(true)
+        setShowImportWallet(true);
     };
     const handlePrevious = (formName) => {
         if (formName === "keysForm") {
@@ -84,11 +84,11 @@ const CreateWallet = (props) => {
         }
         if (formName === "mnemonicQuiz") {
             setKeysForm(true);
-            setMnemonicQuiz(false)
+            setMnemonicQuiz(false);
         }
         if (formName === "accountInfo") {
-            setMnemonicQuiz(true)
-            setAccountInfo(false)
+            setMnemonicQuiz(true);
+            setAccountInfo(false);
         }
     };
     const handleKeypress = e => {
@@ -99,7 +99,7 @@ const CreateWallet = (props) => {
     return (
         <div>
             <Modal backdrop="static" show={show} onHide={handleClose} centered
-                   className="create-wallet-modal large seed">
+                className="create-wallet-modal large seed">
                 {
                     keysForm ?
                         <>
@@ -132,7 +132,7 @@ const CreateWallet = (props) => {
                                                         value={key}
                                                         required={true}
                                                     />
-                                                )
+                                                );
                                             }) : null
                                         }
                                     </div>
@@ -144,7 +144,7 @@ const CreateWallet = (props) => {
                                 }
                                 <div className="buttons">
                                     <button className="button button-primary"
-                                            onClick={() => handleCreateForm("keysForm")}>{t("NEXT")}
+                                        onClick={() => handleCreateForm("keysForm")}>{t("NEXT")}
                                     </button>
                                 </div>
                                 <div className="note-section">
@@ -190,7 +190,7 @@ const CreateWallet = (props) => {
                                                         onKeyPress={handleKeypress}
                                                         required={true}
                                                     />
-                                                )
+                                                );
                                             } else {
                                                 return (
                                                     <Form.Control
@@ -202,7 +202,7 @@ const CreateWallet = (props) => {
                                                         defaultValue={key}
                                                         required={true}
                                                     />
-                                                )
+                                                );
                                             }
                                         })
                                         }
@@ -213,7 +213,7 @@ const CreateWallet = (props) => {
                                     : null}
                                 <div className="buttons">
                                     <button className="button button-primary"
-                                            onClick={() => handleSubmitMnemonic()}>{t("SUBMIT")}
+                                        onClick={() => handleSubmitMnemonic()}>{t("SUBMIT")}
                                     </button>
                                 </div>
                                 <div className="note-section">
@@ -229,7 +229,7 @@ const CreateWallet = (props) => {
             </Modal>
             {accountInfo ?
                 <AdvanceMode mnemonic={response.mnemonic} setAccountInfo={setAccountInfo} setShow={setShow}
-                             setMnemonicQuiz={setMnemonicQuiz} handleClose={handleClose}/>
+                    setMnemonicQuiz={setMnemonicQuiz} handleClose={handleClose}/>
                 : null
             }
             {showImportWallet ?

@@ -1,6 +1,6 @@
 import * as PropTypes from 'prop-types';
 import Axios from 'axios';
-import Profile from '../../../assets/images/profile.svg'
+import Profile from '../../../assets/images/profile.svg';
 import React, { useEffect, useState } from 'react';
 import globals from '../../../constants/globals';
 

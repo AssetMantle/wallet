@@ -6,20 +6,20 @@ import {
     FETCH_VALIDATORS_IN_PROGRESS,
     FETCH_VALIDATORS_SUCCESS,
     FETCH_VALIDATOR_SUCCESS
-} from "../constants/validators"
+} from "../constants/validators";
 import Lodash from "lodash";
 
 const inProgress = (state = false, action) => {
     switch (action.type) {
-        case FETCH_VALIDATORS_IN_PROGRESS:
-            return true;
-        case FETCH_ACTIVE_VALIDATORS_SUCCESS:
-        case FETCH_INACTIVE_VALIDATORS_SUCCESS:
-        case FETCH_VALIDATORS_SUCCESS:
-        case FETCH_VALIDATORS_ERROR:
-            return false;
-        default:
-            return state;
+    case FETCH_VALIDATORS_IN_PROGRESS:
+        return true;
+    case FETCH_ACTIVE_VALIDATORS_SUCCESS:
+    case FETCH_INACTIVE_VALIDATORS_SUCCESS:
+    case FETCH_VALIDATORS_SUCCESS:
+    case FETCH_VALIDATORS_ERROR:
+        return false;
+    default:
+        return state;
     }
 };
 

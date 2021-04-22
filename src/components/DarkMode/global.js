@@ -45,7 +45,7 @@ export const GlobalStyles = createGlobalStyle`
     color: ${({theme}) => theme.infoHeadingColor};
     }
     .token-info-section .info-box{
-    border-color:${({theme}) => theme.tableBorderColor};
+    border-color:${({theme}) => theme.tableBorderColor} !important;;
     }
     .tab-header .left .nav-pills .nav-link{
       border-color:${({theme}) => theme.tableBorderColor};

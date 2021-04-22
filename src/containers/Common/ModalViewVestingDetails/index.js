@@ -1,7 +1,7 @@
 import {Modal} from 'react-bootstrap';
 import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
-import {getAccountUrl} from "../../../constants/url"
+import {getAccountUrl} from "../../../constants/url";
 import axios from "axios";
 
 const ModalViewVestingDetails = () => {
@@ -10,7 +10,7 @@ const ModalViewVestingDetails = () => {
     const [showPeriodicVesting, setShowPeriodicVesting] = useState(false);
     const [showDelayedVesting, setShowDelayedVesting] = useState(false);
     const [response, setResponse] = useState("");
-    const loginAddress = localStorage.getItem('address')
+    const loginAddress = localStorage.getItem('address');
     const handleClose = () => {
         setShow(false);
     };
@@ -26,7 +26,7 @@ const ModalViewVestingDetails = () => {
                 setShowPeriodicVesting(true);
             } else if (response.data.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount") {
                 setShowDelayedVesting(true);
-                setResponse(response.data.account)
+                setResponse(response.data.account);
             } else if (response.data.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
                 setShowContinuesVesting(true);
                 setResponse(response.data.account);
@@ -34,7 +34,7 @@ const ModalViewVestingDetails = () => {
         }).catch(error => {
             console.log(error.response
                 ? error.response.data.message
-                : error.message)
+                : error.message);
         });
     }, []);
 
@@ -81,7 +81,7 @@ const ModalViewVestingDetails = () => {
                                                         <li className="unbonding-schedule-list" key={index}>Unlocking
                                                             tokens {period.amount[0].amount / 1000000} XPRT at
                                                             Date {(new Date(vestingPeriod * 1000)).toUTCString()}</li>
-                                                    )
+                                                    );
                                                 })
                                                 : ""
                                         }

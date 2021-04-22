@@ -23,7 +23,7 @@ const KeplerHome = () => {
             const address = localStorage.getItem("keplerAddress");
             setAddress(address);
         }).catch(err => {
-            setErrorMessage(err.message)
+            setErrorMessage(err.message);
         });
     }, []);
 
@@ -34,7 +34,7 @@ const KeplerHome = () => {
             const address = localStorage.getItem("keplerAddress");
             setAddress(address);
         }).catch(err => {
-            setErrorMessage(err.message)
+            setErrorMessage(err.message);
         });
     };
 
@@ -46,7 +46,7 @@ const KeplerHome = () => {
                 if (data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount" ||
                     data.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount" ||
                     data.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
-                    setErrorMessage("Vesting Accounts are not supported by keplr")
+                    setErrorMessage("Vesting Accounts are not supported by keplr");
                 } else {
                     localStorage.setItem('address', address);
                     localStorage.setItem('loginToken', 'loggedIn');
@@ -63,14 +63,14 @@ const KeplerHome = () => {
             }
         }).catch(err => {
             setErrorMessage(err.message);
-        })
+        });
 
     };
     const handlePrevious = () => {
         history.push('/');
     };
     const handleHelp = () => {
-        setShowFaq(true)
+        setShowFaq(true);
     };
     return (
         <div className="kepler-section">
@@ -83,9 +83,8 @@ const KeplerHome = () => {
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="ml-auto">
                             <a className="nav-link" href="https://persistence.one/" target="_blank"
-                               rel="noopener noreferrer">{t("LEARN_MORE")}</a>
-                            <p className="nav-link" onClick={handleHelp} target="_blank"
-                               rel="noopener noreferrer">{t("HELP")}</p>
+                                rel="noopener noreferrer">{t("LEARN_MORE")}</a>
+                            <p className="nav-link" onClick={handleHelp}>{t("HELP")}</p>
                         </Nav>
                     </Navbar.Collapse>
                 </div>
@@ -103,42 +102,42 @@ const KeplerHome = () => {
                         <h3>{t("USE_KEPLER_BROWSER_EXTENSION")}</h3>
                     </div>
                     <div className="info-body">
-                    {errorMessage !== "" ?
-                        <>
-                            <div className="buttons">
-                                <button className="button button-primary" onClick={() => handleKepler()}>{t("CONNECT")}
-                                </button>
-                            </div>
-                            {
-                                errorMessage === "install keplr extension" ?
-                                    <ModalKeplerInstall/>
-                                    :
-                                    <div className="text">
-                                        <p>{t("KEPLER_ERROR")}</p>
-                                        <p className="form-error">{errorMessage}</p>
-                                    </div>
-                            }
-
-                        </>
-                        :
-                        <>
-
-                            <p>{t("KEPLER_ACCOUNT_NOTE")}</p>
-                            <div className="buttons-list">
+                        {errorMessage !== "" ?
+                            <>
+                                <div className="buttons">
+                                    <button className="button button-primary" onClick={() => handleKepler()}>{t("CONNECT")}
+                                    </button>
+                                </div>
                                 {
-                                    address !== ""
-                                        ?
-                                        <p>{address}</p>
-                                        : <p>Fetching Address..</p>
-
+                                    errorMessage === "install keplr extension" ?
+                                        <ModalKeplerInstall/>
+                                        :
+                                        <div className="text">
+                                            <p>{t("KEPLER_ERROR")}</p>
+                                            <p className="form-error">{errorMessage}</p>
+                                        </div>
                                 }
 
-                                <button className="button button-primary" onClick={() => handleRoute()}>{t("USE")}
-                                </button>
+                            </>
+                            :
+                            <>
 
-                            </div>
-                        </>
-                    }
+                                <p>{t("KEPLER_ACCOUNT_NOTE")}</p>
+                                <div className="buttons-list">
+                                    {
+                                        address !== ""
+                                            ?
+                                            <p>{address}</p>
+                                            : <p>Fetching Address..</p>
+
+                                    }
+
+                                    <button className="button button-primary" onClick={() => handleRoute()}>{t("USE")}
+                                    </button>
+
+                                </div>
+                            </>
+                        }
                     </div>
                 </div>
             </div>
@@ -148,6 +147,6 @@ const KeplerHome = () => {
                 :
                 null}
         </div>
-    )
+    );
 };
 export default KeplerHome;

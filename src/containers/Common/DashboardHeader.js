@@ -23,7 +23,7 @@ const DashboardHeader = () => {
         addressTruncate = helper.stringTruncate(address);
     }
     const handleHelp = () => {
-        setShowFaq(true)
+        setShowFaq(true);
     };
     const closeWallet = () => {
         localStorage.clear();
@@ -31,9 +31,9 @@ const DashboardHeader = () => {
         window.location.reload();
     };
     const handleKeyStore = () =>{
-        setShowKeyStore(true)
+        setShowKeyStore(true);
     };
-    const ProfileIcon = <Icon viewClass="profile" icon="profile"/>
+    const ProfileIcon = <Icon viewClass="profile" icon="profile"/>;
     return (
         <div className="header">
             <Navbar collapseOnSelect expand="lg">
@@ -42,14 +42,14 @@ const DashboardHeader = () => {
                         <img src={logo} alt="logo"/>
                     </Nav.Link></Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav">
-                    <MenuIcon/>
+                        <MenuIcon/>
                     </Navbar.Toggle>
 
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="ml-auto">
                             <li className="nav-item link">
                                 <NavLink className="nav-link primary-medium-color"
-                                         to="/dashboard/wallet">
+                                    to="/dashboard/wallet">
                                     <div className="icon-box">
                                         <Icon
                                             viewClass="icon"
@@ -61,7 +61,7 @@ const DashboardHeader = () => {
                             </li>
                             <li className="nav-item link">
                                 <NavLink className="nav-link primary-medium-color"
-                                         to="/dashboard/staking">
+                                    to="/dashboard/staking">
                                     <div className="icon-box">
                                         <Icon
                                             viewClass="icon"
@@ -72,7 +72,7 @@ const DashboardHeader = () => {
                             </li>
                             <li className="nav-item link">
                                 <a className="nav-link primary-medium-color" href={EXPLORER_API}
-                                   rel="noopener noreferrer" target="_blank">
+                                    rel="noopener noreferrer" target="_blank">
                                     <div className="icon-box">
                                         <Icon
                                             viewClass="icon"
@@ -88,7 +88,7 @@ const DashboardHeader = () => {
                             </li>
                             <li className="nav-item link">
                                 <a className="nav-link primary-medium-color"
-                                   onClick={handleHelp}>
+                                    onClick={handleHelp}>
                                     <div className="icon-box">
                                         <Icon
                                             viewClass="icon"

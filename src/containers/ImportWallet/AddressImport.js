@@ -6,7 +6,7 @@ import Icon from "../../components/Icon";
 import {useHistory} from "react-router-dom";
 import config from "../../config";
 import MakePersistence from "../../utils/cosmosjsWrapper";
-import helper from "../../utils/helper"
+import helper from "../../utils/helper";
 import {useTranslation} from "react-i18next";
 const AddressImport = (props) => {
     const {t} = useTranslation();
@@ -46,13 +46,13 @@ const AddressImport = (props) => {
     };
     const handleClose = () => {
         setShow(false);
-        props.handleClose()
+        props.handleClose();
     };
     const handlePrevious = (formName) => {
         if (formName === "addressImport") {
             setShow(false);
             props.setShow(true);
-            props.setWithAddress(false)
+            props.setWithAddress(false);
         }
     };
     return (
