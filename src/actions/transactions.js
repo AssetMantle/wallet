@@ -9,7 +9,7 @@ import {
     RECEIVE_TRANSACTIONS_FETCH_ERROR,
     RECEIVE_TRANSACTIONS_FETCH_SUCCESS,
     RECEIVE_TRANSACTIONS_IN_PROGRESS
-} from "../constants/transactions"
+} from "../constants/transactions";
 
 
 export const fetchTransactionsProgress = () => {
@@ -55,11 +55,11 @@ export const fetchTransactions = (address, limit, pageNumber) => {
             let txnList = [];
             for (let i = 0; i < txnsResponseList.length; i++) {
                 let txHashResult = await Axios.get(getTxnUrl(txnsResponseList[i].hash));
-                txnList.push(txHashResult.data.tx_response)
+                txnList.push(txHashResult.data.tx_response);
             }
-            dispatch(fetchTransactionsSuccess(txnList))
+            dispatch(fetchTransactionsSuccess(txnList));
         }
-    }
+    };
 };
 
 export const fetchReceiveTransactionsProgress = () => {
@@ -106,9 +106,9 @@ export const fetchReceiveTransactions = (address, limit, pageNumber) => {
             let txnList = [];
             for (let i = 0; i < txnsResponseList.length; i++) {
                 let txHashResult = await Axios.get(getTxnUrl(txnsResponseList[i].hash));
-                txnList.push(txHashResult.data.tx_response)
+                txnList.push(txHashResult.data.tx_response);
             }
-            dispatch(fetchReceiveTransactionsSuccess(txnList))
+            dispatch(fetchReceiveTransactionsSuccess(txnList));
         }
-    }
+    };
 };

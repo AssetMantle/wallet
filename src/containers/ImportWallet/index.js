@@ -8,11 +8,11 @@ import {
 } from "react-bootstrap";
 import Icon from "../../components/Icon";
 import wallet from "../../utils/wallet";
-import helper from "../../utils/helper"
+import helper from "../../utils/helper";
 import {useHistory} from "react-router-dom";
 import ModalFaq from "../Faq";
 import GeneratePrivateKey from "../Common/GeneratePrivateKey";
-import config from "../../config"
+import config from "../../config";
 import MakePersistence from "../../utils/cosmosjsWrapper";
 import {useTranslation} from "react-i18next";
 
@@ -55,7 +55,7 @@ const ModalImportWallet = (props) => {
             const res = JSON.parse(event.target.result);
             const decryptedData = helper.decryptStore(res, password);
             if (decryptedData.error != null) {
-                setErrorMessage(decryptedData.error)
+                setErrorMessage(decryptedData.error);
             } else {
                 setUserMnemonic(decryptedData.mnemonic);
                 setAdvancedForm(true);
@@ -72,11 +72,11 @@ const ModalImportWallet = (props) => {
     const handleRoute = (key) => {
         if (key === "generateKey") {
             setGenerateKey(true);
-            setAdvancedForm(false)
+            setAdvancedForm(false);
         }
         if (key === "hideGenerateKey") {
             setGenerateKey(false);
-            setAdvancedForm(true)
+            setAdvancedForm(true);
         }
 
     };
@@ -143,17 +143,17 @@ const ModalImportWallet = (props) => {
             setAdvancedForm(false);
         } else if (formName === "advancedFormResponse") {
             setAdvancedForm(true);
-            setAdvancedFormResponse(false)
+            setAdvancedFormResponse(false);
         } else if (formName === "generateKey") {
             setGenerateKey(false);
-            setAdvancedFormResponse(true)
+            setAdvancedFormResponse(true);
         }
 
     };
 
     const handlePassphrase = (evt) => {
         const result = helper.ValidatePassphrase(evt.target.value);
-        setPassphraseError(result)
+        setPassphraseError(result);
     };
     const handleLogin = () => {
         const persistence = MakePersistence(0, 0);
@@ -181,18 +181,18 @@ const ModalImportWallet = (props) => {
         setShow(false);
         if (props.name === "createWallet") {
             props.setShowImportWallet(false);
-            props.handleClose()
+            props.handleClose();
         } else if (props.name === "homepage") {
-            props.setRoutName("")
+            props.setRoutName("");
         }
     };
     const handleKepler = () => {
-        history.push('/kepler')
+        history.push('/kepler');
     };
     return (
         <>
             <Modal backdrop="static" show={show} onHide={handleClose} centered
-                   className="create-wallet-modal large seed">
+                className="create-wallet-modal large seed">
                 {
                     mnemonicForm ?
                         <>
@@ -206,13 +206,13 @@ const ModalImportWallet = (props) => {
                                             <Form onSubmit={handleSubmit}>
                                                 <div className="text-center">
                                                     <p onClick={() => handlePrivateKey(false)}
-                                                       className="import-name">{t("USE_PRIVATE_KEY")} (KeyStore.json file)</p>
+                                                        className="import-name">{t("USE_PRIVATE_KEY")} (KeyStore.json file)</p>
                                                 </div>
                                                 <div className="form-field">
                                                     <p className="label">{t("ENTER_MNEMONIC")}</p>
                                                     <Form.Control as="textarea" rows={3} name="mnemonic"
-                                                                  placeholder={t("SEED_PHRASE")}
-                                                                  required={true}/>
+                                                        placeholder={t("SEED_PHRASE")}
+                                                        required={true}/>
                                                 </div>
 
                                                 {errorMessage !== ''
@@ -226,7 +226,7 @@ const ModalImportWallet = (props) => {
                                                 </div>
                                                 <div className="buttons">
                                                     <button className="button button-primary"
-                                                            onClick={() => handleKepler("kepler")}>{t("USE_KEPLER")}
+                                                        onClick={() => handleKepler("kepler")}>{t("USE_KEPLER")}
                                                     </button>
                                                 </div>
                                             </Form>
@@ -249,7 +249,7 @@ const ModalImportWallet = (props) => {
                                             <div className="form-field upload">
                                                 <p className="label"> {t("KEY_STORE_FILE")}</p>
                                                 <Form.File id="exampleFormControlFile1" name="uploadFile"
-                                                           className="file-upload" accept=".json" required={true}/>
+                                                    className="file-upload" accept=".json" required={true}/>
                                             </div>
                                             {errorMessage !== ''
                                                 ? <p className="form-error">{errorMessage}</p>
@@ -261,7 +261,7 @@ const ModalImportWallet = (props) => {
                                             </div>
                                             <div className="buttons">
                                                 <button className="button button-primary"
-                                                        onClick={() => handleKepler("kepler")}>{t("USE_KEPLER")}
+                                                    onClick={() => handleKepler("kepler")}>{t("USE_KEPLER")}
                                                 </button>
                                             </div>
                                             <div className="note-section">
@@ -401,7 +401,7 @@ const ModalImportWallet = (props) => {
 
             {generateKey ?
                 <GeneratePrivateKey mnemonic={userMnemonic} handleRoute={handleRoute} setGenerateKey={setGenerateKey}
-                                    routeValue="hideGenerateKey" formName="Import Wallet"/>
+                    routeValue="hideGenerateKey" formName="Import Wallet"/>
                 : null
             }
             {showFaq

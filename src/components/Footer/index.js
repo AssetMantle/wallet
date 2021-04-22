@@ -1,8 +1,8 @@
 import React from 'react';
-import icon from '../../assets/images/footer_logo.svg'
-import whitepaper from '../../assets/images/whitepaper.pdf'
+import icon from '../../assets/images/footer_logo.svg';
+import whitepaper from '../../assets/images/whitepaper.pdf';
 import Mailchimp from "./MailChimp";
-import {OverlayTrigger, Tooltip} from 'react-bootstrap'
+import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 import Icon from "../Icon";
 
 const socialList = [
@@ -64,7 +64,7 @@ const Footer = () => {
                                             <li><a href="https://persistence.one/vision" rel="noopener noreferrer" target="_blank">Company</a></li>
                                             <li><a href="https://persistence.one/roadmap" rel="noopener noreferrer" target="_blank">Roadmap</a></li>
                                             <li><a href={whitepaper} target="_blank"
-                                                   rel="noopener noreferrer">Protocol paper</a></li>
+                                                rel="noopener noreferrer">Protocol paper</a></li>
                                             <li><a href="https://persistence.one/ecosystem" rel="noopener noreferrer" target="_blank">Ecosystem</a></li>
                                             <li><a href="https://persistence.one/technology" rel="noopener noreferrer" target="_blank">Technology</a></li>
                                         </ul>
@@ -115,8 +115,8 @@ const Footer = () => {
                                                         }
                                                     >
                                                         <a href={item.url} rel="noopener noreferrer"
-                                                           target="_blank"><Icon viewClass="social_icon_imgg"
-                                                                                 icon={item.iconName}/></a>
+                                                            target="_blank"><Icon viewClass="social_icon_imgg"
+                                                                icon={item.iconName}/></a>
                                                     </OverlayTrigger>
                                                 ))
                                             }
@@ -136,7 +136,7 @@ const Footer = () => {
                 </div>
             </footer>
         </>
-    )
+    );
 };
 
 

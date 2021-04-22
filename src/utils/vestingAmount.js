@@ -2,10 +2,10 @@ import MakePersistence from "./cosmosjsWrapper";
 
 const config = require('../config');
 
-const periodicVesting = "/cosmos.vesting.v1beta1.PeriodicVestingAccount"
-const baseAccount = "/cosmos.auth.v1beta1.BaseAccount"
-const delayedVesting = "/cosmos.vesting.v1beta1.DelayedVestingAccount"
-const continuousVesting = "/cosmos.vesting.v1beta1.ContinuousVestingAccount"
+const periodicVesting = "/cosmos.vesting.v1beta1.PeriodicVestingAccount";
+const baseAccount = "/cosmos.auth.v1beta1.BaseAccount";
+const delayedVesting = "/cosmos.vesting.v1beta1.DelayedVestingAccount";
+const continuousVesting = "/cosmos.vesting.v1beta1.ContinuousVestingAccount";
 
 // takes input of authAccount.
 /*
@@ -77,19 +77,19 @@ function getContinuousVestingAmount(account, currentEpochTime) {
 function getAccountVestingAmount(account, currentEpochTime) {
     let accountVestingAmount = 0;
     switch (account["@type"]) {
-        case periodicVesting:
-            accountVestingAmount = getPeriodicVestingAmount(account, currentEpochTime);
-            break;
-        case delayedVesting:
-            accountVestingAmount = getDelayedVestingAmount(account, currentEpochTime);
-            break;
-        case continuousVesting:
-            accountVestingAmount = getContinuousVestingAmount(account, currentEpochTime);
-            break;
-        case baseAccount:
-            accountVestingAmount = 0;
-            break;
-        default:
+    case periodicVesting:
+        accountVestingAmount = getPeriodicVestingAmount(account, currentEpochTime);
+        break;
+    case delayedVesting:
+        accountVestingAmount = getDelayedVestingAmount(account, currentEpochTime);
+        break;
+    case continuousVesting:
+        accountVestingAmount = getContinuousVestingAmount(account, currentEpochTime);
+        break;
+    case baseAccount:
+        accountVestingAmount = 0;
+        break;
+    default:
     }
     return accountVestingAmount;
 }
@@ -109,7 +109,7 @@ async function getTransferableVestingAmount(address, balance) {
             transferableAmount = balance - amount;
         }
     }
-    return [vestingAmount, transferableAmount]
+    return [vestingAmount, transferableAmount];
 }
 
 export default {getTransferableVestingAmount, getAccountVestingAmount};

@@ -69,11 +69,11 @@ const ReceiveTransactions = (props) => {
             <span key={index}
                 className="type">{(stxn.tx.body.messages[0]["@type"]).substr((stxn.tx.body.messages[0]["@type"]).indexOf('v1beta1.') + 11)}</span>,
             <div key={index} className="result">
-                                    <span className="icon-box success">
-                                        <Icon
-                                            viewClass="arrow-right"
-                                            icon="success"/>
-                                    </span>
+                <span className="icon-box success">
+                    <Icon
+                        viewClass="arrow-right"
+                        icon="success"/>
+                </span>
             </div>,
             (stxn.tx.body.messages[0].amount !== undefined && stxn.tx.body.messages[0].amount.length) ?
                 <div className="amount" key={index}>
@@ -100,7 +100,7 @@ const ReceiveTransactions = (props) => {
                     {stxn.tx.auth_info.fee.amount[0].denom}
                 </div> : '',
             <a key={index} href={`${EXPLORER_API}/block?height=${stxn.height}`}
-               target="_blank" className="height" rel="noopener noreferrer">{stxn.height}</a>,
+                target="_blank" className="height" rel="noopener noreferrer">{stxn.height}</a>,
             <span key={index} className="time">{moment.utc(stxn.timestamp).local().startOf('seconds').fromNow()}</span>,
         ])
         :
@@ -129,7 +129,7 @@ const ReceiveTransactions = (props) => {
 
                 <div className="before buttons">
                     <IconButton aria-label="previous" onClick={handlePrevious}
-                                disabled={props.pageNumber[0] > 1 ? false : true}>
+                        disabled={props.pageNumber[0] > 1 ? false : true}>
                         <ChevronLeftIcon/>
                     </IconButton>
                 </div>

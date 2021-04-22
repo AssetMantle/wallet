@@ -3,7 +3,7 @@ import {getWithdrawAddressUrl} from "../constants/url";
 import {
     FETCH_WITHDRAW_ADDRESS_ERROR,
     FETCH_WITHDRAW_ADDRESS_SUCCESS
-} from "../constants/withdrawAddress"
+} from "../constants/withdrawAddress";
 
 export const fetchAddressSuccess = (address) => {
     return {
@@ -19,7 +19,7 @@ export const fetchAddressError = (data) => {
 };
 
 export const fetchWithdrawAddress = (address) => {
-        return async dispatch => {
+    return async dispatch => {
         const url = getWithdrawAddressUrl(address);
         await Axios.get(url)
             .then((res) => {
@@ -32,5 +32,5 @@ export const fetchWithdrawAddress = (address) => {
                     ? error.response.data.message
                     : error.message));
             });
-    }
+    };
 };

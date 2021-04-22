@@ -45,9 +45,9 @@ const ModalUnbond = (props) => {
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
-            setAmount(evt.target.value * 1)
+            setAmount(evt.target.value * 1);
         } else {
-            return false
+            return false;
         }
     };
 
@@ -92,7 +92,7 @@ const ModalUnbond = (props) => {
     useEffect(() => {
         const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
         if (encryptedMnemonic !== null) {
-            setImportMnemonic(false)
+            setImportMnemonic(false);
         } else {
             setImportMnemonic(true);
         }
@@ -125,7 +125,7 @@ const ModalUnbond = (props) => {
         }
         let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
         if (memoCheck) {
-            setErrorMessage("you entered your mnemonic as memo")
+            setErrorMessage("you entered your mnemonic as memo");
         } else {
             setErrorMessage("");
             setMemoContent(memo);
@@ -139,16 +139,16 @@ const ModalUnbond = (props) => {
         const response = transactions.TransactionWithKeplr([UnbondMsg(loginAddress, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             if (result.code !== undefined) {
-                helper.AccountChangeCheck(result.rawLog)
+                helper.AccountChangeCheck(result.rawLog);
             }
             setInitialModal(false);
             setResponse(result);
-            setLoader(false)
+            setLoader(false);
         }).catch(err => {
             setLoader(false);
             helper.AccountChangeCheck(err.message);
             setErrorMessage(err.message);
-        })
+        });
     };
     const handleSubmit = async event => {
         setLoader(true);
@@ -166,7 +166,7 @@ const ModalUnbond = (props) => {
             const res = JSON.parse(encryptedMnemonic);
             const decryptedData = helper.decryptStore(res, password);
             if (decryptedData.error != null) {
-                setErrorMessage(decryptedData.error)
+                setErrorMessage(decryptedData.error);
             } else {
                 mnemonic = decryptedData.mnemonic;
                 setErrorMessage("");
@@ -218,21 +218,21 @@ const ModalUnbond = (props) => {
                         setLoader(false);
                         setAdvanceMode(false);
                         setErrorMessage(err.message);
-                    })
+                    });
                 } else {
                     setLoader(false);
                     setAdvanceMode(false);
-                    setErrorMessage("Mnemonic not matched")
+                    setErrorMessage("Mnemonic not matched");
                 }
             } else {
                 if (address.error !== undefined) {
                     setLoader(false);
                     setAdvanceMode(false);
-                    setErrorMessage(address.error)
+                    setErrorMessage(address.error);
                 } else {
                     setLoader(false);
                     setAdvanceMode(false);
-                    setErrorMessage(ecpairPriv.error)
+                    setErrorMessage(ecpairPriv.error);
                 }
             }
         } else {
@@ -285,45 +285,45 @@ const ModalUnbond = (props) => {
                                 </div>
                             </div>
                             {mode === "normal" ?
-                              <>
-                              <div className="memo-dropdown-section">
-                                  <p onClick={handleMemoChange} className="memo-dropdown"><span className="text">{t("ADVANCED")} </span>
-                                      {memoStatus ?
-                                          <Icon
-                                              viewClass="arrow-right"
-                                              icon="up-arrow"/>
-                                          :
-                                          <Icon
-                                              viewClass="arrow-right"
-                                              icon="down-arrow"/>}
-                                  </p>
-                                  <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
-                                                  overlay={popoverMemo}>
-                                      <button className="icon-button info" type="button"><Icon
-                                          viewClass="arrow-right"
-                                          icon="info"/></button>
-                                  </OverlayTrigger>
-                              </div>
-                                  {memoStatus ?
-                                      <div className="form-field">
-                                          <p className="label info">{t("MEMO")}
-                                              <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
-                                                              overlay={popoverMemo}>
-                                                  <button className="icon-button info" type="button"><Icon
-                                                      viewClass="arrow-right"
-                                                      icon="info"/></button>
-                                              </OverlayTrigger></p>
-                                          <Form.Control
-                                              type="text"
-                                              name="memo"
-                                              placeholder={t("ENTER_MEMO")}
-                                              required={false}
-                                          />
-                                      </div>
-                                      : ""
-                                  }
-                              </>
-                               : null
+                                <>
+                                    <div className="memo-dropdown-section">
+                                        <p onClick={handleMemoChange} className="memo-dropdown"><span className="text">{t("ADVANCED")} </span>
+                                            {memoStatus ?
+                                                <Icon
+                                                    viewClass="arrow-right"
+                                                    icon="up-arrow"/>
+                                                :
+                                                <Icon
+                                                    viewClass="arrow-right"
+                                                    icon="down-arrow"/>}
+                                        </p>
+                                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
+                                            overlay={popoverMemo}>
+                                            <button className="icon-button info" type="button"><Icon
+                                                viewClass="arrow-right"
+                                                icon="info"/></button>
+                                        </OverlayTrigger>
+                                    </div>
+                                    {memoStatus ?
+                                        <div className="form-field">
+                                            <p className="label info">{t("MEMO")}
+                                                <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
+                                                    overlay={popoverMemo}>
+                                                    <button className="icon-button info" type="button"><Icon
+                                                        viewClass="arrow-right"
+                                                        icon="info"/></button>
+                                                </OverlayTrigger></p>
+                                            <Form.Control
+                                                type="text"
+                                                name="memo"
+                                                placeholder={t("ENTER_MEMO")}
+                                                required={false}
+                                            />
+                                        </div>
+                                        : ""
+                                    }
+                                </>
+                                : null
                             }
                             {
                                 errorMessage !== "" ?
@@ -333,13 +333,13 @@ const ModalUnbond = (props) => {
                             <div className="buttons navigate-buttons">
                                 <FeeContainer/>
                                 <button className="button button-secondary" type="button"
-                                        onClick={() => handlePrevious()}>
+                                    onClick={() => handlePrevious()}>
                                     <Icon
                                         viewClass="arrow-right"
                                         icon="left-arrow"/>
                                 </button>
                                 <button className="button button-primary"
-                                        disabled={checkAmountError || !props.delegateStatus || amount === 0 || amount > props.delegationAmount}>
+                                    disabled={checkAmountError || !props.delegateStatus || amount === 0 || amount > props.delegationAmount}>
                                     {mode === "normal" ? "Next" : "Submit"}
                                 </button>
                             </div>
@@ -361,7 +361,7 @@ const ModalUnbond = (props) => {
                                         <div className="form-field upload">
                                             <p className="label"> KeyStore file</p>
                                             <Form.File id="exampleFormControlFile1" name="uploadFile"
-                                                       className="file-upload" accept=".json" required={true}/>
+                                                className="file-upload" accept=".json" required={true}/>
                                         </div>
                                         <div className="form-field">
                                             <p className="label">{t("PASSWORD")}</p>

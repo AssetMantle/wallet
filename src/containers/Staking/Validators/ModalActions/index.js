@@ -32,12 +32,12 @@ const ModalActions = (props) => {
             const url = getValidatorRewardsUrl(address, props.validator.operator_address);
             axios.get(url).then(response => {
                 if (response.data.rewards[0].amount) {
-                    setRewards(((response.data.rewards[0].amount*1) / 1000000).toFixed(6))
+                    setRewards(((response.data.rewards[0].amount*1) / 1000000));
                 }
             }).catch(error => {
                 console.log(error.response
                     ? error.response.data.message
-                    : error.message)
+                    : error.message);
             });
             const delegationsUrl = getDelegationsUrl(address);
             axios.get(delegationsUrl).then(response => {
@@ -51,7 +51,7 @@ const ModalActions = (props) => {
             }).catch(error => {
                 console.log(error.response
                     ? error.response.data.message
-                    : error.message)
+                    : error.message);
             });
         };
         fetchValidatorRewards();
@@ -75,10 +75,10 @@ const ModalActions = (props) => {
     let active = helper.isActive(props.validator);
 
     const handleRewards = () => {
-            setInitialModal(false);
-            setShow(false);
-            setTxModalShow(false);
-            setWithDraw(true);
+        setInitialModal(false);
+        setShow(false);
+        setTxModalShow(false);
+        setWithDraw(true);
 
     };
 
@@ -108,8 +108,8 @@ const ModalActions = (props) => {
                                     <div className="website">
                                         <p className="name">{t("WEBSITE")}</p>
                                         <p className="value"><a href={props.validator.description.website}
-                                                                rel="noopener noreferrer"
-                                                                target="_blank">{props.validator.description.website}</a>
+                                            rel="noopener noreferrer"
+                                            target="_blank">{props.validator.description.website}</a>
                                         </p>
                                     </div>
                                     : null
@@ -133,20 +133,20 @@ const ModalActions = (props) => {
                                     :
                                     null
                                 }
-                                    <button className="button button-primary"
-                                            onClick={() => handleModal('Redelegate', props.validator.operator_address, props.validator.description.moniker)}
-                                    >{t("REDELEGATE")}
-                                    </button>
-                                    <button
-                                        onClick={() => handleModal('Unbond', props.validator.operator_address, props.validator.description.moniker)}
-                                        className="button button-primary">
-                                        {t("UNBOND")}
-                                    </button>
-                                    <button
-                                        onClick={() => handleModal('Withdraw', props.validator.operator_address, props.validator.description.moniker)}
-                                        className="button button-primary">
-                                        {t("CLAIM_REWARDS")}
-                                    </button>
+                                <button className="button button-primary"
+                                    onClick={() => handleModal('Redelegate', props.validator.operator_address, props.validator.description.moniker)}
+                                >{t("REDELEGATE")}
+                                </button>
+                                <button
+                                    onClick={() => handleModal('Unbond', props.validator.operator_address, props.validator.description.moniker)}
+                                    className="button button-primary">
+                                    {t("UNBOND")}
+                                </button>
+                                <button
+                                    onClick={() => handleModal('Withdraw', props.validator.operator_address, props.validator.description.moniker)}
+                                    className="button button-primary">
+                                    {t("CLAIM_REWARDS")}
+                                </button>
 
                             </div>
 
@@ -224,7 +224,7 @@ const ModalActions = (props) => {
             }
             {withdraw ?
                 <ModalSetWithdrawAddress setWithDraw={setWithDraw} handleClose={handleClose}
-                                         totalRewards={props.rewards} />
+                    totalRewards={props.rewards} />
                 : null
             }
 

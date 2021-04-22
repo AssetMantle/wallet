@@ -78,7 +78,7 @@ const ModalDelegate = (props) => {
     useEffect(() => {
         const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
         if (encryptedMnemonic !== null) {
-            setImportMnemonic(false)
+            setImportMnemonic(false);
         } else {
             setImportMnemonic(true);
         }
@@ -86,9 +86,9 @@ const ModalDelegate = (props) => {
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
-            setAmount(evt.target.value)
+            setAmount(evt.target.value);
         } else {
-            return false
+            return false;
         }
     };
 
@@ -104,16 +104,16 @@ const ModalDelegate = (props) => {
         const response = transactions.TransactionWithKeplr([DelegateMsg(loginAddress, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(0, 250000), memoContent);
         response.then(result => {
             if (result.code !== undefined) {
-                helper.AccountChangeCheck(result.rawLog)
+                helper.AccountChangeCheck(result.rawLog);
             }
             setResponse(result);
-            setLoader(false)
+            setLoader(false);
             setInitialModal(false);
         }).catch(err => {
             setLoader(false);
             helper.AccountChangeCheck(err.message);
             setErrorMessage(err.message);
-        })
+        });
     };
 
     const handleSubmitInitialData = async event => {
@@ -122,9 +122,9 @@ const ModalDelegate = (props) => {
         if (memoStatus) {
             memo = event.target.memo.value;
         }
-        let memoCheck = transactions.mnemonicValidation(memo, loginAddress)
+        let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
         if (memoCheck) {
-            setErrorMessage("you entered your mnemonic as memo")
+            setErrorMessage("you entered your mnemonic as memo");
         } else {
             setErrorMessage("");
             setMemoContent(memo);
@@ -168,7 +168,7 @@ const ModalDelegate = (props) => {
             const res = JSON.parse(encryptedMnemonic);
             const decryptedData = helper.decryptStore(res, password);
             if (decryptedData.error != null) {
-                setErrorMessage(decryptedData.error)
+                setErrorMessage(decryptedData.error);
             } else {
                 mnemonic = decryptedData.mnemonic;
                 setErrorMessage("");
@@ -209,7 +209,7 @@ const ModalDelegate = (props) => {
                             }).catch(err => {
                                 setLoader(false);
                                 setErrorMessage(err.message);
-                            })
+                            });
                             showSeedModal(false);
                         } else {
                             setLoader(false);
@@ -220,21 +220,21 @@ const ModalDelegate = (props) => {
                         setLoader(false);
                         setAdvanceMode(false);
                         setErrorMessage(err.message);
-                    })
+                    });
                 } else {
                     setLoader(false);
                     setAdvanceMode(false);
-                    setErrorMessage("Mnemonic not matched")
+                    setErrorMessage("Mnemonic not matched");
                 }
             } else {
                 if (address.error !== undefined) {
                     setLoader(false);
                     setAdvanceMode(false);
-                    setErrorMessage(address.error)
+                    setErrorMessage(address.error);
                 } else {
                     setLoader(false);
                     setAdvanceMode(false);
-                    setErrorMessage(ecpairPriv.error)
+                    setErrorMessage(ecpairPriv.error);
                 }
             }
         } else {
@@ -304,17 +304,17 @@ const ModalDelegate = (props) => {
                                     <div className="memo-dropdown-section">
                                         <p onClick={handleMemoChange} className="memo-dropdown"><span
                                             className="text">{t("ADVANCED")}  </span>
-                                            {memoStatus ?
-                                                <Icon
-                                                    viewClass="arrow-right"
-                                                    icon="up-arrow"/>
-                                                :
-                                                <Icon
-                                                    viewClass="arrow-right"
-                                                    icon="down-arrow"/>}
+                                        {memoStatus ?
+                                            <Icon
+                                                viewClass="arrow-right"
+                                                icon="up-arrow"/>
+                                            :
+                                            <Icon
+                                                viewClass="arrow-right"
+                                                icon="down-arrow"/>}
                                         </p>
                                         <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
-                                                        overlay={popoverMemo}>
+                                            overlay={popoverMemo}>
                                             <button className="icon-button info" type="button"><Icon
                                                 viewClass="arrow-right"
                                                 icon="info"/></button>
@@ -324,7 +324,7 @@ const ModalDelegate = (props) => {
                                         <div className="form-field">
                                             <p className="label info">{t("MEMO")}
                                                 <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
-                                                                overlay={popoverMemo}>
+                                                    overlay={popoverMemo}>
                                                     <button className="icon-button info" type="button"><Icon
                                                         viewClass="arrow-right"
                                                         icon="info"/></button>
@@ -355,7 +355,7 @@ const ModalDelegate = (props) => {
                                         icon="left-arrow"/>
                                 </button>
                                 <button className="button button-primary"
-                                        disabled={amount > props.balance || checkAmountError || amount === 0 || (props.balance * 1) === 0}
+                                    disabled={amount > props.balance || checkAmountError || amount === 0 || (props.balance * 1) === 0}
                                 > {mode === "normal" ? "Next" : "Submit"}</button>
                             </div>
                         </Form>
@@ -382,7 +382,7 @@ const ModalDelegate = (props) => {
                                         <div className="form-field upload">
                                             <p className="label"> KeyStore file</p>
                                             <Form.File id="exampleFormControlFile1" name="uploadFile"
-                                                       className="file-upload" accept=".json" required={true}/>
+                                                className="file-upload" accept=".json" required={true}/>
                                         </div>
                                         <div className="form-field">
                                             <p className="label">{t("PASSWORD")}</p>
@@ -499,38 +499,38 @@ const ModalDelegate = (props) => {
                     </>
                     : null
             }{
-            response !== '' && response.code !== undefined ?
-                <>
-                    <Modal.Header className="result-header error" closeButton>
-                        {t("FAILED_DELEGATE")}
-                    </Modal.Header>
-                    <Modal.Body className="delegate-modal-body">
-                        <div className="result-container">
-                            {mode === "kepler" ?
-                                <>
-                                    <p>{response.rawLog}</p>
-                                    <a
-                                        href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
-                                        target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
+                response !== '' && response.code !== undefined ?
+                    <>
+                        <Modal.Header className="result-header error" closeButton>
+                            {t("FAILED_DELEGATE")}
+                        </Modal.Header>
+                        <Modal.Body className="delegate-modal-body">
+                            <div className="result-container">
+                                {mode === "kepler" ?
+                                    <>
+                                        <p>{response.rawLog}</p>
+                                        <a
+                                            href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
+                                            target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                         Hash: {response.transactionHash}</a>
-                                </>
-                                :
-                                <>
-                                    <p>{response.raw_log === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : response.raw_log}</p>
-                                    <a
-                                        href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
-                                        target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
+                                    </>
+                                    :
+                                    <>
+                                        <p>{response.raw_log === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : response.raw_log}</p>
+                                        <a
+                                            href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
+                                            target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                         Hash: {response.txhash}</a>
-                                </>
-                            }
-                            <div className="buttons">
-                                <button className="button" onClick={props.handleClose}>{t("DONE")}</button>
+                                    </>
+                                }
+                                <div className="buttons">
+                                    <button className="button" onClick={props.handleClose}>{t("DONE")}</button>
+                                </div>
                             </div>
-                        </div>
-                    </Modal.Body>
-                </>
-                : null
-        }
+                        </Modal.Body>
+                    </>
+                    : null
+            }
         </>
     );
 };

@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import helper from "../../../utils/helper"
+import helper from "../../../utils/helper";
 import Avatar from "./Avatar";
 import activeIcon from "../../../assets/images/active.svg";
 import inActiveIcon from "../../../assets/images/inactive.svg";
@@ -80,12 +80,12 @@ const ValidatorsTable = (props) => {
             <div className="" key={index}>
                 {helper.isActive(validator) ?
                     <span className="icon-box" title="active">
-                                            <img src={activeIcon} alt="activeIcon"/>
-                                        </span>
+                        <img src={activeIcon} alt="activeIcon"/>
+                    </span>
                     :
                     <span className="icon-box" title="Inactive">
-                                         <img src={inActiveIcon} alt="inActiveIcon"/>
-                                        </span>
+                        <img src={inActiveIcon} alt="inActiveIcon"/>
+                    </span>
                 }
             </div>,
             <div className="actions-td" key={index}>

@@ -34,9 +34,9 @@ const Validators = (props) => {
                                 </Nav.Item>
                             </Nav>
                         </div>
-                       <div>
-                           <InfoRefresh/>
-                       </div>
+                        <div>
+                            <InfoRefresh/>
+                        </div>
                         {/*<p className="info-value"><span>Lifetime Rewards: </span>125,000 XPRT</p>*/}
                     </div>
 
@@ -44,11 +44,11 @@ const Validators = (props) => {
                 <Tab.Content>
                     <Tab.Pane eventKey="active">
                         <ValidatorsTable validatorsList={props.activeList}
-                                         activeValidatorsTokens={props.activeVotingPower.active}/>
+                            activeValidatorsTokens={props.activeVotingPower.active}/>
                     </Tab.Pane>
                     <Tab.Pane eventKey="inactive">
                         <ValidatorsTable validatorsList={props.inActiveList}
-                                         inActiveValidatorsTokens={props.inActiveVotingPower.inActive}/>
+                            inActiveValidatorsTokens={props.inActiveVotingPower.inActive}/>
                     </Tab.Pane>
                 </Tab.Content>
             </Tab.Container>

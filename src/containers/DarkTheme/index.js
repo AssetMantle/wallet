@@ -1,5 +1,5 @@
 import React from 'react';
-import {useDarkMode} from '../../components/DarkMode/useDarkMode'
+import {useDarkMode} from '../../components/DarkMode/useDarkMode';
 import {lightTheme, darkTheme} from '../../components/DarkMode/theme';
 import {GlobalStyles} from '../../components/DarkMode/global';
 import {ThemeProvider} from 'styled-components';

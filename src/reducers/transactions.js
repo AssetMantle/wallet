@@ -12,13 +12,13 @@ import {
 
 const inProgress = (state = false, action) => {
     switch (action.type) {
-        case TRANSACTIONS_IN_PROGRESS:
-            return true;
-        case TRANSACTIONS_FETCH_SUCCESS:
-        case TRANSACTIONS_FETCH_ERROR:
-            return false;
-        default:
-            return state;
+    case TRANSACTIONS_IN_PROGRESS:
+        return true;
+    case TRANSACTIONS_FETCH_SUCCESS:
+    case TRANSACTIONS_FETCH_ERROR:
+        return false;
+    default:
+        return state;
     }
 };
 
@@ -46,13 +46,13 @@ const pageNumber = (state = 1, action) => {
 
 const inReceiveTxnProgress = (state = false, action) => {
     switch (action.type) {
-        case RECEIVE_TRANSACTIONS_IN_PROGRESS:
-            return true;
-        case RECEIVE_TRANSACTIONS_FETCH_SUCCESS:
-        case RECEIVE_TRANSACTIONS_FETCH_ERROR:
-            return false;
-        default:
-            return state;
+    case RECEIVE_TRANSACTIONS_IN_PROGRESS:
+        return true;
+    case RECEIVE_TRANSACTIONS_FETCH_SUCCESS:
+    case RECEIVE_TRANSACTIONS_FETCH_ERROR:
+        return false;
+    default:
+        return state;
     }
 };
 

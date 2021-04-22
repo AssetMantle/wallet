@@ -5,12 +5,12 @@ import {
     MsgWithdrawDelegatorReward
 } from "@cosmjs/stargate/build/codec/cosmos/distribution/v1beta1/tx";
 
-const msgSendTypeUrl = "/cosmos.bank.v1beta1.MsgSend"
-const msgDelegateTypeUrl = "/cosmos.staking.v1beta1.MsgDelegate"
-const msgRedelegateTypeUrl = "/cosmos.staking.v1beta1.MsgBeginRedelegate"
-const msgUnbondTypeUrl = "/cosmos.staking.v1beta1.MsgUndelegate"
-const msgWithdrawRewardsTypeUrl = "/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward"
-const msgSetWithdrawAddressTypeUrl = "/cosmos.distribution.v1beta1.MsgSetWithdrawAddress"
+const msgSendTypeUrl = "/cosmos.bank.v1beta1.MsgSend";
+const msgDelegateTypeUrl = "/cosmos.staking.v1beta1.MsgDelegate";
+const msgRedelegateTypeUrl = "/cosmos.staking.v1beta1.MsgBeginRedelegate";
+const msgUnbondTypeUrl = "/cosmos.staking.v1beta1.MsgUndelegate";
+const msgWithdrawRewardsTypeUrl = "/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward";
+const msgSetWithdrawAddressTypeUrl = "/cosmos.distribution.v1beta1.MsgSetWithdrawAddress";
 
 
 function SendMsg(fromAddress, toAddress, amount) {
@@ -32,13 +32,13 @@ function DelegateMsg(delegatorAddress, validatorAddress, amount) {
     return {
         typeUrl: msgDelegateTypeUrl,
         value: MsgDelegate.fromPartial({
-                delegatorAddress: delegatorAddress,
-                validatorAddress: validatorAddress,
-                amount: {
-                    denom: "uxprt",
-                    amount: String(amount),
-                },
-            }
+            delegatorAddress: delegatorAddress,
+            validatorAddress: validatorAddress,
+            amount: {
+                denom: "uxprt",
+                amount: String(amount),
+            },
+        }
         ),
     };
 }
@@ -47,14 +47,14 @@ function RedelegateMsg(delegatorAddress, validatorSrcAddress, validatorDstAddres
     return {
         typeUrl: msgRedelegateTypeUrl,
         value: MsgBeginRedelegate.fromPartial({
-                delegatorAddress: delegatorAddress,
-                validatorSrcAddress: validatorSrcAddress,
-                validatorDstAddress: validatorDstAddress,
-                amount: {
-                    denom: "uxprt",
-                    amount: String(amount),
-                },
-            }
+            delegatorAddress: delegatorAddress,
+            validatorSrcAddress: validatorSrcAddress,
+            validatorDstAddress: validatorDstAddress,
+            amount: {
+                denom: "uxprt",
+                amount: String(amount),
+            },
+        }
         ),
     };
 }
@@ -63,13 +63,13 @@ function UnbondMsg(delegatorAddress, validatorAddress, amount) {
     return {
         typeUrl: msgUnbondTypeUrl,
         value: MsgUndelegate.fromPartial({
-                delegatorAddress: delegatorAddress,
-                validatorAddress: validatorAddress,
-                amount: {
-                    denom: "uxprt",
-                    amount: String(amount),
-                },
-            }
+            delegatorAddress: delegatorAddress,
+            validatorAddress: validatorAddress,
+            amount: {
+                denom: "uxprt",
+                amount: String(amount),
+            },
+        }
         ),
     };
 
@@ -95,4 +95,4 @@ function SetWithDrawAddressMsg(delegatorAddress, withdrawAddress) {
     };
 }
 
-export {SendMsg, DelegateMsg, RedelegateMsg, UnbondMsg, WithdrawMsg, SetWithDrawAddressMsg}
+export {SendMsg, DelegateMsg, RedelegateMsg, UnbondMsg, WithdrawMsg, SetWithDrawAddressMsg};

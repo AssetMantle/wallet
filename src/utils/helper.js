@@ -33,7 +33,7 @@ function createStore(mnemonic, password) {
             "iv": iv.toString("hex"),
             "salt": key.toString("hex"),
             "crypted": encrypted.toString("hex")
-        }
+        };
         return {
             Response: obj
         };
@@ -46,10 +46,10 @@ function createStore(mnemonic, password) {
 }
 
 function decryptStore(fileData, password) {
-    let hashpwd = fileData.hashpwd
-    let iv = fileData.iv
-    let salt = fileData.salt
-    let crypted = fileData.crypted
+    let hashpwd = fileData.hashpwd;
+    let iv = fileData.iv;
+    let salt = fileData.salt;
+    let crypted = fileData.crypted;
 
     if (hashpwd === crypto.createHash(passwordHashAlgorithm).update(password).digest("hex")) {
         let ivText = Buffer.from(iv, "hex");
@@ -100,7 +100,7 @@ function AccountChangeCheck(errorMessage) {
         errorMessage === 'Unsupported type: \'/cosmos.vesting.v1beta1.DelayedVestingAccount\'' ||
         errorMessage === 'Unsupported type: \'/cosmos.vesting.v1beta1.PeriodicVestingAccount\''||
         errorMessage.startsWith("pubKey does not match signer address")){
-        alert("Account address changed please login again")
+        alert("Account address changed please login again");
         localStorage.setItem('loginToken', '');
         localStorage.setItem('address', '');
         localStorage.setItem('loginMode', '');

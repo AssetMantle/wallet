@@ -3,7 +3,7 @@ import Axios from 'axios';
 import {
     TOKEN_PRICE_FETCH_ERROR,
     TOKEN_PRICE_FETCH_SUCCESS,
-} from "../constants/tokenPrice"
+} from "../constants/tokenPrice";
 
 const PROXY_API = process.env.REACT_APP_PROXY_API;
 

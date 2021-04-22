@@ -46,10 +46,10 @@ const ModalSetWithdrawAddress = (props) => {
     };
 
     useEffect(() => {
-        props.fetchWithdrawAddress(loginAddress)
+        props.fetchWithdrawAddress(loginAddress);
         const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
         if (encryptedMnemonic !== null) {
-            setImportMnemonic(false)
+            setImportMnemonic(false);
         } else {
             setImportMnemonic(true);
         }
@@ -58,7 +58,7 @@ const ModalSetWithdrawAddress = (props) => {
     const handleClose = () => {
         setShow(false);
         props.handleClose();
-        props.setWithDraw(false)
+        props.setWithDraw(false);
     };
 
     function ContextAwareToggle({eventKey, callback}) {
@@ -102,7 +102,7 @@ const ModalSetWithdrawAddress = (props) => {
                 localStorage.setItem('encryptedMnemonic', event.target.result);
                 const decryptedData = helper.decryptStore(res, password);
                 if (decryptedData.error != null) {
-                    setErrorMessage(decryptedData.error)
+                    setErrorMessage(decryptedData.error);
                     setLoader(false);
                 } else {
                     resolve(decryptedData.mnemonic);
@@ -118,16 +118,16 @@ const ModalSetWithdrawAddress = (props) => {
         const response = transactions.TransactionWithKeplr([SetWithDrawAddressMsg(loginAddress, event.target.withdrawalAddress.value)], aminoMsgHelper.fee(5000, 250000));
         response.then(result => {
             if (result.code !== undefined) {
-                helper.AccountChangeCheck(result.rawLog)
+                helper.AccountChangeCheck(result.rawLog);
             }
             setInitialModal(false);
             setResponse(result);
-            setLoader(false)
+            setLoader(false);
         }).catch(err => {
             setLoader(false);
             helper.AccountChangeCheck(err.message);
             setErrorMessage(err.message);
-        })
+        });
     };
     const handleSubmitInitialData = async event => {
         event.preventDefault();
@@ -137,13 +137,13 @@ const ModalSetWithdrawAddress = (props) => {
         }
         let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
         if (memoCheck) {
-            setErrorMessage("you entered your mnemonic as memo")
+            setErrorMessage("you entered your mnemonic as memo");
         } else {
             setValidatorAddress(event.target.withdrawalAddress.value);
             setMemoContent(memo);
             setInitialModal(false);
             showSeedModal(true);
-            setErrorMessage("")
+            setErrorMessage("");
         }
 
     };
@@ -163,7 +163,7 @@ const ModalSetWithdrawAddress = (props) => {
             const res = JSON.parse(encryptedMnemonic);
             const decryptedData = helper.decryptStore(res, password);
             if (decryptedData.error != null) {
-                setErrorMessage(decryptedData.error)
+                setErrorMessage(decryptedData.error);
             } else {
                 mnemonic = decryptedData.mnemonic;
                 setErrorMessage("");
@@ -204,7 +204,7 @@ const ModalSetWithdrawAddress = (props) => {
                             }).catch(err => {
                                 setLoader(false);
                                 setErrorMessage(err.message);
-                                console.log(err.message, "delegate error")
+                                console.log(err.message, "delegate error");
                             });
                             showSeedModal(false);
                         } else {
@@ -216,17 +216,17 @@ const ModalSetWithdrawAddress = (props) => {
                 } else {
                     setLoader(false);
                     setAdvanceMode(false);
-                    setErrorMessage("Mnemonic not matched")
+                    setErrorMessage("Mnemonic not matched");
                 }
             } else {
                 if (address.error !== undefined) {
                     setLoader(false);
                     setAdvanceMode(false);
-                    setErrorMessage(address.error)
+                    setErrorMessage(address.error);
                 } else {
                     setLoader(false);
                     setAdvanceMode(false);
-                    setErrorMessage(ecpairPriv.error)
+                    setErrorMessage(ecpairPriv.error);
                 }
             }
         } else {
@@ -293,18 +293,18 @@ const ModalSetWithdrawAddress = (props) => {
                                     <div className="memo-dropdown-section">
                                         <p onClick={handleMemoChange} className="memo-dropdown"><span
                                             className="text">{t("ADVANCED")} </span>
-                                            {memoStatus ?
-                                                <Icon
-                                                    viewClass="arrow-right"
-                                                    icon="up-arrow"/>
-                                                :
-                                                <Icon
-                                                    viewClass="arrow-right"
-                                                    icon="down-arrow"/>}
+                                        {memoStatus ?
+                                            <Icon
+                                                viewClass="arrow-right"
+                                                icon="up-arrow"/>
+                                            :
+                                            <Icon
+                                                viewClass="arrow-right"
+                                                icon="down-arrow"/>}
                                         </p>
                                         <OverlayTrigger trigger={['hover', 'focus']}
-                                                        placement="bottom"
-                                                        overlay={popoverMemo}>
+                                            placement="bottom"
+                                            overlay={popoverMemo}>
                                             <button className="icon-button info" type="button"><Icon
                                                 viewClass="arrow-right"
                                                 icon="info"/></button>
@@ -314,7 +314,7 @@ const ModalSetWithdrawAddress = (props) => {
                                         <div className="form-field">
                                             <p className="label">{t("MEMO")}
                                                 <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
-                                                                overlay={popoverMemo}>
+                                                    overlay={popoverMemo}>
                                                     <button className="icon-button info" type="button"><Icon
                                                         viewClass="arrow-right"
                                                         icon="info"/></button>
@@ -357,7 +357,7 @@ const ModalSetWithdrawAddress = (props) => {
                                         <div className="form-field upload">
                                             <p className="label"> KeyStore file</p>
                                             <Form.File id="exampleFormControlFile1" name="uploadFile"
-                                                       className="file-upload" accept=".json" required={true}/>
+                                                className="file-upload" accept=".json" required={true}/>
                                         </div>
                                         <div className="form-field">
                                             <p className="label">{t("PASSWORD")}</p>

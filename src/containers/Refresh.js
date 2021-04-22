@@ -16,7 +16,7 @@ const InfoRefresh = (props) => {
     const handleRefresh = () => {
         setInProgress(true);
         setTimeout(() => {
-            setInProgress(false)
+            setInProgress(false);
         }, 1000);
         props.fetchDelegationsCount(address);
         props.fetchBalance(address);

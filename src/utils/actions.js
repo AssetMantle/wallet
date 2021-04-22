@@ -9,7 +9,7 @@ export default class Actions {
         await axios.get(url).then(response => {
             amount = ((response.data.rewards[0].amount*1) / 1000000).toFixed(6);
         }).catch(error => {
-            console.log(error.response)
+            console.log(error.response);
         });
         return amount;
     }

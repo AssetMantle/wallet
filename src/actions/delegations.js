@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import {getDelegationsUrl} from "../constants/url";
-import {DELEGATIONS_FETCH_SUCCESS, DELEGATIONS_FETCH_ERROR, DELEGATIONS_STATUS_SUCCESS} from "../constants/delegations"
+import {DELEGATIONS_FETCH_SUCCESS, DELEGATIONS_FETCH_ERROR, DELEGATIONS_STATUS_SUCCESS} from "../constants/delegations";
 import Lodash from "lodash";
 
 export const fetchDelegationsCountSuccess = (count) => {
@@ -43,5 +43,5 @@ export const fetchDelegationsCount = (address) => {
                     ? error.response.data.message
                     : error.message));
             });
-    }
+    };
 };

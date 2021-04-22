@@ -43,23 +43,23 @@ const AdvanceMode = (props) => {
         const walletPath = wallet.getWalletPath(accountNumber, addressIndex);
         const responseData = wallet.createWallet(props.mnemonic, walletPath, bip39Passphrase);
         setResponse(responseData);
-        setResponseShow(true)
+        setResponseShow(true);
         setAdvanceForm(false);
         setAdvanceMode(false);
     };
     const handleRoute = (key) => {
         if (key === 'generateKey') {
             setGenerateKey(true);
-            setShow(false)
+            setShow(false);
         }
         if (key === "hideGenerateKey") {
             setGenerateKey(false);
-            setShow(true)
+            setShow(true);
         }
     };
     const handlePassphrase = (evt) => {
         const result = helper.ValidatePassphrase(evt.target.value);
-        setPassphraseError(result)
+        setPassphraseError(result);
     };
     const handleClose = () => {
         setShow(false);
@@ -142,7 +142,7 @@ const AdvanceMode = (props) => {
     return (
         <>
             <Modal backdrop="static" show={show} onHide={handleClose} centered
-                   className="create-wallet-modal large seed">
+                className="create-wallet-modal large seed">
                 {advanceForm ?
                     <>
                         <Modal.Header closeButton>
@@ -161,64 +161,64 @@ const AdvanceMode = (props) => {
                                 <Icon viewClass="arrow-icon" icon="left-arrow"/>
                             </div>
                             <Form onSubmit={handleSubmit} className="advancemode-form">
-                            <Accordion className="advanced-wallet-accordion">
-                                <Card>
-                                    <Card.Header>
-                                        <p>
-                                            {t("ADVANCED")}
-                                        </p>
-                                        <ContextAwareToggle eventKey="0">Click me!</ContextAwareToggle>
-                                    </Card.Header>
-                                    <Accordion.Collapse eventKey="0">
-                                        <>
+                                <Accordion className="advanced-wallet-accordion">
+                                    <Card>
+                                        <Card.Header>
+                                            <p>
+                                                {t("ADVANCED")}
+                                            </p>
+                                            <ContextAwareToggle eventKey="0">Click me!</ContextAwareToggle>
+                                        </Card.Header>
+                                        <Accordion.Collapse eventKey="0">
+                                            <>
 
-                                            <div className="form-field">
-                                                <p className="label">{t("ACCOUNT")}</p>
-                                                <Form.Control
-                                                    type="number"
-                                                    min={0}
-                                                    max={4294967295}
-                                                    name="accountNumber"
-                                                    id="createAccountNumber"
-                                                    onKeyPress={handleKeypress}
-                                                    placeholder={t("ACCOUNT_NUMBER")}
-                                                    required={false}
-                                                />
-                                            </div>
-                                            <div className="form-field">
-                                                <p className="label">{t("ACCOUNT_INDEX")}</p>
-                                                <Form.Control
-                                                    type="number"
-                                                    min={0}
-                                                    max={4294967295}
-                                                    name="accountIndex"
-                                                    id="createAccountIndex"
-                                                    onKeyPress={handleKeypress}
-                                                    placeholder={t("ACCOUNT_INDEX")}
-                                                    required={false}
-                                                />
-                                            </div>
-                                            <div className="form-field passphrase-field">
-                                                <p className="label">{t("BIP_PASSPHRASE")}</p>
-                                                <Form.Control
-                                                    type="password"
-                                                    name="bip39Passphrase"
-                                                    id="createbip39Passphrase"
-                                                    maxLength="50"
-                                                    onKeyPress={handleKeypress}
-                                                    placeholder={t("ENTER_BIP_PASSPHRASE")}
-                                                    onChange={handlePassphrase}
-                                                    required={false}
-                                                />
-                                                {passphraseError ?
-                                                    <span className="passphrase-error">{t("BIP_PASSPHRASE_ERROR")}</span>
-                                                    : null}
-                                            </div>
+                                                <div className="form-field">
+                                                    <p className="label">{t("ACCOUNT")}</p>
+                                                    <Form.Control
+                                                        type="number"
+                                                        min={0}
+                                                        max={4294967295}
+                                                        name="accountNumber"
+                                                        id="createAccountNumber"
+                                                        onKeyPress={handleKeypress}
+                                                        placeholder={t("ACCOUNT_NUMBER")}
+                                                        required={false}
+                                                    />
+                                                </div>
+                                                <div className="form-field">
+                                                    <p className="label">{t("ACCOUNT_INDEX")}</p>
+                                                    <Form.Control
+                                                        type="number"
+                                                        min={0}
+                                                        max={4294967295}
+                                                        name="accountIndex"
+                                                        id="createAccountIndex"
+                                                        onKeyPress={handleKeypress}
+                                                        placeholder={t("ACCOUNT_INDEX")}
+                                                        required={false}
+                                                    />
+                                                </div>
+                                                <div className="form-field passphrase-field">
+                                                    <p className="label">{t("BIP_PASSPHRASE")}</p>
+                                                    <Form.Control
+                                                        type="password"
+                                                        name="bip39Passphrase"
+                                                        id="createbip39Passphrase"
+                                                        maxLength="50"
+                                                        onKeyPress={handleKeypress}
+                                                        placeholder={t("ENTER_BIP_PASSPHRASE")}
+                                                        onChange={handlePassphrase}
+                                                        required={false}
+                                                    />
+                                                    {passphraseError ?
+                                                        <span className="passphrase-error">{t("BIP_PASSPHRASE_ERROR")}</span>
+                                                        : null}
+                                                </div>
 
-                                        </>
-                                    </Accordion.Collapse>
-                                </Card>
-                            </Accordion>
+                                            </>
+                                        </Accordion.Collapse>
+                                    </Card>
+                                </Accordion>
                                 <div className="buttons">
                                     <button className="button button-primary">{t("NEXT")}
                                     </button>
@@ -230,29 +230,29 @@ const AdvanceMode = (props) => {
                 }
                 {responseShow ?
                     <>
-                    <Modal.Header closeButton>
-                        <div className="previous-section">
-                            <button className="button" onClick={() => handlePrevious("response")}>
-                                <Icon
+                        <Modal.Header closeButton>
+                            <div className="previous-section">
+                                <button className="button" onClick={() => handlePrevious("response")}>
+                                    <Icon
+                                        viewClass="arrow-right"
+                                        icon="left-arrow"/>
+                                </button>
+                            </div>
+                            <h3 className="heading">{t("CREATE_WALLET")}</h3>
+                        </Modal.Header>
+                        <div className="create-wallet-body create-wallet-form-body">
+                            <p className="mnemonic-result"><b>{t("WALLET_PATH")}: </b>{response.walletPath}</p>
+                            <p className="mnemonic-result"><b>{t("ADDRESS")}: </b>{response.address}</p>
+                            <div className="buttons">
+                                <button className="button button-primary" onClick={handleLogin}>Login</button>
+                            </div>
+                            <div className="note-section">
+                                <div className="exclamation"><Icon
                                     viewClass="arrow-right"
-                                    icon="left-arrow"/>
-                            </button>
+                                    icon="exclamation"/></div>
+                                <p>{t("WALLET_PATH_WARNING")}</p>
+                            </div>
                         </div>
-                        <h3 className="heading">{t("CREATE_WALLET")}</h3>
-                    </Modal.Header>
-                    <div className="create-wallet-body create-wallet-form-body">
-                        <p className="mnemonic-result"><b>{t("WALLET_PATH")}: </b>{response.walletPath}</p>
-                        <p className="mnemonic-result"><b>{t("ADDRESS")}: </b>{response.address}</p>
-                        <div className="buttons">
-                            <button className="button button-primary" onClick={handleLogin}>Login</button>
-                        </div>
-                        <div className="note-section">
-                            <div className="exclamation"><Icon
-                                viewClass="arrow-right"
-                                icon="exclamation"/></div>
-                            <p>{t("WALLET_PATH_WARNING")}</p>
-                        </div>
-                    </div>
                     </>
                     : null}
             </Modal>

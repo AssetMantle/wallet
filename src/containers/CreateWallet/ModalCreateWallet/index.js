@@ -14,34 +14,34 @@ const ModalCreateWallet = (props) => {
     const [modal4, setModal4] = useState(false);
     const handleClose = () => {
         setShow(false);
-        props.setRoutName("")
+        props.setRoutName("");
     };
     const handlePrevious = (index) => {
         if (index === 1) {
-            setModal1(true)
-            setModal2(false)
+            setModal1(true);
+            setModal2(false);
         }
         if (index === 2) {
             setModal2(true);
-            setModal3(false)
+            setModal3(false);
         }
         if (index === 3) {
             setModal3(true);
-            setModal4(false)
+            setModal4(false);
         }
     };
     const handleNext = (index) => {
         if (index === 2) {
             setModal2(true);
-            setModal1(false)
+            setModal1(false);
         }
         if (index === 3) {
             setModal2(false);
-            setModal3(true)
+            setModal3(true);
         }
         if (index === 4) {
             setModal3(false);
-            setModal4(true)
+            setModal4(true);
         }
     };
     const handleCreateForm = (name) => {
@@ -75,7 +75,7 @@ const ModalCreateWallet = (props) => {
                                     </div>
                                     <div className="buttons">
                                         <button className="button button-primary"
-                                                onClick={() => handleCreateForm("createWalletForm")}>{t("NEXT")}
+                                            onClick={() => handleCreateForm("createWalletForm")}>{t("NEXT")}
                                         </button>
                                     </div>
                                 </Modal.Body>
@@ -180,7 +180,7 @@ const ModalCreateWallet = (props) => {
                                                 icon="left-arrow"/>
                                         </button>
                                         <button className="button button-primary"
-                                                onClick={() => handleCreateForm("createWalletForm")}>Get Started
+                                            onClick={() => handleCreateForm("createWalletForm")}>Get Started
                                         </button>
                                     </div>
 
@@ -194,7 +194,7 @@ const ModalCreateWallet = (props) => {
             {
                 createWallet ?
                     <CreateWallet handleClose={handleClose} setShow={setShow} setModal1={setModal1}
-                                  setCreatWallet={setCreatWallet}/>
+                        setCreatWallet={setCreatWallet}/>
                     :
                     null
             }

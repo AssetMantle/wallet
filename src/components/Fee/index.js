@@ -13,14 +13,14 @@ const FeeContainer = () => {
     return (
         <p className="fee"> Default fee of {(localStorage.getItem('fee')*1) / 1000000}xprt
             will be cut from the wallet.
-            <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popoverSetupAddress}>
-                <button className="icon-button info" type="button">
-                    <Icon
-                        viewClass="arrow-right"
-                        icon="info"
-                    />
-                </button>
-            </OverlayTrigger></p>
+        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popoverSetupAddress}>
+            <button className="icon-button info" type="button">
+                <Icon
+                    viewClass="arrow-right"
+                    icon="info"
+                />
+            </button>
+        </OverlayTrigger></p>
     );
 };
 
