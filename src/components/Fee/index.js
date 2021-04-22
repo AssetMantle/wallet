@@ -26,7 +26,7 @@ const FeeContainer = () => {
                         </button>
                     </OverlayTrigger>
                     </p>
-                    : null
+                    : ""
             }
         </>
 
