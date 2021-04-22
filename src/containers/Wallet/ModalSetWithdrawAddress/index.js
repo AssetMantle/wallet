@@ -445,7 +445,7 @@ const ModalSetWithdrawAddress = (props) => {
                 response !== '' && response.code === undefined ?
                     <>
                         <Modal.Header className="result-header success" closeButton>
-                            {t("SUCCESSFULLY_CLAIMED")}
+                            {t("SUCCESSFULLY_ADDRESS_CHANGED")}
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
@@ -473,7 +473,7 @@ const ModalSetWithdrawAddress = (props) => {
                 response !== '' && response.code !== undefined ?
                     <>
                         <Modal.Header className="result-header error" closeButton>
-                            {t("FAILED_CLAIMING")}
+                            {t("FAILED_ADDRESS_CHANGE")}
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
