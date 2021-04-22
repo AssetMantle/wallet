@@ -301,7 +301,7 @@ const ModalReDelegate = (props) => {
                                         type="number"
                                         min={0}
                                         name="amount"
-                                        placeholder={t("SEND_AMOUNT")}
+                                        placeholder={t("REDELEGATION_AMOUNT")}
                                         defaultValue={amount || ''}
                                         step="any"
                                         className={amount > props.delegationAmount ? "error-amount-field" : ""}
