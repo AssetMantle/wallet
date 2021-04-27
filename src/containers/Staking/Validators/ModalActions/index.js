@@ -13,6 +13,7 @@ import axios from "axios";
 import {useTranslation} from "react-i18next";
 import ModalSetWithdrawAddress from "../../../Wallet/ModalSetWithdrawAddress";
 import {connect} from "react-redux";
+import config from "../../../../config";
 
 const ModalActions = (props) => {
     const {t} = useTranslation();
@@ -32,7 +33,7 @@ const ModalActions = (props) => {
             const url = getValidatorRewardsUrl(address, props.validator.operator_address);
             axios.get(url).then(response => {
                 if (response.data.rewards[0].amount) {
-                    setRewards(((response.data.rewards[0].amount*1) / 1000000));
+                    setRewards(((response.data.rewards[0].amount*1) / config.xprtValue));
                 }
             }).catch(error => {
                 console.log(error.response
@@ -44,7 +45,7 @@ const ModalActions = (props) => {
                 let delegationResponseList = response.data.delegation_responses;
                 for (const item of delegationResponseList) {
                     if (item.delegation.validator_address === props.validator.operator_address) {
-                        setDelegationAmount((item.balance.amount*1) / 1000000);
+                        setDelegationAmount((item.balance.amount*1) / config.xprtValue);
                         setDelegateStatus(true);
                     }
                 }

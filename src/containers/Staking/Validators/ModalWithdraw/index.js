@@ -261,7 +261,7 @@ const ModalWithdraw = (props) => {
     );
 
     const checkAmountError = (
-        props.transferableAmount < (parseInt(localStorage.getItem('fee')) / 1000000)
+        props.transferableAmount < (parseInt(localStorage.getItem('fee')) / config.xprtValue)
     );
     return (
         <>

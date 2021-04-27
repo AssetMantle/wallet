@@ -122,7 +122,7 @@ const ModalReDelegate = (props) => {
     const handleSubmitKepler = async event => {
         setLoader(true);
         event.preventDefault();
-        const response = transactions.TransactionWithKeplr([RedelegateMsg(loginAddress, props.validatorAddress, toValidatorAddress, (amount * 1000000))], aminoMsgHelper.fee(0, 250000));
+        const response = transactions.TransactionWithKeplr([RedelegateMsg(loginAddress, props.validatorAddress, toValidatorAddress, (amount * config.xprtValue))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             if(result.code !== undefined){
                 helper.AccountChangeCheck(result.rawLog);
@@ -197,7 +197,7 @@ const ModalReDelegate = (props) => {
                         if (data.code === undefined) {
                             let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
                             let stdSignMsg = persistence.newStdMsg({
-                                msgs: aminoMsgHelper.msgs(aminoMsgHelper.reDelegateMsg((amount * 1000000), address, props.validatorAddress, toValidatorAddress)),
+                                msgs: aminoMsgHelper.msgs(aminoMsgHelper.reDelegateMsg((amount * config.xprtValue), address, props.validatorAddress, toValidatorAddress)),
                                 fee: aminoMsgHelper.fee(localStorage.getItem('fee'), 250000),
                                 chain_id: persistence.chainId,
                                 memo: memoContent,
@@ -260,7 +260,7 @@ const ModalReDelegate = (props) => {
         </Popover>
     );
     const checkAmountError = (
-        props.transferableAmount < (parseInt(localStorage.getItem('fee')) / 1000000)
+        props.transferableAmount < (parseInt(localStorage.getItem('fee')) / config.xprtValue)
     );
     return (
         <>

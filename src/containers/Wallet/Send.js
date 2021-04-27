@@ -52,7 +52,7 @@ const Send = (props) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
             setAmountField(evt.target.value);
-            if (props.transferableAmount < (amountField * 1 + parseInt(localStorage.getItem('fee')) / 1000000)) {
+            if (props.transferableAmount < (amountField * 1 + parseInt(localStorage.getItem('fee')) / config.xprtValue)) {
                 setCheckAmountError(true);
             } else {
                 setCheckAmountError(false);
@@ -99,7 +99,7 @@ const Send = (props) => {
         setShow(true);
         setLoader(true);
         event.preventDefault();
-        const response = transactions.TransactionWithKeplr([SendMsg(loginAddress, event.target.address.value, (amountField * 1000000))], aminoMsgHelper.fee(0, 250000));
+        const response = transactions.TransactionWithKeplr([SendMsg(loginAddress, event.target.address.value, (amountField * config.xprtValue))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             if (result.code !== undefined) {
                 helper.AccountChangeCheck(result.rawLog);
@@ -215,7 +215,7 @@ const Send = (props) => {
                         if (data.code === undefined) {
                             let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
                             let stdSignMsg = persistence.newStdMsg({
-                                msgs: aminoMsgHelper.msgs(aminoMsgHelper.sendMsg((amountField * 1000000), address, toAddress)),
+                                msgs: aminoMsgHelper.msgs(aminoMsgHelper.sendMsg((amountField * config.xprtValue), address, toAddress)),
                                 chain_id: persistence.chainId,
                                 fee: aminoMsgHelper.fee(localStorage.getItem('fee'), 250000),
                                 memo: memoContent,
@@ -364,7 +364,7 @@ const Send = (props) => {
                     <div className="buttons">
                         <FeeContainer/>
                         <button className="button button-primary"
-                            disabled={props.transferableAmount < (amountField * 1 + parseInt(localStorage.getItem('fee')) / 1000000) || amountField === 0 || props.transferableAmount === 0}>Send
+                            disabled={props.transferableAmount < (amountField * 1 + parseInt(localStorage.getItem('fee')) / config.xprtValue) || amountField === 0 || props.transferableAmount === 0}>Send
                         </button>
                     </div>
                 </Form>

@@ -6,6 +6,7 @@ import {
     REWARDS_FETCH_SUCCESS,
     REWARDS_LIST_FETCH_SUCCESS
 } from "../constants/rewards";
+import config from "../config";
 
 export const fetchRewardsProgress = () => {
     return {
@@ -41,7 +42,7 @@ export const fetchRewards = (address) => {
                     dispatch(fetchRewardsListProgress(res.data.rewards));
                 }
                 if (res.data.total.length) {
-                    const fixedRewardsResponse = (res.data.total[0].amount*1) / 1000000;
+                    const fixedRewardsResponse = (res.data.total[0].amount*1) / config.xprtValue;
                     dispatch(fetchRewardsSuccess(fixedRewardsResponse));
                 }
             })
