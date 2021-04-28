@@ -109,7 +109,7 @@ const DashboardHeader = () => {
                                         </div>
                                     </div>
                                     <div className="dropdown-footer">
-                                        <p onClick={closeWallet} className="link-close">{t("CLOSE_WALLET")}</p>
+                                        <p onClick={closeWallet} className="link-close">Logout</p>
                                         <p onClick={handleKeyStore} className="generate-keystore">Generate KeyStore</p>
                                     </div>
                                 </NavDropdown>
