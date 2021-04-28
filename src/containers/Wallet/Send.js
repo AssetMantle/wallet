@@ -37,7 +37,6 @@ const Send = (props) => {
     const [keplerError, setKeplerError] = useState("");
     const [loader, setLoader] = useState(false);
     const [importMnemonic, setImportMnemonic] = useState(true);
-    const [checkAmountError, setCheckAmountError] = useState(false);
     const [memoContent, setMemoContent] = useState('');
     let mode = localStorage.getItem('loginMode');
     let loginAddress = localStorage.getItem('address');
@@ -52,11 +51,6 @@ const Send = (props) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
             setAmountField(evt.target.value);
-            if (props.transferableAmount < (amountField * 1 + transactions.XprtConversion(parseInt(localStorage.getItem('fee'))))) {
-                setCheckAmountError(true);
-            } else {
-                setCheckAmountError(false);
-            }
         } else {
             return false;
         }
@@ -287,7 +281,6 @@ const Send = (props) => {
                                 placeholder={t("SEND_AMOUNT")}
                                 step="any"
                                 value={amountField}
-                                className={checkAmountError ? "error-amount-field" : ""}
                                 onChange={handleAmountChange}
                                 required={true}
                             />
