@@ -28,6 +28,7 @@ jobs:
         CI: false
         REACT_APP_API_KEY: ${{ secrets.STAGING_REST_ENDPOINT }}
         REACT_APP_TENDERMINT_RPC_ENDPOINT: ${{ secrets.STAGING_RPC_ENDPOINT }}
+        REACT_APP_WEBSITE_URL: ${{ secrets.STAGING_WEBSITE_URL }}
         REACT_APP_EXPLORER_API: ${{ secrets.STAGING_EXPLORER }}
         REACT_APP_MAIL_CHIMP_URL: ${{ secrets.STAGING_MAILCHIMP }}
         REACT_APP_PROXY_API: ${{ secrets.PROXY_API }}
