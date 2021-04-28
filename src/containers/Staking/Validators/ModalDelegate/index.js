@@ -241,9 +241,11 @@ const ModalDelegate = (props) => {
             </Popover.Content>
         </Popover>
     );
+
     const checkAmountError = (
-        props.transferableAmount < transactions.XprtConversion(parseInt(localStorage.getItem('fee'))) + (amount * 1)
+        props.transferableAmount < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
     );
+
     return (
         <>
             {initialModal ?
