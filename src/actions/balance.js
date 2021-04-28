@@ -90,7 +90,6 @@ export const fetchTransferableVestingAmount = (address)=> {
                             if(item.denom === 'uxprt'){
                                 const amount = transactions.XprtConversion(vestingAccount.getAccountVestingAmount(vestingAmountData.account, currentEpochTime));
                                 const balance = transactions.XprtConversion(item.amount*1);
-                                console.log(balance , amount);
                                 vestingAmount = amount;
                                 if ((balance - amount) < 0) {
                                     transferableAmount = 0;

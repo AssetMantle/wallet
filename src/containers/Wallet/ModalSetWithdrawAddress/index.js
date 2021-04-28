@@ -183,27 +183,19 @@ const ModalSetWithdrawAddress = (props) => {
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
                     setImportMnemonic(false);
-                    persistence.getAccounts(address).then(data => {
-                        if (data.code === undefined) {
-                            const response = transactions.TransactionWithMnemonic([SetWithDrawAddressMsg(address, validatorAddress)], aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent,
-                                mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-                            response.then(result => {
-                                setResponse(result);
-                                setLoader(false);
-                                showSeedModal(false);
-                                setAdvanceMode(false);
-                            }).catch(err => {
-                                setLoader(false);
-                                setErrorMessage(err.message);
-                                console.log(err.message, "delegate error");
-                            });
-                            showSeedModal(false);
-                        } else {
-                            setLoader(false);
-                            setAdvanceMode(false);
-                            setErrorMessage(data.message);
-                        }
+                    const response = transactions.TransactionWithMnemonic([SetWithDrawAddressMsg(address, validatorAddress)], aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent,
+                        mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                    response.then(result => {
+                        setResponse(result);
+                        setLoader(false);
+                        showSeedModal(false);
+                        setAdvanceMode(false);
+                    }).catch(err => {
+                        setLoader(false);
+                        setErrorMessage(err.message);
+                        console.log(err.message, "delegate error");
                     });
+                    showSeedModal(false);
                 } else {
                     setLoader(false);
                     setAdvanceMode(false);

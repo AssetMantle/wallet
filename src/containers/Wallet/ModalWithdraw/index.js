@@ -196,30 +196,18 @@ const ModalWithdraw = (props) => {
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
                     setImportMnemonic(false);
-                    persistence.getAccounts(address).then(data => {
-                        if (data.code === undefined) {
-                            const response = transactions.TransactionWithMnemonic([WithdrawMsg(address, validatorAddress)], aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent,
-                                mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-                            response.then(result => {
-                                setResponse(result);
-                                setLoader(false);
-                                showSeedModal(false);
-                                setAdvanceMode(false);
-                            }).catch(err => {
-                                setLoader(false);
-                                setErrorMessage(err.message);
-                            });
-                            showSeedModal(false);
-                        } else {
-                            setLoader(false);
-                            setAdvanceMode(false);
-                            setErrorMessage(data.message);
-                        }
+                    const response = transactions.TransactionWithMnemonic([WithdrawMsg(address, validatorAddress)], aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent,
+                        mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                    response.then(result => {
+                        setResponse(result);
+                        setLoader(false);
+                        showSeedModal(false);
+                        setAdvanceMode(false);
                     }).catch(err => {
                         setLoader(false);
-                        setAdvanceMode(false);
                         setErrorMessage(err.message);
                     });
+                    showSeedModal(false);
                 } else {
                     setLoader(false);
                     setAdvanceMode(false);
@@ -280,7 +268,6 @@ const ModalWithdraw = (props) => {
     const checkAmountError = (
         props.transferableAmount < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
     );
-
     return (
         <>
             <Modal
@@ -504,7 +491,7 @@ const ModalWithdraw = (props) => {
                     : null
                 }
                 {
-                    response !== '' && response.code === undefined || response.code === 0 ?
+                    response !== '' && response.code === 0 ?
                         <>
                             <Modal.Header className="result-header success" closeButton>
                                 {t("SUCCESSFULLY_CLAIMED")}
@@ -532,7 +519,7 @@ const ModalWithdraw = (props) => {
                         : null
                 }
                 {
-                    response !== '' && response.code !== undefined ?
+                    response !== '' && response.code !== 0 ?
                         <>
                             <Modal.Header className="result-header error" closeButton>
                                 {t("FAILED_CLAIMING")}

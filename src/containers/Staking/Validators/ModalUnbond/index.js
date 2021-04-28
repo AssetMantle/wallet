@@ -187,30 +187,19 @@ const ModalUnbond = (props) => {
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
                     setImportMnemonic(false);
-                    persistence.getAccounts(address).then(data => {
-                        if (data.code === undefined) {
-                            const response = transactions.TransactionWithMnemonic([UnbondMsg(address, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent,
-                                mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-                            response.then(result => {
-                                setResponse(result);
-                                setLoader(false);
-                                showSeedModal(false);
-                                setAdvanceMode(false);
-                            }).catch(err => {
-                                setLoader(false);
-                                setErrorMessage(err.message);
-                            });
-                            showSeedModal(false);
-                        } else {
-                            setLoader(false);
-                            setAdvanceMode(false);
-                            setErrorMessage(data.message);
-                        }
+                    const response = transactions.TransactionWithMnemonic([UnbondMsg(address, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent,
+                        mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                    response.then(result => {
+                        setResponse(result);
+                        setLoader(false);
+                        showSeedModal(false);
+                        setAdvanceMode(false);
                     }).catch(err => {
                         setLoader(false);
-                        setAdvanceMode(false);
                         setErrorMessage(err.message);
                     });
+                    showSeedModal(false);
+
                 } else {
                     setLoader(false);
                     setAdvanceMode(false);
@@ -438,7 +427,7 @@ const ModalUnbond = (props) => {
                 : null
             }
             {
-                response !== '' && response.code === undefined ?
+                response !== '' && response.code === 0 ?
                     <>
                         <Modal.Header className="result-header success" closeButton>
                             {t("SUCCESSFULL_UNBOND")}
@@ -466,7 +455,7 @@ const ModalUnbond = (props) => {
                     : null
             }
             {
-                response !== '' && response.code !== undefined ?
+                response !== '' && response.code !== 0 ?
                     <>
                         <Modal.Header className="result-header error" closeButton>
                             {t("FAILED_UNBOND")}
