@@ -4,6 +4,7 @@ const restAPI = process.env.REACT_APP_API_KEY;
 const tendermintRPC = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 const chainID = process.env.REACT_APP_CHAIN_ID;
 const chainName = process.env.REACT_APP_CHAIN_NAME;
+const websiteURL = process.env.REACT_APP_WEBSITE_URL;
 const coinName = config.coinName;
 const coinDenom = config.coinDenom;
 const prefix = config.addressPrefix;
@@ -43,11 +44,11 @@ async function KeplerWallet() {
                         coinDecimals: 6,
                         // (Optional) Keplr can show the fiat value of the coin if a coingecko id is provided.
                         // You can get id from https://api.coingecko.com/api/v3/coins/list if it is listed.
-                        // coinGeckoId: ""
+                        coinGeckoId: "persistence"
                     },
                     // (Optional) If you have a wallet webpage used to stake the coin then provide the url to the website in `walletUrlForStaking`.
                     // The 'stake' button in Keplr extension will link to the webpage.
-                    // walletUrlForStaking: "",
+                    walletUrlForStaking: `${websiteURL}/dashboard/staking`,
                     // The BIP44 path.
                     bip44: {
                         // You can only set the coin type of BIP44.
@@ -82,7 +83,7 @@ async function KeplerWallet() {
                         coinDecimals: 6,
                         // (Optional) Keplr can show the fiat value of the coin if a coingecko id is provided.
                         // You can get id from https://api.coingecko.com/api/v3/coins/list if it is listed.
-                        // coinGeckoId: ""
+                        coinGeckoId: "persistence"
                     }],
                     // List of coin/tokens used as a fee token in this chain.
                     feeCurrencies: [{
@@ -94,7 +95,7 @@ async function KeplerWallet() {
                         coinDecimals: 6,
                         // (Optional) Keplr can show the fiat value of the coin if a coingecko id is provided.
                         // You can get id from https://api.coingecko.com/api/v3/coins/list if it is listed.
-                        // coinGeckoId: ""
+                        coinGeckoId: "persistence"
                     }],
                     // (Optional) The number of the coin type.
                     // This field is only used to fetch the address from ENS.
@@ -107,7 +108,7 @@ async function KeplerWallet() {
                     // Currently, Keplr doesn't support dynamic calculation of the gas prices based on on-chain data.
                     // Make sure that the gas prices are higher than the minimum gas prices accepted by chain validators and RPC/REST endpoint.
                     gasPriceStep: {
-                        low: 0.01,
+                        low: 0.00,
                         average: 0.025,
                         high: 0.04
                     }
