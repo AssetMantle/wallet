@@ -293,7 +293,7 @@ const Send = (props) => {
                             />
                             <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data"}><span
                                 className="title">Transferable Balance:</span> <span
-                                className="value">{props.transferableAmount} XPRT</span> </span>
+                                className="value" title={props.transferableAmount}>{props.transferableAmount.toFixed(6)} XPRT</span> </span>
                         </div>
                     </div>
 
