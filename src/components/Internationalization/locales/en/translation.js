@@ -196,6 +196,7 @@ let English = {
         "DELEGATABLE_NOTE":"The amount of XPRT that can be delegated. This is the sum of all balances that haven’t been delegated yet. Delegatable Balance = (Transferable/Vested + amount under Vesting) - (Delegated+Unbonding)",
         "TRANSFERABLE_NOTE":"The amount of XPRT that is available to be transferred at any given time",
         "SETUP_ADDRESS_NOTE":"Claim your staking rewards and withdraw them to another address",
+        "ADDRESS_NOT_MATCHED_ERROR":"Your sign in address and keystore file don’t match. Please try again or else sign in again."
 
 
     }
