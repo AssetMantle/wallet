@@ -10,6 +10,7 @@ import {
 } from "../constants/balance";
 import MakePersistence from "../utils/cosmosjsWrapper";
 import vestingAccount from "../utils/vestingAmount";
+import transactions from "../utils/transactions";
 export const fetchBalanceProgress = () => {
     return {
         type: BALANCE_FETCH_IN_PROGRESS,
@@ -46,7 +47,7 @@ export const fetchBalance = (address) => {
                     res.data.balances.forEach((item) => {
                         if(item.denom === 'uxprt'){
                             const totalBalance = item.amount*1;
-                            dispatch(fetchBalanceSuccess((totalBalance / 1000000)));
+                            dispatch(fetchBalanceSuccess(transactions.XprtConversion(totalBalance)));
                         }
                     });
                 }
@@ -87,8 +88,8 @@ export const fetchTransferableVestingAmount = (address)=> {
                     if (res.data.balances.length) {
                         res.data.balances.forEach((item) => {
                             if(item.denom === 'uxprt'){
-                                const balance = (item.amount*1/1000000);
-                                const amount = vestingAccount.getAccountVestingAmount(vestingAmountData.account, currentEpochTime) / 1000000;
+                                const amount = transactions.XprtConversion(vestingAccount.getAccountVestingAmount(vestingAmountData.account, currentEpochTime));
+                                const balance = transactions.XprtConversion(item.amount*1);
                                 vestingAmount = amount;
                                 if ((balance - amount) < 0) {
                                     transferableAmount = 0;

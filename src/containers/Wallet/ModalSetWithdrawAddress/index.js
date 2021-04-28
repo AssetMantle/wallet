@@ -18,7 +18,6 @@ import {SetWithDrawAddressMsg} from "../../../utils/protoMsgHelper";
 import aminoMsgHelper from "../../../utils/aminoMsgHelper";
 import transactions from "../../../utils/transactions";
 import MakePersistence from "../../../utils/cosmosjsWrapper";
-import config from "../../../config";
 import {useTranslation} from "react-i18next";
 import {fetchWithdrawAddress} from "../../../actions/withdrawAddress";
 import FeeContainer from "../../../components/Fee";
@@ -184,35 +183,19 @@ const ModalSetWithdrawAddress = (props) => {
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
                     setImportMnemonic(false);
-                    persistence.getAccounts(address).then(data => {
-                        if (data.code === undefined) {
-                            let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
-                            let stdSignMsg = persistence.newStdMsg({
-                                msgs: aminoMsgHelper.msgs(aminoMsgHelper.setWithdrawAddressMsg(address, validatorAddress)),
-                                chain_id: persistence.chainId,
-                                fee: aminoMsgHelper.fee(localStorage.getItem('fee'), 250000),
-                                memo: memoContent,
-                                account_number: String(accountNumber),
-                                sequence: String(sequence)
-                            });
-                            const signedTx = persistence.sign(stdSignMsg, ecpairPriv, config.modeType);
-                            persistence.broadcast(signedTx).then(response => {
-                                setResponse(response);
-                                setLoader(false);
-                                showSeedModal(false);
-                                setAdvanceMode(false);
-                            }).catch(err => {
-                                setLoader(false);
-                                setErrorMessage(err.message);
-                                console.log(err.message, "delegate error");
-                            });
-                            showSeedModal(false);
-                        } else {
-                            setLoader(false);
-                            setAdvanceMode(false);
-                            setErrorMessage(data.message);
-                        }
+                    const response = transactions.TransactionWithMnemonic([SetWithDrawAddressMsg(address, validatorAddress)], aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent,
+                        mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                    response.then(result => {
+                        setResponse(result);
+                        setLoader(false);
+                        showSeedModal(false);
+                        setAdvanceMode(false);
+                    }).catch(err => {
+                        setLoader(false);
+                        setErrorMessage(err.message);
+                        console.log(err.message, "delegate error");
                     });
+                    showSeedModal(false);
                 } else {
                     setLoader(false);
                     setAdvanceMode(false);
@@ -247,7 +230,7 @@ const ModalSetWithdrawAddress = (props) => {
     );
 
     const checkAmountError = (
-        props.transferableAmount < (parseInt(localStorage.getItem('fee')) / 1000000)
+        props.transferableAmount < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
     );
 
     return (
@@ -457,9 +440,9 @@ const ModalSetWithdrawAddress = (props) => {
                                         Hash: {response.transactionHash}</a>
                                     :
                                     <a
-                                        href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
+                                        href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
                                         target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
-                                        Hash: {response.txhash}</a>
+                                        Hash: {response.transactionHash}</a>
                                 }
                                 <div className="buttons">
                                     <button className="button" onClick={handleClose}>{t("DONE")}</button>
@@ -487,11 +470,11 @@ const ModalSetWithdrawAddress = (props) => {
                                     </>
                                     :
                                     <>
-                                        <p>{response.raw_log === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : response.raw_log}</p>
+                                        <p>{response.rawLog === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : response.rawLog}</p>
                                         <a
-                                            href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
+                                            href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
                                             target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
-                                            Hash: {response.txhash}</a>
+                                            Hash: {response.transactionHash}</a>
                                     </>
                                 }
                                 <div className="buttons">

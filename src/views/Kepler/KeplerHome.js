@@ -10,6 +10,7 @@ import config from "../../config";
 import {useTranslation} from "react-i18next";
 import ModalKeplerInstall from "./ModalKeplerInstall";
 import Icon from "../../components/Icon";
+
 const KeplerHome = () => {
     const {t} = useTranslation();
     const history = useHistory();
@@ -46,25 +47,21 @@ const KeplerHome = () => {
                 if (data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount" ||
                     data.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount" ||
                     data.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
-                    setErrorMessage("Vesting Accounts are not supported by keplr");
+                    localStorage.setItem('fee', config.vestingAccountFee);
                 } else {
-                    localStorage.setItem('address', address);
-                    localStorage.setItem('loginToken', 'loggedIn');
-                    localStorage.setItem('version', config.version);
-                    localStorage.setItem('loginMode', 'kepler');
-                    history.push('/dashboard/wallet');
+                    localStorage.setItem('fee', config.defaultFee);
                 }
             } else {
-                localStorage.setItem('address', address);
-                localStorage.setItem('loginToken', 'loggedIn');
-                localStorage.setItem('version', config.version);
-                localStorage.setItem('loginMode', 'kepler');
-                history.push('/dashboard/wallet');
+                localStorage.setItem('fee', config.defaultFee);
             }
         }).catch(err => {
             setErrorMessage(err.message);
         });
-
+        localStorage.setItem('address', address);
+        localStorage.setItem('loginToken', 'loggedIn');
+        localStorage.setItem('version', config.version);
+        localStorage.setItem('loginMode', 'kepler');
+        history.push('/dashboard/wallet');
     };
     const handlePrevious = () => {
         history.push('/');
@@ -105,7 +102,8 @@ const KeplerHome = () => {
                         {errorMessage !== "" ?
                             <>
                                 <div className="buttons">
-                                    <button className="button button-primary" onClick={() => handleKepler()}>{t("CONNECT")}
+                                    <button className="button button-primary"
+                                        onClick={() => handleKepler()}>{t("CONNECT")}
                                     </button>
                                 </div>
                                 {

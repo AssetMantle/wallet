@@ -2,7 +2,9 @@
   "name": "pwallet",
   "private": true,
   "dependencies": {
-    "@cosmjs/stargate": "^0.24.1",
+    "@cosmjs/stargate": "^v0.25.0-alpha.3",
+    "@cosmjs/proto-signing": "^v0.25.0-alpha.3",
+    "@cosmjs/crypto": "^v0.25.0-alpha.3",
     "@cosmostation/cosmosjs": "^0.9.5",
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
