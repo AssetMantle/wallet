@@ -12,6 +12,7 @@
 /build
 .idea
 .env
+.cred
 .sass-cache
 # misc
 .DS_Store

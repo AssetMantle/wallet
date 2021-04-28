@@ -94,11 +94,17 @@ function updateFee(address) {
     });
 }
 
+function XprtConversion(data) {
+    const Result = data/config.xprtValue;
+    return Result;
+}
+
 export default {
     TransactionWithKeplr,
     TransactionWithMnemonic,
     makeHdPath,
     getAccountNumberAndSequence,
     mnemonicValidation,
-    updateFee
+    updateFee,
+    XprtConversion
 };

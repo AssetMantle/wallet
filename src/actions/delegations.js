@@ -2,7 +2,8 @@ import Axios from 'axios';
 import {getDelegationsUrl} from "../constants/url";
 import {DELEGATIONS_FETCH_SUCCESS, DELEGATIONS_FETCH_ERROR, DELEGATIONS_STATUS_SUCCESS} from "../constants/delegations";
 import Lodash from "lodash";
-import config from "../config";
+import transactions from "../utils/transactions";
+
 export const fetchDelegationsCountSuccess = (count) => {
     return {
         type: DELEGATIONS_FETCH_SUCCESS,
@@ -34,7 +35,7 @@ export const fetchDelegationsCount = (address) => {
                     let totalDelegationsCount = Lodash.sumBy(res.data.delegation_responses, (delegation) => {
                         return delegation.balance.amount * 1;
                     });
-                    dispatch(fetchDelegationsCountSuccess(totalDelegationsCount / config.xprtValue));
+                    dispatch(fetchDelegationsCountSuccess(transactions.XprtConversion(totalDelegationsCount)));
                 }
 
             })

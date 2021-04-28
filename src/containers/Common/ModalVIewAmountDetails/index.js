@@ -1,7 +1,7 @@
 import {Modal} from 'react-bootstrap';
 import React, {useState} from 'react';
 import {connect} from "react-redux";
-import config from "../../../config";
+import transactions from "../../../utils/transactions";
 
 const ModalViewAmountDetails = (props) => {
     const [show, setShow] = useState(false);
@@ -32,7 +32,7 @@ const ModalViewAmountDetails = (props) => {
                                 if (item.denom !== 'uxprt') {
                                     return (
                                         <li className="" key={index}><span
-                                            className="amount">{item.amount / config.xprtValue}</span> <span
+                                            className="amount">{transactions.XprtConversion(item.amount)}</span> <span
                                             className="date">{item.denom}</span></li>
                                     );
                                 }

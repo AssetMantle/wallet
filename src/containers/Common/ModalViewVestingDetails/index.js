@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import {getAccountUrl} from "../../../constants/url";
 import axios from "axios";
-import config from "../../../config";
+import transactions from "../../../utils/transactions";
 
 const ModalViewVestingDetails = () => {
     const [show, setShow] = useState(false);
@@ -56,7 +56,7 @@ const ModalViewVestingDetails = () => {
                     <ul className="modal-list-data">
                         {showContinuesVesting ?
                             response.base_vesting_account !== undefined ?
-                                <li className="unbonding-schedule-list">Unlocking {parseInt(response.base_vesting_account.original_vesting[0].amount) / config.xprtValue} XPRT
+                                <li className="unbonding-schedule-list">Unlocking {transactions.XprtConversion(parseInt(response.base_vesting_account.original_vesting[0].amount) )} XPRT
                                     tokens
                                     from {(new Date(parseInt(response.start_time) * 1000)).toUTCString()} to {(new Date(parseInt(response.base_vesting_account.end_time) * 1000)).toUTCString()} continuously</li>
                                 : ""
@@ -69,7 +69,7 @@ const ModalViewVestingDetails = () => {
                                 {response.base_vesting_account.original_vesting.length ?
                                     <>
                                         <p>Total vesting
-                                            tokens {parseInt(response.base_vesting_account.original_vesting[0].amount) / config.xprtValue} at
+                                            tokens {transactions.XprtConversion(parseInt(response.base_vesting_account.original_vesting[0].amount))} at
                                             Date {(new Date(parseInt(response.start_time) * 1000)).toUTCString()}</p>
                                         {
                                             response.vesting_periods.length ?
@@ -80,7 +80,7 @@ const ModalViewVestingDetails = () => {
                                                     }
                                                     return (
                                                         <li className="unbonding-schedule-list" key={index}>Unlocking
-                                                            tokens {period.amount[0].amount / config.xprtValue} XPRT at
+                                                            tokens {transactions.XprtConversion(period.amount[0].amount)} XPRT at
                                                             Date {(new Date(vestingPeriod * 1000)).toUTCString()}</li>
                                                     );
                                                 })
@@ -94,7 +94,7 @@ const ModalViewVestingDetails = () => {
                         }
                         {showDelayedVesting ?
                             response.base_vesting_account !== undefined ?
-                                <li className="unbonding-schedule-list">Unlocking {parseInt(response.base_vesting_account.original_vesting[0].amount) / config.xprtValue} XPRT
+                                <li className="unbonding-schedule-list">Unlocking {transactions.XprtConversion(parseInt(response.base_vesting_account.original_vesting[0].amount))} XPRT
                                     tokens
                                     on {(new Date(parseInt(response.base_vesting_account.end_time) * 1000)).toUTCString()}
                                 </li>

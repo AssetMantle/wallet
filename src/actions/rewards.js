@@ -6,7 +6,7 @@ import {
     REWARDS_FETCH_SUCCESS,
     REWARDS_LIST_FETCH_SUCCESS
 } from "../constants/rewards";
-import config from "../config";
+import transactions from "../utils/transactions";
 
 export const fetchRewardsProgress = () => {
     return {
@@ -42,7 +42,7 @@ export const fetchRewards = (address) => {
                     dispatch(fetchRewardsListProgress(res.data.rewards));
                 }
                 if (res.data.total.length) {
-                    const fixedRewardsResponse = (res.data.total[0].amount*1) / config.xprtValue;
+                    const fixedRewardsResponse = transactions.XprtConversion(res.data.total[0].amount*1);
                     dispatch(fetchRewardsSuccess(fixedRewardsResponse));
                 }
             })

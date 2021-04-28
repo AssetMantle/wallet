@@ -1,5 +1,5 @@
 import MakePersistence from "./cosmosjsWrapper";
-
+import transactions from "../utils/transactions";
 const config = require('../config');
 
 const periodicVesting = "/cosmos.vesting.v1beta1.PeriodicVestingAccount";
@@ -101,7 +101,7 @@ async function getTransferableVestingAmount(address, balance) {
     let vestingAmount = 0;
     let transferableAmount = 0;
     if (vestingAmountData.code === undefined) {
-        const amount = getAccountVestingAmount(vestingAmountData.account, currentEpochTime) / config.xprtValue;
+        const amount = transactions.XprtConversion(getAccountVestingAmount(vestingAmountData.account, currentEpochTime));
         vestingAmount = amount;
         if ((balance - amount) < 0) {
             transferableAmount = 0;

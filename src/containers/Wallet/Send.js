@@ -52,7 +52,7 @@ const Send = (props) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
             setAmountField(evt.target.value);
-            if (props.transferableAmount < (amountField * 1 + parseInt(localStorage.getItem('fee')) / config.xprtValue)) {
+            if (props.transferableAmount < (amountField * 1 + transactions.XprtConversion(parseInt(localStorage.getItem('fee'))))) {
                 setCheckAmountError(true);
             } else {
                 setCheckAmountError(false);
@@ -211,30 +211,13 @@ const Send = (props) => {
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
                     setImportMnemonic(false);
-                    persistence.getAccounts(address).then(data => {
-                        if (data.code === undefined) {
-                            let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
-                            let stdSignMsg = persistence.newStdMsg({
-                                msgs: aminoMsgHelper.msgs(aminoMsgHelper.sendMsg((amountField * config.xprtValue), address, toAddress)),
-                                chain_id: persistence.chainId,
-                                fee: aminoMsgHelper.fee(localStorage.getItem('fee'), 250000),
-                                memo: memoContent,
-                                account_number: String(accountNumber),
-                                sequence: String(sequence)
-                            });
-
-                            const signedTx = persistence.sign(stdSignMsg, ecpairPriv, config.modeType);
-                            persistence.broadcast(signedTx).then(response => {
-                                setTxResponse(response);
-                                setLoader(false);
-                                setAdvanceMode(false);
-                                setMnemonicForm(true);
-                            });
-                        } else {
-                            setLoader(false);
-                            setAdvanceMode(false);
-                            setErrorMessage(data.message);
-                        }
+                    const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, (amountField * 1000000))], aminoMsgHelper.fee(5000, 250000), memoContent,
+                        userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                    response.then(result => {
+                        setTxResponse(result);
+                        setLoader(false);
+                        setAdvanceMode(false);
+                        setMnemonicForm(true);
                     });
                 } else {
                     setLoader(false);
@@ -364,7 +347,7 @@ const Send = (props) => {
                     <div className="buttons">
                         <FeeContainer/>
                         <button className="button button-primary"
-                            disabled={props.transferableAmount < (amountField * 1 + parseInt(localStorage.getItem('fee')) / config.xprtValue) || amountField === 0 || props.transferableAmount === 0}>Send
+                            disabled={props.transferableAmount < (amountField * 1 + transactions.XprtConversion(parseInt(localStorage.getItem('fee')))) || amountField === 0 || props.transferableAmount === 0}>Send
                         </button>
                     </div>
                 </Form>
@@ -476,7 +459,7 @@ const Send = (props) => {
                                 </>
                                 : <>
                                     {
-                                        txResponse.code === undefined ?
+                                        txResponse.code === undefined || txResponse.code === 0 ?
                                             <>
                                                 <Modal.Header className="result-header success">
                                                     Successfully Send!
@@ -492,10 +475,10 @@ const Send = (props) => {
                                                                 Hash: {txResponse.transactionHash}</a>
                                                             :
                                                             <a
-                                                                href={`${EXPLORER_API}/transaction?txHash=${txResponse.txhash}`}
+                                                                href={`${EXPLORER_API}/transaction?txHash=${txResponse.transactionHash}`}
                                                                 target="_blank" className="tx-hash"
                                                                 rel="noopener noreferrer">Tx
-                                                                Hash: {txResponse.txhash}</a>
+                                                                Hash: {txResponse.transactionHash}</a>
                                                         }
 
                                                         <div className="buttons">
@@ -522,12 +505,12 @@ const Send = (props) => {
                                                             </>
                                                             :
                                                             <>
-                                                                <p>{txResponse.raw_log === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : txResponse.raw_log}</p>
+                                                                <p>{txResponse.rawLog === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : txResponse.rawLog}</p>
                                                                 <a
-                                                                    href={`${EXPLORER_API}/transaction?txHash=${txResponse.txhash}`}
+                                                                    href={`${EXPLORER_API}/transaction?txHash=${txResponse.transactionHash}`}
                                                                     target="_blank" className="tx-hash"
                                                                     rel="noopener noreferrer">Tx
-                                                                    Hash: {txResponse.txhash}</a>
+                                                                    Hash: {txResponse.transactionHash}</a>
                                                             </>
                                                         }
                                                         <div className="buttons">

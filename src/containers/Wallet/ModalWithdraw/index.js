@@ -23,7 +23,6 @@ import {WithdrawMsg} from "../../../utils/protoMsgHelper";
 import aminoMsgHelper from "../../../utils/aminoMsgHelper";
 import transactions from "../../../utils/transactions";
 import MakePersistence from "../../../utils/cosmosjsWrapper";
-import config from "../../../config";
 import {useTranslation} from "react-i18next";
 import ModalSetWithdrawAddress from "../ModalSetWithdrawAddress";
 import FeeContainer from "../../../components/Fee";
@@ -199,18 +198,10 @@ const ModalWithdraw = (props) => {
                     setImportMnemonic(false);
                     persistence.getAccounts(address).then(data => {
                         if (data.code === undefined) {
-                            let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
-                            let stdSignMsg = persistence.newStdMsg({
-                                msgs: aminoMsgHelper.msgs(aminoMsgHelper.withDrawMsg(address, validatorAddress)),
-                                chain_id: persistence.chainId,
-                                fee: aminoMsgHelper.fee(localStorage.getItem('fee'), 250000),
-                                memo: memoContent,
-                                account_number: String(accountNumber),
-                                sequence: String(sequence)
-                            });
-                            const signedTx = persistence.sign(stdSignMsg, ecpairPriv, config.modeType);
-                            persistence.broadcast(signedTx).then(response => {
-                                setResponse(response);
+                            const response = transactions.TransactionWithMnemonic([WithdrawMsg(address, validatorAddress)], aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent,
+                                mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                            response.then(result => {
+                                setResponse(result);
                                 setLoader(false);
                                 showSeedModal(false);
                                 setAdvanceMode(false);
@@ -287,7 +278,7 @@ const ModalWithdraw = (props) => {
         </Popover>
     );
     const checkAmountError = (
-        props.transferableAmount < (parseInt(localStorage.getItem('fee')) / config.xprtValue)
+        props.transferableAmount < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
     );
 
     return (
@@ -310,7 +301,8 @@ const ModalWithdraw = (props) => {
                                 <div className="form-field">
                                     <p className="label">Total Available</p>
                                     <div className="available-tokens">
-                                        <p className="tokens" title={props.totalRewards}>{props.totalRewards.toFixed(4)} XPRT</p>
+                                        <p className="tokens"
+                                            title={props.totalRewards}>{props.totalRewards.toFixed(4)} XPRT</p>
                                         <p className="usd">= ${(props.totalRewards * props.tokenPrice).toFixed(4)}</p>
                                     </div>
                                 </div>
@@ -512,7 +504,7 @@ const ModalWithdraw = (props) => {
                     : null
                 }
                 {
-                    response !== '' && response.code === undefined ?
+                    response !== '' && response.code === undefined || response.code === 0 ?
                         <>
                             <Modal.Header className="result-header success" closeButton>
                                 {t("SUCCESSFULLY_CLAIMED")}
@@ -527,9 +519,9 @@ const ModalWithdraw = (props) => {
                                             Hash: {response.transactionHash}</a>
                                         :
                                         <a
-                                            href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
+                                            href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
                                             target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
-                                            Hash: {response.txhash}</a>
+                                            Hash: {response.transactionHash}</a>
                                     }
                                     <div className="buttons">
                                         <button className="button" onClick={handleClose}>{t("DONE")}</button>
@@ -557,11 +549,11 @@ const ModalWithdraw = (props) => {
                                         </>
                                         :
                                         <>
-                                            <p>{response.raw_log === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : response.raw_log}</p>
+                                            <p>{response.rawLog === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : response.rawLog}</p>
                                             <a
-                                                href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
+                                                href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
                                                 target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
-                                                Hash: {response.txhash}</a>
+                                                Hash: {response.transactionHash}</a>
                                         </>
                                     }
                                     <div className="buttons">
