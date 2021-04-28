@@ -211,7 +211,7 @@ const ModalWithdraw = (props) => {
                 } else {
                     setLoader(false);
                     setAdvanceMode(false);
-                    setErrorMessage("Mnemonic not matched");
+                    setErrorMessage(t("ADDRESS_NOT_MATCHED_ERROR"));
                 }
             } else {
                 if (address.error !== undefined) {
