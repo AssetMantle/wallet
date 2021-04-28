@@ -187,7 +187,7 @@ const ModalUnbond = (props) => {
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
                     setImportMnemonic(false);
-                    const response = transactions.TransactionWithMnemonic([UnbondMsg(address, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent,
+                    const response = transactions.TransactionWithMnemonic([UnbondMsg(address, props.validatorAddress, (amount * config.xprtValue))], aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent,
                         mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                     response.then(result => {
                         setResponse(result);
