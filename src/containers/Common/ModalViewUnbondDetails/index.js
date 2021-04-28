@@ -37,7 +37,7 @@ const ModalViewUnbondDetails = (props) => {
                                     item.entries.map((entry, entryIndex) => {
                                         return (
                                             <div className="unbonding-schedule-list" key={entryIndex}>
-                                                <p><span className="amount">{transactions.XprtConversion(entry.balance)} XPRT</span></p>
+                                                <p><span className="amount">{transactions.XprtConversion(entry.balance*1)} XPRT</span></p>
                                                 <p><span className="date">{new Date (entry["completion_time"]).toUTCString()}</span></p>
                                             </div>
                                         );
