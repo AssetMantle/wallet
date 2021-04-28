@@ -21,7 +21,7 @@ const ModalFaq = (props) => {
             show={show}
             backdrop="static"
             size="lg"
-            className="modal-custom faq-modal"
+            className={`modal-custom faq-modal ${props.className}`}
             onHide={handleClose}>
             <Modal.Header className="result-header" closeButton>
                 {t("FAQ")}

@@ -29,7 +29,7 @@ const HomepageHeader = () => {
             </Navbar>
             {showFaq
                 ?
-                <ModalFaq setShowFaq={setShowFaq}/>
+                <ModalFaq setShowFaq={setShowFaq} className={"help-before-login"}/>
                 :
                 null}
         </>

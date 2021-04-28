@@ -406,7 +406,7 @@ const ModalImportWallet = (props) => {
             }
             {showFaq
                 ?
-                <ModalFaq setShowFaq={setShowFaq}/>
+                <ModalFaq setShowFaq={setShowFaq} className={"help-before-login"}/>
                 :
                 null}
         </>

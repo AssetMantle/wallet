@@ -1,9 +1,9 @@
 import {createGlobalStyle} from 'styled-components';
 
 export const GlobalStyles = createGlobalStyle`
-  body {
+    body {
     background: ${({theme}) => theme.bodyBackground};
-  }
+    }
    .txns-container .MuiPaper-root{
     background-color: ${({theme}) => theme.tableBackground} !important;
     border: 1px solid ${({theme}) => theme.tableBorderColor} !important;
@@ -93,6 +93,7 @@ export const GlobalStyles = createGlobalStyle`
     .actions-modal .actions-modal-body .moniker-box .info .commission,
     .actions-modal .actions-modal-body .website .name,
     .advanced-wallet-accordion .card .card-header p,
+    .actions-modal .actions-modal-body .description p,
     .fee{
      color: ${({theme}) => theme.infoHeadingColor};
     }

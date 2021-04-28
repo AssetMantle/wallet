@@ -127,7 +127,7 @@ const DashboardHeader = () => {
                 null}
             {showKeyStore
                 ?
-                <GenerateKeyStore setShowKeyStore={setShowKeyStore}/>
+                <GenerateKeyStore setShowKeyStore={setShowKeyStore} className={""}/>
                 :
                 null}
         </div>
