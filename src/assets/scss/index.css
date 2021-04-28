@@ -77,6 +77,13 @@ html, body {
 .list-modal.modal-custom .list-modal-body {
   padding: 0px 100px 30px 100px; }
 
+.help-before-login .faq-modal-body .nav-pills .box .nav-link {
+  border-color: #E3E5F4; }
+.help-before-login .faq-modal-body .nav-pills .box p {
+  color: #2E3239; }
+.help-before-login .faq-modal-body .accordion .card {
+  border-color: #E3E5F4; }
+
 .faq-modal.modal-custom .modal-dialog {
   max-width: 850px; }
 .faq-modal.modal-custom .faq-modal-body {

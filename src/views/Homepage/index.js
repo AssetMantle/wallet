@@ -75,7 +75,7 @@ const Homepage = () => {
             }
             {showFaq
                 ?
-                <ModalFaq setShowFaq={setShowFaq}/>
+                <ModalFaq setShowFaq={setShowFaq} className={"help-before-login"}/>
                 :
                 null}
         </div>
