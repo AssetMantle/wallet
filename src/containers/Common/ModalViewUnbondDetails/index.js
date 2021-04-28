@@ -1,6 +1,7 @@
 import {Modal} from 'react-bootstrap';
 import React, {useState} from 'react';
 import {connect} from "react-redux";
+import transactions from "../../../utils/transactions";
 
 const ModalViewUnbondDetails = (props) => {
     const [show, setShow] = useState(false);
@@ -36,7 +37,7 @@ const ModalViewUnbondDetails = (props) => {
                                     item.entries.map((entry, entryIndex) => {
                                         return (
                                             <div className="unbonding-schedule-list" key={entryIndex}>
-                                                <p><span className="amount">{entry.balance / 1000000} XPRT</span></p>
+                                                <p><span className="amount">{transactions.XprtConversion(entry.balance)} XPRT</span></p>
                                                 <p><span className="date">{new Date (entry["completion_time"]).toUTCString()}</span></p>
                                             </div>
                                         );

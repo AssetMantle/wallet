@@ -101,7 +101,7 @@ const ModalDelegate = (props) => {
     const handleSubmitKepler = async event => {
         setLoader(true);
         event.preventDefault();
-        const response = transactions.TransactionWithKeplr([DelegateMsg(loginAddress, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(0, 250000), memoContent);
+        const response = transactions.TransactionWithKeplr([DelegateMsg(loginAddress, props.validatorAddress, (amount * config.xprtValue))], aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent);
         response.then(result => {
             if (result.code !== undefined) {
                 helper.AccountChangeCheck(result.rawLog);
@@ -189,38 +189,18 @@ const ModalDelegate = (props) => {
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
                     setImportMnemonic(false);
-                    persistence.getAccounts(address).then(data => {
-                        if (data.code === undefined) {
-                            let [accountNumber, sequence] = transactions.getAccountNumberAndSequence(data);
-                            let stdSignMsg = persistence.newStdMsg({
-                                msgs: aminoMsgHelper.msgs(aminoMsgHelper.delegateMsg((amount * 1000000), address, props.validatorAddress)),
-                                fee: aminoMsgHelper.fee(localStorage.getItem('fee'), 250000),
-                                chain_id: persistence.chainId,
-                                memo: memoContent,
-                                account_number: String(accountNumber),
-                                sequence: String(sequence)
-                            });
-                            const signedTx = persistence.sign(stdSignMsg, ecpairPriv, config.modeType);
-                            persistence.broadcast(signedTx).then(response => {
-                                setResponse(response);
-                                setLoader(false);
-                                showSeedModal(false);
-                                setAdvanceMode(false);
-                            }).catch(err => {
-                                setLoader(false);
-                                setErrorMessage(err.message);
-                            });
-                            showSeedModal(false);
-                        } else {
-                            setLoader(false);
-                            setAdvanceMode(false);
-                            setErrorMessage(data.message);
-                        }
+                    const response = transactions.TransactionWithMnemonic([DelegateMsg(address, props.validatorAddress, (amount * 1000000))], aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent,
+                        mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                    response.then(result => {
+                        setResponse(result);
+                        setLoader(false);
+                        showSeedModal(false);
+                        setAdvanceMode(false);
                     }).catch(err => {
                         setLoader(false);
-                        setAdvanceMode(false);
                         setErrorMessage(err.message);
                     });
+                    showSeedModal(false);
                 } else {
                     setLoader(false);
                     setAdvanceMode(false);
@@ -262,7 +242,7 @@ const ModalDelegate = (props) => {
         </Popover>
     );
     const checkAmountError = (
-        props.transferableAmount < (parseInt(localStorage.getItem('fee')) / 1000000) + (amount*1)
+        props.transferableAmount < transactions.XprtConversion(parseInt(localStorage.getItem('fee'))) + (amount * 1)
     );
     return (
         <>
@@ -471,7 +451,7 @@ const ModalDelegate = (props) => {
 
             }
             {
-                response !== '' && response.code === undefined ?
+                response !== '' && response.code === 0 ?
                     <>
                         <Modal.Header className="result-header success" closeButton>
                             {t("SUCCESSFULL_DELEGATED")}
@@ -486,9 +466,9 @@ const ModalDelegate = (props) => {
                                         Hash: {response.transactionHash}</a>
                                     :
                                     <a
-                                        href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
+                                        href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
                                         target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
-                                        Hash: {response.txhash}</a>
+                                        Hash: {response.transactionHash}</a>
                                 }
                                 <div className="buttons">
                                     <button className="button" onClick={props.handleClose}>{t("DONE")}</button>
@@ -498,7 +478,7 @@ const ModalDelegate = (props) => {
                     </>
                     : null
             }{
-                response !== '' && response.code !== undefined ?
+                response !== '' && response.code !== 0 ?
                     <>
                         <Modal.Header className="result-header error" closeButton>
                             {t("FAILED_DELEGATE")}
@@ -515,11 +495,11 @@ const ModalDelegate = (props) => {
                                     </>
                                     :
                                     <>
-                                        <p>{response.raw_log === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : response.raw_log}</p>
+                                        <p>{response.rawLog === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : response.rawLog}</p>
                                         <a
-                                            href={`${EXPLORER_API}/transaction?txHash=${response.txhash}`}
+                                            href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
                                             target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
-                                        Hash: {response.txhash}</a>
+                                        Hash: {response.transactionHash}</a>
                                     </>
                                 }
                                 <div className="buttons">

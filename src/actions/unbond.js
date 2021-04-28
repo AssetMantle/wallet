@@ -7,6 +7,7 @@ import {
     UNBOND_DELEGATIONS_LIST
 } from "../constants/unbond";
 import Lodash from "lodash";
+import transactions from "../utils/transactions";
 
 export const fetchUnbondDelegationsProgress = () => {
     return {
@@ -48,7 +49,7 @@ export const fetchUnbondDelegations = (address) => {
                             return entriesSum;
                         }
                     });
-                    dispatch(fetchUnbondDelegationsSuccess(totalUnbond / 1000000));
+                    dispatch(fetchUnbondDelegationsSuccess(transactions.XprtConversion(totalUnbond)));
                 }
             })
             .catch((error) => {
