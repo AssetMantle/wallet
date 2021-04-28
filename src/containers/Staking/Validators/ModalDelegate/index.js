@@ -243,7 +243,7 @@ const ModalDelegate = (props) => {
     );
 
     const checkAmountError = (
-        props.transferableAmount < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
+        amount > props.balance + transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
     );
 
     return (
@@ -336,7 +336,7 @@ const ModalDelegate = (props) => {
                                         icon="left-arrow"/>
                                 </button>
                                 <button className="button button-primary"
-                                    disabled={amount > props.balance || checkAmountError || amount === 0 || (props.balance * 1) === 0}
+                                    disabled={checkAmountError || amount === 0 || (props.balance * 1) === 0}
                                 > {mode === "normal" ? "Next" : "Submit"}</button>
                             </div>
                         </Form>
