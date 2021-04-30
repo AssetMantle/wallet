@@ -148,6 +148,7 @@ html, body {
   font-size: 12px;
   font-family: 'Poppins', sans-serif;
   text-align: center;
+  position: relative;
 }
 .amount-error{
   font-size: 12px;
@@ -548,6 +549,18 @@ html, body {
   text-decoration-line: underline;
   color: #5F646C;
   cursor: pointer;
-  padding: 0px 5px;
+  padding: 0 5px;
 }
 
+.amount-warning{
+  color: #fead05;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+}
+.amount-warning.hide{
+  display: none;
+}
+.amount-warning.show{
+  display: block;
+}

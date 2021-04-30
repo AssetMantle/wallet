@@ -92,25 +92,6 @@ const ModalSetWithdrawAddress = (props) => {
         );
     }
 
-    function PrivateKeyReader(file, password) {
-        return new Promise(function (resolve) {
-            const fileReader = new FileReader();
-            fileReader.readAsText(file, "UTF-8");
-            fileReader.onload = event => {
-                const res = JSON.parse(event.target.result);
-                localStorage.setItem('encryptedMnemonic', event.target.result);
-                const decryptedData = helper.decryptStore(res, password);
-                if (decryptedData.error != null) {
-                    setErrorMessage(decryptedData.error);
-                    setLoader(false);
-                } else {
-                    resolve(decryptedData.mnemonic);
-                    setErrorMessage("");
-                }
-            };
-        });
-    }
-
     const handleSubmitKepler = async event => {
         setLoader(true);
         event.preventDefault();
@@ -128,6 +109,7 @@ const ModalSetWithdrawAddress = (props) => {
             setErrorMessage(err.message);
         });
     };
+
     const handleSubmitInitialData = async event => {
         event.preventDefault();
         let memo = "";
@@ -150,11 +132,24 @@ const ModalSetWithdrawAddress = (props) => {
         setLoader(true);
         event.preventDefault();
         let mnemonic;
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = "";
+        if (advanceMode) {
+            accountNumber = event.target.claimTotalAccountNumber.value;
+            addressIndex = event.target.claimTotalAccountIndex.value;
+            bip39Passphrase = event.target.claimTotalbip39Passphrase.value;
+        }
         if (importMnemonic) {
             const password = event.target.password.value;
-            var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
+            let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
             await promise.then(function (result) {
                 mnemonic = result;
+                console.log(result);
+            }).catch(err => {
+                setLoader(false);
+                setErrorMessage(err);
+                console.log(err, "Errror");
             });
         } else {
             const password = event.target.password.value;
@@ -169,14 +164,6 @@ const ModalSetWithdrawAddress = (props) => {
             }
         }
         if (mnemonic !== undefined) {
-            let accountNumber = 0;
-            let addressIndex = 0;
-            let bip39Passphrase = "";
-            if (advanceMode) {
-                accountNumber = event.target.claimTotalAccountNumber.value;
-                addressIndex = event.target.claimTotalAccountIndex.value;
-                bip39Passphrase = event.target.claimTotalbip39Passphrase.value;
-            }
             const persistence = MakePersistence(accountNumber, addressIndex);
             const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
             const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
@@ -193,7 +180,6 @@ const ModalSetWithdrawAddress = (props) => {
                     }).catch(err => {
                         setLoader(false);
                         setErrorMessage(err.message);
-                        console.log(err.message, "delegate error");
                     });
                     showSeedModal(false);
                 } else {
@@ -306,6 +292,7 @@ const ModalSetWithdrawAddress = (props) => {
                                                 type="text"
                                                 name="memo"
                                                 placeholder={t("ENTER_MEMO")}
+                                                maxLength={200}
                                                 required={false}
                                             />
                                         </div> : ""
@@ -355,7 +342,7 @@ const ModalSetWithdrawAddress = (props) => {
                                     :
                                     <>
                                         <div className="form-field">
-                                            <p className="label">{t("PASSWORD")}</p>
+                                            <p className="label">{t("KEY_STORE_PASSWORD")}</p>
                                             <Form.Control
                                                 type="password"
                                                 name="password"

@@ -4,6 +4,8 @@ import {connect} from "react-redux";
 import {getAccountUrl} from "../../../constants/url";
 import axios from "axios";
 import transactions from "../../../utils/transactions";
+import {Table} from "react-bootstrap";
+import moment from "moment";
 
 const ModalViewVestingDetails = () => {
     const [show, setShow] = useState(false);
@@ -24,13 +26,16 @@ const ModalViewVestingDetails = () => {
         axios.get(url).then(response => {
             if (response.data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
                 setResponse(response.data.account);
+                console.log(response.data.account, "PeriodicVestingAccount");
                 setShowPeriodicVesting(true);
             } else if (response.data.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount") {
                 setShowDelayedVesting(true);
                 setResponse(response.data.account);
+                console.log(response.data.account, "DelayedVestingAccount");
             } else if (response.data.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
                 setShowContinuesVesting(true);
                 setResponse(response.data.account);
+                console.log(response.data.account, "ContinuousVestingAccount");
             }
         }).catch(error => {
             console.log(error.response
@@ -56,9 +61,22 @@ const ModalViewVestingDetails = () => {
                     <ul className="modal-list-data">
                         {showContinuesVesting ?
                             response.base_vesting_account !== undefined ?
-                                <li className="unbonding-schedule-list">Unlocking {transactions.XprtConversion(parseInt(response.base_vesting_account.original_vesting[0].amount) )} XPRT
-                                    tokens
-                                    from {(new Date(parseInt(response.start_time) * 1000)).toUTCString()} to {(new Date(parseInt(response.base_vesting_account.end_time) * 1000)).toUTCString()} continuously</li>
+                                <Table borderless>
+                                    <thead>
+                                        <tr>
+                                            <th>Unlocking Tokens</th>
+                                            <th>From Date</th>
+                                            <th>To Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{transactions.XprtConversion(parseInt(response.base_vesting_account.original_vesting[0].amount) )}</td>
+                                            <td>{moment(new Date(parseInt(response.start_time) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</td>
+                                            <td>{moment(new Date(parseInt(response.base_vesting_account.end_time) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</td>
+                                        </tr>
+                                    </tbody>
+                                </Table>
                                 : ""
 
                             : ""
@@ -70,7 +88,7 @@ const ModalViewVestingDetails = () => {
                                     <>
                                         <p>Total vesting
                                             tokens {transactions.XprtConversion(parseInt(response.base_vesting_account.original_vesting[0].amount))} at
-                                            Date {(new Date(parseInt(response.start_time) * 1000)).toUTCString()}</p>
+                                            Date {moment(new Date(parseInt(response.start_time) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</p>
                                         {
                                             response.vesting_periods.length ?
                                                 response.vesting_periods.map((period, index) => {
@@ -79,9 +97,20 @@ const ModalViewVestingDetails = () => {
                                                         vestingPeriod = vestingPeriod + parseInt(response.vesting_periods[i].length);
                                                     }
                                                     return (
-                                                        <li className="unbonding-schedule-list" key={index}>Unlocking
-                                                            tokens {transactions.XprtConversion(period.amount[0].amount)} XPRT at
-                                                            Date {(new Date(vestingPeriod * 1000)).toUTCString()}</li>
+                                                        <Table key={index} borderless>
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Unlocking Tokens</th>
+                                                                    <th>Date</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>{transactions.XprtConversion(period.amount[0].amount)}</td>
+                                                                    <td>{moment(new Date(vestingPeriod * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </Table>
                                                     );
                                                 })
                                                 : ""
@@ -94,10 +123,20 @@ const ModalViewVestingDetails = () => {
                         }
                         {showDelayedVesting ?
                             response.base_vesting_account !== undefined ?
-                                <li className="unbonding-schedule-list">Unlocking {transactions.XprtConversion(parseInt(response.base_vesting_account.original_vesting[0].amount))} XPRT
-                                    tokens
-                                    on {(new Date(parseInt(response.base_vesting_account.end_time) * 1000)).toUTCString()}
-                                </li>
+                                <Table borderless>
+                                    <thead>
+                                        <tr>
+                                            <th>Unlocking Tokens</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{transactions.XprtConversion(parseInt(response.base_vesting_account.original_vesting[0].amount))}</td>
+                                            <td>{moment(new Date(parseInt(response.base_vesting_account.end_time) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</td>
+                                        </tr>
+                                    </tbody>
+                                </Table>
                                 : ""
 
                             : ""

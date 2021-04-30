@@ -105,25 +105,6 @@ const ModalWithdraw = (props) => {
         );
     }
 
-    function PrivateKeyReader(file, password) {
-        return new Promise(function (resolve) {
-            const fileReader = new FileReader();
-            fileReader.readAsText(file, "UTF-8");
-            fileReader.onload = event => {
-                const res = JSON.parse(event.target.result);
-                localStorage.setItem('encryptedMnemonic', event.target.result);
-                const decryptedData = helper.decryptStore(res, password);
-                if (decryptedData.error != null) {
-                    setErrorMessage(decryptedData.error);
-                    setLoader(false);
-                } else {
-                    resolve(decryptedData.mnemonic);
-                    setErrorMessage("");
-                }
-            };
-        });
-    }
-
     const handleSubmitKepler = async event => {
         setLoader(true);
         event.preventDefault();
@@ -158,16 +139,27 @@ const ModalWithdraw = (props) => {
         }
     };
     const handleSubmit = async event => {
-
         setLoader(true);
-
         event.preventDefault();
         let mnemonic;
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = "";
+        if (advanceMode) {
+            accountNumber = event.target.claimTotalAccountNumber.value;
+            addressIndex = event.target.claimTotalAccountIndex.value;
+            bip39Passphrase = event.target.claimTotalbip39Passphrase.value;
+        }
         if (importMnemonic) {
             const password = event.target.password.value;
-            var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
+            let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
             await promise.then(function (result) {
                 mnemonic = result;
+                console.log(result);
+            }).catch(err => {
+                setLoader(false);
+                setErrorMessage(err);
+                console.log(err, "Errror");
             });
         } else {
             const password = event.target.password.value;
@@ -182,14 +174,6 @@ const ModalWithdraw = (props) => {
             }
         }
         if (mnemonic !== undefined) {
-            let accountNumber = 0;
-            let addressIndex = 0;
-            let bip39Passphrase = "";
-            if (advanceMode) {
-                accountNumber = event.target.claimTotalAccountNumber.value;
-                addressIndex = event.target.claimTotalAccountIndex.value;
-                bip39Passphrase = event.target.claimTotalbip39Passphrase.value;
-            }
             const persistence = MakePersistence(accountNumber, addressIndex);
             const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
             const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
@@ -250,6 +234,12 @@ const ModalWithdraw = (props) => {
             setShow(false);
         }
     };
+
+    const handlePrevious = () => {
+        setInitialModal(true);
+        showSeedModal(false);
+    };
+
     const popoverMemo = (
         <Popover id="popover-memo">
             <Popover.Content>
@@ -358,6 +348,7 @@ const ModalWithdraw = (props) => {
                                                     type="text"
                                                     name="memo"
                                                     placeholder={t("ENTER_MEMO")}
+                                                    maxLength={200}
                                                     required={false}
                                                 />
                                             </div> : ""
@@ -395,7 +386,16 @@ const ModalWithdraw = (props) => {
                 {seedModal ?
                     <>
                         <Modal.Header closeButton>
-                            {t("CLAIM_STAKING_REWARDS")}
+                            <div className="previous-section txn-header">
+                                <button className="button" onClick={() => handlePrevious()}>
+                                    <Icon
+                                        viewClass="arrow-right"
+                                        icon="left-arrow"/>
+                                </button>
+                            </div>
+                            <h3 className="heading">
+                                {t("CLAIM_STAKING_REWARDS")}
+                            </h3>
                         </Modal.Header>
                         <Modal.Body className="rewards-modal-body">
                             <Form onSubmit={handleSubmit}>
@@ -420,7 +420,7 @@ const ModalWithdraw = (props) => {
                                         :
                                         <>
                                             <div className="form-field">
-                                                <p className="label">{t("PASSWORD")}</p>
+                                                <p className="label">{t("KEY_STORE_PASSWORD")}</p>
                                                 <Form.Control
                                                     type="password"
                                                     name="password"

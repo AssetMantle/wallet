@@ -50,7 +50,7 @@ const Send = (props) => {
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
-            setAmountField(evt.target.value);
+            setAmountField(evt.target.value * 1);
         } else {
             return false;
         }
@@ -67,27 +67,30 @@ const Send = (props) => {
 
     const handleSubmit = async event => {
         event.preventDefault();
-        setToAddress(event.target.address.value);
-        if (mode === "normal") {
-            let memo = "";
-            if (memoStatus) {
-                memo = event.target.memo.value;
-            }
-            setMemoContent(memo);
-            let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
-            if (memoCheck) {
-                setKeplerError("You entered your mnemonic as memo");
+        if (helper.ValidateAddress(event.target.address.value)) {
+            setToAddress(event.target.address.value);
+            if (mode === "normal") {
+                let memo = "";
+                if (memoStatus) {
+                    memo = event.target.memo.value;
+                }
+                setMemoContent(memo);
+                let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
+                if (memoCheck) {
+                    setKeplerError("You entered your mnemonic as memo");
+                } else {
+                    setKeplerError('');
+                    setMnemonicForm(true);
+                    setShow(true);
+                }
             } else {
                 setKeplerError('');
                 setMnemonicForm(true);
                 setShow(true);
             }
         } else {
-            setKeplerError('');
-            setMnemonicForm(true);
-            setShow(true);
+            setKeplerError("Invalid Recipient Address");
         }
-
     };
     const handleSubmitKepler = event => {
         setShow(true);
@@ -144,36 +147,31 @@ const Send = (props) => {
         return <Loader/>;
     }
 
-    function PrivateKeyReader(file, password) {
-        return new Promise(function (resolve) {
-            const fileReader = new FileReader();
-            fileReader.readAsText(file, "UTF-8");
-            fileReader.onload = event => {
-                const res = JSON.parse(event.target.result);
-                localStorage.setItem('encryptedMnemonic', event.target.result);
-                const decryptedData = helper.decryptStore(res, password);
-                if (decryptedData.error != null) {
-                    setErrorMessage(decryptedData.error);
-                    setLoader(false);
-                } else {
-                    resolve(decryptedData.mnemonic);
-                    setErrorMessage("");
-                }
-            };
-        });
-    }
-
     const handleMnemonicSubmit = async (evt) => {
         setLoader(true);
         setKeplerError('');
         evt.preventDefault();
         setErrorMessage("");
         let userMnemonic;
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = "";
+        if (advanceMode) {
+            accountNumber = evt.target.sendAccountNumber.value;
+            addressIndex = evt.target.sendAccountIndex.value;
+            bip39Passphrase = evt.target.sendbip39Passphrase.value;
+        }
+
         if (importMnemonic) {
             const password = evt.target.password.value;
-            var promise = PrivateKeyReader(evt.target.uploadFile.files[0], password);
+            let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
             await promise.then(function (result) {
                 userMnemonic = result;
+                console.log(result);
+            }).catch(err => {
+                setLoader(false);
+                setErrorMessage(err);
+                console.log(err, "Errror");
             });
         } else {
             const password = evt.target.password.value;
@@ -190,15 +188,6 @@ const Send = (props) => {
         }
 
         if (userMnemonic !== undefined) {
-            let accountNumber = 0;
-            let addressIndex = 0;
-            let bip39Passphrase = "";
-            if (advanceMode) {
-                accountNumber = evt.target.sendAccountNumber.value;
-                addressIndex = evt.target.sendAccountIndex.value;
-                bip39Passphrase = evt.target.sendbip39Passphrase.value;
-            }
-
             const persistence = MakePersistence(accountNumber, addressIndex);
             const address = persistence.getAddress(userMnemonic, bip39Passphrase, true);
             const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
@@ -208,10 +197,15 @@ const Send = (props) => {
                     const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, (amountField * config.xprtValue))], aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent,
                         userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                     response.then(result => {
+                        console.log(response, "response");
                         setTxResponse(result);
                         setLoader(false);
                         setAdvanceMode(false);
                         setMnemonicForm(true);
+                    }).catch(err => {
+                        setLoader(false);
+                        console.log(err, "err");
+                        setErrorMessage(err.message);
                     });
                 } else {
                     setLoader(false);
@@ -253,6 +247,10 @@ const Send = (props) => {
         setMemoStatus(!memoStatus);
     };
 
+    const checkAmountWarning = (
+        (props.transferableAmount - amountField) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
+    );
+
     return (
         <div className="send-container">
             <div className="form-section">
@@ -286,10 +284,17 @@ const Send = (props) => {
                             />
                             <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data"}><span
                                 className="title">Transferable Balance:</span> <span
-                                className="value" title={props.transferableAmount}>{props.transferableAmount.toFixed(6)} XPRT</span> </span>
+                                className="value"
+                                title={props.transferableAmount}>{props.transferableAmount.toFixed(6)} XPRT</span> </span>
                         </div>
                     </div>
-
+                    <div className="form-field">
+                        <p className="label"></p>
+                        <div className="amount-field">
+                            <p className={checkAmountWarning ? "hide amount-warning text-left" : "show amount-warning text-left"}><b>Warning
+                                : </b>You wont have fees to do future txns</p>
+                        </div>
+                    </div>
                     {mode === "normal" ?
                         <>
                             <div className="memo-dropdown-section">
@@ -327,6 +332,7 @@ const Send = (props) => {
                                         type="text"
                                         name="memo"
                                         placeholder={t("ENTER_MEMO")}
+                                        maxLength={200}
                                         required={false}
                                     />
                                 </div>
@@ -380,7 +386,7 @@ const Send = (props) => {
                                                     :
                                                     <>
                                                         <div className="form-field">
-                                                            <p className="label">{t("PASSWORD")}</p>
+                                                            <p className="label">{t("KEY_STORE_PASSWORD")}</p>
                                                             <Form.Control
                                                                 type="password"
                                                                 name="password"

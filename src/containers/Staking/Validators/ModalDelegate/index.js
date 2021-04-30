@@ -86,7 +86,7 @@ const ModalDelegate = (props) => {
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
-            setAmount(evt.target.value);
+            setAmount(evt.target.value*1);
         } else {
             return false;
         }
@@ -133,34 +133,28 @@ const ModalDelegate = (props) => {
         }
     };
 
-    function PrivateKeyReader(file, password) {
-        return new Promise(function (resolve) {
-            const fileReader = new FileReader();
-            fileReader.readAsText(file, "UTF-8");
-            fileReader.onload = event => {
-                const res = JSON.parse(event.target.result);
-                localStorage.setItem('encryptedMnemonic', event.target.result);
-                const decryptedData = helper.decryptStore(res, password);
-                if (decryptedData.error != null) {
-                    setErrorMessage(decryptedData.error);
-                    setLoader(false);
-                } else {
-                    resolve(decryptedData.mnemonic);
-                    setErrorMessage("");
-                }
-            };
-        });
-    }
-
     const handleSubmit = async event => {
         setLoader(true);
         event.preventDefault();
         let mnemonic;
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = "";
+        if (advanceMode) {
+            accountNumber = event.target.delegateAccountNumber.value;
+            addressIndex = event.target.delegateAccountIndex.value;
+            bip39Passphrase = event.target.delegatebip39Passphrase.value;
+        }
         if (importMnemonic) {
             const password = event.target.password.value;
-            var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
+            let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
             await promise.then(function (result) {
                 mnemonic = result;
+                console.log(result);
+            }).catch(err => {
+                setLoader(false);
+                setErrorMessage(err);
+                console.log(err, "Errror");
             });
         } else {
             const password = event.target.password.value;
@@ -175,14 +169,6 @@ const ModalDelegate = (props) => {
             }
         }
         if (mnemonic !== undefined) {
-            let accountNumber = 0;
-            let addressIndex = 0;
-            let bip39Passphrase = "";
-            if (advanceMode) {
-                accountNumber = event.target.delegateAccountNumber.value;
-                addressIndex = event.target.delegateAccountIndex.value;
-                bip39Passphrase = event.target.delegatebip39Passphrase.value;
-            }
             const persistence = MakePersistence(accountNumber, addressIndex);
             const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
             const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
@@ -246,6 +232,10 @@ const ModalDelegate = (props) => {
         amount > props.balance + transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
     );
 
+    const checkAmountWarning = (
+        (props.balance - amount) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
+    );
+
     return (
         <>
             {initialModal ?
@@ -283,11 +273,18 @@ const ModalDelegate = (props) => {
                                         onChange={handleAmountChange}
                                         required={true}
                                     />
+
+
                                     <span className={props.balance === 0 ? "empty info-data" : "info-data"}><span
                                         className="title">{t("BALANCE")}:</span> <span
                                         className="value">{props.balance} XPRT</span> </span>
                                 </div>
                             </div>
+
+                            {mode === "normal" || (localStorage.getItem("fee")*1) === 0 ?
+                                <p className={checkAmountWarning ? "hide amount-warning" : "show amount-warning"}><b>Warning : </b>You wont have fees to do future txns</p>
+                                : null
+                            }
 
                             {mode === "normal" ?
                                 <>
@@ -324,6 +321,7 @@ const ModalDelegate = (props) => {
                                                 name="memo"
                                                 placeholder={t("ENTER_MEMO")}
                                                 required={false}
+                                                maxLength={200}
                                             />
                                         </div>
                                         : ""
@@ -370,7 +368,7 @@ const ModalDelegate = (props) => {
                                                 className="file-upload" accept=".json" required={true}/>
                                         </div>
                                         <div className="form-field">
-                                            <p className="label">{t("PASSWORD")}</p>
+                                            <p className="label">{t("KEY_STORE_PASSWORD")}</p>
                                             <Form.Control
                                                 type="password"
                                                 name="password"
@@ -383,7 +381,7 @@ const ModalDelegate = (props) => {
                                     :
                                     <>
                                         <div className="form-field">
-                                            <p className="label">{t("PASSWORD")}</p>
+                                            <p className="label">{t("KEY_STORE_PASSWORD")}</p>
                                             <Form.Control
                                                 type="password"
                                                 name="password"

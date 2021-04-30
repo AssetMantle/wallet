@@ -47,7 +47,7 @@ const ModalReDelegate = (props) => {
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
-            setAmount(evt.target.value*1);
+            setAmount(evt.target.value * 1);
         } else {
             return false;
         }
@@ -84,11 +84,12 @@ const ModalReDelegate = (props) => {
             </button>
         );
     }
+
     useEffect(() => {
         const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
         if (encryptedMnemonic !== null) {
             setImportMnemonic(false);
-        }else{
+        } else {
             setImportMnemonic(true);
         }
     }, []);
@@ -124,7 +125,7 @@ const ModalReDelegate = (props) => {
         event.preventDefault();
         const response = transactions.TransactionWithKeplr([RedelegateMsg(loginAddress, props.validatorAddress, toValidatorAddress, (amount * config.xprtValue))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
-            if(result.code !== undefined){
+            if (result.code !== undefined) {
                 helper.AccountChangeCheck(result.rawLog);
             }
             setInitialModal(false);
@@ -137,34 +138,28 @@ const ModalReDelegate = (props) => {
         });
     };
 
-    function PrivateKeyReader(file, password) {
-        return new Promise(function (resolve) {
-            const fileReader = new FileReader();
-            fileReader.readAsText(file, "UTF-8");
-            fileReader.onload = event => {
-                const res = JSON.parse(event.target.result);
-                localStorage.setItem('encryptedMnemonic', event.target.result);
-                const decryptedData = helper.decryptStore(res, password);
-                if (decryptedData.error != null) {
-                    setErrorMessage(decryptedData.error);
-                    setLoader(false);
-                } else {
-                    resolve(decryptedData.mnemonic);
-                    setErrorMessage("");
-                }
-            };
-        });
-    }
-
     const handleSubmit = async event => {
         setLoader(true);
         event.preventDefault();
         let mnemonic;
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = "";
+        if (advanceMode) {
+            accountNumber = event.target.redelegateAccountNumber.value;
+            addressIndex = event.target.redelegateAccountIndex.value;
+            bip39Passphrase = event.target.redelegatebip39Passphrase.value;
+        }
         if (importMnemonic) {
             const password = event.target.password.value;
-            var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
+            let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
             await promise.then(function (result) {
                 mnemonic = result;
+                console.log(result);
+            }).catch(err => {
+                setLoader(false);
+                setErrorMessage(err);
+                console.log(err, "Errror");
             });
         } else {
             const password = event.target.password.value;
@@ -179,14 +174,6 @@ const ModalReDelegate = (props) => {
             }
         }
         if (mnemonic !== undefined) {
-            let accountNumber = 0;
-            let addressIndex = 0;
-            let bip39Passphrase = "";
-            if (advanceMode) {
-                accountNumber = event.target.redelegateAccountNumber.value;
-                addressIndex = event.target.redelegateAccountIndex.value;
-                bip39Passphrase = event.target.redelegatebip39Passphrase.value;
-            }
             const persistence = MakePersistence(accountNumber, addressIndex);
             const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
             const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
@@ -205,7 +192,7 @@ const ModalReDelegate = (props) => {
                         setErrorMessage(err.message);
                     });
                     showSeedModal(false);
-                      
+
                 } else {
                     setLoader(false);
                     setAdvanceMode(false);
@@ -243,6 +230,11 @@ const ModalReDelegate = (props) => {
     const checkAmountError = (
         props.transferableAmount < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
     );
+
+    const checkAmountWarning = (
+        (props.transferableAmount - amount) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
+    );
+
     return (
         <>
             {initialModal ?
@@ -293,29 +285,35 @@ const ModalReDelegate = (props) => {
                                         min={0}
                                         name="amount"
                                         placeholder={t("REDELEGATION_AMOUNT")}
-                                        defaultValue={amount || ''}
+                                        value={amount || ''}
                                         step="any"
                                         className={amount > props.delegationAmount ? "error-amount-field" : ""}
                                         onChange={handleAmountChange}
                                         required={true}
                                     />
-                                    <span className={props.delegationAmount === 0 ? "empty info-data" : "info-data"}><span
-                                        className="title">{t("DELEGATION_AMOUNT")}:</span> <span
-                                        className="value">{props.delegationAmount} XPRT</span> </span>
+                                    <span
+                                        className={props.delegationAmount === 0 ? "empty info-data" : "info-data"}><span
+                                            className="title">{t("DELEGATION_AMOUNT")}:</span> <span
+                                            className="value">{props.delegationAmount} XPRT</span> </span>
                                 </div>
                             </div>
+                            {mode === "normal" || (localStorage.getItem("fee")*1) === 0 ?
+                                <p className={checkAmountWarning ? "hide amount-warning" : "show amount-warning"}><b>Warning : </b>You wont have fees to do future txns</p>
+                                : null
+                            }
                             {mode === "normal" ?
                                 <>
                                     <div className="memo-dropdown-section">
-                                        <p onClick={handleMemoChange} className="memo-dropdown"><span className="text">{t("ADVANCED")} </span>
-                                            {memoStatus ?
-                                                <Icon
-                                                    viewClass="arrow-right"
-                                                    icon="up-arrow"/>
-                                                :
-                                                <Icon
-                                                    viewClass="arrow-right"
-                                                    icon="down-arrow"/>}
+                                        <p onClick={handleMemoChange} className="memo-dropdown"><span
+                                            className="text">{t("ADVANCED")} </span>
+                                        {memoStatus ?
+                                            <Icon
+                                                viewClass="arrow-right"
+                                                icon="up-arrow"/>
+                                            :
+                                            <Icon
+                                                viewClass="arrow-right"
+                                                icon="down-arrow"/>}
                                         </p>
                                         <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
                                             overlay={popoverMemo}>
@@ -337,12 +335,13 @@ const ModalReDelegate = (props) => {
                                                 type="text"
                                                 name="memo"
                                                 placeholder={t("ENTER_MEMO")}
+                                                maxLength={200}
                                                 required={false}
                                             />
                                         </div>
                                         : ""
                                     }
-                                </>: null
+                                </> : null
                             }
                             {
                                 errorMessage !== "" ?
@@ -390,7 +389,7 @@ const ModalReDelegate = (props) => {
                                     :
                                     <>
                                         <div className="form-field">
-                                            <p className="label">{t("PASSWORD")}</p>
+                                            <p className="label">{t("KEY_STORE_PASSWORD")}</p>
                                             <Form.Control
                                                 type="password"
                                                 name="password"
