@@ -86,32 +86,33 @@ const ModalViewVestingDetails = () => {
                                         <p>Total vesting
                                             tokens {transactions.XprtConversion(parseInt(response.base_vesting_account.original_vesting[0].amount))} at
                                             Date {moment(new Date(parseInt(response.start_time) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</p>
-                                        {
-                                            response.vesting_periods.length ?
-                                                response.vesting_periods.map((period, index) => {
-                                                    let vestingPeriod = parseInt(response.start_time);
-                                                    for (var i = 0; i <= index; i++) {
-                                                        vestingPeriod = vestingPeriod + parseInt(response.vesting_periods[i].length);
-                                                    }
-                                                    return (
-                                                        <Table key={index} borderless>
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>Unlocking Tokens</th>
-                                                                    <th>Date</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
+                                        <Table borderless>
+                                            <thead>
+                                                <tr>
+                                                    <th>Unlocking Tokens</th>
+                                                    <th>Date</th>
+                                                </tr>
+                                            </thead>
+                                            {
+                                                response.vesting_periods.length ?
+                                                    response.vesting_periods.map((period, index) => {
+                                                        let vestingPeriod = parseInt(response.start_time);
+                                                        for (var i = 0; i <= index; i++) {
+                                                            vestingPeriod = vestingPeriod + parseInt(response.vesting_periods[i].length);
+                                                        }
+                                                        return (
+                                                            <tbody  key={index}>
                                                                 <tr>
                                                                     <td>{transactions.XprtConversion(period.amount[0].amount)}</td>
                                                                     <td>{moment(new Date(vestingPeriod * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</td>
                                                                 </tr>
                                                             </tbody>
-                                                        </Table>
-                                                    );
-                                                })
-                                                : ""
-                                        }
+                                                        
+                                                        );
+                                                    })
+                                                    : ""
+                                            }
+                                        </Table>
                                     </>
                                     : ""
                                 }
