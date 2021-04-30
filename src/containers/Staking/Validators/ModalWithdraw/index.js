@@ -248,7 +248,16 @@ const ModalWithdraw = (props) => {
             {initialModal ?
                 <>
                     <Modal.Header closeButton>
-                        {t("CLAIM_STAKING_REWARDS")}
+                        <div className="previous-section txn-header">
+                            <button className="button" onClick={() => handlePrevious()}>
+                                <Icon
+                                    viewClass="arrow-right"
+                                    icon="left-arrow"/>
+                            </button>
+                        </div>
+                        <h3 className="heading">
+                            {t("CLAIM_STAKING_REWARDS")}
+                        </h3>
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
@@ -308,11 +317,6 @@ const ModalWithdraw = (props) => {
                             }
                             <div className="buttons navigate-buttons">
                                 <FeeContainer/>
-                                <button className="button button-secondary" onClick={() => handlePrevious()}>
-                                    <Icon
-                                        viewClass="arrow-right"
-                                        icon="left-arrow"/>
-                                </button>
                                 <button
                                     className="button button-primary"
                                     disabled={checkAmountError || props.rewards === 0}> {mode === "normal" ? t("NEXT") : t("SUBMIT")}

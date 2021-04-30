@@ -120,19 +120,25 @@ html, body {
 }
 
 .modal-custom {
-  .modal-header {
+  .modal-header{
     border: 0px solid;
     justify-content: center;
     font-weight: 600;
     font-size: 18px;
     line-height: 27px;
-    /* identical to box height */
     font-family: 'Poppins', sans-serif;
     text-align: center;
     padding: 30px;
     color: #313238;
   }
-
+  .modal-header .heading{
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 27px;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    color: #313238;
+  }
   .modal-dialog {
     max-width: 700px;
   }
@@ -349,7 +355,9 @@ html, body {
     outline: none !important;
     font-size: 34px;
   }
-
+  .previous-section.txn-header button{
+    top:30px;
+  }
   .previous-section .button {
     position: absolute;
     left: 30px;

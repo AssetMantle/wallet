@@ -251,12 +251,21 @@ const ModalDelegate = (props) => {
             {initialModal ?
                 <>
                     <Modal.Header closeButton>
-                        Delegate to {props.moniker}
-                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
-                            <button className="icon-button info" type="button"><Icon
-                                viewClass="arrow-right"
-                                icon="info"/></button>
-                        </OverlayTrigger>
+                        <div className="previous-section txn-header">
+                            <button className="button" onClick={() => handlePrevious()}>
+                                <Icon
+                                    viewClass="arrow-right"
+                                    icon="left-arrow"/>
+                            </button>
+                        </div>
+                        <h3 className="heading">Delegate to {props.moniker}
+                            <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
+                                <button className="icon-button info" type="button"><Icon
+                                    viewClass="arrow-right"
+                                    icon="info"/></button>
+                            </OverlayTrigger>
+                        </h3>
+
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
@@ -330,11 +339,6 @@ const ModalDelegate = (props) => {
 
                             <div className="buttons navigate-buttons">
                                 <FeeContainer/>
-                                <button className="button button-secondary" onClick={() => handlePrevious()}>
-                                    <Icon
-                                        viewClass="arrow-right"
-                                        icon="left-arrow"/>
-                                </button>
                                 <button className="button button-primary"
                                     disabled={checkAmountError || amount === 0 || (props.balance * 1) === 0}
                                 > {mode === "normal" ? "Next" : "Submit"}</button>

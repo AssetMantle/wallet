@@ -242,7 +242,16 @@ const ModalUnbond = (props) => {
             {initialModal ?
                 <>
                     <Modal.Header closeButton>
-                        Unbond from {props.moniker}
+                        <div className="previous-section txn-header">
+                            <button className="button" onClick={() => handlePrevious()}>
+                                <Icon
+                                    viewClass="arrow-right"
+                                    icon="left-arrow"/>
+                            </button>
+                        </div>
+                        <h3 className="heading">
+                            Unbond from {props.moniker}
+                        </h3>
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
@@ -313,12 +322,6 @@ const ModalUnbond = (props) => {
                             }
                             <div className="buttons navigate-buttons">
                                 <FeeContainer/>
-                                <button className="button button-secondary" type="button"
-                                    onClick={() => handlePrevious()}>
-                                    <Icon
-                                        viewClass="arrow-right"
-                                        icon="left-arrow"/>
-                                </button>
                                 <button className="button button-primary"
                                     disabled={checkAmountError || !props.delegateStatus || amount === 0 || amount > props.delegationAmount}>
                                     {mode === "normal" ? "Next" : "Submit"}
