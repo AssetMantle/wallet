@@ -219,6 +219,14 @@ const ModalSetWithdrawAddress = (props) => {
         props.transferableAmount < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
     );
 
+    const handlePrevious = () => {
+        if(props.formName === "setAddress"){
+            props.setShow(true);
+            props.setWithDraw(false);
+            setShow(false); 
+        }
+    };
+
     return (
         <Modal
             animation={false}
@@ -231,7 +239,20 @@ const ModalSetWithdrawAddress = (props) => {
             {initialModal ?
                 <>
                     <Modal.Header closeButton>
-                        Setup Rewards Withdrawal Address
+                        {(props.formName === "setAddress") ?
+                            <div className="previous-section txn-header">
+                                <button className="button" onClick={() => handlePrevious()}>
+                                    <Icon
+                                        viewClass="arrow-right"
+                                        icon="left-arrow"/>
+                                </button>
+                            </div>
+                            :""
+                        }
+                        <h3 className="heading">
+                            Setup Rewards Withdrawal Address
+
+                        </h3>
                     </Modal.Header>
                     <Modal.Body className="rewards-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
@@ -412,7 +433,7 @@ const ModalSetWithdrawAddress = (props) => {
                 : null
             }
             {
-                response !== '' && response.code === undefined ?
+                response !== '' && response.code === 0 ?
                     <>
                         <Modal.Header className="result-header success" closeButton>
                             {t("SUCCESSFULLY_ADDRESS_CHANGED")}
@@ -440,7 +461,7 @@ const ModalSetWithdrawAddress = (props) => {
                     : null
             }
             {
-                response !== '' && response.code !== undefined ?
+                response !== '' && response.code !== 0 ?
                     <>
                         <Modal.Header className="result-header error" closeButton>
                             {t("FAILED_ADDRESS_CHANGE")}

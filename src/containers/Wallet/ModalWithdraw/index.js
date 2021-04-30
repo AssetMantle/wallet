@@ -554,7 +554,7 @@ const ModalWithdraw = (props) => {
             </Modal>
             {withdraw ?
                 <ModalSetWithdrawAddress setWithDraw={setWithDraw} handleClose={handleClose}
-                    totalRewards={props.rewards} setShow={setShow}/>
+                    totalRewards={props.rewards} setShow={setShow} formName="setAddress"/>
                 : null
             }
         </>
