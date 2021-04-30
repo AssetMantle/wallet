@@ -171,7 +171,6 @@ const Send = (props) => {
             }).catch(err => {
                 setLoader(false);
                 setErrorMessage(err);
-                console.log(err, "Errror");
             });
         } else {
             const password = evt.target.password.value;
@@ -204,7 +203,6 @@ const Send = (props) => {
                         setMnemonicForm(true);
                     }).catch(err => {
                         setLoader(false);
-                        console.log(err, "err");
                         setErrorMessage(err.message);
                     });
                 } else {

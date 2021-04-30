@@ -26,16 +26,13 @@ const ModalViewVestingDetails = () => {
         axios.get(url).then(response => {
             if (response.data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
                 setResponse(response.data.account);
-                console.log(response.data.account, "PeriodicVestingAccount");
                 setShowPeriodicVesting(true);
             } else if (response.data.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount") {
                 setShowDelayedVesting(true);
                 setResponse(response.data.account);
-                console.log(response.data.account, "DelayedVestingAccount");
             } else if (response.data.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
                 setShowContinuesVesting(true);
                 setResponse(response.data.account);
-                console.log(response.data.account, "ContinuousVestingAccount");
             }
         }).catch(error => {
             console.log(error.response

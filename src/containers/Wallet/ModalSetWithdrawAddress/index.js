@@ -149,7 +149,6 @@ const ModalSetWithdrawAddress = (props) => {
             }).catch(err => {
                 setLoader(false);
                 setErrorMessage(err);
-                console.log(err, "Errror");
             });
         } else {
             const password = event.target.password.value;
