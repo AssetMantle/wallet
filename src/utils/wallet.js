@@ -59,7 +59,7 @@ function getWalletPath(account = 0, addressIndex = 0) {
     return "m/44'/" + coinType + "'/" + account + "'/0/" + addressIndex;
 }
 
-module.exports = {
+export default {
     createWallet,
     createRandomWallet,
     defaultWalletPath,
