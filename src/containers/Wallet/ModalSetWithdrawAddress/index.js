@@ -120,11 +120,16 @@ const ModalSetWithdrawAddress = (props) => {
         if (memoCheck) {
             setErrorMessage(t("MEMO_MNEMONIC_CHECK_ERROR"));
         } else {
-            setValidatorAddress(event.target.withdrawalAddress.value);
-            setMemoContent(memo);
-            setInitialModal(false);
-            showSeedModal(true);
-            setErrorMessage("");
+            if (helper.ValidateAddress(event.target.withdrawalAddress.value)) {
+                setValidatorAddress(event.target.withdrawalAddress.value);
+                setMemoContent(memo);
+                setInitialModal(false);
+                showSeedModal(true);
+                setErrorMessage("");
+            }else {
+                setErrorMessage("Enter Valid Revised Address");
+            }
+
         }
 
     };
