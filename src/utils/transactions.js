@@ -2,6 +2,7 @@ import {DirectSecp256k1Wallet} from "@cosmjs/proto-signing";
 import config from "../config.json";
 import {Bip39, EnglishMnemonic, Slip10, Slip10Curve, stringToPath} from "@cosmjs/crypto";
 import MakePersistence from "./cosmosjsWrapper";
+import helper from "./helper";
 
 const {SigningStargateClient} = require("@cosmjs/stargate");
 const addressPrefix = config.addressPrefix;
@@ -104,6 +105,29 @@ function XprtConversion(data) {
     return Result;
 }
 
+function PrivateKeyReader(file, password, accountNumber, addressIndex, bip39Passphrase, loginAddress) {
+    return new Promise(function (resolve, reject) {
+        const fileReader = new FileReader();
+        fileReader.readAsText(file, "UTF-8");
+        fileReader.onload = event => {
+            const res = JSON.parse(event.target.result);
+            const decryptedData = helper.decryptStore(res, password);
+            if (decryptedData.error != null) {
+                reject(decryptedData.error);
+            } else {
+                const persistence = MakePersistence(accountNumber, addressIndex);
+                const address = persistence.getAddress(decryptedData.mnemonic, bip39Passphrase, true);
+                if(address === loginAddress){
+                    resolve(decryptedData.mnemonic);
+                    localStorage.setItem('encryptedMnemonic', event.target.result);
+                }else {
+                    reject("Your sign in address and keystore file don’t match. Please try again or else sign in again.");
+                }
+            }
+        };
+    });
+}
+
 export default {
     TransactionWithKeplr,
     TransactionWithMnemonic,
@@ -111,5 +135,6 @@ export default {
     getAccountNumberAndSequence,
     mnemonicValidation,
     updateFee,
-    XprtConversion
+    XprtConversion,
+    PrivateKeyReader
 };

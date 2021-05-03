@@ -80,7 +80,6 @@ const ModalActions = (props) => {
         setShow(false);
         setTxModalShow(false);
         setWithDraw(true);
-
     };
 
     return (
@@ -224,8 +223,14 @@ const ModalActions = (props) => {
                 </Modal>
             }
             {withdraw ?
-                <ModalSetWithdrawAddress setWithDraw={setWithDraw} handleClose={handleClose}
-                    totalRewards={props.rewards} />
+                <ModalSetWithdrawAddress setWithDraw={setWithDraw} 
+                    setInitialModal={setInitialModal}
+                    setTxModalShow={setTxModalShow}  
+                    setModalOpen={setModalOpen} 
+                    handleClose={handleClose} 
+                    totalRewards={props.rewards} 
+                    formName="validatorSetAddress"
+                />
                 : null
             }
 

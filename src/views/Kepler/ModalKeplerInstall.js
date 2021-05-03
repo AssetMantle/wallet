@@ -4,6 +4,7 @@ import chrome from "../../assets/images/chrome.svg";
 const ModalKeplerInstall = () => {
     const [show, setShow] = useState(true);
     const handleClose = () => {
+        window.location.reload();
         setShow(false);
     };
 
@@ -25,7 +26,7 @@ const ModalKeplerInstall = () => {
                         </a>
 
                     </div>
-                    <p onClick={handleClose} className="installed-note">Already Installed ?</p>
+                    <p onClick={handleClose} className="installed-note">Already Installed Restart the Application?</p>
                 </Modal.Body>
             </Modal>
         </>

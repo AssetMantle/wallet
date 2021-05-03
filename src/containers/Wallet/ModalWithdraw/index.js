@@ -105,25 +105,6 @@ const ModalWithdraw = (props) => {
         );
     }
 
-    function PrivateKeyReader(file, password) {
-        return new Promise(function (resolve) {
-            const fileReader = new FileReader();
-            fileReader.readAsText(file, "UTF-8");
-            fileReader.onload = event => {
-                const res = JSON.parse(event.target.result);
-                localStorage.setItem('encryptedMnemonic', event.target.result);
-                const decryptedData = helper.decryptStore(res, password);
-                if (decryptedData.error != null) {
-                    setErrorMessage(decryptedData.error);
-                    setLoader(false);
-                } else {
-                    resolve(decryptedData.mnemonic);
-                    setErrorMessage("");
-                }
-            };
-        });
-    }
-
     const handleSubmitKepler = async event => {
         setLoader(true);
         event.preventDefault();
@@ -149,7 +130,7 @@ const ModalWithdraw = (props) => {
         }
         let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
         if (memoCheck) {
-            setErrorMessage("you entered your mnemonic as memo");
+            setErrorMessage(t("MEMO_MNEMONIC_CHECK_ERROR"));
         } else {
             setErrorMessage("");
             setMemoContent(memo);
@@ -158,16 +139,25 @@ const ModalWithdraw = (props) => {
         }
     };
     const handleSubmit = async event => {
-
         setLoader(true);
-
         event.preventDefault();
         let mnemonic;
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = "";
+        if (advanceMode) {
+            accountNumber = event.target.claimTotalAccountNumber.value;
+            addressIndex = event.target.claimTotalAccountIndex.value;
+            bip39Passphrase = event.target.claimTotalbip39Passphrase.value;
+        }
         if (importMnemonic) {
             const password = event.target.password.value;
-            var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
+            let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
             await promise.then(function (result) {
                 mnemonic = result;
+            }).catch(err => {
+                setLoader(false);
+                setErrorMessage(err);
             });
         } else {
             const password = event.target.password.value;
@@ -182,14 +172,6 @@ const ModalWithdraw = (props) => {
             }
         }
         if (mnemonic !== undefined) {
-            let accountNumber = 0;
-            let addressIndex = 0;
-            let bip39Passphrase = "";
-            if (advanceMode) {
-                accountNumber = event.target.claimTotalAccountNumber.value;
-                addressIndex = event.target.claimTotalAccountIndex.value;
-                bip39Passphrase = event.target.claimTotalbip39Passphrase.value;
-            }
             const persistence = MakePersistence(accountNumber, addressIndex);
             const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
             const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
@@ -250,6 +232,12 @@ const ModalWithdraw = (props) => {
             setShow(false);
         }
     };
+
+    const handlePrevious = () => {
+        setInitialModal(true);
+        showSeedModal(false);
+    };
+
     const popoverMemo = (
         <Popover id="popover-memo">
             <Popover.Content>
@@ -265,8 +253,13 @@ const ModalWithdraw = (props) => {
             </Popover.Content>
         </Popover>
     );
+
     const checkAmountError = (
         props.transferableAmount < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
+    );
+
+    const checkAmountWarning = (
+        (props.transferableAmount) < transactions.XprtConversion(2*parseInt(localStorage.getItem('fee'))) && (props.transferableAmount) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
     );
     return (
         <>
@@ -286,7 +279,7 @@ const ModalWithdraw = (props) => {
                         <Modal.Body className="rewards-modal-body">
                             <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
                                 <div className="form-field">
-                                    <p className="label">Total Available</p>
+                                    <p className="label">{t("TOTAL_AVAILABLE_BALANCE")}</p>
                                     <div className="available-tokens">
                                         <p className="tokens"
                                             title={props.totalRewards}>{props.totalRewards.toFixed(4)} XPRT</p>
@@ -313,7 +306,7 @@ const ModalWithdraw = (props) => {
                                         }
                                     </Select>
                                 </div>
-                                <div className="form-field">
+                                <div className="form-field p-0">
                                     <p className="label"></p>
                                     <div className="available-tokens">
                                         <p className="tokens">Available Rewards {individualRewards} <span>XPRT</span>
@@ -321,7 +314,24 @@ const ModalWithdraw = (props) => {
                                         <p className="usd">=${(individualRewards * props.tokenPrice).toFixed(4)}</p>
                                     </div>
                                 </div>
-
+                                {(localStorage.getItem("fee") * 1) !== 0 ?
+                                    <>
+                                        <div className="form-field p-0">
+                                            <p className="label"></p>
+                                            <div className="amount-field">
+                                                <p className={checkAmountWarning ? "show amount-warning text-left" : "hide amount-warning text-left"}>
+                                                    <b>Warning : </b>{t("AMOUNT_WARNING_MESSAGE")}</p>
+                                            </div>
+                                        </div>
+                                        <div className="form-field p-0">
+                                            <p className="label"></p>
+                                            <div className="amount-field">
+                                                <p className={checkAmountError ? "show amount-error text-left" : "hide amount-error text-left"}>{t("AMOUNT_ERROR_MESSAGE")}</p>
+                                            </div>
+                                        </div>
+                                    </>
+                                    : null
+                                }
                                 {mode === "normal" ?
                                     <>
                                         <div className="memo-dropdown-section">
@@ -358,6 +368,7 @@ const ModalWithdraw = (props) => {
                                                     type="text"
                                                     name="memo"
                                                     placeholder={t("ENTER_MEMO")}
+                                                    maxLength={200}
                                                     required={false}
                                                 />
                                             </div> : ""
@@ -395,7 +406,16 @@ const ModalWithdraw = (props) => {
                 {seedModal ?
                     <>
                         <Modal.Header closeButton>
-                            {t("CLAIM_STAKING_REWARDS")}
+                            <div className="previous-section txn-header">
+                                <button className="button" onClick={() => handlePrevious()}>
+                                    <Icon
+                                        viewClass="arrow-right"
+                                        icon="left-arrow"/>
+                                </button>
+                            </div>
+                            <h3 className="heading">
+                                {t("CLAIM_STAKING_REWARDS")}
+                            </h3>
                         </Modal.Header>
                         <Modal.Body className="rewards-modal-body">
                             <Form onSubmit={handleSubmit}>
@@ -420,7 +440,7 @@ const ModalWithdraw = (props) => {
                                         :
                                         <>
                                             <div className="form-field">
-                                                <p className="label">{t("PASSWORD")}</p>
+                                                <p className="label">{t("KEY_STORE_PASSWORD")}</p>
                                                 <Form.Control
                                                     type="password"
                                                     name="password"
@@ -554,7 +574,7 @@ const ModalWithdraw = (props) => {
             </Modal>
             {withdraw ?
                 <ModalSetWithdrawAddress setWithDraw={setWithDraw} handleClose={handleClose}
-                    totalRewards={props.rewards} setShow={setShow}/>
+                    totalRewards={props.rewards} setShow={setShow} formName="setAddress"/>
                 : null
             }
         </>
