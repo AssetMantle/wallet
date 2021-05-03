@@ -175,7 +175,7 @@ const TokenInfo = (props) => {
                                 className="inner-grid">
                                 {
                                     props.unbond > 0 ?
-                                        <ModalViewUnbondDetails unbonding={props.unbond}/>
+                                        <ModalViewUnbondDetails/>
                                         : ""
                                 }
                             </span>

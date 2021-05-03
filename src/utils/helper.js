@@ -95,6 +95,7 @@ function ValidatePassphrase(value) {
 function ValidateAddress(address) {
     return address.startsWith("persistence1") && address.length === 50;
 }
+
 function AccountChangeCheck(errorMessage) {
     if(errorMessage === 'Unsupported type: \'/cosmos.vesting.v1beta1.ContinuousVestingAccount\'' ||
         errorMessage === 'Unsupported type: \'/cosmos.vesting.v1beta1.DelayedVestingAccount\'' ||
