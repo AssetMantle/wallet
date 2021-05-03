@@ -225,8 +225,9 @@ const ModalUnbond = (props) => {
     );
 
     const checkAmountWarning = (
-        (props.transferableAmount - amount) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
+        (props.transferableAmount - amount) < transactions.XprtConversion(2*parseInt(localStorage.getItem('fee'))) && (props.transferableAmount - amount) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
     );
+
 
     return (
         <>
@@ -265,8 +266,12 @@ const ModalUnbond = (props) => {
                                         className="value">{props.delegationAmount} XPRT</span> </span>
                                 </div>
                             </div>
-                            {mode === "normal" || (localStorage.getItem("fee")*1) === 0 ?
-                                <p className={checkAmountWarning ? "hide amount-warning" : "show amount-warning"}><b>Warning : </b>You wont have fees to do future txns</p>
+                            {(localStorage.getItem("fee")*1) !== 0 ?
+                                <p className={checkAmountWarning ? "show amount-warning" : "hide amount-warning"}><b>Warning : </b>You wont have fees to do future txns</p>
+                                : null
+                            }
+                            {(localStorage.getItem("fee")*1) !== 0 ?
+                                <p className={checkAmountError ? "show amount-error text-center" : "hide amount-error text-center"}>You Dont have fees to do txns</p>
                                 : null
                             }
                             {mode === "normal" ?

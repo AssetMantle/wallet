@@ -434,6 +434,12 @@ html, body {
 .amount-warning.show {
   display: block; }
 
+.amount-error.hide {
+  display: none; }
+
+.amount-error.show {
+  display: block; }
+
 /*--------------------------------------------------------------
 # main styles
 --------------------------------------------------------------*/

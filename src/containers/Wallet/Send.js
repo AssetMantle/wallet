@@ -244,11 +244,13 @@ const Send = (props) => {
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
     };
-
-    const checkAmountWarning = (
-        (props.transferableAmount - amountField) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
+    const checkAmountError = (
+        (props.transferableAmount - amountField) < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
     );
 
+    const checkAmountWarning = (
+        (props.transferableAmount - amountField) < transactions.XprtConversion(2*parseInt(localStorage.getItem('fee'))) && (props.transferableAmount - amountField) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
+    );
     return (
         <div className="send-container">
             <div className="form-section">
@@ -289,8 +291,20 @@ const Send = (props) => {
                     <div className="form-field">
                         <p className="label"></p>
                         <div className="amount-field">
-                            <p className={checkAmountWarning ? "hide amount-warning text-left" : "show amount-warning text-left"}><b>Warning
-                                : </b>You wont have fees to do future txns</p>
+                            {(localStorage.getItem("fee")*1) !== 0 ?
+                                <p className={checkAmountWarning ? "show amount-warning" : "hide amount-warning"}><b>Warning : </b>You wont have fees to do future txns</p>
+                                : null
+                            }
+                        </div>
+                    </div>
+
+                    <div className="form-field">
+                        <p className="label"></p>
+                        <div className="amount-field">
+                            {(localStorage.getItem("fee")*1) !== 0 ?
+                                <p className={checkAmountError ? "show amount-error" : "hide amount-error"}>You Dont have fees to do txns</p>
+                                : null
+                            }
                         </div>
                     </div>
                     {mode === "normal" ?

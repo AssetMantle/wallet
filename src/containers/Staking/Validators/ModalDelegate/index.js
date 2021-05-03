@@ -150,7 +150,6 @@ const ModalDelegate = (props) => {
             let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
             await promise.then(function (result) {
                 mnemonic = result;
-                console.log(result);
             }).catch(err => {
                 setLoader(false);
                 setErrorMessage(err);
@@ -232,7 +231,7 @@ const ModalDelegate = (props) => {
     );
 
     const checkAmountWarning = (
-        (props.balance - amount) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
+        (props.balance - amount) < transactions.XprtConversion(2*parseInt(localStorage.getItem('fee'))) && (props.balance - amount) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
     );
 
     return (
@@ -280,8 +279,12 @@ const ModalDelegate = (props) => {
                                 </div>
                             </div>
 
-                            {mode === "normal" || (localStorage.getItem("fee")*1) === 0 ?
-                                <p className={checkAmountWarning ? "hide amount-warning" : "show amount-warning"}><b>Warning : </b>You wont have fees to do future txns</p>
+                            {(localStorage.getItem("fee")*1) !== 0 ?
+                                <p className={checkAmountWarning ? "show amount-warning" : "hide amount-warning"}><b>Warning : </b>You wont have fees to do future txns</p>
+                                : null
+                            }
+                            {(localStorage.getItem("fee")*1) !== 0 ?
+                                <p className={checkAmountError ? "show amount-error text-center" : "hide amount-error text-center"}>You Dont have fees to do txns</p>
                                 : null
                             }
 

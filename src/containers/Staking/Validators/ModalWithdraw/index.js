@@ -228,6 +228,13 @@ const ModalWithdraw = (props) => {
     const checkAmountError = (
         props.transferableAmount < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
     );
+
+    const checkAmountWarning = (
+        (props.transferableAmount) < transactions.XprtConversion(2*parseInt(localStorage.getItem('fee'))) && (props.transferableAmount) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
+    );
+
+    console.log(transactions.XprtConversion(2*parseInt(localStorage.getItem('fee'))),checkAmountWarning,"checkAmountWarning", (localStorage.getItem("fee")*1));
+
     return (
         <>
             {initialModal ?
@@ -252,6 +259,14 @@ const ModalWithdraw = (props) => {
                                     <p className={props.rewards === 0 ? "empty info-data" : "info-data"} title={props.rewards}>{props.rewards.toFixed(4)}</p>
                                 </div>
                             </div>
+                            {(localStorage.getItem("fee")*1) !== 0 ?
+                                <p className={checkAmountWarning ? "show amount-warning" : "hide amount-warning"}><b>Warning : </b>You wont have fees to do future txns</p>
+                                : null
+                            }
+                            {(localStorage.getItem("fee")*1) !== 0 ?
+                                <p className={checkAmountError ? "show amount-error" : "hide amount-error"}>You Dont have fees to do txns</p>
+                                : null
+                            }
                             {
                                 mode === "normal" ?
                                     <>

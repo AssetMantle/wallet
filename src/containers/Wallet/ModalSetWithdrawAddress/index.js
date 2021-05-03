@@ -218,6 +218,9 @@ const ModalSetWithdrawAddress = (props) => {
         props.transferableAmount < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
     );
 
+    const checkAmountWarning = (
+        (props.transferableAmount) < transactions.XprtConversion(2*parseInt(localStorage.getItem('fee'))) && (props.transferableAmount) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
+    );
     const handlePrevious = () => {
         if(props.formName === "setAddress"){
             props.setShow(true);
@@ -318,6 +321,14 @@ const ModalSetWithdrawAddress = (props) => {
                                         </div> : ""
                                     }
                                 </> : null
+                            }
+                            {(localStorage.getItem("fee")*1) !== 0 ?
+                                <p className={checkAmountWarning ? "show amount-warning" : "hide amount-warning"}><b>Warning : </b>You wont have fees to do future txns</p>
+                                : null
+                            }
+                            {(localStorage.getItem("fee")*1) !== 0 ?
+                                <p className={checkAmountError ? "show amount-error" : "hide amount-error"}>You Dont have fees to do txns</p>
+                                : null
                             }
                             {
                                 errorMessage !== "" ?
