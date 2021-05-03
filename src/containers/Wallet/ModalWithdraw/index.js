@@ -155,7 +155,6 @@ const ModalWithdraw = (props) => {
             let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
             await promise.then(function (result) {
                 mnemonic = result;
-                console.log(result);
             }).catch(err => {
                 setLoader(false);
                 setErrorMessage(err);
@@ -280,7 +279,7 @@ const ModalWithdraw = (props) => {
                         <Modal.Body className="rewards-modal-body">
                             <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
                                 <div className="form-field">
-                                    <p className="label">Total Available</p>
+                                    <p className="label">{t("TOTAL_AVAILABLE_BALANCE")}</p>
                                     <div className="available-tokens">
                                         <p className="tokens"
                                             title={props.totalRewards}>{props.totalRewards.toFixed(4)} XPRT</p>

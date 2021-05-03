@@ -161,7 +161,6 @@ const ModalUnbond = (props) => {
             let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
             await promise.then(function (result) {
                 mnemonic = result;
-                console.log(result);
             }).catch(err => {
                 setLoader(false);
                 setErrorMessage(err);
@@ -252,7 +251,7 @@ const ModalUnbond = (props) => {
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
                             <div className="form-field p-0">
-                                <p className="label">{t("UNBOND_AMOUNT")}(XPRT)</p>
+                                <p className="label">Amount (XPRT)</p>
                                 <div className="amount-field">
                                     <Form.Control
                                         type="number"
@@ -266,7 +265,7 @@ const ModalUnbond = (props) => {
                                         required={true}
                                     />
                                     <span className={props.delegationAmount === 0 ? "empty info-data" : "info-data"}><span
-                                        className="title">{t("DELEGATION_AMOUNT")}:</span> <span
+                                        className="title">{t("DELEGATED_AMOUNT")}:</span> <span
                                         className="value">{props.delegationAmount} XPRT</span> </span>
                                 </div>
                             </div>

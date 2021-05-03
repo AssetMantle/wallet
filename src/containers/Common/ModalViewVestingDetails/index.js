@@ -143,7 +143,7 @@ const ModalViewVestingDetails = () => {
 
                 </Modal.Body>
             </Modal>
-            <span className="view-button" onClick={handleModal}>View</span>
+            <span className="view-button" onClick={handleModal} title="View Vesting Schedule">View</span>
         </>
 
     );

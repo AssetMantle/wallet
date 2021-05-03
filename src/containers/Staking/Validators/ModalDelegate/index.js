@@ -85,6 +85,7 @@ const ModalDelegate = (props) => {
             setImportMnemonic(true);
         }
     }, []);
+
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
@@ -225,8 +226,8 @@ const ModalDelegate = (props) => {
     const popover = (
         <Popover id="popover-basic">
             <Popover.Content>
-                Delegate your XPRT to {props.moniker} to earn staking rewards.
-                <p><b>Note:</b> Unstaking or Unbonding period: 21 days.</p>
+                Delegate your XPRT and earn staking rewards.
+                <p><b>Note:</b>Unstaking or unbonding period: 21 days.</p>
             </Popover.Content>
         </Popover>
     );
@@ -291,14 +292,14 @@ const ModalDelegate = (props) => {
                                     <div className="form-field p-0">
                                         <p className="label"></p>
                                         <div className="amount-field">
-                                            <p className={checkAmountWarning ? "show amount-warning" : "hide amount-warning"}>
+                                            <p className={checkAmountWarning ? "show amount-warning text-left" : "hide amount-warning text-left"}>
                                                 <b>Warning : </b>{t("AMOUNT_WARNING_MESSAGE")}</p>
                                         </div>
                                     </div>
                                     <div className="form-field p-0">
                                         <p className="label"></p>
                                         <div className="amount-field">
-                                            <p className={checkAmountError ? "show amount-error" : "hide amount-error"}>{t("AMOUNT_ERROR_MESSAGE")}</p>
+                                            <p className={checkAmountError ? "show amount-error text-left" : "hide amount-error text-left"}>{t("AMOUNT_ERROR_MESSAGE")}</p>
                                         </div>
                                     </div>
                                 </>

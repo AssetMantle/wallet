@@ -145,7 +145,6 @@ const ModalSetWithdrawAddress = (props) => {
             let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
             await promise.then(function (result) {
                 mnemonic = result;
-                console.log(result);
             }).catch(err => {
                 setLoader(false);
                 setErrorMessage(err);

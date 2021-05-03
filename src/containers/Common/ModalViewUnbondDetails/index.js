@@ -24,7 +24,7 @@ const ModalViewUnbondDetails = (props) => {
                 className="modal-custom list-modal"
                 onHide={handleClose}>
                 <Modal.Header className="result-header" closeButton>
-                    Unbonding Schedule
+                    View Unbonding XPRT Schedule
                 </Modal.Header>
                 <Modal.Body className="list-modal-body">
                     <div className="unbonding-schedule-list-header">
@@ -49,7 +49,7 @@ const ModalViewUnbondDetails = (props) => {
                     }
                 </Modal.Body>
             </Modal>
-            <span className="view-button" onClick={handleModal}>View</span>
+            <span className="view-button" onClick={handleModal} title="View Unbonding XPRT Schedule">View</span>
         </>
 
     );

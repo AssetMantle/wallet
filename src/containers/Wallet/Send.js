@@ -179,7 +179,6 @@ const Send = (props) => {
             let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
             await promise.then(function (result) {
                 userMnemonic = result;
-                console.log(result);
             }).catch(err => {
                 setLoader(false);
                 setErrorMessage(err);
@@ -208,7 +207,6 @@ const Send = (props) => {
                     const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, (amountField * config.xprtValue))], aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent,
                         userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                     response.then(result => {
-                        console.log(response, "response");
                         setTxResponse(result);
                         setLoader(false);
                         setAdvanceMode(false);
@@ -248,7 +246,7 @@ const Send = (props) => {
     const popover = (
         <Popover id="popover">
             <Popover.Content>
-                The recipient’s address should start with persistenceXXXXXXXX....
+                Recipient’s address starts with persistence; for example: persistence14zmyw2q8keywcwhpttfr0d4xpggylsrmd4caf4
             </Popover.Content>
         </Popover>
     );
@@ -256,13 +254,7 @@ const Send = (props) => {
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
     };
-    // const checkAmountError = (
-    //     (props.transferableAmount - amountField) < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
-    // );
-    //
-    // const checkAmountWarning = (
-    //     (props.transferableAmount - amountField) < transactions.XprtConversion(2*parseInt(localStorage.getItem('fee'))) && (props.transferableAmount - amountField) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
-    // );
+
     return (
         <div className="send-container">
             <div className="form-section">
@@ -290,6 +282,7 @@ const Send = (props) => {
                                 name="amount"
                                 placeholder={t("SEND_AMOUNT")}
                                 step="any"
+                                className={amountField > props.transferableAmount ? "error-amount-field" : ""}
                                 value={amountField}
                                 onChange={handleAmountChange}
                                 required={true}

@@ -148,9 +148,10 @@ let English = {
         "CLAIMING_REWARDS": "Claiming Rewards",
         "SELECT_VALIDATOR": "Select Validator",
         "TOTAL_AVAILABLE": "Total Available",
+        "TOTAL_AVAILABLE_BALANCE": "Total Available Amount",
         "MEMO": "Memo",
         "ENTER_MEMO": "Enter Memo(Optional)",
-        "SET_WITHDRAW_ADDRESS": "Setup another Reward Withdrawal address",
+        "SET_WITHDRAW_ADDRESS": "Setup Address for Rewards Withdrawal",
         "WITHDRAW_ADDRESS": "Withdraw Address",
         "ENTER_WITHDRAW_ADDRESS": "Enter Withdraw Address",
         "SET_REWARDS_WITHDRAW_ADDRESS": "Set Rewards Withdraw Address",
@@ -195,11 +196,12 @@ let English = {
         "VESTING_NOTE":"Vesting balance shows the maximum amount that will be locked as per the vesting schedule. These coins can be delegated or un-delegated but are non-transferable until these coins are vested (unlocked).",
         "DELEGATABLE_NOTE":"The amount of XPRT that can be delegated. This is the sum of all balances that haven’t been delegated yet. Delegatable Balance = (Transferable/Vested + amount under Vesting) - (Delegated+Unbonding)",
         "TRANSFERABLE_NOTE":"The amount of XPRT that is available to be transferred at any given time",
-        "SETUP_ADDRESS_NOTE":"Claim your staking rewards and withdraw them to another address",
+        "SETUP_ADDRESS_NOTE":"Claim your staking rewards to another wallet address.",
         "ADDRESS_NOT_MATCHED_ERROR":"Your sign in address and keystore file don’t match. Please try again or else sign in again.",
         "KEY_STORE_PASSWORD":"KeyStore file password",
         "AMOUNT_ERROR_MESSAGE":"Insufficient balance/fees to do transactions",
         "AMOUNT_WARNING_MESSAGE":"There will be insufficient balance/fees to do future transactions",
+        "TOTAL_BALANCE_NOTE":"Delegatable XPRT + Delegated XPRT + Unbonded XPRT",
 
 
     }

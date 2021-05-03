@@ -409,7 +409,7 @@ html, body {
 
 .inner-grid {
   display: inline-block;
-  width: 60px;
+  width: 50px;
   text-align: center; }
 
 .view-button {
@@ -740,6 +740,7 @@ html, body {
   align-items: center;
   justify-content: center;
   max-width: 500px;
+  padding-top: 10px;
   margin-bottom: 15px; }
 
 .memo-dropdown {

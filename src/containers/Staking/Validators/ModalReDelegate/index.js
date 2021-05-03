@@ -168,7 +168,6 @@ const ModalReDelegate = (props) => {
             let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
             await promise.then(function (result) {
                 mnemonic = result;
-                console.log(result);
             }).catch(err => {
                 setLoader(false);
                 setErrorMessage(err);
@@ -260,7 +259,7 @@ const ModalReDelegate = (props) => {
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
                             <div className="form-field">
-                                <p className="label">Redelegate to</p>
+                                <p className="label">Validator</p>
                                 <Select value={toValidatorAddress} className="validators-list-selection"
                                     onChange={onChangeSelect} displayEmpty>
                                     <MenuItem value="" key={0}>
@@ -298,7 +297,7 @@ const ModalReDelegate = (props) => {
                                     />
                                     <span
                                         className={props.delegationAmount === 0 ? "empty info-data" : "info-data"}><span
-                                            className="title">{t("DELEGATION_AMOUNT")}:</span> <span
+                                            className="title">{t("DELEGATED_AMOUNT")}:</span> <span
                                             className="value">{props.delegationAmount} XPRT</span> </span>
                                 </div>
                             </div>
