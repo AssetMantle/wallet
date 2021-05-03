@@ -89,7 +89,7 @@ const Send = (props) => {
                 setMemoContent(memo);
                 let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
                 if (memoCheck) {
-                    setKeplerError("You entered your mnemonic as memo");
+                    setKeplerError(t("MEMO_MNEMONIC_CHECK_ERROR"));
                 } else {
                     setKeplerError('');
                     setMnemonicForm(true);

@@ -202,7 +202,7 @@ let English = {
         "AMOUNT_ERROR_MESSAGE":"Insufficient balance/fees to do transactions",
         "AMOUNT_WARNING_MESSAGE":"There will be insufficient balance/fees to do future transactions",
         "TOTAL_BALANCE_NOTE":"Delegatable XPRT + Delegated XPRT + Unbonded XPRT",
-
+        "MEMO_MNEMONIC_CHECK_ERROR":"Entered secret passphrase(mnemonic) in memo field. Don't input any secrete information.",
 
     }
 };
