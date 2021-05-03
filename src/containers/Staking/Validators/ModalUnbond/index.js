@@ -37,6 +37,8 @@ const ModalUnbond = (props) => {
     const loginAddress = localStorage.getItem('address');
     const mode = localStorage.getItem('loginMode');
     const [memoStatus, setMemoStatus] = useState(false);
+    const [checkAmountError, setCheckAmountError] = useState(false);
+    const [checkAmountWarning, setCheckAmountWarning] = useState(false);
 
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
@@ -45,6 +47,16 @@ const ModalUnbond = (props) => {
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
+            if (props.transferableAmount < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))) {
+                setCheckAmountError(true);
+            } else {
+                setCheckAmountError(false);
+            }
+            if ((props.transferableAmount) < transactions.XprtConversion(2 * parseInt(localStorage.getItem('fee'))) && (props.transferableAmount) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))) {
+                setCheckAmountWarning(true);
+            } else {
+                setCheckAmountWarning(false);
+            }
             setAmount(evt.target.value * 1);
         } else {
             return false;
@@ -220,14 +232,6 @@ const ModalUnbond = (props) => {
         </Popover>
     );
 
-    const checkAmountError = (
-        props.transferableAmount < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
-    );
-
-    const checkAmountWarning = (
-        (props.transferableAmount - amount) < transactions.XprtConversion(2*parseInt(localStorage.getItem('fee'))) && (props.transferableAmount - amount) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
-    );
-
 
     return (
         <>
@@ -247,7 +251,7 @@ const ModalUnbond = (props) => {
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
-                            <div className="form-field">
+                            <div className="form-field p-0">
                                 <p className="label">{t("UNBOND_AMOUNT")}(XPRT)</p>
                                 <div className="amount-field">
                                     <Form.Control
@@ -266,12 +270,22 @@ const ModalUnbond = (props) => {
                                         className="value">{props.delegationAmount} XPRT</span> </span>
                                 </div>
                             </div>
-                            {(localStorage.getItem("fee")*1) !== 0 ?
-                                <p className={checkAmountWarning ? "show amount-warning" : "hide amount-warning"}><b>Warning : </b>You wont have fees to do future txns</p>
-                                : null
-                            }
-                            {(localStorage.getItem("fee")*1) !== 0 ?
-                                <p className={checkAmountError ? "show amount-error text-center" : "hide amount-error text-center"}>You Dont have fees to do txns</p>
+                            {(localStorage.getItem("fee") * 1) !== 0 ?
+                                <>
+                                    <div className="form-field p-0">
+                                        <p className="label"></p>
+                                        <div className="amount-field">
+                                            <p className={checkAmountWarning ? "show amount-warning text-left" : "hide amount-warning text-left"}>
+                                                <b>Warning : </b>{t("AMOUNT_WARNING_MESSAGE")}</p>
+                                        </div>
+                                    </div>
+                                    <div className="form-field p-0">
+                                        <p className="label"></p>
+                                        <div className="amount-field">
+                                            <p className={checkAmountError ? "show amount-error text-left" : "hide amount-error text-left"}>{t("AMOUNT_ERROR_MESSAGE")}</p>
+                                        </div>
+                                    </div>
+                                </>
                                 : null
                             }
                             {mode === "normal" ?

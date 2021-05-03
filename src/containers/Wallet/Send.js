@@ -40,6 +40,8 @@ const Send = (props) => {
     const [memoContent, setMemoContent] = useState('');
     let mode = localStorage.getItem('loginMode');
     let loginAddress = localStorage.getItem('address');
+    const [checkAmountError, setCheckAmountError] = useState(false);
+    const [checkAmountWarning, setCheckAmountWarning] = useState(false);
 
     const handleClose = () => {
         setShow(false);
@@ -50,6 +52,16 @@ const Send = (props) => {
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
+            if ((props.transferableAmount - (evt.target.value * 1)) < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))) {
+                setCheckAmountError(true);
+            } else {
+                setCheckAmountError(false);
+            }
+            if ((props.transferableAmount - (evt.target.value * 1)) < transactions.XprtConversion(2 * parseInt(localStorage.getItem('fee'))) && (props.transferableAmount - (evt.target.value * 1)) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))) {
+                setCheckAmountWarning(true);
+            } else {
+                setCheckAmountWarning(false);
+            }
             setAmountField(evt.target.value * 1);
         } else {
             return false;
@@ -244,13 +256,13 @@ const Send = (props) => {
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
     };
-    const checkAmountError = (
-        (props.transferableAmount - amountField) < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
-    );
-
-    const checkAmountWarning = (
-        (props.transferableAmount - amountField) < transactions.XprtConversion(2*parseInt(localStorage.getItem('fee'))) && (props.transferableAmount - amountField) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
-    );
+    // const checkAmountError = (
+    //     (props.transferableAmount - amountField) < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
+    // );
+    //
+    // const checkAmountWarning = (
+    //     (props.transferableAmount - amountField) < transactions.XprtConversion(2*parseInt(localStorage.getItem('fee'))) && (props.transferableAmount - amountField) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
+    // );
     return (
         <div className="send-container">
             <div className="form-section">
@@ -269,7 +281,7 @@ const Send = (props) => {
                             required={true}
                         />
                     </div>
-                    <div className="form-field">
+                    <div className="form-field p-0">
                         <p className="label">Amount (XPRT)</p>
                         <div className="amount-field">
                             <Form.Control
@@ -288,25 +300,25 @@ const Send = (props) => {
                                 title={props.transferableAmount}>{props.transferableAmount.toFixed(6)} XPRT</span> </span>
                         </div>
                     </div>
-                    <div className="form-field">
-                        <p className="label"></p>
-                        <div className="amount-field">
-                            {(localStorage.getItem("fee")*1) !== 0 ?
-                                <p className={checkAmountWarning ? "show amount-warning" : "hide amount-warning"}><b>Warning : </b>You wont have fees to do future txns</p>
-                                : null
-                            }
-                        </div>
-                    </div>
+                    {(localStorage.getItem("fee") * 1) !== 0 ?
+                        <>
+                            <div className="form-field p-0">
+                                <p className="label"></p>
+                                <div className="amount-field">
+                                    <p className={checkAmountWarning ? "show amount-warning" : "hide amount-warning"}>
+                                        <b>Warning : </b>{t("AMOUNT_WARNING_MESSAGE")}</p>
+                                </div>
+                            </div>
+                            <div className="form-field p-0">
+                                <p className="label"></p>
+                                <div className="amount-field">
+                                    <p className={checkAmountError ? "show amount-error" : "hide amount-error"}>{t("AMOUNT_ERROR_MESSAGE")}</p>
+                                </div>
+                            </div>
+                        </>
+                        : null
+                    }
 
-                    <div className="form-field">
-                        <p className="label"></p>
-                        <div className="amount-field">
-                            {(localStorage.getItem("fee")*1) !== 0 ?
-                                <p className={checkAmountError ? "show amount-error" : "hide amount-error"}>You Dont have fees to do txns</p>
-                                : null
-                            }
-                        </div>
-                    </div>
                     {mode === "normal" ?
                         <>
                             <div className="memo-dropdown-section">

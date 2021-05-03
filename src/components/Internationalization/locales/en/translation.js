@@ -197,7 +197,9 @@ let English = {
         "TRANSFERABLE_NOTE":"The amount of XPRT that is available to be transferred at any given time",
         "SETUP_ADDRESS_NOTE":"Claim your staking rewards and withdraw them to another address",
         "ADDRESS_NOT_MATCHED_ERROR":"Your sign in address and keystore file don’t match. Please try again or else sign in again.",
-        "KEY_STORE_PASSWORD":"KeyStore file password"
+        "KEY_STORE_PASSWORD":"KeyStore file password",
+        "AMOUNT_ERROR_MESSAGE":"Insufficient balance/fees to do transactions",
+        "AMOUNT_WARNING_MESSAGE":"There will be insufficient balance/fees to do future transactions",
 
 
     }

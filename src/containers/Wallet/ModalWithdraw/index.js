@@ -307,7 +307,7 @@ const ModalWithdraw = (props) => {
                                         }
                                     </Select>
                                 </div>
-                                <div className="form-field">
+                                <div className="form-field p-0">
                                     <p className="label"></p>
                                     <div className="available-tokens">
                                         <p className="tokens">Available Rewards {individualRewards} <span>XPRT</span>
@@ -315,12 +315,22 @@ const ModalWithdraw = (props) => {
                                         <p className="usd">=${(individualRewards * props.tokenPrice).toFixed(4)}</p>
                                     </div>
                                 </div>
-                                {(localStorage.getItem("fee")*1) !== 0 ?
-                                    <p className={checkAmountWarning ? "show amount-warning" : "hide amount-warning"}><b>Warning : </b>You wont have fees to do future txns</p>
-                                    : null
-                                }
-                                {(localStorage.getItem("fee")*1) !== 0 ?
-                                    <p className={checkAmountError ? "show amount-error" : "hide amount-error"}>You Dont have fees to do txns</p>
+                                {(localStorage.getItem("fee") * 1) !== 0 ?
+                                    <>
+                                        <div className="form-field p-0">
+                                            <p className="label"></p>
+                                            <div className="amount-field">
+                                                <p className={checkAmountWarning ? "show amount-warning text-left" : "hide amount-warning text-left"}>
+                                                    <b>Warning : </b>{t("AMOUNT_WARNING_MESSAGE")}</p>
+                                            </div>
+                                        </div>
+                                        <div className="form-field p-0">
+                                            <p className="label"></p>
+                                            <div className="amount-field">
+                                                <p className={checkAmountError ? "show amount-error text-left" : "hide amount-error text-left"}>{t("AMOUNT_ERROR_MESSAGE")}</p>
+                                            </div>
+                                        </div>
+                                    </>
                                     : null
                                 }
                                 {mode === "normal" ?

@@ -38,6 +38,8 @@ const ModalDelegate = (props) => {
     const loginAddress = localStorage.getItem('address');
     const mode = localStorage.getItem('loginMode');
     const [memoStatus, setMemoStatus] = useState(false);
+    const [checkAmountError, setCheckAmountError] = useState(false);
+    const [checkAmountWarning, setCheckAmountWarning] = useState(false);
 
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
@@ -86,6 +88,17 @@ const ModalDelegate = (props) => {
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
+            if ((props.balance - (evt.target.value * 1)) < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))) {
+                setCheckAmountError(true);
+            } else {
+                setCheckAmountError(false);
+            }
+            if ((props.balance - (evt.target.value * 1)) < transactions.XprtConversion(2 * parseInt(localStorage.getItem('fee'))) && (props.balance - (evt.target.value * 1)) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))) {
+                setCheckAmountWarning(true);
+            } else {
+                setCheckAmountWarning(false);
+            }
+
             setAmount(evt.target.value*1);
         } else {
             return false;
@@ -226,13 +239,7 @@ const ModalDelegate = (props) => {
         </Popover>
     );
 
-    const checkAmountError = (
-        amount > props.balance + transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
-    );
 
-    const checkAmountWarning = (
-        (props.balance - amount) < transactions.XprtConversion(2*parseInt(localStorage.getItem('fee'))) && (props.balance - amount) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
-    );
 
     return (
         <>
@@ -257,7 +264,7 @@ const ModalDelegate = (props) => {
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
-                            <div className="form-field">
+                            <div className="form-field p-0">
                                 <p className="label">{t("DELEGATION_AMOUNT")} (XPRT)</p>
                                 <div className="amount-field">
                                     <Form.Control
@@ -279,12 +286,22 @@ const ModalDelegate = (props) => {
                                 </div>
                             </div>
 
-                            {(localStorage.getItem("fee")*1) !== 0 ?
-                                <p className={checkAmountWarning ? "show amount-warning" : "hide amount-warning"}><b>Warning : </b>You wont have fees to do future txns</p>
-                                : null
-                            }
-                            {(localStorage.getItem("fee")*1) !== 0 ?
-                                <p className={checkAmountError ? "show amount-error text-center" : "hide amount-error text-center"}>You Dont have fees to do txns</p>
+                            {(localStorage.getItem("fee") * 1) !== 0 ?
+                                <>
+                                    <div className="form-field p-0">
+                                        <p className="label"></p>
+                                        <div className="amount-field">
+                                            <p className={checkAmountWarning ? "show amount-warning" : "hide amount-warning"}>
+                                                <b>Warning : </b>{t("AMOUNT_WARNING_MESSAGE")}</p>
+                                        </div>
+                                    </div>
+                                    <div className="form-field p-0">
+                                        <p className="label"></p>
+                                        <div className="amount-field">
+                                            <p className={checkAmountError ? "show amount-error" : "hide amount-error"}>{t("AMOUNT_ERROR_MESSAGE")}</p>
+                                        </div>
+                                    </div>
+                                </>
                                 : null
                             }
 
