@@ -40,6 +40,8 @@ const ModalReDelegate = (props) => {
     const loginAddress = localStorage.getItem('address');
     const mode = localStorage.getItem('loginMode');
     const [memoStatus, setMemoStatus] = useState(false);
+    const [checkAmountError, setCheckAmountError] = useState(false);
+    const [checkAmountWarning, setCheckAmountWarning] = useState(false);
 
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
@@ -47,7 +49,18 @@ const ModalReDelegate = (props) => {
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
-            setAmount(evt.target.value*1);
+            if (props.transferableAmount < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))) {
+                setCheckAmountError(true);
+            } else {
+                setCheckAmountError(false);
+            }
+            if ((props.transferableAmount) < transactions.XprtConversion(2 * parseInt(localStorage.getItem('fee'))) && (props.transferableAmount) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))) {
+                setCheckAmountWarning(true);
+            } else {
+                setCheckAmountWarning(false);
+            }
+            setAmount(evt.target.value * 1);
+
         } else {
             return false;
         }
@@ -84,11 +97,12 @@ const ModalReDelegate = (props) => {
             </button>
         );
     }
+
     useEffect(() => {
         const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
         if (encryptedMnemonic !== null) {
             setImportMnemonic(false);
-        }else{
+        } else {
             setImportMnemonic(true);
         }
     }, []);
@@ -110,7 +124,7 @@ const ModalReDelegate = (props) => {
         }
         let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
         if (memoCheck) {
-            setErrorMessage("you entered your mnemonic as memo");
+            setErrorMessage(t("MEMO_MNEMONIC_CHECK_ERROR"));
         } else {
             setErrorMessage("");
             setMemoContent(memo);
@@ -124,7 +138,7 @@ const ModalReDelegate = (props) => {
         event.preventDefault();
         const response = transactions.TransactionWithKeplr([RedelegateMsg(loginAddress, props.validatorAddress, toValidatorAddress, (amount * config.xprtValue))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
-            if(result.code !== undefined){
+            if (result.code !== undefined) {
                 helper.AccountChangeCheck(result.rawLog);
             }
             setInitialModal(false);
@@ -137,34 +151,26 @@ const ModalReDelegate = (props) => {
         });
     };
 
-    function PrivateKeyReader(file, password) {
-        return new Promise(function (resolve) {
-            const fileReader = new FileReader();
-            fileReader.readAsText(file, "UTF-8");
-            fileReader.onload = event => {
-                const res = JSON.parse(event.target.result);
-                localStorage.setItem('encryptedMnemonic', event.target.result);
-                const decryptedData = helper.decryptStore(res, password);
-                if (decryptedData.error != null) {
-                    setErrorMessage(decryptedData.error);
-                    setLoader(false);
-                } else {
-                    resolve(decryptedData.mnemonic);
-                    setErrorMessage("");
-                }
-            };
-        });
-    }
-
     const handleSubmit = async event => {
         setLoader(true);
         event.preventDefault();
         let mnemonic;
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = "";
+        if (advanceMode) {
+            accountNumber = event.target.redelegateAccountNumber.value;
+            addressIndex = event.target.redelegateAccountIndex.value;
+            bip39Passphrase = event.target.redelegatebip39Passphrase.value;
+        }
         if (importMnemonic) {
             const password = event.target.password.value;
-            var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
+            let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
             await promise.then(function (result) {
                 mnemonic = result;
+            }).catch(err => {
+                setLoader(false);
+                setErrorMessage(err);
             });
         } else {
             const password = event.target.password.value;
@@ -179,14 +185,6 @@ const ModalReDelegate = (props) => {
             }
         }
         if (mnemonic !== undefined) {
-            let accountNumber = 0;
-            let addressIndex = 0;
-            let bip39Passphrase = "";
-            if (advanceMode) {
-                accountNumber = event.target.redelegateAccountNumber.value;
-                addressIndex = event.target.redelegateAccountIndex.value;
-                bip39Passphrase = event.target.redelegatebip39Passphrase.value;
-            }
             const persistence = MakePersistence(accountNumber, addressIndex);
             const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
             const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
@@ -205,7 +203,7 @@ const ModalReDelegate = (props) => {
                         setErrorMessage(err.message);
                     });
                     showSeedModal(false);
-                      
+
                 } else {
                     setLoader(false);
                     setAdvanceMode(false);
@@ -240,20 +238,28 @@ const ModalReDelegate = (props) => {
             </Popover.Content>
         </Popover>
     );
-    const checkAmountError = (
-        props.transferableAmount < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
-    );
+
     return (
         <>
             {initialModal ?
                 <>
                     <Modal.Header closeButton>
-                        Redelegate from {props.moniker}
+                        <div className="previous-section txn-header">
+                            <button className="button" onClick={() => handlePrevious()}>
+                                <Icon
+                                    viewClass="arrow-right"
+                                    icon="left-arrow"/>
+                            </button>
+                        </div>
+                        <h3 className="heading">
+                            Redelegate from {props.moniker}
+                        </h3>
+
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
                             <div className="form-field">
-                                <p className="label">Redelegate to</p>
+                                <p className="label">Validator</p>
                                 <Select value={toValidatorAddress} className="validators-list-selection"
                                     onChange={onChangeSelect} displayEmpty>
                                     <MenuItem value="" key={0}>
@@ -275,7 +281,7 @@ const ModalReDelegate = (props) => {
                                     }
                                 </Select>
                             </div>
-                            <div className="form-field">
+                            <div className="form-field p-0">
                                 <p className="label">{t("REDELEGATION_AMOUNT")} (XPRT)</p>
                                 <div className="amount-field">
                                     <Form.Control
@@ -283,29 +289,49 @@ const ModalReDelegate = (props) => {
                                         min={0}
                                         name="amount"
                                         placeholder={t("REDELEGATION_AMOUNT")}
-                                        defaultValue={amount || ''}
+                                        value={amount || ''}
                                         step="any"
                                         className={amount > props.delegationAmount ? "error-amount-field" : ""}
                                         onChange={handleAmountChange}
                                         required={true}
                                     />
-                                    <span className={props.delegationAmount === 0 ? "empty info-data" : "info-data"}><span
-                                        className="title">{t("DELEGATION_AMOUNT")}:</span> <span
-                                        className="value">{props.delegationAmount} XPRT</span> </span>
+                                    <span
+                                        className={props.delegationAmount === 0 ? "empty info-data" : "info-data"}><span
+                                            className="title">{t("DELEGATED_AMOUNT")}:</span> <span
+                                            className="value">{props.delegationAmount} XPRT</span> </span>
                                 </div>
                             </div>
+                            {(localStorage.getItem("fee") * 1) !== 0 ?
+                                <>
+                                    <div className="form-field p-0">
+                                        <p className="label"></p>
+                                        <div className="amount-field">
+                                            <p className={checkAmountWarning ? "show amount-warning text-left" : "hide amount-warning text-left"}>
+                                                <b>Warning : </b>{t("AMOUNT_WARNING_MESSAGE")}</p>
+                                        </div>
+                                    </div>
+                                    <div className="form-field p-0">
+                                        <p className="label"></p>
+                                        <div className="amount-field">
+                                            <p className={checkAmountError ? "show amount-error text-left" : "hide amount-error text-left"}>{t("AMOUNT_ERROR_MESSAGE")}</p>
+                                        </div>
+                                    </div>
+                                </>
+                                : null
+                            }
                             {mode === "normal" ?
                                 <>
                                     <div className="memo-dropdown-section">
-                                        <p onClick={handleMemoChange} className="memo-dropdown"><span className="text">{t("ADVANCED")} </span>
-                                            {memoStatus ?
-                                                <Icon
-                                                    viewClass="arrow-right"
-                                                    icon="up-arrow"/>
-                                                :
-                                                <Icon
-                                                    viewClass="arrow-right"
-                                                    icon="down-arrow"/>}
+                                        <p onClick={handleMemoChange} className="memo-dropdown"><span
+                                            className="text">{t("ADVANCED")} </span>
+                                        {memoStatus ?
+                                            <Icon
+                                                viewClass="arrow-right"
+                                                icon="up-arrow"/>
+                                            :
+                                            <Icon
+                                                viewClass="arrow-right"
+                                                icon="down-arrow"/>}
                                         </p>
                                         <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
                                             overlay={popoverMemo}>
@@ -327,12 +353,13 @@ const ModalReDelegate = (props) => {
                                                 type="text"
                                                 name="memo"
                                                 placeholder={t("ENTER_MEMO")}
+                                                maxLength={200}
                                                 required={false}
                                             />
                                         </div>
                                         : ""
                                     }
-                                </>: null
+                                </> : null
                             }
                             {
                                 errorMessage !== "" ?
@@ -341,11 +368,6 @@ const ModalReDelegate = (props) => {
                             }
                             <div className="buttons navigate-buttons">
                                 <FeeContainer/>
-                                <button className="button button-secondary" onClick={() => handlePrevious()}>
-                                    <Icon
-                                        viewClass="arrow-right"
-                                        icon="left-arrow"/>
-                                </button>
                                 <button
                                     className="button button-primary"
                                     disabled={checkAmountError || !props.delegateStatus || disabled || amount === 0 || amount > props.delegationAmount}
@@ -385,7 +407,7 @@ const ModalReDelegate = (props) => {
                                     :
                                     <>
                                         <div className="form-field">
-                                            <p className="label">{t("PASSWORD")}</p>
+                                            <p className="label">{t("KEY_STORE_PASSWORD")}</p>
                                             <Form.Control
                                                 type="password"
                                                 name="password"

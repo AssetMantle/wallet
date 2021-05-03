@@ -92,25 +92,6 @@ const ModalSetWithdrawAddress = (props) => {
         );
     }
 
-    function PrivateKeyReader(file, password) {
-        return new Promise(function (resolve) {
-            const fileReader = new FileReader();
-            fileReader.readAsText(file, "UTF-8");
-            fileReader.onload = event => {
-                const res = JSON.parse(event.target.result);
-                localStorage.setItem('encryptedMnemonic', event.target.result);
-                const decryptedData = helper.decryptStore(res, password);
-                if (decryptedData.error != null) {
-                    setErrorMessage(decryptedData.error);
-                    setLoader(false);
-                } else {
-                    resolve(decryptedData.mnemonic);
-                    setErrorMessage("");
-                }
-            };
-        });
-    }
-
     const handleSubmitKepler = async event => {
         setLoader(true);
         event.preventDefault();
@@ -128,6 +109,7 @@ const ModalSetWithdrawAddress = (props) => {
             setErrorMessage(err.message);
         });
     };
+
     const handleSubmitInitialData = async event => {
         event.preventDefault();
         let memo = "";
@@ -136,13 +118,18 @@ const ModalSetWithdrawAddress = (props) => {
         }
         let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
         if (memoCheck) {
-            setErrorMessage("you entered your mnemonic as memo");
+            setErrorMessage(t("MEMO_MNEMONIC_CHECK_ERROR"));
         } else {
-            setValidatorAddress(event.target.withdrawalAddress.value);
-            setMemoContent(memo);
-            setInitialModal(false);
-            showSeedModal(true);
-            setErrorMessage("");
+            if (helper.ValidateAddress(event.target.withdrawalAddress.value)) {
+                setValidatorAddress(event.target.withdrawalAddress.value);
+                setMemoContent(memo);
+                setInitialModal(false);
+                showSeedModal(true);
+                setErrorMessage("");
+            }else {
+                setErrorMessage("Enter Valid Revised Address");
+            }
+
         }
 
     };
@@ -150,11 +137,22 @@ const ModalSetWithdrawAddress = (props) => {
         setLoader(true);
         event.preventDefault();
         let mnemonic;
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = "";
+        if (advanceMode) {
+            accountNumber = event.target.claimTotalAccountNumber.value;
+            addressIndex = event.target.claimTotalAccountIndex.value;
+            bip39Passphrase = event.target.claimTotalbip39Passphrase.value;
+        }
         if (importMnemonic) {
             const password = event.target.password.value;
-            var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
+            let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
             await promise.then(function (result) {
                 mnemonic = result;
+            }).catch(err => {
+                setLoader(false);
+                setErrorMessage(err);
             });
         } else {
             const password = event.target.password.value;
@@ -169,14 +167,6 @@ const ModalSetWithdrawAddress = (props) => {
             }
         }
         if (mnemonic !== undefined) {
-            let accountNumber = 0;
-            let addressIndex = 0;
-            let bip39Passphrase = "";
-            if (advanceMode) {
-                accountNumber = event.target.claimTotalAccountNumber.value;
-                addressIndex = event.target.claimTotalAccountIndex.value;
-                bip39Passphrase = event.target.claimTotalbip39Passphrase.value;
-            }
             const persistence = MakePersistence(accountNumber, addressIndex);
             const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
             const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
@@ -193,7 +183,6 @@ const ModalSetWithdrawAddress = (props) => {
                     }).catch(err => {
                         setLoader(false);
                         setErrorMessage(err.message);
-                        console.log(err.message, "delegate error");
                     });
                     showSeedModal(false);
                 } else {
@@ -233,6 +222,17 @@ const ModalSetWithdrawAddress = (props) => {
         props.transferableAmount < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
     );
 
+    const checkAmountWarning = (
+        (props.transferableAmount) < transactions.XprtConversion(2*parseInt(localStorage.getItem('fee'))) && (props.transferableAmount) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
+    );
+    const handlePrevious = () => {
+        if(props.formName === "setAddress"){
+            props.setShow(true);
+            props.setWithDraw(false);
+            setShow(false); 
+        }
+    };
+
     return (
         <Modal
             animation={false}
@@ -245,7 +245,20 @@ const ModalSetWithdrawAddress = (props) => {
             {initialModal ?
                 <>
                     <Modal.Header closeButton>
-                        Setup Rewards Withdrawal Address
+                        {(props.formName === "setAddress") ?
+                            <div className="previous-section txn-header">
+                                <button className="button" onClick={() => handlePrevious()}>
+                                    <Icon
+                                        viewClass="arrow-right"
+                                        icon="left-arrow"/>
+                                </button>
+                            </div>
+                            :""
+                        }
+                        <h3 className="heading">
+                            Setup Rewards Withdrawal Address
+
+                        </h3>
                     </Modal.Header>
                     <Modal.Body className="rewards-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
@@ -267,10 +280,28 @@ const ModalSetWithdrawAddress = (props) => {
                                     required={true}
                                 />
                             </div>
-                            <div className="form-field">
+                            <div className="form-field p-0">
                                 <p className="label"> Delegations (XPRT)</p>
                                 <p className={props.delegations === 0 ? "empty info-data" : "info-data"}>{props.delegations}</p>
                             </div>
+                            {(localStorage.getItem("fee") * 1) !== 0 ?
+                                <>
+                                    <div className="form-field p-0">
+                                        <p className="label"></p>
+                                        <div className="amount-field">
+                                            <p className={checkAmountWarning ? "show amount-warning text-left" : "hide amount-warning text-left"}>
+                                                <b>Warning : </b>{t("AMOUNT_WARNING_MESSAGE")}</p>
+                                        </div>
+                                    </div>
+                                    <div className="form-field p-0">
+                                        <p className="label"></p>
+                                        <div className="amount-field">
+                                            <p className={checkAmountError ? "show amount-error text-left" : "hide amount-error text-left"}>{t("AMOUNT_ERROR_MESSAGE")}</p>
+                                        </div>
+                                    </div>
+                                </>
+                                : null
+                            }
                             {mode === "normal" ?
                                 <>
                                     <div className="memo-dropdown-section">
@@ -306,6 +337,7 @@ const ModalSetWithdrawAddress = (props) => {
                                                 type="text"
                                                 name="memo"
                                                 placeholder={t("ENTER_MEMO")}
+                                                maxLength={200}
                                                 required={false}
                                             />
                                         </div> : ""
@@ -355,7 +387,7 @@ const ModalSetWithdrawAddress = (props) => {
                                     :
                                     <>
                                         <div className="form-field">
-                                            <p className="label">{t("PASSWORD")}</p>
+                                            <p className="label">{t("KEY_STORE_PASSWORD")}</p>
                                             <Form.Control
                                                 type="password"
                                                 name="password"
@@ -425,7 +457,7 @@ const ModalSetWithdrawAddress = (props) => {
                 : null
             }
             {
-                response !== '' && response.code === undefined ?
+                response !== '' && response.code === 0 ?
                     <>
                         <Modal.Header className="result-header success" closeButton>
                             {t("SUCCESSFULLY_ADDRESS_CHANGED")}
@@ -453,7 +485,7 @@ const ModalSetWithdrawAddress = (props) => {
                     : null
             }
             {
-                response !== '' && response.code !== undefined ?
+                response !== '' && response.code !== 0 ?
                     <>
                         <Modal.Header className="result-header error" closeButton>
                             {t("FAILED_ADDRESS_CHANGE")}

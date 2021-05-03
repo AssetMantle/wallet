@@ -38,6 +38,8 @@ const ModalDelegate = (props) => {
     const loginAddress = localStorage.getItem('address');
     const mode = localStorage.getItem('loginMode');
     const [memoStatus, setMemoStatus] = useState(false);
+    const [checkAmountError, setCheckAmountError] = useState(false);
+    const [checkAmountWarning, setCheckAmountWarning] = useState(false);
 
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
@@ -83,10 +85,22 @@ const ModalDelegate = (props) => {
             setImportMnemonic(true);
         }
     }, []);
+
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
-            setAmount(evt.target.value);
+            if ((props.balance - (evt.target.value * 1)) < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))) {
+                setCheckAmountError(true);
+            } else {
+                setCheckAmountError(false);
+            }
+            if ((props.balance - (evt.target.value * 1)) < transactions.XprtConversion(2 * parseInt(localStorage.getItem('fee'))) && (props.balance - (evt.target.value * 1)) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))) {
+                setCheckAmountWarning(true);
+            } else {
+                setCheckAmountWarning(false);
+            }
+
+            setAmount(evt.target.value*1);
         } else {
             return false;
         }
@@ -124,7 +138,7 @@ const ModalDelegate = (props) => {
         }
         let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
         if (memoCheck) {
-            setErrorMessage("you entered your mnemonic as memo");
+            setErrorMessage(t("MEMO_MNEMONIC_CHECK_ERROR"));
         } else {
             setErrorMessage("");
             setMemoContent(memo);
@@ -133,34 +147,26 @@ const ModalDelegate = (props) => {
         }
     };
 
-    function PrivateKeyReader(file, password) {
-        return new Promise(function (resolve) {
-            const fileReader = new FileReader();
-            fileReader.readAsText(file, "UTF-8");
-            fileReader.onload = event => {
-                const res = JSON.parse(event.target.result);
-                localStorage.setItem('encryptedMnemonic', event.target.result);
-                const decryptedData = helper.decryptStore(res, password);
-                if (decryptedData.error != null) {
-                    setErrorMessage(decryptedData.error);
-                    setLoader(false);
-                } else {
-                    resolve(decryptedData.mnemonic);
-                    setErrorMessage("");
-                }
-            };
-        });
-    }
-
     const handleSubmit = async event => {
         setLoader(true);
         event.preventDefault();
         let mnemonic;
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = "";
+        if (advanceMode) {
+            accountNumber = event.target.delegateAccountNumber.value;
+            addressIndex = event.target.delegateAccountIndex.value;
+            bip39Passphrase = event.target.delegatebip39Passphrase.value;
+        }
         if (importMnemonic) {
             const password = event.target.password.value;
-            var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
+            let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
             await promise.then(function (result) {
                 mnemonic = result;
+            }).catch(err => {
+                setLoader(false);
+                setErrorMessage(err);
             });
         } else {
             const password = event.target.password.value;
@@ -175,14 +181,6 @@ const ModalDelegate = (props) => {
             }
         }
         if (mnemonic !== undefined) {
-            let accountNumber = 0;
-            let addressIndex = 0;
-            let bip39Passphrase = "";
-            if (advanceMode) {
-                accountNumber = event.target.delegateAccountNumber.value;
-                addressIndex = event.target.delegateAccountIndex.value;
-                bip39Passphrase = event.target.delegatebip39Passphrase.value;
-            }
             const persistence = MakePersistence(accountNumber, addressIndex);
             const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
             const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
@@ -228,8 +226,8 @@ const ModalDelegate = (props) => {
     const popover = (
         <Popover id="popover-basic">
             <Popover.Content>
-                Delegate your XPRT to {props.moniker} to earn staking rewards.
-                <p><b>Note:</b> Unstaking or Unbonding period: 21 days.</p>
+                Delegate your XPRT and earn staking rewards.
+                <p><b>Note:</b>Unstaking or unbonding period: 21 days.</p>
             </Popover.Content>
         </Popover>
     );
@@ -242,25 +240,32 @@ const ModalDelegate = (props) => {
         </Popover>
     );
 
-    const checkAmountError = (
-        amount > props.balance + transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
-    );
+
 
     return (
         <>
             {initialModal ?
                 <>
                     <Modal.Header closeButton>
-                        Delegate to {props.moniker}
-                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
-                            <button className="icon-button info" type="button"><Icon
-                                viewClass="arrow-right"
-                                icon="info"/></button>
-                        </OverlayTrigger>
+                        <div className="previous-section txn-header">
+                            <button className="button" onClick={() => handlePrevious()}>
+                                <Icon
+                                    viewClass="arrow-right"
+                                    icon="left-arrow"/>
+                            </button>
+                        </div>
+                        <h3 className="heading">Delegate to {props.moniker}
+                            <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
+                                <button className="icon-button info" type="button"><Icon
+                                    viewClass="arrow-right"
+                                    icon="info"/></button>
+                            </OverlayTrigger>
+                        </h3>
+
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
-                            <div className="form-field">
+                            <div className="form-field p-0">
                                 <p className="label">{t("DELEGATION_AMOUNT")} (XPRT)</p>
                                 <div className="amount-field">
                                     <Form.Control
@@ -274,11 +279,32 @@ const ModalDelegate = (props) => {
                                         onChange={handleAmountChange}
                                         required={true}
                                     />
+
+
                                     <span className={props.balance === 0 ? "empty info-data" : "info-data"}><span
                                         className="title">{t("BALANCE")}:</span> <span
                                         className="value">{props.balance} XPRT</span> </span>
                                 </div>
                             </div>
+
+                            {(localStorage.getItem("fee") * 1) !== 0 ?
+                                <>
+                                    <div className="form-field p-0">
+                                        <p className="label"></p>
+                                        <div className="amount-field">
+                                            <p className={checkAmountWarning ? "show amount-warning text-left" : "hide amount-warning text-left"}>
+                                                <b>Warning : </b>{t("AMOUNT_WARNING_MESSAGE")}</p>
+                                        </div>
+                                    </div>
+                                    <div className="form-field p-0">
+                                        <p className="label"></p>
+                                        <div className="amount-field">
+                                            <p className={checkAmountError ? "show amount-error text-left" : "hide amount-error text-left"}>{t("AMOUNT_ERROR_MESSAGE")}</p>
+                                        </div>
+                                    </div>
+                                </>
+                                : null
+                            }
 
                             {mode === "normal" ?
                                 <>
@@ -315,6 +341,7 @@ const ModalDelegate = (props) => {
                                                 name="memo"
                                                 placeholder={t("ENTER_MEMO")}
                                                 required={false}
+                                                maxLength={200}
                                             />
                                         </div>
                                         : ""
@@ -330,11 +357,6 @@ const ModalDelegate = (props) => {
 
                             <div className="buttons navigate-buttons">
                                 <FeeContainer/>
-                                <button className="button button-secondary" onClick={() => handlePrevious()}>
-                                    <Icon
-                                        viewClass="arrow-right"
-                                        icon="left-arrow"/>
-                                </button>
                                 <button className="button button-primary"
                                     disabled={checkAmountError || amount === 0 || (props.balance * 1) === 0}
                                 > {mode === "normal" ? "Next" : "Submit"}</button>
@@ -366,7 +388,7 @@ const ModalDelegate = (props) => {
                                                 className="file-upload" accept=".json" required={true}/>
                                         </div>
                                         <div className="form-field">
-                                            <p className="label">{t("PASSWORD")}</p>
+                                            <p className="label">{t("KEY_STORE_PASSWORD")}</p>
                                             <Form.Control
                                                 type="password"
                                                 name="password"
@@ -379,7 +401,7 @@ const ModalDelegate = (props) => {
                                     :
                                     <>
                                         <div className="form-field">
-                                            <p className="label">{t("PASSWORD")}</p>
+                                            <p className="label">{t("KEY_STORE_PASSWORD")}</p>
                                             <Form.Control
                                                 type="password"
                                                 name="password"

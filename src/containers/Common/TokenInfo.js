@@ -55,6 +55,14 @@ const TokenInfo = (props) => {
             </Popover.Content>
         </Popover>
     );
+
+    const popoverTotal = (
+        <Popover id="popover-total">
+            <Popover.Content>
+                {t("TOTAL_BALANCE_NOTE")}
+            </Popover.Content>
+        </Popover>
+    );
     return (
         <div className="token-info-section">
             <p className="info-heading">Wallet Balances</p>
@@ -63,9 +71,17 @@ const TokenInfo = (props) => {
                 <div className="xprt-info info-box">
                     <div className="inner-box">
                         <div className="line">
-                            <p className="key">Total</p>
+                            <p className="key">Total
+                                <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
+                                    overlay={popoverTotal}>
+                                    <button className="icon-button info" type="button"><Icon
+                                        viewClass="arrow-right"
+                                        icon="info"/></button>
+                                </OverlayTrigger>
+                            </p>
                             <p className="value"
-                                title={props.delegations + props.balance + props.unbond}>    <span
+                                title={props.delegations + props.balance + props.unbond}>
+                                <span
                                     className="inner-grid-icon">
                                     {
                                         props.list.length > 1 ?
@@ -155,14 +171,17 @@ const TokenInfo = (props) => {
                         </div>
                         <div className="line">
                             <p className="key">{t("UNBONDING")}</p>
-                            <p className="value" title={props.unbond}><span
+                            <p className="value"><span
                                 className="inner-grid">
                                 {
                                     props.unbond > 0 ?
                                         <ModalViewUnbondDetails/>
                                         : ""
                                 }
-                            </span>{props.unbond.toFixed(3)} XPRT
+                            </span>
+                            <span title={props.unbond}>
+                                {props.unbond.toFixed(3)} XPRT
+                            </span>
                             </p>
                         </div>
 

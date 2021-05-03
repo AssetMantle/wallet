@@ -91,25 +91,6 @@ const ModalWithdraw = (props) => {
         }
     }, []);
 
-    function PrivateKeyReader(file, password) {
-        return new Promise(function (resolve) {
-            const fileReader = new FileReader();
-            fileReader.readAsText(file, "UTF-8");
-            fileReader.onload = event => {
-                const res = JSON.parse(event.target.result);
-                localStorage.setItem('encryptedMnemonic', event.target.result);
-                const decryptedData = helper.decryptStore(res, password);
-                if (decryptedData.error != null) {
-                    setErrorMessage(decryptedData.error);
-                    setLoader(false);
-                } else {
-                    resolve(decryptedData.mnemonic);
-                    setErrorMessage("");
-                }
-            };
-        });
-    }
-
     const handleSubmitKepler = async event => {
         setLoader(true);
         event.preventDefault();
@@ -136,7 +117,7 @@ const ModalWithdraw = (props) => {
         }
         let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
         if (memoCheck) {
-            setErrorMessage("you entered your mnemonic as memo");
+            setErrorMessage(t("MEMO_MNEMONIC_CHECK_ERROR"));
         } else {
             setErrorMessage("");
             setMemoContent(memo);
@@ -149,11 +130,22 @@ const ModalWithdraw = (props) => {
         setLoader(true);
         event.preventDefault();
         let mnemonic;
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = "";
+        if (advanceMode) {
+            accountNumber = event.target.claimAccountNumber.value;
+            addressIndex = event.target.claimAccountIndex.value;
+            bip39Passphrase = event.target.claimbip39Passphrase.value;
+        }
         if (importMnemonic) {
             const password = event.target.password.value;
-            var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
+            let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
             await promise.then(function (result) {
                 mnemonic = result;
+            }).catch(err => {
+                setLoader(false);
+                setErrorMessage(err);
             });
         } else {
             const password = event.target.password.value;
@@ -168,14 +160,6 @@ const ModalWithdraw = (props) => {
             }
         }
         if (mnemonic !== undefined) {
-            let accountNumber = 0;
-            let addressIndex = 0;
-            let bip39Passphrase = "";
-            if (advanceMode) {
-                accountNumber = event.target.claimAccountNumber.value;
-                addressIndex = event.target.claimAccountIndex.value;
-                bip39Passphrase = event.target.claimbip39Passphrase.value;
-            }
             const persistence = MakePersistence(accountNumber, addressIndex);
             const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
             const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
@@ -243,21 +227,53 @@ const ModalWithdraw = (props) => {
     const checkAmountError = (
         props.transferableAmount < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
     );
+
+    const checkAmountWarning = (
+        (props.transferableAmount) < transactions.XprtConversion(2*parseInt(localStorage.getItem('fee'))) && (props.transferableAmount) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
+    );
+
     return (
         <>
             {initialModal ?
                 <>
                     <Modal.Header closeButton>
-                        {t("CLAIM_STAKING_REWARDS")}
+                        <div className="previous-section txn-header">
+                            <button className="button" onClick={() => handlePrevious()}>
+                                <Icon
+                                    viewClass="arrow-right"
+                                    icon="left-arrow"/>
+                            </button>
+                        </div>
+                        <h3 className="heading">
+                            {t("CLAIM_STAKING_REWARDS")}
+                        </h3>
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
-                            <div className="form-field">
+                            <div className="form-field p-0">
                                 <p className="label">{t("AVAILABLE")} (XPRT)</p>
                                 <div className="available-tokens">
                                     <p className={props.rewards === 0 ? "empty info-data" : "info-data"} title={props.rewards}>{props.rewards.toFixed(4)}</p>
                                 </div>
                             </div>
+                            {(localStorage.getItem("fee") * 1) !== 0 ?
+                                <>
+                                    <div className="form-field p-0">
+                                        <p className="label"></p>
+                                        <div className="amount-field">
+                                            <p className={checkAmountWarning ? "show amount-warning text-left" : "hide amount-warning text-left"}>
+                                                <b>Warning : </b>{t("AMOUNT_WARNING_MESSAGE")}</p>
+                                        </div>
+                                    </div>
+                                    <div className="form-field p-0">
+                                        <p className="label"></p>
+                                        <div className="amount-field">
+                                            <p className={checkAmountError ? "show amount-error text-left" : "hide amount-error text-left"}>{t("AMOUNT_ERROR_MESSAGE")}</p>
+                                        </div>
+                                    </div>
+                                </>
+                                : null
+                            }
                             {
                                 mode === "normal" ?
                                     <>
@@ -293,6 +309,7 @@ const ModalWithdraw = (props) => {
                                                     type="text"
                                                     name="memo"
                                                     placeholder={t("ENTER_MEMO")}
+                                                    maxLength={200}
                                                     required={false}
                                                 />
                                             </div>
@@ -308,11 +325,6 @@ const ModalWithdraw = (props) => {
                             }
                             <div className="buttons navigate-buttons">
                                 <FeeContainer/>
-                                <button className="button button-secondary" onClick={() => handlePrevious()}>
-                                    <Icon
-                                        viewClass="arrow-right"
-                                        icon="left-arrow"/>
-                                </button>
                                 <button
                                     className="button button-primary"
                                     disabled={checkAmountError || props.rewards === 0}> {mode === "normal" ? t("NEXT") : t("SUBMIT")}
@@ -364,7 +376,7 @@ const ModalWithdraw = (props) => {
                                     :
                                     <>
                                         <div className="form-field">
-                                            <p className="label">{t("PASSWORD")}</p>
+                                            <p className="label">{t("KEY_STORE_PASSWORD")}</p>
                                             <Form.Control
                                                 type="password"
                                                 name="password"

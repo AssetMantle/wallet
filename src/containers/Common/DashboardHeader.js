@@ -38,9 +38,9 @@ const DashboardHeader = () => {
         <div className="header">
             <Navbar collapseOnSelect expand="lg">
                 <div className="container">
-                    <Navbar.Brand><Nav.Link href="/">
+                    <Navbar.Brand><NavLink to="/dashboard/wallet">
                         <img src={logo} alt="logo"/>
-                    </Nav.Link></Navbar.Brand>
+                    </NavLink></Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav">
                         <MenuIcon/>
                     </Navbar.Toggle>

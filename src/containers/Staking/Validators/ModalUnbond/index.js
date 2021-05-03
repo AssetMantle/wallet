@@ -37,6 +37,8 @@ const ModalUnbond = (props) => {
     const loginAddress = localStorage.getItem('address');
     const mode = localStorage.getItem('loginMode');
     const [memoStatus, setMemoStatus] = useState(false);
+    const [checkAmountError, setCheckAmountError] = useState(false);
+    const [checkAmountWarning, setCheckAmountWarning] = useState(false);
 
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
@@ -45,6 +47,16 @@ const ModalUnbond = (props) => {
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
+            if (props.transferableAmount < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))) {
+                setCheckAmountError(true);
+            } else {
+                setCheckAmountError(false);
+            }
+            if ((props.transferableAmount) < transactions.XprtConversion(2 * parseInt(localStorage.getItem('fee'))) && (props.transferableAmount) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))) {
+                setCheckAmountWarning(true);
+            } else {
+                setCheckAmountWarning(false);
+            }
             setAmount(evt.target.value * 1);
         } else {
             return false;
@@ -98,24 +110,6 @@ const ModalUnbond = (props) => {
         }
     }, []);
 
-    function PrivateKeyReader(file, password) {
-        return new Promise(function (resolve) {
-            const fileReader = new FileReader();
-            fileReader.readAsText(file, "UTF-8");
-            fileReader.onload = event => {
-                const res = JSON.parse(event.target.result);
-                localStorage.setItem('encryptedMnemonic', event.target.result);
-                const decryptedData = helper.decryptStore(res, password);
-                if (decryptedData.error != null) {
-                    setErrorMessage(decryptedData.error);
-                    setLoader(false);
-                } else {
-                    resolve(decryptedData.mnemonic);
-                    setErrorMessage("");
-                }
-            };
-        });
-    }
 
     const handleSubmitInitialData = async event => {
         event.preventDefault();
@@ -125,7 +119,7 @@ const ModalUnbond = (props) => {
         }
         let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
         if (memoCheck) {
-            setErrorMessage("you entered your mnemonic as memo");
+            setErrorMessage(t("MEMO_MNEMONIC_CHECK_ERROR"));
         } else {
             setErrorMessage("");
             setMemoContent(memo);
@@ -154,11 +148,22 @@ const ModalUnbond = (props) => {
         setLoader(true);
         event.preventDefault();
         let mnemonic;
+        let accountNumber = 0;
+        let addressIndex = 0;
+        let bip39Passphrase = "";
+        if (advanceMode) {
+            accountNumber = event.target.unbondAccountNumber.value;
+            addressIndex = event.target.unbondAccountIndex.value;
+            bip39Passphrase = event.target.unbondbip39Passphrase.value;
+        }
         if (importMnemonic) {
             const password = event.target.password.value;
-            var promise = PrivateKeyReader(event.target.uploadFile.files[0], password);
+            let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
             await promise.then(function (result) {
                 mnemonic = result;
+            }).catch(err => {
+                setLoader(false);
+                setErrorMessage(err);
             });
         } else {
             const password = event.target.password.value;
@@ -173,14 +178,7 @@ const ModalUnbond = (props) => {
             }
         }
         if (mnemonic !== undefined) {
-            let accountNumber = 0;
-            let addressIndex = 0;
-            let bip39Passphrase = "";
-            if (advanceMode) {
-                accountNumber = event.target.unbondAccountNumber.value;
-                addressIndex = event.target.unbondAccountIndex.value;
-                bip39Passphrase = event.target.unbondbip39Passphrase.value;
-            }
+
             const persistence = MakePersistence(accountNumber, addressIndex);
             const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
             const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
@@ -233,38 +231,62 @@ const ModalUnbond = (props) => {
         </Popover>
     );
 
-    const checkAmountError = (
-        props.transferableAmount < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
-    );
 
     return (
         <>
             {initialModal ?
                 <>
                     <Modal.Header closeButton>
-                        Unbond from {props.moniker}
+                        <div className="previous-section txn-header">
+                            <button className="button" onClick={() => handlePrevious()}>
+                                <Icon
+                                    viewClass="arrow-right"
+                                    icon="left-arrow"/>
+                            </button>
+                        </div>
+                        <h3 className="heading">
+                            Unbond from {props.moniker}
+                        </h3>
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
-                            <div className="form-field">
-                                <p className="label">{t("UNBOND_AMOUNT")}(XPRT)</p>
+                            <div className="form-field p-0">
+                                <p className="label">Amount (XPRT)</p>
                                 <div className="amount-field">
                                     <Form.Control
                                         type="number"
                                         min={0}
                                         name="amount"
                                         placeholder={t("UNBOND_AMOUNT")}
-                                        defaultValue={amount || ''}
+                                        value={amount || ''}
                                         step="any"
                                         className={amount > props.delegationAmount ? "error-amount-field" : ""}
                                         onChange={handleAmountChange}
                                         required={true}
                                     />
                                     <span className={props.delegationAmount === 0 ? "empty info-data" : "info-data"}><span
-                                        className="title">{t("DELEGATION_AMOUNT")}:</span> <span
+                                        className="title">{t("DELEGATED_AMOUNT")}:</span> <span
                                         className="value">{props.delegationAmount} XPRT</span> </span>
                                 </div>
                             </div>
+                            {(localStorage.getItem("fee") * 1) !== 0 ?
+                                <>
+                                    <div className="form-field p-0">
+                                        <p className="label"></p>
+                                        <div className="amount-field">
+                                            <p className={checkAmountWarning ? "show amount-warning text-left" : "hide amount-warning text-left"}>
+                                                <b>Warning : </b>{t("AMOUNT_WARNING_MESSAGE")}</p>
+                                        </div>
+                                    </div>
+                                    <div className="form-field p-0">
+                                        <p className="label"></p>
+                                        <div className="amount-field">
+                                            <p className={checkAmountError ? "show amount-error text-left" : "hide amount-error text-left"}>{t("AMOUNT_ERROR_MESSAGE")}</p>
+                                        </div>
+                                    </div>
+                                </>
+                                : null
+                            }
                             {mode === "normal" ?
                                 <>
                                     <div className="memo-dropdown-section">
@@ -298,6 +320,7 @@ const ModalUnbond = (props) => {
                                                 type="text"
                                                 name="memo"
                                                 placeholder={t("ENTER_MEMO")}
+                                                maxLength={200}
                                                 required={false}
                                             />
                                         </div>
@@ -313,12 +336,6 @@ const ModalUnbond = (props) => {
                             }
                             <div className="buttons navigate-buttons">
                                 <FeeContainer/>
-                                <button className="button button-secondary" type="button"
-                                    onClick={() => handlePrevious()}>
-                                    <Icon
-                                        viewClass="arrow-right"
-                                        icon="left-arrow"/>
-                                </button>
                                 <button className="button button-primary"
                                     disabled={checkAmountError || !props.delegateStatus || amount === 0 || amount > props.delegationAmount}>
                                     {mode === "normal" ? "Next" : "Submit"}
@@ -357,7 +374,7 @@ const ModalUnbond = (props) => {
                                     :
                                     <>
                                         <div className="form-field">
-                                            <p className="label">{t("PASSWORD")}</p>
+                                            <p className="label">{t("KEY_STORE_PASSWORD")}</p>
                                             <Form.Control
                                                 type="password"
                                                 name="password"
