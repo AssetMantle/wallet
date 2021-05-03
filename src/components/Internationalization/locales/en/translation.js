@@ -194,7 +194,7 @@ let English = {
         "UNBOND_AMOUNT": " Unbound Amount",
         "MEMO_NOTE": "The Memo field is an optional field that is usually used by centralized exchanges to identify a transaction in order to credit an account. Never input any kind of sensitive information (such as your wallet password or the Mnemonic) in the MEMO field",
         "VESTING_NOTE":"Vesting balance shows the maximum amount that will be locked as per the vesting schedule. These coins can be delegated or un-delegated but are non-transferable until these coins are vested (unlocked).",
-        "DELEGATABLE_NOTE":"The amount of XPRT that can be delegated. This is the sum of all balances that haven’t been delegated yet. Delegatable Balance = (Transferable/Vested + amount under Vesting) - (Delegated+Unbonding)",
+        "DELEGATABLE_NOTE":"Sum of all balances that are yet to be delegated. (Transferable or Vested Balance + Vesting Amount) - (Delegated + Unbonding Amount)",
         "TRANSFERABLE_NOTE":"The amount of XPRT that is available to be transferred at any given time",
         "SETUP_ADDRESS_NOTE":"Claim your staking rewards to another wallet address.",
         "ADDRESS_NOT_MATCHED_ERROR":"Your sign in address and keystore file don’t match. Please try again or else sign in again.",
