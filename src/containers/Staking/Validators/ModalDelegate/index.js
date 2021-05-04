@@ -226,8 +226,8 @@ const ModalDelegate = (props) => {
     const popover = (
         <Popover id="popover-basic">
             <Popover.Content>
-                Delegate your XPRT and earn staking rewards.
-                <p><b>Note:</b>Unstaking or unbonding period: 21 days.</p>
+                {t("DELEGATE_HEADER_HINT")}
+                <p><b>Note:</b>{t("DELEGATE_HEADER_HINT_NOTE")} </p>
             </Popover.Content>
         </Popover>
     );

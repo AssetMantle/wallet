@@ -258,7 +258,7 @@ const ModalUnbond = (props) => {
                                         min={0}
                                         name="amount"
                                         placeholder={t("UNBOND_AMOUNT")}
-                                        value={amount || ''}
+                                        value={amount}
                                         step="any"
                                         className={amount > props.delegationAmount ? "error-amount-field" : ""}
                                         onChange={handleAmountChange}

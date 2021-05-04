@@ -28,7 +28,7 @@ const ModalViewUnbondDetails = (props) => {
                 </Modal.Header>
                 <Modal.Body className="list-modal-body">
                     <div className="unbonding-schedule-list-header">
-                        <p>To be Unbonded</p>
+                        <p>Unbonding Amount</p>
                         <p>Date</p>
                     </div>
                     {props.list ?

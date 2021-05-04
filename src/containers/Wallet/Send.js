@@ -298,14 +298,14 @@ const Send = (props) => {
                             <div className="form-field p-0">
                                 <p className="label"></p>
                                 <div className="amount-field">
-                                    <p className={checkAmountWarning ? "show amount-warning" : "hide amount-warning"}>
+                                    <p className={checkAmountWarning ? "show amount-warning text-left" : "hide amount-warning"}>
                                         <b>Warning : </b>{t("AMOUNT_WARNING_MESSAGE")}</p>
                                 </div>
                             </div>
                             <div className="form-field p-0">
                                 <p className="label"></p>
                                 <div className="amount-field">
-                                    <p className={checkAmountError ? "show amount-error" : "hide amount-error"}>{t("AMOUNT_ERROR_MESSAGE")}</p>
+                                    <p className={checkAmountError ? "show amount-error text-left" : "hide amount-error"}>{t("AMOUNT_ERROR_MESSAGE")}</p>
                                 </div>
                             </div>
                         </>

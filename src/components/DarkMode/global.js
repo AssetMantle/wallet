@@ -94,6 +94,8 @@ export const GlobalStyles = createGlobalStyle`
     .actions-modal .actions-modal-body .website .name,
     .advanced-wallet-accordion .card .card-header p,
     .actions-modal .actions-modal-body .description p,
+    .modal-list-data table th, table td,
+    .modal-custom .modal-header .heading,
     .fee{
      color: ${({theme}) => theme.infoHeadingColor};
     }
