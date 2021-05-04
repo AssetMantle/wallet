@@ -8,7 +8,7 @@ const FeeContainer = () => {
     const popoverSetupAddress = (
         <Popover id="popover-memo">
             <Popover.Content>
-                Make sure wallet contains sufficient balance to pay fee.
+                Ensure that your wallet contains adequate balance to debit the fee.
             </Popover.Content>
         </Popover>
     );

@@ -9,7 +9,10 @@ import KeplerHome from "./views/Kepler/KeplerHome";
 import RouteNotFound from "./components/RouteNotFound";
 import config from "./config";
 import icon_white from "./assets/images/icon_white.svg";
+import {useTranslation} from "react-i18next";
+
 const App = () => {
+    const {t} = useTranslation();
     const history = useHistory();
     const routes = [{
         path: '/dashboard/wallet',
@@ -60,11 +63,11 @@ const App = () => {
                                     <img src={icon_white} className="icon-white" alt="icon_white"/>
                                 </div>
                             </div>
-                            <h3 className="text-left">No Internet</h3>
+                            <h3 className="text-left">{t("NO_INTERNET")}</h3>
                             <p>Try:</p>
                             <ul>
-                                <li>Checking the network cables, modem and router</li>
-                                <li>Reconnecting to Wi-Fi</li>
+                                <li>{t("NO_INTERNET_NOTE1")}</li>
+                                <li>{t("NO_INTERNET_NOTE2")}</li>
                             </ul>
                         </div>
                     </div>

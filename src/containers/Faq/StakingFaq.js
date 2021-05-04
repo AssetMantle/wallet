@@ -71,6 +71,7 @@ const StakingFaq = () => {
                             <li>{t("STAKING_FAQ22")}
                             </li>
                             <li>{t("STAKING_FAQ23")}</li>
+                            <p> {t("STAKING_NOTE")}</p>
                             <li>{t("STAKING_FAQ24")}
                             </li>
                             <li>{t("STAKING_FAQ25")}</li>
@@ -98,9 +99,15 @@ const StakingFaq = () => {
                             </li>
                             <li>  {t("STAKING_FAQ33")}
                             </li>
+                            <p>  {t("STAKING_FAQ37")}
+                            </p>
                             <li>  {t("STAKING_FAQ34")}
                             </li>
+                            <p>  {t("STAKING_FAQ38")}
+                            </p>
                             <li>  {t("STAKING_FAQ35")}</li>
+                            <p>  {t("STAKING_FAQ39")}
+                            </p>
                             <li>  {t("STAKING_FAQ36")}</li>
                         </ul>
                     </Card.Body>
@@ -122,6 +129,7 @@ const StakingFaq = () => {
                             </li>
                             <li> {t("STAKING_FAQ44")}
                             </li>
+                            <p> {t("STAKING_NOTE")}</p>
                             <li> {t("STAKING_FAQ45")}
                             </li>
                             <li> {t("STAKING_FAQ46")}
@@ -150,6 +158,7 @@ const StakingFaq = () => {
                         <li> {t("STAKING_FAQ53")}
                         </li>
                         <li> {t("STAKING_FAQ54")}</li>
+                        <p> {t("STAKING_NOTE")}</p>
                         <li> {t("STAKING_FAQ55")}</li>
                         <li> {t("STAKING_FAQ56")}</li>
                         <li> {t("STAKING_FAQ57")}
