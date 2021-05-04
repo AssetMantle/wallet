@@ -199,7 +199,7 @@ let English = {
         "UNBOND_AMOUNT": " Unbound Amount",
         "MEMO_NOTE": "Do not provide any sensitive information such as password or mnemonic in this field. Centralized exchanges use this info to identify a transaction when crediting to an account.",
         "VESTING_NOTE":"Maximum amount that can be locked as per the vesting schedule. You may want to delegate or un-delegate the vested balance but you can’t transfer it until it’s vested (unlocked).",
-        "DELEGATABLE_NOTE":"The amount of XPRT that can be delegated. This is the sum of all balances that haven’t been delegated yet. Delegatable Balance = (Transferable/Vested + amount under Vesting) - (Delegated+Unbonding)",
+        "DELEGATABLE_NOTE":"Sum of all balances that are yet to be delegated. (Transferable or Vested Balance + Vesting Amount) - (Delegated + Unbonding Amount)",
         "TRANSFERABLE_NOTE":"Amount that can be transferred.",
         "SETUP_ADDRESS_NOTE":"Claim your staking rewards to another wallet address.",
         "ADDRESS_NOT_MATCHED_ERROR":"Your sign in address and keystore file don’t match. Please try again or else sign in again.",
