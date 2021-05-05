@@ -1306,7 +1306,7 @@ html, body {
   .wallet-main-section .tabs-section .tab-content {
     padding: 25px 0px 0 0px;
     position: relative;
-    height: 59vh;
+    height: calc(100vh - 335px);
     overflow-y: auto; }
     .wallet-main-section .tabs-section .tab-content .tab-content {
       height: auto; }
@@ -1666,7 +1666,7 @@ html, body {
   border-top: 1px solid #E3E5F4;
   padding: 30px 10px;
   position: relative;
-  height: 66vh;
+  height: calc(100vh - 281px);
   overflow-y: scroll; }
   .validators-section .info {
     display: flex;
@@ -2101,12 +2101,6 @@ html, body {
 @media (max-width: 1300px) {
   .header .profile-section .profile-dropdown .dropdown-menu .info {
     padding: 20px 30px; } }
-@media (min-width: 1201px) and (max-width: 1400px) {
-  .validators-section {
-    height: 60vh; }
-
-  .wallet-main-section .tabs-section .tab-content {
-    height: 55vh; } }
 @media (max-width: 1400px) {
   .token-info-section .token-info-section-body {
     padding: 25px 0; }
