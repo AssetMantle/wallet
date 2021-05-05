@@ -3,7 +3,7 @@ import config from "../config.json";
 import {Bip39, EnglishMnemonic, Slip10, Slip10Curve, stringToPath} from "@cosmjs/crypto";
 import MakePersistence from "./cosmosjsWrapper";
 import helper from "./helper";
-
+const bip39 = require("bip39");
 const {SigningStargateClient} = require("@cosmjs/stargate");
 const addressPrefix = config.addressPrefix;
 const configChainID = process.env.REACT_APP_CHAIN_ID;
@@ -72,10 +72,20 @@ function getAccountNumberAndSequence(authResponse) {
     }
 }
 
-function mnemonicValidation(memo, loginAddress) {
-    const persistence = MakePersistence(0, 0);
-    const address = persistence.getAddress(memo, "", true);
-    return address === loginAddress;
+function mnemonicValidation(memo) {
+    let mnemonicList = memo.replace(/\s/g, " ").split(/\s/g);
+    let mnemonicWords = [];
+    for (let word of mnemonicList) {
+        if (word === "") {
+            console.log();
+        } else {
+            let trimmedWord = word.replace(/\s/g, "");
+            mnemonicWords.push(trimmedWord);
+        }
+    }
+    mnemonicWords = mnemonicWords.join(" ");
+    let validateMnemonic = bip39.validateMnemonic(mnemonicWords);
+    return validateMnemonic;
 }
 
 function updateFee(address) {
