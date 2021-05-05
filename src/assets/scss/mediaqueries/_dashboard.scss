@@ -5,7 +5,12 @@
   }
 }
 @media (min-width: 1201px) and (max-width: 1400px){
-
+  .validators-section{
+    height: calc(100vh - 321px);
+  }
+  .wallet-main-section .tabs-section .tab-content{
+    height: calc(100vh - 375px);
+  }
 }
 @media (max-width: 1400px) {
   .token-info-section .token-info-section-body{
