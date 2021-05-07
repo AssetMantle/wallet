@@ -15,7 +15,6 @@ const GenerateKeyStore = (props) => {
     const [mnemonicForm, setMnemonicForm] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
     const [generateKey, setGenerateKey] = useState(false);
-    const loginAddress = localStorage.getItem('address');
 
     const handleSubmit = async event => {
         event.preventDefault();
@@ -23,7 +22,7 @@ const GenerateKeyStore = (props) => {
         if (responseData.error) {
             setErrorMessage(responseData.error);
         } else {
-            let mnemonic = transactions.mnemonicTrim(event.target.mnemonic.value, loginAddress);
+            let mnemonic = transactions.mnemonicTrim(event.target.mnemonic.value);
             setUserMnemonic(mnemonic);
             setGenerateKey(true);
             setMnemonicForm(false);
