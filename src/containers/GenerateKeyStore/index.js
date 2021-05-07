@@ -6,6 +6,7 @@ import {
 import wallet from "../../utils/wallet";
 import GeneratePrivateKey from "../Common/GeneratePrivateKey";
 import {useTranslation} from "react-i18next";
+import transactions from "../../utils/transactions";
 
 const GenerateKeyStore = (props) => {
     const {t} = useTranslation();
@@ -14,6 +15,7 @@ const GenerateKeyStore = (props) => {
     const [mnemonicForm, setMnemonicForm] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
     const [generateKey, setGenerateKey] = useState(false);
+    const loginAddress = localStorage.getItem('address');
 
     const handleSubmit = async event => {
         event.preventDefault();
@@ -21,7 +23,8 @@ const GenerateKeyStore = (props) => {
         if (responseData.error) {
             setErrorMessage(responseData.error);
         } else {
-            setUserMnemonic(event.target.mnemonic.value);
+            let mnemonic = transactions.mnemonicTrim(event.target.mnemonic.value, loginAddress);
+            setUserMnemonic(mnemonic);
             setGenerateKey(true);
             setMnemonicForm(false);
             setErrorMessage("");

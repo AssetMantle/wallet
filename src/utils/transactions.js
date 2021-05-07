@@ -72,8 +72,8 @@ function getAccountNumberAndSequence(authResponse) {
     }
 }
 
-function mnemonicValidation(memo) {
-    let mnemonicList = memo.replace(/\s/g, " ").split(/\s/g);
+function mnemonicTrim(mnemonic) {
+    let mnemonicList = mnemonic.replace(/\s/g, " ").split(/\s/g);
     let mnemonicWords = [];
     for (let word of mnemonicList) {
         if (word === "") {
@@ -84,6 +84,11 @@ function mnemonicValidation(memo) {
         }
     }
     mnemonicWords = mnemonicWords.join(" ");
+    return mnemonicWords;
+}
+
+function mnemonicValidation(memo) {
+    const mnemonicWords = mnemonicTrim(memo);
     let validateMnemonic = bip39.validateMnemonic(mnemonicWords);
     return validateMnemonic;
 }
@@ -146,5 +151,6 @@ export default {
     mnemonicValidation,
     updateFee,
     XprtConversion,
-    PrivateKeyReader
+    PrivateKeyReader,
+    mnemonicTrim
 };
