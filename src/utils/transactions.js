@@ -131,9 +131,10 @@ function PrivateKeyReader(file, password, accountNumber, addressIndex, bip39Pass
                 reject(decryptedData.error);
             } else {
                 const persistence = MakePersistence(accountNumber, addressIndex);
-                const address = persistence.getAddress(decryptedData.mnemonic, bip39Passphrase, true);
+                let mnemonic = mnemonicTrim(decryptedData.mnemonic);
+                const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
                 if(address === loginAddress){
-                    resolve(decryptedData.mnemonic);
+                    resolve(mnemonic);
                     localStorage.setItem('encryptedMnemonic', event.target.result);
                 }else {
                     reject("Your sign in address and keystore file don’t match. Please try again or else sign in again.");
