@@ -35,7 +35,13 @@ const Homepage = () => {
                             <a className="nav-link" href="https://persistence.one/" target="_blank"
                                 rel="noopener noreferrer">  {t("LEARN_MORE")}</a>
                             <Nav.Link className="nav-link" onClick={handleHelp} target="_blank"
-                                rel="noopener noreferrer">{t("HELP")}</Nav.Link>
+                                rel="noopener noreferrer">{t("FAQS")}</Nav.Link>
+                            <li className="nav-item link">
+                                <a className="nav-link primary-medium-color"
+                                    href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer" target="_blank">
+                                    {t("HELP")}
+                                </a>
+                            </li>
                         </Nav>
                     </Navbar.Collapse>
                 </div>
