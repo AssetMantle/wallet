@@ -218,6 +218,8 @@ let English = {
         "DELEGATE_HEADER_HINT":"Delegate your XPRT and earn staking rewards.",
         "DELEGATE_HEADER_HINT_NOTE":"Delegate your XPRT and earn staking rewards.",
         "FAQS":"FAQ",
+        "SELECT_CHAIN":"Select Chain",
+        "CHAIN":"Chain",
 
     }
 };
