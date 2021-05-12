@@ -217,7 +217,7 @@ let English = {
         "ERROR_MNEMONIC_INVALID_SECTION":"Mnemonic phrases have invalid checksums",
         "DELEGATE_HEADER_HINT":"Delegate your XPRT and earn staking rewards.",
         "DELEGATE_HEADER_HINT_NOTE":"Delegate your XPRT and earn staking rewards.",
-
+        "FAQS":"FAQ",
 
     }
 };

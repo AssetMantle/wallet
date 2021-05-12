@@ -81,7 +81,18 @@ const KeplerHome = () => {
                         <Nav className="ml-auto">
                             <a className="nav-link" href="https://persistence.one/" target="_blank"
                                 rel="noopener noreferrer">{t("LEARN_MORE")}</a>
-                            <p className="nav-link" onClick={handleHelp}>{t("HELP")}</p>
+                            <li className="nav-item link">
+                                <a className="nav-link primary-medium-color"
+                                    onClick={handleHelp}>
+                                    {t("FAQS")}
+                                </a>
+                            </li>
+                            <li className="nav-item link">
+                                <a className="nav-link primary-medium-color"
+                                    href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer" target="_blank">
+                                    {t("HELP")}
+                                </a>
+                            </li>
                         </Nav>
                     </Navbar.Collapse>
                 </div>

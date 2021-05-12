@@ -94,6 +94,12 @@ const DashboardHeader = () => {
                                             viewClass="icon"
                                             icon="help"/>
                                     </div>
+                                    {t("FAQS")}
+                                </a>
+                            </li>
+                            <li className="nav-item link">
+                                <a className="nav-link primary-medium-color"
+                                    href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer" target="_blank">
                                     {t("HELP")}
                                 </a>
                             </li>
