@@ -9,5 +9,17 @@
   "defaultFee": "5000",
   "vestingAccountFee": "0",
   "modeType": "sync",
-  "version": "0.1.4"
+  "version": "0.1.4",
+  "channels": [
+    {
+        "name": "cosmos",
+        "id": "channel-0",
+        "port": "transfer"
+    },
+    {
+      "name": "persistence",
+      "id": "channel-1",
+      "port": "transfer"
+    }
+  ]
 }

@@ -15,7 +15,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import axios from "axios";
 import Icon from "../../../components/Icon";
-import Actions from "../../../utils/actions";
+import ActionHelper from "../../../utils/actions";
 import {connect} from "react-redux";
 import helper from "../../../utils/helper";
 import Loader from "../../../components/Loader";
@@ -31,7 +31,6 @@ const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const ModalWithdraw = (props) => {
     const {t} = useTranslation();
-    const ActionHelper = new Actions();
     const [show, setShow] = useState(true);
     const [validatorAddress, setValidatorAddress] = useState('');
     const [response, setResponse] = useState('');

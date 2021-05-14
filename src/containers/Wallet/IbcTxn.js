@@ -15,7 +15,7 @@ import transactions from "../../utils/transactions";
 import helper from "../../utils/helper";
 import aminoMsgHelper from "../../utils/aminoMsgHelper";
 import Loader from "../../components/Loader";
-import {SendMsg} from "../../utils/protoMsgHelper";
+import {SendMsg, TransferMsg} from "../../utils/protoMsgHelper";
 import {connect} from "react-redux";
 import config from "../../config";
 import MakePersistence from "../../utils/cosmosjsWrapper";
@@ -23,6 +23,7 @@ import {useTranslation} from "react-i18next";
 import FeeContainer from "../../components/Fee";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import ActionHelper from "../../utils/actions";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -30,7 +31,7 @@ const IbcTxn = (props) => {
     const {t} = useTranslation();
     const [amountField, setAmountField] = useState(0);
     const [toAddress, setToAddress] = useState('');
-    const [chain, setChain] = useState("cosmos");
+    const [chain, setChain] = useState("");
     const [txResponse, setTxResponse] = useState('');
     const [mnemonicForm, setMnemonicForm] = useState(false);
     const [show, setShow] = useState(true);
@@ -82,30 +83,30 @@ const IbcTxn = (props) => {
 
     const handleSubmit = async event => {
         event.preventDefault();
-        if (helper.ValidateAddress(event.target.address.value)) {
-            setToAddress(event.target.address.value);
-            if (mode === "normal") {
-                let memo = "";
-                if (memoStatus) {
-                    memo = event.target.memo.value;
-                }
-                setMemoContent(memo);
-                let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
-                if (memoCheck) {
-                    setKeplerError(t("MEMO_MNEMONIC_CHECK_ERROR"));
-                } else {
-                    setKeplerError('');
-                    setMnemonicForm(true);
-                    setShow(true);
-                }
+        // if (helper.ValidateAddress(event.target.address.value)) {
+        setToAddress(event.target.address.value);
+        if (mode === "normal") {
+            let memo = "";
+            if (memoStatus) {
+                memo = event.target.memo.value;
+            }
+            setMemoContent(memo);
+            let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
+            if (memoCheck) {
+                setKeplerError(t("MEMO_MNEMONIC_CHECK_ERROR"));
             } else {
                 setKeplerError('');
                 setMnemonicForm(true);
                 setShow(true);
             }
         } else {
-            setKeplerError("Invalid Recipient Address");
+            setKeplerError('');
+            setMnemonicForm(true);
+            setShow(true);
         }
+        // } else {
+        //     setKeplerError("Invalid Recipient Address");
+        // }
     };
     const handleSubmitKepler = event => {
         setShow(true);
@@ -201,13 +202,25 @@ const IbcTxn = (props) => {
         }
 
         if (userMnemonic !== undefined) {
+            let latestBlockHeight = 0;
+            let blockHeightResponse = ActionHelper.getLatestBlock();
+            await blockHeightResponse.then(function (result) {
+                latestBlockHeight = result;
+            }).catch(err => {
+                setErrorMessage(err);
+            });
+            console.log(latestBlockHeight,"latestBlockHeight");
             const persistence = MakePersistence(accountNumber, addressIndex);
             const address = persistence.getAddress(userMnemonic, bip39Passphrase, true);
             const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
+                    let timeoutHeight = {
+                        revisionNumber: "1234",
+                        revisionHeight: latestBlockHeight
+                    };
                     setImportMnemonic(false);
-                    const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, (amountField * config.xprtValue))], aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent,
+                    const response = transactions.TransactionWithMnemonic([TransferMsg(chain, address, toAddress, (amountField * config.xprtValue), timeoutHeight)], aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent,
                         userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                     response.then(result => {
                         setTxResponse(result);
@@ -271,13 +284,24 @@ const IbcTxn = (props) => {
                             <MenuItem value="" key={0}>
                                 <em>{t("SELECT_CHAIN")}</em>
                             </MenuItem>
-                           
-                            <MenuItem
-                                key={1}
-                                className=""
-                                value="cosmos">
-                                Cosmos
-                            </MenuItem>
+                            {
+                                config.channels.map((channel, index) => {
+                                    return (
+                                        <MenuItem
+                                            key={index + 1}
+                                            className=""
+                                            value={channel.id}>
+                                            {channel.name}
+                                        </MenuItem>
+                                    );
+                                })
+                            }
+                            {/*<MenuItem*/}
+                            {/*    key={1}*/}
+                            {/*    className=""*/}
+                            {/*    value="cosmos">*/}
+                            {/*    Cosmos*/}
+                            {/*</MenuItem>*/}
                              
                         </Select>
                     </div>
