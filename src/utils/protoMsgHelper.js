@@ -108,8 +108,8 @@ function TransferMsg(channel ,fromAddress, toAddress, amount) {
             },
             sender: fromAddress,
             receiver: toAddress,
-            // timeoutHeight: timeoutHeight,
-            timeoutTimestamp: "0",
+            timeoutHeight: undefined,
+            timeoutTimestamp: undefined,
         }),
     };
 }

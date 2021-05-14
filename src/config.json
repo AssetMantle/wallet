@@ -13,7 +13,7 @@
   "channels": [
     {
         "name": "cosmos",
-        "id": "channel-0",
+        "id": "channel-1",
         "port": "transfer"
     },
     {

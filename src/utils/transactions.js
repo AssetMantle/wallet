@@ -145,6 +145,24 @@ function PrivateKeyReader(file, password, accountNumber, addressIndex, bip39Pass
     });
 }
 
+
+async function IbcTransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(),
+    bip39Passphrase = "", prefix = addressPrefix) {
+    console.log(msgs[0].value.sender, "red");
+    const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix);
+    return IbcTransaction(wallet, address, msgs, fee, memo);
+}
+
+async function IbcTransaction(wallet, signerAddress, msgs, fee, memo = "") {
+    const cosmJS = await SigningStargateClient.connectWithSigner(
+        tendermintRPCURL,
+        wallet
+    );
+    return await cosmJS.sendIbcTokens(msgs[0].value.sender, msgs[0].value.receiver,msgs[0].value.token,msgs[0].value.sourcePort,
+        msgs[0].value.sourceChannel,msgs[0].value.timeoutHeight ,msgs[0].value.timeoutTimestamp, memo);
+}
+
+
 export default {
     TransactionWithKeplr,
     TransactionWithMnemonic,
@@ -154,5 +172,6 @@ export default {
     updateFee,
     XprtConversion,
     PrivateKeyReader,
-    mnemonicTrim
+    mnemonicTrim,
+    IbcTransactionWithMnemonic,
 };

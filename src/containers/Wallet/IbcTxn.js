@@ -29,7 +29,7 @@ const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const IbcTxn = (props) => {
     const {t} = useTranslation();
-    const [amountField, setAmountField] = useState(0);
+    const [amountField, setAmountField] = useState(0.000001);
     const [toAddress, setToAddress] = useState('');
     const [chain, setChain] = useState("");
     const [txResponse, setTxResponse] = useState('');
@@ -220,8 +220,9 @@ const IbcTxn = (props) => {
                         revisionHeight: latestBlockHeight
                     };
                     setImportMnemonic(false);
-                    const response = transactions.TransactionWithMnemonic([TransferMsg(chain, address, toAddress, (amountField * config.xprtValue), timeoutHeight)], aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent,
+                    const response = transactions.IbcTransactionWithMnemonic([TransferMsg(chain, address, toAddress, (amountField * config.xprtValue), timeoutHeight)], aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent,
                         userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                    console.log(response, 'result');
                     response.then(result => {
                         setTxResponse(result);
                         setLoader(false);
@@ -408,8 +409,7 @@ const IbcTxn = (props) => {
                         <p className="form-error">{keplerError}</p> : null}
                     <div className="buttons">
                         <FeeContainer/>
-                        <button className="button button-primary"
-                            disabled={props.transferableAmount < (amountField * 1 + transactions.XprtConversion(parseInt(localStorage.getItem('fee')))) || amountField === 0 || props.transferableAmount === 0}>Send
+                        <button className="button button-primary">Send
                         </button>
                     </div>
                 </Form>
