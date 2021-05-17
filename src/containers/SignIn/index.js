@@ -22,7 +22,7 @@ const SignIn = (props) => {
     };
 
     const handleKepler = () => {
-        history.push('/kepler');
+        history.push('/keplr');
     };
 
     return (

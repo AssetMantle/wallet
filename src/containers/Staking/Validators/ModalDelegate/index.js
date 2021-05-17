@@ -227,7 +227,7 @@ const ModalDelegate = (props) => {
         <Popover id="popover-basic">
             <Popover.Content>
                 {t("DELEGATE_HEADER_HINT")}
-                <p><b>Note:</b>{t("DELEGATE_HEADER_HINT_NOTE")} </p>
+                <p><b>Note:</b> {t("DELEGATE_HEADER_HINT_NOTE")} </p>
             </Popover.Content>
         </Popover>
     );
