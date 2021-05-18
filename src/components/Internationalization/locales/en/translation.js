@@ -218,6 +218,8 @@ let English = {
         "DELEGATE_HEADER_HINT":"Delegate your XPRT and earn staking rewards.",
         "DELEGATE_HEADER_HINT_NOTE":"Unstaking or unbonding period: 21 days",
         "FAQS":"FAQ",
+        "GAS":"Gas",
+        "ENTER_GAS":"Enter Gas"
 
     }
 };

@@ -4,7 +4,6 @@ import {NavLink, useHistory} from 'react-router-dom';
 import {Nav, Navbar, NavDropdown} from "react-bootstrap";
 import ReactQRCode from "qrcode.react";
 import Copy from "../../components/Copy";
-import ModalFaq from "../Faq";
 import helper from "../../utils/helper";
 import logo from "../../assets/images/logo_bold.svg";
 import {useTranslation} from "react-i18next";
@@ -15,16 +14,13 @@ const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const DashboardHeader = () => {
     const {t} = useTranslation();
     const history = useHistory();
-    const [showFaq, setShowFaq] = useState(false);
     const [showKeyStore, setShowKeyStore] = useState(false);
     const address = localStorage.getItem('address');
     let addressTruncate;
     if (address !== null) {
         addressTruncate = helper.stringTruncate(address);
     }
-    const handleHelp = () => {
-        setShowFaq(true);
-    };
+
     const closeWallet = () => {
         localStorage.clear();
         history.push('/');
@@ -86,20 +82,15 @@ const DashboardHeader = () => {
                                     </div>
                                 </a>
                             </li>
+`
                             <li className="nav-item link">
                                 <a className="nav-link primary-medium-color"
-                                    onClick={handleHelp}>
+                                    href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer" target="_blank">
                                     <div className="icon-box">
                                         <Icon
                                             viewClass="icon"
                                             icon="help"/>
                                     </div>
-                                    {t("FAQS")}
-                                </a>
-                            </li>
-                            <li className="nav-item link">
-                                <a className="nav-link primary-medium-color"
-                                    href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer" target="_blank">
                                     {t("HELP")}
                                 </a>
                             </li>
@@ -126,11 +117,7 @@ const DashboardHeader = () => {
                     </Navbar.Collapse>
                 </div>
             </Navbar>
-            {showFaq
-                ?
-                <ModalFaq setShowFaq={setShowFaq}/>
-                :
-                null}
+
             {showKeyStore
                 ?
                 <GenerateKeyStore setShowKeyStore={setShowKeyStore} className={""}/>

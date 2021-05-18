@@ -4,7 +4,6 @@ import KeplerWallet from "../../utils/kepler";
 import {useHistory, NavLink} from "react-router-dom";
 import {Nav, Navbar} from "react-bootstrap";
 import logo from "../../assets/images/logo_lite.svg";
-import ModalFaq from "../../containers/Faq";
 import MakePersistence from "../../utils/cosmosjsWrapper";
 import config from "../../config";
 import {useTranslation} from "react-i18next";
@@ -15,7 +14,6 @@ const KeplerHome = () => {
     const {t} = useTranslation();
     const history = useHistory();
     const [errorMessage, setErrorMessage] = useState("");
-    const [showFaq, setShowFaq] = useState(false);
     const [address, setAddress] = useState("");
     useEffect(() => {
         setErrorMessage("");
@@ -66,9 +64,6 @@ const KeplerHome = () => {
     const handlePrevious = () => {
         history.push('/');
     };
-    const handleHelp = () => {
-        setShowFaq(true);
-    };
     return (
         <div className="kepler-section">
             <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -81,12 +76,6 @@ const KeplerHome = () => {
                         <Nav className="ml-auto">
                             <a className="nav-link" href="https://persistence.one/" target="_blank"
                                 rel="noopener noreferrer">{t("LEARN_MORE")}</a>
-                            <li className="nav-item link">
-                                <a className="nav-link primary-medium-color"
-                                    onClick={handleHelp}>
-                                    {t("FAQS")}
-                                </a>
-                            </li>
                             <li className="nav-item link">
                                 <a className="nav-link primary-medium-color"
                                     href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer" target="_blank">
@@ -150,11 +139,6 @@ const KeplerHome = () => {
                     </div>
                 </div>
             </div>
-            {showFaq
-                ?
-                <ModalFaq setShowFaq={setShowFaq} className={"help-before-login"}/>
-                :
-                null}
         </div>
     );
 };

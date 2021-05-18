@@ -158,6 +158,7 @@
     }
 
     .form-section {
+      max-width: 600px;
       .form-field {
         display: flex;
         align-items: center;
@@ -208,14 +209,22 @@
       }
 
       .buttons {
+        text-align: center;
         padding-top: 15px;
-        margin-left: 150px;
         .fee{
           text-align: left;
         }
         .button {
           min-width: 200px;
           max-width: 400px;
+        }
+        .fee-container{
+          .fee-box{
+            text-align: center;
+          }
+        }
+        .select-gas{
+          text-align: center;
         }
       }
     }

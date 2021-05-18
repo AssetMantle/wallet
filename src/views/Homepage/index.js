@@ -3,7 +3,6 @@ import {Navbar, NavLink, Nav} from "react-bootstrap";
 import logo from "../../assets/images/logo_bold.svg";
 import dark_icon from "../../assets/images/dark_icon.svg";
 import ModalCreateWallet from "../../containers/CreateWallet/ModalCreateWallet";
-import ModalFaq from "../../containers/Faq";
 import ModalImportWallet from "../../containers/ImportWallet";
 import Footer from "../../components/Footer";
 import SignIn from "../../containers/SignIn";
@@ -12,12 +11,8 @@ import {useTranslation} from "react-i18next";
 const Homepage = () => {
     const {t} = useTranslation();
     const [routName, setRoutName] = useState("false");
-    const [showFaq, setShowFaq] = useState(false);
     const handleRoute = (name) => {
         setRoutName(name);
-    };
-    const handleHelp = () => {
-        setShowFaq(true);
     };
 
     return (
@@ -34,8 +29,6 @@ const Homepage = () => {
                                 rel="noopener noreferrer">{t("SIGN_IN")}</NavLink>
                             <a className="nav-link" href="https://persistence.one/" target="_blank"
                                 rel="noopener noreferrer">  {t("LEARN_MORE")}</a>
-                            <Nav.Link className="nav-link" onClick={handleHelp} target="_blank"
-                                rel="noopener noreferrer">{t("FAQS")}</Nav.Link>
                             <li className="nav-item link">
                                 <a className="nav-link primary-medium-color"
                                     href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer" target="_blank">
@@ -79,11 +72,6 @@ const Homepage = () => {
                     <SignIn setRoutName={setRoutName} name="homepage"/>
                     : null
             }
-            {showFaq
-                ?
-                <ModalFaq setShowFaq={setShowFaq} className={"help-before-login"}/>
-                :
-                null}
         </div>
 
 

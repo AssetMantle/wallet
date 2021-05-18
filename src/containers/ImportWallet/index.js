@@ -10,7 +10,6 @@ import Icon from "../../components/Icon";
 import wallet from "../../utils/wallet";
 import helper from "../../utils/helper";
 import {useHistory} from "react-router-dom";
-import ModalFaq from "../Faq";
 import GeneratePrivateKey from "../Common/GeneratePrivateKey";
 import config from "../../config";
 import MakePersistence from "../../utils/cosmosjsWrapper";
@@ -21,7 +20,6 @@ const ModalImportWallet = (props) => {
     const {t} = useTranslation();
     const [show, setShow] = useState(true);
     const history = useHistory();
-    const [showFaq, setShowFaq] = useState(false);
     const [userMnemonic, setUserMnemonic] = useState("");
     const [passphraseError, setPassphraseError] = useState(false);
     const [importMnemonic, setImportMnemonic] = useState(true);
@@ -406,11 +404,6 @@ const ModalImportWallet = (props) => {
                     routeValue="hideGenerateKey" formName="Import Wallet"/>
                 : null
             }
-            {showFaq
-                ?
-                <ModalFaq setShowFaq={setShowFaq} className={"help-before-login"}/>
-                :
-                null}
         </>
 
     );

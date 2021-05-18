@@ -4,10 +4,6 @@ import ModalFaq from "../Faq";
 import logo from "../../assets/images/logo_bold.svg";
 
 const HomepageHeader = () => {
-    const [showFaq, setShowFaq] = useState(false);
-    const handleHelp = () => {
-        setShowFaq(true);
-    };
 
     return (
         <>
@@ -27,11 +23,7 @@ const HomepageHeader = () => {
                     </Navbar.Collapse>
                 </div>
             </Navbar>
-            {showFaq
-                ?
-                <ModalFaq setShowFaq={setShowFaq} className={"help-before-login"}/>
-                :
-                null}
+
         </>
     );
 };

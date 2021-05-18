@@ -19,7 +19,8 @@ import Loader from "../../../../components/Loader";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import {useTranslation} from "react-i18next";
 import {connect} from "react-redux";
-import FeeContainer from "../../../../components/Fee";
+import config from "../../../../config";
+import GasContainer from "../../../../components/Gas";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalWithdraw = (props) => {
     const {t} = useTranslation();
@@ -34,7 +35,12 @@ const ModalWithdraw = (props) => {
     const loginAddress = localStorage.getItem('address');
     const mode = localStorage.getItem('loginMode');
     const [memoStatus, setMemoStatus] = useState(false);
-
+    const [showGasField, setShowGasField] = useState(false);
+    const [activeFeeState, setActiveFeeState] = useState("Average");
+    const [gas, setGas] = useState(config.gas);
+    const [fee, setFee] = useState(config.averageFee);
+    const [checkAmountError, setCheckAmountError] = useState(false);
+    
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
     };
@@ -83,11 +89,18 @@ const ModalWithdraw = (props) => {
     }
 
     useEffect(() => {
+        setFee(gas*fee);
         const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
         if (encryptedMnemonic !== null) {
             setImportMnemonic(false);
         } else {
             setImportMnemonic(true);
+        }
+
+        if(props.transferableAmount < transactions.XprtConversion(gas*fee)){
+            setCheckAmountError(true);
+        }else{
+            setCheckAmountError(false);
         }
     }, []);
 
@@ -166,7 +179,7 @@ const ModalWithdraw = (props) => {
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
                     setImportMnemonic(false);
-                    const response = transactions.TransactionWithMnemonic([WithdrawMsg(address, props.validatorAddress)], aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent,
+                    const response = transactions.TransactionWithMnemonic([WithdrawMsg(address, props.validatorAddress)], aminoMsgHelper.fee(fee, gas), memoContent,
                         mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                     response.then(result => {
                         setResponse(result);
@@ -200,6 +213,37 @@ const ModalWithdraw = (props) => {
         }
     };
 
+    const handleGas = () =>{
+        setShowGasField(!showGasField);
+    };
+
+    const handleGasChange = (event) =>{
+        if(activeFeeState === "Average"){
+            setFee((event.target.value*1) * config.averageFee);
+        }else if(activeFeeState === "High"){
+            setFee((event.target.value*1) * config.highFee);
+        }else if(activeFeeState === "Low"){
+            setFee((event.target.value*1) * config.lowFee);
+        }
+
+        if(activeFeeState === "Average" && (transactions.XprtConversion( (event.target.value*1) * config.averageFee)) > props.transferableAmount){
+            setCheckAmountError(true);
+        }else if(activeFeeState === "High" && (transactions.XprtConversion( (event.target.value*1) * config.highFee)) > props.transferableAmount){
+            setCheckAmountError(true);
+        }else if(activeFeeState === "Low" && (transactions.XprtConversion( (event.target.value*1) * config.lowFee)) > props.transferableAmount){
+            setCheckAmountError(true);
+        }
+        else {
+            setCheckAmountError(false);
+        }
+        setGas(event.target.value*1);
+    };
+
+    const handleFee = (feeType, feeValue)=>{
+        setActiveFeeState(feeType);
+        setFee(gas*feeValue);
+    };
+    
     if (loader) {
         return <Loader/>;
     }
@@ -223,14 +267,7 @@ const ModalWithdraw = (props) => {
             </Popover.Content>
         </Popover>
     );
-
-    const checkAmountError = (
-        props.transferableAmount < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
-    );
-
-    const checkAmountWarning = (
-        (props.transferableAmount) < transactions.XprtConversion(2*parseInt(localStorage.getItem('fee'))) && (props.transferableAmount) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
-    );
+    
 
     return (
         <>
@@ -256,24 +293,6 @@ const ModalWithdraw = (props) => {
                                     <p className={props.rewards === 0 ? "empty info-data" : "info-data"} title={props.rewards}>{props.rewards.toFixed(4)}</p>
                                 </div>
                             </div>
-                            {(localStorage.getItem("fee") * 1) !== 0 ?
-                                <>
-                                    <div className="form-field p-0">
-                                        <p className="label"></p>
-                                        <div className="amount-field">
-                                            <p className={checkAmountWarning ? "show amount-warning text-left" : "hide amount-warning text-left"}>
-                                                <b>Warning : </b>{t("AMOUNT_WARNING_MESSAGE")}</p>
-                                        </div>
-                                    </div>
-                                    <div className="form-field p-0">
-                                        <p className="label"></p>
-                                        <div className="amount-field">
-                                            <p className={checkAmountError ? "show amount-error text-left" : "hide amount-error text-left"}>{t("AMOUNT_ERROR_MESSAGE")}</p>
-                                        </div>
-                                    </div>
-                                </>
-                                : null
-                            }
                             {
                                 mode === "normal" ?
                                     <>
@@ -324,11 +343,36 @@ const ModalWithdraw = (props) => {
                                     : null
                             }
                             <div className="buttons navigate-buttons">
-                                <FeeContainer/>
-                                <button
-                                    className="button button-primary"
-                                    disabled={checkAmountError || props.rewards === 0}> {mode === "normal" ? t("NEXT") : t("SUBMIT")}
-                                </button>
+                                {mode === "normal" ?
+                                    <div className="button-section">
+                                        <GasContainer checkAmountError={checkAmountError} activeFeeState={activeFeeState} onClick={handleFee} gas={gas}/>
+                                        <div className="select-gas">
+                                            <p onClick={handleGas}>{!showGasField ? "Set gas" : "Close"}</p>
+                                        </div>
+                                        {showGasField
+                                            ?
+                                            <div className="form-field">
+                                                <p className="label info">{t("GAS")}</p>
+                                                <Form.Control
+                                                    type="number"
+                                                    name="gas"
+                                                    value={gas}
+                                                    onChange={handleGasChange}
+                                                    placeholder={t("ENTER_GAS")}
+                                                    required={false}
+                                                />
+                                            </div>
+                                            : ""
+                                        }
+                                        <button className="button button-primary"
+                                            disabled={checkAmountError || props.rewards === 0}
+                                        >Next</button>
+                                    </div>
+                                    :
+                                    <button className="button button-primary"
+                                        disabled={checkAmountError || props.rewards === 0}
+                                    >Submit</button>
+                                }
                             </div>
                             <div className="buttons">
                                 <p className="button-link" type="button"
