@@ -301,10 +301,6 @@ const Send = (props) => {
         setMemoStatus(!memoStatus);
     };
 
-    const handleTotalAmount = () =>{
-        setAmountField(props.transferableAmount);
-    };
-
     return (
         <div className="send-container">
             <div className="form-section">
@@ -337,7 +333,7 @@ const Send = (props) => {
                                 onChange={handleAmountChange}
                                 required={true}
                             />
-                            <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data"} onClick={handleTotalAmount}><span
+                            <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data"}><span
                                 className="title">Transferable Balance:</span> <span
                                 className="value"
                                 title={props.transferableAmount}>{props.transferableAmount.toFixed(6)} XPRT</span> </span>
