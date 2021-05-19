@@ -20,7 +20,6 @@ import {connect} from "react-redux";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import config from "../../../../config";
 import {useTranslation} from "react-i18next";
-// import FeeContainer from "../../../../components/Fee";
 import GasContainer from "../../../../components/Gas";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
@@ -325,25 +324,6 @@ const ModalDelegate = (props) => {
                                         className="value">{props.balance} XPRT</span> </span>
                                 </div>
                             </div>
-
-                            {/*{(localStorage.getItem("fee") * 1) !== 0 ?*/}
-                            {/*    <>*/}
-                            {/*        <div className="form-field p-0">*/}
-                            {/*            <p className="label"></p>*/}
-                            {/*            <div className="amount-field">*/}
-                            {/*                <p className={checkAmountWarning ? "show amount-warning text-left" : "hide amount-warning text-left"}>*/}
-                            {/*                    <b>Warning : </b>{t("AMOUNT_WARNING_MESSAGE")}</p>*/}
-                            {/*            </div>*/}
-                            {/*        </div>*/}
-                            {/*        <div className="form-field p-0">*/}
-                            {/*            <p className="label"></p>*/}
-                            {/*            <div className="amount-field">*/}
-                            {/*                <p className={checkAmountError ? "show amount-error text-left" : "hide amount-error text-left"}>{t("AMOUNT_ERROR_MESSAGE")}</p>*/}
-                            {/*            </div>*/}
-                            {/*        </div>*/}
-                            {/*    </>*/}
-                            {/*    : null*/}
-                            {/*}*/}
 
                             {mode === "normal" ?
                                 <>
