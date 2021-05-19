@@ -216,8 +216,10 @@ let English = {
         "ERROR_MNEMONIC_EXPECT_STRING":"Mnemonic expects a string",
         "ERROR_MNEMONIC_INVALID_SECTION":"Mnemonic phrases have invalid checksums",
         "DELEGATE_HEADER_HINT":"Delegate your XPRT and earn staking rewards.",
-        "DELEGATE_HEADER_HINT_NOTE":"Delegate your XPRT and earn staking rewards.",
+        "DELEGATE_HEADER_HINT_NOTE":"Unstaking or unbonding period: 21 days",
         "FAQS":"FAQ",
+        "GAS":"Gas",
+        "ENTER_GAS":"Enter Gas"
 
     }
 };

@@ -356,6 +356,40 @@ html, body {
   .navigate-buttons .button-secondary .icon {
     width: 20px; }
 
+.fee-container {
+  display: flex;
+  justify-content: center; }
+  .fee-container .fee-box {
+    padding: 15px;
+    width: 150px;
+    box-shadow: 0 1px 3px rgba(50, 50, 93, 0.15), 0 1px 0 rgba(0, 0, 0, 0.02);
+    background: #ffffff; }
+    .fee-container .fee-box p {
+      margin: 0;
+      cursor: pointer; }
+    .fee-container .fee-box .title {
+      font-size: 14px;
+      font-weight: 500; }
+    .fee-container .fee-box .gas, .fee-container .fee-box .xprt {
+      font-size: 10px; }
+  .fee-container .fee-box.active {
+    background: #e50913; }
+    .fee-container .fee-box.active p {
+      color: #ffffff; }
+
+.buttons .amount-field {
+  text-align: left; }
+
+.select-gas p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: red;
+  text-decoration: underline;
+  padding: 10px 0;
+  display: inline-block;
+  cursor: pointer; }
+
 .key-download {
   text-align: center;
   padding: 10px;
@@ -1321,46 +1355,54 @@ html, body {
   padding: 50px 100px; }
   .wallet-main-section .send-container .form-error {
     text-align: left; }
-  .wallet-main-section .send-container .form-section .form-field {
-    display: flex;
-    align-items: center;
-    padding-bottom: 15px; }
-    .wallet-main-section .send-container .form-section .form-field .label {
-      margin: 0 15px 0 0;
-      width: 155px;
-      font-weight: 500;
-      font-size: 14px;
-      line-height: 150%;
-      font-family: 'Poppins', sans-serif;
-      color: #2E3239; }
-    .wallet-main-section .send-container .form-section .form-field .label.info {
-      position: relative; }
-      .wallet-main-section .send-container .form-section .form-field .label.info button {
-        position: absolute;
-        bottom: 0px; }
-        .wallet-main-section .send-container .form-section .form-field .label.info button .icon {
-          width: 14px; }
-    .wallet-main-section .send-container .form-section .form-field input {
-      height: calc(2.3em + .75rem + 2px); }
-    .wallet-main-section .send-container .form-section .form-field .form-control {
-      max-width: 500px;
-      background: #F5F6FA;
-      font-size: 14px;
-      line-height: 150%;
-      border-radius: 0;
-      border: 0px solid;
-      color: #8D9CB5; }
-      .wallet-main-section .send-container .form-section .form-field .form-control::placeholder {
+  .wallet-main-section .send-container .form-section {
+    max-width: 600px; }
+    .wallet-main-section .send-container .form-section .form-field {
+      display: flex;
+      align-items: center;
+      padding-bottom: 15px; }
+      .wallet-main-section .send-container .form-section .form-field .label {
+        margin: 0 15px 0 0;
+        width: 155px;
+        font-weight: 500;
         font-size: 14px;
+        line-height: 150%;
+        font-family: 'Poppins', sans-serif;
+        color: #2E3239; }
+      .wallet-main-section .send-container .form-section .form-field .label.info {
+        position: relative; }
+        .wallet-main-section .send-container .form-section .form-field .label.info button {
+          position: absolute;
+          bottom: 0px; }
+          .wallet-main-section .send-container .form-section .form-field .label.info button .icon {
+            width: 14px; }
+      .wallet-main-section .send-container .form-section .form-field input {
+        height: calc(2.3em + .75rem + 2px); }
+      .wallet-main-section .send-container .form-section .form-field .form-control {
+        max-width: 500px;
+        background: #F5F6FA;
+        font-size: 14px;
+        line-height: 150%;
+        border-radius: 0;
+        border: 0px solid;
         color: #8D9CB5; }
-  .wallet-main-section .send-container .form-section .buttons {
-    padding-top: 15px;
-    margin-left: 150px; }
-    .wallet-main-section .send-container .form-section .buttons .fee {
-      text-align: left; }
-    .wallet-main-section .send-container .form-section .buttons .button {
-      min-width: 200px;
-      max-width: 400px; }
+        .wallet-main-section .send-container .form-section .form-field .form-control::placeholder {
+          font-size: 14px;
+          color: #8D9CB5; }
+    .wallet-main-section .send-container .form-section .buttons {
+      text-align: center;
+      padding-top: 15px; }
+      .wallet-main-section .send-container .form-section .buttons .fee {
+        text-align: left; }
+      .wallet-main-section .send-container .form-section .buttons .button {
+        min-width: 200px;
+        max-width: 400px; }
+      .wallet-main-section .send-container .form-section .buttons .fee-container .fee-box {
+        text-align: center; }
+      .wallet-main-section .send-container .form-section .buttons .select-gas {
+        text-align: center; }
+      .wallet-main-section .send-container .form-section .buttons .amount-field {
+        text-align: left; }
 .wallet-main-section .txns-container .MuiFormControl-root {
   flex-direction: inherit; }
 .wallet-main-section .txns-container .MuiButton-root {
@@ -2116,7 +2158,7 @@ html, body {
       font-size: 26px; }
 
   .wallet-main-section .send-container {
-    padding: 30px 60px; } }
+    padding: 25px 60px; } }
 @media (max-width: 1200px) {
   .wallet-main-section .tabs-section .tab-content, .validators-section {
     padding: 30px 0px 0 0px;

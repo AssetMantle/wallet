@@ -1,14 +1,9 @@
-import React, {useState} from "react";
+import React from "react";
 import {Nav, Navbar, NavLink} from "react-bootstrap";
 import logo from "../assets/images/logo_lite.svg";
-import ModalFaq from "../containers/Faq";
 
 const RouteNotFound = () => {
-    const [showFaq, setShowFaq] = useState(false);
 
-    const handleHelp = () => {
-        setShowFaq(true);
-    };
     return (
         <div className="home-page pageError">
             <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -21,8 +16,12 @@ const RouteNotFound = () => {
                         <Nav className="ml-auto">
                             <a className="nav-link" href="https://persistence.one/" target="_blank"
                                 rel="noopener noreferrer">Learn More</a>
-                            <NavLink className="nav-link" onClick={handleHelp} target="_blank"
-                                rel="noopener noreferrer">Help</NavLink>
+                            <li className="nav-item link">
+                                <a className="nav-link primary-medium-color"
+                                    href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer" target="_blank">
+                                    HELP
+                                </a>
+                            </li>
                         </Nav>
                     </Navbar.Collapse>
                 </div>
@@ -30,11 +29,6 @@ const RouteNotFound = () => {
             <div className="text-container">
                 <h3>Page Not Found</h3>
             </div>
-            {showFaq
-                ?
-                <ModalFaq setShowFaq={setShowFaq} className={"help-before-login"}/>
-                :
-                null}
         </div>
     );
 };
