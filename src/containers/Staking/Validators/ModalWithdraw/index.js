@@ -38,6 +38,7 @@ const ModalWithdraw = (props) => {
     const [showGasField, setShowGasField] = useState(false);
     const [activeFeeState, setActiveFeeState] = useState("Average");
     const [gas, setGas] = useState(config.gas);
+    const [gasValidationError, setGasValidationError] = useState(false);
     const [fee, setFee] = useState(config.averageFee);
     const [checkAmountError, setCheckAmountError] = useState(false);
     
@@ -137,6 +138,9 @@ const ModalWithdraw = (props) => {
             setInitialModal(false);
             showSeedModal(true);
         }
+        if(mode === "normal" && (localStorage.getItem("fee") * 1) === 0 ){
+            setFee(0);
+        }
     };
 
     const handleSubmit = async event => {
@@ -179,7 +183,7 @@ const ModalWithdraw = (props) => {
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
                     setImportMnemonic(false);
-                    const response = transactions.TransactionWithMnemonic([WithdrawMsg(address, props.validatorAddress)], aminoMsgHelper.fee(fee, gas), memoContent,
+                    const response = transactions.TransactionWithMnemonic([WithdrawMsg(address, props.validatorAddress)], aminoMsgHelper.fee(Math.trunc(fee), gas), memoContent,
                         mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                     response.then(result => {
                         setResponse(result);
@@ -218,25 +222,31 @@ const ModalWithdraw = (props) => {
     };
 
     const handleGasChange = (event) =>{
-        if(activeFeeState === "Average"){
-            setFee((event.target.value*1) * config.averageFee);
-        }else if(activeFeeState === "High"){
-            setFee((event.target.value*1) * config.highFee);
-        }else if(activeFeeState === "Low"){
-            setFee((event.target.value*1) * config.lowFee);
-        }
+        if((event.target.value * 1) >= 80000 && (event.target.value * 1) <= 2000000) {
+            setGasValidationError(false);
+            setGas(event.target.value * 1);
+            if ((localStorage.getItem("fee") * 1) !== 0) {
+                if (activeFeeState === "Average") {
+                    setFee((event.target.value * 1) * config.averageFee);
+                } else if (activeFeeState === "High") {
+                    setFee((event.target.value * 1) * config.highFee);
+                } else if (activeFeeState === "Low") {
+                    setFee((event.target.value * 1) * config.lowFee);
+                }
 
-        if(activeFeeState === "Average" && (transactions.XprtConversion( (event.target.value*1) * config.averageFee)) > props.transferableAmount){
-            setCheckAmountError(true);
-        }else if(activeFeeState === "High" && (transactions.XprtConversion( (event.target.value*1) * config.highFee)) > props.transferableAmount){
-            setCheckAmountError(true);
-        }else if(activeFeeState === "Low" && (transactions.XprtConversion( (event.target.value*1) * config.lowFee)) > props.transferableAmount){
-            setCheckAmountError(true);
+                if (activeFeeState === "Average" && (transactions.XprtConversion((event.target.value * 1) * config.averageFee)) > props.transferableAmount) {
+                    setCheckAmountError(true);
+                } else if (activeFeeState === "High" && (transactions.XprtConversion((event.target.value * 1) * config.highFee)) > props.transferableAmount) {
+                    setCheckAmountError(true);
+                } else if (activeFeeState === "Low" && (transactions.XprtConversion((event.target.value * 1) * config.lowFee)) > props.transferableAmount) {
+                    setCheckAmountError(true);
+                } else {
+                    setCheckAmountError(false);
+                }
+            }
+        }else {
+            setGasValidationError(true);
         }
-        else {
-            setCheckAmountError(false);
-        }
-        setGas(event.target.value*1);
     };
 
     const handleFee = (feeType, feeValue)=>{
@@ -353,19 +363,29 @@ const ModalWithdraw = (props) => {
                                             ?
                                             <div className="form-field">
                                                 <p className="label info">{t("GAS")}</p>
-                                                <Form.Control
-                                                    type="number"
-                                                    name="gas"
-                                                    value={gas}
-                                                    onChange={handleGasChange}
-                                                    placeholder={t("ENTER_GAS")}
-                                                    required={false}
-                                                />
+                                                <div className="amount-field">
+                                                    <Form.Control
+                                                        type="number"
+                                                        min={80000}
+                                                        name="gas"
+                                                        placeholder={t("ENTER_GAS")}
+                                                        step="any"
+                                                        defaultValue={gas}
+                                                        onChange={handleGasChange}
+                                                        required={false}
+                                                    />
+                                                    {
+                                                        gasValidationError ?
+                                                            <span className="amount-error">
+                                                                Enter Gas between 80000 to 2000000
+                                                            </span> : ""
+                                                    }
+                                                </div>
                                             </div>
                                             : ""
                                         }
                                         <button className="button button-primary"
-                                            disabled={checkAmountError || props.rewards === 0}
+                                            disabled={checkAmountError || props.rewards === 0 || gasValidationError}
                                         >Next</button>
                                     </div>
                                     :

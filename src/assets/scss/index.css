@@ -377,6 +377,9 @@ html, body {
     .fee-container .fee-box.active p {
       color: #ffffff; }
 
+.buttons .amount-field {
+  text-align: left; }
+
 .select-gas p {
   margin: 0;
   font-size: 14px;
@@ -1398,6 +1401,8 @@ html, body {
         text-align: center; }
       .wallet-main-section .send-container .form-section .buttons .select-gas {
         text-align: center; }
+      .wallet-main-section .send-container .form-section .buttons .amount-field {
+        text-align: left; }
 .wallet-main-section .txns-container .MuiFormControl-root {
   flex-direction: inherit; }
 .wallet-main-section .txns-container .MuiButton-root {
@@ -2153,7 +2158,7 @@ html, body {
       font-size: 26px; }
 
   .wallet-main-section .send-container {
-    padding: 30px 60px; } }
+    padding: 25px 60px; } }
 @media (max-width: 1200px) {
   .wallet-main-section .tabs-section .tab-content, .validators-section {
     padding: 30px 0px 0 0px;
