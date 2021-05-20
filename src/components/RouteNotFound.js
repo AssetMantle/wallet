@@ -1,6 +1,7 @@
 import React from "react";
-import {Nav, Navbar, NavLink} from "react-bootstrap";
-import logo from "../assets/images/logo_lite.svg";
+import {NavLink} from 'react-router-dom';
+import {Nav, Navbar} from "react-bootstrap";
+import logo from "../assets/images/logo_bold.svg";
 
 const RouteNotFound = () => {
 
@@ -8,7 +9,7 @@ const RouteNotFound = () => {
         <div className="home-page pageError">
             <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
                 <div className="container">
-                    <Navbar.Brand><NavLink to="/">
+                    <Navbar.Brand><NavLink to="/dashboard/wallet">
                         <img src={logo} alt="logo"/>
                     </NavLink></Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav"/>

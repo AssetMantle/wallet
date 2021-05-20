@@ -366,14 +366,8 @@
 
 .header {
   .navbar {
-    background: #222325;
-
-    .navbar-toggler {
+    .nav-menu-icon button{
       outline: none !important;
-
-      svg {
-        fill: #ffffff;
-      }
     }
 
     .navbar-nav li {
@@ -395,8 +389,6 @@
       }
 
       a:hover, a.active, a:focus {
-        color: #ffffff !important;
-
         .icon {
           fill: #e50913;
         }

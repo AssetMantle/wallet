@@ -4,6 +4,12 @@ export const GlobalStyles = createGlobalStyle`
     body {
     background: ${({theme}) => theme.bodyBackground};
     }
+    .header .navbar{
+    background: ${({theme}) => theme.navigationBackground};
+    }
+    .header .navbar .navbar-nav li a:hover, .header .navbar .navbar-nav li a.active, .header .navbar .navbar-nav li a:focus{
+    color: ${({theme}) => theme.navItemActiveColor};
+    }
    .txns-container .MuiPaper-root{
     background-color: ${({theme}) => theme.tableBackground} !important;
     border: 1px solid ${({theme}) => theme.tableBorderColor} !important;
@@ -54,7 +60,7 @@ export const GlobalStyles = createGlobalStyle`
      color: ${({theme}) => theme.lineValueColor};
     }
     .header{
-        border-bottom: 1px solid ${({theme}) => theme.bodyBackground};
+        border-bottom: 1px solid ${({theme}) => theme.tableBorderColor};
     }
     .wallet-main-section .txns-container .pagination-custom{
      background-color: ${({theme}) => theme.tableBackground} !important;
@@ -135,7 +141,7 @@ export const GlobalStyles = createGlobalStyle`
     .faq-modal-body .accordion .card-body p{
         color: ${({theme}) => theme.lineValueColor};
     }
-    .claim-rewards-modal .rewards-modal-body .available-tokens .usd{
+    .claim-rewards-modal .rewards-modal-body .available-tokens .usd, .fee-container .fee-box .title, .fee-container .fee-box .gas, .fee-container .fee-box .xprt{
     color: ${({theme}) => theme.lineValueColor};
     }
     .navigate-buttons .button-secondary, .modal-header .previous-section .button{
@@ -171,6 +177,12 @@ export const GlobalStyles = createGlobalStyle`
     }
     .header .profile-section .profile-dropdown .copy-button .icon{
       fill:${({theme}) => theme.copyIconColor};
+    }
+    .fee-container .fee-box{
+     background: ${({theme}) => theme.feeBoxBackground};
+    }
+    .sidebar-section, .sidebar-container .MuiPaper-root{
+    background: ${({theme}) => theme.bodyBackground};
     }
 `;
 

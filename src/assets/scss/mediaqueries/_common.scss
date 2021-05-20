@@ -15,6 +15,12 @@
   .form-field{
     display: block;
   }
+  .form-field .label{
+    width: auto;
+  }
+  .validators-list-selection{
+    width: 100%;
+  }
   .amount-field{
     display: block;
     .range-buttons {
