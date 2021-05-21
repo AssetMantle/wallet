@@ -48,7 +48,7 @@ const DashboardHeader = () => {
     console.log(theme, "theme");
     const ProfileIcon = <Icon viewClass="profile" icon="profile"/>;
     return (
-        <div className="header">
+        <div className="header dashboard">
             <Navbar collapseOnSelect expand="lg">
                 <div className="container">
                     <div className="nav-menu-icon">
