@@ -100,7 +100,6 @@ const DashboardHeader = () => {
                                 </div>
                             </a>
                         </li>
-`
                         <li className="nav-item link mobile-nav-item">
                             <a className="nav-link primary-medium-color"
                                 href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer" target="_blank">
