@@ -9,6 +9,18 @@ export const useDarkMode = () => {
     };
 
     const toggleTheme = () => {
+        if(theme === 'dark'){
+            if (document.getElementById('root').classList.contains('dark-mode')) {
+                document.getElementById('root').classList.add('light-mode');
+                document.getElementById('root').classList.remove('dark-mode');
+            }
+        }
+        else{
+            if (document.getElementById('root').classList.contains('light-mode')) {
+                document.getElementById('root').classList.add('dark-mode');
+                document.getElementById('root').classList.remove('light-mode');
+            }
+        }
         if (theme === 'light') {
             setMode('dark');
         } else {

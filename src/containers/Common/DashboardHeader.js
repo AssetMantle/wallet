@@ -1,30 +1,41 @@
-import React, {useState} from "react";
+import React, {useState,useEffect} from "react";
 import Icon from "../../components/Icon";
 import {NavLink, useHistory} from 'react-router-dom';
 import {Nav, Navbar, NavDropdown} from "react-bootstrap";
 import ReactQRCode from "qrcode.react";
 import Copy from "../../components/Copy";
-import ModalFaq from "../Faq";
 import helper from "../../utils/helper";
-import logo from "../../assets/images/logo_bold.svg";
 import {useTranslation} from "react-i18next";
-import MenuIcon from '@material-ui/icons/Menu';
 import Darktheme from "../DarkTheme";
 import GenerateKeyStore from "../GenerateKeyStore";
+import MobileSidebar from "./MobileSidebar";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
+
 const DashboardHeader = () => {
     const {t} = useTranslation();
     const history = useHistory();
-    const [showFaq, setShowFaq] = useState(false);
     const [showKeyStore, setShowKeyStore] = useState(false);
     const address = localStorage.getItem('address');
     let addressTruncate;
     if (address !== null) {
         addressTruncate = helper.stringTruncate(address);
     }
-    const handleHelp = () => {
-        setShowFaq(true);
-    };
+    useEffect(() => {
+        const localTheme = window.localStorage.getItem('theme');
+        console.log(localTheme, "localTheme");
+        if(localTheme === 'light'){
+            if (document.getElementById('root').classList.contains('dark-mode')) {
+                document.getElementById('root').classList.add('light-mode');
+                document.getElementById('root').classList.remove('dark-mode');
+            }
+        }
+        else{
+            if (document.getElementById('root').classList.contains('light-mode')) {
+                document.getElementById('root').classList.add('dark-mode');
+                document.getElementById('root').classList.remove('light-mode');
+            }
+        }
+    }, []);
     const closeWallet = () => {
         localStorage.clear();
         history.push('/');
@@ -33,104 +44,96 @@ const DashboardHeader = () => {
     const handleKeyStore = () =>{
         setShowKeyStore(true);
     };
+    const theme = window.localStorage.getItem('theme');
+    console.log(theme, "theme");
     const ProfileIcon = <Icon viewClass="profile" icon="profile"/>;
     return (
-        <div className="header">
+        <div className="header dashboard">
             <Navbar collapseOnSelect expand="lg">
                 <div className="container">
-                    <Navbar.Brand><NavLink to="/dashboard/wallet">
-                        <img src={logo} alt="logo"/>
-                    </NavLink></Navbar.Brand>
-                    <Navbar.Toggle aria-controls="responsive-navbar-nav">
-                        <MenuIcon/>
-                    </Navbar.Toggle>
+                    <div className="nav-menu-icon">
+                        <MobileSidebar/>
+                    </div>
+                    <Navbar.Brand>
+                        <NavLink to="/dashboard/wallet" className="header-logo">
+                            {/*<img src={theme === 'light' ? logo : logoDark} alt="logo"/>*/}
+                        </NavLink>
+                    </Navbar.Brand>
 
-                    <Navbar.Collapse id="responsive-navbar-nav">
-                        <Nav className="ml-auto">
-                            <li className="nav-item link">
-                                <NavLink className="nav-link primary-medium-color"
-                                    to="/dashboard/wallet">
-                                    <div className="icon-box">
-                                        <Icon
-                                            viewClass="icon"
-                                            icon="wallet"
-                                        />
+                    <Nav className="ml-auto">
+                        <li className="nav-item link mobile-nav-item">
+                            <NavLink className="nav-link primary-medium-color"
+                                to="/dashboard/wallet">
+                                <div className="icon-box">
+                                    <Icon
+                                        viewClass="icon"
+                                        icon="wallet"
+                                    />
+                                </div>
+                                {t("WALLET")}
+                            </NavLink>
+                        </li>
+                        <li className="nav-item link mobile-nav-item">
+                            <NavLink className="nav-link primary-medium-color"
+                                to="/dashboard/staking">
+                                <div className="icon-box">
+                                    <Icon
+                                        viewClass="icon"
+                                        icon="staking"/>
+                                </div>
+                                {t("STAKING")}
+                            </NavLink>
+                        </li>
+                        <li className="nav-item link mobile-nav-item">
+                            <a className="nav-link primary-medium-color" href={EXPLORER_API}
+                                rel="noopener noreferrer" target="_blank">
+                                <div className="icon-box">
+                                    <Icon
+                                        viewClass="icon"
+                                        icon="explorer"/>
+                                </div>
+                                {t("EXPLORER")}
+                                <div className="icon-box">
+                                    <Icon
+                                        viewClass="icon"
+                                        icon="export"/>
+                                </div>
+                            </a>
+                        </li>
+                        <li className="nav-item link mobile-nav-item">
+                            <a className="nav-link primary-medium-color"
+                                href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer" target="_blank">
+                                <div className="icon-box">
+                                    <Icon
+                                        viewClass="icon"
+                                        icon="help"/>
+                                </div>
+                                {t("HELP")}
+                            </a>
+                        </li>
+                        <li className="profile-section">
+                            <NavDropdown title={ProfileIcon} id="basic-nav-dropdown" className="profile-dropdown">
+                                <div className="info">
+                                    <div className="qr-box">
+                                        <ReactQRCode value={address}/>
                                     </div>
-                                    {t("WALLET")}
-                                </NavLink>
-                            </li>
-                            <li className="nav-item link">
-                                <NavLink className="nav-link primary-medium-color"
-                                    to="/dashboard/staking">
-                                    <div className="icon-box">
-                                        <Icon
-                                            viewClass="icon"
-                                            icon="staking"/>
-                                    </div>
-                                    {t("STAKING")}
-                                </NavLink>
-                            </li>
-                            <li className="nav-item link">
-                                <a className="nav-link primary-medium-color" href={EXPLORER_API}
-                                    rel="noopener noreferrer" target="_blank">
-                                    <div className="icon-box">
-                                        <Icon
-                                            viewClass="icon"
-                                            icon="explorer"/>
-                                    </div>
-                                    {t("EXPLORER")}
-                                    <div className="icon-box">
-                                        <Icon
-                                            viewClass="icon"
-                                            icon="export"/>
-                                    </div>
-                                </a>
-                            </li>
-                            <li className="nav-item link">
-                                <a className="nav-link primary-medium-color"
-                                    onClick={handleHelp}>
-                                    <div className="icon-box">
-                                        <Icon
-                                            viewClass="icon"
-                                            icon="help"/>
-                                    </div>
-                                    {t("FAQS")}
-                                </a>
-                            </li>
-                            <li className="nav-item link">
-                                <a className="nav-link primary-medium-color"
-                                    href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer" target="_blank">
-                                    {t("HELP")}
-                                </a>
-                            </li>
-                            <li className="profile-section">
-                                <NavDropdown title={ProfileIcon} id="basic-nav-dropdown" className="profile-dropdown">
-                                    <div className="info">
-                                        <div className="qr-box">
-                                            <ReactQRCode value={address}/>
-                                        </div>
 
-                                        <p className="key"> {t("WALLET_ADDRESS")}</p>
-                                        <div className="address"><span>{addressTruncate}</span> <Copy id={address}/>
-                                        </div>
+                                    <p className="key"> {t("WALLET_ADDRESS")}</p>
+                                    <div className="address"><span>{addressTruncate}</span> <Copy id={address}/>
                                     </div>
-                                    <div className="dropdown-footer">
-                                        <p onClick={closeWallet} className="link-close">Logout</p>
-                                        <p onClick={handleKeyStore} className="generate-keystore">Generate KeyStore</p>
-                                    </div>
-                                </NavDropdown>
-                            </li>
-                            <li className="nav-item link"><Darktheme/></li>
+                                </div>
+                                <div className="dropdown-footer">
+                                    <p onClick={closeWallet} className="link-close">Logout</p>
+                                    <p onClick={handleKeyStore} className="generate-keystore">Generate KeyStore</p>
+                                </div>
+                            </NavDropdown>
+                        </li>
+                        <li className="nav-item link"><Darktheme/></li>
 
-                        </Nav>
-                    </Navbar.Collapse>
+                    </Nav>
                 </div>
             </Navbar>
-            {showFaq
-                ?
-                <ModalFaq setShowFaq={setShowFaq}/>
-                :
-                null}
+
             {showKeyStore
                 ?
                 <GenerateKeyStore setShowKeyStore={setShowKeyStore} className={""}/>

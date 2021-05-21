@@ -23,7 +23,7 @@
     }
   }
   .wallet-main-section .send-container{
-    padding: 30px 60px;
+    padding: 25px 60px;
   }
 }
 @media (max-width: 1200px) {
@@ -95,10 +95,6 @@
     font-size: 6px;
     bottom: -2px;
   }
-  .header .profile-section .profile-dropdown .dropdown-menu{
-    top:100% !important;
-    transform: initial !important;
-  }
 }
 @media (min-width: 992px) {
   .small-screen-logo {
@@ -112,6 +108,12 @@
   .validators-section .info .info-name{
     font-size: 14px;
     line-height: normal;
+  }
+  .list-modal.modal-custom .list-modal-body{
+    padding: 0 30px 30px 30px;
+    .unbonding-schedule-list p{
+      text-align: left;
+    }
   }
 }
 @media (max-width: 576px){
@@ -142,6 +144,9 @@
   }
   .header .profile-section .icon-profile{
     margin: 0;
+  }
+  .list-modal-body .unbonding-schedule-list{
+    display: block;
   }
 }
 

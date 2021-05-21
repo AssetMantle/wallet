@@ -27,7 +27,7 @@ const App = () => {
         component: ImportWallet,
         private: false,
     }, {
-        path: '/kepler',
+        path: '/keplr',
         component: KeplerHome,
         private: false,
     }];

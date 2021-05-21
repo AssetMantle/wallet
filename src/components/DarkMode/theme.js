@@ -1,5 +1,7 @@
 export const lightTheme = {
     bodyBackground:'#ffffff',
+    navigationBackground:'#ffffff',
+    navItemActiveColor:'#e50913',
     tableBackground:'#ffffff',
     tableBorderColor:'#E3E5F4',
     activeTabTextColor:'#272931',
@@ -21,10 +23,13 @@ export const lightTheme = {
     noteBackground:'#FEF5F6',
     noteFontColor:'#2E3239',
     copyIconColor:'#2E3239',
+    feeBoxBackground:'#ffffff',
 };
 
 export const darkTheme = {
     bodyBackground:'#1F2023',
+    navigationBackground:'#222325',
+    navItemActiveColor:'#ffffff',
     tableBackground:'#27272c',
     tableBorderColor:'#27272c',
     activeTabTextColor:'#ffffff',
@@ -46,4 +51,5 @@ export const darkTheme = {
     noteBackground:'#2e3239',
     noteFontColor:'#e50913a1',
     copyIconColor:'#8D9CB5',
+    feeBoxBackground:'#2e3239',
 };

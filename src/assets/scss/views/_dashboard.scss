@@ -158,6 +158,7 @@
     }
 
     .form-section {
+      max-width: 600px;
       .form-field {
         display: flex;
         align-items: center;
@@ -208,14 +209,25 @@
       }
 
       .buttons {
+        text-align: center;
         padding-top: 15px;
-        margin-left: 150px;
         .fee{
           text-align: left;
         }
         .button {
           min-width: 200px;
           max-width: 400px;
+        }
+        .fee-container{
+          .fee-box{
+            text-align: center;
+          }
+        }
+        .select-gas{
+          text-align: center;
+        }
+        .amount-field{
+          text-align: left;
         }
       }
     }
@@ -354,14 +366,8 @@
 
 .header {
   .navbar {
-    background: #222325;
-
-    .navbar-toggler {
+    .nav-menu-icon button{
       outline: none !important;
-
-      svg {
-        fill: #ffffff;
-      }
     }
 
     .navbar-nav li {
@@ -383,8 +389,6 @@
       }
 
       a:hover, a.active, a:focus {
-        color: #ffffff !important;
-
         .icon {
           fill: #e50913;
         }
