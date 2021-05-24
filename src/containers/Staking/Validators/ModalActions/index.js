@@ -14,6 +14,11 @@ import {useTranslation} from "react-i18next";
 import ModalSetWithdrawAddress from "../../../Wallet/ModalSetWithdrawAddress";
 import {connect} from "react-redux";
 import transactions from "../../../../utils/transactions";
+import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
+import {createProtobufRpcClient, QueryClient} from "@cosmjs/stargate";
+import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/distribution/v1beta1/query";
+import {QueryClientImpl as StakingQueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/staking/v1beta1/query";
+const tendermintRPCURL =  process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
 const ModalActions = (props) => {
     const {t} = useTranslation();
@@ -30,6 +35,16 @@ const ModalActions = (props) => {
     useEffect(() => {
         let address = localStorage.getItem('address');
         const fetchValidatorRewards = async () => {
+            const tendermintClient = await Tendermint34Client.connect(tendermintRPCURL);
+            const queryClient = new QueryClient(tendermintClient);
+            const rpcClient = createProtobufRpcClient(queryClient);
+            const distributionQueryService = new QueryClientImpl(rpcClient);
+            const validatorRewardsResponse = await distributionQueryService.DelegationRewards({
+                delegatorAddress: address,
+                validatorAddress: props.validator.operator_address,
+            });
+            console.log(validatorRewardsResponse, "actions validatorRewardsResponse");
+
             const url = getValidatorRewardsUrl(address, props.validator.operator_address);
             axios.get(url).then(response => {
                 if (response.data.rewards[0].amount) {
@@ -40,8 +55,16 @@ const ModalActions = (props) => {
                     ? error.response.data.message
                     : error.message);
             });
+
+            const stakingQueryService = new StakingQueryClientImpl(rpcClient);
+            const delegationsResponse = await stakingQueryService.DelegatorDelegations({
+                delegatorAddr: address,
+            });
+            console.log(delegationsResponse, "actions delegationsResponse");
+
             const delegationsUrl = getDelegationsUrl(address);
             axios.get(delegationsUrl).then(response => {
+                console.log(response, "actions delegationsResponse response");
                 let delegationResponseList = response.data.delegation_responses;
                 for (const item of delegationResponseList) {
                     if (item.delegation.validator_address === props.validator.operator_address) {

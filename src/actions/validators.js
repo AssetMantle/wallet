@@ -1,6 +1,10 @@
 import Axios from 'axios';
 import {getValidatorsUrl, getValidatorUrl} from "../constants/url";
-
+import { createProtobufRpcClient, QueryClient } from "@cosmjs/stargate";
+import { Tendermint34Client } from "@cosmjs/tendermint-rpc";
+// import { QueryClientImpl } from "./path/to/generated/codec";
+import {QueryClientImpl} from '@cosmjs/stargate/build/codec/cosmos/staking/v1beta1/query';
+const tendermintRPCURL =  process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 import {
     FETCH_ACTIVE_VALIDATORS_SUCCESS,
     FETCH_VALIDATORS_ERROR,
@@ -53,9 +57,21 @@ export const fetchValidators = (address) => {
     return async dispatch => {
         dispatch(fetchValidatorsInProgress());
         const url = getValidatorsUrl(address);
+
+        const tendermintClient = await Tendermint34Client.connect(tendermintRPCURL);
+        const queryClient = new QueryClient(tendermintClient);
+        const rpcClient = createProtobufRpcClient(queryClient);
+
+        const stakingQueryService = new QueryClientImpl(rpcClient);
+        const delegatorWithdrawAddressResponse = await stakingQueryService.Validators({
+            status: false,
+        });
+        console.log(delegatorWithdrawAddressResponse.validators, "validatorsResponse");
+
         await Axios.get(url)
             .then((res) => {
                 let validators = res.data.validators;
+                console.log(validators, "validators");
                 let activeValidators = [];
                 let inActiveValidators = [];
                 validators.forEach((item) => {

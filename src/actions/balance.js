@@ -11,6 +11,11 @@ import {
 import MakePersistence from "../utils/cosmosjsWrapper";
 import vestingAccount from "../utils/vestingAmount";
 import transactions from "../utils/transactions";
+import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
+import {createProtobufRpcClient, QueryClient} from "@cosmjs/stargate";
+import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/bank/v1beta1/query";
+const tendermintRPCURL =  process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
+
 export const fetchBalanceProgress = () => {
     return {
         type: BALANCE_FETCH_IN_PROGRESS,
@@ -40,10 +45,20 @@ export const fetchBalance = (address) => {
     return async dispatch => {
         dispatch(fetchBalanceProgress());
         const url = getBalanceUrl(address);
+        const tendermintClient = await Tendermint34Client.connect(tendermintRPCURL);
+        const queryClient = new QueryClient(tendermintClient);
+        const rpcClient = createProtobufRpcClient(queryClient);
+
+        const stakingQueryService = new QueryClientImpl(rpcClient);
+        const allBalancesResponse = await stakingQueryService.AllBalances({
+            address: address,
+        });
+        console.log(allBalancesResponse, "allBalancesResponse");
         await Axios.get(url)
             .then((res) => {
                 if (res.data.balances.length) {
                     dispatch(fetchBalanceListSuccess(res.data.balances));
+                    console.log(res.data.balances, "res.data.balances");
                     res.data.balances.forEach((item) => {
                         if(item.denom === 'uxprt'){
                             const totalBalance = item.amount*1;

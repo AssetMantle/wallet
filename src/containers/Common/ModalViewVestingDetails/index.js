@@ -6,6 +6,10 @@ import axios from "axios";
 import transactions from "../../../utils/transactions";
 import {Table} from "react-bootstrap";
 import moment from "moment";
+import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
+import {createProtobufRpcClient, QueryClient} from "@cosmjs/stargate";
+import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/auth/v1beta1/query";
+const tendermintRPCURL =  process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
 const ModalViewVestingDetails = () => {
     const [show, setShow] = useState(false);
@@ -22,8 +26,22 @@ const ModalViewVestingDetails = () => {
     };
 
     useEffect(() => {
+        const fetchAccount = async () => {
+            const tendermintClient = await Tendermint34Client.connect(tendermintRPCURL);
+            const queryClient = new QueryClient(tendermintClient);
+            const rpcClient = createProtobufRpcClient(queryClient);
+
+            const stakingQueryService = new QueryClientImpl(rpcClient);
+            const accountResponse = await stakingQueryService.Account({
+                address: loginAddress,
+            });
+            console.log(accountResponse, "accountResponse");
+
+        };
+        fetchAccount();
         const url = getAccountUrl(loginAddress);
         axios.get(url).then(response => {
+            console.log(response, "accountResponse response");
             if (response.data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
                 setResponse(response.data.account);
                 setShowPeriodicVesting(true);
