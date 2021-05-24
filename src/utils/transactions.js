@@ -5,6 +5,11 @@ import MakePersistence from "./cosmosjsWrapper";
 import helper from "./helper";
 const bip39 = require("bip39");
 const {SigningStargateClient} = require("@cosmjs/stargate");
+// const channelQuery = require("@cosmjs/stargate/build/codec/ibc/core/channel/v1/query");
+const tmRPC = require("@cosmjs/tendermint-rpc");
+import Long from "long";
+
+// const stargate = require("@cosmjs/stargate");
 const addressPrefix = config.addressPrefix;
 const configChainID = process.env.REACT_APP_CHAIN_ID;
 const configCoinType = config.coinType;
@@ -150,7 +155,7 @@ async function IbcTransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = ma
     bip39Passphrase = "", prefix = addressPrefix) {
     console.log(msgs[0].value.sender, "red");
     const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix);
-    return IbcTransaction(wallet, address, msgs, fee, memo);
+    return await IbcTransaction(wallet, address, msgs, fee, memo);
 }
 
 async function IbcTransaction(wallet, signerAddress, msgs, fee, memo = "") {
@@ -158,8 +163,34 @@ async function IbcTransaction(wallet, signerAddress, msgs, fee, memo = "") {
         tendermintRPCURL,
         wallet
     );
+
+    const tendermintClient = await tmRPC.Tendermint34Client.connect("https://test.rpc.cosmos.audit.one");
+    // const queryClient = new stargate.QueryClient(tendermintClient);
+    // const rpcClient = stargate.createProtobufRpcClient(queryClient);
+    // const channelQueryService = new channelQuery.QueryClientImpl(rpcClient);
+    // const channelResponse = await channelQueryService.ChannelClientState({
+    //     portId:"transfer",
+    //     channelId:"channel-1"
+    // });
+    // console.log(channelResponse);
+
+    let timeoutHeight = {
+        revisionHeight: Long.fromNumber(lastblockheight.lastBlockHeight,true).add(150),
+        revisionNumber: Long.fromNumber(1,true)
+    };
+    // let consensusState = await channelQueryService.ChannelConsensusState({
+    //     portId: "transfer",
+    //     channelId: "channel-1",
+    //     revisionNumber: channelResponse.proofHeight.revisionNumber,
+    //     revisionHeight: channelResponse.proofHeight.revisionHeight,
+    // });
+
+    //https://test.rpc.cosmos.audit.one
+    // msgs[0].value.timeoutHeight = timeoutHeight;
+    // cosmJS.fees.transfer=fee;
+    // return await cosmJS.signAndBroadcast(msgs[0].value.sender, msgs, fee, memo);
     return await cosmJS.sendIbcTokens(msgs[0].value.sender, msgs[0].value.receiver,msgs[0].value.token,msgs[0].value.sourcePort,
-        msgs[0].value.sourceChannel,msgs[0].value.timeoutHeight ,msgs[0].value.timeoutTimestamp, memo);
+        msgs[0].value.sourceChannel, timeoutHeight, undefined, memo);
 }
 
 

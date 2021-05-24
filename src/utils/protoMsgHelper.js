@@ -5,6 +5,7 @@ import {
     MsgWithdrawDelegatorReward
 } from "@cosmjs/stargate/build/codec/cosmos/distribution/v1beta1/tx";
 import {MsgTransfer} from "@cosmjs/stargate/build/codec/ibc/applications/transfer/v1/tx";
+import Long from "long";
 
 const msgSendTypeUrl = "/cosmos.bank.v1beta1.MsgSend";
 const msgDelegateTypeUrl = "/cosmos.staking.v1beta1.MsgDelegate";
@@ -108,7 +109,10 @@ function TransferMsg(channel ,fromAddress, toAddress, amount) {
             },
             sender: fromAddress,
             receiver: toAddress,
-            timeoutHeight: undefined,
+            timeoutHeight: {
+                revisionNumber: Long.fromNumber(1),
+                revisionHeight: Long.fromNumber(870188),
+            },
             timeoutTimestamp: undefined,
         }),
     };

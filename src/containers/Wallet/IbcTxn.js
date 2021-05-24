@@ -215,12 +215,12 @@ const IbcTxn = (props) => {
             const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
-                    let timeoutHeight = {
-                        revisionNumber: "1234",
-                        revisionHeight: latestBlockHeight
-                    };
+                    // let timeoutHeight = {
+                    //     revisionNumber: "1234",
+                    //     revisionHeight: latestBlockHeight
+                    // };
                     setImportMnemonic(false);
-                    const response = transactions.IbcTransactionWithMnemonic([TransferMsg(chain, address, toAddress, (amountField * config.xprtValue), timeoutHeight)], aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent,
+                    const response = transactions.IbcTransactionWithMnemonic([TransferMsg(chain, address, toAddress, (amountField * config.xprtValue))], aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent,
                         userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                     console.log(response, 'result');
                     response.then(result => {
