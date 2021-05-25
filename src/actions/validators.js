@@ -52,8 +52,27 @@ export const fetchValidatorsError = (count) => {
     };
 };
 
-
-export const fetchValidators = () => {
+const validatorsDelegationSort = (validators, delegations) =>{
+    let delegatedValidators =[];
+    validators.forEach((item) => {
+        let count = 0;
+        for (const data of delegations) {
+            if(item.operatorAddress === data.delegation.validatorAddress){
+                count = 0;
+                break;
+            }else {
+                count ++;
+            }
+        }
+        if(count === 0){
+            delegatedValidators.unshift(item);
+        }else {
+            delegatedValidators.push(item);
+        }
+    });
+    return delegatedValidators;
+};
+export const fetchValidators = (address) => {
     return async dispatch => {
         dispatch(fetchValidatorsInProgress());
         const tendermintClient = await Tendermint34Client.connect(tendermintRPCURL);
@@ -63,8 +82,11 @@ export const fetchValidators = () => {
         const stakingQueryService = new QueryClientImpl(rpcClient);
         await stakingQueryService.Validators({
             status: false,
-        }).then((res) => {
+        }).then(async (res) => {
             let validators = res.validators;
+            const delegationsResponse = await stakingQueryService.DelegatorDelegations({
+                delegatorAddr: address,
+            });
             let activeValidators = [];
             let inActiveValidators = [];
             validators.forEach((item) => {
@@ -74,6 +96,14 @@ export const fetchValidators = () => {
                     inActiveValidators.push(item);
                 }
             });
+
+            if(delegationsResponse.delegationResponses.length) {
+                const sortedActiveValidators =  validatorsDelegationSort(activeValidators, delegationsResponse.delegationResponses);
+                const sortedInactiveValidators =  validatorsDelegationSort(inActiveValidators, delegationsResponse.delegationResponses);
+                activeValidators = sortedActiveValidators;
+                inActiveValidators = sortedInactiveValidators;
+            }
+
             dispatch(fetchTotalValidatorsSuccess(validators));
             dispatch(fetchActiveValidatorsSuccess(activeValidators));
             dispatch(fetchInactiveValidatorsSuccess(inActiveValidators));
