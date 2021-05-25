@@ -9,22 +9,21 @@ import {
     Popover,
     useAccordionToggle
 } from "react-bootstrap";
-import Icon from "../../components/Icon";
-import success from "../../assets/images/success.svg";
-import transactions from "../../utils/transactions";
-import helper from "../../utils/helper";
-import aminoMsgHelper from "../../utils/aminoMsgHelper";
-import Loader from "../../components/Loader";
-import {SendMsg} from "../../utils/protoMsgHelper";
+import Icon from "../../../components/Icon";
+import success from "../../../assets/images/success.svg";
+import transactions from "../../../utils/transactions";
+import helper from "../../../utils/helper";
+import aminoMsgHelper from "../../../utils/aminoMsgHelper";
+import Loader from "../../../components/Loader";
+import {SendMsg} from "../../../utils/protoMsgHelper";
 import {connect} from "react-redux";
-import config from "../../config";
-import MakePersistence from "../../utils/cosmosjsWrapper";
+import config from "../../../config";
+import MakePersistence from "../../../utils/cosmosjsWrapper";
 import {useTranslation} from "react-i18next";
-import FeeContainer from "../../components/Fee";
+import FeeContainer from "../../../components/Fee";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import ActionHelper from "../../utils/actions";
-
+import ActionHelper from "../../../utils/actions";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const IbcTxn = (props) => {
@@ -32,6 +31,7 @@ const IbcTxn = (props) => {
     const [amountField, setAmountField] = useState(0.000001);
     const [toAddress, setToAddress] = useState('');
     const [chain, setChain] = useState("");
+    const [channelID, setChannelID] = useState("");
     const [txResponse, setTxResponse] = useState('');
     const [mnemonicForm, setMnemonicForm] = useState(false);
     const [show, setShow] = useState(true);
@@ -46,7 +46,8 @@ const IbcTxn = (props) => {
     let loginAddress = localStorage.getItem('address');
     const [checkAmountError, setCheckAmountError] = useState(false);
     const [checkAmountWarning, setCheckAmountWarning] = useState(false);
-
+    const [token, setToken] = useState("uxprt");
+    
     const handleClose = () => {
         setShow(false);
         setMnemonicForm(false);
@@ -221,8 +222,8 @@ const IbcTxn = (props) => {
                     };
                     setImportMnemonic(false);
                     // amount field should be int
-                    const response = transactions.TransactionWithMnemonic( [await transactions.MakeIBCTransferMsg("channel-1", address,
-                        toAddress,100000,timeoutHeight)],
+                    const response = transactions.TransactionWithMnemonic( [await transactions.MakeIBCTransferMsg(channelID, address,
+                        toAddress,(amountField * config.xprtValue), timeoutHeight)],
                     aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent, userMnemonic,
                     transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                     console.log(response, 'result');
@@ -274,9 +275,21 @@ const IbcTxn = (props) => {
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
     };
+
     const onChangeSelect = (evt) => {
+        let id = evt.target.value.substr(evt.target.value.indexOf('/') + 1);
+        setChannelID(id);
         setChain(evt.target.value);
     };
+
+    const onTokenChangeSelect = (evt) => {
+        setToken(evt.target.value);
+    };
+
+    const handleCustomChain = (evt) => {
+        setToken(evt.target.value);
+    };
+
     return (
         <div className="send-container">
             <div className="form-section">
@@ -300,14 +313,12 @@ const IbcTxn = (props) => {
                                     );
                                 })
                             }
-                            {/*<MenuItem*/}
-                            {/*    key={1}*/}
-                            {/*    className=""*/}
-                            {/*    value="cosmos">*/}
-                            {/*    Cosmos*/}
-                            {/*</MenuItem>*/}
-                             
+
                         </Select>
+                        <div
+                            className="" onClick={handleCustomChain}>
+                            Custom
+                        </div>
                     </div>
                     <div className="form-field">
                         <p className="label info">Recipient Address
@@ -364,6 +375,22 @@ const IbcTxn = (props) => {
 
                     {mode === "normal" ?
                         <>
+                            <div className="form-field p-0">
+                                <p className="label">Token</p>
+                                <Select value={token} className="validators-list-selection"
+                                    onChange={onTokenChangeSelect} displayEmpty>
+                                    <MenuItem
+                                        className=""
+                                        value="uxprt">
+                                        uxprt
+                                    </MenuItem>
+                                    <MenuItem
+                                        className=""
+                                        value="uatom">
+                                        uAtom
+                                    </MenuItem>
+                                </Select>
+                            </div>
                             <div className="memo-dropdown-section">
                                 <p onClick={handleMemoChange} className="memo-dropdown"><span
                                     className="text">{t("ADVANCED")} </span>

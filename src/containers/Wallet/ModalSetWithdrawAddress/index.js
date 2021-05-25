@@ -20,7 +20,8 @@ import transactions from "../../../utils/transactions";
 import MakePersistence from "../../../utils/cosmosjsWrapper";
 import {useTranslation} from "react-i18next";
 import {fetchWithdrawAddress} from "../../../actions/withdrawAddress";
-import FeeContainer from "../../../components/Fee";
+import config from "../../../config";
+import GasContainer from "../../../components/Gas";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -39,6 +40,12 @@ const ModalSetWithdrawAddress = (props) => {
     const loginAddress = localStorage.getItem('address');
     const mode = localStorage.getItem('loginMode');
     const [memoStatus, setMemoStatus] = useState(false);
+    const [showGasField, setShowGasField] = useState(false);
+    const [activeFeeState, setActiveFeeState] = useState("Average");
+    const [gas, setGas] = useState(config.gas);
+    const [gasValidationError, setGasValidationError] = useState(false);
+    const [fee, setFee] = useState(config.averageFee);
+    const [checkAmountError, setCheckAmountError] = useState(false);
 
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
@@ -51,6 +58,12 @@ const ModalSetWithdrawAddress = (props) => {
             setImportMnemonic(false);
         } else {
             setImportMnemonic(true);
+        }
+        setFee(gas*fee);
+        if(props.transferableAmount < transactions.XprtConversion(gas*fee)){
+            setCheckAmountError(true);
+        }else{
+            setCheckAmountError(false);
         }
     }, []);
 
@@ -95,7 +108,7 @@ const ModalSetWithdrawAddress = (props) => {
     const handleSubmitKepler = async event => {
         setLoader(true);
         event.preventDefault();
-        const response = transactions.TransactionWithKeplr([SetWithDrawAddressMsg(loginAddress, event.target.withdrawalAddress.value)], aminoMsgHelper.fee(5000, 250000));
+        const response = transactions.TransactionWithKeplr([SetWithDrawAddressMsg(loginAddress, event.target.withdrawalAddress.value)], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             if (result.code !== undefined) {
                 helper.AccountChangeCheck(result.rawLog);
@@ -131,7 +144,9 @@ const ModalSetWithdrawAddress = (props) => {
             }
 
         }
-
+        if(mode === "normal" && (localStorage.getItem("fee") * 1) === 0 ){
+            setFee(0);
+        }
     };
     const handleSubmit = async event => {
         setLoader(true);
@@ -173,7 +188,7 @@ const ModalSetWithdrawAddress = (props) => {
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
                     setImportMnemonic(false);
-                    const response = transactions.TransactionWithMnemonic([SetWithDrawAddressMsg(address, validatorAddress)], aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent,
+                    const response = transactions.TransactionWithMnemonic([SetWithDrawAddressMsg(address, validatorAddress)], aminoMsgHelper.fee(Math.trunc(fee), gas), memoContent,
                         mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                     response.then(result => {
                         setResponse(result);
@@ -206,6 +221,50 @@ const ModalSetWithdrawAddress = (props) => {
         }
     };
 
+    const handleGas = () =>{
+        setShowGasField(!showGasField);
+    };
+
+    const handleGasChange = (event) =>{
+        if((event.target.value * 1) >= 80000 && (event.target.value * 1) <= 2000000) {
+            setGasValidationError(false);
+            setGas(event.target.value * 1);
+            if ((localStorage.getItem("fee") * 1) !== 0) {
+                if (activeFeeState === "Average") {
+                    setFee((event.target.value * 1) * config.averageFee);
+                } else if (activeFeeState === "High") {
+                    setFee((event.target.value * 1) * config.highFee);
+                } else if (activeFeeState === "Low") {
+                    setFee((event.target.value * 1) * config.lowFee);
+                }
+
+                if (activeFeeState === "Average" && (transactions.XprtConversion((event.target.value * 1) * config.averageFee)) > props.transferableAmount) {
+                    setCheckAmountError(true);
+                } else if (activeFeeState === "High" && (transactions.XprtConversion((event.target.value * 1) * config.highFee)) > props.transferableAmount) {
+                    setCheckAmountError(true);
+                } else if (activeFeeState === "Low" && (transactions.XprtConversion((event.target.value * 1) * config.lowFee)) > props.transferableAmount) {
+                    setCheckAmountError(true);
+                } else {
+                    setCheckAmountError(false);
+                }
+            }
+        }else {
+            setGasValidationError(true);
+        }
+    };
+
+    const handleFee = (feeType, feeValue)=>{
+        setActiveFeeState(feeType);
+        setFee(gas*feeValue);
+        if (props.transferableAmount < transactions.XprtConversion(gas*feeValue)) {
+            setGasValidationError(true);
+            setCheckAmountError(true);
+        }else {
+            setGasValidationError(false);
+            setCheckAmountError(false);
+        }
+    };
+    
     if (loader) {
         return <Loader/>;
     }
@@ -218,13 +277,6 @@ const ModalSetWithdrawAddress = (props) => {
         </Popover>
     );
 
-    const checkAmountError = (
-        props.transferableAmount < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
-    );
-
-    const checkAmountWarning = (
-        (props.transferableAmount) < transactions.XprtConversion(2*parseInt(localStorage.getItem('fee'))) && (props.transferableAmount) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))
-    );
     const handlePrevious = () => {
         if(props.formName === "setAddress"){
             props.setShow(true);
@@ -284,24 +336,6 @@ const ModalSetWithdrawAddress = (props) => {
                                 <p className="label"> Delegations (XPRT)</p>
                                 <p className={props.delegations === 0 ? "empty info-data" : "info-data"}>{props.delegations}</p>
                             </div>
-                            {(localStorage.getItem("fee") * 1) !== 0 ?
-                                <>
-                                    <div className="form-field p-0">
-                                        <p className="label"></p>
-                                        <div className="amount-field">
-                                            <p className={checkAmountWarning ? "show amount-warning text-left" : "hide amount-warning text-left"}>
-                                                <b>Warning : </b>{t("AMOUNT_WARNING_MESSAGE")}</p>
-                                        </div>
-                                    </div>
-                                    <div className="form-field p-0">
-                                        <p className="label"></p>
-                                        <div className="amount-field">
-                                            <p className={checkAmountError ? "show amount-error text-left" : "hide amount-error text-left"}>{t("AMOUNT_ERROR_MESSAGE")}</p>
-                                        </div>
-                                    </div>
-                                </>
-                                : null
-                            }
                             {mode === "normal" ?
                                 <>
                                     <div className="memo-dropdown-section">
@@ -350,9 +384,46 @@ const ModalSetWithdrawAddress = (props) => {
                                     : null
                             }
                             <div className="buttons">
-                                <FeeContainer/>
-                                <button className="button button-primary" disabled={checkAmountError || !props.status}
-                                >{mode === "normal" ? "Next" : "Submit"}</button>
+                                {mode === "normal" ?
+                                    <div className="button-section">
+                                        <GasContainer checkAmountError={checkAmountError} activeFeeState={activeFeeState} onClick={handleFee} gas={gas}/>
+                                        <div className="select-gas">
+                                            <p onClick={handleGas}>{!showGasField ? "Set gas" : "Close"}</p>
+                                        </div>
+                                        {showGasField
+                                            ?
+                                            <div className="form-field">
+                                                <p className="label info">{t("GAS")}</p>
+                                                <div className="amount-field">
+                                                    <Form.Control
+                                                        type="number"
+                                                        min={80000}
+                                                        name="gas"
+                                                        placeholder={t("ENTER_GAS")}
+                                                        step="any"
+                                                        defaultValue={gas}
+                                                        onChange={handleGasChange}
+                                                        required={false}
+                                                    />
+                                                    {
+                                                        gasValidationError ?
+                                                            <span className="amount-error">
+                                                                Enter Gas between 80000 to 2000000
+                                                            </span> : ""
+                                                    }
+                                                </div>
+                                            </div>
+                                            : ""
+                                        }
+                                        <button className="button button-primary"
+                                            disabled={checkAmountError || !props.status || gasValidationError}
+                                        >Next</button>
+                                    </div>
+                                    :
+                                    <button className="button button-primary"
+                                        disabled={checkAmountError || !props.status}
+                                    >Submit</button>
+                                }
                             </div>
                         </Form>
                     </Modal.Body>

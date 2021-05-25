@@ -3,6 +3,7 @@ import config from "../config.json";
 import {Bip39, EnglishMnemonic, Slip10, Slip10Curve, stringToPath} from "@cosmjs/crypto";
 import MakePersistence from "./cosmosjsWrapper";
 import helper from "./helper";
+import {Decimal} from "@cosmjs/math";
 import Long from "long";
 
 const tendermint_1 = require("@cosmjs/stargate/build/codec/ibc/lightclients/tendermint/v1/tendermint");
@@ -107,11 +108,14 @@ function updateFee(address) {
                     data.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount" ||
                     data.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
                     localStorage.setItem('fee', config.vestingAccountFee);
+                    localStorage.setItem('account', 'vesting');
                 } else {
                     localStorage.setItem('fee', config.defaultFee);
+                    localStorage.setItem('account', 'non-vesting');
                 }
             } else {
                 localStorage.setItem('fee', config.defaultFee);
+                localStorage.setItem('account', 'non-vesting');
             }
         });
     } else {
@@ -186,6 +190,11 @@ async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeo
     return TransferMsg(channel, fromAddress, toAddress, amount,timeoutHeight , timeoutTime, denom, port);
 }
 
+function DecimalConversion(data){
+    let value = Decimal.fromAtomics(data, 18).toString();
+    return value;
+}
+
 export default {
     TransactionWithKeplr,
     TransactionWithMnemonic,
@@ -195,6 +204,7 @@ export default {
     updateFee,
     XprtConversion,
     PrivateKeyReader,
-    mnemonicTrim,
     MakeIBCTransferMsg,
+    mnemonicTrim,
+    DecimalConversion
 };

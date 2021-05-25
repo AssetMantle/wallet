@@ -5,6 +5,7 @@ import activeIcon from "../../../assets/images/active.svg";
 import inActiveIcon from "../../../assets/images/inactive.svg";
 import ModalActions from "./ModalActions";
 import DataTable from "../../../components/DataTable";
+import transactions from "../../../utils/transactions";
 
 const ValidatorsTable = (props) => {
     const [modalDelegate, setModalOpen] = useState();
@@ -76,7 +77,7 @@ const ValidatorsTable = (props) => {
                 }
             </div>
             ,
-            <span className="voting" key={index}>{`${parseFloat((validator.commission.commission_rates.rate * 100).toFixed(2))}`} %</span>,
+            <span className="voting" key={index}>{`${parseFloat((transactions.DecimalConversion(validator.commission.commissionRates.rate) * 100).toFixed(2))}`} %</span>,
             <div className="" key={index}>
                 {helper.isActive(validator) ?
                     <span className="icon-box" title="active">

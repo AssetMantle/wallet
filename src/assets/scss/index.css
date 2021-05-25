@@ -356,6 +356,39 @@ html, body {
   .navigate-buttons .button-secondary .icon {
     width: 20px; }
 
+.fee-container {
+  display: flex;
+  justify-content: center; }
+  .fee-container .fee-box {
+    padding: 15px;
+    width: 150px;
+    box-shadow: 0 1px 3px rgba(50, 50, 93, 0.15), 0 1px 0 rgba(0, 0, 0, 0.02); }
+    .fee-container .fee-box p {
+      margin: 0;
+      cursor: pointer; }
+    .fee-container .fee-box .title {
+      font-size: 14px;
+      font-weight: 500; }
+    .fee-container .fee-box .gas, .fee-container .fee-box .xprt {
+      font-size: 10px; }
+  .fee-container .fee-box.active {
+    background: #e50913; }
+    .fee-container .fee-box.active p {
+      color: #ffffff; }
+
+.buttons .amount-field {
+  text-align: left; }
+
+.select-gas p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: red;
+  text-decoration: underline;
+  padding: 10px 0;
+  display: inline-block;
+  cursor: pointer; }
+
 .key-download {
   text-align: center;
   padding: 10px;
@@ -1321,46 +1354,54 @@ html, body {
   padding: 50px 100px; }
   .wallet-main-section .send-container .form-error {
     text-align: left; }
-  .wallet-main-section .send-container .form-section .form-field {
-    display: flex;
-    align-items: center;
-    padding-bottom: 15px; }
-    .wallet-main-section .send-container .form-section .form-field .label {
-      margin: 0 15px 0 0;
-      width: 155px;
-      font-weight: 500;
-      font-size: 14px;
-      line-height: 150%;
-      font-family: 'Poppins', sans-serif;
-      color: #2E3239; }
-    .wallet-main-section .send-container .form-section .form-field .label.info {
-      position: relative; }
-      .wallet-main-section .send-container .form-section .form-field .label.info button {
-        position: absolute;
-        bottom: 0px; }
-        .wallet-main-section .send-container .form-section .form-field .label.info button .icon {
-          width: 14px; }
-    .wallet-main-section .send-container .form-section .form-field input {
-      height: calc(2.3em + .75rem + 2px); }
-    .wallet-main-section .send-container .form-section .form-field .form-control {
-      max-width: 500px;
-      background: #F5F6FA;
-      font-size: 14px;
-      line-height: 150%;
-      border-radius: 0;
-      border: 0px solid;
-      color: #8D9CB5; }
-      .wallet-main-section .send-container .form-section .form-field .form-control::placeholder {
+  .wallet-main-section .send-container .form-section {
+    max-width: 600px; }
+    .wallet-main-section .send-container .form-section .form-field {
+      display: flex;
+      align-items: center;
+      padding-bottom: 15px; }
+      .wallet-main-section .send-container .form-section .form-field .label {
+        margin: 0 15px 0 0;
+        width: 155px;
+        font-weight: 500;
         font-size: 14px;
+        line-height: 150%;
+        font-family: 'Poppins', sans-serif;
+        color: #2E3239; }
+      .wallet-main-section .send-container .form-section .form-field .label.info {
+        position: relative; }
+        .wallet-main-section .send-container .form-section .form-field .label.info button {
+          position: absolute;
+          bottom: 0px; }
+          .wallet-main-section .send-container .form-section .form-field .label.info button .icon {
+            width: 14px; }
+      .wallet-main-section .send-container .form-section .form-field input {
+        height: calc(2.3em + .75rem + 2px); }
+      .wallet-main-section .send-container .form-section .form-field .form-control {
+        max-width: 500px;
+        background: #F5F6FA;
+        font-size: 14px;
+        line-height: 150%;
+        border-radius: 0;
+        border: 0px solid;
         color: #8D9CB5; }
-  .wallet-main-section .send-container .form-section .buttons {
-    padding-top: 15px;
-    margin-left: 150px; }
-    .wallet-main-section .send-container .form-section .buttons .fee {
-      text-align: left; }
-    .wallet-main-section .send-container .form-section .buttons .button {
-      min-width: 200px;
-      max-width: 400px; }
+        .wallet-main-section .send-container .form-section .form-field .form-control::placeholder {
+          font-size: 14px;
+          color: #8D9CB5; }
+    .wallet-main-section .send-container .form-section .buttons {
+      text-align: center;
+      padding-top: 15px; }
+      .wallet-main-section .send-container .form-section .buttons .fee {
+        text-align: left; }
+      .wallet-main-section .send-container .form-section .buttons .button {
+        min-width: 200px;
+        max-width: 400px; }
+      .wallet-main-section .send-container .form-section .buttons .fee-container .fee-box {
+        text-align: center; }
+      .wallet-main-section .send-container .form-section .buttons .select-gas {
+        text-align: center; }
+      .wallet-main-section .send-container .form-section .buttons .amount-field {
+        text-align: left; }
 .wallet-main-section .txns-container .MuiFormControl-root {
   flex-direction: inherit; }
 .wallet-main-section .txns-container .MuiButton-root {
@@ -1442,29 +1483,23 @@ html, body {
     justify-content: center;
     word-break: break-word; }
 
-.header .navbar {
-  background: #222325; }
-  .header .navbar .navbar-toggler {
-    outline: none !important; }
-    .header .navbar .navbar-toggler svg {
-      fill: #ffffff; }
-  .header .navbar .navbar-nav li {
-    cursor: pointer; }
-    .header .navbar .navbar-nav li a {
-      font-family: "Poppins", sans-serif;
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 1.5;
-      text-align: center;
-      letter-spacing: .1em;
-      color: #5F646C;
-      padding: .5rem 1rem; }
-      .header .navbar .navbar-nav li a .icon {
-        fill: #5F646C; }
-    .header .navbar .navbar-nav li a:hover, .header .navbar .navbar-nav li a.active, .header .navbar .navbar-nav li a:focus {
-      color: #ffffff !important; }
-      .header .navbar .navbar-nav li a:hover .icon, .header .navbar .navbar-nav li a.active .icon, .header .navbar .navbar-nav li a:focus .icon {
-        fill: #e50913; }
+.header .navbar .nav-menu-icon button {
+  outline: none !important; }
+.header .navbar .navbar-nav li {
+  cursor: pointer; }
+  .header .navbar .navbar-nav li a {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.5;
+    text-align: center;
+    letter-spacing: .1em;
+    color: #5F646C;
+    padding: .5rem 1rem; }
+    .header .navbar .navbar-nav li a .icon {
+      fill: #5F646C; }
+  .header .navbar .navbar-nav li a:hover .icon, .header .navbar .navbar-nav li a.active .icon, .header .navbar .navbar-nav li a:focus .icon {
+    fill: #e50913; }
 .header .title {
   font-weight: 600;
   font-size: 18px;
@@ -2062,6 +2097,12 @@ html, body {
   .form-field {
     display: block; }
 
+  .form-field .label {
+    width: auto; }
+
+  .validators-list-selection {
+    width: 100%; }
+
   .amount-field {
     display: block; }
     .amount-field .range-buttons {
@@ -2116,7 +2157,7 @@ html, body {
       font-size: 26px; }
 
   .wallet-main-section .send-container {
-    padding: 30px 60px; } }
+    padding: 25px 60px; } }
 @media (max-width: 1200px) {
   .wallet-main-section .tabs-section .tab-content, .validators-section {
     padding: 30px 0px 0 0px;
@@ -2169,11 +2210,7 @@ html, body {
 
   .main-section .side-bar .header-section .logo span {
     font-size: 6px;
-    bottom: -2px; }
-
-  .header .profile-section .profile-dropdown .dropdown-menu {
-    top: 100% !important;
-    transform: initial !important; } }
+    bottom: -2px; } }
 @media (min-width: 992px) {
   .small-screen-logo {
     display: none; } }
@@ -2183,7 +2220,12 @@ html, body {
 
   .validators-section .info .info-name {
     font-size: 14px;
-    line-height: normal; } }
+    line-height: normal; }
+
+  .list-modal.modal-custom .list-modal-body {
+    padding: 0 30px 30px 30px; }
+    .list-modal.modal-custom .list-modal-body .unbonding-schedule-list p {
+      text-align: left; } }
 @media (max-width: 576px) {
   .validators-section .info .refresh-button {
     padding: 8px !important;
@@ -2207,6 +2249,76 @@ html, body {
     padding: 20px; }
 
   .header .profile-section .icon-profile {
-    margin: 0; } }
+    margin: 0; }
+
+  .list-modal-body .unbonding-schedule-list {
+    display: block; } }
+/*--------------------------------------------------------------
+# header mediaqueries styles
+--------------------------------------------------------------*/
+.header .navbar .header-logo {
+  width: 120px;
+  height: 30px;
+  display: block; }
+
+.dark-mode .header .navbar .header-logo {
+  background: url(../../../src/assets/images/logo_bold.svg) no-repeat; }
+
+.light-mode .header .navbar .header-logo {
+  background: url(../../../src/assets/images/logo_bold_dark.svg) no-repeat; }
+
+.dashboard .navbar-expand-lg .navbar-nav, .dashboard .navbar-nav {
+  flex-direction: row !important; }
+
+.sidebar-section {
+  height: 100%; }
+  .sidebar-section .mobile-sidebar-container .nav-item .nav-link {
+    width: 100%;
+    display: flex;
+    position: relative;
+    box-sizing: border-box;
+    text-align: left;
+    align-items: center;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    justify-content: flex-start;
+    text-decoration: none;
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.5;
+    letter-spacing: .1em;
+    color: #5F646C; }
+    .sidebar-section .mobile-sidebar-container .nav-item .nav-link .icon {
+      fill: #5F646C; }
+  .sidebar-section .mobile-sidebar-container .nav-item a:hover, .sidebar-section .mobile-sidebar-container .nav-item a.active, .sidebar-section .mobile-sidebar-container .nav-item a:focus {
+    color: #e50913 !important; }
+    .sidebar-section .mobile-sidebar-container .nav-item a:hover .icon, .sidebar-section .mobile-sidebar-container .nav-item a.active .icon, .sidebar-section .mobile-sidebar-container .nav-item a:focus .icon {
+      fill: #e50913; }
+  .sidebar-section .mobile-sidebar-container .icon-container {
+    color: rgba(0, 0, 0, 0.54);
+    display: inline-flex;
+    min-width: 56px;
+    flex-shrink: 0; }
+
+.dark-mode .navbar .nav-menu-icon {
+  outline: none !important; }
+  .dark-mode .navbar .nav-menu-icon svg {
+    fill: #ffffff; }
+
+.light-mode .navbar .nav-menu-icon {
+  outline: none !important; }
+  .light-mode .navbar .nav-menu-icon svg {
+    fill: #2E3239; }
+
+/*--------------------------------------------------------------
+# header styles
+--------------------------------------------------------------*/
+@media (max-width: 991.98px) {
+  .mobile-nav-item {
+    display: none !important; } }
+@media (min-width: 992px) {
+  .nav-menu-icon {
+    display: none; } }
 
 /*# sourceMappingURL=index.css.map */

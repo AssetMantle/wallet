@@ -5,7 +5,7 @@ import Receive from "./Receive";
 import Transactions from "./Transactions/index";
 import TokenInfo from "../Common/TokenInfo";
 import InfoRefresh from "../Refresh";
-import IbcTxn from "./IbcTxn";
+import IbcTxn from "./Ibc/IbcTxn";
 
 const Wallet = () => {
 

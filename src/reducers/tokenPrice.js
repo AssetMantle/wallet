@@ -5,7 +5,7 @@ import {
 } from "../constants/tokenPrice";
 
 
-const tokenPrice = (state = 0.4, action) => {
+const tokenPrice = (state = 0, action) => {
     if (action.type === TOKEN_PRICE_FETCH_SUCCESS) {
         return (action.data * 1);
     }

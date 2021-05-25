@@ -20,7 +20,9 @@ import {connect} from "react-redux";
 import config from "../../config";
 import MakePersistence from "../../utils/cosmosjsWrapper";
 import {useTranslation} from "react-i18next";
-import FeeContainer from "../../components/Fee";
+import GasContainer from "../../components/Gas";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -38,10 +40,16 @@ const Send = (props) => {
     const [loader, setLoader] = useState(false);
     const [importMnemonic, setImportMnemonic] = useState(true);
     const [memoContent, setMemoContent] = useState('');
+    const [checkAmountError, setCheckAmountError] = useState(false);
+    const [showGasField, setShowGasField] = useState(false);
+    const [activeFeeState, setActiveFeeState] = useState("Average");
+    const [token, setToken] = useState("uxprt");
+    const [gas, setGas] = useState(config.gas);
+    const [gasValidationError, setGasValidationError] = useState(false);
+    const [fee, setFee] = useState(config.averageFee);
     let mode = localStorage.getItem('loginMode');
     let loginAddress = localStorage.getItem('address');
-    const [checkAmountError, setCheckAmountError] = useState(false);
-    const [checkAmountWarning, setCheckAmountWarning] = useState(false);
+
 
     const handleClose = () => {
         setShow(false);
@@ -49,18 +57,14 @@ const Send = (props) => {
         setTxResponse('');
         setErrorMessage("");
     };
+
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
-            if ((props.transferableAmount - (evt.target.value * 1)) < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))) {
+            if ((props.transferableAmount - (evt.target.value * 1)) < transactions.XprtConversion(fee)) {
                 setCheckAmountError(true);
             } else {
                 setCheckAmountError(false);
-            }
-            if ((props.transferableAmount - (evt.target.value * 1)) < transactions.XprtConversion(2 * parseInt(localStorage.getItem('fee'))) && (props.transferableAmount - (evt.target.value * 1)) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))) {
-                setCheckAmountWarning(true);
-            } else {
-                setCheckAmountWarning(false);
             }
             setAmountField(evt.target.value * 1);
         } else {
@@ -69,6 +73,7 @@ const Send = (props) => {
     };
 
     useEffect(() => {
+        setFee(gas * fee);
         const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
         if (encryptedMnemonic !== null) {
             setImportMnemonic(false);
@@ -103,8 +108,12 @@ const Send = (props) => {
         } else {
             setKeplerError("Invalid Recipient Address");
         }
+        if(mode === "normal" && (localStorage.getItem("fee") * 1) === 0 ){
+            setFee(0);
+        }
     };
     const handleSubmitKepler = event => {
+
         setShow(true);
         setLoader(true);
         event.preventDefault();
@@ -204,7 +213,7 @@ const Send = (props) => {
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
                     setImportMnemonic(false);
-                    const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, (amountField * config.xprtValue))], aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent,
+                    const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, (amountField * config.xprtValue), token)], aminoMsgHelper.fee(Math.trunc(fee), gas), memoContent,
                         userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                     response.then(result => {
                         setTxResponse(result);
@@ -236,6 +245,55 @@ const Send = (props) => {
         }
     };
 
+    const handleGas = () => {
+        setShowGasField(!showGasField);
+    };
+
+    const handleGasChange = (event) => {
+        if((event.target.value * 1) >= 80000 && (event.target.value * 1) <= 2000000){
+            setGasValidationError(false);
+            setGas(event.target.value * 1);
+            if((localStorage.getItem("fee") * 1) !== 0) {
+                if (activeFeeState === "Average") {
+                    setFee((event.target.value * 1) * config.averageFee);
+                } else if (activeFeeState === "High") {
+                    setFee((event.target.value * 1) * config.highFee);
+                } else if (activeFeeState === "Low") {
+                    setFee((event.target.value * 1) * config.lowFee);
+                }
+                if (activeFeeState === "Average" && (transactions.XprtConversion((event.target.value * 1) * config.averageFee)) + amountField > props.transferableAmount) {
+                    setCheckAmountError(true);
+                } else if (activeFeeState === "High" && (transactions.XprtConversion((event.target.value * 1) * config.highFee)) + amountField > props.transferableAmount) {
+                    setCheckAmountError(true);
+                } else if (activeFeeState === "Low" && (transactions.XprtConversion((event.target.value * 1) * config.lowFee)) + amountField > props.transferableAmount) {
+                    setCheckAmountError(true);
+                } else {
+                    setCheckAmountError(false);
+                }
+            }
+        }else {
+            setGasValidationError(true);
+        }
+
+
+    };
+
+    const onChangeSelect = (evt) => {
+        setToken(evt.target.value);
+    };
+
+    const handleFee = (feeType, feeValue) => {
+        setActiveFeeState(feeType);
+        setFee(gas * feeValue);
+        if ((props.transferableAmount - (amountField*1)) < transactions.XprtConversion(gas * feeValue)) {
+            setGasValidationError(true);
+            setCheckAmountError(true);
+        }else {
+            setGasValidationError(false);
+            setCheckAmountError(false);
+        }
+    };
+
     const popoverMemo = (
         <Popover id="popover-memo">
             <Popover.Content>
@@ -243,10 +301,12 @@ const Send = (props) => {
             </Popover.Content>
         </Popover>
     );
+
     const popover = (
         <Popover id="popover">
             <Popover.Content>
-                Recipient’s address starts with persistence; for example: persistence14zmyw2q8keywcwhpttfr0d4xpggylsrmd4caf4
+                Recipient’s address starts with persistence; for example:
+                persistence14zmyw2q8keywcwhpttfr0d4xpggylsrmd4caf4
             </Popover.Content>
         </Popover>
     );
@@ -293,27 +353,25 @@ const Send = (props) => {
                                 title={props.transferableAmount}>{props.transferableAmount.toFixed(6)} XPRT</span> </span>
                         </div>
                     </div>
-                    {(localStorage.getItem("fee") * 1) !== 0 ?
-                        <>
-                            <div className="form-field p-0">
-                                <p className="label"></p>
-                                <div className="amount-field">
-                                    <p className={checkAmountWarning ? "show amount-warning text-left" : "hide amount-warning"}>
-                                        <b>Warning : </b>{t("AMOUNT_WARNING_MESSAGE")}</p>
-                                </div>
-                            </div>
-                            <div className="form-field p-0">
-                                <p className="label"></p>
-                                <div className="amount-field">
-                                    <p className={checkAmountError ? "show amount-error text-left" : "hide amount-error"}>{t("AMOUNT_ERROR_MESSAGE")}</p>
-                                </div>
-                            </div>
-                        </>
-                        : null
-                    }
 
                     {mode === "normal" ?
                         <>
+                            <div className="form-field p-0">
+                                <p className="label">Token</p>
+                                <Select value={token} className="validators-list-selection"
+                                    onChange={onChangeSelect} displayEmpty>
+                                    <MenuItem
+                                        className=""
+                                        value="uxprt">
+                                        uxprt
+                                    </MenuItem>
+                                    <MenuItem
+                                        className=""
+                                        value="uatom">
+                                        uAtom
+                                    </MenuItem>
+                                </Select>
+                            </div>
                             <div className="memo-dropdown-section">
                                 <p onClick={handleMemoChange} className="memo-dropdown"><span
                                     className="text">{t("ADVANCED")} </span>
@@ -361,10 +419,50 @@ const Send = (props) => {
                     {keplerError !== '' ?
                         <p className="form-error">{keplerError}</p> : null}
                     <div className="buttons">
-                        <FeeContainer/>
-                        <button className="button button-primary"
-                            disabled={props.transferableAmount < (amountField * 1 + transactions.XprtConversion(parseInt(localStorage.getItem('fee')))) || amountField === 0 || props.transferableAmount === 0}>Send
-                        </button>
+                        {mode === "normal"  ?
+                            <div className="button-section">
+
+                                <GasContainer checkAmountError={checkAmountError} activeFeeState={activeFeeState}
+                                    onClick={handleFee} gas={gas}/>
+                                <div className="select-gas">
+                                    <p onClick={handleGas}>{!showGasField ? "Set gas" : "Close"}</p>
+                                </div>
+                                {showGasField
+                                    ?
+                                    <div className="form-field">
+                                        <p className="label info">{t("GAS")}</p>
+                                        <div className="amount-field">
+                                            <Form.Control
+                                                type="number"
+                                                min={80000}
+                                                max={250000}
+                                                name="gas"
+                                                placeholder={t("ENTER_GAS")}
+                                                step="any"
+                                                defaultValue={gas}
+                                                onChange={handleGasChange}
+                                                required={false}
+                                            />
+                                            {
+                                                gasValidationError ?
+                                                    <span className="amount-error">
+                                                    Enter Gas between 80000 to 2000000
+                                                    </span> : ""
+                                            }
+                                        </div>
+                                    </div>
+                                    : ""
+                                }
+                                <button className="button button-primary"
+                                    disabled={props.transferableAmount < (amountField * 1 + transactions.XprtConversion(fee)) || amountField === 0 || props.transferableAmount === 0 || gasValidationError}
+                                >Next
+                                </button>
+                            </div>
+                            :
+                            <button className="button button-primary"
+                                disabled={props.transferableAmount < (amountField * 1 + transactions.XprtConversion(fee)) || amountField === 0 || props.transferableAmount === 0}
+                            >Submit</button>
+                        }
                     </div>
                 </Form>
             </div>

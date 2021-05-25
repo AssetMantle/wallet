@@ -10,9 +10,7 @@ const ModalFaq = (props) => {
 
     const handleClose = () => {
         setShow(false);
-        props.setShowFaq(false);
     };
-
 
     return (
         <Modal

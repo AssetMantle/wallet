@@ -10,7 +10,6 @@ import Icon from "../../components/Icon";
 import wallet from "../../utils/wallet";
 import helper from "../../utils/helper";
 import {useHistory} from "react-router-dom";
-import ModalFaq from "../Faq";
 import GeneratePrivateKey from "../Common/GeneratePrivateKey";
 import config from "../../config";
 import MakePersistence from "../../utils/cosmosjsWrapper";
@@ -21,7 +20,6 @@ const ModalImportWallet = (props) => {
     const {t} = useTranslation();
     const [show, setShow] = useState(true);
     const history = useHistory();
-    const [showFaq, setShowFaq] = useState(false);
     const [userMnemonic, setUserMnemonic] = useState("");
     const [passphraseError, setPassphraseError] = useState(false);
     const [importMnemonic, setImportMnemonic] = useState(true);
@@ -165,11 +163,14 @@ const ModalImportWallet = (props) => {
                     data.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount" ||
                     data.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
                     localStorage.setItem('fee', config.vestingAccountFee);
+                    localStorage.setItem('account', 'vesting');
                 } else {
                     localStorage.setItem('fee', config.defaultFee);
+                    localStorage.setItem('account', 'non-vesting');
                 }
             } else {
                 localStorage.setItem('fee', config.defaultFee);
+                localStorage.setItem('account', 'non-vesting');
             }
         });
         localStorage.setItem('loginToken', 'loggedIn');
@@ -189,7 +190,7 @@ const ModalImportWallet = (props) => {
         }
     };
     const handleKepler = () => {
-        history.push('/kepler');
+        history.push('/keplr');
     };
     return (
         <>
@@ -406,11 +407,6 @@ const ModalImportWallet = (props) => {
                     routeValue="hideGenerateKey" formName="Import Wallet"/>
                 : null
             }
-            {showFaq
-                ?
-                <ModalFaq setShowFaq={setShowFaq} className={"help-before-login"}/>
-                :
-                null}
         </>
 
     );
