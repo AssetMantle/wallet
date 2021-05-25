@@ -22,7 +22,6 @@ const DashboardHeader = () => {
     }
     useEffect(() => {
         const localTheme = window.localStorage.getItem('theme');
-        console.log(localTheme, "localTheme");
         if(localTheme === 'light'){
             if (document.getElementById('root').classList.contains('dark-mode')) {
                 document.getElementById('root').classList.add('light-mode');

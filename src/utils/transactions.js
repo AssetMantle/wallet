@@ -3,6 +3,7 @@ import config from "../config.json";
 import {Bip39, EnglishMnemonic, Slip10, Slip10Curve, stringToPath} from "@cosmjs/crypto";
 import MakePersistence from "./cosmosjsWrapper";
 import helper from "./helper";
+import {Decimal} from "@cosmjs/math";
 const bip39 = require("bip39");
 const {SigningStargateClient} = require("@cosmjs/stargate");
 const addressPrefix = config.addressPrefix;
@@ -147,6 +148,11 @@ function PrivateKeyReader(file, password, accountNumber, addressIndex, bip39Pass
     });
 }
 
+function DecimalConversion(data){
+    let value = Decimal.fromAtomics(data, 18).toString();
+    return value;
+}
+
 export default {
     TransactionWithKeplr,
     TransactionWithMnemonic,
@@ -156,5 +162,6 @@ export default {
     updateFee,
     XprtConversion,
     PrivateKeyReader,
-    mnemonicTrim
+    mnemonicTrim,
+    DecimalConversion
 };

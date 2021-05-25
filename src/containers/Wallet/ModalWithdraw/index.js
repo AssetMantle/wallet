@@ -10,10 +10,8 @@ import {
 } from 'react-bootstrap';
 import React, {useContext, useEffect, useState} from 'react';
 import success from "../../../assets/images/success.svg";
-import {getValidatorUrl} from "../../../constants/url";
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import axios from "axios";
 import Icon from "../../../components/Icon";
 import Actions from "../../../utils/actions";
 import {connect} from "react-redux";
@@ -27,6 +25,7 @@ import {useTranslation} from "react-i18next";
 import ModalSetWithdrawAddress from "../ModalSetWithdrawAddress";
 import config from "../../../config";
 import GasContainer from "../../../components/Gas";
+import {fetchValidatorsWithAddress} from "../../../actions/validators";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -36,7 +35,6 @@ const ModalWithdraw = (props) => {
     const [show, setShow] = useState(true);
     const [validatorAddress, setValidatorAddress] = useState('');
     const [response, setResponse] = useState('');
-    const [validatorsList, setValidatorsList] = useState([]);
     const [advanceMode, setAdvanceMode] = useState(false);
     const [initialModal, setInitialModal] = useState(true);
     const [seedModal, showSeedModal] = useState(false);
@@ -60,13 +58,7 @@ const ModalWithdraw = (props) => {
         setMemoStatus(!memoStatus);
     };
     useEffect(() => {
-        for (const item of props.list) {
-            const validatorUrl = getValidatorUrl(item.validator_address);
-            axios.get(validatorUrl).then(validatorResponse => {
-                let validator = validatorResponse.data.validator;
-                setValidatorsList(validatorsList => [...validatorsList, validator]);
-            });
-        }
+        props.fetchValidatorsWithAddress(props.list);
         const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
         if (encryptedMnemonic !== null) {
             setImportMnemonic(false);
@@ -342,11 +334,11 @@ const ModalWithdraw = (props) => {
                                             <em>None</em>
                                         </MenuItem>
                                         {
-                                            validatorsList.map((validator, index) => (
+                                            props.validatorsList.map((validator, index) => (
                                                 <MenuItem
                                                     key={index + 1}
                                                     className=""
-                                                    value={validator.operator_address}>
+                                                    value={validator.operatorAddress}>
                                                     {validator.description.moniker}
                                                 </MenuItem>
                                             ))
@@ -654,7 +646,12 @@ const stateToProps = (state) => {
         balance: state.balance.amount,
         tokenPrice: state.tokenPrice.tokenPrice,
         transferableAmount: state.balance.transferableAmount,
+        validatorsList:state.validators.validatorsListWithAddress
     };
 };
 
-export default connect(stateToProps)(ModalWithdraw);
+const actionsToProps = {
+    fetchValidatorsWithAddress,
+};
+
+export default connect(stateToProps, actionsToProps)(ModalWithdraw);

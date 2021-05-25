@@ -1,5 +1,3 @@
-import Axios from 'axios';
-import {getDelegationsUrl} from "../constants/url";
 import {DELEGATIONS_FETCH_SUCCESS, DELEGATIONS_FETCH_ERROR, DELEGATIONS_STATUS_SUCCESS} from "../constants/delegations";
 import Lodash from "lodash";
 import transactions from "../utils/transactions";
@@ -31,33 +29,27 @@ export const fetchDelegationStatusSuccess = (value) => {
 
 export const fetchDelegationsCount = (address) => {
     return async dispatch => {
-        const url = getDelegationsUrl(address);
-
         const tendermintClient = await Tendermint34Client.connect(tendermintRPCURL);
         const queryClient = new QueryClient(tendermintClient);
         const rpcClient = createProtobufRpcClient(queryClient);
 
         const stakingQueryService = new QueryClientImpl(rpcClient);
-        const delegationsResponse = await stakingQueryService.DelegatorDelegations({
+        await stakingQueryService.DelegatorDelegations({
             delegatorAddr: address,
-        });
-        console.log(delegationsResponse, "validatorsResponse");
-        await Axios.get(url)
-            .then((res) => {
-                if (res.data.delegation_responses.length) {
-                    console.log(res, "res validatorsResponse");
-                    dispatch(fetchDelegationStatusSuccess(true));
-                    let totalDelegationsCount = Lodash.sumBy(res.data.delegation_responses, (delegation) => {
-                        return delegation.balance.amount * 1;
-                    });
-                    dispatch(fetchDelegationsCountSuccess(transactions.XprtConversion(totalDelegationsCount)));
-                }
+        }).then((delegationsResponse) => {
+            if (delegationsResponse.delegationResponses.length) {
+                dispatch(fetchDelegationStatusSuccess(true));
+                let totalDelegationsCount = Lodash.sumBy(delegationsResponse.delegationResponses, (delegation) => {
+                    return delegation.balance.amount * 1;
+                });
+                dispatch(fetchDelegationsCountSuccess(transactions.XprtConversion(totalDelegationsCount)));
+            }
 
-            })
-            .catch((error) => {
-                dispatch(fetchProposalsCountError(error.response
-                    ? error.response.data.message
-                    : error.message));
-            });
+        }).catch((error) => {
+            dispatch(fetchProposalsCountError(error.response
+                ? error.response.data.message
+                : error.message));
+        });
+
     };
 };

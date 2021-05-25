@@ -1,5 +1,3 @@
-import Axios from 'axios';
-import {getBalanceUrl} from "../constants/url";
 import {
     BALANCE_FETCH_SUCCESS,
     BALANCE_FETCH_ERROR,
@@ -44,34 +42,28 @@ export const fetchBalanceListSuccess = (list) => {
 export const fetchBalance = (address) => {
     return async dispatch => {
         dispatch(fetchBalanceProgress());
-        const url = getBalanceUrl(address);
         const tendermintClient = await Tendermint34Client.connect(tendermintRPCURL);
         const queryClient = new QueryClient(tendermintClient);
         const rpcClient = createProtobufRpcClient(queryClient);
 
         const stakingQueryService = new QueryClientImpl(rpcClient);
-        const allBalancesResponse = await stakingQueryService.AllBalances({
+        await stakingQueryService.AllBalances({
             address: address,
+        }).then((allBalancesResponse) => {
+            if (allBalancesResponse.balances.length) {
+                dispatch(fetchBalanceListSuccess(allBalancesResponse.balances));
+                allBalancesResponse.balances.forEach((item) => {
+                    if(item.denom === 'uxprt'){
+                        const totalBalance = item.amount*1;
+                        dispatch(fetchBalanceSuccess(transactions.XprtConversion(totalBalance)));
+                    }
+                });
+            }
+        }).catch((error) => {
+            dispatch(fetchBalanceError(error.response
+                ? error.response.data.message
+                : error.message));
         });
-        console.log(allBalancesResponse, "allBalancesResponse");
-        await Axios.get(url)
-            .then((res) => {
-                if (res.data.balances.length) {
-                    dispatch(fetchBalanceListSuccess(res.data.balances));
-                    console.log(res.data.balances, "res.data.balances");
-                    res.data.balances.forEach((item) => {
-                        if(item.denom === 'uxprt'){
-                            const totalBalance = item.amount*1;
-                            dispatch(fetchBalanceSuccess(transactions.XprtConversion(totalBalance)));
-                        }
-                    });
-                }
-            })
-            .catch((error) => {
-                dispatch(fetchBalanceError(error.response
-                    ? error.response.data.message
-                    : error.message));
-            });
     };
 };
 
@@ -97,32 +89,36 @@ export const fetchTransferableVestingAmount = (address)=> {
         let vestingAmount = 0;
         let transferableAmount = 0;
         if (vestingAmountData.code === undefined) {
-            const url = getBalanceUrl(address);
-            await Axios.get(url)
-                .then((res) => {
-                    if (res.data.balances.length) {
-                        res.data.balances.forEach((item) => {
-                            if(item.denom === 'uxprt'){
-                                const amount = transactions.XprtConversion(vestingAccount.getAccountVestingAmount(vestingAmountData.account, currentEpochTime));
-                                const balance = transactions.XprtConversion(item.amount*1);
-                                vestingAmount = amount;
-                                if ((balance - amount) < 0) {
-                                    transferableAmount = 0;
-                                } else {
-                                    transferableAmount = balance - amount;
-                                }
-                                dispatch(fetchTransferableBalanceSuccess(transferableAmount));
-                                dispatch(fetchVestingBalanceSuccess(vestingAmount));
-                            }
-                        });
-                    }
-                })
-                .catch((error) => {
-                    dispatch(fetchBalanceError(error.response
-                        ? error.response.data.message
-                        : error.message));
-                });
+            const tendermintClient = await Tendermint34Client.connect(tendermintRPCURL);
+            const queryClient = new QueryClient(tendermintClient);
+            const rpcClient = createProtobufRpcClient(queryClient);
 
+            const stakingQueryService = new QueryClientImpl(rpcClient);
+            await stakingQueryService.AllBalances({
+                address: address,
+            }).then((response) => {
+                if (response.balances.length) {
+                    response.balances.forEach((item) => {
+                        if(item.denom === 'uxprt'){
+                            const amount = transactions.XprtConversion(vestingAccount.getAccountVestingAmount(vestingAmountData.account, currentEpochTime));
+                            const balance = transactions.XprtConversion(item.amount*1);
+                            vestingAmount = amount;
+                            if ((balance - amount) < 0) {
+                                transferableAmount = 0;
+                            } else {
+                                transferableAmount = balance - amount;
+                            }
+                            dispatch(fetchTransferableBalanceSuccess(transferableAmount));
+                            dispatch(fetchVestingBalanceSuccess(vestingAmount));
+                        }
+                    });
+                }
+            }).catch((error) => {
+                dispatch(fetchBalanceError(error.response
+                    ? error.response.data.message
+                    : error.message));
+            });
+            
         }
     };
 };

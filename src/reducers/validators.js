@@ -5,7 +5,8 @@ import {
     FETCH_INACTIVE_VALIDATORS_SUCCESS,
     FETCH_VALIDATORS_IN_PROGRESS,
     FETCH_VALIDATORS_SUCCESS,
-    FETCH_VALIDATOR_SUCCESS
+    FETCH_VALIDATOR_SUCCESS,
+    FETCH_VALIDATOR_WITH_ADDRESS_SUCCESS,
 } from "../constants/validators";
 import Lodash from "lodash";
 
@@ -83,6 +84,14 @@ const validator = (state = {}, action) => {
 };
 
 
+const validatorsListWithAddress = (state = [], action) => {
+    if (action.type === FETCH_VALIDATOR_WITH_ADDRESS_SUCCESS) {
+        return action.list;
+    } else {
+        return state;
+    }
+};
+
 export default combineReducers({
     activeList,
     inActiveList,
@@ -91,4 +100,5 @@ export default combineReducers({
     inProgress,
     validators,
     validator,
+    validatorsListWithAddress
 });

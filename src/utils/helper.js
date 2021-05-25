@@ -73,7 +73,7 @@ function decryptStore(fileData, password) {
 }
 
 function isActive(item) {
-    return item.jailed === false && item.status === 'BOND_STATUS_BONDED';
+    return item.jailed === false && item.status === 3;
 }
 
 function ValidateFrom(value) {

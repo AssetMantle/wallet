@@ -313,7 +313,7 @@ const ModalReDelegate = (props) => {
                                                     <MenuItem
                                                         key={index + 1}
                                                         className=""
-                                                        value={validator.operator_address}>
+                                                        value={validator.operatorAddress}>
                                                         {validator.description.moniker}
                                                     </MenuItem>
                                                 );
