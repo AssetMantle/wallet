@@ -5,7 +5,7 @@ import {
     MsgWithdrawDelegatorReward
 } from "@cosmjs/stargate/build/codec/cosmos/distribution/v1beta1/tx";
 import {MsgTransfer} from "@cosmjs/stargate/build/codec/ibc/applications/transfer/v1/tx";
-import Long from "long";
+import {coin} from "@cosmjs/stargate";
 
 const msgSendTypeUrl = "/cosmos.bank.v1beta1.MsgSend";
 const msgDelegateTypeUrl = "/cosmos.staking.v1beta1.MsgDelegate";
@@ -97,23 +97,20 @@ function SetWithDrawAddressMsg(delegatorAddress, withdrawAddress) {
     };
 }
 
-function TransferMsg(channel ,fromAddress, toAddress, amount) {
+function TransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp, denom = "uxprt", port = "transfer") {
     return {
         typeUrl: msgTransferTypeUrl,
         value: MsgTransfer.fromPartial({
-            sourcePort: "transfer",
+            sourcePort: port,
             sourceChannel: channel,
-            token: {
-                denom: "uxprt",
-                amount: String(amount),
-            },
+            token: coin(amount,denom),
             sender: fromAddress,
             receiver: toAddress,
             timeoutHeight: {
-                revisionNumber: Long.fromNumber(1),
-                revisionHeight: Long.fromNumber(870188),
+                revisionNumber: timeoutHeight.revisionNumber,
+                revisionHeight: timeoutHeight.revisionHeight,
             },
-            timeoutTimestamp: undefined,
+            timeoutTimestamp: timeoutTimestamp,
         }),
     };
 }

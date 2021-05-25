@@ -3,13 +3,13 @@ import config from "../config.json";
 import {Bip39, EnglishMnemonic, Slip10, Slip10Curve, stringToPath} from "@cosmjs/crypto";
 import MakePersistence from "./cosmosjsWrapper";
 import helper from "./helper";
-const bip39 = require("bip39");
-const {SigningStargateClient} = require("@cosmjs/stargate");
-// const channelQuery = require("@cosmjs/stargate/build/codec/ibc/core/channel/v1/query");
-const tmRPC = require("@cosmjs/tendermint-rpc");
 import Long from "long";
 
-// const stargate = require("@cosmjs/stargate");
+const tendermint_1 = require("@cosmjs/stargate/build/codec/ibc/lightclients/tendermint/v1/tendermint");
+const bip39 = require("bip39");
+const {SigningStargateClient, QueryClient, setupIbcExtension} = require("@cosmjs/stargate");
+const tmRPC = require("@cosmjs/tendermint-rpc");
+const {TransferMsg} = require("./protoMsgHelper");
 const addressPrefix = config.addressPrefix;
 const configChainID = process.env.REACT_APP_CHAIN_ID;
 const configCoinType = config.coinType;
@@ -19,7 +19,7 @@ const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 async function Transaction(wallet, signerAddress, msgs, fee, memo = "") {
     const cosmJS = await SigningStargateClient.connectWithSigner(
         tendermintRPCURL,
-        wallet
+        wallet,
     );
     return await cosmJS.signAndBroadcast(signerAddress, msgs, fee, memo);
 }
@@ -37,7 +37,6 @@ async function KeplrWallet(chainID = configChainID) {
 }
 
 async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(), bip39Passphrase = "", prefix = addressPrefix) {
-    console.log(msgs, "red");
     const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix);
     return Transaction(wallet, address, msgs, fee, memo);
 }
@@ -101,7 +100,7 @@ function mnemonicValidation(memo) {
 
 function updateFee(address) {
     const persistence = MakePersistence(0, 0);
-    if(localStorage.getItem('loginMode') === 'normal'){
+    if (localStorage.getItem('loginMode') === 'normal') {
         persistence.getAccounts(address).then(data => {
             if (data.code === undefined) {
                 if (data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount" ||
@@ -115,14 +114,14 @@ function updateFee(address) {
                 localStorage.setItem('fee', config.defaultFee);
             }
         });
-    }else {
+    } else {
         localStorage.setItem('fee', config.vestingAccountFee);
     }
 
 }
 
 function XprtConversion(data) {
-    const Result = data/config.xprtValue;
+    const Result = data / config.xprtValue;
     return Result;
 }
 
@@ -139,10 +138,10 @@ function PrivateKeyReader(file, password, accountNumber, addressIndex, bip39Pass
                 const persistence = MakePersistence(accountNumber, addressIndex);
                 let mnemonic = mnemonicTrim(decryptedData.mnemonic);
                 const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
-                if(address === loginAddress){
+                if (address === loginAddress) {
                     resolve(mnemonic);
                     localStorage.setItem('encryptedMnemonic', event.target.result);
-                }else {
+                } else {
                     reject("Your sign in address and keystore file don’t match. Please try again or else sign in again.");
                 }
             }
@@ -150,49 +149,42 @@ function PrivateKeyReader(file, password, accountNumber, addressIndex, bip39Pass
     });
 }
 
-
-async function IbcTransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(),
-    bip39Passphrase = "", prefix = addressPrefix) {
-    console.log(msgs[0].value.sender, "red");
-    const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix);
-    return await IbcTransaction(wallet, address, msgs, fee, memo);
+// copied from node_modules/@cosmjs/stargate/build/queries/ibc.js
+function decodeTendermintClientStateAny(clientState) {
+    if ((clientState === null || clientState === void 0 ? void 0 : clientState.typeUrl) !== "/ibc.lightclients.tendermint.v1.ClientState") {
+        throw new Error(`Unexpected client state type: ${clientState === null || clientState === void 0 ? void 0 : clientState.typeUrl}`);
+    }
+    return tendermint_1.ClientState.decode(clientState.value);
 }
 
-async function IbcTransaction(wallet, signerAddress, msgs, fee, memo = "") {
-    const cosmJS = await SigningStargateClient.connectWithSigner(
-        tendermintRPCURL,
-        wallet
-    );
+// copied from node_modules/@cosmjs/stargate/build/queries/ibc.js
+function decodeTendermintConsensusStateAny(consensusState) {
+    if ((consensusState === null || consensusState === void 0 ? void 0 : consensusState.typeUrl) !== "/ibc.lightclients.tendermint.v1.ConsensusState") {
+        throw new Error(`Unexpected client state type: ${consensusState === null || consensusState === void 0 ? void 0 : consensusState.typeUrl}`);
+    }
+    return tendermint_1.ConsensusState.decode(consensusState.value);
+}
+async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp = 1000, denom = "uxprt", port = "transfer") {
+    const tendermintClient = await tmRPC.Tendermint34Client.connect(tendermintRPCURL);
+    const queryClient = new QueryClient(tendermintClient);
 
-    const tendermintClient = await tmRPC.Tendermint34Client.connect("https://test.rpc.cosmos.audit.one");
-    // const queryClient = new stargate.QueryClient(tendermintClient);
-    // const rpcClient = stargate.createProtobufRpcClient(queryClient);
-    // const channelQueryService = new channelQuery.QueryClientImpl(rpcClient);
-    // const channelResponse = await channelQueryService.ChannelClientState({
-    //     portId:"transfer",
-    //     channelId:"channel-1"
-    // });
-    // console.log(channelResponse);
+    const ibcExtension = setupIbcExtension(queryClient);
 
-    let timeoutHeight = {
-        revisionHeight: Long.fromNumber(lastblockheight.lastBlockHeight,true).add(150),
-        revisionNumber: Long.fromNumber(1,true)
+    const clientStateResponse = await ibcExtension.ibc.channel.clientState(port, channel);
+    const clientStateResponseDecoded = decodeTendermintClientStateAny(clientStateResponse.identifiedClientState.clientState);
+    timeoutHeight = {
+        revisionHeight: clientStateResponseDecoded.latestHeight.revisionHeight.add(1000000),
+        revisionNumber: clientStateResponseDecoded.latestHeight.revisionNumber
     };
-    // let consensusState = await channelQueryService.ChannelConsensusState({
-    //     portId: "transfer",
-    //     channelId: "channel-1",
-    //     revisionNumber: channelResponse.proofHeight.revisionNumber,
-    //     revisionHeight: channelResponse.proofHeight.revisionHeight,
-    // });
 
-    //https://test.rpc.cosmos.audit.one
-    // msgs[0].value.timeoutHeight = timeoutHeight;
-    // cosmJS.fees.transfer=fee;
-    // return await cosmJS.signAndBroadcast(msgs[0].value.sender, msgs, fee, memo);
-    return await cosmJS.sendIbcTokens(msgs[0].value.sender, msgs[0].value.receiver,msgs[0].value.token,msgs[0].value.sourcePort,
-        msgs[0].value.sourceChannel, timeoutHeight, undefined, memo);
+    const consensusStateResponse = await ibcExtension.ibc.channel.consensusState(port,channel,
+        clientStateResponseDecoded.latestHeight.revisionNumber.toInt() , clientStateResponseDecoded.latestHeight.revisionHeight.toInt());
+    const consensusStateResponseDecoded = decodeTendermintConsensusStateAny(consensusStateResponse.consensusState);
+
+    const timeoutTime = Long.fromNumber(consensusStateResponseDecoded.timestamp.getTime()/1000).add(timeoutTimestamp).multiply(1000000000); //get time in nanoesconds
+
+    return TransferMsg(channel, fromAddress, toAddress, amount,timeoutHeight , timeoutTime, denom, port);
 }
-
 
 export default {
     TransactionWithKeplr,
@@ -204,5 +196,5 @@ export default {
     XprtConversion,
     PrivateKeyReader,
     mnemonicTrim,
-    IbcTransactionWithMnemonic,
+    MakeIBCTransferMsg,
 };

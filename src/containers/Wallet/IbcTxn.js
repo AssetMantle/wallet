@@ -15,7 +15,7 @@ import transactions from "../../utils/transactions";
 import helper from "../../utils/helper";
 import aminoMsgHelper from "../../utils/aminoMsgHelper";
 import Loader from "../../components/Loader";
-import {SendMsg, TransferMsg} from "../../utils/protoMsgHelper";
+import {SendMsg} from "../../utils/protoMsgHelper";
 import {connect} from "react-redux";
 import config from "../../config";
 import MakePersistence from "../../utils/cosmosjsWrapper";
@@ -215,13 +215,16 @@ const IbcTxn = (props) => {
             const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
-                    // let timeoutHeight = {
-                    //     revisionNumber: "1234",
-                    //     revisionHeight: latestBlockHeight
-                    // };
+                    let timeoutHeight = {
+                        revisionNumber: "",
+                        revisionHeight: ""
+                    };
                     setImportMnemonic(false);
-                    const response = transactions.IbcTransactionWithMnemonic([TransferMsg(chain, address, toAddress, (amountField * config.xprtValue))], aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent,
-                        userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                    // amount field should be int
+                    const response = transactions.TransactionWithMnemonic( [await transactions.MakeIBCTransferMsg("channel-1", address,
+                        toAddress,100000,timeoutHeight)],
+                    aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent, userMnemonic,
+                    transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                     console.log(response, 'result');
                     response.then(result => {
                         setTxResponse(result);
