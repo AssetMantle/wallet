@@ -222,7 +222,8 @@ let English = {
         "CHAIN":"Chain",
         "GAS":"Gas",
         "ENTER_GAS":"Enter Gas",
-        "ADDING_CHANNEL":"Adding Channel"
+        "ADDING_CHANNEL":"Adding Channel",
+        "ZERO_FEE_WARNING":"Zero fees has only been enabled temperory so people can do transcations to have some tokens left inside the wallet to do proper fee transactions."
 
     }
 };

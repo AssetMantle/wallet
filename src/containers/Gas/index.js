@@ -3,6 +3,7 @@ import transactions from "../../utils/transactions";
 import {connect} from "react-redux";
 import {useTranslation} from "react-i18next";
 import config from "../../config";
+import ModalGasAlert from "./ModalGasAlert";
 
 const GasContainer = (props) => {
     let mode = localStorage.getItem('loginMode');
@@ -43,6 +44,11 @@ const GasContainer = (props) => {
                     <p className={props.checkAmountError ? "show amount-error text-left" : "hide amount-error text-left"}>{t("AMOUNT_ERROR_MESSAGE")}</p>
                 </div>
             </div>
+            {
+                props.zeroFeeAlert ?
+                    <ModalGasAlert setZeroFeeAlert={props.setZeroFeeAlert}/>
+                    :""
+            }
         </>
 
     );

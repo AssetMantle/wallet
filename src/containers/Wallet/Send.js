@@ -20,7 +20,7 @@ import {connect} from "react-redux";
 import config from "../../config";
 import MakePersistence from "../../utils/cosmosjsWrapper";
 import {useTranslation} from "react-i18next";
-import GasContainer from "../../components/Gas";
+import GasContainer from "../Gas";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 
@@ -35,6 +35,7 @@ const Send = (props) => {
     const [show, setShow] = useState(true);
     const [advanceMode, setAdvanceMode] = useState(false);
     const [memoStatus, setMemoStatus] = useState(false);
+    const [zeroFeeAlert, setZeroFeeAlert] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [keplerError, setKeplerError] = useState("");
     const [loader, setLoader] = useState(false);
@@ -283,6 +284,9 @@ const Send = (props) => {
     };
 
     const handleFee = (feeType, feeValue) => {
+        if(feeType === "Low"){
+            setZeroFeeAlert(true);
+        }
         setActiveFeeState(feeType);
         setFee(gas * feeValue);
         if ((props.transferableAmount - (amountField*1)) < transactions.XprtConversion(gas * feeValue)) {
@@ -360,16 +364,30 @@ const Send = (props) => {
                                 <p className="label">Token</p>
                                 <Select value={token} className="validators-list-selection"
                                     onChange={onChangeSelect} displayEmpty>
-                                    <MenuItem
-                                        className=""
-                                        value="uxprt">
-                                        uxprt
-                                    </MenuItem>
-                                    <MenuItem
-                                        className=""
-                                        value="uatom">
-                                        uAtom
-                                    </MenuItem>
+                                    {
+                                        props.tokenList.map((token, index) => {
+                                            if(token === "uxprt"){
+                                                return (
+                                                    <MenuItem
+                                                        key={index + 1}
+                                                        className=""
+                                                        value={token}>
+                                                            XPRT
+                                                    </MenuItem>
+                                                );
+                                            }
+                                            if(token === "uatom"){
+                                                return (
+                                                    <MenuItem
+                                                        key={index + 1}
+                                                        className=""
+                                                        value={token}>
+                                                        ATOM
+                                                    </MenuItem>
+                                                );
+                                            }
+                                        })
+                                    }
                                 </Select>
                             </div>
                             <div className="memo-dropdown-section">
@@ -423,7 +441,7 @@ const Send = (props) => {
                             <div className="button-section">
 
                                 <GasContainer checkAmountError={checkAmountError} activeFeeState={activeFeeState}
-                                    onClick={handleFee} gas={gas}/>
+                                    onClick={handleFee} gas={gas} zeroFeeAlert={zeroFeeAlert} setZeroFeeAlert={setZeroFeeAlert}/>
                                 <div className="select-gas">
                                     <p onClick={handleGas}>{!showGasField ? "Set gas" : "Close"}</p>
                                 </div>
@@ -648,6 +666,7 @@ const Send = (props) => {
 const stateToProps = (state) => {
     return {
         balance: state.balance.amount,
+        tokenList: state.balance.tokenList,
         transferableAmount: state.balance.transferableAmount,
     };
 };

@@ -3,7 +3,6 @@ import {
     Modal,
 } from 'react-bootstrap';
 import React, {useState} from 'react';
-
 import {connect} from "react-redux";
 import {useTranslation} from "react-i18next";
 
@@ -13,6 +12,8 @@ const ModalCustomChannel = (props) => {
 
     const handleSubmit = async event => {
         event.preventDefault();
+        // const port = event.target.port.value;
+        // const channel = event.target.channel.value;
 
     };
     const handleClose = () => {

@@ -20,10 +20,10 @@ import {connect} from "react-redux";
 import config from "../../../config";
 import MakePersistence from "../../../utils/cosmosjsWrapper";
 import {useTranslation} from "react-i18next";
-import FeeContainer from "../../../components/Fee";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import ActionHelper from "../../../utils/actions";
+import GasContainer from "../../Gas";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const IbcTxn = (props) => {
@@ -40,13 +40,20 @@ const IbcTxn = (props) => {
     const [errorMessage, setErrorMessage] = useState("");
     const [keplerError, setKeplerError] = useState( "");
     const [loader, setLoader] = useState(false);
+    const [customChain, setCustomChain] = useState(false);
     const [importMnemonic, setImportMnemonic] = useState(true);
     const [memoContent, setMemoContent] = useState('');
-    let mode = localStorage.getItem('loginMode');
-    let loginAddress = localStorage.getItem('address');
+    const [gas, setGas] = useState(config.gas);
+    const [gasValidationError, setGasValidationError] = useState(false);
+    const [fee, setFee] = useState(config.averageFee);
+    const [showGasField, setShowGasField] = useState(false);
+    const [activeFeeState, setActiveFeeState] = useState("Average");
     const [checkAmountError, setCheckAmountError] = useState(false);
     const [checkAmountWarning, setCheckAmountWarning] = useState(false);
     const [token, setToken] = useState("uxprt");
+    const [zeroFeeAlert, setZeroFeeAlert] = useState(false);
+    let mode = localStorage.getItem('loginMode');
+    let loginAddress = localStorage.getItem('address');
     
     const handleClose = () => {
         setShow(false);
@@ -84,8 +91,9 @@ const IbcTxn = (props) => {
 
     const handleSubmit = async event => {
         event.preventDefault();
-        // if (helper.ValidateAddress(event.target.address.value)) {
         setToAddress(event.target.address.value);
+        let channel = event.target.channel.value;
+        setChannelID(channel);
         if (mode === "normal") {
             let memo = "";
             if (memoStatus) {
@@ -105,9 +113,6 @@ const IbcTxn = (props) => {
             setMnemonicForm(true);
             setShow(true);
         }
-        // } else {
-        //     setKeplerError("Invalid Recipient Address");
-        // }
     };
     const handleSubmitKepler = event => {
         setShow(true);
@@ -257,6 +262,74 @@ const IbcTxn = (props) => {
         }
     };
 
+    const handleMemoChange = () => {
+        setMemoStatus(!memoStatus);
+    };
+
+    const onChangeSelect = (evt) => {
+        if(evt.target.value === "Custom"){
+            setCustomChain(true);
+            setChain(evt.target.value);
+        }else {
+            setCustomChain(false);
+            let id = evt.target.value.substr(evt.target.value.indexOf('/') + 1);
+            setChannelID(id);
+            setChain(evt.target.value);
+        }
+    };
+
+    const handleFee = (feeType, feeValue) => {
+        if(feeType === "Low"){
+            setZeroFeeAlert(true);
+        }
+        setActiveFeeState(feeType);
+        setFee(gas * feeValue);
+        if ((props.transferableAmount - (amountField*1)) < transactions.XprtConversion(gas * feeValue)) {
+            setGasValidationError(true);
+            setCheckAmountError(true);
+        }else {
+            setGasValidationError(false);
+            setCheckAmountError(false);
+        }
+    };
+
+    const handleGas = () => {
+        setShowGasField(!showGasField);
+    };
+
+    const handleGasChange = (event) => {
+        if((event.target.value * 1) >= 80000 && (event.target.value * 1) <= 2000000){
+            setGasValidationError(false);
+            setGas(event.target.value * 1);
+            if((localStorage.getItem("fee") * 1) !== 0) {
+                if (activeFeeState === "Average") {
+                    setFee((event.target.value * 1) * config.averageFee);
+                } else if (activeFeeState === "High") {
+                    setFee((event.target.value * 1) * config.highFee);
+                } else if (activeFeeState === "Low") {
+                    setFee((event.target.value * 1) * config.lowFee);
+                }
+                if (activeFeeState === "Average" && (transactions.XprtConversion((event.target.value * 1) * config.averageFee)) + amountField > props.transferableAmount) {
+                    setCheckAmountError(true);
+                } else if (activeFeeState === "High" && (transactions.XprtConversion((event.target.value * 1) * config.highFee)) + amountField > props.transferableAmount) {
+                    setCheckAmountError(true);
+                } else if (activeFeeState === "Low" && (transactions.XprtConversion((event.target.value * 1) * config.lowFee)) + amountField > props.transferableAmount) {
+                    setCheckAmountError(true);
+                } else {
+                    setCheckAmountError(false);
+                }
+            }
+        }else {
+            setGasValidationError(true);
+        }
+
+
+    };
+
+    const onTokenChangeSelect = (evt) => {
+        setToken(evt.target.value);
+    };
+
     const popoverMemo = (
         <Popover id="popover-memo">
             <Popover.Content>
@@ -271,24 +344,6 @@ const IbcTxn = (props) => {
             </Popover.Content>
         </Popover>
     );
-
-    const handleMemoChange = () => {
-        setMemoStatus(!memoStatus);
-    };
-
-    const onChangeSelect = (evt) => {
-        let id = evt.target.value.substr(evt.target.value.indexOf('/') + 1);
-        setChannelID(id);
-        setChain(evt.target.value);
-    };
-
-    const onTokenChangeSelect = (evt) => {
-        setToken(evt.target.value);
-    };
-
-    const handleCustomChain = (evt) => {
-        setToken(evt.target.value);
-    };
 
     return (
         <div className="send-container">
@@ -313,13 +368,40 @@ const IbcTxn = (props) => {
                                     );
                                 })
                             }
-
+                            <MenuItem
+                                key={config.channels.length + 1}
+                                className=""
+                                value="Custom">
+                                Custom
+                            </MenuItem>
                         </Select>
-                        <div
-                            className="" onClick={handleCustomChain}>
-                            Custom
-                        </div>
                     </div>
+                    {
+                        customChain ?
+                            <>
+                                <div className="form-field">
+                                    <p className="label info">Port</p>
+                                    <Form.Control
+                                        type="text"
+                                        name="port"
+                                        placeholder="Enter port"
+                                        required={true}
+                                        value="transfer"
+                                    />
+                                </div>
+                                <div className="form-field">
+                                    <p className="label info">Channel</p>
+                                    <Form.Control
+                                        type="text"
+                                        name="channel"
+                                        placeholder="Enter Channel"
+                                        required={true}
+                                    />
+                                </div>
+                            </>
+                            : ""
+                    }
+
                     <div className="form-field">
                         <p className="label info">Recipient Address
                             <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
@@ -379,16 +461,30 @@ const IbcTxn = (props) => {
                                 <p className="label">Token</p>
                                 <Select value={token} className="validators-list-selection"
                                     onChange={onTokenChangeSelect} displayEmpty>
-                                    <MenuItem
-                                        className=""
-                                        value="uxprt">
-                                        uxprt
-                                    </MenuItem>
-                                    <MenuItem
-                                        className=""
-                                        value="uatom">
-                                        uAtom
-                                    </MenuItem>
+                                    {
+                                        props.tokenList.map((token, index) => {
+                                            if(token === "uxprt"){
+                                                return (
+                                                    <MenuItem
+                                                        key={index + 1}
+                                                        className=""
+                                                        value={token}>
+                                                        XPRT
+                                                    </MenuItem>
+                                                );
+                                            }
+                                            if(token === "uatom"){
+                                                return (
+                                                    <MenuItem
+                                                        key={index + 1}
+                                                        className=""
+                                                        value={token}>
+                                                        ATOM
+                                                    </MenuItem>
+                                                );
+                                            }
+                                        })
+                                    }
                                 </Select>
                             </div>
                             <div className="memo-dropdown-section">
@@ -436,11 +532,53 @@ const IbcTxn = (props) => {
                         : null
                     }
                     {keplerError !== '' ?
-                        <p className="form-error">{keplerError}</p> : null}
+                        <p className="form-error">{keplerError}</p>
+                        : null
+                    }
                     <div className="buttons">
-                        <FeeContainer/>
-                        <button className="button button-primary">Send
-                        </button>
+                        {mode === "normal"  ?
+                            <div className="button-section">
+                                <GasContainer checkAmountError={checkAmountError} activeFeeState={activeFeeState}
+                                    onClick={handleFee} gas={gas} zeroFeeAlert={zeroFeeAlert} setZeroFeeAlert={setZeroFeeAlert}/>
+                                <div className="select-gas">
+                                    <p onClick={handleGas}>{!showGasField ? "Set gas" : "Close"}</p>
+                                </div>
+                                {showGasField
+                                    ?
+                                    <div className="form-field">
+                                        <p className="label info">{t("GAS")}</p>
+                                        <div className="amount-field">
+                                            <Form.Control
+                                                type="number"
+                                                min={80000}
+                                                max={250000}
+                                                name="gas"
+                                                placeholder={t("ENTER_GAS")}
+                                                step="any"
+                                                defaultValue={gas}
+                                                onChange={handleGasChange}
+                                                required={false}
+                                            />
+                                            {
+                                                gasValidationError ?
+                                                    <span className="amount-error">
+                                                    Enter Gas between 80000 to 2000000
+                                                    </span> : ""
+                                            }
+                                        </div>
+                                    </div>
+                                    : ""
+                                }
+                                <button className="button button-primary"
+                                    disabled={props.transferableAmount < (amountField * 1 + transactions.XprtConversion(fee)) || amountField === 0 || props.transferableAmount === 0 || gasValidationError}
+                                >Next
+                                </button>
+                            </div>
+                            :
+                            <button className="button button-primary"
+                                disabled={props.transferableAmount < (amountField * 1 + transactions.XprtConversion(fee)) || amountField === 0 || props.transferableAmount === 0}
+                            >Submit</button>
+                        }
                     </div>
                 </Form>
             </div>
@@ -626,6 +764,7 @@ const IbcTxn = (props) => {
 const stateToProps = (state) => {
     return {
         balance: state.balance.amount,
+        tokenList: state.balance.tokenList,
         transferableAmount: state.balance.transferableAmount,
     };
 };

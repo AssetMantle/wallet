@@ -20,7 +20,7 @@ import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import {useTranslation} from "react-i18next";
 import {connect} from "react-redux";
 import config from "../../../../config";
-import GasContainer from "../../../../components/Gas";
+import GasContainer from "../../../Gas";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalWithdraw = (props) => {
     const {t} = useTranslation();
@@ -40,6 +40,7 @@ const ModalWithdraw = (props) => {
     const [gas, setGas] = useState(config.gas);
     const [gasValidationError, setGasValidationError] = useState(false);
     const [fee, setFee] = useState(config.averageFee);
+    const [zeroFeeAlert, setZeroFeeAlert] = useState(false);
     const [checkAmountError, setCheckAmountError] = useState(false);
     
     const handleMemoChange = () => {
@@ -250,6 +251,9 @@ const ModalWithdraw = (props) => {
     };
 
     const handleFee = (feeType, feeValue)=>{
+        if(feeType === "Low"){
+            setZeroFeeAlert(true);
+        }
         setActiveFeeState(feeType);
         setFee(gas*feeValue);
         if (props.transferableAmount < transactions.XprtConversion(gas*feeValue)) {
@@ -362,7 +366,7 @@ const ModalWithdraw = (props) => {
                             <div className="buttons navigate-buttons">
                                 {mode === "normal" ?
                                     <div className="button-section">
-                                        <GasContainer checkAmountError={checkAmountError} activeFeeState={activeFeeState} onClick={handleFee} gas={gas}/>
+                                        <GasContainer checkAmountError={checkAmountError} activeFeeState={activeFeeState} onClick={handleFee} gas={gas} zeroFeeAlert={zeroFeeAlert} setZeroFeeAlert={setZeroFeeAlert}/>
                                         <div className="select-gas">
                                             <p onClick={handleGas}>{!showGasField ? "Set gas" : "Close"}</p>
                                         </div>

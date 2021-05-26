@@ -4,13 +4,14 @@ import {
     BALANCE_FETCH_IN_PROGRESS,
     BALANCE_LIST_FETCH_SUCCESS,
     TRANSFERABLE_BALANCE_LIST_FETCH_SUCCESS,
-    VESTING_BALANCE_FETCH_SUCCESS
+    VESTING_BALANCE_FETCH_SUCCESS,
+    TOKEN_LIST_FETCH_SUCCESS
 } from "../constants/balance";
 import MakePersistence from "../utils/cosmosjsWrapper";
 import vestingAccount from "../utils/vestingAmount";
 import transactions from "../utils/transactions";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
-import {createProtobufRpcClient, QueryClient} from "@cosmjs/stargate";
+import {createProtobufRpcClient, QueryClient, setupIbcExtension} from "@cosmjs/stargate";
 import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/bank/v1beta1/query";
 const tendermintRPCURL =  process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
@@ -81,6 +82,13 @@ export const fetchVestingBalanceSuccess = (data) => {
     };
 };
 
+export const fetchTokenListSuccess = (list) => {
+    return {
+        type: TOKEN_LIST_FETCH_SUCCESS,
+        list,
+    };
+};
+
 export const fetchTransferableVestingAmount = (address)=> {
     return async dispatch => {
         const persistence = MakePersistence(0, 0);
@@ -96,10 +104,13 @@ export const fetchTransferableVestingAmount = (address)=> {
             const stakingQueryService = new QueryClientImpl(rpcClient);
             await stakingQueryService.AllBalances({
                 address: address,
-            }).then((response) => {
+            }).then(async (response) => {
                 if (response.balances.length) {
-                    response.balances.forEach((item) => {
+                    let tokenList=[];
+                    for (let i = 0; i < response.balances.length; i++) {
+                        let item = response.balances[i];
                         if(item.denom === 'uxprt'){
+                            tokenList.push(item.denom);
                             const amount = transactions.XprtConversion(vestingAccount.getAccountVestingAmount(vestingAmountData.account, currentEpochTime));
                             const balance = transactions.XprtConversion(item.amount*1);
                             vestingAmount = amount;
@@ -110,8 +121,14 @@ export const fetchTransferableVestingAmount = (address)=> {
                             }
                             dispatch(fetchTransferableBalanceSuccess(transferableAmount));
                             dispatch(fetchVestingBalanceSuccess(vestingAmount));
+                        }else {
+                            let denom = item.denom.substr(item.denom.indexOf('/') +1);
+                            const ibcExtension = setupIbcExtension(queryClient);
+                            let ibcDenomeResponse = await ibcExtension.ibc.transfer.denomTrace(denom);
+                            tokenList.push(ibcDenomeResponse.denomTrace.baseDenom);
                         }
-                    });
+                    }
+                    dispatch(fetchTokenListSuccess(tokenList));
                 }
             }).catch((error) => {
                 dispatch(fetchBalanceError(error.response
