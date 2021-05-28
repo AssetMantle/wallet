@@ -25,6 +25,7 @@ const ModalViewAmountDetails = (props) => {
                     dataResponse: item,
                     denomResponse: ibcDenomeResponse
                 };
+                console.log(data, "data");
                 setIbcList(ibcList => [...ibcList, data]);
             }
         });
@@ -48,9 +49,9 @@ const ModalViewAmountDetails = (props) => {
                             ibcList.map((item, index) => {
                                 if (item.dataResponse.denom !== 'uxprt') {
                                     return (
-                                        <li className="" key={index} title={item.dataResponse.denom}><span
-                                            className="amount">{transactions.XprtConversion(item.dataResponse.amount)}</span> <span
-                                            className="date">{item.denomResponse.denomTrace.baseDenom}</span> <span>{item.denomResponse.denomTrace.path}</span></li>
+                                        <li className="" key={index} title={item.dataResponse.denom}>
+                                            {transactions.XprtConversion(item.dataResponse.amount)} {transactions.DenomChange(item.denomResponse.denomTrace.baseDenom)} ( IBC Trace path - {item.denomResponse.denomTrace.path}, denom: {item.denomResponse.denomTrace.baseDenom}  )
+                                        </li>
                                     );
                                 }
                             }) : null

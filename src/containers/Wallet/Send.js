@@ -45,6 +45,9 @@ const Send = (props) => {
     const [showGasField, setShowGasField] = useState(false);
     const [activeFeeState, setActiveFeeState] = useState("Average");
     const [token, setToken] = useState("uxprt");
+    const [tokenDenom, setTokenDenom] = useState("uxprt");
+    const [transferableAmount, setTransferableAmount] = useState(props.transferableAmount);
+    const [tokenItem, setTokenItem] = useState({});
     const [gas, setGas] = useState(config.gas);
     const [gasValidationError, setGasValidationError] = useState(false);
     const [fee, setFee] = useState(config.averageFee);
@@ -281,6 +284,21 @@ const Send = (props) => {
 
     const onChangeSelect = (evt) => {
         setToken(evt.target.value);
+        console.log(evt.target.value, "els");
+
+        if(evt.target.value === 'uxprt'){
+            setTokenDenom(evt.target.value);
+            setTransferableAmount(props.transferableAmount);
+        }
+        else {
+            props.tokenList.forEach((item) => {
+                if(evt.target.value === item.denomTrace){
+                    setTokenDenom(item.denom.baseDenom);
+                    setTransferableAmount(transactions.XprtConversion(item.amount * 1));
+                    setTokenItem(item);
+                }
+            });
+        }
     };
 
     const handleFee = (feeType, feeValue) => {
@@ -351,10 +369,19 @@ const Send = (props) => {
                                 onChange={handleAmountChange}
                                 required={true}
                             />
-                            <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data"}><span
-                                className="title">Transferable Balance:</span> <span
-                                className="value"
-                                title={props.transferableAmount}>{props.transferableAmount.toFixed(6)} XPRT</span> </span>
+                            {
+                                tokenDenom === "uxprt" ?
+                                    <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data"}><span
+                                        className="title">Transferable Balance:</span> <span
+                                        className="value"
+                                        title={props.transferableAmount}>{props.transferableAmount.toFixed(6)} XPRT</span> </span>
+                                    :
+                                    <span title={tokenItem.denomTrace} className={transferableAmount === 0 ? "empty info-data" : "info-data"}>
+                                        {/*0.001 ATOM ( IBC Trace { path - transfer….. , denom: uatom } )*/}
+                                        <span
+                                            className="title">Transferable Balance:</span> <span
+                                            className="value">{transferableAmount.toFixed(6)}  ATOM ( IBC Trace path - {tokenItem.denom.path} , denom: {tokenItem.denom.baseDenom}  )</span> </span>
+                            }
                         </div>
                     </div>
 
@@ -365,23 +392,23 @@ const Send = (props) => {
                                 <Select value={token} className="validators-list-selection"
                                     onChange={onChangeSelect} displayEmpty>
                                     {
-                                        props.tokenList.map((token, index) => {
-                                            if(token === "uxprt"){
+                                        props.tokenList.map((item, index) => {
+                                            if(item.denom === "uxprt"){
                                                 return (
                                                     <MenuItem
                                                         key={index + 1}
                                                         className=""
-                                                        value={token}>
-                                                            XPRT
+                                                        value={item.denom}>
+                                                        XPRT
                                                     </MenuItem>
                                                 );
                                             }
-                                            if(token === "uatom"){
+                                            if(item.denom.baseDenom === "uatom"){
                                                 return (
                                                     <MenuItem
                                                         key={index + 1}
                                                         className=""
-                                                        value={token}>
+                                                        value={item.denomTrace}>
                                                         ATOM
                                                     </MenuItem>
                                                 );
@@ -664,6 +691,7 @@ const Send = (props) => {
 
 
 const stateToProps = (state) => {
+    console.log(state.balance.tokenList, "Rr");
     return {
         balance: state.balance.amount,
         tokenList: state.balance.tokenList,

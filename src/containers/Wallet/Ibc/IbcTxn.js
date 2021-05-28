@@ -15,7 +15,6 @@ import transactions from "../../../utils/transactions";
 import helper from "../../../utils/helper";
 import aminoMsgHelper from "../../../utils/aminoMsgHelper";
 import Loader from "../../../components/Loader";
-import {SendMsg} from "../../../utils/protoMsgHelper";
 import {connect} from "react-redux";
 import config from "../../../config";
 import MakePersistence from "../../../utils/cosmosjsWrapper";
@@ -28,7 +27,7 @@ const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const IbcTxn = (props) => {
     const {t} = useTranslation();
-    const [amountField, setAmountField] = useState(0.000001);
+    const [amountField, setAmountField] = useState(0);
     const [toAddress, setToAddress] = useState('');
     const [chain, setChain] = useState("");
     const [channelID, setChannelID] = useState("");
@@ -51,6 +50,9 @@ const IbcTxn = (props) => {
     const [checkAmountError, setCheckAmountError] = useState(false);
     const [checkAmountWarning, setCheckAmountWarning] = useState(false);
     const [token, setToken] = useState("uxprt");
+    const [tokenDenom, setTokenDenom] = useState("uxprt");
+    const [transferableAmount, setTransferableAmount] = useState(props.transferableAmount);
+    const [tokenItem, setTokenItem] = useState({});
     const [zeroFeeAlert, setZeroFeeAlert] = useState(false);
     let mode = localStorage.getItem('loginMode');
     let loginAddress = localStorage.getItem('address');
@@ -114,12 +116,15 @@ const IbcTxn = (props) => {
             setShow(true);
         }
     };
-    const handleSubmitKepler = event => {
+    const handleSubmitKepler = async event => {
         setShow(true);
         setLoader(true);
         event.preventDefault();
-        const response = transactions.TransactionWithKeplr([SendMsg(loginAddress, event.target.address.value, (amountField * config.xprtValue))], aminoMsgHelper.fee(0, 250000));
+        console.log(toAddress,"toAddress");
+        const response = transactions.TransactionWithKeplr( [await transactions.MakeIBCTransferMsg(channelID, loginAddress,
+            event.target.address.value,(amountField * config.xprtValue), undefined)],aminoMsgHelper.fee(0, 250000));
         response.then(result => {
+            console.log(response, "keplr");
             if (result.code !== undefined) {
                 helper.AccountChangeCheck(result.rawLog);
             }
@@ -186,7 +191,7 @@ const IbcTxn = (props) => {
 
         if (importMnemonic) {
             const password = evt.target.password.value;
-            let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
+            let promise = transactions.PrivateKeyReader(evt.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
             await promise.then(function (result) {
                 userMnemonic = result;
             }).catch(err => {
@@ -328,6 +333,19 @@ const IbcTxn = (props) => {
 
     const onTokenChangeSelect = (evt) => {
         setToken(evt.target.value);
+        if(evt.target.value === 'uxprt'){
+            setTokenDenom(evt.target.value);
+            setTransferableAmount(props.transferableAmount);
+        }
+        else {
+            props.tokenList.forEach((item) => {
+                if(evt.target.value === item.denomTrace){
+                    setTokenDenom(item.denom.baseDenom);
+                    setTransferableAmount(transactions.XprtConversion(item.amount * 1));
+                    setTokenItem(item);
+                }
+            });
+        }
     };
 
     const popoverMemo = (
@@ -430,10 +448,19 @@ const IbcTxn = (props) => {
                                 onChange={handleAmountChange}
                                 required={true}
                             />
-                            <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data"}><span
-                                className="title">Transferable Balance:</span> <span
-                                className="value"
-                                title={props.transferableAmount}>{props.transferableAmount.toFixed(6)} XPRT</span> </span>
+                            {
+                                tokenDenom === "uxprt" ?
+                                    <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data"}><span
+                                        className="title">Transferable Balance:</span> <span
+                                        className="value"
+                                        title={props.transferableAmount}>{props.transferableAmount.toFixed(6)} XPRT</span> </span>
+                                    :
+                                    <span title={tokenItem.denomTrace} className={transferableAmount === 0 ? "empty info-data" : "info-data"}>
+                                        {/*0.001 ATOM ( IBC Trace { path - transfer….. , denom: uatom } )*/}
+                                        <span
+                                            className="title">Transferable Balance:</span> <span
+                                            className="value">{transferableAmount.toFixed(6)}  ATOM ( IBC Trace path - {tokenItem.denom.path} , denom: {tokenItem.denom.baseDenom}  )</span> </span>
+                            }
                         </div>
                     </div>
                     {(localStorage.getItem("fee") * 1) !== 0 ?
@@ -462,23 +489,23 @@ const IbcTxn = (props) => {
                                 <Select value={token} className="validators-list-selection"
                                     onChange={onTokenChangeSelect} displayEmpty>
                                     {
-                                        props.tokenList.map((token, index) => {
-                                            if(token === "uxprt"){
+                                        props.tokenList.map((item, index) => {
+                                            if(item.denom === "uxprt"){
                                                 return (
                                                     <MenuItem
                                                         key={index + 1}
                                                         className=""
-                                                        value={token}>
+                                                        value={item.denom}>
                                                         XPRT
                                                     </MenuItem>
                                                 );
                                             }
-                                            if(token === "uatom"){
+                                            if(item.denom.baseDenom === "uatom"){
                                                 return (
                                                     <MenuItem
                                                         key={index + 1}
                                                         className=""
-                                                        value={token}>
+                                                        value={item.denomTrace}>
                                                         ATOM
                                                     </MenuItem>
                                                 );

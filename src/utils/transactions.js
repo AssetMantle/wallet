@@ -129,6 +129,14 @@ function XprtConversion(data) {
     return Result;
 }
 
+function DenomChange(denom) {
+    if(denom === "uxprt"){
+        return "XPRT";
+    }else if(denom === "uatom"){
+        return "ATOM";
+    }
+}
+
 function PrivateKeyReader(file, password, accountNumber, addressIndex, bip39Passphrase, loginAddress) {
     return new Promise(function (resolve, reject) {
         const fileReader = new FileReader();
@@ -206,5 +214,6 @@ export default {
     PrivateKeyReader,
     MakeIBCTransferMsg,
     mnemonicTrim,
-    DecimalConversion
+    DecimalConversion,
+    DenomChange
 };

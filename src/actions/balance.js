@@ -100,17 +100,17 @@ export const fetchTransferableVestingAmount = (address)=> {
             const tendermintClient = await Tendermint34Client.connect(tendermintRPCURL);
             const queryClient = new QueryClient(tendermintClient);
             const rpcClient = createProtobufRpcClient(queryClient);
-
             const stakingQueryService = new QueryClientImpl(rpcClient);
             await stakingQueryService.AllBalances({
                 address: address,
             }).then(async (response) => {
                 if (response.balances.length) {
+                    console.log(response.balances);
                     let tokenList=[];
                     for (let i = 0; i < response.balances.length; i++) {
                         let item = response.balances[i];
                         if(item.denom === 'uxprt'){
-                            tokenList.push(item.denom);
+                            tokenList.push(item);
                             const amount = transactions.XprtConversion(vestingAccount.getAccountVestingAmount(vestingAmountData.account, currentEpochTime));
                             const balance = transactions.XprtConversion(item.amount*1);
                             vestingAmount = amount;
@@ -122,10 +122,15 @@ export const fetchTransferableVestingAmount = (address)=> {
                             dispatch(fetchTransferableBalanceSuccess(transferableAmount));
                             dispatch(fetchVestingBalanceSuccess(vestingAmount));
                         }else {
-                            let denom = item.denom.substr(item.denom.indexOf('/') +1);
+                            let denomText = item.denom.substr(item.denom.indexOf('/') +1);
                             const ibcExtension = setupIbcExtension(queryClient);
-                            let ibcDenomeResponse = await ibcExtension.ibc.transfer.denomTrace(denom);
-                            tokenList.push(ibcDenomeResponse.denomTrace.baseDenom);
+                            let ibcDenomeResponse = await ibcExtension.ibc.transfer.denomTrace(denomText);
+                            let transeDenomData = {
+                                denom:ibcDenomeResponse.denomTrace,
+                                denomTrace:item.denom,
+                                amount:item.amount,
+                            };
+                            tokenList.push(transeDenomData);
                         }
                     }
                     dispatch(fetchTokenListSuccess(tokenList));
