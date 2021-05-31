@@ -386,7 +386,7 @@ const IbcTxn = (props) => {
                                 key={config.channels.length + 1}
                                 className=""
                                 value="Custom">
-                                Custom
+                                {t("CUSTOM")}
                             </MenuItem>
                         </Select>
                     </div>
@@ -394,21 +394,21 @@ const IbcTxn = (props) => {
                         customChain ?
                             <>
                                 <div className="form-field">
-                                    <p className="label info">Port</p>
+                                    <p className="label info">{t("PORT")}</p>
                                     <Form.Control
                                         type="text"
                                         name="port"
-                                        placeholder="Enter port"
+                                        placeholder={t("ENTER_PORT")}
                                         required={true}
                                         value="transfer"
                                     />
                                 </div>
                                 <div className="form-field">
-                                    <p className="label info">Channel</p>
+                                    <p className="label info">{t("CHANNEL")}</p>
                                     <Form.Control
                                         type="text"
                                         name="channel"
-                                        placeholder="Enter Channel"
+                                        placeholder={t("ENTER_CHANNEL")}
                                         required={true}
                                     />
                                 </div>
@@ -417,7 +417,7 @@ const IbcTxn = (props) => {
                     }
 
                     <div className="form-field">
-                        <p className="label info">Recipient Address
+                        <p className="label info">{t("RECIPIENT_ADDRESS")}
                             <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
                                 <button className="icon-button info" type="button"><Icon
                                     viewClass="arrow-right"
@@ -431,7 +431,7 @@ const IbcTxn = (props) => {
                         />
                     </div>
                     <div className="form-field p-0">
-                        <p className="label">Amount (XPRT)</p>
+                        <p className="label">{t("AMOUNT")} (XPRT)</p>
                         <div className="amount-field">
                             <Form.Control
                                 type="number"
@@ -452,7 +452,6 @@ const IbcTxn = (props) => {
                                         title={props.transferableAmount}>{props.transferableAmount.toFixed(6)} XPRT</span> </span>
                                     :
                                     <span title={tokenItem.denomTrace} className={transferableAmount === 0 ? "empty info-data" : "info-data"}>
-                                        {/*0.001 ATOM ( IBC Trace { path - transfer….. , denom: uatom } )*/}
                                         <span
                                             className="title">Transferable Balance:</span> <span
                                             className="value">{transferableAmount.toFixed(6)}  ATOM ( IBC Trace path - {tokenItem.denom.path} , denom: {tokenItem.denom.baseDenom}  )</span> </span>
@@ -566,7 +565,7 @@ const IbcTxn = (props) => {
                                             {
                                                 gasValidationError ?
                                                     <span className="amount-error">
-                                                    Enter Gas between 80000 to 2000000
+                                                        {t("GAS_WARNING")}
                                                     </span> : ""
                                             }
                                         </div>
@@ -575,13 +574,13 @@ const IbcTxn = (props) => {
                                 }
                                 <button className="button button-primary"
                                     disabled={checkAmountError || amountField === 0 || props.transferableAmount === 0 || gasValidationError}
-                                >Next
+                                >{t("NEXT")}
                                 </button>
                             </div>
                             :
                             <button className="button button-primary"
                                 disabled={checkAmountError || amountField === 0 || props.transferableAmount === 0}
-                            >Submit</button>
+                            >{t("SUBMIT")}</button>
                         }
                     </div>
                 </Form>
@@ -594,7 +593,7 @@ const IbcTxn = (props) => {
                             txResponse === '' ?
                                 <>
                                     <Modal.Header closeButton>
-                                        Send Token
+                                        {t("SEND_TOKEN")}
                                     </Modal.Header>
                                     <Modal.Body className="create-wallet-body import-wallet-body">
                                         <Form onSubmit={handleMnemonicSubmit}>
@@ -602,7 +601,7 @@ const IbcTxn = (props) => {
                                                 importMnemonic ?
                                                     <>
                                                         <div className="form-field upload">
-                                                            <p className="label"> KeyStore file</p>
+                                                            <p className="label"> {t("KEY_STORE_FILE")}</p>
                                                             <Form.File id="exampleFormControlFile1" name="uploadFile"
                                                                 className="file-upload" accept=".json"
                                                                 required={true}/>
@@ -638,7 +637,7 @@ const IbcTxn = (props) => {
                                                 <Card>
                                                     <Card.Header>
                                                         <p>
-                                                            Advanced
+                                                            {t("ADVANCED")}
                                                         </p>
                                                         <ContextAwareToggle eventKey="0">Click me!</ContextAwareToggle>
                                                     </Card.Header>
@@ -684,7 +683,7 @@ const IbcTxn = (props) => {
                                                 </Card>
                                             </Accordion>
                                             <div className="buttons">
-                                                <button className="button button-primary">Send</button>
+                                                <button className="button button-primary"> {t("SEND")}</button>
                                             </div>
 
                                         </Form>
@@ -696,7 +695,7 @@ const IbcTxn = (props) => {
                                         txResponse.code === undefined || txResponse.code === 0 ?
                                             <>
                                                 <Modal.Header className="result-header success">
-                                                    Successfully Send!
+                                                    {t("SUCCESSFUL_SEND")}
                                                 </Modal.Header>
                                                 <Modal.Body className="delegate-modal-body">
                                                     <div className="result-container">
@@ -723,7 +722,7 @@ const IbcTxn = (props) => {
                                             </>
                                             : <>
                                                 <Modal.Header className="result-header error">
-                                                    Failed to Send
+                                                    {t("FAILED_SEND")}
                                                 </Modal.Header>
                                                 <Modal.Body className="delegate-modal-body">
                                                     <div className="result-container">
@@ -748,7 +747,7 @@ const IbcTxn = (props) => {
                                                             </>
                                                         }
                                                         <div className="buttons">
-                                                            <button className="button" onClick={handleClose}>Done</button>
+                                                            <button className="button" onClick={handleClose}> {t("DONE")}</button>
                                                         </div>
                                                     </div>
                                                 </Modal.Body>

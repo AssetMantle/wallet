@@ -350,7 +350,7 @@ const Send = (props) => {
             <div className="form-section">
                 <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmit}>
                     <div className="form-field">
-                        <p className="label info">Recipient Address
+                        <p className="label info">{t("RECIPIENT_ADDRESS")}
                             <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
                                 <button className="icon-button info" type="button"><Icon
                                     viewClass="arrow-right"
@@ -364,7 +364,7 @@ const Send = (props) => {
                         />
                     </div>
                     <div className="form-field p-0">
-                        <p className="label">Amount (XPRT)</p>
+                        <p className="label">{t("AMOUNT")} (XPRT)</p>
                         <div className="amount-field">
                             <Form.Control
                                 type="number"
@@ -396,7 +396,7 @@ const Send = (props) => {
                     {mode === "normal" ?
                         <>
                             <div className="form-field p-0">
-                                <p className="label">Token</p>
+                                <p className="label">{t("TOKEN")} </p>
                                 <Select value={token} className="validators-list-selection"
                                     onChange={onChangeSelect} displayEmpty>
                                     {
@@ -498,7 +498,7 @@ const Send = (props) => {
                                             {
                                                 gasValidationError ?
                                                     <span className="amount-error">
-                                                    Enter Gas between 80000 to 2000000
+                                                        {t("GAS_WARNING")}
                                                     </span> : ""
                                             }
                                         </div>
@@ -526,7 +526,7 @@ const Send = (props) => {
                             txResponse === '' ?
                                 <>
                                     <Modal.Header closeButton>
-                                        Send Token
+                                        {t("SEND_TOKEN")}
                                     </Modal.Header>
                                     <Modal.Body className="create-wallet-body import-wallet-body">
                                         <Form onSubmit={handleMnemonicSubmit}>
@@ -534,7 +534,7 @@ const Send = (props) => {
                                                 importMnemonic ?
                                                     <>
                                                         <div className="form-field upload">
-                                                            <p className="label"> KeyStore file</p>
+                                                            <p className="label"> {t("KEY_STORE_FILE")}</p>
                                                             <Form.File id="exampleFormControlFile1" name="uploadFile"
                                                                 className="file-upload" accept=".json"
                                                                 required={true}/>
@@ -570,7 +570,7 @@ const Send = (props) => {
                                                 <Card>
                                                     <Card.Header>
                                                         <p>
-                                                            Advanced
+                                                            {t("ADVANCED")}
                                                         </p>
                                                         <ContextAwareToggle eventKey="0">Click me!</ContextAwareToggle>
                                                     </Card.Header>
@@ -628,7 +628,7 @@ const Send = (props) => {
                                         txResponse.code === undefined || txResponse.code === 0 ?
                                             <>
                                                 <Modal.Header className="result-header success">
-                                                    Successfully Send!
+                                                    {t("SUCCESSFUL_SEND")}
                                                 </Modal.Header>
                                                 <Modal.Body className="delegate-modal-body">
                                                     <div className="result-container">
@@ -655,7 +655,7 @@ const Send = (props) => {
                                             </>
                                             : <>
                                                 <Modal.Header className="result-header error">
-                                                    Failed to Send
+                                                    {t("FAILED_SEND")}
                                                 </Modal.Header>
                                                 <Modal.Body className="delegate-modal-body">
                                                     <div className="result-container">

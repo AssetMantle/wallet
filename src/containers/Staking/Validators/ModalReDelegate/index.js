@@ -426,7 +426,7 @@ const ModalReDelegate = (props) => {
                                                     {
                                                         gasValidationError ?
                                                             <span className="amount-error">
-                                                                Enter Gas between 80000 to 2000000
+                                                                {t("GAS_WARNING")}
                                                             </span> : ""
                                                     }
                                                 </div>
@@ -435,12 +435,12 @@ const ModalReDelegate = (props) => {
                                         }
                                         <button className="button button-primary"
                                             disabled={checkAmountError || !props.delegateStatus || disabled || amount === 0 || amount > props.delegationAmount || gasValidationError}
-                                        >Next</button>
+                                        >{t("NEXT")}</button>
                                     </div>
                                     :
                                     <button className="button button-primary"
                                         disabled={checkAmountError || !props.delegateStatus || disabled || amount === 0 || amount > props.delegationAmount}
-                                    >Submit</button>
+                                    >{t("SUBMIT")}</button>
                                 }
                             </div>
                         </Form>
@@ -459,7 +459,7 @@ const ModalReDelegate = (props) => {
                                 importMnemonic ?
                                     <>
                                         <div className="form-field upload">
-                                            <p className="label"> KeyStore file</p>
+                                            <p className="label">{t("KEY_STORE_FILE")}</p>
                                             <Form.File id="exampleFormControlFile1" name="uploadFile"
                                                 className="file-upload" accept=".json" required={true}/>
                                         </div>
@@ -600,7 +600,7 @@ const ModalReDelegate = (props) => {
                                     </>
                                 }
                                 <div className="buttons">
-                                    <button className="button" onClick={props.handleClose}>Done</button>
+                                    <button className="button" onClick={props.handleClose}>{t("DONE")}</button>
                                 </div>
                             </div>
                         </Modal.Body>
