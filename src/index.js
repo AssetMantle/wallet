@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import { createBrowserHistory } from "history";
-import reportWebVitals from './reportWebVitals';
+import * as serviceWorker from "./serviceWorker";
 import { Router } from "react-router-dom";
 import './components/Internationalization/i18n';
 import "../src/assets/scss/index.css";
@@ -29,4 +29,4 @@ ReactDOM.render(
     document.getElementById('root')
 );
 
-reportWebVitals();
+serviceWorker.register();

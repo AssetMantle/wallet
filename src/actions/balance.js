@@ -105,7 +105,6 @@ export const fetchTransferableVestingAmount = (address)=> {
                 address: address,
             }).then(async (response) => {
                 if (response.balances.length) {
-                    console.log(response.balances);
                     let tokenList=[];
                     for (let i = 0; i < response.balances.length; i++) {
                         let item = response.balances[i];

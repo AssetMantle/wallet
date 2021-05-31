@@ -27,7 +27,7 @@ const ModalGasAlert = (props) => {
                 </Modal.Header>
                 <Modal.Body className="delegate-modal-body">
                     <div>
-                        <p>{t("ZERO_FEE_WARNING")}</p>
+                        <p className="fee-alert">{t("ZERO_FEE_WARNING")}</p>
                     </div>
                 </Modal.Body>
             </>

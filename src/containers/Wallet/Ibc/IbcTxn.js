@@ -21,7 +21,6 @@ import MakePersistence from "../../../utils/cosmosjsWrapper";
 import {useTranslation} from "react-i18next";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import ActionHelper from "../../../utils/actions";
 import GasContainer from "../../Gas";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -48,7 +47,6 @@ const IbcTxn = (props) => {
     const [showGasField, setShowGasField] = useState(false);
     const [activeFeeState, setActiveFeeState] = useState("Average");
     const [checkAmountError, setCheckAmountError] = useState(false);
-    const [checkAmountWarning, setCheckAmountWarning] = useState(false);
     const [token, setToken] = useState("uxprt");
     const [tokenDenom, setTokenDenom] = useState("uxprt");
     const [transferableAmount, setTransferableAmount] = useState(props.transferableAmount);
@@ -66,15 +64,18 @@ const IbcTxn = (props) => {
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
-            if ((props.transferableAmount - (evt.target.value * 1)) < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))) {
-                setCheckAmountError(true);
-            } else {
-                setCheckAmountError(false);
-            }
-            if ((props.transferableAmount - (evt.target.value * 1)) < transactions.XprtConversion(2 * parseInt(localStorage.getItem('fee'))) && (props.transferableAmount - (evt.target.value * 1)) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))) {
-                setCheckAmountWarning(true);
-            } else {
-                setCheckAmountWarning(false);
+            if(tokenDenom === "uxprt") {
+                if ((props.transferableAmount - (evt.target.value * 1)) < transactions.XprtConversion(fee)) {
+                    setCheckAmountError(true);
+                } else {
+                    setCheckAmountError(false);
+                }
+            }else {
+                if (props.transferableAmount < transactions.XprtConversion(fee) || transferableAmount < (evt.target.value * 1)) {
+                    setCheckAmountError(true);
+                } else {
+                    setCheckAmountError(false);
+                }
             }
             setAmountField(evt.target.value * 1);
         } else {
@@ -83,6 +84,7 @@ const IbcTxn = (props) => {
     };
 
     useEffect(() => {
+        setFee(gas * fee);
         const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
         if (encryptedMnemonic !== null) {
             setImportMnemonic(false);
@@ -94,8 +96,10 @@ const IbcTxn = (props) => {
     const handleSubmit = async event => {
         event.preventDefault();
         setToAddress(event.target.address.value);
-        let channel = event.target.channel.value;
-        setChannelID(channel);
+        if(customChain){
+            let channel = event.target.channel.value;
+            setChannelID(channel);
+        }
         if (mode === "normal") {
             let memo = "";
             if (memoStatus) {
@@ -115,16 +119,17 @@ const IbcTxn = (props) => {
             setMnemonicForm(true);
             setShow(true);
         }
+        if(mode === "normal" && (localStorage.getItem("fee") * 1) === 0 ){
+            setFee(0);
+        }
     };
     const handleSubmitKepler = async event => {
         setShow(true);
         setLoader(true);
         event.preventDefault();
-        console.log(toAddress,"toAddress");
         const response = transactions.TransactionWithKeplr( [await transactions.MakeIBCTransferMsg(channelID, loginAddress,
-            event.target.address.value,(amountField * config.xprtValue), undefined)],aminoMsgHelper.fee(0, 250000));
+            event.target.address.value,(amountField * config.xprtValue), undefined, undefined, tokenDenom)],aminoMsgHelper.fee(0, 250000));
         response.then(result => {
-            console.log(response, "keplr");
             if (result.code !== undefined) {
                 helper.AccountChangeCheck(result.rawLog);
             }
@@ -213,30 +218,21 @@ const IbcTxn = (props) => {
         }
 
         if (userMnemonic !== undefined) {
-            let latestBlockHeight = 0;
-            let blockHeightResponse = ActionHelper.getLatestBlock();
-            await blockHeightResponse.then(function (result) {
-                latestBlockHeight = result;
-            }).catch(err => {
-                setErrorMessage(err);
-            });
-            console.log(latestBlockHeight,"latestBlockHeight");
             const persistence = MakePersistence(accountNumber, addressIndex);
             const address = persistence.getAddress(userMnemonic, bip39Passphrase, true);
             const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
-                    let timeoutHeight = {
-                        revisionNumber: "",
-                        revisionHeight: ""
-                    };
+                    // let timeoutHeight = {
+                    //     revisionNumber: "",
+                    //     revisionHeight: ""
+                    // };
                     setImportMnemonic(false);
                     // amount field should be int
                     const response = transactions.TransactionWithMnemonic( [await transactions.MakeIBCTransferMsg(channelID, address,
-                        toAddress,(amountField * config.xprtValue), timeoutHeight)],
-                    aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent, userMnemonic,
+                        toAddress,(amountField * config.xprtValue), undefined, undefined, tokenDenom)],
+                    aminoMsgHelper.fee(Math.trunc(fee), gas), memoContent, userMnemonic,
                     transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-                    console.log(response, 'result');
                     response.then(result => {
                         setTxResponse(result);
                         setLoader(false);
@@ -358,7 +354,7 @@ const IbcTxn = (props) => {
     const popover = (
         <Popover id="popover">
             <Popover.Content>
-                Recipient’s address starts with persistence; for example: persistence14zmyw2q8keywcwhpttfr0d4xpggylsrmd4caf4
+                Recipient’s address starts with cosmos; for example: cosmos108juerwthyqolqewl74kewg882kjuert123kls
             </Popover.Content>
         </Popover>
     );
@@ -463,25 +459,6 @@ const IbcTxn = (props) => {
                             }
                         </div>
                     </div>
-                    {(localStorage.getItem("fee") * 1) !== 0 ?
-                        <>
-                            <div className="form-field p-0">
-                                <p className="label"></p>
-                                <div className="amount-field">
-                                    <p className={checkAmountWarning ? "show amount-warning text-left" : "hide amount-warning"}>
-                                        <b>Warning : </b>{t("AMOUNT_WARNING_MESSAGE")}</p>
-                                </div>
-                            </div>
-                            <div className="form-field p-0">
-                                <p className="label"></p>
-                                <div className="amount-field">
-                                    <p className={checkAmountError ? "show amount-error text-left" : "hide amount-error"}>{t("AMOUNT_ERROR_MESSAGE")}</p>
-                                </div>
-                            </div>
-                        </>
-                        : null
-                    }
-
                     {mode === "normal" ?
                         <>
                             <div className="form-field p-0">
@@ -578,7 +555,7 @@ const IbcTxn = (props) => {
                                             <Form.Control
                                                 type="number"
                                                 min={80000}
-                                                max={250000}
+                                                max={2000000}
                                                 name="gas"
                                                 placeholder={t("ENTER_GAS")}
                                                 step="any"
@@ -597,13 +574,13 @@ const IbcTxn = (props) => {
                                     : ""
                                 }
                                 <button className="button button-primary"
-                                    disabled={props.transferableAmount < (amountField * 1 + transactions.XprtConversion(fee)) || amountField === 0 || props.transferableAmount === 0 || gasValidationError}
+                                    disabled={checkAmountError || amountField === 0 || props.transferableAmount === 0 || gasValidationError}
                                 >Next
                                 </button>
                             </div>
                             :
                             <button className="button button-primary"
-                                disabled={props.transferableAmount < (amountField * 1 + transactions.XprtConversion(fee)) || amountField === 0 || props.transferableAmount === 0}
+                                disabled={checkAmountError || amountField === 0 || props.transferableAmount === 0}
                             >Submit</button>
                         }
                     </div>

@@ -774,8 +774,7 @@ html, body {
   align-items: center;
   justify-content: center;
   max-width: 500px;
-  padding-top: 10px;
-  margin-bottom: 15px; }
+  padding-top: 10px; }
 
 .memo-dropdown {
   margin: 0;

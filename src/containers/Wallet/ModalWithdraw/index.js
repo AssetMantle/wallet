@@ -427,7 +427,7 @@ const ModalWithdraw = (props) => {
                                                         <Form.Control
                                                             type="number"
                                                             min={80000}
-                                                            max={250000}
+                                                            max={2000000}
                                                             name="gas"
                                                             placeholder={t("ENTER_GAS")}
                                                             step="any"

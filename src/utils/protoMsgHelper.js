@@ -15,14 +15,14 @@ const msgWithdrawRewardsTypeUrl = "/cosmos.distribution.v1beta1.MsgWithdrawDeleg
 const msgSetWithdrawAddressTypeUrl = "/cosmos.distribution.v1beta1.MsgSetWithdrawAddress";
 const msgTransferTypeUrl = "/ibc.applications.transfer.v1.MsgTransfer";
 
-function SendMsg(fromAddress, toAddress, amount) {
+function SendMsg(fromAddress, toAddress, amount, denom) {
     return {
         typeUrl: msgSendTypeUrl,
         value: MsgSend.fromPartial({
             fromAddress: fromAddress,
             toAddress: toAddress,
             amount: [{
-                denom: "uxprt",
+                denom: denom,
                 amount: String(amount),
             }],
         }),
@@ -97,7 +97,7 @@ function SetWithDrawAddressMsg(delegatorAddress, withdrawAddress) {
     };
 }
 
-function TransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp, denom = "uxprt", port = "transfer") {
+function TransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp, denom , port = "transfer") {
     return {
         typeUrl: msgTransferTypeUrl,
         value: MsgTransfer.fromPartial({
