@@ -112,14 +112,14 @@ const ModalSetWithdrawAddress = (props) => {
         const response = transactions.TransactionWithKeplr([SetWithDrawAddressMsg(loginAddress, event.target.withdrawalAddress.value)], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             if (result.code !== undefined) {
-                helper.AccountChangeCheck(result.rawLog);
+                helper.accountChangeCheck(result.rawLog);
             }
             setInitialModal(false);
             setResponse(result);
             setLoader(false);
         }).catch(err => {
             setLoader(false);
-            helper.AccountChangeCheck(err.message);
+            helper.accountChangeCheck(err.message);
             setErrorMessage(err.message);
         });
     };
@@ -134,7 +134,7 @@ const ModalSetWithdrawAddress = (props) => {
         if (memoCheck) {
             setErrorMessage(t("MEMO_MNEMONIC_CHECK_ERROR"));
         } else {
-            if (helper.ValidateAddress(event.target.withdrawalAddress.value)) {
+            if (helper.validateAddress(event.target.withdrawalAddress.value)) {
                 setValidatorAddress(event.target.withdrawalAddress.value);
                 setMemoContent(memo);
                 setInitialModal(false);

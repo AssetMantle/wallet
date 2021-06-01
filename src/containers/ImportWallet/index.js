@@ -152,7 +152,7 @@ const ModalImportWallet = (props) => {
     };
 
     const handlePassphrase = (evt) => {
-        const result = helper.ValidatePassphrase(evt.target.value);
+        const result = helper.validatePassphrase(evt.target.value);
         setPassphraseError(result);
     };
     const handleLogin = () => {

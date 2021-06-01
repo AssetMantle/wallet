@@ -142,14 +142,14 @@ const ModalReDelegate = (props) => {
         const response = transactions.TransactionWithKeplr([RedelegateMsg(loginAddress, props.validatorAddress, toValidatorAddress, (amount * config.xprtValue))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             if (result.code !== undefined) {
-                helper.AccountChangeCheck(result.rawLog);
+                helper.accountChangeCheck(result.rawLog);
             }
             setInitialModal(false);
             setLoader(false);
             setResponse(result);
         }).catch(err => {
             setLoader(false);
-            helper.AccountChangeCheck(err.message);
+            helper.accountChangeCheck(err.message);
             setErrorMessage(err.message);
         });
     };
@@ -280,7 +280,7 @@ const ModalReDelegate = (props) => {
         return <Loader/>;
     }
     const disabled = (
-        helper.ValidateFrom(toValidatorAddress).message !== ''
+        helper.validateFrom(toValidatorAddress).message !== ''
     );
 
     const popoverMemo = (

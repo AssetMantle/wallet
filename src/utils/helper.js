@@ -79,27 +79,27 @@ function isActive(item) {
     return item.jailed === false && item.status === 3;
 }
 
-function ValidateFrom(value) {
+function validateFrom(value) {
     if (value.length === 0) {
         return new Error('Length must be greater than 0');
     }
     return new Error('');
 }
 
-function CheckLastPage(pageNumber, limit, totalTransactions) {
+function checkLastPage(pageNumber, limit, totalTransactions) {
     return totalTransactions / limit <= pageNumber;
 }
 
-function ValidatePassphrase(value) {
+function validatePassphrase(value) {
     return value.length === 50;
 
 }
 
-function ValidateAddress(address) {
+function validateAddress(address) {
     return address.startsWith("persistence1") && address.length === 50;
 }
 
-function AccountChangeCheck(errorMessage) {
+function accountChangeCheck(errorMessage) {
     if(errorMessage === 'Unsupported type: \'/cosmos.vesting.v1beta1.ContinuousVestingAccount\'' ||
         errorMessage === 'Unsupported type: \'/cosmos.vesting.v1beta1.DelayedVestingAccount\'' ||
         errorMessage === 'Unsupported type: \'/cosmos.vesting.v1beta1.PeriodicVestingAccount\''||
@@ -114,12 +114,12 @@ function AccountChangeCheck(errorMessage) {
     }
 }
 
-function DecimalConversion(data){
+function decimalConversion(data){
     let value = Decimal.fromAtomics(data, 18).toString();
     return value;
 }
 
-function DenomChange(denom) {
+function denomChange(denom) {
     if(denom === "uxprt"){
         return "XPRT";
     }else if(denom === "uatom"){
@@ -154,13 +154,13 @@ export default {
     createStore,
     decryptStore,
     isActive,
-    ValidateFrom,
-    ValidatePassphrase,
-    CheckLastPage,
-    ValidateAddress,
-    AccountChangeCheck,
-    DecimalConversion,
-    DenomChange,
+    validateFrom,
+    validatePassphrase,
+    checkLastPage,
+    validateAddress,
+    accountChangeCheck,
+    decimalConversion,
+    denomChange,
     mnemonicTrim,
     mnemonicValidation
 };

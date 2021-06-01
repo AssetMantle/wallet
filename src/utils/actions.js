@@ -1,5 +1,3 @@
-import {getLatestBlockUrl} from "../constants/url";
-import axios from "axios";
 import transactions from "./transactions";
 import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/distribution/v1beta1/query";
 import helper from "./helper";
@@ -14,7 +12,7 @@ async function getValidatorRewards(validatorAddress) {
         validatorAddress: validatorAddress,
     }).then(response => {
         if(response.rewards.length){
-            let rewards = helper.DecimalConversion(response.rewards[0].amount);
+            let rewards = helper.decimalConversion(response.rewards[0].amount);
             amount = (transactions.XprtConversion(rewards*1)).toFixed(6);
         }
     }).catch(error => {
@@ -23,20 +21,6 @@ async function getValidatorRewards(validatorAddress) {
     return amount;
 }
 
-async function getLatestBlock() {
-    const url = getLatestBlockUrl();
-    let height = 0;
-    await axios.get(url).then(response => {
-        if(response.data.result.block.header.height){
-            height = response.data.result.block.header.height;
-        }
-    }).catch(error => {
-        console.log(error.response);
-    });
-    return height;
-}
-
 export default {
     getValidatorRewards,
-    getLatestBlock
 };

@@ -76,7 +76,7 @@ const ValidatorsTable = (props) => {
                 }
             </div>
             ,
-            <span className="voting" key={index}>{`${parseFloat((helper.DecimalConversion(validator.commission.commissionRates.rate) * 100).toFixed(2))}`} %</span>,
+            <span className="voting" key={index}>{`${parseFloat((helper.decimalConversion(validator.commission.commissionRates.rate) * 100).toFixed(2))}`} %</span>,
             <div className="" key={index}>
                 {helper.isActive(validator) ?
                     <span className="icon-box" title="active">

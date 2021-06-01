@@ -44,7 +44,7 @@ export const fetchRewards = (address) => {
                 dispatch(fetchRewardsListProgress(delegatorRewardsResponse.rewards));
             }
             if (delegatorRewardsResponse.total.length) {
-                let rewards = helper.DecimalConversion(delegatorRewardsResponse.total[0].amount, 18);
+                let rewards = helper.decimalConversion(delegatorRewardsResponse.total[0].amount, 18);
                 const fixedRewardsResponse = transactions.XprtConversion(rewards*1);
                 dispatch(fetchRewardsSuccess(fixedRewardsResponse));
             }

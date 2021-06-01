@@ -131,7 +131,7 @@ const IbcTxn = (props) => {
             event.target.address.value,(amountField * config.xprtValue), undefined, undefined, tokenDenom)],aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             if (result.code !== undefined) {
-                helper.AccountChangeCheck(result.rawLog);
+                helper.accountChangeCheck(result.rawLog);
             }
             setMnemonicForm(true);
             setTxResponse(result);
@@ -139,7 +139,7 @@ const IbcTxn = (props) => {
         }).catch(err => {
             setLoader(false);
             setKeplerError(err.message);
-            helper.AccountChangeCheck(err.message);
+            helper.accountChangeCheck(err.message);
         });
     };
 
