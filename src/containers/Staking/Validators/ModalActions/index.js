@@ -12,11 +12,8 @@ import {useTranslation} from "react-i18next";
 import ModalSetWithdrawAddress from "../../../Wallet/ModalSetWithdrawAddress";
 import {connect} from "react-redux";
 import transactions from "../../../../utils/transactions";
-import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
-import {createProtobufRpcClient, QueryClient} from "@cosmjs/stargate";
 import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/distribution/v1beta1/query";
 import {QueryClientImpl as StakingQueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/staking/v1beta1/query";
-const tendermintRPCURL =  process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
 const ModalActions = (props) => {
     const {t} = useTranslation();
@@ -33,16 +30,14 @@ const ModalActions = (props) => {
     useEffect(() => {
         let address = localStorage.getItem('address');
         const fetchValidatorRewards = async () => {
-            const tendermintClient = await Tendermint34Client.connect(tendermintRPCURL);
-            const queryClient = new QueryClient(tendermintClient);
-            const rpcClient = createProtobufRpcClient(queryClient);
+            const rpcClient = await transactions.RpcClient();
             const distributionQueryService = new QueryClientImpl(rpcClient);
             await distributionQueryService.DelegationRewards({
                 delegatorAddress: address,
                 validatorAddress: props.validator.operatorAddress,
             }).then(response => {
                 if (response.rewards[0].amount) {
-                    let value = transactions.DecimalConversion(response.rewards[0].amount);
+                    let value = helper.DecimalConversion(response.rewards[0].amount);
                     setRewards(transactions.XprtConversion(value*1));
                 }
             }).catch(error => {

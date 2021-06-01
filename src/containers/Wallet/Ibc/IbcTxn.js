@@ -106,7 +106,7 @@ const IbcTxn = (props) => {
                 memo = event.target.memo.value;
             }
             setMemoContent(memo);
-            let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
+            let memoCheck = helper.mnemonicValidation(memo, loginAddress);
             if (memoCheck) {
                 setKeplerError(t("MEMO_MNEMONIC_CHECK_ERROR"));
             } else {

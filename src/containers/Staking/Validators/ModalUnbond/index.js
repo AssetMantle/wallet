@@ -119,7 +119,7 @@ const ModalUnbond = (props) => {
         if (memoStatus) {
             memo = event.target.memo.value;
         }
-        let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
+        let memoCheck = helper.mnemonicValidation(memo, loginAddress);
         if (memoCheck) {
             setErrorMessage(t("MEMO_MNEMONIC_CHECK_ERROR"));
         } else {

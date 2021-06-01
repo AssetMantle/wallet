@@ -3,11 +3,11 @@ import config from "../config.json";
 import {Bip39, EnglishMnemonic, Slip10, Slip10Curve, stringToPath} from "@cosmjs/crypto";
 import MakePersistence from "./cosmosjsWrapper";
 import helper from "./helper";
-import {Decimal} from "@cosmjs/math";
 import Long from "long";
+import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
+import {createProtobufRpcClient} from "@cosmjs/stargate";
 
 const tendermint_1 = require("@cosmjs/stargate/build/codec/ibc/lightclients/tendermint/v1/tendermint");
-const bip39 = require("bip39");
 const {SigningStargateClient, QueryClient, setupIbcExtension} = require("@cosmjs/stargate");
 const tmRPC = require("@cosmjs/tendermint-rpc");
 const {TransferMsg} = require("./protoMsgHelper");
@@ -78,27 +78,6 @@ function getAccountNumberAndSequence(authResponse) {
     }
 }
 
-function mnemonicTrim(mnemonic) {
-    let mnemonicList = mnemonic.replace(/\s/g, " ").split(/\s/g);
-    let mnemonicWords = [];
-    for (let word of mnemonicList) {
-        if (word === "") {
-            console.log();
-        } else {
-            let trimmedWord = word.replace(/\s/g, "");
-            mnemonicWords.push(trimmedWord);
-        }
-    }
-    mnemonicWords = mnemonicWords.join(" ");
-    return mnemonicWords;
-}
-
-function mnemonicValidation(memo) {
-    const mnemonicWords = mnemonicTrim(memo);
-    let validateMnemonic = bip39.validateMnemonic(mnemonicWords);
-    return validateMnemonic;
-}
-
 function updateFee(address) {
     const persistence = MakePersistence(0, 0);
     if (localStorage.getItem('loginMode') === 'normal') {
@@ -129,14 +108,6 @@ function XprtConversion(data) {
     return Result;
 }
 
-function DenomChange(denom) {
-    if(denom === "uxprt"){
-        return "XPRT";
-    }else if(denom === "uatom"){
-        return "ATOM";
-    }
-}
-
 function PrivateKeyReader(file, password, accountNumber, addressIndex, bip39Passphrase, loginAddress) {
     return new Promise(function (resolve, reject) {
         const fileReader = new FileReader();
@@ -148,7 +119,7 @@ function PrivateKeyReader(file, password, accountNumber, addressIndex, bip39Pass
                 reject(decryptedData.error);
             } else {
                 const persistence = MakePersistence(accountNumber, addressIndex);
-                let mnemonic = mnemonicTrim(decryptedData.mnemonic);
+                let mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
                 const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
                 if (address === loginAddress) {
                     resolve(mnemonic);
@@ -198,22 +169,19 @@ async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeo
     return TransferMsg(channel, fromAddress, toAddress, amount,timeoutHeight , timeoutTime, denom, port);
 }
 
-function DecimalConversion(data){
-    let value = Decimal.fromAtomics(data, 18).toString();
-    return value;
+async function RpcClient() {
+    const tendermintClient = await Tendermint34Client.connect(tendermintRPCURL);
+    const queryClient = new QueryClient(tendermintClient);
+    return createProtobufRpcClient(queryClient);
 }
-
 export default {
     TransactionWithKeplr,
     TransactionWithMnemonic,
     makeHdPath,
     getAccountNumberAndSequence,
-    mnemonicValidation,
     updateFee,
     XprtConversion,
     PrivateKeyReader,
     MakeIBCTransferMsg,
-    mnemonicTrim,
-    DecimalConversion,
-    DenomChange
+    RpcClient
 };

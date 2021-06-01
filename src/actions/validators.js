@@ -1,8 +1,5 @@
-import { createProtobufRpcClient, QueryClient } from "@cosmjs/stargate";
-import { Tendermint34Client } from "@cosmjs/tendermint-rpc";
-// import { QueryClientImpl } from "./path/to/generated/codec";
 import {QueryClientImpl} from '@cosmjs/stargate/build/codec/cosmos/staking/v1beta1/query';
-const tendermintRPCURL =  process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
+
 import {
     FETCH_ACTIVE_VALIDATORS_SUCCESS,
     FETCH_VALIDATORS_ERROR,
@@ -16,6 +13,7 @@ import {
 } from "../constants/validators";
 
 import helper from "../utils/helper";
+import transactions from "../utils/transactions";
 
 export const fetchValidatorsInProgress = () => {
     return {
@@ -75,9 +73,7 @@ const validatorsDelegationSort = (validators, delegations) =>{
 export const fetchValidators = (address) => {
     return async dispatch => {
         dispatch(fetchValidatorsInProgress());
-        const tendermintClient = await Tendermint34Client.connect(tendermintRPCURL);
-        const queryClient = new QueryClient(tendermintClient);
-        const rpcClient = createProtobufRpcClient(queryClient);
+        const rpcClient = await transactions.RpcClient();
 
         const stakingQueryService = new QueryClientImpl(rpcClient);
         await stakingQueryService.Validators({
@@ -135,10 +131,7 @@ export const fetchValidatorError = (data) => {
 export const fetchValidator = (address) => {
     
     return async dispatch => {
-        const tendermintClient = await Tendermint34Client.connect(tendermintRPCURL);
-        const queryClient = new QueryClient(tendermintClient);
-        const rpcClient = createProtobufRpcClient(queryClient);
-
+        const rpcClient = await transactions.RpcClient();
         const stakingQueryService = new QueryClientImpl(rpcClient);
         await stakingQueryService.Validator({
             validatorAddr: address,
@@ -170,9 +163,7 @@ export const fetchValidatorsWithAddress = (list) => {
     return async dispatch => {
         let validators = [];
         for (const item of list) {
-            const tendermintClient = await Tendermint34Client.connect(tendermintRPCURL);
-            const queryClient = new QueryClient(tendermintClient);
-            const rpcClient = createProtobufRpcClient(queryClient);
+            const rpcClient = await transactions.RpcClient();
             const stakingQueryService = new QueryClientImpl(rpcClient);
             await stakingQueryService.Validator({
                 validatorAddr: item.validatorAddress,
