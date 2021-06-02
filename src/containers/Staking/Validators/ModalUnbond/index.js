@@ -302,7 +302,7 @@ const ModalUnbond = (props) => {
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
                             <div className="form-field p-0">
-                                <p className="label">Amount (XPRT)</p>
+                                <p className="label">{t("AMOUNT")} (XPRT)</p>
                                 <div className="amount-field">
                                     <Form.Control
                                         type="number"
@@ -393,7 +393,7 @@ const ModalUnbond = (props) => {
                                                     {
                                                         gasValidationError ?
                                                             <span className="amount-error">
-                                                                Enter Gas between 80000 to 2000000
+                                                                {t("GAS_WARNING")}
                                                             </span> : ""
                                                     }
                                                 </div>
@@ -402,12 +402,12 @@ const ModalUnbond = (props) => {
                                         }
                                         <button className="button button-primary"
                                             disabled={checkAmountError || !props.delegateStatus || amount === 0 || amount > props.delegationAmount || gasValidationError}
-                                        >Next</button>
+                                        >{t("NEXT")}</button>
                                     </div>
                                     :
                                     <button className="button button-primary"
                                         disabled={checkAmountError || !props.delegateStatus || amount === 0 || amount > props.delegationAmount}
-                                    >Submit</button>
+                                    >{t("SUBMIT")}</button>
                                 }
                             </div>
                         </Form>
@@ -426,7 +426,7 @@ const ModalUnbond = (props) => {
                                 importMnemonic ?
                                     <>
                                         <div className="form-field upload">
-                                            <p className="label"> KeyStore file</p>
+                                            <p className="label"> {t("KEY_STORE_FILE")}</p>
                                             <Form.File id="exampleFormControlFile1" name="uploadFile"
                                                 className="file-upload" accept=".json" required={true}/>
                                         </div>
@@ -504,7 +504,7 @@ const ModalUnbond = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <button className="button button-primary">Unbond</button>
+                                <button className="button button-primary">{t("UNBOND")}</button>
                             </div>
                         </Form>
                     </Modal.Body>

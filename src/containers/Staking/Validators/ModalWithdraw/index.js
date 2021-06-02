@@ -389,7 +389,7 @@ const ModalWithdraw = (props) => {
                                                     {
                                                         gasValidationError ?
                                                             <span className="amount-error">
-                                                                Enter Gas between 80000 to 2000000
+                                                                {t("GAS_WARNING")}
                                                             </span> : ""
                                                     }
                                                 </div>
@@ -398,12 +398,12 @@ const ModalWithdraw = (props) => {
                                         }
                                         <button className="button button-primary"
                                             disabled={checkAmountError || props.rewards === 0 || gasValidationError}
-                                        >Next</button>
+                                        >{t("NEXT")}</button>
                                     </div>
                                     :
                                     <button className="button button-primary"
                                         disabled={checkAmountError || props.rewards === 0}
-                                    >Submit</button>
+                                    >{t("SUBMIT")}</button>
                                 }
                             </div>
                             <div className="buttons">
@@ -435,7 +435,7 @@ const ModalWithdraw = (props) => {
                                 importMnemonic ?
                                     <>
                                         <div className="form-field upload">
-                                            <p className="label"> KeyStore file</p>
+                                            <p className="label"> {t("KEY_STORE_FILE")}</p>
                                             <Form.File id="exampleFormControlFile1" name="uploadFile"
                                                 className="file-upload" accept=".json" required={true}/>
                                         </div>
@@ -513,8 +513,7 @@ const ModalWithdraw = (props) => {
                                 </Card>
                             </Accordion>
                             <div className="buttons">
-                                <button className="button button-primary">Claim
-                                    Rewards
+                                <button className="button button-primary">{t("CLAIM_REWARDS")}
                                 </button>
                             </div>
                         </Form>
