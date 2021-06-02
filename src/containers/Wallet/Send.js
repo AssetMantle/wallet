@@ -65,10 +65,18 @@ const Send = (props) => {
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
-            if ((props.transferableAmount - (evt.target.value * 1)) < transactions.XprtConversion(fee)) {
-                setCheckAmountError(true);
-            } else {
-                setCheckAmountError(false);
+            if(tokenDenom === "uxprt") {
+                if ((props.transferableAmount - (evt.target.value * 1)) < transactions.XprtConversion(fee)) {
+                    setCheckAmountError(true);
+                } else {
+                    setCheckAmountError(false);
+                }
+            }else {
+                if (props.transferableAmount < transactions.XprtConversion(fee) || transferableAmount < (evt.target.value * 1)) {
+                    setCheckAmountError(true);
+                } else {
+                    setCheckAmountError(false);
+                }
             }
             setAmountField(evt.target.value * 1);
         } else {
@@ -121,7 +129,7 @@ const Send = (props) => {
         setShow(true);
         setLoader(true);
         event.preventDefault();
-        const response = transactions.TransactionWithKeplr([SendMsg(loginAddress, event.target.address.value, (amountField * config.xprtValue))], aminoMsgHelper.fee(0, 250000));
+        const response = transactions.TransactionWithKeplr([SendMsg(loginAddress, event.target.address.value, (amountField * config.xprtValue), tokenDenom)], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             if (result.code !== undefined) {
                 helper.AccountChangeCheck(result.rawLog);
@@ -217,7 +225,7 @@ const Send = (props) => {
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
                     setImportMnemonic(false);
-                    const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, (amountField * config.xprtValue), token)], aminoMsgHelper.fee(Math.trunc(fee), gas), memoContent,
+                    const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, (amountField * config.xprtValue), tokenDenom)], aminoMsgHelper.fee(Math.trunc(fee), gas), memoContent,
                         userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                     response.then(result => {
                         setTxResponse(result);
@@ -246,6 +254,43 @@ const Send = (props) => {
             }
         } else {
             setLoader(false);
+        }
+    };
+
+    const handleMemoChange = () => {
+        setMemoStatus(!memoStatus);
+    };
+
+
+    const onChangeSelect = (evt) => {
+        setToken(evt.target.value);
+        if(evt.target.value === 'uxprt'){
+            setTokenDenom(evt.target.value);
+            setTransferableAmount(props.transferableAmount);
+        }
+        else {
+            props.tokenList.forEach((item) => {
+                if(evt.target.value === item.denomTrace){
+                    setTokenDenom(item.denom.baseDenom);
+                    setTransferableAmount(transactions.XprtConversion(item.amount * 1));
+                    setTokenItem(item);
+                }
+            });
+        }
+    };
+
+    const handleFee = (feeType, feeValue) => {
+        if(feeType === "Low"){
+            setZeroFeeAlert(true);
+        }
+        setActiveFeeState(feeType);
+        setFee(gas * feeValue);
+        if ((props.transferableAmount - (amountField*1)) < transactions.XprtConversion(gas * feeValue)) {
+            setGasValidationError(true);
+            setCheckAmountError(true);
+        }else {
+            setGasValidationError(false);
+            setCheckAmountError(false);
         }
     };
 
@@ -282,39 +327,6 @@ const Send = (props) => {
 
     };
 
-    const onChangeSelect = (evt) => {
-        setToken(evt.target.value);
-        console.log(evt.target.value, "els");
-
-        if(evt.target.value === 'uxprt'){
-            setTokenDenom(evt.target.value);
-            setTransferableAmount(props.transferableAmount);
-        }
-        else {
-            props.tokenList.forEach((item) => {
-                if(evt.target.value === item.denomTrace){
-                    setTokenDenom(item.denom.baseDenom);
-                    setTransferableAmount(transactions.XprtConversion(item.amount * 1));
-                    setTokenItem(item);
-                }
-            });
-        }
-    };
-
-    const handleFee = (feeType, feeValue) => {
-        if(feeType === "Low"){
-            setZeroFeeAlert(true);
-        }
-        setActiveFeeState(feeType);
-        setFee(gas * feeValue);
-        if ((props.transferableAmount - (amountField*1)) < transactions.XprtConversion(gas * feeValue)) {
-            setGasValidationError(true);
-            setCheckAmountError(true);
-        }else {
-            setGasValidationError(false);
-            setCheckAmountError(false);
-        }
-    };
 
     const popoverMemo = (
         <Popover id="popover-memo">
@@ -332,10 +344,6 @@ const Send = (props) => {
             </Popover.Content>
         </Popover>
     );
-
-    const handleMemoChange = () => {
-        setMemoStatus(!memoStatus);
-    };
 
     return (
         <div className="send-container">
@@ -466,7 +474,6 @@ const Send = (props) => {
                     <div className="buttons">
                         {mode === "normal"  ?
                             <div className="button-section">
-
                                 <GasContainer checkAmountError={checkAmountError} activeFeeState={activeFeeState}
                                     onClick={handleFee} gas={gas} zeroFeeAlert={zeroFeeAlert} setZeroFeeAlert={setZeroFeeAlert}/>
                                 <div className="select-gas">
@@ -480,7 +487,7 @@ const Send = (props) => {
                                             <Form.Control
                                                 type="number"
                                                 min={80000}
-                                                max={250000}
+                                                max={2000000}
                                                 name="gas"
                                                 placeholder={t("ENTER_GAS")}
                                                 step="any"
@@ -499,13 +506,13 @@ const Send = (props) => {
                                     : ""
                                 }
                                 <button className="button button-primary"
-                                    disabled={props.transferableAmount < (amountField * 1 + transactions.XprtConversion(fee)) || amountField === 0 || props.transferableAmount === 0 || gasValidationError}
+                                    disabled={checkAmountError || amountField === 0 || props.transferableAmount === 0 || gasValidationError}
                                 >Next
                                 </button>
                             </div>
                             :
                             <button className="button button-primary"
-                                disabled={props.transferableAmount < (amountField * 1 + transactions.XprtConversion(fee)) || amountField === 0 || props.transferableAmount === 0}
+                                disabled={checkAmountError || amountField === 0 || props.transferableAmount === 0}
                             >Submit</button>
                         }
                     </div>
@@ -691,7 +698,6 @@ const Send = (props) => {
 
 
 const stateToProps = (state) => {
-    console.log(state.balance.tokenList, "Rr");
     return {
         balance: state.balance.amount,
         tokenList: state.balance.tokenList,

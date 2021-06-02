@@ -57,6 +57,7 @@ const ModalImportWallet = (props) => {
                 setErrorMessage(decryptedData.error);
             } else {
                 let mnemonic = transactions.mnemonicTrim(decryptedData.mnemonic);
+                localStorage.setItem('encryptedMnemonic', event.target.result);
                 setUserMnemonic(mnemonic);
                 setAdvancedForm(true);
                 setMnemonicForm(false);

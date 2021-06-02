@@ -10,7 +10,7 @@ const GasContainer = (props) => {
     const {t} = useTranslation();
     return (
         <>
-            <p>Fee</p>
+            <p className="fee-title">Fee</p>
             <div className="fee-container">
                 {mode === "normal" && (localStorage.getItem("fee") * 1) !== 0 ?
                     <>

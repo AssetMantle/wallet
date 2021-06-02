@@ -123,7 +123,7 @@ export const GlobalStyles = createGlobalStyle`
     .refresh-button svg{
         fill:${({theme}) => theme.refreshButtonColor} !important;
     }
-    .form-field .info-data .value{
+    .form-field .info-data .value, .fee-alert, .fee-title{
      color: ${({theme}) => theme.lineValueColor};
     }
     .wallet-main-section .receive-container .address{

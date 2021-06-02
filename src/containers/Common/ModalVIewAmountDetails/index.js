@@ -25,7 +25,6 @@ const ModalViewAmountDetails = (props) => {
                     dataResponse: item,
                     denomResponse: ibcDenomeResponse
                 };
-                console.log(data, "data");
                 setIbcList(ibcList => [...ibcList, data]);
             }
         });
