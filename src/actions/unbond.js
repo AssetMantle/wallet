@@ -6,10 +6,7 @@ import {
 } from "../constants/unbond";
 import Lodash from "lodash";
 import transactions from "../utils/transactions";
-import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
-import {createProtobufRpcClient, QueryClient} from "@cosmjs/stargate";
 import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/staking/v1beta1/query";
-const tendermintRPCURL =  process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
 export const fetchUnbondDelegationsProgress = () => {
     return {
@@ -38,10 +35,7 @@ export const fetchUnbondDelegationsList = (list) => {
 export const fetchUnbondDelegations = (address) => {
     return async dispatch => {
         dispatch(fetchUnbondDelegationsProgress());
-        const tendermintClient = await Tendermint34Client.connect(tendermintRPCURL);
-        const queryClient = new QueryClient(tendermintClient);
-        const rpcClient = createProtobufRpcClient(queryClient);
-
+        const rpcClient = await transactions.RpcClient();
         const stakingQueryService = new QueryClientImpl(rpcClient);
         await stakingQueryService.DelegatorUnbondingDelegations({
             delegatorAddr: address,

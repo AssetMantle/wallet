@@ -36,7 +36,7 @@ const AddressImport = (props) => {
             }
         });
 
-        if (helper.ValidateAddress(address)) {
+        if (helper.validateAddress(address)) {
             localStorage.setItem('loginToken', 'loggedIn');
             localStorage.setItem('address', address);
             localStorage.setItem('loginMode', 'normal');

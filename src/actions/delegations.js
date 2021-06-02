@@ -1,10 +1,7 @@
 import {DELEGATIONS_FETCH_SUCCESS, DELEGATIONS_FETCH_ERROR, DELEGATIONS_STATUS_SUCCESS} from "../constants/delegations";
 import Lodash from "lodash";
 import transactions from "../utils/transactions";
-import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
-import {createProtobufRpcClient, QueryClient} from "@cosmjs/stargate";
 import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/staking/v1beta1/query";
-const tendermintRPCURL =  process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
 export const fetchDelegationsCountSuccess = (count) => {
     return {
@@ -29,10 +26,7 @@ export const fetchDelegationStatusSuccess = (value) => {
 
 export const fetchDelegationsCount = (address) => {
     return async dispatch => {
-        const tendermintClient = await Tendermint34Client.connect(tendermintRPCURL);
-        const queryClient = new QueryClient(tendermintClient);
-        const rpcClient = createProtobufRpcClient(queryClient);
-
+        const rpcClient = await transactions.RpcClient();
         const stakingQueryService = new QueryClientImpl(rpcClient);
         await stakingQueryService.DelegatorDelegations({
             delegatorAddr: address,

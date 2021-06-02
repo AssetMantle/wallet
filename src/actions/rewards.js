@@ -5,11 +5,8 @@ import {
     REWARDS_LIST_FETCH_SUCCESS
 } from "../constants/rewards";
 import transactions from "../utils/transactions";
-import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
-import {createProtobufRpcClient, QueryClient} from "@cosmjs/stargate";
 import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/distribution/v1beta1/query";
-
-const tendermintRPCURL =  process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
+import helper from "../utils/helper";
 
 export const fetchRewardsProgress = () => {
     return {
@@ -38,11 +35,7 @@ export const fetchRewardsError = (data) => {
 export const fetchRewards = (address) => {
     return async dispatch => {
         dispatch(fetchRewardsProgress());
-
-        const tendermintClient = await Tendermint34Client.connect(tendermintRPCURL);
-        const queryClient = new QueryClient(tendermintClient);
-        const rpcClient = createProtobufRpcClient(queryClient);
-
+        const rpcClient = await transactions.RpcClient();
         const stakingQueryService = new QueryClientImpl(rpcClient);
         await stakingQueryService.DelegationTotalRewards({
             delegatorAddress: address,
@@ -51,7 +44,7 @@ export const fetchRewards = (address) => {
                 dispatch(fetchRewardsListProgress(delegatorRewardsResponse.rewards));
             }
             if (delegatorRewardsResponse.total.length) {
-                let rewards = transactions.DecimalConversion(delegatorRewardsResponse.total[0].amount, 18);
+                let rewards = helper.decimalConversion(delegatorRewardsResponse.total[0].amount, 18);
                 const fixedRewardsResponse = transactions.XprtConversion(rewards*1);
                 dispatch(fetchRewardsSuccess(fixedRewardsResponse));
             }

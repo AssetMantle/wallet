@@ -109,7 +109,7 @@ const ReceiveTransactions = (props) => {
         return <Loader/>;
     }
     const handleNext = () => {
-        if(!helper.CheckLastPage(props.pageNumber[0], 5, props.pageNumber[1])) {
+        if(!helper.checkLastPage(props.pageNumber[0], 5, props.pageNumber[1])) {
             props.fetchReceiveTransactions(address, 5, props.pageNumber[0] + 1);
         }
     };
@@ -134,7 +134,7 @@ const ReceiveTransactions = (props) => {
                     </IconButton>
                 </div>
                 <div className="before buttons">
-                    <IconButton aria-label="next" className="next" onClick={handleNext} disabled={helper.CheckLastPage(props.pageNumber[0], 5, props.pageNumber[1])?true : false}>
+                    <IconButton aria-label="next" className="next" onClick={handleNext} disabled={helper.checkLastPage(props.pageNumber[0], 5, props.pageNumber[1])?true : false}>
                         <ChevronRightIcon/>
                     </IconButton>
                 </div>

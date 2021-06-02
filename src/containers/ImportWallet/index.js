@@ -14,7 +14,6 @@ import GeneratePrivateKey from "../Common/GeneratePrivateKey";
 import config from "../../config";
 import MakePersistence from "../../utils/cosmosjsWrapper";
 import {useTranslation} from "react-i18next";
-import transactions from "../../utils/transactions";
 
 const ModalImportWallet = (props) => {
     const {t} = useTranslation();
@@ -56,7 +55,7 @@ const ModalImportWallet = (props) => {
             if (decryptedData.error != null) {
                 setErrorMessage(decryptedData.error);
             } else {
-                let mnemonic = transactions.mnemonicTrim(decryptedData.mnemonic);
+                let mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
                 localStorage.setItem('encryptedMnemonic', event.target.result);
                 setUserMnemonic(mnemonic);
                 setAdvancedForm(true);
@@ -153,7 +152,7 @@ const ModalImportWallet = (props) => {
     };
 
     const handlePassphrase = (evt) => {
-        const result = helper.ValidatePassphrase(evt.target.value);
+        const result = helper.validatePassphrase(evt.target.value);
         setPassphraseError(result);
     };
     const handleLogin = () => {

@@ -112,14 +112,14 @@ const ModalWithdraw = (props) => {
         const response = transactions.TransactionWithKeplr([WithdrawMsg(loginAddress, props.validatorAddress)], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             if (result.code !== undefined) {
-                helper.AccountChangeCheck(result.rawLog);
+                helper.accountChangeCheck(result.rawLog);
             }
             setInitialModal(false);
             setResponse(result);
             setLoader(false);
         }).catch(err => {
             setLoader(false);
-            helper.AccountChangeCheck(err.message);
+            helper.accountChangeCheck(err.message);
             setErrorMessage(err.message);
         });
     };
@@ -130,7 +130,7 @@ const ModalWithdraw = (props) => {
         if (memoStatus) {
             memo = event.target.memo.value;
         }
-        let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
+        let memoCheck = helper.mnemonicValidation(memo, loginAddress);
         if (memoCheck) {
             setErrorMessage(t("MEMO_MNEMONIC_CHECK_ERROR"));
         } else {

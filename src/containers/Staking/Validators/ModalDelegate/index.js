@@ -118,14 +118,14 @@ const ModalDelegate = (props) => {
         const response = transactions.TransactionWithKeplr([DelegateMsg(loginAddress, props.validatorAddress, (amount * config.xprtValue))], aminoMsgHelper.fee(0, 250000), memoContent);
         response.then(result => {
             if (result.code !== undefined) {
-                helper.AccountChangeCheck(result.rawLog);
+                helper.accountChangeCheck(result.rawLog);
             }
             setResponse(result);
             setLoader(false);
             setInitialModal(false);
         }).catch(err => {
             setLoader(false);
-            helper.AccountChangeCheck(err.message);
+            helper.accountChangeCheck(err.message);
             setErrorMessage(err.message);
         });
     };
@@ -136,7 +136,7 @@ const ModalDelegate = (props) => {
         if (memoStatus) {
             memo = event.target.memo.value;
         }
-        let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
+        let memoCheck = helper.mnemonicValidation(memo, loginAddress);
         if (memoCheck) {
             setErrorMessage(t("MEMO_MNEMONIC_CHECK_ERROR"));
         } else {

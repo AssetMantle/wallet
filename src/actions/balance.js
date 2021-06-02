@@ -43,10 +43,7 @@ export const fetchBalanceListSuccess = (list) => {
 export const fetchBalance = (address) => {
     return async dispatch => {
         dispatch(fetchBalanceProgress());
-        const tendermintClient = await Tendermint34Client.connect(tendermintRPCURL);
-        const queryClient = new QueryClient(tendermintClient);
-        const rpcClient = createProtobufRpcClient(queryClient);
-
+        const rpcClient = await transactions.RpcClient();
         const stakingQueryService = new QueryClientImpl(rpcClient);
         await stakingQueryService.AllBalances({
             address: address,

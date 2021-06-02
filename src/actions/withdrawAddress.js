@@ -2,10 +2,8 @@ import {
     FETCH_WITHDRAW_ADDRESS_ERROR,
     FETCH_WITHDRAW_ADDRESS_SUCCESS
 } from "../constants/withdrawAddress";
-import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
-import {createProtobufRpcClient, QueryClient} from "@cosmjs/stargate";
 import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/distribution/v1beta1/query";
-const tendermintRPCURL =  process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
+import transactions from "../utils/transactions";
 
 export const fetchAddressSuccess = (address) => {
     return {
@@ -22,9 +20,7 @@ export const fetchAddressError = (data) => {
 
 export const fetchWithdrawAddress = (address) => {
     return async dispatch => {
-        const tendermintClient = await Tendermint34Client.connect(tendermintRPCURL);
-        const queryClient = new QueryClient(tendermintClient);
-        const rpcClient = createProtobufRpcClient(queryClient);
+        const rpcClient = await transactions.RpcClient();
 
         const stakingQueryService = new QueryClientImpl(rpcClient);
         await stakingQueryService.DelegatorWithdrawAddress({
