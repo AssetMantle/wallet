@@ -20,7 +20,9 @@ import {connect} from "react-redux";
 import config from "../../config";
 import MakePersistence from "../../utils/cosmosjsWrapper";
 import {useTranslation} from "react-i18next";
-import GasContainer from "../../components/Gas";
+import GasContainer from "../Gas";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -33,6 +35,7 @@ const Send = (props) => {
     const [show, setShow] = useState(true);
     const [advanceMode, setAdvanceMode] = useState(false);
     const [memoStatus, setMemoStatus] = useState(false);
+    const [zeroFeeAlert, setZeroFeeAlert] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [keplerError, setKeplerError] = useState("");
     const [loader, setLoader] = useState(false);
@@ -41,6 +44,10 @@ const Send = (props) => {
     const [checkAmountError, setCheckAmountError] = useState(false);
     const [showGasField, setShowGasField] = useState(false);
     const [activeFeeState, setActiveFeeState] = useState("Average");
+    const [token, setToken] = useState("uxprt");
+    const [tokenDenom, setTokenDenom] = useState("uxprt");
+    const [transferableAmount, setTransferableAmount] = useState(props.transferableAmount);
+    const [tokenItem, setTokenItem] = useState({});
     const [gas, setGas] = useState(config.gas);
     const [gasValidationError, setGasValidationError] = useState(false);
     const [fee, setFee] = useState(config.averageFee);
@@ -58,10 +65,18 @@ const Send = (props) => {
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
-            if ((props.transferableAmount - (evt.target.value * 1)) < transactions.XprtConversion(fee)) {
-                setCheckAmountError(true);
-            } else {
-                setCheckAmountError(false);
+            if(tokenDenom === "uxprt") {
+                if ((props.transferableAmount - (evt.target.value * 1)) < transactions.XprtConversion(fee)) {
+                    setCheckAmountError(true);
+                } else {
+                    setCheckAmountError(false);
+                }
+            }else {
+                if (props.transferableAmount < transactions.XprtConversion(fee) || transferableAmount < (evt.target.value * 1)) {
+                    setCheckAmountError(true);
+                } else {
+                    setCheckAmountError(false);
+                }
             }
             setAmountField(evt.target.value * 1);
         } else {
@@ -81,7 +96,7 @@ const Send = (props) => {
 
     const handleSubmit = async event => {
         event.preventDefault();
-        if (helper.ValidateAddress(event.target.address.value)) {
+        if (helper.validateAddress(event.target.address.value)) {
             setToAddress(event.target.address.value);
             if (mode === "normal") {
                 let memo = "";
@@ -89,7 +104,7 @@ const Send = (props) => {
                     memo = event.target.memo.value;
                 }
                 setMemoContent(memo);
-                let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
+                let memoCheck = helper.mnemonicValidation(memo, loginAddress);
                 if (memoCheck) {
                     setKeplerError(t("MEMO_MNEMONIC_CHECK_ERROR"));
                 } else {
@@ -114,10 +129,10 @@ const Send = (props) => {
         setShow(true);
         setLoader(true);
         event.preventDefault();
-        const response = transactions.TransactionWithKeplr([SendMsg(loginAddress, event.target.address.value, (amountField * config.xprtValue))], aminoMsgHelper.fee(0, 250000));
+        const response = transactions.TransactionWithKeplr([SendMsg(loginAddress, event.target.address.value, (amountField * config.xprtValue), tokenDenom)], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             if (result.code !== undefined) {
-                helper.AccountChangeCheck(result.rawLog);
+                helper.accountChangeCheck(result.rawLog);
             }
             setMnemonicForm(true);
             setTxResponse(result);
@@ -125,7 +140,7 @@ const Send = (props) => {
         }).catch(err => {
             setLoader(false);
             setKeplerError(err.message);
-            helper.AccountChangeCheck(err.message);
+            helper.accountChangeCheck(err.message);
         });
     };
 
@@ -210,7 +225,7 @@ const Send = (props) => {
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
                     setImportMnemonic(false);
-                    const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, (amountField * config.xprtValue))], aminoMsgHelper.fee(Math.trunc(fee), gas), memoContent,
+                    const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, (amountField * config.xprtValue), tokenDenom)], aminoMsgHelper.fee(Math.trunc(fee), gas), memoContent,
                         userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                     response.then(result => {
                         setTxResponse(result);
@@ -239,6 +254,43 @@ const Send = (props) => {
             }
         } else {
             setLoader(false);
+        }
+    };
+
+    const handleMemoChange = () => {
+        setMemoStatus(!memoStatus);
+    };
+
+
+    const onChangeSelect = (evt) => {
+        setToken(evt.target.value);
+        if(evt.target.value === 'uxprt'){
+            setTokenDenom(evt.target.value);
+            setTransferableAmount(props.transferableAmount);
+        }
+        else {
+            props.tokenList.forEach((item) => {
+                if(evt.target.value === item.denomTrace){
+                    setTokenDenom(item.denom.baseDenom);
+                    setTransferableAmount(transactions.XprtConversion(item.amount * 1));
+                    setTokenItem(item);
+                }
+            });
+        }
+    };
+
+    const handleFee = (feeType, feeValue) => {
+        if(feeType === "Low"){
+            setZeroFeeAlert(true);
+        }
+        setActiveFeeState(feeType);
+        setFee(gas * feeValue);
+        if ((props.transferableAmount - (amountField*1)) < transactions.XprtConversion(gas * feeValue)) {
+            setGasValidationError(true);
+            setCheckAmountError(true);
+        }else {
+            setGasValidationError(false);
+            setCheckAmountError(false);
         }
     };
 
@@ -275,10 +327,6 @@ const Send = (props) => {
 
     };
 
-    const handleFee = (feeType, feeValue) => {
-        setActiveFeeState(feeType);
-        setFee(gas * feeValue);
-    };
 
     const popoverMemo = (
         <Popover id="popover-memo">
@@ -297,16 +345,12 @@ const Send = (props) => {
         </Popover>
     );
 
-    const handleMemoChange = () => {
-        setMemoStatus(!memoStatus);
-    };
-
     return (
         <div className="send-container">
             <div className="form-section">
                 <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmit}>
                     <div className="form-field">
-                        <p className="label info">Recipient Address
+                        <p className="label info">{t("RECIPIENT_ADDRESS")}
                             <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
                                 <button className="icon-button info" type="button"><Icon
                                     viewClass="arrow-right"
@@ -320,7 +364,7 @@ const Send = (props) => {
                         />
                     </div>
                     <div className="form-field p-0">
-                        <p className="label">Amount (XPRT)</p>
+                        <p className="label">{t("AMOUNT")} (XPRT)</p>
                         <div className="amount-field">
                             <Form.Control
                                 type="number"
@@ -333,15 +377,54 @@ const Send = (props) => {
                                 onChange={handleAmountChange}
                                 required={true}
                             />
-                            <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data"}><span
-                                className="title">Transferable Balance:</span> <span
-                                className="value"
-                                title={props.transferableAmount}>{props.transferableAmount.toFixed(6)} XPRT</span> </span>
+                            {
+                                tokenDenom === "uxprt" ?
+                                    <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data"}><span
+                                        className="title">Transferable Balance:</span> <span
+                                        className="value"
+                                        title={props.transferableAmount}>{props.transferableAmount.toFixed(6)} XPRT</span> </span>
+                                    :
+                                    <span title={tokenItem.denomTrace} className={transferableAmount === 0 ? "empty info-data" : "info-data"}>
+                                        {/*0.001 ATOM ( IBC Trace { path - transfer….. , denom: uatom } )*/}
+                                        <span
+                                            className="title">Transferable Balance:</span> <span
+                                            className="value">{transferableAmount.toFixed(6)}  ATOM ( IBC Trace path - {tokenItem.denom.path} , denom: {tokenItem.denom.baseDenom}  )</span> </span>
+                            }
                         </div>
                     </div>
 
                     {mode === "normal" ?
                         <>
+                            <div className="form-field p-0">
+                                <p className="label">{t("TOKEN")} </p>
+                                <Select value={token} className="validators-list-selection"
+                                    onChange={onChangeSelect} displayEmpty>
+                                    {
+                                        props.tokenList.map((item, index) => {
+                                            if(item.denom === "uxprt"){
+                                                return (
+                                                    <MenuItem
+                                                        key={index + 1}
+                                                        className=""
+                                                        value={item.denom}>
+                                                        XPRT
+                                                    </MenuItem>
+                                                );
+                                            }
+                                            if(item.denom.baseDenom === "uatom"){
+                                                return (
+                                                    <MenuItem
+                                                        key={index + 1}
+                                                        className=""
+                                                        value={item.denomTrace}>
+                                                        ATOM
+                                                    </MenuItem>
+                                                );
+                                            }
+                                        })
+                                    }
+                                </Select>
+                            </div>
                             <div className="memo-dropdown-section">
                                 <p onClick={handleMemoChange} className="memo-dropdown"><span
                                     className="text">{t("ADVANCED")} </span>
@@ -391,9 +474,8 @@ const Send = (props) => {
                     <div className="buttons">
                         {mode === "normal"  ?
                             <div className="button-section">
-
                                 <GasContainer checkAmountError={checkAmountError} activeFeeState={activeFeeState}
-                                    onClick={handleFee} gas={gas}/>
+                                    onClick={handleFee} gas={gas} zeroFeeAlert={zeroFeeAlert} setZeroFeeAlert={setZeroFeeAlert}/>
                                 <div className="select-gas">
                                     <p onClick={handleGas}>{!showGasField ? "Set gas" : "Close"}</p>
                                 </div>
@@ -405,6 +487,7 @@ const Send = (props) => {
                                             <Form.Control
                                                 type="number"
                                                 min={80000}
+                                                max={2000000}
                                                 name="gas"
                                                 placeholder={t("ENTER_GAS")}
                                                 step="any"
@@ -415,7 +498,7 @@ const Send = (props) => {
                                             {
                                                 gasValidationError ?
                                                     <span className="amount-error">
-                                                    Enter Gas between 80000 to 2000000
+                                                        {t("GAS_WARNING")}
                                                     </span> : ""
                                             }
                                         </div>
@@ -423,13 +506,13 @@ const Send = (props) => {
                                     : ""
                                 }
                                 <button className="button button-primary"
-                                    disabled={props.transferableAmount < (amountField * 1 + transactions.XprtConversion(fee)) || amountField === 0 || props.transferableAmount === 0 || gasValidationError}
+                                    disabled={checkAmountError || amountField === 0 || props.transferableAmount === 0 || gasValidationError}
                                 >Next
                                 </button>
                             </div>
                             :
                             <button className="button button-primary"
-                                disabled={props.transferableAmount < (amountField * 1 + transactions.XprtConversion(fee)) || amountField === 0 || props.transferableAmount === 0}
+                                disabled={checkAmountError || amountField === 0 || props.transferableAmount === 0}
                             >Submit</button>
                         }
                     </div>
@@ -443,7 +526,7 @@ const Send = (props) => {
                             txResponse === '' ?
                                 <>
                                     <Modal.Header closeButton>
-                                        Send Token
+                                        {t("SEND_TOKEN")}
                                     </Modal.Header>
                                     <Modal.Body className="create-wallet-body import-wallet-body">
                                         <Form onSubmit={handleMnemonicSubmit}>
@@ -451,7 +534,7 @@ const Send = (props) => {
                                                 importMnemonic ?
                                                     <>
                                                         <div className="form-field upload">
-                                                            <p className="label"> KeyStore file</p>
+                                                            <p className="label"> {t("KEY_STORE_FILE")}</p>
                                                             <Form.File id="exampleFormControlFile1" name="uploadFile"
                                                                 className="file-upload" accept=".json"
                                                                 required={true}/>
@@ -487,7 +570,7 @@ const Send = (props) => {
                                                 <Card>
                                                     <Card.Header>
                                                         <p>
-                                                            Advanced
+                                                            {t("ADVANCED")}
                                                         </p>
                                                         <ContextAwareToggle eventKey="0">Click me!</ContextAwareToggle>
                                                     </Card.Header>
@@ -545,7 +628,7 @@ const Send = (props) => {
                                         txResponse.code === undefined || txResponse.code === 0 ?
                                             <>
                                                 <Modal.Header className="result-header success">
-                                                    Successfully Send!
+                                                    {t("SUCCESSFUL_SEND")}
                                                 </Modal.Header>
                                                 <Modal.Body className="delegate-modal-body">
                                                     <div className="result-container">
@@ -572,7 +655,7 @@ const Send = (props) => {
                                             </>
                                             : <>
                                                 <Modal.Header className="result-header error">
-                                                    Failed to Send
+                                                    {t("FAILED_SEND")}
                                                 </Modal.Header>
                                                 <Modal.Body className="delegate-modal-body">
                                                     <div className="result-container">
@@ -617,6 +700,7 @@ const Send = (props) => {
 const stateToProps = (state) => {
     return {
         balance: state.balance.amount,
+        tokenList: state.balance.tokenList,
         transferableAmount: state.balance.transferableAmount,
     };
 };

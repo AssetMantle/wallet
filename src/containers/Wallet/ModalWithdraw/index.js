@@ -10,12 +10,10 @@ import {
 } from 'react-bootstrap';
 import React, {useContext, useEffect, useState} from 'react';
 import success from "../../../assets/images/success.svg";
-import {getValidatorUrl} from "../../../constants/url";
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import axios from "axios";
 import Icon from "../../../components/Icon";
-import Actions from "../../../utils/actions";
+import ActionHelper from "../../../utils/actions";
 import {connect} from "react-redux";
 import helper from "../../../utils/helper";
 import Loader from "../../../components/Loader";
@@ -26,17 +24,16 @@ import MakePersistence from "../../../utils/cosmosjsWrapper";
 import {useTranslation} from "react-i18next";
 import ModalSetWithdrawAddress from "../ModalSetWithdrawAddress";
 import config from "../../../config";
-import GasContainer from "../../../components/Gas";
+import GasContainer from "../../Gas";
+import {fetchValidatorsWithAddress} from "../../../actions/validators";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const ModalWithdraw = (props) => {
     const {t} = useTranslation();
-    const ActionHelper = new Actions();
     const [show, setShow] = useState(true);
     const [validatorAddress, setValidatorAddress] = useState('');
     const [response, setResponse] = useState('');
-    const [validatorsList, setValidatorsList] = useState([]);
     const [advanceMode, setAdvanceMode] = useState(false);
     const [initialModal, setInitialModal] = useState(true);
     const [seedModal, showSeedModal] = useState(false);
@@ -54,19 +51,14 @@ const ModalWithdraw = (props) => {
     const [gas, setGas] = useState(config.gas);
     const [gasValidationError, setGasValidationError] = useState(false);
     const [fee, setFee] = useState(config.averageFee);
+    const [zeroFeeAlert, setZeroFeeAlert] = useState(false);
     const [checkAmountError, setCheckAmountError] = useState(false);
 
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
     };
     useEffect(() => {
-        for (const item of props.list) {
-            const validatorUrl = getValidatorUrl(item.validator_address);
-            axios.get(validatorUrl).then(validatorResponse => {
-                let validator = validatorResponse.data.validator;
-                setValidatorsList(validatorsList => [...validatorsList, validator]);
-            });
-        }
+        props.fetchValidatorsWithAddress(props.list);
         const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
         if (encryptedMnemonic !== null) {
             setImportMnemonic(false);
@@ -124,14 +116,14 @@ const ModalWithdraw = (props) => {
         const response = transactions.TransactionWithKeplr([WithdrawMsg(loginAddress, validatorAddress)], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             if (result.code !== undefined) {
-                helper.AccountChangeCheck(result.rawLog);
+                helper.accountChangeCheck(result.rawLog);
             }
             setInitialModal(false);
             setResponse(result);
             setLoader(false);
         }).catch(err => {
             setLoader(false);
-            helper.AccountChangeCheck(err.message);
+            helper.accountChangeCheck(err.message);
             setErrorMessage(err.message);
         });
     };
@@ -141,7 +133,7 @@ const ModalWithdraw = (props) => {
         if (memoStatus) {
             memo = event.target.memo.value;
         }
-        let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
+        let memoCheck = helper.mnemonicValidation(memo, loginAddress);
         if (memoCheck) {
             setErrorMessage(t("MEMO_MNEMONIC_CHECK_ERROR"));
         } else {
@@ -267,12 +259,22 @@ const ModalWithdraw = (props) => {
     };
 
     const handleFee = (feeType, feeValue)=>{
+        if(feeType === "Low"){
+            setZeroFeeAlert(true);
+        }
         setActiveFeeState(feeType);
         setFee(gas*feeValue);
+        if (props.transferableAmount < transactions.XprtConversion(gas*feeValue)) {
+            setGasValidationError(true);
+            setCheckAmountError(true);
+        }else {
+            setGasValidationError(false);
+            setCheckAmountError(false);
+        }
     };
 
     const disabled = (
-        helper.ValidateFrom(validatorAddress).message !== ''
+        helper.validateFrom(validatorAddress).message !== ''
     );
 
     if (loader) {
@@ -334,7 +336,7 @@ const ModalWithdraw = (props) => {
                                     </div>
                                 </div>
                                 <div className="form-field">
-                                    <p className="label">Validator</p>
+                                    <p className="label">{t("VALIDATOR")}</p>
 
                                     <Select value={validatorAddress} className="validators-list-selection"
                                         onChange={onChangeSelect} displayEmpty>
@@ -342,11 +344,11 @@ const ModalWithdraw = (props) => {
                                             <em>None</em>
                                         </MenuItem>
                                         {
-                                            validatorsList.map((validator, index) => (
+                                            props.validatorsList.map((validator, index) => (
                                                 <MenuItem
                                                     key={index + 1}
                                                     className=""
-                                                    value={validator.operator_address}>
+                                                    value={validator.operatorAddress}>
                                                     {validator.description.moniker}
                                                 </MenuItem>
                                             ))
@@ -356,7 +358,7 @@ const ModalWithdraw = (props) => {
                                 <div className="form-field p-0">
                                     <p className="label"></p>
                                     <div className="available-tokens">
-                                        <p className="tokens">Available Rewards {individualRewards} <span>XPRT</span>
+                                        <p className="tokens">{t("AVAILABLE_REWARDS")} {individualRewards} <span>XPRT</span>
                                         </p>
                                         <p className="usd">=${(individualRewards * props.tokenPrice).toFixed(4)}</p>
                                     </div>
@@ -413,7 +415,7 @@ const ModalWithdraw = (props) => {
                                 <div className="buttons">
                                     {mode === "normal" ?
                                         <div className="button-section">
-                                            <GasContainer checkAmountError={checkAmountError} activeFeeState={activeFeeState} onClick={handleFee} gas={gas}/>
+                                            <GasContainer checkAmountError={checkAmountError} activeFeeState={activeFeeState} onClick={handleFee} gas={gas} zeroFeeAlert={zeroFeeAlert} setZeroFeeAlert={setZeroFeeAlert}/>
                                             <div className="select-gas">
                                                 <p onClick={handleGas}>{!showGasField ? "Set gas" : "Close"}</p>
                                             </div>
@@ -425,6 +427,7 @@ const ModalWithdraw = (props) => {
                                                         <Form.Control
                                                             type="number"
                                                             min={80000}
+                                                            max={2000000}
                                                             name="gas"
                                                             placeholder={t("ENTER_GAS")}
                                                             step="any"
@@ -435,7 +438,7 @@ const ModalWithdraw = (props) => {
                                                         {
                                                             gasValidationError ?
                                                                 <span className="amount-error">
-                                                                    Enter Gas between 80000 to 2000000
+                                                                    {t("GAS_WARNING")}
                                                                 </span> : ""
                                                         }
                                                     </div>
@@ -444,12 +447,12 @@ const ModalWithdraw = (props) => {
                                             }
                                             <button className="button button-primary"
                                                 disabled={checkAmountError || disabled || individualRewards === 0 || gasValidationError}
-                                            >Next</button>
+                                            >{t("NEXT")}</button>
                                         </div>
                                         :
                                         <button className="button button-primary"
                                             disabled={checkAmountError || disabled || individualRewards === 0}
-                                        >Submit</button>
+                                        >{t("SUBMIT")}</button>
                                     }
                                 </div>
                                 <div className="buttons">
@@ -489,7 +492,7 @@ const ModalWithdraw = (props) => {
                                     importMnemonic ?
                                         <>
                                             <div className="form-field upload">
-                                                <p className="label"> KeyStore file</p>
+                                                <p className="label"> {t("KEY_STORE_FILE")}</p>
                                                 <Form.File id="exampleFormControlFile1" name="uploadFile"
                                                     className="file-upload" accept=".json" required={true}/>
                                             </div>
@@ -654,7 +657,12 @@ const stateToProps = (state) => {
         balance: state.balance.amount,
         tokenPrice: state.tokenPrice.tokenPrice,
         transferableAmount: state.balance.transferableAmount,
+        validatorsList:state.validators.validatorsListWithAddress
     };
 };
 
-export default connect(stateToProps)(ModalWithdraw);
+const actionsToProps = {
+    fetchValidatorsWithAddress,
+};
+
+export default connect(stateToProps, actionsToProps)(ModalWithdraw);

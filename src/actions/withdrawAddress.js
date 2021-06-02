@@ -1,9 +1,9 @@
-import Axios from 'axios';
-import {getWithdrawAddressUrl} from "../constants/url";
 import {
     FETCH_WITHDRAW_ADDRESS_ERROR,
     FETCH_WITHDRAW_ADDRESS_SUCCESS
 } from "../constants/withdrawAddress";
+import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/distribution/v1beta1/query";
+import transactions from "../utils/transactions";
 
 export const fetchAddressSuccess = (address) => {
     return {
@@ -20,17 +20,20 @@ export const fetchAddressError = (data) => {
 
 export const fetchWithdrawAddress = (address) => {
     return async dispatch => {
-        const url = getWithdrawAddressUrl(address);
-        await Axios.get(url)
-            .then((res) => {
-                if (res.data.withdraw_address) {
-                    dispatch(fetchAddressSuccess(res.data.withdraw_address));
-                }
-            })
-            .catch((error) => {
-                dispatch(fetchAddressError(error.response
-                    ? error.response.data.message
-                    : error.message));
-            });
+        const rpcClient = await transactions.RpcClient();
+
+        const stakingQueryService = new QueryClientImpl(rpcClient);
+        await stakingQueryService.DelegatorWithdrawAddress({
+            delegatorAddress: address,
+        }) .then((res) => {
+            if (res.withdrawAddress) {
+                dispatch(fetchAddressSuccess(res.withdrawAddress));
+            }
+        }).catch((error) => {
+            dispatch(fetchAddressError(error.response
+                ? error.response.data.message
+                : error.message));
+        });
+
     };
 };

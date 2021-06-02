@@ -8,12 +8,12 @@ import ModalReDelegate from "../ModalReDelegate";
 import ModalUnbond from "../ModalUnbond";
 import ModalWithdraw from "../ModalWithdraw";
 import ModalDelegate from "../ModalDelegate";
-import {getDelegationsUrl, getValidatorRewardsUrl} from "../../../../constants/url";
-import axios from "axios";
 import {useTranslation} from "react-i18next";
 import ModalSetWithdrawAddress from "../../../Wallet/ModalSetWithdrawAddress";
 import {connect} from "react-redux";
 import transactions from "../../../../utils/transactions";
+import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/distribution/v1beta1/query";
+import {QueryClientImpl as StakingQueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/staking/v1beta1/query";
 
 const ModalActions = (props) => {
     const {t} = useTranslation();
@@ -30,21 +30,29 @@ const ModalActions = (props) => {
     useEffect(() => {
         let address = localStorage.getItem('address');
         const fetchValidatorRewards = async () => {
-            const url = getValidatorRewardsUrl(address, props.validator.operator_address);
-            axios.get(url).then(response => {
-                if (response.data.rewards[0].amount) {
-                    setRewards(transactions.XprtConversion(response.data.rewards[0].amount*1));
+            const rpcClient = await transactions.RpcClient();
+            const distributionQueryService = new QueryClientImpl(rpcClient);
+            await distributionQueryService.DelegationRewards({
+                delegatorAddress: address,
+                validatorAddress: props.validator.operatorAddress,
+            }).then(response => {
+                if (response.rewards[0].amount) {
+                    let value = helper.decimalConversion(response.rewards[0].amount);
+                    setRewards(transactions.XprtConversion(value*1));
                 }
             }).catch(error => {
                 console.log(error.response
                     ? error.response.data.message
                     : error.message);
             });
-            const delegationsUrl = getDelegationsUrl(address);
-            axios.get(delegationsUrl).then(response => {
-                let delegationResponseList = response.data.delegation_responses;
+
+            const stakingQueryService = new StakingQueryClientImpl(rpcClient);
+            await stakingQueryService.DelegatorDelegations({
+                delegatorAddr: address,
+            }).then(response => {
+                let delegationResponseList = response.delegationResponses;
                 for (const item of delegationResponseList) {
-                    if (item.delegation.validator_address === props.validator.operator_address) {
+                    if (item.delegation.validatorAddress === props.validator.operatorAddress) {
                         setDelegationAmount(transactions.XprtConversion(item.balance.amount*1));
                         setDelegateStatus(true);
                     }
@@ -71,7 +79,7 @@ const ModalActions = (props) => {
         setAddress(address);
     };
 
-    let commissionRate = props.validator.commission.commission_rates.rate * 100;
+    let commissionRate = props.validator.commission.commissionRates.rate * 100;
     commissionRate = parseFloat(commissionRate.toFixed(2)).toLocaleString();
     let active = helper.isActive(props.validator);
 
@@ -126,7 +134,7 @@ const ModalActions = (props) => {
 
                                 {active ?
                                     <button
-                                        onClick={() => handleModal('Delegate', props.validator.operator_address, props.validator.description.moniker)}
+                                        onClick={() => handleModal('Delegate', props.validator.operatorAddress, props.validator.description.moniker)}
                                         className="button button-primary">
                                         {t("DELEGATE")}
                                     </button>
@@ -134,16 +142,16 @@ const ModalActions = (props) => {
                                     null
                                 }
                                 <button className="button button-primary"
-                                    onClick={() => handleModal('Redelegate', props.validator.operator_address, props.validator.description.moniker)}
+                                    onClick={() => handleModal('Redelegate', props.validator.operatorAddress, props.validator.description.moniker)}
                                 >{t("REDELEGATE")}
                                 </button>
                                 <button
-                                    onClick={() => handleModal('Unbond', props.validator.operator_address, props.validator.description.moniker)}
+                                    onClick={() => handleModal('Unbond', props.validator.operatorAddress, props.validator.description.moniker)}
                                     className="button button-primary">
                                     {t("UNBOND")}
                                 </button>
                                 <button
-                                    onClick={() => handleModal('Withdraw', props.validator.operator_address, props.validator.description.moniker)}
+                                    onClick={() => handleModal('Withdraw', props.validator.operatorAddress, props.validator.description.moniker)}
                                     className="button button-primary">
                                     {t("CLAIM_REWARDS")}
                                 </button>

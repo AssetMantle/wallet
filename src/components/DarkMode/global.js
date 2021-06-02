@@ -29,6 +29,9 @@ export const GlobalStyles = createGlobalStyle`
     }           
     .wallet-main-section .tabs-section .nav-tabs .nav-link:nth-child(2){
         border-left: 1px solid ${({theme}) => theme.tableBorderColor} !important;
+        border-right: 1px solid ${({theme}) => theme.tableBorderColor} !important;
+    }
+    .wallet-main-section .tabs-section .nav-tabs .nav-link:nth-child(3){
     border-right: 1px solid ${({theme}) => theme.tableBorderColor} !important;
     }
     .wallet-main-section .send-container, .wallet-main-section .receive-container{
@@ -120,7 +123,7 @@ export const GlobalStyles = createGlobalStyle`
     .refresh-button svg{
         fill:${({theme}) => theme.refreshButtonColor} !important;
     }
-    .form-field .info-data .value{
+    .form-field .info-data .value, .fee-alert, .fee-title{
      color: ${({theme}) => theme.lineValueColor};
     }
     .wallet-main-section .receive-container .address{

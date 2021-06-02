@@ -1,5 +1,3 @@
-import Axios from 'axios';
-import {getDelegationsUnbondUrl} from "../constants/url";
 import {
     UNBOND_DELEGATIONS_FETCH_ERROR,
     UNBOND_DELEGATIONS_FETCH_IN_PROGRESS,
@@ -8,6 +6,7 @@ import {
 } from "../constants/unbond";
 import Lodash from "lodash";
 import transactions from "../utils/transactions";
+import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/staking/v1beta1/query";
 
 export const fetchUnbondDelegationsProgress = () => {
     return {
@@ -36,26 +35,27 @@ export const fetchUnbondDelegationsList = (list) => {
 export const fetchUnbondDelegations = (address) => {
     return async dispatch => {
         dispatch(fetchUnbondDelegationsProgress());
-        const url = getDelegationsUnbondUrl(address);
-        await Axios.get(url)
-            .then((res) => {
-                if (res.data.unbonding_responses.length) {
-                    dispatch(fetchUnbondDelegationsList(res.data.unbonding_responses));
-                    const totalUnbond = Lodash.sumBy(res.data.unbonding_responses, (item) => {
-                        if (item.entries.length) {
-                            const entriesSum = Lodash.sumBy(item.entries, (entry) => {
-                                return parseInt(entry["balance"]);
-                            });
-                            return entriesSum;
-                        }
-                    });
-                    dispatch(fetchUnbondDelegationsSuccess(transactions.XprtConversion(totalUnbond)));
-                }
-            })
-            .catch((error) => {
-                dispatch(fetchUnbondDelegationsError(error.response
-                    ? error.response.data.message
-                    : error.message));
-            });
+        const rpcClient = await transactions.RpcClient();
+        const stakingQueryService = new QueryClientImpl(rpcClient);
+        await stakingQueryService.DelegatorUnbondingDelegations({
+            delegatorAddr: address,
+        }).then((unbondingDelegationsResponse) => {
+            if (unbondingDelegationsResponse.unbondingResponses.length) {
+                dispatch(fetchUnbondDelegationsList(unbondingDelegationsResponse.unbondingResponses));
+                const totalUnbond = Lodash.sumBy(unbondingDelegationsResponse.unbondingResponses, (item) => {
+                    if (item.entries.length) {
+                        const entriesSum = Lodash.sumBy(item.entries, (entry) => {
+                            return parseInt(entry["balance"]);
+                        });
+                        return entriesSum;
+                    }
+                });
+                dispatch(fetchUnbondDelegationsSuccess(transactions.XprtConversion(totalUnbond)));
+            }
+        }).catch((error) => {
+            dispatch(fetchUnbondDelegationsError(error.response
+                ? error.response.data.message
+                : error.message));
+        });
     };
 };

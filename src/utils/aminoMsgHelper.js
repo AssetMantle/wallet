@@ -1,11 +1,11 @@
-function sendMsg(amount, fromAddress, toAddress) {
+function sendMsg(amount, fromAddress, toAddress, denom) {
     return {
         type: "cosmos-sdk/MsgSend",
         value: {
             amount: [
                 {
                     amount: String(amount),
-                    denom: "uxprt"
+                    denom: denom
                 }
             ],
             from_address: fromAddress,

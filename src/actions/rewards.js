@@ -1,5 +1,3 @@
-import Axios from 'axios';
-import {getRewardsUrl} from "../constants/url";
 import {
     REWARDS_FETCH_ERROR,
     REWARDS_FETCH_IN_PROGRESS,
@@ -7,6 +5,8 @@ import {
     REWARDS_LIST_FETCH_SUCCESS
 } from "../constants/rewards";
 import transactions from "../utils/transactions";
+import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/distribution/v1beta1/query";
+import helper from "../utils/helper";
 
 export const fetchRewardsProgress = () => {
     return {
@@ -35,21 +35,23 @@ export const fetchRewardsError = (data) => {
 export const fetchRewards = (address) => {
     return async dispatch => {
         dispatch(fetchRewardsProgress());
-        const url = getRewardsUrl(address);
-        await Axios.get(url)
-            .then((res) => {
-                if (res.data.rewards.length) {
-                    dispatch(fetchRewardsListProgress(res.data.rewards));
-                }
-                if (res.data.total.length) {
-                    const fixedRewardsResponse = transactions.XprtConversion(res.data.total[0].amount*1);
-                    dispatch(fetchRewardsSuccess(fixedRewardsResponse));
-                }
-            })
-            .catch((error) => {
-                dispatch(fetchRewardsError(error.response
-                    ? error.response.data.message
-                    : error.message));
-            });
+        const rpcClient = await transactions.RpcClient();
+        const stakingQueryService = new QueryClientImpl(rpcClient);
+        await stakingQueryService.DelegationTotalRewards({
+            delegatorAddress: address,
+        }).then((delegatorRewardsResponse) => {
+            if (delegatorRewardsResponse.rewards.length) {
+                dispatch(fetchRewardsListProgress(delegatorRewardsResponse.rewards));
+            }
+            if (delegatorRewardsResponse.total.length) {
+                let rewards = helper.decimalConversion(delegatorRewardsResponse.total[0].amount, 18);
+                const fixedRewardsResponse = transactions.XprtConversion(rewards*1);
+                dispatch(fetchRewardsSuccess(fixedRewardsResponse));
+            }
+        }).catch((error) => {
+            dispatch(fetchRewardsError(error.response
+                ? error.response.data.message
+                : error.message));
+        });
     };
 };

@@ -3,8 +3,14 @@ import config from "../config.json";
 import {Bip39, EnglishMnemonic, Slip10, Slip10Curve, stringToPath} from "@cosmjs/crypto";
 import MakePersistence from "./cosmosjsWrapper";
 import helper from "./helper";
-const bip39 = require("bip39");
-const {SigningStargateClient} = require("@cosmjs/stargate");
+import Long from "long";
+import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
+import {createProtobufRpcClient} from "@cosmjs/stargate";
+
+const tendermint_1 = require("@cosmjs/stargate/build/codec/ibc/lightclients/tendermint/v1/tendermint");
+const {SigningStargateClient, QueryClient, setupIbcExtension} = require("@cosmjs/stargate");
+const tmRPC = require("@cosmjs/tendermint-rpc");
+const {TransferMsg} = require("./protoMsgHelper");
 const addressPrefix = config.addressPrefix;
 const configChainID = process.env.REACT_APP_CHAIN_ID;
 const configCoinType = config.coinType;
@@ -14,7 +20,7 @@ const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 async function Transaction(wallet, signerAddress, msgs, fee, memo = "") {
     const cosmJS = await SigningStargateClient.connectWithSigner(
         tendermintRPCURL,
-        wallet
+        wallet,
     );
     return await cosmJS.signAndBroadcast(signerAddress, msgs, fee, memo);
 }
@@ -72,30 +78,9 @@ function getAccountNumberAndSequence(authResponse) {
     }
 }
 
-function mnemonicTrim(mnemonic) {
-    let mnemonicList = mnemonic.replace(/\s/g, " ").split(/\s/g);
-    let mnemonicWords = [];
-    for (let word of mnemonicList) {
-        if (word === "") {
-            console.log();
-        } else {
-            let trimmedWord = word.replace(/\s/g, "");
-            mnemonicWords.push(trimmedWord);
-        }
-    }
-    mnemonicWords = mnemonicWords.join(" ");
-    return mnemonicWords;
-}
-
-function mnemonicValidation(memo) {
-    const mnemonicWords = mnemonicTrim(memo);
-    let validateMnemonic = bip39.validateMnemonic(mnemonicWords);
-    return validateMnemonic;
-}
-
 function updateFee(address) {
     const persistence = MakePersistence(0, 0);
-    if(localStorage.getItem('loginMode') === 'normal'){
+    if (localStorage.getItem('loginMode') === 'normal') {
         persistence.getAccounts(address).then(data => {
             if (data.code === undefined) {
                 if (data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount" ||
@@ -112,14 +97,14 @@ function updateFee(address) {
                 localStorage.setItem('account', 'non-vesting');
             }
         });
-    }else {
+    } else {
         localStorage.setItem('fee', config.vestingAccountFee);
     }
 
 }
 
 function XprtConversion(data) {
-    const Result = data/config.xprtValue;
+    const Result = data / config.xprtValue;
     return Result;
 }
 
@@ -134,12 +119,12 @@ function PrivateKeyReader(file, password, accountNumber, addressIndex, bip39Pass
                 reject(decryptedData.error);
             } else {
                 const persistence = MakePersistence(accountNumber, addressIndex);
-                let mnemonic = mnemonicTrim(decryptedData.mnemonic);
+                let mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
                 const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
-                if(address === loginAddress){
+                if (address === loginAddress) {
                     resolve(mnemonic);
                     localStorage.setItem('encryptedMnemonic', event.target.result);
-                }else {
+                } else {
                     reject("Your sign in address and keystore file don’t match. Please try again or else sign in again.");
                 }
             }
@@ -147,14 +132,56 @@ function PrivateKeyReader(file, password, accountNumber, addressIndex, bip39Pass
     });
 }
 
+// copied from node_modules/@cosmjs/stargate/build/queries/ibc.js
+function decodeTendermintClientStateAny(clientState) {
+    if ((clientState === null || clientState === void 0 ? void 0 : clientState.typeUrl) !== "/ibc.lightclients.tendermint.v1.ClientState") {
+        throw new Error(`Unexpected client state type: ${clientState === null || clientState === void 0 ? void 0 : clientState.typeUrl}`);
+    }
+    return tendermint_1.ClientState.decode(clientState.value);
+}
+
+// copied from node_modules/@cosmjs/stargate/build/queries/ibc.js
+function decodeTendermintConsensusStateAny(consensusState) {
+    if ((consensusState === null || consensusState === void 0 ? void 0 : consensusState.typeUrl) !== "/ibc.lightclients.tendermint.v1.ConsensusState") {
+        throw new Error(`Unexpected client state type: ${consensusState === null || consensusState === void 0 ? void 0 : consensusState.typeUrl}`);
+    }
+    return tendermint_1.ConsensusState.decode(consensusState.value);
+}
+async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp = 1000, denom = "uxprt", port = "transfer") {
+    const tendermintClient = await tmRPC.Tendermint34Client.connect(tendermintRPCURL);
+    const queryClient = new QueryClient(tendermintClient);
+
+    const ibcExtension = setupIbcExtension(queryClient);
+
+    const clientStateResponse = await ibcExtension.ibc.channel.clientState(port, channel);
+    const clientStateResponseDecoded = decodeTendermintClientStateAny(clientStateResponse.identifiedClientState.clientState);
+    timeoutHeight = {
+        revisionHeight: clientStateResponseDecoded.latestHeight.revisionHeight.add(1000000),
+        revisionNumber: clientStateResponseDecoded.latestHeight.revisionNumber
+    };
+
+    const consensusStateResponse = await ibcExtension.ibc.channel.consensusState(port,channel,
+        clientStateResponseDecoded.latestHeight.revisionNumber.toInt() , clientStateResponseDecoded.latestHeight.revisionHeight.toInt());
+    const consensusStateResponseDecoded = decodeTendermintConsensusStateAny(consensusStateResponse.consensusState);
+
+    const timeoutTime = Long.fromNumber(consensusStateResponseDecoded.timestamp.getTime()/1000).add(timeoutTimestamp).multiply(1000000000); //get time in nanoesconds
+
+    return TransferMsg(channel, fromAddress, toAddress, amount,timeoutHeight , timeoutTime, denom, port);
+}
+
+async function RpcClient() {
+    const tendermintClient = await Tendermint34Client.connect(tendermintRPCURL);
+    const queryClient = new QueryClient(tendermintClient);
+    return createProtobufRpcClient(queryClient);
+}
 export default {
     TransactionWithKeplr,
     TransactionWithMnemonic,
     makeHdPath,
     getAccountNumberAndSequence,
-    mnemonicValidation,
     updateFee,
     XprtConversion,
     PrivateKeyReader,
-    mnemonicTrim
+    MakeIBCTransferMsg,
+    RpcClient
 };

@@ -6,7 +6,7 @@ import {
 import wallet from "../../utils/wallet";
 import GeneratePrivateKey from "../Common/GeneratePrivateKey";
 import {useTranslation} from "react-i18next";
-import transactions from "../../utils/transactions";
+import helper from "../../utils/helper";
 
 const GenerateKeyStore = (props) => {
     const {t} = useTranslation();
@@ -22,7 +22,7 @@ const GenerateKeyStore = (props) => {
         if (responseData.error) {
             setErrorMessage(responseData.error);
         } else {
-            let mnemonic = transactions.mnemonicTrim(event.target.mnemonic.value);
+            let mnemonic = helper.mnemonicTrim(event.target.mnemonic.value);
             setUserMnemonic(mnemonic);
             setGenerateKey(true);
             setMnemonicForm(false);

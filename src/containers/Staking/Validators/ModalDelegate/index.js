@@ -20,7 +20,7 @@ import {connect} from "react-redux";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import config from "../../../../config";
 import {useTranslation} from "react-i18next";
-import GasContainer from "../../../../components/Gas";
+import GasContainer from "../../../Gas";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -44,6 +44,7 @@ const ModalDelegate = (props) => {
     const [gas, setGas] = useState(config.gas);
     const [gasValidationError, setGasValidationError] = useState(false);
     const [fee, setFee] = useState(config.averageFee);
+    const [zeroFeeAlert, setZeroFeeAlert] = useState(false);
 
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
@@ -117,14 +118,14 @@ const ModalDelegate = (props) => {
         const response = transactions.TransactionWithKeplr([DelegateMsg(loginAddress, props.validatorAddress, (amount * config.xprtValue))], aminoMsgHelper.fee(0, 250000), memoContent);
         response.then(result => {
             if (result.code !== undefined) {
-                helper.AccountChangeCheck(result.rawLog);
+                helper.accountChangeCheck(result.rawLog);
             }
             setResponse(result);
             setLoader(false);
             setInitialModal(false);
         }).catch(err => {
             setLoader(false);
-            helper.AccountChangeCheck(err.message);
+            helper.accountChangeCheck(err.message);
             setErrorMessage(err.message);
         });
     };
@@ -135,7 +136,7 @@ const ModalDelegate = (props) => {
         if (memoStatus) {
             memo = event.target.memo.value;
         }
-        let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
+        let memoCheck = helper.mnemonicValidation(memo, loginAddress);
         if (memoCheck) {
             setErrorMessage(t("MEMO_MNEMONIC_CHECK_ERROR"));
         } else {
@@ -255,8 +256,18 @@ const ModalDelegate = (props) => {
     };
 
     const handleFee = (feeType, feeValue)=>{
+        if(feeType === "Low"){
+            setZeroFeeAlert(true);
+        }
         setActiveFeeState(feeType);
         setFee(gas*feeValue);
+        if ((props.balance - amount) < transactions.XprtConversion(gas*feeValue)) {
+            setGasValidationError(true);
+            setCheckAmountError(true);
+        }else {
+            setGasValidationError(false);
+            setCheckAmountError(false);
+        }
     };
 
     if (loader) {
@@ -375,10 +386,9 @@ const ModalDelegate = (props) => {
                             }
 
                             <div className="buttons navigate-buttons">
-                                {/*<FeeContainer/>*/}
                                 {mode === "normal" ?
                                     <div className="button-section">
-                                        <GasContainer checkAmountError={checkAmountError} activeFeeState={activeFeeState} onClick={handleFee} gas={gas}/>
+                                        <GasContainer checkAmountError={checkAmountError} activeFeeState={activeFeeState} onClick={handleFee} gas={gas} zeroFeeAlert={zeroFeeAlert} setZeroFeeAlert={setZeroFeeAlert}/>
                                         <div className="select-gas">
                                             <p onClick={handleGas}>{!showGasField ? "Set gas" : "Close"}</p>
                                         </div>
@@ -390,6 +400,7 @@ const ModalDelegate = (props) => {
                                                     <Form.Control
                                                         type="number"
                                                         min={80000}
+                                                        max={2000000}
                                                         name="gas"
                                                         placeholder={t("ENTER_GAS")}
                                                         step="any"
@@ -400,7 +411,7 @@ const ModalDelegate = (props) => {
                                                     {
                                                         gasValidationError ?
                                                             <span className="amount-error">
-                                                                Enter Gas between 80000 to 2000000
+                                                                {t("GAS_WARNING")}
                                                             </span> : ""
                                                     }
                                                 </div>
@@ -409,12 +420,12 @@ const ModalDelegate = (props) => {
                                         }
                                         <button className="button button-primary"
                                             disabled={checkAmountError || amount === 0 || (props.balance * 1) === 0 || gasValidationError}
-                                        >Next</button>
+                                        > {t("NEXT")}</button>
                                     </div>
                                     :
                                     <button className="button button-primary"
                                         disabled={checkAmountError || amount === 0 || (props.balance * 1) === 0}
-                                    >Submit</button>
+                                    > {t("SUBMIT")}</button>
                                 }
                             </div>
                         </Form>
@@ -439,7 +450,7 @@ const ModalDelegate = (props) => {
                                 importMnemonic ?
                                     <>
                                         <div className="form-field upload">
-                                            <p className="label"> KeyStore file</p>
+                                            <p className="label">  {t("KEY_STORE_FILE")}</p>
                                             <Form.File id="exampleFormControlFile1" name="uploadFile"
                                                 className="file-upload" accept=".json" required={true}/>
                                         </div>

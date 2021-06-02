@@ -1,5 +1,4 @@
-import Axios from 'axios';
-import {getValidatorsUrl, getValidatorUrl} from "../constants/url";
+import {QueryClientImpl} from '@cosmjs/stargate/build/codec/cosmos/staking/v1beta1/query';
 
 import {
     FETCH_ACTIVE_VALIDATORS_SUCCESS,
@@ -8,10 +7,13 @@ import {
     FETCH_VALIDATORS_IN_PROGRESS,
     FETCH_VALIDATORS_SUCCESS,
     FETCH_VALIDATOR_SUCCESS,
-    FETCH_VALIDATOR_ERROR
+    FETCH_VALIDATOR_ERROR,
+    FETCH_VALIDATOR_WITH_ADDRESS_ERROR,
+    FETCH_VALIDATOR_WITH_ADDRESS_SUCCESS
 } from "../constants/validators";
 
 import helper from "../utils/helper";
+import transactions from "../utils/transactions";
 
 export const fetchValidatorsInProgress = () => {
     return {
@@ -48,32 +50,66 @@ export const fetchValidatorsError = (count) => {
     };
 };
 
-
+const validatorsDelegationSort = (validators, delegations) =>{
+    let delegatedValidators =[];
+    validators.forEach((item) => {
+        let count = 0;
+        for (const data of delegations) {
+            if(item.operatorAddress === data.delegation.validatorAddress){
+                count = 0;
+                break;
+            }else {
+                count ++;
+            }
+        }
+        if(count === 0){
+            delegatedValidators.unshift(item);
+        }else {
+            delegatedValidators.push(item);
+        }
+    });
+    return delegatedValidators;
+};
 export const fetchValidators = (address) => {
     return async dispatch => {
         dispatch(fetchValidatorsInProgress());
-        const url = getValidatorsUrl(address);
-        await Axios.get(url)
-            .then((res) => {
-                let validators = res.data.validators;
-                let activeValidators = [];
-                let inActiveValidators = [];
-                validators.forEach((item) => {
-                    if (helper.isActive(item)) {
-                        activeValidators.push(item);
-                    } else {
-                        inActiveValidators.push(item);
-                    }
-                });
-                dispatch(fetchTotalValidatorsSuccess(validators));
-                dispatch(fetchActiveValidatorsSuccess(activeValidators));
-                dispatch(fetchInactiveValidatorsSuccess(inActiveValidators));
-            })
-            .catch((error) => {
-                dispatch(fetchValidatorsError(error.response
-                    ? error.response.data.message
-                    : error.message));
+        const rpcClient = await transactions.RpcClient();
+
+        const stakingQueryService = new QueryClientImpl(rpcClient);
+        await stakingQueryService.Validators({
+            status: false,
+        }).then(async (res) => {
+            let validators = res.validators;
+            const delegationsResponse = await stakingQueryService.DelegatorDelegations({
+                delegatorAddr: address,
             });
+            let activeValidators = [];
+            let inActiveValidators = [];
+            validators.forEach((item) => {
+                if (helper.isActive(item)) {
+                    activeValidators.push(item);
+                } else {
+                    inActiveValidators.push(item);
+                }
+            });
+
+            if(delegationsResponse.delegationResponses.length) {
+                const sortedActiveValidators =  validatorsDelegationSort(activeValidators, delegationsResponse.delegationResponses);
+                const sortedInactiveValidators =  validatorsDelegationSort(inActiveValidators, delegationsResponse.delegationResponses);
+                activeValidators = sortedActiveValidators;
+                inActiveValidators = sortedInactiveValidators;
+            }
+
+            dispatch(fetchTotalValidatorsSuccess(validators));
+            dispatch(fetchActiveValidatorsSuccess(activeValidators));
+            dispatch(fetchInactiveValidatorsSuccess(inActiveValidators));
+        }).catch((error) => {
+            dispatch(fetchValidatorsError(error.response
+                ? error.response.data.message
+                : error.message));
+        });
+
+
     };
 };
 
@@ -93,16 +129,52 @@ export const fetchValidatorError = (data) => {
 
 
 export const fetchValidator = (address) => {
+    
     return async dispatch => {
-        const url = getValidatorUrl(address);
-        Axios.get(url)
-            .then((res) => {
-                dispatch(fetchValidatorSuccess(res.data.validator));
-            })
-            .catch((error) => {
-                dispatch(fetchValidatorError(error.response
+        const rpcClient = await transactions.RpcClient();
+        const stakingQueryService = new QueryClientImpl(rpcClient);
+        await stakingQueryService.Validator({
+            validatorAddr: address,
+        }).then((res) => {
+            dispatch(fetchValidatorSuccess(res.validator));
+        }).catch((error) => {
+            dispatch(fetchValidatorError(error.response
+                ? error.response.data.message
+                : error.message));
+        });
+    };
+};
+
+export const fetchValidatorsWithAddressSuccess = (list) => {
+    return {
+        type: FETCH_VALIDATOR_WITH_ADDRESS_SUCCESS,
+        list,
+    };
+};
+
+export const fetchValidatorsWithAddressError = (data) => {
+    return {
+        type: FETCH_VALIDATOR_WITH_ADDRESS_ERROR,
+        data,
+    };
+};
+
+export const fetchValidatorsWithAddress = (list) => {
+    return async dispatch => {
+        let validators = [];
+        for (const item of list) {
+            const rpcClient = await transactions.RpcClient();
+            const stakingQueryService = new QueryClientImpl(rpcClient);
+            await stakingQueryService.Validator({
+                validatorAddr: item.validatorAddress,
+            }).then((res) => {
+                validators.push(res.validator);
+            }).catch((error) => {
+                dispatch(fetchValidatorsWithAddressError(error.response
                     ? error.response.data.message
                     : error.message));
             });
+        }
+        dispatch(fetchValidatorsWithAddressSuccess(validators));
     };
 };

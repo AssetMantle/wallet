@@ -5,7 +5,8 @@ import {
     BALANCE_FETCH_IN_PROGRESS,
     BALANCE_LIST_FETCH_SUCCESS,
     TRANSFERABLE_BALANCE_LIST_FETCH_SUCCESS,
-    VESTING_BALANCE_FETCH_SUCCESS
+    VESTING_BALANCE_FETCH_SUCCESS,
+    TOKEN_LIST_FETCH_SUCCESS
 } from "../constants/balance";
 
 
@@ -58,11 +59,19 @@ const vestingAmount = (state = 0, action) => {
     return state;
 };
 
+const tokenList = (state = [], action) => {
+    if (action.type === TOKEN_LIST_FETCH_SUCCESS) {
+        return action.list;
+    }
+    return state;
+};
+
 export default combineReducers({
     amount,
     _,
     list,
     transferableAmount,
     vestingAmount,
-    inProgress
+    inProgress,
+    tokenList
 });

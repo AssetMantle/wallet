@@ -4,6 +4,8 @@ import {
     MsgSetWithdrawAddress,
     MsgWithdrawDelegatorReward
 } from "@cosmjs/stargate/build/codec/cosmos/distribution/v1beta1/tx";
+import {MsgTransfer} from "@cosmjs/stargate/build/codec/ibc/applications/transfer/v1/tx";
+import {coin} from "@cosmjs/stargate";
 
 const msgSendTypeUrl = "/cosmos.bank.v1beta1.MsgSend";
 const msgDelegateTypeUrl = "/cosmos.staking.v1beta1.MsgDelegate";
@@ -11,16 +13,16 @@ const msgRedelegateTypeUrl = "/cosmos.staking.v1beta1.MsgBeginRedelegate";
 const msgUnbondTypeUrl = "/cosmos.staking.v1beta1.MsgUndelegate";
 const msgWithdrawRewardsTypeUrl = "/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward";
 const msgSetWithdrawAddressTypeUrl = "/cosmos.distribution.v1beta1.MsgSetWithdrawAddress";
+const msgTransferTypeUrl = "/ibc.applications.transfer.v1.MsgTransfer";
 
-
-function SendMsg(fromAddress, toAddress, amount) {
+function SendMsg(fromAddress, toAddress, amount, denom) {
     return {
         typeUrl: msgSendTypeUrl,
         value: MsgSend.fromPartial({
             fromAddress: fromAddress,
             toAddress: toAddress,
             amount: [{
-                denom: "uxprt",
+                denom: denom,
                 amount: String(amount),
             }],
         }),
@@ -95,4 +97,22 @@ function SetWithDrawAddressMsg(delegatorAddress, withdrawAddress) {
     };
 }
 
-export {SendMsg, DelegateMsg, RedelegateMsg, UnbondMsg, WithdrawMsg, SetWithDrawAddressMsg};
+function TransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp, denom , port = "transfer") {
+    return {
+        typeUrl: msgTransferTypeUrl,
+        value: MsgTransfer.fromPartial({
+            sourcePort: port,
+            sourceChannel: channel,
+            token: coin(amount,denom),
+            sender: fromAddress,
+            receiver: toAddress,
+            timeoutHeight: {
+                revisionNumber: timeoutHeight.revisionNumber,
+                revisionHeight: timeoutHeight.revisionHeight,
+            },
+            timeoutTimestamp: timeoutTimestamp,
+        }),
+    };
+}
+
+export {SendMsg, DelegateMsg, RedelegateMsg, UnbondMsg, WithdrawMsg, SetWithDrawAddressMsg, TransferMsg};
