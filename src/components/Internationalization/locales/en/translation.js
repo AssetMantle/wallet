@@ -218,8 +218,12 @@ let English = {
         "DELEGATE_HEADER_HINT":"Delegate your XPRT and earn staking rewards.",
         "DELEGATE_HEADER_HINT_NOTE":"Unstaking or unbonding period: 21 days",
         "FAQS":"FAQ",
+        "SELECT_CHAIN":"Select Chain",
+        "CHAIN":"Chain",
         "GAS":"Gas",
-        "ENTER_GAS":"Enter Gas"
+        "ENTER_GAS":"Enter Gas",
+        "ADDING_CHANNEL":"Adding Channel",
+        "ZERO_FEE_WARNING":"Zero fees has only been enabled temperory so people can do transcations to have some tokens left inside the wallet to do proper fee transactions."
 
     }
 };

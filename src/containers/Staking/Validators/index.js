@@ -8,9 +8,9 @@ import InfoRefresh from "../../Refresh";
 import {useTranslation} from "react-i18next";
 
 const Validators = (props) => {
+    let address = localStorage.getItem('address');
     const {t} = useTranslation();
     useEffect(() => {
-        const address = localStorage.getItem('address');
         props.fetchValidators(address);
     }, []);
 

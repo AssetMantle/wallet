@@ -20,7 +20,7 @@ import Loader from "../../../../components/Loader";
 import config from "../../../../config";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import {useTranslation} from "react-i18next";
-import GasContainer from "../../../../components/Gas";
+import GasContainer from "../../../Gas";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalUnbond = (props) => {
@@ -43,6 +43,7 @@ const ModalUnbond = (props) => {
     const [gas, setGas] = useState(config.gas);
     const [gasValidationError, setGasValidationError] = useState(false);
     const [fee, setFee] = useState(config.averageFee);
+    const [zeroFeeAlert, setZeroFeeAlert] = useState(false);
 
 
     const handleMemoChange = () => {
@@ -255,8 +256,18 @@ const ModalUnbond = (props) => {
     };
 
     const handleFee = (feeType, feeValue)=>{
+        if(feeType === "Low"){
+            setZeroFeeAlert(true);
+        }
         setActiveFeeState(feeType);
         setFee(gas*feeValue);
+        if (props.transferableAmount < transactions.XprtConversion(gas*feeValue)) {
+            setGasValidationError(true);
+            setCheckAmountError(true);
+        }else {
+            setGasValidationError(false);
+            setCheckAmountError(false);
+        }
     };
     
     if (loader) {
@@ -359,7 +370,7 @@ const ModalUnbond = (props) => {
                             <div className="buttons navigate-buttons">
                                 {mode === "normal" ?
                                     <div className="button-section">
-                                        <GasContainer checkAmountError={checkAmountError} activeFeeState={activeFeeState} onClick={handleFee} gas={gas}/>
+                                        <GasContainer checkAmountError={checkAmountError} activeFeeState={activeFeeState} onClick={handleFee} gas={gas} zeroFeeAlert={zeroFeeAlert} setZeroFeeAlert={setZeroFeeAlert}/>
                                         <div className="select-gas">
                                             <p onClick={handleGas}>{!showGasField ? "Set gas" : "Close"}</p>
                                         </div>

@@ -29,6 +29,9 @@ export const GlobalStyles = createGlobalStyle`
     }           
     .wallet-main-section .tabs-section .nav-tabs .nav-link:nth-child(2){
         border-left: 1px solid ${({theme}) => theme.tableBorderColor} !important;
+        border-right: 1px solid ${({theme}) => theme.tableBorderColor} !important;
+    }
+    .wallet-main-section .tabs-section .nav-tabs .nav-link:nth-child(3){
     border-right: 1px solid ${({theme}) => theme.tableBorderColor} !important;
     }
     .wallet-main-section .send-container, .wallet-main-section .receive-container{

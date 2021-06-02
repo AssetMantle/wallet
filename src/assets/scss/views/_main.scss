@@ -449,3 +449,13 @@
     width: 20px;
   }
 }
+
+.zero-fee-modal {
+  .modal-dialog {
+    max-width: 500px !important;
+
+    .modal-content {
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    }
+  }
+}

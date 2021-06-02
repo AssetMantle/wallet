@@ -5,6 +5,8 @@ import Receive from "./Receive";
 import Transactions from "./Transactions/index";
 import TokenInfo from "../Common/TokenInfo";
 import InfoRefresh from "../Refresh";
+import IbcTxn from "./Ibc/IbcTxn";
+
 const Wallet = () => {
 
     return (
@@ -14,6 +16,9 @@ const Wallet = () => {
                 <Tabs defaultActiveKey="Send" id="uncontrolled-tab-example">
                     <Tab eventKey="Send" title="Send">
                         <Send/>
+                    </Tab>
+                    <Tab eventKey="IBC" title="IBC">
+                        <IbcTxn/>
                     </Tab>
                     <Tab eventKey="Receive" title="Receive">
                         <Receive/>

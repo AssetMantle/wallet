@@ -22,7 +22,6 @@ const DashboardHeader = () => {
     }
     useEffect(() => {
         const localTheme = window.localStorage.getItem('theme');
-        console.log(localTheme, "localTheme");
         if(localTheme === 'light'){
             if (document.getElementById('root').classList.contains('dark-mode')) {
                 document.getElementById('root').classList.add('light-mode');
@@ -35,6 +34,7 @@ const DashboardHeader = () => {
                 document.getElementById('root').classList.remove('light-mode');
             }
         }
+
     }, []);
     const closeWallet = () => {
         localStorage.clear();
@@ -44,8 +44,6 @@ const DashboardHeader = () => {
     const handleKeyStore = () =>{
         setShowKeyStore(true);
     };
-    const theme = window.localStorage.getItem('theme');
-    console.log(theme, "theme");
     const ProfileIcon = <Icon viewClass="profile" icon="profile"/>;
     return (
         <div className="header dashboard">

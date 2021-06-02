@@ -9,66 +9,72 @@ import {
     Popover,
     useAccordionToggle
 } from "react-bootstrap";
-import Icon from "../../components/Icon";
-import success from "../../assets/images/success.svg";
-import transactions from "../../utils/transactions";
-import helper from "../../utils/helper";
-import aminoMsgHelper from "../../utils/aminoMsgHelper";
-import Loader from "../../components/Loader";
-import {SendMsg} from "../../utils/protoMsgHelper";
+import Icon from "../../../components/Icon";
+import success from "../../../assets/images/success.svg";
+import transactions from "../../../utils/transactions";
+import helper from "../../../utils/helper";
+import aminoMsgHelper from "../../../utils/aminoMsgHelper";
+import Loader from "../../../components/Loader";
 import {connect} from "react-redux";
-import config from "../../config";
-import MakePersistence from "../../utils/cosmosjsWrapper";
+import config from "../../../config";
+import MakePersistence from "../../../utils/cosmosjsWrapper";
 import {useTranslation} from "react-i18next";
-import GasContainer from "../Gas";
-import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
-
+import MenuItem from "@material-ui/core/MenuItem";
+import ActionHelper from "../../../utils/actions";
+import GasContainer from "../../Gas";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
-const Send = (props) => {
+const IbcTxn = (props) => {
     const {t} = useTranslation();
     const [amountField, setAmountField] = useState(0);
     const [toAddress, setToAddress] = useState('');
+    const [chain, setChain] = useState("");
+    const [channelID, setChannelID] = useState("");
     const [txResponse, setTxResponse] = useState('');
     const [mnemonicForm, setMnemonicForm] = useState(false);
     const [show, setShow] = useState(true);
     const [advanceMode, setAdvanceMode] = useState(false);
     const [memoStatus, setMemoStatus] = useState(false);
-    const [zeroFeeAlert, setZeroFeeAlert] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    const [keplerError, setKeplerError] = useState("");
+    const [keplerError, setKeplerError] = useState( "");
     const [loader, setLoader] = useState(false);
+    const [customChain, setCustomChain] = useState(false);
     const [importMnemonic, setImportMnemonic] = useState(true);
     const [memoContent, setMemoContent] = useState('');
-    const [checkAmountError, setCheckAmountError] = useState(false);
+    const [gas, setGas] = useState(config.gas);
+    const [gasValidationError, setGasValidationError] = useState(false);
+    const [fee, setFee] = useState(config.averageFee);
     const [showGasField, setShowGasField] = useState(false);
     const [activeFeeState, setActiveFeeState] = useState("Average");
+    const [checkAmountError, setCheckAmountError] = useState(false);
+    const [checkAmountWarning, setCheckAmountWarning] = useState(false);
     const [token, setToken] = useState("uxprt");
     const [tokenDenom, setTokenDenom] = useState("uxprt");
     const [transferableAmount, setTransferableAmount] = useState(props.transferableAmount);
     const [tokenItem, setTokenItem] = useState({});
-    const [gas, setGas] = useState(config.gas);
-    const [gasValidationError, setGasValidationError] = useState(false);
-    const [fee, setFee] = useState(config.averageFee);
+    const [zeroFeeAlert, setZeroFeeAlert] = useState(false);
     let mode = localStorage.getItem('loginMode');
     let loginAddress = localStorage.getItem('address');
-
-
+    
     const handleClose = () => {
         setShow(false);
         setMnemonicForm(false);
         setTxResponse('');
         setErrorMessage("");
     };
-
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
-            if ((props.transferableAmount - (evt.target.value * 1)) < transactions.XprtConversion(fee)) {
+            if ((props.transferableAmount - (evt.target.value * 1)) < transactions.XprtConversion(parseInt(localStorage.getItem('fee')))) {
                 setCheckAmountError(true);
             } else {
                 setCheckAmountError(false);
+            }
+            if ((props.transferableAmount - (evt.target.value * 1)) < transactions.XprtConversion(2 * parseInt(localStorage.getItem('fee'))) && (props.transferableAmount - (evt.target.value * 1)) >= transactions.XprtConversion(parseInt(localStorage.getItem('fee')))) {
+                setCheckAmountWarning(true);
+            } else {
+                setCheckAmountWarning(false);
             }
             setAmountField(evt.target.value * 1);
         } else {
@@ -77,7 +83,6 @@ const Send = (props) => {
     };
 
     useEffect(() => {
-        setFee(gas * fee);
         const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
         if (encryptedMnemonic !== null) {
             setImportMnemonic(false);
@@ -88,41 +93,38 @@ const Send = (props) => {
 
     const handleSubmit = async event => {
         event.preventDefault();
-        if (helper.ValidateAddress(event.target.address.value)) {
-            setToAddress(event.target.address.value);
-            if (mode === "normal") {
-                let memo = "";
-                if (memoStatus) {
-                    memo = event.target.memo.value;
-                }
-                setMemoContent(memo);
-                let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
-                if (memoCheck) {
-                    setKeplerError(t("MEMO_MNEMONIC_CHECK_ERROR"));
-                } else {
-                    setKeplerError('');
-                    setMnemonicForm(true);
-                    setShow(true);
-                }
+        setToAddress(event.target.address.value);
+        let channel = event.target.channel.value;
+        setChannelID(channel);
+        if (mode === "normal") {
+            let memo = "";
+            if (memoStatus) {
+                memo = event.target.memo.value;
+            }
+            setMemoContent(memo);
+            let memoCheck = transactions.mnemonicValidation(memo, loginAddress);
+            if (memoCheck) {
+                setKeplerError(t("MEMO_MNEMONIC_CHECK_ERROR"));
             } else {
                 setKeplerError('');
                 setMnemonicForm(true);
                 setShow(true);
             }
         } else {
-            setKeplerError("Invalid Recipient Address");
-        }
-        if(mode === "normal" && (localStorage.getItem("fee") * 1) === 0 ){
-            setFee(0);
+            setKeplerError('');
+            setMnemonicForm(true);
+            setShow(true);
         }
     };
-    const handleSubmitKepler = event => {
-
+    const handleSubmitKepler = async event => {
         setShow(true);
         setLoader(true);
         event.preventDefault();
-        const response = transactions.TransactionWithKeplr([SendMsg(loginAddress, event.target.address.value, (amountField * config.xprtValue))], aminoMsgHelper.fee(0, 250000));
+        console.log(toAddress,"toAddress");
+        const response = transactions.TransactionWithKeplr( [await transactions.MakeIBCTransferMsg(channelID, loginAddress,
+            event.target.address.value,(amountField * config.xprtValue), undefined)],aminoMsgHelper.fee(0, 250000));
         response.then(result => {
+            console.log(response, "keplr");
             if (result.code !== undefined) {
                 helper.AccountChangeCheck(result.rawLog);
             }
@@ -189,7 +191,7 @@ const Send = (props) => {
 
         if (importMnemonic) {
             const password = evt.target.password.value;
-            let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
+            let promise = transactions.PrivateKeyReader(evt.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
             await promise.then(function (result) {
                 userMnemonic = result;
             }).catch(err => {
@@ -211,14 +213,30 @@ const Send = (props) => {
         }
 
         if (userMnemonic !== undefined) {
+            let latestBlockHeight = 0;
+            let blockHeightResponse = ActionHelper.getLatestBlock();
+            await blockHeightResponse.then(function (result) {
+                latestBlockHeight = result;
+            }).catch(err => {
+                setErrorMessage(err);
+            });
+            console.log(latestBlockHeight,"latestBlockHeight");
             const persistence = MakePersistence(accountNumber, addressIndex);
             const address = persistence.getAddress(userMnemonic, bip39Passphrase, true);
             const ecpairPriv = persistence.getECPairPriv(userMnemonic, bip39Passphrase);
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
+                    let timeoutHeight = {
+                        revisionNumber: "",
+                        revisionHeight: ""
+                    };
                     setImportMnemonic(false);
-                    const response = transactions.TransactionWithMnemonic([SendMsg(address, toAddress, (amountField * config.xprtValue), token)], aminoMsgHelper.fee(Math.trunc(fee), gas), memoContent,
-                        userMnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                    // amount field should be int
+                    const response = transactions.TransactionWithMnemonic( [await transactions.MakeIBCTransferMsg(channelID, address,
+                        toAddress,(amountField * config.xprtValue), timeoutHeight)],
+                    aminoMsgHelper.fee(localStorage.getItem('fee'), 250000), memoContent, userMnemonic,
+                    transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                    console.log(response, 'result');
                     response.then(result => {
                         setTxResponse(result);
                         setLoader(false);
@@ -246,6 +264,37 @@ const Send = (props) => {
             }
         } else {
             setLoader(false);
+        }
+    };
+
+    const handleMemoChange = () => {
+        setMemoStatus(!memoStatus);
+    };
+
+    const onChangeSelect = (evt) => {
+        if(evt.target.value === "Custom"){
+            setCustomChain(true);
+            setChain(evt.target.value);
+        }else {
+            setCustomChain(false);
+            let id = evt.target.value.substr(evt.target.value.indexOf('/') + 1);
+            setChannelID(id);
+            setChain(evt.target.value);
+        }
+    };
+
+    const handleFee = (feeType, feeValue) => {
+        if(feeType === "Low"){
+            setZeroFeeAlert(true);
+        }
+        setActiveFeeState(feeType);
+        setFee(gas * feeValue);
+        if ((props.transferableAmount - (amountField*1)) < transactions.XprtConversion(gas * feeValue)) {
+            setGasValidationError(true);
+            setCheckAmountError(true);
+        }else {
+            setGasValidationError(false);
+            setCheckAmountError(false);
         }
     };
 
@@ -282,10 +331,8 @@ const Send = (props) => {
 
     };
 
-    const onChangeSelect = (evt) => {
+    const onTokenChangeSelect = (evt) => {
         setToken(evt.target.value);
-        console.log(evt.target.value, "els");
-
         if(evt.target.value === 'uxprt'){
             setTokenDenom(evt.target.value);
             setTransferableAmount(props.transferableAmount);
@@ -301,21 +348,6 @@ const Send = (props) => {
         }
     };
 
-    const handleFee = (feeType, feeValue) => {
-        if(feeType === "Low"){
-            setZeroFeeAlert(true);
-        }
-        setActiveFeeState(feeType);
-        setFee(gas * feeValue);
-        if ((props.transferableAmount - (amountField*1)) < transactions.XprtConversion(gas * feeValue)) {
-            setGasValidationError(true);
-            setCheckAmountError(true);
-        }else {
-            setGasValidationError(false);
-            setCheckAmountError(false);
-        }
-    };
-
     const popoverMemo = (
         <Popover id="popover-memo">
             <Popover.Content>
@@ -323,24 +355,71 @@ const Send = (props) => {
             </Popover.Content>
         </Popover>
     );
-
     const popover = (
         <Popover id="popover">
             <Popover.Content>
-                Recipient’s address starts with persistence; for example:
-                persistence14zmyw2q8keywcwhpttfr0d4xpggylsrmd4caf4
+                Recipient’s address starts with persistence; for example: persistence14zmyw2q8keywcwhpttfr0d4xpggylsrmd4caf4
             </Popover.Content>
         </Popover>
     );
-
-    const handleMemoChange = () => {
-        setMemoStatus(!memoStatus);
-    };
 
     return (
         <div className="send-container">
             <div className="form-section">
                 <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmit}>
+                    <div className="form-field">
+                        <p className="label">{t("CHAIN")}</p>
+                        <Select value={chain} className="validators-list-selection"
+                            onChange={onChangeSelect} displayEmpty>
+                            <MenuItem value="" key={0}>
+                                <em>{t("SELECT_CHAIN")}</em>
+                            </MenuItem>
+                            {
+                                config.channels.map((channel, index) => {
+                                    return (
+                                        <MenuItem
+                                            key={index + 1}
+                                            className=""
+                                            value={channel.id}>
+                                            {channel.name}
+                                        </MenuItem>
+                                    );
+                                })
+                            }
+                            <MenuItem
+                                key={config.channels.length + 1}
+                                className=""
+                                value="Custom">
+                                Custom
+                            </MenuItem>
+                        </Select>
+                    </div>
+                    {
+                        customChain ?
+                            <>
+                                <div className="form-field">
+                                    <p className="label info">Port</p>
+                                    <Form.Control
+                                        type="text"
+                                        name="port"
+                                        placeholder="Enter port"
+                                        required={true}
+                                        value="transfer"
+                                    />
+                                </div>
+                                <div className="form-field">
+                                    <p className="label info">Channel</p>
+                                    <Form.Control
+                                        type="text"
+                                        name="channel"
+                                        placeholder="Enter Channel"
+                                        required={true}
+                                    />
+                                </div>
+                            </>
+                            : ""
+                    }
+
                     <div className="form-field">
                         <p className="label info">Recipient Address
                             <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
@@ -384,13 +463,31 @@ const Send = (props) => {
                             }
                         </div>
                     </div>
+                    {(localStorage.getItem("fee") * 1) !== 0 ?
+                        <>
+                            <div className="form-field p-0">
+                                <p className="label"></p>
+                                <div className="amount-field">
+                                    <p className={checkAmountWarning ? "show amount-warning text-left" : "hide amount-warning"}>
+                                        <b>Warning : </b>{t("AMOUNT_WARNING_MESSAGE")}</p>
+                                </div>
+                            </div>
+                            <div className="form-field p-0">
+                                <p className="label"></p>
+                                <div className="amount-field">
+                                    <p className={checkAmountError ? "show amount-error text-left" : "hide amount-error"}>{t("AMOUNT_ERROR_MESSAGE")}</p>
+                                </div>
+                            </div>
+                        </>
+                        : null
+                    }
 
                     {mode === "normal" ?
                         <>
                             <div className="form-field p-0">
                                 <p className="label">Token</p>
                                 <Select value={token} className="validators-list-selection"
-                                    onChange={onChangeSelect} displayEmpty>
+                                    onChange={onTokenChangeSelect} displayEmpty>
                                     {
                                         props.tokenList.map((item, index) => {
                                             if(item.denom === "uxprt"){
@@ -462,11 +559,12 @@ const Send = (props) => {
                         : null
                     }
                     {keplerError !== '' ?
-                        <p className="form-error">{keplerError}</p> : null}
+                        <p className="form-error">{keplerError}</p>
+                        : null
+                    }
                     <div className="buttons">
                         {mode === "normal"  ?
                             <div className="button-section">
-
                                 <GasContainer checkAmountError={checkAmountError} activeFeeState={activeFeeState}
                                     onClick={handleFee} gas={gas} zeroFeeAlert={zeroFeeAlert} setZeroFeeAlert={setZeroFeeAlert}/>
                                 <div className="select-gas">
@@ -691,7 +789,6 @@ const Send = (props) => {
 
 
 const stateToProps = (state) => {
-    console.log(state.balance.tokenList, "Rr");
     return {
         balance: state.balance.amount,
         tokenList: state.balance.tokenList,
@@ -699,4 +796,4 @@ const stateToProps = (state) => {
     };
 };
 
-export default connect(stateToProps)(Send);
+export default connect(stateToProps)(IbcTxn);

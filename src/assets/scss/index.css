@@ -156,7 +156,8 @@ html, body {
     max-width: 400px !important;
     flex: 1; }
   .form-field .info-data {
-    margin: 0;
+    margin: 0 0 10px 0;
+    display: block;
     font-weight: 500;
     font-size: 16px; }
     .form-field .info-data .title {
@@ -786,6 +787,11 @@ html, body {
     color: #8D9CB5; }
   .memo-dropdown .icon {
     width: 20px; }
+
+.zero-fee-modal .modal-dialog {
+  max-width: 500px !important; }
+  .zero-fee-modal .modal-dialog .modal-content {
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3); }
 
 /*--------------------------------------------------------------
 # homepage styles

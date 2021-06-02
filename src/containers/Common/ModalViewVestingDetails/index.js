@@ -1,18 +1,21 @@
 import {Modal} from 'react-bootstrap';
 import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
-import {getAccountUrl} from "../../../constants/url";
-import axios from "axios";
 import transactions from "../../../utils/transactions";
 import {Table} from "react-bootstrap";
 import moment from "moment";
+import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
+import {createProtobufRpcClient, QueryClient} from "@cosmjs/stargate";
+import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/auth/v1beta1/query";
+const tendermintRPCURL =  process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
+import * as vesting_1 from "@cosmjs/stargate/build/codec/cosmos/vesting/v1beta1/vesting";
 
 const ModalViewVestingDetails = () => {
     const [show, setShow] = useState(false);
     const [showContinuesVesting, setShowContinuesVesting] = useState(false);
     const [showPeriodicVesting, setShowPeriodicVesting] = useState(false);
     const [showDelayedVesting, setShowDelayedVesting] = useState(false);
-    const [response, setResponse] = useState("");
+    const [response, setResponse] = useState({});
     const loginAddress = localStorage.getItem('address');
     const handleClose = () => {
         setShow(false);
@@ -22,23 +25,34 @@ const ModalViewVestingDetails = () => {
     };
 
     useEffect(() => {
-        const url = getAccountUrl(loginAddress);
-        axios.get(url).then(response => {
-            if (response.data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
-                setResponse(response.data.account);
-                setShowPeriodicVesting(true);
-            } else if (response.data.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount") {
-                setShowDelayedVesting(true);
-                setResponse(response.data.account);
-            } else if (response.data.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
-                setShowContinuesVesting(true);
-                setResponse(response.data.account);
-            }
-        }).catch(error => {
-            console.log(error.response
-                ? error.response.data.message
-                : error.message);
-        });
+        const fetchAccount = async () => {
+            const tendermintClient = await Tendermint34Client.connect(tendermintRPCURL);
+            const queryClient = new QueryClient(tendermintClient);
+            const rpcClient = createProtobufRpcClient(queryClient);
+            const AuthQueryService = new QueryClientImpl(rpcClient);
+            await AuthQueryService.Account({
+                address: loginAddress,
+            }).then(accountResponse => {
+                if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
+                    let periodicVestingAccountResponse = vesting_1.PeriodicVestingAccount.decode(accountResponse.account.value);
+                    setShowPeriodicVesting(true);
+                    setResponse(periodicVestingAccountResponse);
+                } else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.DelayedVestingAccount") {
+                    let delayedVestingAccountResponse = vesting_1.DelayedVestingAccount.decode(accountResponse.account.value);
+                    setShowDelayedVesting(true);
+                    setResponse(delayedVestingAccountResponse);
+                } else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
+                    let continuousVestingAccountResponse = vesting_1.ContinuousVestingAccount.decode(accountResponse.account.value);
+                    setShowContinuesVesting(true);
+                    setResponse(continuousVestingAccountResponse);
+                }
+            }).catch(error => {
+                console.log(error.response
+                    ? error.response.data.message
+                    : error.message);
+            });
+        };
+        fetchAccount();
     }, []);
 
     return (
@@ -57,7 +71,7 @@ const ModalViewVestingDetails = () => {
                 <Modal.Body className="faq-modal-body">
                     <ul className="modal-list-data">
                         {showContinuesVesting ?
-                            response.base_vesting_account !== undefined ?
+                            response.baseVestingAccount !== undefined ?
                                 <Table borderless>
                                     <thead>
                                         <tr>
@@ -68,9 +82,9 @@ const ModalViewVestingDetails = () => {
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>{transactions.XprtConversion(parseInt(response.base_vesting_account.original_vesting[0].amount) )}</td>
-                                            <td>{moment(new Date(parseInt(response.start_time) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</td>
-                                            <td>{moment(new Date(parseInt(response.base_vesting_account.end_time) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</td>
+                                            <td>{transactions.XprtConversion(parseInt(response.baseVestingAccount.originalVesting[0].amount) )}</td>
+                                            <td>{moment(new Date(parseInt(response.startTime.low) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</td>
+                                            <td>{moment(new Date((response.baseVestingAccount.endTime.low) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</td>
                                         </tr>
                                     </tbody>
                                 </Table>
@@ -81,11 +95,11 @@ const ModalViewVestingDetails = () => {
                         {showPeriodicVesting ?
                             <>
                                 <p>Your vesting schedule is as follows</p>
-                                {response.base_vesting_account.original_vesting.length ?
+                                {response.baseVestingAccount ?
                                     <>
                                         <p>Total vesting
-                                            tokens {transactions.XprtConversion(parseInt(response.base_vesting_account.original_vesting[0].amount))} at
-                                            Date {moment(new Date(parseInt(response.start_time) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</p>
+                                            tokens {transactions.XprtConversion(parseInt(response.baseVestingAccount.originalVesting[0].amount))} at
+                                            Date {moment(new Date(parseInt(response.startTime.low) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</p>
                                         <Table borderless>
                                             <thead>
                                                 <tr>
@@ -94,11 +108,11 @@ const ModalViewVestingDetails = () => {
                                                 </tr>
                                             </thead>
                                             {
-                                                response.vesting_periods.length ?
-                                                    response.vesting_periods.map((period, index) => {
-                                                        let vestingPeriod = parseInt(response.start_time);
-                                                        for (var i = 0; i <= index; i++) {
-                                                            vestingPeriod = vestingPeriod + parseInt(response.vesting_periods[i].length);
+                                                response.vestingPeriods.length ?
+                                                    response.vestingPeriods.map((period, index) => {
+                                                        let vestingPeriod = parseInt(response.startTime.low);
+                                                        for (let i = 0; i <= index; i++) {
+                                                            vestingPeriod = vestingPeriod + parseInt(response.vestingPeriods[i].length);
                                                         }
                                                         return (
                                                             <tbody  key={index}>
@@ -120,7 +134,7 @@ const ModalViewVestingDetails = () => {
                             : ""
                         }
                         {showDelayedVesting ?
-                            response.base_vesting_account !== undefined ?
+                            response.baseVestingAccount !== undefined ?
                                 <Table borderless>
                                     <thead>
                                         <tr>
@@ -130,8 +144,8 @@ const ModalViewVestingDetails = () => {
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>{transactions.XprtConversion(parseInt(response.base_vesting_account.original_vesting[0].amount))}</td>
-                                            <td>{moment(new Date(parseInt(response.base_vesting_account.end_time) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</td>
+                                            <td>{transactions.XprtConversion(parseInt(response.baseVestingAccount.originalVesting[0].amount))}</td>
+                                            <td>{moment(new Date((response.baseVestingAccount.endTime.low) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</td>
                                         </tr>
                                     </tbody>
                                 </Table>

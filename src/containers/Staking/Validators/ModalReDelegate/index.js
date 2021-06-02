@@ -22,7 +22,7 @@ import Loader from "../../../../components/Loader";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import config from "../../../../config";
 import {useTranslation} from "react-i18next";
-import GasContainer from "../../../../components/Gas";
+import GasContainer from "../../../Gas";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalReDelegate = (props) => {
@@ -46,6 +46,7 @@ const ModalReDelegate = (props) => {
     const [gas, setGas] = useState(config.gas);
     const [gasValidationError, setGasValidationError] = useState(false);
     const [fee, setFee] = useState(config.averageFee);
+    const [zeroFeeAlert, setZeroFeeAlert] = useState(false);
 
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
@@ -261,8 +262,18 @@ const ModalReDelegate = (props) => {
     };
 
     const handleFee = (feeType, feeValue)=>{
+        if(feeType === "Low"){
+            setZeroFeeAlert(true);
+        }
         setActiveFeeState(feeType);
         setFee(gas*feeValue);
+        if (props.transferableAmount < transactions.XprtConversion(gas*feeValue)) {
+            setGasValidationError(true);
+            setCheckAmountError(true);
+        }else {
+            setGasValidationError(false);
+            setCheckAmountError(false);
+        }
     };
     
     if (loader) {
@@ -313,7 +324,7 @@ const ModalReDelegate = (props) => {
                                                     <MenuItem
                                                         key={index + 1}
                                                         className=""
-                                                        value={validator.operator_address}>
+                                                        value={validator.operatorAddress}>
                                                         {validator.description.moniker}
                                                     </MenuItem>
                                                 );
@@ -392,7 +403,7 @@ const ModalReDelegate = (props) => {
                             <div className="buttons navigate-buttons">
                                 {mode === "normal" ?
                                     <div className="button-section">
-                                        <GasContainer checkAmountError={checkAmountError} activeFeeState={activeFeeState} onClick={handleFee} gas={gas}/>
+                                        <GasContainer checkAmountError={checkAmountError} activeFeeState={activeFeeState} onClick={handleFee} gas={gas} zeroFeeAlert={zeroFeeAlert} setZeroFeeAlert={setZeroFeeAlert}/>
                                         <div className="select-gas">
                                             <p onClick={handleGas}>{!showGasField ? "Set gas" : "Close"}</p>
                                         </div>
