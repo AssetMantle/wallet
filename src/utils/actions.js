@@ -1,5 +1,8 @@
 import transactions from "./transactions";
-import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/distribution/v1beta1/query";
+import {
+    QueryClientImpl as DistributionQueryClient,
+    QueryClientImpl
+} from "@cosmjs/stargate/build/codec/cosmos/distribution/v1beta1/query";
 import helper from "./helper";
 
 async function getValidatorRewards(validatorAddress) {
@@ -21,6 +24,27 @@ async function getValidatorRewards(validatorAddress) {
     return amount;
 }
 
+async function getValidatorCommission(address){
+    console.log(address, "REd");
+    const rpcClient = await transactions.RpcClient();
+    const stakingQueryService = new DistributionQueryClient(rpcClient);
+    let commission = 0;
+    await stakingQueryService.ValidatorCommission({
+        validatorAddress:address
+    }).then((res) => {
+        if(res.commission.commission[0].amount){
+            commission = helper.decimalConversion(res.commission.commission[0].amount);
+            commission = (transactions.XprtConversion(commission*1)).toFixed(6);
+        }
+    }).catch((error) => {
+        console.log(error.response
+            ? error.response.data.message
+            : error.message);
+    });
+    return commission;
+}
+
 export default {
     getValidatorRewards,
+    getValidatorCommission
 };

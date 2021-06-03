@@ -1850,6 +1850,12 @@ html, body {
       font-weight: 500;
       font-size: 14px;
       line-height: 150%; }
+    .claim-rewards-modal .rewards-modal-body .available-tokens .view {
+      cursor: pointer;
+      text-decoration: underline;
+      margin: 0 10px;
+      font-weight: 500;
+      color: #e50913; }
 
 .faq-modal-body .nav-pills {
   justify-content: center;
@@ -2042,6 +2048,29 @@ html, body {
   .rdt_TableBody .rdt_TableRow .rdt_TableCell:first-child {
     padding-left: 40px;
     width: 150px; }
+
+.rewards-validators-list > div {
+  width: 100%;
+  max-width: 400px !important; }
+  .rewards-validators-list > div button {
+    width: 100%; }
+  .rewards-validators-list > div > div:nth-child(2) {
+    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12); }
+.rewards-validators-list input[type=checkbox], .rewards-validators-list input {
+  height: auto !important; }
+
+.claim-check-box input[type=checkbox], .claim-check-box input {
+  height: auto !important; }
+.claim-check-box .check-box-container {
+  display: flex;
+  align-items: center;
+  padding: 10px 10px; }
+  .claim-check-box .check-box-container .label {
+    width: auto;
+    margin-right: 15px; }
+  .claim-check-box .check-box-container input {
+    width: auto;
+    flex: none; }
 
 /*--------------------------------------------------------------
 # importwallet styles

@@ -1,5 +1,5 @@
 import {QueryClientImpl} from '@cosmjs/stargate/build/codec/cosmos/staking/v1beta1/query';
-
+import {QueryClientImpl as DistributionQueryClient } from "@cosmjs/stargate/build/codec/cosmos/distribution/v1beta1/query";
 import {
     FETCH_ACTIVE_VALIDATORS_SUCCESS,
     FETCH_VALIDATORS_ERROR,
@@ -9,11 +9,17 @@ import {
     FETCH_VALIDATOR_SUCCESS,
     FETCH_VALIDATOR_ERROR,
     FETCH_VALIDATOR_WITH_ADDRESS_ERROR,
-    FETCH_VALIDATOR_WITH_ADDRESS_SUCCESS
+    FETCH_VALIDATOR_WITH_ADDRESS_SUCCESS,
+    FETCH_VALIDATORS_REWARDS_SUCCESS,
+    FETCH_VALIDATORS_REWARDS_IN_PROGRESS,
+    FETCH_VALIDATOR_COMMISSION_ERROR,
+    FETCH_VALIDATOR_COMMISSION_SUCCESS,
+    FETCH_VALIDATOR_COMMISSION_INFO_SUCCESS
 } from "../constants/validators";
 
 import helper from "../utils/helper";
 import transactions from "../utils/transactions";
+import ActionHelper from "../utils/actions";
 
 export const fetchValidatorsInProgress = () => {
     return {
@@ -70,6 +76,7 @@ const validatorsDelegationSort = (validators, delegations) =>{
     });
     return delegatedValidators;
 };
+
 export const fetchValidators = (address) => {
     return async dispatch => {
         dispatch(fetchValidatorsInProgress());
@@ -159,22 +166,98 @@ export const fetchValidatorsWithAddressError = (data) => {
     };
 };
 
-export const fetchValidatorsWithAddress = (list) => {
+export const fetchValidatorRewardsListSuccess = (list) => {
+    return {
+        type: FETCH_VALIDATORS_REWARDS_SUCCESS,
+        list,
+    };
+};
+
+export const fetchValidatorRewardsListInProgress = () => {
+    return {
+        type: FETCH_VALIDATORS_REWARDS_IN_PROGRESS,
+    };
+};
+
+export const fetchValidatorCommissionInfoSuccess = (list) => {
+
+    return {
+        type: FETCH_VALIDATOR_COMMISSION_INFO_SUCCESS,
+        list,
+    };
+};
+
+export const fetchValidatorsWithAddress = (list, address) => {
     return async dispatch => {
+        dispatch(fetchValidatorRewardsListInProgress());
         let validators = [];
+        let options = [];
         for (const item of list) {
             const rpcClient = await transactions.RpcClient();
             const stakingQueryService = new QueryClientImpl(rpcClient);
             await stakingQueryService.Validator({
                 validatorAddr: item.validatorAddress,
-            }).then((res) => {
-                validators.push(res.validator);
+            }).then( async (res) => {
+
+                const validatorObj = {
+                    validatorAddress : item.validatorAddress,
+                    rewards: helper.decimalConversion(item.reward[0].amount),
+                    validator:res.validator
+                };
+                const data = {
+                    label:res.validator.description.moniker,
+                    value:res.validator.operatorAddress,
+                    rewards: helper.decimalConversion(item.reward[0].amount)
+                };
+
+                if(transactions.checkValidatorAccountAddress(res.validator.operatorAddress, address)){
+                    let commissionInfo = await ActionHelper.getValidatorCommission(res.validator.operatorAddress);
+                    dispatch(fetchValidatorCommissionInfoSuccess([commissionInfo, res.validator.operatorAddress, true]));
+                }
+
+                options.push(data);
+                validators.push(validatorObj);
             }).catch((error) => {
                 dispatch(fetchValidatorsWithAddressError(error.response
                     ? error.response.data.message
                     : error.message));
             });
         }
+        dispatch(fetchValidatorRewardsListSuccess(options));
         dispatch(fetchValidatorsWithAddressSuccess(validators));
+    };
+};
+
+export const fetchValidatorCommissionSuccess = (data) => {
+    return {
+        type: FETCH_VALIDATOR_COMMISSION_SUCCESS,
+        data,
+    };
+};
+
+export const fetchValidatorCommissionError = (data) => {
+    return {
+        type: FETCH_VALIDATOR_COMMISSION_ERROR,
+        data,
+    };
+};
+
+
+export const fetchValidatorCommission = (address) =>{
+    console.log("fetchValidatorCommission", address);
+    return async dispatch => {
+        const rpcClient = await transactions.RpcClient();
+        const stakingQueryService = new DistributionQueryClient(rpcClient);
+        await stakingQueryService.ValidatorCommission({
+            validatorAddress:address
+        }).then((res) => {
+            console.log(res, "commission res");
+            dispatch(fetchValidatorCommissionSuccess(res));
+        }).catch((error) => {
+            dispatch(fetchValidatorCommissionError(error.response
+                ? error.response.data.message
+                : error.message));
+        });
+
     };
 };

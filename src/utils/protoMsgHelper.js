@@ -2,7 +2,8 @@ import {MsgSend} from "@cosmjs/stargate/build/codec/cosmos/bank/v1beta1/tx";
 import {MsgBeginRedelegate, MsgDelegate, MsgUndelegate} from "@cosmjs/stargate/build/codec/cosmos/staking/v1beta1/tx";
 import {
     MsgSetWithdrawAddress,
-    MsgWithdrawDelegatorReward
+    MsgWithdrawDelegatorReward,
+    MsgWithdrawValidatorCommission
 } from "@cosmjs/stargate/build/codec/cosmos/distribution/v1beta1/tx";
 import {MsgTransfer} from "@cosmjs/stargate/build/codec/ibc/applications/transfer/v1/tx";
 import {coin} from "@cosmjs/stargate";
@@ -14,6 +15,7 @@ const msgUnbondTypeUrl = "/cosmos.staking.v1beta1.MsgUndelegate";
 const msgWithdrawRewardsTypeUrl = "/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward";
 const msgSetWithdrawAddressTypeUrl = "/cosmos.distribution.v1beta1.MsgSetWithdrawAddress";
 const msgTransferTypeUrl = "/ibc.applications.transfer.v1.MsgTransfer";
+const msgValidatorCommission = '/cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission';
 
 function SendMsg(fromAddress, toAddress, amount, denom) {
     return {
@@ -115,4 +117,13 @@ function TransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, tim
     };
 }
 
-export {SendMsg, DelegateMsg, RedelegateMsg, UnbondMsg, WithdrawMsg, SetWithDrawAddressMsg, TransferMsg};
+function ValidatorCommissionMsg(address){
+    return {
+        typeUrl: msgValidatorCommission,
+        value: MsgWithdrawValidatorCommission.fromPartial({
+            validatorAddress: address,
+        }),
+    };
+}
+
+export {SendMsg, DelegateMsg, RedelegateMsg, UnbondMsg, WithdrawMsg, SetWithDrawAddressMsg, TransferMsg, ValidatorCommissionMsg};

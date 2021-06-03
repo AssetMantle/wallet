@@ -10,14 +10,14 @@ import {
 } from 'react-bootstrap';
 import React, {useContext, useEffect, useState} from 'react';
 import success from "../../../assets/images/success.svg";
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
+// import MenuItem from '@material-ui/core/MenuItem';
+// import Select from '@material-ui/core/Select';
 import Icon from "../../../components/Icon";
-import ActionHelper from "../../../utils/actions";
 import {connect} from "react-redux";
 import helper from "../../../utils/helper";
 import Loader from "../../../components/Loader";
 import {WithdrawMsg} from "../../../utils/protoMsgHelper";
+import {ValidatorCommissionMsg} from "../../../utils/protoMsgHelper";
 import aminoMsgHelper from "../../../utils/aminoMsgHelper";
 import transactions from "../../../utils/transactions";
 import MakePersistence from "../../../utils/cosmosjsWrapper";
@@ -25,14 +25,15 @@ import {useTranslation} from "react-i18next";
 import ModalSetWithdrawAddress from "../ModalSetWithdrawAddress";
 import config from "../../../config";
 import GasContainer from "../../Gas";
-import {fetchValidatorsWithAddress} from "../../../actions/validators";
+import {fetchValidatorsWithAddress, fetchValidatorCommission} from "../../../actions/validators";
+import ReactMultiSelectCheckboxes from 'react-multiselect-checkboxes';
+import ModalViewValidatorRewards from "../ModalViewValidatorRewards";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const ModalWithdraw = (props) => {
     const {t} = useTranslation();
     const [show, setShow] = useState(true);
-    const [validatorAddress, setValidatorAddress] = useState('');
     const [response, setResponse] = useState('');
     const [advanceMode, setAdvanceMode] = useState(false);
     const [initialModal, setInitialModal] = useState(true);
@@ -53,12 +54,15 @@ const ModalWithdraw = (props) => {
     const [fee, setFee] = useState(config.averageFee);
     const [zeroFeeAlert, setZeroFeeAlert] = useState(false);
     const [checkAmountError, setCheckAmountError] = useState(false);
-
+    const [withDrawMsgs, setWithDrawMsgs] = useState({});
+    const [commissionMsg, setCommissionMsg] = useState({});
+    const [showRewardsModal, setShowRewardsModal] = useState(false);
+    
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
     };
     useEffect(() => {
-        props.fetchValidatorsWithAddress(props.list);
+        props.fetchValidatorsWithAddress(props.list, loginAddress);
         const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
         if (encryptedMnemonic !== null) {
             setImportMnemonic(false);
@@ -71,6 +75,7 @@ const ModalWithdraw = (props) => {
         }else{
             setCheckAmountError(false);
         }
+
     }, []);
 
     const handleClose = () => {
@@ -113,7 +118,14 @@ const ModalWithdraw = (props) => {
     const handleSubmitKepler = async event => {
         setLoader(true);
         event.preventDefault();
-        const response = transactions.TransactionWithKeplr([WithdrawMsg(loginAddress, validatorAddress)], aminoMsgHelper.fee(0, 250000));
+        let messages  = [];
+        if(withDrawMsgs.length){
+            messages = withDrawMsgs;
+        }
+        if(commissionMsg.length){
+            messages.push(commissionMsg[0]);
+        }
+        const response = transactions.TransactionWithKeplr(messages, aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             if (result.code !== undefined) {
                 helper.accountChangeCheck(result.rawLog);
@@ -186,7 +198,16 @@ const ModalWithdraw = (props) => {
             if (address.error === undefined && ecpairPriv.error === undefined) {
                 if (address === loginAddress) {
                     setImportMnemonic(false);
-                    const response = transactions.TransactionWithMnemonic([WithdrawMsg(address, validatorAddress)], aminoMsgHelper.fee(Math.trunc(fee), gas), memoContent,
+                    let messages  = [];
+                    if(withDrawMsgs.length){
+                        messages = withDrawMsgs;
+                    }
+                    if(commissionMsg.length){
+                        messages.push(commissionMsg[0]);
+                    }
+
+                    console.log(messages,  "in com if");
+                    const response = transactions.TransactionWithMnemonic(messages, aminoMsgHelper.fee(Math.trunc(fee), gas), memoContent,
                         mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                     response.then(result => {
                         setResponse(result);
@@ -194,10 +215,14 @@ const ModalWithdraw = (props) => {
                         showSeedModal(false);
                         setAdvanceMode(false);
                     }).catch(err => {
+
+
                         setLoader(false);
-                        setErrorMessage(err.message);
+                        setErrorMessage(err.response
+                            ? err.response.data.message
+                            : err.message);
                     });
-                    showSeedModal(false);
+
                 } else {
                     setLoader(false);
                     setAdvanceMode(false);
@@ -218,12 +243,17 @@ const ModalWithdraw = (props) => {
             setLoader(false);
         }
     };
-    const onChangeSelect = (evt) => {
-        setValidatorAddress(evt.target.value);
-        let rewards = ActionHelper.getValidatorRewards(evt.target.value);
-        rewards.then(function (response) {
-            setIndividualRewards(response);
+
+    const onChangeSelect =  (evt) => {
+        let totalValidatorsRewards = 0;
+        let messages = [];
+        evt.forEach(async (item) => {
+            totalValidatorsRewards = totalValidatorsRewards + (transactions.XprtConversion(item.rewards*1));
+            messages.push(WithdrawMsg(loginAddress, item.value));
         });
+        console.log(totalValidatorsRewards, totalValidatorsRewards);
+        setWithDrawMsgs(messages);
+        setIndividualRewards(totalValidatorsRewards);
     };
 
     const handleGas = () =>{
@@ -273,10 +303,6 @@ const ModalWithdraw = (props) => {
         }
     };
 
-    const disabled = (
-        helper.validateFrom(validatorAddress).message !== ''
-    );
-
     if (loader) {
         return <Loader/>;
     }
@@ -292,7 +318,21 @@ const ModalWithdraw = (props) => {
         setInitialModal(true);
         showSeedModal(false);
     };
+    
+    const handleViewRewards = () =>{
+        setShowRewardsModal(true);
+        setShow(false);
+    };
 
+    const handleCommissionChange = (evt) =>{
+        let messages = [];
+        if(evt.target.checked){
+            messages.push(ValidatorCommissionMsg(props.validatorCommissionInfo[1]));
+        }else {
+            messages = [];
+        }
+        setCommissionMsg(messages);
+    };
     const popoverMemo = (
         <Popover id="popover-memo">
             <Popover.Content>
@@ -308,7 +348,10 @@ const ModalWithdraw = (props) => {
             </Popover.Content>
         </Popover>
     );
-
+    
+    if (props.inProgress) {
+        return <Loader/>;
+    }
 
     return (
         <>
@@ -335,34 +378,39 @@ const ModalWithdraw = (props) => {
                                         <p className="usd">= ${(props.totalRewards * props.tokenPrice).toFixed(4)}</p>
                                     </div>
                                 </div>
-                                <div className="form-field">
-                                    <p className="label">{t("VALIDATOR")}</p>
 
-                                    <Select value={validatorAddress} className="validators-list-selection"
-                                        onChange={onChangeSelect} displayEmpty>
-                                        <MenuItem value="" key={0}>
-                                            <em>None</em>
-                                        </MenuItem>
-                                        {
-                                            props.validatorsList.map((validator, index) => (
-                                                <MenuItem
-                                                    key={index + 1}
-                                                    className=""
-                                                    value={validator.operatorAddress}>
-                                                    {validator.description.moniker}
-                                                </MenuItem>
-                                            ))
-                                        }
-                                    </Select>
+                                <div className="form-field rewards-validators-list">
+                                    <p className="label">{t("VALIDATOR")}</p>
+                                    <ReactMultiSelectCheckboxes
+                                        options={props.validatorsRewardsList}
+                                        onChange={onChangeSelect}
+                                    />
+
                                 </div>
                                 <div className="form-field p-0">
                                     <p className="label"></p>
                                     <div className="available-tokens">
-                                        <p className="tokens">{t("AVAILABLE_REWARDS")} {individualRewards} <span>XPRT</span>
+                                        <p className="tokens">{t("AVAILABLE_REWARDS")} {individualRewards.toFixed(6)} <span>XPRT</span>
                                         </p>
                                         <p className="usd">=${(individualRewards * props.tokenPrice).toFixed(4)}</p>
+                                        <p className="view" onClick={handleViewRewards}>view</p>
                                     </div>
                                 </div>
+                                {props.validatorCommissionInfo[2] ?
+                                    <div className="form-field claim-check-box">
+                                        <p className="label"></p>
+                                        <div className="check-box-container">
+                                            <p className="label">{t("Claim Commission")}</p>
+                                            <Form.Control
+                                                type="checkbox"
+                                                name="claimCommission"
+                                                onChange={handleCommissionChange}
+                                                required={false}
+                                            />
+                                        </div>
+                                    </div>
+                                    :""
+                                }
                                 {mode === "normal" ?
                                     <>
                                         <div className="memo-dropdown-section">
@@ -446,12 +494,12 @@ const ModalWithdraw = (props) => {
                                                 : ""
                                             }
                                             <button className="button button-primary"
-                                                disabled={checkAmountError || disabled || individualRewards === 0 || gasValidationError}
+                                                disabled={checkAmountError || individualRewards === 0 || gasValidationError}
                                             >{t("NEXT")}</button>
                                         </div>
                                         :
                                         <button className="button button-primary"
-                                            disabled={checkAmountError || disabled || individualRewards === 0}
+                                            disabled={checkAmountError || individualRewards === 0}
                                         >{t("SUBMIT")}</button>
                                     }
                                 </div>
@@ -570,6 +618,7 @@ const ModalWithdraw = (props) => {
                                         }
                                     </Card>
                                 </Accordion>
+
                                 <div className="buttons">
                                     <button className="button button-primary">{t("CLAIM_REWARDS")}</button>
                                 </div>
@@ -646,23 +695,34 @@ const ModalWithdraw = (props) => {
                     totalRewards={props.rewards} setShow={setShow} formName="setAddress"/>
                 : null
             }
+            {
+                showRewardsModal ?
+                    <ModalViewValidatorRewards setShowRewardsModal={setShowRewardsModal} handleClose={handleClose}
+                        commission={props.validatorCommissionInfo[0]} setShow={setShow} formName="viewRewards"/>
+                    : null
+            }
         </>
     );
 };
 
 const stateToProps = (state) => {
+    console.log(state.validators.validatorCommissionInfo, "validatorCommission");
     return {
         list: state.rewards.list,
         rewards: state.rewards.rewards,
         balance: state.balance.amount,
         tokenPrice: state.tokenPrice.tokenPrice,
         transferableAmount: state.balance.transferableAmount,
-        validatorsList:state.validators.validatorsListWithAddress
+        validatorsList:state.validators.validatorsListWithAddress,
+        validatorsRewardsList:state.validators.validatorsRewardsList,
+        inProgress:state.validators.rewardsInProgress,
+        validatorCommissionInfo:state.validators.validatorCommissionInfo
     };
 };
 
 const actionsToProps = {
     fetchValidatorsWithAddress,
+    fetchValidatorCommission
 };
 
 export default connect(stateToProps, actionsToProps)(ModalWithdraw);

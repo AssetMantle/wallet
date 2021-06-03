@@ -934,6 +934,13 @@
         font-size: 14px;
         line-height: 150%;
       }
+      .view{
+        cursor: pointer;
+        text-decoration: underline;
+        margin: 0 10px;
+        font-weight: 500;
+        color: #e50913;
+      }
     }
   }
 
@@ -1240,33 +1247,39 @@
       width: 150px;
     }
   }
+}
 
-  //.result{
-  //
-  //}
-  //.type{
-  //  color: #8D9CB5;
-  //  font-family: 'Poppins', sans-serif;
-  //}
-  //.tx-hash a{
-  //  color: #1A73B4;
-  //}
-  //
-  //.type {
-  //  color: #8D9CB5;
-  //}
-  //.amount{
-  //  font-family: 'Poppins', sans-serif;
-  //  font-weight: 500;
-  //}
-  //.fee{
-  //  font-family: 'Poppins', sans-serif;
-  //  color: #8D9CB5;
-  //}
-  //.height{
-  //  color: #1A73B4;
-  //}
-  //.time{
-  //  color: #8D9CB5;
-  //}
+.rewards-validators-list{
+  &>div{
+    width: 100%;
+    max-width: 400px !important;
+    button{
+      width: 100%;
+    }
+    &>div:nth-child(2){
+      box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12);
+    }
+  }
+  input[type=checkbox], input{
+    height: auto !important;
+  }
+}
+
+.claim-check-box{
+  input[type=checkbox], input{
+    height: auto !important;
+  }
+  .check-box-container{
+    display: flex;
+    align-items: center;
+    padding: 10px 10px;
+    .label{
+      width: auto;
+      margin-right: 15px;
+    }
+    input {
+      width: auto;
+      flex: none;
+    }
+  }
 }

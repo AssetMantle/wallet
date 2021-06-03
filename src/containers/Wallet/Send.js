@@ -125,7 +125,6 @@ const Send = (props) => {
         }
     };
     const handleSubmitKepler = event => {
-
         setShow(true);
         setLoader(true);
         event.preventDefault();

@@ -25,5 +25,6 @@
       "id": "persistence/channel-2",
       "port": "transfer"
     }
-  ]
+  ],
+  "valoperAddressPrefix": "persistence"
 }
