@@ -449,12 +449,12 @@ const IbcTxn = (props) => {
                                     <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data"}><span
                                         className="title">Transferable Balance:</span> <span
                                         className="value"
-                                        title={props.transferableAmount}>{props.transferableAmount.toFixed(6)} XPRT</span> </span>
+                                        title={props.transferableAmount}>{props.transferableAmount.toLocaleString()} XPRT</span> </span>
                                     :
                                     <span title={tokenItem.denomTrace} className={transferableAmount === 0 ? "empty info-data" : "info-data"}>
                                         <span
                                             className="title">Transferable Balance:</span> <span
-                                            className="value">{transferableAmount.toFixed(6)}  ATOM ( IBC Trace path - {tokenItem.denom.path} , denom: {tokenItem.denom.baseDenom}  )</span> </span>
+                                            className="value">{transferableAmount.toLocaleString()}  ATOM ( IBC Trace path - {tokenItem.denom.path} , denom: {tokenItem.denom.baseDenom}  )</span> </span>
                             }
                         </div>
                     </div>

@@ -16,7 +16,7 @@ async function getValidatorRewards(validatorAddress) {
     }).then(response => {
         if(response.rewards.length){
             let rewards = helper.decimalConversion(response.rewards[0].amount);
-            amount = (transactions.XprtConversion(rewards*1)).toFixed(6);
+            amount = (transactions.XprtConversion(rewards*1));
         }
     }).catch(error => {
         console.log(error.response);
@@ -34,7 +34,7 @@ async function getValidatorCommission(address){
     }).then((res) => {
         if(res.commission.commission[0].amount){
             commission = helper.decimalConversion(res.commission.commission[0].amount);
-            commission = (transactions.XprtConversion(commission*1)).toFixed(6);
+            commission = (transactions.XprtConversion(commission*1));
         }
     }).catch((error) => {
         console.log(error.response

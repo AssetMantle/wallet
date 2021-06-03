@@ -374,8 +374,8 @@ const ModalWithdraw = (props) => {
                                     <p className="label">{t("TOTAL_AVAILABLE_BALANCE")}</p>
                                     <div className="available-tokens">
                                         <p className="tokens"
-                                            title={props.totalRewards}>{props.totalRewards.toFixed(4)} XPRT</p>
-                                        <p className="usd">= ${(props.totalRewards * props.tokenPrice).toFixed(4)}</p>
+                                            title={props.totalRewards}>{props.totalRewards.toLocaleString()} XPRT</p>
+                                        <p className="usd">= ${(props.totalRewards * props.tokenPrice).toLocaleString()}</p>
                                     </div>
                                 </div>
 
@@ -390,9 +390,8 @@ const ModalWithdraw = (props) => {
                                 <div className="form-field p-0">
                                     <p className="label"></p>
                                     <div className="available-tokens">
-                                        <p className="tokens">{t("AVAILABLE_REWARDS")} {individualRewards.toFixed(6)} <span>XPRT</span>
-                                        </p>
-                                        <p className="usd">=${(individualRewards * props.tokenPrice).toFixed(4)}</p>
+                                        <p className="tokens">{t("AVAILABLE_REWARDS")} {individualRewards.toLocaleString()} <span>XPRT</span></p>
+                                        <p className="usd">= ${(individualRewards * props.tokenPrice).toLocaleString()}</p>
                                         <p className="view" onClick={handleViewRewards}>view</p>
                                     </div>
                                 </div>

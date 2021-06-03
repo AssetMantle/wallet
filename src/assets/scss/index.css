@@ -153,7 +153,7 @@ html, body {
     color: #2E3239;
     width: 150px; }
   .form-field input, .form-field .amount-field, .form-field textarea, .form-field .file-upload, .form-field .info-data {
-    max-width: 400px !important;
+    max-width: 450px !important;
     flex: 1; }
   .form-field .info-data {
     margin: 0 0 10px 0;
@@ -315,7 +315,7 @@ html, body {
       box-shadow: none; }
 
 .validators-list-selection {
-  max-width: 400px !important;
+  max-width: 450px !important;
   flex: 1;
   background: #F5F6FA;
   font-size: 14px;
@@ -1360,7 +1360,7 @@ html, body {
   .wallet-main-section .send-container .form-error {
     text-align: left; }
   .wallet-main-section .send-container .form-section {
-    max-width: 600px; }
+    max-width: 700px; }
     .wallet-main-section .send-container .form-section .form-field {
       display: flex;
       align-items: center;
@@ -1628,12 +1628,14 @@ html, body {
 .token-info-section {
   padding: 25px 0px 25px 0px; }
   .token-info-section .token-info-section-body {
-    display: flex; }
+    display: flex;
+    padding-top: 15px; }
   .token-info-section .info-heading {
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
     font-size: 14px;
-    line-height: 150%; }
+    line-height: 150%;
+    margin: 0; }
   .token-info-section .info-box {
     flex: 1;
     display: flex;
@@ -1806,7 +1808,7 @@ html, body {
 .claim-rewards-modal .rewards-modal-body {
   padding: 10px 40px 40px 40px; }
   .claim-rewards-modal .rewards-modal-body input, .claim-rewards-modal .rewards-modal-body .amount-field, .claim-rewards-modal .rewards-modal-body textarea {
-    max-width: 400px;
+    max-width: 450px;
     flex: 1; }
   .claim-rewards-modal .rewards-modal-body textarea {
     background: #F5F6FA;
@@ -2173,6 +2175,11 @@ html, body {
 /*--------------------------------------------------------------
 # dashboard mediaqueries styles
 --------------------------------------------------------------*/
+@media (max-width: 1400px) {
+  .wallet-main-section .txns-container table tbody tr:first-child td, .validators-section table tbody tr:first-child td {
+    padding-top: 20px; }
+  .wallet-main-section .txns-container table tbody td, .validators-section table tbody td {
+    padding: 13px 20px; } }
 @media (max-width: 1300px) {
   .header .profile-section .profile-dropdown .dropdown-menu .info {
     padding: 20px 30px; } }
@@ -2184,7 +2191,7 @@ html, body {
     height: calc(100vh - 375px); } }
 @media (max-width: 1400px) {
   .token-info-section .token-info-section-body {
-    padding: 25px 0; }
+    padding: 15px 0; }
     .token-info-section .token-info-section-body .info-box {
       padding: 15px 20px; }
     .token-info-section .token-info-section-body .xprt-info .total-supply {

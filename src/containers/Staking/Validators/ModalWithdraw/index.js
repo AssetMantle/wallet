@@ -311,7 +311,7 @@ const ModalWithdraw = (props) => {
                             <div className="form-field p-0">
                                 <p className="label">{t("AVAILABLE")} (XPRT)</p>
                                 <div className="available-tokens">
-                                    <p className={props.rewards === 0 ? "empty info-data" : "info-data"} title={props.rewards}>{props.rewards.toFixed(4)}</p>
+                                    <p className={props.rewards === 0 ? "empty info-data" : "info-data"} title={props.rewards}>{props.rewards.toLocaleString()}</p>
                                 </div>
                             </div>
                             {
