@@ -13,7 +13,7 @@
   "defaultFee": "5000",
   "vestingAccountFee": "0",
   "modeType": "sync",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "channels": [
     {
         "name": "cosmos",
