@@ -108,7 +108,20 @@
 
     .nav-tabs {
       border: 1px solid #dee2e6 !important;
-
+      .ibc-tab{
+        p{
+          margin: 0;
+          button{
+            position: relative;
+           .icon{
+             position: absolute;
+             left: 5px;
+             right: 0px;
+             bottom: -1px;
+           }
+          }
+        }
+      }
       .nav-link {
         border: 0px solid;
         border-radius: 0px;

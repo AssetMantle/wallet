@@ -1328,6 +1328,15 @@ html, body {
     border-bottom: 2px solid #272931; }
   .wallet-main-section .tabs-section .nav-tabs {
     border: 1px solid #dee2e6 !important; }
+    .wallet-main-section .tabs-section .nav-tabs .ibc-tab p {
+      margin: 0; }
+      .wallet-main-section .tabs-section .nav-tabs .ibc-tab p button {
+        position: relative; }
+        .wallet-main-section .tabs-section .nav-tabs .ibc-tab p button .icon {
+          position: absolute;
+          left: 5px;
+          right: 0px;
+          bottom: -1px; }
     .wallet-main-section .tabs-section .nav-tabs .nav-link {
       border: 0px solid;
       border-radius: 0px;
