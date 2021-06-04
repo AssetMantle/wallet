@@ -25,7 +25,7 @@ import {useTranslation} from "react-i18next";
 import ModalSetWithdrawAddress from "../ModalSetWithdrawAddress";
 import config from "../../../config";
 import GasContainer from "../../Gas";
-import {fetchValidatorsWithAddress, fetchValidatorCommission} from "../../../actions/validators";
+import {fetchValidatorsWithAddress} from "../../../actions/validators";
 import ReactMultiSelectCheckboxes from 'react-multiselect-checkboxes';
 import ModalViewValidatorRewards from "../ModalViewValidatorRewards";
 
@@ -732,7 +732,6 @@ const stateToProps = (state) => {
 
 const actionsToProps = {
     fetchValidatorsWithAddress,
-    fetchValidatorCommission
 };
 
 export default connect(stateToProps, actionsToProps)(ModalWithdraw);

@@ -27,7 +27,7 @@ const ModalViewValidatorRewards = (props) => {
                     let commissionInfo = await ActionHelper.getValidatorCommission(item.value);
                     const data = {
                         label: item.label,
-                        rewards:item.rewards,
+                        rewards:transactions.XprtConversion(item.rewards*1),
                         commission: commissionInfo
                     };
                     list.push(data);
@@ -35,7 +35,7 @@ const ModalViewValidatorRewards = (props) => {
                 else {
                     const data = {
                         label: item.label,
-                        rewards:item.rewards,
+                        rewards:transactions.XprtConversion(item.rewards*1),
                     };
                     list.push(data);
                 }
@@ -80,7 +80,7 @@ const ModalViewValidatorRewards = (props) => {
                         <thead>
                             <tr>
                                 <th>Moniker</th>
-                                <th>Rewards</th>
+                                <th>Rewards (uxprt)</th>
                                 <th>Validator Commission</th>
                             </tr>
                         </thead>
@@ -89,7 +89,7 @@ const ModalViewValidatorRewards = (props) => {
                                 dataList.map((validator, index) => (
                                     <tr key={index}>
                                         <td>{validator.label}</td>
-                                        <td>{validator.rewards}</td>
+                                        <td>{validator.rewards.toLocaleString()}</td>
                                         {validator.commission?
                                             <td>{validator.commission} </td>:
                                             <td>--</td>

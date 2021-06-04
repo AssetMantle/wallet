@@ -1,19 +1,14 @@
 import {QueryClientImpl} from '@cosmjs/stargate/build/codec/cosmos/staking/v1beta1/query';
-import {QueryClientImpl as DistributionQueryClient } from "@cosmjs/stargate/build/codec/cosmos/distribution/v1beta1/query";
 import {
     FETCH_ACTIVE_VALIDATORS_SUCCESS,
     FETCH_VALIDATORS_ERROR,
     FETCH_INACTIVE_VALIDATORS_SUCCESS,
     FETCH_VALIDATORS_IN_PROGRESS,
     FETCH_VALIDATORS_SUCCESS,
-    FETCH_VALIDATOR_SUCCESS,
-    FETCH_VALIDATOR_ERROR,
     FETCH_VALIDATOR_WITH_ADDRESS_ERROR,
     FETCH_VALIDATOR_WITH_ADDRESS_SUCCESS,
     FETCH_VALIDATORS_REWARDS_SUCCESS,
     FETCH_VALIDATORS_REWARDS_IN_PROGRESS,
-    FETCH_VALIDATOR_COMMISSION_ERROR,
-    FETCH_VALIDATOR_COMMISSION_SUCCESS,
     FETCH_VALIDATOR_COMMISSION_INFO_SUCCESS
 } from "../constants/validators";
 
@@ -120,38 +115,6 @@ export const fetchValidators = (address) => {
     };
 };
 
-export const fetchValidatorSuccess = (data) => {
-    return {
-        type: FETCH_VALIDATOR_SUCCESS,
-        data,
-    };
-};
-
-export const fetchValidatorError = (data) => {
-    return {
-        type: FETCH_VALIDATOR_ERROR,
-        data,
-    };
-};
-
-
-export const fetchValidator = (address) => {
-    
-    return async dispatch => {
-        const rpcClient = await transactions.RpcClient();
-        const stakingQueryService = new QueryClientImpl(rpcClient);
-        await stakingQueryService.Validator({
-            validatorAddr: address,
-        }).then((res) => {
-            dispatch(fetchValidatorSuccess(res.validator));
-        }).catch((error) => {
-            dispatch(fetchValidatorError(error.response
-                ? error.response.data.message
-                : error.message));
-        });
-    };
-};
-
 export const fetchValidatorsWithAddressSuccess = (list) => {
     return {
         type: FETCH_VALIDATOR_WITH_ADDRESS_SUCCESS,
@@ -225,37 +188,5 @@ export const fetchValidatorsWithAddress = (list, address) => {
         }
         dispatch(fetchValidatorRewardsListSuccess(options));
         dispatch(fetchValidatorsWithAddressSuccess(validators));
-    };
-};
-
-export const fetchValidatorCommissionSuccess = (data) => {
-    return {
-        type: FETCH_VALIDATOR_COMMISSION_SUCCESS,
-        data,
-    };
-};
-
-export const fetchValidatorCommissionError = (data) => {
-    return {
-        type: FETCH_VALIDATOR_COMMISSION_ERROR,
-        data,
-    };
-};
-
-
-export const fetchValidatorCommission = (address) =>{
-    return async dispatch => {
-        const rpcClient = await transactions.RpcClient();
-        const stakingQueryService = new DistributionQueryClient(rpcClient);
-        await stakingQueryService.ValidatorCommission({
-            validatorAddress:address
-        }).then((res) => {
-            dispatch(fetchValidatorCommissionSuccess(res));
-        }).catch((error) => {
-            dispatch(fetchValidatorCommissionError(error.response
-                ? error.response.data.message
-                : error.message));
-        });
-
     };
 };
