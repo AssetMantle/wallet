@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import AddressImport from "../ImportWallet/AddressImport";
 import {useHistory} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-
+import {createUSB} from "../../utils/ledger";
 
 const SignIn = (props) => {
     const history = useHistory();
@@ -14,10 +14,14 @@ const SignIn = (props) => {
         setShow(false);
         props.setRoutName("");
     };
-    const handleRoute = (key) => {
+    const handleRoute = async (key) => {
         if (key === "withAddress") {
             setWithAddress(true);
             setShow(false);
+        }
+        if(key === "ledger"){
+            let create = await createUSB();
+            console.log(create, "createion");
         }
     };
 
@@ -34,6 +38,11 @@ const SignIn = (props) => {
                         <h3 className="heading"> {t("SIGN_IN")}</h3>
                     </Modal.Header>
                     <Modal.Body className="create-wallet-body create-wallet-form-body sign-in-buttons">
+                        <div className="buttons">
+                            <button className="button button-primary large"
+                                onClick={() => handleRoute("ledger")}>{t("CONNECT_WITH_LEDGER")}
+                            </button>
+                        </div>
                         <div className="buttons">
                             <button className="button button-primary" onClick={() => handleKepler("kepler")}>{t("USE_KEPLER")}
                             </button>
