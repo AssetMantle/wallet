@@ -405,7 +405,7 @@ const ModalWithdraw = (props) => {
                                     <div className="form-field claim-check-box">
                                         <p className="label"></p>
                                         <div className="check-box-container">
-                                            <p className="label">{t("Claim Commission")}</p>
+                                            <p className="label" title={`${transactions.XprtConversion(props.validatorCommissionInfo[0]*1)} uxprt`}>{t("Claim Commission")}({transactions.XprtConversion(props.validatorCommissionInfo[0]*1).toLocaleString()} XPRT)</p>
                                             <Form.Control
                                                 type="checkbox"
                                                 name="claimCommission"
@@ -419,7 +419,7 @@ const ModalWithdraw = (props) => {
                                 <div className="form-field p-0">
                                     <p className="label"></p>
                                     <div className="validator-limit-warning">
-                                        <p className="amount-warning">Warning: Select below 5 validators to claim</p>
+                                        <p className="amount-warning">Warning: Select below 3 validators to claim</p>
                                     </div>
                                 </div>
                                 {mode === "normal" ?
@@ -708,8 +708,7 @@ const ModalWithdraw = (props) => {
             }
             {
                 showRewardsModal ?
-                    <ModalViewValidatorRewards setShowRewardsModal={setShowRewardsModal} handleClose={handleClose}
-                        commission={props.validatorCommissionInfo[0]} setShow={setShow} formName="viewRewards"/>
+                    <ModalViewValidatorRewards setShowRewardsModal={setShowRewardsModal} handleClose={handleClose} setShow={setShow} formName="viewRewards"/>
                     : null
             }
         </>

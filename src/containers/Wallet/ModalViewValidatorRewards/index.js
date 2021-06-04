@@ -80,8 +80,7 @@ const ModalViewValidatorRewards = (props) => {
                         <thead>
                             <tr>
                                 <th>Moniker</th>
-                                <th>Rewards (uxprt)</th>
-                                <th>Validator Commission</th>
+                                <th>Rewards (XPRT)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -90,10 +89,6 @@ const ModalViewValidatorRewards = (props) => {
                                     <tr key={index}>
                                         <td>{validator.label}</td>
                                         <td>{validator.rewards.toLocaleString()}</td>
-                                        {validator.commission?
-                                            <td>{validator.commission} </td>:
-                                            <td>--</td>
-                                        }
                                     </tr>
                                 ))
                             }
