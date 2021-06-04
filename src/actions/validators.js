@@ -244,14 +244,12 @@ export const fetchValidatorCommissionError = (data) => {
 
 
 export const fetchValidatorCommission = (address) =>{
-    console.log("fetchValidatorCommission", address);
     return async dispatch => {
         const rpcClient = await transactions.RpcClient();
         const stakingQueryService = new DistributionQueryClient(rpcClient);
         await stakingQueryService.ValidatorCommission({
             validatorAddress:address
         }).then((res) => {
-            console.log(res, "commission res");
             dispatch(fetchValidatorCommissionSuccess(res));
         }).catch((error) => {
             dispatch(fetchValidatorCommissionError(error.response

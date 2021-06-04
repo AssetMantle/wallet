@@ -124,7 +124,6 @@ const validatorCommission = (state = {}, action) => {
 };
 
 const validatorCommissionInfo = (state = {}, action) => {
-    console.log(action.list,"validatorAddress test");
     if (action.type === FETCH_VALIDATOR_COMMISSION_INFO_SUCCESS) {
         return action.list;
     } else {

@@ -340,7 +340,7 @@ const ModalSetWithdrawAddress = (props) => {
                                 <p className={props.delegations === 0 ? "empty info-data" : "info-data"}>{props.delegations}</p>
                             </div>
                             {mode === "normal" ?
-                                <>
+                                <div className="memo-container">
                                     <div className="memo-dropdown-section">
                                         <p onClick={handleMemoChange} className="memo-dropdown"><span
                                             className="text">{t("ADVANCED")} </span>
@@ -379,7 +379,7 @@ const ModalSetWithdrawAddress = (props) => {
                                             />
                                         </div> : ""
                                     }
-                                </> : null
+                                </div> : null
                             }
                             {
                                 errorMessage !== "" ?

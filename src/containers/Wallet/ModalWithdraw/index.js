@@ -53,6 +53,7 @@ const ModalWithdraw = (props) => {
     const [gasValidationError, setGasValidationError] = useState(false);
     const [fee, setFee] = useState(config.averageFee);
     const [zeroFeeAlert, setZeroFeeAlert] = useState(false);
+    const [selectValidation, setSelectValidation] = useState(false);
     const [checkAmountError, setCheckAmountError] = useState(false);
     const [withDrawMsgs, setWithDrawMsgs] = useState({});
     const [commissionMsg, setCommissionMsg] = useState({});
@@ -206,7 +207,6 @@ const ModalWithdraw = (props) => {
                         messages.push(commissionMsg[0]);
                     }
 
-                    console.log(messages,  "in com if");
                     const response = transactions.TransactionWithMnemonic(messages, aminoMsgHelper.fee(Math.trunc(fee), gas), memoContent,
                         mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                     response.then(result => {
@@ -251,7 +251,6 @@ const ModalWithdraw = (props) => {
             totalValidatorsRewards = totalValidatorsRewards + (transactions.XprtConversion(item.rewards*1));
             messages.push(WithdrawMsg(loginAddress, item.value));
         });
-        console.log(totalValidatorsRewards, totalValidatorsRewards);
         setWithDrawMsgs(messages);
         setIndividualRewards(totalValidatorsRewards);
     };
@@ -328,10 +327,13 @@ const ModalWithdraw = (props) => {
         let messages = [];
         if(evt.target.checked){
             messages.push(ValidatorCommissionMsg(props.validatorCommissionInfo[1]));
+            setSelectValidation(true);
         }else {
             messages = [];
+            setSelectValidation(false);
         }
         setCommissionMsg(messages);
+
     };
     const popoverMemo = (
         <Popover id="popover-memo">
@@ -353,6 +355,9 @@ const ModalWithdraw = (props) => {
         return <Loader/>;
     }
 
+    const disable = (
+        individualRewards === 0 && !selectValidation
+    );
     return (
         <>
             <Modal
@@ -384,13 +389,14 @@ const ModalWithdraw = (props) => {
                                     <ReactMultiSelectCheckboxes
                                         options={props.validatorsRewardsList}
                                         onChange={onChangeSelect}
+                                        placeholderButtonLabel="Select"
                                     />
 
                                 </div>
                                 <div className="form-field p-0">
                                     <p className="label"></p>
                                     <div className="available-tokens">
-                                        <p className="tokens">{t("AVAILABLE_REWARDS")} {individualRewards.toLocaleString()} <span>XPRT</span></p>
+                                        <p className="tokens">{t("CLAIMING_REWARDS")} {individualRewards.toLocaleString()} <span>XPRT</span></p>
                                         <p className="usd">= ${(individualRewards * props.tokenPrice).toLocaleString()}</p>
                                         <p className="view" onClick={handleViewRewards}>view</p>
                                     </div>
@@ -410,8 +416,14 @@ const ModalWithdraw = (props) => {
                                     </div>
                                     :""
                                 }
+                                <div className="form-field p-0">
+                                    <p className="label"></p>
+                                    <div className="validator-limit-warning">
+                                        <p className="amount-warning">Warning: Select below 5 validators to claim</p>
+                                    </div>
+                                </div>
                                 {mode === "normal" ?
-                                    <>
+                                    <div className="memo-container">
                                         <div className="memo-dropdown-section">
                                             <p onClick={handleMemoChange} className="memo-dropdown"><span
                                                 className="text">{t("ADVANCED")} </span>
@@ -451,7 +463,7 @@ const ModalWithdraw = (props) => {
                                                 />
                                             </div> : ""
                                         }
-                                    </> : null
+                                    </div> : null
                                 }
                                 {
                                     errorMessage !== "" ?
@@ -493,17 +505,17 @@ const ModalWithdraw = (props) => {
                                                 : ""
                                             }
                                             <button className="button button-primary"
-                                                disabled={checkAmountError || individualRewards === 0 || gasValidationError}
+                                                disabled={checkAmountError || disable || gasValidationError}
                                             >{t("NEXT")}</button>
                                         </div>
                                         :
                                         <button className="button button-primary"
-                                            disabled={checkAmountError || individualRewards === 0}
+                                            disabled={checkAmountError || disable || individualRewards === 0}
                                         >{t("SUBMIT")}</button>
                                     }
                                 </div>
                                 <div className="buttons">
-                                    <p className="button-link" type="button"
+                                    <p className="button-link"
                                         onClick={() => handleRewards("setWithDraw")}>
                                         {t("SET_WITHDRAW_ADDRESS")}
                                         <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
@@ -705,7 +717,6 @@ const ModalWithdraw = (props) => {
 };
 
 const stateToProps = (state) => {
-    console.log(state.validators.validatorCommissionInfo, "validatorCommission");
     return {
         list: state.rewards.list,
         rewards: state.rewards.rewards,

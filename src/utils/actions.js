@@ -25,7 +25,6 @@ async function getValidatorRewards(validatorAddress) {
 }
 
 async function getValidatorCommission(address){
-    console.log(address, "REd");
     const rpcClient = await transactions.RpcClient();
     const stakingQueryService = new DistributionQueryClient(rpcClient);
     let commission = 0;

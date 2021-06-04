@@ -460,8 +460,8 @@ const IbcTxn = (props) => {
                     </div>
                     {mode === "normal" ?
                         <>
-                            <div className="form-field p-0">
-                                <p className="label">Token</p>
+                            <div className="form-field">
+                                <p className="label">{t("TOKEN")}</p>
                                 <Select value={token} className="validators-list-selection"
                                     onChange={onTokenChangeSelect} displayEmpty>
                                     {
@@ -490,46 +490,48 @@ const IbcTxn = (props) => {
                                     }
                                 </Select>
                             </div>
-                            <div className="memo-dropdown-section">
-                                <p onClick={handleMemoChange} className="memo-dropdown"><span
-                                    className="text">{t("ADVANCED")} </span>
-                                {memoStatus ?
-                                    <Icon
-                                        viewClass="arrow-right"
-                                        icon="up-arrow"/>
-                                    :
-                                    <Icon
-                                        viewClass="arrow-right"
-                                        icon="down-arrow"/>}
+                            <div className="memo-container">
+                                <div className="memo-dropdown-section">
+                                    <p onClick={handleMemoChange} className="memo-dropdown"><span
+                                        className="text">{t("ADVANCED")} </span>
+                                    {memoStatus ?
+                                        <Icon
+                                            viewClass="arrow-right"
+                                            icon="up-arrow"/>
+                                        :
+                                        <Icon
+                                            viewClass="arrow-right"
+                                            icon="down-arrow"/>}
 
-                                </p>
-                                <OverlayTrigger trigger={['hover', 'focus']}
-                                    placement="bottom"
-                                    overlay={popoverMemo}>
-                                    <button className="icon-button info" type="button"><Icon
-                                        viewClass="arrow-right"
-                                        icon="info"/></button>
-                                </OverlayTrigger>
-                            </div>
-
-                            {memoStatus ?
-                                <div className="form-field">
-                                    <p className="label info">{t("MEMO")}
-                                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
-                                            overlay={popoverMemo}>
-                                            <button className="icon-button info" type="button"><Icon
-                                                viewClass="arrow-right"
-                                                icon="info"/></button>
-                                        </OverlayTrigger></p>
-                                    <Form.Control
-                                        type="text"
-                                        name="memo"
-                                        placeholder={t("ENTER_MEMO")}
-                                        maxLength={200}
-                                        required={false}
-                                    />
+                                    </p>
+                                    <OverlayTrigger trigger={['hover', 'focus']}
+                                        placement="bottom"
+                                        overlay={popoverMemo}>
+                                        <button className="icon-button info" type="button"><Icon
+                                            viewClass="arrow-right"
+                                            icon="info"/></button>
+                                    </OverlayTrigger>
                                 </div>
-                                : ""}
+
+                                {memoStatus ?
+                                    <div className="form-field">
+                                        <p className="label info">{t("MEMO")}
+                                            <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
+                                                overlay={popoverMemo}>
+                                                <button className="icon-button info" type="button"><Icon
+                                                    viewClass="arrow-right"
+                                                    icon="info"/></button>
+                                            </OverlayTrigger></p>
+                                        <Form.Control
+                                            type="text"
+                                            name="memo"
+                                            placeholder={t("ENTER_MEMO")}
+                                            maxLength={200}
+                                            required={false}
+                                        />
+                                    </div>
+                                    : ""}
+                            </div>
 
                         </>
                         : null

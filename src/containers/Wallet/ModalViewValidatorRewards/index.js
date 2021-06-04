@@ -31,7 +31,6 @@ const ModalViewValidatorRewards = (props) => {
                         commission: commissionInfo
                     };
                     list.push(data);
-                    console.log(commissionInfo, "in");
                 }
                 else {
                     const data = {
@@ -42,7 +41,6 @@ const ModalViewValidatorRewards = (props) => {
                 }
             }
             setDataList(list);
-            console.log(list, "list");
         };
         fetchRewardsList();
     },[]);

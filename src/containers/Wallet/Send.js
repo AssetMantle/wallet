@@ -393,7 +393,7 @@ const Send = (props) => {
 
                     {mode === "normal" ?
                         <>
-                            <div className="form-field p-0">
+                            <div className="form-field">
                                 <p className="label">{t("TOKEN")} </p>
                                 <Select value={token} className="validators-list-selection"
                                     onChange={onChangeSelect} displayEmpty>

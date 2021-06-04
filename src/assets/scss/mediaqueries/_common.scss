@@ -11,15 +11,17 @@
   }
 }
 
+@media (max-width: 992px) {
+  .validators-list-selection {
+    width: 100%;
+  }
+}
 @media (max-width: 767px) {
   .form-field{
     display: block;
   }
   .form-field .label{
     width: auto;
-  }
-  .validators-list-selection{
-    width: 100%;
   }
   .amount-field{
     display: block;
