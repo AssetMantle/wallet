@@ -1,9 +1,3 @@
----
-name: "\U0001F41B Bug Report"
-about: Submit a bug report to help us improve Inadatron
-
----
-
 ## 🐛 Bug
 
 <!-- A clear and concise description of what the bug is. -->
