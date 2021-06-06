@@ -23,6 +23,7 @@
     "bip39": "^3.0.2",
     "bitcoinjs-lib": "^4.0.2",
     "bootstrap": "^4.6.0",
+    "coingecko-api": "^1.0.10",
     "crypto": "^1.0.1",
     "i18next": "^19.8.7",
     "i18next-browser-languagedetector": "^6.0.1",
