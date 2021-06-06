@@ -7,8 +7,8 @@ Latest main branch codebase is deployed on [staging.wallet.persistence.one](http
 Any requests for test-tokens, questions, suggestions, are welcome on [Discord Persistence -> under wallet-development](https://discord.gg/s8hBStXjKs)
 
 ## Libraries and Integrations   
-- [cosmos/cosmJs](https://github.com/cosmos/cosmjs)
-- [cosmostation/cosmosJS](https://github.com/cosmostation/cosmosjs)
+- [cosmos/cosmjs](https://github.com/cosmos/cosmjs)
+- [cosmostation/cosmosjs](https://github.com/cosmostation/cosmosjs)
 - [keplr experimental feature](https://github.com/chainapsis/keplr-example)
 ## Developer Configurations
 ```
