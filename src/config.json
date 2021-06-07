@@ -19,11 +19,6 @@
         "name": "cosmos",
         "id": "cosmos/channel-1",
         "port": "transfer"
-    },
-    {
-      "name": "persistence",
-      "id": "persistence/channel-2",
-      "port": "transfer"
     }
   ],
   "valoperAddressPrefix": "persistence"

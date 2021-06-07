@@ -17,13 +17,14 @@ import aminoMsgHelper from "../../../utils/aminoMsgHelper";
 import Loader from "../../../components/Loader";
 import {connect} from "react-redux";
 import config from "../../../config";
+import ibcConfig from "../../../ibcConfig";
 import MakePersistence from "../../../utils/cosmosjsWrapper";
 import {useTranslation} from "react-i18next";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import GasContainer from "../../Gas";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
-
+const IBC_CONF = process.env.REACT_APP_IBC_CONFIG;
 const IbcTxn = (props) => {
     const {t} = useTranslation();
     const [amountField, setAmountField] = useState(0);
@@ -54,7 +55,7 @@ const IbcTxn = (props) => {
     const [zeroFeeAlert, setZeroFeeAlert] = useState(false);
     let mode = localStorage.getItem('loginMode');
     let loginAddress = localStorage.getItem('address');
-    
+
     const handleClose = () => {
         setShow(false);
         setMnemonicForm(false);
@@ -359,7 +360,12 @@ const IbcTxn = (props) => {
             </Popover.Content>
         </Popover>
     );
-
+    let channels=[];
+    if(IBC_CONF === "ibcStaging.json"){
+        channels = ibcConfig.testNetChannels;
+    }else {
+        channels = ibcConfig.mainNetChannels;
+    }
     return (
         <div className="send-container">
             <div className="form-section">
@@ -372,7 +378,7 @@ const IbcTxn = (props) => {
                                 <em>{t("SELECT_CHAIN")}</em>
                             </MenuItem>
                             {
-                                config.channels.map((channel, index) => {
+                                channels.map((channel, index) => {
                                     return (
                                         <MenuItem
                                             key={index + 1}
@@ -384,7 +390,7 @@ const IbcTxn = (props) => {
                                 })
                             }
                             <MenuItem
-                                key={config.channels.length + 1}
+                                key={channels.length + 1}
                                 className=""
                                 value="Custom">
                                 {t("CUSTOM")}
