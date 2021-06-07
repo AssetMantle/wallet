@@ -153,7 +153,7 @@ html, body {
     color: #2E3239;
     width: 150px; }
   .form-field input, .form-field .amount-field, .form-field textarea, .form-field .file-upload, .form-field .info-data {
-    max-width: 400px !important;
+    max-width: 450px !important;
     flex: 1; }
   .form-field .info-data {
     margin: 0 0 10px 0;
@@ -315,7 +315,7 @@ html, body {
       box-shadow: none; }
 
 .validators-list-selection {
-  max-width: 400px !important;
+  max-width: 450px !important;
   flex: 1;
   background: #F5F6FA;
   font-size: 14px;
@@ -1328,6 +1328,15 @@ html, body {
     border-bottom: 2px solid #272931; }
   .wallet-main-section .tabs-section .nav-tabs {
     border: 1px solid #dee2e6 !important; }
+    .wallet-main-section .tabs-section .nav-tabs .ibc-tab p {
+      margin: 0; }
+      .wallet-main-section .tabs-section .nav-tabs .ibc-tab p button {
+        position: relative; }
+        .wallet-main-section .tabs-section .nav-tabs .ibc-tab p button .icon {
+          position: absolute;
+          left: 5px;
+          right: 0px;
+          bottom: -1px; }
     .wallet-main-section .tabs-section .nav-tabs .nav-link {
       border: 0px solid;
       border-radius: 0px;
@@ -1360,7 +1369,7 @@ html, body {
   .wallet-main-section .send-container .form-error {
     text-align: left; }
   .wallet-main-section .send-container .form-section {
-    max-width: 600px; }
+    max-width: 700px; }
     .wallet-main-section .send-container .form-section .form-field {
       display: flex;
       align-items: center;
@@ -1628,12 +1637,14 @@ html, body {
 .token-info-section {
   padding: 25px 0px 25px 0px; }
   .token-info-section .token-info-section-body {
-    display: flex; }
+    display: flex;
+    padding-top: 15px; }
   .token-info-section .info-heading {
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
     font-size: 14px;
-    line-height: 150%; }
+    line-height: 150%;
+    margin: 0; }
   .token-info-section .info-box {
     flex: 1;
     display: flex;
@@ -1806,7 +1817,7 @@ html, body {
 .claim-rewards-modal .rewards-modal-body {
   padding: 10px 40px 40px 40px; }
   .claim-rewards-modal .rewards-modal-body input, .claim-rewards-modal .rewards-modal-body .amount-field, .claim-rewards-modal .rewards-modal-body textarea {
-    max-width: 400px;
+    max-width: 450px;
     flex: 1; }
   .claim-rewards-modal .rewards-modal-body textarea {
     background: #F5F6FA;
@@ -1827,7 +1838,7 @@ html, body {
       font-size: 14px;
       color: #8D9CB5; }
   .claim-rewards-modal .rewards-modal-body .buttons {
-    padding-top: 20px;
+    padding-top: 15px;
     text-align: center; }
     .claim-rewards-modal .rewards-modal-body .buttons .button {
       width: 200px; }
@@ -1838,7 +1849,7 @@ html, body {
     .claim-rewards-modal .rewards-modal-body .available-tokens p {
       margin: 0; }
     .claim-rewards-modal .rewards-modal-body .available-tokens .tokens {
-      padding: 0px 10px;
+      padding: 0px 10px 0 0;
       font-weight: bold;
       font-size: 14px;
       line-height: 150%;
@@ -1850,6 +1861,12 @@ html, body {
       font-weight: 500;
       font-size: 14px;
       line-height: 150%; }
+    .claim-rewards-modal .rewards-modal-body .available-tokens .view {
+      cursor: pointer;
+      text-decoration: underline;
+      margin: 0 10px;
+      font-weight: 500;
+      color: #e50913; }
 
 .faq-modal-body .nav-pills {
   justify-content: center;
@@ -2043,6 +2060,41 @@ html, body {
     padding-left: 40px;
     width: 150px; }
 
+.rewards-validators-list > div {
+  width: 100%;
+  max-width: 400px !important; }
+  .rewards-validators-list > div button {
+    width: 100%;
+    background: #F5F6FA;
+    height: calc(2.3em + .75rem + 2px);
+    box-shadow: none; }
+  .rewards-validators-list > div > div:nth-child(2) {
+    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+    width: 100%; }
+.rewards-validators-list input[type=checkbox], .rewards-validators-list input {
+  height: auto !important; }
+
+.claim-check-box {
+  padding: 0; }
+  .claim-check-box input[type=checkbox], .claim-check-box input {
+    height: auto !important; }
+  .claim-check-box .check-box-container {
+    display: flex;
+    align-items: center;
+    padding: 10px 10px 0 0; }
+    .claim-check-box .check-box-container .label {
+      width: auto;
+      margin-right: 15px; }
+    .claim-check-box .check-box-container input {
+      width: auto;
+      flex: none; }
+
+.memo-container .form-field {
+  padding-top: 15px; }
+
+.validator-limit-warning .amount-warning {
+  padding-top: 10px; }
+
 /*--------------------------------------------------------------
 # importwallet styles
 --------------------------------------------------------------*/
@@ -2098,15 +2150,15 @@ html, body {
 @media (min-width: 1400px) {
   .container {
     max-width: 1340px; } }
+@media (max-width: 992px) {
+  .validators-list-selection {
+    width: 100%; } }
 @media (max-width: 767px) {
   .form-field {
     display: block; }
 
   .form-field .label {
     width: auto; }
-
-  .validators-list-selection {
-    width: 100%; }
 
   .amount-field {
     display: block; }
@@ -2144,6 +2196,11 @@ html, body {
 /*--------------------------------------------------------------
 # dashboard mediaqueries styles
 --------------------------------------------------------------*/
+@media (max-width: 1400px) {
+  .wallet-main-section .txns-container table tbody tr:first-child td, .validators-section table tbody tr:first-child td {
+    padding-top: 20px; }
+  .wallet-main-section .txns-container table tbody td, .validators-section table tbody td {
+    padding: 13px 20px; } }
 @media (max-width: 1300px) {
   .header .profile-section .profile-dropdown .dropdown-menu .info {
     padding: 20px 30px; } }
@@ -2155,7 +2212,7 @@ html, body {
     height: calc(100vh - 375px); } }
 @media (max-width: 1400px) {
   .token-info-section .token-info-section-body {
-    padding: 25px 0; }
+    padding: 15px 0; }
     .token-info-section .token-info-section-body .info-box {
       padding: 15px 20px; }
     .token-info-section .token-info-section-body .xprt-info .total-supply {

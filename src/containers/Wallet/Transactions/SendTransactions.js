@@ -55,7 +55,8 @@ const SendTransactions = (props) => {
         print: false,
         download: false,
         filter: false,
-        search:false
+        search:false,
+        viewColumns:false,
     };
 
     const tableData = props.list && props.list.length > 0

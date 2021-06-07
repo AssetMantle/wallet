@@ -5,8 +5,10 @@ import {
     FETCH_INACTIVE_VALIDATORS_SUCCESS,
     FETCH_VALIDATORS_IN_PROGRESS,
     FETCH_VALIDATORS_SUCCESS,
-    FETCH_VALIDATOR_SUCCESS,
     FETCH_VALIDATOR_WITH_ADDRESS_SUCCESS,
+    FETCH_VALIDATORS_REWARDS_SUCCESS,
+    FETCH_VALIDATORS_REWARDS_IN_PROGRESS,
+    FETCH_VALIDATOR_COMMISSION_INFO_SUCCESS
 } from "../constants/validators";
 import Lodash from "lodash";
 
@@ -24,6 +26,17 @@ const inProgress = (state = false, action) => {
     }
 };
 
+const rewardsInProgress =  (state = false, action) => {
+    switch (action.type) {
+    case FETCH_VALIDATORS_REWARDS_IN_PROGRESS:
+        return true;
+    case FETCH_VALIDATOR_WITH_ADDRESS_SUCCESS:
+    case FETCH_VALIDATORS_REWARDS_SUCCESS:
+        return false;
+    default:
+        return state;
+    }
+};
 
 const activeList = (state = [], action) => {
     if (action.type === FETCH_ACTIVE_VALIDATORS_SUCCESS) {
@@ -75,15 +88,6 @@ const validators = (state = [], action) => {
     }
 };
 
-const validator = (state = {}, action) => {
-    if (action.type === FETCH_VALIDATOR_SUCCESS) {
-        return action.data;
-    } else {
-        return state;
-    }
-};
-
-
 const validatorsListWithAddress = (state = [], action) => {
     if (action.type === FETCH_VALIDATOR_WITH_ADDRESS_SUCCESS) {
         return action.list;
@@ -92,6 +96,23 @@ const validatorsListWithAddress = (state = [], action) => {
     }
 };
 
+const validatorsRewardsList = (state = [], action) => {
+    if (action.type === FETCH_VALIDATORS_REWARDS_SUCCESS) {
+        return action.list;
+    } else {
+        return state;
+    }
+};
+
+const validatorCommissionInfo = (state = {}, action) => {
+    if (action.type === FETCH_VALIDATOR_COMMISSION_INFO_SUCCESS) {
+        return action.list;
+    } else {
+        return state;
+    }
+};
+
+
 export default combineReducers({
     activeList,
     inActiveList,
@@ -99,6 +120,8 @@ export default combineReducers({
     inActiveVotingPower,
     inProgress,
     validators,
-    validator,
-    validatorsListWithAddress
+    validatorsListWithAddress,
+    validatorsRewardsList,
+    rewardsInProgress,
+    validatorCommissionInfo
 });

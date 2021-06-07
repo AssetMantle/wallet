@@ -176,6 +176,7 @@ const ModalUnbond = (props) => {
             const res = JSON.parse(encryptedMnemonic);
             const decryptedData = helper.decryptStore(res, password);
             if (decryptedData.error != null) {
+                setLoader(false);
                 setErrorMessage(decryptedData.error);
             } else {
                 mnemonic = decryptedData.mnemonic;
@@ -321,7 +322,7 @@ const ModalUnbond = (props) => {
                                 </div>
                             </div>
                             {mode === "normal" ?
-                                <>
+                                <div className="memo-container">
                                     <div className="memo-dropdown-section">
                                         <p onClick={handleMemoChange} className="memo-dropdown"><span className="text">{t("ADVANCED")} </span>
                                             {memoStatus ?
@@ -359,7 +360,7 @@ const ModalUnbond = (props) => {
                                         </div>
                                         : ""
                                     }
-                                </>
+                                </div>
                                 : null
                             }
                             {

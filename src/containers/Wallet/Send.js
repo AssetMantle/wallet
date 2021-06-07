@@ -125,7 +125,6 @@ const Send = (props) => {
         }
     };
     const handleSubmitKepler = event => {
-
         setShow(true);
         setLoader(true);
         event.preventDefault();
@@ -210,6 +209,7 @@ const Send = (props) => {
             const res = JSON.parse(encryptedMnemonic);
             const decryptedData = helper.decryptStore(res, password);
             if (decryptedData.error != null) {
+                setLoader(false);
                 setErrorMessage(decryptedData.error);
             } else {
                 userMnemonic = decryptedData.mnemonic;
@@ -382,20 +382,19 @@ const Send = (props) => {
                                     <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data"}><span
                                         className="title">Transferable Balance:</span> <span
                                         className="value"
-                                        title={props.transferableAmount}>{props.transferableAmount.toFixed(6)} XPRT</span> </span>
+                                        title={props.transferableAmount}>{props.transferableAmount.toLocaleString()} XPRT</span> </span>
                                     :
                                     <span title={tokenItem.denomTrace} className={transferableAmount === 0 ? "empty info-data" : "info-data"}>
-                                        {/*0.001 ATOM ( IBC Trace { path - transfer….. , denom: uatom } )*/}
                                         <span
                                             className="title">Transferable Balance:</span> <span
-                                            className="value">{transferableAmount.toFixed(6)}  ATOM ( IBC Trace path - {tokenItem.denom.path} , denom: {tokenItem.denom.baseDenom}  )</span> </span>
+                                            className="value">{transferableAmount.toLocaleString()}  ATOM ( IBC Trace path - {tokenItem.denom.path} , denom: {tokenItem.denom.baseDenom}  )</span> </span>
                             }
                         </div>
                     </div>
 
                     {mode === "normal" ?
                         <>
-                            <div className="form-field p-0">
+                            <div className="form-field">
                                 <p className="label">{t("TOKEN")} </p>
                                 <Select value={token} className="validators-list-selection"
                                     onChange={onChangeSelect} displayEmpty>

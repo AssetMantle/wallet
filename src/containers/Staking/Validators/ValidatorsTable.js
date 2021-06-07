@@ -106,6 +106,7 @@ const ValidatorsTable = (props) => {
         print: false,
         download: false,
         filter: false,
+        viewColumns:false,
         search: false,
     };
 

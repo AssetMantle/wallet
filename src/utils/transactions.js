@@ -7,6 +7,7 @@ import Long from "long";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient} from "@cosmjs/stargate";
 
+const encoding = require("@cosmjs/encoding");
 const tendermint_1 = require("@cosmjs/stargate/build/codec/ibc/lightclients/tendermint/v1/tendermint");
 const {SigningStargateClient, QueryClient, setupIbcExtension} = require("@cosmjs/stargate");
 const tmRPC = require("@cosmjs/tendermint-rpc");
@@ -14,6 +15,7 @@ const {TransferMsg} = require("./protoMsgHelper");
 const addressPrefix = config.addressPrefix;
 const configChainID = process.env.REACT_APP_CHAIN_ID;
 const configCoinType = config.coinType;
+const valoperAddressPrefix = config.valoperAddressPrefix;
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
 //TODO take from config and env
@@ -174,6 +176,22 @@ async function RpcClient() {
     const queryClient = new QueryClient(tendermintClient);
     return createProtobufRpcClient(queryClient);
 }
+
+function addrToValoper(address) {
+    let data = encoding.Bech32.decode(address).data;
+    return encoding.Bech32.encode(valoperAddressPrefix, data);
+}
+
+function valoperToAddr(valoperAddr) {
+    let data = encoding.Bech32.decode(valoperAddr).data;
+    return encoding.Bech32.encode(addressPrefix, data);
+}
+
+function checkValidatorAccountAddress(validatorAddress, address) {
+    let validatorAccountAddress = valoperToAddr(validatorAddress);
+    return validatorAccountAddress === address;
+}
+
 export default {
     TransactionWithKeplr,
     TransactionWithMnemonic,
@@ -183,5 +201,8 @@ export default {
     XprtConversion,
     PrivateKeyReader,
     MakeIBCTransferMsg,
-    RpcClient
+    RpcClient,
+    addrToValoper,
+    valoperToAddr,
+    checkValidatorAccountAddress
 };

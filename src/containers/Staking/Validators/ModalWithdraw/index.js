@@ -171,6 +171,7 @@ const ModalWithdraw = (props) => {
             const res = JSON.parse(encryptedMnemonic);
             const decryptedData = helper.decryptStore(res, password);
             if (decryptedData.error != null) {
+                setLoader(false);
                 setErrorMessage(decryptedData.error);
             } else {
                 mnemonic = decryptedData.mnemonic;
@@ -311,12 +312,12 @@ const ModalWithdraw = (props) => {
                             <div className="form-field p-0">
                                 <p className="label">{t("AVAILABLE")} (XPRT)</p>
                                 <div className="available-tokens">
-                                    <p className={props.rewards === 0 ? "empty info-data" : "info-data"} title={props.rewards}>{props.rewards.toFixed(4)}</p>
+                                    <p className={props.rewards === 0 ? "empty info-data" : "info-data"} title={props.rewards}>{props.rewards.toLocaleString()}</p>
                                 </div>
                             </div>
                             {
                                 mode === "normal" ?
-                                    <>
+                                    <div className="memo-container">
                                         <div className="memo-dropdown-section">
                                             <p onClick={handleMemoChange} className="memo-dropdown"><span
                                                 className="text">{t("ADVANCED")} </span>
@@ -355,7 +356,7 @@ const ModalWithdraw = (props) => {
                                             </div>
                                             : ""
                                         }
-                                    </>
+                                    </div>
                                     : null
                             }
                             {
