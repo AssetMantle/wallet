@@ -209,6 +209,7 @@ const IbcTxn = (props) => {
             const res = JSON.parse(encryptedMnemonic);
             const decryptedData = helper.decryptStore(res, password);
             if (decryptedData.error != null) {
+                setLoader(false);
                 setErrorMessage(decryptedData.error);
             } else {
                 userMnemonic = decryptedData.mnemonic;

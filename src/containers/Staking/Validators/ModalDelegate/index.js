@@ -177,6 +177,7 @@ const ModalDelegate = (props) => {
             const res = JSON.parse(encryptedMnemonic);
             const decryptedData = helper.decryptStore(res, password);
             if (decryptedData.error != null) {
+                setLoader(false);
                 setErrorMessage(decryptedData.error);
             } else {
                 mnemonic = decryptedData.mnemonic;
