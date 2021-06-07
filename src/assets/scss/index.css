@@ -2081,7 +2081,7 @@ html, body {
   .claim-check-box .check-box-container {
     display: flex;
     align-items: center;
-    padding: 10px 10px 0 10px; }
+    padding: 10px 10px 0 0; }
     .claim-check-box .check-box-container .label {
       width: auto;
       margin-right: 15px; }
