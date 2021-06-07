@@ -55,7 +55,9 @@ export const fetchTransactions = (address, limit, pageNumber) => {
             let txnList = [];
             for (let i = 0; i < txnsResponseList.length; i++) {
                 let txHashResult = await Axios.get(getTxnUrl(txnsResponseList[i].hash));
-                txnList.push(txHashResult.data.tx_response);
+                if(txHashResult.data.tx_response.code === 0){
+                    txnList.push(txHashResult.data.tx_response);
+                }
             }
             dispatch(fetchTransactionsSuccess(txnList));
         }
@@ -106,7 +108,9 @@ export const fetchReceiveTransactions = (address, limit, pageNumber) => {
             let txnList = [];
             for (let i = 0; i < txnsResponseList.length; i++) {
                 let txHashResult = await Axios.get(getTxnUrl(txnsResponseList[i].hash));
-                txnList.push(txHashResult.data.tx_response);
+                if(txHashResult.data.tx_response.code === 0){
+                    txnList.push(txHashResult.data.tx_response);
+                }
             }
             dispatch(fetchReceiveTransactionsSuccess(txnList));
         }
