@@ -363,6 +363,39 @@ const Send = (props) => {
                             required={true}
                         />
                     </div>
+                    {mode === "normal" ?
+                        <div className="form-field">
+                            <p className="label">{t("TOKEN")} </p>
+                            <Select value={token} className="validators-list-selection"
+                                onChange={onChangeSelect} displayEmpty>
+                                {
+                                    props.tokenList.map((item, index) => {
+                                        if(item.denom === "uxprt"){
+                                            return (
+                                                <MenuItem
+                                                    key={index + 1}
+                                                    className=""
+                                                    value={item.denom}>
+                                                    XPRT
+                                                </MenuItem>
+                                            );
+                                        }
+                                        if(item.denom.baseDenom === "uatom"){
+                                            return (
+                                                <MenuItem
+                                                    key={index + 1}
+                                                    className=""
+                                                    value={item.denomTrace}>
+                                                    ATOM
+                                                </MenuItem>
+                                            );
+                                        }
+                                    })
+                                }
+                            </Select>
+                        </div>
+                        : null
+                    }
                     <div className="form-field p-0">
                         <p className="label">{t("AMOUNT")} (XPRT)</p>
                         <div className="amount-field">
@@ -394,36 +427,6 @@ const Send = (props) => {
 
                     {mode === "normal" ?
                         <>
-                            <div className="form-field">
-                                <p className="label">{t("TOKEN")} </p>
-                                <Select value={token} className="validators-list-selection"
-                                    onChange={onChangeSelect} displayEmpty>
-                                    {
-                                        props.tokenList.map((item, index) => {
-                                            if(item.denom === "uxprt"){
-                                                return (
-                                                    <MenuItem
-                                                        key={index + 1}
-                                                        className=""
-                                                        value={item.denom}>
-                                                        XPRT
-                                                    </MenuItem>
-                                                );
-                                            }
-                                            if(item.denom.baseDenom === "uatom"){
-                                                return (
-                                                    <MenuItem
-                                                        key={index + 1}
-                                                        className=""
-                                                        value={item.denomTrace}>
-                                                        ATOM
-                                                    </MenuItem>
-                                                );
-                                            }
-                                        })
-                                    }
-                                </Select>
-                            </div>
                             <div className="memo-dropdown-section">
                                 <p onClick={handleMemoChange} className="memo-dropdown"><span
                                     className="text">{t("ADVANCED")} </span>

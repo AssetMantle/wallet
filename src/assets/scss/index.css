@@ -248,7 +248,8 @@ html, body {
   display: flex;
   margin-top: 20px;
   padding: 20px;
-  align-items: center; }
+  align-items: center;
+  justify-content: center; }
   .note-section .exclamation {
     padding-right: 25px; }
     .note-section .exclamation .icon {
@@ -900,7 +901,7 @@ html, body {
 # createwallet styles
 --------------------------------------------------------------*/
 .create-wallet-modal .modal-dialog {
-  max-width: 600px !important; }
+  max-width: 700px !important; }
 .create-wallet-modal .modal-content {
   border-radius: 0; }
 .create-wallet-modal .modal-header {
@@ -993,9 +994,7 @@ html, body {
       text-align: center;
       color: #E50913; }
   .create-wallet-modal .create-wallet-form-body form {
-    padding-top: 30px;
-    max-width: 400px;
-    margin: auto; }
+    padding-top: 30px; }
     .create-wallet-modal .create-wallet-form-body form .form-field {
       justify-content: center; }
     .create-wallet-modal .create-wallet-form-body form .label {
@@ -1003,9 +1002,8 @@ html, body {
       font-size: 14px;
       line-height: 150%;
       font-family: 'Poppins', sans-serif;
-      text-align: right;
       color: #2E3239;
-      margin-right: 30px; }
+      margin-right: 10px; }
     .create-wallet-modal .create-wallet-form-body form .password-group {
       position: relative; }
       .create-wallet-modal .create-wallet-form-body form .password-group button {
@@ -1512,8 +1510,11 @@ html, body {
     padding: .5rem 1rem; }
     .header .navbar .navbar-nav li a .icon, .header .navbar .navbar-nav li .profile-dropdown .icon, .header .navbar .navbar-nav li .dark-mode-button .icon {
       fill: #5F646C; }
-  .header .navbar .navbar-nav li .profile-dropdown a {
-    padding: 0; }
+  .header .navbar .navbar-nav li .profile-dropdown {
+    cursor: auto; }
+    .header .navbar .navbar-nav li .profile-dropdown a {
+      padding: 0;
+      cursor: pointer; }
   .header .navbar .navbar-nav li a:hover .icon, .header .navbar .navbar-nav li a.active .icon, .header .navbar .navbar-nav li a:focus .icon {
     fill: #e50913; }
 .header .title {
@@ -1543,6 +1544,7 @@ html, body {
     width: 14px;
     height: 14px; }
 .header .profile-section {
+  cursor: auto !important;
   display: flex;
   align-items: center; }
   .header .profile-section .icon {
@@ -1568,7 +1570,7 @@ html, body {
     margin: 0px !important;
     right: auto !important;
     bottom: auto !important;
-    transform: translate(-184px, 42px) !important; }
+    transform: translate(-200px, 42px) !important; }
     .header .profile-section .profile-dropdown .dropdown-menu .qr-box {
       width: 80px;
       height: 80px;

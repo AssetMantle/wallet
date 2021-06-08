@@ -400,8 +400,12 @@
           fill: #5F646C;;
         }
       }
-      .profile-dropdown a{
-        padding: 0;
+      .profile-dropdown {
+        cursor: auto;
+        a{
+          padding: 0;
+          cursor: pointer;
+        }
       }
       a:hover, a.active, a:focus {
         .icon {
@@ -452,6 +456,7 @@
   }
 
   .profile-section {
+    cursor: auto !important;
     display: flex;
     align-items: center;
 
@@ -485,7 +490,7 @@
         margin: 0px !important;
         right: auto !important;
         bottom: auto !important;
-        transform: translate(-184px, 42px) !important;
+        transform: translate(-200px, 42px) !important;
 
 
         .qr-box {
