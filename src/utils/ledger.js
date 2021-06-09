@@ -1,5 +1,4 @@
 import {
-    makeCosmoshubPath,
     coins,
 } from "@cosmjs/amino";
 import {
@@ -7,50 +6,50 @@ import {
     SigningStargateClient,
 } from "@cosmjs/stargate";
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
-import { LedgerSigner } from "@cosmjs/ledger-amino/build/ledgersigner";
-const RPCURL =  process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
+import {LedgerSigner} from "@cosmjs/ledger-amino";
+import {makeHdPath} from "./transactions";
+import {SendMsg} from "./protoMsgHelper";
 
-export const createUSB = async () => {
-    let transpt = null;
-    try {
-        transpt = await TransportWebUSB.create();
-        console.log("transport for createUSB(): ", transpt);
-        let response = await onSelectDevice(transpt);
-        return response;
-    } catch (e) {
-        console.log("Error while createUSB: ", e);
-    }
-};
+const RPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
-const onSelectDevice = async (transpt) => {
-    try {
-        window.ledgerTransport = transpt;
-        console.log("transport for onSelectDevice(): ", transpt);
-        transpt.on("disconnect", () => {
-            console.log("transport disconnected!!");
-        });
-        console.log("transport connected!!");
-    } catch (e) {
-        console.log("Error while Selecting Device: ", e);
-    }
-    let response = await fetchAddress(transpt);
-    return response;
-};
+const interactiveTimeout = 120_000;
 
-const fetchAddress = async (transport) =>{
-    const defaultLedgerAddress = "cosmos1p6xs63q4g7np99ttv5nd3yzkt8n4qxa47w8aea";
+export async function createTransport() {
+    const ledgerTransport = await TransportWebUSB.create(interactiveTimeout, interactiveTimeout);
+    return ledgerTransport;
+}
+
+export const fetchAddress = async (transport) => {
     const signer = new LedgerSigner(transport, {
         testModeAllowed: true,
-        hdPaths: [makeCosmoshubPath(0), makeCosmoshubPath(1), makeCosmoshubPath(10)],
+        hdPaths: [makeHdPath()],
+        prefix: "persistence"
     });
     const [firstAccount] = await signer.getAccounts();
-    console.log(firstAccount, "address");
+    return firstAccount.address;
+};
+
+
+// eslint-disable-next-line no-unused-vars
+export const doTx = async (transport) => {
+    transport = await createTransport();
+    console.log(transport);
+    const signer = new LedgerSigner(transport, {
+        hdPaths: [makeHdPath()],
+        prefix: "persistence"
+    });
+    const [firstAccount] = await signer.getAccounts();
+    console.log(firstAccount, "address", "persistence18qr36nfyhferhpl6alwa8pdvxt4pr5g5jetv82");
     const client = await SigningStargateClient.connectWithSigner(RPCURL, signer);
-    const result = await client.sendTokens(
+    const fee = {
+        amount: coins(100, "uxprt"),
+        gas: String(2000000)
+    };
+
+    const result = await client.signAndBroadcast(
         firstAccount.address,
-        defaultLedgerAddress,
-        coins(1234, "ustake"),
+        [SendMsg(firstAccount.address,"persistence18qr36nfyhferhpl6alwa8pdvxt4pr5g5jetv82",1221,"uxprt" )],fee,"ledger Tx",
     );
     assertIsBroadcastTxSuccessStargate(result);
-    console.log(result , "final result ");
+    console.log(result, "final result ");
 };

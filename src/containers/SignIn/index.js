@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import AddressImport from "../ImportWallet/AddressImport";
 import {useHistory} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import {createUSB} from "../../utils/ledger";
+import { fetchAddresss} from "../../utils/ledger";
 
 const SignIn = (props) => {
     const history = useHistory();
@@ -19,8 +19,8 @@ const SignIn = (props) => {
             setWithAddress(true);
             setShow(false);
         }
-        if(key === "ledger"){
-            let create = await createUSB();
+        if (key === "ledger") {
+            let create = await fetchAddresss();
             console.log(create, "createion");
         }
     };

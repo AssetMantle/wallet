@@ -6,6 +6,8 @@ import helper from "./helper";
 import Long from "long";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient} from "@cosmjs/stargate";
+import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
+import {LedgerSigner} from "@cosmjs/ledger-amino";
 
 const encoding = require("@cosmjs/encoding");
 const tendermint_1 = require("@cosmjs/stargate/build/codec/ibc/lightclients/tendermint/v1/tendermint");
@@ -39,6 +41,28 @@ async function KeplrWallet(chainID = configChainID) {
     return [offlineSigner, accounts[0].address];
 }
 
+async function TransactionWithLedger(msgs, fee, memo = "", chainID = configChainID) {
+    const [wallet, address] = await LedgerWallet(chainID);
+    return Transaction(wallet, address, msgs, fee, memo);
+}
+
+async function LedgerWallet() {
+    const interactiveTimeout = 120_000;
+    async function createTransport() {
+        const ledgerTransport = await TransportWebUSB.create(interactiveTimeout, interactiveTimeout);
+        return ledgerTransport;
+    }
+
+    const transport = await createTransport();
+    const signer = new LedgerSigner(transport, {
+        testModeAllowed: true,
+        hdPaths: [makeHdPath()],
+        prefix: "persistence"
+    });
+    const [firstAccount] = await signer.getAccounts();
+    return [signer, firstAccount.address];
+}
+
 async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(), bip39Passphrase = "", prefix = addressPrefix) {
     const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix);
     return Transaction(wallet, address, msgs, fee, memo);
@@ -62,7 +86,7 @@ async function MnemonicWalletWithPassphrase(mnemonic, hdPath = makeHdPath(), pas
 //
 // }
 
-function makeHdPath(accountNumber = "0", addressIndex = "0", coinType = configCoinType) {
+export function makeHdPath(accountNumber = "0", addressIndex = "0", coinType = configCoinType) {
     return stringToPath("m/44'/" + coinType + "'/" + accountNumber + "'/0/" + addressIndex);
 }
 
@@ -149,6 +173,7 @@ function decodeTendermintConsensusStateAny(consensusState) {
     }
     return tendermint_1.ConsensusState.decode(consensusState.value);
 }
+
 async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp = 1000, denom = "uxprt", port = "transfer") {
     const tendermintClient = await tmRPC.Tendermint34Client.connect(tendermintRPCURL);
     const queryClient = new QueryClient(tendermintClient);
@@ -162,13 +187,13 @@ async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeo
         revisionNumber: clientStateResponseDecoded.latestHeight.revisionNumber
     };
 
-    const consensusStateResponse = await ibcExtension.ibc.channel.consensusState(port,channel,
-        clientStateResponseDecoded.latestHeight.revisionNumber.toInt() , clientStateResponseDecoded.latestHeight.revisionHeight.toInt());
+    const consensusStateResponse = await ibcExtension.ibc.channel.consensusState(port, channel,
+        clientStateResponseDecoded.latestHeight.revisionNumber.toInt(), clientStateResponseDecoded.latestHeight.revisionHeight.toInt());
     const consensusStateResponseDecoded = decodeTendermintConsensusStateAny(consensusStateResponse.consensusState);
 
-    const timeoutTime = Long.fromNumber(consensusStateResponseDecoded.timestamp.getTime()/1000).add(timeoutTimestamp).multiply(1000000000); //get time in nanoesconds
+    const timeoutTime = Long.fromNumber(consensusStateResponseDecoded.timestamp.getTime() / 1000).add(timeoutTimestamp).multiply(1000000000); //get time in nanoesconds
 
-    return TransferMsg(channel, fromAddress, toAddress, amount,timeoutHeight , timeoutTime, denom, port);
+    return TransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTime, denom, port);
 }
 
 async function RpcClient() {
@@ -195,6 +220,7 @@ function checkValidatorAccountAddress(validatorAddress, address) {
 export default {
     TransactionWithKeplr,
     TransactionWithMnemonic,
+    TransactionWithLedger,
     makeHdPath,
     getAccountNumberAndSequence,
     updateFee,
