@@ -6,7 +6,6 @@ import {
     FETCH_VALIDATORS_IN_PROGRESS,
     FETCH_VALIDATORS_SUCCESS,
     FETCH_VALIDATOR_WITH_ADDRESS_ERROR,
-    FETCH_VALIDATOR_WITH_ADDRESS_SUCCESS,
     FETCH_VALIDATORS_REWARDS_SUCCESS,
     FETCH_VALIDATORS_REWARDS_IN_PROGRESS,
     FETCH_VALIDATOR_COMMISSION_INFO_SUCCESS
@@ -115,14 +114,7 @@ export const fetchValidators = (address) => {
     };
 };
 
-export const fetchValidatorsWithAddressSuccess = (list) => {
-    return {
-        type: FETCH_VALIDATOR_WITH_ADDRESS_SUCCESS,
-        list,
-    };
-};
-
-export const fetchValidatorsWithAddressError = (data) => {
+export const fetchValidatorRewardsListError = (data) => {
     return {
         type: FETCH_VALIDATOR_WITH_ADDRESS_ERROR,
         data,
@@ -150,10 +142,9 @@ export const fetchValidatorCommissionInfoSuccess = (list) => {
     };
 };
 
-export const fetchValidatorsWithAddress = (list, address) => {
+export const fetchValidatorRewardsList = (list, address) => {
     return async dispatch => {
         dispatch(fetchValidatorRewardsListInProgress());
-        let validators = [];
         let options = [];
         for (const item of list) {
             const rpcClient = await transactions.RpcClient();
@@ -161,32 +152,22 @@ export const fetchValidatorsWithAddress = (list, address) => {
             await stakingQueryService.Validator({
                 validatorAddr: item.validatorAddress,
             }).then( async (res) => {
-
-                const validatorObj = {
-                    validatorAddress : item.validatorAddress,
-                    rewards: helper.decimalConversion(item.reward[0].amount),
-                    validator:res.validator
-                };
-
                 const data = {
-                    label:`${res.validator.description.moniker} - ${transactions.XprtConversion(helper.decimalConversion(item.reward[0].amount))}`,
+                    label:`${res.validator.description.moniker} - ${transactions.XprtConversion(helper.decimalConversion(item.reward[0].amount)).toLocaleString(undefined, {minimumFractionDigits: 5})} XPRT` ,
                     value:res.validator.operatorAddress,
                     rewards: helper.decimalConversion(item.reward[0].amount)
                 };
-
                 if(transactions.checkValidatorAccountAddress(res.validator.operatorAddress, address)){
                     let commissionInfo = await ActionHelper.getValidatorCommission(res.validator.operatorAddress);
                     dispatch(fetchValidatorCommissionInfoSuccess([commissionInfo, res.validator.operatorAddress, true]));
                 }
                 options.push(data);
-                validators.push(validatorObj);
             }).catch((error) => {
-                dispatch(fetchValidatorsWithAddressError(error.response
+                dispatch(fetchValidatorRewardsListError(error.response
                     ? error.response.data.message
                     : error.message));
             });
         }
         dispatch(fetchValidatorRewardsListSuccess(options));
-        dispatch(fetchValidatorsWithAddressSuccess(validators));
     };
 };

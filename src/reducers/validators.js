@@ -5,7 +5,6 @@ import {
     FETCH_INACTIVE_VALIDATORS_SUCCESS,
     FETCH_VALIDATORS_IN_PROGRESS,
     FETCH_VALIDATORS_SUCCESS,
-    FETCH_VALIDATOR_WITH_ADDRESS_SUCCESS,
     FETCH_VALIDATORS_REWARDS_SUCCESS,
     FETCH_VALIDATORS_REWARDS_IN_PROGRESS,
     FETCH_VALIDATOR_COMMISSION_INFO_SUCCESS
@@ -30,7 +29,6 @@ const rewardsInProgress =  (state = false, action) => {
     switch (action.type) {
     case FETCH_VALIDATORS_REWARDS_IN_PROGRESS:
         return true;
-    case FETCH_VALIDATOR_WITH_ADDRESS_SUCCESS:
     case FETCH_VALIDATORS_REWARDS_SUCCESS:
         return false;
     default:
@@ -88,14 +86,6 @@ const validators = (state = [], action) => {
     }
 };
 
-const validatorsListWithAddress = (state = [], action) => {
-    if (action.type === FETCH_VALIDATOR_WITH_ADDRESS_SUCCESS) {
-        return action.list;
-    } else {
-        return state;
-    }
-};
-
 const validatorsRewardsList = (state = [], action) => {
     if (action.type === FETCH_VALIDATORS_REWARDS_SUCCESS) {
         return action.list;
@@ -120,7 +110,6 @@ export default combineReducers({
     inActiveVotingPower,
     inProgress,
     validators,
-    validatorsListWithAddress,
     validatorsRewardsList,
     rewardsInProgress,
     validatorCommissionInfo

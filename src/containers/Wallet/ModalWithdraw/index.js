@@ -16,9 +16,8 @@ import aminoMsgHelper from "../../../utils/aminoMsgHelper";
 import transactions from "../../../utils/transactions";
 import {useTranslation} from "react-i18next";
 import ModalSetWithdrawAddress from "../ModalSetWithdrawAddress";
-import {fetchValidatorsWithAddress} from "../../../actions/validators";
+import {fetchValidatorRewardsList} from "../../../actions/validators";
 import ReactMultiSelectCheckboxes from 'react-multiselect-checkboxes';
-import ModalViewValidatorRewards from "../ModalViewValidatorRewards";
 import ModalGasAlert from "../../Gas/ModalGasAlert";
 import ModalViewTxnResponse from "../../Common/ModalViewTxnResponse";
 
@@ -37,7 +36,6 @@ const ModalWithdraw = (props) => {
     const [selectValidation, setSelectValidation] = useState(false);
     const [withDrawMsgs, setWithDrawMsgs] = useState({});
     const [commissionMsg, setCommissionMsg] = useState({});
-    const [showRewardsModal, setShowRewardsModal] = useState(false);
     const [formData, setFormData] = useState({});
     const [feeModal, setFeeModal] = useState(false);
 
@@ -47,7 +45,7 @@ const ModalWithdraw = (props) => {
     };
 
     useEffect(() => {
-        props.fetchValidatorsWithAddress(props.list, loginAddress);
+        props.fetchValidatorRewardsList(props.list, loginAddress);
     }, []);
 
     const handleClose = () => {
@@ -137,11 +135,6 @@ const ModalWithdraw = (props) => {
         }
     };
 
-    const handleViewRewards = () =>{
-        setShowRewardsModal(true);
-        setShow(false);
-    };
-
     const handleCommissionChange = (evt) =>{
         let messages = [];
         if(evt.target.checked){
@@ -217,7 +210,6 @@ const ModalWithdraw = (props) => {
                                     <div className="available-tokens">
                                         <p className="tokens">{t("CLAIMING_REWARDS")} {individualRewards.toLocaleString()} <span>XPRT</span></p>
                                         <p className="usd">= ${(individualRewards * props.tokenPrice).toLocaleString()}</p>
-                                        <p className="view" onClick={handleViewRewards}>view</p>
                                     </div>
                                 </div>
                                 {props.validatorCommissionInfo[2] ?
@@ -340,11 +332,6 @@ const ModalWithdraw = (props) => {
                     totalRewards={props.rewards} setShow={setShow} formName="setAddress"/>
                 : null
             }
-            {
-                showRewardsModal ?
-                    <ModalViewValidatorRewards setShowRewardsModal={setShowRewardsModal} handleClose={handleClose} setShow={setShow} formName="viewRewards"/>
-                    : null
-            }
         </>
     );
 };
@@ -356,7 +343,6 @@ const stateToProps = (state) => {
         balance: state.balance.amount,
         tokenPrice: state.tokenPrice.tokenPrice,
         transferableAmount: state.balance.transferableAmount,
-        validatorsList:state.validators.validatorsListWithAddress,
         validatorsRewardsList:state.validators.validatorsRewardsList,
         inProgress:state.validators.rewardsInProgress,
         validatorCommissionInfo:state.validators.validatorCommissionInfo
@@ -364,7 +350,7 @@ const stateToProps = (state) => {
 };
 
 const actionsToProps = {
-    fetchValidatorsWithAddress,
+    fetchValidatorRewardsList,
 };
 
 export default connect(stateToProps, actionsToProps)(ModalWithdraw);
