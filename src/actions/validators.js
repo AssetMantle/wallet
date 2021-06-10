@@ -167,8 +167,9 @@ export const fetchValidatorsWithAddress = (list, address) => {
                     rewards: helper.decimalConversion(item.reward[0].amount),
                     validator:res.validator
                 };
+
                 const data = {
-                    label:res.validator.description.moniker,
+                    label:`${res.validator.description.moniker} - ${transactions.XprtConversion(helper.decimalConversion(item.reward[0].amount))}`,
                     value:res.validator.operatorAddress,
                     rewards: helper.decimalConversion(item.reward[0].amount)
                 };
@@ -177,7 +178,6 @@ export const fetchValidatorsWithAddress = (list, address) => {
                     let commissionInfo = await ActionHelper.getValidatorCommission(res.validator.operatorAddress);
                     dispatch(fetchValidatorCommissionInfoSuccess([commissionInfo, res.validator.operatorAddress, true]));
                 }
-
                 options.push(data);
                 validators.push(validatorObj);
             }).catch((error) => {
