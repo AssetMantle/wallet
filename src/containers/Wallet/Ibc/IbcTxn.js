@@ -471,7 +471,7 @@ const IbcTxn = (props) => {
                         : null
                     }
                     <div className="form-field p-0">
-                        <p className="label">{t("AMOUNT")} (XPRT)</p>
+                        <p className="label">{t("AMOUNT")}</p>
                         <div className="amount-field">
                             <Form.Control
                                 type="number"

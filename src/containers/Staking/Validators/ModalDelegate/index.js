@@ -20,7 +20,7 @@ import {connect} from "react-redux";
 import MakePersistence from "../../../../utils/cosmosjsWrapper";
 import config from "../../../../config";
 import {useTranslation} from "react-i18next";
-import GasContainer from "../../../Gas";
+import ModalGasAlert from "../../../Gas/ModalGasAlert";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -39,12 +39,9 @@ const ModalDelegate = (props) => {
     const mode = localStorage.getItem('loginMode');
     const [memoStatus, setMemoStatus] = useState(false);
     const [checkAmountError, setCheckAmountError] = useState(false);
-    const [showGasField, setShowGasField] = useState(false);
-    const [activeFeeState, setActiveFeeState] = useState("Average");
     const [gas, setGas] = useState(config.gas);
-    const [gasValidationError, setGasValidationError] = useState(false);
     const [fee, setFee] = useState(config.averageFee);
-    const [zeroFeeAlert, setZeroFeeAlert] = useState(false);
+    const [feeModal, setFeeModal] = useState(false);
 
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
@@ -81,9 +78,8 @@ const ModalDelegate = (props) => {
             </button>
         );
     }
-
+    console.log(fee,gas, "redd");
     useEffect(() => {
-        setFee(gas*fee);
         const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
         if (encryptedMnemonic !== null) {
             setImportMnemonic(false);
@@ -106,10 +102,16 @@ const ModalDelegate = (props) => {
         }
     };
 
-    const handlePrevious = () => {
-        props.setShow(true);
-        props.setTxModalShow(false);
-        props.setInitialModal(true);
+    const handlePrevious = (name) => {
+        if(name === "initialModal"){
+            props.setShow(true);
+            props.setTxModalShow(false);
+            props.setInitialModal(true);
+        }
+        if(name === "passwordModal"){
+            setFeeModal(true);
+            showSeedModal(false);
+        }
     };
 
     const handleSubmitKepler = async event => {
@@ -132,6 +134,7 @@ const ModalDelegate = (props) => {
 
     const handleSubmitInitialData = async event => {
         event.preventDefault();
+
         let memo = "";
         if (memoStatus) {
             memo = event.target.memo.value;
@@ -143,7 +146,7 @@ const ModalDelegate = (props) => {
             setErrorMessage("");
             setMemoContent(memo);
             setInitialModal(false);
-            showSeedModal(true);
+            setFeeModal(true);
         }
         if(mode === "normal" && (localStorage.getItem("fee") * 1) === 0 ){
             setFee(0);
@@ -151,6 +154,7 @@ const ModalDelegate = (props) => {
     };
 
     const handleSubmit = async event => {
+
         setLoader(true);
         event.preventDefault();
         let mnemonic;
@@ -224,53 +228,6 @@ const ModalDelegate = (props) => {
         }
     };
 
-    const handleGas = () =>{
-        setShowGasField(!showGasField);
-    };
-
-    const handleGasChange = (event) =>{
-        if((event.target.value * 1) >= 80000 && (event.target.value * 1) <= 2000000) {
-            setGasValidationError(false);
-            setGas(event.target.value * 1);
-            if ((localStorage.getItem("fee") * 1) !== 0) {
-                if (activeFeeState === "Average") {
-                    setFee((event.target.value * 1) * config.averageFee);
-                } else if (activeFeeState === "High") {
-                    setFee((event.target.value * 1) * config.highFee);
-                } else if (activeFeeState === "Low") {
-                    setFee((event.target.value * 1) * config.lowFee);
-                }
-
-                if (activeFeeState === "Average" && (transactions.XprtConversion((event.target.value * 1) * config.averageFee)) + amount > props.balance) {
-                    setCheckAmountError(true);
-                } else if (activeFeeState === "High" && (transactions.XprtConversion((event.target.value * 1) * config.highFee)) + amount > props.balance) {
-                    setCheckAmountError(true);
-                } else if (activeFeeState === "Low" && (transactions.XprtConversion((event.target.value * 1) * config.lowFee)) + amount > props.balance) {
-                    setCheckAmountError(true);
-                } else {
-                    setCheckAmountError(false);
-                }
-            }
-        }else {
-            setGasValidationError(true);
-        }
-    };
-
-    const handleFee = (feeType, feeValue)=>{
-        if(feeType === "Low"){
-            setZeroFeeAlert(true);
-        }
-        setActiveFeeState(feeType);
-        setFee(gas*feeValue);
-        if ((props.balance - amount) < transactions.XprtConversion(gas*feeValue)) {
-            setGasValidationError(true);
-            setCheckAmountError(true);
-        }else {
-            setGasValidationError(false);
-            setCheckAmountError(false);
-        }
-    };
-
     if (loader) {
         return <Loader/>;
     }
@@ -300,7 +257,7 @@ const ModalDelegate = (props) => {
                 <>
                     <Modal.Header closeButton>
                         <div className="previous-section txn-header">
-                            <button className="button" onClick={() => handlePrevious()}>
+                            <button className="button" onClick={() => handlePrevious("initialModal")}>
                                 <Icon
                                     viewClass="arrow-right"
                                     icon="left-arrow"/>
@@ -389,38 +346,8 @@ const ModalDelegate = (props) => {
                             <div className="buttons navigate-buttons">
                                 {mode === "normal" ?
                                     <div className="button-section">
-                                        <GasContainer checkAmountError={checkAmountError} activeFeeState={activeFeeState} onClick={handleFee} gas={gas} zeroFeeAlert={zeroFeeAlert} setZeroFeeAlert={setZeroFeeAlert}/>
-                                        <div className="select-gas">
-                                            <p onClick={handleGas}>{!showGasField ? "Set gas" : "Close"}</p>
-                                        </div>
-                                        {showGasField
-                                            ?
-                                            <div className="form-field">
-                                                <p className="label info">{t("GAS")}</p>
-                                                <div className="amount-field">
-                                                    <Form.Control
-                                                        type="number"
-                                                        min={80000}
-                                                        max={2000000}
-                                                        name="gas"
-                                                        placeholder={t("ENTER_GAS")}
-                                                        step="any"
-                                                        defaultValue={gas}
-                                                        onChange={handleGasChange}
-                                                        required={false}
-                                                    />
-                                                    {
-                                                        gasValidationError ?
-                                                            <span className="amount-error">
-                                                                {t("GAS_WARNING")}
-                                                            </span> : ""
-                                                    }
-                                                </div>
-                                            </div>
-                                            : ""
-                                        }
                                         <button className="button button-primary"
-                                            disabled={checkAmountError || amount === 0 || (props.balance * 1) === 0 || gasValidationError}
+                                            disabled={checkAmountError || amount === 0 || (props.balance * 1) === 0}
                                         > {t("NEXT")}</button>
                                     </div>
                                     :
@@ -437,12 +364,20 @@ const ModalDelegate = (props) => {
             {seedModal ?
                 <>
                     <Modal.Header closeButton>
-                        Delegate to {props.moniker}
-                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
-                            <button className="icon-button info" type="button"><Icon
-                                viewClass="arrow-right"
-                                icon="info"/></button>
-                        </OverlayTrigger>
+                        <div className="previous-section txn-header">
+                            <button className="button" onClick={() => handlePrevious("passwordModal")}>
+                                <Icon
+                                    viewClass="arrow-right"
+                                    icon="left-arrow"/>
+                            </button>
+                        </div>
+                        <h3 className="heading">Delegate to {props.moniker}
+                            <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
+                                <button className="icon-button info" type="button"><Icon
+                                    viewClass="arrow-right"
+                                    icon="info"/></button>
+                            </OverlayTrigger>
+                        </h3>
                     </Modal.Header>
                     <Modal.Body className="delegate-modal-body">
                         <Form onSubmit={handleSubmit}>
@@ -601,6 +536,22 @@ const ModalDelegate = (props) => {
                         </Modal.Body>
                     </>
                     : null
+            }
+            {feeModal ?
+                <ModalGasAlert
+                    setZeroFeeAlert={props.setZeroFeeAlert}
+                    setGas={setGas}
+                    gas={gas}
+                    setFee={setFee}
+                    fee={fee}
+                    amountField={amount}
+                    setShow={setInitialModal}
+                    setFeeModal={setFeeModal}
+                    showSeedModal={showSeedModal}
+                    modalName="delegate"
+                    setInitialModal={setInitialModal}
+                />
+                : null
             }
         </>
     );

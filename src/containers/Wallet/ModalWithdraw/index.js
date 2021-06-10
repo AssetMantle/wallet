@@ -58,12 +58,11 @@ const ModalWithdraw = (props) => {
     const [withDrawMsgs, setWithDrawMsgs] = useState({});
     const [commissionMsg, setCommissionMsg] = useState({});
     const [showRewardsModal, setShowRewardsModal] = useState(false);
-    
+
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
     };
     useEffect(() => {
-        props.fetchValidatorsWithAddress(props.list, loginAddress);
         const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
         if (encryptedMnemonic !== null) {
             setImportMnemonic(false);
@@ -316,7 +315,7 @@ const ModalWithdraw = (props) => {
         setInitialModal(true);
         showSeedModal(false);
     };
-    
+
     const handleViewRewards = () =>{
         setShowRewardsModal(true);
         setShow(false);
@@ -349,7 +348,7 @@ const ModalWithdraw = (props) => {
             </Popover.Content>
         </Popover>
     );
-    
+
     if (props.inProgress) {
         return <Loader/>;
     }

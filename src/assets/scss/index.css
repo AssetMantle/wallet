@@ -381,15 +381,17 @@ html, body {
 .buttons .amount-field {
   text-align: left; }
 
-.select-gas p {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 500;
-  color: red;
-  text-decoration: underline;
-  padding: 10px 0;
-  display: inline-block;
-  cursor: pointer; }
+.select-gas {
+  text-align: center; }
+  .select-gas p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: red;
+    text-decoration: underline;
+    padding: 10px 0;
+    display: inline-block;
+    cursor: pointer; }
 
 .key-download {
   text-align: center;

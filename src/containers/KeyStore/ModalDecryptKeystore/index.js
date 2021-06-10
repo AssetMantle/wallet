@@ -4,12 +4,12 @@ import {
 } from 'react-bootstrap';
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from "react-i18next";
-import config from "../../config";
-import transactions from "../../utils/transactions";
+import config from "../../../config";
+import transactions from "../../../utils/transactions";
 import {connect} from "react-redux";
-import Icon from "../../components/Icon";
+import Icon from "../../../components/Icon";
 
-const ModalGasAlert = (props) => {
+const ModalDecryptKeyStore = (props) => {
     const {t} = useTranslation();
     const [showGasField, setShowGasField] = useState(false);
     const [gasValidationError, setGasValidationError] = useState(false);
@@ -28,13 +28,6 @@ const ModalGasAlert = (props) => {
     const handleGas = () => {
         setShowGasField(!showGasField);
     };
-    // const handleClose = () => {
-    //     setShow(false);
-    //     props.setFeeModal(false);
-    //     setCheckAmountError(false);
-    //     props.setGas(config.gas);
-    //     props.setFee(config.averageFee);
-    // };
     const handleGasChange = (event) => {
         if((event.target.value * 1) >= 80000 && (event.target.value * 1) <= 2000000){
             setGasValidationError(false);
@@ -75,7 +68,7 @@ const ModalGasAlert = (props) => {
         }
     };
 
-    const handleNext = () =>{
+    const handleNext = () => {
         if(props.modalName === "delegate") {
             props.showSeedModal(true);
             props.setFeeModal(false);
@@ -189,4 +182,4 @@ const stateToProps = (state) => {
     };
 };
 
-export default connect(stateToProps)(ModalGasAlert);
+export default connect(stateToProps)(ModalDecryptKeyStore);

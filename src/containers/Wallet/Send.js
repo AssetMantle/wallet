@@ -20,9 +20,9 @@ import {connect} from "react-redux";
 import config from "../../config";
 import MakePersistence from "../../utils/cosmosjsWrapper";
 import {useTranslation} from "react-i18next";
-import GasContainer from "../Gas";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
+import ModalGasAlert from "../Gas/ModalGasAlert";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -35,22 +35,19 @@ const Send = (props) => {
     const [show, setShow] = useState(true);
     const [advanceMode, setAdvanceMode] = useState(false);
     const [memoStatus, setMemoStatus] = useState(false);
-    const [zeroFeeAlert, setZeroFeeAlert] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [keplerError, setKeplerError] = useState("");
     const [loader, setLoader] = useState(false);
     const [importMnemonic, setImportMnemonic] = useState(true);
     const [memoContent, setMemoContent] = useState('');
     const [checkAmountError, setCheckAmountError] = useState(false);
-    const [showGasField, setShowGasField] = useState(false);
-    const [activeFeeState, setActiveFeeState] = useState("Average");
     const [token, setToken] = useState("uxprt");
     const [tokenDenom, setTokenDenom] = useState("uxprt");
     const [transferableAmount, setTransferableAmount] = useState(props.transferableAmount);
     const [tokenItem, setTokenItem] = useState({});
     const [gas, setGas] = useState(config.gas);
-    const [gasValidationError, setGasValidationError] = useState(false);
     const [fee, setFee] = useState(config.averageFee);
+    const [feeModal, setFeeModal] = useState(false);
     let mode = localStorage.getItem('loginMode');
     let loginAddress = localStorage.getItem('address');
 
@@ -66,13 +63,13 @@ const Send = (props) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
             if(tokenDenom === "uxprt") {
-                if ((props.transferableAmount - (evt.target.value * 1)) < transactions.XprtConversion(fee)) {
+                if (props.transferableAmount < (evt.target.value * 1)) {
                     setCheckAmountError(true);
                 } else {
                     setCheckAmountError(false);
                 }
             }else {
-                if (props.transferableAmount < transactions.XprtConversion(fee) || transferableAmount < (evt.target.value * 1)) {
+                if (transferableAmount < (evt.target.value * 1)) {
                     setCheckAmountError(true);
                 } else {
                     setCheckAmountError(false);
@@ -85,7 +82,7 @@ const Send = (props) => {
     };
 
     useEffect(() => {
-        setFee(gas * fee);
+        console.log(fee, gas , "send in");
         const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
         if (encryptedMnemonic !== null) {
             setImportMnemonic(false);
@@ -108,9 +105,8 @@ const Send = (props) => {
                 if (memoCheck) {
                     setKeplerError(t("MEMO_MNEMONIC_CHECK_ERROR"));
                 } else {
+                    setFeeModal(true);
                     setKeplerError('');
-                    setMnemonicForm(true);
-                    setShow(true);
                 }
             } else {
                 setKeplerError('');
@@ -119,9 +115,6 @@ const Send = (props) => {
             }
         } else {
             setKeplerError("Invalid Recipient Address");
-        }
-        if(mode === "normal" && (localStorage.getItem("fee") * 1) === 0 ){
-            setFee(0);
         }
     };
     const handleSubmitKepler = event => {
@@ -279,54 +272,11 @@ const Send = (props) => {
         }
     };
 
-    const handleFee = (feeType, feeValue) => {
-        if(feeType === "Low"){
-            setZeroFeeAlert(true);
-        }
-        setActiveFeeState(feeType);
-        setFee(gas * feeValue);
-        if ((props.transferableAmount - (amountField*1)) < transactions.XprtConversion(gas * feeValue)) {
-            setGasValidationError(true);
-            setCheckAmountError(true);
-        }else {
-            setGasValidationError(false);
-            setCheckAmountError(false);
-        }
+    const handlePrevious = () => {
+        setFeeModal(true);
+        setMnemonicForm(false);
+        setShow(false);
     };
-
-    const handleGas = () => {
-        setShowGasField(!showGasField);
-    };
-
-    const handleGasChange = (event) => {
-        if((event.target.value * 1) >= 80000 && (event.target.value * 1) <= 2000000){
-            setGasValidationError(false);
-            setGas(event.target.value * 1);
-            if((localStorage.getItem("fee") * 1) !== 0) {
-                if (activeFeeState === "Average") {
-                    setFee((event.target.value * 1) * config.averageFee);
-                } else if (activeFeeState === "High") {
-                    setFee((event.target.value * 1) * config.highFee);
-                } else if (activeFeeState === "Low") {
-                    setFee((event.target.value * 1) * config.lowFee);
-                }
-                if (activeFeeState === "Average" && (transactions.XprtConversion((event.target.value * 1) * config.averageFee)) + amountField > props.transferableAmount) {
-                    setCheckAmountError(true);
-                } else if (activeFeeState === "High" && (transactions.XprtConversion((event.target.value * 1) * config.highFee)) + amountField > props.transferableAmount) {
-                    setCheckAmountError(true);
-                } else if (activeFeeState === "Low" && (transactions.XprtConversion((event.target.value * 1) * config.lowFee)) + amountField > props.transferableAmount) {
-                    setCheckAmountError(true);
-                } else {
-                    setCheckAmountError(false);
-                }
-            }
-        }else {
-            setGasValidationError(true);
-        }
-
-
-    };
-
 
     const popoverMemo = (
         <Popover id="popover-memo">
@@ -397,7 +347,7 @@ const Send = (props) => {
                         : null
                     }
                     <div className="form-field p-0">
-                        <p className="label">{t("AMOUNT")} (XPRT)</p>
+                        <p className="label">{t("AMOUNT")}</p>
                         <div className="amount-field">
                             <Form.Control
                                 type="number"
@@ -424,7 +374,12 @@ const Send = (props) => {
                             }
                         </div>
                     </div>
-
+                    <div className="form-field p-0">
+                        <p className="label"></p>
+                        <div className="amount-field">
+                            <p className={checkAmountError ? "show amount-error text-left" : "hide amount-error text-left"}>{t("AMOUNT_ERROR_MESSAGE")}</p>
+                        </div>
+                    </div>
                     {mode === "normal" ?
                         <>
                             <div className="memo-dropdown-section">
@@ -471,44 +426,14 @@ const Send = (props) => {
                         </>
                         : null
                     }
+
                     {keplerError !== '' ?
                         <p className="form-error">{keplerError}</p> : null}
                     <div className="buttons">
                         {mode === "normal"  ?
                             <div className="button-section">
-                                <GasContainer checkAmountError={checkAmountError} activeFeeState={activeFeeState}
-                                    onClick={handleFee} gas={gas} zeroFeeAlert={zeroFeeAlert} setZeroFeeAlert={setZeroFeeAlert}/>
-                                <div className="select-gas">
-                                    <p onClick={handleGas}>{!showGasField ? "Set gas" : "Close"}</p>
-                                </div>
-                                {showGasField
-                                    ?
-                                    <div className="form-field">
-                                        <p className="label info">{t("GAS")}</p>
-                                        <div className="amount-field">
-                                            <Form.Control
-                                                type="number"
-                                                min={80000}
-                                                max={2000000}
-                                                name="gas"
-                                                placeholder={t("ENTER_GAS")}
-                                                step="any"
-                                                defaultValue={gas}
-                                                onChange={handleGasChange}
-                                                required={false}
-                                            />
-                                            {
-                                                gasValidationError ?
-                                                    <span className="amount-error">
-                                                        {t("GAS_WARNING")}
-                                                    </span> : ""
-                                            }
-                                        </div>
-                                    </div>
-                                    : ""
-                                }
                                 <button className="button button-primary"
-                                    disabled={checkAmountError || amountField === 0 || props.transferableAmount === 0 || gasValidationError}
+                                    disabled={checkAmountError || amountField === 0 || props.transferableAmount === 0}
                                 >Next
                                 </button>
                             </div>
@@ -528,7 +453,16 @@ const Send = (props) => {
                             txResponse === '' ?
                                 <>
                                     <Modal.Header closeButton>
-                                        {t("SEND_TOKEN")}
+                                        <div className="previous-section txn-header">
+                                            <button className="button" onClick={() => handlePrevious()}>
+                                                <Icon
+                                                    viewClass="arrow-right"
+                                                    icon="left-arrow"/>
+                                            </button>
+                                        </div>
+                                        <h3 className="heading">
+                                            {t("SEND_TOKEN")}
+                                        </h3>
                                     </Modal.Header>
                                     <Modal.Body className="create-wallet-body import-wallet-body">
                                         <Form onSubmit={handleMnemonicSubmit}>
@@ -692,7 +626,19 @@ const Send = (props) => {
                         }
                     </Modal>
                     : null
-
+            }
+            {feeModal ?
+                <ModalGasAlert
+                    setGas={setGas}
+                    gas={gas}
+                    setFee={setFee}
+                    fee={fee}
+                    amountField={amountField}
+                    setShow={setShow}
+                    setFeeModal={setFeeModal}
+                    setMnemonicForm={setMnemonicForm}
+                />
+                : null
             }
         </div>
     );
