@@ -191,7 +191,7 @@ let English = {
         "FAILED_REDELEGATE": "Failed to Redelegate",
         "SUCCESSFULL_UNBOND": "Successfully Unbonded!",
         "FAILED_UNBOND": "Failed to Unbond",
-        "SUCCESSFUL_SEND": "Successfully Send!",
+        "SUCCESSFUL_SEND": "Successfully Sent!",
         "FAILED_SEND": "Failed to Send",
         "DELEGATION_AMOUNT": "Delegation Amount",
         "REDELEGATION_AMOUNT": "Redelegation Amount",
