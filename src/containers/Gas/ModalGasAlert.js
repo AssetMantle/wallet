@@ -66,12 +66,10 @@ const ModalGasAlert = (props) => {
 
 
     };
-    console.log(props.formData, "props");
 
     const handleFee = (feeType, feeValue) => {
         setActiveFeeState(feeType);
         setFee(gas * feeValue);
-        console.log(gas , feeValue, gas*feeValue, "re123");
         if ((props.transferableAmount - (props.amountField*1)) < transactions.XprtConversion(gas * feeValue)) {
             setCheckAmountError(true);
         }else {

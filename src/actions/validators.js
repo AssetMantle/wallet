@@ -5,15 +5,10 @@ import {
     FETCH_INACTIVE_VALIDATORS_SUCCESS,
     FETCH_VALIDATORS_IN_PROGRESS,
     FETCH_VALIDATORS_SUCCESS,
-    FETCH_VALIDATOR_WITH_ADDRESS_ERROR,
-    FETCH_VALIDATORS_REWARDS_SUCCESS,
-    FETCH_VALIDATORS_REWARDS_IN_PROGRESS,
-    FETCH_VALIDATOR_COMMISSION_INFO_SUCCESS
 } from "../constants/validators";
 
 import helper from "../utils/helper";
 import transactions from "../utils/transactions";
-import ActionHelper from "../utils/actions";
 
 export const fetchValidatorsInProgress = () => {
     return {
@@ -114,60 +109,4 @@ export const fetchValidators = (address) => {
     };
 };
 
-export const fetchValidatorRewardsListError = (data) => {
-    return {
-        type: FETCH_VALIDATOR_WITH_ADDRESS_ERROR,
-        data,
-    };
-};
 
-export const fetchValidatorRewardsListSuccess = (list) => {
-    return {
-        type: FETCH_VALIDATORS_REWARDS_SUCCESS,
-        list,
-    };
-};
-
-export const fetchValidatorRewardsListInProgress = () => {
-    return {
-        type: FETCH_VALIDATORS_REWARDS_IN_PROGRESS,
-    };
-};
-
-export const fetchValidatorCommissionInfoSuccess = (list) => {
-
-    return {
-        type: FETCH_VALIDATOR_COMMISSION_INFO_SUCCESS,
-        list,
-    };
-};
-
-export const fetchValidatorRewardsList = (list, address) => {
-    return async dispatch => {
-        dispatch(fetchValidatorRewardsListInProgress());
-        let options = [];
-        for (const item of list) {
-            const rpcClient = await transactions.RpcClient();
-            const stakingQueryService = new QueryClientImpl(rpcClient);
-            await stakingQueryService.Validator({
-                validatorAddr: item.validatorAddress,
-            }).then( async (res) => {
-                const data = {
-                    label:`${res.validator.description.moniker} - ${transactions.XprtConversion(helper.decimalConversion(item.reward[0].amount)).toLocaleString(undefined, {minimumFractionDigits: 5})} XPRT` ,
-                    value:res.validator.operatorAddress,
-                    rewards: helper.decimalConversion(item.reward[0].amount)
-                };
-                if(transactions.checkValidatorAccountAddress(res.validator.operatorAddress, address)){
-                    let commissionInfo = await ActionHelper.getValidatorCommission(res.validator.operatorAddress);
-                    dispatch(fetchValidatorCommissionInfoSuccess([commissionInfo, res.validator.operatorAddress, true]));
-                }
-                options.push(data);
-            }).catch((error) => {
-                dispatch(fetchValidatorRewardsListError(error.response
-                    ? error.response.data.message
-                    : error.message));
-            });
-        }
-        dispatch(fetchValidatorRewardsListSuccess(options));
-    };
-};

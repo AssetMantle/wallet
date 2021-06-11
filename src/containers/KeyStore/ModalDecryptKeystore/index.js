@@ -40,7 +40,6 @@ const ModalDecryptKeyStore = (props) => {
         }
     }, []);
 
-    console.log(importMnemonic, "importMnemonic");
     function ContextAwareToggle({eventKey, callback}) {
         const currentEventKey = useContext(AccordionContext);
 

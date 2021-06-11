@@ -4,7 +4,7 @@ import {
     OverlayTrigger,
     Popover,
 } from 'react-bootstrap';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 
 import Icon from "../../../components/Icon";
 import {connect} from "react-redux";
@@ -16,7 +16,6 @@ import aminoMsgHelper from "../../../utils/aminoMsgHelper";
 import transactions from "../../../utils/transactions";
 import {useTranslation} from "react-i18next";
 import ModalSetWithdrawAddress from "../ModalSetWithdrawAddress";
-import {fetchValidatorRewardsList} from "../../../actions/validators";
 import ReactMultiSelectCheckboxes from 'react-multiselect-checkboxes';
 import ModalGasAlert from "../../Gas/ModalGasAlert";
 import ModalViewTxnResponse from "../../Common/ModalViewTxnResponse";
@@ -43,10 +42,6 @@ const ModalWithdraw = (props) => {
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
     };
-
-    useEffect(() => {
-        props.fetchValidatorRewardsList(props.list, loginAddress);
-    }, []);
 
     const handleClose = () => {
         setShow(false);
@@ -108,9 +103,6 @@ const ModalWithdraw = (props) => {
             };
             setFormData(data);
         }
-        // if(mode === "normal" && (localStorage.getItem("fee") * 1) === 0 ){
-        //     setFee(0);
-        // }
     };
 
     const onChangeSelect =  (evt) => {
@@ -162,11 +154,6 @@ const ModalWithdraw = (props) => {
             </Popover.Content>
         </Popover>
     );
-
-    if (props.inProgress) {
-        return <Loader/>;
-    }
-
     const disable = (
         individualRewards === 0 && !selectValidation
     );
@@ -343,14 +330,9 @@ const stateToProps = (state) => {
         balance: state.balance.amount,
         tokenPrice: state.tokenPrice.tokenPrice,
         transferableAmount: state.balance.transferableAmount,
-        validatorsRewardsList:state.validators.validatorsRewardsList,
-        inProgress:state.validators.rewardsInProgress,
-        validatorCommissionInfo:state.validators.validatorCommissionInfo
+        validatorsRewardsList:state.rewards.validatorsRewardsList,
+        validatorCommissionInfo:state.rewards.validatorCommissionInfo
     };
 };
 
-const actionsToProps = {
-    fetchValidatorRewardsList,
-};
-
-export default connect(stateToProps, actionsToProps)(ModalWithdraw);
+export default connect(stateToProps)(ModalWithdraw);
