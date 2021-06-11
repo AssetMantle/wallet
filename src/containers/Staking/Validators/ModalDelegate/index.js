@@ -253,7 +253,12 @@ const ModalDelegate = (props) => {
                 : null
             }
             {response !== '' ?
-                <ModalViewTxnResponse response = {response}/>
+                <ModalViewTxnResponse
+                    response = {response}
+                    successMsg = {t("SUCCESSFULL_DELEGATED")}
+                    failedMsg = {t("FAILED_DELEGATE")}
+                    handleClose={props.handleClose}
+                />
                 : null}
         </>
     );

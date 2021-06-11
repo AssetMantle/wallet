@@ -110,19 +110,28 @@ const IbcTxn = (props) => {
         setShow(true);
         setLoader(true);
         event.preventDefault();
-        const response = transactions.TransactionWithKeplr( [await transactions.MakeIBCTransferMsg(channelID, loginAddress,
-            event.target.address.value,(amountField * config.xprtValue), undefined, undefined, tokenDenom)],aminoMsgHelper.fee(0, 250000));
-        response.then(result => {
-            if (result.code !== undefined) {
-                helper.accountChangeCheck(result.rawLog);
-            }
-            setTxResponse(result);
-            setLoader(false);
+        let msg =  transactions.MakeIBCTransferMsg(event.target.channel.value, loginAddress,
+            event.target.address.value,(amountField * config.xprtValue), undefined, undefined, tokenDenom);
+        await msg.then(result => {
+            const response = transactions.TransactionWithKeplr( [result],aminoMsgHelper.fee(0, 250000));
+            response.then(result => {
+                if (result.code !== undefined) {
+                    helper.accountChangeCheck(result.rawLog);
+                }
+                setTxResponse(result);
+                setLoader(false);
+            }).catch(err => {
+                setLoader(false);
+                setKeplerError(err.message);
+                helper.accountChangeCheck(err.message);
+            });
         }).catch(err => {
             setLoader(false);
-            setKeplerError(err.message);
-            helper.accountChangeCheck(err.message);
+            setKeplerError(err.response
+                ? err.response.data.message
+                : err.message);
         });
+
     };
 
     if (loader) {
@@ -164,7 +173,7 @@ const IbcTxn = (props) => {
     };
 
     const popoverMemo = (
-        <Popover id="popover-memo">
+        <Popover id="popover-memo" className="pop-custom">
             <Popover.Content>
                 {t("MEMO_NOTE")}
             </Popover.Content>
@@ -224,7 +233,7 @@ const IbcTxn = (props) => {
                                         name="port"
                                         placeholder={t("ENTER_PORT")}
                                         required={true}
-                                        value="transfer"
+                                        defaultValue="transfer"
                                     />
                                 </div>
                                 <div className="form-field">
@@ -333,7 +342,9 @@ const IbcTxn = (props) => {
                                     </p>
                                     <OverlayTrigger trigger={['hover', 'focus']}
                                         placement="bottom"
-                                        overlay={popoverMemo}>
+                                        overlay={popoverMemo}
+                                        className="pop-custom"
+                                    >
                                         <button className="icon-button info" type="button"><Icon
                                             viewClass="arrow-right"
                                             icon="info"/></button>
@@ -384,7 +395,14 @@ const IbcTxn = (props) => {
                 </Form>
             </div>
             {txResponse !== '' ?
-                <ModalViewTxnResponse response = {txResponse}/>
+                <Modal show={show} onHide={handleClose} backdrop="static" centered className="modal-custom">
+                    <ModalViewTxnResponse
+                        response = {txResponse}
+                        successMsg = {t("SUCCESSFUL_SEND")}
+                        failedMsg = {t("FAILED_SEND")}
+                        handleClose={handleClose}
+                    />
+                </Modal>
                 : null}
 
             {feeModal ?

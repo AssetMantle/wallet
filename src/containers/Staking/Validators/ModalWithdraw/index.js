@@ -220,7 +220,12 @@ const ModalWithdraw = (props) => {
                 : null
             }
             {response !== '' ?
-                <ModalViewTxnResponse response = {response}/>
+                <ModalViewTxnResponse
+                    response = {response}
+                    successMsg = {t("SUCCESSFULLY_CLAIMED")}
+                    failedMsg =  {t("FAILED_CLAIMING")}
+                    handleClose = {props.handleClose}
+                />
                 : null}
         </>
     );

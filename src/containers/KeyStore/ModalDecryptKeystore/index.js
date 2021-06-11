@@ -121,10 +121,18 @@ const ModalDecryptKeyStore = (props) => {
                         response = transactions.TransactionWithMnemonic([SendMsg(address, props.formData.toAddress, (props.formData.amount * config.xprtValue), props.formData.denom)], aminoMsgHelper.fee(Math.trunc(props.fee), props.gas), props.formData.memo,
                             mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                     } else if(props.formData.formName === "ibc"){
-                        response = transactions.TransactionWithMnemonic( [await transactions.MakeIBCTransferMsg(props.formData.channelID, address,
-                            props.formData.toAddress,(props.formData.amount * config.xprtValue), undefined, undefined, props.formData.denom)],
-                        aminoMsgHelper.fee(Math.trunc(props.fee), props.gas), props.formData.memo, mnemonic,
-                        transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                        let msg =  transactions.MakeIBCTransferMsg(props.formData.channelID, address,
+                            props.formData.toAddress,(props.formData.amount * config.xprtValue), undefined, undefined, props.formData.denom);
+                        await msg.then(result => {
+                            response = transactions.TransactionWithMnemonic( [result],
+                                aminoMsgHelper.fee(Math.trunc(props.fee), props.gas), props.formData.memo, mnemonic,
+                                transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                        }).catch(err => {
+                            setLoader(false);
+                            setErrorMessage(err.response
+                                ? err.response.data.message
+                                : err.message);
+                        });
                     } else if(props.formData.formName === "withdrawMultiple"){
                         response = transactions.TransactionWithMnemonic(props.formData.messages, aminoMsgHelper.fee(Math.trunc(props.fee), props.gas), props.formData.memo,
                             mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
@@ -142,17 +150,21 @@ const ModalDecryptKeyStore = (props) => {
                         response = transactions.TransactionWithMnemonic([WithdrawMsg(address, props.formData.validatorAddress)], aminoMsgHelper.fee(Math.trunc(props.fee), props.gas), props.formData.memo,
                             mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                     }
-                    response.then(result => {
-                        setResponse(result);
-                        setLoader(false);
-                        setAdvanceMode(false);
-                    }).catch(err => {
-                        setLoader(false);
-                        setErrorMessage(err.message);
-                    });
+                    if(response !== undefined){
+                        response.then(result => {
+                            setResponse(result);
+                            setLoader(false);
+                            setAdvanceMode(false);
+                        }).catch(err => {
+                            console.log(err.response
+                                ? err.response.data.message
+                                : err.message, "let se");
+                            setLoader(false);
+                            setErrorMessage(err.message);
+                        });
+                    }
                 } else {
                     setLoader(false);
-                    setAdvanceMode(false);
                     setErrorMessage(t("ADDRESS_NOT_MATCHED_ERROR"));
                 }
             } else {

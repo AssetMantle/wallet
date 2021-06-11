@@ -21,23 +21,31 @@ const ModalGasAlert = (props) => {
     const [fee, setFee] = useState(config.averageFee);
 
     useEffect(() => {
-        if((props.transferableAmount - (props.amountField*1)) < transactions.XprtConversion(gas * fee)){
-            setCheckAmountError(true);
-        }else {
-            setCheckAmountError(false);
+        if(props.formData.formName === "withdrawMultiple" || props.formData.formName === "withdrawAddress" || props.formData.formName === "withdrawValidatorRewards"){
+            if(props.transferableAmount < transactions.XprtConversion(gas * fee)){
+                setCheckAmountError(true);
+            }else {
+                setCheckAmountError(false);
+            }
+        } else {
+            if((props.transferableAmount - (props.formData.amount*1)) < transactions.XprtConversion(gas * fee)){
+                setCheckAmountError(true);
+            }else {
+                setCheckAmountError(false);
+            }
         }
+
+
         setFee(gas * fee);
     }, []);
+
+    const amountTxns = (
+        props.formData.formName === "withdrawMultiple" || props.formData.formName === "withdrawAddress" || props.formData.formName === "withdrawValidatorRewards"
+    );
     const handleGas = () => {
         setShowGasField(!showGasField);
     };
-    // const handleClose = () => {
-    //     setShow(false);
-    //     setFeeModal(false);
-    //     setCheckAmountError(false);
-    //     setGas(config.gas);
-    //     setFee(config.averageFee);
-    // };
+
     const handleGasChange = (event) => {
         if((event.target.value * 1) >= 80000 && (event.target.value * 1) <= 2000000){
             setGasValidationError(false);
@@ -50,15 +58,28 @@ const ModalGasAlert = (props) => {
                 } else if (activeFeeState === "Low") {
                     setFee((event.target.value * 1) * config.lowFee);
                 }
-                if (activeFeeState === "Average" && (transactions.XprtConversion((event.target.value * 1) * config.averageFee)) + props.amountField > props.transferableAmount) {
-                    setCheckAmountError(true);
-                } else if (activeFeeState === "High" && (transactions.XprtConversion((event.target.value * 1) * config.highFee)) + props.amountField > props.transferableAmount) {
-                    setCheckAmountError(true);
-                } else if (activeFeeState === "Low" && (transactions.XprtConversion((event.target.value * 1) * config.lowFee)) + props.amountField > props.transferableAmount) {
-                    setCheckAmountError(true);
-                } else {
-                    setCheckAmountError(false);
+                if(amountTxns){
+                    if (activeFeeState === "Average" && (transactions.XprtConversion((event.target.value * 1) * config.averageFee)) > props.transferableAmount) {
+                        setCheckAmountError(true);
+                    } else if (activeFeeState === "High" && (transactions.XprtConversion((event.target.value * 1) * config.highFee)) > props.transferableAmount) {
+                        setCheckAmountError(true);
+                    } else if (activeFeeState === "Low" && (transactions.XprtConversion((event.target.value * 1) * config.lowFee)) > props.transferableAmount) {
+                        setCheckAmountError(true);
+                    } else {
+                        setCheckAmountError(false);
+                    }
+                }else {
+                    if (activeFeeState === "Average" && (transactions.XprtConversion((event.target.value * 1) * config.averageFee)) + props.formData.amount > props.transferableAmount) {
+                        setCheckAmountError(true);
+                    } else if (activeFeeState === "High" && (transactions.XprtConversion((event.target.value * 1) * config.highFee)) + props.formData.amount > props.transferableAmount) {
+                        setCheckAmountError(true);
+                    } else if (activeFeeState === "Low" && (transactions.XprtConversion((event.target.value * 1) * config.lowFee)) + props.formData.amount > props.transferableAmount) {
+                        setCheckAmountError(true);
+                    } else {
+                        setCheckAmountError(false);
+                    }
                 }
+
             }
         }else {
             setGasValidationError(true);
@@ -70,11 +91,20 @@ const ModalGasAlert = (props) => {
     const handleFee = (feeType, feeValue) => {
         setActiveFeeState(feeType);
         setFee(gas * feeValue);
-        if ((props.transferableAmount - (props.amountField*1)) < transactions.XprtConversion(gas * feeValue)) {
-            setCheckAmountError(true);
+        if(amountTxns){
+            if (props.transferableAmount  < transactions.XprtConversion(gas * feeValue)) {
+                setCheckAmountError(true);
+            }else {
+                setCheckAmountError(false);
+            }
         }else {
-            setCheckAmountError(false);
+            if ((props.transferableAmount - (props.formData.amount*1)) < transactions.XprtConversion(gas * feeValue)) {
+                setCheckAmountError(true);
+            }else {
+                setCheckAmountError(false);
+            }
         }
+
     };
 
     const handleNext = () =>{
@@ -123,7 +153,7 @@ const ModalGasAlert = (props) => {
                             <div className="fee-container">
                                 <>
                                     {
-                                        props.transferableAmount <= 0 ?
+                                        props.transferableAmount <= 0.005 ?
                                             <div className={activeFeeState === "Low" ? "fee-box active" : "fee-box"}
                                                 onClick={() => handleFee("Low", config.lowFee)}>
                                                 <p className="title">Low</p>
@@ -155,7 +185,16 @@ const ModalGasAlert = (props) => {
                             </div>
                         </>
                         <div className="select-gas">
-                            <p onClick={handleGas} className="text-center">{!showGasField ? "Set gas" : "Close"}</p>
+                            <p onClick={handleGas} className="text-center">{!showGasField ? "Set gas" : "Close"}
+                                {!showGasField ?
+                                    <Icon
+                                        viewClass="arrow-right"
+                                        icon="down-arrow"/>
+                                    :
+                                    <Icon
+                                        viewClass="arrow-right"
+                                        icon="up-arrow"/>}
+                            </p>
                         </div>
                         {showGasField
                             ?
@@ -184,7 +223,7 @@ const ModalGasAlert = (props) => {
                             : ""
                         }
                         <div className="buttons">
-                            <button className="button button-primary"
+                            <button className="button button-primary" disabled={gasValidationError}
                                 onClick={() => handleNext()}>{t("NEXT")}</button>
                         </div>
                     </Modal.Body>

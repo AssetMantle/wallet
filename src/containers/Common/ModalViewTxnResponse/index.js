@@ -25,12 +25,12 @@ const ModalViewTxnResponse = (props) => {
                                 <img src={success} alt="success-image"/>
                                 {mode === "kepler" ?
                                     <a
-                                        href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
+                                        href={`${EXPLORER_API}/transactions/${response.transactionHash}`}
                                         target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                         Hash: {response.transactionHash}</a>
                                     :
                                     <a
-                                        href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
+                                        href={`${EXPLORER_API}/transactions/${response.transactionHash}`}
                                         target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                         Hash: {response.transactionHash}</a>
                                 }
@@ -53,7 +53,7 @@ const ModalViewTxnResponse = (props) => {
                                     <>
                                         <p>{response.rawLog}</p>
                                         <a
-                                            href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
+                                            href={`${EXPLORER_API}/transactions/${response.transactionHash}`}
                                             target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                         Hash: {response.transactionHash}</a>
                                     </>
@@ -61,7 +61,7 @@ const ModalViewTxnResponse = (props) => {
                                     <>
                                         <p>{response.rawLog === "panic message redacted to hide potentially sensitive system info: panic" ? "You cannot send vesting amount" : response.rawLog}</p>
                                         <a
-                                            href={`${EXPLORER_API}/transaction?txHash=${response.transactionHash}`}
+                                            href={`${EXPLORER_API}/transactions/${response.transactionHash}`}
                                             target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
                                         Hash: {response.transactionHash}</a>
                                     </>

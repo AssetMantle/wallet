@@ -91,9 +91,6 @@ const ModalSetWithdrawAddress = (props) => {
             }
 
         }
-        // if(mode === "normal" && (localStorage.getItem("fee") * 1) === 0 ){
-        //     setFee(0);
-        // }
     };
 
     if (loader) {
@@ -242,7 +239,12 @@ const ModalSetWithdrawAddress = (props) => {
                 : null
             }
             {response !== '' ?
-                <ModalViewTxnResponse response = {response}/>
+                <ModalViewTxnResponse
+                    response = {response}
+                    successMsg = {t("SUCCESSFULLY_ADDRESS_CHANGED")}
+                    failedMsg =  {t("FAILED_ADDRESS_CHANGE")}
+                    handleClose = {handleClose}
+                />
                 : null}
         </Modal>
     );

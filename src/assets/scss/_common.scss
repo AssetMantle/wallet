@@ -142,6 +142,22 @@ html, body {
   .modal-dialog {
     max-width: 700px;
   }
+  .modal-body{
+    input {
+      margin: 0;
+      font-size: 14px;
+      line-height: 150%;
+      height: calc(2.3em + .75rem + 2px);
+      border-radius: 0;
+      border: 0px solid;
+      color: #8D9CB5;
+
+      &::placeholder {
+        font-size: 14px;
+        color: #8D9CB5;
+      }
+    }
+  }
 }
 
 .fee {
@@ -520,6 +536,11 @@ html, body {
     padding: 10px 0;
     display: inline-block;
     cursor: pointer;
+    .icon{
+      width: 16px;
+      height: 16px;
+      margin-left: 5px;
+    }
   }
 }
 .key-download {
@@ -620,4 +641,8 @@ html, body {
 }
 .amount-error.show{
   display: block;
+}
+
+.pop-custom{
+  position: fixed !important;
 }

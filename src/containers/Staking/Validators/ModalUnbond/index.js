@@ -224,7 +224,12 @@ const ModalUnbond = (props) => {
                 : null
             }
             {response !== '' ?
-                <ModalViewTxnResponse response = {response}/>
+                <ModalViewTxnResponse
+                    response = {response}
+                    successMsg = {t("SUCCESSFULL_UNBOND")}
+                    failedMsg =  {t("FAILED_UNBOND")}
+                    handleClose = {props.handleClose}
+                />
                 : null}
         </>
     );

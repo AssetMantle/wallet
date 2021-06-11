@@ -76,9 +76,6 @@ export const fetchValidators = (address) => {
             status: false,
         }).then(async (res) => {
             let validators = res.validators;
-            const delegationsResponse = await stakingQueryService.DelegatorDelegations({
-                delegatorAddr: address,
-            });
             let activeValidators = [];
             let inActiveValidators = [];
             validators.forEach((item) => {
@@ -87,6 +84,16 @@ export const fetchValidators = (address) => {
                 } else {
                     inActiveValidators.push(item);
                 }
+            });
+
+            const delegationsResponse = await stakingQueryService.DelegatorDelegations({
+                delegatorAddr: address,
+            }).catch((error) => {
+                console.log(error.response
+                    ? error.response.data.message
+                    : error.message);
+                dispatch(fetchActiveValidatorsSuccess(activeValidators));
+                dispatch(fetchInactiveValidatorsSuccess(inActiveValidators));
             });
 
             if(delegationsResponse.delegationResponses.length) {

@@ -261,7 +261,12 @@ const ModalReDelegate = (props) => {
                 : null
             }
             {response !== '' ?
-                <ModalViewTxnResponse response = {response}/>
+                <ModalViewTxnResponse
+                    response = {response}
+                    successMsg = {t("SUCCESSFULL_REDELEGATED")}
+                    failedMsg =  {t("FAILED_REDELEGATE")}
+                    handleClose = {props.handleClose}
+                />
                 : null}
         </>
     );

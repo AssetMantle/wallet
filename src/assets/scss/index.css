@@ -111,6 +111,17 @@ html, body {
   color: #313238; }
 .modal-custom .modal-dialog {
   max-width: 700px; }
+.modal-custom .modal-body input {
+  margin: 0;
+  font-size: 14px;
+  line-height: 150%;
+  height: calc(2.3em + .75rem + 2px);
+  border-radius: 0;
+  border: 0px solid;
+  color: #8D9CB5; }
+  .modal-custom .modal-body input::placeholder {
+    font-size: 14px;
+    color: #8D9CB5; }
 
 .fee {
   font-size: 12px;
@@ -392,6 +403,10 @@ html, body {
     padding: 10px 0;
     display: inline-block;
     cursor: pointer; }
+    .select-gas p .icon {
+      width: 16px;
+      height: 16px;
+      margin-left: 5px; }
 
 .key-download {
   text-align: center;
@@ -476,6 +491,9 @@ html, body {
 
 .amount-error.show {
   display: block; }
+
+.pop-custom {
+  position: fixed !important; }
 
 /*--------------------------------------------------------------
 # main styles
