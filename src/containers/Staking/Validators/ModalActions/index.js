@@ -79,7 +79,7 @@ const ModalActions = (props) => {
         setAddress(address);
     };
 
-    let commissionRate = props.validator.commission.commissionRates.rate * 100;
+    let commissionRate = helper.decimalConversion(props.validator.commission.commissionRates.rate) * 100;
     commissionRate = parseFloat(commissionRate.toFixed(2)).toLocaleString();
     let active = helper.isActive(props.validator);
 
@@ -231,12 +231,12 @@ const ModalActions = (props) => {
                 </Modal>
             }
             {withdraw ?
-                <ModalSetWithdrawAddress setWithDraw={setWithDraw} 
+                <ModalSetWithdrawAddress setWithDraw={setWithDraw}
                     setInitialModal={setInitialModal}
-                    setTxModalShow={setTxModalShow}  
-                    setModalOpen={setModalOpen} 
-                    handleClose={handleClose} 
-                    totalRewards={props.rewards} 
+                    setTxModalShow={setTxModalShow}
+                    setModalOpen={setModalOpen}
+                    handleClose={handleClose}
+                    totalRewards={props.rewards}
                     formName="validatorSetAddress"
                 />
                 : null

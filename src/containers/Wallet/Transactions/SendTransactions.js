@@ -62,7 +62,7 @@ const SendTransactions = (props) => {
     const tableData = props.list && props.list.length > 0
         ?
         props.list.map((stxn, index) => [
-            <a key={index} href={`${EXPLORER_API}/transaction?txHash=${stxn.txhash}`}
+            <a key={index} href={`${EXPLORER_API}/transactions/${stxn.txhash}`}
                 target="_blank" className="tx-hash" rel="noopener noreferrer">
                 {helper.stringTruncate(stxn.txhash)}
             </a>,
@@ -98,7 +98,7 @@ const SendTransactions = (props) => {
                     {stxn.tx.auth_info.fee.amount[0].amount}
                     {stxn.tx.auth_info.fee.amount[0].denom}
                 </div> : '',
-            <a key={index} href={`${EXPLORER_API}/block?height=${stxn.height}`}
+            <a key={index} href={`${EXPLORER_API}/blocks/${stxn.height}`}
                 target="_blank" className="height" rel="noopener noreferrer">{stxn.height}</a>,
             <span key={index} className="time">{moment.utc(stxn.timestamp).local().startOf('seconds').fromNow()}</span>,
         ])

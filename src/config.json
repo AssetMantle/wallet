@@ -14,16 +14,13 @@
   "vestingAccountFee": "0",
   "modeType": "sync",
   "version": "0.1.6",
+  "timeoutTimestamp": 1000,
+  "ibcRevisionHeightIncrement": 1000000,
   "channels": [
     {
         "name": "cosmos",
         "id": "cosmos/channel-1",
         "port": "transfer"
-    },
-    {
-      "name": "persistence",
-      "id": "persistence/channel-2",
-      "port": "transfer"
     }
   ],
   "valoperAddressPrefix": "persistence"

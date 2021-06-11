@@ -1,6 +1,6 @@
 .create-wallet-modal {
   .modal-dialog {
-    max-width: 600px !important;
+    max-width: 700px !important;
   }
 
   .modal-content {
@@ -137,9 +137,6 @@
 
     form {
       padding-top: 30px;
-      max-width: 400px;
-      margin: auto;
-
       .form-field {
         justify-content: center;
       }
@@ -149,9 +146,8 @@
         font-size: 14px;
         line-height: 150%;
         font-family: 'Poppins', sans-serif;
-        text-align: right;
         color: #2E3239;
-        margin-right: 30px;
+        margin-right: 10px;
       }
 
 

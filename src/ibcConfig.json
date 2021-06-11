@@ -1,0 +1,16 @@
+{
+  "testNetChannels": [
+    {
+      "name": "cosmos",
+      "id": "cosmos/channel-1",
+      "port": "transfer"
+    }
+  ],
+  "mainNetChannels": [
+    {
+      "name": "cosmos",
+      "id": "cosmos/channel-1",
+      "port": "transfer"
+    }
+  ]
+}

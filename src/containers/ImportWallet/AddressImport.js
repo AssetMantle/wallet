@@ -59,7 +59,7 @@ const AddressImport = (props) => {
         }
     };
     return (
-        <Modal backdrop="static" show={show} onHide={handleClose} centered className="create-wallet-modal large seed">
+        <Modal backdrop="static" show={show} onHide={handleClose} centered className="create-wallet-modal seed">
             <Modal.Header closeButton>
                 <div className="previous-section">
                     <button className="button" onClick={() => handlePrevious("addressImport")}>

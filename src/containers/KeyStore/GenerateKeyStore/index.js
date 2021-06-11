@@ -3,10 +3,10 @@ import {
     Form,
     Modal
 } from "react-bootstrap";
-import wallet from "../../utils/wallet";
-import GeneratePrivateKey from "../Common/GeneratePrivateKey";
+import wallet from "../../../utils/wallet";
+import GeneratePrivateKey from "../../Common/GeneratePrivateKey";
 import {useTranslation} from "react-i18next";
-import helper from "../../utils/helper";
+import helper from "../../../utils/helper";
 
 const GenerateKeyStore = (props) => {
     const {t} = useTranslation();
@@ -58,7 +58,7 @@ const GenerateKeyStore = (props) => {
     return (
         <>
             <Modal backdrop="static" show={show} onHide={handleClose} centered
-                className="create-wallet-modal large seed">
+                className="create-wallet-modal seed">
                 {
                     mnemonicForm ?
                         <>

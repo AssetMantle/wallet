@@ -164,7 +164,7 @@
 
   .send-container {
     border: 1px solid #E3E5F4;
-    padding: 50px 100px;
+    padding: 35px 100px;
 
     .form-error {
       text-align: left;
@@ -386,7 +386,7 @@
     .navbar-nav li {
       cursor: pointer;
 
-      a {
+      a, .profile-dropdown, .dark-mode-button {
         font-family: "Poppins", sans-serif;
         font-weight: 600;
         font-size: 14px;
@@ -400,7 +400,13 @@
           fill: #5F646C;;
         }
       }
-
+      .profile-dropdown {
+        cursor: auto;
+        a{
+          padding: 0;
+          cursor: pointer;
+        }
+      }
       a:hover, a.active, a:focus {
         .icon {
           fill: #e50913;
@@ -450,6 +456,7 @@
   }
 
   .profile-section {
+    cursor: auto !important;
     display: flex;
     align-items: center;
 
@@ -483,7 +490,7 @@
         margin: 0px !important;
         right: auto !important;
         bottom: auto !important;
-        transform: translate(-184px, 42px) !important;
+        transform: translate(-200px, 42px) !important;
 
 
         .qr-box {
@@ -551,12 +558,6 @@
         }
       }
     }
-
-    .icon-profile {
-      margin-right: 20px;
-    }
-
-
   }
 }
 

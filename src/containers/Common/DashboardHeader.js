@@ -7,7 +7,7 @@ import Copy from "../../components/Copy";
 import helper from "../../utils/helper";
 import {useTranslation} from "react-i18next";
 import Darktheme from "../DarkTheme";
-import GenerateKeyStore from "../GenerateKeyStore";
+import GenerateKeyStore from "../KeyStore/GenerateKeyStore";
 import MobileSidebar from "./MobileSidebar";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 

@@ -111,6 +111,17 @@ html, body {
   color: #313238; }
 .modal-custom .modal-dialog {
   max-width: 700px; }
+.modal-custom .modal-body input {
+  margin: 0;
+  font-size: 14px;
+  line-height: 150%;
+  height: calc(2.3em + .75rem + 2px);
+  border-radius: 0;
+  border: 0px solid;
+  color: #8D9CB5; }
+  .modal-custom .modal-body input::placeholder {
+    font-size: 14px;
+    color: #8D9CB5; }
 
 .fee {
   font-size: 12px;
@@ -248,7 +259,8 @@ html, body {
   display: flex;
   margin-top: 20px;
   padding: 20px;
-  align-items: center; }
+  align-items: center;
+  justify-content: center; }
   .note-section .exclamation {
     padding-right: 25px; }
     .note-section .exclamation .icon {
@@ -380,15 +392,21 @@ html, body {
 .buttons .amount-field {
   text-align: left; }
 
-.select-gas p {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 500;
-  color: red;
-  text-decoration: underline;
-  padding: 10px 0;
-  display: inline-block;
-  cursor: pointer; }
+.select-gas {
+  text-align: center; }
+  .select-gas p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: red;
+    text-decoration: underline;
+    padding: 10px 0;
+    display: inline-block;
+    cursor: pointer; }
+    .select-gas p .icon {
+      width: 16px;
+      height: 16px;
+      margin-left: 5px; }
 
 .key-download {
   text-align: center;
@@ -473,6 +491,9 @@ html, body {
 
 .amount-error.show {
   display: block; }
+
+.pop-custom {
+  position: fixed !important; }
 
 /*--------------------------------------------------------------
 # main styles
@@ -900,7 +921,7 @@ html, body {
 # createwallet styles
 --------------------------------------------------------------*/
 .create-wallet-modal .modal-dialog {
-  max-width: 600px !important; }
+  max-width: 700px !important; }
 .create-wallet-modal .modal-content {
   border-radius: 0; }
 .create-wallet-modal .modal-header {
@@ -993,9 +1014,7 @@ html, body {
       text-align: center;
       color: #E50913; }
   .create-wallet-modal .create-wallet-form-body form {
-    padding-top: 30px;
-    max-width: 400px;
-    margin: auto; }
+    padding-top: 30px; }
     .create-wallet-modal .create-wallet-form-body form .form-field {
       justify-content: center; }
     .create-wallet-modal .create-wallet-form-body form .label {
@@ -1003,9 +1022,8 @@ html, body {
       font-size: 14px;
       line-height: 150%;
       font-family: 'Poppins', sans-serif;
-      text-align: right;
       color: #2E3239;
-      margin-right: 30px; }
+      margin-right: 10px; }
     .create-wallet-modal .create-wallet-form-body form .password-group {
       position: relative; }
       .create-wallet-modal .create-wallet-form-body form .password-group button {
@@ -1365,7 +1383,7 @@ html, body {
       padding-bottom: 25px; }
 .wallet-main-section .send-container {
   border: 1px solid #E3E5F4;
-  padding: 50px 100px; }
+  padding: 35px 100px; }
   .wallet-main-section .send-container .form-error {
     text-align: left; }
   .wallet-main-section .send-container .form-section {
@@ -1501,7 +1519,7 @@ html, body {
   outline: none !important; }
 .header .navbar .navbar-nav li {
   cursor: pointer; }
-  .header .navbar .navbar-nav li a {
+  .header .navbar .navbar-nav li a, .header .navbar .navbar-nav li .profile-dropdown, .header .navbar .navbar-nav li .dark-mode-button {
     font-family: "Poppins", sans-serif;
     font-weight: 600;
     font-size: 14px;
@@ -1510,8 +1528,13 @@ html, body {
     letter-spacing: .1em;
     color: #5F646C;
     padding: .5rem 1rem; }
-    .header .navbar .navbar-nav li a .icon {
+    .header .navbar .navbar-nav li a .icon, .header .navbar .navbar-nav li .profile-dropdown .icon, .header .navbar .navbar-nav li .dark-mode-button .icon {
       fill: #5F646C; }
+  .header .navbar .navbar-nav li .profile-dropdown {
+    cursor: auto; }
+    .header .navbar .navbar-nav li .profile-dropdown a {
+      padding: 0;
+      cursor: pointer; }
   .header .navbar .navbar-nav li a:hover .icon, .header .navbar .navbar-nav li a.active .icon, .header .navbar .navbar-nav li a:focus .icon {
     fill: #e50913; }
 .header .title {
@@ -1541,6 +1564,7 @@ html, body {
     width: 14px;
     height: 14px; }
 .header .profile-section {
+  cursor: auto !important;
   display: flex;
   align-items: center; }
   .header .profile-section .icon {
@@ -1566,7 +1590,7 @@ html, body {
     margin: 0px !important;
     right: auto !important;
     bottom: auto !important;
-    transform: translate(-184px, 42px) !important; }
+    transform: translate(-200px, 42px) !important; }
     .header .profile-section .profile-dropdown .dropdown-menu .qr-box {
       width: 80px;
       height: 80px;
@@ -1611,8 +1635,6 @@ html, body {
         padding: 10px 0; }
         .header .profile-section .profile-dropdown .dropdown-menu .dropdown-footer p:first-child {
           border-right: 1px solid; }
-  .header .profile-section .icon-profile {
-    margin-right: 20px; }
 
 .tab-header .left {
   display: flex;
