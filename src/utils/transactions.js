@@ -149,7 +149,7 @@ function decodeTendermintConsensusStateAny(consensusState) {
     }
     return tendermint_1.ConsensusState.decode(consensusState.value);
 }
-async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp = 1000, denom = "uxprt", port = "transfer") {
+async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp = config.timeoutTimestamp, denom = "uxprt", port = "transfer") {
     const tendermintClient = await tmRPC.Tendermint34Client.connect(tendermintRPCURL);
     const queryClient = new QueryClient(tendermintClient);
 
@@ -158,7 +158,7 @@ async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeo
     const finalResponse = await ibcExtension.ibc.channel.clientState(port, channel).then(async (clientStateResponse) => {
         const clientStateResponseDecoded = decodeTendermintClientStateAny(clientStateResponse.identifiedClientState.clientState);
         timeoutHeight = {
-            revisionHeight: clientStateResponseDecoded.latestHeight.revisionHeight.add(1000000),
+            revisionHeight: clientStateResponseDecoded.latestHeight.revisionHeight.add(config.ibcRevisionHeightIncrement),
             revisionNumber: clientStateResponseDecoded.latestHeight.revisionNumber
         };
 
