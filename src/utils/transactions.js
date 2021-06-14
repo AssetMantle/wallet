@@ -40,7 +40,6 @@ async function KeplrWallet(chainID = configChainID) {
 }
 
 async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(), bip39Passphrase = "", prefix = addressPrefix) {
-    console.log(msgs, "msgs");
     const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix);
     return Transaction(wallet, address, msgs, fee, memo);
 }
