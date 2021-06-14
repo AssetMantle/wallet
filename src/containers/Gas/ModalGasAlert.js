@@ -21,7 +21,7 @@ const ModalGasAlert = (props) => {
     const [fee, setFee] = useState(config.averageFee);
 
     useEffect(() => {
-        if(props.formData.formName === "withdrawMultiple" || props.formData.formName === "withdrawAddress" || props.formData.formName === "withdrawValidatorRewards"){
+        if(props.formData.formName === "withdrawMultiple" || props.formData.formName === "withdrawAddress" || props.formData.formName === "withdrawValidatorRewards" || props.formData.formName === "redelegate" || props.formData.formName === "unbond"){
             if(props.transferableAmount < transactions.XprtConversion(gas * fee)){
                 setCheckAmountError(true);
             }else {
@@ -40,7 +40,7 @@ const ModalGasAlert = (props) => {
     }, []);
 
     const amountTxns = (
-        props.formData.formName === "withdrawMultiple" || props.formData.formName === "withdrawAddress" || props.formData.formName === "withdrawValidatorRewards"
+        props.formData.formName === "withdrawMultiple" || props.formData.formName === "withdrawAddress" || props.formData.formName === "withdrawValidatorRewards" || props.formData.formName === "redelegate" || props.formData.formName === "unbond"
     );
     const handleGas = () => {
         setShowGasField(!showGasField);
@@ -153,7 +153,7 @@ const ModalGasAlert = (props) => {
                             <div className="fee-container">
                                 <>
                                     {
-                                        props.transferableAmount < 0.005 ?
+                                        props.transferableAmount < config.averageFee ?
                                             <div className={activeFeeState === "Low" ? "fee-box active" : "fee-box"}
                                                 onClick={() => handleFee("Low", config.lowFee)}>
                                                 <p className="title">Zero</p>

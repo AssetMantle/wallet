@@ -185,28 +185,11 @@ const Send = (props) => {
                             <Select value={token} className="validators-list-selection"
                                 onChange={onChangeSelect} displayEmpty>
                                 {
-                                    props.tokenList.map((item, index) => {
-                                        if(item.denom === "uxprt"){
-                                            return (
-                                                <MenuItem
-                                                    key={index + 1}
-                                                    className=""
-                                                    value={item.denom}>
-                                                    XPRT
-                                                </MenuItem>
-                                            );
-                                        }
-                                        if(item.denom.baseDenom === "uatom"){
-                                            return (
-                                                <MenuItem
-                                                    key={index + 1}
-                                                    className=""
-                                                    value={item.denomTrace}>
-                                                    ATOM
-                                                </MenuItem>
-                                            );
-                                        }
-                                    })
+                                    <MenuItem
+                                        className=""
+                                        value="uxprt">
+                                            XPRT
+                                    </MenuItem>
                                 }
                             </Select>
                         </div>

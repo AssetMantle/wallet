@@ -85,9 +85,6 @@ const ModalReDelegate = (props) => {
             };
             setFormData(data);
         }
-        // if(mode === "normal" && (localStorage.getItem("fee") * 1) === 0 ){
-        //     setFee(0);
-        // }
     };
 
     const handleSubmitKepler = async event => {
