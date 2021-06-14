@@ -1,26 +1,31 @@
 
 .import-wallet-body {
   padding: 0 40px 40px 40px;
-  .buttons{
+
+  .buttons {
     padding-top: 30px;
     text-align: center;
-    .button-secondary{
+
+    .button-secondary {
       float: left;
       padding: .375rem 0.8rem;
       background: #F0F1F2;
       border-color: transparent;
-      .icon{
+
+      .icon {
         width: 20px;
       }
     }
-    .button.button-primary.large
-    {
+
+    .button.button-primary.large {
       width: auto;
     }
-    .button.button-primary{
+
+    .button.button-primary {
       width: 200px;
     }
   }
+
   .heading {
     font-weight: 600;
     font-size: 18px;
@@ -117,12 +122,14 @@
         line-height: 150%;
         color: #E9721C !important;
       }
-      .icon.icon-download-icon{
-        width: 20px ;
+
+      .icon.icon-download-icon {
+        width: 20px;
         transform: rotate(0) !important;
         margin-bottom: -6px;
         margin-left: 10px;
       }
+
       .icon {
         width: 16px;
         margin-left: 10px;
@@ -132,34 +139,41 @@
     }
   }
 }
-.advanced-wallet-accordion{
+
+.advanced-wallet-accordion {
   padding-top: 20px;
-.card{
-  border: 0px solid;
-  background: transparent;
-  .card-header{
+
+  .card {
+    border: 0px solid;
     background: transparent;
-    padding:0  0 10px 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 0;
-    p{
-      margin: 0;
+
+    .card-header {
+      background: transparent;
+      padding: 0 0 10px 0;
+      display: flex;
+      display: -webkit-flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+
+      p {
+        margin: 0;
+      }
+    }
+
+    button {
+      border: 0px;
+      background: transparent;
+      outline: none;
+
+      .icon {
+        width: 20px;
+      }
+    }
+
+    .collapse.show {
+      padding: 30px 10px;
+      border: 1px solid #E3E5F4;
     }
   }
-  button{
-    border: 0px;
-    background: transparent;
-    outline: none;
-    .icon
-    {
-      width: 20px;
-    }
-  }
-  .collapse.show{
-    padding: 30px 10px;
-    border: 1px solid #E3E5F4;
-  }
-}
 }
