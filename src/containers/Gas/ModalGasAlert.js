@@ -153,10 +153,10 @@ const ModalGasAlert = (props) => {
                             <div className="fee-container">
                                 <>
                                     {
-                                        props.transferableAmount <= 0.005 ?
+                                        props.transferableAmount < 0.005 ?
                                             <div className={activeFeeState === "Low" ? "fee-box active" : "fee-box"}
                                                 onClick={() => handleFee("Low", config.lowFee)}>
-                                                <p className="title">Low</p>
+                                                <p className="title">Zero</p>
                                                 <p className="gas">{(transactions.XprtConversion(gas * config.lowFee) * props.tokenPrice).toLocaleString(undefined, {minimumFractionDigits: 4})} $</p>
                                                 <p className="xprt">{(transactions.XprtConversion(gas * config.lowFee)).toLocaleString(undefined, {minimumFractionDigits: 4})} XPRT</p>
                                             </div>
@@ -164,7 +164,7 @@ const ModalGasAlert = (props) => {
                                     }
                                     <div className={activeFeeState === "Average" ? "fee-box active" : "fee-box"}
                                         onClick={() => handleFee("Average", config.averageFee)}>
-                                        <p className="title">Average</p>
+                                        <p className="title">Low</p>
                                         <p className="gas">{(transactions.XprtConversion(gas * config.averageFee) * props.tokenPrice).toLocaleString(undefined, {minimumFractionDigits: 4})} $</p>
                                         <p className="xprt">{(transactions.XprtConversion(gas * config.averageFee)).toLocaleString(undefined, {minimumFractionDigits: 4})} XPRT</p>
                                     </div>
@@ -185,7 +185,7 @@ const ModalGasAlert = (props) => {
                             </div>
                         </>
                         <div className="select-gas">
-                            <p onClick={handleGas} className="text-center">{!showGasField ? "Set gas" : "Close"}
+                            <p onClick={handleGas} className="text-center">{!showGasField ? "Advanced" : "Advanced"}
                                 {!showGasField ?
                                     <Icon
                                         viewClass="arrow-right"

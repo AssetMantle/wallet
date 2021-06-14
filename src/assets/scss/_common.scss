@@ -1,5 +1,5 @@
 html, body {
-  font-family:'Poppins', sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 ::-webkit-scrollbar {
@@ -52,6 +52,7 @@ html, body {
 
 .flex-center {
   display: flex;
+  display: -webkit-flex;
   align-items: center;
   justify-content: center;
 }
@@ -74,6 +75,7 @@ html, body {
   height: 28px;
   background: #EAEBF6;
   display: flex;
+  display: -webkit-flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
@@ -94,17 +96,20 @@ html, body {
   }
 }
 
-.help-before-login{
-  .faq-modal-body .nav-pills .box .nav-link{
+.help-before-login {
+  .faq-modal-body .nav-pills .box .nav-link {
     border-color: #E3E5F4;
   }
+
   .faq-modal-body .nav-pills .box p {
     color: #2E3239;
   }
+
   .faq-modal-body .accordion .card {
     border-color: #E3E5F4;
   }
 }
+
 .faq-modal.modal-custom {
   .modal-dialog {
     max-width: 850px;
@@ -120,7 +125,7 @@ html, body {
 }
 
 .modal-custom {
-  .modal-header{
+  .modal-header {
     border: 0px solid;
     justify-content: center;
     font-weight: 600;
@@ -131,7 +136,8 @@ html, body {
     padding: 30px;
     color: #313238;
   }
-  .modal-header .heading{
+
+  .modal-header .heading {
     font-weight: 600;
     font-size: 18px;
     line-height: 27px;
@@ -139,10 +145,12 @@ html, body {
     text-align: center;
     color: #313238;
   }
+
   .modal-dialog {
     max-width: 700px;
   }
-  .modal-body{
+
+  .modal-body {
     input {
       margin: 0;
       font-size: 14px;
@@ -166,21 +174,25 @@ html, body {
   text-align: center;
   position: relative;
 }
-.amount-error{
+
+.amount-error {
   font-size: 12px;
   font-family: 'Poppins', sans-serif;
   margin: 10px 0;
   color: #e51f0c;
 }
-.error-amount-field{
+
+.error-amount-field {
   color: #e51f0c !important;
   box-shadow: 0 0 0 0.2rem #e51f0c38 !important;
 }
+
 .amount-field {
 
   .range-buttons {
     margin-left: 10px;
     display: flex;
+    display: -webkit-flex;
 
     button {
       font-weight: 600;
@@ -199,6 +211,7 @@ html, body {
 
 .form-field {
   display: flex;
+  display: -webkit-flex;
   align-items: center;
   padding-bottom: 15px;
 
@@ -259,6 +272,7 @@ html, body {
 .button-link {
   font-weight: 500;
   color: #e50913;
+  cursor: pointer;
   text-decoration: underline;
   display: inline;
 }
@@ -337,6 +351,7 @@ html, body {
 
 .note-section {
   display: flex;
+  display: -webkit-flex;
   margin-top: 20px;
   padding: 20px;
   align-items: center;
@@ -374,9 +389,11 @@ html, body {
     outline: none !important;
     font-size: 34px;
   }
-  .previous-section.txn-header button{
-    top:30px;
+
+  .previous-section.txn-header button {
+    top: 30px;
   }
+
   .previous-section .button {
     position: absolute;
     left: 30px;
@@ -398,6 +415,7 @@ html, body {
 
 .menmonic-list {
   display: flex;
+  display: -webkit-flex;
   align-items: center;
   flex-wrap: wrap;
   justify-content: center;
@@ -457,6 +475,7 @@ html, body {
 .icon-box {
   width: 30px;
   display: flex;
+  display: -webkit-flex;
   border-radius: 7px;
   padding: 5px;
   align-items: center;
@@ -477,8 +496,9 @@ html, body {
 }
 
 .navigate-buttons {
-  .button-section{
+  .button-section {
   }
+
   .button-secondary {
     float: left;
     padding: .375rem 0.8rem;
@@ -491,58 +511,67 @@ html, body {
   }
 }
 
-.fee-container{
+.fee-container {
   display: flex;
+  display: -webkit-flex;
   justify-content: center;
-  .fee-box{
+
+  .fee-box {
     padding: 15px;
     width: 150px;
-    box-shadow: 0 1px 3px rgba(50,50,93,0.15), 0 1px 0 rgba(0,0,0,0.02);
-    p{
+    box-shadow: 0 1px 3px rgba(50, 50, 93, 0.15), 0 1px 0 rgba(0, 0, 0, 0.02);
+
+    p {
       margin: 0;
       cursor: pointer;
     }
-    .title{
+
+    .title {
       font-size: 14px;
       font-weight: 500;
     }
-    .gas, .xprt{
+
+    .gas, .xprt {
       font-size: 10px;
 
     }
   }
-  .fee-box.active{
+
+  .fee-box.active {
     background: #e50913;
-    p{
+
+    p {
       color: #ffffff;
     }
   }
 }
 
 .buttons {
-  .amount-field{
+  .amount-field {
     text-align: left;
   }
 }
 
-.select-gas{
+.select-gas {
   text-align: center;
-  p{
+
+  p {
     margin: 0;
     font-size: 14px;
     font-weight: 500;
-    color: red;
-    text-decoration: underline;
+    color: #8D9CB5;
     padding: 10px 0;
     display: inline-block;
     cursor: pointer;
-    .icon{
+
+    .icon {
       width: 16px;
       height: 16px;
       margin-left: 5px;
     }
   }
 }
+
 .key-download {
   text-align: center;
   padding: 10px;
@@ -551,6 +580,7 @@ html, body {
   margin: 20px auto;
   cursor: pointer;
   display: flex;
+  display: -webkit-flex;
   justify-content: center;
 
   p, a {
@@ -623,26 +653,29 @@ html, body {
   padding: 0 5px;
 }
 
-.amount-warning{
+.amount-warning {
   color: #fead05;
   text-align: center;
   font-size: 14px;
   font-weight: 500;
 }
-.amount-warning.hide{
+
+.amount-warning.hide {
   display: none;
 }
-.amount-warning.show{
+
+.amount-warning.show {
   display: block;
 }
 
-.amount-error.hide{
+.amount-error.hide {
   display: none;
 }
-.amount-error.show{
+
+.amount-error.show {
   display: block;
 }
 
-.pop-custom{
+.pop-custom {
   position: fixed !important;
 }

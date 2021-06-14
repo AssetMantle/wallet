@@ -50,7 +50,7 @@
         box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
         border-radius: 6px;
         width: 55px;
-        display: flex;
+        display: -webkit-flex;;
         height: 55px;
         position: absolute;
         align-items: center;
@@ -219,7 +219,7 @@
       }
     }
     .radio-group{
-      display: flex;
+      display: flexdisplay: -webkit-flex;;
       justify-content: center;
       .custom-control{
         margin-right: 20px;
