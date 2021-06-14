@@ -306,7 +306,7 @@ const IbcTxn = (props) => {
                                 placeholder={t("SEND_AMOUNT")}
                                 step="any"
                                 className={amountField > props.transferableAmount ? "error-amount-field" : ""}
-                                value={amountField}
+                                defaultValue={amountField}
                                 onChange={handleAmountChange}
                                 required={true}
                             />
