@@ -153,7 +153,7 @@ const ModalGasAlert = (props) => {
                             <div className="fee-container">
                                 <>
                                     {
-                                        props.transferableAmount <= 0.005 ?
+                                        props.transferableAmount < 0.005 ?
                                             <div className={activeFeeState === "Low" ? "fee-box active" : "fee-box"}
                                                 onClick={() => handleFee("Low", config.lowFee)}>
                                                 <p className="title">Zero</p>
