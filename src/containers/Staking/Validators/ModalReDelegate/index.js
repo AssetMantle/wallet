@@ -173,7 +173,7 @@ const ModalReDelegate = (props) => {
                                         min={0}
                                         name="amount"
                                         placeholder={t("REDELEGATION_AMOUNT")}
-                                        defaultValue={amount}
+                                        value={amount}
                                         step="any"
                                         className={amount > props.delegationAmount ? "error-amount-field" : ""}
                                         onChange={handleAmountChange}
