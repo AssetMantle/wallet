@@ -30,6 +30,7 @@ jobs:
         REACT_APP_PROXY_API: ${{ secrets.PROXY_API }}
         REACT_APP_CHAIN_ID: ${{ secrets.PRODUCTION_CHAIN_ID }}
         REACT_APP_CHAIN_NAME: ${{ secrets.PRODUCTION_CHAIN_NAME }}
+        REACT_APP_IBC_CONFIG: ${{ secrets.PRODUCTION_IBC_CONFIG}}
     - name: zip up the build
       uses: montudor/action-zip@v0.1.0
       with:
