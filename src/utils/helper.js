@@ -95,8 +95,16 @@ function validatePassphrase(value) {
 
 }
 
-function validateAddress(address) {
-    return address.startsWith("persistence1") && address.length === 50;
+function validateAddress(prefix="persistence1", address) {
+    if(prefix === "cosmos"){
+        return address.startsWith(prefix) && address.length === 45;
+    }else {
+        return address.startsWith(prefix) && address.length === 50;
+    }
+}
+
+function validateCosmosAddress(address) {
+    return address.startsWith("cosmos") && address.length === 40;
 }
 
 function accountChangeCheck(errorMessage) {
@@ -170,5 +178,6 @@ export default {
     denomChange,
     mnemonicTrim,
     mnemonicValidation,
-    ValidateAmount
+    ValidateAmount,
+    validateCosmosAddress
 };

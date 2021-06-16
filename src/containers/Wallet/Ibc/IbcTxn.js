@@ -47,6 +47,7 @@ const IbcTxn = (props) => {
     };
 
     const handleAmountChange = (evt) => {
+        setKeplerError('');
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
             if(tokenDenom === "uxprt") {
@@ -84,16 +85,20 @@ const IbcTxn = (props) => {
             if (memoCheck) {
                 setKeplerError(t("MEMO_MNEMONIC_CHECK_ERROR"));
             } else {
+                if (chain !== "custom" && !helper.validateAddress(chain.substr(0, chain.indexOf('/')), event.target.address.value)) {
+                    setKeplerError(`Enter Valid  Recipient’s Address, address should starts with ${chain.substr(0, chain.indexOf('/'))}`);
+                    return ;
+                }
                 const data = {
-                    amount : amountField,
-                    denom : tokenDenom,
-                    memo : memo,
-                    toAddress : event.target.address.value,
-                    channelID: customChain ?  event.target.channel.value : channelID,
+                    amount: amountField,
+                    denom: tokenDenom,
+                    memo: memo,
+                    toAddress: event.target.address.value,
+                    channelID: customChain ? event.target.channel.value : channelID,
                     modalHeader: "Send Token",
                     formName: "ibc",
-                    successMsg : t("SUCCESSFUL_SEND"),
-                    failedMsg : t("FAILED_SEND")
+                    successMsg: t("SUCCESSFUL_SEND"),
+                    failedMsg: t("FAILED_SEND")
                 };
                 setFormData(data);
                 setKeplerError('');
@@ -110,7 +115,15 @@ const IbcTxn = (props) => {
         setShow(true);
         setLoader(true);
         event.preventDefault();
-        let msg =  transactions.MakeIBCTransferMsg(event.target.channel.value, loginAddress,
+        if (chain !== "custom" && !helper.validateAddress(chain.substr(0, chain.indexOf('/')), event.target.address.value)) {
+            setLoader(false);
+            setKeplerError(`Enter Valid  Recipient’s Address, address should starts with ${chain.substr(0, chain.indexOf('/'))}`);
+            return ;
+        }
+        let inputChannelID = customChain ? event.target.channel.value : channelID;
+        console.log(inputChannelID, loginAddress,
+            event.target.address.value);
+        let msg =  transactions.MakeIBCTransferMsg(inputChannelID, loginAddress,
             event.target.address.value,(amountField * config.xprtValue), undefined, undefined, tokenDenom);
         await msg.then(result => {
             const response = transactions.TransactionWithKeplr( [result],aminoMsgHelper.fee(0, 250000));
@@ -143,6 +156,7 @@ const IbcTxn = (props) => {
     };
 
     const onChangeSelect = (evt) => {
+        setKeplerError('');
         if(evt.target.value === "Custom"){
             setCustomChain(true);
             setChain(evt.target.value);
@@ -182,16 +196,34 @@ const IbcTxn = (props) => {
     const popover = (
         <Popover id="popover">
             <Popover.Content>
-                Recipient’s address starts with cosmos; for example: cosmos108juerwthyqolqewl74kewg882kjuert123kls
+                {
+                    (chain !== "Custom" && chain !== "")  ?
+                        <p>Recipient’s address starts with {chain.substr(0, chain.indexOf('/'))}; for example: {chain.substr(0, chain.indexOf('/'))}108juerwthyqolqewl74kewg882kjuert123kls</p>
+                        : ""
+                }
+
             </Popover.Content>
         </Popover>
     );
+
+    const disable = (
+        chain === ""
+    );
+
+    // const addressValidation = (
+    //     if(chain !== "" && chain !== "custom" && helper.validateAddress(chain.substr(0,chain.indexOf('/') )), event.target.address.value){
+    //         if(){}
+    //     }
+    // // if(helper.validateAddress(chain.substr(0,chain.indexOf('/') )), event.target.address.value){}
+    // );
+
     let channels=[];
     if(IBC_CONF === "ibcStaging.json"){
         channels = ibcConfig.testNetChannels;
     }else {
         channels = ibcConfig.mainNetChannels;
     }
+
     return (
         <div className="send-container">
             <div className="form-section">
@@ -251,11 +283,15 @@ const IbcTxn = (props) => {
 
                     <div className="form-field">
                         <p className="label info">{t("RECIPIENT_ADDRESS")}
-                            <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
-                                <button className="icon-button info" type="button"><Icon
-                                    viewClass="arrow-right"
-                                    icon="info"/></button>
-                            </OverlayTrigger></p>
+                            {(chain !== "Custom" && chain !== "") ?
+                                <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
+                                    <button className="icon-button info" type="button"><Icon
+                                        viewClass="arrow-right"
+                                        icon="info"/></button>
+                                </OverlayTrigger> :
+                                ""
+                            }
+                        </p>
                         <Form.Control
                             type="text"
                             name="address"
@@ -382,13 +418,13 @@ const IbcTxn = (props) => {
                         {mode === "normal"  ?
                             <div className="button-section">
                                 <button className="button button-primary"
-                                    disabled={checkAmountError || amountField === 0 || props.transferableAmount === 0}
+                                    disabled={disable || checkAmountError || amountField === 0 || props.transferableAmount === 0}
                                 >{t("NEXT")}
                                 </button>
                             </div>
                             :
                             <button className="button button-primary"
-                                disabled={checkAmountError || amountField === 0 || props.transferableAmount === 0}
+                                disabled={disable || checkAmountError || amountField === 0 || props.transferableAmount === 0}
                             >{t("SUBMIT")}</button>
                         }
                     </div>
