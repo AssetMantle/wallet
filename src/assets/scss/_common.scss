@@ -144,6 +144,8 @@ html, body {
     font-family: 'Poppins', sans-serif;
     text-align: center;
     color: #313238;
+    margin: 0 45px;
+
   }
 
   .modal-dialog {
@@ -678,4 +680,10 @@ html, body {
 
 .pop-custom {
   position: fixed !important;
+}
+
+.text-link{
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: #8D9CB5;
 }

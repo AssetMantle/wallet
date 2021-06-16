@@ -41,7 +41,9 @@ const ModalViewAmountDetails = (props) => {
                 className="modal-custom faq-modal"
                 onHide={handleClose}>
                 <Modal.Header className="result-header" closeButton>
-                    Tokens received via IBC
+                    <h3 className="heading">
+                        Tokens received via IBC
+                    </h3>
                 </Modal.Header>
                 <Modal.Body className="faq-modal-body">
                     <ul className="modal-list-data">

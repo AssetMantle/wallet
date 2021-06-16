@@ -21,7 +21,8 @@ import ModalGasAlert from "../../Gas/ModalGasAlert";
 const IBC_CONF = process.env.REACT_APP_IBC_CONFIG;
 const IbcTxn = (props) => {
     const {t} = useTranslation();
-    const [amountField, setAmountField] = useState(0);
+    const [enteredAmount, setEnteredAmount] = useState('');
+    const [amountField, setAmountField] = useState();
     const [chain, setChain] = useState("");
     const [channelID, setChannelID] = useState("");
     const [txResponse, setTxResponse] = useState('');
@@ -61,6 +62,7 @@ const IbcTxn = (props) => {
                     setCheckAmountError(false);
                 }
             }
+            setEnteredAmount(evt.target.value);
             setAmountField(evt.target.value * 1);
         } else {
             return false;
@@ -304,7 +306,7 @@ const IbcTxn = (props) => {
                                 placeholder={t("SEND_AMOUNT")}
                                 step="any"
                                 className={amountField > props.transferableAmount ? "error-amount-field" : ""}
-                                value={amountField.toString()}
+                                value={enteredAmount}
                                 onChange={handleAmountChange}
                                 required={true}
                             />

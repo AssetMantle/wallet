@@ -19,7 +19,8 @@ import ModalViewTxnResponse from "../../../Common/ModalViewTxnResponse";
 
 const ModalUnbond = (props) => {
     const {t} = useTranslation();
-    const [amount, setAmount] = useState(0);
+    const [amount, setAmount] = useState();
+    const [enteredAmount, setEnteredAmount] = useState('');
     const [response, setResponse] = useState('');
     const [initialModal, setInitialModal] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
@@ -43,6 +44,7 @@ const ModalUnbond = (props) => {
             } else {
                 setCheckAmountError(false);
             }
+            setEnteredAmount(evt.target.value);
             setAmount(evt.target.value * 1);
         } else {
             return false;
@@ -137,7 +139,7 @@ const ModalUnbond = (props) => {
                                         min={0}
                                         name="amount"
                                         placeholder={t("UNBOND_AMOUNT")}
-                                        value={amount.toString()}
+                                        value={enteredAmount}
                                         step="any"
                                         className={amount > props.delegationAmount ? "error-amount-field" : ""}
                                         onChange={handleAmountChange}

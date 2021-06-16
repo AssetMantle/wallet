@@ -22,7 +22,8 @@ import ModalViewTxnResponse from "../Common/ModalViewTxnResponse";
 
 const Send = (props) => {
     const {t} = useTranslation();
-    const [amountField, setAmountField] = useState(0);
+    const [enteredAmount, setEnteredAmount] = useState('');
+    const [amountField, setAmountField] = useState();
     const [txResponse, setTxResponse] = useState('');
     const [show, setShow] = useState(true);
     const [memoStatus, setMemoStatus] = useState(false);
@@ -60,6 +61,7 @@ const Send = (props) => {
                     setCheckAmountError(false);
                 }
             }
+            setEnteredAmount(evt.target.value);
             setAmountField(evt.target.value * 1);
         } else {
             return false;
@@ -205,7 +207,7 @@ const Send = (props) => {
                                 placeholder={t("SEND_AMOUNT")}
                                 step="any"
                                 className={amountField > props.transferableAmount ? "error-amount-field" : ""}
-                                value={amountField.toString()}
+                                value={enteredAmount}
                                 onChange={handleAmountChange}
                                 required={true}
                             />

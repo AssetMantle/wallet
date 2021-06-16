@@ -61,7 +61,9 @@ const ModalViewVestingDetails = () => {
                 className="modal-custom faq-modal"
                 onHide={handleClose}>
                 <Modal.Header className="result-header" closeButton>
-                    Vesting Schedule
+                    <h3 className="heading">
+                        Vesting Schedule
+                    </h3>
                 </Modal.Header>
                 <Modal.Body className="faq-modal-body">
                     <ul className="modal-list-data">
@@ -116,7 +118,7 @@ const ModalViewVestingDetails = () => {
                                                                     <td>{moment(new Date(vestingPeriod * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</td>
                                                                 </tr>
                                                             </tbody>
-                                                        
+
                                                         );
                                                     })
                                                     : ""

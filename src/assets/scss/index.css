@@ -110,7 +110,8 @@ html, body {
   line-height: 27px;
   font-family: 'Poppins', sans-serif;
   text-align: center;
-  color: #313238; }
+  color: #313238;
+  margin: 0 45px; }
 .modal-custom .modal-dialog {
   max-width: 700px; }
 .modal-custom .modal-body input {
@@ -503,6 +504,11 @@ html, body {
 
 .pop-custom {
   position: fixed !important; }
+
+.text-link {
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: #8D9CB5; }
 
 /*--------------------------------------------------------------
 # main styles
@@ -1548,7 +1554,9 @@ html, body {
     word-break: break-word; }
 
 .header .navbar .nav-menu-icon button {
-  outline: none !important; }
+  outline: none !important;
+  padding: 0;
+  min-width: 50px; }
 .header .navbar .navbar-nav li {
   cursor: pointer; }
   .header .navbar .navbar-nav li a, .header .navbar .navbar-nav li .profile-dropdown, .header .navbar .navbar-nav li .dark-mode-button {
@@ -2116,7 +2124,7 @@ html, body {
       color: #2E3239; }
 
 .sign-in-buttons button {
-  width: auto !important; }
+  width: 250px !important; }
 
 .rdt_TableBody .rdt_TableRow:first-child .rdt_TableCell {
   padding-top: 30px; }
@@ -2230,7 +2238,8 @@ html, body {
     display: block; }
 
   .form-field .label {
-    width: auto; }
+    width: auto;
+    margin-bottom: 5px !important; }
 
   .amount-field {
     display: block; }
@@ -2238,7 +2247,25 @@ html, body {
       padding-top: 10px; }
 
   .import-wallet-body form .form-field .label {
-    text-align: left; } }
+    text-align: left; }
+
+  .navbar .navbar-nav li .profile-dropdown, .header .navbar .navbar-nav li .dark-mode-button {
+    padding: .5rem .7rem; } }
+@media (max-width: 576px) {
+  .modal-custom .modal-header {
+    padding: 20px 0px; }
+    .modal-custom .modal-header .heading {
+      font-size: 14px; }
+    .modal-custom .modal-header .previous-section.txn-header button {
+      left: 15px;
+      line-height: normal;
+      top: 20px; }
+      .modal-custom .modal-header .previous-section.txn-header button .icon {
+        width: 14px; }
+    .modal-custom .modal-header button.close {
+      right: 15px;
+      top: 20px;
+      font-size: 28px; } }
 /*--------------------------------------------------------------
 # homepagemediaqueries styles
 --------------------------------------------------------------*/

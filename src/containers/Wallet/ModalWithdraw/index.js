@@ -175,7 +175,9 @@ const ModalWithdraw = (props) => {
                 {initialModal ?
                     <>
                         <Modal.Header closeButton>
-                            {t("CLAIM_STAKING_REWARDS")}
+                            <h3 className="heading">
+                                {t("CLAIM_STAKING_REWARDS")}
+                            </h3>
                         </Modal.Header>
                         <Modal.Body className="rewards-modal-body">
                             <Form onSubmit={mode === "kepler" ? handleSubmitKepler : handleSubmitInitialData}>
