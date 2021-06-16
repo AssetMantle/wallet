@@ -161,7 +161,7 @@ const ModalDelegate = (props) => {
                                         min={0}
                                         name="amount"
                                         placeholder={t("DELEGATION_AMOUNT")}
-                                        value={amount}
+                                        value={amount.toString()}
                                         step="any"
                                         className={amount > props.balance ? "error-amount-field" : ""}
                                         onChange={handleAmountChange}

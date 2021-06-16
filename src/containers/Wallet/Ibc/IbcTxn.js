@@ -102,9 +102,6 @@ const IbcTxn = (props) => {
             setKeplerError('');
             setShow(true);
         }
-        // if(mode === "normal" && (localStorage.getItem("fee") * 1) === 0 ){
-        //     setFee(0);
-        // }
     };
     const handleSubmitKepler = async event => {
         setShow(true);
@@ -306,7 +303,7 @@ const IbcTxn = (props) => {
                                 placeholder={t("SEND_AMOUNT")}
                                 step="any"
                                 className={amountField > props.transferableAmount ? "error-amount-field" : ""}
-                                value={amountField}
+                                value={amountField.toString()}
                                 onChange={handleAmountChange}
                                 required={true}
                             />

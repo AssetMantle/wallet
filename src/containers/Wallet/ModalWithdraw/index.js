@@ -37,7 +37,7 @@ const ModalWithdraw = (props) => {
     const [commissionMsg, setCommissionMsg] = useState({});
     const [formData, setFormData] = useState({});
     const [feeModal, setFeeModal] = useState(false);
-
+    const [multiSelectWarning, setMultiSelectWarning] = useState(false);
 
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
@@ -108,6 +108,11 @@ const ModalWithdraw = (props) => {
     const onChangeSelect =  (evt) => {
         let totalValidatorsRewards = 0;
         let messages = [];
+        if(evt.length > 3){
+            setMultiSelectWarning(true);
+        }else {
+            setMultiSelectWarning(false);
+        }
         evt.forEach(async (item) => {
             totalValidatorsRewards = totalValidatorsRewards + (transactions.XprtConversion(item.rewards*1));
             messages.push(WithdrawMsg(loginAddress, item.value));
@@ -217,7 +222,7 @@ const ModalWithdraw = (props) => {
                                 <div className="form-field p-0">
                                     <p className="label"></p>
                                     <div className="validator-limit-warning">
-                                        <p className="amount-warning">Warning: Select below 3 validators to claim</p>
+                                        <p className="amount-warning">{multiSelectWarning ? "Warning: Select below 3 validators to claim" : ""}</p>
                                     </div>
                                 </div>
                                 {mode === "normal" ?

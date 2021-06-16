@@ -195,12 +195,22 @@ const ModalDecryptKeyStore = (props) => {
         </Popover>
     );
 
+    const handlePrevious = () =>{
+        props.setShowDecryptModal(false);
+    };
     return (
         <>
             {
                 response === '' ?
                     <>
                         <Modal.Header closeButton>
+                            <div className="previous-section txn-header">
+                                <button className="button" onClick={() => handlePrevious()}>
+                                    <Icon
+                                        viewClass="arrow-right"
+                                        icon="left-arrow"/>
+                                </button>
+                            </div>
                             <h3 className="heading">
                                 {props.formData.formName === "delegate" ?
                                     <>

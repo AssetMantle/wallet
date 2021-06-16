@@ -81,7 +81,6 @@ const ModalActions = (props) => {
 
     let commissionRate = helper.decimalConversion(props.validator.commission.commissionRates.rate) * 100;
     commissionRate = parseFloat(commissionRate.toFixed(2)).toLocaleString();
-    let active = helper.isActive(props.validator);
 
     const handleRewards = () => {
         setInitialModal(false);
@@ -132,15 +131,11 @@ const ModalActions = (props) => {
                             }
                             <div className="buttons-group">
 
-                                {active ?
-                                    <button
-                                        onClick={() => handleModal('Delegate', props.validator.operatorAddress, props.validator.description.moniker)}
-                                        className="button button-primary">
-                                        {t("DELEGATE")}
-                                    </button>
-                                    :
-                                    null
-                                }
+                                <button
+                                    onClick={() => handleModal('Delegate', props.validator.operatorAddress, props.validator.description.moniker)}
+                                    className="button button-primary">
+                                    {t("DELEGATE")}
+                                </button>
                                 <button className="button button-primary"
                                     onClick={() => handleModal('Redelegate', props.validator.operatorAddress, props.validator.description.moniker)}
                                 >{t("REDELEGATE")}

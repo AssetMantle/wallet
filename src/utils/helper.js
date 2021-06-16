@@ -148,6 +148,13 @@ function mnemonicValidation(memo) {
     return validateMnemonic;
 }
 
+function ValidateAmount(value){
+    if (value === 0) {
+        return new Error('Value must be greater than 0');
+    }
+    return new Error('');
+}
+
 export default {
     randomNum,
     stringTruncate,
@@ -162,5 +169,6 @@ export default {
     decimalConversion,
     denomChange,
     mnemonicTrim,
-    mnemonicValidation
+    mnemonicValidation,
+    ValidateAmount
 };
