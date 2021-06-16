@@ -110,7 +110,8 @@ const IbcTxn = (props) => {
         setShow(true);
         setLoader(true);
         event.preventDefault();
-        let msg =  transactions.MakeIBCTransferMsg(event.target.channel.value, loginAddress,
+        let inputChannelID = customChain ? event.target.channel.value : channelID;
+        let msg =  transactions.MakeIBCTransferMsg(inputChannelID, loginAddress,
             event.target.address.value,(amountField * config.xprtValue), undefined, undefined, tokenDenom);
         await msg.then(result => {
             const response = transactions.TransactionWithKeplr( [result],aminoMsgHelper.fee(0, 250000));
