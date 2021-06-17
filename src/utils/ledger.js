@@ -20,6 +20,7 @@ export async function createTransport() {
 }
 
 export const fetchAddress = async (transport) => {
+    transport = await createTransport();
     const signer = new LedgerSigner(transport, {
         testModeAllowed: true,
         hdPaths: [makeHdPath()],

@@ -41,12 +41,12 @@ async function KeplrWallet(chainID = configChainID) {
     return [offlineSigner, accounts[0].address];
 }
 
-async function TransactionWithLedger(msgs, fee, memo = "", chainID = configChainID) {
-    const [wallet, address] = await LedgerWallet(chainID);
+async function TransactionWithLedger(msgs, fee, memo = "",  hdpath = makeHdPath(), prefix = addressPrefix) {
+    const [wallet, address] = await LedgerWallet(hdpath, prefix);
     return Transaction(wallet, address, msgs, fee, memo);
 }
 
-async function LedgerWallet() {
+async function LedgerWallet(hdpath, prefix) {
     const interactiveTimeout = 120_000;
     async function createTransport() {
         const ledgerTransport = await TransportWebUSB.create(interactiveTimeout, interactiveTimeout);
@@ -56,8 +56,8 @@ async function LedgerWallet() {
     const transport = await createTransport();
     const signer = new LedgerSigner(transport, {
         testModeAllowed: true,
-        hdPaths: [makeHdPath()],
-        prefix: "persistence"
+        hdPaths: [hdpath],
+        prefix: prefix
     });
     const [firstAccount] = await signer.getAccounts();
     return [signer, firstAccount.address];
