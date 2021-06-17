@@ -22,7 +22,8 @@ import ModalViewTxnResponse from "../Common/ModalViewTxnResponse";
 
 const Send = (props) => {
     const {t} = useTranslation();
-    const [amountField, setAmountField] = useState(0);
+    const [enteredAmount, setEnteredAmount] = useState('');
+    const [amountField, setAmountField] = useState();
     const [txResponse, setTxResponse] = useState('');
     const [show, setShow] = useState(true);
     const [memoStatus, setMemoStatus] = useState(false);
@@ -60,6 +61,7 @@ const Send = (props) => {
                     setCheckAmountError(false);
                 }
             }
+            setEnteredAmount(evt.target.value);
             setAmountField(evt.target.value * 1);
         } else {
             return false;
@@ -179,22 +181,20 @@ const Send = (props) => {
                             required={true}
                         />
                     </div>
-                    {mode === "normal" ?
-                        <div className="form-field">
-                            <p className="label">{t("TOKEN")} </p>
-                            <Select value={token} className="validators-list-selection"
-                                onChange={onChangeSelect} displayEmpty>
-                                {
-                                    <MenuItem
-                                        className=""
-                                        value="uxprt">
-                                            XPRT
-                                    </MenuItem>
-                                }
-                            </Select>
-                        </div>
-                        : null
-                    }
+                    <div className="form-field">
+                        <p className="label">{t("TOKEN")} </p>
+                        <Select value={token} className="validators-list-selection"
+                            onChange={onChangeSelect} displayEmpty>
+                            {
+                                <MenuItem
+                                    className=""
+                                    value="uxprt">
+                                        XPRT
+                                </MenuItem>
+                            }
+                        </Select>
+                    </div>
+
                     <div className="form-field p-0">
                         <p className="label">{t("AMOUNT")}</p>
                         <div className="amount-field">
@@ -205,7 +205,7 @@ const Send = (props) => {
                                 placeholder={t("SEND_AMOUNT")}
                                 step="any"
                                 className={amountField > props.transferableAmount ? "error-amount-field" : ""}
-                                value={amountField}
+                                value={enteredAmount}
                                 onChange={handleAmountChange}
                                 required={true}
                             />

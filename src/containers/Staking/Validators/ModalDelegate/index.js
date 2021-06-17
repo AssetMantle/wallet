@@ -19,7 +19,8 @@ import ModalViewTxnResponse from "../../../Common/ModalViewTxnResponse";
 
 const ModalDelegate = (props) => {
     const {t} = useTranslation();
-    const [amount, setAmount] = useState(0);
+    const [enteredAmount, setEnteredAmount] = useState('');
+    const [amount, setAmount] = useState();
     const [memoContent, setMemoContent] = useState('');
     const [initialModal, setInitialModal] = useState(true);
     const [response, setResponse] = useState('');
@@ -44,6 +45,7 @@ const ModalDelegate = (props) => {
             } else {
                 setCheckAmountError(false);
             }
+            setEnteredAmount(evt.target.value);
             setAmount(evt.target.value*1);
         } else {
             return false;
@@ -101,9 +103,6 @@ const ModalDelegate = (props) => {
             };
             setFormData(data);
         }
-        // if(mode === "normal" && (localStorage.getItem("fee") * 1) === 0 ){
-        //     setFee(0);
-        // }
     };
 
 
@@ -161,7 +160,7 @@ const ModalDelegate = (props) => {
                                         min={0}
                                         name="amount"
                                         placeholder={t("DELEGATION_AMOUNT")}
-                                        value={amount}
+                                        value={enteredAmount}
                                         step="any"
                                         className={amount > props.balance ? "error-amount-field" : ""}
                                         onChange={handleAmountChange}

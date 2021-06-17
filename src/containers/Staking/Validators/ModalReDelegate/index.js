@@ -21,7 +21,8 @@ import ModalViewTxnResponse from "../../../Common/ModalViewTxnResponse";
 
 const ModalReDelegate = (props) => {
     const {t} = useTranslation();
-    const [amount, setAmount] = useState(0);
+    const [enteredAmount, setEnteredAmount] = useState('');
+    const [amount, setAmount] = useState();
     const [initialModal, setInitialModal] = useState(true);
     const [response, setResponse] = useState('');
     const [toValidatorAddress, setToValidatorAddress] = useState("");
@@ -45,6 +46,7 @@ const ModalReDelegate = (props) => {
             } else {
                 setCheckAmountError(false);
             }
+            setEnteredAmount(evt.target.value);
             setAmount(evt.target.value * 1);
         } else {
             return false;
@@ -170,7 +172,7 @@ const ModalReDelegate = (props) => {
                                         min={0}
                                         name="amount"
                                         placeholder={t("REDELEGATION_AMOUNT")}
-                                        value={amount}
+                                        value={enteredAmount}
                                         step="any"
                                         className={amount > props.delegationAmount ? "error-amount-field" : ""}
                                         onChange={handleAmountChange}

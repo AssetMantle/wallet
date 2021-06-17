@@ -19,7 +19,6 @@ const ModalGasAlert = (props) => {
     const [showDecryptModal, setShowDecryptModal] = useState(false);
     const [gas, setGas] = useState(config.gas);
     const [fee, setFee] = useState(config.averageFee);
-
     useEffect(() => {
         if(props.formData.formName === "withdrawMultiple" || props.formData.formName === "withdrawAddress" || props.formData.formName === "withdrawValidatorRewards" || props.formData.formName === "redelegate" || props.formData.formName === "unbond"){
             if(props.transferableAmount < transactions.XprtConversion(gas * fee)){
@@ -233,6 +232,7 @@ const ModalGasAlert = (props) => {
                     fee={fee}
                     gas={gas}
                     handleClose={props.handleClose}
+                    setShowDecryptModal={setShowDecryptModal}
                 />
             }
         </>

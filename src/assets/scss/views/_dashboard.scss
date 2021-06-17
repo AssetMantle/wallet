@@ -399,6 +399,8 @@
   .navbar {
     .nav-menu-icon button {
       outline: none !important;
+      padding: 0;
+      min-width: 50px;
     }
 
     .navbar-nav li {
@@ -1275,7 +1277,7 @@
 
 .sign-in-buttons {
   button {
-    width: auto !important;
+    width: 250px !important;
   }
 }
 
@@ -1354,5 +1356,6 @@
 .validator-limit-warning {
   .amount-warning {
     padding-top: 10px;
+    text-align: left;
   }
 }

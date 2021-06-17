@@ -22,6 +22,7 @@
   }
   .form-field .label{
     width: auto;
+    margin-bottom: 5px !important;
   }
   .amount-field{
     display: block;
@@ -31,5 +32,32 @@
   }
   .import-wallet-body form .form-field .label{
     text-align: left;
+  }
+  .navbar .navbar-nav li .profile-dropdown, .header .navbar .navbar-nav li .dark-mode-button{
+    padding: .5rem .7rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .modal-custom {
+    .modal-header {
+      padding: 20px 0px;
+      .heading{
+        font-size: 14px;
+      }
+      .previous-section.txn-header button{
+        left: 15px;
+        line-height: normal;
+        top: 20px;
+        .icon{
+          width: 14px;
+        }
+      }
+      button.close{
+        right: 15px;
+        top: 20px;
+        font-size: 28px;
+      }
+    }
   }
 }

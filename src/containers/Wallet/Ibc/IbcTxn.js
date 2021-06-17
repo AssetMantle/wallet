@@ -21,7 +21,8 @@ import ModalGasAlert from "../../Gas/ModalGasAlert";
 const IBC_CONF = process.env.REACT_APP_IBC_CONFIG;
 const IbcTxn = (props) => {
     const {t} = useTranslation();
-    const [amountField, setAmountField] = useState(0);
+    const [enteredAmount, setEnteredAmount] = useState('');
+    const [amountField, setAmountField] = useState();
     const [chain, setChain] = useState("");
     const [channelID, setChannelID] = useState("");
     const [txResponse, setTxResponse] = useState('');
@@ -61,6 +62,7 @@ const IbcTxn = (props) => {
                     setCheckAmountError(false);
                 }
             }
+            setEnteredAmount(evt.target.value);
             setAmountField(evt.target.value * 1);
         } else {
             return false;
@@ -102,15 +104,14 @@ const IbcTxn = (props) => {
             setKeplerError('');
             setShow(true);
         }
-        // if(mode === "normal" && (localStorage.getItem("fee") * 1) === 0 ){
-        //     setFee(0);
-        // }
+
     };
     const handleSubmitKepler = async event => {
         setShow(true);
         setLoader(true);
         event.preventDefault();
-        let msg =  transactions.MakeIBCTransferMsg(event.target.channel.value, loginAddress,
+        let inputChannelID = customChain ? event.target.channel.value : channelID;
+        let msg =  transactions.MakeIBCTransferMsg(inputChannelID, loginAddress,
             event.target.address.value,(amountField * config.xprtValue), undefined, undefined, tokenDenom);
         await msg.then(result => {
             const response = transactions.TransactionWithKeplr( [result],aminoMsgHelper.fee(0, 250000));
@@ -306,7 +307,7 @@ const IbcTxn = (props) => {
                                 placeholder={t("SEND_AMOUNT")}
                                 step="any"
                                 className={amountField > props.transferableAmount ? "error-amount-field" : ""}
-                                value={amountField}
+                                value={enteredAmount}
                                 onChange={handleAmountChange}
                                 required={true}
                             />

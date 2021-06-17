@@ -204,7 +204,7 @@ let English = {
         "SETUP_ADDRESS_NOTE":"Claim your staking rewards to another wallet address.",
         "ADDRESS_NOT_MATCHED_ERROR":"Your sign in address and keystore file don’t match. Please try again or else sign in again.",
         "KEY_STORE_PASSWORD":"KeyStore file password",
-        "AMOUNT_ERROR_MESSAGE":"Insufficient balance/fees to do transactions",
+        "AMOUNT_ERROR_MESSAGE":"Insufficient wallet balance to process the transaction.",
         "AMOUNT_WARNING_MESSAGE":"Insufficient wallet balance for your future transactions",
         "TOTAL_BALANCE_NOTE":"Delegatable XPRT + Delegated XPRT + Unbonded XPRT",
         "MEMO_MNEMONIC_CHECK_ERROR":"Entered secret passphrase(mnemonic) in memo field. Don't input any secrete information.",
