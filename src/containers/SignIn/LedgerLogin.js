@@ -12,15 +12,17 @@ const LedgerLogin = (props) => {
     const history = useHistory();
     const [show, setShow] = useState(true);
     const [ledgerAddress, setLedgerAddress] = useState('');
+    const [errorMessage, setErrorMessage] = useState("");
+
     useEffect(() => {
         let ledgerResponse = fetchAddress();
         ledgerResponse.then(function (result) {
             console.log(result, "address");
             setLedgerAddress(result);
         }).catch(err => {
-            console.log(err.response
+            setErrorMessage(err.response
                 ? err.response.data.message
-                : err.message, "let se");
+                : err.message);
         });
 
     },[]);
@@ -58,10 +60,15 @@ const LedgerLogin = (props) => {
             </Modal.Header>
             <div className="create-wallet-body create-wallet-form-body">
                 {
+                    errorMessage !== "" ?
+                        <p className="form-error">{errorMessage}</p>
+                        : null
+                }
+                {
                     ledgerAddress !== ""
                         ?
                         <p>{ledgerAddress}</p>
-                        : <p>Fetching Address..</p>
+                        : <p className="fetching">Fetching Address </p>
 
                 }
                 <button className="button button-primary" onClick={() => handleRoute()}>Continue

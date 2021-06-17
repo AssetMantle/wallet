@@ -510,6 +510,22 @@ html, body {
   text-decoration: underline;
   text-decoration-color: #8D9CB5; }
 
+.fetching:after {
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: bottom;
+  -webkit-animation: ellipsis steps(4, end) 1500ms infinite;
+  animation: ellipsis steps(4, end) 1500ms infinite;
+  content: "\2026";
+  /* ascii code for the ellipsis character */
+  width: 0px; }
+
+@keyframes ellipsis {
+  to {
+    width: 20px; } }
+@-webkit-keyframes ellipsis {
+  to {
+    width: 20px; } }
 /*--------------------------------------------------------------
 # main styles
 --------------------------------------------------------------*/

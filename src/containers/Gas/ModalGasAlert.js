@@ -9,7 +9,6 @@ import transactions from "../../utils/transactions";
 import {connect} from "react-redux";
 import Icon from "../../components/Icon";
 import ModalDecryptKeyStore from "../KeyStore/ModalDecryptKeystore";
-import {SendMsg} from "../../utils/protoMsgHelper";
 import aminoMsgHelper from "../../utils/aminoMsgHelper";
 import ModalViewTxnResponse from "../Common/ModalViewTxnResponse";
 
@@ -21,10 +20,12 @@ const ModalGasAlert = (props) => {
     const [checkAmountError, setCheckAmountError] = useState(false);
     const [showDecryptModal, setShowDecryptModal] = useState(false);
     const [feeModal, setFeeModal] = useState(true);
+    const [errorMessage, setErrorMessage] = useState("");
     const [gas, setGas] = useState(config.gas);
     const [fee, setFee] = useState(config.averageFee);
     const [response, setResponse] = useState('');
     const loginMode = localStorage.getItem('loginMode');
+
     useEffect(() => {
         if (props.formData.formName === "withdrawMultiple" || props.formData.formName === "withdrawAddress" || props.formData.formName === "withdrawValidatorRewards" || props.formData.formName === "redelegate" || props.formData.formName === "unbond") {
             if (props.transferableAmount < transactions.XprtConversion(gas * fee)) {
@@ -39,7 +40,6 @@ const ModalGasAlert = (props) => {
                 setCheckAmountError(false);
             }
         }
-
 
         setFee(gas * fee);
     }, []);
@@ -117,14 +117,30 @@ const ModalGasAlert = (props) => {
         setFeeModal(false);
     };
 
-    const handleLedgerSubmit = () => {
+    const handleLedgerSubmit = async () => {
         const loginAddress = localStorage.getItem('address');
-        const response = transactions.TransactionWithLedger([SendMsg(loginAddress, props.formData.toAddress, (props.formData.amount * config.xprtValue), props.formData.denom)], aminoMsgHelper.fee(Math.trunc(fee), gas), props.formData.memo, transactions.makeHdPath(0, 0));
+        let response;
+        if (props.formData.formName === "ibc") {
+            let msg = transactions.MakeIBCTransferMsg(props.formData.channelID, loginAddress,
+                props.formData.toAddress, (props.formData.amount * config.xprtValue), undefined, undefined, props.formData.denom);
+            await msg.then(result => {
+                response = transactions.TransactionWithMnemonic([result],
+                    aminoMsgHelper.fee(Math.trunc(props.fee), props.gas), props.formData.memo, "",
+                    transactions.makeHdPath(0, 0), "");
+            }).catch(err => {
+                setErrorMessage(err.response
+                    ? err.response.data.message
+                    : err.message);
+            });
+        } else {
+            response = transactions.getTransactionResponse(loginAddress, props.formData, props.fee, props.gas, "", 0, 0);
+        }
+
         response.then(result => {
             setResponse(result);
             console.log(result);
         }).catch(err => {
-            console.log(err.response
+            setErrorMessage(err.response
                 ? err.response.data.message
                 : err.message);
         });
@@ -233,6 +249,11 @@ const ModalGasAlert = (props) => {
                             </div>
                             : ""
                         }
+                        {
+                            errorMessage !== "" ?
+                                <p className="form-error">{errorMessage}</p>
+                                : null
+                        }
                         <div className="buttons">
                             <button className="button button-primary" disabled={gasValidationError}
                                 onClick={loginMode === "normal" ? handleNext : handleLedgerSubmit}>{loginMode === "normal" ? t("NEXT") : t("SUBMIT")}</button>
@@ -240,7 +261,7 @@ const ModalGasAlert = (props) => {
                     </Modal.Body>
                 </> : ""
             }
-            { showDecryptModal ?
+            {showDecryptModal ?
                 <ModalDecryptKeyStore
                     formData={props.formData}
                     fee={fee}
@@ -253,9 +274,9 @@ const ModalGasAlert = (props) => {
             }
             {response !== '' ?
                 <ModalViewTxnResponse
-                    response = {response}
-                    successMsg = {props.formData.successMsg}
-                    failedMsg = {props.formData.failedMsg}
+                    response={response}
+                    successMsg={props.formData.successMsg}
+                    failedMsg={props.formData.failedMsg}
                     handleClose={props.handleClose}
                 />
                 : null}
