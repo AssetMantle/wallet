@@ -3,10 +3,6 @@ import {
     Modal,
 } from "react-bootstrap";
 import Icon from "../../components/Icon";
-// import {useHistory} from "react-router-dom";
-// import config from "../../config";
-// import MakePersistence from "../../utils/cosmosjsWrapper";
-// import helper from "../../utils/helper";
 import config from "../../config";
 import {useTranslation} from "react-i18next";
 import {fetchAddress} from "../../utils/ledger";
@@ -34,7 +30,7 @@ const LedgerLogin = (props) => {
         if(ledgerAddress !== ''){
             localStorage.setItem('loginToken', 'loggedIn');
             localStorage.setItem('address', ledgerAddress);
-            localStorage.setItem('loginMode', 'normal');
+            localStorage.setItem('loginMode', 'ledger');
             localStorage.setItem('version', config.version);
             history.push('/dashboard/wallet');
         }
