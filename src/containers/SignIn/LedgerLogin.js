@@ -17,7 +17,6 @@ const LedgerLogin = (props) => {
     useEffect(() => {
         let ledgerResponse = fetchAddress();
         ledgerResponse.then(function (result) {
-            console.log(result, "address");
             setLedgerAddress(result);
         }).catch(err => {
             setErrorMessage(err.response
@@ -62,17 +61,25 @@ const LedgerLogin = (props) => {
                 {
                     errorMessage !== "" ?
                         <p className="form-error">{errorMessage}</p>
-                        : null
-                }
-                {
-                    ledgerAddress !== ""
-                        ?
-                        <p>{ledgerAddress}</p>
-                        : <p className="fetching">Fetching Address </p>
+                        :
+                        <>
+                            {
+                                ledgerAddress !== ""
+                                    ?
+                                    <div className="buttons-list">
+                                        <p>{ledgerAddress}</p>
+                                        <button className="button button-primary" onClick={() => handleRoute()}>Continue
+                                        </button>
+                                    </div>
+                                    :
+                                    <p className="fetching">Fetching Address</p>
 
+                            }
+
+                        </>
                 }
-                <button className="button button-primary" onClick={() => handleRoute()}>Continue
-                </button>
+
+
             </div>
         </Modal>
     );

@@ -1,3 +1,5 @@
+import React from "react";
+
 let English = {
     translations: {
         "HOME_PAGE_TEXT": "Securely store, transfer and stake your XPRT tokens with the Persistence Wallet",
@@ -239,6 +241,15 @@ let English = {
         "DELEGATIONS":"Delegations",
         "VALIDATOR":"Validator",
         "AVAILABLE_REWARDS":"Available Rewards",
+        "RECEIVED_IBC_TOKENS":"Tokens received via IBC",
+        "VIEW":"View",
+        "VIEW_UNBOND_SCHEDULE":"View Unbonding XPRT Schedule",
+        "UNBONDING_AMOUNT":"Unbonding Amount",
+        "DATE":"Date",
+        "VESTING_SCHEDULE":"Vesting Schedule",
+        "UNLOCKING_TOKENS":"Unlocking Tokens",
+        "FROM_DATE":"From Date",
+        "TO_DATE":"To Date",
 
     }
 };

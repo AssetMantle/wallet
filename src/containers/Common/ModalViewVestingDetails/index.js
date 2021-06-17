@@ -6,8 +6,10 @@ import {Table} from "react-bootstrap";
 import moment from "moment";
 import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/auth/v1beta1/query";
 import * as vesting_1 from "@cosmjs/stargate/build/codec/cosmos/vesting/v1beta1/vesting";
+import {useTranslation} from "react-i18next";
 
 const ModalViewVestingDetails = () => {
+    const {t} = useTranslation();
     const [show, setShow] = useState(false);
     const [showContinuesVesting, setShowContinuesVesting] = useState(false);
     const [showPeriodicVesting, setShowPeriodicVesting] = useState(false);
@@ -62,7 +64,7 @@ const ModalViewVestingDetails = () => {
                 onHide={handleClose}>
                 <Modal.Header className="result-header" closeButton>
                     <h3 className="heading">
-                        Vesting Schedule
+                        {t("VESTING_SCHEDULE")}
                     </h3>
                 </Modal.Header>
                 <Modal.Body className="faq-modal-body">
@@ -72,9 +74,9 @@ const ModalViewVestingDetails = () => {
                                 <Table borderless>
                                     <thead>
                                         <tr>
-                                            <th>Unlocking Tokens</th>
-                                            <th>From Date</th>
-                                            <th>To Date</th>
+                                            <th>{t("UNLOCKING_TOKENS")}</th>
+                                            <th>{t("FROM_DATE")}</th>
+                                            <th>{t("TO_DATE")}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -100,8 +102,8 @@ const ModalViewVestingDetails = () => {
                                         <Table borderless>
                                             <thead>
                                                 <tr>
-                                                    <th>Unlocking Tokens</th>
-                                                    <th>Date</th>
+                                                    <th>{t("UNLOCKING_TOKENS")}</th>
+                                                    <th>{t("DATE")}</th>
                                                 </tr>
                                             </thead>
                                             {
@@ -135,8 +137,8 @@ const ModalViewVestingDetails = () => {
                                 <Table borderless>
                                     <thead>
                                         <tr>
-                                            <th>Unlocking Tokens</th>
-                                            <th>Date</th>
+                                            <th>{t("UNLOCKING_TOKENS")}</th>
+                                            <th>{t("DATE")}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -154,7 +156,7 @@ const ModalViewVestingDetails = () => {
 
                 </Modal.Body>
             </Modal>
-            <span className="view-button" onClick={handleModal} title="View Vesting Schedule">View</span>
+            <span className="view-button" onClick={handleModal} title="View Vesting Schedule">{t("VIEW")}</span>
         </>
 
     );
