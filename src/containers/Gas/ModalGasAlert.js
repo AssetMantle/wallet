@@ -11,7 +11,6 @@ import Icon from "../../components/Icon";
 import ModalDecryptKeyStore from "../KeyStore/ModalDecryptKeystore";
 import {SendMsg} from "../../utils/protoMsgHelper";
 import aminoMsgHelper from "../../utils/aminoMsgHelper";
-import helper from "../../utils/helper";
 
 const ModalGasAlert = (props) => {
     const {t} = useTranslation();
@@ -120,7 +119,7 @@ const ModalGasAlert = (props) => {
 
     const handleLedgerSubmit = () => {
         const loginAddress = localStorage.getItem('address');
-        const response = transactions.TransactionWithLedger([SendMsg(loginAddress, props.formData.toAddress, (props.formData.amount * config.xprtValue), props.formData.denom)], aminoMsgHelper.fee(Math.trunc(props.fee), props.gas), props.formData.memo, transactions.makeHdPath(0, 0), "");
+        const response = transactions.TransactionWithLedger([SendMsg(loginAddress, props.formData.toAddress, (props.formData.amount * config.xprtValue), props.formData.denom)], aminoMsgHelper.fee(Math.trunc(fee), gas), props.formData.memo, transactions.makeHdPath(0, 0));
         response.then(result => {
             console.log(result);
         }).catch(err => {

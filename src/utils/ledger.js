@@ -40,7 +40,7 @@ export const doTx = async (transport) => {
         prefix: "persistence"
     });
     const [firstAccount] = await signer.getAccounts();
-    console.log(firstAccount, "address", "persistence18qr36nfyhferhpl6alwa8pdvxt4pr5g5jetv82");
+    console.log(firstAccount, "address", "persistence15pc0lktktdj37dw0rqjsptpqnhqvxhfydva96r");
     const client = await SigningStargateClient.connectWithSigner(RPCURL, signer);
     const fee = {
         amount: coins(100, "uxprt"),
@@ -49,7 +49,7 @@ export const doTx = async (transport) => {
 
     const result = await client.signAndBroadcast(
         firstAccount.address,
-        [SendMsg(firstAccount.address,"persistence18qr36nfyhferhpl6alwa8pdvxt4pr5g5jetv82",1221,"uxprt" )],fee,"ledger Tx",
+        [SendMsg(firstAccount.address,"persistence15pc0lktktdj37dw0rqjsptpqnhqvxhfydva96r",1221,"uxprt" )],fee,"ledger Tx",
     );
     assertIsBroadcastTxSuccessStargate(result);
     console.log(result, "final result ");
