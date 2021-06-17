@@ -95,7 +95,7 @@ function validatePassphrase(value) {
 
 }
 
-function validateAddress(prefix="persistence1", address) {
+function validateAddress(address,prefix="persistence1") {
     if(prefix === "cosmos"){
         return address.startsWith(prefix) && address.length === 45;
     }else {

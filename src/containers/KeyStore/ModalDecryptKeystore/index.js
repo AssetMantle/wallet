@@ -158,7 +158,7 @@ const ModalDecryptKeyStore = (props) => {
                         }).catch(err => {
                             console.log(err.response
                                 ? err.response.data.message
-                                : err.message, "let se");
+                                : err.message);
                             setLoader(false);
                             setErrorMessage(err.message);
                         });

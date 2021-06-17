@@ -6,6 +6,8 @@ import helper from "./helper";
 import Long from "long";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient} from "@cosmjs/stargate";
+import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
+import {LedgerSigner} from "@cosmjs/ledger-amino";
 
 const encoding = require("@cosmjs/encoding");
 const tendermint_1 = require("@cosmjs/stargate/build/codec/ibc/lightclients/tendermint/v1/tendermint");
@@ -17,7 +19,7 @@ const configChainID = process.env.REACT_APP_CHAIN_ID;
 const configCoinType = config.coinType;
 const valoperAddressPrefix = config.valoperAddressPrefix;
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
-
+const loginMode = localStorage.getItem('loginMode');
 //TODO take from config and env
 async function Transaction(wallet, signerAddress, msgs, fee, memo = "") {
     const cosmJS = await SigningStargateClient.connectWithSigner(
@@ -39,9 +41,36 @@ async function KeplrWallet(chainID = configChainID) {
     return [offlineSigner, accounts[0].address];
 }
 
-async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(), bip39Passphrase = "", prefix = addressPrefix) {
-    const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix);
+async function TransactionWithLedger(msgs, fee, memo = "",  hdpath = makeHdPath(), prefix = addressPrefix) {
+    const [wallet, address] = await LedgerWallet(hdpath, prefix);
     return Transaction(wallet, address, msgs, fee, memo);
+}
+
+async function LedgerWallet(hdpath, prefix) {
+    const interactiveTimeout = 120_000;
+    async function createTransport() {
+        const ledgerTransport = await TransportWebUSB.create(interactiveTimeout, interactiveTimeout);
+        return ledgerTransport;
+    }
+
+    const transport = await createTransport();
+    const signer = new LedgerSigner(transport, {
+        testModeAllowed: true,
+        hdPaths: [hdpath],
+        prefix: prefix
+    });
+    const [firstAccount] = await signer.getAccounts();
+    return [signer, firstAccount.address];
+}
+
+async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(), bip39Passphrase = "", prefix = addressPrefix) {
+    if(loginMode === "normal"){
+        const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix);
+        return Transaction(wallet, address, msgs, fee, memo);
+    }else {
+        const [wallet, address] = await LedgerWallet(hdpath, prefix);
+        return Transaction(wallet, address, msgs, fee, memo);
+    }
 }
 
 // TODO remove this function; use MnemonicWallet instead.
@@ -62,7 +91,7 @@ async function MnemonicWalletWithPassphrase(mnemonic, hdPath = makeHdPath(), pas
 //
 // }
 
-function makeHdPath(accountNumber = "0", addressIndex = "0", coinType = configCoinType) {
+export function makeHdPath(accountNumber = "0", addressIndex = "0", coinType = configCoinType) {
     return stringToPath("m/44'/" + coinType + "'/" + accountNumber + "'/0/" + addressIndex);
 }
 
@@ -149,6 +178,7 @@ function decodeTendermintConsensusStateAny(consensusState) {
     }
     return tendermint_1.ConsensusState.decode(consensusState.value);
 }
+
 async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp = config.timeoutTimestamp, denom = "uxprt", port = "transfer") {
     const tendermintClient = await tmRPC.Tendermint34Client.connect(tendermintRPCURL);
     const queryClient = new QueryClient(tendermintClient);
@@ -198,6 +228,7 @@ function checkValidatorAccountAddress(validatorAddress, address) {
 export default {
     TransactionWithKeplr,
     TransactionWithMnemonic,
+    TransactionWithLedger,
     makeHdPath,
     getAccountNumberAndSequence,
     updateFee,
