@@ -9,6 +9,9 @@ import transactions from "../../utils/transactions";
 import {connect} from "react-redux";
 import Icon from "../../components/Icon";
 import ModalDecryptKeyStore from "../KeyStore/ModalDecryptKeystore";
+import {SendMsg} from "../../utils/protoMsgHelper";
+import aminoMsgHelper from "../../utils/aminoMsgHelper";
+import helper from "../../utils/helper";
 
 const ModalGasAlert = (props) => {
     const {t} = useTranslation();
@@ -19,17 +22,18 @@ const ModalGasAlert = (props) => {
     const [showDecryptModal, setShowDecryptModal] = useState(false);
     const [gas, setGas] = useState(config.gas);
     const [fee, setFee] = useState(config.averageFee);
+    const loginMode = localStorage.getItem('loginMode');
     useEffect(() => {
-        if(props.formData.formName === "withdrawMultiple" || props.formData.formName === "withdrawAddress" || props.formData.formName === "withdrawValidatorRewards" || props.formData.formName === "redelegate" || props.formData.formName === "unbond"){
-            if(props.transferableAmount < transactions.XprtConversion(gas * fee)){
+        if (props.formData.formName === "withdrawMultiple" || props.formData.formName === "withdrawAddress" || props.formData.formName === "withdrawValidatorRewards" || props.formData.formName === "redelegate" || props.formData.formName === "unbond") {
+            if (props.transferableAmount < transactions.XprtConversion(gas * fee)) {
                 setCheckAmountError(true);
-            }else {
+            } else {
                 setCheckAmountError(false);
             }
         } else {
-            if((props.transferableAmount - (props.formData.amount*1)) < transactions.XprtConversion(gas * fee)){
+            if ((props.transferableAmount - (props.formData.amount * 1)) < transactions.XprtConversion(gas * fee)) {
                 setCheckAmountError(true);
-            }else {
+            } else {
                 setCheckAmountError(false);
             }
         }
@@ -46,10 +50,10 @@ const ModalGasAlert = (props) => {
     };
 
     const handleGasChange = (event) => {
-        if((event.target.value * 1) >= 80000 && (event.target.value * 1) <= 2000000){
+        if ((event.target.value * 1) >= 80000 && (event.target.value * 1) <= 2000000) {
             setGasValidationError(false);
             setGas(event.target.value * 1);
-            if((localStorage.getItem("fee") * 1) !== 0) {
+            if ((localStorage.getItem("fee") * 1) !== 0) {
                 if (activeFeeState === "Average") {
                     setFee((event.target.value * 1) * config.averageFee);
                 } else if (activeFeeState === "High") {
@@ -57,7 +61,7 @@ const ModalGasAlert = (props) => {
                 } else if (activeFeeState === "Low") {
                     setFee((event.target.value * 1) * config.lowFee);
                 }
-                if(amountTxns){
+                if (amountTxns) {
                     if (activeFeeState === "Average" && (transactions.XprtConversion((event.target.value * 1) * config.averageFee)) > props.transferableAmount) {
                         setCheckAmountError(true);
                     } else if (activeFeeState === "High" && (transactions.XprtConversion((event.target.value * 1) * config.highFee)) > props.transferableAmount) {
@@ -67,7 +71,7 @@ const ModalGasAlert = (props) => {
                     } else {
                         setCheckAmountError(false);
                     }
-                }else {
+                } else {
                     if (activeFeeState === "Average" && (transactions.XprtConversion((event.target.value * 1) * config.averageFee)) + props.formData.amount > props.transferableAmount) {
                         setCheckAmountError(true);
                     } else if (activeFeeState === "High" && (transactions.XprtConversion((event.target.value * 1) * config.highFee)) + props.formData.amount > props.transferableAmount) {
@@ -80,7 +84,7 @@ const ModalGasAlert = (props) => {
                 }
 
             }
-        }else {
+        } else {
             setGasValidationError(true);
         }
 
@@ -90,44 +94,52 @@ const ModalGasAlert = (props) => {
     const handleFee = (feeType, feeValue) => {
         setActiveFeeState(feeType);
         setFee(gas * feeValue);
-        if(amountTxns){
-            if (props.transferableAmount  < transactions.XprtConversion(gas * feeValue)) {
+        if (amountTxns) {
+            if (props.transferableAmount < transactions.XprtConversion(gas * feeValue)) {
                 setCheckAmountError(true);
-            }else {
+            } else {
                 setCheckAmountError(false);
             }
-        }else {
-            if ((props.transferableAmount - (props.formData.amount*1)) < transactions.XprtConversion(gas * feeValue)) {
+        } else {
+            if ((props.transferableAmount - (props.formData.amount * 1)) < transactions.XprtConversion(gas * feeValue)) {
                 setCheckAmountError(true);
-            }else {
+            } else {
                 setCheckAmountError(false);
             }
         }
 
     };
 
-    const handleNext = () =>{
-        if(props.formData.formName === "delegate") {
+    const handleNext = () => {
+        if (props.formData.formName === "delegate") {
+            setShowDecryptModal(true);
+        } else {
             setShowDecryptModal(true);
         }
-        else {
-            setShowDecryptModal(true);
-        }
+    };
+
+    const handleLedgerSubmit = () => {
+        const loginAddress = localStorage.getItem('address');
+        const response = transactions.TransactionWithLedger([SendMsg(loginAddress, props.formData.toAddress, (props.formData.amount * config.xprtValue), props.formData.denom)], aminoMsgHelper.fee(Math.trunc(props.fee), props.gas), props.formData.memo, transactions.makeHdPath(0, 0), "");
+        response.then(result => {
+            console.log(result);
+        }).catch(err => {
+            console.log(err.response
+                ? err.response.data.message
+                : err.message);
+        });
     };
 
     const handlePrevious = () => {
-        if(props.formData.formName === "delegate"){
+        if (props.formData.formName === "delegate") {
             props.setFeeModal(false);
             props.setInitialModal(true);
             setCheckAmountError(false);
             setGas(config.gas);
             setFee(config.averageFee);
-        }
-
-        else if(props.formData.formName === "send" || props.formData.formName === "ibc"){
+        } else if (props.formData.formName === "send" || props.formData.formName === "ibc") {
             props.handleClose();
-        }
-        else {
+        } else {
             props.setFeeModal(false);
             props.setInitialModal(true);
         }
@@ -223,7 +235,7 @@ const ModalGasAlert = (props) => {
                         }
                         <div className="buttons">
                             <button className="button button-primary" disabled={gasValidationError}
-                                onClick={() => handleNext()}>{t("NEXT")}</button>
+                                onClick={loginMode === "normal" ? handleNext : handleLedgerSubmit}>{loginMode === "normal" ? t("NEXT") : t("SUBMIT")}</button>
                         </div>
                     </Modal.Body>
                 </> :
