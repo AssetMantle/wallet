@@ -2171,7 +2171,8 @@ html, body {
   padding-top: 15px; }
 
 .validator-limit-warning .amount-warning {
-  padding-top: 10px; }
+  padding-top: 10px;
+  text-align: left; }
 
 /*--------------------------------------------------------------
 # importwallet styles

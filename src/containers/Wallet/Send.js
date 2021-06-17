@@ -181,22 +181,20 @@ const Send = (props) => {
                             required={true}
                         />
                     </div>
-                    {mode === "normal" ?
-                        <div className="form-field">
-                            <p className="label">{t("TOKEN")} </p>
-                            <Select value={token} className="validators-list-selection"
-                                onChange={onChangeSelect} displayEmpty>
-                                {
-                                    <MenuItem
-                                        className=""
-                                        value="uxprt">
-                                            XPRT
-                                    </MenuItem>
-                                }
-                            </Select>
-                        </div>
-                        : null
-                    }
+                    <div className="form-field">
+                        <p className="label">{t("TOKEN")} </p>
+                        <Select value={token} className="validators-list-selection"
+                            onChange={onChangeSelect} displayEmpty>
+                            {
+                                <MenuItem
+                                    className=""
+                                    value="uxprt">
+                                        XPRT
+                                </MenuItem>
+                            }
+                        </Select>
+                    </div>
+
                     <div className="form-field p-0">
                         <p className="label">{t("AMOUNT")}</p>
                         <div className="amount-field">
