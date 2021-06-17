@@ -6,8 +6,10 @@ import Icon from "../../components/Icon";
 import config from "../../config";
 import {useTranslation} from "react-i18next";
 import {fetchAddress} from "../../utils/ledger";
+import {useHistory} from "react-router-dom";
 const LedgerLogin = (props) => {
     const {t} = useTranslation();
+    const history = useHistory();
     const [show, setShow] = useState(true);
     const [ledgerAddress, setLedgerAddress] = useState('');
     useEffect(() => {

@@ -71,7 +71,7 @@ const Send = (props) => {
     const handleSubmit = async event => {
         event.preventDefault();
         if (helper.validateAddress(event.target.address.value)) {
-            if (mode === "normal") {
+            if (mode !== "kepler") {
                 let memo = "";
                 if (memoStatus) {
                     memo = event.target.memo.value;
@@ -181,7 +181,7 @@ const Send = (props) => {
                             required={true}
                         />
                     </div>
-                    {mode === "normal" ?
+                    {mode !== "kepler" ?
                         <div className="form-field">
                             <p className="label">{t("TOKEN")} </p>
                             <Select value={token} className="validators-list-selection"
@@ -231,7 +231,7 @@ const Send = (props) => {
                             <p className={checkAmountError ? "show amount-error text-left" : "hide amount-error text-left"}>{t("AMOUNT_ERROR_MESSAGE")}</p>
                         </div>
                     </div>
-                    {mode === "normal" ?
+                    {mode !== "kepler" ?
                         <>
                             <div className="memo-dropdown-section">
                                 <p onClick={handleMemoChange} className="memo-dropdown"><span
@@ -281,7 +281,7 @@ const Send = (props) => {
                     {keplerError !== '' ?
                         <p className="form-error">{keplerError}</p> : null}
                     <div className="buttons">
-                        {mode === "normal"  ?
+                        {mode !== "kepler"  ?
                             <div className="button-section">
                                 <button className="button button-primary"
                                     disabled={checkAmountError || amountField === 0 || props.transferableAmount === 0}
