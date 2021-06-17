@@ -197,6 +197,7 @@ const ModalDecryptKeyStore = (props) => {
 
     const handlePrevious = () =>{
         props.setShowDecryptModal(false);
+        props.setFeeModal(true);
     };
     return (
         <>
