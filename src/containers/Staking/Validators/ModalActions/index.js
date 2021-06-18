@@ -133,7 +133,7 @@ const ModalActions = (props) => {
 
                                 {active ?
                                     <button
-                                        onClick={() => handleModal('Delegate', props.validator.operator_address, props.validator.description.moniker)}
+                                        onClick={() => handleModal('Delegate', props.validator.operatorAddress, props.validator.description.moniker)}
                                         className="button button-primary">
                                         {t("DELEGATE")}
                                     </button>
