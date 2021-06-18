@@ -108,7 +108,7 @@ export const GlobalStyles = createGlobalStyle`
     .fee{
      color: ${({theme}) => theme.infoHeadingColor};
     }
-    .validators-list-selection{
+    .validators-list-selection, .copy-section .copy-result{
       color: #8D9CB5 !important;
     }
     .form-control, .validators-list-selection, .claim-rewards-modal .rewards-modal-body input, .rewards-validators-list > div > div:nth-child(2), .rewards-validators-list > div button{
