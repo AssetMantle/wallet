@@ -24,6 +24,7 @@ export const lightTheme = {
     noteFontColor:'#2E3239',
     copyIconColor:'#2E3239',
     feeBoxBackground:'#ffffff',
+    selectIconColor:'rgba(0, 0, 0, 0.54)'
 };
 
 export const darkTheme = {
@@ -52,4 +53,5 @@ export const darkTheme = {
     noteFontColor:'#e50913a1',
     copyIconColor:'#8D9CB5',
     feeBoxBackground:'#2e3239',
+    selectIconColor:'#94979b'
 };

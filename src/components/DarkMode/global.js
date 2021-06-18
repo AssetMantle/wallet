@@ -109,11 +109,25 @@ export const GlobalStyles = createGlobalStyle`
      color: ${({theme}) => theme.infoHeadingColor};
     }
     .validators-list-selection{
-     color: ${({theme}) => theme.lineValueColor};
+      color: #8D9CB5 !important;
     }
     .form-control, .validators-list-selection, .claim-rewards-modal .rewards-modal-body input, .rewards-validators-list > div > div:nth-child(2), .rewards-validators-list > div button{
         background-color: ${({theme}) => theme.inputBackground} !important;
     }
+    
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active
+    {
+      -webkit-box-shadow: 0 0 0 30px ${({theme}) => theme.inputBackground}  inset !important;
+    }
+    
+    input:-webkit-autofill
+    {
+      -webkit-text-fill-color: #8D9CB5 !important;
+    }
+
     .rewards-validators-list > div button{
      color: #8D9CB5 !important;
     }
@@ -129,7 +143,6 @@ export const GlobalStyles = createGlobalStyle`
     .rewards-validators-list > div > div:nth-child(2) > div > div{
      color: #8D9CB5 !important;
     }
-    #8D9CB5
     .list-modal-body .unbonding-schedule-list p{
       color: ${({theme}) => theme.infoHeadingColor};
     }   
@@ -139,7 +152,7 @@ export const GlobalStyles = createGlobalStyle`
     .refresh-button svg{
         fill:${({theme}) => theme.refreshButtonColor} !important;
     }
-    .form-field .info-data .value, .fee-alert, .fee-title{
+    .form-field .info-data .value, .fee-alert, .fee-title, .form-field .info-data{
      color: ${({theme}) => theme.lineValueColor};
     }
     .wallet-main-section .receive-container .address{
@@ -202,6 +215,9 @@ export const GlobalStyles = createGlobalStyle`
     }
     .sidebar-section, .sidebar-container .MuiPaper-root{
     background: ${({theme}) => theme.bodyBackground};
+    }
+    .MuiSelect-icon{
+    fill:${({theme}) => theme.selectIconColor} !important;
     }
 `;
 

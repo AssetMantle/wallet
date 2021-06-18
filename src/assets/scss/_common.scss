@@ -258,7 +258,7 @@ html, body {
     color: #e50a2a;
   }
 
-  textarea {
+  textarea, textarea:focus {
     background: #F5F6FA;
     font-size: 14px;
     border-radius: 0;
@@ -687,3 +687,4 @@ html, body {
   text-decoration: underline;
   text-decoration-color: #8D9CB5;
 }
+
