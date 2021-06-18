@@ -66,7 +66,11 @@ const SendTransactions = (props) => {
                 target="_blank" className="tx-hash" rel="noopener noreferrer">
                 {helper.stringTruncate(stxn.txhash)}
             </a>,
-            <span key={index} className="type">{(stxn.tx.body.messages[0]["@type"]).substr((stxn.tx.body.messages[0]["@type"]).indexOf('v1beta1.') + 11)}</span>,
+            (stxn.tx.body.messages[0]["@type"] === "/ibc.applications.transfer.v1.MsgTransfer") ?
+                <span key={index} className="type">{(stxn.tx.body.messages[0]["@type"]).substr((stxn.tx.body.messages[0]["@type"]).indexOf('/')+1)}</span>
+                :
+                <span key={index} className="type">{(stxn.tx.body.messages[0]["@type"]).substr((stxn.tx.body.messages[0]["@type"]).indexOf('v1beta1.') + 11)}</span>
+            ,
             <div key={index} className="result">
                 <span className="icon-box success">
                     <Icon

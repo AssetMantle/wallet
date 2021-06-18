@@ -111,13 +111,29 @@ export const GlobalStyles = createGlobalStyle`
     .validators-list-selection{
      color: ${({theme}) => theme.lineValueColor};
     }
-    .form-control, .validators-list-selection, .claim-rewards-modal .rewards-modal-body input{
+    .form-control, .validators-list-selection, .claim-rewards-modal .rewards-modal-body input, .rewards-validators-list > div > div:nth-child(2), .rewards-validators-list > div button{
         background-color: ${({theme}) => theme.inputBackground} !important;
     }
+    .rewards-validators-list > div button{
+     color: #8D9CB5 !important;
+    }
+    .rewards-validators-list > div > div > div > div:first-child, .rewards-validators-list > div > div > div > div:first-child:hover{
+       background-color: ${({theme}) => theme.inputBackground} !important;
+        border-color:${({theme}) => theme.inputBackground} !important;
+    }
+    .rewards-validators-list > div > div:nth-child(2) div:first-child input{
+     color: #8D9CB5 !important;
+     background-color: #F5F6FA !important;
+     border-color:#F5F6FA !important;
+    }
+    .rewards-validators-list > div > div:nth-child(2) > div > div{
+     color: #8D9CB5 !important;
+    }
+    #8D9CB5
     .list-modal-body .unbonding-schedule-list p{
       color: ${({theme}) => theme.infoHeadingColor};
     }   
-    .claim-rewards-modal .rewards-modal-body .available-tokens .tokens{
+    .claim-rewards-modal .rewards-modal-body .available-tokens .tokens, .result-container p{
      color: ${({theme}) => theme.lineValueColor};
     }
     .refresh-button svg{

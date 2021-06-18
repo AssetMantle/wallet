@@ -20,7 +20,7 @@ const ModalGasAlert = (props) => {
     const [gas, setGas] = useState(config.gas);
     const [fee, setFee] = useState(config.averageFee);
     useEffect(() => {
-        if(props.formData.formName === "withdrawMultiple" || props.formData.formName === "withdrawAddress" || props.formData.formName === "withdrawValidatorRewards" || props.formData.formName === "redelegate" || props.formData.formName === "unbond"){
+        if(props.formData.formName === "withdrawMultiple" || props.formData.formName === "withdrawAddress" || props.formData.formName === "withdrawValidatorRewards" || props.formData.formName === "redelegate" || props.formData.formName === "unbond" || props.formData.formName === "delegate"){
             if(props.transferableAmount < transactions.XprtConversion(gas * fee)){
                 setCheckAmountError(true);
             }else {
@@ -39,7 +39,7 @@ const ModalGasAlert = (props) => {
     }, []);
 
     const amountTxns = (
-        props.formData.formName === "withdrawMultiple" || props.formData.formName === "withdrawAddress" || props.formData.formName === "withdrawValidatorRewards" || props.formData.formName === "redelegate" || props.formData.formName === "unbond"
+        props.formData.formName === "withdrawMultiple" || props.formData.formName === "withdrawAddress" || props.formData.formName === "withdrawValidatorRewards" || props.formData.formName === "redelegate" || props.formData.formName === "unbond" || props.formData.formName === "delegate"
     );
     const handleGas = () => {
         setShowGasField(!showGasField);
@@ -222,7 +222,7 @@ const ModalGasAlert = (props) => {
                             : ""
                         }
                         <div className="buttons">
-                            <button className="button button-primary" disabled={gasValidationError}
+                            <button className="button button-primary" disabled={gasValidationError || checkAmountError}
                                 onClick={() => handleNext()}>{t("NEXT")}</button>
                         </div>
                     </Modal.Body>

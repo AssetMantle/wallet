@@ -13,7 +13,7 @@
   "defaultFee": "5000",
   "vestingAccountFee": "0",
   "modeType": "sync",
-  "version": "v0.1.6",
+  "version": "v0.1.7",
   "timeoutTimestamp": 1000,
   "ibcRevisionHeightIncrement": 1000000,
   "channels": [
