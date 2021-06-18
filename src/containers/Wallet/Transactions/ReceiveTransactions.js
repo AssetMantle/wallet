@@ -58,8 +58,6 @@ const ReceiveTransactions = (props) => {
         search:false,
         viewColumns:false,
     };
-    console.log(props.list, "EDe");
-
     const tableData = props.list && props.list.length > 0
         ?
         props.list.map((stxn, index) => [
