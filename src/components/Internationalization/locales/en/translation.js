@@ -1,5 +1,3 @@
-import React from "react";
-
 let English = {
     translations: {
         "HOME_PAGE_TEXT": "Securely store, transfer and stake your XPRT tokens with the Persistence Wallet",
@@ -250,6 +248,7 @@ let English = {
         "UNLOCKING_TOKENS":"Unlocking Tokens",
         "FROM_DATE":"From Date",
         "TO_DATE":"To Date",
+        "CONTINUE_WITH_LEDGER":"Continue With Ledger"
 
     }
 };
