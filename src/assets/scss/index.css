@@ -190,7 +190,7 @@ html, body {
       color: #2E3239; }
   .form-field .info-data.empty {
     color: #e50a2a; }
-  .form-field textarea {
+  .form-field textarea, .form-field textarea:focus {
     background: #F5F6FA;
     font-size: 14px;
     border-radius: 0;
@@ -1677,7 +1677,8 @@ html, body {
         line-height: 180%;
         text-align: center;
         margin: 0;
-        padding: 10px 0; }
+        padding: 10px 0;
+        cursor: pointer; }
         .header .profile-section .profile-dropdown .dropdown-menu .dropdown-footer p:first-child {
           border-right: 1px solid; }
 
