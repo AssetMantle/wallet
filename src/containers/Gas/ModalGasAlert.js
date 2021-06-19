@@ -19,14 +19,22 @@ const ModalGasAlert = (props) => {
     const [showDecryptModal, setShowDecryptModal] = useState(false);
     const [gas, setGas] = useState(config.gas);
     const [fee, setFee] = useState(config.averageFee);
+    const accountType = localStorage.getItem('account');
     useEffect(() => {
-        if(props.formData.formName === "withdrawMultiple" || props.formData.formName === "withdrawAddress" || props.formData.formName === "withdrawValidatorRewards" || props.formData.formName === "redelegate" || props.formData.formName === "unbond" || props.formData.formName === "delegate"){
+        if(props.formData.formName === "withdrawMultiple" || props.formData.formName === "withdrawAddress" || props.formData.formName === "withdrawValidatorRewards" || props.formData.formName === "redelegate" || props.formData.formName === "unbond"){
             if(props.transferableAmount < transactions.XprtConversion(gas * fee)){
                 setCheckAmountError(true);
             }else {
                 setCheckAmountError(false);
             }
-        } else {
+        }else if(accountType === "vesting" && props.formData.formName === "delegate"){
+            if(props.transferableAmount < transactions.XprtConversion(gas * fee)){
+                setCheckAmountError(true);
+            }else {
+                setCheckAmountError(false);
+            }
+        }
+        else {
             if((props.transferableAmount - (props.formData.amount*1)) < transactions.XprtConversion(gas * fee)){
                 setCheckAmountError(true);
             }else {
@@ -39,7 +47,11 @@ const ModalGasAlert = (props) => {
     }, []);
 
     const amountTxns = (
-        props.formData.formName === "withdrawMultiple" || props.formData.formName === "withdrawAddress" || props.formData.formName === "withdrawValidatorRewards" || props.formData.formName === "redelegate" || props.formData.formName === "unbond" || props.formData.formName === "delegate"
+        props.formData.formName === "withdrawMultiple" || props.formData.formName === "withdrawAddress" || props.formData.formName === "withdrawValidatorRewards" || props.formData.formName === "redelegate" || props.formData.formName === "unbond"
+    );
+
+    const vestingDelegationCheck = (
+        accountType === "vesting" && props.formData.formName === "delegate"
     );
     const handleGas = () => {
         setShowGasField(!showGasField);
@@ -57,7 +69,7 @@ const ModalGasAlert = (props) => {
                 } else if (activeFeeState === "Low") {
                     setFee((event.target.value * 1) * config.lowFee);
                 }
-                if(amountTxns){
+                if(amountTxns || vestingDelegationCheck){
                     if (activeFeeState === "Average" && (transactions.XprtConversion((event.target.value * 1) * config.averageFee)) > props.transferableAmount) {
                         setCheckAmountError(true);
                     } else if (activeFeeState === "High" && (transactions.XprtConversion((event.target.value * 1) * config.highFee)) > props.transferableAmount) {
@@ -90,7 +102,7 @@ const ModalGasAlert = (props) => {
     const handleFee = (feeType, feeValue) => {
         setActiveFeeState(feeType);
         setFee(gas * feeValue);
-        if(amountTxns){
+        if(amountTxns || vestingDelegationCheck){
             if (props.transferableAmount  < transactions.XprtConversion(gas * feeValue)) {
                 setCheckAmountError(true);
             }else {
