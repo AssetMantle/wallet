@@ -10,6 +10,7 @@
 
 # production
 /build
+.idea
 .env
 .cred
 .sass-cache
