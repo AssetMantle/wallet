@@ -125,7 +125,7 @@ const ModalGasAlert = (props) => {
                 props.formData.toAddress, (props.formData.amount * config.xprtValue), undefined, undefined, props.formData.denom);
             await msg.then(result => {
                 response = transactions.TransactionWithMnemonic([result],
-                    aminoMsgHelper.fee(Math.trunc(props.fee), props.gas), props.formData.memo, "",
+                    aminoMsgHelper.fee(Math.trunc(fee), gas), props.formData.memo, "",
                     transactions.makeHdPath(0, 0), "");
             }).catch(err => {
                 setErrorMessage(err.response
@@ -133,13 +133,15 @@ const ModalGasAlert = (props) => {
                     : err.message);
             });
         } else {
-            response = transactions.getTransactionResponse(loginAddress, props.formData, props.fee, props.gas, "", 0, 0);
+            response = transactions.getTransactionResponse(loginAddress, props.formData, fee, gas, "", 0, 0);
         }
 
         response.then(result => {
             setResponse(result);
             console.log(result);
+            setFeeModal(false);
         }).catch(err => {
+            setFeeModal(false);
             setErrorMessage(err.response
                 ? err.response.data.message
                 : err.message);
