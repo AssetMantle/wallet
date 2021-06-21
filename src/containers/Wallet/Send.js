@@ -106,18 +106,24 @@ const Send = (props) => {
     const handleSubmitKepler = event => {
         setLoader(true);
         event.preventDefault();
-        const response = transactions.TransactionWithKeplr([SendMsg(loginAddress, event.target.address.value, (amountField * config.xprtValue), tokenDenom)], aminoMsgHelper.fee(0, 250000));
-        response.then(result => {
-            if (result.code !== undefined) {
-                helper.accountChangeCheck(result.rawLog);
-            }
-            setTxResponse(result);
+        if (helper.validateAddress(event.target.address.value)) {
+            const response = transactions.TransactionWithKeplr([SendMsg(loginAddress, event.target.address.value, (amountField * config.xprtValue), tokenDenom)], aminoMsgHelper.fee(0, 250000));
+            response.then(result => {
+                if (result.code !== undefined) {
+                    helper.accountChangeCheck(result.rawLog);
+                }
+                setTxResponse(result);
+                setLoader(false);
+            }).catch(err => {
+                setLoader(false);
+                setKeplerError(err.message);
+                helper.accountChangeCheck(err.message);
+            });
+        }
+        else {
             setLoader(false);
-        }).catch(err => {
-            setLoader(false);
-            setKeplerError(err.message);
-            helper.accountChangeCheck(err.message);
-        });
+            setKeplerError("Invalid Recipient Address");
+        }
     };
 
     if (loader) {
@@ -181,22 +187,20 @@ const Send = (props) => {
                             required={true}
                         />
                     </div>
-                    {mode !== "kepler" ?
-                        <div className="form-field">
-                            <p className="label">{t("TOKEN")} </p>
-                            <Select value={token} className="validators-list-selection"
-                                onChange={onChangeSelect} displayEmpty>
-                                {
-                                    <MenuItem
-                                        className=""
-                                        value="uxprt">
-                                            XPRT
-                                    </MenuItem>
-                                }
-                            </Select>
-                        </div>
-                        : null
-                    }
+                    <div className="form-field">
+                        <p className="label">{t("TOKEN")} </p>
+                        <Select value={token} className="validators-list-selection"
+                            onChange={onChangeSelect} displayEmpty>
+                            {
+                                <MenuItem
+                                    className=""
+                                    value="uxprt">
+                                        XPRT
+                                </MenuItem>
+                            }
+                        </Select>
+                    </div>
+
                     <div className="form-field p-0">
                         <p className="label">{t("AMOUNT")}</p>
                         <div className="amount-field">

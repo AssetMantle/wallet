@@ -258,7 +258,7 @@ html, body {
     color: #e50a2a;
   }
 
-  textarea {
+  textarea, textarea:focus {
     background: #F5F6FA;
     font-size: 14px;
     border-radius: 0;
@@ -686,6 +686,14 @@ html, body {
   cursor: pointer;
   text-decoration: underline;
   text-decoration-color: #8D9CB5;
+}
+
+.string-truncate{
+  width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
 }
 
 .fetching:after {

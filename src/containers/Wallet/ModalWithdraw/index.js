@@ -224,7 +224,7 @@ const ModalWithdraw = (props) => {
                                 <div className="form-field p-0">
                                     <p className="label"></p>
                                     <div className="validator-limit-warning">
-                                        <p className="amount-warning">{multiSelectWarning ? "Warning: Select below 3 validators to claim" : ""}</p>
+                                        <p className="amount-warning">{multiSelectWarning ? "Warning:  Recommend 3 or fewer validators to avoid potential issues." : ""}</p>
                                     </div>
                                 </div>
                                 {mode === "normal" ?

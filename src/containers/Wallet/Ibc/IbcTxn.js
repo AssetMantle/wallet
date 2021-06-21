@@ -121,8 +121,6 @@ const IbcTxn = (props) => {
             return ;
         }
         let inputChannelID = customChain ? event.target.channel.value : channelID;
-        console.log(inputChannelID, loginAddress,
-            event.target.address.value);
         let msg =  transactions.MakeIBCTransferMsg(inputChannelID, loginAddress,
             event.target.address.value,(amountField * config.xprtValue), undefined, undefined, tokenDenom);
         await msg.then(result => {
@@ -178,7 +176,7 @@ const IbcTxn = (props) => {
         else {
             props.tokenList.forEach((item) => {
                 if(evt.target.value === item.denomTrace){
-                    setTokenDenom(item.denom.baseDenom);
+                    setTokenDenom(evt.target.value);
                     setTransferableAmount(transactions.XprtConversion(item.amount * 1));
                     setTokenItem(item);
                 }
@@ -329,7 +327,6 @@ const IbcTxn = (props) => {
                             }
                         </Select>
                     </div>
-
                     <div className="form-field p-0">
                         <p className="label">{t("AMOUNT")}</p>
                         <div className="amount-field">

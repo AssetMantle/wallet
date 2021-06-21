@@ -66,7 +66,11 @@ const SendTransactions = (props) => {
                 target="_blank" className="tx-hash" rel="noopener noreferrer">
                 {helper.stringTruncate(stxn.txhash)}
             </a>,
-            <span key={index} className="type">{(stxn.tx.body.messages[0]["@type"]).substr((stxn.tx.body.messages[0]["@type"]).indexOf('v1beta1.') + 11)}</span>,
+            (stxn.tx.body.messages[0]["@type"] === "/ibc.applications.transfer.v1.MsgTransfer") ?
+                <span key={index} className="type">{(stxn.tx.body.messages[0]["@type"]).substr((stxn.tx.body.messages[0]["@type"]).indexOf('/')+1)}</span>
+                :
+                <span key={index} className="type">{(stxn.tx.body.messages[0]["@type"]).substr((stxn.tx.body.messages[0]["@type"]).indexOf('v1beta1.') + 11)}</span>
+            ,
             <div key={index} className="result">
                 <span className="icon-box success">
                     <Icon
@@ -77,19 +81,19 @@ const SendTransactions = (props) => {
             (stxn.tx.body.messages[0].amount !== undefined && stxn.tx.body.messages[0].amount.length) ?
                 <div key={index} className="amount">
                     {stxn.tx.body.messages[0].amount[0].amount}
-                    {stxn.tx.body.messages[0].amount[0].denom}
+                    <span className="string-truncate" title={stxn.tx.body.messages[0].amount[0].denom}>{stxn.tx.body.messages[0].amount[0].denom}</span>
                 </div>
                 :
                 (stxn.tx.body.messages[0].amount !== undefined && stxn.tx.body.messages[0].amount) ?
                     <div key={index} className="amount">
                         {stxn.tx.body.messages[0].amount.amount}
-                        {stxn.tx.body.messages[0].amount.denom}
+                        <span className="string-truncate" title={stxn.tx.body.messages[0].amount.denom}>{stxn.tx.body.messages[0].amount.denom}</span>
                     </div>
                     :
                     (stxn.logs[0].events.find(event => event.type === 'transfer') !== undefined) ?
                         (stxn.logs[0].events.find(event => event.type === 'transfer').attributes.find(item => item.key === 'amount') !== undefined) ?
                             <div key={index} className="amount">
-                                {stxn.logs[0].events.find(event => event.type === 'transfer').attributes.find(item => item.key === 'amount').value}
+                                <span className="string-truncate" title={stxn.logs[0].events.find(event => event.type === 'transfer').attributes.find(item => item.key === 'amount').value}>{stxn.logs[0].events.find(event => event.type === 'transfer').attributes.find(item => item.key === 'amount').value}</span>
                             </div>
                             : ''
                         : '',

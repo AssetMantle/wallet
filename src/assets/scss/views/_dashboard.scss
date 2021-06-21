@@ -332,7 +332,10 @@
         .type {
           color: #8D9CB5;
         }
-
+        .amount{
+          display: flex;
+          align-items: center;
+        }
         .amount, .fee, .time {
           font-family: 'Poppins', sans-serif;
           font-weight: 500;
@@ -578,7 +581,7 @@
             text-align: center;
             margin: 0;
             padding: 10px 0;
-
+            cursor: pointer;
             &:first-child {
               border-right: 1px solid;
             }
@@ -1356,5 +1359,6 @@
 .validator-limit-warning {
   .amount-warning {
     padding-top: 10px;
+    text-align: left;
   }
 }
