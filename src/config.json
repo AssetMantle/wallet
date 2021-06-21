@@ -15,7 +15,7 @@
   "modeType": "sync",
   "version": "v0.1.7",
   "timeoutTimestamp": 1000,
-  "ibcRevisionHeightIncrement": 1000000,
+  "ibcRevisionHeightIncrement": 1000,
   "channels": [
     {
         "name": "cosmos",

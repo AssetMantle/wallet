@@ -11,6 +11,11 @@
       "name": "cosmos",
       "id": "cosmos/channel-1",
       "port": "transfer"
+    },
+    {
+      "name": "osmosis",
+      "id": "osmosis/channel-6",
+      "port": "transfer"
     }
   ]
 }
