@@ -165,7 +165,7 @@ const IbcTxn = (props) => {
         else {
             props.tokenList.forEach((item) => {
                 if(evt.target.value === item.denomTrace){
-                    setTokenDenom(item.denom.baseDenom);
+                    setTokenDenom(evt.target.value);
                     setTransferableAmount(transactions.XprtConversion(item.amount * 1));
                     setTokenItem(item);
                 }
