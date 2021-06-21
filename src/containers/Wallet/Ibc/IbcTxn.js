@@ -76,7 +76,7 @@ const IbcTxn = (props) => {
             let channel = event.target.channel.value;
             setChannelID(channel);
         }
-        if (mode === "normal") {
+        if (mode !== "kepler") {
             let memo = "";
             if (memoStatus) {
                 memo = event.target.memo.value;
@@ -358,7 +358,7 @@ const IbcTxn = (props) => {
                             }
                         </div>
                     </div>
-                    {mode === "normal" ?
+                    {mode !== "kepler" ?
                         <>
                             <div className="memo-container">
                                 <div className="memo-dropdown-section">
@@ -413,7 +413,7 @@ const IbcTxn = (props) => {
                         : null
                     }
                     <div className="buttons">
-                        {mode === "normal"  ?
+                        {mode !== "kepler"  ?
                             <div className="button-section">
                                 <button className="button button-primary"
                                     disabled={disable || checkAmountError || amountField === 0 || props.transferableAmount === 0}
