@@ -61,36 +61,33 @@ const ModalGasAlert = (props) => {
         if((event.target.value * 1) >= 80000 && (event.target.value * 1) <= 2000000){
             setGasValidationError(false);
             setGas(event.target.value * 1);
-            if((localStorage.getItem("fee") * 1) !== 0) {
-                if (activeFeeState === "Average") {
-                    setFee((event.target.value * 1) * config.averageFee);
-                } else if (activeFeeState === "High") {
-                    setFee((event.target.value * 1) * config.highFee);
-                } else if (activeFeeState === "Low") {
-                    setFee((event.target.value * 1) * config.lowFee);
+            if (activeFeeState === "Average") {
+                setFee((event.target.value * 1) * config.averageFee);
+            } else if (activeFeeState === "High") {
+                setFee((event.target.value * 1) * config.highFee);
+            } else if (activeFeeState === "Low") {
+                setFee((event.target.value * 1) * config.lowFee);
+            }
+            if(amountTxns || vestingDelegationCheck){
+                if (activeFeeState === "Average" && (transactions.XprtConversion((event.target.value * 1) * config.averageFee)) > props.transferableAmount) {
+                    setCheckAmountError(true);
+                } else if (activeFeeState === "High" && (transactions.XprtConversion((event.target.value * 1) * config.highFee)) > props.transferableAmount) {
+                    setCheckAmountError(true);
+                } else if (activeFeeState === "Low" && (transactions.XprtConversion((event.target.value * 1) * config.lowFee)) > props.transferableAmount) {
+                    setCheckAmountError(true);
+                } else {
+                    setCheckAmountError(false);
                 }
-                if(amountTxns || vestingDelegationCheck){
-                    if (activeFeeState === "Average" && (transactions.XprtConversion((event.target.value * 1) * config.averageFee)) > props.transferableAmount) {
-                        setCheckAmountError(true);
-                    } else if (activeFeeState === "High" && (transactions.XprtConversion((event.target.value * 1) * config.highFee)) > props.transferableAmount) {
-                        setCheckAmountError(true);
-                    } else if (activeFeeState === "Low" && (transactions.XprtConversion((event.target.value * 1) * config.lowFee)) > props.transferableAmount) {
-                        setCheckAmountError(true);
-                    } else {
-                        setCheckAmountError(false);
-                    }
-                }else {
-                    if (activeFeeState === "Average" && (transactions.XprtConversion((event.target.value * 1) * config.averageFee)) + props.formData.amount > props.transferableAmount) {
-                        setCheckAmountError(true);
-                    } else if (activeFeeState === "High" && (transactions.XprtConversion((event.target.value * 1) * config.highFee)) + props.formData.amount > props.transferableAmount) {
-                        setCheckAmountError(true);
-                    } else if (activeFeeState === "Low" && (transactions.XprtConversion((event.target.value * 1) * config.lowFee)) + props.formData.amount > props.transferableAmount) {
-                        setCheckAmountError(true);
-                    } else {
-                        setCheckAmountError(false);
-                    }
+            }else {
+                if (activeFeeState === "Average" && (transactions.XprtConversion((event.target.value * 1) * config.averageFee)) + props.formData.amount > props.transferableAmount) {
+                    setCheckAmountError(true);
+                } else if (activeFeeState === "High" && (transactions.XprtConversion((event.target.value * 1) * config.highFee)) + props.formData.amount > props.transferableAmount) {
+                    setCheckAmountError(true);
+                } else if (activeFeeState === "Low" && (transactions.XprtConversion((event.target.value * 1) * config.lowFee)) + props.formData.amount > props.transferableAmount) {
+                    setCheckAmountError(true);
+                } else {
+                    setCheckAmountError(false);
                 }
-
             }
         }else {
             setGasValidationError(true);
