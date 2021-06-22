@@ -141,6 +141,7 @@ const ModalUnbond = (props) => {
                                         placeholder={t("UNBOND_AMOUNT")}
                                         value={enteredAmount}
                                         step="any"
+                                        onKeyPress={helper.inputAmountValidation}
                                         className={amount > props.delegationAmount ? "error-amount-field" : ""}
                                         onChange={handleAmountChange}
                                         required={true}

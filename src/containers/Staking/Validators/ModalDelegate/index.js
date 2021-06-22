@@ -162,6 +162,7 @@ const ModalDelegate = (props) => {
                                         placeholder={t("DELEGATION_AMOUNT")}
                                         value={enteredAmount}
                                         step="any"
+                                        onKeyPress={helper.inputAmountValidation}
                                         className={amount > props.balance ? "error-amount-field" : ""}
                                         onChange={handleAmountChange}
                                         required={true}

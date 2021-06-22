@@ -163,6 +163,18 @@ function ValidateAmount(value){
     return new Error('');
 }
 
+function inputSpaceValidation(e){
+    if (e.key === " ") {
+        e.preventDefault();
+    }
+}
+
+function inputAmountValidation(e){
+    if (e.key === "e" || e.key === "-" || e.key === "+") {
+        e.preventDefault();
+    }
+}
+
 export default {
     randomNum,
     stringTruncate,
@@ -179,5 +191,7 @@ export default {
     mnemonicTrim,
     mnemonicValidation,
     ValidateAmount,
-    validateCosmosAddress
+    validateCosmosAddress,
+    inputSpaceValidation,
+    inputAmountValidation
 };

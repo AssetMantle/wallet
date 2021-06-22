@@ -109,7 +109,7 @@ const IbcTxn = (props) => {
             setKeplerError('');
             setShow(true);
         }
-
+        event.target.reset();
     };
     const handleSubmitKepler = async event => {
         setShow(true);
@@ -142,7 +142,7 @@ const IbcTxn = (props) => {
                 ? err.response.data.message
                 : err.message);
         });
-
+        event.target.reset();
     };
 
     if (loader) {
@@ -261,6 +261,7 @@ const IbcTxn = (props) => {
                                     <Form.Control
                                         type="text"
                                         name="port"
+                                        onKeyPress={helper.inputSpaceValidation}
                                         placeholder={t("ENTER_PORT")}
                                         required={true}
                                         defaultValue="transfer"
@@ -271,6 +272,7 @@ const IbcTxn = (props) => {
                                     <Form.Control
                                         type="text"
                                         name="channel"
+                                        onKeyPress={helper.inputSpaceValidation}
                                         placeholder={t("ENTER_CHANNEL")}
                                         required={true}
                                     />
@@ -293,6 +295,7 @@ const IbcTxn = (props) => {
                         <Form.Control
                             type="text"
                             name="address"
+                            onKeyPress={helper.inputSpaceValidation}
                             placeholder="Enter Recipient's address "
                             required={true}
                         />
@@ -336,6 +339,7 @@ const IbcTxn = (props) => {
                                 name="amount"
                                 placeholder={t("SEND_AMOUNT")}
                                 step="any"
+                                onKeyPress={helper.inputAmountValidation}
                                 className={amountField > props.transferableAmount ? "error-amount-field" : ""}
                                 value={enteredAmount}
                                 onChange={handleAmountChange}

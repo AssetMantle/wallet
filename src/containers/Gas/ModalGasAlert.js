@@ -11,6 +11,7 @@ import Icon from "../../components/Icon";
 import ModalDecryptKeyStore from "../KeyStore/ModalDecryptKeystore";
 import aminoMsgHelper from "../../utils/aminoMsgHelper";
 import ModalViewTxnResponse from "../Common/ModalViewTxnResponse";
+import Loader from "../../components/Loader";
 
 const ModalGasAlert = (props) => {
     const {t} = useTranslation();
@@ -25,6 +26,7 @@ const ModalGasAlert = (props) => {
     const [fee, setFee] = useState(config.averageFee);
     const [response, setResponse] = useState('');
     const loginMode = localStorage.getItem('loginMode');
+    const [loader, setLoader] = useState(false);
 
     const accountType = localStorage.getItem('account');
     useEffect(() => {
@@ -128,7 +130,13 @@ const ModalGasAlert = (props) => {
         setFeeModal(false);
     };
 
+    if (loader) {
+        return <Loader/>;
+    }
+
     const handleLedgerSubmit = async () => {
+        console.log("red");
+        setLoader(true);
         const loginAddress = localStorage.getItem('address');
         let response;
         if (props.formData.formName === "ibc") {
@@ -139,6 +147,7 @@ const ModalGasAlert = (props) => {
                     aminoMsgHelper.fee(Math.trunc(fee), gas), props.formData.memo, "",
                     transactions.makeHdPath(0, 0), "");
             }).catch(err => {
+                setLoader(false);
                 setErrorMessage(err.response
                     ? err.response.data.message
                     : err.message);
@@ -150,9 +159,10 @@ const ModalGasAlert = (props) => {
         response.then(result => {
             setResponse(result);
             console.log(result);
+            setLoader(false);
             setFeeModal(false);
         }).catch(err => {
-            setFeeModal(false);
+            setLoader(false);
             setErrorMessage(err.response
                 ? err.response.data.message
                 : err.message);

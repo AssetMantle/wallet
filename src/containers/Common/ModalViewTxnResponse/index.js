@@ -5,6 +5,7 @@ import React from 'react';
 import {useTranslation} from "react-i18next";
 import {connect} from "react-redux";
 import success from "../../../assets/images/success.svg";
+import failed from "../../../assets/images/inactive.svg";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -49,6 +50,7 @@ const ModalViewTxnResponse = (props) => {
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
+                                <img src={failed} alt="success-image"/>
                                 {mode === "kepler" ?
                                     <>
                                         <p>{response.rawLog}</p>

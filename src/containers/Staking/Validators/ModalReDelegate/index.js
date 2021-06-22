@@ -174,6 +174,7 @@ const ModalReDelegate = (props) => {
                                         placeholder={t("REDELEGATION_AMOUNT")}
                                         value={enteredAmount}
                                         step="any"
+                                        onKeyPress={helper.inputAmountValidation}
                                         className={amount > props.delegationAmount ? "error-amount-field" : ""}
                                         onChange={handleAmountChange}
                                         required={true}
