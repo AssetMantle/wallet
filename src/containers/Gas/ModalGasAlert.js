@@ -135,17 +135,20 @@ const ModalGasAlert = (props) => {
     }
 
     const handleLedgerSubmit = async () => {
-        console.log("red");
         setLoader(true);
         const loginAddress = localStorage.getItem('address');
         let response;
+
+        let accountNumber = localStorage.getItem('addressIndex')*1;
+        let addressIndex = localStorage.getItem('accountNumber')*1;
+
         if (props.formData.formName === "ibc") {
             let msg = transactions.MakeIBCTransferMsg(props.formData.channelID, loginAddress,
                 props.formData.toAddress, (props.formData.amount * config.xprtValue), undefined, undefined, props.formData.denom);
             await msg.then(result => {
                 response = transactions.TransactionWithMnemonic([result],
                     aminoMsgHelper.fee(Math.trunc(fee), gas), props.formData.memo, "",
-                    transactions.makeHdPath(0, 0), "");
+                    transactions.makeHdPath(accountNumber, addressIndex), "");
             }).catch(err => {
                 setLoader(false);
                 setErrorMessage(err.response
@@ -153,7 +156,7 @@ const ModalGasAlert = (props) => {
                     : err.message);
             });
         } else {
-            response = transactions.getTransactionResponse(loginAddress, props.formData, fee, gas, "", 0, 0);
+            response = transactions.getTransactionResponse(loginAddress, props.formData, fee, gas, "", accountNumber, addressIndex);
         }
 
         response.then(result => {

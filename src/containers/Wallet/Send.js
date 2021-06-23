@@ -18,8 +18,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import ModalGasAlert from "../Gas/ModalGasAlert";
 import ModalViewTxnResponse from "../Common/ModalViewTxnResponse";
-import Refresh from "../../components/Refresh";
-
 
 const Send = (props) => {
     const {t} = useTranslation();
@@ -39,18 +37,13 @@ const Send = (props) => {
     let mode = localStorage.getItem('loginMode');
     let loginAddress = localStorage.getItem('address');
     const [formData, setFormData] = useState({});
-    const [refresh, setRefresh] = useState(false);
 
     const handleClose = () => {
         setShow(true);
         setTxResponse('');
         setFeeModal(false);
-        setRefresh(true);
     };
 
-    if(refresh){
-        return <Refresh setRefresh={setRefresh}/>;
-    }
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         // event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57

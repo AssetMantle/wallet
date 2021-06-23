@@ -19,11 +19,11 @@ export async function createTransport() {
     return ledgerTransport;
 }
 
-export const fetchAddress = async (transport) => {
-    transport = await createTransport();
+export const fetchAddress = async (accountNumber = "0", addressIndex = "0") => {
+    let transport = await createTransport();
     const signer = new LedgerSigner(transport, {
         testModeAllowed: true,
-        hdPaths: [makeHdPath()],
+        hdPaths: [makeHdPath(accountNumber, addressIndex)],
         prefix: "persistence"
     });
     const [firstAccount] = await signer.getAccounts();
