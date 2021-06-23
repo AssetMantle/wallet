@@ -3,14 +3,18 @@
     {
       "name": "cosmos",
       "id": "cosmos/channel-1",
-      "port": "transfer"
+      "port": "transfer",
+      "url": "https://persistence.testnet.rest.audit.one",
+      "description": "step talent crowd useless daring talk album increase fit nasty eager deal"
     }
   ],
   "mainNetChannels": [
     {
       "name": "cosmos",
       "id": "cosmos/channel-1",
-      "port": "transfer"
+      "port": "transfer",
+      "url": "https://persistence.testnet.rest.audit.one",
+      "description": "step talent crowd useless daring talk album increase fit nasty eager deal"
     },
     {
       "name": "osmosis",

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {
     Form,
     Modal,
@@ -36,11 +36,20 @@ const IbcTxn = (props) => {
     const [tokenDenom, setTokenDenom] = useState("uxprt");
     const [transferableAmount, setTransferableAmount] = useState(props.transferableAmount);
     const [tokenItem, setTokenItem] = useState({});
-    let mode = localStorage.getItem('loginMode');
-    let loginAddress = localStorage.getItem('address');
     const [feeModal, setFeeModal] = useState(false);
     const [formData, setFormData] = useState({});
+    const [channels, setChannels] = useState([]);
+    const [selectedChannel, setSelectedChannel] = useState();
 
+    let mode = localStorage.getItem('loginMode');
+    let loginAddress = localStorage.getItem('address');
+    useEffect(()=>{
+        if(IBC_CONF === "ibcStaging.json"){
+            setChannels(ibcConfig.testNetChannels);
+        }else {
+            setChannels(ibcConfig.mainNetChannels);
+        }
+    },);
     const handleClose = () => {
         setShow(false);
         setTxResponse('');
@@ -90,6 +99,7 @@ const IbcTxn = (props) => {
                     memo : memo,
                     toAddress : helper.trimWhiteSpaces(event.target.address.value),
                     channelID: customChain ?  helper.trimWhiteSpaces(event.target.channel.value) : helper.trimWhiteSpaces(channelID),
+                    channelUrl:selectedChannel ? selectedChannel.url : undefined,
                     modalHeader: "Send Token",
                     formName: "ibc",
                     successMsg : t("SUCCESSFUL_SEND"),
@@ -112,7 +122,7 @@ const IbcTxn = (props) => {
         event.preventDefault();
         let inputChannelID = customChain ? helper.trimWhiteSpaces(event.target.channel.value) : helper.trimWhiteSpaces(channelID);
         let msg =  transactions.MakeIBCTransferMsg(inputChannelID, loginAddress,
-            event.target.address.value,(amountField * config.xprtValue), undefined, undefined, tokenDenom);
+            event.target.address.value,(amountField * config.xprtValue), undefined, undefined, tokenDenom, selectedChannel ? selectedChannel.url : undefined);
         await msg.then(result => {
             const response = transactions.TransactionWithKeplr( [result],aminoMsgHelper.fee(0, 250000));
             response.then(result => {
@@ -144,6 +154,7 @@ const IbcTxn = (props) => {
     };
 
     const onChangeSelect = (evt) => {
+        setSelectedChannel();
         if(evt.target.value === "Custom"){
             setCustomChain(true);
             setChain(evt.target.value);
@@ -152,6 +163,11 @@ const IbcTxn = (props) => {
             let id = evt.target.value.substr(evt.target.value.indexOf('/') + 1);
             setChannelID(id);
             setChain(evt.target.value);
+            channels.forEach(async (item) => {
+                if(evt.target.value === item.id){
+                    setSelectedChannel(item);
+                }
+            });
         }
     };
 
@@ -187,12 +203,6 @@ const IbcTxn = (props) => {
             </Popover.Content>
         </Popover>
     );
-    let channels=[];
-    if(IBC_CONF === "ibcStaging.json"){
-        channels = ibcConfig.testNetChannels;
-    }else {
-        channels = ibcConfig.mainNetChannels;
-    }
     return (
         <div className="send-container">
             <div className="form-section">
@@ -211,7 +221,7 @@ const IbcTxn = (props) => {
                                             key={index + 1}
                                             className=""
                                             value={channel.id}>
-                                            {channel.name}
+                                            {channel.name} ({channel.id.substr(channel.id.indexOf('/') + 1)} / {channel.port})
                                         </MenuItem>
                                     );
                                 })
@@ -224,6 +234,13 @@ const IbcTxn = (props) => {
                             </MenuItem>
                         </Select>
                     </div>
+                    {selectedChannel ?
+                        <div className="form-field">
+                            <p className="label info">{t("DESCRIPTION")}</p>
+                            <div className="amount-field"><span className="description-info">{selectedChannel.description}</span></div>
+                        </div>
+
+                        : ""}
                     {
                         customChain ?
                             <>

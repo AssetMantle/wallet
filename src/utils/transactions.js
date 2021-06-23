@@ -150,7 +150,8 @@ function decodeTendermintConsensusStateAny(consensusState) {
     }
     return tendermint_1.ConsensusState.decode(consensusState.value);
 }
-async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp = config.timeoutTimestamp, denom = "uxprt", port = "transfer") {
+async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp = config.timeoutTimestamp, denom = "uxprt", url , port = "transfer") {
+    console.log(url, "example url");
     const tendermintClient = await tmRPC.Tendermint34Client.connect(tendermintRPCURL);
     const queryClient = new QueryClient(tendermintClient);
 

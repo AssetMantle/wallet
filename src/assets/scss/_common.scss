@@ -231,6 +231,14 @@ html, body {
     flex: 1;
   }
 
+  .description-info {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 150%;
+    color: #8D9CB5;
+  }
+
   .info-data {
     margin: 0 0 10px 0;
     display: block;
@@ -682,13 +690,13 @@ html, body {
   position: fixed !important;
 }
 
-.text-link{
+.text-link {
   cursor: pointer;
   text-decoration: underline;
   text-decoration-color: #8D9CB5;
 }
 
-.string-truncate{
+.string-truncate {
   width: 150px;
   white-space: nowrap;
   overflow: hidden;
