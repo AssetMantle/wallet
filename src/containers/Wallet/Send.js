@@ -183,6 +183,7 @@ const Send = (props) => {
                         <Form.Control
                             type="text"
                             name="address"
+                            onKeyPress={helper.inputSpaceValidation}
                             placeholder="Enter Recipient's address "
                             required={true}
                         />
@@ -213,6 +214,7 @@ const Send = (props) => {
                                 className={amountField > props.transferableAmount ? "error-amount-field" : ""}
                                 value={enteredAmount}
                                 onChange={handleAmountChange}
+                                onKeyPress={helper.inputAmountValidation}
                                 required={true}
                             />
                             {

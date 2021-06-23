@@ -143,6 +143,7 @@ const ModalUnbond = (props) => {
                                         step="any"
                                         className={amount > props.delegationAmount ? "error-amount-field" : ""}
                                         onChange={handleAmountChange}
+                                        onKeyPress={helper.inputAmountValidation}
                                         required={true}
                                     />
                                     <span className={props.delegationAmount === 0 ? "empty info-data" : "info-data"}><span

@@ -77,6 +77,7 @@ const AddressImport = (props) => {
                         <Form.Control
                             type="text"
                             name="address"
+                            onKeyPress={helper.inputSpaceValidation}
                             id="addressImport"
                             placeholder={t("ENTER_ADDRESS")}
                             required={true}

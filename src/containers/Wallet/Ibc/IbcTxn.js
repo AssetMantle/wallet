@@ -88,8 +88,8 @@ const IbcTxn = (props) => {
                     amount : amountField,
                     denom : tokenDenom,
                     memo : memo,
-                    toAddress : event.target.address.value,
-                    channelID: customChain ?  event.target.channel.value : channelID,
+                    toAddress : helper.trimWhiteSpaces(event.target.address.value),
+                    channelID: customChain ?  helper.trimWhiteSpaces(event.target.channel.value) : helper.trimWhiteSpaces(channelID),
                     modalHeader: "Send Token",
                     formName: "ibc",
                     successMsg : t("SUCCESSFUL_SEND"),
@@ -110,7 +110,7 @@ const IbcTxn = (props) => {
         setShow(true);
         setLoader(true);
         event.preventDefault();
-        let inputChannelID = customChain ? event.target.channel.value : channelID;
+        let inputChannelID = customChain ? helper.trimWhiteSpaces(event.target.channel.value) : helper.trimWhiteSpaces(channelID);
         let msg =  transactions.MakeIBCTransferMsg(inputChannelID, loginAddress,
             event.target.address.value,(amountField * config.xprtValue), undefined, undefined, tokenDenom);
         await msg.then(result => {
@@ -231,6 +231,7 @@ const IbcTxn = (props) => {
                                     <p className="label info">{t("PORT")}</p>
                                     <Form.Control
                                         type="text"
+                                        onKeyPress={helper.inputSpaceValidation}
                                         name="port"
                                         placeholder={t("ENTER_PORT")}
                                         required={true}
@@ -241,6 +242,7 @@ const IbcTxn = (props) => {
                                     <p className="label info">{t("CHANNEL")}</p>
                                     <Form.Control
                                         type="text"
+                                        onKeyPress={helper.inputSpaceValidation}
                                         name="channel"
                                         placeholder={t("ENTER_CHANNEL")}
                                         required={true}
@@ -259,6 +261,7 @@ const IbcTxn = (props) => {
                             </OverlayTrigger></p>
                         <Form.Control
                             type="text"
+                            onKeyPress={helper.inputSpaceValidation}
                             name="address"
                             placeholder="Enter Recipient's address "
                             required={true}
@@ -305,6 +308,7 @@ const IbcTxn = (props) => {
                                 step="any"
                                 className={amountField > props.transferableAmount ? "error-amount-field" : ""}
                                 value={enteredAmount}
+                                onKeyPress={helper.inputAmountValidation}
                                 onChange={handleAmountChange}
                                 required={true}
                             />

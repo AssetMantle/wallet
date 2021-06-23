@@ -176,6 +176,7 @@ const ModalReDelegate = (props) => {
                                         step="any"
                                         className={amount > props.delegationAmount ? "error-amount-field" : ""}
                                         onChange={handleAmountChange}
+                                        onKeyPress={helper.inputAmountValidation}
                                         required={true}
                                     />
                                     <span

@@ -164,6 +164,7 @@ const ModalDelegate = (props) => {
                                         step="any"
                                         className={amount > props.balance ? "error-amount-field" : ""}
                                         onChange={handleAmountChange}
+                                        onKeyPress={helper.inputAmountValidation}
                                         required={true}
                                     />
                                     <span className={props.balance === 0 ? "empty info-data" : "info-data"}><span
