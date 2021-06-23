@@ -105,6 +105,11 @@ const ModalDelegate = (props) => {
         }
     };
 
+    const selectTotalBalanceHandler = (value) =>{
+        setEnteredAmount(value);
+        setAmount(value * 1);
+
+    };
 
 
     if (loader) {
@@ -167,7 +172,7 @@ const ModalDelegate = (props) => {
                                         onChange={handleAmountChange}
                                         required={true}
                                     />
-                                    <span className={props.balance === 0 ? "empty info-data" : "info-data"}><span
+                                    <span className={props.balance === 0 ? "empty info-data" : "info-data"} onClick={()=>selectTotalBalanceHandler(props.balance)}><span
                                         className="title">{t("BALANCE")}:</span> <span
                                         className="value">{props.balance} XPRT</span> </span>
                                 </div>

@@ -14,6 +14,7 @@ import {connect} from "react-redux";
 import transactions from "../../../../utils/transactions";
 import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/distribution/v1beta1/query";
 import {QueryClientImpl as StakingQueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/staking/v1beta1/query";
+import Refresh from "../../../../components/Refresh";
 
 const ModalActions = (props) => {
     const {t} = useTranslation();
@@ -27,6 +28,10 @@ const ModalActions = (props) => {
     const [rewards, setRewards] = useState(0);
     const [delegateStatus, setDelegateStatus] = useState(false);
     const [withdraw, setWithDraw] = useState(false);
+    const [refresh, setRefresh] = useState(false);
+
+
+
     useEffect(() => {
         let address = localStorage.getItem('address');
         const fetchValidatorRewards = async () => {
@@ -66,10 +71,20 @@ const ModalActions = (props) => {
         fetchValidatorRewards();
     }, []);
 
-    const handleClose = () => {
+    const handleCloseInitialModal = () => {
         setShow(false);
         props.setModalOpen('');
     };
+
+    const handleClose = () => {
+        setRefresh(true);
+        setShow(false);
+    };
+
+    if(refresh){
+        return <Refresh setRefresh={setRefresh} actionModal={props.setModalOpen} name="staking"/>;
+    }
+
     const handleModal = (name, address, validatorMoniker) => {
         setShow(false);
         setInitialModal(false);
@@ -98,7 +113,7 @@ const ModalActions = (props) => {
                     centered={true}
                     show={show}
                     className="actions-modal"
-                    onHide={handleClose}>
+                    onHide={handleCloseInitialModal}>
 
                     <>
                         <Modal.Body className="actions-modal-body">

@@ -107,6 +107,11 @@ const ModalReDelegate = (props) => {
         });
     };
 
+    const selectTotalBalanceHandler = (value) =>{
+        setEnteredAmount(value);
+        setAmount(value * 1);
+    };
+
     if (loader) {
         return <Loader/>;
     }
@@ -180,7 +185,7 @@ const ModalReDelegate = (props) => {
                                         required={true}
                                     />
                                     <span
-                                        className={props.delegationAmount === 0 ? "empty info-data" : "info-data"}><span
+                                        className={props.delegationAmount === 0 ? "empty info-data" : "info-data"} onClick={()=>selectTotalBalanceHandler(props.delegationAmount)}><span
                                             className="title">{t("DELEGATED_AMOUNT")}:</span> <span
                                             className="value">{props.delegationAmount} XPRT</span> </span>
                                 </div>

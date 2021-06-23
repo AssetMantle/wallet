@@ -18,6 +18,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import ModalGasAlert from "../Gas/ModalGasAlert";
 import ModalViewTxnResponse from "../Common/ModalViewTxnResponse";
+import Refresh from "../../components/Refresh";
 
 
 const Send = (props) => {
@@ -38,13 +39,18 @@ const Send = (props) => {
     let mode = localStorage.getItem('loginMode');
     let loginAddress = localStorage.getItem('address');
     const [formData, setFormData] = useState({});
+    const [refresh, setRefresh] = useState(false);
 
     const handleClose = () => {
-        setShow(false);
+        setShow(true);
         setTxResponse('');
         setFeeModal(false);
+        setRefresh(true);
     };
 
+    if(refresh){
+        return <Refresh setRefresh={setRefresh}/>;
+    }
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         // event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57
@@ -109,6 +115,7 @@ const Send = (props) => {
     const handleSubmitKepler = event => {
         setLoader(true);
         event.preventDefault();
+
         if (helper.validateAddress(event.target.address.value)) {
             const response = transactions.TransactionWithKeplr([SendMsg(loginAddress, event.target.address.value, (amountField * config.xprtValue), tokenDenom)], aminoMsgHelper.fee(0, 250000));
             response.then(result => {
@@ -138,7 +145,6 @@ const Send = (props) => {
         setMemoStatus(!memoStatus);
     };
 
-
     const onChangeSelect = (evt) => {
         setToken(evt.target.value);
         if(evt.target.value === 'uxprt'){
@@ -154,6 +160,11 @@ const Send = (props) => {
                 }
             });
         }
+    };
+
+    const selectTotalBalanceHandler = (value) =>{
+        setEnteredAmount(value);
+        setAmountField(value * 1);
     };
 
     const popoverMemo = (
@@ -223,7 +234,7 @@ const Send = (props) => {
                             />
                             {
                                 tokenDenom === "uxprt" ?
-                                    <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data"}><span
+                                    <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data"} onClick={()=>selectTotalBalanceHandler(props.transferableAmount)}><span
                                         className="title">Transferable Balance:</span> <span
                                         className="value"
                                         title={props.transferableAmount}>{props.transferableAmount.toLocaleString()} XPRT</span> </span>

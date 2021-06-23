@@ -21,7 +21,7 @@ const configChainID = process.env.REACT_APP_CHAIN_ID;
 const configCoinType = config.coinType;
 const valoperAddressPrefix = config.valoperAddressPrefix;
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
-const loginMode = localStorage.getItem('loginMode');
+
 //TODO take from config and env
 async function Transaction(wallet, signerAddress, msgs, fee, memo = "") {
     const cosmJS = await SigningStargateClient.connectWithSigner(
@@ -66,6 +66,8 @@ async function LedgerWallet(hdpath, prefix) {
 }
 
 async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(), bip39Passphrase = "", prefix = addressPrefix) {
+    const loginMode = localStorage.getItem('loginMode');
+
     if(loginMode === "normal"){
         const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix);
         return Transaction(wallet, address, msgs, fee, memo);

@@ -124,46 +124,8 @@ const ModalDecryptKeyStore = (props) => {
                     }else {
                         response = transactions.getTransactionResponse(address, props.formData, props.fee, props.gas, mnemonic, accountNumber, addressIndex, bip39Passphrase);
                     }
-
-                    // if (props.formData.formName === "delegate"){
-                    //     response = transactions.TransactionWithMnemonic([DelegateMsg(address, props.formData.validatorAddress, (props.formData.amount * 1000000))], aminoMsgHelper.fee(Math.trunc(props.fee), props.gas), props.formData.memo,
-                    //         mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-                    // } else if(props.formData.formName === "send"){
-                    //     response = transactions.TransactionWithMnemonic([SendMsg(address, props.formData.toAddress, (props.formData.amount * config.xprtValue), props.formData.denom)], aminoMsgHelper.fee(Math.trunc(props.fee), props.gas), props.formData.memo,
-                    //         mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-                    // } else if(props.formData.formName === "ibc"){
-                    //     let msg =  transactions.MakeIBCTransferMsg(props.formData.channelID, address,
-                    //         props.formData.toAddress,(props.formData.amount * config.xprtValue), undefined, undefined, props.formData.denom);
-                    //     await msg.then(result => {
-                    //         response = transactions.TransactionWithMnemonic( [result],
-                    //             aminoMsgHelper.fee(Math.trunc(props.fee), props.gas), props.formData.memo, mnemonic,
-                    //             transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-                    //     }).catch(err => {
-                    //         setLoader(false);
-                    //         setErrorMessage(err.response
-                    //             ? err.response.data.message
-                    //             : err.message);
-                    //     });
-                    // } else if(props.formData.formName === "withdrawMultiple"){
-                    //     response = transactions.TransactionWithMnemonic(props.formData.messages, aminoMsgHelper.fee(Math.trunc(props.fee), props.gas), props.formData.memo,
-                    //         mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-                    // } else if(props.formData.formName === "withdrawAddress"){
-                    //     response = transactions.TransactionWithMnemonic([SetWithDrawAddressMsg(address, props.formData.validatorAddress)], aminoMsgHelper.fee(Math.trunc(props.fee), props.gas), props.formData.memo,
-                    //         mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-                    // }
-                    // else if(props.formData.formName === "redelegate"){
-                    //     response = transactions.TransactionWithMnemonic([RedelegateMsg(address, props.formData.validatorAddress, props.formData.toValidatorAddress, (props.formData.amount * config.xprtValue))], aminoMsgHelper.fee(Math.trunc(props.fee), props.gas), props.formData.memo,
-                    //         mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-                    // }else if(props.formData.formName === "unbond"){
-                    //     response = transactions.TransactionWithMnemonic([UnbondMsg(address, props.formData.validatorAddress, (props.formData.amount * config.xprtValue))], aminoMsgHelper.fee(Math.trunc(props.fee), props.gas), props.formData.memo,
-                    //         mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-                    // }else if(props.formData.formName === "withdrawValidatorRewards"){
-                    //     response = transactions.TransactionWithMnemonic([WithdrawMsg(address, props.formData.validatorAddress)], aminoMsgHelper.fee(Math.trunc(props.fee), props.gas), props.formData.memo,
-                    //         mnemonic, transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-                    // }
                     if(response !== undefined){
                         response.then(result => {
-                            console.log(result ,"ee");
                             setResponse(result);
                             setLoader(false);
                             setAdvanceMode(false);
