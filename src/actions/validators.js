@@ -109,7 +109,6 @@ export const fetchValidators = (address) => {
             if(delegationsResponse.delegationResponses.length) {
                 const sortedActiveValidators =  validatorsDelegationSort(activeValidators, delegationsResponse.delegationResponses);
                 const sortedInactiveValidators =  validatorsDelegationSort(inActiveValidators, delegationsResponse.delegationResponses);
-                console.log(sortedActiveValidators, "sortedActiveValidators");
 
                 activeValidators = sortedActiveValidators;
                 inActiveValidators = sortedInactiveValidators;

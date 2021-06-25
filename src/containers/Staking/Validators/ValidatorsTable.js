@@ -63,7 +63,6 @@ const ValidatorsTable = (props) => {
         label: 'Actions',
         options: {sort: false}
     }];
-    console.log(props.activeValidatorsTokens, "tokens");
     const tableData = props.validatorsList.length ?
         props.validatorsList.map((validator, index) => [
             (validator.delegations > 0) ? <div className="delegation-rank active">{index+1}</div>: <div className="delegation-rank inactive">{index+1}</div>,

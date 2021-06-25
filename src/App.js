@@ -54,7 +54,6 @@ const App = () => {
     }
     window.addEventListener("keplr_keystorechange", () => {
         if(localStorage.getItem('loginMode') === 'kepler'){
-            console.log("Key store in Keplr is changed. You may need to refetch the account info.");
             const kepler = KeplerWallet();
             kepler.then(function () {
                 const address = localStorage.getItem("keplerAddress");
