@@ -51,19 +51,29 @@ const validatorsDelegationSort = (validators, delegations) =>{
         let count = 0;
         for (const data of delegations) {
             if(item.operatorAddress === data.delegation.validatorAddress){
+                let obj = {
+                    'data':item,
+                    'delegations':data.balance.amount*1
+                };
+                delegatedValidators.push(obj);
                 count = 0;
                 break;
             }else {
                 count ++;
             }
         }
-        if(count === 0){
-            delegatedValidators.unshift(item);
-        }else {
-            delegatedValidators.push(item);
+        if(count !== 0){
+            let obj ={
+                'data':item,
+                'delegations':0
+            };
+            delegatedValidators.push(obj);
         }
     });
-    return delegatedValidators;
+    const sortDel = delegatedValidators.sort(function (a, b) {
+        return b.delegations - a.delegations;
+    });
+    return sortDel;
 };
 
 export const fetchValidators = (address) => {
@@ -99,6 +109,8 @@ export const fetchValidators = (address) => {
             if(delegationsResponse.delegationResponses.length) {
                 const sortedActiveValidators =  validatorsDelegationSort(activeValidators, delegationsResponse.delegationResponses);
                 const sortedInactiveValidators =  validatorsDelegationSort(inActiveValidators, delegationsResponse.delegationResponses);
+                console.log(sortedActiveValidators, "sortedActiveValidators");
+
                 activeValidators = sortedActiveValidators;
                 inActiveValidators = sortedInactiveValidators;
             }

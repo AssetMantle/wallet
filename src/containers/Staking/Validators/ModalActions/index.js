@@ -28,6 +28,7 @@ const ModalActions = (props) => {
     const [delegateStatus, setDelegateStatus] = useState(false);
     const [withdraw, setWithDraw] = useState(false);
     useEffect(() => {
+        console.log(props.validator.operatorAddress);
         let address = localStorage.getItem('address');
         const fetchValidatorRewards = async () => {
             const rpcClient = await transactions.RpcClient();

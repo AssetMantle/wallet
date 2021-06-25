@@ -177,6 +177,10 @@ html, body {
     font-size: 14px;
     line-height: 150%;
     color: #8D9CB5; }
+  .form-field .info-link {
+    text-decoration: underline;
+    text-decoration-color: #8D9CB5;
+    cursor: pointer; }
   .form-field .info-data {
     margin: 0 0 10px 0;
     display: block;
@@ -522,6 +526,32 @@ html, body {
   overflow: hidden;
   text-overflow: ellipsis;
   display: block; }
+
+.delegation-rank {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e50913;
+  color: #ffffff;
+  border-radius: 50%; }
+
+.delegation-rank {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+
+.delegation-rank.active {
+  background: #e50913;
+  color: #fff; }
+
+.delegation-rank.inactive {
+  color: #e50913;
+  background: #e509130f; }
 
 /*--------------------------------------------------------------
 # main styles

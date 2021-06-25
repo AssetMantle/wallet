@@ -114,7 +114,7 @@ const IbcTxn = (props) => {
             setKeplerError('');
             setShow(true);
         }
-
+        event.target.reset();
     };
     const handleSubmitKepler = async event => {
         setShow(true);
@@ -142,7 +142,7 @@ const IbcTxn = (props) => {
                 ? err.response.data.message
                 : err.message);
         });
-
+        event.target.reset();
     };
 
     if (loader) {
