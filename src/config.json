@@ -13,15 +13,8 @@
   "defaultFee": "5000",
   "vestingAccountFee": "0",
   "modeType": "sync",
-  "version": "v0.1.7",
+  "version": "v0.1.8",
   "timeoutTimestamp": 1000,
   "ibcRevisionHeightIncrement": 1000,
-  "channels": [
-    {
-        "name": "cosmos",
-        "id": "cosmos/channel-1",
-        "port": "transfer"
-    }
-  ],
   "valoperAddressPrefix": "persistence"
 }
