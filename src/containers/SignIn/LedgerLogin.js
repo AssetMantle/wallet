@@ -152,6 +152,10 @@ const LedgerLogin = (props) => {
                                                         required={false}
                                                     />
                                                 </div>
+                                                <div className="buttons">
+                                                    <button className="button button-primary" type="Submit">Submit
+                                                    </button>
+                                                </div>
                                             </Form>
                                             : ""
                                         }

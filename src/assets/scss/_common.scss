@@ -717,3 +717,19 @@ html, body {
     width: 20px;
   }
 }
+
+.buttons-list {
+  display: flex;
+  display: -webkit-flex;
+  align-content: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  p {
+    margin: 0;
+  }
+
+  .button {
+    line-height: 1.3;
+  }
+}

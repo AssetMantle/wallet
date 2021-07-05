@@ -533,6 +533,17 @@ html, body {
 @-webkit-keyframes ellipsis {
   to {
     width: 20px; } }
+.buttons-list {
+  display: flex;
+  display: -webkit-flex;
+  align-content: center;
+  justify-content: space-between;
+  flex-wrap: wrap; }
+  .buttons-list p {
+    margin: 0; }
+  .buttons-list .button {
+    line-height: 1.3; }
+
 /*--------------------------------------------------------------
 # main styles
 --------------------------------------------------------------*/

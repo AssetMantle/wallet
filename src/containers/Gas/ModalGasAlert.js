@@ -139,8 +139,8 @@ const ModalGasAlert = (props) => {
         const loginAddress = localStorage.getItem('address');
         let response;
 
-        let accountNumber = localStorage.getItem('addressIndex')*1;
-        let addressIndex = localStorage.getItem('accountNumber')*1;
+        let accountNumber = localStorage.getItem('accountNumber')*1;
+        let addressIndex = localStorage.getItem('addressIndex')*1;
 
         if (props.formData.formName === "ibc") {
             let msg = transactions.MakeIBCTransferMsg(props.formData.channelID, loginAddress,
