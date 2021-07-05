@@ -34,7 +34,7 @@ const activeVotingPower = (state = 0, action) => {
 
     if (action.type === FETCH_ACTIVE_VALIDATORS_SUCCESS) {
         const active = Lodash.sumBy(action.list, (item) => {
-            return parseInt(item.tokens);
+            return parseInt(item.data.tokens);
         });
 
         return {
@@ -48,7 +48,7 @@ const activeVotingPower = (state = 0, action) => {
 const inActiveVotingPower = (state = 0, action) => {
     if (action.type === FETCH_INACTIVE_VALIDATORS_SUCCESS) {
         const inActive = Lodash.sumBy(action.list, (item) => {
-            return parseInt(item.tokens);
+            return parseInt(item.data.tokens);
         });
         return {
             ...state,

@@ -3,19 +3,25 @@
     {
       "name": "cosmos",
       "id": "cosmos/channel-1",
-      "port": "transfer"
+      "port": "transfer",
+      "url": "https://persistence.testnet.rpc.audit.one",
+      "description": "cosmos test chain relayer, maintained by AUDIT.one"
     }
   ],
   "mainNetChannels": [
     {
       "name": "cosmos",
       "id": "cosmos/channel-1",
-      "port": "transfer"
+      "port": "transfer",
+      "url": "https://core.rpc.persistence.one",
+      "description": "CosmosHub-4 relayer, maintained by AUDIT.one"
     },
     {
       "name": "osmosis",
       "id": "osmosis/channel-6",
-      "port": "transfer"
+      "port": "transfer",
+      "url": "",
+      "description": "Osmosis relayer, maintained by OSMOSIS here - https://github.com/osmosis-labs/assetlists/blob/main/osmosis-1/osmosis-1.assetlist.json#L98-L121"
     }
   ]
 }

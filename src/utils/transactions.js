@@ -1,6 +1,6 @@
-import {DirectSecp256k1Wallet} from "@cosmjs/proto-signing";
+import {DirectSecp256k1HdWallet} from "@cosmjs/proto-signing";
 import config from "../config.json";
-import {Bip39, EnglishMnemonic, Slip10, Slip10Curve, stringToPath} from "@cosmjs/crypto";
+import {stringToPath} from "@cosmjs/crypto";
 import MakePersistence from "./cosmosjsWrapper";
 import helper from "./helper";
 import Long from "long";
@@ -77,25 +77,17 @@ async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeH
     }
 }
 
-// TODO remove this function; use MnemonicWallet instead.
 async function MnemonicWalletWithPassphrase(mnemonic, hdPath = makeHdPath(), password = "", prefix = addressPrefix) {
-    const mnemonicChecked = new EnglishMnemonic(mnemonic);
-    const seed = await Bip39.mnemonicToSeed(mnemonicChecked, password);
-    const {privkey} = Slip10.derivePath(Slip10Curve.Secp256k1, seed, hdPath);
-    const wallet = await DirectSecp256k1Wallet.fromKey(privkey, prefix);
+    const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, {
+        prefix: prefix,
+        bip39Password: password,
+        hdPaths: [hdPath]
+    });
     const [firstAccount] = await wallet.getAccounts();
     return [wallet, firstAccount.address];
 }
 
-//TODO use this when bip39 passphrase is included in cosmjs.
-// async function MnemonicWallet(mnemonic, hdPath = makeHdPath(), prefix = addressPrefix) {
-//     const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, hdPath, prefix);
-//     const [firstAccount] = await wallet.getAccounts();
-//     return [wallet, firstAccount.address]
-//
-// }
-
-export function makeHdPath(accountNumber = "0", addressIndex = "0", coinType = configCoinType) {
+function makeHdPath(accountNumber = "0", addressIndex = "0", coinType = configCoinType) {
     return stringToPath("m/44'/" + coinType + "'/" + accountNumber + "'/0/" + addressIndex);
 }
 
@@ -183,24 +175,25 @@ function decodeTendermintConsensusStateAny(consensusState) {
     return tendermint_1.ConsensusState.decode(consensusState.value);
 }
 
-async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp = config.timeoutTimestamp, denom = "uxprt", port = "transfer") {
+async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp = config.timeoutTimestamp, denom = "uxprt", url, port = "transfer") {
+    console.log(url, "example url");
     const tendermintClient = await tmRPC.Tendermint34Client.connect(tendermintRPCURL);
     const queryClient = new QueryClient(tendermintClient);
 
     const ibcExtension = setupIbcExtension(queryClient);
 
-    const finalResponse = await ibcExtension.ibc.channel.clientState(port, channel).then(async (clientStateResponse) => {
+    const finalResponse = await ibcExtension.ibc.channel.clientState(port, channel).then(async (clientStateResponse ) => {
         const clientStateResponseDecoded = decodeTendermintClientStateAny(clientStateResponse.identifiedClientState.clientState);
         timeoutHeight = {
             revisionHeight: clientStateResponseDecoded.latestHeight.revisionHeight.add(config.ibcRevisionHeightIncrement),
             revisionNumber: clientStateResponseDecoded.latestHeight.revisionNumber
         };
 
-        const consensusStateResponse = await ibcExtension.ibc.channel.consensusState(port,channel,
-            clientStateResponseDecoded.latestHeight.revisionNumber.toInt() , clientStateResponseDecoded.latestHeight.revisionHeight.toInt());
+        const consensusStateResponse = await ibcExtension.ibc.channel.consensusState(port, channel,
+            clientStateResponseDecoded.latestHeight.revisionNumber.toInt(), clientStateResponseDecoded.latestHeight.revisionHeight.toInt());
         const consensusStateResponseDecoded = decodeTendermintConsensusStateAny(consensusStateResponse.consensusState);
 
-        const timeoutTime = Long.fromNumber(consensusStateResponseDecoded.timestamp.getTime()/1000).add(timeoutTimestamp).multiply(1000000000); //get time in nanoesconds
+        const timeoutTime = Long.fromNumber(consensusStateResponseDecoded.timestamp.getTime() / 1000).add(timeoutTimestamp).multiply(1000000000); //get time in nanoesconds
         return TransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTime, denom, port);
     }).catch(error => {
         throw error;

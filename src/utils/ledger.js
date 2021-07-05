@@ -7,7 +7,7 @@ import {
 } from "@cosmjs/stargate";
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import {LedgerSigner} from "@cosmjs/ledger-amino";
-import {makeHdPath} from "./transactions";
+import makeHdPath from "./transactions";
 import {SendMsg} from "./protoMsgHelper";
 
 const RPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;

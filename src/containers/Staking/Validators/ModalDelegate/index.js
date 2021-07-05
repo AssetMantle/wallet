@@ -111,7 +111,6 @@ const ModalDelegate = (props) => {
 
     };
 
-
     if (loader) {
         return <Loader/>;
     }
@@ -167,12 +166,12 @@ const ModalDelegate = (props) => {
                                         placeholder={t("DELEGATION_AMOUNT")}
                                         value={enteredAmount}
                                         step="any"
-                                        onKeyPress={helper.inputAmountValidation}
                                         className={amount > props.balance ? "error-amount-field" : ""}
                                         onChange={handleAmountChange}
+                                        onKeyPress={helper.inputAmountValidation}
                                         required={true}
                                     />
-                                    <span className={props.balance === 0 ? "empty info-data" : "info-data"} onClick={()=>selectTotalBalanceHandler(props.balance)}><span
+                                    <span className={props.balance === 0 ? "empty info-data info-link" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(props.balance)}><span
                                         className="title">{t("BALANCE")}:</span> <span
                                         className="value">{props.balance} XPRT</span> </span>
                                 </div>

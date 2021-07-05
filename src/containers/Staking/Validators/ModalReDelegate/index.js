@@ -179,13 +179,13 @@ const ModalReDelegate = (props) => {
                                         placeholder={t("REDELEGATION_AMOUNT")}
                                         value={enteredAmount}
                                         step="any"
-                                        onKeyPress={helper.inputAmountValidation}
                                         className={amount > props.delegationAmount ? "error-amount-field" : ""}
                                         onChange={handleAmountChange}
+                                        onKeyPress={helper.inputAmountValidation}
                                         required={true}
                                     />
                                     <span
-                                        className={props.delegationAmount === 0 ? "empty info-data" : "info-data"} onClick={()=>selectTotalBalanceHandler(props.delegationAmount)}><span
+                                        className={props.delegationAmount === 0 ? "empty info-data info-link" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(props.delegationAmount)}><span
                                             className="title">{t("DELEGATED_AMOUNT")}:</span> <span
                                             className="value">{props.delegationAmount} XPRT</span> </span>
                                 </div>

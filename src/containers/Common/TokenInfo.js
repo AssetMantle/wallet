@@ -27,6 +27,7 @@ const TokenInfo = (props) => {
         props.fetchTokenPrice();
         props.fetchTransferableVestingAmount(address);
         transactions.updateFee(address);
+        setInterval(() => props.fetchRewards(address), 10000);
     }, []);
 
     const handleRewards = (key) => {

@@ -71,7 +71,7 @@ const ModalViewVestingDetails = () => {
                     <ul className="modal-list-data">
                         {showContinuesVesting ?
                             response.baseVestingAccount !== undefined ?
-                                <Table borderless>
+                                <Table borderless hover>
                                     <thead>
                                         <tr>
                                             <th>{t("UNLOCKING_TOKENS")}</th>

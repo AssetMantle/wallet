@@ -103,10 +103,6 @@ function validateAddress(address,prefix="persistence1") {
     }
 }
 
-function validateCosmosAddress(address) {
-    return address.startsWith("cosmos") && address.length === 40;
-}
-
 function accountChangeCheck(errorMessage) {
     if(errorMessage === 'Unsupported type: \'/cosmos.vesting.v1beta1.ContinuousVestingAccount\'' ||
         errorMessage === 'Unsupported type: \'/cosmos.vesting.v1beta1.DelayedVestingAccount\'' ||
@@ -174,6 +170,9 @@ function inputAmountValidation(e){
         e.preventDefault();
     }
 }
+function trimWhiteSpaces(data){
+    return data.split(' ').join('');
+}
 
 export default {
     randomNum,
@@ -191,7 +190,7 @@ export default {
     mnemonicTrim,
     mnemonicValidation,
     ValidateAmount,
-    validateCosmosAddress,
     inputSpaceValidation,
-    inputAmountValidation
+    inputAmountValidation,
+    trimWhiteSpaces
 };

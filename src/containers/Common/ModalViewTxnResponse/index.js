@@ -13,6 +13,7 @@ import {fetchRewards} from "../../../actions/rewards";
 import {fetchUnbondDelegations} from "../../../actions/unbond";
 import {fetchTokenPrice} from "../../../actions/tokenPrice";
 import {fetchReceiveTransactions, fetchTransactions} from "../../../actions/transactions";
+
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const ModalViewTxnResponse = (props) => {

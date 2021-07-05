@@ -145,6 +145,7 @@ const ModalSetWithdrawAddress = (props) => {
                                 <p className="label">{t("CURRENT_ADDRESS")}</p>
                                 <Form.Control
                                     type="text"
+                                    onKeyPress={helper.inputSpaceValidation}
                                     name="currentWithdrawalAddress"
                                     placeholder={t("ENTER_CURRENT_ADDRESS")}
                                     value={props.withdrawAddress}
@@ -154,6 +155,7 @@ const ModalSetWithdrawAddress = (props) => {
                                 <p className="label">{t("REVISED_ADDRESS")}</p>
                                 <Form.Control
                                     type="text"
+                                    onKeyPress={helper.inputSpaceValidation}
                                     name="withdrawalAddress"
                                     placeholder={t("ENTER_WITHDRAW_ADDRESS")}
                                     required={true}
