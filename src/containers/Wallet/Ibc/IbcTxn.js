@@ -95,7 +95,7 @@ const IbcTxn = (props) => {
                 setKeplerError(t("MEMO_MNEMONIC_CHECK_ERROR"));
             } else {
                 if (chain !== "custom" && !helper.validateAddress(event.target.address.value, chain.substr(0, chain.indexOf('/')))) {
-                    setKeplerError(`Enter Valid  Recipient’s Address, address should starts with ${chain.substr(0, chain.indexOf('/'))}`);
+                    setKeplerError('Enter Valid  Recipient’s Address');
                     return ;
                 }
                 const data = {
@@ -127,10 +127,10 @@ const IbcTxn = (props) => {
         event.preventDefault();
         if (chain !== "custom" && !helper.validateAddress(event.target.address.value, chain.substr(0, chain.indexOf('/')))) {
             setLoader(false);
-            setKeplerError(`Enter Valid  Recipient’s Address, address should starts with ${chain.substr(0, chain.indexOf('/'))}`);
+            setKeplerError('Enter Valid  Recipient’s Address.');
             return ;
         }
-        let inputChannelID = customChain ? helper.trimWhiteSpaces(event.target.channel.value) : helper.trimWhiteSpaces(channelID);
+        let inputChannelID = customChain ? event.target.channel.value : channelID;
         let msg =  transactions.MakeIBCTransferMsg(inputChannelID, loginAddress,
             event.target.address.value,(amountField * config.xprtValue), undefined, undefined, tokenDenom, selectedChannel ? selectedChannel.url : undefined);
         await msg.then(result => {
@@ -179,6 +179,7 @@ const IbcTxn = (props) => {
                 }
             });
         }
+        setKeplerError('');
     };
 
 
@@ -210,11 +211,10 @@ const IbcTxn = (props) => {
         <Popover id="popover">
             <Popover.Content>
                 {
-                    (chain !== "Custom" && chain !== "")  ?
-                        <p>Recipient’s address starts with {chain.substr(0, chain.indexOf('/'))}; for example: {chain.substr(0, chain.indexOf('/'))}108juerwthyqolqewl74kewg882kjuert123kls</p>
+                    (chain !== "Custom" && chain !== "" && chain.substr(0, chain.indexOf('/')) !== "osmosis")  ?
+                        <p>Recipient’s address starts with {chain.substr(0, chain.indexOf('/'))}</p>
                         : ""
                 }
-
             </Popover.Content>
         </Popover>
     );
@@ -289,7 +289,7 @@ const IbcTxn = (props) => {
 
                     <div className="form-field">
                         <p className="label info">{t("RECIPIENT_ADDRESS")}
-                            {(chain !== "Custom" && chain !== "") ?
+                            {(chain !== "Custom" && chain !== "" && chain.substr(0, chain.indexOf('/')) !== "osmosis") ?
                                 <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
                                     <button className="icon-button info" type="button"><Icon
                                         viewClass="arrow-right"
@@ -328,7 +328,7 @@ const IbcTxn = (props) => {
                                                 key={index + 1}
                                                 className=""
                                                 value={item.denomTrace}>
-                                                    ATOM
+                                                    ATOM ({item.denom.path})
                                             </MenuItem>
                                         );
                                     }

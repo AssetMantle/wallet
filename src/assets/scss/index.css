@@ -1923,12 +1923,13 @@ html, body {
         margin-right: 10px;
         width: 23px;
         border-radius: 50%; }
-      .validators-section table tbody td:first-child {
-        align-items: center;
-        padding-left: 40px;
+      .validators-section table tbody td .validator-name {
         font-size: 14px;
         line-height: 150%;
         color: #1A73B4; }
+      .validators-section table tbody td:first-child {
+        align-items: center;
+        padding-left: 40px; }
     .validators-section table tr:first-child td {
       padding-top: 30px; }
 

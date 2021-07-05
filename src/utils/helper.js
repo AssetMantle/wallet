@@ -95,13 +95,16 @@ function validatePassphrase(value) {
 
 }
 
-function validateAddress(address,prefix="persistence1") {
+function validateAddress(address, prefix="persistence") {
     if(prefix === "cosmos"){
         return address.startsWith(prefix) && address.length === 45;
-    }else {
+    }else if(prefix === "osmosis"){
+        return address.startsWith("osmo") && address.length === 43;
+    } else {
         return address.startsWith(prefix) && address.length === 50;
     }
 }
+
 
 function accountChangeCheck(errorMessage) {
     if(errorMessage === 'Unsupported type: \'/cosmos.vesting.v1beta1.ContinuousVestingAccount\'' ||

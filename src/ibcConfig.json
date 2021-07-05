@@ -10,13 +10,6 @@
   ],
   "mainNetChannels": [
     {
-      "name": "cosmos",
-      "id": "cosmos/channel-1",
-      "port": "transfer",
-      "url": "https://core.rpc.persistence.one",
-      "description": "CosmosHub-4 relayer, maintained by AUDIT.one"
-    },
-    {
       "name": "osmosis",
       "id": "osmosis/channel-6",
       "port": "transfer",
