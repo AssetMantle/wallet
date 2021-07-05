@@ -104,14 +104,12 @@ const LedgerLogin = (props) => {
                             {
                                 ledgerAddress !== ""
                                     ?
-                                    <div className="buttons-list">
-                                        <p>{ledgerAddress}</p>
-                                        <button className="button button-primary" onClick={() => handleRoute()}>Continue
-                                        </button>
-                                    </div>
-                                    :
                                     <>
-                                        <p className="fetching">Fetching Address</p>
+                                        <div className="buttons-list">
+                                            <p>{ledgerAddress}</p>
+                                            <button className="button button-primary" onClick={() => handleRoute()}>Continue
+                                            </button>
+                                        </div>
                                         <div className="select-gas">
                                             <p onClick={handleAdvanceMode}
                                                 className="text-center">{!advancedMode ? "Advanced" : "Advanced"}
@@ -157,6 +155,10 @@ const LedgerLogin = (props) => {
                                             </Form>
                                             : ""
                                         }
+                                    </>
+                                    :
+                                    <>
+                                        <p className="fetching">Fetching Address</p>
                                     </>
 
                             }
