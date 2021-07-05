@@ -21,8 +21,11 @@ export async function createTransport() {
 
 export const fetchAddress = async (accountNumber = "0", addressIndex = "0") => {
     let transport = await createTransport();
+
+    // window.ledgerTransport = transport;
+
     transport.on("disconnect", () => {
-        console.log("disconnected");
+        alert("ledger disconnected");
     });
     const signer = new LedgerSigner(transport, {
         testModeAllowed: true,
