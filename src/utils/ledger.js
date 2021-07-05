@@ -21,6 +21,9 @@ export async function createTransport() {
 
 export const fetchAddress = async (accountNumber = "0", addressIndex = "0") => {
     let transport = await createTransport();
+    transport.on("disconnect", () => {
+        console.log("disconnected");
+    });
     const signer = new LedgerSigner(transport, {
         testModeAllowed: true,
         hdPaths: [makeHdPath(accountNumber, addressIndex)],

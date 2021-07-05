@@ -49,7 +49,7 @@ const LedgerLogin = (props) => {
         }
     };
     const handleAdvanceMode = () => {
-        setAdvancedMode(!setAdvancedMode);
+        setAdvancedMode(!advancedMode);
     };
 
     const handleKeypress = e => {
