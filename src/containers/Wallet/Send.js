@@ -227,7 +227,7 @@ const Send = (props) => {
                             />
                             {
                                 tokenDenom === "uxprt" ?
-                                    <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data"} onClick={()=>selectTotalBalanceHandler(props.transferableAmount)}><span
+                                    <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(props.transferableAmount)}><span
                                         className="title">Transferable Balance:</span> <span
                                         className="value"
                                         title={props.transferableAmount}>{props.transferableAmount.toLocaleString()} XPRT</span> </span>

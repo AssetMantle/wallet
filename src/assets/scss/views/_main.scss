@@ -94,7 +94,6 @@
       display: -webkit-flex;
       margin-top: 20px;
       flex-wrap: wrap;
-      justify-content: center;
     }
 
     padding-top: 15px;
@@ -433,6 +432,7 @@
   font-weight: 500;
   font-size: 14px;
   color: #8D9CB5;
+  word-break: break-word;
 }
 
 .memo-dropdown-section {
