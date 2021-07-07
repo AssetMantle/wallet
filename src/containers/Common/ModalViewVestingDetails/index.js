@@ -82,8 +82,8 @@ const ModalViewVestingDetails = () => {
                                     <tbody>
                                         <tr>
                                             <td>{transactions.XprtConversion(parseInt(response.baseVestingAccount.originalVesting[0].amount) )}</td>
-                                            <td>{moment(new Date(parseInt(response.startTime.low) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss.js a')}</td>
-                                            <td>{moment(new Date((response.baseVestingAccount.endTime.low) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss.js a')}</td>
+                                            <td>{moment(new Date(parseInt(response.startTime.low) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</td>
+                                            <td>{moment(new Date((response.baseVestingAccount.endTime.low) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</td>
                                         </tr>
                                     </tbody>
                                 </Table>
@@ -98,7 +98,7 @@ const ModalViewVestingDetails = () => {
                                     <>
                                         <p>Total vesting
                                             tokens {transactions.XprtConversion(parseInt(response.baseVestingAccount.originalVesting[0].amount))} at
-                                            Date {moment(new Date(parseInt(response.startTime.low) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss.js a')}</p>
+                                            Date {moment(new Date(parseInt(response.startTime.low) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</p>
                                         <Table borderless>
                                             <thead>
                                                 <tr>
@@ -117,7 +117,7 @@ const ModalViewVestingDetails = () => {
                                                             <tbody  key={index}>
                                                                 <tr>
                                                                     <td>{transactions.XprtConversion(period.amount[0].amount)}</td>
-                                                                    <td>{moment(new Date(vestingPeriod * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss.js a')}</td>
+                                                                    <td>{moment(new Date(vestingPeriod * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</td>
                                                                 </tr>
                                                             </tbody>
 
