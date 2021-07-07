@@ -26,7 +26,6 @@ const TokenInfo = (props) => {
         props.fetchUnbondDelegations(address);
         props.fetchTokenPrice();
         props.fetchTransferableVestingAmount(address);
-        console.log("coming for 4");
         transactions.updateFee(address);
         setInterval(() => props.fetchRewards(address), 10000);
     }, []);
