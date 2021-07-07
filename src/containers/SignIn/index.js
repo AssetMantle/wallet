@@ -41,7 +41,7 @@ const SignIn = (props) => {
                     <Modal.Body className="create-wallet-body create-wallet-form-body sign-in-buttons">
                         <div className="buttons">
                             <button className="button button-primary large"
-                                onClick={() => handleRoute("ledger")}>{t("CONTINUE_WITH_LEDGER")}
+                                onClick={() => handleRoute("ledger")}>{t("USE_LEDGER")}
                             </button>
                         </div>
                         <div className="buttons">

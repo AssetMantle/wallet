@@ -248,8 +248,8 @@ let English = {
         "UNLOCKING_TOKENS":"Unlocking Tokens",
         "FROM_DATE":"From Date",
         "TO_DATE":"To Date",
-        "CONTINUE_WITH_LEDGER":"Continue With Ledger"
-
+        "CONTINUE_WITH_LEDGER":"Continue With Ledger",
+        "USE_LEDGER":"Use Ledger"
     }
 };
 
