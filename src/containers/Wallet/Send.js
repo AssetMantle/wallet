@@ -19,7 +19,6 @@ import Select from "@material-ui/core/Select";
 import ModalGasAlert from "../Gas/ModalGasAlert";
 import ModalViewTxnResponse from "../Common/ModalViewTxnResponse";
 
-
 const Send = (props) => {
     const {t} = useTranslation();
     const [enteredAmount, setEnteredAmount] = useState('');
@@ -40,13 +39,15 @@ const Send = (props) => {
     const [formData, setFormData] = useState({});
 
     const handleClose = () => {
-        setShow(false);
+        setShow(true);
         setTxResponse('');
         setFeeModal(false);
     };
 
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
+        // event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57
+        console.log(rex.test(evt.target.value), "test", evt.target.value, evt.keyCode );
         if (rex.test(evt.target.value)) {
             if(tokenDenom === "uxprt") {
                 if (props.transferableAmount < (evt.target.value * 1)) {
@@ -71,7 +72,7 @@ const Send = (props) => {
     const handleSubmit = async event => {
         event.preventDefault();
         if (helper.validateAddress(event.target.address.value)) {
-            if (mode === "normal") {
+            if (mode !== "kepler") {
                 let memo = "";
                 if (memoStatus) {
                     memo = event.target.memo.value;
@@ -101,11 +102,13 @@ const Send = (props) => {
         } else {
             setKeplerError("Invalid Recipient Address");
         }
+        event.target.reset();
     };
 
     const handleSubmitKepler = event => {
         setLoader(true);
         event.preventDefault();
+
         if (helper.validateAddress(event.target.address.value)) {
             const response = transactions.TransactionWithKeplr([SendMsg(loginAddress, event.target.address.value, (amountField * config.xprtValue), tokenDenom)], aminoMsgHelper.fee(0, 250000));
             response.then(result => {
@@ -124,6 +127,7 @@ const Send = (props) => {
             setLoader(false);
             setKeplerError("Invalid Recipient Address");
         }
+        event.target.reset();
     };
 
     if (loader) {
@@ -133,7 +137,6 @@ const Send = (props) => {
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
     };
-
 
     const onChangeSelect = (evt) => {
         setToken(evt.target.value);
@@ -150,6 +153,11 @@ const Send = (props) => {
                 }
             });
         }
+    };
+
+    const selectTotalBalanceHandler = (value) =>{
+        setEnteredAmount(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)).toString());
+        setAmountField(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)));
     };
 
     const popoverMemo = (
@@ -183,6 +191,7 @@ const Send = (props) => {
                         <Form.Control
                             type="text"
                             name="address"
+                            onKeyPress={helper.inputSpaceValidation}
                             placeholder="Enter Recipient's address "
                             required={true}
                         />
@@ -210,6 +219,7 @@ const Send = (props) => {
                                 name="amount"
                                 placeholder={t("SEND_AMOUNT")}
                                 step="any"
+                                onKeyPress={helper.inputAmountValidation}
                                 className={amountField > props.transferableAmount ? "error-amount-field" : ""}
                                 value={enteredAmount}
                                 onChange={handleAmountChange}
@@ -217,7 +227,7 @@ const Send = (props) => {
                             />
                             {
                                 tokenDenom === "uxprt" ?
-                                    <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data"}><span
+                                    <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(props.transferableAmount)}><span
                                         className="title">Transferable Balance:</span> <span
                                         className="value"
                                         title={props.transferableAmount}>{props.transferableAmount.toLocaleString()} XPRT</span> </span>
@@ -235,7 +245,7 @@ const Send = (props) => {
                             <p className={checkAmountError ? "show amount-error text-left" : "hide amount-error text-left"}>{t("AMOUNT_ERROR_MESSAGE")}</p>
                         </div>
                     </div>
-                    {mode === "normal" ?
+                    {mode !== "kepler" ?
                         <>
                             <div className="memo-dropdown-section">
                                 <p onClick={handleMemoChange} className="memo-dropdown"><span
@@ -285,7 +295,7 @@ const Send = (props) => {
                     {keplerError !== '' ?
                         <p className="form-error">{keplerError}</p> : null}
                     <div className="buttons">
-                        {mode === "normal"  ?
+                        {mode !== "kepler"  ?
                             <div className="button-section">
                                 <button className="button button-primary"
                                     disabled={checkAmountError || amountField === 0 || props.transferableAmount === 0}

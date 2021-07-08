@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {
     Form,
     Modal,
@@ -36,17 +36,27 @@ const IbcTxn = (props) => {
     const [tokenDenom, setTokenDenom] = useState("uxprt");
     const [transferableAmount, setTransferableAmount] = useState(props.transferableAmount);
     const [tokenItem, setTokenItem] = useState({});
-    let mode = localStorage.getItem('loginMode');
-    let loginAddress = localStorage.getItem('address');
     const [feeModal, setFeeModal] = useState(false);
     const [formData, setFormData] = useState({});
+    const [channels, setChannels] = useState([]);
+    const [selectedChannel, setSelectedChannel] = useState();
 
+    let mode = localStorage.getItem('loginMode');
+    let loginAddress = localStorage.getItem('address');
+    useEffect(()=>{
+        if(IBC_CONF === "ibcStaging.json"){
+            setChannels(ibcConfig.testNetChannels);
+        }else {
+            setChannels(ibcConfig.mainNetChannels);
+        }
+    },);
     const handleClose = () => {
         setShow(false);
         setTxResponse('');
     };
 
     const handleAmountChange = (evt) => {
+        setKeplerError('');
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
             if(tokenDenom === "uxprt") {
@@ -75,7 +85,7 @@ const IbcTxn = (props) => {
             let channel = event.target.channel.value;
             setChannelID(channel);
         }
-        if (mode === "normal") {
+        if (mode !== "kepler") {
             let memo = "";
             if (memoStatus) {
                 memo = event.target.memo.value;
@@ -89,15 +99,16 @@ const IbcTxn = (props) => {
                     return ;
                 }
                 const data = {
-                    amount : amountField,
-                    denom : tokenDenom,
-                    memo : memo,
-                    toAddress : event.target.address.value,
-                    channelID: customChain ?  event.target.channel.value : channelID,
+                    amount: amountField,
+                    denom: tokenDenom,
+                    memo: memo,
+                    toAddress: helper.trimWhiteSpaces(event.target.address.value),
+                    channelID: customChain ? helper.trimWhiteSpaces(event.target.channel.value) : helper.trimWhiteSpaces(channelID),
+                    channelUrl:selectedChannel ? selectedChannel.url : undefined,
                     modalHeader: "Send Token",
                     formName: "ibc",
-                    successMsg : t("SUCCESSFUL_SEND"),
-                    failedMsg : t("FAILED_SEND")
+                    successMsg: t("SUCCESSFUL_SEND"),
+                    failedMsg: t("FAILED_SEND")
                 };
                 setFormData(data);
                 setKeplerError('');
@@ -108,7 +119,7 @@ const IbcTxn = (props) => {
             setKeplerError('');
             setShow(true);
         }
-
+        event.target.reset();
     };
     const handleSubmitKepler = async event => {
         setShow(true);
@@ -121,7 +132,7 @@ const IbcTxn = (props) => {
         }
         let inputChannelID = customChain ? event.target.channel.value : channelID;
         let msg =  transactions.MakeIBCTransferMsg(inputChannelID, loginAddress,
-            event.target.address.value,(amountField * config.xprtValue), undefined, undefined, tokenDenom);
+            event.target.address.value,(amountField * config.xprtValue), undefined, undefined, tokenDenom, selectedChannel ? selectedChannel.url : undefined);
         await msg.then(result => {
             const response = transactions.TransactionWithKeplr( [result],aminoMsgHelper.fee(0, 250000));
             response.then(result => {
@@ -141,7 +152,7 @@ const IbcTxn = (props) => {
                 ? err.response.data.message
                 : err.message);
         });
-
+        event.target.reset();
     };
 
     if (loader) {
@@ -153,6 +164,7 @@ const IbcTxn = (props) => {
     };
 
     const onChangeSelect = (evt) => {
+        setSelectedChannel();
         if(evt.target.value === "Custom"){
             setCustomChain(true);
             setChain(evt.target.value);
@@ -161,6 +173,11 @@ const IbcTxn = (props) => {
             let id = evt.target.value.substr(evt.target.value.indexOf('/') + 1);
             setChannelID(id);
             setChain(evt.target.value);
+            channels.forEach(async (item) => {
+                if(evt.target.value === item.id){
+                    setSelectedChannel(item);
+                }
+            });
         }
         setKeplerError('');
     };
@@ -201,12 +218,9 @@ const IbcTxn = (props) => {
             </Popover.Content>
         </Popover>
     );
-    let channels=[];
-    if(IBC_CONF === "ibcStaging.json"){
-        channels = ibcConfig.testNetChannels;
-    }else {
-        channels = ibcConfig.mainNetChannels;
-    }
+    const disable = (
+        chain === ""
+    );
     return (
         <div className="send-container">
             <div className="form-section">
@@ -225,7 +239,7 @@ const IbcTxn = (props) => {
                                             key={index + 1}
                                             className=""
                                             value={channel.id}>
-                                            {channel.name}
+                                            {channel.name} ({channel.id.substr(channel.id.indexOf('/') + 1)} / {channel.port})
                                         </MenuItem>
                                     );
                                 })
@@ -238,6 +252,13 @@ const IbcTxn = (props) => {
                             </MenuItem>
                         </Select>
                     </div>
+                    {selectedChannel ?
+                        <div className="form-field">
+                            <p className="label info">{t("DESCRIPTION")}</p>
+                            <div className="amount-field"><span className="description-info">{selectedChannel.description}</span></div>
+                        </div>
+
+                        : ""}
                     {
                         customChain ?
                             <>
@@ -245,6 +266,7 @@ const IbcTxn = (props) => {
                                     <p className="label info">{t("PORT")}</p>
                                     <Form.Control
                                         type="text"
+                                        onKeyPress={helper.inputSpaceValidation}
                                         name="port"
                                         placeholder={t("ENTER_PORT")}
                                         required={true}
@@ -255,6 +277,7 @@ const IbcTxn = (props) => {
                                     <p className="label info">{t("CHANNEL")}</p>
                                     <Form.Control
                                         type="text"
+                                        onKeyPress={helper.inputSpaceValidation}
                                         name="channel"
                                         placeholder={t("ENTER_CHANNEL")}
                                         required={true}
@@ -277,6 +300,7 @@ const IbcTxn = (props) => {
                         </p>
                         <Form.Control
                             type="text"
+                            onKeyPress={helper.inputSpaceValidation}
                             name="address"
                             placeholder="Enter Recipient's address "
                             required={true}
@@ -323,6 +347,7 @@ const IbcTxn = (props) => {
                                 step="any"
                                 className={amountField > props.transferableAmount ? "error-amount-field" : ""}
                                 value={enteredAmount}
+                                onKeyPress={helper.inputAmountValidation}
                                 onChange={handleAmountChange}
                                 required={true}
                             />
@@ -340,7 +365,7 @@ const IbcTxn = (props) => {
                             }
                         </div>
                     </div>
-                    {mode === "normal" ?
+                    {mode !== "kepler" ?
                         <>
                             <div className="memo-container">
                                 <div className="memo-dropdown-section">
@@ -395,16 +420,16 @@ const IbcTxn = (props) => {
                         : null
                     }
                     <div className="buttons">
-                        {mode === "normal"  ?
+                        {mode !== "kepler"  ?
                             <div className="button-section">
                                 <button className="button button-primary"
-                                    disabled={checkAmountError || amountField === 0 || props.transferableAmount === 0}
+                                    disabled={disable || checkAmountError || amountField === 0 || props.transferableAmount === 0}
                                 >{t("NEXT")}
                                 </button>
                             </div>
                             :
                             <button className="button button-primary"
-                                disabled={checkAmountError || amountField === 0 || props.transferableAmount === 0}
+                                disabled={disable || checkAmountError || amountField === 0 || props.transferableAmount === 0}
                             >{t("SUBMIT")}</button>
                         }
                     </div>

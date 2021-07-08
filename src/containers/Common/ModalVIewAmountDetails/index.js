@@ -3,10 +3,12 @@ import React, {useState} from 'react';
 import {connect} from "react-redux";
 import transactions from "../../../utils/transactions";
 import helper from "../../../utils/helper";
+import {useTranslation} from "react-i18next";
 const tmRPC = require("@cosmjs/tendermint-rpc");
 const {QueryClient, setupIbcExtension} = require("@cosmjs/stargate");
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 const ModalViewAmountDetails = (props) => {
+    const {t} = useTranslation();
     const [ibcList, setIbcList] = useState([]);
     const [show, setShow] = useState(false);
     const handleClose = () => {
@@ -42,7 +44,7 @@ const ModalViewAmountDetails = (props) => {
                 onHide={handleClose}>
                 <Modal.Header className="result-header" closeButton>
                     <h3 className="heading">
-                        Tokens received via IBC
+                        {t("RECEIVED_IBC_TOKENS")}
                     </h3>
                 </Modal.Header>
                 <Modal.Body className="faq-modal-body">
@@ -61,7 +63,7 @@ const ModalViewAmountDetails = (props) => {
                     </ul>
                 </Modal.Body>
             </Modal>
-            <span className="view-button" onClick={handleModal}>View</span>
+            <span className="view-button" onClick={handleModal}>{t("VIEW")}</span>
         </>
 
     );

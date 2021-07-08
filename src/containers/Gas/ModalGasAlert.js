@@ -9,6 +9,9 @@ import transactions from "../../utils/transactions";
 import {connect} from "react-redux";
 import Icon from "../../components/Icon";
 import ModalDecryptKeyStore from "../KeyStore/ModalDecryptKeystore";
+import aminoMsgHelper from "../../utils/aminoMsgHelper";
+import ModalViewTxnResponse from "../Common/ModalViewTxnResponse";
+import Loader from "../../components/Loader";
 
 const ModalGasAlert = (props) => {
     const {t} = useTranslation();
@@ -17,14 +20,20 @@ const ModalGasAlert = (props) => {
     const [activeFeeState, setActiveFeeState] = useState("Average");
     const [checkAmountError, setCheckAmountError] = useState(false);
     const [showDecryptModal, setShowDecryptModal] = useState(false);
+    const [feeModal, setFeeModal] = useState(true);
+    const [errorMessage, setErrorMessage] = useState("");
     const [gas, setGas] = useState(config.gas);
     const [fee, setFee] = useState(config.averageFee);
+    const [response, setResponse] = useState('');
+    const loginMode = localStorage.getItem('loginMode');
+    const [loader, setLoader] = useState(false);
+
     const accountType = localStorage.getItem('account');
     useEffect(() => {
-        if(props.formData.formName === "withdrawMultiple" || props.formData.formName === "withdrawAddress" || props.formData.formName === "withdrawValidatorRewards" || props.formData.formName === "redelegate" || props.formData.formName === "unbond"){
-            if(props.transferableAmount < transactions.XprtConversion(gas * fee)){
+        if (props.formData.formName === "withdrawMultiple" || props.formData.formName === "withdrawAddress" || props.formData.formName === "withdrawValidatorRewards" || props.formData.formName === "redelegate" || props.formData.formName === "unbond") {
+            if (props.transferableAmount < transactions.XprtConversion(gas * fee)) {
                 setCheckAmountError(true);
-            }else {
+            } else {
                 setCheckAmountError(false);
             }
         }else if(accountType === "vesting" && props.formData.formName === "delegate"){
@@ -35,13 +44,12 @@ const ModalGasAlert = (props) => {
             }
         }
         else {
-            if((props.transferableAmount - (props.formData.amount*1)) < transactions.XprtConversion(gas * fee)){
+            if ((props.transferableAmount - (props.formData.amount * 1)) < transactions.XprtConversion(gas * fee)) {
                 setCheckAmountError(true);
-            }else {
+            } else {
                 setCheckAmountError(false);
             }
         }
-
 
         setFee(gas * fee);
     }, []);
@@ -58,9 +66,10 @@ const ModalGasAlert = (props) => {
     };
 
     const handleGasChange = (event) => {
-        if((event.target.value * 1) >= 80000 && (event.target.value * 1) <= 2000000){
+        if ((event.target.value * 1) >= 80000 && (event.target.value * 1) <= 2000000) {
             setGasValidationError(false);
             setGas(event.target.value * 1);
+
             if (activeFeeState === "Average") {
                 setFee((event.target.value * 1) * config.averageFee);
             } else if (activeFeeState === "High") {
@@ -68,7 +77,7 @@ const ModalGasAlert = (props) => {
             } else if (activeFeeState === "Low") {
                 setFee((event.target.value * 1) * config.lowFee);
             }
-            if(amountTxns || vestingDelegationCheck){
+            if (amountTxns|| vestingDelegationCheck) {
                 if (activeFeeState === "Average" && (transactions.XprtConversion((event.target.value * 1) * config.averageFee)) > props.transferableAmount) {
                     setCheckAmountError(true);
                 } else if (activeFeeState === "High" && (transactions.XprtConversion((event.target.value * 1) * config.highFee)) > props.transferableAmount) {
@@ -78,7 +87,7 @@ const ModalGasAlert = (props) => {
                 } else {
                     setCheckAmountError(false);
                 }
-            }else {
+            } else {
                 if (activeFeeState === "Average" && (transactions.XprtConversion((event.target.value * 1) * config.averageFee)) + props.formData.amount > props.transferableAmount) {
                     setCheckAmountError(true);
                 } else if (activeFeeState === "High" && (transactions.XprtConversion((event.target.value * 1) * config.highFee)) + props.formData.amount > props.transferableAmount) {
@@ -87,9 +96,10 @@ const ModalGasAlert = (props) => {
                     setCheckAmountError(true);
                 } else {
                     setCheckAmountError(false);
+
                 }
             }
-        }else {
+        } else {
             setGasValidationError(true);
         }
 
@@ -99,51 +109,86 @@ const ModalGasAlert = (props) => {
     const handleFee = (feeType, feeValue) => {
         setActiveFeeState(feeType);
         setFee(gas * feeValue);
-        if(amountTxns || vestingDelegationCheck){
-            if (props.transferableAmount  < transactions.XprtConversion(gas * feeValue)) {
+        if (amountTxns || vestingDelegationCheck) {
+            if (props.transferableAmount < transactions.XprtConversion(gas * feeValue)) {
                 setCheckAmountError(true);
-            }else {
+            } else {
                 setCheckAmountError(false);
             }
-        }else {
-            if ((props.transferableAmount - (props.formData.amount*1)) < transactions.XprtConversion(gas * feeValue)) {
+        } else {
+            if ((props.transferableAmount - (props.formData.amount * 1)) < transactions.XprtConversion(gas * feeValue)) {
                 setCheckAmountError(true);
-            }else {
+            } else {
                 setCheckAmountError(false);
             }
         }
 
     };
 
-    const handleNext = () =>{
-        if(props.formData.formName === "delegate") {
-            setShowDecryptModal(true);
+    const handleNext = () => {
+        setShowDecryptModal(true);
+        setFeeModal(false);
+    };
+
+    if (loader) {
+        return <Loader/>;
+    }
+
+    const handleLedgerSubmit = async () => {
+        setLoader(true);
+        const loginAddress = localStorage.getItem('address');
+        let response;
+
+        let accountNumber = localStorage.getItem('accountNumber')*1;
+        let addressIndex = localStorage.getItem('addressIndex')*1;
+
+        if (props.formData.formName === "ibc") {
+            let msg = transactions.MakeIBCTransferMsg(props.formData.channelID, loginAddress,
+                props.formData.toAddress, (props.formData.amount * config.xprtValue), undefined, undefined, props.formData.denom);
+            await msg.then(result => {
+                response = transactions.TransactionWithMnemonic([result],
+                    aminoMsgHelper.fee(Math.trunc(fee), gas), props.formData.memo, "",
+                    transactions.makeHdPath(accountNumber, addressIndex), "");
+            }).catch(err => {
+                setLoader(false);
+                setErrorMessage(err.response
+                    ? err.response.data.message
+                    : err.message);
+            });
+        } else {
+            response = transactions.getTransactionResponse(loginAddress, props.formData, fee, gas, "", accountNumber, addressIndex);
         }
-        else {
-            setShowDecryptModal(true);
-        }
+
+        response.then(result => {
+            setResponse(result);
+            console.log(result);
+            setLoader(false);
+            setFeeModal(false);
+        }).catch(err => {
+            setLoader(false);
+            setErrorMessage(err.response
+                ? err.response.data.message
+                : err.message);
+        });
     };
 
     const handlePrevious = () => {
-        if(props.formData.formName === "delegate"){
+        if (props.formData.formName === "delegate") {
             props.setFeeModal(false);
             props.setInitialModal(true);
             setCheckAmountError(false);
             setGas(config.gas);
             setFee(config.averageFee);
-        }
-
-        else if(props.formData.formName === "send" || props.formData.formName === "ibc"){
+        } else if (props.formData.formName === "send" || props.formData.formName === "ibc") {
             props.handleClose();
-        }
-        else {
+        } else {
             props.setFeeModal(false);
             props.setInitialModal(true);
         }
     };
     return (
         <>
-            {!showDecryptModal ?
+            {feeModal ?
                 <>
                     <Modal.Header className="result-header success" closeButton>
                         <div className="previous-section txn-header">
@@ -230,20 +275,37 @@ const ModalGasAlert = (props) => {
                             </div>
                             : ""
                         }
+                        {
+                            errorMessage !== "" ?
+                                <p className="form-error">{errorMessage}</p>
+                                : null
+                        }
                         <div className="buttons">
                             <button className="button button-primary" disabled={gasValidationError || checkAmountError}
-                                onClick={() => handleNext()}>{t("NEXT")}</button>
+                                onClick={loginMode === "normal" ? handleNext : handleLedgerSubmit}>{loginMode === "normal" ? t("NEXT") : t("SUBMIT")}</button>
                         </div>
                     </Modal.Body>
-                </> :
+                </> : ""
+            }
+            {showDecryptModal ?
                 <ModalDecryptKeyStore
                     formData={props.formData}
                     fee={fee}
                     gas={gas}
                     handleClose={props.handleClose}
                     setShowDecryptModal={setShowDecryptModal}
+                    setFeeModal={setFeeModal}
                 />
+                : ""
             }
+            {response !== '' ?
+                <ModalViewTxnResponse
+                    response={response}
+                    successMsg={props.formData.successMsg}
+                    failedMsg={props.formData.failedMsg}
+                    handleClose={props.handleClose}
+                />
+                : null}
         </>
     );
 };

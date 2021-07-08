@@ -94,7 +94,6 @@
       display: -webkit-flex;
       margin-top: 20px;
       flex-wrap: wrap;
-      justify-content: center;
     }
 
     padding-top: 15px;
@@ -323,7 +322,6 @@
     display: -webkit-flex;
     justify-content: space-between;
     padding: 15px 20px;
-    border-bottom: 1px solid #E3E5F4;
 
     p {
       font-family: 'Poppins', sans-serif;
@@ -343,7 +341,7 @@
     padding: 10px 20px;
 
     &:hover {
-      background: #F5F6FA;
+      background: rgba(0,0,0,.075);
     }
 
     p {
@@ -434,6 +432,7 @@
   font-weight: 500;
   font-size: 14px;
   color: #8D9CB5;
+  word-break: break-word;
 }
 
 .memo-dropdown-section {

@@ -27,6 +27,7 @@ const ModalActions = (props) => {
     const [rewards, setRewards] = useState(0);
     const [delegateStatus, setDelegateStatus] = useState(false);
     const [withdraw, setWithDraw] = useState(false);
+
     useEffect(() => {
         let address = localStorage.getItem('address');
         const fetchValidatorRewards = async () => {
@@ -66,10 +67,16 @@ const ModalActions = (props) => {
         fetchValidatorRewards();
     }, []);
 
+    const handleCloseInitialModal = () => {
+        setShow(false);
+        props.setModalOpen('');
+    };
+
     const handleClose = () => {
         setShow(false);
         props.setModalOpen('');
     };
+
     const handleModal = (name, address, validatorMoniker) => {
         setShow(false);
         setInitialModal(false);
@@ -98,7 +105,7 @@ const ModalActions = (props) => {
                     centered={true}
                     show={show}
                     className="actions-modal"
-                    onHide={handleClose}>
+                    onHide={handleCloseInitialModal}>
 
                     <>
                         <Modal.Body className="actions-modal-body">

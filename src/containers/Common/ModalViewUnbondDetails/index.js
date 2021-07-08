@@ -3,8 +3,10 @@ import React, {useState} from 'react';
 import {connect} from "react-redux";
 import transactions from "../../../utils/transactions";
 import moment from "moment";
+import {useTranslation} from "react-i18next";
 
 const ModalViewUnbondDetails = (props) => {
+    const {t} = useTranslation();
     const [show, setShow] = useState(false);
     const handleClose = () => {
         setShow(false);
@@ -25,13 +27,13 @@ const ModalViewUnbondDetails = (props) => {
                 onHide={handleClose}>
                 <Modal.Header className="result-header" closeButton>
                     <h3 className="heading">
-                        View Unbonding XPRT Schedule
+                        {t("VIEW_UNBOND_SCHEDULE")}
                     </h3>
                 </Modal.Header>
                 <Modal.Body className="list-modal-body">
                     <div className="unbonding-schedule-list-header">
-                        <p>Unbonding Amount</p>
-                        <p>Date</p>
+                        <p>{t("UNBONDING_AMOUNT")}</p>
+                        <p>{t("DATE")}</p>
                     </div>
                     {props.list ?
                         props.list.map((item) => {
@@ -51,7 +53,7 @@ const ModalViewUnbondDetails = (props) => {
                     }
                 </Modal.Body>
             </Modal>
-            <span className="view-button" onClick={handleModal} title="View Unbonding XPRT Schedule">View</span>
+            <span className="view-button" onClick={handleModal} title="View Unbonding XPRT Schedule">{t("VIEW")}</span>
         </>
 
     );

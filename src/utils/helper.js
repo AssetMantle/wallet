@@ -162,6 +162,21 @@ function ValidateAmount(value){
     return new Error('');
 }
 
+function inputSpaceValidation(e){
+    if (e.key === " ") {
+        e.preventDefault();
+    }
+}
+
+function inputAmountValidation(e){
+    if (e.key === "e" || e.key === "-" || e.key === "+") {
+        e.preventDefault();
+    }
+}
+function trimWhiteSpaces(data){
+    return data.split(' ').join('');
+}
+
 export default {
     randomNum,
     stringTruncate,
@@ -177,5 +192,8 @@ export default {
     denomChange,
     mnemonicTrim,
     mnemonicValidation,
-    ValidateAmount
+    ValidateAmount,
+    inputSpaceValidation,
+    inputAmountValidation,
+    trimWhiteSpaces
 };

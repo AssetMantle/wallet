@@ -100,6 +100,11 @@ const ModalUnbond = (props) => {
         });
     };
 
+    const selectTotalBalanceHandler = (value) =>{
+        setEnteredAmount(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)).toString());
+        setAmount(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)));
+    };
+
     if (loader) {
         return <Loader/>;
     }
@@ -143,9 +148,10 @@ const ModalUnbond = (props) => {
                                         step="any"
                                         className={amount > props.delegationAmount ? "error-amount-field" : ""}
                                         onChange={handleAmountChange}
+                                        onKeyPress={helper.inputAmountValidation}
                                         required={true}
                                     />
-                                    <span className={props.delegationAmount === 0 ? "empty info-data" : "info-data"}><span
+                                    <span className={props.delegationAmount === 0 ? "empty info-data info-link" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(props.delegationAmount)}><span
                                         className="title">{t("DELEGATED_AMOUNT")}:</span> <span
                                         className="value">{props.delegationAmount} XPRT</span> </span>
                                 </div>

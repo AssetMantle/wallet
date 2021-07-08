@@ -53,7 +53,7 @@ export const GlobalStyles = createGlobalStyle`
     .token-info-section .info-heading{
     color: ${({theme}) => theme.infoHeadingColor};
     }
-    .token-info-section .info-box{
+    .token-info-section .info-box, .advanced-wallet-accordion .card .collapse.show{
     border-color:${({theme}) => theme.tableBorderColor} !important;;
     }
     .tab-header .left .nav-pills .nav-link{

@@ -5,12 +5,32 @@ import React from 'react';
 import {useTranslation} from "react-i18next";
 import {connect} from "react-redux";
 import success from "../../../assets/images/success.svg";
+import failed from "../../../assets/images/inactive.svg";
+import transactions from "../../../utils/transactions";
+import {fetchDelegationsCount} from "../../../actions/delegations";
+import {fetchBalance, fetchTransferableVestingAmount} from "../../../actions/balance";
+import {fetchRewards} from "../../../actions/rewards";
+import {fetchUnbondDelegations} from "../../../actions/unbond";
+import {fetchTokenPrice} from "../../../actions/tokenPrice";
+import {fetchReceiveTransactions, fetchTransactions} from "../../../actions/transactions";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const ModalViewTxnResponse = (props) => {
     const {t} = useTranslation();
     const mode = localStorage.getItem('loginMode');
+    if(props.response !== undefined) {
+        let address = localStorage.getItem('address');
+        props.fetchDelegationsCount(address);
+        props.fetchBalance(address);
+        props.fetchRewards(address);
+        props.fetchUnbondDelegations(address);
+        props.fetchTokenPrice();
+        props.fetchTransactions(address, 5, 1);
+        props.fetchReceiveTransactions(address, 5, 1);
+        props.fetchTransferableVestingAmount(address);
+        transactions.updateFee(address);
+    }
     let response = props.response;
     return (
         <>
@@ -49,6 +69,7 @@ const ModalViewTxnResponse = (props) => {
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
+                                <img src={failed} alt="success-image"/>
                                 {mode === "kepler" ?
                                     <>
                                         <p>{response.rawLog}</p>
@@ -78,12 +99,15 @@ const ModalViewTxnResponse = (props) => {
     );
 };
 
-const stateToProps = (state) => {
-    return {
-        balance: state.balance.amount,
-        tokenPrice: state.tokenPrice.tokenPrice,
-        transferableAmount: state.balance.transferableAmount,
-    };
+const actionsToProps = {
+    fetchDelegationsCount,
+    fetchBalance,
+    fetchRewards,
+    fetchUnbondDelegations,
+    fetchTokenPrice,
+    fetchTransactions,
+    fetchReceiveTransactions,
+    fetchTransferableVestingAmount
 };
 
-export default connect(stateToProps)(ModalViewTxnResponse);
+export default connect(null, actionsToProps)(ModalViewTxnResponse);

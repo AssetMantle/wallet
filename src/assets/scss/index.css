@@ -171,6 +171,16 @@ html, body {
   .form-field input, .form-field .amount-field, .form-field textarea, .form-field .file-upload, .form-field .info-data {
     max-width: 450px !important;
     flex: 1; }
+  .form-field .description-info {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 150%;
+    color: #8D9CB5; }
+  .form-field .info-link {
+    text-decoration: underline;
+    text-decoration-color: #8D9CB5;
+    cursor: pointer; }
   .form-field .info-data {
     margin: 0 0 10px 0;
     display: block;
@@ -510,6 +520,69 @@ html, body {
   text-decoration: underline;
   text-decoration-color: #8D9CB5; }
 
+.string-truncate {
+  width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block; }
+
+.delegation-rank {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e50913;
+  color: #ffffff;
+  border-radius: 50%; }
+
+.delegation-rank {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+
+.delegation-rank.active {
+  background: #e50913;
+  color: #fff; }
+
+.delegation-rank.inactive {
+  color: #e50913;
+  background: #e509130f; }
+
+.fetching:after {
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: bottom;
+  -webkit-animation: ellipsis steps(4, end) 1500ms infinite;
+  animation: ellipsis steps(4, end) 1500ms infinite;
+  content: "\2026";
+  /* ascii code for the ellipsis character */
+  width: 0px; }
+
+@keyframes ellipsis {
+  to {
+    width: 20px; } }
+@-webkit-keyframes ellipsis {
+  to {
+    width: 20px; } }
+.buttons-list {
+  display: flex;
+  display: -webkit-flex;
+  align-content: center;
+  justify-content: space-between;
+  flex-wrap: wrap; }
+  .buttons-list p {
+    margin: 0; }
+  .buttons-list .button {
+    line-height: 1.3; }
+
+ul li em {
+  font-style: normal; }
+
 /*--------------------------------------------------------------
 # main styles
 --------------------------------------------------------------*/
@@ -582,8 +655,7 @@ html, body {
       display: flex;
       display: -webkit-flex;
       margin-top: 20px;
-      flex-wrap: wrap;
-      justify-content: center; }
+      flex-wrap: wrap; }
     .footer .social-links-section a {
       width: 28px;
       height: 28px;
@@ -736,8 +808,7 @@ html, body {
     display: flex;
     display: -webkit-flex;
     justify-content: space-between;
-    padding: 15px 20px;
-    border-bottom: 1px solid #E3E5F4; }
+    padding: 15px 20px; }
     .list-modal-body .unbonding-schedule-list-header p {
       font-family: 'Poppins', sans-serif;
       font-weight: 500;
@@ -752,7 +823,7 @@ html, body {
     justify-content: space-between;
     padding: 10px 20px; }
     .list-modal-body .unbonding-schedule-list:hover {
-      background: #F5F6FA; }
+      background: rgba(0, 0, 0, 0.075); }
     .list-modal-body .unbonding-schedule-list p {
       font-family: 'Poppins', sans-serif;
       font-weight: 500;
@@ -814,7 +885,8 @@ html, body {
   font-family: 'Poppins', sans-serif;
   font-weight: 500;
   font-size: 14px;
-  color: #8D9CB5; }
+  color: #8D9CB5;
+  word-break: break-word; }
 
 .memo-dropdown-section {
   display: flex;
@@ -1510,6 +1582,9 @@ html, body {
   color: #1A73B4; }
 .wallet-main-section .txns-container table tbody .type {
   color: #8D9CB5; }
+.wallet-main-section .txns-container table tbody .amount {
+  display: flex;
+  align-items: center; }
 .wallet-main-section .txns-container table tbody .amount, .wallet-main-section .txns-container table tbody .fee, .wallet-main-section .txns-container table tbody .time {
   font-family: 'Poppins', sans-serif;
   font-weight: 500;
@@ -1677,7 +1752,7 @@ html, body {
         line-height: 180%;
         text-align: center;
         margin: 0;
-        padding: 10px 0;
+        padding: 10px 10px;
         cursor: pointer; }
         .header .profile-section .profile-dropdown .dropdown-menu .dropdown-footer p:first-child {
           border-right: 1px solid; }
@@ -1851,12 +1926,13 @@ html, body {
         margin-right: 10px;
         width: 23px;
         border-radius: 50%; }
-      .validators-section table tbody td:first-child {
-        align-items: center;
-        padding-left: 40px;
+      .validators-section table tbody td .validator-name {
         font-size: 14px;
         line-height: 150%;
         color: #1A73B4; }
+      .validators-section table tbody td:first-child {
+        align-items: center;
+        padding-left: 40px; }
     .validators-section table tr:first-child td {
       padding-top: 30px; }
 
@@ -2415,7 +2491,11 @@ html, body {
     margin: 0; }
 
   .list-modal-body .unbonding-schedule-list {
-    display: block; } }
+    display: block; }
+
+  .delegate-modal .delegate-modal-body .buttons .button {
+    width: 140px;
+    padding: 0.2rem 0.8rem; } }
 /*--------------------------------------------------------------
 # header mediaqueries styles
 --------------------------------------------------------------*/

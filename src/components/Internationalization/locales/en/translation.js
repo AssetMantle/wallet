@@ -239,7 +239,17 @@ let English = {
         "DELEGATIONS":"Delegations",
         "VALIDATOR":"Validator",
         "AVAILABLE_REWARDS":"Available Rewards",
-
+        "RECEIVED_IBC_TOKENS":"Tokens received via IBC",
+        "VIEW":"View",
+        "VIEW_UNBOND_SCHEDULE":"View Unbonding XPRT Schedule",
+        "UNBONDING_AMOUNT":"Unbonding Amount",
+        "DATE":"Date",
+        "VESTING_SCHEDULE":"Vesting Schedule",
+        "UNLOCKING_TOKENS":"Unlocking Tokens",
+        "FROM_DATE":"From Date",
+        "TO_DATE":"To Date",
+        "CONTINUE_WITH_LEDGER":"Continue With Ledger",
+        "USE_LEDGER":"Use Ledger"
     }
 };
 

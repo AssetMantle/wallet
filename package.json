@@ -2,12 +2,18 @@
   "name": "pwallet",
   "private": true,
   "dependencies": {
+    "@cosmjs/amino": "^v0.25.4",
     "@cosmjs/crypto": "^v0.25.4",
+    "@cosmjs/encoding": "^v0.25.4",
+    "@cosmjs/launchpad": "^v0.25.4",
+    "@cosmjs/ledger-amino": "git://github.com/persistenceOne/ledger-amino.git#v0.1.0",
     "@cosmjs/math": "^0.25.4",
     "@cosmjs/proto-signing": "^v0.25.4",
     "@cosmjs/stargate": "^v0.25.4",
     "@cosmjs/tendermint-rpc": "^v0.25.4",
+    "@cosmjs/utils": "^v0.25.4",
     "@cosmostation/cosmosjs": "^0.9.5",
+    "@ledgerhq/hw-transport": "^5.51.1",
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
     "@tendermint/sig": "^0.6.0",
@@ -74,6 +80,7 @@
     ]
   },
   "devDependencies": {
+    "@ledgerhq/hw-transport-webusb": "^5.53.1",
     "eslint": "^7.24.0",
     "eslint-plugin-react": "^7.23.2"
   }
