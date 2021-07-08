@@ -101,8 +101,8 @@ const ModalUnbond = (props) => {
     };
 
     const selectTotalBalanceHandler = (value) =>{
-        setEnteredAmount(value);
-        setAmount(value * 1);
+        setEnteredAmount(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)).toString());
+        setAmount(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)));
     };
 
     if (loader) {

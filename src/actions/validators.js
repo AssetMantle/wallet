@@ -88,11 +88,23 @@ export const fetchValidators = (address) => {
             let validators = res.validators;
             let activeValidators = [];
             let inActiveValidators = [];
+            let activeValidatorsEmptyDelegations = [];
+            let inActiveValidatorsEmptyDelegations = [];
             validators.forEach((item) => {
                 if (helper.isActive(item)) {
-                    activeValidators.push(item);
+                    let activeValidatorsData ={
+                        'data':item,
+                        'delegations':0
+                    };
+                    activeValidatorsEmptyDelegations.push(item);
+                    activeValidators.push(activeValidatorsData);
                 } else {
-                    inActiveValidators.push(item);
+                    let inActiveValidatorsData ={
+                        'data':item,
+                        'delegations':0
+                    };
+                    inActiveValidatorsEmptyDelegations.push(item);
+                    inActiveValidators.push(inActiveValidatorsData);
                 }
             });
 
@@ -107,8 +119,8 @@ export const fetchValidators = (address) => {
             });
 
             if(delegationsResponse.delegationResponses.length) {
-                const sortedActiveValidators =  validatorsDelegationSort(activeValidators, delegationsResponse.delegationResponses);
-                const sortedInactiveValidators =  validatorsDelegationSort(inActiveValidators, delegationsResponse.delegationResponses);
+                const sortedActiveValidators =  validatorsDelegationSort(activeValidatorsEmptyDelegations, delegationsResponse.delegationResponses);
+                const sortedInactiveValidators =  validatorsDelegationSort(inActiveValidatorsEmptyDelegations, delegationsResponse.delegationResponses);
 
                 activeValidators = sortedActiveValidators;
                 inActiveValidators = sortedInactiveValidators;
