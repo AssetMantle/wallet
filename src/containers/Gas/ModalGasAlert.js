@@ -161,7 +161,6 @@ const ModalGasAlert = (props) => {
 
         response.then(result => {
             setResponse(result);
-            console.log(result);
             setLoader(false);
             setFeeModal(false);
         }).catch(err => {
