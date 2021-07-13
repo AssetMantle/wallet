@@ -96,7 +96,7 @@ const ModalDecryptKeyStore = (props) => {
                 setLoader(false);
                 setErrorMessage(decryptedData.error);
             } else {
-                mnemonic = decryptedData.mnemonic;
+                mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
                 setErrorMessage("");
             }
         }

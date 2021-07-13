@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import ModalWithdraw from "../Wallet/ModalWithdraw";
 import {fetchDelegationsCount} from "../../actions/delegations";
 import {fetchBalance, fetchTransferableVestingAmount} from "../../actions/balance";
-import {fetchRewards} from "../../actions/rewards";
+import {fetchRewards, fetchTotalRewards} from "../../actions/rewards";
 import {fetchUnbondDelegations} from "../../actions/unbond";
 import {fetchTokenPrice} from "../../actions/tokenPrice";
 import {useTranslation} from "react-i18next";
@@ -23,11 +23,12 @@ const TokenInfo = (props) => {
         props.fetchDelegationsCount(address);
         props.fetchBalance(address);
         props.fetchRewards(address);
+        props.fetchTotalRewards(address);
         props.fetchUnbondDelegations(address);
         props.fetchTokenPrice();
         props.fetchTransferableVestingAmount(address);
         transactions.updateFee(address);
-        setInterval(() => props.fetchRewards(address), 10000);
+        setInterval(() => props.fetchTotalRewards(address), 10000);
     }, []);
 
     const handleRewards = (key) => {
@@ -218,7 +219,8 @@ const actionsToProps = {
     fetchRewards,
     fetchUnbondDelegations,
     fetchTokenPrice,
-    fetchTransferableVestingAmount
+    fetchTransferableVestingAmount,
+    fetchTotalRewards
 };
 
 export default connect(stateToProps, actionsToProps)(TokenInfo);

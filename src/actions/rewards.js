@@ -59,6 +59,27 @@ export const fetchValidatorCommissionInfoSuccess = (list) => {
     };
 };
 
+export const fetchTotalRewards= (address) => {
+    return async dispatch => {
+        dispatch(fetchRewardsProgress());
+        const rpcClient = await transactions.RpcClient();
+        const distributionQueryService = new QueryClientImpl(rpcClient);
+        await distributionQueryService.DelegationTotalRewards({
+            delegatorAddress: address,
+        }).then(async (delegatorRewardsResponse) => {
+            if (delegatorRewardsResponse.total.length) {
+                let rewards = helper.decimalConversion(delegatorRewardsResponse.total[0].amount, 18);
+                const fixedRewardsResponse = transactions.XprtConversion(rewards*1);
+                dispatch(fetchRewardsSuccess(fixedRewardsResponse));
+            }
+        }).catch((error) => {
+            console.log(error.response
+                ? error.response.data.message
+                : error.message);
+        });
+    };
+};
+
 export const fetchRewards = (address) => {
     return async dispatch => {
         dispatch(fetchRewardsProgress());
@@ -92,11 +113,6 @@ export const fetchRewards = (address) => {
                 }
                 dispatch(fetchValidatorRewardsListSuccess(options));
                 dispatch(fetchRewardsListProgress(delegatorRewardsResponse.rewards));
-            }
-            if (delegatorRewardsResponse.total.length) {
-                let rewards = helper.decimalConversion(delegatorRewardsResponse.total[0].amount, 18);
-                const fixedRewardsResponse = transactions.XprtConversion(rewards*1);
-                dispatch(fetchRewardsSuccess(fixedRewardsResponse));
             }
         }).catch((error) => {
             dispatch(fetchRewardsError(error.response
