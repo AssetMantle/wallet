@@ -9,7 +9,7 @@ import failed from "../../../assets/images/inactive.svg";
 import transactions from "../../../utils/transactions";
 import {fetchDelegationsCount} from "../../../actions/delegations";
 import {fetchBalance, fetchTransferableVestingAmount} from "../../../actions/balance";
-import {fetchRewards} from "../../../actions/rewards";
+import {fetchRewards, fetchTotalRewards} from "../../../actions/rewards";
 import {fetchUnbondDelegations} from "../../../actions/unbond";
 import {fetchTokenPrice} from "../../../actions/tokenPrice";
 import {fetchReceiveTransactions, fetchTransactions} from "../../../actions/transactions";
@@ -24,6 +24,7 @@ const ModalViewTxnResponse = (props) => {
         props.fetchDelegationsCount(address);
         props.fetchBalance(address);
         props.fetchRewards(address);
+        props.fetchTotalRewards(address);
         props.fetchUnbondDelegations(address);
         props.fetchTokenPrice();
         props.fetchTransactions(address, 5, 1);
@@ -107,7 +108,8 @@ const actionsToProps = {
     fetchTokenPrice,
     fetchTransactions,
     fetchReceiveTransactions,
-    fetchTransferableVestingAmount
+    fetchTransferableVestingAmount,
+    fetchTotalRewards
 };
 
 export default connect(null, actionsToProps)(ModalViewTxnResponse);
