@@ -356,6 +356,30 @@ html, body {
   .validators-list-selection .MuiSelect-select:focus {
     background-color: transparent; }
 
+.MuiMenu-list .validator-item:last-child {
+  border: 0px solid !important; }
+
+.validator-item {
+  border-bottom: 1px solid #e0e0e0 !important;
+  display: flex !important;
+  justify-content: space-between !important; }
+
+.validator-item .state.active {
+  background: rgba(29, 158, 97, 0.15);
+  color: #1D9E61;
+  font-size: 12px;
+  padding: 0px 7px;
+  display: inline !important;
+  margin-left: 5px; }
+
+.validator-item .state.inactive {
+  background: #e51f0c33;
+  color: #e50913;
+  font-size: 12px;
+  padding: 0px 7px;
+  display: inline !important;
+  margin-left: 5px; }
+
 .MuiInput-underline::before {
   border: 0px solid !important; }
 
@@ -533,8 +557,6 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #e50913;
-  color: #ffffff;
   border-radius: 50%; }
 
 .delegation-rank {
@@ -2251,6 +2273,15 @@ ul li em {
   padding-top: 10px;
   text-align: left; }
 
+.delegated-validators .info-name {
+  padding: 20px 0;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 27px;
+  font-family: 'Poppins', sans-serif;
+  color: #212529;
+  margin: 0; }
+
 /*--------------------------------------------------------------
 # importwallet styles
 --------------------------------------------------------------*/
@@ -2452,7 +2483,12 @@ ul li em {
     bottom: -2px; } }
 @media (min-width: 992px) {
   .small-screen-logo {
-    display: none; } }
+    display: none; }
+
+  .active-inactive-validators {
+    position: absolute;
+    top: 30px;
+    right: 70px; } }
 @media (max-width: 768px) {
   .token-info-section .token-info-section-body {
     padding: 0; }

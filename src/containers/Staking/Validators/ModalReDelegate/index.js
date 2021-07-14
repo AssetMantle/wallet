@@ -150,20 +150,34 @@ const ModalReDelegate = (props) => {
                                 <p className="label">Validator</p>
                                 <Select value={toValidatorAddress} className="validators-list-selection"
                                     onChange={onChangeSelect} displayEmpty>
-                                    <MenuItem value="" key={0}>
+                                    <MenuItem value="" className="validator-item" key={0}>
                                         <em>{t("SELECT_VALIDATOR")}</em>
                                     </MenuItem>
                                     {
                                         props.validators.map((validator, index) => {
                                             if (validator.description.moniker !== props.moniker) {
-                                                return (
-                                                    <MenuItem
-                                                        key={index + 1}
-                                                        className=""
-                                                        value={validator.operatorAddress}>
-                                                        {validator.description.moniker}
-                                                    </MenuItem>
-                                                );
+                                                if(helper.isActive(validator)){
+                                                    return (
+                                                        <MenuItem
+                                                            key={index + 1}
+                                                            className="validator-item"
+                                                            value={validator.operatorAddress}>
+                                                            <span>{validator.description.moniker}</span>
+                                                            <span className="state active">active </span>
+                                                        </MenuItem>
+                                                    );
+                                                }else {
+                                                    return (
+                                                        <MenuItem
+                                                            key={index + 1}
+                                                            className="validator-item"
+                                                            value={validator.operatorAddress}>
+                                                            <span>{validator.description.moniker}</span>
+                                                            <span className="state inactive">inActive </span>
+                                                        </MenuItem>
+                                                    );
+                                                }
+
                                             }
                                         })
                                     }
@@ -278,6 +292,7 @@ const ModalReDelegate = (props) => {
 };
 
 const stateToProps = (state) => {
+    console.log(state.validators.validators, "all");
     return {
         validators: state.validators.validators,
         balance: state.balance.amount,

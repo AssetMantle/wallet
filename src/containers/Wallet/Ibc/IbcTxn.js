@@ -94,7 +94,8 @@ const IbcTxn = (props) => {
             if (memoCheck) {
                 setKeplerError(t("MEMO_MNEMONIC_CHECK_ERROR"));
             } else {
-                if (chain !== "custom" && !helper.validateAddress(event.target.address.value, chain.substr(0, chain.indexOf('/')))) {
+                if (chain !== "Custom" && !helper.validateAddress(event.target.address.value, chain.substr(0, chain.indexOf('/')))) {
+                    console.log(chain, "rajuu", helper.validateAddress(event.target.address.value, chain.substr(0, chain.indexOf('/'))));
                     setKeplerError('Enter Valid  Recipient’s Address');
                     return ;
                 }
@@ -125,7 +126,7 @@ const IbcTxn = (props) => {
         setShow(true);
         setLoader(true);
         event.preventDefault();
-        if (chain !== "custom" && !helper.validateAddress(event.target.address.value, chain.substr(0, chain.indexOf('/')))) {
+        if (chain !== "Custom" && !helper.validateAddress(event.target.address.value, chain.substr(0, chain.indexOf('/')))) {
             setLoader(false);
             setKeplerError('Enter Valid  Recipient’s Address.');
             return ;

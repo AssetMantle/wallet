@@ -106,11 +106,18 @@
     bottom: -2px;
   }
 }
+
 @media (min-width: 992px) {
   .small-screen-logo {
     display: none;
   }
+  .active-inactive-validators{
+    position: absolute;
+    top: 30px;
+    right: 70px;
+  }
 }
+
 @media (max-width: 768px){
   .token-info-section .token-info-section-body{
     padding: 0  ;

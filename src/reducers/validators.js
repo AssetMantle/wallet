@@ -5,6 +5,7 @@ import {
     FETCH_INACTIVE_VALIDATORS_SUCCESS,
     FETCH_VALIDATORS_IN_PROGRESS,
     FETCH_VALIDATORS_SUCCESS,
+    FETCH_DELEGATED_VALIDATORS_SUCCESS
 } from "../constants/validators";
 import Lodash from "lodash";
 
@@ -65,6 +66,7 @@ const inActiveList = (state = [], action) => {
         return state;
     }
 };
+
 const validators = (state = [], action) => {
     if (action.type === FETCH_VALIDATORS_SUCCESS) {
         return action.list;
@@ -73,7 +75,13 @@ const validators = (state = [], action) => {
     }
 };
 
-
+const delegatedValidators = (state = [], action) => {
+    if (action.type === FETCH_DELEGATED_VALIDATORS_SUCCESS) {
+        return action.list;
+    } else {
+        return state;
+    }
+};
 
 export default combineReducers({
     activeList,
@@ -82,4 +90,5 @@ export default combineReducers({
     inActiveVotingPower,
     inProgress,
     validators,
+    delegatedValidators
 });
