@@ -3,7 +3,8 @@ This is the main repository Persistence Wallet, React + Javascript project.
 
 ## Deployments
 Tagged Releases are deployed on [wallet.persistence.one](https://wallet.persistence.one) which connects to Peristence Core mainnet.   
-Latest main branch codebase is deployed on [staging.wallet.persistence.one](https://staging.wallet.persistence.one) which connects to Persistence Core testnet.
+Latest main branch codebase is deployed on [staging.wallet.persistence.one](https://staging.wallet.persistence.one) which connects to Peristence Core mainnet.   
+Latest main branch codebase is deployed on [test-core-1.wallet.persistence.one](https://test-core-1.wallet.persistence.one) which connects to Persistence Core testnet.
 Any requests for test-tokens, questions, suggestions, are welcome on [Discord Persistence -> under wallet-development](https://discord.gg/s8hBStXjKs)
 
 ## Libraries and Integrations   
@@ -34,5 +35,7 @@ REACT_APP_API_KEY=https://persistence.testnet.rest.audit.one
 REACT_APP_TENDERMINT_RPC_ENDPOINT=https://persistence.testnet.rpc.audit.one
 # REACT_APP_EXPLORER_API is endpoint for explorer, requried for redirecting txHash
 REACT_APP_EXPLORER_API=https://test-core-1.explorer.persistence.one
+# REACT_APP_IBC_CONFIG is testnet configuration for IBC 
+REACT_APP_IBC_CONFIG=“ibcStaging.json”
 ```
 Requires Blockchain Rest Client CORS and RPC client CORS (under `.persistenceCore/config/app.toml`) to be disabled/ configured accordingly.
