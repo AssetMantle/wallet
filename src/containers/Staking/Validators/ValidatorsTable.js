@@ -14,10 +14,6 @@ const ValidatorsTable = (props) => {
         setValidator(validator);
     };
     const columns = [{
-        name: '',
-        label: '',
-        options: {sort: false}
-    },{
         name: 'validator',
         label: 'Validator',
         options: {
@@ -65,7 +61,6 @@ const ValidatorsTable = (props) => {
     }];
     const tableData = props.validatorsList.length ?
         props.validatorsList.map((validator, index) => [
-            (validator.delegations > 0) ? <div className="delegation-rank active">{index+1}</div>: <div className="delegation-rank inactive">{index+1}</div>,
             <div key={index} className="validator-name">
                 <Avatar
                     identity={validator.data.description.identity}/>

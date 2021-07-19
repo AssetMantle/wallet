@@ -19,7 +19,6 @@ const Wallet = () => {
         </Popover>
     );
 
-
     const ibcTitle = (
         <p>
             IBC
@@ -32,6 +31,7 @@ const Wallet = () => {
             </OverlayTrigger>
         </p>
     );
+
     return (
         <div className="wallet-main-section">
             <TokenInfo/>

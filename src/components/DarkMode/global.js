@@ -24,10 +24,11 @@ export const GlobalStyles = createGlobalStyle`
     // border-bottom: 1px solid ${({theme}) => theme.tableBorderColor} !important;
     // }
     
-    .wallet-main-section .tabs-section .nav-tabs{
+    .wallet-main-section .tabs-section .nav-tabs, .validators-section .main-header{
       border: 1px solid ${({theme}) => theme.tableBorderColor} !important;  
     }           
-    .wallet-main-section .tabs-section .nav-tabs .nav-link:nth-child(2){
+    .wallet-main-section .tabs-section .nav-tabs .nav-link:nth-child(2), 
+    .validators-section .main-header .left .nav-pills .nav-item:nth-child(2){
         border-left: 1px solid ${({theme}) => theme.tableBorderColor} !important;
         border-right: 1px solid ${({theme}) => theme.tableBorderColor} !important;
     }
@@ -37,11 +38,16 @@ export const GlobalStyles = createGlobalStyle`
     .wallet-main-section .send-container, .wallet-main-section .receive-container{
     border: 1px solid ${({theme}) => theme.tableBorderColor} !important;  
     }
-    .wallet-main-section .tabs-section .nav-tabs .nav-link.active{
+    .wallet-main-section .tabs-section .nav-tabs .nav-link.active,
+    .validators-section .main-header .left .nav-pills .nav-link.active, 
+    .validators-section .main-header .left .nav-pills .show > .nav-link{
         color: ${({theme}) => theme.activeTabTextColor};
     }
-    .wallet-main-section .tabs-section .nav-tabs .nav-link:focus, .wallet-main-section .tabs-section .nav-tabs .nav-link:hover,
-    .wallet-main-section .tabs-section .nav-tabs .nav-link.active{
+    .wallet-main-section .tabs-section .nav-tabs .nav-link:focus, 
+    .wallet-main-section .tabs-section .nav-tabs .nav-link:hover,
+    .wallet-main-section .tabs-section .nav-tabs .nav-link.active,
+    .validators-section .main-header .left .nav-pills .nav-link.active, 
+    .validators-section .main-header .left .nav-pills .show > .nav-link{
     border-bottom: 2px solid ${({theme}) => theme.activeTabBorderColor};
     }
     .wallet-main-section .txns-container table thead th, .validators-section table thead th{
@@ -56,7 +62,8 @@ export const GlobalStyles = createGlobalStyle`
     .token-info-section .info-box, .advanced-wallet-accordion .card .collapse.show{
     border-color:${({theme}) => theme.tableBorderColor} !important;;
     }
-    .tab-header .left .nav-pills .nav-link{
+    .validators-section .main-tab-content .active-inactive-validators .left .nav-pills .nav-link,
+    .wallet-main-section .tabs-section .tab-content .tab-header .left .nav-pills .nav-link{
       border-color:${({theme}) => theme.tableBorderColor};
     }
     .token-info-section .info-box .line .value{
@@ -67,9 +74,6 @@ export const GlobalStyles = createGlobalStyle`
     }
     .wallet-main-section .txns-container .pagination-custom{
      background-color: ${({theme}) => theme.tableBackground} !important;
-    }
-    .validators-section{
-   border-top: 1px solid ${({theme}) => theme.tableBorderColor} !important;  
     }
     .form-field .label {
     color: ${({theme}) => theme.labelColor} !important;

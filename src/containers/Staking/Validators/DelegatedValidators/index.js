@@ -17,10 +17,6 @@ const DelegatedValidators = (props) => {
         setValidator(validator);
     };
     const columns = [{
-        name: '',
-        label: '',
-        options: {sort: false}
-    },{
         name: 'validator',
         label: 'Validator',
         options: {
@@ -56,7 +52,6 @@ const DelegatedValidators = (props) => {
     }];
     const tableData = props.validatorsList.length ?
         props.validatorsList.map((validator, index) => [
-            <div key={index} className="delegation-rank inactive">{index+1}</div>,
             <div key={index} className="validator-name">
                 <Avatar
                     identity={validator.data.description.identity}/>
@@ -101,7 +96,6 @@ const DelegatedValidators = (props) => {
 
     return (
         <div className="txns-container delegated-validators">
-            <p className="info-name">Delegated Validators</p>
             <DataTable
                 columns={columns}
                 data={tableData}

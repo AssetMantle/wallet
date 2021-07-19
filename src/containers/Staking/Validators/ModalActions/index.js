@@ -14,7 +14,8 @@ import {connect} from "react-redux";
 import transactions from "../../../../utils/transactions";
 import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/distribution/v1beta1/query";
 import {QueryClientImpl as StakingQueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/staking/v1beta1/query";
-
+import config from "../../../../config";
+const NODE_CONF = process.env.REACT_APP_IBC_CONFIG;
 const ModalActions = (props) => {
     const {t} = useTranslation();
     const [show, setShow] = useState(true);
@@ -27,6 +28,7 @@ const ModalActions = (props) => {
     const [rewards, setRewards] = useState(0);
     const [delegateStatus, setDelegateStatus] = useState(false);
     const [withdraw, setWithDraw] = useState(false);
+    const [foundationNode, setFoundationNode] = useState(false);
 
     useEffect(() => {
         let address = localStorage.getItem('address');
@@ -65,6 +67,23 @@ const ModalActions = (props) => {
             });
         };
         fetchValidatorRewards();
+
+        if(NODE_CONF === "ibcStaging.json"){
+            if (config.testNetFoundationNodes.includes(props.validator.operatorAddress)) {
+                setFoundationNode(true);
+            }else {
+                setFoundationNode(false);
+            }
+        }
+        else {
+            if (config.testNetFoundationNodes.includes(props.validator.operatorAddress)) {
+                setFoundationNode(true);
+            }else {
+                setFoundationNode(false);
+            }
+        }
+
+
     }, []);
 
     const handleCloseInitialModal = () => {
@@ -137,7 +156,6 @@ const ModalActions = (props) => {
                                     : null
                             }
                             <div className="buttons-group">
-
                                 {active ?
                                     <button
                                         onClick={() => handleModal('Delegate', props.validator.operatorAddress, props.validator.description.moniker)}
@@ -161,9 +179,10 @@ const ModalActions = (props) => {
                                     className="button button-primary">
                                     {t("CLAIM_REWARDS")}
                                 </button>
-
                             </div>
-
+                            {foundationNode ?
+                                <p className="amount-warning text-left"> Warning: Foundation Nodes operate at 100% commission, you will not be receiving any staking rewards.</p>: ""
+                            }
                         </Modal.Body>
                     </>
                 </Modal>

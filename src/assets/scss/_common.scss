@@ -475,8 +475,15 @@ html, body {
   border-radius: 0;
   padding-left: 10px;
 
-  .MuiSelect-select:focus {
-    background-color: transparent;
+  .MuiSelect-select{
+    &:focus {
+      background-color: transparent;
+    }
+    display: flex !important;
+    justify-content: space-between !important;
+    .state{
+      display: none !important;
+    }
   }
 
 }
@@ -490,21 +497,22 @@ html, body {
   display: flex !important;
   justify-content: space-between !important;
 }
-.validator-item .state.active{
+
+.validators-list-selection .MuiSelect-select .state.active, .validator-item .state.active{
   background: rgba(29, 158, 97, 0.15);
   color: #1D9E61;
   font-size: 12px;
   padding: 0px 7px;
-  display: inline !important;
+  display: inline ;
   margin-left: 5px;
 }
 
-.validator-item .state.inactive{
+.validators-list-selection .MuiSelect-select .state.inactive, .validator-item .state.inactive{
   background: #e51f0c33;
   color: #e50913;
   font-size: 12px;
   padding: 0px 7px;
-  display: inline !important;
+  display: inline;
   margin-left: 5px;
 }
 .MuiInput-underline::before {

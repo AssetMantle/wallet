@@ -4,7 +4,7 @@ import {
     OverlayTrigger,
     Popover,
 } from 'react-bootstrap';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Icon from "../../../../components/Icon";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -34,10 +34,20 @@ const ModalReDelegate = (props) => {
     const [formData, setFormData] = useState({});
     const [feeModal, setFeeModal] = useState(false);
     const [checkAmountError, setCheckAmountError] = useState(false);
+    const [activeValidatorsList, setActiveValidatorsList] = useState([]);
+    const [inActiveValidatorsList, setInActiveValidatorsList] = useState([]);
+
+    useEffect(() =>{
+        if(props.validators){
+            setActiveValidatorsList(props.validators.filter(item => helper.isActive(item)));
+            setInActiveValidatorsList(props.validators.filter(item => !helper.isActive(item)));
+        }
+    },[]);
 
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
     };
+
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
         if (rex.test(evt.target.value)) {
@@ -154,30 +164,32 @@ const ModalReDelegate = (props) => {
                                         <em>{t("SELECT_VALIDATOR")}</em>
                                     </MenuItem>
                                     {
-                                        props.validators.map((validator, index) => {
+                                        activeValidatorsList.map((validator, index) => {
                                             if (validator.description.moniker !== props.moniker) {
-                                                if(helper.isActive(validator)){
-                                                    return (
-                                                        <MenuItem
-                                                            key={index + 1}
-                                                            className="validator-item"
-                                                            value={validator.operatorAddress}>
-                                                            <span>{validator.description.moniker}</span>
-                                                            <span className="state active">active </span>
-                                                        </MenuItem>
-                                                    );
-                                                }else {
-                                                    return (
-                                                        <MenuItem
-                                                            key={index + 1}
-                                                            className="validator-item"
-                                                            value={validator.operatorAddress}>
-                                                            <span>{validator.description.moniker}</span>
-                                                            <span className="state inactive">inActive </span>
-                                                        </MenuItem>
-                                                    );
-                                                }
-
+                                                return (
+                                                    <MenuItem
+                                                        key={index + 1}
+                                                        className="validator-item"
+                                                        value={validator.operatorAddress}>
+                                                        <span>{validator.description.moniker}</span>
+                                                        <span className="state active">active </span>
+                                                    </MenuItem>
+                                                );
+                                            }
+                                        })
+                                    }
+                                    {
+                                        inActiveValidatorsList.map((validator, index) => {
+                                            if (validator.description.moniker !== props.moniker) {
+                                                return (
+                                                    <MenuItem
+                                                        key={index + 1}
+                                                        className="validator-item"
+                                                        value={validator.operatorAddress}>
+                                                        <span>{validator.description.moniker}</span>
+                                                        <span className="state inactive">inActive </span>
+                                                    </MenuItem>
+                                                );
                                             }
                                         })
                                     }
