@@ -1,7 +1,7 @@
 import {
     Modal,
 } from 'react-bootstrap';
-import React from 'react';
+import React,{useEffect} from 'react';
 import {useTranslation} from "react-i18next";
 import {connect} from "react-redux";
 import success from "../../../assets/images/success.svg";
@@ -19,19 +19,21 @@ const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalViewTxnResponse = (props) => {
     const {t} = useTranslation();
     const mode = localStorage.getItem('loginMode');
-    if(props.response !== undefined) {
-        let address = localStorage.getItem('address');
-        props.fetchDelegationsCount(address);
-        props.fetchBalance(address);
-        props.fetchRewards(address);
-        props.fetchTotalRewards(address);
-        props.fetchUnbondDelegations(address);
-        props.fetchTokenPrice();
-        props.fetchTransactions(address, 5, 1);
-        props.fetchReceiveTransactions(address, 5, 1);
-        props.fetchTransferableVestingAmount(address);
-        transactions.updateFee(address);
-    }
+    useEffect(()=>{
+        if(props.response !== undefined) {
+            let address = localStorage.getItem('address');
+            props.fetchDelegationsCount(address);
+            props.fetchBalance(address);
+            props.fetchRewards(address);
+            props.fetchTotalRewards(address);
+            props.fetchUnbondDelegations(address);
+            props.fetchTokenPrice();
+            props.fetchTransactions(address, 5, 1);
+            props.fetchReceiveTransactions(address, 5, 1);
+            props.fetchTransferableVestingAmount(address);
+            transactions.updateFee(address);
+        }
+    }, []);
     let response = props.response;
     return (
         <>

@@ -46,8 +46,6 @@ const Send = (props) => {
 
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
-        // event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57
-        console.log(rex.test(evt.target.value), "test", evt.target.value, evt.keyCode );
         if (rex.test(evt.target.value)) {
             if(tokenDenom === "uxprt") {
                 if (props.transferableAmount < (evt.target.value * 1)) {
@@ -110,7 +108,7 @@ const Send = (props) => {
         event.preventDefault();
 
         if (helper.validateAddress(event.target.address.value)) {
-            const response = transactions.TransactionWithKeplr([SendMsg(loginAddress, event.target.address.value, (amountField * config.xprtValue), tokenDenom)], aminoMsgHelper.fee(0, 250000));
+            const response = transactions.TransactionWithKeplr([SendMsg(loginAddress, event.target.address.value, (amountField * config.xprtValue).toFixed(0), tokenDenom)], aminoMsgHelper.fee(0, 250000));
             response.then(result => {
                 if (result.code !== undefined) {
                     helper.accountChangeCheck(result.rawLog);
