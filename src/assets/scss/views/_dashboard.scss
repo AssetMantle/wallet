@@ -495,6 +495,13 @@
     }
 
     .profile-dropdown {
+      .ledger-verify{
+        background-color: #8d9cb5 !important;
+        padding: 2px 10px !important;
+        color: #ffffff;
+        margin: 0 5px;
+      }
+
       button {
         padding: 0;
         margin: 0;
@@ -519,7 +526,7 @@
         margin: 0px !important;
         right: auto !important;
         bottom: auto !important;
-        transform: translate(-200px, 42px) !important;
+        transform: translate(-215px, 42px) !important;
 
 
         .qr-box {
