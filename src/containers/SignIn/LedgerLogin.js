@@ -34,6 +34,10 @@ const LedgerLogin = (props) => {
     };
     const handleRoute = () => {
         if (ledgerAddress !== '') {
+            let accountNumber = 0;
+            let addressIndex = 0;
+            localStorage.setItem('accountNumber', accountNumber.toString());
+            localStorage.setItem('addressIndex', addressIndex.toString());
             localStorage.setItem('loginToken', 'loggedIn');
             localStorage.setItem('address', ledgerAddress);
             localStorage.setItem('loginMode', 'ledger');
