@@ -550,7 +550,8 @@ html, body {
   text-decoration-color: #8D9CB5; }
 
 .string-truncate {
-  width: 150px;
+  min-width: 50px;
+  max-width: 150px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1630,7 +1631,7 @@ ul li em {
 .wallet-main-section .txns-container table tbody .type {
   color: #8D9CB5; }
 .wallet-main-section .txns-container table tbody .amount {
-  display: flex;
+  display: inline-flex;
   align-items: center; }
 .wallet-main-section .txns-container table tbody .amount, .wallet-main-section .txns-container table tbody .fee, .wallet-main-section .txns-container table tbody .time {
   font-family: 'Poppins', sans-serif;

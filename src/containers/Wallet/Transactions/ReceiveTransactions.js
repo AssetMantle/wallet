@@ -99,7 +99,7 @@ const ReceiveTransactions = (props) => {
                             : ''
                         : '',
             (stxn.tx.auth_info.fee.amount !== undefined && stxn.tx.auth_info.fee.amount.length) ?
-                <div className="fee" key={index}>
+                <div className="fee text-left" key={index}>
                     {stxn.tx.auth_info.fee.amount[0].amount}
                     {stxn.tx.auth_info.fee.amount[0].denom}
                 </div> : '',

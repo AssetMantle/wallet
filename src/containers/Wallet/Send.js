@@ -46,8 +46,6 @@ const Send = (props) => {
 
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,2}$/;
-        // event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57
-        console.log(rex.test(evt.target.value), "test", evt.target.value, evt.keyCode );
         if (rex.test(evt.target.value)) {
             if(tokenDenom === "uxprt") {
                 if (props.transferableAmount < (evt.target.value * 1)) {

@@ -67,7 +67,7 @@ async function LedgerWallet(hdpath, prefix) {
 
 async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(), bip39Passphrase = "", prefix = addressPrefix) {
     const loginMode = localStorage.getItem('loginMode');
-
+    console.log(msgs , "ms");
     if(loginMode === "normal"){
         const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix);
         return Transaction(wallet, address, msgs, fee, memo);
@@ -223,11 +223,11 @@ function checkValidatorAccountAddress(validatorAddress, address) {
 
 async function getTransactionResponse(address, data, fee, gas, mnemonic="", accountNumber=0, addressIndex=0, bip39Passphrase="") {
     if(data.formName === "send"){
-        return TransactionWithMnemonic([SendMsg(address, data.toAddress, (data.amount * config.xprtValue), data.denom)], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
+        return TransactionWithMnemonic([SendMsg(address, data.toAddress, (data.amount * config.xprtValue).toFixed(0), data.denom)], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
     }
     else if (data.formName === "delegate"){
-        return TransactionWithMnemonic([DelegateMsg(address, data.validatorAddress, (data.amount * 1000000))], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
+        return TransactionWithMnemonic([DelegateMsg(address, data.validatorAddress, (data.amount * config.xprtValue))], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
     }
     else if(data.formName === "withdrawMultiple"){

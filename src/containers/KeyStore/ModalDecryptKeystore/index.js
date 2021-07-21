@@ -173,6 +173,11 @@ const ModalDecryptKeyStore = (props) => {
         props.setShowDecryptModal(false);
         props.setFeeModal(true);
     };
+
+    const handleUpdateKeystore = () => {
+        setImportMnemonic(true);
+        localStorage.removeItem('encryptedMnemonic');
+    };
     return (
         <>
             {
@@ -231,10 +236,10 @@ const ModalDecryptKeyStore = (props) => {
                                                     required={true}
                                                 />
                                             </div>
-
                                         </>
 
                                 }
+
                                 <Accordion className="advanced-wallet-accordion">
                                     <Card>
                                         <Card.Header>
@@ -284,6 +289,16 @@ const ModalDecryptKeyStore = (props) => {
                                         }
                                     </Card>
                                 </Accordion>
+                                {
+                                    !importMnemonic ?
+                                        <div className="buttons">
+                                            <p className="button-link"
+                                                onClick={handleUpdateKeystore}>
+                                                Change Keystore file
+                                            </p>
+                                        </div>
+                                        : null
+                                }
                                 <div className="buttons">
                                     <button className="button button-primary">{t("SUBMIT")}</button>
                                 </div>
