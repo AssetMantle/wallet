@@ -126,7 +126,7 @@ const DashboardHeader = () => {
 
                                     <p className="key"> {t("WALLET_ADDRESS")}
                                         {
-                                            localStorage.getItem('loginMode') === 'normal' ?
+                                            localStorage.getItem('loginMode') === 'ledger' ?
                                                 <button className="ledger-verify" onClick={ledgerShowAddress}>Verify</button>
                                                 : ""
                                         }</p>
