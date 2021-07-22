@@ -15,7 +15,6 @@ export const fetchAddress = async (accountNumber = "0", addressIndex = "0") => {
     transport.on("disconnect", () => {
         alert("ledger disconnected please login again");
         localStorage.clear();
-        history.push('/');
         window.location.reload();
     });
     const signer = new LedgerSigner(transport, {

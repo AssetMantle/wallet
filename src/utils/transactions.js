@@ -263,5 +263,6 @@ export default {
     addrToValoper,
     valoperToAddr,
     checkValidatorAccountAddress,
-    getTransactionResponse
+    getTransactionResponse,
+    LedgerWallet
 };
