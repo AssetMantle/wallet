@@ -1,15 +1,10 @@
 import {QueryClientImpl} from '@cosmjs/stargate/build/codec/cosmos/staking/v1beta1/query';
-
 import {
     FETCH_ACTIVE_VALIDATORS_SUCCESS,
     FETCH_VALIDATORS_ERROR,
     FETCH_INACTIVE_VALIDATORS_SUCCESS,
     FETCH_VALIDATORS_IN_PROGRESS,
     FETCH_VALIDATORS_SUCCESS,
-    FETCH_VALIDATOR_SUCCESS,
-    FETCH_VALIDATOR_ERROR,
-    FETCH_VALIDATOR_WITH_ADDRESS_ERROR,
-    FETCH_VALIDATOR_WITH_ADDRESS_SUCCESS
 } from "../constants/validators";
 
 import helper from "../utils/helper";
@@ -56,20 +51,31 @@ const validatorsDelegationSort = (validators, delegations) =>{
         let count = 0;
         for (const data of delegations) {
             if(item.operatorAddress === data.delegation.validatorAddress){
+                let obj = {
+                    'data':item,
+                    'delegations':data.balance.amount*1
+                };
+                delegatedValidators.push(obj);
                 count = 0;
                 break;
             }else {
                 count ++;
             }
         }
-        if(count === 0){
-            delegatedValidators.unshift(item);
-        }else {
-            delegatedValidators.push(item);
+        if(count !== 0){
+            let obj ={
+                'data':item,
+                'delegations':0
+            };
+            delegatedValidators.push(obj);
         }
     });
-    return delegatedValidators;
+    const sortDel = delegatedValidators.sort(function (a, b) {
+        return b.delegations - a.delegations;
+    });
+    return sortDel;
 };
+
 export const fetchValidators = (address) => {
     return async dispatch => {
         dispatch(fetchValidatorsInProgress());
@@ -80,22 +86,42 @@ export const fetchValidators = (address) => {
             status: false,
         }).then(async (res) => {
             let validators = res.validators;
-            const delegationsResponse = await stakingQueryService.DelegatorDelegations({
-                delegatorAddr: address,
-            });
             let activeValidators = [];
             let inActiveValidators = [];
+            let activeValidatorsEmptyDelegations = [];
+            let inActiveValidatorsEmptyDelegations = [];
             validators.forEach((item) => {
                 if (helper.isActive(item)) {
-                    activeValidators.push(item);
+                    let activeValidatorsData ={
+                        'data':item,
+                        'delegations':0
+                    };
+                    activeValidatorsEmptyDelegations.push(item);
+                    activeValidators.push(activeValidatorsData);
                 } else {
-                    inActiveValidators.push(item);
+                    let inActiveValidatorsData ={
+                        'data':item,
+                        'delegations':0
+                    };
+                    inActiveValidatorsEmptyDelegations.push(item);
+                    inActiveValidators.push(inActiveValidatorsData);
                 }
             });
 
+            const delegationsResponse = await stakingQueryService.DelegatorDelegations({
+                delegatorAddr: address,
+            }).catch((error) => {
+                console.log(error.response
+                    ? error.response.data.message
+                    : error.message);
+                dispatch(fetchActiveValidatorsSuccess(activeValidators));
+                dispatch(fetchInactiveValidatorsSuccess(inActiveValidators));
+            });
+
             if(delegationsResponse.delegationResponses.length) {
-                const sortedActiveValidators =  validatorsDelegationSort(activeValidators, delegationsResponse.delegationResponses);
-                const sortedInactiveValidators =  validatorsDelegationSort(inActiveValidators, delegationsResponse.delegationResponses);
+                const sortedActiveValidators =  validatorsDelegationSort(activeValidatorsEmptyDelegations, delegationsResponse.delegationResponses);
+                const sortedInactiveValidators =  validatorsDelegationSort(inActiveValidatorsEmptyDelegations, delegationsResponse.delegationResponses);
+
                 activeValidators = sortedActiveValidators;
                 inActiveValidators = sortedInactiveValidators;
             }
@@ -113,68 +139,4 @@ export const fetchValidators = (address) => {
     };
 };
 
-export const fetchValidatorSuccess = (data) => {
-    return {
-        type: FETCH_VALIDATOR_SUCCESS,
-        data,
-    };
-};
 
-export const fetchValidatorError = (data) => {
-    return {
-        type: FETCH_VALIDATOR_ERROR,
-        data,
-    };
-};
-
-
-export const fetchValidator = (address) => {
-    
-    return async dispatch => {
-        const rpcClient = await transactions.RpcClient();
-        const stakingQueryService = new QueryClientImpl(rpcClient);
-        await stakingQueryService.Validator({
-            validatorAddr: address,
-        }).then((res) => {
-            dispatch(fetchValidatorSuccess(res.validator));
-        }).catch((error) => {
-            dispatch(fetchValidatorError(error.response
-                ? error.response.data.message
-                : error.message));
-        });
-    };
-};
-
-export const fetchValidatorsWithAddressSuccess = (list) => {
-    return {
-        type: FETCH_VALIDATOR_WITH_ADDRESS_SUCCESS,
-        list,
-    };
-};
-
-export const fetchValidatorsWithAddressError = (data) => {
-    return {
-        type: FETCH_VALIDATOR_WITH_ADDRESS_ERROR,
-        data,
-    };
-};
-
-export const fetchValidatorsWithAddress = (list) => {
-    return async dispatch => {
-        let validators = [];
-        for (const item of list) {
-            const rpcClient = await transactions.RpcClient();
-            const stakingQueryService = new QueryClientImpl(rpcClient);
-            await stakingQueryService.Validator({
-                validatorAddr: item.validatorAddress,
-            }).then((res) => {
-                validators.push(res.validator);
-            }).catch((error) => {
-                dispatch(fetchValidatorsWithAddressError(error.response
-                    ? error.response.data.message
-                    : error.message));
-            });
-        }
-        dispatch(fetchValidatorsWithAddressSuccess(validators));
-    };
-};

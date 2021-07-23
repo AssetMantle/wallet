@@ -7,8 +7,10 @@ import Copy from "../../components/Copy";
 import helper from "../../utils/helper";
 import {useTranslation} from "react-i18next";
 import Darktheme from "../DarkTheme";
-import GenerateKeyStore from "../GenerateKeyStore";
+import GenerateKeyStore from "../KeyStore/GenerateKeyStore";
 import MobileSidebar from "./MobileSidebar";
+import transactions from "../../utils/transactions";
+import config from "../../config";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const DashboardHeader = () => {
@@ -43,6 +45,12 @@ const DashboardHeader = () => {
     };
     const handleKeyStore = () =>{
         setShowKeyStore(true);
+    };
+    const ledgerShowAddress = async () =>{
+        const accountNumber= localStorage.getItem('accountNumber');
+        const addressIndex = localStorage.getItem('addressIndex');
+        const [wallet] = await transactions.LedgerWallet(transactions.makeHdPath(accountNumber, addressIndex), config.addressPrefix);
+        await wallet.showAddress(transactions.makeHdPath(accountNumber, addressIndex));
     };
     const ProfileIcon = <Icon viewClass="profile" icon="profile"/>;
     return (
@@ -116,7 +124,12 @@ const DashboardHeader = () => {
                                         <ReactQRCode value={address}/>
                                     </div>
 
-                                    <p className="key"> {t("WALLET_ADDRESS")}</p>
+                                    <p className="key"> {t("WALLET_ADDRESS")}
+                                        {
+                                            localStorage.getItem('loginMode') === 'ledger' ?
+                                                <button className="ledger-verify" onClick={ledgerShowAddress}>Verify</button>
+                                                : ""
+                                        }</p>
                                     <div className="address"><span>{addressTruncate}</span> <Copy id={address}/>
                                     </div>
                                 </div>

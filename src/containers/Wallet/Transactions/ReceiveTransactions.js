@@ -55,19 +55,22 @@ const ReceiveTransactions = (props) => {
         print: false,
         download: false,
         filter: false,
-        search:false
+        search:false,
+        viewColumns:false,
     };
-
     const tableData = props.list && props.list.length > 0
         ?
         props.list.map((stxn, index) => [
             <a key={index}
-                href={`${EXPLORER_API}/transaction?txHash=${stxn.txhash}`}
+                href={`${EXPLORER_API}/transactions/${stxn.txhash}`}
                 target="_blank" className="tx-hash" rel="noopener noreferrer">
                 {helper.stringTruncate(stxn.txhash)}
             </a>,
-            <span key={index}
-                className="type">{(stxn.tx.body.messages[0]["@type"]).substr((stxn.tx.body.messages[0]["@type"]).indexOf('v1beta1.') + 11)}</span>,
+            (stxn.tx.body.messages[0]["@type"] === "/ibc.applications.transfer.v1.MsgTransfer") ?
+                <span key={index} className="type">{(stxn.tx.body.messages[0]["@type"]).substr((stxn.tx.body.messages[0]["@type"]).indexOf('/')+1)}</span>
+                :
+                <span key={index} className="type">{(stxn.tx.body.messages[0]["@type"]).substr((stxn.tx.body.messages[0]["@type"]).indexOf('v1beta1.') + 11)}</span>
+            ,
             <div key={index} className="result">
                 <span className="icon-box success">
                     <Icon
@@ -78,19 +81,20 @@ const ReceiveTransactions = (props) => {
             (stxn.tx.body.messages[0].amount !== undefined && stxn.tx.body.messages[0].amount.length) ?
                 <div className="amount" key={index}>
                     {stxn.tx.body.messages[0].amount[0].amount}
-                    {stxn.tx.body.messages[0].amount[0].denom}
+                    <span className="string-truncate">{stxn.tx.body.messages[0].amount[0].denom}</span>
                 </div>
                 :
                 (stxn.tx.body.messages[0].amount !== undefined && stxn.tx.body.messages[0].amount) ?
                     <div className="amount" key={index}>
                         {stxn.tx.body.messages[0].amount.amount}
-                        {stxn.tx.body.messages[0].amount.denom}
+                        <span className="string-truncate">{stxn.tx.body.messages[0].amount.denom}</span>
+
                     </div>
                     :
                     (stxn.logs[0].events.find(event => event.type === 'transfer') !== undefined) ?
                         (stxn.logs[0].events.find(event => event.type === 'transfer').attributes.find(item => item.key === 'amount') !== undefined) ?
                             <div className="amount" key={index}>
-                                {stxn.logs[0].events.find(event => event.type === 'transfer').attributes.find(item => item.key === 'amount').value}
+                                <span className="string-truncate">{stxn.logs[0].events.find(event => event.type === 'transfer').attributes.find(item => item.key === 'amount').value}</span>
                             </div>
                             : ''
                         : '',
@@ -99,7 +103,7 @@ const ReceiveTransactions = (props) => {
                     {stxn.tx.auth_info.fee.amount[0].amount}
                     {stxn.tx.auth_info.fee.amount[0].denom}
                 </div> : '',
-            <a key={index} href={`${EXPLORER_API}/block?height=${stxn.height}`}
+            <a key={index} href={`${EXPLORER_API}/blocks/${stxn.height}`}
                 target="_blank" className="height" rel="noopener noreferrer">{stxn.height}</a>,
             <span key={index} className="time">{moment.utc(stxn.timestamp).local().startOf('seconds').fromNow()}</span>,
         ])

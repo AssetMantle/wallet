@@ -1,3 +1,13 @@
+@media (max-width: 1400px) {
+  .wallet-main-section .txns-container table tbody, .validators-section table tbody {
+    tr:first-child td{
+      padding-top: 20px;
+    }
+    td{
+      padding: 13px 20px;
+    }
+  }
+}
 @media (max-width: 1300px)
 {
   .header .profile-section .profile-dropdown .dropdown-menu .info{
@@ -14,7 +24,7 @@
 }
 @media (max-width: 1400px) {
   .token-info-section .token-info-section-body{
-    padding: 25px 0;
+    padding: 15px 0;
     .info-box{
       padding: 15px 20px;
     }
@@ -147,6 +157,10 @@
   }
   .list-modal-body .unbonding-schedule-list{
     display: block;
+  }
+  .delegate-modal .delegate-modal-body .buttons .button{
+    width: 140px;
+    padding: 0.2rem 0.8rem;
   }
 }
 

@@ -3,7 +3,9 @@ import {
     REWARDS_FETCH_ERROR,
     REWARDS_FETCH_IN_PROGRESS,
     REWARDS_FETCH_SUCCESS,
-    REWARDS_LIST_FETCH_SUCCESS
+    REWARDS_LIST_FETCH_SUCCESS,
+    FETCH_VALIDATOR_COMMISSION_INFO_SUCCESS,
+    FETCH_VALIDATORS_REWARDS_SUCCESS
 } from "../constants/rewards";
 
 const inProgress = (state = false, action) => {
@@ -41,10 +43,27 @@ const _ = (state = 0, action) => {
     }
 };
 
+const validatorsRewardsList = (state = [], action) => {
+    if (action.type === FETCH_VALIDATORS_REWARDS_SUCCESS) {
+        return action.list;
+    } else {
+        return state;
+    }
+};
+
+const validatorCommissionInfo = (state = {}, action) => {
+    if (action.type === FETCH_VALIDATOR_COMMISSION_INFO_SUCCESS) {
+        return action.list;
+    } else {
+        return state;
+    }
+};
 
 export default combineReducers({
     rewards,
     list,
     _,
-    inProgress
+    inProgress,
+    validatorsRewardsList,
+    validatorCommissionInfo
 });

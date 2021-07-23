@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import ModalWithdraw from "../Wallet/ModalWithdraw";
 import {fetchDelegationsCount} from "../../actions/delegations";
 import {fetchBalance, fetchTransferableVestingAmount} from "../../actions/balance";
-import {fetchRewards} from "../../actions/rewards";
+import {fetchRewards, fetchTotalRewards} from "../../actions/rewards";
 import {fetchUnbondDelegations} from "../../actions/unbond";
 import {fetchTokenPrice} from "../../actions/tokenPrice";
 import {useTranslation} from "react-i18next";
@@ -23,10 +23,12 @@ const TokenInfo = (props) => {
         props.fetchDelegationsCount(address);
         props.fetchBalance(address);
         props.fetchRewards(address);
+        props.fetchTotalRewards(address);
         props.fetchUnbondDelegations(address);
         props.fetchTokenPrice();
         props.fetchTransferableVestingAmount(address);
         transactions.updateFee(address);
+        setInterval(() => props.fetchTotalRewards(address), 10000);
     }, []);
 
     const handleRewards = (key) => {
@@ -89,7 +91,7 @@ const TokenInfo = (props) => {
                                             : ""
                                     }
                                 </span>
-                                {(props.delegations + props.balance + props.unbond).toFixed(3)} XPRT
+                                {(props.delegations + props.balance + props.unbond).toLocaleString()} XPRT
                             </p>
                         </div>
                         <div className="line">
@@ -101,7 +103,7 @@ const TokenInfo = (props) => {
                         <div className="line">
                             <p className="key">{t("CURRENT_VALUE")}</p>
                             <p className="value"><span className="inner-grid-icon"/>
-                                ${((props.delegations + props.balance + props.unbond) * props.tokenPrice).toFixed(3)}
+                                ${((props.delegations + props.balance + props.unbond) * props.tokenPrice).toLocaleString()}
                             </p>
                         </div>
 
@@ -126,7 +128,7 @@ const TokenInfo = (props) => {
                                             : ""
                                     }
                                 </span>
-                                {props.vestingAmount.toFixed(3)} XPRT
+                                {props.vestingAmount.toLocaleString()} XPRT
                             </p>
                         </div>
                         <div className="line">
@@ -139,7 +141,7 @@ const TokenInfo = (props) => {
                                 </OverlayTrigger>
                             </p>
                             <p className="value" title={props.transferableAmount}><span className="inner-grid-icon"/>
-                                {props.transferableAmount.toFixed(3)} XPRT</p>
+                                {props.transferableAmount.toLocaleString()} XPRT</p>
                         </div>
                         <div className="line">
                             <p className="key">Delegatable
@@ -151,7 +153,7 @@ const TokenInfo = (props) => {
                                 </OverlayTrigger>
                             </p>
                             <p className="value" title={props.balance}><span className="inner-grid-icon"/>
-                                {props.balance.toFixed(3)} XPRT</p>
+                                {props.balance.toLocaleString()} XPRT</p>
                         </div>
 
                     </div>
@@ -161,12 +163,12 @@ const TokenInfo = (props) => {
                         <div className="line">
                             <p className="key">Delegated</p>
                             <p className="value" title={props.delegations}>
-                                <span className="inner-grid"/> {props.delegations.toFixed(3)} XPRT</p>
+                                <span className="inner-grid"/> {props.delegations.toLocaleString()} XPRT</p>
                         </div>
                         <div className="line">
                             <p className="key">{t("REWARDS")}</p>
                             <p className="value rewards"><span onClick={() => handleRewards("rewards")}
-                                className="claim inner-grid">{t("CLAIM")}</span><span title={props.rewards}> {props.rewards.toFixed(3)}XPRT</span>
+                                className="claim inner-grid">{t("CLAIM")}</span><span title={props.rewards}> {props.rewards.toLocaleString()}XPRT</span>
                             </p>
                         </div>
                         <div className="line">
@@ -180,7 +182,7 @@ const TokenInfo = (props) => {
                                 }
                             </span>
                             <span title={props.unbond}>
-                                {props.unbond.toFixed(3)} XPRT
+                                {props.unbond.toLocaleString()} XPRT
                             </span>
                             </p>
                         </div>
@@ -217,7 +219,8 @@ const actionsToProps = {
     fetchRewards,
     fetchUnbondDelegations,
     fetchTokenPrice,
-    fetchTransferableVestingAmount
+    fetchTransferableVestingAmount,
+    fetchTotalRewards
 };
 
 export default connect(stateToProps, actionsToProps)(TokenInfo);

@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {connect} from 'react-redux';
 import {fetchDelegationsCount} from "../actions/delegations";
 import {fetchBalance, fetchTransferableVestingAmount} from "../actions/balance";
-import {fetchRewards} from "../actions/rewards";
+import {fetchRewards, fetchTotalRewards} from "../actions/rewards";
 import {fetchUnbondDelegations} from "../actions/unbond";
 import {fetchTokenPrice} from "../actions/tokenPrice";
 import IconButton from '@material-ui/core/IconButton';
@@ -21,6 +21,7 @@ const InfoRefresh = (props) => {
         props.fetchDelegationsCount(address);
         props.fetchBalance(address);
         props.fetchRewards(address);
+        props.fetchTotalRewards(address);
         props.fetchUnbondDelegations(address);
         props.fetchTokenPrice();
         props.fetchTransactions(address, 5, 1);
@@ -55,7 +56,8 @@ const actionsToProps = {
     fetchTokenPrice,
     fetchTransactions,
     fetchReceiveTransactions,
-    fetchTransferableVestingAmount
+    fetchTransferableVestingAmount,
+    fetchTotalRewards
 };
 
 export default connect(stateToProps, actionsToProps)(InfoRefresh);

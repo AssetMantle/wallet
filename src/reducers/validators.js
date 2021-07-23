@@ -5,8 +5,6 @@ import {
     FETCH_INACTIVE_VALIDATORS_SUCCESS,
     FETCH_VALIDATORS_IN_PROGRESS,
     FETCH_VALIDATORS_SUCCESS,
-    FETCH_VALIDATOR_SUCCESS,
-    FETCH_VALIDATOR_WITH_ADDRESS_SUCCESS,
 } from "../constants/validators";
 import Lodash from "lodash";
 
@@ -36,7 +34,7 @@ const activeVotingPower = (state = 0, action) => {
 
     if (action.type === FETCH_ACTIVE_VALIDATORS_SUCCESS) {
         const active = Lodash.sumBy(action.list, (item) => {
-            return parseInt(item.tokens);
+            return parseInt(item.data.tokens);
         });
 
         return {
@@ -50,7 +48,7 @@ const activeVotingPower = (state = 0, action) => {
 const inActiveVotingPower = (state = 0, action) => {
     if (action.type === FETCH_INACTIVE_VALIDATORS_SUCCESS) {
         const inActive = Lodash.sumBy(action.list, (item) => {
-            return parseInt(item.tokens);
+            return parseInt(item.data.tokens);
         });
         return {
             ...state,
@@ -75,22 +73,7 @@ const validators = (state = [], action) => {
     }
 };
 
-const validator = (state = {}, action) => {
-    if (action.type === FETCH_VALIDATOR_SUCCESS) {
-        return action.data;
-    } else {
-        return state;
-    }
-};
 
-
-const validatorsListWithAddress = (state = [], action) => {
-    if (action.type === FETCH_VALIDATOR_WITH_ADDRESS_SUCCESS) {
-        return action.list;
-    } else {
-        return state;
-    }
-};
 
 export default combineReducers({
     activeList,
@@ -99,6 +82,4 @@ export default combineReducers({
     inActiveVotingPower,
     inProgress,
     validators,
-    validator,
-    validatorsListWithAddress
 });

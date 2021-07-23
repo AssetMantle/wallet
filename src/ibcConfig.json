@@ -1,0 +1,20 @@
+{
+  "testNetChannels": [
+    {
+      "name": "cosmos",
+      "id": "cosmos/channel-1",
+      "port": "transfer",
+      "url": "https://persistence.testnet.rpc.audit.one",
+      "description": "cosmos test chain relayer, maintained by AUDIT.one"
+    }
+  ],
+  "mainNetChannels": [
+    {
+      "name": "osmosis",
+      "id": "osmosis/channel-6",
+      "port": "transfer",
+      "url": "https://rpc.osmosis-1.audit.one/",
+      "description": "Osmosis relayer, maintained by OSMOSIS here - https://github.com/osmosis-labs/assetlists/blob/main/osmosis-1/osmosis-1.assetlist.json#L98-L121"
+    }
+  ]
+}

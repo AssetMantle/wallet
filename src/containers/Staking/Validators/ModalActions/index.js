@@ -27,6 +27,7 @@ const ModalActions = (props) => {
     const [rewards, setRewards] = useState(0);
     const [delegateStatus, setDelegateStatus] = useState(false);
     const [withdraw, setWithDraw] = useState(false);
+
     useEffect(() => {
         let address = localStorage.getItem('address');
         const fetchValidatorRewards = async () => {
@@ -66,10 +67,16 @@ const ModalActions = (props) => {
         fetchValidatorRewards();
     }, []);
 
+    const handleCloseInitialModal = () => {
+        setShow(false);
+        props.setModalOpen('');
+    };
+
     const handleClose = () => {
         setShow(false);
         props.setModalOpen('');
     };
+
     const handleModal = (name, address, validatorMoniker) => {
         setShow(false);
         setInitialModal(false);
@@ -79,10 +86,9 @@ const ModalActions = (props) => {
         setAddress(address);
     };
 
-    let commissionRate = props.validator.commission.commissionRates.rate * 100;
+    let commissionRate = helper.decimalConversion(props.validator.commission.commissionRates.rate) * 100;
     commissionRate = parseFloat(commissionRate.toFixed(2)).toLocaleString();
     let active = helper.isActive(props.validator);
-
     const handleRewards = () => {
         setInitialModal(false);
         setShow(false);
@@ -99,7 +105,7 @@ const ModalActions = (props) => {
                     centered={true}
                     show={show}
                     className="actions-modal"
-                    onHide={handleClose}>
+                    onHide={handleCloseInitialModal}>
 
                     <>
                         <Modal.Body className="actions-modal-body">
@@ -231,12 +237,12 @@ const ModalActions = (props) => {
                 </Modal>
             }
             {withdraw ?
-                <ModalSetWithdrawAddress setWithDraw={setWithDraw} 
+                <ModalSetWithdrawAddress setWithDraw={setWithDraw}
                     setInitialModal={setInitialModal}
-                    setTxModalShow={setTxModalShow}  
-                    setModalOpen={setModalOpen} 
-                    handleClose={handleClose} 
-                    totalRewards={props.rewards} 
+                    setTxModalShow={setTxModalShow}
+                    setModalOpen={setModalOpen}
+                    handleClose={handleClose}
+                    totalRewards={props.rewards}
                     formName="validatorSetAddress"
                 />
                 : null

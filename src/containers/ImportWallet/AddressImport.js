@@ -59,7 +59,7 @@ const AddressImport = (props) => {
         }
     };
     return (
-        <Modal backdrop="static" show={show} onHide={handleClose} centered className="create-wallet-modal large seed">
+        <Modal backdrop="static" show={show} onHide={handleClose} centered className="create-wallet-modal seed">
             <Modal.Header closeButton>
                 <div className="previous-section">
                     <button className="button" onClick={() => handlePrevious("addressImport")}>
@@ -77,6 +77,7 @@ const AddressImport = (props) => {
                         <Form.Control
                             type="text"
                             name="address"
+                            onKeyPress={helper.inputSpaceValidation}
                             id="addressImport"
                             placeholder={t("ENTER_ADDRESS")}
                             required={true}

@@ -195,7 +195,7 @@ const ModalImportWallet = (props) => {
     return (
         <>
             <Modal backdrop="static" show={show} onHide={handleClose} centered
-                className="create-wallet-modal large seed">
+                className="create-wallet-modal seed">
                 {
                     mnemonicForm ?
                         <>

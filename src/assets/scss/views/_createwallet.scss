@@ -1,6 +1,6 @@
 .create-wallet-modal {
   .modal-dialog {
-    max-width: 600px !important;
+    max-width: 700px !important;
   }
 
   .modal-content {
@@ -50,7 +50,7 @@
         box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
         border-radius: 6px;
         width: 55px;
-        display: flex;
+        display: -webkit-flex;;
         height: 55px;
         position: absolute;
         align-items: center;
@@ -123,7 +123,7 @@
     .info {
       text-align: center;
       font-size: 14px;
-      padding:0  0 20px 0;
+      padding: 0 0 20px 0;
       color: #8D9CB5;
 
       span {
@@ -137,8 +137,6 @@
 
     form {
       padding-top: 30px;
-      max-width: 400px;
-      margin: auto;
 
       .form-field {
         justify-content: center;
@@ -149,9 +147,8 @@
         font-size: 14px;
         line-height: 150%;
         font-family: 'Poppins', sans-serif;
-        text-align: right;
         color: #2E3239;
-        margin-right: 30px;
+        margin-right: 10px;
       }
 
 
@@ -169,6 +166,7 @@
       .form-group {
         text-align: center;
       }
+
       textarea {
         background: #F5F6FA;
         border: 0px solid;
@@ -196,13 +194,13 @@
           font-size: 14px;
           color: #8D9CB5;
         }
-        &:disabled{
+
+        &:disabled {
           background-color: #e9ecef;
         }
       }
 
     }
-
 
 
     .seed-section {
@@ -222,12 +220,16 @@
         text-align: center;
       }
     }
-    .radio-group{
+
+    .radio-group {
       display: flex;
+      display: -webkit-flex;;
       justify-content: center;
-      .custom-control{
+
+      .custom-control {
         margin-right: 20px;
-        .custom-control-label{
+
+        .custom-control-label {
           font-family: 'Poppins', sans-serif;
           font-size: 16px;
           line-height: 150%;
@@ -236,26 +238,30 @@
         }
       }
 
-      .custom-control-input:checked~.custom-control-label::before{
+      .custom-control-input:checked ~ .custom-control-label::before {
         border-color: #E50913;
         background-color: #E50913;
       }
-      .custom-control-input:focus~.custom-control-label::before{
+
+      .custom-control-input:focus ~ .custom-control-label::before {
         box-shadow: 0 0 0 0.2rem #e5091354;
         border-color: #e5091354 !important;
       }
     }
-    .advancemode-form{
-      border: 0px solid ;
+
+    .advancemode-form {
+      border: 0px solid;
     }
   }
 }
-.create-wallet-modal.seed{
-  .modal-header{
+
+.create-wallet-modal.seed {
+  .modal-header {
     background: transparent;
     border: 0px solid;
     padding-top: 40px;
     padding-bottom: 30px;
+
     .heading {
       font-family: 'Poppins', sans-serif;
       font-weight: 600;
@@ -266,18 +272,22 @@
       margin: 0;
     }
   }
-  .create-wallet-form-body{
+
+  .create-wallet-form-body {
     padding-top: 0px;
   }
 }
+
 .create-wallet-modal.large {
   .modal-dialog {
     max-width: 900px !important;
   }
-  .create-wallet-form-body .form-privatekey{
+
+  .create-wallet-form-body .form-privatekey {
     padding-top: 0;
-  max-width: inherit;
+    max-width: inherit;
   }
+
   .create-wallet-form-body form {
     max-width: 500px;
   }
@@ -325,6 +335,7 @@
   }
 
 }
+
 .mnemonic-result {
   text-align: center;
 }

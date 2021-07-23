@@ -1,12 +1,17 @@
-import {DirectSecp256k1Wallet} from "@cosmjs/proto-signing";
+import {DirectSecp256k1HdWallet} from "@cosmjs/proto-signing";
 import config from "../config.json";
-import {Bip39, EnglishMnemonic, Slip10, Slip10Curve, stringToPath} from "@cosmjs/crypto";
+import {stringToPath} from "@cosmjs/crypto";
 import MakePersistence from "./cosmosjsWrapper";
 import helper from "./helper";
 import Long from "long";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient} from "@cosmjs/stargate";
+import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
+import {LedgerSigner} from "@cosmjs/ledger-amino";
+import {DelegateMsg, RedelegateMsg, SendMsg, SetWithDrawAddressMsg, UnbondMsg, WithdrawMsg} from "./protoMsgHelper";
+import aminoMsgHelper from "./aminoMsgHelper";
 
+const encoding = require("@cosmjs/encoding");
 const tendermint_1 = require("@cosmjs/stargate/build/codec/ibc/lightclients/tendermint/v1/tendermint");
 const {SigningStargateClient, QueryClient, setupIbcExtension} = require("@cosmjs/stargate");
 const tmRPC = require("@cosmjs/tendermint-rpc");
@@ -14,6 +19,7 @@ const {TransferMsg} = require("./protoMsgHelper");
 const addressPrefix = config.addressPrefix;
 const configChainID = process.env.REACT_APP_CHAIN_ID;
 const configCoinType = config.coinType;
+const valoperAddressPrefix = config.valoperAddressPrefix;
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
 //TODO take from config and env
@@ -37,28 +43,49 @@ async function KeplrWallet(chainID = configChainID) {
     return [offlineSigner, accounts[0].address];
 }
 
-async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(), bip39Passphrase = "", prefix = addressPrefix) {
-    const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix);
+async function TransactionWithLedger(msgs, fee, memo = "",  hdpath = makeHdPath(), prefix = addressPrefix) {
+    const [wallet, address] = await LedgerWallet(hdpath, prefix);
     return Transaction(wallet, address, msgs, fee, memo);
 }
 
-// TODO remove this function; use MnemonicWallet instead.
+async function LedgerWallet(hdpath, prefix) {
+    const interactiveTimeout = 120_000;
+    async function createTransport() {
+        const ledgerTransport = await TransportWebUSB.create(interactiveTimeout, interactiveTimeout);
+        return ledgerTransport;
+    }
+
+    const transport = await createTransport();
+    const signer = new LedgerSigner(transport, {
+        testModeAllowed: true,
+        hdPaths: [hdpath],
+        prefix: prefix
+    });
+    const [firstAccount] = await signer.getAccounts();
+    return [signer, firstAccount.address];
+}
+
+async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(), bip39Passphrase = "", prefix = addressPrefix) {
+    const loginMode = localStorage.getItem('loginMode');
+
+    if(loginMode === "normal"){
+        const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix);
+        return Transaction(wallet, address, msgs, fee, memo);
+    }else {
+        const [wallet, address] = await LedgerWallet(hdpath, prefix);
+        return Transaction(wallet, address, msgs, fee, memo);
+    }
+}
+
 async function MnemonicWalletWithPassphrase(mnemonic, hdPath = makeHdPath(), password = "", prefix = addressPrefix) {
-    const mnemonicChecked = new EnglishMnemonic(mnemonic);
-    const seed = await Bip39.mnemonicToSeed(mnemonicChecked, password);
-    const {privkey} = Slip10.derivePath(Slip10Curve.Secp256k1, seed, hdPath);
-    const wallet = await DirectSecp256k1Wallet.fromKey(privkey, prefix);
+    const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, {
+        prefix: prefix,
+        bip39Password: password,
+        hdPaths: [hdPath]
+    });
     const [firstAccount] = await wallet.getAccounts();
     return [wallet, firstAccount.address];
 }
-
-//TODO use this when bip39 passphrase is included in cosmjs.
-// async function MnemonicWallet(mnemonic, hdPath = makeHdPath(), prefix = addressPrefix) {
-//     const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, hdPath, prefix);
-//     const [firstAccount] = await wallet.getAccounts();
-//     return [wallet, firstAccount.address]
-//
-// }
 
 function makeHdPath(accountNumber = "0", addressIndex = "0", coinType = configCoinType) {
     return stringToPath("m/44'/" + coinType + "'/" + accountNumber + "'/0/" + addressIndex);
@@ -147,26 +174,30 @@ function decodeTendermintConsensusStateAny(consensusState) {
     }
     return tendermint_1.ConsensusState.decode(consensusState.value);
 }
-async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp = 1000, denom = "uxprt", port = "transfer") {
+
+async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp = config.timeoutTimestamp, denom = "uxprt", url, port = "transfer") {
     const tendermintClient = await tmRPC.Tendermint34Client.connect(tendermintRPCURL);
     const queryClient = new QueryClient(tendermintClient);
 
     const ibcExtension = setupIbcExtension(queryClient);
 
-    const clientStateResponse = await ibcExtension.ibc.channel.clientState(port, channel);
-    const clientStateResponseDecoded = decodeTendermintClientStateAny(clientStateResponse.identifiedClientState.clientState);
-    timeoutHeight = {
-        revisionHeight: clientStateResponseDecoded.latestHeight.revisionHeight.add(1000000),
-        revisionNumber: clientStateResponseDecoded.latestHeight.revisionNumber
-    };
+    const finalResponse = await ibcExtension.ibc.channel.clientState(port, channel).then(async (clientStateResponse ) => {
+        const clientStateResponseDecoded = decodeTendermintClientStateAny(clientStateResponse.identifiedClientState.clientState);
+        timeoutHeight = {
+            revisionHeight: clientStateResponseDecoded.latestHeight.revisionHeight.add(config.ibcRevisionHeightIncrement),
+            revisionNumber: clientStateResponseDecoded.latestHeight.revisionNumber
+        };
 
-    const consensusStateResponse = await ibcExtension.ibc.channel.consensusState(port,channel,
-        clientStateResponseDecoded.latestHeight.revisionNumber.toInt() , clientStateResponseDecoded.latestHeight.revisionHeight.toInt());
-    const consensusStateResponseDecoded = decodeTendermintConsensusStateAny(consensusStateResponse.consensusState);
+        const consensusStateResponse = await ibcExtension.ibc.channel.consensusState(port, channel,
+            clientStateResponseDecoded.latestHeight.revisionNumber.toInt(), clientStateResponseDecoded.latestHeight.revisionHeight.toInt());
+        const consensusStateResponseDecoded = decodeTendermintConsensusStateAny(consensusStateResponse.consensusState);
 
-    const timeoutTime = Long.fromNumber(consensusStateResponseDecoded.timestamp.getTime()/1000).add(timeoutTimestamp).multiply(1000000000); //get time in nanoesconds
-
-    return TransferMsg(channel, fromAddress, toAddress, amount,timeoutHeight , timeoutTime, denom, port);
+        const timeoutTime = Long.fromNumber(consensusStateResponseDecoded.timestamp.getTime() / 1000).add(timeoutTimestamp).multiply(1000000000); //get time in nanoesconds
+        return TransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTime, denom, port);
+    }).catch(error => {
+        throw error;
+    });
+    return finalResponse;
 }
 
 async function RpcClient() {
@@ -174,14 +205,64 @@ async function RpcClient() {
     const queryClient = new QueryClient(tendermintClient);
     return createProtobufRpcClient(queryClient);
 }
+
+function addrToValoper(address) {
+    let data = encoding.Bech32.decode(address).data;
+    return encoding.Bech32.encode(valoperAddressPrefix, data);
+}
+
+function valoperToAddr(valoperAddr) {
+    let data = encoding.Bech32.decode(valoperAddr).data;
+    return encoding.Bech32.encode(addressPrefix, data);
+}
+
+function checkValidatorAccountAddress(validatorAddress, address) {
+    let validatorAccountAddress = valoperToAddr(validatorAddress);
+    return validatorAccountAddress === address;
+}
+
+async function getTransactionResponse(address, data, fee, gas, mnemonic="", accountNumber=0, addressIndex=0, bip39Passphrase="") {
+    if(data.formName === "send"){
+        return TransactionWithMnemonic([SendMsg(address, data.toAddress, (data.amount * config.xprtValue).toFixed(0), data.denom)], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
+            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+    }
+    else if (data.formName === "delegate"){
+        return TransactionWithMnemonic([DelegateMsg(address, data.validatorAddress, (data.amount * config.xprtValue).toFixed(0))], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
+            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+    }
+    else if(data.formName === "withdrawMultiple"){
+        return TransactionWithMnemonic(data.messages, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
+            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+    } else if(data.formName === "withdrawAddress"){
+        return TransactionWithMnemonic([SetWithDrawAddressMsg(address, data.validatorAddress)], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
+            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+    }
+    else if(data.formName === "redelegate"){
+        return TransactionWithMnemonic([RedelegateMsg(address, data.validatorAddress, data.toValidatorAddress, (data.amount * config.xprtValue).toFixed(0))], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
+            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+    }else if(data.formName === "unbond"){
+        return TransactionWithMnemonic([UnbondMsg(address, data.validatorAddress, (data.amount * config.xprtValue).toFixed(0))], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
+            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+    }else if(data.formName === "withdrawValidatorRewards"){
+        return TransactionWithMnemonic([WithdrawMsg(address, data.validatorAddress)], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
+            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+    }
+}
+
 export default {
     TransactionWithKeplr,
     TransactionWithMnemonic,
+    TransactionWithLedger,
     makeHdPath,
     getAccountNumberAndSequence,
     updateFee,
     XprtConversion,
     PrivateKeyReader,
     MakeIBCTransferMsg,
-    RpcClient
+    RpcClient,
+    addrToValoper,
+    valoperToAddr,
+    checkValidatorAccountAddress,
+    getTransactionResponse,
+    LedgerWallet
 };

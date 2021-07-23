@@ -191,7 +191,7 @@ let English = {
         "FAILED_REDELEGATE": "Failed to Redelegate",
         "SUCCESSFULL_UNBOND": "Successfully Unbonded!",
         "FAILED_UNBOND": "Failed to Unbond",
-        "SUCCESSFUL_SEND": "Successfully Send!",
+        "SUCCESSFUL_SEND": "Successfully Sent!",
         "FAILED_SEND": "Failed to Send",
         "DELEGATION_AMOUNT": "Delegation Amount",
         "REDELEGATION_AMOUNT": "Redelegation Amount",
@@ -204,7 +204,7 @@ let English = {
         "SETUP_ADDRESS_NOTE":"Claim your staking rewards to another wallet address.",
         "ADDRESS_NOT_MATCHED_ERROR":"Your sign in address and keystore file don’t match. Please try again or else sign in again.",
         "KEY_STORE_PASSWORD":"KeyStore file password",
-        "AMOUNT_ERROR_MESSAGE":"Insufficient balance/fees to do transactions",
+        "AMOUNT_ERROR_MESSAGE":"Insufficient wallet balance to process the transaction.",
         "AMOUNT_WARNING_MESSAGE":"Insufficient wallet balance for your future transactions",
         "TOTAL_BALANCE_NOTE":"Delegatable XPRT + Delegated XPRT + Unbonded XPRT",
         "MEMO_MNEMONIC_CHECK_ERROR":"Entered secret passphrase(mnemonic) in memo field. Don't input any secrete information.",
@@ -239,7 +239,17 @@ let English = {
         "DELEGATIONS":"Delegations",
         "VALIDATOR":"Validator",
         "AVAILABLE_REWARDS":"Available Rewards",
-
+        "RECEIVED_IBC_TOKENS":"Tokens received via IBC",
+        "VIEW":"View",
+        "VIEW_UNBOND_SCHEDULE":"View Unbonding XPRT Schedule",
+        "UNBONDING_AMOUNT":"Unbonding Amount",
+        "DATE":"Date",
+        "VESTING_SCHEDULE":"Vesting Schedule",
+        "UNLOCKING_TOKENS":"Unlocking Tokens",
+        "FROM_DATE":"From Date",
+        "TO_DATE":"To Date",
+        "CONTINUE_WITH_LEDGER":"Continue With Ledger",
+        "USE_LEDGER":"Use Ledger"
     }
 };
 

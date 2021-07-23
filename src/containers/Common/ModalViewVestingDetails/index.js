@@ -6,8 +6,10 @@ import {Table} from "react-bootstrap";
 import moment from "moment";
 import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/auth/v1beta1/query";
 import * as vesting_1 from "@cosmjs/stargate/build/codec/cosmos/vesting/v1beta1/vesting";
+import {useTranslation} from "react-i18next";
 
 const ModalViewVestingDetails = () => {
+    const {t} = useTranslation();
     const [show, setShow] = useState(false);
     const [showContinuesVesting, setShowContinuesVesting] = useState(false);
     const [showPeriodicVesting, setShowPeriodicVesting] = useState(false);
@@ -61,18 +63,20 @@ const ModalViewVestingDetails = () => {
                 className="modal-custom faq-modal"
                 onHide={handleClose}>
                 <Modal.Header className="result-header" closeButton>
-                    Vesting Schedule
+                    <h3 className="heading">
+                        {t("VESTING_SCHEDULE")}
+                    </h3>
                 </Modal.Header>
                 <Modal.Body className="faq-modal-body">
                     <ul className="modal-list-data">
                         {showContinuesVesting ?
                             response.baseVestingAccount !== undefined ?
-                                <Table borderless>
+                                <Table borderless hover>
                                     <thead>
                                         <tr>
-                                            <th>Unlocking Tokens</th>
-                                            <th>From Date</th>
-                                            <th>To Date</th>
+                                            <th>{t("UNLOCKING_TOKENS")}</th>
+                                            <th>{t("FROM_DATE")}</th>
+                                            <th>{t("TO_DATE")}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -98,8 +102,8 @@ const ModalViewVestingDetails = () => {
                                         <Table borderless>
                                             <thead>
                                                 <tr>
-                                                    <th>Unlocking Tokens</th>
-                                                    <th>Date</th>
+                                                    <th>{t("UNLOCKING_TOKENS")}</th>
+                                                    <th>{t("DATE")}</th>
                                                 </tr>
                                             </thead>
                                             {
@@ -116,7 +120,7 @@ const ModalViewVestingDetails = () => {
                                                                     <td>{moment(new Date(vestingPeriod * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</td>
                                                                 </tr>
                                                             </tbody>
-                                                        
+
                                                         );
                                                     })
                                                     : ""
@@ -133,14 +137,14 @@ const ModalViewVestingDetails = () => {
                                 <Table borderless>
                                     <thead>
                                         <tr>
-                                            <th>Unlocking Tokens</th>
-                                            <th>Date</th>
+                                            <th>{t("UNLOCKING_TOKENS")}</th>
+                                            <th>{t("DATE")}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
                                             <td>{transactions.XprtConversion(parseInt(response.baseVestingAccount.originalVesting[0].amount))}</td>
-                                            <td>{moment(new Date((response.baseVestingAccount.endTime.low) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</td>
+                                            <td>{moment(new Date((response.baseVestingAccount.endTime.low) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss.js a')}</td>
                                         </tr>
                                     </tbody>
                                 </Table>
@@ -152,7 +156,7 @@ const ModalViewVestingDetails = () => {
 
                 </Modal.Body>
             </Modal>
-            <span className="view-button" onClick={handleModal} title="View Vesting Schedule">View</span>
+            <span className="view-button" onClick={handleModal} title="View Vesting Schedule">{t("VIEW")}</span>
         </>
 
     );

@@ -91,9 +91,9 @@
   .social-links-section {
     ul {
       display: flex;
+      display: -webkit-flex;
       margin-top: 20px;
       flex-wrap: wrap;
-      justify-content: center;
     }
 
     padding-top: 15px;
@@ -103,6 +103,7 @@
       height: 28px;
       margin-right: 10px;
       display: flex;
+      display: -webkit-flex;
       align-items: center;
       border-radius: 50%;
       justify-content: center;
@@ -126,6 +127,7 @@
 
   .footer-logo-section {
     display: flex;
+    display: -webkit-flex;
     align-items: center;
     justify-content: space-between;
     padding-top: 20px;
@@ -144,11 +146,13 @@
 
   .contact-us {
     display: flex;
+    display: -webkit-flex;
     justify-content: center;
     flex: 1;
 
     .mail-chimp-section {
       display: flex;
+      display: -webkit-flex;
       align-items: center;
       margin: 10px 0 20px 0;
 
@@ -179,6 +183,7 @@
 .heading.copy {
   justify-content: center;
   display: flex;
+  display: -webkit-flex;
 }
 
 .refresh-button {
@@ -217,6 +222,7 @@
   z-index: 999;
   height: 100vh;
   display: flex;
+  display: -webkit-flex;
   align-items: center;
   justify-content: center;
 
@@ -313,9 +319,9 @@
 
   .unbonding-schedule-list-header {
     display: flex;
+    display: -webkit-flex;
     justify-content: space-between;
     padding: 15px 20px;
-    border-bottom: 1px solid #E3E5F4;
 
     p {
       font-family: 'Poppins', sans-serif;
@@ -330,11 +336,12 @@
   .unbonding-schedule-list {
     width: 100%;
     display: flex;
+    display: -webkit-flex;
     justify-content: space-between;
     padding: 10px 20px;
 
     &:hover {
-      background: #F5F6FA;
+      background: rgba(0,0,0,.075);
     }
 
     p {
@@ -377,12 +384,14 @@
 
     .chrome-box {
       display: flex;
+      display: -webkit-flex;
       flex-direction: row;
       justify-content: center;
 
       .chrome-link {
         padding: 20px;
         display: flex;
+        display: -webkit-flex;
         flex-direction: column;
         align-items: center;
         width: 200px;
@@ -423,10 +432,12 @@
   font-weight: 500;
   font-size: 14px;
   color: #8D9CB5;
+  word-break: break-word;
 }
 
 .memo-dropdown-section {
   display: flex;
+  display: -webkit-flex;
   align-items: center;
   justify-content: center;
   max-width: 500px;

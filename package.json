@@ -2,12 +2,18 @@
   "name": "pwallet",
   "private": true,
   "dependencies": {
-    "@cosmjs/crypto": "^v0.25.2",
-    "@cosmjs/math": "^0.25.3",
-    "@cosmjs/proto-signing": "^v0.25.2",
-    "@cosmjs/stargate": "^v0.25.2",
-    "@cosmjs/tendermint-rpc": "^v0.25.2",
+    "@cosmjs/amino": "^v0.25.4",
+    "@cosmjs/crypto": "^v0.25.4",
+    "@cosmjs/encoding": "^v0.25.4",
+    "@cosmjs/launchpad": "^v0.25.4",
+    "@cosmjs/ledger-amino": "git://github.com/persistenceOne/ledger-amino.git#v0.1.1",
+    "@cosmjs/math": "^0.25.4",
+    "@cosmjs/proto-signing": "^v0.25.4",
+    "@cosmjs/stargate": "^v0.25.4",
+    "@cosmjs/tendermint-rpc": "^v0.25.4",
+    "@cosmjs/utils": "^v0.25.4",
     "@cosmostation/cosmosjs": "^0.9.5",
+    "@ledgerhq/hw-transport": "^5.51.1",
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
     "@tendermint/sig": "^0.6.0",
@@ -40,6 +46,7 @@
     "react-download-link": "^2.3.0",
     "react-i18next": "^11.8.6",
     "react-mailchimp-subscribe": "^2.1.0",
+    "react-multiselect-checkboxes": "^0.1.1",
     "react-redux": "^7.2.2",
     "react-router-dom": "^5.1.2",
     "react-scripts": "4.0.3",
@@ -74,6 +81,7 @@
     ]
   },
   "devDependencies": {
+    "@ledgerhq/hw-transport-webusb": "^5.53.1",
     "eslint": "^7.24.0",
     "eslint-plugin-react": "^7.23.2"
   }

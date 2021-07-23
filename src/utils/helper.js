@@ -95,9 +95,16 @@ function validatePassphrase(value) {
 
 }
 
-function validateAddress(address) {
-    return address.startsWith("persistence1") && address.length === 50;
+function validateAddress(address, prefix="persistence") {
+    if(prefix === "cosmos"){
+        return address.startsWith(prefix) && address.length === 45;
+    }else if(prefix === "osmosis"){
+        return address.startsWith("osmo") && address.length === 43;
+    } else {
+        return address.startsWith(prefix) && address.length === 50;
+    }
 }
+
 
 function accountChangeCheck(errorMessage) {
     if(errorMessage === 'Unsupported type: \'/cosmos.vesting.v1beta1.ContinuousVestingAccount\'' ||
@@ -148,6 +155,28 @@ function mnemonicValidation(memo) {
     return validateMnemonic;
 }
 
+function ValidateAmount(value){
+    if (value === 0) {
+        return new Error('Value must be greater than 0');
+    }
+    return new Error('');
+}
+
+function inputSpaceValidation(e){
+    if (e.key === " ") {
+        e.preventDefault();
+    }
+}
+
+function inputAmountValidation(e){
+    if (e.key === "e" || e.key === "-" || e.key === "+") {
+        e.preventDefault();
+    }
+}
+function trimWhiteSpaces(data){
+    return data.split(' ').join('');
+}
+
 export default {
     randomNum,
     stringTruncate,
@@ -162,5 +191,9 @@ export default {
     decimalConversion,
     denomChange,
     mnemonicTrim,
-    mnemonicValidation
+    mnemonicValidation,
+    ValidateAmount,
+    inputSpaceValidation,
+    inputAmountValidation,
+    trimWhiteSpaces
 };

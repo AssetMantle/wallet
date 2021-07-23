@@ -9,7 +9,6 @@ import {
     TOKEN_LIST_FETCH_SUCCESS
 } from "../constants/balance";
 
-
 const inProgress = (state = false, action) => {
     switch (action.type) {
     case BALANCE_FETCH_IN_PROGRESS:

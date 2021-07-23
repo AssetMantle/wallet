@@ -7,7 +7,7 @@ on:
   push:
     branches: [ main ]
 jobs:
-  build:
+  testnet:
 
     runs-on: ubuntu-latest
 
@@ -28,16 +28,17 @@ jobs:
         CI: false
         REACT_APP_API_KEY: ${{ secrets.STAGING_REST_ENDPOINT }}
         REACT_APP_TENDERMINT_RPC_ENDPOINT: ${{ secrets.STAGING_RPC_ENDPOINT }}
-        REACT_APP_WEBSITE_URL: ${{ secrets.STAGING_WEBSITE_URL }}
+        REACT_APP_WEBSITE_URL: ${{ secrets.TESTNET_STAGING_URL }}
         REACT_APP_EXPLORER_API: ${{ secrets.STAGING_EXPLORER }}
         REACT_APP_MAIL_CHIMP_URL: ${{ secrets.STAGING_MAILCHIMP }}
         REACT_APP_PROXY_API: ${{ secrets.PROXY_API }}
         REACT_APP_CHAIN_ID: ${{ secrets.STAGING_CHAIN_ID }}
         REACT_APP_CHAIN_NAME: ${{ secrets.STAGING_CHAIN_NAME }}
+        REACT_APP_IBC_CONFIG: ${{ secrets.STAGING_IBC_CONFIG }}
     - name: zip up the build
       uses: montudor/action-zip@v0.1.0
       with:
-        args: zip -qq -r build.zip build
+        args: zip -qq -r build_testnet.zip build
     - name: Operations
       uses: alinz/ssh-scp-action@master
       with:
@@ -47,10 +48,57 @@ jobs:
         user: ${{ secrets.STAGING_USERNAME }}
         # runs this on remove server
         ssh_before: |
-          rm -r build.zip
+          rm -r build_testnet.zip
         # then uploads these 2 files
         scp: |
-          build.zip ${{ secrets.STAGING_USERNAME }}@${{ secrets.STAGING_HOST }}:~/build.zip
+          build_testnet.zip ${{ secrets.STAGING_USERNAME }}@${{ secrets.STAGING_HOST }}:~/build_testnet.zip
         # then run these commands
         ssh_after: |
-          ${{ secrets.STAGING_UPDATE_SCRIPT }}
+          ${{ secrets.STAGING_TESTNET_SCRIPT }}
+
+  mainnet:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 14.x ]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci
+    - run: npm run build --if-present
+      env:
+        CI: false
+        REACT_APP_API_KEY: ${{ secrets.PRODUCTION_REST_ENDPOINT }}
+        REACT_APP_TENDERMINT_RPC_ENDPOINT: ${{ secrets.PRODUCTION_RPC_ENDPOINT }}
+        REACT_APP_WEBSITE_URL: ${{ secrets.MAINNET_STAGING_URL }}
+        REACT_APP_EXPLORER_API: ${{ secrets.PRODUCTION_EXPLORER }}
+        REACT_APP_MAIL_CHIMP_URL: ${{ secrets.PRODUCTION_MAILCHIMP }}
+        REACT_APP_PROXY_API: ${{ secrets.PROXY_API }}
+        REACT_APP_CHAIN_ID: ${{ secrets.PRODUCTION_CHAIN_ID }}
+        REACT_APP_CHAIN_NAME: ${{ secrets.PRODUCTION_CHAIN_NAME }}
+        REACT_APP_IBC_CONFIG: ${{ secrets.PRODUCTION_IBC_CONFIG }}
+    - name: zip up the build
+      uses: montudor/action-zip@v0.1.0
+      with:
+        args: zip -qq -r build_mainnet.zip build
+    - name: Operations
+      uses: alinz/ssh-scp-action@master
+      with:
+        key: ${{ secrets.STAGING_SSH_KEY }}
+        host: ${{ secrets.STAGING_HOST }}
+        port: 22
+        user: ${{ secrets.STAGING_USERNAME }}
+        # runs this on remove server
+        ssh_before: |
+          rm -r build_mainnet.zip
+        # then uploads these 2 files
+        scp: |
+          build_mainnet.zip ${{ secrets.STAGING_USERNAME }}@${{ secrets.STAGING_HOST }}:~/build_mainnet.zip
+        # then run these commands
+        ssh_after: |
+          ${{ secrets.STAGING_MAINNET_SCRIPT }}

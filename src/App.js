@@ -10,6 +10,7 @@ import RouteNotFound from "./components/RouteNotFound";
 import config from "./config";
 import icon_white from "./assets/images/icon_white.svg";
 import {useTranslation} from "react-i18next";
+import KeplerWallet from "./utils/kepler";
 
 const App = () => {
     const {t} = useTranslation();
@@ -51,7 +52,18 @@ const App = () => {
     } else {
         address = localStorage.getItem('address');
     }
-
+    window.addEventListener("keplr_keystorechange", () => {
+        if(localStorage.getItem('loginMode') === 'kepler'){
+            const kepler = KeplerWallet();
+            kepler.then(function () {
+                const address = localStorage.getItem("keplerAddress");
+                localStorage.setItem('address', address);
+                window.location.reload();
+            }).catch(err => {
+                console.log(err.message);
+            });
+        }
+    });
     return (
         <>
             {
@@ -106,5 +118,4 @@ const App = () => {
         </>
     );
 };
-
 export default App;
