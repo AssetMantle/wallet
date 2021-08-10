@@ -3,6 +3,7 @@
   "private": true,
   "dependencies": {
     "@cosmjs/amino": "^v0.25.4",
+    "@ledgerhq/hw-transport-webusb": "^5.53.1",
     "@cosmjs/crypto": "^v0.25.4",
     "@cosmjs/encoding": "^v0.25.4",
     "@cosmjs/launchpad": "^v0.25.4",
@@ -80,7 +81,6 @@
     ]
   },
   "devDependencies": {
-    "@ledgerhq/hw-transport-webusb": "^5.53.1",
     "eslint": "^7.24.0",
     "eslint-plugin-react": "^7.23.2"
   }
