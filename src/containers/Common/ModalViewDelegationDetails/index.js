@@ -50,7 +50,7 @@ const ModalViewDelegationDetails = (props) => {
                                             <tr key={index}>
                                                 <td>{delegation.data.description.moniker}
                                                 </td>
-                                                <td><span>{addressTruncate}</span></td>
+                                                <td><span title={delegation.data.operatorAddress}>{addressTruncate}</span></td>
                                                 <td><span className="amount">{(transactions.XprtConversion(delegation.delegations*1)).toLocaleString()} XPRT</span></td>
                                                 <td>     {helper.isActive(delegation.data) ?
                                                     <span className="active-icon-box" title="active">
@@ -70,19 +70,6 @@ const ModalViewDelegationDetails = (props) => {
                         </Table>
 
                     </ul>
-                    {/*<div className="unbonding-schedule-list-header delegations-list-header">*/}
-                    {/*    <p>{t("MONIKER")}</p>*/}
-                    {/*    <p>{t("VALIDATOR_ADDRESS")}</p>*/}
-                    {/*    <p>{t("AMOUNT")}</p>*/}
-                    {/*</div>*/}
-
-                    {/*<div className="delegations-list unbonding-schedule-list" key={index}>*/}
-                    {/*    <p>{delegation.data.description.moniker}</p>*/}
-                    {/*    <p> <div className="address" title={delegation.data.operatorAddress}><span>{addressTruncate}</span></div></p>*/}
-                    {/*    <p><span className="amount">{transactions.XprtConversion(delegation.delegations*1)} XPRT</span></p>*/}
-                    {/*    /!*<p><span className="date">{moment(new Date (entry["completionTime"]).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</span></p>*!/*/}
-                    {/*</div>*/}
-
                 </Modal.Body>
             </Modal>
             <span className="view-button" onClick={handleModal} title="View Unbonding XPRT Schedule">{t("VIEW")}</span>

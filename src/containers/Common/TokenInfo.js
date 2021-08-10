@@ -169,7 +169,7 @@ const TokenInfo = (props) => {
                                 <span
                                     className="inner-grid">
                                     {
-                                        props.delegationStatus > 0 ?
+                                        props.delegationStatus ?
                                             <ModalViewDelegationDetails/>
                                             : ""
                                     }
