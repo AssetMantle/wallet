@@ -1,17 +1,12 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {Tab, Nav,} from "react-bootstrap";
 import Loader from "../../../components/Loader";
 import ValidatorsTable from "./ValidatorsTable";
-import {fetchValidators} from "../../../actions/validators";
 import {connect} from "react-redux";
 import {useTranslation} from "react-i18next";
 
 const Validators = (props) => {
-    let address = localStorage.getItem('address');
     const {t} = useTranslation();
-    useEffect(() => {
-        props.fetchValidators(address);
-    }, []);
 
     if (props.inProgress) {
         return <Loader/>;
@@ -60,8 +55,5 @@ const stateToProps = (state) => {
     };
 };
 
-const actionsToProps = {
-    fetchValidators,
-};
 
-export default connect(stateToProps, actionsToProps)(Validators);
+export default connect(stateToProps)(Validators);

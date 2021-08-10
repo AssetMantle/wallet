@@ -63,7 +63,7 @@ const ModalDelegate = (props) => {
     const handleSubmitKepler = async event => {
         setLoader(true);
         event.preventDefault();
-        const response = transactions.TransactionWithKeplr([DelegateMsg(loginAddress, props.validatorAddress, (amount * config.xprtValue))], aminoMsgHelper.fee(0, 250000), memoContent);
+        const response = transactions.TransactionWithKeplr([DelegateMsg(loginAddress, props.validatorAddress, (amount * config.xprtValue).toFixed(0))], aminoMsgHelper.fee(0, 250000), memoContent);
         response.then(result => {
             if (result.code !== undefined) {
                 helper.accountChangeCheck(result.rawLog);

@@ -67,7 +67,7 @@ async function LedgerWallet(hdpath, prefix) {
 
 async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(), bip39Passphrase = "", prefix = addressPrefix) {
     const loginMode = localStorage.getItem('loginMode');
-    console.log(msgs , "ms");
+
     if(loginMode === "normal"){
         const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix);
         return Transaction(wallet, address, msgs, fee, memo);
@@ -227,7 +227,7 @@ async function getTransactionResponse(address, data, fee, gas, mnemonic="", acco
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
     }
     else if (data.formName === "delegate"){
-        return TransactionWithMnemonic([DelegateMsg(address, data.validatorAddress, (data.amount * config.xprtValue))], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
+        return TransactionWithMnemonic([DelegateMsg(address, data.validatorAddress, (data.amount * config.xprtValue).toFixed(0))], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
     }
     else if(data.formName === "withdrawMultiple"){
@@ -238,10 +238,10 @@ async function getTransactionResponse(address, data, fee, gas, mnemonic="", acco
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
     }
     else if(data.formName === "redelegate"){
-        return TransactionWithMnemonic([RedelegateMsg(address, data.validatorAddress, data.toValidatorAddress, (data.amount * config.xprtValue))], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
+        return TransactionWithMnemonic([RedelegateMsg(address, data.validatorAddress, data.toValidatorAddress, (data.amount * config.xprtValue).toFixed(0))], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
     }else if(data.formName === "unbond"){
-        return TransactionWithMnemonic([UnbondMsg(address, data.validatorAddress, (data.amount * config.xprtValue))], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
+        return TransactionWithMnemonic([UnbondMsg(address, data.validatorAddress, (data.amount * config.xprtValue).toFixed(0))], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
     }else if(data.formName === "withdrawValidatorRewards"){
         return TransactionWithMnemonic([WithdrawMsg(address, data.validatorAddress)], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
@@ -263,5 +263,6 @@ export default {
     addrToValoper,
     valoperToAddr,
     checkValidatorAccountAddress,
-    getTransactionResponse
+    getTransactionResponse,
+    LedgerWallet
 };

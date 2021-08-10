@@ -210,7 +210,7 @@ const ModalWithdraw = (props) => {
                                     <div className="form-field claim-check-box">
                                         <p className="label"></p>
                                         <div className="check-box-container">
-                                            <p className="label" title={transactions.XprtConversion(props.validatorCommissionInfo[0]*1)}>{t("Claim Commission")}({transactions.XprtConversion(props.validatorCommissionInfo[0]*1).toLocaleString()} XPRT)</p>
+                                            <p className="label" title={(props.validatorCommissionInfo[0]*1)}>{t("Claim Commission")}({(props.validatorCommissionInfo[0]*1).toLocaleString()} XPRT)</p>
                                             <Form.Control
                                                 type="checkbox"
                                                 name="claimCommission"
@@ -336,6 +336,8 @@ const ModalWithdraw = (props) => {
 };
 
 const stateToProps = (state) => {
+
+
     return {
         list: state.rewards.list,
         rewards: state.rewards.rewards,

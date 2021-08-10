@@ -102,7 +102,7 @@ const ModalReDelegate = (props) => {
     const handleSubmitKepler = async event => {
         setLoader(true);
         event.preventDefault();
-        const response = transactions.TransactionWithKeplr([RedelegateMsg(loginAddress, props.validatorAddress, toValidatorAddress, (amount * config.xprtValue))], aminoMsgHelper.fee(0, 250000));
+        const response = transactions.TransactionWithKeplr([RedelegateMsg(loginAddress, props.validatorAddress, toValidatorAddress, (amount * config.xprtValue).toFixed(0))], aminoMsgHelper.fee(0, 250000));
         response.then(result => {
             if (result.code !== undefined) {
                 helper.accountChangeCheck(result.rawLog);
@@ -304,7 +304,6 @@ const ModalReDelegate = (props) => {
 };
 
 const stateToProps = (state) => {
-    console.log(state.validators.validators, "all");
     return {
         validators: state.validators.validators,
         balance: state.balance.amount,

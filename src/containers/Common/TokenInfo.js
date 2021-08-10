@@ -13,6 +13,8 @@ import ModalViewAmountDetails from "./ModalVIewAmountDetails";
 import Icon from "../../components/Icon";
 import {OverlayTrigger, Popover} from "react-bootstrap";
 import transactions from "../../utils/transactions";
+import ModalViewDelegationDetails from "./ModalViewDelegationDetails";
+import {fetchValidators} from "../../actions/validators";
 
 const TokenInfo = (props) => {
     const {t} = useTranslation();
@@ -27,6 +29,7 @@ const TokenInfo = (props) => {
         props.fetchUnbondDelegations(address);
         props.fetchTokenPrice();
         props.fetchTransferableVestingAmount(address);
+        props.fetchValidators(address);
         transactions.updateFee(address);
         setInterval(() => props.fetchTotalRewards(address), 10000);
     }, []);
@@ -163,7 +166,17 @@ const TokenInfo = (props) => {
                         <div className="line">
                             <p className="key">Delegated</p>
                             <p className="value" title={props.delegations}>
-                                <span className="inner-grid"/> {props.delegations.toLocaleString()} XPRT</p>
+                                <span
+                                    className="inner-grid">
+                                    {
+                                        props.delegationStatus > 0 ?
+                                            <ModalViewDelegationDetails/>
+                                            : ""
+                                    }
+                                </span>
+                                <span> {props.delegations.toLocaleString()} XPRT
+                                </span>
+                            </p>
                         </div>
                         <div className="line">
                             <p className="key">{t("REWARDS")}</p>
@@ -203,6 +216,7 @@ const TokenInfo = (props) => {
 const stateToProps = (state) => {
     return {
         delegations: state.delegations.count,
+        delegationStatus: state.delegations.status,
         balance: state.balance.amount,
         rewards: state.rewards.rewards,
         unbond: state.unbond.unbond,
@@ -220,7 +234,8 @@ const actionsToProps = {
     fetchUnbondDelegations,
     fetchTokenPrice,
     fetchTransferableVestingAmount,
-    fetchTotalRewards
+    fetchTotalRewards,
+    fetchValidators
 };
 
 export default connect(stateToProps, actionsToProps)(TokenInfo);

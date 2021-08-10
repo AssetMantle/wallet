@@ -249,7 +249,11 @@ let English = {
         "FROM_DATE":"From Date",
         "TO_DATE":"To Date",
         "CONTINUE_WITH_LEDGER":"Continue With Ledger",
-        "USE_LEDGER":"Use Ledger"
+        "USE_LEDGER":"Use Ledger",
+        "VIEW_DELEGATIONS":"View Delegations",
+        "MONIKER":"Moniker",
+        "VALIDATOR_ADDRESS":"Validator Address",
+        "STATUS":"Status"
     }
 };
 

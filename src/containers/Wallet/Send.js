@@ -108,7 +108,7 @@ const Send = (props) => {
         event.preventDefault();
 
         if (helper.validateAddress(event.target.address.value)) {
-            const response = transactions.TransactionWithKeplr([SendMsg(loginAddress, event.target.address.value, (amountField * config.xprtValue), tokenDenom)], aminoMsgHelper.fee(0, 250000));
+            const response = transactions.TransactionWithKeplr([SendMsg(loginAddress, event.target.address.value, (amountField * config.xprtValue).toFixed(0), tokenDenom)], aminoMsgHelper.fee(0, 250000));
             response.then(result => {
                 if (result.code !== undefined) {
                     helper.accountChangeCheck(result.rawLog);

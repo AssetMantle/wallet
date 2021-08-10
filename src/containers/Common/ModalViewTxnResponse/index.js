@@ -34,7 +34,6 @@ const ModalViewTxnResponse = (props) => {
             transactions.updateFee(address);
         }
     },[]);
-
     let response = props.response;
     return (
         <>

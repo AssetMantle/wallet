@@ -85,6 +85,7 @@ export const fetchValidators = (address) => {
             let activeValidators = [];
             let delegatedValidators = [];
             let inActiveValidators = [];
+
             validators.forEach((item) => {
                 if (helper.isActive(item)) {
                     let activeValidatorsData ={

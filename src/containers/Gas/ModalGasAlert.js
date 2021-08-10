@@ -144,7 +144,7 @@ const ModalGasAlert = (props) => {
 
         if (props.formData.formName === "ibc") {
             let msg = transactions.MakeIBCTransferMsg(props.formData.channelID, loginAddress,
-                props.formData.toAddress, (props.formData.amount * config.xprtValue), undefined, undefined, props.formData.denom);
+                props.formData.toAddress, (props.formData.amount * config.xprtValue).toFixed(0), undefined, undefined, props.formData.denom);
             await msg.then(result => {
                 response = transactions.TransactionWithMnemonic([result],
                     aminoMsgHelper.fee(Math.trunc(fee), gas), props.formData.memo, "",
