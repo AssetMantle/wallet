@@ -12,6 +12,7 @@ env:
   GKE_REGION: us-west2   # Add your cluster zone here.
   DEPLOYMENT_NAME: pwallet-testnet-deployment # Add your deployment name here.
   IMAGE: wallet
+  GKE_SA_KEY: ${{ secrets.GKE_SA_KEY }}
 
 jobs:
   setup-build-publish-deploy:
@@ -26,8 +27,8 @@ jobs:
       - uses: google-github-actions/setup-gcloud@master
         with:
           version: '303.0.0'
-          service_account_key: ${{ secrets.GKE_SA_KEY }}
-          project_id: ${{ secrets.GKE_PROJECT }}
+          service_account_key: $GKE_SA_KEY
+          project_id: $PROJECT_ID
           export_default_credentials: true
 
       # Configure docker to use the gcloud command-line tool as a credential helper
