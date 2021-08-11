@@ -44,8 +44,7 @@ jobs:
       - name: Build
         run: |-
           docker build \
-            --tag "gcr.io/${{ secrets.GKE_PROJECT }}/${{ env.IMAGE }}:${{ github.sha }}" \
-            .
+            --tag "gcr.io/${{ secrets.GKE_PROJECT }}/${{ env.IMAGE }}:${{ github.sha }}" .
 
       # Push the Docker image to Google Container Registry
       - name: Publish
