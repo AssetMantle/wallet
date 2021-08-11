@@ -12,7 +12,6 @@ env:
   GKE_REGION: us-west2   # Add your cluster zone here.
   DEPLOYMENT_NAME: pwallet-testnet-deployment # Add your deployment name here.
   IMAGE: wallet
-  GKE_SA_KEY: ${{ secrets.GKE_SA_KEY }}
 
 jobs:
   setup-build-publish-deploy:
@@ -27,8 +26,8 @@ jobs:
       - uses: google-github-actions/setup-gcloud@master
         with:
           version: '303.0.0'
-          service_account_key: $GKE_SA_KEY
-          project_id: $PROJECT_ID
+          service_account_key: ${{ secrets.GKE_SA_KEY }}
+          project_id: ${{ env.PROJECT_ID }}
           export_default_credentials: true
 
       # Configure docker to use the gcloud command-line tool as a credential helper
@@ -46,13 +45,13 @@ jobs:
       - name: Build
         run: |-
           docker build \
-            --tag "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA" \
+            --tag "gcr.io/${{ env.PROJECT_ID }}/${{ env.IMAGE }}:${{ env.GITHUB_SHA}}" \
             .
 
       # Push the Docker image to Google Container Registry
       - name: Publish
         run: |-
-          docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
+          docker push "gcr.io/${{ env.PROJECT_ID }}/${{ env.IMAGE }}:${{ env.GITHUB_SHA}}"
 
       # Set up kustomize
       - name: Set up Kustomize
@@ -63,7 +62,7 @@ jobs:
       # Deploy the Docker image to the GKE cluster
       - name: Deploy
         run: |-
-          ./kustomize edit set image gcr.io/PROJECT_ID/IMAGE:TAG=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
+          ./kustomize edit set image gcr.io/PROJECT_ID/IMAGE:TAG=gcr.io/${{ env.PROJECT_ID }}/${{ env.IMAGE }}:${{ env.GITHUB_SHA}}
           ./kustomize build . | kubectl apply -f -
           kubectl rollout status deployment/$DEPLOYMENT_NAME
           kubectl get services -o wide
