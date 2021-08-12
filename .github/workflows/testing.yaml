@@ -59,7 +59,7 @@ jobs:
           chmod u+x ./kustomize
 
       # Deploy the Docker image to the GKE cluster
-      - name: Deploy
+      - name: Deploy to GKE
         run: |-
           ./kustomize edit set image gcr.io/PROJECT_ID/IMAGE:TAG=gcr.io/$PROJECT_ID/${{ env.IMAGE }}:${{ github.sha }}
           ./kustomize build . | kubectl apply -f -
