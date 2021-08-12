@@ -2,9 +2,7 @@ name: Build and Deploy to GKE
 
 on:
   push:
-    branches: [ rohit/docker ]
-  pull_request:
-    branches: [ rohit/docker ]
+    branches: [ main ]
 
 env:
   GKE_CLUSTER: gke-staging    # Add your cluster name here.
