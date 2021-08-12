@@ -53,8 +53,12 @@ export const GlobalStyles = createGlobalStyle`
     .wallet-main-section .txns-container table thead th, .validators-section table thead th{
         border-color: ${({theme}) => theme.tableRowBorder};
     }
+    .wallet-main-section .txns-container table tbody td{
+      color: ${({theme}) => theme.lineValueColor};
+    }
     .wallet-main-section .txns-container table tbody td, .validators-section table tbody td{
     border-color: ${({theme}) => theme.tableRowBorder};
+     color: ${({theme}) => theme.lineValueColor};
     }
     .token-info-section .info-heading{
     color: ${({theme}) => theme.infoHeadingColor};
