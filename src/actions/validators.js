@@ -110,8 +110,10 @@ export const fetchValidators = (address) => {
                     : error.message);
             });
 
-            if(delegationsResponse.delegationResponses.length) {
+            if(delegationsResponse !== undefined && delegationsResponse.delegationResponses.length) {
                 delegatedValidators =  validatorsDelegationSort(validators, delegationsResponse.delegationResponses);
+            }else{
+                delegatedValidators = [];
             }
 
             dispatch(fetchDelegatedValidators(delegatedValidators));
