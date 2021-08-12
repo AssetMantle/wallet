@@ -20,8 +20,6 @@ node: '16.1.0'
 ```
 # REACT_APP_MAIL_CHIMP_URL is required for mail subscription ~ not required for local development
 REACT_APP_MAIL_CHIMP_URL=
-# REACT_APP_PROXY_API is required for fetching coin price
-REACT_APP_PROXY_API=
 # REACT_APP_CHAIN_ID is the blockchain chain-id, can be found in rpc endpoint under /status -> network, adding test-net configurations.
 REACT_APP_CHAIN_ID=test-core-1
 # REACT_APP_CHAIN_NAME required to display chain name on the app
