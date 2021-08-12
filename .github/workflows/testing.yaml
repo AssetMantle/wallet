@@ -43,7 +43,7 @@ jobs:
       - name: Build
         run: |-
           docker build \
-            --tag "gcr.io/$PROJECT_ID/${{ env.IMAGE }}:${{ github.sha }}" REACT_APP_PROXY_API=${{ secrets.PROXY_API }} REACT_APP_CHAIN_ID=${{secrets.TESTING_REACT_APP_CHAIN_ID}} REACT_APP_CHAIN_NAME=${{secrets.TESTING_REACT_APP_CHAIN_NAME}} REACT_APP_WEBSITE_URL=${{secrets.TESTING_REACT_APP_WEBSITE_URL}} REACT_APP_API_KEY=${{secrets.TESTING_REACT_APP_API_KEY}} REACT_APP_TENDERMINT_RPC_ENDPOINT=${{secrets.TESTING_REACT_APP_TENDERMINT_RPC_ENDPOINT}} REACT_APP_EXPLORER_API=${{secrets.TESTING_REACT_APP_EXPLORER_API}} .
+            --tag "gcr.io/$PROJECT_ID/${{ env.IMAGE }}:${{ github.sha }}" --build-arg REACT_APP_PROXY_API=${{ secrets.PROXY_API }} --build-arg REACT_APP_CHAIN_ID=${{secrets.TESTING_REACT_APP_CHAIN_ID}} --build-arg REACT_APP_CHAIN_NAME=${{secrets.TESTING_REACT_APP_CHAIN_NAME}} --build-arg REACT_APP_WEBSITE_URL=${{secrets.TESTING_REACT_APP_WEBSITE_URL}} --build-arg REACT_APP_API_KEY=${{secrets.TESTING_REACT_APP_API_KEY}} --build-arg REACT_APP_TENDERMINT_RPC_ENDPOINT=${{secrets.TESTING_REACT_APP_TENDERMINT_RPC_ENDPOINT}} --build-arg REACT_APP_EXPLORER_API=${{secrets.TESTING_REACT_APP_EXPLORER_API}} .
 
       # Push the Docker image to Google Container Registry
       - name: Publish
