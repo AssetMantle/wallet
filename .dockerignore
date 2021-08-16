@@ -1,0 +1,15 @@
+node_modules
+.git
+.github
+.idea
+.run
+
+.eslintrc.json
+README.md
+npm-debug.log
+build
+.dockerignore
+Dockerfile
+**/.git
+**/.DS_Store
+**/node_modules
