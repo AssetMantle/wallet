@@ -21,6 +21,7 @@ export const fetchTokenPriceError = (data) => {
 };
 
 export const fetchTokenPrice = () => (dispatch) => {
+
     CoinGeckoClient.simple.price({ids:"persistence"}).then((res) => {
         if (res.data.persistence.usd) {
             dispatch(fetchTokenPriceSuccess(res.data.persistence.usd));
