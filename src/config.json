@@ -16,5 +16,15 @@
   "version": "v0.1.9",
   "timeoutTimestamp": 1000,
   "ibcRevisionHeightIncrement": 1000,
-  "valoperAddressPrefix": "persistence"
+  "valoperAddressPrefix": "persistence",
+  "testNetFoundationNodes": [
+    "persistencevaloper1xepyv8lf99pa4x0w2ptr3vx3rr7wfs6msh2m76"
+  ],
+  "mainNetFoundationNodes": [
+    "persistencevaloper19ehhcj0fqw22vwqgll9g70njsv7eq9068pprfu",
+    "persistencevaloper1hndk2s0dx9p0pxd9pxwmls3eywpdu5ha76kpqs",
+    "persistencevaloper1ve9ls5wnczj72mxldewze8u46sarlatmgmp3nd",
+    "persistencevaloper1emrvay43wy7f4ylwen3yxhm9qxddy8zc9zdk5y",
+    "persistencevaloper13dv6h3wtmhmt0jprhaw9pv343qanttkty4685v"
+  ]
 }

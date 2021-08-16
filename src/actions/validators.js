@@ -5,6 +5,7 @@ import {
     FETCH_INACTIVE_VALIDATORS_SUCCESS,
     FETCH_VALIDATORS_IN_PROGRESS,
     FETCH_VALIDATORS_SUCCESS,
+    FETCH_DELEGATED_VALIDATORS_SUCCESS
 } from "../constants/validators";
 
 import helper from "../utils/helper";
@@ -38,6 +39,13 @@ export const fetchTotalValidatorsSuccess = (list) => {
     };
 };
 
+export const fetchDelegatedValidators = (list) => {
+    return {
+        type: FETCH_DELEGATED_VALIDATORS_SUCCESS,
+        list,
+    };
+};
+
 export const fetchValidatorsError = (count) => {
     return {
         type: FETCH_VALIDATORS_ERROR,
@@ -48,7 +56,6 @@ export const fetchValidatorsError = (count) => {
 const validatorsDelegationSort = (validators, delegations) =>{
     let delegatedValidators =[];
     validators.forEach((item) => {
-        let count = 0;
         for (const data of delegations) {
             if(item.operatorAddress === data.delegation.validatorAddress){
                 let obj = {
@@ -56,18 +63,7 @@ const validatorsDelegationSort = (validators, delegations) =>{
                     'delegations':data.balance.amount*1
                 };
                 delegatedValidators.push(obj);
-                count = 0;
-                break;
-            }else {
-                count ++;
             }
-        }
-        if(count !== 0){
-            let obj ={
-                'data':item,
-                'delegations':0
-            };
-            delegatedValidators.push(obj);
         }
     });
     const sortDel = delegatedValidators.sort(function (a, b) {
@@ -87,23 +83,21 @@ export const fetchValidators = (address) => {
         }).then(async (res) => {
             let validators = res.validators;
             let activeValidators = [];
+            let delegatedValidators = [];
             let inActiveValidators = [];
-            let activeValidatorsEmptyDelegations = [];
-            let inActiveValidatorsEmptyDelegations = [];
+
             validators.forEach((item) => {
                 if (helper.isActive(item)) {
                     let activeValidatorsData ={
                         'data':item,
                         'delegations':0
                     };
-                    activeValidatorsEmptyDelegations.push(item);
                     activeValidators.push(activeValidatorsData);
                 } else {
                     let inActiveValidatorsData ={
                         'data':item,
                         'delegations':0
                     };
-                    inActiveValidatorsEmptyDelegations.push(item);
                     inActiveValidators.push(inActiveValidatorsData);
                 }
             });
@@ -114,18 +108,15 @@ export const fetchValidators = (address) => {
                 console.log(error.response
                     ? error.response.data.message
                     : error.message);
-                dispatch(fetchActiveValidatorsSuccess(activeValidators));
-                dispatch(fetchInactiveValidatorsSuccess(inActiveValidators));
             });
 
-            if(delegationsResponse.delegationResponses.length) {
-                const sortedActiveValidators =  validatorsDelegationSort(activeValidatorsEmptyDelegations, delegationsResponse.delegationResponses);
-                const sortedInactiveValidators =  validatorsDelegationSort(inActiveValidatorsEmptyDelegations, delegationsResponse.delegationResponses);
-
-                activeValidators = sortedActiveValidators;
-                inActiveValidators = sortedInactiveValidators;
+            if(delegationsResponse !== undefined && delegationsResponse.delegationResponses.length) {
+                delegatedValidators =  validatorsDelegationSort(validators, delegationsResponse.delegationResponses);
+            }else{
+                delegatedValidators = [];
             }
 
+            dispatch(fetchDelegatedValidators(delegatedValidators));
             dispatch(fetchTotalValidatorsSuccess(validators));
             dispatch(fetchActiveValidatorsSuccess(activeValidators));
             dispatch(fetchInactiveValidatorsSuccess(inActiveValidators));

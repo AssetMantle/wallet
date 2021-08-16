@@ -98,7 +98,7 @@ const SendTransactions = (props) => {
                             : ''
                         : '',
             (stxn.tx.auth_info.fee.amount !== undefined && stxn.tx.auth_info.fee.amount.length) ?
-                <div key={index} className="fee">
+                <div key={index} className="fee text-left">
                     {stxn.tx.auth_info.fee.amount[0].amount}
                     {stxn.tx.auth_info.fee.amount[0].denom}
                 </div> : '',

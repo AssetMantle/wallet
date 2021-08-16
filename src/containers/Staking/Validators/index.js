@@ -1,18 +1,12 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {Tab, Nav,} from "react-bootstrap";
 import Loader from "../../../components/Loader";
 import ValidatorsTable from "./ValidatorsTable";
-import {fetchValidators} from "../../../actions/validators";
 import {connect} from "react-redux";
-import InfoRefresh from "../../Refresh";
 import {useTranslation} from "react-i18next";
 
 const Validators = (props) => {
-    let address = localStorage.getItem('address');
     const {t} = useTranslation();
-    useEffect(() => {
-        props.fetchValidators(address);
-    }, []);
 
     if (props.inProgress) {
         return <Loader/>;
@@ -21,10 +15,10 @@ const Validators = (props) => {
     return (
         <div className="txns-container">
             <Tab.Container id="left-tabs-example" defaultActiveKey="active">
-                <div className="tab-header">
+                <div className="tab-header active-inactive-validators">
                     <div className="info">
                         <div className="left">
-                            <p className="info-name">Validators</p>
+                            <p className="info-name"></p>
                             <Nav variant="pills">
                                 <Nav.Item>
                                     <Nav.Link eventKey="active"> {t("ACTIVE")}</Nav.Link>
@@ -34,12 +28,7 @@ const Validators = (props) => {
                                 </Nav.Item>
                             </Nav>
                         </div>
-                        <div>
-                            <InfoRefresh/>
-                        </div>
-                        {/*<p className="info-value"><span>Lifetime Rewards: </span>125,000 XPRT</p>*/}
                     </div>
-
                 </div>
                 <Tab.Content>
                     <Tab.Pane eventKey="active">
@@ -66,8 +55,5 @@ const stateToProps = (state) => {
     };
 };
 
-const actionsToProps = {
-    fetchValidators,
-};
 
-export default connect(stateToProps, actionsToProps)(Validators);
+export default connect(stateToProps)(Validators);

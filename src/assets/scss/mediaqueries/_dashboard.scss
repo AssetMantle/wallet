@@ -16,7 +16,11 @@
 }
 @media (min-width: 1201px) and (max-width: 1400px){
   .validators-section{
-    height: calc(100vh - 321px);
+    height: calc(100vh - 300px);
+    .main-tab-content{
+      height: calc(100vh - 348px);
+      padding: 0 10px 30px 0px;
+    }
   }
   .wallet-main-section .tabs-section .tab-content{
     height: calc(100vh - 375px);
@@ -37,10 +41,24 @@
   }
 }
 @media (max-width: 1200px) {
-  .wallet-main-section .tabs-section .tab-content, .validators-section {
+  .wallet-main-section .tabs-section .tab-content{
     padding: 30px 0px 0 0px;
     height: auto;
     overflow: auto;
+    &::after {
+      content:'';
+      display:block;
+      padding-bottom:30px;
+    }
+  }
+  .validators-section{
+    height: auto;
+    overflow: auto;
+    .main-tab-content{
+      height: auto;
+      overflow: auto;
+      padding: 0;
+    }
     &::after {
       content:'';
       display:block;
@@ -106,11 +124,18 @@
     bottom: -2px;
   }
 }
+
 @media (min-width: 992px) {
   .small-screen-logo {
     display: none;
   }
+  .active-inactive-validators{
+    position: absolute;
+    top: 10px;
+    right: 70px;
+  }
 }
+
 @media (max-width: 768px){
   .token-info-section .token-info-section-body{
     padding: 0  ;

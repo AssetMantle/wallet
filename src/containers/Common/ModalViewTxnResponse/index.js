@@ -1,7 +1,7 @@
 import {
     Modal,
 } from 'react-bootstrap';
-import React,{useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {useTranslation} from "react-i18next";
 import {connect} from "react-redux";
 import success from "../../../assets/images/success.svg";
@@ -33,7 +33,7 @@ const ModalViewTxnResponse = (props) => {
             props.fetchTransferableVestingAmount(address);
             transactions.updateFee(address);
         }
-    }, []);
+    },[]);
     let response = props.response;
     return (
         <>

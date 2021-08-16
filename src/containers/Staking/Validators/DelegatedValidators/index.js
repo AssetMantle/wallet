@@ -1,12 +1,15 @@
 import React, {useState} from "react";
-import helper from "../../../utils/helper";
-import Avatar from "./Avatar";
-import activeIcon from "../../../assets/images/active.svg";
-import inActiveIcon from "../../../assets/images/inactive.svg";
-import ModalActions from "./ModalActions";
-import DataTable from "../../../components/DataTable";
+import helper from "../../../../utils/helper";
+import Avatar from "../Avatar";
+import activeIcon from "../../../../assets/images/active.svg";
+import inActiveIcon from "../../../../assets/images/inactive.svg";
+import ModalActions from "../ModalActions";
+import DataTable from "../../../../components/DataTable";
+import {fetchValidators} from "../../../../actions/validators";
+import {connect} from "react-redux";
+import transactions from "../../../../utils/transactions";
 
-const ValidatorsTable = (props) => {
+const DelegatedValidators = (props) => {
     const [modalDelegate, setModalOpen] = useState();
     const [validator, setValidator] = useState('');
     const handleModal = (name, validator) => {
@@ -27,8 +30,8 @@ const ValidatorsTable = (props) => {
 
         }
     }, {
-        name: 'votingPower',
-        label: 'Voting Power',
+        name: 'delegatedAmount',
+        label: 'Delegated Amount(XPRT)',
         options: {
             sortCompare: (order) => {
                 return (obj1, obj2) => {
@@ -38,19 +41,7 @@ const ValidatorsTable = (props) => {
                 };
             }
         }
-    }, {
-        name: 'commission',
-        label: 'Commission',
-        options: {
-            sortCompare: (order) => {
-                return (obj1, obj2) => {
-                    let val1 = parseInt(obj1.data.props.children[0]);
-                    let val2 = parseInt(obj2.data.props.children[0]);
-                    return (val1 - val2) * (order === 'asc' ? 1 : -1);
-                };
-            }
-        }
-    }, {
+    },{
         name: 'status',
         label: 'Status',
         options: {sort: false}
@@ -67,15 +58,9 @@ const ValidatorsTable = (props) => {
                 {validator.data.description.moniker}
             </div>,
             <div className="voting" key={index}>
-                {parseFloat((validator.data.tokens * Math.pow(10, -6)).toFixed(2))}
-                {
-                    helper.isActive(validator.data)
-                        ? `(${parseFloat((validator.data.tokens * 100 / props.activeValidatorsTokens).toString()).toFixed(2).toLocaleString()}%)`
-                        : `(${parseFloat((validator.data.tokens * 100 / props.inActiveValidatorsTokens).toString()).toFixed(2).toLocaleString()}%)`
-                }
+                {transactions.XprtConversion(validator.delegations)}
             </div>
             ,
-            <span className="voting" key={index}>{`${parseFloat((helper.decimalConversion(validator.data.commission.commissionRates.rate) * 100).toFixed(2))}`} %</span>,
             <div className="" key={index}>
                 {helper.isActive(validator.data) ?
                     <span className="icon-box" title="active">
@@ -110,7 +95,7 @@ const ValidatorsTable = (props) => {
     };
 
     return (
-        <div className="txns-container">
+        <div className="txns-container delegated-validators">
             <DataTable
                 columns={columns}
                 data={tableData}
@@ -126,4 +111,19 @@ const ValidatorsTable = (props) => {
     );
 };
 
-export default ValidatorsTable;
+
+const stateToProps = (state) => {
+    return {
+        validatorsList: state.validators.delegatedValidators,
+        inActiveList: state.validators.inActiveList,
+        activeVotingPower: state.validators.activeVotingPower,
+        inActiveVotingPower: state.validators.inActiveVotingPower,
+        inProgress: state.validators.inProgress,
+    };
+};
+
+const actionsToProps = {
+    fetchValidators,
+};
+
+export default connect(stateToProps, actionsToProps)(DelegatedValidators);

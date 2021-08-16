@@ -4,6 +4,7 @@ import {
 } from "../constants/tokenPrice";
 import CoinGecko from 'coingecko-api';
 
+
 const CoinGeckoClient = new CoinGecko();
 
 export const fetchTokenPriceSuccess = (data) => {
