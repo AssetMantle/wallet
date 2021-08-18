@@ -5,8 +5,10 @@ import activeIcon from "../../../assets/images/active.svg";
 import inActiveIcon from "../../../assets/images/inactive.svg";
 import ModalActions from "./ModalActions";
 import DataTable from "../../../components/DataTable";
+import {useTranslation} from "react-i18next";
 
 const ValidatorsTable = (props) => {
+    const {t} = useTranslation();
     const [modalDelegate, setModalOpen] = useState();
     const [validator, setValidator] = useState('');
     const handleModal = (name, validator) => {
@@ -15,7 +17,7 @@ const ValidatorsTable = (props) => {
     };
     const columns = [{
         name: 'validator',
-        label: 'Validator',
+        label: t("VALIDATOR"),
         options: {
             sortCompare: (order) => {
                 return (obj1, obj2) => {
@@ -28,7 +30,7 @@ const ValidatorsTable = (props) => {
         }
     }, {
         name: 'votingPower',
-        label: 'Voting Power',
+        label: t("VOTING_POWER"),
         options: {
             sortCompare: (order) => {
                 return (obj1, obj2) => {
@@ -40,7 +42,7 @@ const ValidatorsTable = (props) => {
         }
     }, {
         name: 'commission',
-        label: 'Commission',
+        label: t("COMMISSION"),
         options: {
             sortCompare: (order) => {
                 return (obj1, obj2) => {
@@ -52,11 +54,11 @@ const ValidatorsTable = (props) => {
         }
     }, {
         name: 'status',
-        label: 'Status',
+        label: t("STATUS"),
         options: {sort: false}
     }, {
         name: 'actions',
-        label: 'Actions',
+        label: t("ACTIONS"),
         options: {sort: false}
     }];
     const tableData = props.validatorsList.length ?

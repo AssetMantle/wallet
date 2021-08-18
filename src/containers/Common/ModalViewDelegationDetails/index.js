@@ -80,7 +80,6 @@ const ModalViewDelegationDetails = (props) => {
 
 
 const stateToProps = (state) => {
-    console.log(state.validators.delegatedValidators);
     return {
         validatorsList: state.validators.delegatedValidators,
     };

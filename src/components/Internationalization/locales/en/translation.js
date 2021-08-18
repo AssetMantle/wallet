@@ -253,7 +253,11 @@ let English = {
         "VIEW_DELEGATIONS":"View Delegations",
         "MONIKER":"Moniker",
         "VALIDATOR_ADDRESS":"Validator Address",
-        "STATUS":"Status"
+        "STATUS":"Status",
+        "CHANGE_KEY_STORE":"Change Keystore file",
+        "ALL_VALIDATORS":"All Validators",
+        "ACTIONS":"Actions",
+        "VOTING_POWER":"Voting Power"
     }
 };
 

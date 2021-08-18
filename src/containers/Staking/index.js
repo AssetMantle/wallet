@@ -4,8 +4,10 @@ import Validators from "./Validators";
 import DelegatedValidators from "./Validators/DelegatedValidators";
 import {Nav, Tab} from "react-bootstrap";
 import InfoRefresh from "../Refresh";
+import {useTranslation} from "react-i18next";
 
 const Staking = () => {
+    const {t} = useTranslation();
     return (
         <div className="staking-main-section">
             <TokenInfo/>
@@ -17,10 +19,10 @@ const Staking = () => {
                                 <div className="left">
                                     <Nav variant="pills">
                                         <Nav.Item>
-                                            <Nav.Link eventKey="all"> All Validators</Nav.Link>
+                                            <Nav.Link eventKey="all">{t("ALL_VALIDATORS")}</Nav.Link>
                                         </Nav.Item>
                                         <Nav.Item>
-                                            <Nav.Link eventKey="delegated">Delegated</Nav.Link>
+                                            <Nav.Link eventKey="delegated">{t("DELEGATED")}</Nav.Link>
                                         </Nav.Item>
                                     </Nav>
                                 </div>

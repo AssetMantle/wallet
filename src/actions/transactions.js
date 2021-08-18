@@ -28,6 +28,7 @@ export const fetchPageNumberSuccess = (number, totalPages) => {
 
 
 export const fetchTransactionsSuccess = (list) => {
+    console.log(list, "send txns");
     return {
         type: TRANSACTIONS_FETCH_SUCCESS,
         list,
@@ -80,6 +81,7 @@ export const fetchReceivePageNumberSuccess = (number, totalPages) => {
 
 
 export const fetchReceiveTransactionsSuccess = (list) => {
+    console.log(list, "received txns");
     return {
         type: RECEIVE_TRANSACTIONS_FETCH_SUCCESS,
         list,
