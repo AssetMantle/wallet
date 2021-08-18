@@ -7,7 +7,6 @@ spec:
   selector: 
     app: pwallet-testnet
   ports:  
-    - protocol: TCP
+    - name: http-web
       port: 3001
       targetPort: 3000
-      name: http-web
