@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pwallet-testnet-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: pwallet-testnet
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: pwallet-testnet
+    spec:
+      containers:
+      - name: pwallet
+        image: gcr.io/true-ion-305111/wallet:v0.1.10
+        env:
+        - name: "PORT"
+          value: "3000"
