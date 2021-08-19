@@ -117,6 +117,7 @@ const ModalDecryptKeyStore = (props) => {
                                 transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                         }).catch(err => {
                             setLoader(false);
+
                             setErrorMessage(err.response
                                 ? err.response.data.message
                                 : err.message);
@@ -294,7 +295,7 @@ const ModalDecryptKeyStore = (props) => {
                                         <div className="buttons">
                                             <p className="button-link"
                                                 onClick={handleUpdateKeystore}>
-                                                Change Keystore file
+                                                {t("CHANGE_KEY_STORE")}
                                             </p>
                                         </div>
                                         : null

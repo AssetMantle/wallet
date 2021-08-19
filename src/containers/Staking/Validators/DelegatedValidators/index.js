@@ -8,8 +8,10 @@ import DataTable from "../../../../components/DataTable";
 import {fetchValidators} from "../../../../actions/validators";
 import {connect} from "react-redux";
 import transactions from "../../../../utils/transactions";
+import {useTranslation} from "react-i18next";
 
 const DelegatedValidators = (props) => {
+    const {t} = useTranslation();
     const [modalDelegate, setModalOpen] = useState();
     const [validator, setValidator] = useState('');
     const handleModal = (name, validator) => {
@@ -18,7 +20,7 @@ const DelegatedValidators = (props) => {
     };
     const columns = [{
         name: 'validator',
-        label: 'Validator',
+        label: t("VALIDATOR"),
         options: {
             sortCompare: (order) => {
                 return (obj1, obj2) => {
@@ -31,7 +33,7 @@ const DelegatedValidators = (props) => {
         }
     }, {
         name: 'delegatedAmount',
-        label: 'Delegated Amount(XPRT)',
+        label: `${t("DELEGATED_AMOUNT")}(XPRT)`,
         options: {
             sortCompare: (order) => {
                 return (obj1, obj2) => {
@@ -43,11 +45,11 @@ const DelegatedValidators = (props) => {
         }
     },{
         name: 'status',
-        label: 'Status',
+        label: t("STATUS"),
         options: {sort: false}
     }, {
         name: 'actions',
-        label: 'Actions',
+        label: t("ACTIONS"),
         options: {sort: false}
     }];
     const tableData = props.validatorsList.length ?

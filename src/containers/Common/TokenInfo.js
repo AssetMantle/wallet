@@ -85,7 +85,7 @@ const TokenInfo = (props) => {
                                 </OverlayTrigger>
                             </p>
                             <p className="value"
-                                title={props.delegations + props.balance + props.unbond}>
+                                title={(props.delegations + props.balance + props.unbond).toFixed(6)}>
                                 <span
                                     className="inner-grid-icon">
                                     {

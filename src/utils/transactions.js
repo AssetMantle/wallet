@@ -187,14 +187,15 @@ async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeo
             revisionHeight: clientStateResponseDecoded.latestHeight.revisionHeight.add(config.ibcRevisionHeightIncrement),
             revisionNumber: clientStateResponseDecoded.latestHeight.revisionNumber
         };
-
         const consensusStateResponse = await ibcExtension.ibc.channel.consensusState(port, channel,
             clientStateResponseDecoded.latestHeight.revisionNumber.toInt(), clientStateResponseDecoded.latestHeight.revisionHeight.toInt());
         const consensusStateResponseDecoded = decodeTendermintConsensusStateAny(consensusStateResponse.consensusState);
 
         const timeoutTime = Long.fromNumber(consensusStateResponseDecoded.timestamp.getTime() / 1000).add(timeoutTimestamp).multiply(1000000000); //get time in nanoesconds
+
         return TransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTime, denom, port);
     }).catch(error => {
+
         throw error;
     });
     return finalResponse;
