@@ -7,10 +7,11 @@ export const getValidatorsUrl = () => `${API_URL}/cosmos/staking/v1beta1/validat
 export const getValidatorUrl = (address) => `${API_URL}/cosmos/staking/v1beta1/validators/${address}`;
 export const getBalanceUrl = (address) => `${API_URL}/cosmos/bank/v1beta1/balances/${address}`;
 export const getTxnUrl = (hash) => `${API_URL}/cosmos/tx/v1beta1/txs/${hash}`;
-export const getSendTransactionsUrl  = (address , limit, pageNumber) =>`${RPC_URL}/tx_search?query="message.sender='${address}'"&order_by="desc"&prove=true&page=${pageNumber}&per_page=${limit}`;
-export const getReceiveTransactionsUrl  = (address , limit, pageNumber) =>`${RPC_URL}/tx_search?query="transfer.recipient='${address}'"&order_by="desc"&prove=true&page=${pageNumber}&per_page=${limit}`;
-// export const getReceiveTransactionsUrl  = (address , limit, pageNumber) =>`${API_URL}/txs?transfer.recipient=${address}&limit=${limit}&page=${pageNumber}`;
+
+export const getSendTransactionsUrl  = (address , limit, pageNumber) =>`${API_URL}/cosmos/tx/v1beta1/txs?events=message.sender='${address}'&order_by=ORDER_BY_DESC&pagination.offset=${limit * pageNumber}&pagination.limit=${limit}&pagination.count_total=true`;
+export const getReceiveTransactionsUrl  = (address , limit, pageNumber) =>`${API_URL}/cosmos/tx/v1beta1/txs?events=transfer.recipient='${address}'&order_by=ORDER_BY_DESC&pagination.offset=${limit * pageNumber}&pagination.limit=${limit}&pagination.count_total=true`;
 export const getValidatorRewardsUrl = (address, validatorAddress) => `${API_URL}/cosmos/distribution/v1beta1/delegators/${address}/rewards/${validatorAddress}`;
 export const getAccountUrl = (address) => `${API_URL}/cosmos/auth/v1beta1/accounts/${address}`;
 export const getWithdrawAddressUrl = (address) => `${API_URL}/cosmos/distribution/v1beta1/delegators/${address}/withdraw_address`;
 export const getLatestBlockUrl = () => `${RPC_URL}/block`;
+

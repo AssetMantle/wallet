@@ -87,7 +87,8 @@ function validateFrom(value) {
 }
 
 function checkLastPage(pageNumber, limit, totalTransactions) {
-    return totalTransactions / limit <= pageNumber;
+    console.log(totalTransactions / limit <= pageNumber, totalTransactions / limit , pageNumber, totalTransactions);
+    return totalTransactions / limit <= pageNumber+1;
 }
 
 function validatePassphrase(value) {

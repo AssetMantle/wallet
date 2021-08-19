@@ -14,7 +14,7 @@ const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ReceiveTransactions = (props) => {
     const address = localStorage.getItem('address');
     useEffect(() => {
-        props.fetchReceiveTransactions(address, 5, 1);
+        props.fetchReceiveTransactions(address, 5, 0);
     }, []);
     const columns = [{
         name: 'txHash',
@@ -118,7 +118,7 @@ const ReceiveTransactions = (props) => {
         }
     };
     const handlePrevious = () => {
-        if (props.pageNumber[0] > 1) {
+        if (props.pageNumber[0] >= 1) {
             props.fetchReceiveTransactions(address, 5, props.pageNumber[0] - 1);
         }
     };
@@ -133,7 +133,7 @@ const ReceiveTransactions = (props) => {
 
                 <div className="before buttons">
                     <IconButton aria-label="previous" onClick={handlePrevious}
-                        disabled={props.pageNumber[0] > 1 ? false : true}>
+                        disabled={props.pageNumber[0] >= 1 ? false : true}>
                         <ChevronLeftIcon/>
                     </IconButton>
                 </div>
