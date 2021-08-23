@@ -141,6 +141,7 @@ let English = {
         "WALLET_ADDRESS": "Wallet Address",
         "TOTAL_BALANCE": "Total Balance",
         "DELEGATED": "Delegated",
+        "DELEGATABLE":"Delegatable",
         "CURRENT_PRICE": "Current Price per XPRT",
         "CURRENT_VALUE": "Current Value",
         "AMOUNT_UNDER_VESTING": "Vesting Balance",
