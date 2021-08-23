@@ -76,7 +76,7 @@ const ModalActions = (props) => {
             }
         }
         else {
-            if (config.testNetFoundationNodes.includes(props.validator.operatorAddress)) {
+            if (config.mainNetFoundationNodes.includes(props.validator.operatorAddress)) {
                 setFoundationNode(true);
             }else {
                 setFoundationNode(false);

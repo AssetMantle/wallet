@@ -87,7 +87,6 @@ function validateFrom(value) {
 }
 
 function checkLastPage(pageNumber, limit, totalTransactions) {
-    console.log(totalTransactions / limit <= pageNumber, totalTransactions / limit , pageNumber, totalTransactions);
     return totalTransactions / limit <= pageNumber+1;
 }
 

@@ -88,7 +88,7 @@ const DelegatedValidators = (props) => {
         responsive: "standard",
         filters: false,
         pagination: false,
-        selectableRows: false,
+        selectableRows: 'none',
         print: false,
         download: false,
         filter: false,

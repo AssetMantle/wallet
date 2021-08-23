@@ -143,11 +143,11 @@ const TokenInfo = (props) => {
                                         icon="info"/></button>
                                 </OverlayTrigger>
                             </p>
-                            <p className="value" title={props.transferableAmount}><span className="inner-grid-icon"/>
+                            <p className="value" title={props.transferableAmount.toFixed(6)}><span className="inner-grid-icon"/>
                                 {props.transferableAmount.toLocaleString()} XPRT</p>
                         </div>
                         <div className="line">
-                            <p className="key">Delegatable
+                            <p className="key">{t("DELEGATABLE")}
                                 <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
                                     overlay={popoverDelegatable}>
                                     <button className="icon-button info" type="button"><Icon
@@ -155,7 +155,7 @@ const TokenInfo = (props) => {
                                         icon="info"/></button>
                                 </OverlayTrigger>
                             </p>
-                            <p className="value" title={props.balance}><span className="inner-grid-icon"/>
+                            <p className="value" title={props.balance.toFixed(6)}><span className="inner-grid-icon"/>
                                 {props.balance.toLocaleString()} XPRT</p>
                         </div>
 
@@ -164,7 +164,7 @@ const TokenInfo = (props) => {
                 <div className="rewards-info info-box">
                     <div className="inner-box">
                         <div className="line">
-                            <p className="key">Delegated</p>
+                            <p className="key">{t("DELEGATED")}</p>
                             <p className="value" title={props.delegations}>
                                 <span
                                     className="inner-grid">
@@ -181,7 +181,7 @@ const TokenInfo = (props) => {
                         <div className="line">
                             <p className="key">{t("REWARDS")}</p>
                             <p className="value rewards"><span onClick={() => handleRewards("rewards")}
-                                className="claim inner-grid">{t("CLAIM")}</span><span title={props.rewards}> {props.rewards.toLocaleString()}XPRT</span>
+                                className="claim inner-grid">{t("CLAIM")}</span><span title={props.rewards.toFixed(6)}> {props.rewards.toLocaleString()} XPRT</span>
                             </p>
                         </div>
                         <div className="line">
