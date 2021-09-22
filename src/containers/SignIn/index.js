@@ -24,6 +24,9 @@ const SignIn = (props) => {
             setShow(false);
             setWithLedger(true);
         }
+        if (key === "keystone") {
+            history.push("/keystation");
+        }
     };
 
     const handleKepler = () => {
@@ -51,6 +54,11 @@ const SignIn = (props) => {
                         <div className="buttons">
                             <button className="button button-primary large"
                                 onClick={() => handleRoute("withAddress")}>{t("CONTINUE_WITH_ADDRESS")}
+                            </button>
+                        </div>
+                        <div className="buttons">
+                            <button className="button button-primary large" 
+                                onClick={() => handleRoute("keystone")}>Keystone
                             </button>
                         </div>
                     </Modal.Body>

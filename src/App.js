@@ -11,8 +11,10 @@ import config from "./config";
 import icon_white from "./assets/images/icon_white.svg";
 import {useTranslation} from "react-i18next";
 import KeplerWallet from "./utils/kepler";
-
+import KeyStation from "./containers/KeyStation";
+import {test} from "./utils/transactions";
 const App = () => {
+    test().then(res => console.log("done", res));
     const {t} = useTranslation();
     const history = useHistory();
     const routes = [{
@@ -30,6 +32,10 @@ const App = () => {
     }, {
         path: '/keplr',
         component: KeplerHome,
+        private: false,
+    }, {
+        path: '/keystation',
+        component: KeyStation,
         private: false,
     }];
     const [isOnline, setNetwork] = useState(window.navigator.onLine);

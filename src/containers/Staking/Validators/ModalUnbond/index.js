@@ -203,6 +203,9 @@ const ModalUnbond = (props) => {
                                     <p className="form-error">{errorMessage}</p>
                                     : null
                             }
+
+                            <p className="amount-warning">{t("UN_BONDING_NOTE")}</p>
+
                             <div className="buttons navigate-buttons">
                                 {mode === "normal" ?
                                     <div className="button-section">
