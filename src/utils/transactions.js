@@ -1,4 +1,6 @@
-import {DirectSecp256k1HdWallet} from "@cosmjs/proto-signing";
+import {DirectSecp256k1HdWallet,  decodePubkey} from "@cosmjs/proto-signing";
+import { assert } from "@cosmjs/utils";
+import { Uint64 } from "@cosmjs/math";
 import config from "../config.json";
 import {stringToPath} from "@cosmjs/crypto";
 import MakePersistence from "./cosmosjsWrapper";
@@ -8,8 +10,17 @@ import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient} from "@cosmjs/stargate";
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import {LedgerSigner} from "@cosmjs/ledger-amino";
-import {DelegateMsg, RedelegateMsg, SendMsg, SetWithDrawAddressMsg, UnbondMsg, WithdrawMsg} from "./protoMsgHelper";
+import {DelegateMsg, RedelegateMsg, SetWithDrawAddressMsg, UnbondMsg, WithdrawMsg} from "./protoMsgHelper";
 import aminoMsgHelper from "./aminoMsgHelper";
+import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/auth/v1beta1/query";
+import {BaseAccount, ModuleAccount} from "@cosmjs/stargate/build/codec/cosmos/auth/v1beta1/auth";
+import {
+    BaseVestingAccount,
+    ContinuousVestingAccount,
+    DelayedVestingAccount,
+    PeriodicVestingAccount,
+} from "@cosmjs/stargate/build/codec/cosmos/vesting/v1beta1/vesting";
+// import Keystation from "@cosmostation/keystation-es6";
 
 const encoding = require("@cosmjs/encoding");
 const tendermint_1 = require("@cosmjs/stargate/build/codec/ibc/lightclients/tendermint/v1/tendermint");
@@ -207,6 +218,71 @@ async function RpcClient() {
     return createProtobufRpcClient(queryClient);
 }
 
+export async function test(){
+
+    function uint64FromProto(input) {
+        return Uint64.fromString(input.toString());
+    }
+
+    function accountFromBaseAccount(input) {
+        const { address, pubKey, accountNumber, sequence } = input;
+        const pubkey = decodePubkey(pubKey);
+        return {
+            address: address,
+            pubkey: pubkey,
+            accountNumber: uint64FromProto(accountNumber).toNumber(),
+            sequence: uint64FromProto(sequence).toNumber(),
+        };
+    }
+    const rpcClient = await RpcClient();
+    const authAccountService = new QueryClientImpl(rpcClient);
+    const acc = await authAccountService.Account({address:"persistence16z5a650vwq7gzwtpy2ndjc0g382a94p37qmdmj"});
+    switch (acc.account.typeUrl) {
+    // auth
+
+    case "/cosmos.auth.v1beta1.BaseAccount":
+        return accountFromBaseAccount(BaseAccount.decode(acc.account.value));
+    case "/cosmos.auth.v1beta1.ModuleAccount": {
+        const baseAccount = ModuleAccount.decode(acc.account.value).baseAccount;
+        assert(baseAccount);
+        return accountFromBaseAccount(baseAccount);
+    }
+
+    // vesting
+
+    case "/cosmos.vesting.v1beta1.BaseVestingAccount": {
+        const baseAccount = BaseVestingAccount.decode(acc.account.value)?.baseAccount;
+        assert(baseAccount);
+        // return accountFromBaseAccount(baseAccount);
+        return baseAccount;
+    }
+    case "/cosmos.vesting.v1beta1.ContinuousVestingAccount": {
+        const baseAccount = ContinuousVestingAccount.decode(acc.account.value);
+        assert(baseAccount);
+        // return accountFromBaseAccount(baseAccount);
+        console.log(acc.account.typeUrl, baseAccount, "cont");
+        return baseAccount;
+    }
+    case "/cosmos.vesting.v1beta1.DelayedVestingAccount": {
+        const baseAccount = DelayedVestingAccount.decode(acc.account.value);
+        assert(baseAccount);
+        // return accountFromBaseAccount(baseAccount);
+        console.log(acc.account.typeUrl, baseAccount, "delay");
+        return baseAccount;
+    }
+    case "/cosmos.vesting.v1beta1.PeriodicVestingAccount": {
+        const baseAccount = PeriodicVestingAccount.decode(acc.account.value);
+        assert(baseAccount);
+        // return accountFromBaseAccount(baseAccount);
+        return baseAccount;
+    }
+
+    default:
+        throw new Error(`Unsupported type: '${acc.account.typeUrl}'`);
+    }
+}
+
+
 function addrToValoper(address) {
     let data = encoding.Bech32.decode(address).data;
     return encoding.Bech32.encode(valoperAddressPrefix, data);
@@ -223,10 +299,68 @@ function checkValidatorAccountAddress(validatorAddress, address) {
 }
 
 async function getTransactionResponse(address, data, fee, gas, mnemonic="", accountNumber=0, addressIndex=0, bip39Passphrase="") {
+
     if(data.formName === "send"){
-        return TransactionWithMnemonic([SendMsg(address, data.toAddress, (data.amount * config.xprtValue).toFixed(0), data.denom)], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
-            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+        const persistence = MakePersistence(accountNumber, addressIndex);
+        persistence.getAccounts(address).then(data => {
+            if (data.code === undefined) {
+                let stdSignMsg = persistence.newStdMsg({
+                    msgs: [
+                        {
+                            type: "cosmos-sdk/MsgSend",
+                            value: {
+                                amount: [
+                                    {
+                                        amount: 0.000001,
+                                        denom: "uxprt"
+                                    }
+                                ],
+                                from_address: address,
+                                to_address: 'persistence1wv9879c57ag7zthrtcvundrw3yvvt0a92wmmhq'
+                            }
+                        }
+                    ],
+                    chain_id: persistence.chainId,
+                    fee: {amount: [{amount: String(0), denom: "upxrt"}], gas: String(250000)},
+                    memo: "",
+                    account_number: String(data.account.account_number),
+                    sequence: String(data.account.sequence)
+                });
+                console.log("stdSignMsg",stdSignMsg);
+                // let myKeystation = new Keystation();
+                // myKeystation.client = "http://localhost:3000";
+                // myKeystation.lcd = "https://persistence.testnet.rest.audit.one";
+                // myKeystation.path = "44/750/0/0/0";
+                // var keystationAccount = "";
+                //
+                // var popup = myKeystation.openWindow("transaction", stdSignMsg, keystationAccount);
+                // var popupTick = setInterval(function() {
+                //     if (popup.closed) {
+                //         clearInterval(popupTick);
+                //         console.log("window closed! transfer");
+                //     }
+                // }, 500);
+                //
+                // window.addEventListener("message", function(e) {
+                //     if (e.origin != "https://keystation.cosmostation.io") return;
+                //     // if (e.origin != "http://localhost:8080") return;
+                //     console.log(e.data);
+                //     // e.data.account : User's keychain account. Remember this account!
+                //     keystationAccount = e.data.account;
+                //     document.getElementById("result").innerHTML = JSON.stringify(e.data);
+                // } , false);
+            }
+            else {
+                console.log( "keystatiosn error");
+            }
+        });
+
     }
+
+    // if(data.formName === "send"){
+    //     return TransactionWithMnemonic([SendMsg(address, data.toAddress, (data.amount * config.xprtValue).toFixed(0), data.denom)], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
+    //         mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+    // }
     else if (data.formName === "delegate"){
         return TransactionWithMnemonic([DelegateMsg(address, data.validatorAddress, (data.amount * config.xprtValue).toFixed(0))], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
@@ -265,5 +399,6 @@ export default {
     valoperToAddr,
     checkValidatorAccountAddress,
     getTransactionResponse,
-    LedgerWallet
+    LedgerWallet,
+    test
 };
