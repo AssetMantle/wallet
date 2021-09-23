@@ -8,7 +8,6 @@ import transactions from "../../../utils/transactions";
 import {connect} from "react-redux";
 import Icon from "../../../components/Icon";
 import helper from "../../../utils/helper";
-import MakePersistence from "../../../utils/cosmosjsWrapper";
 
 import Loader from "../../../components/Loader";
 import ModalViewTxnResponse from "../../Common/ModalViewTxnResponse";
@@ -101,57 +100,45 @@ const ModalDecryptKeyStore = (props) => {
             }
         }
         if (mnemonic !== undefined) {
-            const persistence = MakePersistence(accountNumber, addressIndex);
-            const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
-            const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
-            if (address.error === undefined && ecpairPriv.error === undefined) {
-                if (address === loginAddress) {
-                    setImportMnemonic(false);
-                    let response;
-                    if(props.formData.formName === "ibc"){
-                        let msg =  transactions.MakeIBCTransferMsg(props.formData.channelID, address,
-                            props.formData.toAddress,(props.formData.amount * config.xprtValue).toFixed(0), undefined, undefined, props.formData.denom, props.formData.channelUrl);
-                        await msg.then(result => {
-                            response = transactions.TransactionWithMnemonic( [result],
-                                aminoMsgHelper.fee(Math.trunc(props.fee), props.gas), props.formData.memo, mnemonic,
-                                transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-                        }).catch(err => {
-                            setLoader(false);
+            const accountData = await transactions.MnemonicWalletWithPassphrase(mnemonic, transactions.makeHdPath(),bip39Passphrase);
+            const address = accountData[1];
 
-                            setErrorMessage(err.response
-                                ? err.response.data.message
-                                : err.message);
-                        });
-                    }else {
-                        response = transactions.getTransactionResponse(address, props.formData, props.fee, props.gas, mnemonic, accountNumber, addressIndex, bip39Passphrase);
-                    }
-                    if(response !== undefined){
-                        response.then(result => {
-                            setResponse(result);
-                            setLoader(false);
-                            setAdvanceMode(false);
-                        }).catch(err => {
-                            console.log(err.response
-                                ? err.response.data.message
-                                : err.message);
-                            setLoader(false);
-                            setErrorMessage(err.message);
-                        });
-                    }
-                } else {
-                    setLoader(false);
-                    setErrorMessage(t("ADDRESS_NOT_MATCHED_ERROR"));
+            if (address === loginAddress) {
+                setImportMnemonic(false);
+                let response;
+                if(props.formData.formName === "ibc"){
+                    let msg =  transactions.MakeIBCTransferMsg(props.formData.channelID, address,
+                        props.formData.toAddress,(props.formData.amount * config.xprtValue).toFixed(0), undefined, undefined, props.formData.denom, props.formData.channelUrl);
+                    await msg.then(result => {
+                        response = transactions.TransactionWithMnemonic( [result],
+                            aminoMsgHelper.fee(Math.trunc(props.fee), props.gas), props.formData.memo, mnemonic,
+                            transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                    }).catch(err => {
+                        setLoader(false);
+
+                        setErrorMessage(err.response
+                            ? err.response.data.message
+                            : err.message);
+                    });
+                }else {
+                    response = transactions.getTransactionResponse(address, props.formData, props.fee, props.gas, mnemonic, accountNumber, addressIndex, bip39Passphrase);
+                }
+                if(response !== undefined){
+                    response.then(result => {
+                        setResponse(result);
+                        setLoader(false);
+                        setAdvanceMode(false);
+                    }).catch(err => {
+                        console.log(err.response
+                            ? err.response.data.message
+                            : err.message);
+                        setLoader(false);
+                        setErrorMessage(err.message);
+                    });
                 }
             } else {
-                if (address.error !== undefined) {
-                    setLoader(false);
-                    setAdvanceMode(false);
-                    setErrorMessage(address.error);
-                } else {
-                    setLoader(false);
-                    setAdvanceMode(false);
-                    setErrorMessage(ecpairPriv.error);
-                }
+                setLoader(false);
+                setErrorMessage(t("ADDRESS_NOT_MATCHED_ERROR"));
             }
         } else {
             setLoader(false);

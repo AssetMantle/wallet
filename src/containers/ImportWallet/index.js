@@ -12,8 +12,9 @@ import helper from "../../utils/helper";
 import {useHistory} from "react-router-dom";
 import GeneratePrivateKey from "../Common/GeneratePrivateKey";
 import config from "../../config";
-import MakePersistence from "../../utils/cosmosjsWrapper";
 import {useTranslation} from "react-i18next";
+import {GetAccount} from "../../utils/transactions";
+import transactions from "../../utils/transactions";
 
 const ModalImportWallet = (props) => {
     const {t} = useTranslation();
@@ -156,23 +157,22 @@ const ModalImportWallet = (props) => {
         setPassphraseError(result);
     };
     const handleLogin = () => {
-        const persistence = MakePersistence(0, 0);
-        persistence.getAccounts(advancedFormResponseData.address).then(data => {
-            if (data.code === undefined) {
-                if (data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount" ||
-                    data.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount" ||
-                    data.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
+        GetAccount(advancedFormResponseData.address)
+            .then(res =>{
+                if(transactions.VestingAccountCheck(res.typeUrl)){
                     localStorage.setItem('fee', config.vestingAccountFee);
                     localStorage.setItem('account', 'vesting');
-                } else {
+                }else {
                     localStorage.setItem('fee', config.defaultFee);
                     localStorage.setItem('account', 'non-vesting');
                 }
-            } else {
+                console.log("done", res);
+            })
+            .catch(error => {
+                console.log(error.message);
                 localStorage.setItem('fee', config.defaultFee);
                 localStorage.setItem('account', 'non-vesting');
-            }
-        });
+            });
         localStorage.setItem('loginToken', 'loggedIn');
         localStorage.setItem('address', advancedFormResponseData.address);
         localStorage.setItem('loginMode', 'normal');

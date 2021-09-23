@@ -1,27 +1,20 @@
-import {DirectSecp256k1HdWallet,  decodePubkey} from "@cosmjs/proto-signing";
-import { assert } from "@cosmjs/utils";
-import { Uint64 } from "@cosmjs/math";
+import {DirectSecp256k1HdWallet} from "@cosmjs/proto-signing";
 import config from "../config.json";
 import {stringToPath} from "@cosmjs/crypto";
-import MakePersistence from "./cosmosjsWrapper";
 import helper from "./helper";
 import Long from "long";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient} from "@cosmjs/stargate";
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import {LedgerSigner} from "@cosmjs/ledger-amino";
-import {DelegateMsg, RedelegateMsg, SetWithDrawAddressMsg, UnbondMsg, WithdrawMsg} from "./protoMsgHelper";
+import {DelegateMsg, RedelegateMsg, SendMsg, SetWithDrawAddressMsg, UnbondMsg, WithdrawMsg} from "./protoMsgHelper";
 import aminoMsgHelper from "./aminoMsgHelper";
 import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/auth/v1beta1/query";
-import {BaseAccount, ModuleAccount} from "@cosmjs/stargate/build/codec/cosmos/auth/v1beta1/auth";
 import {
-    BaseVestingAccount,
     ContinuousVestingAccount,
     DelayedVestingAccount,
     PeriodicVestingAccount,
 } from "@cosmjs/stargate/build/codec/cosmos/vesting/v1beta1/vesting";
-// import Keystation from "@cosmostation/keystation-es6";
-
 const encoding = require("@cosmjs/encoding");
 const tendermint_1 = require("@cosmjs/stargate/build/codec/ibc/lightclients/tendermint/v1/tendermint");
 const {SigningStargateClient, QueryClient, setupIbcExtension} = require("@cosmjs/stargate");
@@ -33,7 +26,6 @@ const configCoinType = config.coinType;
 const valoperAddressPrefix = config.valoperAddressPrefix;
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
-//TODO take from config and env
 async function Transaction(wallet, signerAddress, msgs, fee, memo = "") {
     const cosmJS = await SigningStargateClient.connectWithSigner(
         tendermintRPCURL,
@@ -117,28 +109,25 @@ function getAccountNumberAndSequence(authResponse) {
 }
 
 function updateFee(address) {
-    const persistence = MakePersistence(0, 0);
     if (localStorage.getItem('loginMode') === 'normal') {
-        persistence.getAccounts(address).then(data => {
-            if (data.code === undefined) {
-                if (data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount" ||
-                    data.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount" ||
-                    data.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
+        GetAccount(address)
+            .then(res => {
+                if (VestingAccountCheck(res.typeUrl)) {
                     localStorage.setItem('fee', config.vestingAccountFee);
                     localStorage.setItem('account', 'vesting');
                 } else {
                     localStorage.setItem('fee', config.defaultFee);
                     localStorage.setItem('account', 'non-vesting');
                 }
-            } else {
+            })
+            .catch(error => {
+                console.log(error.message);
                 localStorage.setItem('fee', config.defaultFee);
                 localStorage.setItem('account', 'non-vesting');
-            }
-        });
-    } else {
+            });
+    }else {
         localStorage.setItem('fee', config.vestingAccountFee);
     }
-
 }
 
 function XprtConversion(data) {
@@ -150,15 +139,16 @@ function PrivateKeyReader(file, password, accountNumber, addressIndex, bip39Pass
     return new Promise(function (resolve, reject) {
         const fileReader = new FileReader();
         fileReader.readAsText(file, "UTF-8");
-        fileReader.onload = event => {
+        fileReader.onload =async event => {
             const res = JSON.parse(event.target.result);
             const decryptedData = helper.decryptStore(res, password);
             if (decryptedData.error != null) {
                 reject(decryptedData.error);
             } else {
-                const persistence = MakePersistence(accountNumber, addressIndex);
                 let mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
-                const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
+                const accountData = await MnemonicWalletWithPassphrase(mnemonic, makeHdPath());
+                const address = accountData[1];
+                console.log(accountData,loginAddress, "not matched address");
                 if (address === loginAddress) {
                     resolve(mnemonic);
                     localStorage.setItem('encryptedMnemonic', event.target.result);
@@ -218,70 +208,26 @@ async function RpcClient() {
     return createProtobufRpcClient(queryClient);
 }
 
-export async function test(){
-
-    function uint64FromProto(input) {
-        return Uint64.fromString(input.toString());
-    }
-
-    function accountFromBaseAccount(input) {
-        const { address, pubKey, accountNumber, sequence } = input;
-        const pubkey = decodePubkey(pubKey);
-        return {
-            address: address,
-            pubkey: pubkey,
-            accountNumber: uint64FromProto(accountNumber).toNumber(),
-            sequence: uint64FromProto(sequence).toNumber(),
-        };
-    }
+export async function GetAccount(address){
     const rpcClient = await RpcClient();
     const authAccountService = new QueryClientImpl(rpcClient);
-    const acc = await authAccountService.Account({address:"persistence16z5a650vwq7gzwtpy2ndjc0g382a94p37qmdmj"});
-    switch (acc.account.typeUrl) {
-    // auth
-
-    case "/cosmos.auth.v1beta1.BaseAccount":
-        return accountFromBaseAccount(BaseAccount.decode(acc.account.value));
-    case "/cosmos.auth.v1beta1.ModuleAccount": {
-        const baseAccount = ModuleAccount.decode(acc.account.value).baseAccount;
-        assert(baseAccount);
-        return accountFromBaseAccount(baseAccount);
-    }
-
-    // vesting
-
-    case "/cosmos.vesting.v1beta1.BaseVestingAccount": {
-        const baseAccount = BaseVestingAccount.decode(acc.account.value)?.baseAccount;
-        assert(baseAccount);
-        // return accountFromBaseAccount(baseAccount);
-        return baseAccount;
-    }
-    case "/cosmos.vesting.v1beta1.ContinuousVestingAccount": {
-        const baseAccount = ContinuousVestingAccount.decode(acc.account.value);
-        assert(baseAccount);
-        // return accountFromBaseAccount(baseAccount);
-        console.log(acc.account.typeUrl, baseAccount, "cont");
-        return baseAccount;
-    }
-    case "/cosmos.vesting.v1beta1.DelayedVestingAccount": {
-        const baseAccount = DelayedVestingAccount.decode(acc.account.value);
-        assert(baseAccount);
-        // return accountFromBaseAccount(baseAccount);
-        console.log(acc.account.typeUrl, baseAccount, "delay");
-        return baseAccount;
-    }
-    case "/cosmos.vesting.v1beta1.PeriodicVestingAccount": {
-        const baseAccount = PeriodicVestingAccount.decode(acc.account.value);
-        assert(baseAccount);
-        // return accountFromBaseAccount(baseAccount);
-        return baseAccount;
-    }
-
-    default:
-        throw new Error(`Unsupported type: '${acc.account.typeUrl}'`);
+    const accountResponse = await authAccountService.Account({
+        address: address,
+    });
+    if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
+        let periodicVestingAccountResponse = PeriodicVestingAccount.decode(accountResponse.account.value);
+        console.log("using v1", periodicVestingAccountResponse);
+        return {"typeUrl": accountResponse.account.typeUrl, "accountData" : periodicVestingAccountResponse};
+    } else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.DelayedVestingAccount") {
+        let delayedVestingAccountResponse = DelayedVestingAccount.decode(accountResponse.account.value);
+        console.log("using v1", delayedVestingAccountResponse);
+        return {"typeUrl": accountResponse.account.typeUrl, "accountData" : delayedVestingAccountResponse};
+    } else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
+        let continuousVestingAccountResponse = ContinuousVestingAccount.decode(accountResponse.account.value);
+        console.log("using v1", continuousVestingAccountResponse);
+        return {"typeUrl": accountResponse.account.typeUrl, "accountData" : continuousVestingAccountResponse};
     }
 }
-
 
 function addrToValoper(address) {
     let data = encoding.Bech32.decode(address).data;
@@ -299,68 +245,10 @@ function checkValidatorAccountAddress(validatorAddress, address) {
 }
 
 async function getTransactionResponse(address, data, fee, gas, mnemonic="", accountNumber=0, addressIndex=0, bip39Passphrase="") {
-
     if(data.formName === "send"){
-        const persistence = MakePersistence(accountNumber, addressIndex);
-        persistence.getAccounts(address).then(data => {
-            if (data.code === undefined) {
-                let stdSignMsg = persistence.newStdMsg({
-                    msgs: [
-                        {
-                            type: "cosmos-sdk/MsgSend",
-                            value: {
-                                amount: [
-                                    {
-                                        amount: 0.000001,
-                                        denom: "uxprt"
-                                    }
-                                ],
-                                from_address: address,
-                                to_address: 'persistence1wv9879c57ag7zthrtcvundrw3yvvt0a92wmmhq'
-                            }
-                        }
-                    ],
-                    chain_id: persistence.chainId,
-                    fee: {amount: [{amount: String(0), denom: "upxrt"}], gas: String(250000)},
-                    memo: "",
-                    account_number: String(data.account.account_number),
-                    sequence: String(data.account.sequence)
-                });
-                console.log("stdSignMsg",stdSignMsg);
-                // let myKeystation = new Keystation();
-                // myKeystation.client = "http://localhost:3000";
-                // myKeystation.lcd = "https://persistence.testnet.rest.audit.one";
-                // myKeystation.path = "44/750/0/0/0";
-                // var keystationAccount = "";
-                //
-                // var popup = myKeystation.openWindow("transaction", stdSignMsg, keystationAccount);
-                // var popupTick = setInterval(function() {
-                //     if (popup.closed) {
-                //         clearInterval(popupTick);
-                //         console.log("window closed! transfer");
-                //     }
-                // }, 500);
-                //
-                // window.addEventListener("message", function(e) {
-                //     if (e.origin != "https://keystation.cosmostation.io") return;
-                //     // if (e.origin != "http://localhost:8080") return;
-                //     console.log(e.data);
-                //     // e.data.account : User's keychain account. Remember this account!
-                //     keystationAccount = e.data.account;
-                //     document.getElementById("result").innerHTML = JSON.stringify(e.data);
-                // } , false);
-            }
-            else {
-                console.log( "keystatiosn error");
-            }
-        });
-
+        return TransactionWithMnemonic([SendMsg(address, data.toAddress, (data.amount * config.xprtValue).toFixed(0), data.denom)], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
+            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
     }
-
-    // if(data.formName === "send"){
-    //     return TransactionWithMnemonic([SendMsg(address, data.toAddress, (data.amount * config.xprtValue).toFixed(0), data.denom)], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
-    //         mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-    // }
     else if (data.formName === "delegate"){
         return TransactionWithMnemonic([DelegateMsg(address, data.validatorAddress, (data.amount * config.xprtValue).toFixed(0))], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
@@ -384,6 +272,15 @@ async function getTransactionResponse(address, data, fee, gas, mnemonic="", acco
     }
 }
 
+/**
+ * @return {boolean}
+ */
+async function VestingAccountCheck(type) {
+    return type === "/cosmos.vesting.v1beta1.PeriodicVestingAccount" ||
+        type === "/cosmos.vesting.v1beta1.DelayedVestingAccount" ||
+        type === "/cosmos.vesting.v1beta1.ContinuousVestingAccount";
+}
+
 export default {
     TransactionWithKeplr,
     TransactionWithMnemonic,
@@ -400,5 +297,7 @@ export default {
     checkValidatorAccountAddress,
     getTransactionResponse,
     LedgerWallet,
-    test
+    GetAccount,
+    VestingAccountCheck,
+    MnemonicWalletWithPassphrase
 };

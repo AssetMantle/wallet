@@ -5,9 +5,9 @@ import {
 import Icon from "../../components/Icon";
 import {useHistory} from "react-router-dom";
 import config from "../../config";
-import MakePersistence from "../../utils/cosmosjsWrapper";
 import helper from "../../utils/helper";
 import {useTranslation} from "react-i18next";
+import transactions, {GetAccount} from "../../utils/transactions";
 const AddressImport = (props) => {
     const {t} = useTranslation();
     const history = useHistory();
@@ -16,27 +16,24 @@ const AddressImport = (props) => {
     const handleSubmit = async event => {
         event.preventDefault();
         setErrorMessage("");
-        //TODO FIND THE BETTER WAY TO IMPLEMENT
-        const persistence = MakePersistence(0, 0);
         const address = event.target.address.value;
-        persistence.getAccounts(address).then(data => {
-            if (data.code === undefined) {
-                if (data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount" ||
-                    data.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount" ||
-                    data.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
-                    localStorage.setItem('fee', config.vestingAccountFee);
-                    localStorage.setItem('account', 'vesting');
-                } else {
+        if (helper.validateAddress(address)) {
+            GetAccount(address)
+                .then(res => {
+                    if(transactions.VestingAccountCheck(res.typeUrl)){
+                        localStorage.setItem('fee', config.vestingAccountFee);
+                        localStorage.setItem('account', 'vesting');
+                    }else {
+                        localStorage.setItem('fee', config.defaultFee);
+                        localStorage.setItem('account', 'non-vesting');
+                    }
+                    console.log("done", res);
+                })
+                .catch(error => {
+                    console.log(error.message);
                     localStorage.setItem('fee', config.defaultFee);
                     localStorage.setItem('account', 'non-vesting');
-                }
-            } else {
-                localStorage.setItem('fee', config.defaultFee);
-                localStorage.setItem('account', 'non-vesting');
-            }
-        });
-
-        if (helper.validateAddress(address)) {
+                });
             localStorage.setItem('loginToken', 'loggedIn');
             localStorage.setItem('address', address);
             localStorage.setItem('loginMode', 'normal');
