@@ -90,31 +90,39 @@ export const fetchRewards = (address) => {
         }).then(async (delegatorRewardsResponse) => {
             if (delegatorRewardsResponse.rewards.length) {
                 let options = [];
-                for (const item of delegatorRewardsResponse.rewards) {
-                    const stakingQueryService = new StakingQueryClientImpl(rpcClient);
-                    await stakingQueryService.Validator({
-                        validatorAddr: item.validatorAddress,
-                    }).then( async (res) => {
-                        const data = {
-                            label:`${res.validator.description.moniker} - ${transactions.XprtConversion(helper.decimalConversion(item.reward[0].amount)).toLocaleString(undefined, {minimumFractionDigits: 5})} XPRT` ,
-                            value:res.validator.operatorAddress,
-                            rewards: helper.decimalConversion(item.reward[0].amount)
-                        };
-                        if(transactions.checkValidatorAccountAddress(res.validator.operatorAddress, address)){
-                            let commissionInfo = await ActionHelper.getValidatorCommission(res.validator.operatorAddress);
-                            dispatch(fetchValidatorCommissionInfoSuccess([commissionInfo, res.validator.operatorAddress, true]));
-                        }
-                        options.push(data);
-                    }).catch((error) => {
-                        dispatch(fetchValidatorRewardsListError(error.response
-                            ? error.response.data.message
-                            : error.message));
-                    });
+
+                if(delegatorRewardsResponse.rewards.length) {
+                    for (const item of delegatorRewardsResponse.rewards) {
+                        const stakingQueryService = new StakingQueryClientImpl(rpcClient);
+                        console.log("rajuuu",delegatorRewardsResponse);
+
+                        await stakingQueryService.Validator({
+                            validatorAddr: item.validatorAddress,
+                        }).then(async (res) => {
+                            const data = {
+                                label: `${res.validator.description.moniker} - ${transactions.XprtConversion(helper.decimalConversion(item.reward[0] && item.reward[0].amount)).toLocaleString(undefined, {minimumFractionDigits: 5})} XPRT`,
+                                value: res.validator.operatorAddress,
+                                rewards: helper.decimalConversion(item.reward[0] && item.reward[0].amount)
+                            };
+
+                            console.log(transactions.checkValidatorAccountAddress(res.validator.operatorAddress, address), "commissionInfo");
+                            if (transactions.checkValidatorAccountAddress(res.validator.operatorAddress, address)) {
+                                let commissionInfo = await ActionHelper.getValidatorCommission(res.validator.operatorAddress);
+                                dispatch(fetchValidatorCommissionInfoSuccess([commissionInfo, res.validator.operatorAddress, true]));
+                            }
+                            options.push(data);
+                        }).catch((error) => {
+                            dispatch(fetchValidatorRewardsListError(error.response
+                                ? error.response.data.message
+                                : error.message));
+                        });
+                    }
                 }
                 dispatch(fetchValidatorRewardsListSuccess(options));
                 dispatch(fetchRewardsListProgress(delegatorRewardsResponse.rewards));
             }
         }).catch((error) => {
+            console.log("not work");
             dispatch(fetchRewardsError(error.response
                 ? error.response.data.message
                 : error.message));

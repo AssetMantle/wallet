@@ -11,10 +11,10 @@ import wallet from "../../utils/wallet";
 import helper from "../../utils/helper";
 import {useHistory} from "react-router-dom";
 import GeneratePrivateKey from "../Common/GeneratePrivateKey";
-import config from "../../config";
+// import config from "../../config";
 import {useTranslation} from "react-i18next";
-import {GetAccount} from "../../utils/transactions";
-import transactions from "../../utils/transactions";
+// import {GetAccount} from "../../utils/transactions";
+// import transactions from "../../utils/transactions";
 
 const ModalImportWallet = (props) => {
     const {t} = useTranslation();
@@ -156,30 +156,30 @@ const ModalImportWallet = (props) => {
         const result = helper.validatePassphrase(evt.target.value);
         setPassphraseError(result);
     };
-    const handleLogin = () => {
-        GetAccount(advancedFormResponseData.address)
-            .then(res =>{
-                if(transactions.VestingAccountCheck(res.typeUrl)){
-                    localStorage.setItem('fee', config.vestingAccountFee);
-                    localStorage.setItem('account', 'vesting');
-                }else {
-                    localStorage.setItem('fee', config.defaultFee);
-                    localStorage.setItem('account', 'non-vesting');
-                }
-                console.log("done", res);
-            })
-            .catch(error => {
-                console.log(error.message);
-                localStorage.setItem('fee', config.defaultFee);
-                localStorage.setItem('account', 'non-vesting');
-            });
-        localStorage.setItem('loginToken', 'loggedIn');
-        localStorage.setItem('address', advancedFormResponseData.address);
-        localStorage.setItem('loginMode', 'normal');
-        localStorage.setItem('version', config.version);
-        setShow(false);
-        history.push('/dashboard/wallet');
-    };
+    // const handleLogin = () => {
+    //     GetAccount(advancedFormResponseData.address)
+    //         .then(res =>{
+    //             if(transactions.VestingAccountCheck(res.typeUrl)){
+    //                 localStorage.setItem('fee', config.vestingAccountFee);
+    //                 localStorage.setItem('account', 'vesting');
+    //             }else {
+    //                 localStorage.setItem('fee', config.defaultFee);
+    //                 localStorage.setItem('account', 'non-vesting');
+    //             }
+    //             console.log("done", res);
+    //         })
+    //         .catch(error => {
+    //             console.log(error.message);
+    //             localStorage.setItem('fee', config.defaultFee);
+    //             localStorage.setItem('account', 'non-vesting');
+    //         });
+    //     localStorage.setItem('loginToken', 'loggedIn');
+    //     localStorage.setItem('address', advancedFormResponseData.address);
+    //     localStorage.setItem('loginMode', 'normal');
+    //     localStorage.setItem('version', config.version);
+    //     setShow(false);
+    //     history.push('/dashboard/wallet');
+    // };
     const handleClose = () => {
         setShow(false);
         if (props.name === "createWallet") {
@@ -387,7 +387,7 @@ const ModalImportWallet = (props) => {
                             <p className="mnemonic-result"><b>{t("WALLET_PATH")}: </b>{advancedFormResponseData.walletPath}</p>
                             <p className="mnemonic-result"><b>{t("ADDRESS")}: </b>{advancedFormResponseData.address}</p>
                             <div className="buttons">
-                                <button className="button button-primary" onClick={handleLogin}>{t("DONE")}</button>
+                                <button className="button button-primary" onClick={handleClose}>{t("DONE")}</button>
                             </div>
                             <div className="note-section">
                                 <div className="exclamation"><Icon
