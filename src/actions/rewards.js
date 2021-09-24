@@ -112,6 +112,7 @@ export const fetchRewards = (address) => {
                             }
                             options.push(data);
                         }).catch((error) => {
+                            console.log("rajuuu",error.message);
                             dispatch(fetchValidatorRewardsListError(error.response
                                 ? error.response.data.message
                                 : error.message));
