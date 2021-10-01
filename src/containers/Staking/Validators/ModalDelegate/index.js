@@ -20,7 +20,7 @@ import ModalViewTxnResponse from "../../../Common/ModalViewTxnResponse";
 const ModalDelegate = (props) => {
     const {t} = useTranslation();
     const [enteredAmount, setEnteredAmount] = useState('');
-    const [amount, setAmount] = useState();
+    const [amount, setAmount] = useState(0);
     const [memoContent, setMemoContent] = useState('');
     const [initialModal, setInitialModal] = useState(true);
     const [response, setResponse] = useState('');
@@ -38,7 +38,7 @@ const ModalDelegate = (props) => {
     };
 
     const handleAmountChange = (evt) => {
-        let rex = /^\d*\.?\d{0,2}$/;
+        let rex = /^\d*\.?\d{0,6}$/;
         if (rex.test(evt.target.value)) {
             if (props.balance < (evt.target.value * 1)) {
                 setCheckAmountError(true);
@@ -106,8 +106,8 @@ const ModalDelegate = (props) => {
     };
 
     const selectTotalBalanceHandler = (value) =>{
-        setEnteredAmount(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)).toString());
-        setAmount(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)));
+        setEnteredAmount(helper.fixedConvertion(value, 'string'));
+        setAmount(helper.fixedConvertion(value, 'number'));
     };
 
     if (loader) {

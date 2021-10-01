@@ -55,10 +55,11 @@ const CreateWallet = (props) => {
     };
 
     const handleSubmitMnemonic = () => {
-        randomNumberList.map((number, index) => {
-            let phrase = document.getElementById('mnemonicKey' + number).value;
-            if (mnemonicList[number] !== phrase) {
+        for (let index = 0; index < randomNumberList.length; index++){
+            let phrase = document.getElementById('mnemonicKey' + randomNumberList[index]).value;
+            if (mnemonicList[randomNumberList[index]] !== phrase) {
                 setQuizError(true);
+                return;
             } else {
                 if (index === randomNumberList.length - 1) {
                     localStorage.setItem('loginToken', 'loggedIn');
@@ -67,7 +68,7 @@ const CreateWallet = (props) => {
                     setMnemonicQuiz(false);
                 }
             }
-        });
+        }
 
     };
 
@@ -85,6 +86,7 @@ const CreateWallet = (props) => {
         if (formName === "mnemonicQuiz") {
             setKeysForm(true);
             setMnemonicQuiz(false);
+            setQuizError(false);
         }
         if (formName === "accountInfo") {
             setMnemonicQuiz(true);
@@ -175,7 +177,7 @@ const CreateWallet = (props) => {
                                     onClick={handleRoute}>{t("IMPORT_WALLET")}</span>
                                 </p>
                                 <div className="seed-section">
-                                    <h3 className="heading copy">{t("MNEMONIC")} (Seed Phrase) <Copy id={response.mnemonic}/>
+                                    <h3 className="heading copy">{t("MNEMONIC")} (Seed Phrase)
                                     </h3>
                                     <div className="menmonic-list">
                                         {randomMnemonicList.map((key, index) => {

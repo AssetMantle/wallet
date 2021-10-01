@@ -1,7 +1,8 @@
 import {DELEGATIONS_FETCH_SUCCESS, DELEGATIONS_FETCH_ERROR, DELEGATIONS_STATUS_SUCCESS} from "../constants/delegations";
 import Lodash from "lodash";
 import transactions from "../utils/transactions";
-import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/staking/v1beta1/query";
+import {QueryClientImpl} from "cosmjs-types/cosmos/staking/v1beta1/query";
+import helper from "../utils/helper";
 
 export const fetchDelegationsCountSuccess = (count) => {
     return {
@@ -36,7 +37,7 @@ export const fetchDelegationsCount = (address) => {
                 let totalDelegationsCount = Lodash.sumBy(delegationsResponse.delegationResponses, (delegation) => {
                     return delegation.balance.amount * 1;
                 });
-                dispatch(fetchDelegationsCountSuccess(transactions.XprtConversion(totalDelegationsCount)));
+                dispatch(fetchDelegationsCountSuccess(helper.fixedConvertion(transactions.XprtConversion(totalDelegationsCount), 'number')));
             }
 
         }).catch((error) => {

@@ -1,6 +1,6 @@
 import {DirectSecp256k1HdWallet} from "@cosmjs/proto-signing";
 import config from "../config.json";
-import {stringToPath} from "@cosmjs/crypto";
+import {stringToPath, sha256} from "@cosmjs/crypto";
 import helper from "./helper";
 import Long from "long";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
@@ -9,14 +9,18 @@ import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import {LedgerSigner} from "@cosmjs/ledger-amino";
 import {DelegateMsg, RedelegateMsg, SendMsg, SetWithDrawAddressMsg, UnbondMsg, WithdrawMsg} from "./protoMsgHelper";
 import aminoMsgHelper from "./aminoMsgHelper";
-import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/auth/v1beta1/query";
+import {QueryClientImpl} from "cosmjs-types/cosmos/auth/v1beta1/query";
 import {
     ContinuousVestingAccount,
     DelayedVestingAccount,
     PeriodicVestingAccount,
-} from "@cosmjs/stargate/build/codec/cosmos/vesting/v1beta1/vesting";
+} from "cosmjs-types/cosmos/vesting/v1beta1/vesting";
+import {
+    BaseAccount
+} from "cosmjs-types/cosmos/auth/v1beta1/auth";
+
 const encoding = require("@cosmjs/encoding");
-const tendermint_1 = require("@cosmjs/stargate/build/codec/ibc/lightclients/tendermint/v1/tendermint");
+const tendermint_1 = require("cosmjs-types/ibc/lightclients/tendermint/v1/tendermint");
 const {SigningStargateClient, QueryClient, setupIbcExtension} = require("@cosmjs/stargate");
 const tmRPC = require("@cosmjs/tendermint-rpc");
 const {TransferMsg} = require("./protoMsgHelper");
@@ -140,21 +144,26 @@ function PrivateKeyReader(file, password, accountNumber, addressIndex, bip39Pass
         const fileReader = new FileReader();
         fileReader.readAsText(file, "UTF-8");
         fileReader.onload =async event => {
-            const res = JSON.parse(event.target.result);
-            const decryptedData = helper.decryptStore(res, password);
-            if (decryptedData.error != null) {
-                reject(decryptedData.error);
-            } else {
-                let mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
-                const accountData = await MnemonicWalletWithPassphrase(mnemonic, makeHdPath());
-                const address = accountData[1];
-                console.log(accountData,loginAddress, "not matched address");
-                if (address === loginAddress) {
-                    resolve(mnemonic);
-                    localStorage.setItem('encryptedMnemonic', event.target.result);
+            console.log(event, 'file data');
+            if(event.target.result !== '') {
+                const res = JSON.parse(event.target.result);
+                const decryptedData = helper.decryptStore(res, password);
+                if (decryptedData.error != null) {
+                    reject(decryptedData.error);
                 } else {
-                    reject("Your sign in address and keystore file don’t match. Please try again or else sign in again.");
+                    let mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
+                    const accountData = await MnemonicWalletWithPassphrase(mnemonic, makeHdPath());
+                    const address = accountData[1];
+                    console.log(accountData, loginAddress, "not matched address");
+                    if (address === loginAddress) {
+                        resolve(mnemonic);
+                        localStorage.setItem('encryptedMnemonic', event.target.result);
+                    } else {
+                        reject("Your sign in address and keystore file don’t match. Please try again or else sign in again.");
+                    }
                 }
+            }else {
+                reject("Invalid File data");
             }
         };
     });
@@ -214,17 +223,18 @@ export async function GetAccount(address){
     const accountResponse = await authAccountService.Account({
         address: address,
     });
-    if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
+    if(accountResponse.account.typeUrl === "/cosmos.auth.v1beta1.BaseAccount"){
+        let baseAccountResponse = BaseAccount.decode(accountResponse.account.value);
+        return {"typeUrl": accountResponse.account.typeUrl, "accountData" : baseAccountResponse};
+    }
+    else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
         let periodicVestingAccountResponse = PeriodicVestingAccount.decode(accountResponse.account.value);
-        console.log("using v1", periodicVestingAccountResponse);
         return {"typeUrl": accountResponse.account.typeUrl, "accountData" : periodicVestingAccountResponse};
     } else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.DelayedVestingAccount") {
         let delayedVestingAccountResponse = DelayedVestingAccount.decode(accountResponse.account.value);
-        console.log("using v1", delayedVestingAccountResponse);
         return {"typeUrl": accountResponse.account.typeUrl, "accountData" : delayedVestingAccountResponse};
     } else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
         let continuousVestingAccountResponse = ContinuousVestingAccount.decode(accountResponse.account.value);
-        console.log("using v1", continuousVestingAccountResponse);
         return {"typeUrl": accountResponse.account.typeUrl, "accountData" : continuousVestingAccountResponse};
     }
 }
@@ -246,6 +256,7 @@ function checkValidatorAccountAddress(validatorAddress, address) {
 
 async function getTransactionResponse(address, data, fee, gas, mnemonic="", accountNumber=0, addressIndex=0, bip39Passphrase="") {
     if(data.formName === "send"){
+        console.log((data.amount * config.xprtValue).toFixed(0),(data.amount * config.xprtValue), data.amount);
         return TransactionWithMnemonic([SendMsg(address, data.toAddress, (data.amount * config.xprtValue).toFixed(0), data.denom)], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
     }
@@ -281,6 +292,10 @@ async function VestingAccountCheck(type) {
         type === "/cosmos.vesting.v1beta1.ContinuousVestingAccount";
 }
 
+function generateHash(txBytes){
+    return encoding.toHex(sha256(txBytes)).toUpperCase();
+}
+
 export default {
     TransactionWithKeplr,
     TransactionWithMnemonic,
@@ -299,5 +314,6 @@ export default {
     LedgerWallet,
     GetAccount,
     VestingAccountCheck,
-    MnemonicWalletWithPassphrase
+    MnemonicWalletWithPassphrase,
+    generateHash
 };

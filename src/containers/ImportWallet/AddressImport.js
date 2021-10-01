@@ -27,7 +27,6 @@ const AddressImport = (props) => {
                         localStorage.setItem('fee', config.defaultFee);
                         localStorage.setItem('account', 'non-vesting');
                     }
-                    console.log("done", res);
                 })
                 .catch(error => {
                     console.log(error.message);

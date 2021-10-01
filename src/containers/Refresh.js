@@ -24,8 +24,8 @@ const InfoRefresh = (props) => {
         props.fetchTotalRewards(address);
         props.fetchUnbondDelegations(address);
         props.fetchTokenPrice();
-        props.fetchTransactions(address, 5, 0);
-        props.fetchReceiveTransactions(address, 5, 0);
+        props.fetchTransactions(address, 5, 1);
+        props.fetchReceiveTransactions(address, 5, 1);
         props.fetchTransferableVestingAmount(address);
         transactions.updateFee(address);
     };

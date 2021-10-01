@@ -77,15 +77,24 @@ const ModalDecryptKeyStore = (props) => {
             addressIndex = event.target.delegateAccountIndex.value;
             bip39Passphrase = event.target.delegatebip39Passphrase.value;
         }
+
         if (importMnemonic) {
-            const password = event.target.password.value;
-            let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
-            await promise.then(function (result) {
-                mnemonic = result;
-            }).catch(err => {
-                setLoader(false);
-                setErrorMessage(err);
-            });
+            let fileInput =
+                document.getElementById('decryptFile');
+
+            let filePath = fileInput.value;
+            if(helper.fileTypeCheck(filePath)) {
+                const password = event.target.password.value;
+                let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
+                await promise.then(function (result) {
+                    mnemonic = result;
+                }).catch(err => {
+                    setLoader(false);
+                    setErrorMessage(err);
+                });
+            }else {
+                setErrorMessage("File type not supported");
+            }
         } else {
             const password = event.target.password.value;
             const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
@@ -199,7 +208,7 @@ const ModalDecryptKeyStore = (props) => {
                                         <>
                                             <div className="form-field upload">
                                                 <p className="label">  {t("KEY_STORE_FILE")}</p>
-                                                <Form.File id="exampleFormControlFile1" name="uploadFile"
+                                                <Form.File id="decryptFile" name="uploadFile"
                                                     className="file-upload" accept=".json" required={true}/>
                                             </div>
                                             <div className="form-field">

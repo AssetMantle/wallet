@@ -8,10 +8,10 @@ import {
     FETCH_VALIDATORS_REWARDS_SUCCESS
 } from "../constants/rewards";
 import transactions from "../utils/transactions";
-import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/distribution/v1beta1/query";
+import {QueryClientImpl} from "cosmjs-types/cosmos/distribution/v1beta1/query";
 import helper from "../utils/helper";
 import ActionHelper from "../utils/actions";
-import {QueryClientImpl as StakingQueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/staking/v1beta1/query";
+import {QueryClientImpl as StakingQueryClientImpl} from "cosmjs-types/cosmos/staking/v1beta1/query";
 
 export const fetchRewardsProgress = () => {
     return {
@@ -70,7 +70,7 @@ export const fetchTotalRewards= (address) => {
             if (delegatorRewardsResponse.total.length) {
                 let rewards = helper.decimalConversion(delegatorRewardsResponse.total[0].amount, 18);
                 const fixedRewardsResponse = transactions.XprtConversion(rewards*1);
-                dispatch(fetchRewardsSuccess(fixedRewardsResponse));
+                dispatch(fetchRewardsSuccess(helper.fixedConvertion(fixedRewardsResponse), 'number'));
             }
         }).catch((error) => {
             console.log(error.response
@@ -94,25 +94,22 @@ export const fetchRewards = (address) => {
                 if(delegatorRewardsResponse.rewards.length) {
                     for (const item of delegatorRewardsResponse.rewards) {
                         const stakingQueryService = new StakingQueryClientImpl(rpcClient);
-                        console.log("rajuuu",delegatorRewardsResponse);
 
                         await stakingQueryService.Validator({
                             validatorAddr: item.validatorAddress,
                         }).then(async (res) => {
                             const data = {
-                                label: `${res.validator.description.moniker} - ${transactions.XprtConversion(helper.decimalConversion(item.reward[0] && item.reward[0].amount)).toLocaleString(undefined, {minimumFractionDigits: 5})} XPRT`,
+                                label: `${res.validator.description.moniker} - ${helper.fixedConvertion(transactions.XprtConversion(helper.decimalConversion(item.reward[0] && item.reward[0].amount)), "number")} XPRT`,
                                 value: res.validator.operatorAddress,
                                 rewards: helper.decimalConversion(item.reward[0] && item.reward[0].amount)
                             };
 
-                            console.log(transactions.checkValidatorAccountAddress(res.validator.operatorAddress, address), "commissionInfo");
                             if (transactions.checkValidatorAccountAddress(res.validator.operatorAddress, address)) {
                                 let commissionInfo = await ActionHelper.getValidatorCommission(res.validator.operatorAddress);
                                 dispatch(fetchValidatorCommissionInfoSuccess([commissionInfo, res.validator.operatorAddress, true]));
                             }
                             options.push(data);
                         }).catch((error) => {
-                            console.log("rajuuu",error.message);
                             dispatch(fetchValidatorRewardsListError(error.response
                                 ? error.response.data.message
                                 : error.message));

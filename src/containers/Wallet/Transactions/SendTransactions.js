@@ -9,12 +9,13 @@ import DataTable from "../../../components/DataTable";
 import IconButton from "@material-ui/core/IconButton";
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import transactions from "../../../utils/transactions";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const SendTransactions = (props) => {
     const address = localStorage.getItem('address');
     useEffect(() => {
-        props.fetchTransactions(address, 5, 0);
+        props.fetchTransactions(address, 5, 1);
     }, []);
     const columns = [{
         name: 'txHash',
@@ -59,17 +60,24 @@ const SendTransactions = (props) => {
         viewColumns:false,
     };
 
+    // (stxn.tx.body.messages[0]["@type"] === "/ibc.applications.transfer.v1.MsgTransfer") ?
+    //     <span key={index} className="type">{(stxn.tx.body.messages[0]["@type"]).substr((stxn.tx.body.messages[0]["@type"]).indexOf('/')+1)}</span>
+    //     :
+    //     <span key={index} className="type">{(stxn.tx.body.messages[0]["@type"]).substr((stxn.tx.body.messages[0]["@type"]).indexOf('v1beta1.') + 11)}</span>
+    //     ,
+
     const tableData = props.list && props.list.length > 0
         ?
         props.list.map((stxn, index) => [
-            <a key={index} href={`${EXPLORER_API}/transactions/${stxn.txhash}`}
+            <a key={index}
+                href={`${EXPLORER_API}/transactions/${stxn.hash}`}
                 target="_blank" className="tx-hash" rel="noopener noreferrer">
-                {helper.stringTruncate(stxn.txhash)}
+                {helper.stringTruncate(stxn.hash)}
             </a>,
-            (stxn.tx.body.messages[0]["@type"] === "/ibc.applications.transfer.v1.MsgTransfer") ?
-                <span key={index} className="type">{(stxn.tx.body.messages[0]["@type"]).substr((stxn.tx.body.messages[0]["@type"]).indexOf('/')+1)}</span>
+            (stxn.typeUrl === "/ibc.applications.transfer.v1.MsgTransfer") ?
+                <span key={index} className="type">{(stxn.typeUrl).substr((stxn.typeUrl).indexOf('/')+1)}</span>
                 :
-                <span key={index} className="type">{(stxn.tx.body.messages[0]["@type"]).substr((stxn.tx.body.messages[0]["@type"]).indexOf('v1beta1.') + 11)}</span>
+                <span key={index} className="type">{(stxn.typeUrl).substr((stxn.typeUrl).indexOf('v1beta1.') + 11)}</span>
             ,
             <div key={index} className="result">
                 <span className="icon-box success">
@@ -78,30 +86,52 @@ const SendTransactions = (props) => {
                         icon="success"/>
                 </span>
             </div>,
-            (stxn.tx.body.messages[0].amount !== undefined && stxn.tx.body.messages[0].amount.length) ?
-                <div key={index} className="amount">
-                    {stxn.tx.body.messages[0].amount[0].amount}
-                    <span className="string-truncate" title={stxn.tx.body.messages[0].amount[0].denom}>{stxn.tx.body.messages[0].amount[0].denom}</span>
-                </div>
-                :
-                (stxn.tx.body.messages[0].amount !== undefined && stxn.tx.body.messages[0].amount) ?
-                    <div key={index} className="amount">
-                        {stxn.tx.body.messages[0].amount.amount}
-                        <span className="string-truncate" title={stxn.tx.body.messages[0].amount.denom}>{stxn.tx.body.messages[0].amount.denom}</span>
+            (stxn.body.amount !== undefined ) ?
+                (Array.isArray(stxn.body.amount) && stxn.body.amount.length) ?
+                    stxn.body.amount[0].denom === 'uxprt' ?
+                        <div className="amount" key={index}>
+                            {transactions.XprtConversion(stxn.body.amount[0].amount)}
+                            <span className="string-truncate">XPRT</span>
+                        </div>
+                        :
+                        <div className="amount" key={index}>
+                            {stxn.body.amount[0].amount}
+                            <span className="string-truncate">
+                                {
+                                    stxn.body.amount[0].denom
+                                }
+                            </span>
+                        </div>
+
+                    :
+
+                    stxn.body.amount.denom === 'uxprt' ?
+                        <div className="amount" key={index}>
+                            {transactions.XprtConversion(stxn.body.amount.amount)}
+                            <span className="string-truncate">XPRT</span>
+                        </div>
+                        :
+                        <div className="amount" key={index}>
+                            {stxn.body.amount.amount}
+                            <span className="string-truncate">
+                                {
+                                    stxn.body.amount.denom
+                                }
+                            </span>
+                        </div>
+                : '',
+            (stxn.fee.amount !== undefined) ?
+                (Array.isArray(stxn.fee.amount) && stxn.fee.amount.length) ?
+                    <div className="fee text-left" key={index}>
+                        {stxn.fee.amount[0].amount}
+                        {stxn.fee.amount[0].denom}
                     </div>
                     :
-                    (stxn.logs[0].events.find(event => event.type === 'transfer') !== undefined) ?
-                        (stxn.logs[0].events.find(event => event.type === 'transfer').attributes.find(item => item.key === 'amount') !== undefined) ?
-                            <div key={index} className="amount">
-                                <span className="string-truncate" title={stxn.logs[0].events.find(event => event.type === 'transfer').attributes.find(item => item.key === 'amount').value}>{stxn.logs[0].events.find(event => event.type === 'transfer').attributes.find(item => item.key === 'amount').value}</span>
-                            </div>
-                            : ''
-                        : '',
-            (stxn.tx.auth_info.fee.amount !== undefined && stxn.tx.auth_info.fee.amount.length) ?
-                <div key={index} className="fee text-left">
-                    {stxn.tx.auth_info.fee.amount[0].amount}
-                    {stxn.tx.auth_info.fee.amount[0].denom}
-                </div> : '',
+                    <div className="fee text-left" key={index}>
+                        {stxn.fee.amount.amount}
+                        {stxn.fee.amount.denom}
+                    </div>
+                : '',
             <a key={index} href={`${EXPLORER_API}/blocks/${stxn.height}`}
                 target="_blank" className="height" rel="noopener noreferrer">{stxn.height}</a>,
             <span key={index} className="time">{moment.utc(stxn.timestamp).local().startOf('seconds').fromNow()}</span>,
@@ -117,7 +147,7 @@ const SendTransactions = (props) => {
         }
     };
     const handlePrevious = () => {
-        if (props.pageNumber[0] >= 1) {
+        if (props.pageNumber[0] >= 2) {
             props.fetchTransactions(address, 5, props.pageNumber[0] - 1);
         }
     };
@@ -132,7 +162,7 @@ const SendTransactions = (props) => {
 
                 <div className="before buttons">
                     <IconButton aria-label="previous" onClick={handlePrevious}
-                        disabled={props.pageNumber[0] >= 1 ? false : true}>
+                        disabled={props.pageNumber[0] >= 2 ? false : true}>
                         <ChevronLeftIcon/>
                     </IconButton>
                 </div>

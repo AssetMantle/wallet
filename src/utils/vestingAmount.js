@@ -108,8 +108,6 @@ async function getTransferableVestingAmount(address, balance) {
             } else {
                 transferableAmount = balance - amount;
             }
-            console.log("done", res);
-
             return [vestingAmount, transferableAmount];
         })
         .catch(error => {

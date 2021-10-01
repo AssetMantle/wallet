@@ -185,7 +185,7 @@ const ModalWithdraw = (props) => {
                                     <p className="label">{t("TOTAL_AVAILABLE_BALANCE")}</p>
                                     <div className="available-tokens">
                                         <p className="tokens"
-                                            title={props.totalRewards}>{props.totalRewards.toLocaleString()} XPRT</p>
+                                            title={props.totalRewards}>{props.totalRewards} XPRT</p>
                                         <p className="usd">= ${(props.totalRewards * props.tokenPrice).toLocaleString()}</p>
                                     </div>
                                 </div>

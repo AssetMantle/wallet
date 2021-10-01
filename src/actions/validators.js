@@ -1,4 +1,4 @@
-import {QueryClientImpl} from '@cosmjs/stargate/build/codec/cosmos/staking/v1beta1/query';
+import {QueryClientImpl} from 'cosmjs-types/cosmos/staking/v1beta1/query';
 import {
     FETCH_ACTIVE_VALIDATORS_SUCCESS,
     FETCH_VALIDATORS_ERROR,

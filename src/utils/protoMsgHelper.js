@@ -1,11 +1,11 @@
-import {MsgSend} from "@cosmjs/stargate/build/codec/cosmos/bank/v1beta1/tx";
-import {MsgBeginRedelegate, MsgDelegate, MsgUndelegate} from "@cosmjs/stargate/build/codec/cosmos/staking/v1beta1/tx";
+import {MsgSend} from "cosmjs-types/cosmos/bank/v1beta1/tx";
+import {MsgBeginRedelegate, MsgDelegate, MsgUndelegate} from "cosmjs-types/cosmos/staking/v1beta1/tx";
 import {
     MsgSetWithdrawAddress,
     MsgWithdrawDelegatorReward,
     MsgWithdrawValidatorCommission
-} from "@cosmjs/stargate/build/codec/cosmos/distribution/v1beta1/tx";
-import {MsgTransfer} from "@cosmjs/stargate/build/codec/ibc/applications/transfer/v1/tx";
+} from "cosmjs-types/cosmos/distribution/v1beta1/tx";
+import {MsgTransfer} from "cosmjs-types/ibc/applications/transfer/v1/tx";
 import {coin} from "@cosmjs/stargate";
 import helper from "./helper";
 

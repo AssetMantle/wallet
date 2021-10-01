@@ -11,7 +11,8 @@ import vestingAccount from "../utils/vestingAmount";
 import transactions, {GetAccount} from "../utils/transactions";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient, QueryClient, setupIbcExtension} from "@cosmjs/stargate";
-import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/bank/v1beta1/query";
+import {QueryClientImpl} from "cosmjs-types/cosmos/bank/v1beta1/query";
+import helper from "../utils/helper";
 const tendermintRPCURL =  process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
 export const fetchBalanceProgress = () => {
@@ -52,7 +53,7 @@ export const fetchBalance = (address) => {
                 allBalancesResponse.balances.forEach((item) => {
                     if(item.denom === 'uxprt'){
                         const totalBalance = item.amount*1;
-                        dispatch(fetchBalanceSuccess(transactions.XprtConversion(totalBalance)));
+                        dispatch(fetchBalanceSuccess(helper.fixedConvertion(transactions.XprtConversion(totalBalance), "number")));
                     }
                 });
             }
@@ -88,11 +89,11 @@ export const fetchTokenListSuccess = (list) => {
 export const fetchTransferableVestingAmount = (address)=> {
     return async dispatch => {
         GetAccount(address).then(async vestingAmountData => {
-            console.log(vestingAmountData, "vesting amount data");
+            // console.log(vestingAmountData, "vesting amount data");
             const currentEpochTime = Math.floor(new Date().getTime() / 1000);
             let vestingAmount = 0;
             let transferableAmount = 0;
-            if (vestingAmountData.code === undefined) {
+            if (vestingAmountData !== undefined) {
                 const tendermintClient = await Tendermint34Client.connect(tendermintRPCURL);
                 const queryClient = new QueryClient(tendermintClient);
                 const rpcClient = createProtobufRpcClient(queryClient);
@@ -114,8 +115,8 @@ export const fetchTransferableVestingAmount = (address)=> {
                                 } else {
                                     transferableAmount = balance - amount;
                                 }
-                                dispatch(fetchTransferableBalanceSuccess(transferableAmount));
-                                dispatch(fetchVestingBalanceSuccess(vestingAmount));
+                                dispatch(fetchTransferableBalanceSuccess(helper.fixedConvertion(transferableAmount, 'number')));
+                                dispatch(fetchVestingBalanceSuccess(helper.fixedConvertion(vestingAmount, 'number')));
                             } else {
                                 let denomText = item.denom.substr(item.denom.indexOf('/') + 1);
                                 const ibcExtension = setupIbcExtension(queryClient);
@@ -138,7 +139,7 @@ export const fetchTransferableVestingAmount = (address)=> {
 
             }
         }).catch(err=>{
-            console.log(err.message);
+            console.log(err);
         });
     };
 };

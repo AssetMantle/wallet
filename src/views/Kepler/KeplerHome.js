@@ -48,7 +48,6 @@ const KeplerHome = () => {
                     localStorage.setItem('fee', config.vestingAccountFee);
                     localStorage.setItem('account', 'non-vesting');
                 }
-                console.log("done", res);
             })
             .catch(error => {
                 console.log(error.message);

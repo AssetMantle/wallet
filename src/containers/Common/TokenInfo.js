@@ -131,7 +131,7 @@ const TokenInfo = (props) => {
                                             : ""
                                     }
                                 </span>
-                                {props.vestingAmount.toLocaleString()} XPRT
+                                {props.vestingAmount} XPRT
                             </p>
                         </div>
                         <div className="line">
@@ -143,8 +143,8 @@ const TokenInfo = (props) => {
                                         icon="info"/></button>
                                 </OverlayTrigger>
                             </p>
-                            <p className="value" title={props.transferableAmount.toFixed(6)}><span className="inner-grid-icon"/>
-                                {props.transferableAmount.toLocaleString()} XPRT</p>
+                            <p className="value" title={props.transferableAmount}><span className="inner-grid-icon"/>
+                                {props.transferableAmount} XPRT</p>
                         </div>
                         <div className="line">
                             <p className="key">{t("DELEGATABLE")}
@@ -155,8 +155,8 @@ const TokenInfo = (props) => {
                                         icon="info"/></button>
                                 </OverlayTrigger>
                             </p>
-                            <p className="value" title={props.balance.toFixed(6)}><span className="inner-grid-icon"/>
-                                {props.balance.toLocaleString()} XPRT</p>
+                            <p className="value" title={props.balance}><span className="inner-grid-icon"/>
+                                {props.balance} XPRT</p>
                         </div>
 
                     </div>
@@ -174,14 +174,14 @@ const TokenInfo = (props) => {
                                             : ""
                                     }
                                 </span>
-                                <span> {props.delegations.toLocaleString()} XPRT
+                                <span> {props.delegations} XPRT
                                 </span>
                             </p>
                         </div>
                         <div className="line">
                             <p className="key">{t("REWARDS")}</p>
                             <p className="value rewards"><span onClick={() => handleRewards("rewards")}
-                                className="claim inner-grid">{t("CLAIM")}</span><span title={props.rewards.toFixed(6)}> {props.rewards.toLocaleString()} XPRT</span>
+                                className="claim inner-grid">{t("CLAIM")}</span><span title={props.rewards}> {props.rewards} XPRT</span>
                             </p>
                         </div>
                         <div className="line">
@@ -195,7 +195,7 @@ const TokenInfo = (props) => {
                                 }
                             </span>
                             <span title={props.unbond}>
-                                {props.unbond.toLocaleString()} XPRT
+                                {props.unbond} XPRT
                             </span>
                             </p>
                         </div>

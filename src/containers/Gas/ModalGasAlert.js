@@ -128,6 +128,10 @@ const ModalGasAlert = (props) => {
     const handleNext = () => {
         setShowDecryptModal(true);
         setFeeModal(false);
+        if(props.formData.formName === "send"){
+            props.formData.evt.target.reset();
+            props.setEnteredAmount('');
+        }
     };
 
     if (loader) {

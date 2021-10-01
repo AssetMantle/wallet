@@ -25,6 +25,8 @@ const Homepage = () => {
                     <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="ml-auto">
+                            <NavLink className="nav-link" onClick={() => handleRoute('importWallet')} target="_blank"
+                                rel="noopener noreferrer">{t("IMPORT_WALLET")}</NavLink>
                             <NavLink className="nav-link" onClick={() => handleRoute('signIn')} target="_blank"
                                 rel="noopener noreferrer">{t("SIGN_IN")}</NavLink>
                             <a className="nav-link" href="https://persistence.one/" target="_blank"
@@ -49,8 +51,6 @@ const Homepage = () => {
                         <button className="button button-primary" onClick={() => handleRoute('createWallet')}>
                             {t("CREATE_WALLET")}
                         </button>
-                        <p onClick={() => handleRoute('importWallet')} className="import">{t("IMPORT_EXISTS_WALLET")}
-                        </p>
                     </div>
                     <p className="border-logo"><img src={dark_icon} alt="dark-icon"/></p>
                 </div>

@@ -87,12 +87,18 @@ function validateFrom(value) {
 }
 
 function checkLastPage(pageNumber, limit, totalTransactions) {
-    return totalTransactions / limit <= pageNumber+1;
+    return totalTransactions / limit <= pageNumber;
 }
 
 function validatePassphrase(value) {
     return value.length === 50;
 
+}
+
+function fileTypeCheck(filePath) {
+    let allowedExtensions =
+        /(\.json)$/i;
+    return allowedExtensions.exec(filePath);
 }
 
 function validateAddress(address, prefix="persistence") {
@@ -177,6 +183,14 @@ function trimWhiteSpaces(data){
     return data.split(' ').join('');
 }
 
+function fixedConvertion(value, type){
+    if(type === "string"){
+        return parseFloat(value.toLocaleString(undefined, {minimumFractionDigits: 6})).toString();
+    }else {
+        return parseFloat(value.toLocaleString(undefined, {minimumFractionDigits: 6}).replace(/,/g, ''));
+    }
+}
+
 export default {
     randomNum,
     stringTruncate,
@@ -195,5 +209,7 @@ export default {
     ValidateAmount,
     inputSpaceValidation,
     inputAmountValidation,
-    trimWhiteSpaces
+    trimWhiteSpaces,
+    fileTypeCheck,
+    fixedConvertion
 };
