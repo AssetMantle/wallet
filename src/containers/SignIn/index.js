@@ -56,12 +56,12 @@ const SignIn = (props) => {
                         </div>
                         <div className="buttons">
                             <button className="button button-primary large"
-                                onClick={() => handleRoute("withAddress")}>{t("CONTINUE_WITH_ADDRESS")}
+                                onClick={() => handleRoute("withKeyStore")}>Use KeyStore File
                             </button>
                         </div>
                         <div className="buttons">
                             <button className="button button-primary large"
-                                onClick={() => handleRoute("withKeyStore")}>Use KeyStore File
+                                onClick={() => handleRoute("withAddress")}>{t("CONTINUE_WITH_ADDRESS")}
                             </button>
                         </div>
                     </Modal.Body>
