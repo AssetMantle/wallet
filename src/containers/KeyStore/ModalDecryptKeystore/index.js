@@ -85,7 +85,6 @@ const ModalDecryptKeyStore = (props) => {
             let filePath = fileInput.value;
             if(helper.fileTypeCheck(filePath)) {
                 const password = event.target.password.value;
-                console.log(helper.passwordValidation(password));
                 if(helper.passwordValidation(password)) {
                     let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
                     await promise.then(function (result) {

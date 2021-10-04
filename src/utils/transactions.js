@@ -144,7 +144,6 @@ function PrivateKeyReader(file, password, accountNumber, addressIndex, bip39Pass
         const fileReader = new FileReader();
         fileReader.readAsText(file, "UTF-8");
         fileReader.onload =async event => {
-            console.log(event, 'file data');
             if(event.target.result !== '') {
                 const res = JSON.parse(event.target.result);
                 const decryptedData = helper.decryptStore(res, password);
@@ -154,7 +153,6 @@ function PrivateKeyReader(file, password, accountNumber, addressIndex, bip39Pass
                     let mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
                     const accountData = await MnemonicWalletWithPassphrase(mnemonic, makeHdPath());
                     const address = accountData[1];
-                    console.log(accountData, loginAddress, "not matched address");
                     if (address === loginAddress) {
                         resolve(mnemonic);
                         localStorage.setItem('encryptedMnemonic', event.target.result);
@@ -186,7 +184,6 @@ function decodeTendermintConsensusStateAny(consensusState) {
 }
 
 async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp = config.timeoutTimestamp, denom = "uxprt", url, port = "transfer") {
-    console.log(port, "port");
     const tendermintClient = await tmRPC.Tendermint34Client.connect(tendermintRPCURL);
     const queryClient = new QueryClient(tendermintClient);
 

@@ -120,7 +120,6 @@ export const fetchRewards = (address) => {
                 dispatch(fetchRewardsListProgress(delegatorRewardsResponse.rewards));
             }
         }).catch((error) => {
-            console.log("not work");
             dispatch(fetchRewardsError(error.response
                 ? error.response.data.message
                 : error.message));

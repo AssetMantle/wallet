@@ -11,9 +11,7 @@ import config from "./config";
 import icon_white from "./assets/images/icon_white.svg";
 import {useTranslation} from "react-i18next";
 import KeplerWallet from "./utils/kepler";
-// import {GetAccount} from "./utils/transactions";
 const App = () => {
-    // GetAccount('persistence16z5a650vwq7gzwtpy2ndjc0g382a94p37qmdmjZ').then(res => console.log("done", res));
     const {t} = useTranslation();
     const history = useHistory();
     const routes = [{

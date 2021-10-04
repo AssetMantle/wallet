@@ -89,7 +89,6 @@ export const fetchTokenListSuccess = (list) => {
 export const fetchTransferableVestingAmount = (address)=> {
     return async dispatch => {
         GetAccount(address).then(async vestingAmountData => {
-            // console.log(vestingAmountData, "vesting amount data");
             const currentEpochTime = Math.floor(new Date().getTime() / 1000);
             let vestingAmount = 0;
             let transferableAmount = 0;

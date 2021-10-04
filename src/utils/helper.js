@@ -192,7 +192,6 @@ function fixedConvertion(value, type){
 }
 
 function isBech32Address(address, prefix){
-    console.log(address, prefix, "isBech32Address");
     try{
         let decodedAddress = encoding.Bech32.decode(address);
         return decodedAddress.prefix === prefix;
