@@ -1,11 +1,11 @@
 {
   "testNetChannels": [
     {
-      "name": "cosmos",
-      "id": "cosmos/channel-1",
+      "name": "test-core-1",
+      "id": "test-core-1/channel-30",
       "port": "transfer",
-      "url": "https://persistence.testnet.rpc.audit.one",
-      "description": "cosmos test chain relayer, maintained by AUDIT.one"
+      "url": "https://rpc.core.persistence.one",
+      "description": "persistence test chain relayer, maintained by persistence"
     }
   ],
   "mainNetChannels": [

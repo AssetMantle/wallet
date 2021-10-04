@@ -105,6 +105,7 @@ const IbcTxn = (props) => {
                     toAddress: helper.trimWhiteSpaces(event.target.address.value),
                     channelID: customChain ? helper.trimWhiteSpaces(event.target.channel.value) : helper.trimWhiteSpaces(channelID),
                     channelUrl:selectedChannel ? selectedChannel.url : undefined,
+                    inputPort : customChain ? event.target.port.value : "transfer",
                     modalHeader: "Send Token",
                     formName: "ibc",
                     successMsg: t("SUCCESSFUL_SEND"),
@@ -131,8 +132,9 @@ const IbcTxn = (props) => {
             return ;
         }
         let inputChannelID = customChain ? event.target.channel.value : channelID;
+        let inputPort = customChain ? event.target.port.value : "transfer";
         let msg =  transactions.MakeIBCTransferMsg(inputChannelID, loginAddress,
-            event.target.address.value,(amountField * config.xprtValue), undefined, undefined, tokenDenom, selectedChannel ? selectedChannel.url : undefined);
+            event.target.address.value,(amountField * config.xprtValue), undefined, undefined, tokenDenom, selectedChannel ? selectedChannel.url : undefined, inputPort);
         await msg.then(result => {
             const response = transactions.TransactionWithKeplr( [result],aminoMsgHelper.fee(0, 250000));
             response.then(result => {
