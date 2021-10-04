@@ -1,5 +1,5 @@
 import {Decimal} from "@cosmjs/math";
-
+const encoding = require("@cosmjs/encoding");
 const bip39 = require("bip39");
 const crypto = require("crypto");
 const passwordHashAlgorithm = "sha512";
@@ -191,6 +191,20 @@ function fixedConvertion(value, type){
     }
 }
 
+function isBech32Address(address, prefix){
+    console.log(address, prefix, "isBech32Address");
+    try{
+        let decodedAddress = encoding.Bech32.decode(address);
+        return decodedAddress.prefix === prefix;
+    } catch (e) {
+        return false;
+    }
+}
+
+function passwordValidation(data){
+    const regex= /^\S{3}\S+$/;
+    return regex.test(data);
+}
 export default {
     randomNum,
     stringTruncate,
@@ -211,5 +225,7 @@ export default {
     inputAmountValidation,
     trimWhiteSpaces,
     fileTypeCheck,
-    fixedConvertion
+    fixedConvertion,
+    isBech32Address,
+    passwordValidation
 };

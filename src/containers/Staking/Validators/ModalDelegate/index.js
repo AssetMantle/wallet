@@ -209,6 +209,7 @@ const ModalDelegate = (props) => {
                                             <Form.Control
                                                 type="text"
                                                 name="memo"
+                                                onKeyPress={helper.inputSpaceValidation}
                                                 placeholder={t("ENTER_MEMO")}
                                                 required={false}
                                                 maxLength={200}

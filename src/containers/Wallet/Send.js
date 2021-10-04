@@ -155,7 +155,6 @@ const Send = (props) => {
     };
 
     const selectTotalBalanceHandler = (value) => {
-        console.log(helper.fixedConvertion(value, 'number') , props.transferableAmount);
         setEnteredAmount(helper.fixedConvertion(value, 'string'));
         setAmountField(helper.fixedConvertion(value, 'number'));
     };
@@ -281,6 +280,7 @@ const Send = (props) => {
                                     <Form.Control
                                         type="text"
                                         name="memo"
+                                        onKeyPress={helper.inputSpaceValidation}
                                         placeholder={t("ENTER_MEMO")}
                                         maxLength={200}
                                         required={false}

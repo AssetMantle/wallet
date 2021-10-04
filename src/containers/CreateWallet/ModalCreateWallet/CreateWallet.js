@@ -94,9 +94,17 @@ const CreateWallet = (props) => {
         }
     };
     const handleKeypress = e => {
-        if (e.key === "Enter") {
-            handleSubmitMnemonic();
+        const regex = new RegExp("^[a-zA-Z0-9]+$");
+        const key = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (!regex.test(key) && e.key !== "Enter") {
+            e.preventDefault();
+            return false;
+        }else {
+            if (e.key === "Enter") {
+                handleSubmitMnemonic();
+            }
         }
+
     };
     return (
         <div>
@@ -190,6 +198,7 @@ const CreateWallet = (props) => {
                                                         id={`mnemonicKey${index}`}
                                                         value={key}
                                                         onKeyPress={handleKeypress}
+                                                        pattern="^[a-zA-Z0-9]+$"
                                                         required={true}
                                                     />
                                                 );
@@ -201,6 +210,7 @@ const CreateWallet = (props) => {
                                                         type="text"
                                                         id={`mnemonicKey${index}`}
                                                         onKeyPress={handleKeypress}
+                                                        pattern="/^[A-Za-z0-9 ]+$"
                                                         defaultValue={key}
                                                         required={true}
                                                     />

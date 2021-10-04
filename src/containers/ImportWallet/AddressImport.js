@@ -17,7 +17,7 @@ const AddressImport = (props) => {
         event.preventDefault();
         setErrorMessage("");
         const address = event.target.address.value;
-        if (helper.validateAddress(address)) {
+        if (helper.validateAddress(address) && helper.isBech32Address(address, config.addressPrefix)) {
             GetAccount(address)
                 .then(res => {
                     if(transactions.VestingAccountCheck(res.typeUrl)){

@@ -85,13 +85,18 @@ const ModalDecryptKeyStore = (props) => {
             let filePath = fileInput.value;
             if(helper.fileTypeCheck(filePath)) {
                 const password = event.target.password.value;
-                let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
-                await promise.then(function (result) {
-                    mnemonic = result;
-                }).catch(err => {
-                    setLoader(false);
-                    setErrorMessage(err);
-                });
+                console.log(helper.passwordValidation(password));
+                if(helper.passwordValidation(password)) {
+                    let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
+                    await promise.then(function (result) {
+                        mnemonic = result;
+                    }).catch(err => {
+                        setLoader(false);
+                        setErrorMessage(err);
+                    });
+                }else {
+                    setErrorMessage("Password must be greater than 3 letters and no spaces allowed");
+                }
             }else {
                 setErrorMessage("File type not supported");
             }
@@ -250,20 +255,26 @@ const ModalDecryptKeyStore = (props) => {
                                                 <div className="form-field">
                                                     <p className="label">{t("ACCOUNT")}</p>
                                                     <Form.Control
-                                                        type="text"
+                                                        type="number"
+                                                        min={0}
+                                                        max={4294967295}
                                                         name="delegateAccountNumber"
                                                         id="delegateAccountNumber"
                                                         placeholder={t("ACCOUNT_NUMBER")}
+                                                        onKeyPress={helper.inputAmountValidation}
                                                         required={advanceMode ? true : false}
                                                     />
                                                 </div>
                                                 <div className="form-field">
                                                     <p className="label">{t("ACCOUNT_INDEX")}</p>
                                                     <Form.Control
-                                                        type="text"
+                                                        type="number"
+                                                        min={0}
+                                                        max={4294967295}
                                                         name="delegateAccountIndex"
                                                         id="delegateAccountIndex"
                                                         placeholder={t("ACCOUNT_INDEX")}
+                                                        onKeyPress={helper.inputAmountValidation}
                                                         required={advanceMode ? true : false}
                                                     />
                                                 </div>

@@ -221,6 +221,13 @@ const IbcTxn = (props) => {
     const disable = (
         chain === ""
     );
+
+    const selectTotalBalanceHandler = (value) => {
+        setEnteredAmount(helper.fixedConvertion(value, 'string'));
+        setAmountField(helper.fixedConvertion(value, 'number'));
+    };
+
+
     return (
         <div className="send-container">
             <div className="form-section">
@@ -353,10 +360,10 @@ const IbcTxn = (props) => {
                             />
                             {
                                 tokenDenom === "uxprt" ?
-                                    <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data"}><span
+                                    <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(props.transferableAmount)}><span
                                         className="title">Transferable Balance:</span> <span
                                         className="value"
-                                        title={props.transferableAmount}>{props.transferableAmount.toLocaleString()} XPRT</span> </span>
+                                        title={props.transferableAmount}>{props.transferableAmount} XPRT</span> </span>
                                     :
                                     <span title={tokenItem.denomTrace} className={transferableAmount === 0 ? "empty info-data" : "info-data"}>
                                         <span
@@ -404,6 +411,7 @@ const IbcTxn = (props) => {
                                         <Form.Control
                                             type="text"
                                             name="memo"
+                                            onKeyPress={helper.inputSpaceValidation}
                                             placeholder={t("ENTER_MEMO")}
                                             maxLength={200}
                                             required={false}
