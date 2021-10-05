@@ -61,12 +61,6 @@ const SendTransactions = (props) => {
         viewColumns:false,
     };
 
-    // (stxn.tx.body.messages[0]["@type"] === "/ibc.applications.transfer.v1.MsgTransfer") ?
-    //     <span key={index} className="type">{(stxn.tx.body.messages[0]["@type"]).substr((stxn.tx.body.messages[0]["@type"]).indexOf('/')+1)}</span>
-    //     :
-    //     <span key={index} className="type">{(stxn.tx.body.messages[0]["@type"]).substr((stxn.tx.body.messages[0]["@type"]).indexOf('v1beta1.') + 11)}</span>
-    //     ,
-
     const tableData = props.list && props.list.length > 0
         ?
         props.list.map((stxn, index) => [

@@ -66,21 +66,7 @@ export const fetchTransactions = (address, limit, pageNumber) => {
         let txnsResponseList = txData;
         dispatch(fetchPageNumberSuccess(pageNumber, txSearch.totalCount));
         dispatch(fetchTransactionsSuccess(txnsResponseList));
-        //
-        //
-        // dispatch(fetchTransactionsProgress());
-        // const url = getSendTransactionsUrl(address, limit, pageNumber);
-        //
-        // const result = await Axios.get(url).catch((error) => {
-        //     dispatch(fetchTransactionsError(error.response
-        //         ? error.response.data.message
-        //         : error.message));
-        // });
-        // if(result !== undefined) {
-        //     let txnsResponseList = result.data.tx_responses;
-        //     dispatch(fetchPageNumberSuccess(pageNumber, result.data.pagination.total));
-        //     dispatch(fetchTransactionsSuccess(txnsResponseList));
-        // }
+
     };
 };
 

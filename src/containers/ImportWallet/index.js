@@ -9,17 +9,12 @@ import {
 import Icon from "../../components/Icon";
 import wallet from "../../utils/wallet";
 import helper from "../../utils/helper";
-// import {useHistory} from "react-router-dom";
 import GeneratePrivateKey from "../Common/GeneratePrivateKey";
-// import config from "../../config";
 import {useTranslation} from "react-i18next";
-// import {GetAccount} from "../../utils/transactions";
-// import transactions from "../../utils/transactions";
 
 const ModalImportWallet = (props) => {
     const {t} = useTranslation();
     const [show, setShow] = useState(true);
-    // const history = useHistory();
     const [userMnemonic, setUserMnemonic] = useState("");
     const [passphraseError, setPassphraseError] = useState(false);
     const [mnemonicForm, setMnemonicForm] = useState(true);
@@ -145,30 +140,7 @@ const ModalImportWallet = (props) => {
         const result = helper.validatePassphrase(evt.target.value);
         setPassphraseError(result);
     };
-    // const handleLogin = () => {
-    //     GetAccount(advancedFormResponseData.address)
-    //         .then(res =>{
-    //             if(transactions.VestingAccountCheck(res.typeUrl)){
-    //                 localStorage.setItem('fee', config.vestingAccountFee);
-    //                 localStorage.setItem('account', 'vesting');
-    //             }else {
-    //                 localStorage.setItem('fee', config.defaultFee);
-    //                 localStorage.setItem('account', 'non-vesting');
-    //             }
-    //             console.log("done", res);
-    //         })
-    //         .catch(error => {
-    //             console.log(error.message);
-    //             localStorage.setItem('fee', config.defaultFee);
-    //             localStorage.setItem('account', 'non-vesting');
-    //         });
-    //     localStorage.setItem('loginToken', 'loggedIn');
-    //     localStorage.setItem('address', advancedFormResponseData.address);
-    //     localStorage.setItem('loginMode', 'normal');
-    //     localStorage.setItem('version', config.version);
-    //     setShow(false);
-    //     history.push('/dashboard/wallet');
-    // };
+
     const handleClose = () => {
         setShow(false);
         if (props.name === "createWallet") {
@@ -178,9 +150,7 @@ const ModalImportWallet = (props) => {
             props.setRoutName("");
         }
     };
-    // const handleKepler = () => {
-    //     history.push('/keplr');
-    // };
+
     return (
         <>
             <Modal backdrop="static" show={show} onHide={handleClose} centered
@@ -215,11 +185,7 @@ const ModalImportWallet = (props) => {
                                     <div className="buttons">
                                         <button className="button button-primary">Next</button>
                                     </div>
-                                    {/*<div className="buttons">*/}
-                                    {/*    <button className="button button-primary"*/}
-                                    {/*        onClick={() => handleKepler("kepler")}>{t("USE_KEPLER")}*/}
-                                    {/*    </button>*/}
-                                    {/*</div>*/}
+
                                     <div className="note-section">
                                         <div className="exclamation"><Icon
                                             viewClass="arrow-right"
