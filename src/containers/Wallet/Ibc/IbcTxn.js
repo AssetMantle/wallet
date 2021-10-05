@@ -57,7 +57,7 @@ const IbcTxn = (props) => {
 
     const handleAmountChange = (evt) => {
         setKeplerError('');
-        let rex = /^\d*\.?\d{0,2}$/;
+        let rex = /^\d*\.?\d{0,6}$/;
         if (rex.test(evt.target.value)) {
             if(tokenDenom === "uxprt") {
                 if (props.transferableAmount < (evt.target.value * 1)) {

@@ -15,7 +15,8 @@ import {OverlayTrigger, Popover} from "react-bootstrap";
 import transactions from "../../utils/transactions";
 import ModalViewDelegationDetails from "./ModalViewDelegationDetails";
 import {fetchValidators} from "../../actions/validators";
-
+import helper from "../../utils/helper";
+import NumberView from "../../components/NumberView";
 const TokenInfo = (props) => {
     const {t} = useTranslation();
     const [rewards, setRewards] = useState(false);
@@ -68,6 +69,7 @@ const TokenInfo = (props) => {
             </Popover.Content>
         </Popover>
     );
+
     return (
         <div className="token-info-section">
             <p className="info-heading">Wallet Balances</p>
@@ -94,7 +96,9 @@ const TokenInfo = (props) => {
                                             : ""
                                     }
                                 </span>
-                                {(props.delegations + props.balance + props.unbond).toLocaleString()} XPRT
+                                <NumberView
+                                    data = {helper.digitFormat(helper.fixedConvertion((props.delegations + props.balance + props.unbond), 'number'))}/>
+                                XPRT
                             </p>
                         </div>
                         <div className="line">
@@ -106,7 +110,8 @@ const TokenInfo = (props) => {
                         <div className="line">
                             <p className="key">{t("CURRENT_VALUE")}</p>
                             <p className="value"><span className="inner-grid-icon"/>
-                                ${((props.delegations + props.balance + props.unbond) * props.tokenPrice).toLocaleString()}
+                                <NumberView
+                                    data={helper.digitFormat(helper.fixedConvertion(((props.delegations + props.balance + props.unbond) * props.tokenPrice), 'number'))}/>
                             </p>
                         </div>
 
@@ -131,7 +136,7 @@ const TokenInfo = (props) => {
                                             : ""
                                     }
                                 </span>
-                                {props.vestingAmount} XPRT
+                                <NumberView data={helper.digitFormat(props.vestingAmount)}/> XPRT
                             </p>
                         </div>
                         <div className="line">
@@ -144,7 +149,8 @@ const TokenInfo = (props) => {
                                 </OverlayTrigger>
                             </p>
                             <p className="value" title={props.transferableAmount}><span className="inner-grid-icon"/>
-                                {props.transferableAmount} XPRT</p>
+                                <NumberView data={helper.digitFormat(props.transferableAmount)}/> XPRT
+                            </p>
                         </div>
                         <div className="line">
                             <p className="key">{t("DELEGATABLE")}
@@ -156,7 +162,8 @@ const TokenInfo = (props) => {
                                 </OverlayTrigger>
                             </p>
                             <p className="value" title={props.balance}><span className="inner-grid-icon"/>
-                                {props.balance} XPRT</p>
+                                <NumberView data={helper.digitFormat(props.balance)}/> XPRT
+                            </p>
                         </div>
 
                     </div>
@@ -174,14 +181,17 @@ const TokenInfo = (props) => {
                                             : ""
                                     }
                                 </span>
-                                <span> {props.delegations} XPRT
+                                <span>
+                                    <NumberView data={helper.digitFormat(props.delegations)}/> XPRT
                                 </span>
                             </p>
                         </div>
                         <div className="line">
                             <p className="key">{t("REWARDS")}</p>
                             <p className="value rewards"><span onClick={() => handleRewards("rewards")}
-                                className="claim inner-grid">{t("CLAIM")}</span><span title={props.rewards}> {props.rewards} XPRT</span>
+                                className="claim inner-grid">{t("CLAIM")}</span><span title={props.rewards}>
+                                <NumberView data={helper.digitFormat(props.rewards)}/> XPRT
+                            </span>
                             </p>
                         </div>
                         <div className="line">
@@ -195,7 +205,7 @@ const TokenInfo = (props) => {
                                 }
                             </span>
                             <span title={props.unbond}>
-                                {props.unbond} XPRT
+                                <NumberView data={helper.digitFormat(props.unbond)}/> XPRT
                             </span>
                             </p>
                         </div>

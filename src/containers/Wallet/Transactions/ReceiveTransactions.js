@@ -10,6 +10,7 @@ import IconButton from "@material-ui/core/IconButton";
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import transactions from "../../../utils/transactions";
+import NumberView from "../../../components/NumberView";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ReceiveTransactions = (props) => {
@@ -79,49 +80,91 @@ const ReceiveTransactions = (props) => {
                         icon="success"/>
                 </span>
             </div>,
-            (stxn.body.amount !== undefined ) ?
-                (Array.isArray(stxn.body.amount) && stxn.body.amount.length) ?
-                    stxn.body.amount[0].denom === 'uxprt' ?
-                        <div className="amount" key={index}>
-                            {transactions.XprtConversion(stxn.body.amount[0].amount)}
-                            <span className="string-truncate">XPRT</span>
-                        </div>
+            (stxn.body.amount !== undefined || stxn.body.token !== undefined ) ?
+                stxn.body.amount !== undefined ?
+                    (Array.isArray(stxn.body.amount) && stxn.body.amount.length) ?
+                        stxn.body.amount[0].denom === 'uxprt' ?
+                            <div className="amount" key={index}>
+                                <NumberView data={helper.digitFormat(transactions.XprtConversion(stxn.body.amount[0].amount))}/>
+                                <span className="string-truncate">XPRT</span>
+                            </div>
+                            :
+                            <div className="amount" key={index}>
+                                <NumberView data={helper.digitFormat(stxn.body.amount[0].amount)}/>
+                                <span className="string-truncate">
+                                    {
+                                        stxn.body.amount[0].denom
+                                    }
+                                </span>
+                            </div>
                         :
-                        <div className="amount" key={index}>
-                            {stxn.body.amount[0].amount}
-                            <span className="string-truncate">
-                                {
-                                    stxn.body.amount[0].denom
-                                }
-                            </span>
-                        </div>
-                      
+
+                        stxn.body.amount.denom === 'uxprt' ?
+                            <div className="amount" key={index}>
+                                <NumberView data={helper.digitFormat(transactions.XprtConversion(stxn.body.amount.amount))}/>
+                                <span className="string-truncate">XPRT</span>
+                            </div>
+                            :
+                            <div className="amount" key={index}>
+                                <NumberView data={helper.digitFormat(stxn.body.amount.amount)}/>
+                                <span className="string-truncate">
+                                    {
+                                        stxn.body.amount.denom
+                                    }
+                                </span>
+                            </div>
+
                     :
 
-                    stxn.body.amount.denom === 'uxprt' ?
-                        <div className="amount" key={index}>
-                            {transactions.XprtConversion(stxn.body.amount.amount)}
-                            <span className="string-truncate">XPRT</span>
-                        </div>
+                    (Array.isArray(stxn.body.token) && stxn.body.token.length) ?
+                        stxn.body.token[0].denom === 'uxprt' ?
+                            <div className="amount" key={index}>
+                                <NumberView data={helper.digitFormat(transactions.XprtConversion(stxn.body.token[0].amount))}/>
+                                <span className="string-truncate">XPRT</span>
+                            </div>
+                            :
+                            <div className="amount" key={index}>
+                                <NumberView data={helper.digitFormat(stxn.body.token[0].amount)}/>
+                                <span className="string-truncate">
+                                    {
+                                        stxn.body.token[0].denom
+                                    }
+                                </span>
+                            </div>
                         :
-                        <div className="amount" key={index}>
-                            {stxn.body.amount.amount}
-                            <span className="string-truncate">
-                                {
-                                    stxn.body.amount.denom
-                                }
-                            </span>
-                        </div>
+
+                        stxn.body.token.denom === 'uxprt' ?
+                            <div className="amount" key={index}>
+                                <NumberView data={helper.digitFormat(transactions.XprtConversion(stxn.body.token.amount))}/>
+                                <span className="string-truncate">XPRT</span>
+                            </div>
+                            :
+                            <div className="amount" key={index}>
+                                <NumberView data={helper.digitFormat(stxn.body.token.amount)}/>
+                                <span className="string-truncate">
+                                    {
+                                        stxn.body.token.denom
+                                    }
+                                </span>
+                            </div>
+
+
                 : '',
             (stxn.fee.amount !== undefined) ?
                 (Array.isArray(stxn.fee.amount) && stxn.fee.amount.length) ?
-                    <div className="fee text-left" key={index}>
-                        {stxn.fee.amount[0].amount}
-                        {stxn.fee.amount[0].denom}
-                    </div>
+                    stxn.fee.amount[0].denom === 'uxprt' ?
+                        <div className="fee text-left" key={index}>
+                            <NumberView data={helper.digitFormat(transactions.XprtConversion(stxn.fee.amount[0].amount))}/>
+                            XPRT
+                        </div>
+                        :
+                        <div className="fee text-left" key={index}>
+                            <NumberView data={helper.digitFormat(transactions.XprtConversion(stxn.fee.amount[0].amount))}/>
+                            {stxn.fee.amount[0].denom}
+                        </div>
                     :
                     <div className="fee text-left" key={index}>
-                        {stxn.fee.amount.amount}
+                        <NumberView data={helper.digitFormat(stxn.fee.amount.amount)}/>
                         {stxn.fee.amount.denom}
                     </div>
                 : '',

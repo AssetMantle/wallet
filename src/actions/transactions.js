@@ -136,6 +136,8 @@ export const fetchReceiveTransactions = (address, limit, pageNumber) => {
         for (let transaction of txSearch.txs) {
             const decodedTransaction = decodeTxRaw(transaction.tx);
             const block = await tmClient.block(transaction.height);
+            console.log(decodedTransaction.body, "decodedTransaction.body.messages");
+
             if (transaction.result.code === 0) {
                 for (let message of decodedTransaction.body.messages) {
                     const txHash = transactions.generateHash(transaction.tx);
@@ -144,6 +146,8 @@ export const fetchReceiveTransactions = (address, limit, pageNumber) => {
                 }
             }
         }
+        console.log(txData, "txnsResponseList");
+
         let txnsResponseList = txData;
         dispatch(fetchReceivePageNumberSuccess(pageNumber, txSearch.totalCount));
         dispatch(fetchReceiveTransactionsSuccess(txnsResponseList));
