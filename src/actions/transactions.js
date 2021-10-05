@@ -14,6 +14,7 @@ import {decodeTxRaw, Registry} from "@cosmjs/proto-signing";
 const {defaultRegistryTypes} = require("@cosmjs/stargate");
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 const vestingTx = require("cosmjs-types/cosmos/vesting/v1beta1/tx");
+const tx_7 = require("cosmjs-types/ibc/core/channel/v1/tx");
 import transactions from "../utils/transactions";
 
 export const fetchTransactionsProgress = () => {
@@ -123,7 +124,7 @@ function txSearchParams(recipientAddress, pageNumber, perPage, type) {
 }
 
 function createDefaultRegistry() {
-    return new Registry([...defaultRegistryTypes, ["/cosmos.vesting.v1beta1.MsgCreateVestingAccount", vestingTx.MsgCreateVestingAccount]]);
+    return new Registry([...defaultRegistryTypes, ["/cosmos.vesting.v1beta1.MsgCreateVestingAccount", vestingTx.MsgCreateVestingAccount], ["/ibc.core.channel.v1.MsgTimeout", tx_7.MsgTimeout]]);
 }
 
 const registry = createDefaultRegistry();
