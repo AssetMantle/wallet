@@ -210,7 +210,6 @@ function digitFormat(data){
     if(strindata.indexOf('.') !== -1){
         const beforeString = strindata.substr(0, strindata.indexOf('.'));
         const afterString = strindata.substr(strindata.indexOf('.'));
-        console.log((beforeString*1).toLocaleString(), "beforeString.toLocaleString()");
         return [parseInt(beforeString).toLocaleString(), afterString];
     }else{
         return data;

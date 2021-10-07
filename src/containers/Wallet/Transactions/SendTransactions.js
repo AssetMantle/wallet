@@ -70,9 +70,15 @@ const SendTransactions = (props) => {
                 {helper.stringTruncate(stxn.hash)}
             </a>,
             (stxn.typeUrl === "/ibc.applications.transfer.v1.MsgTransfer") ?
-                <span key={index} className="type">{(stxn.typeUrl).substr((stxn.typeUrl).indexOf('/')+1)}</span>
+                stxn.messageCount > 1 ?
+                    <span key={index} className="type"><span className="name">{(stxn.typeUrl).substr((stxn.typeUrl).indexOf('/')+1)}</span> + {stxn.messageCount}</span>
+                    :
+                    <span key={index} className="type"><span className="name">{(stxn.typeUrl).substr((stxn.typeUrl).indexOf('/')+1)}</span></span>
                 :
-                <span key={index} className="type">{(stxn.typeUrl).substr((stxn.typeUrl).indexOf('v1beta1.') + 11)}</span>
+                stxn.messageCount > 1 ?
+                    <span key={index} className="type"><span className="name">{(stxn.typeUrl).substr((stxn.typeUrl).indexOf('v1beta1.') + 11)}</span>+{stxn.messageCount}</span>
+                    :
+                    <span key={index} className="type"><span className="name">{(stxn.typeUrl).substr((stxn.typeUrl).indexOf('v1beta1.') + 11)}</span></span>
             ,
             <div key={index} className="result">
                 <span className="icon-box success">

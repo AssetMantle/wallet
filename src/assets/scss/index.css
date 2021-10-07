@@ -2011,14 +2011,21 @@ ul li em {
   width: 150px;
 }
 .wallet-main-section .txns-container table tbody .type {
-  color: #8D9CB5;
+  color: #e50813;
+  font-family: "Poppins", sans-serif;
+}
+.wallet-main-section .txns-container table tbody .type .name {
+  background: #e508131c;
+  padding: 2px 10px;
+  color: #e50813;
+  border-radius: 10px;
   font-family: "Poppins", sans-serif;
 }
 .wallet-main-section .txns-container table tbody .tx-hash {
   color: #1A73B4;
 }
 .wallet-main-section .txns-container table tbody .type {
-  color: #8D9CB5;
+  color: #e50813;
 }
 .wallet-main-section .txns-container table tbody .amount {
   display: inline-flex;

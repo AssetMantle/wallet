@@ -74,58 +74,61 @@ const validatorsDelegationSort = (validators, delegations) =>{
 
 export const fetchValidators = (address) => {
     return async dispatch => {
-        dispatch(fetchValidatorsInProgress());
-        const rpcClient = await transactions.RpcClient();
+        try {
+            dispatch(fetchValidatorsInProgress());
+            const rpcClient = await transactions.RpcClient();
 
-        const stakingQueryService = new QueryClientImpl(rpcClient);
-        await stakingQueryService.Validators({
-            status: false,
-        }).then(async (res) => {
-            let validators = res.validators;
-            let activeValidators = [];
-            let delegatedValidators = [];
-            let inActiveValidators = [];
+            const stakingQueryService = new QueryClientImpl(rpcClient);
+            await stakingQueryService.Validators({
+                status: false,
+            }).then(async (res) => {
+                let validators = res.validators;
+                let activeValidators = [];
+                let delegatedValidators = [];
+                let inActiveValidators = [];
 
-            validators.forEach((item) => {
-                if (helper.isActive(item)) {
-                    let activeValidatorsData ={
-                        'data':item,
-                        'delegations':0
-                    };
-                    activeValidators.push(activeValidatorsData);
+                validators.forEach((item) => {
+                    if (helper.isActive(item)) {
+                        let activeValidatorsData = {
+                            'data': item,
+                            'delegations': 0
+                        };
+                        activeValidators.push(activeValidatorsData);
+                    } else {
+                        let inActiveValidatorsData = {
+                            'data': item,
+                            'delegations': 0
+                        };
+                        inActiveValidators.push(inActiveValidatorsData);
+                    }
+                });
+
+                const delegationsResponse = await stakingQueryService.DelegatorDelegations({
+                    delegatorAddr: address,
+                }).catch((error) => {
+                    console.log(error.response
+                        ? error.response.data.message
+                        : error.message);
+                });
+
+                if (delegationsResponse !== undefined && delegationsResponse.delegationResponses.length) {
+                    delegatedValidators = validatorsDelegationSort(validators, delegationsResponse.delegationResponses);
                 } else {
-                    let inActiveValidatorsData ={
-                        'data':item,
-                        'delegations':0
-                    };
-                    inActiveValidators.push(inActiveValidatorsData);
+                    delegatedValidators = [];
                 }
-            });
 
-            const delegationsResponse = await stakingQueryService.DelegatorDelegations({
-                delegatorAddr: address,
+                dispatch(fetchDelegatedValidators(delegatedValidators));
+                dispatch(fetchTotalValidatorsSuccess(validators));
+                dispatch(fetchActiveValidatorsSuccess(activeValidators));
+                dispatch(fetchInactiveValidatorsSuccess(inActiveValidators));
             }).catch((error) => {
-                console.log(error.response
+                dispatch(fetchValidatorsError(error.response
                     ? error.response.data.message
-                    : error.message);
+                    : error.message));
             });
-
-            if(delegationsResponse !== undefined && delegationsResponse.delegationResponses.length) {
-                delegatedValidators =  validatorsDelegationSort(validators, delegationsResponse.delegationResponses);
-            }else{
-                delegatedValidators = [];
-            }
-
-            dispatch(fetchDelegatedValidators(delegatedValidators));
-            dispatch(fetchTotalValidatorsSuccess(validators));
-            dispatch(fetchActiveValidatorsSuccess(activeValidators));
-            dispatch(fetchInactiveValidatorsSuccess(inActiveValidators));
-        }).catch((error) => {
-            dispatch(fetchValidatorsError(error.response
-                ? error.response.data.message
-                : error.message));
-        });
-
+        } catch (e) {
+            console.log(e.message);
+        }
 
     };
 };

@@ -49,24 +49,41 @@ export const fetchTransactionsError = (list) => {
 export const fetchTransactions = (address, limit, pageNumber) => {
     return async dispatch => {
         dispatch(fetchTransactionsProgress());
-        const tmClient = await Tendermint34Client.connect(tendermintRPCURL);
-        const txSearch = await tmClient.txSearch(txSearchParams(address, pageNumber, limit,"message.sender"));
-        let txData = [];
-        for (let transaction of txSearch.txs) {
-            const decodedTransaction = decodeTxRaw(transaction.tx);
-            const block = await tmClient.block(transaction.height);
-            if (transaction.result.code === 0) {
-                for (let message of decodedTransaction.body.messages) {
+        try {
+            const tmClient = await Tendermint34Client.connect(tendermintRPCURL);
+            const txSearch = await tmClient.txSearch(txSearchParams(address, pageNumber, limit, "message.sender"));
+            let txData = [];
+            for (let transaction of txSearch.txs) {
+                const decodedTransaction = decodeTxRaw(transaction.tx);
+                const block = await tmClient.block(transaction.height);
+                if (transaction.result.code === 0) {
                     const txHash = transactions.generateHash(transaction.tx);
-                    const body = registry.decode(message);
-                    txData.push({'typeUrl':message.typeUrl,'fee':decodedTransaction.authInfo.fee,'height':transaction.height, 'hash':txHash, 'body':body, 'timestamp':  block.block.header.time});
+                    let body;
+                    let typeUrl;
+                    if (decodedTransaction.body.messages.length > 1) {
+                        typeUrl = decodedTransaction.body.messages[decodedTransaction.body.messages.length - 1].typeUrl;
+                        body = registry.decode(decodedTransaction.body.messages[decodedTransaction.body.messages.length - 1]);
+                    } else {
+                        typeUrl = decodedTransaction.body.messages[0].typeUrl;
+                        body = registry.decode(decodedTransaction.body.messages[0]);
+                    }
+                    txData.push({
+                        'typeUrl': typeUrl,
+                        'messageCount': decodedTransaction.body.messages.length,
+                        'fee': decodedTransaction.authInfo.fee,
+                        'height': transaction.height,
+                        'hash': txHash,
+                        'body': body,
+                        'timestamp': block.block.header.time
+                    });
                 }
             }
+            let txnsResponseList = txData;
+            dispatch(fetchPageNumberSuccess(pageNumber, txSearch.totalCount));
+            dispatch(fetchTransactionsSuccess(txnsResponseList));
+        }catch (e) {
+            console.log(e.message);
         }
-        let txnsResponseList = txData;
-        dispatch(fetchPageNumberSuccess(pageNumber, txSearch.totalCount));
-        dispatch(fetchTransactionsSuccess(txnsResponseList));
-
     };
 };
 
@@ -117,26 +134,44 @@ const registry = createDefaultRegistry();
 export const fetchReceiveTransactions = (address, limit, pageNumber) => {
     return async dispatch => {
         dispatch(fetchReceiveTransactionsProgress());
-        const tmClient = await Tendermint34Client.connect(tendermintRPCURL);
-        const txSearch = await tmClient.txSearch(txSearchParams(address, pageNumber, limit,"transfer.recipient"));
-        let txData = [];
-        for (let transaction of txSearch.txs) {
-            const decodedTransaction = decodeTxRaw(transaction.tx);
-            const block = await tmClient.block(transaction.height);
-            console.log(decodedTransaction.body, "decodedTransaction.body.messages");
+        try {
+            const tmClient = await Tendermint34Client.connect(tendermintRPCURL);
+            const txSearch = await tmClient.txSearch(txSearchParams(address, pageNumber, limit, "transfer.recipient"));
+            let txData = [];
+            for (let transaction of txSearch.txs) {
+                const decodedTransaction = decodeTxRaw(transaction.tx);
+                const block = await tmClient.block(transaction.height);
+                console.log(decodedTransaction.body, "decodedTransaction.body.messages");
 
-            if (transaction.result.code === 0) {
-                for (let message of decodedTransaction.body.messages) {
+                if (transaction.result.code === 0) {
                     const txHash = transactions.generateHash(transaction.tx);
-                    const body = registry.decode(message);
-                    txData.push({'typeUrl':message.typeUrl,'fee':decodedTransaction.authInfo.fee,'height':transaction.height, 'hash':txHash, 'body':body, 'timestamp':  block.block.header.time});
+                    let body;
+                    let typeUrl;
+                    if (decodedTransaction.body.messages.length > 1) {
+                        typeUrl = decodedTransaction.body.messages[decodedTransaction.body.messages.length - 1].typeUrl;
+                        body = registry.decode(decodedTransaction.body.messages[decodedTransaction.body.messages.length - 1]);
+                    } else {
+                        typeUrl = decodedTransaction.body.messages[0].typeUrl;
+                        body = registry.decode(decodedTransaction.body.messages[0]);
+                    }
+                    txData.push({
+                        'typeUrl': typeUrl,
+                        'messageCount': decodedTransaction.body.messages.length,
+                        'fee': decodedTransaction.authInfo.fee,
+                        'height': transaction.height,
+                        'hash': txHash,
+                        'body': body,
+                        'timestamp': block.block.header.time
+                    });
                 }
             }
-        }
-        console.log(txData, "txnsResponseList");
+            console.log(txData, "txnsResponseList");
 
-        let txnsResponseList = txData;
-        dispatch(fetchReceivePageNumberSuccess(pageNumber, txSearch.totalCount));
-        dispatch(fetchReceiveTransactionsSuccess(txnsResponseList));
+            let txnsResponseList = txData;
+            dispatch(fetchReceivePageNumberSuccess(pageNumber, txSearch.totalCount));
+            dispatch(fetchReceiveTransactionsSuccess(txnsResponseList));
+        } catch (e) {
+            console.log(e.message);
+        }
     };
 };

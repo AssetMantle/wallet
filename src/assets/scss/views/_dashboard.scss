@@ -339,8 +339,15 @@
         }
 
         .type {
-          color: #8D9CB5;
+          color: #e50813;
           font-family: 'Poppins', sans-serif;
+          .name{
+              background: #e508131c;
+              padding: 2px 10px;
+              color: #e50813;
+              border-radius: 10px;
+              font-family: 'Poppins', sans-serif;
+          }
         }
 
         .tx-hash {
@@ -348,7 +355,7 @@
         }
 
         .type {
-          color: #8D9CB5;
+          color: #e50813;
         }
         .amount{
           display: inline-flex;
