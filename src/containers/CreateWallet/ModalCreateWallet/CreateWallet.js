@@ -55,10 +55,11 @@ const CreateWallet = (props) => {
     };
 
     const handleSubmitMnemonic = () => {
-        randomNumberList.map((number, index) => {
-            let phrase = document.getElementById('mnemonicKey' + number).value;
-            if (mnemonicList[number] !== phrase) {
+        for (let index = 0; index < randomNumberList.length; index++){
+            let phrase = document.getElementById('mnemonicKey' + randomNumberList[index]).value;
+            if (mnemonicList[randomNumberList[index]] !== phrase) {
                 setQuizError(true);
+                return;
             } else {
                 if (index === randomNumberList.length - 1) {
                     localStorage.setItem('loginToken', 'loggedIn');
@@ -67,7 +68,7 @@ const CreateWallet = (props) => {
                     setMnemonicQuiz(false);
                 }
             }
-        });
+        }
 
     };
 
@@ -85,6 +86,7 @@ const CreateWallet = (props) => {
         if (formName === "mnemonicQuiz") {
             setKeysForm(true);
             setMnemonicQuiz(false);
+            setQuizError(false);
         }
         if (formName === "accountInfo") {
             setMnemonicQuiz(true);
@@ -92,9 +94,17 @@ const CreateWallet = (props) => {
         }
     };
     const handleKeypress = e => {
-        if (e.key === "Enter") {
-            handleSubmitMnemonic();
+        const regex = new RegExp("^[a-zA-Z0-9]+$");
+        const key = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (!regex.test(key) && e.key !== "Enter") {
+            e.preventDefault();
+            return false;
+        }else {
+            if (e.key === "Enter") {
+                handleSubmitMnemonic();
+            }
         }
+
     };
     return (
         <div>
@@ -175,7 +185,7 @@ const CreateWallet = (props) => {
                                     onClick={handleRoute}>{t("IMPORT_WALLET")}</span>
                                 </p>
                                 <div className="seed-section">
-                                    <h3 className="heading copy">{t("MNEMONIC")} (Seed Phrase) <Copy id={response.mnemonic}/>
+                                    <h3 className="heading copy">{t("MNEMONIC")} (Seed Phrase)
                                     </h3>
                                     <div className="menmonic-list">
                                         {randomMnemonicList.map((key, index) => {
@@ -188,6 +198,7 @@ const CreateWallet = (props) => {
                                                         id={`mnemonicKey${index}`}
                                                         value={key}
                                                         onKeyPress={handleKeypress}
+                                                        pattern="^[a-zA-Z0-9]+$"
                                                         required={true}
                                                     />
                                                 );
@@ -199,6 +210,7 @@ const CreateWallet = (props) => {
                                                         type="text"
                                                         id={`mnemonicKey${index}`}
                                                         onKeyPress={handleKeypress}
+                                                        pattern="/^[A-Za-z0-9 ]+$"
                                                         defaultValue={key}
                                                         required={true}
                                                     />

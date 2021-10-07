@@ -7,10 +7,10 @@ import wallet from "../../../utils/wallet";
 import Icon from "../../../components/Icon";
 import GeneratePrivateKey from "../../Common/GeneratePrivateKey";
 import helper from "../../../utils/helper";
-import MakePersistence from "../../../utils/cosmosjsWrapper";
 import config from "../../../config";
 import {useHistory} from "react-router-dom";
 import {useTranslation} from "react-i18next";
+import transactions, {GetAccount} from "../../../utils/transactions";
 
 const AdvanceMode = (props) => {
     const {t} = useTranslation();
@@ -66,23 +66,21 @@ const AdvanceMode = (props) => {
         props.handleClose();
     };
     const handleLogin = () => {
-        const persistence = MakePersistence(0, 0);
-        persistence.getAccounts(response.address).then(data => {
-            if (data.code === undefined) {
-                if (data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount" ||
-                    data.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount" ||
-                    data.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
+        GetAccount(response.address)
+            .then(res =>{
+                if(transactions.VestingAccountCheck(res.typeUrl)){
                     localStorage.setItem('fee', config.vestingAccountFee);
                     localStorage.setItem('account', 'vesting');
-                } else {
+                }else {
                     localStorage.setItem('fee', config.defaultFee);
                     localStorage.setItem('account', 'non-vesting');
                 }
-            } else {
+            })
+            .catch(error => {
+                console.log(error.message);
                 localStorage.setItem('fee', config.defaultFee);
                 localStorage.setItem('account', 'non-vesting');
-            }
-        });
+            });
         localStorage.setItem('loginToken', 'loggedIn');
         localStorage.setItem('address', response.address);
         localStorage.setItem('loginMode', 'normal');

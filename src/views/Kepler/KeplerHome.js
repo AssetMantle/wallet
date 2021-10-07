@@ -4,11 +4,11 @@ import KeplerWallet from "../../utils/kepler";
 import {useHistory, NavLink} from "react-router-dom";
 import {Nav, Navbar} from "react-bootstrap";
 import logo from "../../assets/images/logo_lite.svg";
-import MakePersistence from "../../utils/cosmosjsWrapper";
 import config from "../../config";
 import {useTranslation} from "react-i18next";
 import ModalKeplerInstall from "./ModalKeplerInstall";
 import Icon from "../../components/Icon";
+import transactions, {GetAccount} from "../../utils/transactions";
 
 const KeplerHome = () => {
     const {t} = useTranslation();
@@ -38,24 +38,22 @@ const KeplerHome = () => {
     };
 
     const handleRoute = () => {
-        const persistence = MakePersistence(0, 0);
         const address = localStorage.getItem("keplerAddress");
-        persistence.getAccounts(address).then(data => {
-            if (data.code === undefined) {
-                if (data.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount" ||
-                    data.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount" ||
-                    data.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
+        GetAccount(address)
+            .then(res =>{
+                if(transactions.VestingAccountCheck(res.typeUrl)){
                     localStorage.setItem('fee', config.vestingAccountFee);
                     localStorage.setItem('account', 'vesting');
-                } else {
+                }else {
                     localStorage.setItem('fee', config.vestingAccountFee);
+                    localStorage.setItem('account', 'non-vesting');
                 }
-            } else {
+            })
+            .catch(error => {
+                console.log(error.message);
                 localStorage.setItem('fee', config.vestingAccountFee);
-            }
-        }).catch(err => {
-            setErrorMessage(err.message);
-        });
+                localStorage.setItem('account', 'non-vesting');
+            });
         localStorage.setItem('address', address);
         localStorage.setItem('loginToken', 'loggedIn');
         localStorage.setItem('version', config.version);

@@ -11,7 +11,6 @@ import config from "./config";
 import icon_white from "./assets/images/icon_white.svg";
 import {useTranslation} from "react-i18next";
 import KeplerWallet from "./utils/kepler";
-
 const App = () => {
     const {t} = useTranslation();
     const history = useHistory();

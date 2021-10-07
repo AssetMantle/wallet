@@ -57,7 +57,7 @@ const IbcTxn = (props) => {
 
     const handleAmountChange = (evt) => {
         setKeplerError('');
-        let rex = /^\d*\.?\d{0,2}$/;
+        let rex = /^\d*\.?\d{0,6}$/;
         if (rex.test(evt.target.value)) {
             if(tokenDenom === "uxprt") {
                 if (props.transferableAmount < (evt.target.value * 1)) {
@@ -105,6 +105,7 @@ const IbcTxn = (props) => {
                     toAddress: helper.trimWhiteSpaces(event.target.address.value),
                     channelID: customChain ? helper.trimWhiteSpaces(event.target.channel.value) : helper.trimWhiteSpaces(channelID),
                     channelUrl:selectedChannel ? selectedChannel.url : undefined,
+                    inputPort : customChain ? event.target.port.value : "transfer",
                     modalHeader: "Send Token",
                     formName: "ibc",
                     successMsg: t("SUCCESSFUL_SEND"),
@@ -131,8 +132,9 @@ const IbcTxn = (props) => {
             return ;
         }
         let inputChannelID = customChain ? event.target.channel.value : channelID;
+        let inputPort = customChain ? event.target.port.value : "transfer";
         let msg =  transactions.MakeIBCTransferMsg(inputChannelID, loginAddress,
-            event.target.address.value,(amountField * config.xprtValue), undefined, undefined, tokenDenom, selectedChannel ? selectedChannel.url : undefined);
+            event.target.address.value,(amountField * config.xprtValue), undefined, undefined, tokenDenom, selectedChannel ? selectedChannel.url : undefined, inputPort);
         await msg.then(result => {
             const response = transactions.TransactionWithKeplr( [result],aminoMsgHelper.fee(0, 250000));
             response.then(result => {
@@ -221,6 +223,13 @@ const IbcTxn = (props) => {
     const disable = (
         chain === ""
     );
+
+    const selectTotalBalanceHandler = (value) => {
+        setEnteredAmount(helper.fixedConvertion(value, 'string'));
+        setAmountField(helper.fixedConvertion(value, 'number'));
+    };
+
+
     return (
         <div className="send-container">
             <div className="form-section">
@@ -353,10 +362,10 @@ const IbcTxn = (props) => {
                             />
                             {
                                 tokenDenom === "uxprt" ?
-                                    <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data"}><span
+                                    <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(props.transferableAmount)}><span
                                         className="title">Transferable Balance:</span> <span
                                         className="value"
-                                        title={props.transferableAmount}>{props.transferableAmount.toLocaleString()} XPRT</span> </span>
+                                        title={props.transferableAmount}>{props.transferableAmount} XPRT</span> </span>
                                     :
                                     <span title={tokenItem.denomTrace} className={transferableAmount === 0 ? "empty info-data" : "info-data"}>
                                         <span
@@ -404,6 +413,7 @@ const IbcTxn = (props) => {
                                         <Form.Control
                                             type="text"
                                             name="memo"
+                                            onKeyPress={helper.inputSpaceValidation}
                                             placeholder={t("ENTER_MEMO")}
                                             maxLength={200}
                                             required={false}

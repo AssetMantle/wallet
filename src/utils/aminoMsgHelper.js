@@ -1,4 +1,4 @@
-function sendMsg(amount, fromAddress, toAddress, denom) {
+function sendMsg( fromAddress, toAddress, amount, denom) {
     return {
         type: "cosmos-sdk/MsgSend",
         value: {

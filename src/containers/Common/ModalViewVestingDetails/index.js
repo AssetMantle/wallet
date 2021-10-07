@@ -4,8 +4,8 @@ import {connect} from "react-redux";
 import transactions from "../../../utils/transactions";
 import {Table} from "react-bootstrap";
 import moment from "moment";
-import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/auth/v1beta1/query";
-import * as vesting_1 from "@cosmjs/stargate/build/codec/cosmos/vesting/v1beta1/vesting";
+import {QueryClientImpl} from "cosmjs-types/cosmos/auth/v1beta1/query";
+import * as vesting_1 from "cosmjs-types/cosmos/vesting/v1beta1/vesting";
 import {useTranslation} from "react-i18next";
 
 const ModalViewVestingDetails = () => {

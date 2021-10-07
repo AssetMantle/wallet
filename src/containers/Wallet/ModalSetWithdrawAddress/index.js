@@ -199,6 +199,7 @@ const ModalSetWithdrawAddress = (props) => {
                                             <Form.Control
                                                 type="text"
                                                 name="memo"
+                                                onKeyPress={helper.inputSpaceValidation}
                                                 placeholder={t("ENTER_MEMO")}
                                                 maxLength={200}
                                                 required={false}

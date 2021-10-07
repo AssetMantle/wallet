@@ -8,7 +8,6 @@ import transactions from "../../../utils/transactions";
 import {connect} from "react-redux";
 import Icon from "../../../components/Icon";
 import helper from "../../../utils/helper";
-import MakePersistence from "../../../utils/cosmosjsWrapper";
 
 import Loader from "../../../components/Loader";
 import ModalViewTxnResponse from "../../Common/ModalViewTxnResponse";
@@ -78,15 +77,28 @@ const ModalDecryptKeyStore = (props) => {
             addressIndex = event.target.delegateAccountIndex.value;
             bip39Passphrase = event.target.delegatebip39Passphrase.value;
         }
+
         if (importMnemonic) {
-            const password = event.target.password.value;
-            let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
-            await promise.then(function (result) {
-                mnemonic = result;
-            }).catch(err => {
-                setLoader(false);
-                setErrorMessage(err);
-            });
+            let fileInput =
+                document.getElementById('decryptFile');
+
+            let filePath = fileInput.value;
+            if(helper.fileTypeCheck(filePath)) {
+                const password = event.target.password.value;
+                if(helper.passwordValidation(password)) {
+                    let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
+                    await promise.then(function (result) {
+                        mnemonic = result;
+                    }).catch(err => {
+                        setLoader(false);
+                        setErrorMessage(err);
+                    });
+                }else {
+                    setErrorMessage("Password must be greater than 3 letters and no spaces allowed");
+                }
+            }else {
+                setErrorMessage("File type not supported");
+            }
         } else {
             const password = event.target.password.value;
             const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
@@ -101,57 +113,45 @@ const ModalDecryptKeyStore = (props) => {
             }
         }
         if (mnemonic !== undefined) {
-            const persistence = MakePersistence(accountNumber, addressIndex);
-            const address = persistence.getAddress(mnemonic, bip39Passphrase, true);
-            const ecpairPriv = persistence.getECPairPriv(mnemonic, bip39Passphrase);
-            if (address.error === undefined && ecpairPriv.error === undefined) {
-                if (address === loginAddress) {
-                    setImportMnemonic(false);
-                    let response;
-                    if(props.formData.formName === "ibc"){
-                        let msg =  transactions.MakeIBCTransferMsg(props.formData.channelID, address,
-                            props.formData.toAddress,(props.formData.amount * config.xprtValue).toFixed(0), undefined, undefined, props.formData.denom, props.formData.channelUrl);
-                        await msg.then(result => {
-                            response = transactions.TransactionWithMnemonic( [result],
-                                aminoMsgHelper.fee(Math.trunc(props.fee), props.gas), props.formData.memo, mnemonic,
-                                transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-                        }).catch(err => {
-                            setLoader(false);
+            const accountData = await transactions.MnemonicWalletWithPassphrase(mnemonic, transactions.makeHdPath(),bip39Passphrase);
+            const address = accountData[1];
 
-                            setErrorMessage(err.response
-                                ? err.response.data.message
-                                : err.message);
-                        });
-                    }else {
-                        response = transactions.getTransactionResponse(address, props.formData, props.fee, props.gas, mnemonic, accountNumber, addressIndex, bip39Passphrase);
-                    }
-                    if(response !== undefined){
-                        response.then(result => {
-                            setResponse(result);
-                            setLoader(false);
-                            setAdvanceMode(false);
-                        }).catch(err => {
-                            console.log(err.response
-                                ? err.response.data.message
-                                : err.message);
-                            setLoader(false);
-                            setErrorMessage(err.message);
-                        });
-                    }
-                } else {
-                    setLoader(false);
-                    setErrorMessage(t("ADDRESS_NOT_MATCHED_ERROR"));
+            if (address === loginAddress) {
+                setImportMnemonic(false);
+                let response;
+                if(props.formData.formName === "ibc"){
+                    let msg =  transactions.MakeIBCTransferMsg(props.formData.channelID, address,
+                        props.formData.toAddress,(props.formData.amount * config.xprtValue).toFixed(0), undefined, undefined, props.formData.denom, props.formData.channelUrl, props.formData.inputPort);
+                    await msg.then(result => {
+                        response = transactions.TransactionWithMnemonic( [result],
+                            aminoMsgHelper.fee(Math.trunc(props.fee), props.gas), props.formData.memo, mnemonic,
+                            transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+                    }).catch(err => {
+                        setLoader(false);
+
+                        setErrorMessage(err.response
+                            ? err.response.data.message
+                            : err.message);
+                    });
+                }else {
+                    response = transactions.getTransactionResponse(address, props.formData, props.fee, props.gas, mnemonic, accountNumber, addressIndex, bip39Passphrase);
+                }
+                if(response !== undefined){
+                    response.then(result => {
+                        setResponse(result);
+                        setLoader(false);
+                        setAdvanceMode(false);
+                    }).catch(err => {
+                        console.log(err.response
+                            ? err.response.data.message
+                            : err.message);
+                        setLoader(false);
+                        setErrorMessage(err.message);
+                    });
                 }
             } else {
-                if (address.error !== undefined) {
-                    setLoader(false);
-                    setAdvanceMode(false);
-                    setErrorMessage(address.error);
-                } else {
-                    setLoader(false);
-                    setAdvanceMode(false);
-                    setErrorMessage(ecpairPriv.error);
-                }
+                setLoader(false);
+                setErrorMessage(t("ADDRESS_NOT_MATCHED_ERROR"));
             }
         } else {
             setLoader(false);
@@ -212,7 +212,7 @@ const ModalDecryptKeyStore = (props) => {
                                         <>
                                             <div className="form-field upload">
                                                 <p className="label">  {t("KEY_STORE_FILE")}</p>
-                                                <Form.File id="exampleFormControlFile1" name="uploadFile"
+                                                <Form.File id="decryptFile" name="uploadFile"
                                                     className="file-upload" accept=".json" required={true}/>
                                             </div>
                                             <div className="form-field">
@@ -254,20 +254,26 @@ const ModalDecryptKeyStore = (props) => {
                                                 <div className="form-field">
                                                     <p className="label">{t("ACCOUNT")}</p>
                                                     <Form.Control
-                                                        type="text"
+                                                        type="number"
+                                                        min={0}
+                                                        max={4294967295}
                                                         name="delegateAccountNumber"
                                                         id="delegateAccountNumber"
                                                         placeholder={t("ACCOUNT_NUMBER")}
+                                                        onKeyPress={helper.inputAmountValidation}
                                                         required={advanceMode ? true : false}
                                                     />
                                                 </div>
                                                 <div className="form-field">
                                                     <p className="label">{t("ACCOUNT_INDEX")}</p>
                                                     <Form.Control
-                                                        type="text"
+                                                        type="number"
+                                                        min={0}
+                                                        max={4294967295}
                                                         name="delegateAccountIndex"
                                                         id="delegateAccountIndex"
                                                         placeholder={t("ACCOUNT_INDEX")}
+                                                        onKeyPress={helper.inputAmountValidation}
                                                         required={advanceMode ? true : false}
                                                     />
                                                 </div>

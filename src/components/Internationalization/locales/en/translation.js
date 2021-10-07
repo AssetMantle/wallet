@@ -258,7 +258,9 @@ let English = {
         "CHANGE_KEY_STORE":"Change Keystore file",
         "ALL_VALIDATORS":"All Validators",
         "ACTIONS":"Actions",
-        "VOTING_POWER":"Voting Power"
+        "VOTING_POWER":"Voting Power",
+        "UN_BONDING_NOTE":"Are you sure you want to unbond your staked tokens, it will take 21 days ?",
+        "LOGIN_WITH_KEYSTORE":"Login With KeyStore"
     }
 };
 

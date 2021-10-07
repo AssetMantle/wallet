@@ -2,7 +2,7 @@ import {
     FETCH_WITHDRAW_ADDRESS_ERROR,
     FETCH_WITHDRAW_ADDRESS_SUCCESS
 } from "../constants/withdrawAddress";
-import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/distribution/v1beta1/query";
+import {QueryClientImpl} from "cosmjs-types/cosmos/distribution/v1beta1/query";
 import transactions from "../utils/transactions";
 
 export const fetchAddressSuccess = (address) => {

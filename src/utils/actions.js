@@ -2,7 +2,7 @@ import transactions from "./transactions";
 import {
     QueryClientImpl as DistributionQueryClient,
     QueryClientImpl
-} from "@cosmjs/stargate/build/codec/cosmos/distribution/v1beta1/query";
+} from "cosmjs-types/cosmos/distribution/v1beta1/query";
 import helper from "./helper";
 
 async function getValidatorRewards(validatorAddress) {

@@ -9,21 +9,21 @@ import {
 import Icon from "../../components/Icon";
 import wallet from "../../utils/wallet";
 import helper from "../../utils/helper";
-import GeneratePrivateKey from "../Common/GeneratePrivateKey";
+import config from "../../config";
 import {useTranslation} from "react-i18next";
+import {useHistory} from "react-router-dom";
+import transactions, {GetAccount} from "../../utils/transactions";
 
-const ModalImportWallet = (props) => {
+const KeyStoreLogin = (props) => {
     const {t} = useTranslation();
     const [show, setShow] = useState(true);
-    const [userMnemonic, setUserMnemonic] = useState("");
+    const history = useHistory();
     const [passphraseError, setPassphraseError] = useState(false);
     const [mnemonicForm, setMnemonicForm] = useState(true);
     const [advancedForm, setAdvancedForm] = useState(false);
     const [advancedFormResponseData, setAdvancedFormResponseData] = useState("");
-    const [advancedFormResponse, setAdvancedFormResponse] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [advanceMode, setAdvanceMode] = useState(false);
-    const [generateKey, setGenerateKey] = useState(false);
     const [privateAdvanceMode, setPrivateAdvanceMode] = useState(false);
 
     const handlePrivateKeySubmit = async event => {
@@ -43,7 +43,25 @@ const ModalImportWallet = (props) => {
                 } else {
                     let mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
                     localStorage.setItem('encryptedMnemonic', event.target.result);
-                    setUserMnemonic(mnemonic);
+
+                    let accountNumber = 0;
+                    let addressIndex = 0;
+                    let bip39Passphrase = "";
+                    if (advanceMode) {
+                        accountNumber = document.getElementById('accountNumber').value;
+                        addressIndex = document.getElementById('accountIndex').value;
+                        bip39Passphrase = document.getElementById('bip39Passphrase').value;
+                        if (accountNumber === "") {
+                            accountNumber = 0;
+                        }
+                        if (addressIndex === "") {
+                            addressIndex = 0;
+                        }
+                    }
+                    const walletPath = wallet.getWalletPath(accountNumber, addressIndex);
+                    const responseData = wallet.createWallet(mnemonic, walletPath, bip39Passphrase);
+                    setAdvancedFormResponseData(responseData);
+
                     setAdvancedForm(true);
                     setMnemonicForm(false);
                     setErrorMessage("");
@@ -52,18 +70,6 @@ const ModalImportWallet = (props) => {
         }else{
             setErrorMessage("File type not supported");
         }
-    };
-
-    const handleRoute = (key) => {
-        if (key === "generateKey") {
-            setGenerateKey(true);
-            setAdvancedForm(false);
-        }
-        if (key === "hideGenerateKey") {
-            setGenerateKey(false);
-            setAdvancedForm(true);
-        }
-
     };
 
     function ContextAwareToggle({eventKey, callback}) {
@@ -99,39 +105,10 @@ const ModalImportWallet = (props) => {
         );
     }
 
-    const handleSubmitAdvance = (event) => {
-        event.preventDefault();
-        let accountNumber = 0;
-        let addressIndex = 0;
-        let bip39Passphrase = "";
-        if (advanceMode) {
-            accountNumber = document.getElementById('accountNumber').value;
-            addressIndex = document.getElementById('accountIndex').value;
-            bip39Passphrase = document.getElementById('bip39Passphrase').value;
-            if (accountNumber === "") {
-                accountNumber = 0;
-            }
-            if (addressIndex === "") {
-                addressIndex = 0;
-            }
-        }
-        const walletPath = wallet.getWalletPath(accountNumber, addressIndex);
-        const responseData = wallet.createWallet(userMnemonic, walletPath, bip39Passphrase);
-        setAdvancedFormResponseData(responseData);
-        setAdvancedForm(false);
-        setAdvancedFormResponse(true);
-        setAdvanceMode(false);
-    };
     const handlePrevious = (formName) => {
         if (formName === "advancedForm") {
             setMnemonicForm(true);
             setAdvancedForm(false);
-        } else if (formName === "advancedFormResponse") {
-            setAdvancedForm(true);
-            setAdvancedFormResponse(false);
-        } else if (formName === "generateKey") {
-            setGenerateKey(false);
-            setAdvancedFormResponse(true);
         }
 
     };
@@ -140,15 +117,32 @@ const ModalImportWallet = (props) => {
         const result = helper.validatePassphrase(evt.target.value);
         setPassphraseError(result);
     };
-
+    const handleLogin = () => {
+        GetAccount(advancedFormResponseData.address)
+            .then(res =>{
+                if(transactions.VestingAccountCheck(res.typeUrl)){
+                    localStorage.setItem('fee', config.vestingAccountFee);
+                    localStorage.setItem('account', 'vesting');
+                }else {
+                    localStorage.setItem('fee', config.defaultFee);
+                    localStorage.setItem('account', 'non-vesting');
+                }
+            })
+            .catch(error => {
+                console.log(error.message);
+                localStorage.setItem('fee', config.defaultFee);
+                localStorage.setItem('account', 'non-vesting');
+            });
+        localStorage.setItem('loginToken', 'loggedIn');
+        localStorage.setItem('address', advancedFormResponseData.address);
+        localStorage.setItem('loginMode', 'normal');
+        localStorage.setItem('version', config.version);
+        setShow(false);
+        history.push('/dashboard/wallet');
+    };
     const handleClose = () => {
         setShow(false);
-        if (props.name === "createWallet") {
-            props.setShowImportWallet(false);
-            props.handleClose();
-        } else if (props.name === "homepage") {
-            props.setRoutName("");
-        }
+        props.handleClose();
     };
 
     return (
@@ -159,7 +153,7 @@ const ModalImportWallet = (props) => {
                     mnemonicForm ?
                         <>
                             <Modal.Header closeButton>
-                                <h3 className="heading">{t("IMPORT_WALLET")}</h3>
+                                <h3 className="heading">{t("LOGIN_WITH_KEYSTORE")}</h3>
                             </Modal.Header>
                             <div className="create-wallet-body import-wallet-body">
                                 <Form onSubmit={handlePrivateKeySubmit}>
@@ -177,55 +171,7 @@ const ModalImportWallet = (props) => {
                                         <Form.File id="importDecryptFile" name="uploadFile"
                                             className="file-upload" accept=".json" required={true}/>
                                     </div>
-                                    {errorMessage !== ''
-                                        ? <p className="form-error">{errorMessage}</p>
-                                        : null
 
-                                    }
-                                    <div className="buttons">
-                                        <button className="button button-primary">Next</button>
-                                    </div>
-
-                                    <div className="note-section">
-                                        <div className="exclamation"><Icon
-                                            viewClass="arrow-right"
-                                            icon="exclamation"/></div>
-                                        <p>{t("PRIVATE_KEY_WARNING")}</p>
-                                    </div>
-                                </Form>
-
-
-
-                            </div>
-                        </>
-                        : null
-                }
-                {
-                    advancedForm ?
-                        <>
-                            <Modal.Header closeButton>
-                                <div className="previous-section">
-                                    <button className="button" onClick={() => handlePrevious("advancedForm")}>
-                                        <Icon
-                                            viewClass="arrow-right"
-                                            icon="left-arrow"/>
-                                    </button>
-                                </div>
-                                <h3 className="heading">{t("IMPORT_WALLET")}</h3>
-                            </Modal.Header>
-                            <div className="create-wallet-body import-wallet-body">
-                                {errorMessage !== "" ?
-                                    <div className="login-error"><p className="error-response">{errorMessage}</p></div>
-                                    : <div>
-                                        <div className="download-section">
-                                            <div className="key-download" onClick={() => handleRoute('generateKey')}>
-                                                <p>{t("GENERATE_KEY_STORE")}</p>
-                                                <Icon viewClass="arrow-icon" icon="left-arrow"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                                <Form onSubmit={handleSubmitAdvance}>
                                     <Accordion className="advanced-wallet-accordion">
                                         <Card>
                                             <Card.Header>
@@ -280,53 +226,56 @@ const ModalImportWallet = (props) => {
                                         </Card>
                                     </Accordion>
 
+                                    {errorMessage !== ''
+                                        ? <p className="form-error">{errorMessage}</p>
+                                        : null
+
+                                    }
                                     <div className="buttons">
-                                        <button className="button button-primary">{t("NEXT")}</button>
+                                        <button className="button button-primary">Next</button>
+                                    </div>
+                                    <div className="note-section">
+                                        <div className="exclamation"><Icon
+                                            viewClass="arrow-right"
+                                            icon="exclamation"/></div>
+                                        <p>{t("PRIVATE_KEY_WARNING")}</p>
                                     </div>
                                 </Form>
-
                             </div>
                         </>
                         : null
                 }
-                {advancedFormResponse ?
-                    <>
-                        <Modal.Header closeButton>
-                            <div className="previous-section">
-                                <button className="button" onClick={() => handlePrevious("advancedFormResponse")}>
-                                    <Icon
-                                        viewClass="arrow-right"
-                                        icon="left-arrow"/>
-                                </button>
+                {
+                    advancedForm ?
+                        <>
+                            <Modal.Header closeButton>
+                                <div className="previous-section">
+                                    <button className="button" onClick={() => handlePrevious("advancedForm")}>
+                                        <Icon
+                                            viewClass="arrow-right"
+                                            icon="left-arrow"/>
+                                    </button>
+                                </div>
+                                <h3 className="heading">{t("LOGIN_WITH_KEYSTORE")}</h3>
+                            </Modal.Header>
+                            <div className="create-wallet-body import-wallet-body">
+                                {errorMessage !== "" ?
+                                    <div className="login-error"><p className="error-response">{errorMessage}</p></div>
+                                    : ""
+                                }
+                                <p className="mnemonic-result"><b>{t("WALLET_PATH")}: </b>{advancedFormResponseData.walletPath}</p>
+                                <p className="mnemonic-result"><b>{t("ADDRESS")}: </b>{advancedFormResponseData.address}</p>
+                                <div className="buttons">
+                                    <button className="button button-primary" onClick={handleLogin}>{t("LOGIN")}</button>
+                                </div>
                             </div>
-                            <h3 className="heading">{t("IMPORT_WALLET")}</h3>
-                        </Modal.Header>
-                        <div className="create-wallet-body create-wallet-form-body">
-                            <p className="mnemonic-result"><b>{t("WALLET_PATH")}: </b>{advancedFormResponseData.walletPath}</p>
-                            <p className="mnemonic-result"><b>{t("ADDRESS")}: </b>{advancedFormResponseData.address}</p>
-                            <div className="buttons">
-                                <button className="button button-primary" onClick={handleClose}>{t("DONE")}</button>
-                            </div>
-                            <div className="note-section">
-                                <div className="exclamation"><Icon
-                                    viewClass="arrow-right"
-                                    icon="exclamation"/></div>
-                                <p>{t("WALLET_PATH_WARNING")}</p>
-                            </div>
-
-                        </div>
-                    </>
-                    : null}
+                        </>
+                        : null
+                }
 
             </Modal>
-
-            {generateKey ?
-                <GeneratePrivateKey mnemonic={userMnemonic} handleRoute={handleRoute} setGenerateKey={setGenerateKey}
-                    routeValue="hideGenerateKey" formName="Import Wallet"/>
-                : null
-            }
         </>
 
     );
 };
-export default ModalImportWallet;
+export default KeyStoreLogin;

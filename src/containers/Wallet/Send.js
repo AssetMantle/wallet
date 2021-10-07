@@ -22,7 +22,7 @@ import ModalViewTxnResponse from "../Common/ModalViewTxnResponse";
 const Send = (props) => {
     const {t} = useTranslation();
     const [enteredAmount, setEnteredAmount] = useState('');
-    const [amountField, setAmountField] = useState();
+    const [amountField, setAmountField] = useState('');
     const [txResponse, setTxResponse] = useState('');
     const [show, setShow] = useState(true);
     const [memoStatus, setMemoStatus] = useState(false);
@@ -45,7 +45,7 @@ const Send = (props) => {
     };
 
     const handleAmountChange = (evt) => {
-        let rex = /^\d*\.?\d{0,2}$/;
+        let rex = /^\d*\.?\d{0,6}$/;
         if (rex.test(evt.target.value)) {
             if(tokenDenom === "uxprt") {
                 if (props.transferableAmount < (evt.target.value * 1)) {
@@ -87,7 +87,8 @@ const Send = (props) => {
                         modalHeader: "Send Token",
                         formName: "send",
                         successMsg : t("SUCCESSFUL_SEND"),
-                        failedMsg : t("FAILED_SEND")
+                        failedMsg : t("FAILED_SEND"),
+                        evt:event
                     };
                     setShow(true);
                     setFormData(data);
@@ -100,7 +101,6 @@ const Send = (props) => {
         } else {
             setKeplerError("Invalid Recipient Address");
         }
-        event.target.reset();
     };
 
     const handleSubmitKepler = event => {
@@ -115,6 +115,7 @@ const Send = (props) => {
                 }
                 setTxResponse(result);
                 setLoader(false);
+                setEnteredAmount('');
             }).catch(err => {
                 setLoader(false);
                 setKeplerError(err.message);
@@ -153,9 +154,9 @@ const Send = (props) => {
         }
     };
 
-    const selectTotalBalanceHandler = (value) =>{
-        setEnteredAmount(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)).toString());
-        setAmountField(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)));
+    const selectTotalBalanceHandler = (value) => {
+        setEnteredAmount(helper.fixedConvertion(value, 'string'));
+        setAmountField(helper.fixedConvertion(value, 'number'));
     };
 
     const popoverMemo = (
@@ -228,7 +229,7 @@ const Send = (props) => {
                                     <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(props.transferableAmount)}><span
                                         className="title">Transferable Balance:</span> <span
                                         className="value"
-                                        title={props.transferableAmount}>{props.transferableAmount.toLocaleString()} XPRT</span> </span>
+                                        title={props.transferableAmount}>{props.transferableAmount} XPRT</span> </span>
                                     :
                                     <span title={tokenItem.denomTrace} className={transferableAmount === 0 ? "empty info-data" : "info-data"}>
                                         <span
@@ -279,6 +280,7 @@ const Send = (props) => {
                                     <Form.Control
                                         type="text"
                                         name="memo"
+                                        onKeyPress={helper.inputSpaceValidation}
                                         placeholder={t("ENTER_MEMO")}
                                         maxLength={200}
                                         required={false}
@@ -328,6 +330,7 @@ const Send = (props) => {
                         setFeeModal={setFeeModal}
                         formData={formData}
                         handleClose={handleClose}
+                        setEnteredAmount={setEnteredAmount}
                     />
                 </Modal>
                 : null

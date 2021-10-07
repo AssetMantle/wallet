@@ -127,7 +127,7 @@ const ModalWithdraw = (props) => {
                             <div className="form-field p-0">
                                 <p className="label">{t("AVAILABLE")} (XPRT)</p>
                                 <div className="available-tokens">
-                                    <p className={props.rewards === 0 ? "empty info-data" : "info-data"} title={props.rewards}>{props.rewards.toLocaleString()}</p>
+                                    <p className={props.rewards === 0 ? "empty info-data" : "info-data"} title={props.rewards}>{props.rewards}</p>
                                 </div>
                             </div>
                             {
@@ -164,6 +164,7 @@ const ModalWithdraw = (props) => {
                                                 <Form.Control
                                                     type="text"
                                                     name="memo"
+                                                    onKeyPress={helper.inputSpaceValidation}
                                                     placeholder={t("ENTER_MEMO")}
                                                     maxLength={200}
                                                     required={false}

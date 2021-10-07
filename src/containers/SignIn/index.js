@@ -4,12 +4,14 @@ import AddressImport from "../ImportWallet/AddressImport";
 import {useHistory} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import LedgerLogin from "./LedgerLogin";
+import KeyStoreLogin from "./KeyStoreLogin";
 
 const SignIn = (props) => {
     const history = useHistory();
     const {t} = useTranslation();
     const [show, setShow] = useState(true);
     const [withAddress, setWithAddress] = useState(false);
+    const [withKeyStore, setWithKeyStore] = useState(false);
     const [withLedger, setWithLedger] = useState(false);
     const handleClose = () => {
         setShow(false);
@@ -23,6 +25,10 @@ const SignIn = (props) => {
         if (key === "ledger") {
             setShow(false);
             setWithLedger(true);
+        }
+        if (key === "withKeyStore") {
+            setShow(false);
+            setWithKeyStore(true);
         }
     };
 
@@ -50,6 +56,11 @@ const SignIn = (props) => {
                         </div>
                         <div className="buttons">
                             <button className="button button-primary large"
+                                onClick={() => handleRoute("withKeyStore")}>Use KeyStore File
+                            </button>
+                        </div>
+                        <div className="buttons">
+                            <button className="button button-primary large"
                                 onClick={() => handleRoute("withAddress")}>{t("CONTINUE_WITH_ADDRESS")}
                             </button>
                         </div>
@@ -63,6 +74,11 @@ const SignIn = (props) => {
             }
             {withLedger ?
                 <LedgerLogin setWithLedger={setWithLedger} handleClose={handleClose} setShow={setShow}
+                />
+                : null
+            }
+            {withKeyStore ?
+                <KeyStoreLogin setWithLedger={setWithLedger} handleClose={handleClose} setShow={setShow}
                 />
                 : null
             }

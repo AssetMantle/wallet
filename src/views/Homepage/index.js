@@ -3,10 +3,10 @@ import {Navbar, NavLink, Nav} from "react-bootstrap";
 import logo from "../../assets/images/logo_bold.svg";
 import dark_icon from "../../assets/images/dark_icon.svg";
 import ModalCreateWallet from "../../containers/CreateWallet/ModalCreateWallet";
-import ModalImportWallet from "../../containers/ImportWallet";
 import Footer from "../../components/Footer";
 import SignIn from "../../containers/SignIn";
 import {useTranslation} from "react-i18next";
+import GenerateKeyStore from "../../containers/KeyStore/GenerateKeyStore";
 
 const Homepage = () => {
     const {t} = useTranslation();
@@ -49,7 +49,7 @@ const Homepage = () => {
                         <button className="button button-primary" onClick={() => handleRoute('createWallet')}>
                             {t("CREATE_WALLET")}
                         </button>
-                        <p onClick={() => handleRoute('importWallet')} className="import">{t("IMPORT_EXISTS_WALLET")}
+                        <p onClick={() => handleRoute('importWallet')} className="import">{t("GENERATE_KEY_STORE")}
                         </p>
                     </div>
                     <p className="border-logo"><img src={dark_icon} alt="dark-icon"/></p>
@@ -64,7 +64,7 @@ const Homepage = () => {
             }
             {
                 routName === "importWallet" ?
-                    <ModalImportWallet setRoutName={setRoutName} name="homepage"/>
+                    <GenerateKeyStore setShowKeyStore={setRoutName} className={""}/>
                     : null
             }
             {

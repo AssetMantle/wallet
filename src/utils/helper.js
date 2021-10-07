@@ -1,5 +1,5 @@
 import {Decimal} from "@cosmjs/math";
-
+const encoding = require("@cosmjs/encoding");
 const bip39 = require("bip39");
 const crypto = require("crypto");
 const passwordHashAlgorithm = "sha512";
@@ -87,12 +87,18 @@ function validateFrom(value) {
 }
 
 function checkLastPage(pageNumber, limit, totalTransactions) {
-    return totalTransactions / limit <= pageNumber+1;
+    return totalTransactions / limit <= pageNumber;
 }
 
 function validatePassphrase(value) {
     return value.length === 50;
 
+}
+
+function fileTypeCheck(filePath) {
+    let allowedExtensions =
+        /(\.json)$/i;
+    return allowedExtensions.exec(filePath);
 }
 
 function validateAddress(address, prefix="persistence") {
@@ -177,6 +183,40 @@ function trimWhiteSpaces(data){
     return data.split(' ').join('');
 }
 
+function fixedConvertion(value, type){
+    if(type === "string"){
+        return parseFloat(value.toLocaleString(undefined, {minimumFractionDigits: 6})).toString();
+    }else {
+        return parseFloat(value.toLocaleString(undefined, {minimumFractionDigits: 6}).replace(/,/g, ''));
+    }
+}
+
+function isBech32Address(address, prefix){
+    try{
+        let decodedAddress = encoding.Bech32.decode(address);
+        return decodedAddress.prefix === prefix;
+    } catch (e) {
+        return false;
+    }
+}
+
+function passwordValidation(data){
+    const regex= /^\S{3}\S+$/;
+    return regex.test(data);
+}
+
+function digitFormat(data){
+    const strindata = data.toString();
+    if(strindata.indexOf('.') !== -1){
+        const beforeString = strindata.substr(0, strindata.indexOf('.'));
+        const afterString = strindata.substr(strindata.indexOf('.'));
+        return [parseInt(beforeString).toLocaleString(), afterString];
+    }else{
+        return data;
+    }
+}
+
+
 export default {
     randomNum,
     stringTruncate,
@@ -195,5 +235,10 @@ export default {
     ValidateAmount,
     inputSpaceValidation,
     inputAmountValidation,
-    trimWhiteSpaces
+    trimWhiteSpaces,
+    fileTypeCheck,
+    fixedConvertion,
+    isBech32Address,
+    passwordValidation,
+    digitFormat
 };

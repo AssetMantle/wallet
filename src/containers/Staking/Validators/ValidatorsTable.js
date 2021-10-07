@@ -69,15 +69,15 @@ const ValidatorsTable = (props) => {
                 {validator.data.description.moniker}
             </div>,
             <div className="voting" key={index}>
-                {parseFloat((validator.data.tokens * Math.pow(10, -6)).toFixed(2))}
+                {parseFloat((validator.data.tokens * Math.pow(10, -6)).toFixed())}
                 {
                     helper.isActive(validator.data)
-                        ? `(${parseFloat((validator.data.tokens * 100 / props.activeValidatorsTokens).toString()).toFixed(2).toLocaleString()}%)`
-                        : `(${parseFloat((validator.data.tokens * 100 / props.inActiveValidatorsTokens).toString()).toFixed(2).toLocaleString()}%)`
+                        ? `(${parseFloat((validator.data.tokens * 100 / props.activeValidatorsTokens).toString()).toFixed(6).toLocaleString()}%)`
+                        : `(${parseFloat((validator.data.tokens * 100 / props.inActiveValidatorsTokens).toString()).toFixed(6).toLocaleString()}%)`
                 }
             </div>
             ,
-            <span className="voting" key={index}>{`${parseFloat((helper.decimalConversion(validator.data.commission.commissionRates.rate) * 100).toFixed(2))}`} %</span>,
+            <span className="voting" key={index}>{`${parseFloat((helper.decimalConversion(validator.data.commission.commissionRates.rate) * 100).toFixed(6))}`} %</span>,
             <div className="" key={index}>
                 {helper.isActive(validator.data) ?
                     <span className="icon-box" title="active">

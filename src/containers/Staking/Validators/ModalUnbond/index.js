@@ -19,7 +19,7 @@ import ModalViewTxnResponse from "../../../Common/ModalViewTxnResponse";
 
 const ModalUnbond = (props) => {
     const {t} = useTranslation();
-    const [amount, setAmount] = useState();
+    const [amount, setAmount] = useState(0);
     const [enteredAmount, setEnteredAmount] = useState('');
     const [response, setResponse] = useState('');
     const [initialModal, setInitialModal] = useState(true);
@@ -37,7 +37,7 @@ const ModalUnbond = (props) => {
     };
 
     const handleAmountChange = (evt) => {
-        let rex = /^\d*\.?\d{0,2}$/;
+        let rex = /^\d*\.?\d{0,6}$/;
         if (rex.test(evt.target.value)) {
             if (props.delegationAmount < (evt.target.value * 1)) {
                 setCheckAmountError(true);
@@ -101,8 +101,8 @@ const ModalUnbond = (props) => {
     };
 
     const selectTotalBalanceHandler = (value) =>{
-        setEnteredAmount(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)).toString());
-        setAmount(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)));
+        setEnteredAmount(helper.fixedConvertion(value, 'string'));
+        setAmount(helper.fixedConvertion(value, 'number'));
     };
 
     if (loader) {
@@ -188,6 +188,7 @@ const ModalUnbond = (props) => {
                                             <Form.Control
                                                 type="text"
                                                 name="memo"
+                                                onKeyPress={helper.inputSpaceValidation}
                                                 placeholder={t("ENTER_MEMO")}
                                                 maxLength={200}
                                                 required={false}
@@ -203,6 +204,9 @@ const ModalUnbond = (props) => {
                                     <p className="form-error">{errorMessage}</p>
                                     : null
                             }
+
+                            <p className="amount-warning">{t("UN_BONDING_NOTE")}</p>
+
                             <div className="buttons navigate-buttons">
                                 {mode === "normal" ?
                                     <div className="button-section">

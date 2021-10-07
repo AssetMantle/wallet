@@ -6,7 +6,8 @@ import {
 } from "../constants/unbond";
 import Lodash from "lodash";
 import transactions from "../utils/transactions";
-import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/staking/v1beta1/query";
+import {QueryClientImpl} from "cosmjs-types/cosmos/staking/v1beta1/query";
+import helper from "../utils/helper";
 
 export const fetchUnbondDelegationsProgress = () => {
     return {
@@ -50,7 +51,7 @@ export const fetchUnbondDelegations = (address) => {
                         return entriesSum;
                     }
                 });
-                dispatch(fetchUnbondDelegationsSuccess(transactions.XprtConversion(totalUnbond)));
+                dispatch(fetchUnbondDelegationsSuccess(helper.fixedConvertion(transactions.XprtConversion(totalUnbond), "number")));
             }
         }).catch((error) => {
             dispatch(fetchUnbondDelegationsError(error.response

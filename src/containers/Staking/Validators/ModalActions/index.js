@@ -12,8 +12,8 @@ import {useTranslation} from "react-i18next";
 import ModalSetWithdrawAddress from "../../../Wallet/ModalSetWithdrawAddress";
 import {connect} from "react-redux";
 import transactions from "../../../../utils/transactions";
-import {QueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/distribution/v1beta1/query";
-import {QueryClientImpl as StakingQueryClientImpl} from "@cosmjs/stargate/build/codec/cosmos/staking/v1beta1/query";
+import {QueryClientImpl} from "cosmjs-types/cosmos/distribution/v1beta1/query";
+import {QueryClientImpl as StakingQueryClientImpl} from "cosmjs-types/cosmos/staking/v1beta1/query";
 import config from "../../../../config";
 const NODE_CONF = process.env.REACT_APP_IBC_CONFIG;
 const ModalActions = (props) => {
@@ -41,7 +41,7 @@ const ModalActions = (props) => {
             }).then(response => {
                 if (response.rewards[0].amount) {
                     let value = helper.decimalConversion(response.rewards[0].amount);
-                    setRewards(transactions.XprtConversion(value*1));
+                    setRewards(helper.fixedConvertion(transactions.XprtConversion(value*1), 'number'));
                 }
             }).catch(error => {
                 console.log(error.response
@@ -106,7 +106,7 @@ const ModalActions = (props) => {
     };
 
     let commissionRate = helper.decimalConversion(props.validator.commission.commissionRates.rate) * 100;
-    commissionRate = parseFloat(commissionRate.toFixed(2)).toLocaleString();
+    commissionRate = parseFloat(commissionRate.toFixed(6)).toLocaleString();
 
     const handleRewards = () => {
         setInitialModal(false);
