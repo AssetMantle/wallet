@@ -261,7 +261,6 @@ function checkValidatorAccountAddress(validatorAddress, address) {
 
 async function getTransactionResponse(address, data, fee, gas, mnemonic="", accountNumber=0, addressIndex=0, bip39Passphrase="") {
     if(data.formName === "send"){
-        console.log((data.amount * config.xprtValue).toFixed(0),(data.amount * config.xprtValue), data.amount);
         return TransactionWithMnemonic([SendMsg(address, data.toAddress, (data.amount * config.xprtValue).toFixed(0), data.denom)], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
     }

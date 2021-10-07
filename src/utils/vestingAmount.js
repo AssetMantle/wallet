@@ -6,22 +6,6 @@ const baseAccount = "/cosmos.auth.v1beta1.BaseAccount";
 const delayedVesting = "/cosmos.vesting.v1beta1.DelayedVestingAccount";
 const continuousVesting = "/cosmos.vesting.v1beta1.ContinuousVestingAccount";
 
-// takes input of authAccount.
-/*
-* Usage :
-* const currentEpochTime = Math.floor(new Date().getTime() / 1000)
-* const persistence = MakePersistence(0,0)
-* const accountsResponse = persistence.getAccounts(inputAddress);
-* const vestingAmount = getAccountVestingAmount(accountsResponse.account, currentEpochTime)
-*/
-// function getAuthAccountAddress(account) {
-//     if (account["@type"] !== baseAccount) {
-//         return account.address;
-//     } else {
-//         return account.base_vesting_account.base_account.address;
-//     }
-// }
-
 function getUXPRT_Balance(amountList) {
     let balance = 0;
     for (let i = 0; i < amountList.length; i++) {
