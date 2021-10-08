@@ -23,7 +23,7 @@ const AdvanceMode = (props) => {
     const [generateKey, setGenerateKey] = useState(false);
     const [advanceMode, setAdvanceMode] = useState(false);
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         let accountNumber = 0;
         let addressIndex = 0;
@@ -40,8 +40,8 @@ const AdvanceMode = (props) => {
             }
         }
 
-        const walletPath = wallet.getWalletPath(accountNumber, addressIndex);
-        const responseData = wallet.createWallet(props.mnemonic, walletPath, bip39Passphrase);
+        const walletPath = transactions.makeHdPath(accountNumber, addressIndex);
+        const responseData = await wallet.createWallet(props.mnemonic, walletPath, bip39Passphrase);
         setResponse(responseData);
         setResponseShow(true);
         setAdvanceForm(false);

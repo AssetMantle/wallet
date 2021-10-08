@@ -27,25 +27,28 @@ const CreateWallet = (props) => {
         props.handleClose();
     };
     useEffect(() => {
-        const responseData = wallet.createRandomWallet();
-        setResponse(responseData);
-        let mnemonic = responseData.mnemonic;
-        const mnemonicArray = mnemonic.split(' ');
-        setMnemonicList(mnemonicArray);
-        let randomNumbers = helper.randomNum(1, 24);
-        setRandomNumberList(randomNumbers);
-        let newMnemonicList = [];
-        mnemonicArray.map((key, index) => {
-            if (randomNumbers.includes(index)) {
-                newMnemonicList.push('');
-            } else {
-                newMnemonicList.push(key);
+        const getWallet = async () =>{
+            const responseData = await wallet.createRandomWallet();
+            setResponse(responseData);
+            let mnemonic = responseData.mnemonic;
+            const mnemonicArray = mnemonic.split(' ');
+            setMnemonicList(mnemonicArray);
+            let randomNumbers = helper.randomNum(1, 24);
+            setRandomNumberList(randomNumbers);
+            let newMnemonicList = [];
+            mnemonicArray.map((key, index) => {
+                if (randomNumbers.includes(index)) {
+                    newMnemonicList.push('');
+                } else {
+                    newMnemonicList.push(key);
+                }
+            });
+            setRandomMnemonicList(newMnemonicList);
+            if (responseData.error) {
+                setErrorMessage(responseData.error);
             }
-        });
-        setRandomMnemonicList(newMnemonicList);
-        if (responseData.error) {
-            setErrorMessage(responseData.error);
-        }
+        };
+        getWallet();
     }, []);
     const handleCreateForm = (name) => {
         if (name === "keysForm") {

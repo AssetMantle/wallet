@@ -11,6 +11,7 @@ import wallet from "../../utils/wallet";
 import helper from "../../utils/helper";
 import GeneratePrivateKey from "../Common/GeneratePrivateKey";
 import {useTranslation} from "react-i18next";
+import transactions from "../../utils/transactions";
 
 const ModalImportWallet = (props) => {
     const {t} = useTranslation();
@@ -99,7 +100,7 @@ const ModalImportWallet = (props) => {
         );
     }
 
-    const handleSubmitAdvance = (event) => {
+    const handleSubmitAdvance = async (event) => {
         event.preventDefault();
         let accountNumber = 0;
         let addressIndex = 0;
@@ -115,8 +116,8 @@ const ModalImportWallet = (props) => {
                 addressIndex = 0;
             }
         }
-        const walletPath = wallet.getWalletPath(accountNumber, addressIndex);
-        const responseData = wallet.createWallet(userMnemonic, walletPath, bip39Passphrase);
+        const walletPath = transactions.makeHdPath(accountNumber, addressIndex);
+        const responseData = await wallet.createWallet(userMnemonic, walletPath, bip39Passphrase);
         setAdvancedFormResponseData(responseData);
         setAdvancedForm(false);
         setAdvancedFormResponse(true);
