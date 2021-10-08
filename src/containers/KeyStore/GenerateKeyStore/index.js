@@ -18,7 +18,7 @@ const GenerateKeyStore = (props) => {
 
     const handleSubmit = async event => {
         event.preventDefault();
-        const responseData = wallet.createWallet(event.target.mnemonic.value);
+        const responseData = await wallet.createWallet(event.target.mnemonic.value);
         if (responseData.error) {
             setErrorMessage(responseData.error);
         } else {

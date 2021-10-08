@@ -16,6 +16,7 @@ const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 const vestingTx = require("cosmjs-types/cosmos/vesting/v1beta1/tx");
 const tx_7 = require("cosmjs-types/ibc/core/channel/v1/tx");
 import transactions from "../utils/transactions";
+import helper from "../utils/helper";
 
 export const fetchTransactionsProgress = () => {
     return {
@@ -67,6 +68,8 @@ export const fetchTransactions = (address, limit, pageNumber) => {
                         typeUrl = decodedTransaction.body.messages[0].typeUrl;
                         body = registry.decode(decodedTransaction.body.messages[0]);
                     }
+                    const txAmount = helper.getTransactionAmount(body);
+
                     txData.push({
                         'typeUrl': typeUrl,
                         'messageCount': decodedTransaction.body.messages.length,
@@ -74,6 +77,7 @@ export const fetchTransactions = (address, limit, pageNumber) => {
                         'height': transaction.height,
                         'hash': txHash,
                         'body': body,
+                        'amount':txAmount,
                         'timestamp': block.block.header.time
                     });
                 }
@@ -153,6 +157,7 @@ export const fetchReceiveTransactions = (address, limit, pageNumber) => {
                         typeUrl = decodedTransaction.body.messages[0].typeUrl;
                         body = registry.decode(decodedTransaction.body.messages[0]);
                     }
+                    const txAmount = helper.getTransactionAmount(body);
                     txData.push({
                         'typeUrl': typeUrl,
                         'messageCount': decodedTransaction.body.messages.length,
@@ -160,6 +165,7 @@ export const fetchReceiveTransactions = (address, limit, pageNumber) => {
                         'height': transaction.height,
                         'hash': txHash,
                         'body': body,
+                        'amount':txAmount,
                         'timestamp': block.block.header.time
                     });
                 }

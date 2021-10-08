@@ -35,7 +35,7 @@ const KeyStoreLogin = (props) => {
             event.preventDefault();
             const fileReader = new FileReader();
             fileReader.readAsText(event.target.uploadFile.files[0], "UTF-8");
-            fileReader.onload = event => {
+            fileReader.onload = async event => {
                 const res = JSON.parse(event.target.result);
                 const decryptedData = helper.decryptStore(res, password);
                 if (decryptedData.error != null) {
@@ -58,8 +58,8 @@ const KeyStoreLogin = (props) => {
                             addressIndex = 0;
                         }
                     }
-                    const walletPath = wallet.getWalletPath(accountNumber, addressIndex);
-                    const responseData = wallet.createWallet(mnemonic, walletPath, bip39Passphrase);
+                    const walletPath = transactions.makeHdPath(accountNumber, addressIndex);
+                    const responseData = await wallet.createWallet(mnemonic, walletPath, bip39Passphrase);
                     setAdvancedFormResponseData(responseData);
 
                     setAdvancedForm(true);
