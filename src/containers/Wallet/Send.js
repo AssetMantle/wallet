@@ -155,7 +155,7 @@ const Send = (props) => {
     };
 
     const selectTotalBalanceHandler = (value) => {
-        setEnteredAmount(helper.fixedConvertion(value, 'string'));
+        setEnteredAmount(helper.fixedConvertion(value, 'number').toString());
         setAmountField(helper.fixedConvertion(value, 'number'));
     };
 
