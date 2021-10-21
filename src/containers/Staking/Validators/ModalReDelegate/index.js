@@ -118,7 +118,7 @@ const ModalReDelegate = (props) => {
     };
 
     const selectTotalBalanceHandler = (value) =>{
-        setEnteredAmount(helper.fixedConvertion(value, 'string'));
+        setEnteredAmount(helper.fixedConvertion(value, 'number').toString());
         setAmount(helper.fixedConvertion(value, 'number'));
     };
 
