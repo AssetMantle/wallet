@@ -160,7 +160,7 @@ const ModalWithdraw = (props) => {
         </Popover>
     );
     const disable = (
-        individualRewards === 0 && !selectValidation
+        individualRewards === 0 && !selectValidation &&  commissionMsg
     );
     return (
         <>
