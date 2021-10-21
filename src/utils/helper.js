@@ -186,7 +186,7 @@ function trimWhiteSpaces(data){
 
 function fixedConvertion(value, type){
     if(type === "string"){
-        return value.toLocaleString(undefined, {minimumFractionDigits: 6}).toString();
+        return parseFloat(value.toLocaleString(undefined, {minimumFractionDigits: 6})).toString();
     }else {
         return parseFloat(value.toLocaleString(undefined, {minimumFractionDigits: 6}).replace(/,/g, ''));
     }
