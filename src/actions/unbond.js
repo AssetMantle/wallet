@@ -51,7 +51,7 @@ export const fetchUnbondDelegations = (address) => {
                         return entriesSum;
                     }
                 });
-                dispatch(fetchUnbondDelegationsSuccess(helper.fixedConvertion(transactions.XprtConversion(totalUnbond), "number")));
+                dispatch(fetchUnbondDelegationsSuccess(helper.fixedConversion(transactions.XprtConversion(totalUnbond), "number")));
             }
         }).catch((error) => {
             dispatch(fetchUnbondDelegationsError(error.response

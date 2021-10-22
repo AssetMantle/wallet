@@ -97,7 +97,7 @@ const TokenInfo = (props) => {
                                     }
                                 </span>
                                 <NumberView
-                                    data = {helper.digitFormat(helper.fixedConvertion((props.delegations + props.balance + props.unbond), 'number'))}/>
+                                    data = {helper.digitFormat(helper.fixedConversion((props.delegations + props.balance + props.unbond), 'number'))}/>
                                 XPRT
                             </p>
                         </div>
@@ -110,8 +110,8 @@ const TokenInfo = (props) => {
                         <div className="line">
                             <p className="key">{t("CURRENT_VALUE")}</p>
                             <p className="value"><span className="inner-grid-icon"/>
-                                <NumberView
-                                    data={helper.digitFormat(helper.fixedConvertion(((props.delegations + props.balance + props.unbond) * props.tokenPrice), 'number'))}/>
+                                $<NumberView
+                                    data={helper.digitFormat(helper.fixedConversion(((props.delegations + props.balance + props.unbond) * props.tokenPrice), 'number'))}/>
                             </p>
                         </div>
 

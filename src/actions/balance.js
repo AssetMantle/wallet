@@ -54,7 +54,7 @@ export const fetchBalance = (address) => {
                     allBalancesResponse.balances.forEach((item) => {
                         if (item.denom === 'uxprt') {
                             const totalBalance = item.amount * 1;
-                            dispatch(fetchBalanceSuccess(helper.fixedConvertion(transactions.XprtConversion(totalBalance), "number")));
+                            dispatch(fetchBalanceSuccess(helper.fixedConversion(transactions.XprtConversion(totalBalance), "number")));
                         }
                     });
                 }
@@ -119,8 +119,8 @@ export const fetchTransferableVestingAmount = (address)=> {
                                     } else {
                                         transferableAmount = balance - amount;
                                     }
-                                    dispatch(fetchTransferableBalanceSuccess(helper.fixedConvertion(transferableAmount, 'number')));
-                                    dispatch(fetchVestingBalanceSuccess(helper.fixedConvertion(vestingAmount, 'number')));
+                                    dispatch(fetchTransferableBalanceSuccess(helper.fixedConversion(transferableAmount, 'number')));
+                                    dispatch(fetchVestingBalanceSuccess(helper.fixedConversion(vestingAmount, 'number')));
                                 } else {
                                     let denomText = item.denom.substr(item.denom.indexOf('/') + 1);
                                     const ibcExtension = setupIbcExtension(queryClient);
