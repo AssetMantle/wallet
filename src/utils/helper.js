@@ -184,7 +184,7 @@ function trimWhiteSpaces(data){
     return data.split(' ').join('');
 }
 
-function fixedConvertion(value, type){
+function fixedConversion(value, type){
     if(type === "string"){
         return parseFloat(value.toLocaleString(undefined, {minimumFractionDigits: 6})).toString();
     }else {
@@ -207,13 +207,35 @@ function passwordValidation(data){
 }
 
 function digitFormat(data){
-    const strindata = data.toString();
-    if(strindata.indexOf('.') !== -1){
-        const beforeString = strindata.substr(0, strindata.indexOf('.'));
-        const afterString = strindata.substr(strindata.indexOf('.'));
-        return [parseInt(beforeString).toLocaleString(), afterString];
+    const stringData = data.toString();
+    if(stringData.indexOf('.') !== -1){
+        const beforeString = stringData.substr(0, stringData.indexOf('.'));
+        const afterString = stringData.substr(stringData.indexOf('.')+1);
+        const stringTruncate = (parseInt(afterString)*1000000).toString();
+        return [parseInt(beforeString).toLocaleString(), stringTruncate.substr(0, 6)];
     }else{
-        return data;
+        if(stringData.length > 3){
+            return parseInt(stringData).toLocaleString();
+        }else {
+            return data;
+        }
+    }
+}
+
+function localStringConversion(data) {
+    const stringData = data.toString();
+    if(stringData.indexOf('.') !== -1){
+        const beforeString = stringData.substr(0, stringData.indexOf('.'));
+        const afterString = stringData.substr(stringData.indexOf('.')+1);
+        const stringTruncate = (parseInt(afterString)*1000000).toString();
+        const newString = parseInt(beforeString).toLocaleString()+'.'+ stringTruncate.substr(0, 6);
+        return newString;
+    }else{
+        if(stringData.length > 3){
+            return parseInt(stringData).toLocaleString();
+        }else {
+            return data;
+        }
     }
 }
 
@@ -269,9 +291,10 @@ export default {
     inputAmountValidation,
     trimWhiteSpaces,
     fileTypeCheck,
-    fixedConvertion,
+    fixedConversion,
     isBech32Address,
     passwordValidation,
     digitFormat,
-    getTransactionAmount
+    getTransactionAmount,
+    localStringConversion
 };

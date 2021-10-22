@@ -41,7 +41,7 @@ const ModalActions = (props) => {
             }).then(response => {
                 if (response.rewards[0].amount) {
                     let value = helper.decimalConversion(response.rewards[0].amount);
-                    setRewards(helper.fixedConvertion(transactions.XprtConversion(value*1), 'number'));
+                    setRewards(helper.fixedConversion(transactions.XprtConversion(value*1), 'number'));
                 }
             }).catch(error => {
                 console.log(error.response

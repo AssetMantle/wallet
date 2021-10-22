@@ -155,8 +155,8 @@ const Send = (props) => {
     };
 
     const selectTotalBalanceHandler = (value) => {
-        setEnteredAmount(helper.fixedConvertion(value, 'number').toString());
-        setAmountField(helper.fixedConvertion(value, 'number'));
+        setEnteredAmount(helper.fixedConversion(value, 'number').toString());
+        setAmountField(helper.fixedConversion(value, 'number'));
     };
 
     const popoverMemo = (
@@ -229,7 +229,7 @@ const Send = (props) => {
                                     <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(props.transferableAmount)}><span
                                         className="title">Transferable Balance:</span> <span
                                         className="value"
-                                        title={props.transferableAmount}>{props.transferableAmount} XPRT</span> </span>
+                                        title={props.transferableAmount}>{helper.localStringConversion(props.transferableAmount)} XPRT</span> </span>
                                     :
                                     <span title={tokenItem.denomTrace} className={transferableAmount === 0 ? "empty info-data" : "info-data"}>
                                         <span
