@@ -119,8 +119,9 @@ const KeyStoreLogin = (props) => {
     };
     const handleLogin = () => {
         GetAccount(advancedFormResponseData.address)
-            .then(res =>{
-                if(transactions.VestingAccountCheck(res.typeUrl)){
+            .then(async res => {
+                const accountType = await transactions.VestingAccountCheck(res.typeUrl);
+                if(accountType){
                     localStorage.setItem('fee', config.vestingAccountFee);
                     localStorage.setItem('account', 'vesting');
                 }else {

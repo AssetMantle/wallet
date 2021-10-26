@@ -19,8 +19,9 @@ const AddressImport = (props) => {
         const address = event.target.address.value;
         if (helper.validateAddress(address) && helper.isBech32Address(address, config.addressPrefix)) {
             GetAccount(address)
-                .then(res => {
-                    if(transactions.VestingAccountCheck(res.typeUrl)){
+                .then(async res => {
+                    const accountType = await transactions.VestingAccountCheck(res.typeUrl);
+                    if(accountType){
                         localStorage.setItem('fee', config.vestingAccountFee);
                         localStorage.setItem('account', 'vesting');
                     }else {
