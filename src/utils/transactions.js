@@ -115,8 +115,9 @@ function getAccountNumberAndSequence(authResponse) {
 function updateFee(address) {
     if (localStorage.getItem('loginMode') === 'normal') {
         GetAccount(address)
-            .then(res => {
-                if (VestingAccountCheck(res.typeUrl)) {
+            .then(async res => {
+                const accountType = await VestingAccountCheck(res.typeUrl);
+                if(accountType){
                     localStorage.setItem('fee', config.vestingAccountFee);
                     localStorage.setItem('account', 'vesting');
                 } else {
