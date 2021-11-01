@@ -11,14 +11,19 @@ const GeneratePrivateKey = (props) => {
     const {t} = useTranslation();
     const [keyFile, setKeyFile] = useState(false);
     const [show, setShow] = useState(true);
+    const [errorMessage, setErrorMessage] = useState("");
     const handleSubmit = async event => {
         event.preventDefault();
         const password = event.target.password.value;
-        const mnemonic = props.mnemonic;
-        let encryptedData = helper.createStore(mnemonic, password);
-        let jsonContent = JSON.stringify(encryptedData.Response);
-        setKeyFile(true);
-        downloadFile(jsonContent);
+        if(helper.passwordValidation(password)) {
+            const mnemonic = props.mnemonic;
+            let encryptedData = helper.createStore(mnemonic, password);
+            let jsonContent = JSON.stringify(encryptedData.Response);
+            setKeyFile(true);
+            downloadFile(jsonContent);
+        }else {
+            setErrorMessage("Password must be greater than 3 letters and no spaces allowed");
+        }
     };
     const downloadFile = async (jsonContent) => {
         const json = jsonContent;
@@ -86,6 +91,11 @@ const GeneratePrivateKey = (props) => {
                                     icon="exclamation"/></div>
                                 <p>{t("PRIVATE_KEY_PASSWORD_NOTE")}</p>
                             </div>
+                            {errorMessage !== ''
+                                ? <p className="form-error">{errorMessage}</p>
+                                : null
+
+                            }
                         </>
                         :
                         null
