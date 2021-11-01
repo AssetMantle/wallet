@@ -238,12 +238,7 @@ const Send = (props) => {
                             }
                         </div>
                     </div>
-                    <div className="form-field p-0">
-                        <p className="label"></p>
-                        <div className="amount-field">
-                            <p className={checkAmountError ? "show amount-error text-left" : "hide amount-error text-left"}>{t("AMOUNT_ERROR_MESSAGE")}</p>
-                        </div>
-                    </div>
+
                     {mode !== "kepler" ?
                         <>
                             <div className="memo-dropdown-section">

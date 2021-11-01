@@ -12,6 +12,7 @@ import {fetchBalance, fetchTransferableVestingAmount} from "../../../actions/bal
 import {fetchRewards, fetchTotalRewards} from "../../../actions/rewards";
 import {fetchUnbondDelegations} from "../../../actions/unbond";
 import {fetchTokenPrice} from "../../../actions/tokenPrice";
+import {fetchValidators} from "../../../actions/validators";
 import {fetchReceiveTransactions, fetchTransactions} from "../../../actions/transactions";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
@@ -31,6 +32,7 @@ const ModalViewTxnResponse = (props) => {
             props.fetchTransactions(address, 5, 1);
             props.fetchReceiveTransactions(address, 5, 1);
             props.fetchTransferableVestingAmount(address);
+            props.fetchValidators(address);
             transactions.updateFee(address);
         }
     },[]);
@@ -111,7 +113,8 @@ const actionsToProps = {
     fetchTransactions,
     fetchReceiveTransactions,
     fetchTransferableVestingAmount,
-    fetchTotalRewards
+    fetchTotalRewards,
+    fetchValidators
 };
 
 export default connect(null, actionsToProps)(ModalViewTxnResponse);
