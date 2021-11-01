@@ -105,7 +105,7 @@ export const fetchRewards = (address) => {
                             validatorAddr: item.validatorAddress,
                         }).then(async (res) => {
                             const data = {
-                                label: `${res.validator.description.moniker} - ${transactions.XprtConversion(helper.decimalConversion(item.reward[0] && item.reward[0].amount))} XPRT`,
+                                label: `${res.validator.description.moniker} - ${transactions.XprtConversion(helper.decimalConversion(item.reward[0] && item.reward[0].amount)).toLocaleString(undefined, {minimumFractionDigits: 5})} XPRT`,
                                 value: res.validator.operatorAddress,
                                 rewards: helper.decimalConversion(item.reward[0] && item.reward[0].amount)
                             };
