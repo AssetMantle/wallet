@@ -243,18 +243,18 @@ function denomModify(amount){
     if(Array.isArray(amount)){
         if(amount.length){
             if(amount[0].denom ==="uxprt"){
-                return [digitFormat(transactions.XprtConversion(amount[0].amount)), "XPRT"];
+                return [transactions.XprtConversion(amount[0].amount)];
             }else {
-                return [digitFormat(amount[0].amount), amount[0].denom];
+                return [amount[0].amount, amount[0].denom];
             }
         }else {
             return '';
         }
     }else {
         if(amount.denom ==="uxprt"){
-            return [digitFormat(transactions.XprtConversion(amount.amount)), "XPRT"];
+            return [transactions.XprtConversion(amount.amount), "XPRT"];
         }else {
-            return [digitFormat(amount.amount), amount.denom];
+            return [amount.amount, amount.denom];
         }
     }
 }

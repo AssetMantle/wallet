@@ -4,7 +4,6 @@ import {connect} from "react-redux";
 import transactions from "../../../utils/transactions";
 import {useTranslation} from "react-i18next";
 import helper from "../../../utils/helper";
-import NumberView from "../../../components/NumberView";
 
 const ModalViewDelegationDetails = (props) => {
     const {t} = useTranslation();
@@ -52,9 +51,7 @@ const ModalViewDelegationDetails = (props) => {
                                                 <td>{delegation.data.description.moniker}
                                                 </td>
                                                 <td><span title={delegation.data.operatorAddress}>{addressTruncate}</span></td>
-                                                <td><span className="amount">
-                                                    <NumberView data={helper.digitFormat(transactions.XprtConversion(delegation.delegations*1))}/> XPRT
-                                                </span></td>
+                                                <td><span className="amount">{(transactions.XprtConversion(delegation.delegations*1)).toLocaleString()} XPRT</span></td>
                                                 <td>     {helper.isActive(delegation.data) ?
                                                     <span className="active-icon-box" title="active">
                                                             active
