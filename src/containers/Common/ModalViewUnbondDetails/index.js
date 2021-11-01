@@ -4,7 +4,6 @@ import {connect} from "react-redux";
 import transactions from "../../../utils/transactions";
 import moment from "moment";
 import {useTranslation} from "react-i18next";
-import NumberView from "../../../components/NumberView";
 
 const ModalViewUnbondDetails = (props) => {
     const {t} = useTranslation();
@@ -44,7 +43,7 @@ const ModalViewUnbondDetails = (props) => {
                                         return (
                                             <div className="unbonding-schedule-list" key={entryIndex}>
                                                 <p><span className="amount">
-                                                    <NumberView data={(transactions.XprtConversion(entry.balance*1))}/> XPRT
+                                                    {transactions.XprtConversion(entry.balance*1)} XPRT
                                                 </span></p>
                                                 <p><span className="date">{moment(new Date (entry["completionTime"]).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</span></p>
                                             </div>
