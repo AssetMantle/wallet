@@ -106,8 +106,8 @@ const ModalDelegate = (props) => {
     };
 
     const selectTotalBalanceHandler = (value) =>{
-        setEnteredAmount(helper.fixedConversion(value, 'number').toString());
-        setAmount(helper.fixedConversion(value, 'number'));
+        setEnteredAmount(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)).toString());
+        setAmount(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)));
     };
 
     if (loader) {

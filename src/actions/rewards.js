@@ -71,7 +71,7 @@ export const fetchTotalRewards= (address) => {
                 if (delegatorRewardsResponse.total.length) {
                     let rewards = helper.decimalConversion(delegatorRewardsResponse.total[0].amount, 18);
                     const fixedRewardsResponse = transactions.XprtConversion(rewards * 1);
-                    dispatch(fetchRewardsSuccess(helper.fixedConversion(fixedRewardsResponse), 'number'));
+                    dispatch(fetchRewardsSuccess(fixedRewardsResponse));
                 }
             }).catch((error) => {
                 console.log(error.response
@@ -105,7 +105,7 @@ export const fetchRewards = (address) => {
                             validatorAddr: item.validatorAddress,
                         }).then(async (res) => {
                             const data = {
-                                label: `${res.validator.description.moniker} - ${helper.fixedConversion(transactions.XprtConversion(helper.decimalConversion(item.reward[0] && item.reward[0].amount)), "number")} XPRT`,
+                                label: `${res.validator.description.moniker} - ${transactions.XprtConversion(helper.decimalConversion(item.reward[0] && item.reward[0].amount))} XPRT`,
                                 value: res.validator.operatorAddress,
                                 rewards: helper.decimalConversion(item.reward[0] && item.reward[0].amount)
                             };

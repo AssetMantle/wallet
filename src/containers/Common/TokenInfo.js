@@ -15,8 +15,6 @@ import {OverlayTrigger, Popover} from "react-bootstrap";
 import transactions from "../../utils/transactions";
 import ModalViewDelegationDetails from "./ModalViewDelegationDetails";
 import {fetchValidators} from "../../actions/validators";
-import helper from "../../utils/helper";
-import NumberView from "../../components/NumberView";
 const TokenInfo = (props) => {
     const {t} = useTranslation();
     const [rewards, setRewards] = useState(false);
@@ -96,9 +94,7 @@ const TokenInfo = (props) => {
                                             : ""
                                     }
                                 </span>
-                                <NumberView
-                                    data = {helper.digitFormat(helper.fixedConversion((props.delegations + props.balance + props.unbond), 'number'))}/>
-                                XPRT
+                                {(props.delegations + props.balance + props.unbond).toLocaleString()} XPRT
                             </p>
                         </div>
                         <div className="line">
@@ -110,8 +106,7 @@ const TokenInfo = (props) => {
                         <div className="line">
                             <p className="key">{t("CURRENT_VALUE")}</p>
                             <p className="value"><span className="inner-grid-icon"/>
-                                $<NumberView
-                                    data={helper.digitFormat(helper.fixedConversion(((props.delegations + props.balance + props.unbond) * props.tokenPrice), 'number'))}/>
+                                ${((props.delegations + props.balance + props.unbond) * props.tokenPrice).toLocaleString()}
                             </p>
                         </div>
 
@@ -136,7 +131,7 @@ const TokenInfo = (props) => {
                                             : ""
                                     }
                                 </span>
-                                <NumberView data={helper.digitFormat(props.vestingAmount)}/> XPRT
+                                {props.vestingAmount.toLocaleString()} XPRT
                             </p>
                         </div>
                         <div className="line">
@@ -148,9 +143,8 @@ const TokenInfo = (props) => {
                                         icon="info"/></button>
                                 </OverlayTrigger>
                             </p>
-                            <p className="value" title={props.transferableAmount}><span className="inner-grid-icon"/>
-                                <NumberView data={helper.digitFormat(props.transferableAmount)}/> XPRT
-                            </p>
+                            <p className="value" title={props.transferableAmount.toFixed(6)}><span className="inner-grid-icon"/>
+                                {props.transferableAmount.toLocaleString()} XPRT</p>
                         </div>
                         <div className="line">
                             <p className="key">{t("DELEGATABLE")}
@@ -161,9 +155,8 @@ const TokenInfo = (props) => {
                                         icon="info"/></button>
                                 </OverlayTrigger>
                             </p>
-                            <p className="value" title={props.balance}><span className="inner-grid-icon"/>
-                                <NumberView data={helper.digitFormat(props.balance)}/> XPRT
-                            </p>
+                            <p className="value" title={props.balance.toFixed(6)}><span className="inner-grid-icon"/>
+                                {props.balance.toLocaleString()} XPRT</p>
                         </div>
 
                     </div>
@@ -181,17 +174,12 @@ const TokenInfo = (props) => {
                                             : ""
                                     }
                                 </span>
-                                <span>
-                                    <NumberView data={helper.digitFormat(props.delegations)}/> XPRT
-                                </span>
+                                <span> {props.delegations.toLocaleString()} XPRT</span>
                             </p>
                         </div>
                         <div className="line">
                             <p className="key">{t("REWARDS")}</p>
-                            <p className="value rewards"><span onClick={() => handleRewards("rewards")}
-                                className="claim inner-grid">{t("CLAIM")}</span><span title={props.rewards}>
-                                <NumberView data={helper.digitFormat(props.rewards)}/> XPRT
-                            </span>
+                            <p className="value rewards"><span onClick={() => handleRewards("rewards")} className="claim inner-grid">{t("CLAIM")}</span><span title={props.rewards.toFixed(6)}> {props.rewards.toLocaleString()} XPRT</span>
                             </p>
                         </div>
                         <div className="line">
@@ -205,7 +193,7 @@ const TokenInfo = (props) => {
                                 }
                             </span>
                             <span title={props.unbond}>
-                                <NumberView data={helper.digitFormat(props.unbond)}/> XPRT
+                                {props.unbond.toLocaleString()} XPRT
                             </span>
                             </p>
                         </div>
