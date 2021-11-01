@@ -202,8 +202,8 @@ const ModalWithdraw = (props) => {
                                 <div className="form-field p-0">
                                     <p className="label"></p>
                                     <div className="available-tokens">
-                                        <p className="tokens">{t("CLAIMING_REWARDS")} {individualRewards.toLocaleString()} <span>XPRT</span></p>
-                                        <p className="usd">= ${(individualRewards * props.tokenPrice).toLocaleString()}</p>
+                                        <p className="tokens">{t("CLAIMING_REWARDS")} {individualRewards.toLocaleString(undefined, {minimumFractionDigits: 4})} <span>XPRT</span></p>
+                                        <p className="usd">= ${(individualRewards * props.tokenPrice).toLocaleString(undefined, {minimumFractionDigits: 4})}</p>
                                     </div>
                                 </div>
                                 {props.validatorCommissionInfo[2] ?
