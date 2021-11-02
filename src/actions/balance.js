@@ -12,6 +12,9 @@ import transactions, {GetAccount} from "../utils/transactions";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient, QueryClient, setupIbcExtension} from "@cosmjs/stargate";
 import {QueryClientImpl} from "cosmjs-types/cosmos/bank/v1beta1/query";
+// import helper from "../utils/helper";
+import {formatNumber} from "../utils/scripts";
+
 const tendermintRPCURL =  process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
 export const fetchBalanceProgress = () => {
@@ -118,6 +121,20 @@ export const fetchTransferableVestingAmount = (address)=> {
                                     } else {
                                         transferableAmount = balance - amount;
                                     }
+                                    transferableAmount = 454;
+                                    let formattedNumber = transferableAmount.toLocaleString('en-US', {
+                                        minimumIntegerDigits: 6,
+                                        useGrouping: false
+                                    });
+                                    console.log(
+                                        'Input:    ' + transferableAmount + '\n' +
+                                        'Output:   ' + formattedNumber
+                                    );
+                                    const stringTruncate = (parseInt("001")*1000000).toString();
+                                    console.log(transferableAmount,stringTruncate, "transferableAmount");
+                                    console.log(formatNumber(transferableAmount), "format number");
+                                    // console.log(helper.fixedConversion(transferableAmount, "number"), "fixedConversion");
+                                    console.log(vestingAmount, "vestingAmount");
                                     dispatch(fetchTransferableBalanceSuccess(transferableAmount));
                                     dispatch(fetchVestingBalanceSuccess(vestingAmount));
                                 } else {
@@ -129,9 +146,11 @@ export const fetchTransferableVestingAmount = (address)=> {
                                         denomTrace: item.denom,
                                         amount: item.amount,
                                     };
+
                                     tokenList.push(transeDenomData);
                                 }
                             }
+                            console.log(tokenList, "tokenList");
                             dispatch(fetchTokenListSuccess(tokenList));
                         }
                     }).catch((error) => {

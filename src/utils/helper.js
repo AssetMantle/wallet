@@ -188,6 +188,7 @@ function fixedConversion(value, type){
     if(type === "string"){
         return parseFloat(value.toLocaleString(undefined, {minimumFractionDigits: 6})).toString();
     }else {
+        console.log(value.toLocaleString(undefined, {minimumFractionDigits: 6}), type, "in");
         return parseFloat(value.toLocaleString(undefined, {minimumFractionDigits: 6}).replace(/,/g, ''));
     }
 }
@@ -211,8 +212,7 @@ function digitFormat(data){
     if(stringData.indexOf('.') !== -1){
         const beforeString = stringData.substr(0, stringData.indexOf('.'));
         const afterString = stringData.substr(stringData.indexOf('.')+1);
-        const stringTruncate = (parseInt(afterString)*1000000).toString();
-        return [parseInt(beforeString).toLocaleString(), stringTruncate.substr(0, 6)];
+        return [parseInt(beforeString).toLocaleString(), afterString];
     }else{
         if(stringData.length > 3){
             return parseInt(stringData).toLocaleString();
@@ -227,8 +227,7 @@ function localStringConversion(data) {
     if(stringData.indexOf('.') !== -1){
         const beforeString = stringData.substr(0, stringData.indexOf('.'));
         const afterString = stringData.substr(stringData.indexOf('.')+1);
-        const stringTruncate = (parseInt(afterString)*1000000).toString();
-        const newString = parseInt(beforeString).toLocaleString()+'.'+ stringTruncate.substr(0, 6);
+        const newString = parseInt(beforeString).toLocaleString()+'.'+ afterString;
         return newString;
     }else{
         if(stringData.length > 3){

@@ -15,6 +15,8 @@ import {OverlayTrigger, Popover} from "react-bootstrap";
 import transactions from "../../utils/transactions";
 import ModalViewDelegationDetails from "./ModalViewDelegationDetails";
 import {fetchValidators} from "../../actions/validators";
+import NumberView from "../../components/NumberView";
+import {formatNumber} from "../../utils/scripts";
 const TokenInfo = (props) => {
     const {t} = useTranslation();
     const [rewards, setRewards] = useState(false);
@@ -144,7 +146,8 @@ const TokenInfo = (props) => {
                                 </OverlayTrigger>
                             </p>
                             <p className="value" title={props.transferableAmount.toFixed(6)}><span className="inner-grid-icon"/>
-                                {props.transferableAmount.toLocaleString()} XPRT</p>
+                                <NumberView value={formatNumber(props.transferableAmount)}/> XPRT
+                            </p>
                         </div>
                         <div className="line">
                             <p className="key">{t("DELEGATABLE")}
