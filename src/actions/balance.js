@@ -12,7 +12,6 @@ import transactions, {GetAccount} from "../utils/transactions";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient, QueryClient, setupIbcExtension} from "@cosmjs/stargate";
 import {QueryClientImpl} from "cosmjs-types/cosmos/bank/v1beta1/query";
-import helper from "../utils/helper";
 const tendermintRPCURL =  process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
 export const fetchBalanceProgress = () => {
@@ -54,7 +53,7 @@ export const fetchBalance = (address) => {
                     allBalancesResponse.balances.forEach((item) => {
                         if (item.denom === 'uxprt') {
                             const totalBalance = item.amount * 1;
-                            dispatch(fetchBalanceSuccess(helper.fixedConversion(transactions.XprtConversion(totalBalance), "number")));
+                            dispatch(fetchBalanceSuccess(transactions.XprtConversion(totalBalance)));
                         }
                     });
                 }
@@ -119,8 +118,8 @@ export const fetchTransferableVestingAmount = (address)=> {
                                     } else {
                                         transferableAmount = balance - amount;
                                     }
-                                    dispatch(fetchTransferableBalanceSuccess(helper.fixedConversion(transferableAmount, 'number')));
-                                    dispatch(fetchVestingBalanceSuccess(helper.fixedConversion(vestingAmount, 'number')));
+                                    dispatch(fetchTransferableBalanceSuccess(transferableAmount));
+                                    dispatch(fetchVestingBalanceSuccess(vestingAmount));
                                 } else {
                                     let denomText = item.denom.substr(item.denom.indexOf('/') + 1);
                                     const ibcExtension = setupIbcExtension(queryClient);

@@ -101,8 +101,8 @@ const ModalUnbond = (props) => {
     };
 
     const selectTotalBalanceHandler = (value) =>{
-        setEnteredAmount(helper.fixedConversion(value, 'number').toString());
-        setAmount(helper.fixedConversion(value, 'number'));
+        setEnteredAmount(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)).toString());
+        setAmount(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)));
     };
 
     if (loader) {
@@ -153,7 +153,7 @@ const ModalUnbond = (props) => {
                                     />
                                     <span className={props.delegationAmount === 0 ? "empty info-data info-link" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(props.delegationAmount)}><span
                                         className="title">{t("DELEGATED_AMOUNT")}:</span> <span
-                                        className="value">{helper.localStringConversion(props.delegationAmount)} XPRT</span> </span>
+                                        className="value">{props.delegationAmount} XPRT</span> </span>
                                 </div>
                             </div>
                             {mode === "normal" ?

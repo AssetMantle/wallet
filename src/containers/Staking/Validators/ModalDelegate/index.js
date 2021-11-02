@@ -106,8 +106,8 @@ const ModalDelegate = (props) => {
     };
 
     const selectTotalBalanceHandler = (value) =>{
-        setEnteredAmount(helper.fixedConversion(value, 'number').toString());
-        setAmount(helper.fixedConversion(value, 'number'));
+        setEnteredAmount(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)).toString());
+        setAmount(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)));
     };
 
     if (loader) {
@@ -172,7 +172,7 @@ const ModalDelegate = (props) => {
                                     />
                                     <span className={props.balance === 0 ? "empty info-data info-link" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(props.balance)}><span
                                         className="title">{t("BALANCE")}:</span> <span
-                                        className="value">{helper.localStringConversion(props.balance)} XPRT</span> </span>
+                                        className="value">{props.balance} XPRT</span> </span>
                                 </div>
                             </div>
 

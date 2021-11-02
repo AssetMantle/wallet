@@ -10,7 +10,6 @@ import IconButton from "@material-ui/core/IconButton";
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import transactions from "../../../utils/transactions";
-import NumberView from "../../../components/NumberView";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ReceiveTransactions = (props) => {
@@ -89,7 +88,7 @@ const ReceiveTransactions = (props) => {
             (stxn.body.amount !== undefined || stxn.body.token !== undefined || stxn.body.value !== undefined) ?
                 stxn.amount !== '' && stxn.amount !== undefined ?
                     <div className="amount" >
-                        <NumberView data={stxn.amount[0]}/>
+                        {stxn.amount[0]}
                         <span className="string-truncate">
                            &nbsp;{stxn.amount[1]}
                         </span>
@@ -101,18 +100,18 @@ const ReceiveTransactions = (props) => {
                     stxn.fee.amount.length ?
                         stxn.fee.amount[0].denom === 'uxprt' ?
                             <div className="fee text-left" key={index}>
-                                <NumberView data={helper.digitFormat(transactions.XprtConversion(stxn.fee.amount[0].amount))}/>
+                                {transactions.XprtConversion(stxn.fee.amount[0].amount)}
                                 XPRT
                             </div>
                             :
                             <div className="fee text-left" key={index}>
-                                <NumberView data={helper.digitFormat(transactions.XprtConversion(stxn.fee.amount[0].amount))}/>
+                                {transactions.XprtConversion(stxn.fee.amount[0].amount)}
                                 {stxn.fee.amount[0].denom}
                             </div>
                         :""
                     :
                     <div className="fee text-left" key={index}>
-                        <NumberView data={helper.digitFormat(stxn.fee.amount.amount)}/>
+                        {stxn.fee.amount.amount}
                         {stxn.fee.amount.denom}
                     </div>
                 : '',
