@@ -138,7 +138,6 @@ const ModalDecryptKeyStore = (props) => {
                 if(response !== undefined){
                     response.then(result => {
                         setResponse(result);
-                        console.log(result, "result");
                         setLoader(false);
                         setAdvanceMode(false);
                     }).catch(err => {

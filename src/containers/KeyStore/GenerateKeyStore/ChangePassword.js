@@ -26,7 +26,6 @@ const ChangePassword = (props) => {
     // const [keyFile, setKeyFile] = useState(false);
 
     const handleSubmit = async event => {
-        console.log(inputAccountNumber, inputAccountIndex ,inputBip39Passphrase,advanceMode, "proops values");
         let fileInput =
             document.getElementById('resetPasswordFile');
         let filePath = fileInput.value;
@@ -62,7 +61,6 @@ const ChangePassword = (props) => {
                     setVerifyModal(false);
                     setResponse(responseData);
                     setResetModal(true);
-                    console.log(responseData);
                     setErrorMessage("");
                 }
             };
@@ -164,12 +162,7 @@ const ChangePassword = (props) => {
                             <div className="buttons">
                                 <button className="button button-primary" >{t("SUBMIT")}</button>
                             </div>
-                            {/*<div className="note-section">*/}
-                            {/*    <div className="exclamation"><Icon*/}
-                            {/*        viewClass="arrow-right"*/}
-                            {/*        icon="exclamation"/></div>*/}
-                            {/*    <p>{t("PRIVATE_KEY_PASSWORD_NOTE")}</p>*/}
-                            {/*</div>*/}
+
                         </Form>
                     </div>
                 </>
@@ -189,8 +182,6 @@ const ChangePassword = (props) => {
                             <h3 className="heading">{t("KEYSTORE_PASSWORD_RESET")}</h3>
                         </Modal.Header>
                         <div className="create-wallet-body import-wallet-body">
-
-                            {/*<p className="mnemonic-result"><b>{t("WALLET_PATH")}: </b>{response.walletPath}</p>*/}
 
                             {
                                 !showDownload ?

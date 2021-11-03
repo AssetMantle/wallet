@@ -121,26 +121,6 @@ export const fetchTransferableVestingAmount = (address)=> {
                                     } else {
                                         transferableAmount = balance - amount;
                                     }
-                                    transferableAmount = 33;
-                                    // let formattedNumber = transferableAmount.toLocaleString('en-US', {
-                                    //     minimumIntegerDigits: 6,
-                                    //     useGrouping: false
-                                    // });
-                                    // console.log(
-                                    //     'Input:    ' + transferableAmount + '\n' +
-                                    //     'Output:   ' + formattedNumber
-                                    // );
-                                    // const newNumber = "01222";
-                                    // const lengthS = 6 - newNumber.length;
-                                    // console.log(lengthS);
-                                    // let zeroPadStr = newNumber.toString();
-                                    // for(let i = 0; i < lengthS; i++) {
-                                    //     zeroPadStr+="0";
-                                    // }
-                                    // console.log(zeroPadStr, "zeroPadStr");
-                                    console.log(formatNumber(transferableAmount), "format number");
-                                    // console.log(helper.fixedConversion(transferableAmount, "number"), "fixedConversion");
-                                    // console.log(vestingAmount, "vestingAmount");
                                     dispatch(fetchTransferableBalanceSuccess(transferableAmount));
                                     dispatch(fetchVestingBalanceSuccess(vestingAmount));
                                 } else {
@@ -156,7 +136,6 @@ export const fetchTransferableVestingAmount = (address)=> {
                                     tokenList.push(transeDenomData);
                                 }
                             }
-                            console.log(tokenList, "tokenList");
                             dispatch(fetchTokenListSuccess(tokenList));
                         }
                     }).catch((error) => {
