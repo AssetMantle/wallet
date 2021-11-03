@@ -2972,6 +2972,10 @@ ul li em {
   margin: 0;
 }
 
+.available-tokens .info-data, .rewards-modal-body .form-field .info-data {
+  margin: 0;
+}
+
 /*--------------------------------------------------------------
 # importwallet styles
 --------------------------------------------------------------*/

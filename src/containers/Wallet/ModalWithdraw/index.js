@@ -294,13 +294,13 @@ const ModalWithdraw = (props) => {
                                     <p className="button-link"
                                         onClick={() => handleRewards("setWithDraw")}>
                                         {t("SET_WITHDRAW_ADDRESS")}
-                                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
-                                            overlay={popoverSetupAddress}>
-                                            <button className="icon-button info" type="button"><Icon
-                                                viewClass="arrow-right"
-                                                icon="info"/></button>
-                                        </OverlayTrigger>
                                     </p>
+                                    <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
+                                        overlay={popoverSetupAddress}>
+                                        <button className="icon-button info" type="button"><Icon
+                                            viewClass="arrow-right"
+                                            icon="info"/></button>
+                                    </OverlayTrigger>
                                 </div>
                             </Form>
                         </Modal.Body>
