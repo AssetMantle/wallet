@@ -128,7 +128,6 @@ const ModalDecryptKeyStore = (props) => {
                             transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                     }).catch(err => {
                         setLoader(false);
-
                         setErrorMessage(err.response
                             ? err.response.data.message
                             : err.message);
@@ -139,6 +138,7 @@ const ModalDecryptKeyStore = (props) => {
                 if(response !== undefined){
                     response.then(result => {
                         setResponse(result);
+                        console.log(result, "result");
                         setLoader(false);
                         setAdvanceMode(false);
                     }).catch(err => {

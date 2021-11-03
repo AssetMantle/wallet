@@ -96,19 +96,19 @@ const TokenInfo = (props) => {
                                             : ""
                                     }
                                 </span>
-                                {(props.delegations + props.balance + props.unbond).toLocaleString()} XPRT
+                                <NumberView value={formatNumber(props.delegations + props.balance + props.unbond)}/>XPRT
                             </p>
                         </div>
                         <div className="line">
                             <p className="key">{t("CURRENT_PRICE")}</p>
                             <p className="value"><span className="inner-grid-icon"/>
-                                ${props.tokenPrice}
+                                $<NumberView value={formatNumber(props.tokenPrice)}/>
                             </p>
                         </div>
                         <div className="line">
                             <p className="key">{t("CURRENT_VALUE")}</p>
                             <p className="value"><span className="inner-grid-icon"/>
-                                ${((props.delegations + props.balance + props.unbond) * props.tokenPrice).toLocaleString()}
+                                $<NumberView value={formatNumber((props.delegations + props.balance + props.unbond)* props.tokenPrice)}/>
                             </p>
                         </div>
 
@@ -133,7 +133,7 @@ const TokenInfo = (props) => {
                                             : ""
                                     }
                                 </span>
-                                {props.vestingAmount.toLocaleString()} XPRT
+                                <NumberView value={formatNumber(props.vestingAmount)}/> XPRT
                             </p>
                         </div>
                         <div className="line">
@@ -159,7 +159,7 @@ const TokenInfo = (props) => {
                                 </OverlayTrigger>
                             </p>
                             <p className="value" title={props.balance.toFixed(6)}><span className="inner-grid-icon"/>
-                                {props.balance.toLocaleString()} XPRT</p>
+                                <NumberView value={formatNumber(props.balance)}/> XPRT</p>
                         </div>
 
                     </div>
@@ -177,12 +177,15 @@ const TokenInfo = (props) => {
                                             : ""
                                     }
                                 </span>
-                                <span> {props.delegations.toLocaleString()} XPRT</span>
+                                <span> <NumberView value={formatNumber(props.delegations)}/> XPRT</span>
                             </p>
                         </div>
                         <div className="line">
                             <p className="key">{t("REWARDS")}</p>
-                            <p className="value rewards"><span onClick={() => handleRewards("rewards")} className="claim inner-grid">{t("CLAIM")}</span><span title={props.rewards.toFixed(6)}> {props.rewards.toLocaleString()} XPRT</span>
+                            <p className="value rewards"><span onClick={() => handleRewards("rewards")} className="claim inner-grid">{t("CLAIM")}</span>
+                                <span title={props.rewards.toFixed(6)}>
+                                    <NumberView value={formatNumber(props.rewards)}/> XPRT
+                                </span>
                             </p>
                         </div>
                         <div className="line">
@@ -196,7 +199,7 @@ const TokenInfo = (props) => {
                                 }
                             </span>
                             <span title={props.unbond}>
-                                {props.unbond.toLocaleString()} XPRT
+                                <NumberView value={formatNumber(props.unbond)}/>XPRT
                             </span>
                             </p>
                         </div>

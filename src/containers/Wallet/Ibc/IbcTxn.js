@@ -18,11 +18,12 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import ModalViewTxnResponse from "../../Common/ModalViewTxnResponse";
 import ModalGasAlert from "../../Gas/ModalGasAlert";
+import {formatNumber} from "../../../utils/scripts";
 const IBC_CONF = process.env.REACT_APP_IBC_CONFIG;
 const IbcTxn = (props) => {
     const {t} = useTranslation();
     const [enteredAmount, setEnteredAmount] = useState('');
-    const [amountField, setAmountField] = useState();
+    const [amountField, setAmountField] = useState(0);
     const [chain, setChain] = useState("");
     const [channelID, setChannelID] = useState("");
     const [txResponse, setTxResponse] = useState('');
@@ -225,8 +226,8 @@ const IbcTxn = (props) => {
     );
 
     const selectTotalBalanceHandler = (value) => {
-        setEnteredAmount(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)).toString());
-        setAmountField(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)));
+        setAmountField(value.replace(/,/g, '')*1);
+        setEnteredAmount(value.replace(/,/g, ''));
     };
 
 
@@ -362,7 +363,7 @@ const IbcTxn = (props) => {
                             />
                             {
                                 tokenDenom === "uxprt" ?
-                                    <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(props.transferableAmount)}><span
+                                    <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(formatNumber(props.transferableAmount))}><span
                                         className="title">Transferable Balance:</span> <span
                                         className="value"
                                         title={props.transferableAmount}>{props.transferableAmount} XPRT</span> </span>

@@ -23,6 +23,7 @@ const ModalViewTxnResponse = (props) => {
     useEffect(()=>{
         if(props.response !== undefined) {
             let address = localStorage.getItem('address');
+            props.fetchValidators(address);
             props.fetchDelegationsCount(address);
             props.fetchBalance(address);
             props.fetchRewards(address);
@@ -32,7 +33,6 @@ const ModalViewTxnResponse = (props) => {
             props.fetchTransactions(address, 5, 1);
             props.fetchReceiveTransactions(address, 5, 1);
             props.fetchTransferableVestingAmount(address);
-            props.fetchValidators(address);
             transactions.updateFee(address);
         }
     },[]);

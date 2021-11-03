@@ -16,6 +16,8 @@ import {useTranslation} from "react-i18next";
 import {fetchWithdrawAddress} from "../../../actions/withdrawAddress";
 import ModalGasAlert from "../../Gas/ModalGasAlert";
 import ModalViewTxnResponse from "../../Common/ModalViewTxnResponse";
+import {formatNumber} from "../../../utils/scripts";
+import NumberView from "../../../components/NumberView";
 
 const ModalSetWithdrawAddress = (props) => {
     const {t} = useTranslation();
@@ -162,8 +164,9 @@ const ModalSetWithdrawAddress = (props) => {
                                 />
                             </div>
                             <div className="form-field p-0">
-                                <p className="label"> {t("DELEGATIONS")} (XPRT)</p>
-                                <p className={props.delegations === 0 ? "empty info-data" : "info-data"}>{props.delegations}</p>
+                                <p className="label"> {t("DELEGATIONS")}</p>
+                                <p className={props.delegations === 0 ? "empty info-data" : "info-data"}>
+                                    <NumberView value={formatNumber(props.delegations)}/>XPRT</p>
                             </div>
                             {mode === "normal" ?
                                 <div className="memo-container">

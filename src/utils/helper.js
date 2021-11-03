@@ -188,8 +188,7 @@ function fixedConversion(value, type){
     if(type === "string"){
         return parseFloat(value.toLocaleString(undefined, {minimumFractionDigits: 6})).toString();
     }else {
-        console.log(value.toLocaleString(undefined, {minimumFractionDigits: 6}), type, "in");
-        return parseFloat(value.toLocaleString(undefined, {minimumFractionDigits: 6}).replace(/,/g, ''));
+        return parseFloat(value.replace(/,/g, ''));
     }
 }
 
@@ -270,6 +269,20 @@ function getTransactionAmount(data) {
     }
 }
 
+function sixDigitsNumber(value, length= 6) {
+    let inputValue = value.toString();
+    if(inputValue.length >= length){
+        return inputValue.substr(0,6);
+    }else {
+        const stringLength = length - inputValue.length;
+        let newString = inputValue;
+        for(let i = 0; i < stringLength; i++) {
+            newString+="0";
+        }
+        return newString;
+    }
+}
+
 export default {
     randomNum,
     stringTruncate,
@@ -295,5 +308,6 @@ export default {
     passwordValidation,
     digitFormat,
     getTransactionAmount,
-    localStringConversion
+    localStringConversion,
+    sixDigitsNumber
 };
