@@ -180,6 +180,22 @@ function inputAmountValidation(e){
         e.preventDefault();
     }
 }
+
+function stringValidation(evt) {
+    const key = evt.charCode || evt.keyCode;
+    if (key == 8 ||
+        key == 9 ||
+        key == 32 ||
+        (key >= 37 && key <= 40) ||
+        (key >= 48 && key <= 57) ||
+        (key >= 96 && key <= 105)) {
+        return true;
+    }
+    else {
+        evt.preventDefault();
+    }
+
+}
 function trimWhiteSpaces(data){
     return data.split(' ').join('');
 }
@@ -308,6 +324,7 @@ export default {
     passwordValidation,
     digitFormat,
     getTransactionAmount,
+    sixDigitsNumber,
     localStringConversion,
-    sixDigitsNumber
+    stringValidation
 };

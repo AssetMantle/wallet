@@ -70,7 +70,7 @@ const GenerateKeyStore = (props) => {
                                     <div className="form-field">
                                         <p className="label">{t("ENTER_MNEMONIC")}</p>
                                         <Form.Control as="textarea" rows={3} name="mnemonic"
-                                            placeholder={t("SEED_PHRASE")}
+                                            placeholder={t("SEED_PHRASE")} onKeyPress={helper.stringValidation}
                                             required={true}/>
                                     </div>
 

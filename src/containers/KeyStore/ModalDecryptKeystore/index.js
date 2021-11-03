@@ -179,6 +179,29 @@ const ModalDecryptKeyStore = (props) => {
         setImportMnemonic(true);
         localStorage.removeItem('encryptedMnemonic');
     };
+
+    const handleAccountNumberKeypress = e => {
+        if (e.key === "e" || e.key === "-" || e.key === "+") {
+            e.preventDefault();
+        }else {
+            const accountNumber = document.getElementById('delegateAccountNumber').value;
+            if (parseInt(accountNumber) > 4294967295 || parseInt(accountNumber) < 0) {
+                e.preventDefault();
+            }
+        }
+    };
+
+    const handleIndexKeypress = e => {
+        if (e.key === "e" || e.key === "-" || e.key === "+") {
+            e.preventDefault();
+        }else {
+            const addressIndex = document.getElementById('delegateAccountIndex').value;
+            if (parseInt(addressIndex) > 4294967295 || parseInt(addressIndex) < 0) {
+                e.preventDefault();
+            }
+        }
+    };
+
     return (
         <>
             {
@@ -260,7 +283,7 @@ const ModalDecryptKeyStore = (props) => {
                                                         name="delegateAccountNumber"
                                                         id="delegateAccountNumber"
                                                         placeholder={t("ACCOUNT_NUMBER")}
-                                                        onKeyPress={helper.inputAmountValidation}
+                                                        onKeyPress={handleAccountNumberKeypress}
                                                         required={advanceMode ? true : false}
                                                     />
                                                 </div>
@@ -273,7 +296,7 @@ const ModalDecryptKeyStore = (props) => {
                                                         name="delegateAccountIndex"
                                                         id="delegateAccountIndex"
                                                         placeholder={t("ACCOUNT_INDEX")}
-                                                        onKeyPress={helper.inputAmountValidation}
+                                                        onKeyPress={handleIndexKeypress}
                                                         required={advanceMode ? true : false}
                                                     />
                                                 </div>

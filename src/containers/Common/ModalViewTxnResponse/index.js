@@ -24,7 +24,6 @@ const ModalViewTxnResponse = (props) => {
 
     useEffect(()=>{
         if(props.response !== undefined) {
-            props.fetchValidators(address);
             props.fetchDelegationsCount(address);
             props.fetchBalance(address);
             props.fetchRewards(address);

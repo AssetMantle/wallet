@@ -33,40 +33,44 @@ const KeyStoreLogin = (props) => {
         if(helper.fileTypeCheck(filePath)) {
             const password = event.target.password.value;
             event.preventDefault();
-            const fileReader = new FileReader();
-            fileReader.readAsText(event.target.uploadFile.files[0], "UTF-8");
-            fileReader.onload = async event => {
-                const res = JSON.parse(event.target.result);
-                const decryptedData = helper.decryptStore(res, password);
-                if (decryptedData.error != null) {
-                    setErrorMessage(decryptedData.error);
-                } else {
-                    let mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
-                    localStorage.setItem('encryptedMnemonic', event.target.result);
+            if(helper.passwordValidation(password)) {
+                const fileReader = new FileReader();
+                fileReader.readAsText(event.target.uploadFile.files[0], "UTF-8");
+                fileReader.onload = async event => {
+                    const res = JSON.parse(event.target.result);
+                    const decryptedData = helper.decryptStore(res, password);
+                    if (decryptedData.error != null) {
+                        setErrorMessage(decryptedData.error);
+                    } else {
+                        let mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
+                        localStorage.setItem('encryptedMnemonic', event.target.result);
 
-                    let accountNumber = 0;
-                    let addressIndex = 0;
-                    let bip39Passphrase = "";
-                    if (advanceMode) {
-                        accountNumber = document.getElementById('accountNumber').value;
-                        addressIndex = document.getElementById('accountIndex').value;
-                        bip39Passphrase = document.getElementById('bip39Passphrase').value;
-                        if (accountNumber === "") {
-                            accountNumber = 0;
+                        let accountNumber = 0;
+                        let addressIndex = 0;
+                        let bip39Passphrase = "";
+                        if (advanceMode) {
+                            accountNumber = document.getElementById('accountNumber').value;
+                            addressIndex = document.getElementById('accountIndex').value;
+                            bip39Passphrase = document.getElementById('bip39Passphrase').value;
+                            if (accountNumber === "") {
+                                accountNumber = 0;
+                            }
+                            if (addressIndex === "") {
+                                addressIndex = 0;
+                            }
                         }
-                        if (addressIndex === "") {
-                            addressIndex = 0;
-                        }
+                        const walletPath = transactions.makeHdPath(accountNumber, addressIndex);
+                        const responseData = await wallet.createWallet(mnemonic, walletPath, bip39Passphrase);
+                        setAdvancedFormResponseData(responseData);
+
+                        setAdvancedForm(true);
+                        setMnemonicForm(false);
+                        setErrorMessage("");
                     }
-                    const walletPath = transactions.makeHdPath(accountNumber, addressIndex);
-                    const responseData = await wallet.createWallet(mnemonic, walletPath, bip39Passphrase);
-                    setAdvancedFormResponseData(responseData);
-
-                    setAdvancedForm(true);
-                    setMnemonicForm(false);
-                    setErrorMessage("");
-                }
-            };
+                };
+            }else {
+                setErrorMessage("Password must be greater than 3 letters and no spaces allowed");
+            }
         }else{
             setErrorMessage("File type not supported");
         }
@@ -146,6 +150,28 @@ const KeyStoreLogin = (props) => {
         props.handleClose();
     };
 
+    const handleAccountNumberKeypress = e => {
+        if (e.key === "e" || e.key === "-" || e.key === "+") {
+            e.preventDefault();
+        }else {
+            const accountNumber = document.getElementById('accountNumber').value;
+            if (parseInt(accountNumber) > 4294967295 || parseInt(accountNumber) < 0) {
+                e.preventDefault();
+            }
+        }
+    };
+
+    const handleIndexKeypress = e => {
+        if (e.key === "e" || e.key === "-" || e.key === "+") {
+            e.preventDefault();
+        }else {
+            const addressIndex = document.getElementById('accountIndex').value;
+            if (parseInt(addressIndex) > 4294967295 || parseInt(addressIndex) < 0) {
+                e.preventDefault();
+            }
+        }
+    };
+
     return (
         <>
             <Modal backdrop="static" show={show} onHide={handleClose} centered
@@ -191,6 +217,7 @@ const KeyStoreLogin = (props) => {
                                                             max={4294967295}
                                                             name="accountNumber"
                                                             id="accountNumber"
+                                                            onKeyPress={handleAccountNumberKeypress}
                                                             placeholder= {t("ACCOUNT_NUMBER")}
                                                             required={false}
                                                         />
@@ -203,6 +230,7 @@ const KeyStoreLogin = (props) => {
                                                             max={4294967295}
                                                             name="accountIndex"
                                                             id="accountIndex"
+                                                            onKeyPress={handleIndexKeypress}
                                                             placeholder={t("ACCOUNT_INDEX")}
                                                             required={false}
                                                         />
