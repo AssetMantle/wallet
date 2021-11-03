@@ -38,7 +38,6 @@ const DelegatedValidators = (props) => {
         options: {
             sortCompare: (order) => {
                 return (obj1, obj2) => {
-                    console.log(obj1,obj2,"raju");
                     let val1 = parseInt(obj1.data.props.children);
                     let val2 = parseInt(obj2.data.props.children);
                     return (val1 - val2) * (order === 'asc' ? 1 : -1);
