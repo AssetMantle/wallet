@@ -33,40 +33,44 @@ const KeyStoreLogin = (props) => {
         if(helper.fileTypeCheck(filePath)) {
             const password = event.target.password.value;
             event.preventDefault();
-            const fileReader = new FileReader();
-            fileReader.readAsText(event.target.uploadFile.files[0], "UTF-8");
-            fileReader.onload = async event => {
-                const res = JSON.parse(event.target.result);
-                const decryptedData = helper.decryptStore(res, password);
-                if (decryptedData.error != null) {
-                    setErrorMessage(decryptedData.error);
-                } else {
-                    let mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
-                    localStorage.setItem('encryptedMnemonic', event.target.result);
+            if(helper.passwordValidation(password)) {
+                const fileReader = new FileReader();
+                fileReader.readAsText(event.target.uploadFile.files[0], "UTF-8");
+                fileReader.onload = async event => {
+                    const res = JSON.parse(event.target.result);
+                    const decryptedData = helper.decryptStore(res, password);
+                    if (decryptedData.error != null) {
+                        setErrorMessage(decryptedData.error);
+                    } else {
+                        let mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
+                        localStorage.setItem('encryptedMnemonic', event.target.result);
 
-                    let accountNumber = 0;
-                    let addressIndex = 0;
-                    let bip39Passphrase = "";
-                    if (advanceMode) {
-                        accountNumber = document.getElementById('accountNumber').value;
-                        addressIndex = document.getElementById('accountIndex').value;
-                        bip39Passphrase = document.getElementById('bip39Passphrase').value;
-                        if (accountNumber === "") {
-                            accountNumber = 0;
+                        let accountNumber = 0;
+                        let addressIndex = 0;
+                        let bip39Passphrase = "";
+                        if (advanceMode) {
+                            accountNumber = document.getElementById('accountNumber').value;
+                            addressIndex = document.getElementById('accountIndex').value;
+                            bip39Passphrase = document.getElementById('bip39Passphrase').value;
+                            if (accountNumber === "") {
+                                accountNumber = 0;
+                            }
+                            if (addressIndex === "") {
+                                addressIndex = 0;
+                            }
                         }
-                        if (addressIndex === "") {
-                            addressIndex = 0;
-                        }
+                        const walletPath = transactions.makeHdPath(accountNumber, addressIndex);
+                        const responseData = await wallet.createWallet(mnemonic, walletPath, bip39Passphrase);
+                        setAdvancedFormResponseData(responseData);
+
+                        setAdvancedForm(true);
+                        setMnemonicForm(false);
+                        setErrorMessage("");
                     }
-                    const walletPath = transactions.makeHdPath(accountNumber, addressIndex);
-                    const responseData = await wallet.createWallet(mnemonic, walletPath, bip39Passphrase);
-                    setAdvancedFormResponseData(responseData);
-
-                    setAdvancedForm(true);
-                    setMnemonicForm(false);
-                    setErrorMessage("");
-                }
-            };
+                };
+            }else {
+                setErrorMessage("Password must be greater than 3 letters and no spaces allowed");
+            }
         }else{
             setErrorMessage("File type not supported");
         }

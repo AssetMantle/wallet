@@ -91,10 +91,11 @@ const GeneratePrivateKey = (props) => {
                                     icon="exclamation"/></div>
                                 <p>{t("PRIVATE_KEY_PASSWORD_NOTE")}</p>
                             </div>
-                            {errorMessage !== ''
-                                ? <p className="form-error">{errorMessage}</p>
-                                : null
 
+                            {
+                                errorMessage !== "" ?
+                                    <p className="form-error">{errorMessage}</p>
+                                    : null
                             }
                         </>
                         :
