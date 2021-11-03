@@ -167,13 +167,7 @@ const AdvanceMode = (props) => {
             </button>
         );
     }
-    // const handlerNumberChange = (evt) =>{
-    //     if(parseInt(evt.target.value) > 4294967295 || parseInt(evt.target.value) < 0){
-    //         console.log(parseInt(evt.target.value));
-    //
-    //         return false;
-    //     }
-    // };
+
     return (
         <>
             <Modal backdrop="static" show={show} onHide={handleClose} centered
