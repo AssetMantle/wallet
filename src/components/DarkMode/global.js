@@ -79,7 +79,7 @@ export const GlobalStyles = createGlobalStyle`
     .wallet-main-section .txns-container .pagination-custom{
      background-color: ${({theme}) => theme.tableBackground} !important;
     }
-    .form-field .label {
+    .form-field .label, .mnemonic-result {
     color: ${({theme}) => theme.labelColor} !important;
     }
     .modal-content{

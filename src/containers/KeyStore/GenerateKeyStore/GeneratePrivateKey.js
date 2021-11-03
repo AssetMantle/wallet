@@ -2,8 +2,8 @@ import React, {useState} from "react";
 import {
     Form, Modal,
 } from "react-bootstrap";
-import Icon from "../../components/Icon";
-import helper from "../../utils/helper";
+import Icon from "../../../components/Icon";
+import helper from "../../../utils/helper";
 import {useTranslation} from "react-i18next";
 
 
@@ -80,7 +80,6 @@ const GeneratePrivateKey = (props) => {
                     }
 
                     {!keyFile ?
-
                         <>
                             <div className="buttons">
                                 <button className="button button-primary">{t("SUBMIT")}</button>
