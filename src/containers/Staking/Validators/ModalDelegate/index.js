@@ -17,6 +17,7 @@ import {useTranslation} from "react-i18next";
 import ModalGasAlert from "../../../Gas/ModalGasAlert";
 import ModalViewTxnResponse from "../../../Common/ModalViewTxnResponse";
 import {formatNumber} from "../../../../utils/scripts";
+import NumberView from "../../../../components/NumberView";
 
 const ModalDelegate = (props) => {
     const {t} = useTranslation();
@@ -173,7 +174,8 @@ const ModalDelegate = (props) => {
                                     />
                                     <span className={props.balance === 0 ? "empty info-data info-link" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(formatNumber(props.balance))}><span
                                         className="title">{t("BALANCE")}:</span> <span
-                                        className="value">{props.balance} XPRT</span> </span>
+                                        className="value">
+                                        <NumberView value={formatNumber(props.balance)}/>XPRT</span> </span>
                                 </div>
                             </div>
 

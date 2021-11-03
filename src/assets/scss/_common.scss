@@ -241,6 +241,8 @@ html, body {
 
   .info-link{
     text-decoration: underline;
+    display: inline-flex !important;
+    align-items: center;
     text-decoration-color:#8D9CB5;
     cursor: pointer;
   }

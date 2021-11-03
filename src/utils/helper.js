@@ -241,7 +241,7 @@ function denomModify(amount){
     if(Array.isArray(amount)){
         if(amount.length){
             if(amount[0].denom ==="uxprt"){
-                return [transactions.XprtConversion(amount[0].amount)];
+                return [transactions.XprtConversion(amount[0].amount), "XPRT"];
             }else {
                 return [amount[0].amount, amount[0].denom];
             }

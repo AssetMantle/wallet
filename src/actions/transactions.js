@@ -170,7 +170,7 @@ export const fetchReceiveTransactions = (address, limit, pageNumber) => {
                     });
                 }
             }
-
+            console.log(txData, "txData");
             let txnsResponseList = txData;
             dispatch(fetchReceivePageNumberSuccess(pageNumber, txSearch.totalCount));
             dispatch(fetchReceiveTransactionsSuccess(txnsResponseList));

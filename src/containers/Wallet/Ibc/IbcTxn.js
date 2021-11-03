@@ -19,6 +19,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import ModalViewTxnResponse from "../../Common/ModalViewTxnResponse";
 import ModalGasAlert from "../../Gas/ModalGasAlert";
 import {formatNumber} from "../../../utils/scripts";
+import NumberView from "../../../components/NumberView";
 const IBC_CONF = process.env.REACT_APP_IBC_CONFIG;
 const IbcTxn = (props) => {
     const {t} = useTranslation();
@@ -366,12 +367,13 @@ const IbcTxn = (props) => {
                                     <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(formatNumber(props.transferableAmount))}><span
                                         className="title">Transferable Balance:</span> <span
                                         className="value"
-                                        title={props.transferableAmount}>{props.transferableAmount} XPRT</span> </span>
+                                        title={props.transferableAmount}>
+                                        <NumberView value={formatNumber(props.transferableAmount)}/> XPRT</span> </span>
                                     :
                                     <span title={tokenItem.denomTrace} className={transferableAmount === 0 ? "empty info-data" : "info-data"}>
                                         <span
                                             className="title">Transferable Balance:</span> <span
-                                            className="value">{transferableAmount.toLocaleString()}  ATOM ( IBC Trace path - {tokenItem.denom.path} , denom: {tokenItem.denom.baseDenom}  )</span> </span>
+                                            className="value"><NumberView value={formatNumber(transferableAmount)}/> ATOM ( IBC Trace path - {tokenItem.denom.path} , denom: {tokenItem.denom.baseDenom}  )</span> </span>
                             }
                         </div>
                     </div>

@@ -17,6 +17,7 @@ import {useTranslation} from "react-i18next";
 import ModalGasAlert from "../../../Gas/ModalGasAlert";
 import ModalViewTxnResponse from "../../../Common/ModalViewTxnResponse";
 import {formatNumber} from "../../../../utils/scripts";
+import NumberView from "../../../../components/NumberView";
 
 const ModalUnbond = (props) => {
     const {t} = useTranslation();
@@ -154,7 +155,8 @@ const ModalUnbond = (props) => {
                                     />
                                     <span className={props.delegationAmount === 0 ? "empty info-data info-link" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(formatNumber(props.delegationAmount))}><span
                                         className="title">{t("DELEGATED_AMOUNT")}:</span> <span
-                                        className="value">{props.delegationAmount} XPRT</span> </span>
+                                        className="value">
+                                        <NumberView value={formatNumber(props.delegationAmount)}/>XPRT</span> </span>
                                 </div>
                             </div>
                             {mode === "normal" ?

@@ -4,6 +4,8 @@ import {connect} from "react-redux";
 import transactions from "../../../utils/transactions";
 import helper from "../../../utils/helper";
 import {useTranslation} from "react-i18next";
+import {formatNumber} from "../../../utils/scripts";
+import NumberView from "../../../components/NumberView";
 const tmRPC = require("@cosmjs/tendermint-rpc");
 const {QueryClient, setupIbcExtension} = require("@cosmjs/stargate");
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
@@ -54,7 +56,7 @@ const ModalViewAmountDetails = (props) => {
                                 if (item.dataResponse.denom !== 'uxprt') {
                                     return (
                                         <li className="" key={index} title={item.dataResponse.denom}>
-                                            {transactions.XprtConversion(item.dataResponse.amount)} {helper.denomChange(item.denomResponse.denomTrace.baseDenom)} ( IBC Trace path - {item.denomResponse.denomTrace.path}, denom: {item.denomResponse.denomTrace.baseDenom} ) {item.dataResponse.denom}
+                                            <NumberView value={formatNumber(transactions.XprtConversion(item.dataResponse.amount))}/>{helper.denomChange(item.denomResponse.denomTrace.baseDenom)} ( IBC Trace path - {item.denomResponse.denomTrace.path}, denom: {item.denomResponse.denomTrace.baseDenom} ) {item.dataResponse.denom}
                                         </li>
                                     );
                                 }
