@@ -20,9 +20,9 @@ const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ModalViewTxnResponse = (props) => {
     const {t} = useTranslation();
     const mode = localStorage.getItem('loginMode');
+    let address = localStorage.getItem('address');
     useEffect(()=>{
         if(props.response !== undefined) {
-            let address = localStorage.getItem('address');
             props.fetchDelegationsCount(address);
             props.fetchBalance(address);
             props.fetchRewards(address);
@@ -32,17 +32,22 @@ const ModalViewTxnResponse = (props) => {
             props.fetchTransactions(address, 5, 1);
             props.fetchReceiveTransactions(address, 5, 1);
             props.fetchTransferableVestingAmount(address);
-            props.fetchValidators(address);
             transactions.updateFee(address);
         }
     },[]);
+
+    const handleClose = () =>{
+        props.fetchValidators(address);
+        props.handleClose();
+    };
+
     let response = props.response;
     return (
         <>
             {
                 response !== '' && response.code === 0 ?
                     <>
-                        <Modal.Header className="result-header success" closeButton>
+                        <Modal.Header className="result-header success">
                             {props.successMsg}
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
@@ -60,7 +65,7 @@ const ModalViewTxnResponse = (props) => {
                                         Hash: {response.transactionHash}</a>
                                 }
                                 <div className="buttons">
-                                    <button className="button" onClick={props.handleClose}>{t("DONE")}</button>
+                                    <button className="button" onClick={handleClose}>{t("DONE")}</button>
                                 </div>
                             </div>
                         </Modal.Body>
@@ -69,7 +74,7 @@ const ModalViewTxnResponse = (props) => {
             }{
                 response !== '' && response.code !== 0 ?
                     <>
-                        <Modal.Header className="result-header error" closeButton>
+                        <Modal.Header className="result-header error">
                             {props.failedMsg}
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
@@ -93,7 +98,7 @@ const ModalViewTxnResponse = (props) => {
                                     </>
                                 }
                                 <div className="buttons">
-                                    <button className="button" onClick={props.handleClose}>{t("DONE")}</button>
+                                    <button className="button" onClick={handleClose}>{t("DONE")}</button>
                                 </div>
                             </div>
                         </Modal.Body>
