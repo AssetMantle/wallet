@@ -104,8 +104,35 @@ const AdvanceMode = (props) => {
     };
 
     const handleKeypress = e => {
-        if (e.key === "Enter") {
+        if(e.key === "Enter") {
             handleSubmit(e);
+        }
+    };
+
+
+    const handleAccountNumberKeypress = e => {
+        if (e.key === "e" || e.key === "-" || e.key === "+") {
+            e.preventDefault();
+        }else if (e.key === "Enter") {
+            handleSubmit(e);
+        }else {
+            const accountNumber = document.getElementById('createAccountNumber').value;
+            if (parseInt(accountNumber) > 4294967295 || parseInt(accountNumber) < 0) {
+                e.preventDefault();
+            }
+        }
+    };
+
+    const handleIndexKeypress = e => {
+        if (e.key === "e" || e.key === "-" || e.key === "+") {
+            e.preventDefault();
+        }else if (e.key === "Enter") {
+            handleSubmit(e);
+        }else {
+            const addressIndex = document.getElementById('createAccountIndex').value;
+            if (parseInt(addressIndex) > 4294967295 || parseInt(addressIndex) < 0) {
+                e.preventDefault();
+            }
         }
     };
 
@@ -182,7 +209,7 @@ const AdvanceMode = (props) => {
                                                         max={4294967295}
                                                         name="accountNumber"
                                                         id="createAccountNumber"
-                                                        onKeyPress={handleKeypress}
+                                                        onKeyPress={handleAccountNumberKeypress}
                                                         placeholder={t("ACCOUNT_NUMBER")}
                                                         required={false}
                                                     />
@@ -195,7 +222,7 @@ const AdvanceMode = (props) => {
                                                         max={4294967295}
                                                         name="accountIndex"
                                                         id="createAccountIndex"
-                                                        onKeyPress={handleKeypress}
+                                                        onKeyPress={handleIndexKeypress}
                                                         placeholder={t("ACCOUNT_INDEX")}
                                                         required={false}
                                                     />

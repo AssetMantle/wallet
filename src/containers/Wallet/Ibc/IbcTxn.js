@@ -109,7 +109,8 @@ const IbcTxn = (props) => {
                     modalHeader: "Send Token",
                     formName: "ibc",
                     successMsg: t("SUCCESSFUL_SEND"),
-                    failedMsg: t("FAILED_SEND")
+                    failedMsg: t("FAILED_SEND"),
+                    evt:event
                 };
                 setFormData(data);
                 setKeplerError('');
@@ -464,6 +465,7 @@ const IbcTxn = (props) => {
                         setFeeModal={setFeeModal}
                         formData={formData}
                         handleClose={handleClose}
+                        setEnteredAmount={setEnteredAmount}
                     />
                 </Modal>
                 : null

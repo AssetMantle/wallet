@@ -150,6 +150,28 @@ const KeyStoreLogin = (props) => {
         props.handleClose();
     };
 
+    const handleAccountNumberKeypress = e => {
+        if (e.key === "e" || e.key === "-" || e.key === "+") {
+            e.preventDefault();
+        }else {
+            const accountNumber = document.getElementById('accountNumber').value;
+            if (parseInt(accountNumber) > 4294967295 || parseInt(accountNumber) < 0) {
+                e.preventDefault();
+            }
+        }
+    };
+
+    const handleIndexKeypress = e => {
+        if (e.key === "e" || e.key === "-" || e.key === "+") {
+            e.preventDefault();
+        }else {
+            const addressIndex = document.getElementById('accountIndex').value;
+            if (parseInt(addressIndex) > 4294967295 || parseInt(addressIndex) < 0) {
+                e.preventDefault();
+            }
+        }
+    };
+
     return (
         <>
             <Modal backdrop="static" show={show} onHide={handleClose} centered
@@ -195,6 +217,7 @@ const KeyStoreLogin = (props) => {
                                                             max={4294967295}
                                                             name="accountNumber"
                                                             id="accountNumber"
+                                                            onKeyPress={handleAccountNumberKeypress}
                                                             placeholder= {t("ACCOUNT_NUMBER")}
                                                             required={false}
                                                         />
@@ -207,6 +230,7 @@ const KeyStoreLogin = (props) => {
                                                             max={4294967295}
                                                             name="accountIndex"
                                                             id="accountIndex"
+                                                            onKeyPress={handleIndexKeypress}
                                                             placeholder={t("ACCOUNT_INDEX")}
                                                             required={false}
                                                         />
