@@ -23,13 +23,12 @@ const ChangePassword = (props) => {
     const [inputAccountIndex, setAccountIndex] = useState('');
     const [inputBip39Passphrase, setBip39Passphrase] = useState('');
     const [showDownload, setShowDownload] = useState(false);
-    // const [keyFile, setKeyFile] = useState(false);
 
     const handleSubmit = async event => {
         let fileInput =
             document.getElementById('resetPasswordFile');
         let filePath = fileInput.value;
-        if(helper.fileTypeCheck(filePath)) {
+        if (helper.fileTypeCheck(filePath)) {
             const password = event.target.password.value;
             event.preventDefault();
             const fileReader = new FileReader();
@@ -47,7 +46,7 @@ const ChangePassword = (props) => {
                     let bip39Passphrase = "";
                     if (advanceMode) {
                         accountNumber = inputAccountNumber;
-                        addressIndex =  inputAccountIndex;
+                        addressIndex = inputAccountIndex;
                         bip39Passphrase = inputBip39Passphrase;
                         if (accountNumber === "") {
                             accountNumber = 0;
@@ -64,18 +63,18 @@ const ChangePassword = (props) => {
                     setErrorMessage("");
                 }
             };
-        }else{
+        } else {
             setErrorMessage("File type not supported");
         }
     };
 
-    const handleSubmitPassword = (event) =>{
+    const handleSubmitPassword = (event) => {
         event.preventDefault();
-        if(helper.passwordValidation(event.target.password.value)) {
+        if (helper.passwordValidation(event.target.password.value)) {
             setPassword(event.target.password.value);
             setShowDownload(true);
             setErrorMessage("");
-        }else {
+        } else {
             setErrorMessage("Password must be greater than 3 letters and no spaces allowed");
         }
     };
@@ -102,7 +101,7 @@ const ChangePassword = (props) => {
     const handleClose = () => {
         setShow(false);
         props.handleRoute(props.routeValue);
-        if(props.formName === "Generate KeyStore File"){
+        if (props.formName === "Generate KeyStore File") {
             props.handleClose();
         }
     };
@@ -111,7 +110,7 @@ const ChangePassword = (props) => {
             setShow(false);
             props.setChangePassword(false);
             props.handleRoute(props.routeValue);
-        }else if(formName === "download"){
+        } else if (formName === "download") {
             setResetModal(false);
             setVerifyModal(true);
         }
@@ -161,7 +160,7 @@ const ChangePassword = (props) => {
                                     : null
                             }
                             <div className="buttons">
-                                <button className="button button-primary" >{t("SUBMIT")}</button>
+                                <button className="button button-primary">{t("SUBMIT")}</button>
                             </div>
 
                         </Form>
@@ -205,7 +204,8 @@ const ChangePassword = (props) => {
                                                 />
                                             </div>
                                             {errorMessage !== "" ?
-                                                <div className="login-error"><p className="error-response">{errorMessage}</p></div>
+                                                <div className="login-error"><p
+                                                    className="error-response">{errorMessage}</p></div>
                                                 : ""
                                             }
                                             <div className="buttons">

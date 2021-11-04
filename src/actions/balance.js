@@ -13,7 +13,7 @@ import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient, QueryClient, setupIbcExtension} from "@cosmjs/stargate";
 import {QueryClientImpl} from "cosmjs-types/cosmos/bank/v1beta1/query";
 
-const tendermintRPCURL =  process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
+const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
 export const fetchBalanceProgress = () => {
     return {
@@ -63,7 +63,7 @@ export const fetchBalance = (address) => {
                     ? error.response.data.message
                     : error.message));
             });
-        }catch (e) {
+        } catch (e) {
             console.log(e.message);
         }
     };
@@ -90,7 +90,7 @@ export const fetchTokenListSuccess = (list) => {
     };
 };
 
-export const fetchTransferableVestingAmount = (address)=> {
+export const fetchTransferableVestingAmount = (address) => {
     return async dispatch => {
         try {
             GetAccount(address).then(async vestingAmountData => {

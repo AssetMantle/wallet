@@ -1,9 +1,4 @@
-import {
-    Form,
-    Modal,
-    Popover,
-    OverlayTrigger,
-} from 'react-bootstrap';
+import {Form, Modal, OverlayTrigger, Popover,} from 'react-bootstrap';
 import React, {useState} from 'react';
 import Icon from "../../../../components/Icon";
 import {connect} from "react-redux";
@@ -73,13 +68,13 @@ const ModalUnbond = (props) => {
             setInitialModal(false);
             setFeeModal(true);
             const data = {
-                amount : amount,
-                memo : memo,
-                validatorAddress : props.validatorAddress,
+                amount: amount,
+                memo: memo,
+                validatorAddress: props.validatorAddress,
                 modalHeader: `Unbond from ${props.moniker}`,
                 formName: "unbond",
-                successMsg : t("SUCCESSFULL_UNBOND"),
-                failedMsg : t("FAILED_UNBOND")
+                successMsg: t("SUCCESSFULL_UNBOND"),
+                failedMsg: t("FAILED_UNBOND")
             };
             setFormData(data);
         }
@@ -102,8 +97,8 @@ const ModalUnbond = (props) => {
         });
     };
 
-    const selectTotalBalanceHandler = (value) =>{
-        setAmount(value.replace(/,/g, '')*1);
+    const selectTotalBalanceHandler = (value) => {
+        setAmount(value.replace(/,/g, '') * 1);
         setEnteredAmount(value.replace(/,/g, ''));
     };
 
@@ -153,24 +148,27 @@ const ModalUnbond = (props) => {
                                         onKeyPress={helper.inputAmountValidation}
                                         required={true}
                                     />
-                                    <span className={props.delegationAmount === 0 ? "empty info-data info-link" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(formatNumber(props.delegationAmount))}><span
-                                        className="title">{t("DELEGATED_AMOUNT")}:</span> <span
-                                        className="value">
-                                        <NumberView value={formatNumber(props.delegationAmount)}/>XPRT</span> </span>
+                                    <span
+                                        className={props.delegationAmount === 0 ? "empty info-data info-link" : "info-data info-link"}
+                                        onClick={() => selectTotalBalanceHandler(formatNumber(props.delegationAmount))}><span
+                                            className="title">{t("DELEGATED_AMOUNT")}:</span> <span
+                                            className="value">
+                                            <NumberView value={formatNumber(props.delegationAmount)}/>XPRT</span> </span>
                                 </div>
                             </div>
                             {mode === "normal" ?
                                 <div className="memo-container">
                                     <div className="memo-dropdown-section">
-                                        <p onClick={handleMemoChange} className="memo-dropdown"><span className="text">{t("ADVANCED")} </span>
-                                            {memoStatus ?
-                                                <Icon
-                                                    viewClass="arrow-right"
-                                                    icon="up-arrow"/>
-                                                :
-                                                <Icon
-                                                    viewClass="arrow-right"
-                                                    icon="down-arrow"/>}
+                                        <p onClick={handleMemoChange} className="memo-dropdown"><span
+                                            className="text">{t("ADVANCED")} </span>
+                                        {memoStatus ?
+                                            <Icon
+                                                viewClass="arrow-right"
+                                                icon="up-arrow"/>
+                                            :
+                                            <Icon
+                                                viewClass="arrow-right"
+                                                icon="down-arrow"/>}
                                         </p>
                                         <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
                                             overlay={popoverMemo}>
@@ -240,10 +238,10 @@ const ModalUnbond = (props) => {
             }
             {response !== '' ?
                 <ModalViewTxnResponse
-                    response = {response}
-                    successMsg = {t("SUCCESSFULL_UNBOND")}
-                    failedMsg =  {t("FAILED_UNBOND")}
-                    handleClose = {props.handleClose}
+                    response={response}
+                    successMsg={t("SUCCESSFULL_UNBOND")}
+                    failedMsg={t("FAILED_UNBOND")}
+                    handleClose={props.handleClose}
                 />
                 : null}
         </>

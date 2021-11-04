@@ -6,7 +6,6 @@ import Icon from "../../../components/Icon";
 import helper from "../../../utils/helper";
 import {useTranslation} from "react-i18next";
 
-
 const GeneratePrivateKey = (props) => {
     const {t} = useTranslation();
     const [keyFile, setKeyFile] = useState(false);
@@ -15,13 +14,13 @@ const GeneratePrivateKey = (props) => {
     const handleSubmit = async event => {
         event.preventDefault();
         const password = event.target.password.value;
-        if(helper.passwordValidation(password)) {
+        if (helper.passwordValidation(password)) {
             const mnemonic = props.mnemonic;
             let encryptedData = helper.createStore(mnemonic, password);
             let jsonContent = JSON.stringify(encryptedData.Response);
             setKeyFile(true);
             downloadFile(jsonContent);
-        }else {
+        } else {
             setErrorMessage("Password must be greater than 3 letters and no spaces allowed");
         }
     };
@@ -41,7 +40,7 @@ const GeneratePrivateKey = (props) => {
     const handleClose = () => {
         setShow(false);
         props.handleRoute(props.routeValue);
-        if(props.formName === "Generate KeyStore File"){
+        if (props.formName === "Generate KeyStore File") {
             props.handleClose();
         }
     };
