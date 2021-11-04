@@ -200,13 +200,6 @@ function trimWhiteSpaces(data){
     return data.split(' ').join('');
 }
 
-function fixedConversion(value, type){
-    if(type === "string"){
-        return parseFloat(value.toLocaleString(undefined, {minimumFractionDigits: 6})).toString();
-    }else {
-        return parseFloat(value.replace(/,/g, ''));
-    }
-}
 
 function isBech32Address(address, prefix){
     try{
@@ -220,37 +213,6 @@ function isBech32Address(address, prefix){
 function passwordValidation(data){
     const regex= /^\S{3}\S+$/;
     return regex.test(data);
-}
-
-function digitFormat(data){
-    const stringData = data.toString();
-    if(stringData.indexOf('.') !== -1){
-        const beforeString = stringData.substr(0, stringData.indexOf('.'));
-        const afterString = stringData.substr(stringData.indexOf('.')+1);
-        return [parseInt(beforeString).toLocaleString(), afterString];
-    }else{
-        if(stringData.length > 3){
-            return parseInt(stringData).toLocaleString();
-        }else {
-            return data;
-        }
-    }
-}
-
-function localStringConversion(data) {
-    const stringData = data.toString();
-    if(stringData.indexOf('.') !== -1){
-        const beforeString = stringData.substr(0, stringData.indexOf('.'));
-        const afterString = stringData.substr(stringData.indexOf('.')+1);
-        const newString = parseInt(beforeString).toLocaleString()+'.'+ afterString;
-        return newString;
-    }else{
-        if(stringData.length > 3){
-            return parseInt(stringData).toLocaleString();
-        }else {
-            return data;
-        }
-    }
 }
 
 function denomModify(amount){
@@ -319,12 +281,9 @@ export default {
     inputAmountValidation,
     trimWhiteSpaces,
     fileTypeCheck,
-    fixedConversion,
     isBech32Address,
     passwordValidation,
-    digitFormat,
     getTransactionAmount,
     sixDigitsNumber,
-    localStringConversion,
     stringValidation
 };
