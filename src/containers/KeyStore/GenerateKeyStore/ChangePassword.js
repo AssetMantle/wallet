@@ -71,9 +71,10 @@ const ChangePassword = (props) => {
 
     const handleSubmitPassword = (event) =>{
         event.preventDefault();
-        if(helper.passwordValidation(password)) {
+        if(helper.passwordValidation(event.target.password.value)) {
             setPassword(event.target.password.value);
             setShowDownload(true);
+            setErrorMessage("");
         }else {
             setErrorMessage("Password must be greater than 3 letters and no spaces allowed");
         }
