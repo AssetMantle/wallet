@@ -12,8 +12,6 @@ import transactions, {GetAccount} from "../utils/transactions";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient, QueryClient, setupIbcExtension} from "@cosmjs/stargate";
 import {QueryClientImpl} from "cosmjs-types/cosmos/bank/v1beta1/query";
-// import helper from "../utils/helper";
-import {formatNumber} from "../utils/scripts";
 
 const tendermintRPCURL =  process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
