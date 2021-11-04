@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import MailchimpSubscribe from "react-mailchimp-subscribe";
 import {Button, Spinner} from "react-bootstrap";
 
@@ -55,7 +55,7 @@ const CustomForm = ({status, onValidated}) => {
                         className="show-message"
                     >
 
-                       Email already subscribed.</div>
+                        Email already subscribed.</div>
                 )}
                 {status === "success" && (
                     <div

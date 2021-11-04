@@ -1,17 +1,11 @@
-import {
-    Form,
-    Modal,
-    OverlayTrigger,
-    Popover,
-} from 'react-bootstrap';
+import {Form, Modal, OverlayTrigger, Popover,} from 'react-bootstrap';
 import React, {useState} from 'react';
 
 import Icon from "../../../components/Icon";
 import {connect} from "react-redux";
 import helper from "../../../utils/helper";
 import Loader from "../../../components/Loader";
-import {WithdrawMsg} from "../../../utils/protoMsgHelper";
-import {ValidatorCommissionMsg} from "../../../utils/protoMsgHelper";
+import {ValidatorCommissionMsg, WithdrawMsg} from "../../../utils/protoMsgHelper";
 import aminoMsgHelper from "../../../utils/aminoMsgHelper";
 import transactions from "../../../utils/transactions";
 import {useTranslation} from "react-i18next";
@@ -53,11 +47,11 @@ const ModalWithdraw = (props) => {
     const handleSubmitKepler = async event => {
         setLoader(true);
         event.preventDefault();
-        let messages  = [];
-        if(withDrawMsgs.length){
+        let messages = [];
+        if (withDrawMsgs.length) {
             messages = withDrawMsgs;
         }
-        if(commissionMsg.length){
+        if (commissionMsg.length) {
             messages.push(commissionMsg[0]);
         }
         const response = transactions.TransactionWithKeplr(messages, aminoMsgHelper.fee(0, 250000));
@@ -88,35 +82,35 @@ const ModalWithdraw = (props) => {
             setInitialModal(false);
             setFeeModal(true);
 
-            let messages  = [];
-            if(withDrawMsgs.length){
+            let messages = [];
+            if (withDrawMsgs.length) {
                 messages = withDrawMsgs;
             }
-            if(commissionMsg.length){
+            if (commissionMsg.length) {
                 messages.push(commissionMsg[0]);
             }
             const data = {
-                memo : memo,
+                memo: memo,
                 modalHeader: "Claim Rewards",
                 formName: "withdrawMultiple",
-                messages:messages,
-                successMsg : t("SUCCESSFULLY_CLAIMED"),
-                failedMsg : t("FAILED_CLAIMING")
+                messages: messages,
+                successMsg: t("SUCCESSFULLY_CLAIMED"),
+                failedMsg: t("FAILED_CLAIMING")
             };
             setFormData(data);
         }
     };
 
-    const onChangeSelect =  (evt) => {
+    const onChangeSelect = (evt) => {
         let totalValidatorsRewards = 0;
         let messages = [];
-        if(evt.length > 3){
+        if (evt.length > 3) {
             setMultiSelectWarning(true);
-        }else {
+        } else {
             setMultiSelectWarning(false);
         }
         evt.forEach(async (item) => {
-            totalValidatorsRewards = totalValidatorsRewards + (transactions.XprtConversion(item.rewards*1));
+            totalValidatorsRewards = totalValidatorsRewards + (transactions.XprtConversion(item.rewards * 1));
             messages.push(WithdrawMsg(loginAddress, item.value));
         });
         setWithDrawMsgs(messages);
@@ -134,12 +128,12 @@ const ModalWithdraw = (props) => {
         }
     };
 
-    const handleCommissionChange = (evt) =>{
+    const handleCommissionChange = (evt) => {
         let messages = [];
-        if(evt.target.checked){
+        if (evt.target.checked) {
             messages.push(ValidatorCommissionMsg(props.validatorCommissionInfo[1]));
             setSelectValidation(true);
-        }else {
+        } else {
             messages = [];
             setSelectValidation(false);
         }
@@ -162,7 +156,7 @@ const ModalWithdraw = (props) => {
         </Popover>
     );
     const disable = (
-        individualRewards === 0 && !selectValidation &&  commissionMsg
+        individualRewards === 0 && !selectValidation && commissionMsg
     );
     return (
         <>
@@ -189,7 +183,8 @@ const ModalWithdraw = (props) => {
                                         <p className="tokens"
                                             title={props.totalRewards}>
                                             <NumberView value={formatNumber(props.totalRewards)}/>XPRT</p>
-                                        <p className="usd">= $<NumberView value={formatNumber(props.totalRewards * props.tokenPrice)}/></p>
+                                        <p className="usd">= $<NumberView
+                                            value={formatNumber(props.totalRewards * props.tokenPrice)}/></p>
                                     </div>
                                 </div>
 
@@ -205,15 +200,18 @@ const ModalWithdraw = (props) => {
                                 <div className="form-field p-0">
                                     <p className="label"></p>
                                     <div className="available-tokens">
-                                        <p className="tokens">{t("CLAIMING_REWARDS")} <NumberView value={formatNumber(individualRewards)}/><span>XPRT</span></p>
-                                        <p className="usd">= $<NumberView value={formatNumber(individualRewards * props.tokenPrice)}/></p>
+                                        <p className="tokens">{t("CLAIMING_REWARDS")} <NumberView
+                                            value={formatNumber(individualRewards)}/><span>XPRT</span></p>
+                                        <p className="usd">= $<NumberView
+                                            value={formatNumber(individualRewards * props.tokenPrice)}/></p>
                                     </div>
                                 </div>
                                 {props.validatorCommissionInfo[2] ?
                                     <div className="form-field claim-check-box">
                                         <p className="label"></p>
                                         <div className="check-box-container">
-                                            <p className="label" title={(props.validatorCommissionInfo[0]*1)}>{t("Claim Commission")}({(props.validatorCommissionInfo[0]*1).toLocaleString()} XPRT)</p>
+                                            <p className="label"
+                                                title={(props.validatorCommissionInfo[0] * 1)}>{t("Claim Commission")}({(props.validatorCommissionInfo[0] * 1).toLocaleString()} XPRT)</p>
                                             <Form.Control
                                                 type="checkbox"
                                                 name="claimCommission"
@@ -222,7 +220,7 @@ const ModalWithdraw = (props) => {
                                             />
                                         </div>
                                     </div>
-                                    :""
+                                    : ""
                                 }
                                 <div className="form-field p-0">
                                     <p className="label"></p>
@@ -323,10 +321,10 @@ const ModalWithdraw = (props) => {
                 }
                 {response !== '' ?
                     <ModalViewTxnResponse
-                        response = {response}
-                        successMsg = {t("SUCCESSFULLY_CLAIMED")}
-                        failedMsg =  {t("FAILED_CLAIMING")}
-                        handleClose = {handleClose}
+                        response={response}
+                        successMsg={t("SUCCESSFULLY_CLAIMED")}
+                        failedMsg={t("FAILED_CLAIMING")}
+                        handleClose={handleClose}
                     />
                     : null}
             </Modal>
@@ -348,8 +346,8 @@ const stateToProps = (state) => {
         balance: state.balance.amount,
         tokenPrice: state.tokenPrice.tokenPrice,
         transferableAmount: state.balance.transferableAmount,
-        validatorsRewardsList:state.rewards.validatorsRewardsList,
-        validatorCommissionInfo:state.rewards.validatorCommissionInfo
+        validatorsRewardsList: state.rewards.validatorsRewardsList,
+        validatorCommissionInfo: state.rewards.validatorCommissionInfo
     };
 };
 

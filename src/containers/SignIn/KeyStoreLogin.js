@@ -1,11 +1,5 @@
 import React, {useContext, useState} from "react";
-import {
-    Form,
-    Accordion,
-    Card,
-    AccordionContext,
-    useAccordionToggle, Modal
-} from "react-bootstrap";
+import {Accordion, AccordionContext, Card, Form, Modal, useAccordionToggle} from "react-bootstrap";
 import Icon from "../../components/Icon";
 import wallet from "../../utils/wallet";
 import helper from "../../utils/helper";
@@ -30,10 +24,10 @@ const KeyStoreLogin = (props) => {
         let fileInput =
             document.getElementById('importDecryptFile');
         let filePath = fileInput.value;
-        if(helper.fileTypeCheck(filePath)) {
+        if (helper.fileTypeCheck(filePath)) {
             const password = event.target.password.value;
             event.preventDefault();
-            if(helper.passwordValidation(password)) {
+            if (helper.passwordValidation(password)) {
                 const fileReader = new FileReader();
                 fileReader.readAsText(event.target.uploadFile.files[0], "UTF-8");
                 fileReader.onload = async event => {
@@ -68,10 +62,10 @@ const KeyStoreLogin = (props) => {
                         setErrorMessage("");
                     }
                 };
-            }else {
+            } else {
                 setErrorMessage("Password must be greater than 3 letters and no spaces allowed");
             }
-        }else{
+        } else {
             setErrorMessage("File type not supported");
         }
     };
@@ -125,10 +119,10 @@ const KeyStoreLogin = (props) => {
         GetAccount(advancedFormResponseData.address)
             .then(async res => {
                 const accountType = await transactions.VestingAccountCheck(res.typeUrl);
-                if(accountType){
+                if (accountType) {
                     localStorage.setItem('fee', config.vestingAccountFee);
                     localStorage.setItem('account', 'vesting');
-                }else {
+                } else {
                     localStorage.setItem('fee', config.defaultFee);
                     localStorage.setItem('account', 'non-vesting');
                 }
@@ -153,7 +147,7 @@ const KeyStoreLogin = (props) => {
     const handleAccountNumberKeypress = e => {
         if (e.key === "e" || e.key === "-" || e.key === "+") {
             e.preventDefault();
-        }else {
+        } else {
             const accountNumber = document.getElementById('accountNumber').value;
             if (parseInt(accountNumber) > 4294967295 || parseInt(accountNumber) < 0) {
                 e.preventDefault();
@@ -164,7 +158,7 @@ const KeyStoreLogin = (props) => {
     const handleIndexKeypress = e => {
         if (e.key === "e" || e.key === "-" || e.key === "+") {
             e.preventDefault();
-        }else {
+        } else {
             const addressIndex = document.getElementById('accountIndex').value;
             if (parseInt(addressIndex) > 4294967295 || parseInt(addressIndex) < 0) {
                 e.preventDefault();
@@ -218,7 +212,7 @@ const KeyStoreLogin = (props) => {
                                                             name="accountNumber"
                                                             id="accountNumber"
                                                             onKeyPress={handleAccountNumberKeypress}
-                                                            placeholder= {t("ACCOUNT_NUMBER")}
+                                                            placeholder={t("ACCOUNT_NUMBER")}
                                                             required={false}
                                                         />
                                                     </div>
@@ -247,7 +241,8 @@ const KeyStoreLogin = (props) => {
                                                             required={false}
                                                         />
                                                         {passphraseError ?
-                                                            <span className="passphrase-error">{t("BIP_PASSPHRASE_ERROR")}</span>
+                                                            <span
+                                                                className="passphrase-error">{t("BIP_PASSPHRASE_ERROR")}</span>
                                                             : null}
                                                     </div>
                                                 </>
@@ -292,10 +287,13 @@ const KeyStoreLogin = (props) => {
                                     <div className="login-error"><p className="error-response">{errorMessage}</p></div>
                                     : ""
                                 }
-                                <p className="mnemonic-result"><b>{t("WALLET_PATH")}: </b>{advancedFormResponseData.walletPath}</p>
-                                <p className="mnemonic-result"><b>{t("ADDRESS")}: </b>{advancedFormResponseData.address}</p>
+                                <p className="mnemonic-result">
+                                    <b>{t("WALLET_PATH")}: </b>{advancedFormResponseData.walletPath}</p>
+                                <p className="mnemonic-result"><b>{t("ADDRESS")}: </b>{advancedFormResponseData.address}
+                                </p>
                                 <div className="buttons">
-                                    <button className="button button-primary" onClick={handleLogin}>{t("LOGIN")}</button>
+                                    <button className="button button-primary"
+                                        onClick={handleLogin}>{t("LOGIN")}</button>
                                 </div>
                             </div>
                         </>

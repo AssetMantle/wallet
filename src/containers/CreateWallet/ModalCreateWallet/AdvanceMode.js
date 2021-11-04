@@ -1,8 +1,5 @@
 import React, {useContext, useState} from "react";
-import {
-    Accordion, AccordionContext, Card,
-    Form, Modal, useAccordionToggle,
-} from "react-bootstrap";
+import {Accordion, AccordionContext, Card, Form, Modal, useAccordionToggle,} from "react-bootstrap";
 import wallet from "../../../utils/wallet";
 import Icon from "../../../components/Icon";
 import GeneratePrivateKey from "../../KeyStore/GenerateKeyStore/GeneratePrivateKey";
@@ -28,14 +25,14 @@ const AdvanceMode = (props) => {
         let accountNumber = 0;
         let addressIndex = 0;
         let bip39Passphrase = "";
-        if(advanceMode){
+        if (advanceMode) {
             accountNumber = document.getElementById('createAccountNumber').value;
             addressIndex = document.getElementById('createAccountIndex').value;
             bip39Passphrase = document.getElementById('createbip39Passphrase').value;
-            if(accountNumber === ""){
+            if (accountNumber === "") {
                 accountNumber = 0;
             }
-            if(addressIndex === ""){
+            if (addressIndex === "") {
                 addressIndex = 0;
             }
         }
@@ -69,10 +66,10 @@ const AdvanceMode = (props) => {
         GetAccount(response.address)
             .then(async res => {
                 const accountType = await transactions.VestingAccountCheck(res.typeUrl);
-                if(accountType){
+                if (accountType) {
                     localStorage.setItem('fee', config.vestingAccountFee);
                     localStorage.setItem('account', 'vesting');
-                }else {
+                } else {
                     localStorage.setItem('fee', config.defaultFee);
                     localStorage.setItem('account', 'non-vesting');
                 }
@@ -91,20 +88,20 @@ const AdvanceMode = (props) => {
         history.push('/dashboard/wallet');
     };
     const handlePrevious = (formName) => {
-        if(formName === "advanceForm"){
+        if (formName === "advanceForm") {
             setAdvanceForm(false);
             props.setAccountInfo(false);
             props.setShow(true);
             props.setMnemonicQuiz(true);
         }
-        if(formName === "response"){
+        if (formName === "response") {
             setAdvanceForm(true);
             setResponseShow(false);
         }
     };
 
     const handleKeypress = e => {
-        if(e.key === "Enter") {
+        if (e.key === "Enter") {
             handleSubmit(e);
         }
     };
@@ -113,9 +110,9 @@ const AdvanceMode = (props) => {
     const handleAccountNumberKeypress = e => {
         if (e.key === "e" || e.key === "-" || e.key === "+") {
             e.preventDefault();
-        }else if (e.key === "Enter") {
+        } else if (e.key === "Enter") {
             handleSubmit(e);
-        }else {
+        } else {
             const accountNumber = document.getElementById('createAccountNumber').value;
             if (parseInt(accountNumber) > 4294967295 || parseInt(accountNumber) < 0) {
                 e.preventDefault();
@@ -126,9 +123,9 @@ const AdvanceMode = (props) => {
     const handleIndexKeypress = e => {
         if (e.key === "e" || e.key === "-" || e.key === "+") {
             e.preventDefault();
-        }else if (e.key === "Enter") {
+        } else if (e.key === "Enter") {
             handleSubmit(e);
-        }else {
+        } else {
             const addressIndex = document.getElementById('createAccountIndex').value;
             if (parseInt(addressIndex) > 4294967295 || parseInt(addressIndex) < 0) {
                 e.preventDefault();
@@ -240,7 +237,8 @@ const AdvanceMode = (props) => {
                                                         required={false}
                                                     />
                                                     {passphraseError ?
-                                                        <span className="passphrase-error">{t("BIP_PASSPHRASE_ERROR")}</span>
+                                                        <span
+                                                            className="passphrase-error">{t("BIP_PASSPHRASE_ERROR")}</span>
                                                         : null}
                                                 </div>
 
@@ -286,7 +284,8 @@ const AdvanceMode = (props) => {
                     : null}
             </Modal>
             {generateKey ?
-                <GeneratePrivateKey mnemonic={props.mnemonic} handleRoute={handleRoute} setGenerateKey={setGenerateKey} routeValue="hideGenerateKey" formName="Create Wallet"/>
+                <GeneratePrivateKey mnemonic={props.mnemonic} handleRoute={handleRoute} setGenerateKey={setGenerateKey}
+                    routeValue="hideGenerateKey" formName="Create Wallet"/>
                 : null
             }
         </>

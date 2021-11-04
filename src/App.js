@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Switch, Route, withRouter, useHistory} from 'react-router-dom';
+import {Route, Switch, useHistory, withRouter} from 'react-router-dom';
 import DashboardWallet from "./views/DashboardWallet";
 import Homepage from "./views/Homepage";
 import DashboardStaking from "./views/Staking";
@@ -11,6 +11,7 @@ import config from "./config";
 import icon_white from "./assets/images/icon_white.svg";
 import {useTranslation} from "react-i18next";
 import KeplerWallet from "./utils/kepler";
+
 const App = () => {
     const {t} = useTranslation();
     const history = useHistory();
@@ -52,7 +53,7 @@ const App = () => {
         address = localStorage.getItem('address');
     }
     window.addEventListener("keplr_keystorechange", () => {
-        if(localStorage.getItem('loginMode') === 'kepler'){
+        if (localStorage.getItem('loginMode') === 'kepler') {
             const kepler = KeplerWallet();
             kepler.then(function () {
                 const address = localStorage.getItem("keplerAddress");

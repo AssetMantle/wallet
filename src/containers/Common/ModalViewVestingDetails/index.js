@@ -1,8 +1,7 @@
-import {Modal} from 'react-bootstrap';
+import {Modal, Table} from 'react-bootstrap';
 import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import transactions from "../../../utils/transactions";
-import {Table} from "react-bootstrap";
 import moment from "moment";
 import {QueryClientImpl} from "cosmjs-types/cosmos/auth/v1beta1/query";
 import * as vesting_1 from "cosmjs-types/cosmos/vesting/v1beta1/vesting";
@@ -81,7 +80,7 @@ const ModalViewVestingDetails = () => {
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>{transactions.XprtConversion(parseInt(response.baseVestingAccount.originalVesting[0].amount) )}</td>
+                                            <td>{transactions.XprtConversion(parseInt(response.baseVestingAccount.originalVesting[0].amount))}</td>
                                             <td>{moment(new Date(parseInt(response.startTime.low) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</td>
                                             <td>{moment(new Date((response.baseVestingAccount.endTime.low) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</td>
                                         </tr>
@@ -114,7 +113,7 @@ const ModalViewVestingDetails = () => {
                                                             vestingPeriod = vestingPeriod + parseInt(response.vestingPeriods[i].length);
                                                         }
                                                         return (
-                                                            <tbody  key={index}>
+                                                            <tbody key={index}>
                                                                 <tr>
                                                                     <td>{transactions.XprtConversion(period.amount[0].amount)}</td>
                                                                     <td>{moment(new Date(vestingPeriod * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</td>

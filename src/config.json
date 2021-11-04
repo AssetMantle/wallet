@@ -1,5 +1,5 @@
 {
-  "chainID" : "test-core-1",
+  "chainID": "test-core-1",
   "chainName": "Persistence test-net",
   "addressPrefix": "persistence",
   "coinType": "750",

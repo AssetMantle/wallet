@@ -27,7 +27,7 @@ const CreateWallet = (props) => {
         props.handleClose();
     };
     useEffect(() => {
-        const getWallet = async () =>{
+        const getWallet = async () => {
             const responseData = await wallet.createRandomWallet();
             setResponse(responseData);
             let mnemonic = responseData.mnemonic;
@@ -58,7 +58,7 @@ const CreateWallet = (props) => {
     };
 
     const handleSubmitMnemonic = () => {
-        for (let index = 0; index < randomNumberList.length; index++){
+        for (let index = 0; index < randomNumberList.length; index++) {
             let phrase = document.getElementById('mnemonicKey' + randomNumberList[index]).value;
             if (mnemonicList[randomNumberList[index]] !== phrase) {
                 setQuizError(true);
@@ -102,7 +102,7 @@ const CreateWallet = (props) => {
         if (!regex.test(key) && e.key !== "Enter") {
             e.preventDefault();
             return false;
-        }else {
+        } else {
             if (e.key === "Enter") {
                 handleSubmitMnemonic();
             }
@@ -132,7 +132,8 @@ const CreateWallet = (props) => {
                                     onClick={handleRoute}>{t("IMPORT_WALLET")}</span>
                                 </p>
                                 <div className="seed-section">
-                                    <h3 className="heading copy">{t("MNEMONIC")} ({t("SEED_PHRASE")}) <Copy id={response.mnemonic}/>
+                                    <h3 className="heading copy">{t("MNEMONIC")} ({t("SEED_PHRASE")}) <Copy
+                                        id={response.mnemonic}/>
                                     </h3>
                                     <div className="menmonic-list">
                                         {mnemonicList ?

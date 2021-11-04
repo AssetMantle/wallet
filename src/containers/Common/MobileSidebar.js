@@ -7,6 +7,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import {NavLink} from "react-router-dom";
 import Icon from "../../components/Icon";
 import {useTranslation} from "react-i18next";
+
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const MobileSidebar = () => {
@@ -23,7 +24,7 @@ const MobileSidebar = () => {
             return;
         }
 
-        setState({ ...state, [anchor]: open });
+        setState({...state, [anchor]: open});
     };
 
     const list = (anchor) => (
@@ -95,7 +96,7 @@ const MobileSidebar = () => {
                 </li>
 
             </List>
-            <Divider />
+            <Divider/>
         </div>
     );
 

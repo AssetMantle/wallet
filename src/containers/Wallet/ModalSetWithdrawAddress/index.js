@@ -1,9 +1,4 @@
-import {
-    Form,
-    Modal,
-    OverlayTrigger,
-    Popover,
-} from 'react-bootstrap';
+import {Form, Modal, OverlayTrigger, Popover,} from 'react-bootstrap';
 import React, {useEffect, useState} from 'react';
 import Icon from "../../../components/Icon";
 import {connect} from "react-redux";
@@ -80,15 +75,15 @@ const ModalSetWithdrawAddress = (props) => {
                 setFeeModal(true);
                 setErrorMessage("");
                 const data = {
-                    memo : memo,
+                    memo: memo,
                     modalHeader: t("SETUP_WITHDRAWAL_ADDRESS"),
                     formName: "withdrawAddress",
-                    validatorAddress:event.target.withdrawalAddress.value,
-                    successMsg : t("SUCCESSFULLY_ADDRESS_CHANGED"),
-                    failedMsg : t("FAILED_ADDRESS_CHANGE")
+                    validatorAddress: event.target.withdrawalAddress.value,
+                    successMsg: t("SUCCESSFULLY_ADDRESS_CHANGED"),
+                    failedMsg: t("FAILED_ADDRESS_CHANGE")
                 };
                 setFormData(data);
-            }else {
+            } else {
                 setErrorMessage("Enter Valid Revised Address");
             }
 
@@ -108,7 +103,7 @@ const ModalSetWithdrawAddress = (props) => {
     );
 
     const handlePrevious = () => {
-        if(props.formName === "setAddress"){
+        if (props.formName === "setAddress") {
             props.setShow(true);
             props.setWithDraw(false);
             setShow(false);
@@ -135,7 +130,7 @@ const ModalSetWithdrawAddress = (props) => {
                                         icon="left-arrow"/>
                                 </button>
                             </div>
-                            :""
+                            : ""
                         }
                         <h3 className="heading">
                             {t("SETUP_WITHDRAWAL_ADDRESS")}
@@ -246,10 +241,10 @@ const ModalSetWithdrawAddress = (props) => {
             }
             {response !== '' ?
                 <ModalViewTxnResponse
-                    response = {response}
-                    successMsg = {t("SUCCESSFULLY_ADDRESS_CHANGED")}
-                    failedMsg =  {t("FAILED_ADDRESS_CHANGE")}
-                    handleClose = {handleClose}
+                    response={response}
+                    successMsg={t("SUCCESSFULLY_ADDRESS_CHANGED")}
+                    failedMsg={t("FAILED_ADDRESS_CHANGE")}
+                    handleClose={handleClose}
                 />
                 : null}
         </Modal>

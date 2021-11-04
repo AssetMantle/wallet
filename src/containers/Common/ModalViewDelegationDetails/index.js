@@ -52,13 +52,15 @@ const ModalViewDelegationDetails = (props) => {
                                             <tr key={index}>
                                                 <td>{delegation.data.description.moniker}
                                                 </td>
-                                                <td><span title={delegation.data.operatorAddress}>{addressTruncate}</span></td>
+                                                <td><span title={delegation.data.operatorAddress}>{addressTruncate}</span>
+                                                </td>
                                                 <td>
                                                     <span className="amount">
-                                                        <NumberView value={formatNumber(transactions.XprtConversion(delegation.delegations*1))}/>XPRT
+                                                        <NumberView
+                                                            value={formatNumber(transactions.XprtConversion(delegation.delegations * 1))}/>XPRT
                                                     </span>
                                                 </td>
-                                                <td>     
+                                                <td>
                                                     {helper.isActive(delegation.data) ?
                                                         <span className="active-icon-box" title="active">
                                                             active

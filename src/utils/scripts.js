@@ -15,9 +15,9 @@ export const formatNumber = (v = 0, size = 3) => {
     let str = `${v}`;
     if (empty(str)) return "NaN";
     let substr = str.split(".");
-    if(substr[1] === undefined){
+    if (substr[1] === undefined) {
         substr.push('000000');
-    }else {
+    } else {
         substr[1] = helper.sixDigitsNumber(substr[1]);
     }
     str = reverseString(substr[0]);

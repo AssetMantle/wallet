@@ -1,7 +1,4 @@
-import {
-    FETCH_WITHDRAW_ADDRESS_ERROR,
-    FETCH_WITHDRAW_ADDRESS_SUCCESS
-} from "../constants/withdrawAddress";
+import {FETCH_WITHDRAW_ADDRESS_ERROR, FETCH_WITHDRAW_ADDRESS_SUCCESS} from "../constants/withdrawAddress";
 import {QueryClientImpl} from "cosmjs-types/cosmos/distribution/v1beta1/query";
 import transactions from "../utils/transactions";
 
@@ -25,7 +22,7 @@ export const fetchWithdrawAddress = (address) => {
         const stakingQueryService = new QueryClientImpl(rpcClient);
         await stakingQueryService.DelegatorWithdrawAddress({
             delegatorAddress: address,
-        }) .then((res) => {
+        }).then((res) => {
             if (res.withdrawAddress) {
                 dispatch(fetchAddressSuccess(res.withdrawAddress));
             }

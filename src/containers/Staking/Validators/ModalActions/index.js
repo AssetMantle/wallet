@@ -1,7 +1,5 @@
-import {
-    Modal,
-} from 'react-bootstrap';
-import React, {useState, useEffect} from 'react';
+import {Modal,} from 'react-bootstrap';
+import React, {useEffect, useState} from 'react';
 import Avatar from "../Avatar";
 import helper from "../../../../utils/helper";
 import ModalReDelegate from "../ModalReDelegate";
@@ -15,6 +13,7 @@ import transactions from "../../../../utils/transactions";
 import {QueryClientImpl} from "cosmjs-types/cosmos/distribution/v1beta1/query";
 import {QueryClientImpl as StakingQueryClientImpl} from "cosmjs-types/cosmos/staking/v1beta1/query";
 import config from "../../../../config";
+
 const NODE_CONF = process.env.REACT_APP_IBC_CONFIG;
 const ModalActions = (props) => {
     const {t} = useTranslation();
@@ -41,7 +40,7 @@ const ModalActions = (props) => {
             }).then(response => {
                 if (response.rewards[0].amount) {
                     let value = helper.decimalConversion(response.rewards[0].amount);
-                    setRewards(transactions.XprtConversion(value*1));
+                    setRewards(transactions.XprtConversion(value * 1));
                 }
             }).catch(error => {
                 console.log(error.response
@@ -56,7 +55,7 @@ const ModalActions = (props) => {
                 let delegationResponseList = response.delegationResponses;
                 for (const item of delegationResponseList) {
                     if (item.delegation.validatorAddress === props.validator.operatorAddress) {
-                        setDelegationAmount(transactions.XprtConversion(item.balance.amount*1));
+                        setDelegationAmount(transactions.XprtConversion(item.balance.amount * 1));
                         setDelegateStatus(true);
                     }
                 }
@@ -68,17 +67,16 @@ const ModalActions = (props) => {
         };
         fetchValidatorRewards();
 
-        if(NODE_CONF === "ibcStaging.json"){
+        if (NODE_CONF === "ibcStaging.json") {
             if (config.testNetFoundationNodes.includes(props.validator.operatorAddress)) {
                 setFoundationNode(true);
-            }else {
+            } else {
                 setFoundationNode(false);
             }
-        }
-        else {
+        } else {
             if (config.mainNetFoundationNodes.includes(props.validator.operatorAddress)) {
                 setFoundationNode(true);
-            }else {
+            } else {
                 setFoundationNode(false);
             }
         }
@@ -178,7 +176,8 @@ const ModalActions = (props) => {
                                 </button>
                             </div>
                             {foundationNode ?
-                                <p className="amount-warning text-left"> Warning: Foundation Nodes operate at 100% commission, you will not be receiving any staking rewards.</p>: ""
+                                <p className="amount-warning text-left"> Warning: Foundation Nodes operate at 100%
+                                    commission, you will not be receiving any staking rewards.</p> : ""
                             }
                         </Modal.Body>
                     </>

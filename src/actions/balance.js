@@ -1,17 +1,18 @@
 import {
-    BALANCE_FETCH_SUCCESS,
     BALANCE_FETCH_ERROR,
     BALANCE_FETCH_IN_PROGRESS,
+    BALANCE_FETCH_SUCCESS,
     BALANCE_LIST_FETCH_SUCCESS,
+    TOKEN_LIST_FETCH_SUCCESS,
     TRANSFERABLE_BALANCE_LIST_FETCH_SUCCESS,
-    VESTING_BALANCE_FETCH_SUCCESS,
-    TOKEN_LIST_FETCH_SUCCESS
+    VESTING_BALANCE_FETCH_SUCCESS
 } from "../constants/balance";
 import vestingAccount from "../utils/vestingAmount";
 import transactions, {GetAccount} from "../utils/transactions";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient, QueryClient, setupIbcExtension} from "@cosmjs/stargate";
 import {QueryClientImpl} from "cosmjs-types/cosmos/bank/v1beta1/query";
+import config from "../config";
 
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
@@ -52,7 +53,7 @@ export const fetchBalance = (address) => {
                 if (allBalancesResponse.balances.length) {
                     dispatch(fetchBalanceListSuccess(allBalancesResponse.balances));
                     allBalancesResponse.balances.forEach((item) => {
-                        if (item.denom === 'uxprt') {
+                        if (item.denom === config.coinDenom) {
                             const totalBalance = item.amount * 1;
                             dispatch(fetchBalanceSuccess(transactions.XprtConversion(totalBalance)));
                         }
@@ -141,7 +142,6 @@ export const fetchTransferableVestingAmount = (address) => {
                             ? error.response.data.message
                             : error.message));
                     });
-
                 }
             }).catch(err => {
                 console.log(err);

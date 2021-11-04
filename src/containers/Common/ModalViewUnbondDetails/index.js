@@ -45,9 +45,12 @@ const ModalViewUnbondDetails = (props) => {
                                         return (
                                             <div className="unbonding-schedule-list" key={entryIndex}>
                                                 <p><span className="amount">
-                                                    <NumberView value={formatNumber(transactions.XprtConversion(entry.balance*1))}/> XPRT
+                                                    <NumberView
+                                                        value={formatNumber(transactions.XprtConversion(entry.balance * 1))}/> XPRT
                                                 </span></p>
-                                                <p><span className="date">{moment(new Date (entry["completionTime"]).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</span></p>
+                                                <p><span
+                                                    className="date">{moment(new Date(entry["completionTime"]).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</span>
+                                                </p>
                                             </div>
                                         );
                                     })

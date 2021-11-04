@@ -1,10 +1,5 @@
-import {
-    Form,
-    Modal,
-    OverlayTrigger,
-    Popover,
-} from 'react-bootstrap';
-import React, {useState, useEffect} from 'react';
+import {Form, Modal, OverlayTrigger, Popover,} from 'react-bootstrap';
+import React, {useEffect, useState} from 'react';
 import Icon from "../../../../components/Icon";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -39,12 +34,12 @@ const ModalReDelegate = (props) => {
     const [activeValidatorsList, setActiveValidatorsList] = useState([]);
     const [inActiveValidatorsList, setInActiveValidatorsList] = useState([]);
 
-    useEffect(() =>{
-        if(props.validators){
+    useEffect(() => {
+        if (props.validators) {
             setActiveValidatorsList(props.validators.filter(item => helper.isActive(item)));
             setInActiveValidatorsList(props.validators.filter(item => !helper.isActive(item)));
         }
-    },[]);
+    }, []);
 
     const handleMemoChange = () => {
         setMemoStatus(!memoStatus);
@@ -88,14 +83,14 @@ const ModalReDelegate = (props) => {
             setInitialModal(false);
             setFeeModal(true);
             const data = {
-                amount : amount,
-                memo : memo,
-                validatorAddress : props.validatorAddress,
-                toValidatorAddress : toValidatorAddress,
+                amount: amount,
+                memo: memo,
+                validatorAddress: props.validatorAddress,
+                toValidatorAddress: toValidatorAddress,
                 modalHeader: `Redelegate from ${props.moniker}`,
                 formName: "redelegate",
-                successMsg : t("SUCCESSFULL_REDELEGATED"),
-                failedMsg : t("FAILED_REDELEGATE")
+                successMsg: t("SUCCESSFULL_REDELEGATED"),
+                failedMsg: t("FAILED_REDELEGATE")
             };
             setFormData(data);
         }
@@ -119,8 +114,8 @@ const ModalReDelegate = (props) => {
         });
     };
 
-    const selectTotalBalanceHandler = (value) =>{
-        setAmount(value.replace(/,/g, '')*1);
+    const selectTotalBalanceHandler = (value) => {
+        setAmount(value.replace(/,/g, '') * 1);
         setEnteredAmount(value.replace(/,/g, ''));
     };
 
@@ -213,10 +208,12 @@ const ModalReDelegate = (props) => {
                                         required={true}
                                     />
                                     <span
-                                        className={props.delegationAmount === 0 ? "empty info-data info-link" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(formatNumber(props.delegationAmount))}><span
+                                        className={props.delegationAmount === 0 ? "empty info-data info-link" : "info-data info-link"}
+                                        onClick={() => selectTotalBalanceHandler(formatNumber(props.delegationAmount))}><span
                                             className="title">{t("DELEGATED_AMOUNT")}:</span> <span
                                             className="value">
-                                            <NumberView value={formatNumber(props.delegationAmount)}/> XPRT</span> </span>
+                                            <NumberView
+                                                value={formatNumber(props.delegationAmount)}/> XPRT</span> </span>
                                 </div>
                             </div>
                             {mode === "normal" ?
@@ -271,7 +268,7 @@ const ModalReDelegate = (props) => {
                                 {mode === "normal" ?
                                     <div className="button-section">
                                         <button className="button button-primary"
-                                            disabled={ !props.delegateStatus || disabled || amount === 0 || checkAmountError}
+                                            disabled={!props.delegateStatus || disabled || amount === 0 || checkAmountError}
                                         >{t("NEXT")}</button>
                                     </div>
                                     :
@@ -297,10 +294,10 @@ const ModalReDelegate = (props) => {
             }
             {response !== '' ?
                 <ModalViewTxnResponse
-                    response = {response}
-                    successMsg = {t("SUCCESSFULL_REDELEGATED")}
-                    failedMsg =  {t("FAILED_REDELEGATE")}
-                    handleClose = {props.handleClose}
+                    response={response}
+                    successMsg={t("SUCCESSFULL_REDELEGATED")}
+                    failedMsg={t("FAILED_REDELEGATE")}
+                    handleClose={props.handleClose}
                 />
                 : null}
         </>

@@ -1,12 +1,12 @@
 import {combineReducers} from 'redux';
 import {
-    BALANCE_FETCH_SUCCESS,
     BALANCE_FETCH_ERROR,
     BALANCE_FETCH_IN_PROGRESS,
+    BALANCE_FETCH_SUCCESS,
     BALANCE_LIST_FETCH_SUCCESS,
+    TOKEN_LIST_FETCH_SUCCESS,
     TRANSFERABLE_BALANCE_LIST_FETCH_SUCCESS,
-    VESTING_BALANCE_FETCH_SUCCESS,
-    TOKEN_LIST_FETCH_SUCCESS
+    VESTING_BALANCE_FETCH_SUCCESS
 } from "../constants/balance";
 
 const inProgress = (state = false, action) => {

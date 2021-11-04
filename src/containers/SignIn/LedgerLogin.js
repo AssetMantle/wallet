@@ -1,8 +1,5 @@
-import React, {useState, useEffect} from "react";
-import {
-    Form,
-    Modal,
-} from "react-bootstrap";
+import React, {useEffect, useState} from "react";
+import {Form, Modal,} from "react-bootstrap";
 import Icon from "../../components/Icon";
 import config from "../../config";
 import {useTranslation} from "react-i18next";
@@ -59,9 +56,9 @@ const LedgerLogin = (props) => {
     const handleAccountNumberKeypress = e => {
         if (e.key === "e" || e.key === "-" || e.key === "+") {
             e.preventDefault();
-        }else if (e.key === "Enter") {
+        } else if (e.key === "Enter") {
             handleSubmit(e);
-        }else {
+        } else {
             const accountNumber = document.getElementById('createAccountNumber').value;
             if (parseInt(accountNumber) > 4294967295 || parseInt(accountNumber) < 0) {
                 e.preventDefault();
@@ -72,9 +69,9 @@ const LedgerLogin = (props) => {
     const handleIndexKeypress = e => {
         if (e.key === "e" || e.key === "-" || e.key === "+") {
             e.preventDefault();
-        }else if (e.key === "Enter") {
+        } else if (e.key === "Enter") {
             handleSubmit(e);
-        }else {
+        } else {
             const addressIndex = document.getElementById('createAccountIndex').value;
             if (parseInt(addressIndex) > 4294967295 || parseInt(addressIndex) < 0) {
                 e.preventDefault();
@@ -85,13 +82,13 @@ const LedgerLogin = (props) => {
         event.preventDefault();
         let accountNumber = 0;
         let addressIndex = 0;
-        if(advancedMode){
+        if (advancedMode) {
             accountNumber = document.getElementById('ledgerAccountNumber').value;
             addressIndex = document.getElementById('ledgerAccountIndex').value;
-            if(accountNumber === ""){
+            if (accountNumber === "") {
                 accountNumber = 0;
             }
-            if(addressIndex === ""){
+            if (addressIndex === "") {
                 addressIndex = 0;
             }
         }
@@ -130,7 +127,8 @@ const LedgerLogin = (props) => {
                                     <>
                                         <div className="buttons-list">
                                             <p>{ledgerAddress}</p>
-                                            <button className="button button-primary" onClick={() => handleRoute()}>Continue
+                                            <button className="button button-primary"
+                                                onClick={() => handleRoute()}>Continue
                                             </button>
                                         </div>
                                         <div className="select-gas">

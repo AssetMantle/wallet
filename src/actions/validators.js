@@ -1,11 +1,11 @@
 import {QueryClientImpl} from 'cosmjs-types/cosmos/staking/v1beta1/query';
 import {
     FETCH_ACTIVE_VALIDATORS_SUCCESS,
-    FETCH_VALIDATORS_ERROR,
+    FETCH_DELEGATED_VALIDATORS_SUCCESS,
     FETCH_INACTIVE_VALIDATORS_SUCCESS,
+    FETCH_VALIDATORS_ERROR,
     FETCH_VALIDATORS_IN_PROGRESS,
-    FETCH_VALIDATORS_SUCCESS,
-    FETCH_DELEGATED_VALIDATORS_SUCCESS
+    FETCH_VALIDATORS_SUCCESS
 } from "../constants/validators";
 
 import helper from "../utils/helper";
@@ -53,23 +53,22 @@ export const fetchValidatorsError = (count) => {
     };
 };
 
-const validatorsDelegationSort = (validators, delegations) =>{
-    let delegatedValidators =[];
+const validatorsDelegationSort = (validators, delegations) => {
+    let delegatedValidators = [];
     validators.forEach((item) => {
         for (const data of delegations) {
-            if(item.operatorAddress === data.delegation.validatorAddress){
+            if (item.operatorAddress === data.delegation.validatorAddress) {
                 let obj = {
-                    'data':item,
-                    'delegations':data.balance.amount*1
+                    'data': item,
+                    'delegations': data.balance.amount * 1
                 };
                 delegatedValidators.push(obj);
             }
         }
     });
-    const sortDel = delegatedValidators.sort(function (a, b) {
+    return delegatedValidators.sort(function (a, b) {
         return b.delegations - a.delegations;
     });
-    return sortDel;
 };
 
 export const fetchValidators = (address) => {

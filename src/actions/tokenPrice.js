@@ -1,7 +1,4 @@
-import {
-    TOKEN_PRICE_FETCH_ERROR,
-    TOKEN_PRICE_FETCH_SUCCESS,
-} from "../constants/tokenPrice";
+import {TOKEN_PRICE_FETCH_ERROR, TOKEN_PRICE_FETCH_SUCCESS,} from "../constants/tokenPrice";
 import CoinGecko from 'coingecko-api';
 
 
@@ -21,8 +18,7 @@ export const fetchTokenPriceError = (data) => {
 };
 
 export const fetchTokenPrice = () => (dispatch) => {
-
-    CoinGeckoClient.simple.price({ids:"persistence"}).then((res) => {
+    CoinGeckoClient.simple.price({ids: "persistence"}).then((res) => {
         if (res.data.persistence.usd) {
             dispatch(fetchTokenPriceSuccess(res.data.persistence.usd));
         }

@@ -1,5 +1,6 @@
 import {Decimal} from "@cosmjs/math";
 import transactions from "./transactions";
+
 const encoding = require("@cosmjs/encoding");
 const bip39 = require("bip39");
 const crypto = require("crypto");
@@ -102,10 +103,10 @@ function fileTypeCheck(filePath) {
     return allowedExtensions.exec(filePath);
 }
 
-function validateAddress(address, prefix="persistence") {
-    if(prefix === "cosmos"){
+function validateAddress(address, prefix = "persistence") {
+    if (prefix === "cosmos") {
         return address.startsWith(prefix) && address.length === 45;
-    }else if(prefix === "osmosis"){
+    } else if (prefix === "osmosis") {
         return address.startsWith("osmo") && address.length === 43;
     } else {
         return address.startsWith(prefix) && address.length === 50;
@@ -114,10 +115,10 @@ function validateAddress(address, prefix="persistence") {
 
 
 function accountChangeCheck(errorMessage) {
-    if(errorMessage === 'Unsupported type: \'/cosmos.vesting.v1beta1.ContinuousVestingAccount\'' ||
+    if (errorMessage === 'Unsupported type: \'/cosmos.vesting.v1beta1.ContinuousVestingAccount\'' ||
         errorMessage === 'Unsupported type: \'/cosmos.vesting.v1beta1.DelayedVestingAccount\'' ||
-        errorMessage === 'Unsupported type: \'/cosmos.vesting.v1beta1.PeriodicVestingAccount\''||
-        errorMessage.startsWith("pubKey does not match signer address")){
+        errorMessage === 'Unsupported type: \'/cosmos.vesting.v1beta1.PeriodicVestingAccount\'' ||
+        errorMessage.startsWith("pubKey does not match signer address")) {
         alert("Account address changed please login again");
         localStorage.setItem('loginToken', '');
         localStorage.setItem('address', '');
@@ -128,15 +129,15 @@ function accountChangeCheck(errorMessage) {
     }
 }
 
-function decimalConversion(data){
+function decimalConversion(data) {
     let value = Decimal.fromAtomics(data, 18).toString();
     return value;
 }
 
 function denomChange(denom) {
-    if(denom === "uxprt"){
+    if (denom === "uxprt") {
         return "XPRT";
-    }else if(denom === "uatom"){
+    } else if (denom === "uatom") {
         return "ATOM";
     }
 }
@@ -162,20 +163,20 @@ function mnemonicValidation(memo) {
     return validateMnemonic;
 }
 
-function ValidateAmount(value){
+function ValidateAmount(value) {
     if (value === 0) {
         return new Error('Value must be greater than 0');
     }
     return new Error('');
 }
 
-function inputSpaceValidation(e){
+function inputSpaceValidation(e) {
     if (e.key === " ") {
         e.preventDefault();
     }
 }
 
-function inputAmountValidation(e){
+function inputAmountValidation(e) {
     if (e.key === "e" || e.key === "-" || e.key === "+") {
         e.preventDefault();
     }
@@ -190,19 +191,19 @@ function stringValidation(evt) {
         (key >= 48 && key <= 57) ||
         (key >= 96 && key <= 105)) {
         return true;
-    }
-    else {
+    } else {
         evt.preventDefault();
     }
 
 }
-function trimWhiteSpaces(data){
+
+function trimWhiteSpaces(data) {
     return data.split(' ').join('');
 }
 
 
-function isBech32Address(address, prefix){
-    try{
+function isBech32Address(address, prefix) {
+    try {
         let decodedAddress = encoding.Bech32.decode(address);
         return decodedAddress.prefix === prefix;
     } catch (e) {
@@ -210,52 +211,52 @@ function isBech32Address(address, prefix){
     }
 }
 
-function passwordValidation(data){
-    const regex= /^\S{3}\S+$/;
+function passwordValidation(data) {
+    const regex = /^\S{3}\S+$/;
     return regex.test(data);
 }
 
-function denomModify(amount){
-    if(Array.isArray(amount)){
-        if(amount.length){
-            if(amount[0].denom ==="uxprt"){
+function denomModify(amount) {
+    if (Array.isArray(amount)) {
+        if (amount.length) {
+            if (amount[0].denom === "uxprt") {
                 return [transactions.XprtConversion(amount[0].amount), "XPRT"];
-            }else {
+            } else {
                 return [amount[0].amount, amount[0].denom];
             }
-        }else {
+        } else {
             return '';
         }
-    }else {
-        if(amount.denom ==="uxprt"){
+    } else {
+        if (amount.denom === "uxprt") {
             return [transactions.XprtConversion(amount.amount), "XPRT"];
-        }else {
+        } else {
             return [amount.amount, amount.denom];
         }
     }
 }
 
 function getTransactionAmount(data) {
-    if(data.amount !== undefined || data.token !== undefined || data.value !== undefined){
-        if(data.amount !== undefined){
+    if (data.amount !== undefined || data.token !== undefined || data.value !== undefined) {
+        if (data.amount !== undefined) {
             return denomModify(data.amount);
-        }else if(data.token !== undefined){
+        } else if (data.token !== undefined) {
             return denomModify(data.token);
-        }else {
+        } else {
             return denomModify(data.value);
         }
     }
 }
 
-function sixDigitsNumber(value, length= 6) {
+function sixDigitsNumber(value, length = 6) {
     let inputValue = value.toString();
-    if(inputValue.length >= length){
-        return inputValue.substr(0,6);
-    }else {
+    if (inputValue.length >= length) {
+        return inputValue.substr(0, 6);
+    } else {
         const stringLength = length - inputValue.length;
         let newString = inputValue;
-        for(let i = 0; i < stringLength; i++) {
-            newString+="0";
+        for (let i = 0; i < stringLength; i++) {
+            newString += "0";
         }
         return newString;
     }

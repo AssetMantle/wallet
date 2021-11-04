@@ -44,7 +44,7 @@ const DelegatedValidators = (props) => {
                 };
             }
         }
-    },{
+    }, {
         name: 'status',
         label: t("STATUS"),
         options: {sort: false}
@@ -93,7 +93,7 @@ const DelegatedValidators = (props) => {
         print: false,
         download: false,
         filter: false,
-        viewColumns:false,
+        viewColumns: false,
         search: false,
     };
 

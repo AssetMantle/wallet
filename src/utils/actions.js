@@ -14,9 +14,9 @@ async function getValidatorRewards(validatorAddress) {
         delegatorAddress: address,
         validatorAddress: validatorAddress,
     }).then(response => {
-        if(response.rewards.length){
+        if (response.rewards.length) {
             let rewards = helper.decimalConversion(response.rewards[0].amount);
-            amount = (transactions.XprtConversion(rewards*1));
+            amount = (transactions.XprtConversion(rewards * 1));
         }
     }).catch(error => {
         console.log(error.response);
@@ -24,16 +24,16 @@ async function getValidatorRewards(validatorAddress) {
     return amount;
 }
 
-async function getValidatorCommission(address){
+async function getValidatorCommission(address) {
     const rpcClient = await transactions.RpcClient();
     const stakingQueryService = new DistributionQueryClient(rpcClient);
     let commission = 0;
     await stakingQueryService.ValidatorCommission({
-        validatorAddress:address
+        validatorAddress: address
     }).then((res) => {
-        if(res.commission.commission[0].amount){
+        if (res.commission.commission[0].amount) {
             commission = helper.decimalConversion(res.commission.commission[0].amount);
-            commission = (transactions.XprtConversion(commission*1));
+            commission = (transactions.XprtConversion(commission * 1));
         }
     }).catch((error) => {
         console.log(error.response

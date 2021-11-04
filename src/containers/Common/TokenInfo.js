@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {connect} from 'react-redux';
 import ModalWithdraw from "../Wallet/ModalWithdraw";
 import {fetchDelegationsCount} from "../../actions/delegations";
@@ -17,6 +17,7 @@ import ModalViewDelegationDetails from "./ModalViewDelegationDetails";
 import {fetchValidators} from "../../actions/validators";
 import NumberView from "../../components/NumberView";
 import {formatNumber} from "../../utils/scripts";
+
 const TokenInfo = (props) => {
     const {t} = useTranslation();
     const [rewards, setRewards] = useState(false);
@@ -108,7 +109,8 @@ const TokenInfo = (props) => {
                         <div className="line">
                             <p className="key">{t("CURRENT_VALUE")}</p>
                             <p className="value"><span className="inner-grid-icon"/>
-                                $<NumberView value={formatNumber((props.delegations + props.balance + props.unbond)* props.tokenPrice)}/>
+                                $<NumberView
+                                    value={formatNumber((props.delegations + props.balance + props.unbond) * props.tokenPrice)}/>
                             </p>
                         </div>
 
@@ -145,8 +147,9 @@ const TokenInfo = (props) => {
                                         icon="info"/></button>
                                 </OverlayTrigger>
                             </p>
-                            <p className="value" title={props.transferableAmount.toFixed(6)}><span className="inner-grid-icon"/>
-                                <NumberView value={formatNumber(props.transferableAmount)}/> XPRT
+                            <p className="value" title={props.transferableAmount.toFixed(6)}><span
+                                className="inner-grid-icon"/>
+                            <NumberView value={formatNumber(props.transferableAmount)}/> XPRT
                             </p>
                         </div>
                         <div className="line">
@@ -182,10 +185,11 @@ const TokenInfo = (props) => {
                         </div>
                         <div className="line">
                             <p className="key">{t("REWARDS")}</p>
-                            <p className="value rewards"><span onClick={() => handleRewards("rewards")} className="claim inner-grid">{t("CLAIM")}</span>
-                                <span title={props.rewards.toFixed(6)}>
-                                    <NumberView value={formatNumber(props.rewards)}/> XPRT
-                                </span>
+                            <p className="value rewards"><span onClick={() => handleRewards("rewards")}
+                                className="claim inner-grid">{t("CLAIM")}</span>
+                            <span title={props.rewards.toFixed(6)}>
+                                <NumberView value={formatNumber(props.rewards)}/> XPRT
+                            </span>
                             </p>
                         </div>
                         <div className="line">
@@ -226,8 +230,8 @@ const stateToProps = (state) => {
         unbond: state.unbond.unbond,
         tokenPrice: state.tokenPrice.tokenPrice,
         list: state.balance.list,
-        transferableAmount:state.balance.transferableAmount,
-        vestingAmount:state.balance.vestingAmount
+        transferableAmount: state.balance.transferableAmount,
+        vestingAmount: state.balance.vestingAmount
     };
 };
 

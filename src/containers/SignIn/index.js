@@ -51,7 +51,8 @@ const SignIn = (props) => {
                             </button>
                         </div>
                         <div className="buttons">
-                            <button className="button button-primary" onClick={() => handleKepler("kepler")}>{t("USE_KEPLER")}
+                            <button className="button button-primary"
+                                onClick={() => handleKepler("kepler")}>{t("USE_KEPLER")}
                             </button>
                         </div>
                         <div className="buttons">

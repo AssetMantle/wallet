@@ -44,10 +44,9 @@ export const fetchUnbondDelegations = (address) => {
                 dispatch(fetchUnbondDelegationsList(unbondingDelegationsResponse.unbondingResponses));
                 const totalUnbond = Lodash.sumBy(unbondingDelegationsResponse.unbondingResponses, (item) => {
                     if (item.entries.length) {
-                        const entriesSum = Lodash.sumBy(item.entries, (entry) => {
+                        return Lodash.sumBy(item.entries, (entry) => {
                             return parseInt(entry["balance"]);
                         });
-                        return entriesSum;
                     }
                 });
                 dispatch(fetchUnbondDelegationsSuccess(transactions.XprtConversion(totalUnbond)));

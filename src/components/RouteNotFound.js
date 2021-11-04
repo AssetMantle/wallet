@@ -19,7 +19,8 @@ const RouteNotFound = () => {
                                 rel="noopener noreferrer">Learn More</a>
                             <li className="nav-item link">
                                 <a className="nav-link primary-medium-color"
-                                    href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer" target="_blank">
+                                    href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer"
+                                    target="_blank">
                                     HELP
                                 </a>
                             </li>

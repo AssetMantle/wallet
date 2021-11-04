@@ -239,11 +239,11 @@ html, body {
     color: #8D9CB5;
   }
 
-  .info-link{
+  .info-link {
     text-decoration: underline;
     display: inline-flex !important;
     align-items: center;
-    text-decoration-color:#8D9CB5;
+    text-decoration-color: #8D9CB5;
     cursor: pointer;
   }
 
@@ -477,39 +477,43 @@ html, body {
   border-radius: 0;
   padding-left: 10px;
 
-  .MuiSelect-select{
+  .MuiSelect-select {
     &:focus {
       background-color: transparent;
     }
+
     display: flex !important;
     justify-content: space-between !important;
-    .state{
+
+    .state {
       display: none !important;
     }
   }
 
 }
-.MuiMenu-list{
-  .validator-item:last-child{
+
+.MuiMenu-list {
+  .validator-item:last-child {
     border: 0px solid !important;
   }
 }
-.validator-item{
-  border-bottom:1px solid rgba(224, 224, 224, 1) !important;
+
+.validator-item {
+  border-bottom: 1px solid rgba(224, 224, 224, 1) !important;
   display: flex !important;
   justify-content: space-between !important;
 }
 
-.validators-list-selection .MuiSelect-select .state.active, .validator-item .state.active, .active-icon-box{
+.validators-list-selection .MuiSelect-select .state.active, .validator-item .state.active, .active-icon-box {
   background: rgba(29, 158, 97, 0.15);
   color: #1D9E61;
   font-size: 12px;
   padding: 0px 7px;
-  display: inline ;
+  display: inline;
   margin-left: 5px;
 }
 
-.validators-list-selection .MuiSelect-select .state.inactive, .validator-item .state.inactive, .inactive-icon-box{
+.validators-list-selection .MuiSelect-select .state.inactive, .validator-item .state.inactive, .inactive-icon-box {
   background: #e51f0c33;
   color: #e50913;
   font-size: 12px;
@@ -517,6 +521,7 @@ html, body {
   display: inline;
   margin-left: 5px;
 }
+
 .MuiInput-underline::before {
   border: 0px solid !important;
 }
@@ -748,7 +753,7 @@ html, body {
   display: block;
 }
 
-.delegation-rank{
+.delegation-rank {
   width: 30px;
   height: 30px;
   display: flex;
@@ -766,11 +771,12 @@ html, body {
   justify-content: center;
 }
 
-.delegation-rank.active{
+.delegation-rank.active {
   background: #e50913;
   color: #fff;
 }
-.delegation-rank.inactive{
+
+.delegation-rank.inactive {
   color: #e50913;
   background: #e509130f;
 }
@@ -779,8 +785,8 @@ html, body {
   overflow: hidden;
   display: inline-block;
   vertical-align: bottom;
-  -webkit-animation: ellipsis steps(4,end) 1500ms infinite;
-  animation: ellipsis steps(4,end) 1500ms infinite;
+  -webkit-animation: ellipsis steps(4, end) 1500ms infinite;
+  animation: ellipsis steps(4, end) 1500ms infinite;
   content: "\2026"; /* ascii code for the ellipsis character */
   width: 0px;
 }
@@ -813,23 +819,25 @@ html, body {
   }
 }
 
-ul li em{
+ul li em {
   font-style: normal;
 }
 
-.digits{
-  .start{
+.digits {
+  .start {
     font-size: 16px;
   }
-  .end{
+
+  .end {
     font-size: 13px;
   }
 }
 
-.download-keystore-box{
-text-align: center;
-  p{
-    margin:0;
+.download-keystore-box {
+  text-align: center;
+
+  p {
+    margin: 0;
     display: inline-flex;
     background: #ffa5000d;
     padding: 5px 20px;

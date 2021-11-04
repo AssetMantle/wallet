@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import {combineReducers} from 'redux';
 import delegations from './delegations';
 import transactions from "./transactions";
 import validators from "./validators";
@@ -7,6 +7,7 @@ import rewards from "./rewards";
 import unbond from "./unbond";
 import tokenPrice from "./tokenPrice";
 import withdrawAddress from "./withdrawAddress";
+
 export default combineReducers({
     delegations,
     transactions,

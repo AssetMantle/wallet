@@ -1,10 +1,5 @@
-import {
-    Form,
-    Modal,
-    OverlayTrigger,
-    Popover,
-} from 'react-bootstrap';
-import React, { useState} from 'react';
+import {Form, Modal, OverlayTrigger, Popover,} from 'react-bootstrap';
+import React, {useState} from 'react';
 import Icon from "../../../../components/Icon";
 import aminoMsgHelper from "../../../../utils/aminoMsgHelper";
 import {DelegateMsg} from "../../../../utils/protoMsgHelper";
@@ -48,14 +43,14 @@ const ModalDelegate = (props) => {
                 setCheckAmountError(false);
             }
             setEnteredAmount(evt.target.value);
-            setAmount(evt.target.value*1);
+            setAmount(evt.target.value * 1);
         } else {
             return false;
         }
     };
 
     const handlePrevious = (name) => {
-        if(name === "initialModal"){
+        if (name === "initialModal") {
             props.setShow(true);
             props.setTxModalShow(false);
             props.setInitialModal(true);
@@ -95,20 +90,20 @@ const ModalDelegate = (props) => {
             setInitialModal(false);
             setFeeModal(true);
             const data = {
-                amount : amount,
-                memo : memo,
-                validatorAddress : props.validatorAddress,
+                amount: amount,
+                memo: memo,
+                validatorAddress: props.validatorAddress,
                 modalHeader: `Delegate to ${props.moniker}`,
                 formName: "delegate",
-                successMsg : t("SUCCESSFULL_DELEGATED"),
-                failedMsg : t("FAILED_DELEGATE")
+                successMsg: t("SUCCESSFULL_DELEGATED"),
+                failedMsg: t("FAILED_DELEGATE")
             };
             setFormData(data);
         }
     };
 
-    const selectTotalBalanceHandler = (value) =>{
-        setAmount(value.replace(/,/g, '')*1);
+    const selectTotalBalanceHandler = (value) => {
+        setAmount(value.replace(/,/g, '') * 1);
         setEnteredAmount(value.replace(/,/g, ''));
     };
 
@@ -172,10 +167,12 @@ const ModalDelegate = (props) => {
                                         onKeyPress={helper.inputAmountValidation}
                                         required={true}
                                     />
-                                    <span className={props.balance === 0 ? "empty info-data info-link" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(formatNumber(props.balance))}><span
-                                        className="title">{t("BALANCE")}:</span> <span
-                                        className="value">
-                                        <NumberView value={formatNumber(props.balance)}/>XPRT</span> </span>
+                                    <span
+                                        className={props.balance === 0 ? "empty info-data info-link" : "info-data info-link"}
+                                        onClick={() => selectTotalBalanceHandler(formatNumber(props.balance))}><span
+                                            className="title">{t("BALANCE")}:</span> <span
+                                            className="value">
+                                            <NumberView value={formatNumber(props.balance)}/>XPRT</span> </span>
                                 </div>
                             </div>
 
@@ -261,9 +258,9 @@ const ModalDelegate = (props) => {
             }
             {response !== '' ?
                 <ModalViewTxnResponse
-                    response = {response}
-                    successMsg = {t("SUCCESSFULL_DELEGATED")}
-                    failedMsg = {t("FAILED_DELEGATE")}
+                    response={response}
+                    successMsg={t("SUCCESSFULL_DELEGATED")}
+                    failedMsg={t("FAILED_DELEGATE")}
                     handleClose={props.handleClose}
                 />
                 : null}

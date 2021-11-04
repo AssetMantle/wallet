@@ -1,22 +1,23 @@
 import {
     PAGE_NUMBER_FETCH_SUCCESS,
-    TRANSACTIONS_FETCH_ERROR,
-    TRANSACTIONS_FETCH_SUCCESS,
-    TRANSACTIONS_IN_PROGRESS,
     RECEIVE_PAGE_NUMBER_FETCH_SUCCESS,
     RECEIVE_TRANSACTIONS_FETCH_ERROR,
     RECEIVE_TRANSACTIONS_FETCH_SUCCESS,
-    RECEIVE_TRANSACTIONS_IN_PROGRESS
+    RECEIVE_TRANSACTIONS_IN_PROGRESS,
+    TRANSACTIONS_FETCH_ERROR,
+    TRANSACTIONS_FETCH_SUCCESS,
+    TRANSACTIONS_IN_PROGRESS
 } from "../constants/transactions";
 import {buildQuery} from "@cosmjs/tendermint-rpc/build/tendermint34/requests";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {decodeTxRaw, Registry} from "@cosmjs/proto-signing";
+import transactions from "../utils/transactions";
+import helper from "../utils/helper";
+
 const {defaultRegistryTypes} = require("@cosmjs/stargate");
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 const vestingTx = require("cosmjs-types/cosmos/vesting/v1beta1/tx");
 const tx_7 = require("cosmjs-types/ibc/core/channel/v1/tx");
-import transactions from "../utils/transactions";
-import helper from "../utils/helper";
 
 export const fetchTransactionsProgress = () => {
     return {
@@ -77,7 +78,7 @@ export const fetchTransactions = (address, limit, pageNumber) => {
                         'height': transaction.height,
                         'hash': txHash,
                         'body': body,
-                        'amount':txAmount,
+                        'amount': txAmount,
                         'timestamp': block.block.header.time
                     });
                 }
@@ -85,7 +86,7 @@ export const fetchTransactions = (address, limit, pageNumber) => {
             let txnsResponseList = txData;
             dispatch(fetchPageNumberSuccess(pageNumber, txSearch.totalCount));
             dispatch(fetchTransactionsSuccess(txnsResponseList));
-        }catch (e) {
+        } catch (e) {
             console.log(e.message);
         }
     };
@@ -124,9 +125,9 @@ function txSearchParams(recipientAddress, pageNumber, perPage, type) {
     return {
         query: buildQuery({
             tags: [
-                {key:type, value: recipientAddress},
+                {key: type, value: recipientAddress},
             ],
-        }), page: pageNumber, per_page: perPage, prove: true, order_by :'desc'
+        }), page: pageNumber, per_page: perPage, prove: true, order_by: 'desc'
     };
 }
 
@@ -165,7 +166,7 @@ export const fetchReceiveTransactions = (address, limit, pageNumber) => {
                         'height': transaction.height,
                         'hash': txHash,
                         'body': body,
-                        'amount':txAmount,
+                        'amount': txAmount,
                         'timestamp': block.block.header.time
                     });
                 }

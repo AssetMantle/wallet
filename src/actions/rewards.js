@@ -1,11 +1,11 @@
 import {
+    FETCH_VALIDATOR_COMMISSION_INFO_SUCCESS,
+    FETCH_VALIDATOR_WITH_ADDRESS_ERROR,
+    FETCH_VALIDATORS_REWARDS_SUCCESS,
     REWARDS_FETCH_ERROR,
     REWARDS_FETCH_IN_PROGRESS,
     REWARDS_FETCH_SUCCESS,
-    REWARDS_LIST_FETCH_SUCCESS,
-    FETCH_VALIDATOR_COMMISSION_INFO_SUCCESS,
-    FETCH_VALIDATOR_WITH_ADDRESS_ERROR,
-    FETCH_VALIDATORS_REWARDS_SUCCESS
+    REWARDS_LIST_FETCH_SUCCESS
 } from "../constants/rewards";
 import transactions from "../utils/transactions";
 import {QueryClientImpl} from "cosmjs-types/cosmos/distribution/v1beta1/query";
@@ -59,7 +59,7 @@ export const fetchValidatorCommissionInfoSuccess = (list) => {
     };
 };
 
-export const fetchTotalRewards= (address) => {
+export const fetchTotalRewards = (address) => {
     return async dispatch => {
         try {
             dispatch(fetchRewardsProgress());
@@ -78,7 +78,7 @@ export const fetchTotalRewards= (address) => {
                     ? error.response.data.message
                     : error.message);
             });
-        } catch(error)  {
+        } catch (error) {
             console.log(error.response
                 ? error.response.data.message
                 : error.message);
@@ -97,7 +97,7 @@ export const fetchRewards = (address) => {
             if (delegatorRewardsResponse.rewards.length) {
                 let options = [];
 
-                if(delegatorRewardsResponse.rewards.length) {
+                if (delegatorRewardsResponse.rewards.length) {
                     for (const item of delegatorRewardsResponse.rewards) {
                         const stakingQueryService = new StakingQueryClientImpl(rpcClient);
 

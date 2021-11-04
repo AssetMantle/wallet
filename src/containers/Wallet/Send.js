@@ -1,10 +1,5 @@
-import React, { useState} from "react";
-import {
-    Modal,
-    Form,
-    OverlayTrigger,
-    Popover,
-} from "react-bootstrap";
+import React, {useState} from "react";
+import {Form, Modal, OverlayTrigger, Popover,} from "react-bootstrap";
 import Icon from "../../components/Icon";
 import transactions from "../../utils/transactions";
 import helper from "../../utils/helper";
@@ -49,13 +44,13 @@ const Send = (props) => {
     const handleAmountChange = (evt) => {
         let rex = /^\d*\.?\d{0,6}$/;
         if (rex.test(evt.target.value)) {
-            if(tokenDenom === "uxprt") {
+            if (tokenDenom === "uxprt") {
                 if (props.transferableAmount < (evt.target.value * 1)) {
                     setCheckAmountError(true);
                 } else {
                     setCheckAmountError(false);
                 }
-            }else {
+            } else {
                 if (transferableAmount < (evt.target.value * 1)) {
                     setCheckAmountError(true);
                 } else {
@@ -82,15 +77,15 @@ const Send = (props) => {
                     setKeplerError(t("MEMO_MNEMONIC_CHECK_ERROR"));
                 } else {
                     const data = {
-                        amount : amountField,
-                        denom : tokenDenom,
-                        memo : memo,
-                        toAddress : event.target.address.value,
+                        amount: amountField,
+                        denom: tokenDenom,
+                        memo: memo,
+                        toAddress: event.target.address.value,
                         modalHeader: "Send Token",
                         formName: "send",
-                        successMsg : t("SUCCESSFUL_SEND"),
-                        failedMsg : t("FAILED_SEND"),
-                        evt:event
+                        successMsg: t("SUCCESSFUL_SEND"),
+                        failedMsg: t("FAILED_SEND"),
+                        evt: event
                     };
                     setShow(true);
                     setFormData(data);
@@ -123,8 +118,7 @@ const Send = (props) => {
                 setKeplerError(err.message);
                 helper.accountChangeCheck(err.message);
             });
-        }
-        else {
+        } else {
             setLoader(false);
             setKeplerError("Invalid Recipient Address");
         }
@@ -141,13 +135,12 @@ const Send = (props) => {
 
     const onChangeSelect = (evt) => {
         setToken(evt.target.value);
-        if(evt.target.value === 'uxprt'){
+        if (evt.target.value === 'uxprt') {
             setTokenDenom(evt.target.value);
             setTransferableAmount(props.transferableAmount);
-        }
-        else {
+        } else {
             props.tokenList.forEach((item) => {
-                if(evt.target.value === item.denomTrace){
+                if (evt.target.value === item.denomTrace) {
                     setTokenDenom(item.denom.baseDenom);
                     setTransferableAmount(transactions.XprtConversion(item.amount * 1));
                     setTokenItem(item);
@@ -157,7 +150,7 @@ const Send = (props) => {
     };
 
     const selectTotalBalanceHandler = (value) => {
-        setAmountField(value.replace(/,/g, '')*1);
+        setAmountField(value.replace(/,/g, '') * 1);
         setEnteredAmount(value.replace(/,/g, ''));
     };
 
@@ -205,7 +198,7 @@ const Send = (props) => {
                                 <MenuItem
                                     className=""
                                     value="uxprt">
-                                        XPRT
+                                    XPRT
                                 </MenuItem>
                             }
                         </Select>
@@ -228,19 +221,22 @@ const Send = (props) => {
                             />
                             {
                                 tokenDenom === "uxprt" ?
-                                    <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(formatNumber(props.transferableAmount))}><span
-                                        className="title">Transferable Balance:</span> 
                                     <span
-                                        className="value"
-                                        title={props.transferableAmount}>
-                                        <NumberView value={formatNumber(props.transferableAmount)}/>XPRT
-                                    </span> 
+                                        className={props.transferableAmount === 0 ? "empty info-data" : "info-data info-link"}
+                                        onClick={() => selectTotalBalanceHandler(formatNumber(props.transferableAmount))}><span
+                                            className="title">Transferable Balance:</span> 
+                                        <span
+                                            className="value"
+                                            title={props.transferableAmount}>
+                                            <NumberView value={formatNumber(props.transferableAmount)}/>XPRT
+                                        </span> 
                                     </span>
                                     :
-                                    <span title={tokenItem.denomTrace} className={transferableAmount === 0 ? "empty info-data" : "info-data"}>
+                                    <span title={tokenItem.denomTrace}
+                                        className={transferableAmount === 0 ? "empty info-data" : "info-data"}>
                                         <span
                                             className="title">Transferable Balance:</span> <span
-                                            className="value">{transferableAmount.toLocaleString()}  ATOM ( IBC Trace path - {tokenItem.denom.path} , denom: {tokenItem.denom.baseDenom}  )</span> </span>
+                                            className="value">{transferableAmount.toLocaleString()} ATOM ( IBC Trace path - {tokenItem.denom.path} , denom: {tokenItem.denom.baseDenom} )</span> </span>
                             }
                         </div>
                     </div>
@@ -297,7 +293,7 @@ const Send = (props) => {
                     {keplerError !== '' ?
                         <p className="form-error">{keplerError}</p> : null}
                     <div className="buttons">
-                        {mode !== "kepler"  ?
+                        {mode !== "kepler" ?
                             <div className="button-section">
                                 <button className="button button-primary"
                                     disabled={checkAmountError || amountField === 0 || props.transferableAmount === 0}
@@ -316,9 +312,9 @@ const Send = (props) => {
             {txResponse !== '' ?
                 <Modal show={show} onHide={handleClose} backdrop="static" centered className="modal-custom">
                     <ModalViewTxnResponse
-                        response = {txResponse}
-                        successMsg = {t("SUCCESSFUL_SEND")}
-                        failedMsg = {t("FAILED_SEND")}
+                        response={txResponse}
+                        successMsg={t("SUCCESSFUL_SEND")}
+                        failedMsg={t("FAILED_SEND")}
                         handleClose={handleClose}
                     />
                 </Modal>

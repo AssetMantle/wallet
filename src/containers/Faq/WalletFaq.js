@@ -1,5 +1,5 @@
 import React, {useContext} from "react";
-import {Accordion, Card, useAccordionToggle, AccordionContext} from "react-bootstrap";
+import {Accordion, AccordionContext, Card, useAccordionToggle} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
 
 function ContextAwareToggle({eventKey, callback}) {

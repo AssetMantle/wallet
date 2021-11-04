@@ -16,7 +16,8 @@ const FeeContainer = () => {
         <>
             {
                 mode === "normal" ?
-                    <p className="fee">A default fee of {transactions.XprtConversion(localStorage.getItem('fee')*1)} XPRT is
+                    <p className="fee">A default fee
+                        of {transactions.XprtConversion(localStorage.getItem('fee') * 1)} XPRT is
                         deducted from your wallet.
                     <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popoverSetupAddress}>
                         <button className="icon-button info" type="button">

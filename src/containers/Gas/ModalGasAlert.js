@@ -1,7 +1,4 @@
-import {
-    Modal,
-    Form
-} from 'react-bootstrap';
+import {Form, Modal} from 'react-bootstrap';
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from "react-i18next";
 import config from "../../config";
@@ -38,14 +35,13 @@ const ModalGasAlert = (props) => {
             } else {
                 setCheckAmountError(false);
             }
-        }else if(accountType === "vesting" && props.formData.formName === "delegate"){
-            if(props.transferableAmount < transactions.XprtConversion(gas * fee)){
+        } else if (accountType === "vesting" && props.formData.formName === "delegate") {
+            if (props.transferableAmount < transactions.XprtConversion(gas * fee)) {
                 setCheckAmountError(true);
-            }else {
+            } else {
                 setCheckAmountError(false);
             }
-        }
-        else {
+        } else {
             if ((props.transferableAmount - (props.formData.amount * 1)) < transactions.XprtConversion(gas * fee)) {
                 setCheckAmountError(true);
             } else {
@@ -79,7 +75,7 @@ const ModalGasAlert = (props) => {
             } else if (activeFeeState === "Low") {
                 setFee((event.target.value * 1) * config.lowFee);
             }
-            if (amountTxns|| vestingDelegationCheck) {
+            if (amountTxns || vestingDelegationCheck) {
                 if (activeFeeState === "Average" && (transactions.XprtConversion((event.target.value * 1) * config.averageFee)) > props.transferableAmount) {
                     setCheckAmountError(true);
                 } else if (activeFeeState === "High" && (transactions.XprtConversion((event.target.value * 1) * config.highFee)) > props.transferableAmount) {
@@ -130,7 +126,7 @@ const ModalGasAlert = (props) => {
     const handleNext = () => {
         setShowDecryptModal(true);
         setFeeModal(false);
-        if(props.formData.formName === "send" || props.formData.formName === "ibc"){
+        if (props.formData.formName === "send" || props.formData.formName === "ibc") {
             props.formData.evt.target.reset();
             props.setEnteredAmount('');
         }
@@ -145,8 +141,8 @@ const ModalGasAlert = (props) => {
         const loginAddress = localStorage.getItem('address');
         let response;
 
-        let accountNumber = localStorage.getItem('accountNumber')*1;
-        let addressIndex = localStorage.getItem('addressIndex')*1;
+        let accountNumber = localStorage.getItem('accountNumber') * 1;
+        let addressIndex = localStorage.getItem('addressIndex') * 1;
 
         if (props.formData.formName === "ibc") {
             let msg = transactions.MakeIBCTransferMsg(props.formData.channelID, loginAddress,
@@ -215,22 +211,34 @@ const ModalGasAlert = (props) => {
                                             <div className={activeFeeState === "Low" ? "fee-box active" : "fee-box"}
                                                 onClick={() => handleFee("Low", config.lowFee)}>
                                                 <p className="title">Zero</p>
-                                                <p className="gas"><NumberView value={formatNumber(transactions.XprtConversion(gas * config.lowFee)* props.tokenPrice)}/>$</p>
-                                                <p className="xprt"><NumberView value={formatNumber(transactions.XprtConversion(gas * config.lowFee))}/>XPRT</p>
+                                                <p className="gas"><NumberView
+                                                    value={formatNumber(transactions.XprtConversion(gas * config.lowFee) * props.tokenPrice)}/>$
+                                                </p>
+                                                <p className="xprt"><NumberView
+                                                    value={formatNumber(transactions.XprtConversion(gas * config.lowFee))}/>XPRT
+                                                </p>
                                             </div>
                                             : null
                                     }
                                     <div className={activeFeeState === "Average" ? "fee-box active" : "fee-box"}
                                         onClick={() => handleFee("Average", config.averageFee)}>
                                         <p className="title">Low</p>
-                                        <p className="gas"><NumberView value={formatNumber(transactions.XprtConversion(gas * config.averageFee)* props.tokenPrice)}/>$</p>
-                                        <p className="xprt"><NumberView value={formatNumber(transactions.XprtConversion(gas * config.averageFee))}/>XPRT</p>
+                                        <p className="gas"><NumberView
+                                            value={formatNumber(transactions.XprtConversion(gas * config.averageFee) * props.tokenPrice)}/>$
+                                        </p>
+                                        <p className="xprt"><NumberView
+                                            value={formatNumber(transactions.XprtConversion(gas * config.averageFee))}/>XPRT
+                                        </p>
                                     </div>
                                     <div className={activeFeeState === "High" ? "fee-box active" : "fee-box"}
                                         onClick={() => handleFee("High", config.highFee)}>
                                         <p className="title">High</p>
-                                        <p className="gas"><NumberView value={formatNumber(transactions.XprtConversion(gas * config.highFee)* props.tokenPrice)}/>$</p>
-                                        <p className="xprt"><NumberView value={formatNumber(transactions.XprtConversion(gas * config.highFee))}/>XPRT</p>
+                                        <p className="gas"><NumberView
+                                            value={formatNumber(transactions.XprtConversion(gas * config.highFee) * props.tokenPrice)}/>$
+                                        </p>
+                                        <p className="xprt"><NumberView
+                                            value={formatNumber(transactions.XprtConversion(gas * config.highFee))}/>XPRT
+                                        </p>
                                     </div>
                                 </>
 

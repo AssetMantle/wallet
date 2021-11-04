@@ -1,10 +1,5 @@
-import React, {useState, useEffect} from "react";
-import {
-    Form,
-    Modal,
-    OverlayTrigger,
-    Popover,
-} from "react-bootstrap";
+import React, {useEffect, useState} from "react";
+import {Form, Modal, OverlayTrigger, Popover,} from "react-bootstrap";
 import Icon from "../../../components/Icon";
 import transactions from "../../../utils/transactions";
 import helper from "../../../utils/helper";
@@ -20,6 +15,7 @@ import ModalViewTxnResponse from "../../Common/ModalViewTxnResponse";
 import ModalGasAlert from "../../Gas/ModalGasAlert";
 import {formatNumber} from "../../../utils/scripts";
 import NumberView from "../../../components/NumberView";
+
 const IBC_CONF = process.env.REACT_APP_IBC_CONFIG;
 const IbcTxn = (props) => {
     const {t} = useTranslation();
@@ -30,7 +26,7 @@ const IbcTxn = (props) => {
     const [txResponse, setTxResponse] = useState('');
     const [show, setShow] = useState(true);
     const [memoStatus, setMemoStatus] = useState(false);
-    const [keplerError, setKeplerError] = useState( "");
+    const [keplerError, setKeplerError] = useState("");
     const [loader, setLoader] = useState(false);
     const [customChain, setCustomChain] = useState(false);
     const [checkAmountError, setCheckAmountError] = useState(false);
@@ -45,10 +41,10 @@ const IbcTxn = (props) => {
 
     let mode = localStorage.getItem('loginMode');
     let loginAddress = localStorage.getItem('address');
-    useEffect(()=>{
-        if(IBC_CONF === "ibcStaging.json"){
+    useEffect(() => {
+        if (IBC_CONF === "ibcStaging.json") {
             setChannels(ibcConfig.testNetChannels);
-        }else {
+        } else {
             setChannels(ibcConfig.mainNetChannels);
         }
     },);
@@ -61,13 +57,13 @@ const IbcTxn = (props) => {
         setKeplerError('');
         let rex = /^\d*\.?\d{0,6}$/;
         if (rex.test(evt.target.value)) {
-            if(tokenDenom === "uxprt") {
+            if (tokenDenom === "uxprt") {
                 if (props.transferableAmount < (evt.target.value * 1)) {
                     setCheckAmountError(true);
                 } else {
                     setCheckAmountError(false);
                 }
-            }else {
+            } else {
                 if (transferableAmount < (evt.target.value * 1)) {
                     setCheckAmountError(true);
                 } else {
@@ -83,7 +79,7 @@ const IbcTxn = (props) => {
 
     const handleSubmit = async event => {
         event.preventDefault();
-        if(customChain){
+        if (customChain) {
             let channel = event.target.channel.value;
             setChannelID(channel);
         }
@@ -98,7 +94,7 @@ const IbcTxn = (props) => {
             } else {
                 if (chain !== "Custom" && !helper.validateAddress(event.target.address.value, chain.substr(0, chain.indexOf('/')))) {
                     setKeplerError('Enter Valid  Recipient’s Address');
-                    return ;
+                    return;
                 }
                 const data = {
                     amount: amountField,
@@ -106,13 +102,13 @@ const IbcTxn = (props) => {
                     memo: memo,
                     toAddress: helper.trimWhiteSpaces(event.target.address.value),
                     channelID: customChain ? helper.trimWhiteSpaces(event.target.channel.value) : helper.trimWhiteSpaces(channelID),
-                    channelUrl:selectedChannel ? selectedChannel.url : undefined,
-                    inputPort : customChain ? event.target.port.value : "transfer",
+                    channelUrl: selectedChannel ? selectedChannel.url : undefined,
+                    inputPort: customChain ? event.target.port.value : "transfer",
                     modalHeader: "Send Token",
                     formName: "ibc",
                     successMsg: t("SUCCESSFUL_SEND"),
                     failedMsg: t("FAILED_SEND"),
-                    evt:event
+                    evt: event
                 };
                 setFormData(data);
                 setKeplerError('');
@@ -132,14 +128,14 @@ const IbcTxn = (props) => {
         if (chain !== "Custom" && !helper.validateAddress(event.target.address.value, chain.substr(0, chain.indexOf('/')))) {
             setLoader(false);
             setKeplerError('Enter Valid  Recipient’s Address.');
-            return ;
+            return;
         }
         let inputChannelID = customChain ? event.target.channel.value : channelID;
         let inputPort = customChain ? event.target.port.value : "transfer";
-        let msg =  transactions.MakeIBCTransferMsg(inputChannelID, loginAddress,
-            event.target.address.value,(amountField * config.xprtValue), undefined, undefined, tokenDenom, selectedChannel ? selectedChannel.url : undefined, inputPort);
+        let msg = transactions.MakeIBCTransferMsg(inputChannelID, loginAddress,
+            event.target.address.value, (amountField * config.xprtValue), undefined, undefined, tokenDenom, selectedChannel ? selectedChannel.url : undefined, inputPort);
         await msg.then(result => {
-            const response = transactions.TransactionWithKeplr( [result],aminoMsgHelper.fee(0, 250000));
+            const response = transactions.TransactionWithKeplr([result], aminoMsgHelper.fee(0, 250000));
             response.then(result => {
                 if (result.code !== undefined) {
                     helper.accountChangeCheck(result.rawLog);
@@ -170,16 +166,16 @@ const IbcTxn = (props) => {
 
     const onChangeSelect = (evt) => {
         setSelectedChannel();
-        if(evt.target.value === "Custom"){
+        if (evt.target.value === "Custom") {
             setCustomChain(true);
             setChain(evt.target.value);
-        }else {
+        } else {
             setCustomChain(false);
             let id = evt.target.value.substr(evt.target.value.indexOf('/') + 1);
             setChannelID(id);
             setChain(evt.target.value);
             channels.forEach(async (item) => {
-                if(evt.target.value === item.id){
+                if (evt.target.value === item.id) {
                     setSelectedChannel(item);
                 }
             });
@@ -190,13 +186,12 @@ const IbcTxn = (props) => {
 
     const onTokenChangeSelect = (evt) => {
         setToken(evt.target.value);
-        if(evt.target.value === 'uxprt'){
+        if (evt.target.value === 'uxprt') {
             setTokenDenom(evt.target.value);
             setTransferableAmount(props.transferableAmount);
-        }
-        else {
+        } else {
             props.tokenList.forEach((item) => {
-                if(evt.target.value === item.denomTrace){
+                if (evt.target.value === item.denomTrace) {
                     setTokenDenom(evt.target.value);
                     setTransferableAmount(transactions.XprtConversion(item.amount * 1));
                     setTokenItem(item);
@@ -216,7 +211,7 @@ const IbcTxn = (props) => {
         <Popover id="popover">
             <Popover.Content>
                 {
-                    (chain !== "Custom" && chain !== "" && chain.substr(0, chain.indexOf('/')) !== "osmosis")  ?
+                    (chain !== "Custom" && chain !== "" && chain.substr(0, chain.indexOf('/')) !== "osmosis") ?
                         <p>Recipient’s address starts with {chain.substr(0, chain.indexOf('/'))}</p>
                         : ""
                 }
@@ -228,7 +223,7 @@ const IbcTxn = (props) => {
     );
 
     const selectTotalBalanceHandler = (value) => {
-        setAmountField(value.replace(/,/g, '')*1);
+        setAmountField(value.replace(/,/g, '') * 1);
         setEnteredAmount(value.replace(/,/g, ''));
     };
 
@@ -267,7 +262,8 @@ const IbcTxn = (props) => {
                     {selectedChannel ?
                         <div className="form-field">
                             <p className="label info">{t("DESCRIPTION")}</p>
-                            <div className="amount-field"><span className="description-info">{selectedChannel.description}</span></div>
+                            <div className="amount-field"><span
+                                className="description-info">{selectedChannel.description}</span></div>
                         </div>
 
                         : ""}
@@ -324,23 +320,23 @@ const IbcTxn = (props) => {
                             onChange={onTokenChangeSelect} displayEmpty>
                             {
                                 props.tokenList.map((item, index) => {
-                                    if(item.denom === "uxprt"){
+                                    if (item.denom === "uxprt") {
                                         return (
                                             <MenuItem
                                                 key={index + 1}
                                                 className=""
                                                 value={item.denom}>
-                                                    XPRT
+                                                XPRT
                                             </MenuItem>
                                         );
                                     }
-                                    if(item.denom.baseDenom === "uatom"){
+                                    if (item.denom.baseDenom === "uatom") {
                                         return (
                                             <MenuItem
                                                 key={index + 1}
                                                 className=""
                                                 value={item.denomTrace}>
-                                                    ATOM ({item.denom.path})
+                                                ATOM ({item.denom.path})
                                             </MenuItem>
                                         );
                                     }
@@ -365,16 +361,19 @@ const IbcTxn = (props) => {
                             />
                             {
                                 tokenDenom === "uxprt" ?
-                                    <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(formatNumber(props.transferableAmount))}><span
-                                        className="title">Transferable Balance:</span> <span
-                                        className="value"
-                                        title={props.transferableAmount}>
-                                        <NumberView value={formatNumber(props.transferableAmount)}/> XPRT</span> </span>
+                                    <span
+                                        className={props.transferableAmount === 0 ? "empty info-data" : "info-data info-link"}
+                                        onClick={() => selectTotalBalanceHandler(formatNumber(props.transferableAmount))}><span
+                                            className="title">Transferable Balance:</span> <span
+                                            className="value"
+                                            title={props.transferableAmount}>
+                                            <NumberView value={formatNumber(props.transferableAmount)}/> XPRT</span> </span>
                                     :
-                                    <span title={tokenItem.denomTrace} className={transferableAmount === 0 ? "empty info-data" : "info-data"}>
+                                    <span title={tokenItem.denomTrace}
+                                        className={transferableAmount === 0 ? "empty info-data" : "info-data"}>
                                         <span
                                             className="title">Transferable Balance:</span> <span
-                                            className="value"><NumberView value={formatNumber(transferableAmount)}/> ATOM ( IBC Trace path - {tokenItem.denom.path} , denom: {tokenItem.denom.baseDenom}  )</span> </span>
+                                            className="value"><NumberView value={formatNumber(transferableAmount)}/> ATOM ( IBC Trace path - {tokenItem.denom.path} , denom: {tokenItem.denom.baseDenom} )</span> </span>
                             }
                         </div>
                     </div>
@@ -434,7 +433,7 @@ const IbcTxn = (props) => {
                         : null
                     }
                     <div className="buttons">
-                        {mode !== "kepler"  ?
+                        {mode !== "kepler" ?
                             <div className="button-section">
                                 <button className="button button-primary"
                                     disabled={disable || checkAmountError || amountField === 0 || props.transferableAmount === 0}
@@ -452,9 +451,9 @@ const IbcTxn = (props) => {
             {txResponse !== '' ?
                 <Modal show={show} onHide={handleClose} backdrop="static" centered className="modal-custom">
                     <ModalViewTxnResponse
-                        response = {txResponse}
-                        successMsg = {t("SUCCESSFUL_SEND")}
-                        failedMsg = {t("FAILED_SEND")}
+                        response={txResponse}
+                        successMsg={t("SUCCESSFUL_SEND")}
+                        failedMsg={t("FAILED_SEND")}
                         handleClose={handleClose}
                     />
                 </Modal>

@@ -100,13 +100,13 @@ function SetWithDrawAddressMsg(delegatorAddress, withdrawAddress) {
     };
 }
 
-function TransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp, denom , port = "transfer") {
+function TransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp, denom, port = "transfer") {
     return {
         typeUrl: msgTransferTypeUrl,
         value: MsgTransfer.fromPartial({
             sourcePort: port,
             sourceChannel: channel,
-            token: coin(amount*1,denom),
+            token: coin(amount * 1, denom),
             sender: helper.trimWhiteSpaces(fromAddress),
             receiver: helper.trimWhiteSpaces(toAddress),
             timeoutHeight: {
@@ -118,7 +118,7 @@ function TransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, tim
     };
 }
 
-function ValidatorCommissionMsg(address){
+function ValidatorCommissionMsg(address) {
     return {
         typeUrl: msgValidatorCommission,
         value: MsgWithdrawValidatorCommission.fromPartial({
@@ -127,4 +127,13 @@ function ValidatorCommissionMsg(address){
     };
 }
 
-export {SendMsg, DelegateMsg, RedelegateMsg, UnbondMsg, WithdrawMsg, SetWithDrawAddressMsg, TransferMsg, ValidatorCommissionMsg};
+export {
+    SendMsg,
+    DelegateMsg,
+    RedelegateMsg,
+    UnbondMsg,
+    WithdrawMsg,
+    SetWithDrawAddressMsg,
+    TransferMsg,
+    ValidatorCommissionMsg
+};

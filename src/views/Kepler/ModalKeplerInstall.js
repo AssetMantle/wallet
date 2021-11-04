@@ -23,7 +23,9 @@ const ModalKeplerInstall = () => {
                 <Modal.Body className="kepler-modal-body">
                     <p>{t("KEPLR_INSTALL_NOTE")}</p>
                     <div className="chrome-box">
-                        <a className="chrome-link" href="https://chrome.google.com/webstore/detail/keplr/dmkamcknogkgcdfhhbddcghachkejeap" rel="noopener noreferrer" target="_blank">
+                        <a className="chrome-link"
+                            href="https://chrome.google.com/webstore/detail/keplr/dmkamcknogkgcdfhhbddcghachkejeap"
+                            rel="noopener noreferrer" target="_blank">
                             <img src={chrome} alt="chrome"/>
                             <p>{t("INSTALL_CHROME")}</p>
                         </a>

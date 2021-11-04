@@ -1,13 +1,8 @@
 import React, {useContext, useState} from "react";
-import {
-    Accordion, AccordionContext,
-    Card,
-    Form, useAccordionToggle,
-} from "react-bootstrap";
+import {Accordion, AccordionContext, Card, Form, useAccordionToggle,} from "react-bootstrap";
 import Icon from "../../components/Icon";
 import helper from "../../utils/helper";
 import {useTranslation} from "react-i18next";
-
 
 
 const AdvancedFields = (props) => {
@@ -63,7 +58,7 @@ const AdvancedFields = (props) => {
     const handleAccountNumberKeypress = e => {
         if (e.key === "e" || e.key === "-" || e.key === "+") {
             e.preventDefault();
-        }else {
+        } else {
             const accountNumber = document.getElementById('accountNumberReset').value;
             if (parseInt(accountNumber) > 4294967295 || parseInt(accountNumber) < 0) {
                 e.preventDefault();
@@ -74,7 +69,7 @@ const AdvancedFields = (props) => {
     const handleIndexKeypress = e => {
         if (e.key === "e" || e.key === "-" || e.key === "+") {
             e.preventDefault();
-        }else {
+        } else {
             const addressIndex = document.getElementById('accountIndexReset').value;
             if (parseInt(addressIndex) > 4294967295 || parseInt(addressIndex) < 0) {
                 e.preventDefault();
@@ -102,7 +97,7 @@ const AdvancedFields = (props) => {
                                 id="accountNumberReset"
                                 onKeyPress={handleAccountNumberKeypress}
                                 onChange={handleAccountNumberChange}
-                                placeholder= {t("ACCOUNT_NUMBER")}
+                                placeholder={t("ACCOUNT_NUMBER")}
                                 required={false}
                             />
                         </div>

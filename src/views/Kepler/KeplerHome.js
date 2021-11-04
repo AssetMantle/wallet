@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import "../../utils/kepler";
 import KeplerWallet from "../../utils/kepler";
-import {useHistory, NavLink} from "react-router-dom";
+import {NavLink, useHistory} from "react-router-dom";
 import {Nav, Navbar} from "react-bootstrap";
 import logo from "../../assets/images/logo_lite.svg";
 import config from "../../config";
@@ -42,10 +42,10 @@ const KeplerHome = () => {
         GetAccount(address)
             .then(async res => {
                 const accountType = await transactions.VestingAccountCheck(res.typeUrl);
-                if(accountType){
+                if (accountType) {
                     localStorage.setItem('fee', config.vestingAccountFee);
                     localStorage.setItem('account', 'vesting');
-                }else {
+                } else {
                     localStorage.setItem('fee', config.vestingAccountFee);
                     localStorage.setItem('account', 'non-vesting');
                 }
@@ -78,7 +78,8 @@ const KeplerHome = () => {
                                 rel="noopener noreferrer">{t("LEARN_MORE")}</a>
                             <li className="nav-item link">
                                 <a className="nav-link primary-medium-color"
-                                    href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer" target="_blank">
+                                    href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer"
+                                    target="_blank">
                                     {t("HELP")}
                                 </a>
                             </li>

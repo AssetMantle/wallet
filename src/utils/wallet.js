@@ -1,10 +1,11 @@
 import transactions from "./transactions";
 import {pathToString} from "@cosmjs/crypto";
+
 const bip39 = require("bip39");
 const prefix = "persistence";
 
 // This function is not for use. Use only createRandomWallet, createWallet and getWalletPath
-async function getWallet(mnemonic, walletPath=transactions.makeHdPath(), bip39Passphrase = "") {
+async function getWallet(mnemonic, walletPath = transactions.makeHdPath(), bip39Passphrase = "") {
     try {
         const [wallet, address] = await transactions.MnemonicWalletWithPassphrase(mnemonic, walletPath, bip39Passphrase, prefix);
         return {

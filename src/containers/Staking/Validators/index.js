@@ -1,5 +1,5 @@
 import React from "react";
-import {Tab, Nav,} from "react-bootstrap";
+import {Nav, Tab,} from "react-bootstrap";
 import Loader from "../../../components/Loader";
 import ValidatorsTable from "./ValidatorsTable";
 import {connect} from "react-redux";

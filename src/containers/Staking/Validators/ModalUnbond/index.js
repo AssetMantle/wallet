@@ -153,7 +153,8 @@ const ModalUnbond = (props) => {
                                         onClick={() => selectTotalBalanceHandler(formatNumber(props.delegationAmount))}><span
                                             className="title">{t("DELEGATED_AMOUNT")}:</span> <span
                                             className="value">
-                                            <NumberView value={formatNumber(props.delegationAmount)}/>XPRT</span> </span>
+                                            <NumberView
+                                                value={formatNumber(props.delegationAmount)}/>XPRT</span> </span>
                                 </div>
                             </div>
                             {mode === "normal" ?

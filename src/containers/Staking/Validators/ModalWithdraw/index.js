@@ -1,9 +1,4 @@
-import {
-    Form,
-    Modal,
-    OverlayTrigger,
-    Popover,
-} from 'react-bootstrap';
+import {Form, Modal, OverlayTrigger, Popover,} from 'react-bootstrap';
 import React, {useState} from 'react';
 import Icon from "../../../../components/Icon";
 import aminoMsgHelper from "../../../../utils/aminoMsgHelper";
@@ -72,12 +67,12 @@ const ModalWithdraw = (props) => {
             setInitialModal(false);
             setFeeModal(true);
             const data = {
-                memo : memo,
-                validatorAddress : props.validatorAddress,
+                memo: memo,
+                validatorAddress: props.validatorAddress,
                 modalHeader: t("CLAIM_STAKING_REWARDS"),
                 formName: "withdrawValidatorRewards",
-                successMsg : t("SUCCESSFULLY_CLAIMED"),
-                failedMsg : t("FAILED_CLAIMING")
+                successMsg: t("SUCCESSFULLY_CLAIMED"),
+                failedMsg: t("FAILED_CLAIMING")
             };
             setFormData(data);
         }
@@ -129,7 +124,8 @@ const ModalWithdraw = (props) => {
                             <div className="form-field p-0">
                                 <p className="label">{t("AVAILABLE")} (XPRT)</p>
                                 <div className="available-tokens">
-                                    <p className={props.rewards === 0 ? "empty info-data" : "info-data"} title={props.rewards}>
+                                    <p className={props.rewards === 0 ? "empty info-data" : "info-data"}
+                                        title={props.rewards}>
                                         <NumberView value={formatNumber(props.rewards)}/>
                                     </p>
                                 </div>
@@ -226,10 +222,10 @@ const ModalWithdraw = (props) => {
             }
             {response !== '' ?
                 <ModalViewTxnResponse
-                    response = {response}
-                    successMsg = {t("SUCCESSFULLY_CLAIMED")}
-                    failedMsg =  {t("FAILED_CLAIMING")}
-                    handleClose = {props.handleClose}
+                    response={response}
+                    successMsg={t("SUCCESSFULLY_CLAIMED")}
+                    failedMsg={t("FAILED_CLAIMING")}
+                    handleClose={props.handleClose}
                 />
                 : null}
         </>

@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Navbar, NavLink, Nav} from "react-bootstrap";
+import {Nav, Navbar, NavLink} from "react-bootstrap";
 import logo from "../../assets/images/logo_bold.svg";
 import dark_icon from "../../assets/images/dark_icon.svg";
 import ModalCreateWallet from "../../containers/CreateWallet/ModalCreateWallet";
@@ -31,7 +31,8 @@ const Homepage = () => {
                                 rel="noopener noreferrer">  {t("LEARN_MORE")}</a>
                             <li className="nav-item link">
                                 <a className="nav-link primary-medium-color"
-                                    href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer" target="_blank">
+                                    href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer"
+                                    target="_blank">
                                     {t("HELP")}
                                 </a>
                             </li>

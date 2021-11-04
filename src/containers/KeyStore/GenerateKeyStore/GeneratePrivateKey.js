@@ -1,7 +1,5 @@
 import React, {useState} from "react";
-import {
-    Form, Modal,
-} from "react-bootstrap";
+import {Form, Modal,} from "react-bootstrap";
 import Icon from "../../../components/Icon";
 import helper from "../../../utils/helper";
 import {useTranslation} from "react-i18next";

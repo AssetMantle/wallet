@@ -1,7 +1,4 @@
-import {
-    Form,
-    Modal,
-} from 'react-bootstrap';
+import {Form, Modal,} from 'react-bootstrap';
 import React, {useState} from 'react';
 import {connect} from "react-redux";
 import {useTranslation} from "react-i18next";
@@ -56,7 +53,8 @@ const ModalCustomChannel = (props) => {
                             />
                         </div>
                         <button className="button button-primary"
-                        >Submit</button>
+                        >Submit
+                        </button>
                     </Form>
                 </Modal.Body>
             </>
