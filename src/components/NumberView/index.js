@@ -1,10 +1,11 @@
 import React from "react";
-const NumberView = (props) => {
+const NumberView = ({value = "0.000000"}) => {
+    const split = value.split(".");
     return (
-        Array.isArray(props.data) ?
-            <span className="digits"><span className="start">{props.data[0]}</span>.<span className="end">{props.data[1]} </span></span>
-            :  <span className="digits"><span className="start">{props.data}</span></span>
-        
+        <span className="digits">
+            <span className="start">{split[0]}.</span>
+            <span className="end">{split[1]} </span>
+        </span>
     );
 };
 export default NumberView;

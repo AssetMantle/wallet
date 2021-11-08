@@ -15,6 +15,8 @@ import {useTranslation} from "react-i18next";
 import {connect} from "react-redux";
 import ModalGasAlert from "../../../Gas/ModalGasAlert";
 import ModalViewTxnResponse from "../../../Common/ModalViewTxnResponse";
+import NumberView from "../../../../components/NumberView";
+import {formatNumber} from "../../../../utils/scripts";
 
 const ModalWithdraw = (props) => {
     const {t} = useTranslation();
@@ -127,7 +129,9 @@ const ModalWithdraw = (props) => {
                             <div className="form-field p-0">
                                 <p className="label">{t("AVAILABLE")} (XPRT)</p>
                                 <div className="available-tokens">
-                                    <p className={props.rewards === 0 ? "empty info-data" : "info-data"} title={props.rewards}>{props.rewards.toLocaleString(undefined, {minimumFractionDigits:5})}</p>
+                                    <p className={props.rewards === 0 ? "empty info-data" : "info-data"} title={props.rewards}>
+                                        <NumberView value={formatNumber(props.rewards)}/>
+                                    </p>
                                 </div>
                             </div>
                             {

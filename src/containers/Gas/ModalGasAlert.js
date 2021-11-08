@@ -12,6 +12,8 @@ import ModalDecryptKeyStore from "../KeyStore/ModalDecryptKeystore";
 import aminoMsgHelper from "../../utils/aminoMsgHelper";
 import ModalViewTxnResponse from "../Common/ModalViewTxnResponse";
 import Loader from "../../components/Loader";
+import {formatNumber} from "../../utils/scripts";
+import NumberView from "../../components/NumberView";
 
 const ModalGasAlert = (props) => {
     const {t} = useTranslation();
@@ -213,22 +215,22 @@ const ModalGasAlert = (props) => {
                                             <div className={activeFeeState === "Low" ? "fee-box active" : "fee-box"}
                                                 onClick={() => handleFee("Low", config.lowFee)}>
                                                 <p className="title">Zero</p>
-                                                <p className="gas">{(transactions.XprtConversion(gas * config.lowFee) * props.tokenPrice).toLocaleString(undefined, {minimumFractionDigits: 4})} $</p>
-                                                <p className="xprt">{(transactions.XprtConversion(gas * config.lowFee)).toLocaleString(undefined, {minimumFractionDigits: 4})} XPRT</p>
+                                                <p className="gas"><NumberView value={formatNumber(transactions.XprtConversion(gas * config.lowFee)* props.tokenPrice)}/>$</p>
+                                                <p className="xprt"><NumberView value={formatNumber(transactions.XprtConversion(gas * config.lowFee))}/>XPRT</p>
                                             </div>
                                             : null
                                     }
                                     <div className={activeFeeState === "Average" ? "fee-box active" : "fee-box"}
                                         onClick={() => handleFee("Average", config.averageFee)}>
                                         <p className="title">Low</p>
-                                        <p className="gas">{(transactions.XprtConversion(gas * config.averageFee) * props.tokenPrice).toLocaleString(undefined, {minimumFractionDigits: 4})} $</p>
-                                        <p className="xprt">{(transactions.XprtConversion(gas * config.averageFee)).toLocaleString(undefined, {minimumFractionDigits: 4})} XPRT</p>
+                                        <p className="gas"><NumberView value={formatNumber(transactions.XprtConversion(gas * config.averageFee)* props.tokenPrice)}/>$</p>
+                                        <p className="xprt"><NumberView value={formatNumber(transactions.XprtConversion(gas * config.averageFee))}/>XPRT</p>
                                     </div>
                                     <div className={activeFeeState === "High" ? "fee-box active" : "fee-box"}
                                         onClick={() => handleFee("High", config.highFee)}>
                                         <p className="title">High</p>
-                                        <p className="gas">{(transactions.XprtConversion(gas * config.highFee) * props.tokenPrice).toLocaleString(undefined, {minimumFractionDigits: 4})} $</p>
-                                        <p className="xprt">{(transactions.XprtConversion(gas * config.highFee)).toLocaleString(undefined, {minimumFractionDigits: 4})} XPRT</p>
+                                        <p className="gas"><NumberView value={formatNumber(transactions.XprtConversion(gas * config.highFee)* props.tokenPrice)}/>$</p>
+                                        <p className="xprt"><NumberView value={formatNumber(transactions.XprtConversion(gas * config.highFee))}/>XPRT</p>
                                     </div>
                                 </>
 

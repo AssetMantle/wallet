@@ -21,6 +21,7 @@ const ModalViewTxnResponse = (props) => {
     const {t} = useTranslation();
     const mode = localStorage.getItem('loginMode');
     let address = localStorage.getItem('address');
+
     useEffect(()=>{
         if(props.response !== undefined) {
             props.fetchDelegationsCount(address);
@@ -36,12 +37,13 @@ const ModalViewTxnResponse = (props) => {
         }
     },[]);
 
+    let response = props.response;
+
     const handleClose = () =>{
         props.fetchValidators(address);
         props.handleClose();
     };
 
-    let response = props.response;
     return (
         <>
             {

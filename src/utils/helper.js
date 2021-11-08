@@ -200,13 +200,6 @@ function trimWhiteSpaces(data){
     return data.split(' ').join('');
 }
 
-function fixedConversion(value, type){
-    if(type === "string"){
-        return parseFloat(value.toLocaleString(undefined, {minimumFractionDigits: 6})).toString();
-    }else {
-        return parseFloat(value.toLocaleString(undefined, {minimumFractionDigits: 6}).replace(/,/g, ''));
-    }
-}
 
 function isBech32Address(address, prefix){
     try{
@@ -222,42 +215,11 @@ function passwordValidation(data){
     return regex.test(data);
 }
 
-function digitFormat(data){
-    const stringData = data.toString();
-    if(stringData.indexOf('.') !== -1){
-        const beforeString = stringData.substr(0, stringData.indexOf('.'));
-        const afterString = stringData.substr(stringData.indexOf('.')+1);
-        return [parseInt(beforeString).toLocaleString(), afterString];
-    }else{
-        if(stringData.length > 3){
-            return parseInt(stringData).toLocaleString();
-        }else {
-            return data;
-        }
-    }
-}
-
-function localStringConversion(data) {
-    const stringData = data.toString();
-    if(stringData.indexOf('.') !== -1){
-        const beforeString = stringData.substr(0, stringData.indexOf('.'));
-        const afterString = stringData.substr(stringData.indexOf('.')+1);
-        const newString = parseInt(beforeString).toLocaleString()+'.'+ afterString;
-        return newString;
-    }else{
-        if(stringData.length > 3){
-            return parseInt(stringData).toLocaleString();
-        }else {
-            return data;
-        }
-    }
-}
-
 function denomModify(amount){
     if(Array.isArray(amount)){
         if(amount.length){
             if(amount[0].denom ==="uxprt"){
-                return [transactions.XprtConversion(amount[0].amount)];
+                return [transactions.XprtConversion(amount[0].amount), "XPRT"];
             }else {
                 return [amount[0].amount, amount[0].denom];
             }
@@ -285,6 +247,20 @@ function getTransactionAmount(data) {
     }
 }
 
+function sixDigitsNumber(value, length= 6) {
+    let inputValue = value.toString();
+    if(inputValue.length >= length){
+        return inputValue.substr(0,6);
+    }else {
+        const stringLength = length - inputValue.length;
+        let newString = inputValue;
+        for(let i = 0; i < stringLength; i++) {
+            newString+="0";
+        }
+        return newString;
+    }
+}
+
 export default {
     randomNum,
     stringTruncate,
@@ -305,11 +281,9 @@ export default {
     inputAmountValidation,
     trimWhiteSpaces,
     fileTypeCheck,
-    fixedConversion,
     isBech32Address,
     passwordValidation,
-    digitFormat,
     getTransactionAmount,
-    localStringConversion,
+    sixDigitsNumber,
     stringValidation
 };

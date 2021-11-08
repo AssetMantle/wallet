@@ -19,6 +19,8 @@ import ModalSetWithdrawAddress from "../ModalSetWithdrawAddress";
 import ReactMultiSelectCheckboxes from 'react-multiselect-checkboxes';
 import ModalGasAlert from "../../Gas/ModalGasAlert";
 import ModalViewTxnResponse from "../../Common/ModalViewTxnResponse";
+import {formatNumber} from "../../../utils/scripts";
+import NumberView from "../../../components/NumberView";
 
 const ModalWithdraw = (props) => {
     const {t} = useTranslation();
@@ -185,8 +187,9 @@ const ModalWithdraw = (props) => {
                                     <p className="label">{t("TOTAL_AVAILABLE_BALANCE")}</p>
                                     <div className="available-tokens">
                                         <p className="tokens"
-                                            title={props.totalRewards}>{props.totalRewards.toLocaleString()} XPRT</p>
-                                        <p className="usd">= ${(props.totalRewards * props.tokenPrice).toLocaleString()}</p>
+                                            title={props.totalRewards}>
+                                            <NumberView value={formatNumber(props.totalRewards)}/>XPRT</p>
+                                        <p className="usd">= $<NumberView value={formatNumber(props.totalRewards * props.tokenPrice)}/></p>
                                     </div>
                                 </div>
 
@@ -202,8 +205,8 @@ const ModalWithdraw = (props) => {
                                 <div className="form-field p-0">
                                     <p className="label"></p>
                                     <div className="available-tokens">
-                                        <p className="tokens">{t("CLAIMING_REWARDS")} {individualRewards.toLocaleString(undefined, {minimumFractionDigits: 4})} <span>XPRT</span></p>
-                                        <p className="usd">= ${(individualRewards * props.tokenPrice).toLocaleString(undefined, {minimumFractionDigits: 4})}</p>
+                                        <p className="tokens">{t("CLAIMING_REWARDS")} <NumberView value={formatNumber(individualRewards)}/><span>XPRT</span></p>
+                                        <p className="usd">= $<NumberView value={formatNumber(individualRewards * props.tokenPrice)}/></p>
                                     </div>
                                 </div>
                                 {props.validatorCommissionInfo[2] ?

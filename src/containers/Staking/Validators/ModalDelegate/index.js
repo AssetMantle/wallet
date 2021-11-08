@@ -16,6 +16,8 @@ import config from "../../../../config";
 import {useTranslation} from "react-i18next";
 import ModalGasAlert from "../../../Gas/ModalGasAlert";
 import ModalViewTxnResponse from "../../../Common/ModalViewTxnResponse";
+import {formatNumber} from "../../../../utils/scripts";
+import NumberView from "../../../../components/NumberView";
 
 const ModalDelegate = (props) => {
     const {t} = useTranslation();
@@ -106,8 +108,8 @@ const ModalDelegate = (props) => {
     };
 
     const selectTotalBalanceHandler = (value) =>{
-        setEnteredAmount(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)).toString());
-        setAmount(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)));
+        setAmount(value.replace(/,/g, '')*1);
+        setEnteredAmount(value.replace(/,/g, ''));
     };
 
     if (loader) {
@@ -170,9 +172,10 @@ const ModalDelegate = (props) => {
                                         onKeyPress={helper.inputAmountValidation}
                                         required={true}
                                     />
-                                    <span className={props.balance === 0 ? "empty info-data info-link" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(props.balance)}><span
+                                    <span className={props.balance === 0 ? "empty info-data info-link" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(formatNumber(props.balance))}><span
                                         className="title">{t("BALANCE")}:</span> <span
-                                        className="value">{props.balance} XPRT</span> </span>
+                                        className="value">
+                                        <NumberView value={formatNumber(props.balance)}/>XPRT</span> </span>
                                 </div>
                             </div>
 

@@ -9,7 +9,7 @@ import {
 import Icon from "../../components/Icon";
 import wallet from "../../utils/wallet";
 import helper from "../../utils/helper";
-import GeneratePrivateKey from "../Common/GeneratePrivateKey";
+import GeneratePrivateKey from "../KeyStore/GenerateKeyStore/GeneratePrivateKey";
 import {useTranslation} from "react-i18next";
 import transactions from "../../utils/transactions";
 

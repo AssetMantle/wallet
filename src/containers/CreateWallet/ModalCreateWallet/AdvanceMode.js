@@ -5,7 +5,7 @@ import {
 } from "react-bootstrap";
 import wallet from "../../../utils/wallet";
 import Icon from "../../../components/Icon";
-import GeneratePrivateKey from "../../Common/GeneratePrivateKey";
+import GeneratePrivateKey from "../../KeyStore/GenerateKeyStore/GeneratePrivateKey";
 import helper from "../../../utils/helper";
 import config from "../../../config";
 import {useHistory} from "react-router-dom";

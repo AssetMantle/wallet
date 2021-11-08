@@ -18,6 +18,8 @@ import config from "../../../../config";
 import {useTranslation} from "react-i18next";
 import ModalGasAlert from "../../../Gas/ModalGasAlert";
 import ModalViewTxnResponse from "../../../Common/ModalViewTxnResponse";
+import {formatNumber} from "../../../../utils/scripts";
+import NumberView from "../../../../components/NumberView";
 
 const ModalReDelegate = (props) => {
     const {t} = useTranslation();
@@ -118,8 +120,8 @@ const ModalReDelegate = (props) => {
     };
 
     const selectTotalBalanceHandler = (value) =>{
-        setEnteredAmount(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)).toString());
-        setAmount(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)));
+        setAmount(value.replace(/,/g, '')*1);
+        setEnteredAmount(value.replace(/,/g, ''));
     };
 
     if (loader) {
@@ -211,9 +213,10 @@ const ModalReDelegate = (props) => {
                                         required={true}
                                     />
                                     <span
-                                        className={props.delegationAmount === 0 ? "empty info-data info-link" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(props.delegationAmount)}><span
+                                        className={props.delegationAmount === 0 ? "empty info-data info-link" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(formatNumber(props.delegationAmount))}><span
                                             className="title">{t("DELEGATED_AMOUNT")}:</span> <span
-                                            className="value">{props.delegationAmount} XPRT</span> </span>
+                                            className="value">
+                                            <NumberView value={formatNumber(props.delegationAmount)}/> XPRT</span> </span>
                                 </div>
                             </div>
                             {mode === "normal" ?

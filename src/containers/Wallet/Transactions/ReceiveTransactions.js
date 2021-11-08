@@ -10,6 +10,8 @@ import IconButton from "@material-ui/core/IconButton";
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import transactions from "../../../utils/transactions";
+import {formatNumber} from "../../../utils/scripts";
+import NumberView from "../../../components/NumberView";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ReceiveTransactions = (props) => {
@@ -88,7 +90,7 @@ const ReceiveTransactions = (props) => {
             (stxn.body.amount !== undefined || stxn.body.token !== undefined || stxn.body.value !== undefined) ?
                 stxn.amount !== '' && stxn.amount !== undefined ?
                     <div className="amount" >
-                        {stxn.amount[0]}
+                        <NumberView value={formatNumber(stxn.amount[0])}/>
                         <span className="string-truncate">
                            &nbsp;{stxn.amount[1]}
                         </span>
@@ -100,18 +102,18 @@ const ReceiveTransactions = (props) => {
                     stxn.fee.amount.length ?
                         stxn.fee.amount[0].denom === 'uxprt' ?
                             <div className="fee text-left" key={index}>
-                                {transactions.XprtConversion(stxn.fee.amount[0].amount)}
+                                <NumberView value={formatNumber(transactions.XprtConversion(stxn.fee.amount[0].amount))}/>
                                 XPRT
                             </div>
                             :
                             <div className="fee text-left" key={index}>
-                                {transactions.XprtConversion(stxn.fee.amount[0].amount)}
+                                <NumberView value={formatNumber(transactions.XprtConversion(stxn.fee.amount[0].amount))}/>
                                 {stxn.fee.amount[0].denom}
                             </div>
                         :""
                     :
                     <div className="fee text-left" key={index}>
-                        {stxn.fee.amount.amount}
+                        <NumberView value={formatNumber(transactions.XprtConversion(stxn.fee.amount.amount))}/>
                         {stxn.fee.amount.denom}
                     </div>
                 : '',

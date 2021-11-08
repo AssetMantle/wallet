@@ -12,6 +12,7 @@ import transactions, {GetAccount} from "../utils/transactions";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient, QueryClient, setupIbcExtension} from "@cosmjs/stargate";
 import {QueryClientImpl} from "cosmjs-types/cosmos/bank/v1beta1/query";
+
 const tendermintRPCURL =  process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
 export const fetchBalanceProgress = () => {
@@ -129,6 +130,7 @@ export const fetchTransferableVestingAmount = (address)=> {
                                         denomTrace: item.denom,
                                         amount: item.amount,
                                     };
+
                                     tokenList.push(transeDenomData);
                                 }
                             }

@@ -18,11 +18,13 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import ModalGasAlert from "../Gas/ModalGasAlert";
 import ModalViewTxnResponse from "../Common/ModalViewTxnResponse";
+import {formatNumber} from "../../utils/scripts";
+import NumberView from "../../components/NumberView";
 
 const Send = (props) => {
     const {t} = useTranslation();
     const [enteredAmount, setEnteredAmount] = useState('');
-    const [amountField, setAmountField] = useState('');
+    const [amountField, setAmountField] = useState(0);
     const [txResponse, setTxResponse] = useState('');
     const [show, setShow] = useState(true);
     const [memoStatus, setMemoStatus] = useState(false);
@@ -155,8 +157,8 @@ const Send = (props) => {
     };
 
     const selectTotalBalanceHandler = (value) => {
-        setEnteredAmount(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)).toString());
-        setAmountField(parseFloat(( parseInt( (value * 100).toString() ) / 100 ).toFixed(2)));
+        setAmountField(value.replace(/,/g, '')*1);
+        setEnteredAmount(value.replace(/,/g, ''));
     };
 
     const popoverMemo = (
@@ -226,10 +228,14 @@ const Send = (props) => {
                             />
                             {
                                 tokenDenom === "uxprt" ?
-                                    <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(props.transferableAmount)}><span
-                                        className="title">Transferable Balance:</span> <span
+                                    <span className={props.transferableAmount === 0 ? "empty info-data" : "info-data info-link"} onClick={()=>selectTotalBalanceHandler(formatNumber(props.transferableAmount))}><span
+                                        className="title">Transferable Balance:</span> 
+                                    <span
                                         className="value"
-                                        title={props.transferableAmount}>{props.transferableAmount} XPRT</span> </span>
+                                        title={props.transferableAmount}>
+                                        <NumberView value={formatNumber(props.transferableAmount)}/>XPRT
+                                    </span> 
+                                    </span>
                                     :
                                     <span title={tokenItem.denomTrace} className={transferableAmount === 0 ? "empty info-data" : "info-data"}>
                                         <span
@@ -271,7 +277,8 @@ const Send = (props) => {
                                             <button className="icon-button info" type="button"><Icon
                                                 viewClass="arrow-right"
                                                 icon="info"/></button>
-                                        </OverlayTrigger></p>
+                                        </OverlayTrigger>
+                                    </p>
                                     <Form.Control
                                         type="text"
                                         name="memo"

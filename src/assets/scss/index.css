@@ -215,6 +215,8 @@ html, body {
 }
 .form-field .info-link {
   text-decoration: underline;
+  display: inline-flex !important;
+  align-items: center;
   text-decoration-color: #8D9CB5;
   cursor: pointer;
 }
@@ -744,6 +746,19 @@ ul li em {
 }
 .digits .end {
   font-size: 13px;
+}
+
+.download-keystore-box {
+  text-align: center;
+}
+.download-keystore-box p {
+  margin: 0;
+  display: inline-flex;
+  background: #ffa5000d;
+  padding: 5px 20px;
+  color: orange;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 /*--------------------------------------------------------------
