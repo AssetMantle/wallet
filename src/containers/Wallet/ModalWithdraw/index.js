@@ -116,7 +116,7 @@ const ModalWithdraw = (props) => {
             setMultiSelectWarning(false);
         }
         evt.forEach(async (item) => {
-            totalValidatorsRewards = totalValidatorsRewards + (transactions.XprtConversion(item.rewards*1));
+            totalValidatorsRewards = totalValidatorsRewards + (transactions.XprtConversion(item.rewards).toFixed(6)*1);
             messages.push(WithdrawMsg(loginAddress, item.value));
         });
         setWithDrawMsgs(messages);

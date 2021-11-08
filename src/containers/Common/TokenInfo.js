@@ -183,7 +183,7 @@ const TokenInfo = (props) => {
                         <div className="line">
                             <p className="key">{t("REWARDS")}</p>
                             <p className="value rewards"><span onClick={() => handleRewards("rewards")} className="claim inner-grid">{t("CLAIM")}</span>
-                                <span title={props.rewards.toFixed(6)}>
+                                <span title={props.rewards}>
                                     <NumberView value={formatNumber(props.rewards)}/> XPRT
                                 </span>
                             </p>
