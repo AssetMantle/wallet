@@ -289,7 +289,7 @@ const ModalWithdraw = (props) => {
                                         </div>
                                         :
                                         <button className="button button-primary"
-                                            disabled={disable || individualRewards === 0}
+                                            disabled={disable}
                                         >{t("SUBMIT")}</button>
                                     }
                                 </div>
@@ -340,8 +340,7 @@ const ModalWithdraw = (props) => {
 };
 
 const stateToProps = (state) => {
-
-
+    console.log(state.rewards.validatorCommissionInfo, "props.validatorCommissionInfo");
     return {
         list: state.rewards.list,
         rewards: state.rewards.rewards,
