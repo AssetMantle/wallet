@@ -340,7 +340,6 @@ const ModalWithdraw = (props) => {
 };
 
 const stateToProps = (state) => {
-    console.log(state.rewards.validatorCommissionInfo, "props.validatorCommissionInfo");
     return {
         list: state.rewards.list,
         rewards: state.rewards.rewards,
