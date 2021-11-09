@@ -33,7 +33,7 @@ async function getValidatorCommission(address){
     }).then((res) => {
         if(res.commission.commission[0].amount){
             commission = helper.decimalConversion(res.commission.commission[0].amount);
-            commission = (transactions.XprtConversion(commission*1));
+            commission = (transactions.XprtConversion(commission*1).toFixed(6)*1);
         }
     }).catch((error) => {
         console.log(error.response
