@@ -96,7 +96,7 @@ const Send = (props) => {
                 setKeplerError('');
             }
         } else {
-            setKeplerError("Invalid Recipient Address");
+            setKeplerError("Invalid Recipient ToAddress");
         }
     };
 
@@ -110,6 +110,7 @@ const Send = (props) => {
                 if (result.code !== undefined) {
                     helper.accountChangeCheck(result.rawLog);
                 }
+                console.log(result, "result");
                 setTxResponse(result);
                 setLoader(false);
                 setEnteredAmount('');
@@ -120,7 +121,7 @@ const Send = (props) => {
             });
         } else {
             setLoader(false);
-            setKeplerError("Invalid Recipient Address");
+            setKeplerError("Invalid Recipient ToAddress");
         }
         event.target.reset();
     };

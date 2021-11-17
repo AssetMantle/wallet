@@ -139,7 +139,8 @@ function XprtConversion(data) {
     return Result;
 }
 
-function PrivateKeyReader(file, password, accountNumber, addressIndex, bip39Passphrase, loginAddress) {
+function PrivateKeyReader(file, password, loginAddress) {
+    console.log(file, password, "file, password");
     return new Promise(function (resolve, reject) {
         const fileReader = new FileReader();
         fileReader.readAsText(file, "UTF-8");
@@ -153,6 +154,7 @@ function PrivateKeyReader(file, password, accountNumber, addressIndex, bip39Pass
                     let mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
                     const accountData = await MnemonicWalletWithPassphrase(mnemonic, makeHdPath());
                     const address = accountData[1];
+                    console.log(address, loginAddress, "loginAddress");
                     if (address === loginAddress) {
                         resolve(mnemonic);
                         localStorage.setItem('encryptedMnemonic', event.target.result);
@@ -258,9 +260,10 @@ function checkValidatorAccountAddress(validatorAddress, address) {
     return validatorAccountAddress === address;
 }
 
-async function getTransactionResponse(address, data, fee, gas, mnemonic = "", accountNumber = 0, addressIndex = 0, bip39Passphrase = "") {
-    if (data.formName === "send") {
-        return TransactionWithMnemonic([SendMsg(address, data.toAddress, (data.amount * config.xprtValue).toFixed(0), data.denom)], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
+async function getTransactionResponse(address, data, fee, gas, mnemonic = "", txName,  accountNumber = 0, addressIndex = 0, bip39Passphrase = "") {
+    if (txName === "send") {
+        console.log(address, data.toAddress.value, (data.amount.value * config.xprtValue).toFixed(0), data.token ,aminoMsgHelper.fee(Math.trunc(fee), gas), "getTransactionResponse");
+        return TransactionWithMnemonic([SendMsg(address, data.toAddress.value, (data.amount.value * config.xprtValue).toFixed(0), data.token)], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
     } else if (data.formName === "delegate") {
         return TransactionWithMnemonic([DelegateMsg(address, data.validatorAddress, (data.amount * config.xprtValue).toFixed(0))], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,

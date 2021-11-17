@@ -84,7 +84,7 @@ const ModalSetWithdrawAddress = (props) => {
                 };
                 setFormData(data);
             } else {
-                setErrorMessage("Enter Valid Revised Address");
+                setErrorMessage("Enter Valid Revised ToAddress");
             }
 
         }

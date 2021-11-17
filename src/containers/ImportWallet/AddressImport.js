@@ -40,7 +40,7 @@ const AddressImport = (props) => {
             history.push('/dashboard/wallet');
             setShow(false);
         } else {
-            setErrorMessage("Enter Valid Address");
+            setErrorMessage("Enter Valid ToAddress");
         }
     };
     const handleClose = () => {

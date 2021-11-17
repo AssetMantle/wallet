@@ -1,0 +1,3 @@
+export const TX_RESULT_MODAL_SHOW = 'TX_RESULT_MODAL_SHOW';
+export const TX_RESULT_MODAL_HIDE = 'TX_RESULT_MODAL_HIDE';
+export const SET_TX_NAME = 'SET_TX_NAME';

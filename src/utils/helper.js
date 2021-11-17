@@ -94,7 +94,6 @@ function checkLastPage(pageNumber, limit, totalTransactions) {
 
 function validatePassphrase(value) {
     return value.length === 50;
-
 }
 
 function fileTypeCheck(filePath) {
@@ -105,12 +104,22 @@ function fileTypeCheck(filePath) {
 
 function validateAddress(address, prefix = "persistence") {
     if (prefix === "cosmos") {
-        return address.startsWith(prefix) && address.length === 45;
+        if(!address.startsWith(prefix) && address.length !== 45)
+        {
+            return new Error('Invalid Recipient Address');
+        }
     } else if (prefix === "osmosis") {
-        return address.startsWith("osmo") && address.length === 43;
+        if(!address.startsWith("osmo") && address.length !== 43)
+        {
+            return new Error('Invalid Recipient Address');
+        }
     } else {
-        return address.startsWith(prefix) && address.length === 50;
+        if(!address.startsWith(prefix) && address.length !== 50)
+        {
+            return new Error('Invalid Recipient Address');
+        }
     }
+    return new Error('');
 }
 
 
@@ -262,6 +271,8 @@ function sixDigitsNumber(value, length = 6) {
     }
 }
 
+const emptyFunc = () => ({});
+
 export default {
     randomNum,
     stringTruncate,
@@ -286,5 +297,6 @@ export default {
     passwordValidation,
     getTransactionAmount,
     sixDigitsNumber,
-    stringValidation
+    stringValidation,
+    emptyFunc
 };

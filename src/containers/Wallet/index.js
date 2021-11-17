@@ -1,6 +1,6 @@
 import React from "react";
 import {OverlayTrigger, Popover, Tab, Tabs} from "react-bootstrap";
-import Send from "./Send";
+import Send from "./Send/index";
 import Receive from "./Receive";
 import Transactions from "./Transactions/index";
 import TokenInfo from "../Common/TokenInfo";
