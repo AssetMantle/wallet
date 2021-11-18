@@ -62,7 +62,7 @@ const LedgerLogin = (props) => {
         }else if (e.key === "Enter") {
             handleSubmit(e);
         }else {
-            const accountNumber = document.getElementById('createAccountNumber').value;
+            const accountNumber = document.getElementById('ledgerAccountNumber').value;
             if (parseInt(accountNumber) > 4294967295 || parseInt(accountNumber) < 0) {
                 e.preventDefault();
             }
@@ -75,7 +75,7 @@ const LedgerLogin = (props) => {
         }else if (e.key === "Enter") {
             handleSubmit(e);
         }else {
-            const addressIndex = document.getElementById('createAccountIndex').value;
+            const addressIndex = document.getElementById('ledgerAccountIndex').value;
             if (parseInt(addressIndex) > 4294967295 || parseInt(addressIndex) < 0) {
                 e.preventDefault();
             }
