@@ -13,7 +13,10 @@ import fee from "./transactions/fee";
 import gas from "./transactions/gas";
 import keyStore from "./transactions/keyStore";
 import advanced from "./transactions/advanced";
-export default combineReducers({
+import signInKeyStore from "./signIn/keyStore";
+import signInModal from "./signIn/modal";
+
+const appReducer =  combineReducers({
     delegations,
     transactions,
     validators,
@@ -27,5 +30,14 @@ export default combineReducers({
     fee,
     gas,
     keyStore,
-    advanced
+    advanced,
+    signInKeyStore,
+    signInModal
 });
+
+export const rootReducer = (state, action) => {
+    if (action.type === 'USER_LOGOUT') {
+        return appReducer(undefined, action);
+    }
+    return appReducer(state, action);
+};

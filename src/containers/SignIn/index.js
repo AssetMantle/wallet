@@ -4,35 +4,43 @@ import AddressImport from "../ImportWallet/AddressImport";
 import {useHistory} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import LedgerLogin from "./LedgerLogin";
-import KeyStoreLogin from "./KeyStoreLogin";
+import KeyStore from "./KeyStore";
+import {showKeyStoreModal} from "../../actions/signIn/keyStore";
+import {useDispatch, useSelector} from "react-redux";
+import {hideSignInModal} from "../../actions/signIn/modal";
 
 const SignIn = (props) => {
     const history = useHistory();
     const {t} = useTranslation();
-    const [show, setShow] = useState(true);
+    const show = useSelector((state) => state.signInModal.modal);
     const [withAddress, setWithAddress] = useState(false);
     const [withKeyStore, setWithKeyStore] = useState(false);
     const [withLedger, setWithLedger] = useState(false);
+    const dispatch = useDispatch();
+
     const handleClose = () => {
-        setShow(false);
+        dispatch(hideSignInModal());
         props.setRoutName("");
     };
+
     const handleRoute = async (key) => {
         if (key === "withAddress") {
+            dispatch(hideSignInModal());
             setWithAddress(true);
-            setShow(false);
         }
         if (key === "ledger") {
-            setShow(false);
+            dispatch(hideSignInModal());
             setWithLedger(true);
         }
         if (key === "withKeyStore") {
-            setShow(false);
+            dispatch(showKeyStoreModal());
+            dispatch(hideSignInModal());
             setWithKeyStore(true);
         }
     };
 
     const handleKepler = () => {
+        dispatch(hideSignInModal());
         history.push('/keplr');
     };
 
@@ -69,20 +77,25 @@ const SignIn = (props) => {
                 </>
             </Modal>
             {withAddress ?
-                <AddressImport setWithAddress={setWithAddress} handleClose={handleClose} setShow={setShow}
+                <AddressImport setWithAddress={setWithAddress} handleClose={handleClose}
                 />
                 : null
             }
             {withLedger ?
-                <LedgerLogin setWithLedger={setWithLedger} handleClose={handleClose} setShow={setShow}
+                <LedgerLogin setWithLedger={setWithLedger} handleClose={handleClose}
                 />
                 : null
             }
             {withKeyStore ?
-                <KeyStoreLogin setWithLedger={setWithLedger} handleClose={handleClose} setShow={setShow}
+                <KeyStore setWithLedger={setWithLedger} handleClose={handleClose}
                 />
                 : null
             }
+            {/*{withKeyStore ?*/}
+            {/*    <KeyStoreLogin setWithLedger={setWithLedger} handleClose={handleClose} setShow={setShow}*/}
+            {/*    />*/}
+            {/*    : null*/}
+            {/*}*/}
         </>
     );
 };

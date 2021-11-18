@@ -11,11 +11,14 @@ import GenerateKeyStore from "../KeyStore/GenerateKeyStore";
 import MobileSidebar from "./MobileSidebar";
 import transactions from "../../utils/transactions";
 import config from "../../config";
+import {userLogout} from "../../actions/logout";
+import {useDispatch} from "react-redux";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const DashboardHeader = () => {
     const {t} = useTranslation();
+    const dispatch = useDispatch();
     const history = useHistory();
     const [showKeyStore, setShowKeyStore] = useState(false);
     const address = localStorage.getItem('address');
@@ -39,6 +42,7 @@ const DashboardHeader = () => {
 
     }, []);
     const closeWallet = () => {
+        dispatch(userLogout());
         localStorage.clear();
         history.push('/');
         window.location.reload();

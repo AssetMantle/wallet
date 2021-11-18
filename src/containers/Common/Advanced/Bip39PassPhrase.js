@@ -21,7 +21,7 @@ const Bip39PassPhrase = () => {
 
     return (
         <div className="form-field">
-            <p className="label">{t("ACCOUNT_INDEX")}</p>
+            <p className="label">{t("BIP_PASSPHRASE")}</p>
             <InputText
                 name="delegateAccountNumber"
                 placeholder={t("ENTER_BIP_PASSPHRASE")}

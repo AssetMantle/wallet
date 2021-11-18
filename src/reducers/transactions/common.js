@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux';
-import {TX_RESULT_MODAL_HIDE, TX_RESULT_MODAL_SHOW} from "../../constants/common";
-import {SET_TX_NAME} from "../../constants/common";
+import {TX_RESULT_MODAL_HIDE, TX_RESULT_MODAL_SHOW, SET_LOGIN_INFO, SET_TX_NAME} from "../../constants/common";
 import {TX_SEND_SUCCESS} from "../../constants/send";
 
 const modal = (state = false, {
@@ -45,7 +44,31 @@ const txInfo = (state = {
     }
 };
 
+const loginInfo = (state = {
+    value: '',
+}, {
+    type,
+    data,
+}) => {
+    switch (type) {
+    case SET_LOGIN_INFO:
+        return {
+            ...state,
+            value: data.value,
+        };
+    case TX_SEND_SUCCESS:
+    case TX_RESULT_MODAL_HIDE:
+        return {
+            ...state,
+            value: '',
+        };
+    default:
+        return state;
+    }
+};
+
 export default combineReducers({
     modal,
-    txInfo
+    txInfo,
+    loginInfo
 });

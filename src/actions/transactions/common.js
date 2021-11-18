@@ -1,4 +1,4 @@
-import {SET_TX_NAME, TX_RESULT_MODAL_HIDE, TX_RESULT_MODAL_SHOW} from "../../constants/common";
+import {SET_TX_NAME, TX_RESULT_MODAL_HIDE, TX_RESULT_MODAL_SHOW, SET_LOGIN_INFO} from "../../constants/common";
 
 export const showTxResultModal = (data) => {
     return {
@@ -13,6 +13,14 @@ export const hideTxResultModal = (data) => {
         data,
     };
 };
+
+export const setLoginInfo = (data) => {
+    return {
+        type: SET_LOGIN_INFO,
+        data,
+    };
+};
+
 
 export const setTxName = (data) => {
     return {

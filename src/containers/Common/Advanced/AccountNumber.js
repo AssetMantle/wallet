@@ -21,7 +21,7 @@ const AccountNumber = () => {
 
     return (
         <div className="form-field">
-            <p className="label">{t("ACCOUNT_INDEX")}</p>
+            <p className="label">{t("ACCOUNT_NUMBER")}</p>
             <InputFieldNumber
                 min={0}
                 max={4294967295}

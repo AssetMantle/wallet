@@ -4,15 +4,21 @@ import logo from "../../assets/images/logo_bold.svg";
 import dark_icon from "../../assets/images/dark_icon.svg";
 import ModalCreateWallet from "../../containers/CreateWallet/ModalCreateWallet";
 import Footer from "../../components/Footer";
-import SignIn from "../../containers/SignIn";
 import {useTranslation} from "react-i18next";
 import GenerateKeyStore from "../../containers/KeyStore/GenerateKeyStore";
+import SignIn from "../../containers/SignIn";
+import {showSignInModal} from "../../actions/signIn/modal";
+import {useDispatch} from "react-redux";
 
 const Homepage = () => {
     const {t} = useTranslation();
+    const dispatch = useDispatch();
     const [routName, setRoutName] = useState("false");
     const handleRoute = (name) => {
         setRoutName(name);
+        if(name === "signIn"){
+            dispatch(showSignInModal());
+        }
     };
 
     return (
@@ -68,11 +74,7 @@ const Homepage = () => {
                     <GenerateKeyStore setShowKeyStore={setRoutName} className={""}/>
                     : null
             }
-            {
-                routName === "signIn" ?
-                    <SignIn setRoutName={setRoutName} name="homepage"/>
-                    : null
-            }
+            <SignIn setRoutName={setRoutName} name="homepage"/>
         </div>
 
 
