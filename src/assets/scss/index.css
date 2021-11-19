@@ -59,11 +59,14 @@ html, body {
   justify-content: center;
 }
 
-.loader {
-  position: fixed;
-  z-index: 2;
-  top: 50%;
-  left: 50%;
+.loader .modal-content {
+  text-align: center;
+  background: transparent !important;
+  display: flex;
+  align-items: center;
+}
+.loader .modal-content img {
+  width: 80px;
 }
 
 .hidden {
@@ -1742,12 +1745,12 @@ ul li em {
 .advanced-wallet-accordion .card .card-header p {
   margin: 0;
 }
-.advanced-wallet-accordion .card button {
+.advanced-wallet-accordion .card .card-header button {
   border: 0px;
   background: transparent;
   outline: none;
 }
-.advanced-wallet-accordion .card button .icon {
+.advanced-wallet-accordion .card .card-header button .icon {
   width: 20px;
 }
 .advanced-wallet-accordion .card .collapse.show {

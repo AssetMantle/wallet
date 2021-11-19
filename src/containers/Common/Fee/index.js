@@ -4,7 +4,7 @@ import NumberView from "../../../components/NumberView";
 import {formatNumber} from "../../../utils/scripts";
 import transactions from "../../../utils/transactions";
 import {useDispatch, useSelector} from "react-redux";
-import {feeChangeHandler} from "../../../actions/transactions/fee";
+import {feeChangeHandler} from "../../../store/actions/transactions/fee";
 import {ValidateFee} from "../../../utils/validations";
 
 const Fee = () => {

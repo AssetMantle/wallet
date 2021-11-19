@@ -1,13 +1,12 @@
 import React from 'react';
 import Button from "../../../../components/Button";
 import {useDispatch} from "react-redux";
-import {keyStoreSubmit} from "../../../../actions/signIn/keyStore";
+import {keyStoreSubmit} from "../../../../store/actions/signIn/keyStore";
 
 const Submit = () => {
     const dispatch = useDispatch();
     const onClick = () => {
         dispatch(keyStoreSubmit());
-
     };
 
     return (

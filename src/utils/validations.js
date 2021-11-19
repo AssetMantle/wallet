@@ -52,7 +52,8 @@ export const passwordValidation = (data) => {
 };
 
 export const ValidateSpecialCharacters = e => {
-    if (e.key === "e" || e.key === "-" || e.key === "+") {
+    const key = e.key.toUpperCase();
+    if (key === "e" || key === "-" || key === "+") {
         e.preventDefault();
     }
 };

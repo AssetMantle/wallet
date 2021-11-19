@@ -5,7 +5,7 @@ import activeIcon from "../../../../assets/images/active.svg";
 import inActiveIcon from "../../../../assets/images/inactive.svg";
 import ModalActions from "../ModalActions";
 import DataTable from "../../../../components/DataTable";
-import {fetchValidators} from "../../../../actions/validators";
+import {fetchValidators} from "../../../../store/actions/validators";
 import {connect} from "react-redux";
 import transactions from "../../../../utils/transactions";
 import {useTranslation} from "react-i18next";

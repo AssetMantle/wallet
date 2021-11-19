@@ -2,7 +2,7 @@ import React from 'react';
 import {useSelector, useDispatch} from "react-redux";
 import {ValidateBip39PassPhrase} from "../../../utils/validations";
 import {useTranslation} from "react-i18next";
-import {setBip39Passphrase} from "../../../actions/transactions/advanced";
+import {setBip39Passphrase} from "../../../store/actions/transactions/advanced";
 import InputText from "../../../components/InputText";
 
 const Bip39PassPhrase = () => {

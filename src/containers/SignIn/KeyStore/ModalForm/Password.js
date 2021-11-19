@@ -3,7 +3,7 @@ import InputText from "../../../../components/InputText";
 import helper from "../../../../utils/helper";
 import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
-import {setTxKeyStorePassword} from "../../../../actions/transactions/keyStore";
+import {setTxKeyStorePassword} from "../../../../store/actions/transactions/keyStore";
 
 const Password = () => {
     const {t} = useTranslation();

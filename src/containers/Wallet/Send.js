@@ -96,7 +96,7 @@ const Send = (props) => {
                 setKeplerError('');
             }
         } else {
-            setKeplerError("Invalid Recipient ToAddress");
+            setKeplerError("Invalid Recipient Address");
         }
     };
 
@@ -121,7 +121,7 @@ const Send = (props) => {
             });
         } else {
             setLoader(false);
-            setKeplerError("Invalid Recipient ToAddress");
+            setKeplerError("Invalid Recipient Address");
         }
         event.target.reset();
     };

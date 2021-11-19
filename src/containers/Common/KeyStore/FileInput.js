@@ -2,7 +2,7 @@ import React from 'react';
 import {Form} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
 import {useDispatch} from "react-redux";
-import {setTxKeyStore} from "../../../actions/transactions/keyStore";
+import {setTxKeyStore} from "../../../store/actions/transactions/keyStore";
 
 const FileInput = () => {
     const {t} = useTranslation();

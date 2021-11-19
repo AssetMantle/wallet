@@ -6,7 +6,7 @@ import Amount from './Amount';
 import Label from '../../../../components/Label';
 import Memo from './Memo';
 import React from 'react';
-import Send from './Send';
+import Send from './ButtonSend';
 import TextBox from '../../../../components/TextBox';
 import ToAddress from "./ToAddress";
 

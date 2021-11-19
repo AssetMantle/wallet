@@ -17,7 +17,7 @@ const InputFieldNumber = ({
     // const isError = error.message.length > 0;
 
     return (
-        <>
+        <div className="form-control-section flex-fill">
             <Form.Control
                 className={className}
                 min={min}
@@ -30,7 +30,7 @@ const InputFieldNumber = ({
                 onBlur={onBlur}
             />
             <p className="input-error">{error.message}</p>
-        </>
+        </div>
     );
 };
 

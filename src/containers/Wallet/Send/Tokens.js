@@ -1,4 +1,4 @@
-import {setTxSendToken} from '../../../actions/transactions/send';
+import {setTxSendToken} from '../../../store/actions/transactions/send';
 import React, {useEffect} from 'react';
 import transactions from "../../../utils/transactions";
 import {useDispatch, useSelector} from "react-redux";

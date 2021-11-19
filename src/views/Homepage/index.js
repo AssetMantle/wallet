@@ -7,7 +7,7 @@ import Footer from "../../components/Footer";
 import {useTranslation} from "react-i18next";
 import GenerateKeyStore from "../../containers/KeyStore/GenerateKeyStore";
 import SignIn from "../../containers/SignIn";
-import {showSignInModal} from "../../actions/signIn/modal";
+import {showSignInModal} from "../../store/actions/signIn/modal";
 import {useDispatch} from "react-redux";
 
 const Homepage = () => {

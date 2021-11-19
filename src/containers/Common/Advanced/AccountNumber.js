@@ -3,7 +3,7 @@ import InputFieldNumber from "../../../components/InputFieldNumber";
 import {useSelector, useDispatch} from "react-redux";
 import {ValidateAccountIndex, ValidateSpecialCharacters} from "../../../utils/validations";
 import {useTranslation} from "react-i18next";
-import {setAccountNumber} from "../../../actions/transactions/advanced";
+import {setAccountNumber} from "../../../store/actions/transactions/advanced";
 
 const AccountNumber = () => {
     const {t} = useTranslation();

@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
 import {connect} from 'react-redux';
 import ModalWithdraw from "../Wallet/ModalWithdraw";
-import {fetchDelegationsCount} from "../../actions/delegations";
-import {fetchBalance, fetchTransferableVestingAmount} from "../../actions/balance";
-import {fetchRewards, fetchTotalRewards} from "../../actions/rewards";
-import {fetchUnbondDelegations} from "../../actions/unbond";
-import {fetchTokenPrice} from "../../actions/tokenPrice";
+import {fetchDelegationsCount} from "../../store/actions/delegations";
+import {fetchBalance, fetchTransferableVestingAmount} from "../../store/actions/balance";
+import {fetchRewards, fetchTotalRewards} from "../../store/actions/rewards";
+import {fetchUnbondDelegations} from "../../store/actions/unbond";
+import {fetchTokenPrice} from "../../store/actions/tokenPrice";
 import {useTranslation} from "react-i18next";
 import ModalViewUnbondDetails from "./ModalViewUnbondDetails";
 import ModalViewVestingDetails from "./ModalViewVestingDetails";
@@ -14,7 +14,7 @@ import Icon from "../../components/Icon";
 import {OverlayTrigger, Popover} from "react-bootstrap";
 import transactions from "../../utils/transactions";
 import ModalViewDelegationDetails from "./ModalViewDelegationDetails";
-import {fetchValidators} from "../../actions/validators";
+import {fetchValidators} from "../../store/actions/validators";
 import NumberView from "../../components/NumberView";
 import {formatNumber} from "../../utils/scripts";
 

@@ -93,7 +93,7 @@ const IbcTxn = (props) => {
                 setKeplerError(t("MEMO_MNEMONIC_CHECK_ERROR"));
             } else {
                 if (chain !== "Custom" && !helper.validateAddress(event.target.address.value, chain.substr(0, chain.indexOf('/')))) {
-                    setKeplerError('Enter Valid  Recipient’s ToAddress');
+                    setKeplerError('Enter Valid  Recipient’s Address');
                     return;
                 }
                 const data = {
@@ -127,7 +127,7 @@ const IbcTxn = (props) => {
         event.preventDefault();
         if (chain !== "Custom" && !helper.validateAddress(event.target.address.value, chain.substr(0, chain.indexOf('/')))) {
             setLoader(false);
-            setKeplerError('Enter Valid  Recipient’s ToAddress.');
+            setKeplerError('Enter Valid  Recipient’s Address.');
             return;
         }
         let inputChannelID = customChain ? event.target.channel.value : channelID;

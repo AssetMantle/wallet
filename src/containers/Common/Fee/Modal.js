@@ -1,19 +1,24 @@
 import { Modal as ReactModal } from 'react-bootstrap';
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {hideFeeModal} from "../../../actions/transactions/fee";
+import {hideFeeModal} from "../../../store/actions/transactions/fee";
 import Fee from "./index";
 import Gas from "./Gas";
 import Submit from "./Submit";
+import Loader from "../../../components/Loader";
 
 const Modal = () => {
     const show = useSelector((state) => state.fee.modal);
-    console.log(show, "show in fee");
+    const inProgress = useSelector((state) => state.common.inProgress);
+
+    console.log(inProgress, "inProgress");
     const dispatch = useDispatch();
     const handleClose = () => {
         dispatch(hideFeeModal());
     };
-
+    if (inProgress) {
+        return <Loader/>;
+    }
     return (
         <ReactModal
             animation={false}
@@ -24,7 +29,7 @@ const Modal = () => {
             show={show}
             onHide={handleClose}>
             <ReactModal.Header closeButton={true}>
-                <p>Send Token</p>
+                <p>Fee</p>
             </ReactModal.Header>
             <ReactModal.Body className="create-wallet-body import-wallet-body">
                 <Fee/>

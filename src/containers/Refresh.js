@@ -1,13 +1,13 @@
 import React, {useState} from "react";
 import {connect} from 'react-redux';
-import {fetchDelegationsCount} from "../actions/delegations";
-import {fetchBalance, fetchTransferableVestingAmount} from "../actions/balance";
-import {fetchRewards, fetchTotalRewards} from "../actions/rewards";
-import {fetchUnbondDelegations} from "../actions/unbond";
-import {fetchTokenPrice} from "../actions/tokenPrice";
+import {fetchDelegationsCount} from "../store/actions/delegations";
+import {fetchBalance, fetchTransferableVestingAmount} from "../store/actions/balance";
+import {fetchRewards, fetchTotalRewards} from "../store/actions/rewards";
+import {fetchUnbondDelegations} from "../store/actions/unbond";
+import {fetchTokenPrice} from "../store/actions/tokenPrice";
 import IconButton from '@material-ui/core/IconButton';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import {fetchReceiveTransactions, fetchTransactions} from "../actions/transactions";
+import {fetchReceiveTransactions, fetchTransactions} from "../store/actions/transactions";
 import transactions from "../utils/transactions";
 
 const InfoRefresh = (props) => {

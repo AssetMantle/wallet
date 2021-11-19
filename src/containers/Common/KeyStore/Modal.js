@@ -1,8 +1,8 @@
 import { Modal as ReactModal } from 'react-bootstrap';
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {hideKeyStoreModal} from "../../../actions/transactions/keyStore";
-import {showFeeModal} from "../../../actions/transactions/fee";
+import {hideKeyStoreModal} from "../../../store/actions/transactions/keyStore";
+import {showFeeModal} from "../../../store/actions/transactions/fee";
 import FileInput from "./FileInput";
 import Password from "./Password";
 import Submit from "./Submit";

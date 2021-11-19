@@ -4,7 +4,7 @@ import Icon from "../../../components/Icon";
 import InputText from "../../../components/InputText";
 import helper from "../../../utils/helper";
 import {useDispatch, useSelector} from "react-redux";
-import {setTxSendMemo} from "../../../actions/transactions/send";
+import {setTxSendMemo} from "../../../store/actions/transactions/send";
 import {useTranslation} from "react-i18next";
 
 const Memo = () => {

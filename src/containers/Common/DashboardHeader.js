@@ -11,7 +11,7 @@ import GenerateKeyStore from "../KeyStore/GenerateKeyStore";
 import MobileSidebar from "./MobileSidebar";
 import transactions from "../../utils/transactions";
 import config from "../../config";
-import {userLogout} from "../../actions/logout";
+import {userLogout} from "../../store/actions/logout";
 import {useDispatch} from "react-redux";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;

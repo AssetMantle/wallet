@@ -1,6 +1,6 @@
 import React from 'react';
 import InputFieldNumber from "../../../components/InputFieldNumber";
-import {setTxSendAmount} from "../../../actions/transactions/send";
+import {setTxSendAmount} from "../../../store/actions/transactions/send";
 import {useSelector, useDispatch} from "react-redux";
 import {formatNumber} from "../../../utils/scripts";
 import NumberView from "../../../components/NumberView";

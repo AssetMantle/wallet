@@ -2,11 +2,11 @@ import React from "react";
 import ToAddress from "./ToAddress";
 import Tokens from "./Tokens";
 import Amount from "./Amount";
-import SendButton from "./Send";
+import ButtonSend from "./ButtonSend";
 import {Modal} from "react-bootstrap";
 import ModalViewTxnResponse from "../../Common/ModalViewTxnResponse";
 import {useDispatch, useSelector} from "react-redux";
-import {hideTxResultModal} from "../../../actions/transactions/common";
+import {hideTxResultModal} from "../../../store/actions/transactions/common";
 import {useTranslation} from "react-i18next";
 import Loader from "../../../components/Loader";
 import Memo from "./Memo";
@@ -18,8 +18,8 @@ const Send = () => {
     const dispatch = useDispatch();
     // let mode = localStorage.getItem('loginMode');
     const show = useSelector((state) => state.common.modal);
-    const response = useSelector(state => state.send.response.value);
-    const inProgress = useSelector(state => state.send.inProgress);
+    const response = useSelector(state => state.common.txResponse.value);
+    const inProgress = useSelector(state => state.common.inProgress);
     const error = useSelector(state => state.send.error);
 
     console.log(error.error.message, "error in index");
@@ -39,7 +39,7 @@ const Send = () => {
                 <Memo/>
                 {error !== '' ?
                     <p className="form-error">{error.error.message}</p> : null}
-                <SendButton/>
+                <ButtonSend/>
             </div>
             <FeeModal/>
             <Modal show={show} onHide={handleClose} backdrop="static" centered className="modal-custom">

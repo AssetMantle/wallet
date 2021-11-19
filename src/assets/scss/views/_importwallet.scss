@@ -159,17 +159,18 @@
       p {
         margin: 0;
       }
-    }
+      button {
+        border: 0px;
+        background: transparent;
+        outline: none;
 
-    button {
-      border: 0px;
-      background: transparent;
-      outline: none;
-
-      .icon {
-        width: 20px;
+        .icon {
+          width: 20px;
+        }
       }
     }
+
+
 
     .collapse.show {
       padding: 30px 10px;

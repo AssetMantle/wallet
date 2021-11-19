@@ -1,8 +1,8 @@
 import React from 'react';
 import Button from "./../../../components/Button";
-import {feeSubmitKeyStore} from "../../../actions/transactions/fee";
+import {feeSubmitKeyStore} from "../../../store/actions/transactions/fee";
 import {useDispatch, useSelector} from "react-redux";
-import {keyStoreSubmit} from "../../../actions/transactions/keyStore";
+import {ledgerSubmit} from "../../../store/actions/transactions/ledger";
 
 const Submit = () => {
     let loginMode = localStorage.getItem('loginMode');
@@ -12,8 +12,7 @@ const Submit = () => {
 
     const onClick = () => {
         if(loginMode === "ledger"){
-            dispatch(keyStoreSubmit(loginAddress, loginMode, "send"));
-            console.log("");
+            dispatch(ledgerSubmit(loginAddress, loginMode));
         }else {
             dispatch(feeSubmitKeyStore());
         }
@@ -25,10 +24,7 @@ const Submit = () => {
     const disable = (
         fee.error.message !== '' || gas.error.message !== ''
     );
-    //
-    // const onClick = () => {
-    //     dispatch(keplrTxSend(loginAddress));
-    // };
+
     return (
         <div className="buttons">
             <div className="button-section">

@@ -5,13 +5,13 @@ import {connect} from "react-redux";
 import success from "../../../assets/images/success.svg";
 import failed from "../../../assets/images/inactive.svg";
 import transactions from "../../../utils/transactions";
-import {fetchDelegationsCount} from "../../../actions/delegations";
-import {fetchBalance, fetchTransferableVestingAmount} from "../../../actions/balance";
-import {fetchRewards, fetchTotalRewards} from "../../../actions/rewards";
-import {fetchUnbondDelegations} from "../../../actions/unbond";
-import {fetchTokenPrice} from "../../../actions/tokenPrice";
-import {fetchValidators} from "../../../actions/validators";
-import {fetchReceiveTransactions, fetchTransactions} from "../../../actions/transactions";
+import {fetchDelegationsCount} from "../../../store/actions/delegations";
+import {fetchBalance, fetchTransferableVestingAmount} from "../../../store/actions/balance";
+import {fetchRewards, fetchTotalRewards} from "../../../store/actions/rewards";
+import {fetchUnbondDelegations} from "../../../store/actions/unbond";
+import {fetchTokenPrice} from "../../../store/actions/tokenPrice";
+import {fetchValidators} from "../../../store/actions/validators";
+import {fetchReceiveTransactions, fetchTransactions} from "../../../store/actions/transactions";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -19,7 +19,6 @@ const ModalViewTxnResponse = (props) => {
     const {t} = useTranslation();
     const mode = localStorage.getItem('loginMode');
     let address = localStorage.getItem('address');
-
     useEffect(() => {
         if (props.response !== undefined) {
             props.fetchDelegationsCount(address);

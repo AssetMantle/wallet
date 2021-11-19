@@ -4,7 +4,7 @@ import {useSelector, useDispatch} from "react-redux";
 import {ValidateFee, ValidateGas} from "../../../utils/validations";
 import {useTranslation} from "react-i18next";
 import Icon from "../../../components/Icon";
-import {setTxGas} from "../../../actions/transactions/gas";
+import {setTxGas} from "../../../store/actions/transactions/gas";
 import config from "../../../config";
 
 const Gas = () => {

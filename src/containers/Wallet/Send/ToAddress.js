@@ -4,7 +4,7 @@ import Icon from "../../../components/Icon";
 import InputText from "../../../components/InputText";
 import helper from "../../../utils/helper";
 import {useDispatch, useSelector} from "react-redux";
-import {setTxSendAddress}from "../../../actions/transactions/send";
+import {setTxSendAddress}from "../../../store/actions/transactions/send";
 const ToAddress = () => {
     const toAddress = useSelector((state) => state.send.toAddress);
     const dispatch = useDispatch();

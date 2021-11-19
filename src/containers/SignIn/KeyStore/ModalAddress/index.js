@@ -1,7 +1,7 @@
 import { Modal as ReactModal } from 'react-bootstrap';
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {hideKeyStoreResultModal, showKeyStoreModal, keyStoreLogin} from "../../../../actions/signIn/keyStore";
+import {hideKeyStoreResultModal, showKeyStoreModal, keyStoreLogin} from "../../../../store/actions/signIn/keyStore";
 import Icon from "../../../../components/Icon";
 import {useTranslation} from "react-i18next";
 import {useHistory} from "react-router-dom";

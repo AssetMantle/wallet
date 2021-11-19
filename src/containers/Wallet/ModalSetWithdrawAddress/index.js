@@ -8,7 +8,7 @@ import {SetWithDrawAddressMsg} from "../../../utils/protoMsgHelper";
 import aminoMsgHelper from "../../../utils/aminoMsgHelper";
 import transactions from "../../../utils/transactions";
 import {useTranslation} from "react-i18next";
-import {fetchWithdrawAddress} from "../../../actions/withdrawAddress";
+import {fetchWithdrawAddress} from "../../../store/actions/withdrawAddress";
 import ModalGasAlert from "../../Gas/ModalGasAlert";
 import ModalViewTxnResponse from "../../Common/ModalViewTxnResponse";
 import {formatNumber} from "../../../utils/scripts";
@@ -84,7 +84,7 @@ const ModalSetWithdrawAddress = (props) => {
                 };
                 setFormData(data);
             } else {
-                setErrorMessage("Enter Valid Revised ToAddress");
+                setErrorMessage("Enter Valid Revised Address");
             }
 
         }
