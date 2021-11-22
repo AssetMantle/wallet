@@ -4,7 +4,6 @@
 /.pnp
 .pnp.js
 
-.idea
 # misc
 .sass-cache
 /__unfinished/*
@@ -22,7 +21,6 @@
 
 # dotenv environment variables file(s)
 .env
-.env.*
 
 # Build generated
 dist/
