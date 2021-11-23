@@ -5,15 +5,19 @@ import InputText from "../../../components/InputText";
 import helper from "../../../utils/helper";
 import {useDispatch, useSelector} from "react-redux";
 import {setTxSendAddress}from "../../../store/actions/transactions/send";
+import {useTranslation} from "react-i18next";
+import {ValidateAlphaNumeric} from "../../../utils/validations";
 const ToAddress = () => {
+    const {t} = useTranslation();
     const toAddress = useSelector((state) => state.send.toAddress);
     const dispatch = useDispatch();
 
-    console.log(toAddress, "toAddress");
-    const onChange = (evt) =>{
+    const onChange = (evt) => {
         dispatch(setTxSendAddress({
             value:evt.target.value,
-            error: helper.validateAddress(evt.target.value)
+            error: {
+                message: ''
+            }
         }));
     };
 
@@ -35,7 +39,7 @@ const ToAddress = () => {
     return (
         <>
             <div className="form-field">
-                <p className="label info">RECIPIENT_ADDRESS
+                <p className="label info">{t("RECIPIENT_ADDRESS")}
                     <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
                         <button className="icon-button info" type="button"><Icon
                             viewClass="arrow-right"
@@ -48,7 +52,7 @@ const ToAddress = () => {
                     value={toAddress.value}
                     required={true}
                     error={toAddress.error}
-                    onKeyPress={helper.inputSpaceValidation}
+                    onKeyPress={ValidateAlphaNumeric}
                     onBlur={onBlur}
                     placeholder="Enter Recipient's address"
                     autofocus={false}

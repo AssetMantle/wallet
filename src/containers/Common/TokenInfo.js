@@ -1,6 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {connect} from 'react-redux';
-import ModalWithdraw from "../Wallet/ModalWithdraw";
+import React, {useEffect} from "react";
+import {connect, useDispatch} from 'react-redux';
 import {fetchDelegationsCount} from "../../store/actions/delegations";
 import {fetchBalance, fetchTransferableVestingAmount} from "../../store/actions/balance";
 import {fetchRewards, fetchTotalRewards} from "../../store/actions/rewards";
@@ -17,10 +16,12 @@ import ModalViewDelegationDetails from "./ModalViewDelegationDetails";
 import {fetchValidators} from "../../store/actions/validators";
 import NumberView from "../../components/NumberView";
 import {formatNumber} from "../../utils/scripts";
-
+import {showTxWithDrawTotalModal} from "../../store/actions/transactions/withdrawTotalRewards";
+// import ModalWithDraw from "../Wallet/WithDrawTotal";
 const TokenInfo = (props) => {
     const {t} = useTranslation();
-    const [rewards, setRewards] = useState(false);
+    const dispatch = useDispatch();
+    // const [rewards, setRewards] = useState(false);
     let address = localStorage.getItem('address');
 
     useEffect(() => {
@@ -38,7 +39,8 @@ const TokenInfo = (props) => {
 
     const handleRewards = (key) => {
         if (key === "rewards") {
-            setRewards(true);
+            dispatch(showTxWithDrawTotalModal());
+            // setRewards(true);
         }
     };
     const popoverVesting = (
@@ -210,10 +212,10 @@ const TokenInfo = (props) => {
 
                     </div>
                 </div>
-                {rewards ?
-                    <ModalWithdraw setRewards={setRewards} totalRewards={props.rewards}/>
-                    : null
-                }
+                {/*{rewards ?*/}
+                {/*    <ModalWithDraw setRewards={setRewards} totalRewards={props.rewards}/>*/}
+                {/*    : null*/}
+                {/*}*/}
 
             </div>
         </div>

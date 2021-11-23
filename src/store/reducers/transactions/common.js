@@ -7,6 +7,7 @@ import {
     TX_IN_PROGRESS,
     TX_SUCCESS,
     TX_FAILED, TX_RESPONSE,
+    TX_MEMO_SET
 } from "../../../constants/common";
 
 const modal = (state = false, {
@@ -52,7 +53,7 @@ const txInfo = (state = {
 };
 
 const loginInfo = (state = {
-    value: '',
+    encryptedSeed: false,
     error:{
         message:''
     },
@@ -64,19 +65,10 @@ const loginInfo = (state = {
     case SET_LOGIN_INFO:
         return {
             ...state,
-            value: data.value,
+            encryptedSeed: data.encryptedSeed,
             error: {
                 ...state.error,
                 message: data.error.message,
-            },
-        };
-    case TX_SUCCESS:
-    case TX_RESULT_MODAL_HIDE:
-        return {
-            ...state,
-            value: '',
-            error:{
-                message:''
             },
         };
     default:
@@ -100,7 +92,6 @@ const inProgress = (state = false, {
 
 const txResponse = (state = {}, action) => {
     if (action.type === TX_RESPONSE) {
-        console.log(action.data, "receive r");
         return {
             ...state,
             value: action.data,
@@ -110,11 +101,68 @@ const txResponse = (state = {}, action) => {
     }
 };
 
+const memo = (state = {
+    value: '',
+    error: {
+        message: '',
+    },
+}, {
+    type,
+    data,
+}) => {
+    switch (type) {
+    case TX_MEMO_SET:
+        return {
+            ...state,
+            value: data.value,
+            error: {
+                ...state.error,
+                message: data.error.message,
+            },
+        };
+    case TX_SUCCESS:
+    case TX_RESULT_MODAL_HIDE:
+        return {
+            ...state,
+            value: '',
+            error: {
+                ...state.error,
+                message: '',
+            },
+        };
+    default:
+        return state;
+    }
+};
 
+
+const error = (state = {
+    error: {
+        message: '',
+    },
+}, {
+    type,
+    data,
+}) => {
+    switch (type) {
+    case TX_FAILED:
+        return {
+            ...state,
+            error: {
+                ...state.error,
+                message: data,
+            },
+        };
+    default:
+        return state;
+    }
+};
 export default combineReducers({
     modal,
     txInfo,
     loginInfo,
     inProgress,
-    txResponse
+    memo,
+    txResponse,
+    error
 });

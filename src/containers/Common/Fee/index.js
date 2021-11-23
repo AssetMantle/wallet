@@ -84,7 +84,7 @@ const Fee = () => {
             <div className="form-field p-0">
                 <p className="label"></p>
                 <div className="amount-field">
-                    <p className="amount-error text-left">
+                    <p className="amount-error text-center">
                         {fee.error &&
                          fee.error.message}
                         {gas.feeError &&

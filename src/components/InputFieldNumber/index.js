@@ -13,6 +13,7 @@ const InputFieldNumber = ({
     onChange,
     min,
     onBlur= helper.emptyFunc,
+    onKeyPress= helper.emptyFunc,
 }) => {
     // const isError = error.message.length > 0;
 
@@ -28,6 +29,7 @@ const InputFieldNumber = ({
                 value={value}
                 onChange={onChange}
                 onBlur={onBlur}
+                onKeyPress={onKeyPress}
             />
             <p className="input-error">{error.message}</p>
         </div>

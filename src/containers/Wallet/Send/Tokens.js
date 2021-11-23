@@ -4,16 +4,20 @@ import transactions from "../../../utils/transactions";
 import {useDispatch, useSelector} from "react-redux";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import {useTranslation} from "react-i18next";
+import config from "../../../config";
 
 const Tokens = () => {
+    const {t} = useTranslation();
     const tokenList = useSelector((state) => state.balance.tokenList);
     const transferableAmount = useSelector((state) => state.balance.transferableAmount);
     const dispatch = useDispatch();
-    const tokenData=[];
+    let tokenData=[];
+
     useEffect(()=>{
         const initialObject ={
-            tokenDenom:'uxprt',
-            token:'uxprt',
+            tokenDenom:config.coinDenom,
+            token:config.coinDenom,
             transferableAmount:transferableAmount
         };
         tokenData.push(initialObject);
@@ -23,12 +27,18 @@ const Tokens = () => {
             })
         );
     },[]);
+
     console.log(tokenList, "tokenList");
     const onChangeSelect = (evt) => {
         const tokenDataObject={};
-        console.log(evt.target.value, "tokenvalue");
+        dispatch(
+            setTxSendToken({
+                value: [],
+            })
+        );
+        tokenData=[];
         tokenDataObject.token = evt.target.value;
-        if (evt.target.value === 'uxprt') {
+        if (evt.target.value === config.coinDenom) {
             tokenDataObject.tokenDenom = evt.target.value;
             tokenDataObject.transferableAmount = transferableAmount;
         } else {
@@ -51,27 +61,21 @@ const Tokens = () => {
 
     return (
         <div className="form-field">
-            <p className="label">TOKEN</p>
-            {/*<SelectField*/}
-            {/*    className="validators-list-selection"*/}
-            {/*    items={tokenList}*/}
-            {/*    value={token.length ? token.token : 'uxprt'}*/}
-            {/*    menuItemClassName=""*/}
-            {/*    onChange={onChangeSelect}*/}
-            {/*/>*/}
-
-            <Select
-                className="validators-list-selection"
-                displayEmpty={true}
-                defaultValue={'uxprt'}
-                required={true}
-                onChange={onChangeSelect}>
-                <MenuItem
-                    className=""
-                    value="uxprt">
-                    XPRT
-                </MenuItem>
-            </Select>
+            <p className="label">{t("TOKEN")} </p>
+            <div className="form-control-section flex-fill">
+                <Select
+                    className="validators-list-selection"
+                    displayEmpty={true}
+                    defaultValue={config.coinDenom}
+                    required={true}
+                    onChange={onChangeSelect}>
+                    <MenuItem
+                        className=""
+                        value={config.coinDenom}>
+                        {config.coinName}
+                    </MenuItem>
+                </Select>
+            </div>
         </div>
        
     );

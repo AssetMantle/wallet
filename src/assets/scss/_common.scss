@@ -93,7 +93,7 @@ html, body {
 
 .list-modal.modal-custom {
   .modal-dialog {
-    max-width: 700px;
+    max-width: 600px;
   }
 
   .list-modal-body {
@@ -154,7 +154,7 @@ html, body {
   }
 
   .modal-dialog {
-    max-width: 700px;
+    max-width: 600px;
   }
 
   .modal-body {
@@ -217,22 +217,16 @@ html, body {
 }
 
 .form-field {
-  display: flex;
-  display: -webkit-flex;
-  align-items: center;
-  padding-bottom: 15px;
-
   .label {
     font-weight: 500;
     font-size: 14px;
     line-height: 150%;
-    margin: 0;
+    margin: 0 0 5px 0;
     color: #2E3239;
-    width: 150px;
   }
 
-  input, .amount-field, textarea, .file-upload, .info-data {
-    max-width: 450px !important;
+  input, .amount-field, textarea, .file-upload{
+    max-width: 500px !important;
     flex: 1;
   }
 
@@ -253,7 +247,7 @@ html, body {
   }
 
   .info-data {
-    margin: 0 0 10px 0;
+    margin: 0;
     display: block;
     font-weight: 500;
     font-size: 16px;
@@ -376,7 +370,6 @@ html, body {
   display: flex;
   display: -webkit-flex;
   margin-top: 20px;
-  padding: 20px;
   align-items: center;
   justify-content: center;
 
@@ -473,8 +466,9 @@ html, body {
 }
 
 .validators-list-selection {
-  max-width: 450px !important;
+  max-width: 500px !important;
   flex: 1;
+  width: 100%;
   background: #F5F6FA;
   font-size: 14px;
   line-height: 150%;
@@ -857,4 +851,80 @@ ul li em {
   font-size: 12px;
   color: #E50913;
   font-weight: 500;
+}
+
+.form-control-section{
+  position: relative;
+  padding-bottom: 20px;
+  .input-error {
+   position: absolute;
+    bottom: 0;
+  }
+}
+
+.error-popover{
+  background: red;
+
+  .popover-arrow{
+    background: red;
+
+  }
+}
+
+.amount-label{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.custom-file-section {
+  position:relative;
+  height: 40px;
+  margin-bottom: 20px;
+  .custom-file{
+    display: flex;
+    align-items: center;
+  .file-name{
+    color: red;
+    margin: 0;
+    padding: 0px 10px;
+  }
+  }
+  .file-button{
+    cursor: pointer;
+    color: #FFFFFF;
+    margin: 0;
+    background: #495057;
+    width: 150px;
+    padding: 5px;
+    text-align: center;
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
+  }
+  .file-upload{
+    position: absolute;
+    top: 0px;
+    width: 150px;
+    opacity: 0;
+    input{
+      cursor: pointer;
+      height: 40px;
+
+    }
+  }
+}
+
+.password-field{
+  .password-field-container{
+    position: relative;
+    .password-icon-section{
+      cursor: pointer;
+      position: absolute;
+      top: 10px;
+      right: 15px;
+    }
+    .icon{
+      width:24px;
+    }
+  }
+
 }

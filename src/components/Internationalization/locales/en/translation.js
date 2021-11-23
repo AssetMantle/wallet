@@ -263,7 +263,8 @@ let English = {
         "LOGIN_WITH_KEYSTORE": "Login With KeyStore",
         "CURRENT_PASSWORD": "Current Password",
         "KEYSTORE_PASSWORD_RESET": "KeyStore Password Reset",
-        "ENTER_NEW_PASSWORD": "Enter New Password"
+        "ENTER_NEW_PASSWORD": "Enter New Password",
+        "CHOOSE_FILE":"Choose File"
     }
 };
 

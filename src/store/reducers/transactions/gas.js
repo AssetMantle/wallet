@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux';
 import {TX_GAS_SET} from "../../../constants/gas";
-import {TX_SEND_SUCCESS} from "../../../constants/send";
-import {TX_RESULT_MODAL_HIDE} from "../../../constants/common";
+import {TX_RESULT_MODAL_HIDE, TX_SUCCESS} from "../../../constants/common";
 import config from "../../../config";
 
 const gas = (state = {
@@ -30,7 +29,7 @@ const gas = (state = {
                 message: data.error.message,
             },
         };
-    case TX_SEND_SUCCESS:
+    case TX_SUCCESS:
     case TX_RESULT_MODAL_HIDE:
         return {
             ...state,

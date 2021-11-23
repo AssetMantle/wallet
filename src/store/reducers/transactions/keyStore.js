@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux';
 import {TX_KEY_STORE_SET, TX_KEY_STORE_PASSWORD_SET} from "../../../constants/keyStore";
-import {TX_SEND_SUCCESS} from "../../../constants/send";
-import {TX_RESULT_MODAL_HIDE} from "../../../constants/common";
+import {TX_RESULT_MODAL_HIDE, TX_SUCCESS} from "../../../constants/common";
 import {KEYSTORE_MODAL_SHOW, KEYSTORE_MODAL_HIDE} from "../../../constants/keyStore";
 
 const keyStore = (state = {
@@ -47,7 +46,7 @@ const password = (state = {
                 message: data.error.message,
             },
         };
-    case TX_SEND_SUCCESS:
+    case TX_SUCCESS:
     case TX_RESULT_MODAL_HIDE:
         return {
             ...state,

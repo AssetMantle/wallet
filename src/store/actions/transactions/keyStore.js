@@ -1,8 +1,9 @@
 import {TX_KEY_STORE_SET, TX_KEY_STORE_PASSWORD_SET} from "../../../constants/keyStore";
 import transactions from "../../../utils/transactions";
 import {KEYSTORE_MODAL_HIDE, KEYSTORE_MODAL_SHOW} from "../../../constants/keyStore";
-import {txResponse, txFailed, txSuccess, txInProgress} from "./common";
+import {txResponse, txFailed, txSuccess, txInProgress, setLoginInfo} from "./common";
 import {showTxResultModal} from "./common";
+import helper from "../../../utils/helper";
 
 export const setTxKeyStore = (data) => {
     return {
@@ -33,9 +34,10 @@ export const hideKeyStoreModal = (data) => {
     };
 };
 
-export const keyStoreSubmit = (loginAddress, loginMode) => {
+export const keyStoreSubmit = (loginAddress) => {
     return async (dispatch, getState) => {
         dispatch(txInProgress());
+
         const password = getState().keyStore.password;
         const keyStoreData = getState().keyStore.keyStore;
 
@@ -46,18 +48,31 @@ export const keyStoreSubmit = (loginAddress, loginMode) => {
         const formData = getState().common.txInfo.value.data;
         const txName = getState().common.txInfo.value.name;
 
+        const encryptedSeed = getState().common.loginInfo.encryptedSeed;
+
         const fee = getState().fee.fee.value.fee;
         const gas = getState().gas.gas.value;
-
-        let mnemonic = "";
-        if(loginMode !=="ledger") {
+        let mnemonic="";
+        console.log(encryptedSeed, "encryptedSeed");
+        if(encryptedSeed){
+            const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
+            const res = JSON.parse(encryptedMnemonic);
+            const decryptedData = helper.decryptStore(res, password.value);
+            mnemonic = decryptedData.mnemonic;
+        }else{
             mnemonic = await transactions.PrivateKeyReader(keyStoreData.value, password.value, loginAddress);
         }
-
+        console.log(loginAddress, formData, fee, gas, mnemonic,txName, accountNumber, accountIndex, bip39PassPhrase, "txn data");
         let response = transactions.getTransactionResponse(loginAddress, formData, fee, gas, mnemonic,txName, accountNumber, accountIndex, bip39PassPhrase);
-        console.log(response, "txn response");
         response.then(result => {
+            console.log(result, "txn response");
+
             if (result.code !== undefined) {
+                dispatch(setLoginInfo({
+                    encryptedSeed:true,
+                    error:{
+                        message:''
+                    }}));
                 dispatch(hideKeyStoreModal());
                 dispatch(txSuccess());
                 dispatch(txResponse(result));
@@ -67,6 +82,7 @@ export const keyStoreSubmit = (loginAddress, loginMode) => {
                 console.log(result, "final result");
             }
         }).catch(err => {
+            console.log(err.message, "err.message");
             dispatch(txFailed(err.message));
         });
     };

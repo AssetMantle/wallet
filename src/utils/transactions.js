@@ -7,7 +7,7 @@ import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient} from "@cosmjs/stargate";
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import {LedgerSigner} from "@cosmjs/ledger-amino";
-import {DelegateMsg, RedelegateMsg, SendMsg, SetWithDrawAddressMsg, UnbondMsg, WithdrawMsg} from "./protoMsgHelper";
+import {DelegateMsg, RedelegateMsg, UnbondMsg, WithdrawMsg} from "./protoMsgHelper";
 import aminoMsgHelper from "./aminoMsgHelper";
 import {QueryClientImpl} from "cosmjs-types/cosmos/auth/v1beta1/query";
 import {
@@ -73,7 +73,7 @@ async function LedgerWallet(hdpath, prefix) {
 
 async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(), bip39Passphrase = "", prefix = addressPrefix) {
     const loginMode = localStorage.getItem('loginMode');
-
+    console.log(loginMode, "loginMode");
     if (loginMode === "normal") {
         const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix);
         return Transaction(wallet, address, msgs, fee, memo);
@@ -154,7 +154,7 @@ function PrivateKeyReader(file, password, loginAddress) {
                     let mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
                     const accountData = await MnemonicWalletWithPassphrase(mnemonic, makeHdPath());
                     const address = accountData[1];
-                    console.log(address, loginAddress, "loginAddress");
+                    console.log(address, event.target.result, "loginAddress");
                     if (address === loginAddress) {
                         resolve(mnemonic);
                         localStorage.setItem('encryptedMnemonic', event.target.result);
@@ -186,6 +186,8 @@ function decodeTendermintConsensusStateAny(consensusState) {
 }
 
 async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp = config.timeoutTimestamp, denom = "uxprt", url, port = "transfer") {
+
+    console.log(channel, fromAddress, toAddress, amount, timeoutHeight, config.timeoutTimestamp, "uxprt", url, "transfer", "redd");
     const tendermintClient = await tmRPC.Tendermint34Client.connect(tendermintRPCURL);
     const queryClient = new QueryClient(tendermintClient);
 
@@ -262,17 +264,18 @@ function checkValidatorAccountAddress(validatorAddress, address) {
 
 async function getTransactionResponse(address, data, fee, gas, mnemonic = "", txName,  accountNumber = 0, addressIndex = 0, bip39Passphrase = "") {
     if (txName === "send") {
-        console.log(address, data.toAddress.value, (data.amount.value * config.xprtValue).toFixed(0), data.token ,aminoMsgHelper.fee(Math.trunc(fee), gas), "getTransactionResponse");
-        return TransactionWithMnemonic([SendMsg(address, data.toAddress.value, (data.amount.value * config.xprtValue).toFixed(0), data.token)], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
+        return TransactionWithMnemonic(data.message, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
     } else if (data.formName === "delegate") {
         return TransactionWithMnemonic([DelegateMsg(address, data.validatorAddress, (data.amount * config.xprtValue).toFixed(0))], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-    } else if (data.formName === "withdrawMultiple") {
-        return TransactionWithMnemonic(data.messages, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
+    } else if (txName === "withdrawMultiple") {
+        console.log(data.message.message, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
+            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, "messages response");
+        return TransactionWithMnemonic(data.message, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-    } else if (data.formName === "withdrawAddress") {
-        return TransactionWithMnemonic([SetWithDrawAddressMsg(address, data.validatorAddress)], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
+    } else if (txName === "withdrawAddress") {
+        return TransactionWithMnemonic(data.message, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
     } else if (data.formName === "redelegate") {
         return TransactionWithMnemonic([RedelegateMsg(address, data.validatorAddress, data.toValidatorAddress, (data.amount * config.xprtValue).toFixed(0))], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
@@ -283,6 +286,13 @@ async function getTransactionResponse(address, data, fee, gas, mnemonic = "", tx
     } else if (data.formName === "withdrawValidatorRewards") {
         return TransactionWithMnemonic([WithdrawMsg(address, data.validatorAddress)], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+    }else if(txName === "ibc"){
+        console.log(data.message,
+            aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo, mnemonic,
+            makeHdPath(accountNumber, addressIndex), bip39Passphrase, "getTransactionResponse");
+        return TransactionWithMnemonic(data.message,
+            aminoMsgHelper.fee(Math.trunc(fee), gas),  data.memo, mnemonic,
+            makeHdPath(accountNumber, addressIndex), bip39Passphrase);
     }
 }
 

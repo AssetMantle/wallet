@@ -16,7 +16,6 @@ const InputText = ({
     onKeyPress= helper.emptyFunc,
     onBlur= helper.emptyFunc,
 })=>{
-    console.log(value ,"inputText");
     return (
         <div className="form-control-section flex-fill">
             <Form.Control
@@ -25,11 +24,11 @@ const InputText = ({
                 name={name}
                 onKeyPress={onKeyPress}
                 placeholder={placeholder}
-                required={required}
                 autoFocus={autofocus}
                 defaultValue={value}
                 onChange={onChange}
                 onBlur={onBlur}
+                required={required}
             />
             <p className="input-error">{error.message}</p>
         </div>

@@ -1,21 +1,20 @@
 import transactions from "../../../utils/transactions";
-import {SendMsg} from "../../../utils/protoMsgHelper";
-import config from "../../../config";
 import aminoMsgHelper from "../../../utils/aminoMsgHelper";
 import {showTxResultModal} from "./common";
 import {txResponse, txFailed, txSuccess, txInProgress} from "./common";
 
-export const keplrTxSend = (loginAddress) => (dispatch, getState) => {
+export const keplrSubmit = (messages) => (dispatch) => {
     dispatch(txInProgress());
-    const {
-        send: {
-            toAddress,
-            amount,
-            token,
-        },
-    } = getState();
-    console.log(toAddress, amount,token, "loginAddress");
-    const response = transactions.TransactionWithKeplr([SendMsg(loginAddress, toAddress.value, (amount.value * config.xprtValue).toFixed(0), token.value.tokenDenom)], aminoMsgHelper.fee(0, 250000));
+    // const {
+    //     send: {
+    //         toAddress,
+    //         amount,
+    //         token,
+    //     },
+    // } = getState();
+    // console.log(toAddress, amount,token, "loginAddress");
+    console.log(messages, "messages");
+    const response = transactions.TransactionWithKeplr(messages, aminoMsgHelper.fee(0, 250000));
     response.then(result => {
         if (result.code !== undefined) {
             dispatch(txSuccess());

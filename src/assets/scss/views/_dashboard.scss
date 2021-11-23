@@ -209,17 +209,11 @@
     }
 
     .form-section {
-      max-width: 700px;
+      max-width: 500px;
 
       .form-field {
-        display: flex;
-        display: -webkit-flex;
-        align-items: center;
-        padding-bottom: 15px;
-
         .label {
-          margin: 0 15px 0 0;
-          width: 155px;
+          margin: 0 0 5px 0;
           font-weight: 500;
           font-size: 14px;
           line-height: 150%;
@@ -1060,7 +1054,7 @@
       display: -webkit-flex;
       align-items: center;
       font-family: 'Poppins', sans-serif;
-
+      margin-bottom: 20px;
       p {
         margin: 0;
       }
@@ -1406,8 +1400,6 @@
 .rewards-validators-list {
   & > div {
     width: 100%;
-    max-width: 400px !important;
-
     button {
       width: 100%;
       background: #F5F6FA;

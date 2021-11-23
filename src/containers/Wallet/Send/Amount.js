@@ -4,9 +4,11 @@ import {setTxSendAmount} from "../../../store/actions/transactions/send";
 import {useSelector, useDispatch} from "react-redux";
 import {formatNumber} from "../../../utils/scripts";
 import NumberView from "../../../components/NumberView";
-import {ValidateSendAmount} from "../../../utils/validations";
+import {ValidateSendAmount, ValidateSpecialCharacters} from "../../../utils/validations";
+import {useTranslation} from "react-i18next";
 
 const Amount = () => {
+    const {t} = useTranslation();
     // const amount = floatCoin(props.balance);
     const amount = useSelector((state) => state.send.amount);
     const token = useSelector((state) => state.send.token.value);
@@ -59,19 +61,8 @@ const Amount = () => {
     }
     return (
         <div className="form-field p-0">
-            <p className="label">AMOUNT</p>
-            <div className="amount-field">
-                <InputFieldNumber
-                    className="form-control"
-                    min={0}
-                    name="Amount"
-                    placeholder="Enter Amount"
-                    required={true}
-                    type="number"
-                    value={amount.value}
-                    error={amount.error}
-                    onChange={onChange}
-                />
+            <p className="label amount-label">
+                <span> {t("AMOUNT")}</span>
                 {
                     Object.keys(token).length !== 0 ?
                         token.tokenDenom === "uxprt" ?
@@ -103,6 +94,21 @@ const Amount = () => {
                             </span> 
                         </span>
                 }
+            </p>
+            <div className="amount-field">
+                <InputFieldNumber
+                    className="form-control"
+                    min={0}
+                    name="Amount"
+                    placeholder="Enter Amount"
+                    required={true}
+                    type="number"
+                    value={amount.value}
+                    onKeyPress={ValidateSpecialCharacters}
+                    error={amount.error}
+                    onChange={onChange}
+                />
+         
             </div>
         </div>
     );

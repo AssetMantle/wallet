@@ -20,9 +20,9 @@ const Send = () => {
     const show = useSelector((state) => state.common.modal);
     const response = useSelector(state => state.common.txResponse.value);
     const inProgress = useSelector(state => state.common.inProgress);
-    const error = useSelector(state => state.send.error);
+    const error = useSelector(state => state.common.error);
 
-    console.log(error.error.message, "error in index");
+    console.log(error, "error in index");
     const handleClose = () => {
         dispatch(hideTxResultModal());
     };

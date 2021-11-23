@@ -45,14 +45,24 @@ export const ValidateGas = (value) => {
 
 export const passwordValidation = (data) => {
     const regex = /^\S{3}\S+$/;
-    if(!regex.test(data)){
-        return new Error('Password must be greater than 3 letters and no spaces allowed');
+    console.log(/\s/g.test(data), "erted");
+    if(/\s/g.test(data)){
+        return new Error('Spaces not allowed');
+    }else if(!regex.test(data)){
+        return new Error('Password must be greater than 3 letters');
     }
     return new Error('');
 };
 
+export const ValidateAlphaNumeric = e =>{
+    const regEx = /^[a-z0-9]+$/;
+    if(!regEx.test(e.key)){
+        e.preventDefault();
+    }
+};
+
 export const ValidateSpecialCharacters = e => {
-    const key = e.key.toUpperCase();
+    const key = e.key.toLowerCase();
     if (key === "e" || key === "-" || key === "+") {
         e.preventDefault();
     }
@@ -67,6 +77,28 @@ export const ValidateAccountIndex = (value) => {
 export const ValidateBip39PassPhrase = (value) => {
     if (parseInt(value) > 50) {
         return new Error(' "Length should be below 50 characters",');
+    }
+    return new Error('');
+};
+
+export const ValidationFileTypeCheck = (filePath) => {
+    let allowedExtensions =
+        /(\.json)$/i;
+    if(!allowedExtensions.exec(filePath)){
+        return new Error("File type not supported");
+    }
+    return new Error('');
+};
+
+export const ValidateSpace = (e) => {
+    if (e.key === " ") {
+        e.preventDefault();
+    }
+};
+
+export const ValidateMultipleValidatorsClaim = (evt) => {
+    if (evt.length > 3) {
+        return new Error("Warning:  Recommend 3 or fewer validators to avoid potential issues.");
     }
     return new Error('');
 };

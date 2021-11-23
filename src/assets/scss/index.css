@@ -91,7 +91,7 @@ html, body {
 }
 
 .list-modal.modal-custom .modal-dialog {
-  max-width: 700px;
+  max-width: 600px;
 }
 .list-modal.modal-custom .list-modal-body {
   padding: 0px 100px 30px 100px;
@@ -139,7 +139,7 @@ html, body {
   margin: 0 45px;
 }
 .modal-custom .modal-dialog {
-  max-width: 700px;
+  max-width: 600px;
 }
 .modal-custom .modal-body input {
   margin: 0;
@@ -191,22 +191,15 @@ html, body {
   margin-left: 10px;
 }
 
-.form-field {
-  display: flex;
-  display: -webkit-flex;
-  align-items: center;
-  padding-bottom: 15px;
-}
 .form-field .label {
   font-weight: 500;
   font-size: 14px;
   line-height: 150%;
-  margin: 0;
+  margin: 0 0 5px 0;
   color: #2E3239;
-  width: 150px;
 }
-.form-field input, .form-field .amount-field, .form-field textarea, .form-field .file-upload, .form-field .info-data {
-  max-width: 450px !important;
+.form-field input, .form-field .amount-field, .form-field textarea, .form-field .file-upload {
+  max-width: 500px !important;
   flex: 1;
 }
 .form-field .description-info {
@@ -224,7 +217,7 @@ html, body {
   cursor: pointer;
 }
 .form-field .info-data {
-  margin: 0 0 10px 0;
+  margin: 0;
   display: block;
   font-weight: 500;
   font-size: 16px;
@@ -336,7 +329,6 @@ html, body {
   display: flex;
   display: -webkit-flex;
   margin-top: 20px;
-  padding: 20px;
   align-items: center;
   justify-content: center;
 }
@@ -420,8 +412,9 @@ html, body {
 }
 
 .validators-list-selection {
-  max-width: 450px !important;
+  max-width: 500px !important;
   flex: 1;
+  width: 100%;
   background: #F5F6FA;
   font-size: 14px;
   line-height: 150%;
@@ -769,6 +762,76 @@ ul li em {
   font-size: 12px;
   color: #E50913;
   font-weight: 500;
+}
+
+.form-control-section {
+  position: relative;
+  padding-bottom: 20px;
+}
+.form-control-section .input-error {
+  position: absolute;
+  bottom: 0;
+}
+
+.error-popover {
+  background: red;
+}
+.error-popover .popover-arrow {
+  background: red;
+}
+
+.amount-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.custom-file-section {
+  position: relative;
+  height: 40px;
+  margin-bottom: 20px;
+}
+.custom-file-section .custom-file {
+  display: flex;
+  align-items: center;
+}
+.custom-file-section .custom-file .file-name {
+  color: red;
+  margin: 0;
+  padding: 0px 10px;
+}
+.custom-file-section .file-button {
+  cursor: pointer;
+  color: #FFFFFF;
+  margin: 0;
+  background: #495057;
+  width: 150px;
+  padding: 5px;
+  text-align: center;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+}
+.custom-file-section .file-upload {
+  position: absolute;
+  top: 0px;
+  width: 150px;
+  opacity: 0;
+}
+.custom-file-section .file-upload input {
+  cursor: pointer;
+  height: 40px;
+}
+
+.password-field .password-field-container {
+  position: relative;
+}
+.password-field .password-field-container .password-icon-section {
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+}
+.password-field .password-field-container .icon {
+  width: 24px;
 }
 
 /*--------------------------------------------------------------
@@ -1156,7 +1219,6 @@ ul li em {
   align-items: center;
   justify-content: center;
   max-width: 500px;
-  padding-top: 10px;
 }
 
 .memo-dropdown {
@@ -1312,7 +1374,7 @@ ul li em {
 # createwallet styles
 --------------------------------------------------------------*/
 .create-wallet-modal .modal-dialog {
-  max-width: 700px !important;
+  max-width: 600px !important;
 }
 .create-wallet-modal .modal-content {
   border-radius: 0;
@@ -1329,9 +1391,6 @@ ul li em {
   text-align: center;
   color: #2E3239;
   margin: 0;
-}
-.create-wallet-modal .modal-body {
-  padding: 40px;
 }
 .create-wallet-modal .modal-body .question-heading {
   font-family: "Poppins", sans-serif;
@@ -1610,7 +1669,7 @@ ul li em {
 # importwallet styles
 --------------------------------------------------------------*/
 .import-wallet-body {
-  padding: 0 40px 40px 40px;
+  padding: 0 50px 40px 50px;
 }
 .import-wallet-body .buttons {
   padding-top: 30px;
@@ -1928,17 +1987,10 @@ ul li em {
   text-align: left;
 }
 .wallet-main-section .send-container .form-section {
-  max-width: 700px;
-}
-.wallet-main-section .send-container .form-section .form-field {
-  display: flex;
-  display: -webkit-flex;
-  align-items: center;
-  padding-bottom: 15px;
+  max-width: 500px;
 }
 .wallet-main-section .send-container .form-section .form-field .label {
-  margin: 0 15px 0 0;
-  width: 155px;
+  margin: 0 0 5px 0;
   font-weight: 500;
   font-size: 14px;
   line-height: 150%;
@@ -2603,6 +2655,7 @@ ul li em {
   display: -webkit-flex;
   align-items: center;
   font-family: "Poppins", sans-serif;
+  margin-bottom: 20px;
 }
 .claim-rewards-modal .rewards-modal-body .available-tokens p {
   margin: 0;
@@ -2876,7 +2929,6 @@ ul li em {
 
 .rewards-validators-list > div {
   width: 100%;
-  max-width: 400px !important;
 }
 .rewards-validators-list > div button {
   width: 100%;

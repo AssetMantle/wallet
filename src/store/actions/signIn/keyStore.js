@@ -48,6 +48,7 @@ export const  keyStoreSubmit = () => {
         let mnemonic ="";
         fileReader.readAsText(keyStoreData.value, "UTF-8");
         fileReader.onload = async event => {
+            localStorage.setItem('encryptedMnemonic', event.target.result);
             const res = JSON.parse(event.target.result);
             console.log(password, " res keyStoreData");
             const decryptedData = helper.decryptStore(res, password.value);
@@ -121,28 +122,27 @@ export const keyStoreLogin = (history) => {
             accountNumber:'',
             accountIndex:''
         };
-        GetAccount(address)
-            .then(async res => {
-                const accountType = await transactions.VestingAccountCheck(res.typeUrl);
-                if (accountType) {
-                    loginInfo.fee = config.vestingAccountFee;
-                    loginInfo.account = "vesting";
-                    localStorage.setItem('fee', config.vestingAccountFee);
-                    localStorage.setItem('account', 'vesting');
-                } else {
-                    loginInfo.fee = config.defaultFee;
-                    loginInfo.account = "non-vesting";
-                    localStorage.setItem('fee', config.defaultFee);
-                    localStorage.setItem('account', 'non-vesting');
-                }
-            })
-            .catch(error => {
-                console.log(error.message);
-                loginInfo.fee = config.defaultFee;
-                loginInfo.account = "non-vesting";
-                localStorage.setItem('fee', config.defaultFee);
-                localStorage.setItem('account', 'non-vesting');
-            });
+        console.log("in keyStoreLogin");
+        const account = await GetAccount(address).catch(error => {
+            console.log(error.message);
+            loginInfo.fee = config.defaultFee;
+            loginInfo.account = "non-vesting";
+            localStorage.setItem('fee', config.defaultFee);
+            localStorage.setItem('account', 'non-vesting');
+        });
+        const accountType = await transactions.VestingAccountCheck(account.typeUrl);
+        if (accountType) {
+            loginInfo.fee = config.vestingAccountFee;
+            loginInfo.account = "vesting";
+            localStorage.setItem('fee', config.vestingAccountFee);
+            localStorage.setItem('account', 'vesting');
+        } else {
+            loginInfo.fee = config.defaultFee;
+            loginInfo.account = "non-vesting";
+            localStorage.setItem('fee', config.defaultFee);
+            localStorage.setItem('account', 'non-vesting');
+        }
+
         loginInfo.loginToken = "loggedIn";
         loginInfo.address = address;
         loginInfo.loginMode = "normal";
@@ -153,8 +153,9 @@ export const keyStoreLogin = (history) => {
         localStorage.setItem('address', address);
         localStorage.setItem('loginMode', 'normal');
         localStorage.setItem('version', config.version);
+        localStorage.setItem('loginInfo', JSON.stringify(loginInfo));
         dispatch(setLoginInfo({
-            value:loginInfo,
+            encryptedSeed:true,
             error:{
                 message:''
             }}));

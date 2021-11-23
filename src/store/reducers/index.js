@@ -18,7 +18,9 @@ import signInModal from "./signIn/modal";
 import signInLedger from "./signIn/ledger";
 import signInAddress from "./signIn/address";
 import signInKeplr from "./signIn/keplr";
-
+import mulitpleRewardsWithDraw from "./transactions/withdrawTotalRewards";
+import sendIbc from "./transactions/sendIbc";
+import setWithdrawAddress from "./transactions/setWithdrawAddress";
 const appReducer =  combineReducers({
     delegations,
     transactions,
@@ -38,7 +40,10 @@ const appReducer =  combineReducers({
     signInModal,
     signInLedger,
     signInAddress,
-    signInKeplr
+    signInKeplr,
+    mulitpleRewardsWithDraw,
+    sendIbc,
+    setWithdrawAddress
 });
 
 export const rootReducer = (state, action) => {

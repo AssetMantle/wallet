@@ -5,9 +5,10 @@ import Receive from "./Receive";
 import Transactions from "./Transactions/index";
 import TokenInfo from "../Common/TokenInfo";
 import InfoRefresh from "../Refresh";
-import IbcTxn from "./Ibc/IbcTxn";
+import SendIbc from "./SendIbc/index";
 import Icon from "../../components/Icon";
-
+import ModalWithdraw from "./WithDrawTotal/ModalWithDraw";
+import ModalSetWithdrawAddress from "./SetWithdrawAddress/ModalSetWithdrawAddress";
 const Wallet = () => {
 
 
@@ -33,30 +34,34 @@ const Wallet = () => {
     );
 
     return (
-        <div className="wallet-main-section">
-            <TokenInfo/>
-            <div className="tabs-section">
-                <Tabs defaultActiveKey="Send" id="uncontrolled-tab-example">
-                    <Tab eventKey="Send" title="Send">
-                        <Send/>
-                    </Tab>
-                    <Tab eventKey="IBC" title={ibcTitle} tabClassName="ibc-tab">
-                        <IbcTxn/>
-                    </Tab>
-                    <Tab eventKey="Receive" title="Receive">
-                        <Receive/>
-                    </Tab>
-                    <Tab eventKey="Transactions" title="Transactions">
-                        <Transactions/>
-                    </Tab>
+        <>
+            <ModalWithdraw/>
+            <ModalSetWithdrawAddress/>
+            <div className="wallet-main-section">
+                <TokenInfo/>
+                <div className="tabs-section">
+                    <Tabs defaultActiveKey="Send" id="uncontrolled-tab-example">
+                        <Tab eventKey="Send" title="Send">
+                            <Send/>
+                        </Tab>
+                        <Tab eventKey="IBC" title={ibcTitle} tabClassName="ibc-tab">
+                            <SendIbc/>
+                        </Tab>
+                        <Tab eventKey="Receive" title="Receive">
+                            <Receive/>
+                        </Tab>
+                        <Tab eventKey="Transactions" title="Transactions">
+                            <Transactions/>
+                        </Tab>
 
-                </Tabs>
-                <div>
-                    <InfoRefresh/>
+                    </Tabs>
+                    <div>
+                        <InfoRefresh/>
+                    </div>
                 </div>
-            </div>
 
-        </div>
+            </div>
+        </>
     );
 };
 export default Wallet;
