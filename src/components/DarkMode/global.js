@@ -227,5 +227,13 @@ export const GlobalStyles = createGlobalStyle`
     .MuiSelect-icon{
     fill:${({theme}) => theme.selectIconColor} !important;
     }
+    .MuiPaper-root.MuiMenu-paper {
+       background-color: ${({theme}) => theme.tableBackground} !important;
+    };
+   .MuiPaper-root.MuiMenu-paper .validator-item{
+     border-bottom: 1px solid ${({theme}) => theme.selectItemBorderColor} !important;
+     color: ${({theme}) => theme.infoHeadingColor};
+   }
+
 `;
 

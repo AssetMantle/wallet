@@ -7,7 +7,6 @@ import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient} from "@cosmjs/stargate";
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import {LedgerSigner} from "@cosmjs/ledger-amino";
-import {DelegateMsg, RedelegateMsg, UnbondMsg, WithdrawMsg} from "./protoMsgHelper";
 import aminoMsgHelper from "./aminoMsgHelper";
 import {QueryClientImpl} from "cosmjs-types/cosmos/auth/v1beta1/query";
 import {
@@ -266,25 +265,24 @@ async function getTransactionResponse(address, data, fee, gas, mnemonic = "", tx
     if (txName === "send") {
         return TransactionWithMnemonic(data.message, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-    } else if (data.formName === "delegate") {
-        return TransactionWithMnemonic([DelegateMsg(address, data.validatorAddress, (data.amount * config.xprtValue).toFixed(0))], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
+    } else if (txName === "delegate") {
+        console.log(address, data, fee, gas, mnemonic, "delegate", "delegate");
+        return TransactionWithMnemonic(data.message, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
     } else if (txName === "withdrawMultiple") {
-        console.log(data.message.message, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
-            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, "messages response");
         return TransactionWithMnemonic(data.message, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
     } else if (txName === "withdrawAddress") {
         return TransactionWithMnemonic(data.message, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-    } else if (data.formName === "redelegate") {
-        return TransactionWithMnemonic([RedelegateMsg(address, data.validatorAddress, data.toValidatorAddress, (data.amount * config.xprtValue).toFixed(0))], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
+    } else if (txName === "reDelegate") {
+        return TransactionWithMnemonic(data.message, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-    } else if (data.formName === "unbond") {
-        return TransactionWithMnemonic([UnbondMsg(address, data.validatorAddress, (data.amount * config.xprtValue).toFixed(0))], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
+    } else if (txName === "unbond") {
+        return TransactionWithMnemonic(data.message, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-    } else if (data.formName === "withdrawValidatorRewards") {
-        return TransactionWithMnemonic([WithdrawMsg(address, data.validatorAddress)], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
+    } else if (txName === "withdrawValidatorRewards") {
+        return TransactionWithMnemonic(data.message, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
     }else if(txName === "ibc"){
         console.log(data.message,

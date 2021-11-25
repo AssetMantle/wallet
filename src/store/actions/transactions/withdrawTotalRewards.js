@@ -44,6 +44,7 @@ export const submitFormData = (messages) => (dispatch, getState) => {
     dispatch(setTxName({
         value:{
             name:"withdrawMultiple",
+            modal:showTxWithDrawTotalModal(),
             data:{
                 message:messages,
                 memo:getState().common.memo.value,

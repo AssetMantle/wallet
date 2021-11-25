@@ -31,6 +31,7 @@ export const submitFormData = (messages) => (dispatch, getState) => {
     dispatch(setTxName({
         value:{
             name:"withdrawAddress",
+            modal:showTxWithDrawAddressModal(),
             data:{
                 message:messages,
                 memo:getState().common.memo.value,

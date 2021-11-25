@@ -1,5 +1,7 @@
 import { combineReducers } from 'redux';
 import {SET_ACCOUNT_INDEX, SET_ACCOUNT_NUMBER, SET_BIP_39_PASSPHRASE} from "../../../constants/advanced";
+import {KEYSTORE_MODAL_HIDE} from "../../../constants/keyStore";
+import {TX_RESULT_MODAL_HIDE} from "../../../constants/common";
 
 const accountIndex = (state = {
     value: '0',
@@ -18,6 +20,16 @@ const accountIndex = (state = {
             error: {
                 ...state.error,
                 message: data.error.message,
+            },
+        };
+    case TX_RESULT_MODAL_HIDE:
+    case KEYSTORE_MODAL_HIDE:
+        return {
+            ...state,
+            value: '0',
+            error: {
+                ...state.error,
+                message: '',
             },
         };
     default:
@@ -44,6 +56,16 @@ const accountNumber = (state = {
                 message: data.error.message,
             },
         };
+    case TX_RESULT_MODAL_HIDE:
+    case KEYSTORE_MODAL_HIDE:
+        return {
+            ...state,
+            value: '0',
+            error: {
+                ...state.error,
+                message: '',
+            },
+        };
     default:
         return state;
     }
@@ -65,6 +87,16 @@ const bip39PassPhrase = (state = {
             error: {
                 ...state.error,
                 message: data.error.message,
+            },
+        };
+    case TX_RESULT_MODAL_HIDE:
+    case KEYSTORE_MODAL_HIDE:
+        return {
+            ...state,
+            value: '',
+            error: {
+                ...state.error,
+                message: '',
             },
         };
     default:

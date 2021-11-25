@@ -7,8 +7,9 @@ import {
     TX_IN_PROGRESS,
     TX_SUCCESS,
     TX_FAILED, TX_RESPONSE,
-    TX_MEMO_SET
+    TX_MEMO_SET,
 } from "../../../constants/common";
+import {KEYSTORE_MODAL_HIDE} from "../../../constants/keyStore";
 
 const modal = (state = false, {
     type,
@@ -153,10 +154,22 @@ const error = (state = {
                 message: data,
             },
         };
+    case TX_RESULT_MODAL_HIDE:
+    case KEYSTORE_MODAL_HIDE:
+        return {
+            ...state,
+            error: {
+                ...state.error,
+                message: '',
+            },
+        };
     default:
         return state;
     }
 };
+
+
+
 export default combineReducers({
     modal,
     txInfo,

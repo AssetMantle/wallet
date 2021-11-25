@@ -8,7 +8,7 @@ import {
 import {MsgTransfer} from "cosmjs-types/ibc/applications/transfer/v1/tx";
 import {coin} from "@cosmjs/stargate";
 import helper from "./helper";
-
+import config from "../config";
 const msgSendTypeUrl = "/cosmos.bank.v1beta1.MsgSend";
 const msgDelegateTypeUrl = "/cosmos.staking.v1beta1.MsgDelegate";
 const msgRedelegateTypeUrl = "/cosmos.staking.v1beta1.MsgBeginRedelegate";
@@ -33,14 +33,14 @@ function SendMsg(fromAddress, toAddress, amount, denom) {
 }
 
 
-function DelegateMsg(delegatorAddress, validatorAddress, amount) {
+function DelegateMsg(delegatorAddress, validatorAddress, amount, denom = config.coinDenom) {
     return {
         typeUrl: msgDelegateTypeUrl,
         value: MsgDelegate.fromPartial({
             delegatorAddress: delegatorAddress,
             validatorAddress: validatorAddress,
             amount: {
-                denom: "uxprt",
+                denom: denom,
                 amount: String(amount),
             },
         }

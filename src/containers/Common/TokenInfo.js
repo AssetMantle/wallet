@@ -40,7 +40,6 @@ const TokenInfo = (props) => {
     const handleRewards = (key) => {
         if (key === "rewards") {
             dispatch(showTxWithDrawTotalModal());
-            // setRewards(true);
         }
     };
     const popoverVesting = (

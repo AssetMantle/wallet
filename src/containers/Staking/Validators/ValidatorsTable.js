@@ -1,19 +1,31 @@
-import React, {useState} from "react";
+import React from "react";
 import helper from "../../../utils/helper";
 import Avatar from "./Avatar";
 import activeIcon from "../../../assets/images/active.svg";
 import inActiveIcon from "../../../assets/images/inactive.svg";
-import ModalActions from "./ModalActions";
 import DataTable from "../../../components/DataTable";
 import {useTranslation} from "react-i18next";
+import {useDispatch} from "react-redux";
+import {
+    showValidatorTxModal,
+    setValidatorTxData,
+    fetchValidatorDelegations,
+    fetchValidatorRewards
+} from "../../../store/actions/validators";
 
 const ValidatorsTable = (props) => {
     const {t} = useTranslation();
-    const [modalDelegate, setModalOpen] = useState();
-    const [validator, setValidator] = useState('');
+    const dispatch = useDispatch();
+    const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
     const handleModal = (name, validator) => {
-        setModalOpen(name);
-        setValidator(validator);
+        dispatch(showValidatorTxModal());
+        dispatch(setValidatorTxData({
+            value:validator,
+            error: new Error(''),
+        }));
+        dispatch(fetchValidatorDelegations(loginInfo.address));
+        dispatch(fetchValidatorRewards(loginInfo.address, validator.operatorAddress));
+
     };
     const columns = [{
         name: 'validator',
@@ -119,12 +131,6 @@ const ValidatorsTable = (props) => {
                 data={tableData}
                 name=""
                 options={options}/>
-            {
-                modalDelegate === 'ModalActions' ?
-                    <ModalActions setModalOpen={setModalOpen} validator={validator}/>
-                    : null
-            }
-
         </div>
     );
 };

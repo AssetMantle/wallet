@@ -1,7 +1,7 @@
 import {Modal,} from 'react-bootstrap';
 import React, {useEffect} from 'react';
 import {useTranslation} from "react-i18next";
-import {connect} from "react-redux";
+import {connect, useDispatch, useSelector} from "react-redux";
 import success from "../../../assets/images/success.svg";
 import failed from "../../../assets/images/inactive.svg";
 import transactions from "../../../utils/transactions";
@@ -12,6 +12,7 @@ import {fetchUnbondDelegations} from "../../../store/actions/unbond";
 import {fetchTokenPrice} from "../../../store/actions/tokenPrice";
 import {fetchValidators} from "../../../store/actions/validators";
 import {fetchReceiveTransactions, fetchTransactions} from "../../../store/actions/transactions";
+import {hideTxResultModal} from "../../../store/actions/transactions/common";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -19,6 +20,12 @@ const ModalViewTxnResponse = (props) => {
     const {t} = useTranslation();
     const mode = localStorage.getItem('loginMode');
     let address = localStorage.getItem('address');
+    const dispatch = useDispatch();
+    const show = useSelector((state) => state.common.modal);
+    const response = useSelector(state => state.common.txResponse.value);
+    const handleClose = () => {
+        dispatch(hideTxResultModal());
+    };
     useEffect(() => {
         if (props.response !== undefined) {
             props.fetchDelegationsCount(address);
@@ -34,15 +41,18 @@ const ModalViewTxnResponse = (props) => {
         }
     }, []);
 
-    let response = props.response;
-
-    const handleClose = () => {
-        props.fetchValidators(address);
-        props.handleClose();
-    };
+    //
+    // const handleClose = () => {
+    //     props.fetchValidators(address);
+    //     props.handleClose();
+    // };
+    console.log(response, "response");
+    if(response === undefined){
+        return null ;
+    }
 
     return (
-        <>
+        <Modal show={show} onHide={handleClose} backdrop="static" centered className="modal-custom">
             {
                 response !== '' && response.code === 0 ?
                     <>
@@ -104,7 +114,7 @@ const ModalViewTxnResponse = (props) => {
                     </>
                     : null
             }
-        </>
+        </Modal>
     );
 };
 

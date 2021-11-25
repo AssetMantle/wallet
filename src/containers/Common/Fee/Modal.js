@@ -5,12 +5,16 @@ import {hideFeeModal} from "../../../store/actions/transactions/fee";
 import Fee from "./index";
 import Gas from "./Gas";
 import Submit from "./Submit";
+import Icon from "../../../components/Icon";
 import Loader from "../../../components/Loader";
 // import {showTxWithDrawTotalModal} from "../../../store/actions/transactions/withdrawTotalRewards";
 
 const Modal = () => {
     const show = useSelector((state) => state.fee.modal);
+    const txInfo = useSelector((state) => state.common.txInfo);
     const inProgress = useSelector((state) => state.common.inProgress);
+    console.log(txInfo.value.name, " fee modalshow");
+
     const dispatch = useDispatch();
     const handleClose = () => {
         dispatch(hideFeeModal());
@@ -20,28 +24,30 @@ const Modal = () => {
         return <Loader/>;
     }
 
-    // const handleBack = () => {
-    //     props.previousModal();
-    //     dispatch(hideFeeModal());
-    // };
+    const handleBack = () => {
+        dispatch(txInfo.value.modal);
+        dispatch(hideFeeModal());
+    };
 
     return (
         <ReactModal
             animation={false}
             backdrop="static"
-            className="modal-custom"
+            className="modal-custom fee-m"
             centered={true}
             keyboard={false}
             show={show}
             onHide={handleClose}>
             <ReactModal.Header closeButton={true}>
-                {/*<div className="previous-section txn-header">*/}
-                {/*    /!*<button className="button" onClick={handleBack}>*!/*/}
-                {/*    /!*    <Icon*!/*/}
-                {/*    /!*        viewClass="arrow-right"*!/*/}
-                {/*    /!*        icon="left-arrow"/>*!/*/}
-                {/*    /!*</button>*!/*/}
-                {/*</div>*/}
+                {txInfo.value.name !== 'send' && txInfo.value.name !== 'ibc' ?
+                    <div className="previous-section txn-header">
+                        <button className="button" onClick={handleBack}>
+                            <Icon
+                                viewClass="arrow-right"
+                                icon="left-arrow"/>
+                        </button>
+                    </div> : null
+                }
                 <p>Fee</p>
             </ReactModal.Header>
             <ReactModal.Body className="create-wallet-body import-wallet-body">

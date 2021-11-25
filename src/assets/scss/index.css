@@ -432,13 +432,15 @@ html, body {
 .validators-list-selection .MuiSelect-select .state {
   display: none !important;
 }
+.validators-list-selection .MuiSelect-select em {
+  font-style: normal;
+}
 
 .MuiMenu-list .validator-item:last-child {
   border: 0px solid !important;
 }
 
 .validator-item {
-  border-bottom: 1px solid #e0e0e0 !important;
   display: flex !important;
   justify-content: space-between !important;
 }
@@ -1221,6 +1223,18 @@ ul li em {
   max-width: 500px;
 }
 
+.memo-dropdown-section-body {
+  height: auto;
+  max-height: 0px;
+  overflow: hidden;
+  transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+}
+
+.memo-dropdown-section-body.show {
+  max-height: 200px;
+}
+
 .memo-dropdown {
   margin: 0;
   text-align: center;
@@ -1785,8 +1799,16 @@ ul li em {
   transform: rotate(180deg);
 }
 
-.advanced-wallet-accordion {
-  padding-top: 20px;
+.advanced-wallet-accordion .accordion-body {
+  height: auto;
+  max-height: 0px;
+  overflow: hidden;
+  transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+}
+.advanced-wallet-accordion .accordion-body.show {
+  padding: 0;
+  max-height: 400px;
 }
 .advanced-wallet-accordion .card {
   border: 0px solid;
@@ -1811,10 +1833,6 @@ ul li em {
 }
 .advanced-wallet-accordion .card .card-header button .icon {
   width: 20px;
-}
-.advanced-wallet-accordion .card .collapse.show {
-  padding: 30px 10px;
-  border: 1px solid #E3E5F4;
 }
 
 /*--------------------------------------------------------------
@@ -2582,7 +2600,7 @@ ul li em {
 }
 
 .delegate-modal .delegate-modal-body {
-  padding: 10px 40px 40px 40px;
+  padding: 10px 50px 40px 50px;
 }
 .delegate-modal .delegate-modal-body form input, .delegate-modal .delegate-modal-body form .amount-field, .delegate-modal .delegate-modal-body form textarea {
   max-width: 400px;

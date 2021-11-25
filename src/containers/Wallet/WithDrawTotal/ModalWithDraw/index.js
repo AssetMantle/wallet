@@ -17,7 +17,6 @@ const ModalWithDraw = () => {
     const rewards = useSelector((state) => state.rewards.rewards);
     const tokenPrice = useSelector((state) => state.tokenPrice.tokenPrice);
     const error = useSelector(state => state.common.error);
-    console.log(show, "9");
 
     const dispatch = useDispatch();
 
@@ -29,6 +28,7 @@ const ModalWithDraw = () => {
         dispatch(hideTxWithDrawTotalModal());
         dispatch(showTxWithDrawAddressModal());
     };
+
     const popoverSetupAddress = (
         <Popover id="popover-memo">
             <Popover.Content>

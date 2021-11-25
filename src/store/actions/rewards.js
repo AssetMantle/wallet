@@ -60,6 +60,7 @@ export const fetchValidatorCommissionInfoSuccess = (list) => {
 };
 
 export const fetchTotalRewards = (address) => {
+    console.log("heere");
     return async dispatch => {
         try {
             dispatch(fetchRewardsProgress());
@@ -105,7 +106,7 @@ export const fetchRewards = (address) => {
                             validatorAddr: item.validatorAddress,
                         }).then(async (res) => {
                             const data = {
-                                label: `${res.validator.description.moniker} - ${transactions.XprtConversion(helper.decimalConversion(item.reward[0] && item.reward[0].amount)).toLocaleString(undefined, {minimumFractionDigits: 5})} XPRT`,
+                                label: `${res.validator.description.moniker} - ${transactions.XprtConversion(helper.decimalConversion(item.reward[0] && item.reward[0].amount)).toLocaleString(undefined, {minimumFractionDigits: 6})} XPRT`,
                                 value: res.validator.operatorAddress,
                                 rewards: helper.decimalConversion(item.reward[0] && item.reward[0].amount)
                             };

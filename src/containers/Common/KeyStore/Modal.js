@@ -1,4 +1,4 @@
-import { Modal as ReactModal } from 'react-bootstrap';
+import {Modal as ReactModal} from 'react-bootstrap';
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {hideKeyStoreModal} from "../../../store/actions/transactions/keyStore";
@@ -14,10 +14,11 @@ const Modal = () => {
     const {t} = useTranslation();
     const show = useSelector((state) => state.keyStore.modal);
     const encryptedSeed = useSelector((state) => state.common.loginInfo.encryptedSeed);
+    const response = useSelector((state) => state.common.error);
+    console.log(response, "in ke");
     const dispatch = useDispatch();
     const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
     useEffect(()=>{
-        console.log(encryptedSeed, encryptedMnemonic, "encryptedMnemonic1" );
         if (encryptedMnemonic !== null) {
             dispatch(setLoginInfo({
                 encryptedSeed:true,
@@ -55,7 +56,7 @@ const Modal = () => {
         <ReactModal
             animation={false}
             backdrop="static"
-            className="modal-custom"
+            className="modal-custom keystore-m"
             centered={true}
             keyboard={false}
             show={show}
@@ -77,6 +78,11 @@ const Modal = () => {
                 }
                 <Password/>
                 <Advanced/>
+                {
+                    response.error.message !== "" ?
+                        <p className="form-error">{response.error.message}</p>
+                        : null
+                }
                 <Submit/>
                 {
                     encryptedSeed ?

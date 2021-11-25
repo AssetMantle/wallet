@@ -9,6 +9,7 @@ import SendIbc from "./SendIbc/index";
 import Icon from "../../components/Icon";
 import ModalWithdraw from "./WithDrawTotal/ModalWithDraw";
 import ModalSetWithdrawAddress from "./SetWithdrawAddress/ModalSetWithdrawAddress";
+import FeeModal from "../Common/Fee/Modal";
 const Wallet = () => {
 
 
@@ -35,6 +36,7 @@ const Wallet = () => {
 
     return (
         <>
+            <FeeModal/>
             <ModalWithdraw/>
             <ModalSetWithdrawAddress/>
             <div className="wallet-main-section">

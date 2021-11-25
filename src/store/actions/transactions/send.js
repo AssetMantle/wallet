@@ -27,14 +27,15 @@ export const setTxSendAddress = (data) => {
 
 
 export const submitFormData = (message) => (dispatch,getState) => {
+    console.log("calling");
     dispatch(setTxName({
         value:{
             name:"send",
+            
             data:{
                 message:message,
-                toAddress:getState().send.toAddress,
-                amount:getState().send.amount,
                 token:getState().send.token.value.tokenDenom,
+                memo:getState().common.memo.value,
             }
         }
     }));

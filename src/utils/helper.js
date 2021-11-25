@@ -1,11 +1,12 @@
 import {Decimal} from "@cosmjs/math";
 import transactions from "./transactions";
+import config from "../config";
 
 const encoding = require("@cosmjs/encoding");
 const bip39 = require("bip39");
 const crypto = require("crypto");
 const passwordHashAlgorithm = "sha512";
-
+const NODE_CONF = process.env.REACT_APP_IBC_CONFIG;
 function randomNum(min, max) {
     let randomNumbers = [];
     for (var i = 0; i < 3; i++) {
@@ -271,6 +272,21 @@ function sixDigitsNumber(value, length = 6) {
     }
 }
 
+function foundationNodeCheck(validatorAddress) {
+    if (NODE_CONF === "ibcStaging.json") {
+        if (config.testNetFoundationNodes.includes(validatorAddress)) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        if (config.mainNetFoundationNodes.includes(validatorAddress)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
 const emptyFunc = () => ({});
 
 export default {
@@ -298,5 +314,6 @@ export default {
     getTransactionAmount,
     sixDigitsNumber,
     stringValidation,
-    emptyFunc
+    emptyFunc,
+    foundationNodeCheck
 };

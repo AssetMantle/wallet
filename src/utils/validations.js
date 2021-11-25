@@ -55,7 +55,7 @@ export const passwordValidation = (data) => {
 };
 
 export const ValidateAlphaNumeric = e =>{
-    const regEx = /^[a-z0-9]+$/;
+    const regEx = /^[a-z0-9A-Z]+$/;
     if(!regEx.test(e.key)){
         e.preventDefault();
     }
@@ -99,6 +99,13 @@ export const ValidateSpace = (e) => {
 export const ValidateMultipleValidatorsClaim = (evt) => {
     if (evt.length > 3) {
         return new Error("Warning:  Recommend 3 or fewer validators to avoid potential issues.");
+    }
+    return new Error('');
+};
+
+export const ValidateReDelegateAmount = (delegationAmount, amount) => {
+    if ((delegationAmount*1) < amount) {
+        return new Error('Insufficient Delegated Amount');
     }
     return new Error('');
 };

@@ -141,7 +141,19 @@
 }
 
 .advanced-wallet-accordion {
-  padding-top: 20px;
+  .accordion-body{
+    height: auto;
+    max-height: 0px;
+    overflow: hidden;
+    transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+  }
+
+  .accordion-body.show {
+    padding:0;
+    max-height: 400px;
+    //border: 1px solid #E3E5F4;
+  }
 
   .card {
     border: 0px solid;
@@ -172,9 +184,5 @@
 
 
 
-    .collapse.show {
-      padding: 30px 10px;
-      border: 1px solid #E3E5F4;
-    }
   }
 }

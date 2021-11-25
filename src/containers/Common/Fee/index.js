@@ -42,7 +42,6 @@ const Fee = () => {
     // const (gas.value) = 250000;
     return (
         <>
-            <p className="fee-title text-center">Fee</p>
             <div className="fee-container">
                 <>
                     {

@@ -75,26 +75,27 @@ export const ledgerLogin = (history) => {
             accountIndex:''
         };
         console.log("in ledgerLogin");
-        const account = await GetAccount(address).catch(error => {
+        GetAccount(address).then(async res => {
+            const accountType = await transactions.VestingAccountCheck(res.typeUrl);
+            if (accountType) {
+                loginInfo.fee = config.vestingAccountFee;
+                loginInfo.account = "vesting";
+                localStorage.setItem('fee', config.vestingAccountFee);
+                localStorage.setItem('account', 'vesting');
+            } else {
+                loginInfo.fee = config.defaultFee;
+                loginInfo.account = "non-vesting";
+                localStorage.setItem('fee', config.defaultFee);
+                localStorage.setItem('account', 'non-vesting');
+            }
+        }).catch(error => {
             console.log(error.message);
             loginInfo.fee = config.defaultFee;
             loginInfo.account = "non-vesting";
             localStorage.setItem('fee', config.defaultFee);
             localStorage.setItem('account', 'non-vesting');
         });
-        const accountType = await transactions.VestingAccountCheck(account.typeUrl);
-        if (accountType) {
-            loginInfo.fee = config.vestingAccountFee;
-            loginInfo.account = "vesting";
-            localStorage.setItem('fee', config.vestingAccountFee);
-            localStorage.setItem('account', 'vesting');
-        } else {
-            loginInfo.fee = config.defaultFee;
-            loginInfo.account = "non-vesting";
-            localStorage.setItem('fee', config.defaultFee);
-            localStorage.setItem('account', 'non-vesting');
-        }
-           
+
         loginInfo.loginToken = "loggedIn";
         loginInfo.address = address;
         loginInfo.loginMode = "ledger";

@@ -487,9 +487,13 @@ html, body {
     .state {
       display: none !important;
     }
+    em{
+      font-style: normal;
+    }
   }
 
 }
+
 
 .MuiMenu-list {
   .validator-item:last-child {
@@ -498,7 +502,6 @@ html, body {
 }
 
 .validator-item {
-  border-bottom: 1px solid rgba(224, 224, 224, 1) !important;
   display: flex !important;
   justify-content: space-between !important;
 }

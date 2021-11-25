@@ -52,42 +52,42 @@ export const keplrLogin = (history) => {
     return async (dispatch, getState) => {
         const address = getState().signInKeplr.keplrInfo.value;
         const loginInfo = {
-            fee:'',
-            account:'',
-            loginToken:'',
-            address:'',
-            loginMode:'',
-            version:'',
-            accountNumber:'',
-            accountIndex:''
+            fee: '',
+            account: '',
+            loginToken: '',
+            address: '',
+            loginMode: '',
+            version: '',
+            accountNumber: '',
+            accountIndex: ''
         };
         const accountNumber = getState().advanced.accountNumber.value;
         const accountIndex = getState().advanced.accountIndex.value;
-        const account = await GetAccount(address).catch(error => {
+        GetAccount(address).then(async res => {
+            const accountType = await transactions.VestingAccountCheck(res.typeUrl);
+            if (accountType) {
+                loginInfo.fee = config.vestingAccountFee;
+                loginInfo.account = "vesting";
+                localStorage.setItem('fee', config.vestingAccountFee);
+                localStorage.setItem('account', 'vesting');
+            } else {
+                loginInfo.fee = config.defaultFee;
+                loginInfo.account = "non-vesting";
+                localStorage.setItem('fee', config.defaultFee);
+                localStorage.setItem('account', 'non-vesting');
+            }
+        }).catch(error => {
             console.log(error.message);
             loginInfo.fee = config.defaultFee;
             loginInfo.account = "non-vesting";
             localStorage.setItem('fee', config.defaultFee);
             localStorage.setItem('account', 'non-vesting');
         });
-        const accountType = await transactions.VestingAccountCheck(account.typeUrl);
-        if (accountType) {
-            loginInfo.fee = config.vestingAccountFee;
-            loginInfo.account = "vesting";
-            localStorage.setItem('fee', config.vestingAccountFee);
-            localStorage.setItem('account', 'vesting');
-        } else {
-            loginInfo.fee = config.defaultFee;
-            loginInfo.account = "non-vesting";
-            localStorage.setItem('fee', config.defaultFee);
-            localStorage.setItem('account', 'non-vesting');
-        }
-           
         loginInfo.loginToken = "loggedIn";
         loginInfo.address = address;
         loginInfo.loginMode = "keplr";
         loginInfo.version = config.version;
-        loginInfo.accountNumber =  accountNumber;
+        loginInfo.accountNumber = accountNumber;
         loginInfo.accountIndex = accountIndex;
         console.log(JSON.stringify(loginInfo), "in keyStoreLogin");
 
@@ -97,9 +97,9 @@ export const keplrLogin = (history) => {
         localStorage.setItem('version', config.version);
         localStorage.setItem('loginInfo', JSON.stringify(loginInfo));
         dispatch(setLoginInfo({
-            encryptedSeed:false,
-            error:{
-                message:''
+            encryptedSeed: false,
+            error: {
+                message: ''
             }
         }));
         history.push('/dashboard/wallet');

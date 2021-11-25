@@ -10,7 +10,6 @@ import {hideTxResultModal} from "../../../store/actions/transactions/common";
 import {useTranslation} from "react-i18next";
 import Loader from "../../../components/Loader";
 import Memo from "./Memo";
-import FeeModal from "../../Common/Fee/Modal";
 import KeyStoreModal from "../../Common/KeyStore/Modal";
 import Chain from "./Chain";
 import CustomChain from "./CustomChain";
@@ -48,7 +47,6 @@ const Send = () => {
                     <p className="form-error">{error.error.message}</p> : null}
                 <ButtonSend/>
             </div>
-            <FeeModal/>
             <Modal show={show} onHide={handleClose} backdrop="static" centered className="modal-custom">
                 <ModalViewTxnResponse
                     response={response}

@@ -46,6 +46,7 @@ const password = (state = {
                 message: data.error.message,
             },
         };
+    case KEYSTORE_MODAL_HIDE:
     case TX_SUCCESS:
     case TX_RESULT_MODAL_HIDE:
         return {

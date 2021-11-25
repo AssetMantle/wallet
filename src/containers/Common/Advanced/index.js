@@ -43,14 +43,11 @@ const Advanced = () => {
 
                     </button>
                 </Card.Header>
-                {advanceMode ?
-                    <div className="collapse show">
-                        <AccountNumber/>
-                        <AccountIndex />
-                        <Bip39PassPhrase />
-                    </div>
-                    : ""
-                }
+                <div className={`accordion-body ${advanceMode ? 'show': ''}`}>
+                    <AccountNumber/>
+                    <AccountIndex />
+                    <Bip39PassPhrase />
+                </div>
             </Card>
         </div>
     );

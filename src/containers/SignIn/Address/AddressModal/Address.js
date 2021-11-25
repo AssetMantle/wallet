@@ -22,7 +22,7 @@ const Address = () => {
     return (
         <>
             <div className="form-field">
-                <p className="label info">{t("ADDRESS")}</p>
+                <p className="label">{t("ADDRESS")}</p>
                 <InputText
                     className="form-control"
                     name="address"

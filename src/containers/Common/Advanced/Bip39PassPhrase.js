@@ -13,7 +13,7 @@ const Bip39PassPhrase = () => {
 
     const onChange = (evt) => {
         dispatch(setBip39Passphrase({
-            value:(evt.target.value*1),
+            value:(evt.target.value),
             error:ValidateBip39PassPhrase(evt.target.value)
         }));
     };

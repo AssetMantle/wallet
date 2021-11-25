@@ -31,7 +31,7 @@ const Gas = () => {
     };
 
     return (
-        <div>
+        <div className="advanced-wallet-accordion">
             <div className="select-gas">
                 <p onClick={handleGas} className="text-center">{!showGasField ? "Advanced" : "Advanced"}
                     {!showGasField ?
@@ -44,28 +44,24 @@ const Gas = () => {
                             icon="up-arrow"/>}
                 </p>
             </div>
-            {showGasField
-                ?
-                <div className="form-field">
-                    <p className="label info">{t("GAS")}</p>
-                    <div className="amount-field">
-                        <InputFieldNumber
-                            min={80000}
-                            max={2000000}
-                            name="gas"
-                            placeholder={t("ENTER_GAS")}
-                            step="any"
-                            required={false}
-                            type="number"
-                            className="form-control"
-                            value={gas.value}
-                            error={gas.error}
-                            onChange={onChange}
-                        />
-                    </div>
+            <div className={`form-field accordion-body ${showGasField ? 'show': ''}`}>
+                <p className="label info">{t("GAS")}</p>
+                <div className="amount-field">
+                    <InputFieldNumber
+                        min={80000}
+                        max={2000000}
+                        name="gas"
+                        placeholder={t("ENTER_GAS")}
+                        step="any"
+                        required={false}
+                        type="number"
+                        className="form-control"
+                        value={gas.value}
+                        error={gas.error}
+                        onChange={onChange}
+                    />
                 </div>
-                : ""
-            }
+            </div>
         </div>
         
        

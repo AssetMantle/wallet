@@ -5,9 +5,15 @@ import {
     FETCH_INACTIVE_VALIDATORS_SUCCESS,
     FETCH_VALIDATORS_ERROR,
     FETCH_VALIDATORS_IN_PROGRESS,
-    FETCH_VALIDATORS_SUCCESS
+    FETCH_VALIDATORS_SUCCESS,
+    VALIDATOR_TX_MODAL_HIDE,
+    VALIDATOR_TX_MODAL_SHOW,
+    SET_VALIDATOR_TX_DATA,
+    SET_VALIDATOR_DELEGATIONS,
+    SET_VALIDATOR_REWARDS
 } from "../../constants/validators";
 import Lodash from "lodash";
+import {TX_RESULT_MODAL_HIDE, TX_SUCCESS} from "../../constants/common";
 
 const inProgress = (state = false, action) => {
     switch (action.type) {
@@ -83,6 +89,125 @@ const delegatedValidators = (state = [], action) => {
     }
 };
 
+const validatorTxModal = (state = false, {
+    type,
+}) => {
+    switch (type) {
+    case VALIDATOR_TX_MODAL_SHOW:
+        return true;
+    case VALIDATOR_TX_MODAL_HIDE:
+        return false;
+    default:
+        return state;
+    }
+};
+
+const validator = (state = {
+    value: {},
+    error: {
+        message: '',
+    },
+}, {
+    type,
+    data,
+}) => {
+    switch (type) {
+    case SET_VALIDATOR_TX_DATA:
+        return {
+            ...state,
+            value: data.value,
+            error: {
+                ...state.error,
+                message: data.error.message,
+            },
+        };
+    case TX_RESULT_MODAL_HIDE:
+    case TX_SUCCESS:
+        return {
+            ...state,
+            value: {},
+            error: {
+                ...state.error,
+                message: '',
+            },
+        };
+    default:
+        return state;
+    }
+};
+
+const validatorDelegations = (state = {
+    value: 0,
+    status: false,
+    error: {
+        message: '',
+    },
+}, {
+    type,
+    data,
+}) => {
+    switch (type) {
+    case SET_VALIDATOR_DELEGATIONS:
+        return {
+            ...state,
+            value: data.value,
+            status: data.status,
+            error: {
+                ...state.error,
+                message: data.error.message,
+            },
+        };
+    case TX_RESULT_MODAL_HIDE:
+    case TX_SUCCESS:
+        return {
+            ...state,
+            value: 0,
+            status: false,
+            error: {
+                ...state.error,
+                message: '',
+            },
+        };
+    default:
+        return state;
+    }
+};
+
+
+const validatorRewards = (state = {
+    value: 0,
+    error: {
+        message: '',
+    },
+}, {
+    type,
+    data,
+}) => {
+    switch (type) {
+    case SET_VALIDATOR_REWARDS:
+        return {
+            ...state,
+            value: data.value,
+            error: {
+                ...state.error,
+                message: data.error.message,
+            },
+        };
+    case TX_RESULT_MODAL_HIDE:
+    case TX_SUCCESS:
+        return {
+            ...state,
+            value: 0,
+            error: {
+                ...state.error,
+                message: '',
+            },
+        };
+    default:
+        return state;
+    }
+};
+
 export default combineReducers({
     activeList,
     inActiveList,
@@ -90,5 +215,9 @@ export default combineReducers({
     inActiveVotingPower,
     inProgress,
     validators,
-    delegatedValidators
+    delegatedValidators,
+    validatorTxModal,
+    validator,
+    validatorDelegations,
+    validatorRewards
 });

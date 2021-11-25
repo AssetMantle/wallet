@@ -3,29 +3,20 @@ import ToAddress from "./ToAddress";
 import Tokens from "./Tokens";
 import Amount from "./Amount";
 import ButtonSend from "./ButtonSend";
-import {Modal} from "react-bootstrap";
 import ModalViewTxnResponse from "../../Common/ModalViewTxnResponse";
-import {useDispatch, useSelector} from "react-redux";
-import {hideTxResultModal} from "../../../store/actions/transactions/common";
-import {useTranslation} from "react-i18next";
+import {useSelector} from "react-redux";
 import Loader from "../../../components/Loader";
 import Memo from "./Memo";
-import FeeModal from "../../Common/Fee/Modal";
 import KeyStoreModal from "../../Common/KeyStore/Modal";
 
 const Send = () => {
-    const {t} = useTranslation();
-    const dispatch = useDispatch();
+
     // let mode = localStorage.getItem('loginMode');
-    const show = useSelector((state) => state.common.modal);
-    const response = useSelector(state => state.common.txResponse.value);
     const inProgress = useSelector(state => state.common.inProgress);
     const error = useSelector(state => state.common.error);
 
     console.log(error, "error in index");
-    const handleClose = () => {
-        dispatch(hideTxResultModal());
-    };
+
     if (inProgress) {
         return <Loader/>;
     }
@@ -41,15 +32,7 @@ const Send = () => {
                     <p className="form-error">{error.error.message}</p> : null}
                 <ButtonSend/>
             </div>
-            <FeeModal/>
-            <Modal show={show} onHide={handleClose} backdrop="static" centered className="modal-custom">
-                <ModalViewTxnResponse
-                    response={response}
-                    successMsg={t("SUCCESSFUL_SEND")}
-                    failedMsg={t("FAILED_SEND")}
-                    handleClose={handleClose}
-                />
-            </Modal>
+            <ModalViewTxnResponse/>
             <KeyStoreModal/>
         </div>
     );

@@ -21,6 +21,11 @@ import signInKeplr from "./signIn/keplr";
 import mulitpleRewardsWithDraw from "./transactions/withdrawTotalRewards";
 import sendIbc from "./transactions/sendIbc";
 import setWithdrawAddress from "./transactions/setWithdrawAddress";
+import delegate from "./transactions/delegate";
+import redelegate from "./transactions/redelegate";
+import unbondTx from "./transactions/unbond";
+import withdrawValidatorRewards from "./transactions/withdrawValidatorRewards";
+
 const appReducer =  combineReducers({
     delegations,
     transactions,
@@ -43,7 +48,11 @@ const appReducer =  combineReducers({
     signInKeplr,
     mulitpleRewardsWithDraw,
     sendIbc,
-    setWithdrawAddress
+    setWithdrawAddress,
+    delegate,
+    redelegate,
+    unbondTx,
+    withdrawValidatorRewards
 });
 
 export const rootReducer = (state, action) => {

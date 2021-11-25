@@ -53,7 +53,6 @@ const Memo = () => {
                     <Icon
                         viewClass="arrow-right"
                         icon="down-arrow"/>}
-
                 </p>
                 <OverlayTrigger trigger={['hover', 'focus']}
                     placement="bottom"
@@ -64,33 +63,31 @@ const Memo = () => {
                 </OverlayTrigger>
             </div>
 
-            {memoStatus ?
-                <div className="form-field">
-                    <p className="label info">{t("MEMO")}
-                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
-                            overlay={popoverMemo}>
-                            <button className="icon-button info" type="button"><Icon
-                                viewClass="arrow-right"
-                                icon="info"/></button>
-                        </OverlayTrigger>
-                    </p>
-                    <InputText
-                        className="form-control"
-                        name="memo"
-                        type="text"
-                        value={memo.value}
-                        required={false}
-                        error={memo.error}
-                        onKeyPress={helper.inputSpaceValidation}
-                        onBlur={onBlur}
-                        placeholder={t("ENTER_MEMO")}
-                        autofocus={false}
-                        maxLength={200}
-                        onChange={onChange}
-                    />
+            <div className={`form-field memo-dropdown-section-body ${memoStatus ? 'show': ''}`}>
+                <p className="label info">{t("MEMO")}
+                    <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
+                        overlay={popoverMemo}>
+                        <button className="icon-button info" type="button"><Icon
+                            viewClass="arrow-right"
+                            icon="info"/></button>
+                    </OverlayTrigger>
+                </p>
+                <InputText
+                    className="form-control"
+                    name="memo"
+                    type="text"
+                    value={memo.value}
+                    required={false}
+                    error={memo.error}
+                    onKeyPress={helper.inputSpaceValidation}
+                    onBlur={onBlur}
+                    placeholder={t("ENTER_MEMO")}
+                    autofocus={false}
+                    maxLength={200}
+                    onChange={onChange}
+                />
 
-                </div>
-                : ""}
+            </div>
         </>
     );
 };
