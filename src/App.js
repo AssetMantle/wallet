@@ -67,7 +67,7 @@ const App = () => {
 
     useEffect(() => {
         const fetchApi = async () => {
-            if (address !== null) {
+            if (address !== null && address !== undefined) {
                 dispatch(fetchDelegationsCount(address));
                 dispatch(fetchBalance(address));
                 dispatch(fetchRewards(address));

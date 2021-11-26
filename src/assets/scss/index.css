@@ -2414,7 +2414,7 @@ ul li em {
   font-size: 12px;
   padding: 3px 10px;
   display: inline !important;
-  margin-left: 5px;
+  margin: 0px 5px;
 }
 .token-info-section .info-box .inner-box {
   flex: 1;

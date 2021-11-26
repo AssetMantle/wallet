@@ -1,7 +1,8 @@
 import {
     TX_DELEGATE_MODAL_SHOW,
     TX_DELEGATE_MODAL_HIDE,
-    TX_DELEGATE_AMOUNT_SET
+    TX_DELEGATE_AMOUNT_SET,
+    TX_DELEGATE_MEMO_SET
 } from "../../../constants/delegate";
 import {setTxName} from "./common";
 import {showFeeModal} from "./fee";
@@ -23,6 +24,13 @@ export const showTxDelegateModal = (data) => {
 export const hideTxDelegateModal = (data) => {
     return {
         type: TX_DELEGATE_MODAL_HIDE,
+        data,
+    };
+};
+
+export const setTxMemo = (data) => {
+    return {
+        type: TX_DELEGATE_MEMO_SET,
         data,
     };
 };

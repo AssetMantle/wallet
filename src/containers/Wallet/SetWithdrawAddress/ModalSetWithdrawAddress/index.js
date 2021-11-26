@@ -4,7 +4,7 @@ import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
 import {hideTxWithDrawAddressModal} from "../../../../store/actions/transactions/setWithdrawAddress";
 import RevisedAddress from "./RevisedAddress";
-import Memo from "../../../Common/Memo";
+import Memo from "./Memo";
 import NumberView from "../../../../components/NumberView";
 import {formatNumber} from "../../../../utils/scripts";
 import config from "../../../../config";

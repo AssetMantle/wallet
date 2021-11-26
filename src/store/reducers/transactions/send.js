@@ -2,6 +2,7 @@ import {
     TX_SEND_AMOUNT_SET,
     TX_SEND_ADDRESS_SET,
     TX_SEND_TOKEN_SET,
+    TX_SEND_MEMO_SET
 } from "../../../constants/send";
 import { combineReducers } from 'redux';
 import {TX_RESULT_MODAL_HIDE, TX_SUCCESS} from "../../../constants/common";
@@ -86,9 +87,42 @@ const token = (state = {value: []}, action) => {
     }
 };
 
-
+const memo = (state = {
+    value: '',
+    error: {
+        message: '',
+    },
+}, {
+    type,
+    data,
+}) => {
+    switch (type) {
+    case TX_SEND_MEMO_SET:
+        return {
+            ...state,
+            value: data.value,
+            error: {
+                ...state.error,
+                message: data.error.message,
+            },
+        };
+    case TX_SUCCESS:
+    case TX_RESULT_MODAL_HIDE:
+        return {
+            ...state,
+            value: '',
+            error: {
+                ...state.error,
+                message: '',
+            },
+        };
+    default:
+        return state;
+    }
+};
 export default combineReducers({
     toAddress,
     amount,
     token,
+    memo
 });

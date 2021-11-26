@@ -4,13 +4,13 @@ import Icon from "../../../components/Icon";
 import InputText from "../../../components/InputText";
 import helper from "../../../utils/helper";
 import {useDispatch, useSelector} from "react-redux";
-import {setTxMemo} from "../../../store/actions/transactions/common";
+import {setTxMemo} from "../../../store/actions/transactions/sendIbc";
 import {useTranslation} from "react-i18next";
 
 const Memo = () => {
     const {t} = useTranslation();
     const [memoStatus, setMemoStatus] = useState(false);
-    const memo = useSelector((state) => state.common.memo);
+    const memo = useSelector((state) => state.sendIbc.memo);
     const dispatch = useDispatch();
 
     const handleMemoChange = () => {
@@ -53,7 +53,6 @@ const Memo = () => {
                     <Icon
                         viewClass="arrow-right"
                         icon="down-arrow"/>}
-
                 </p>
                 <OverlayTrigger trigger={['hover', 'focus']}
                     placement="bottom"
@@ -63,34 +62,32 @@ const Memo = () => {
                         icon="info"/></button>
                 </OverlayTrigger>
             </div>
-            
-            {memoStatus ?
-                <div className="form-field">
-                    <p className="label info">{t("MEMO")}
-                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
-                            overlay={popoverMemo}>
-                            <button className="icon-button info" type="button"><Icon
-                                viewClass="arrow-right"
-                                icon="info"/></button>
-                        </OverlayTrigger>
-                    </p>
-                    <InputText
-                        className="form-control"
-                        name="memo"
-                        type="text"
-                        value={memo.value}
-                        required={false}
-                        error={memo.error}
-                        onKeyPress={helper.inputSpaceValidation}
-                        onBlur={onBlur}
-                        placeholder={t("ENTER_MEMO")}
-                        autofocus={false}
-                        maxLength={200}
-                        onChange={onChange}
-                    />
-                   
-                </div>
-                : ""}
+
+            <div className={`form-field memo-dropdown-section-body ${memoStatus ? 'show': ''}`}>
+                <p className="label info">{t("MEMO")}
+                    <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
+                        overlay={popoverMemo}>
+                        <button className="icon-button info" type="button"><Icon
+                            viewClass="arrow-right"
+                            icon="info"/></button>
+                    </OverlayTrigger>
+                </p>
+                <InputText
+                    className="form-control"
+                    name="memo"
+                    type="text"
+                    value={memo.value}
+                    required={false}
+                    error={memo.error}
+                    onKeyPress={helper.inputSpaceValidation}
+                    onBlur={onBlur}
+                    placeholder={t("ENTER_MEMO")}
+                    autofocus={false}
+                    maxLength={200}
+                    onChange={onChange}
+                />
+
+            </div>
         </>
     );
 };

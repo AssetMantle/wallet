@@ -8,7 +8,7 @@ import NumberView from "../../../../components/NumberView";
 import {formatNumber} from "../../../../utils/scripts";
 import ValidatorCommission from "./ValidatorCommission";
 import Validators from "./Validators";
-import Memo from "../../../Common/Memo";
+import Memo from "./Memo";
 import ButtonNext from "./ButtonNext";
 import Icon from "../../../../components/Icon";
 const ModalWithDraw = () => {

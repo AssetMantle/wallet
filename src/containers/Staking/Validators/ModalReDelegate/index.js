@@ -2,7 +2,7 @@ import React from 'react';
 import {Modal as ReactModal} from "react-bootstrap";
 import Icon from "../../../../components/Icon";
 import Amount from "./Amount";
-import Memo from "../../../Common/Memo";
+import Memo from "./Memo";
 import ButtonSubmit from "./ButtonSubmit";
 import {useDispatch, useSelector} from "react-redux";
 import {hideTxReDelegateModal} from "../../../../store/actions/transactions/redelegate";

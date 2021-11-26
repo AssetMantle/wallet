@@ -4,7 +4,8 @@ import {
     TX_IBC_SEND_TOKEN_SET,
     TX_IBC_SEND_CUSTOM_CHANNEL_SET,
     TX_IBC_SEND_CUSTOM_PORT_SET,
-    TX_IBC_SEND_CHAIN_INFO_SET
+    TX_IBC_SEND_CHAIN_INFO_SET,
+    TX_IBC_SEND_MEMO_SET
 } from "../../../constants/sendIbc";
 import {setTxName} from "./common";
 import {showFeeModal} from "./fee";
@@ -45,6 +46,13 @@ export const setTxIbcSendCustomChannel = (data) => {
 export const setTxIbcSendChainInfo = (data) => {
     return {
         type: TX_IBC_SEND_CHAIN_INFO_SET,
+        data,
+    };
+};
+
+export const setTxMemo = (data) => {
+    return {
+        type: TX_IBC_SEND_MEMO_SET,
         data,
     };
 };

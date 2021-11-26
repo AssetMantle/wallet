@@ -15,10 +15,12 @@ import ModalUnbond from "./Validators/ModalUnbond";
 import ModalValidatorWithdraw from "./Validators/ModalWithdraw";
 import ModalWithdraw from "../Wallet/WithDrawTotal/ModalWithDraw";
 import ModalSetWithdrawAddress from "../Wallet/SetWithdrawAddress/ModalSetWithdrawAddress";
+import Loader from "../../components/Loader";
 const Staking = () => {
     const {t} = useTranslation();
     return (
         <div className="staking-main-section">
+            <Loader/>
             <ModalValidator/>
             <ModalDelegate/>
             <ModalReDelegate/>

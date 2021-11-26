@@ -7,7 +7,6 @@ import {
     TX_IN_PROGRESS,
     TX_SUCCESS,
     TX_FAILED, TX_RESPONSE,
-    TX_MEMO_SET,
 } from "../../../constants/common";
 import {KEYSTORE_MODAL_HIDE} from "../../../constants/keyStore";
 
@@ -103,40 +102,6 @@ const txResponse = (state = {}, action) => {
     }
 };
 
-const memo = (state = {
-    value: '',
-    error: {
-        message: '',
-    },
-}, {
-    type,
-    data,
-}) => {
-    switch (type) {
-    case TX_MEMO_SET:
-        return {
-            ...state,
-            value: data.value,
-            error: {
-                ...state.error,
-                message: data.error.message,
-            },
-        };
-    case TX_SUCCESS:
-    case TX_RESULT_MODAL_HIDE:
-        return {
-            ...state,
-            value: '',
-            error: {
-                ...state.error,
-                message: '',
-            },
-        };
-    default:
-        return state;
-    }
-};
-
 
 const error = (state = {
     error: {
@@ -176,7 +141,6 @@ export default combineReducers({
     txInfo,
     loginInfo,
     inProgress,
-    memo,
     txResponse,
     error
 });

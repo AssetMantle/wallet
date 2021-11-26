@@ -1,16 +1,17 @@
 import React, {useState} from 'react';
 import {OverlayTrigger, Popover} from "react-bootstrap";
-import Icon from "../../../components/Icon";
-import InputText from "../../../components/InputText";
-import helper from "../../../utils/helper";
+import Icon from "../../../../components/Icon";
+import InputText from "../../../../components/InputText";
+import helper from "../../../../utils/helper";
 import {useDispatch, useSelector} from "react-redux";
-import {setTxMemo} from "../../../store/actions/transactions/common";
+import {setTxMemo} from "../../../../store/actions/transactions/delegate";
 import {useTranslation} from "react-i18next";
+
 
 const Memo = () => {
     const {t} = useTranslation();
     const [memoStatus, setMemoStatus] = useState(false);
-    const memo = useSelector((state) => state.common.memo);
+    const memo = useSelector((state) => state.delegate.memo);
     const dispatch = useDispatch();
 
     const handleMemoChange = () => {

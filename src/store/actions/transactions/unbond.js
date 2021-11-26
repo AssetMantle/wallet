@@ -2,6 +2,7 @@ import {
     TX_UNBOND_AMOUNT_SET,
     TX_UNBOND_MODAL_HIDE,
     TX_UNBOND_MODAL_SHOW,
+    TX_UNBOND_MEMO_SET
 } from "../../../constants/unbond";
 import {setTxName} from "./common";
 import {showFeeModal} from "./fee";
@@ -23,6 +24,13 @@ export const showTxUnbondModal = (data) => {
 export const hideTxUnbondModal = (data) => {
     return {
         type: TX_UNBOND_MODAL_HIDE,
+        data,
+    };
+};
+
+export const setTxMemo = (data) => {
+    return {
+        type: TX_UNBOND_MEMO_SET,
         data,
     };
 };

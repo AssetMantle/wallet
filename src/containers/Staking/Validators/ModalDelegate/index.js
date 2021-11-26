@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {hideTxDelegateModal} from "../../../../store/actions/transactions/delegate";
 import ButtonSubmit from "./ButtonSubmit";
 import {showValidatorTxModal} from "../../../../store/actions/validators";
-import Memo from "../../../Common/Memo";
+import Memo from "./Memo";
 const ModalDelegate = (props) => {
     const dispatch = useDispatch();
     const show = useSelector((state) => state.delegate.modal);

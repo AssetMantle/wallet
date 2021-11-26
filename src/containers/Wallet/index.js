@@ -12,6 +12,7 @@ import ModalSetWithdrawAddress from "./SetWithdrawAddress/ModalSetWithdrawAddres
 import FeeModal from "../Common/Fee/Modal";
 import KeyStoreModal from "../Common/KeyStore/Modal";
 import Loader from "../../components/Loader";
+import ModalViewTxnResponse from "../Common/ModalViewTxnResponse";
 const Wallet = () => {
 
     const popoverMemo = (
@@ -42,6 +43,7 @@ const Wallet = () => {
             <FeeModal/>
             <ModalWithdraw/>
             <ModalSetWithdrawAddress/>
+            <ModalViewTxnResponse/>
             <div className="wallet-main-section">
                 <TokenInfo/>
                 <div className="tabs-section">

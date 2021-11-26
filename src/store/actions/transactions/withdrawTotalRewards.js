@@ -1,5 +1,7 @@
 import {TX_WITH_DRAW_TOTAL_REWARDS_AMOUNT_SET, TX_WITH_DRAW_TOTAL_REWARDS_VALIDATORS_SET,
-    TX_WITH_DRAW_TOTAL_REWARDS_MODAL_HIDE, TX_WITH_DRAW_TOTAL_REWARDS_MODAL_SHOW, TX_WITH_DRAW_TOTAL_REWARDS_VALIDATORS_COMMISSION_SET}
+    TX_WITH_DRAW_TOTAL_REWARDS_MODAL_HIDE, TX_WITH_DRAW_TOTAL_REWARDS_MODAL_SHOW,
+    TX_WITH_DRAW_TOTAL_REWARDS_VALIDATORS_COMMISSION_SET, TX_WITH_DRAW_TOTAL_REWARDS_MEMO_SET
+}
     from "../../../constants/withdrawTotalRewards";
 import {setTxName} from "./common";
 import {showFeeModal} from "./fee";
@@ -36,6 +38,13 @@ export const showTxWithDrawTotalModal = (data) => {
 export const hideTxWithDrawTotalModal = (data) => {
     return {
         type: TX_WITH_DRAW_TOTAL_REWARDS_MODAL_HIDE,
+        data,
+    };
+};
+
+export const setTxMemo = (data) => {
+    return {
+        type: TX_WITH_DRAW_TOTAL_REWARDS_MEMO_SET,
         data,
     };
 };

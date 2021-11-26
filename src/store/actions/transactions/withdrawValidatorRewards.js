@@ -1,6 +1,7 @@
 import {
     TX_VALIDATOR_REWARDS_WITHDRAW_SHOW,
     TX_VALIDATOR_REWARDS_WITHDRAW_HIDE,
+    TX_VALIDATOR_REWARDS_WITHDRAW_MEMO_SET
 } from "../../../constants/withdrawValidatorRewards";
 import {setTxName} from "./common";
 import {showFeeModal} from "./fee";
@@ -18,6 +19,14 @@ export const hideTxWithdrawValidatorRewardsModal = (data) => {
         data,
     };
 };
+
+export const setTxMemo = (data) => {
+    return {
+        type: TX_VALIDATOR_REWARDS_WITHDRAW_MEMO_SET,
+        data,
+    };
+};
+
 
 export const submitFormData = (message) => (dispatch, getState) => {
     dispatch(setTxName({
