@@ -16,6 +16,8 @@ const ModalWithDraw = () => {
     const show = useSelector((state) => state.mulitpleRewardsWithDraw.modal);
     const rewards = useSelector((state) => state.rewards.rewards);
     const tokenPrice = useSelector((state) => state.tokenPrice.tokenPrice);
+    let selectedValidators = useSelector((state) => state.mulitpleRewardsWithDraw.validatorsList);
+
     const error = useSelector(state => state.common.error);
 
     const dispatch = useDispatch();
@@ -40,7 +42,7 @@ const ModalWithDraw = () => {
         <ReactModal
             animation={false}
             backdrop="static"
-            className="modal-custom claim-rewards-modal"
+            className="modal-custom claim-rewards-modal wallet-rewards-modal"
             centered={true}
             keyboard={false}
             show={show}
@@ -63,7 +65,10 @@ const ModalWithDraw = () => {
                 <Validators/>
                 <ValidatorCommission/>
                 <Memo/>
-                {error !== '' ?
+                <div className="validator-limit-warning">
+                    <p className="amount-warning">{selectedValidators.error.message !== '' ? "Warning:  Recommend 3 or fewer validators to avoid potential issues." : ""}</p>
+                </div>
+                {error.error.message !== '' ?
                     <p className="form-error">{error.error.message}</p> : null}
                 <ButtonNext/>
                 <div className="buttons">

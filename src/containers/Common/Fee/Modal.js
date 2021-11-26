@@ -6,23 +6,17 @@ import Fee from "./index";
 import Gas from "./Gas";
 import Submit from "./Submit";
 import Icon from "../../../components/Icon";
-import Loader from "../../../components/Loader";
 // import {showTxWithDrawTotalModal} from "../../../store/actions/transactions/withdrawTotalRewards";
 
 const Modal = () => {
     const show = useSelector((state) => state.fee.modal);
     const txInfo = useSelector((state) => state.common.txInfo);
-    const inProgress = useSelector((state) => state.common.inProgress);
     console.log(txInfo.value.name, " fee modalshow");
 
     const dispatch = useDispatch();
     const handleClose = () => {
         dispatch(hideFeeModal());
     };
-
-    if (inProgress) {
-        return <Loader/>;
-    }
 
     const handleBack = () => {
         dispatch(txInfo.value.modal);

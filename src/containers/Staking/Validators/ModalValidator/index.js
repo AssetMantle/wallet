@@ -46,7 +46,7 @@ const ModalValidator = () => {
         <ReactModal
             animation={false}
             backdrop="static"
-            className="actions-modal"
+            className="actions-modal modal-action"
             centered={true}
             keyboard={false}
             show={show}

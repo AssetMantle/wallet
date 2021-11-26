@@ -40,6 +40,7 @@ const txInfo = (state = {
             value: data.value,
         };
     case TX_SUCCESS:
+    case KEYSTORE_MODAL_HIDE:
     case TX_RESULT_MODAL_HIDE:
         return {
             ...state,

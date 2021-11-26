@@ -117,7 +117,7 @@ const ModalSetWithdrawAddress = (props) => {
             keyboard={false}
             backdrop="static"
             show={show}
-            className="modal-custom claim-rewards-modal"
+            className="modal-custom claim-rewards-modal ddd"
             onHide={handleClose}>
             {initialModal ?
                 <>

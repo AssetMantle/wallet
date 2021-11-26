@@ -5,6 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {keplrSubmit} from "../../../store/actions/transactions/keplr";
 import config from "../../../config";
 import transactions from "../../../utils/transactions";
+import {txFailed} from "../../../store/actions/transactions/common";
 
 const ButtonSend = () => {
     const dispatch = useDispatch();
@@ -18,22 +19,35 @@ const ButtonSend = () => {
     let inputChannelID = chainInfo.customChain ? customChannel.value : chainInfo.chainID;
     let inputPort = chainInfo.customChain ? customPort.value : "transfer";
 
+    console.log(inputChannelID, inputPort, "inputPort");
+
     const disable = (
         amount.value === '' || amount.error.message !== '' || toAddress.value === '' || toAddress.error.message !== ''
     );
 
     const onClick = async () => {
-        let msg = await transactions.MakeIBCTransferMsg(inputChannelID, loginInfo.address,
+        let msg = transactions.MakeIBCTransferMsg(inputChannelID, loginInfo.address,
             toAddress.value, (amount.value * config.xprtValue), undefined, undefined,
             token.value.tokenDenom, chainInfo.selectedChannel ? chainInfo.selectedChannel.url : undefined, inputPort);
-        dispatch(submitFormData([msg], inputPort, inputChannelID));
+        msg.then(result => {
+            dispatch(submitFormData([result], inputPort, inputChannelID));
+        }).catch(err => {
+            dispatch(txFailed(err.message));
+        });
+        console.log(msg, "message");
+
     };
 
     const onClickKeplr = async () => {
         let msg = await transactions.MakeIBCTransferMsg(inputChannelID, loginInfo.address,
             toAddress.value, (amount.value * config.xprtValue), undefined, undefined,
             token.value.tokenDenom, chainInfo.selectedChannel ? chainInfo.selectedChannel.url : undefined, inputPort);
-        dispatch(keplrSubmit( [msg]));
+        msg.then(result => {
+            dispatch(keplrSubmit( [result]));
+        }).catch(err => {
+            dispatch(txFailed(err.message));
+        });
+
     };
 
     return (

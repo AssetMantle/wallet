@@ -32,7 +32,7 @@ const ModalSetWithdrawAddress = () => {
         <ReactModal
             animation={false}
             backdrop="static"
-            className="modal-custom claim-rewards-modal"
+            className="modal-custom claim-rewards-modal set-address"
             centered={true}
             keyboard={false}
             show={show}

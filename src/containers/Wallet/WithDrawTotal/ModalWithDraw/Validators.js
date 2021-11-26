@@ -16,6 +16,7 @@ const Validators = () => {
     const validatorsList =  useSelector((state) => state.rewards.validatorsRewardsList);
     let validatorsRewards = useSelector((state) => state.mulitpleRewardsWithDraw.rewards);
     const tokenPrice = useSelector((state) => state.tokenPrice.tokenPrice);
+
     const onChangeSelect = (evt) => {
         let totalValidatorsRewards = 0;
         let messages = [];
@@ -32,10 +33,11 @@ const Validators = () => {
             error: ValidateMultipleValidatorsClaim(evt),
         }));
     };
+
     return (
         <>
             <div className="form-field rewards-validators-list">
-                <p className="label">{t("VALIDATOR")}</p>
+                <p className="label">{t("SELECT_VALIDATOR")}</p>
                 <ReactMultiSelectCheckboxes
                     options={validatorsList}
                     onChange={onChangeSelect}

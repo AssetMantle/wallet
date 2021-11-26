@@ -8,9 +8,8 @@ import ModalViewTxnResponse from "../../Common/ModalViewTxnResponse";
 import {useDispatch, useSelector} from "react-redux";
 import {hideTxResultModal} from "../../../store/actions/transactions/common";
 import {useTranslation} from "react-i18next";
-import Loader from "../../../components/Loader";
+// import Loader from "../../../components/Loader";
 import Memo from "./Memo";
-import KeyStoreModal from "../../Common/KeyStore/Modal";
 import Chain from "./Chain";
 import CustomChain from "./CustomChain";
 const Send = () => {
@@ -20,16 +19,16 @@ const Send = () => {
     const chainInfo = useSelector((state) => state.sendIbc.chainInfo.value);
     const show = useSelector((state) => state.common.modal);
     const response = useSelector(state => state.common.txResponse.value);
-    const inProgress = useSelector(state => state.common.inProgress);
+    // const inProgress = useSelector(state => state.common.inProgress);
     const error = useSelector(state => state.common.error);
 
     console.log(error.error.message, "error in index");
     const handleClose = () => {
         dispatch(hideTxResultModal());
     };
-    if (inProgress) {
-        return <Loader/>;
-    }
+    // if (inProgress) {
+    //     return <Loader/>;
+    // }
 
     return (
         <div className="send-container">
@@ -55,7 +54,6 @@ const Send = () => {
                     handleClose={handleClose}
                 />
             </Modal>
-            <KeyStoreModal/>
         </div>
     );
 };

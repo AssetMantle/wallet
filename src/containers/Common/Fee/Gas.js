@@ -10,10 +10,8 @@ import config from "../../../config";
 const Gas = () => {
     const {t} = useTranslation();
     const [showGasField, setShowGasField] = useState(false);
-    // const amount = floatCoin(props.balance);
     const amount = useSelector((state) => state.send.amount);
     const gas = useSelector((state) => state.gas.gas);
-    // const token = useSelector((state) => state.send.token.value);
     const transferableAmount = useSelector((state) => state.balance.transferableAmount);
     const type = useSelector((state) => state.common.txInfo.value.name);
     const dispatch = useDispatch();

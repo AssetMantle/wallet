@@ -37,7 +37,6 @@ export const hideKeyStoreModal = (data) => {
 export const keyStoreSubmit = (loginAddress) => {
     return async (dispatch, getState) => {
         dispatch(txInProgress());
-
         const password = getState().keyStore.password;
         const keyStoreData = getState().keyStore.keyStore;
 
@@ -52,6 +51,7 @@ export const keyStoreSubmit = (loginAddress) => {
 
         const fee = getState().fee.fee.value.fee;
         const gas = getState().gas.gas.value;
+
         let mnemonic="";
         console.log(encryptedSeed, "encryptedSeed");
         if(encryptedSeed){
@@ -66,7 +66,6 @@ export const keyStoreSubmit = (loginAddress) => {
         let response = transactions.getTransactionResponse(loginAddress, formData, fee, gas, mnemonic,txName, accountNumber, accountIndex, bip39PassPhrase);
         response.then(result => {
             console.log(result, "txn response");
-
             if (result.code !== undefined) {
                 dispatch(setLoginInfo({
                     encryptedSeed:true,

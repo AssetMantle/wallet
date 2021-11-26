@@ -26,7 +26,7 @@ const ModalReDelegate = () => {
         <ReactModal
             animation={false}
             backdrop="static"
-            className="modal-custom delegate-modal"
+            className="modal-custom delegate-modal modal-redelegate"
             centered={true}
             keyboard={false}
             show={show}

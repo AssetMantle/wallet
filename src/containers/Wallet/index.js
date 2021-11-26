@@ -10,8 +10,9 @@ import Icon from "../../components/Icon";
 import ModalWithdraw from "./WithDrawTotal/ModalWithDraw";
 import ModalSetWithdrawAddress from "./SetWithdrawAddress/ModalSetWithdrawAddress";
 import FeeModal from "../Common/Fee/Modal";
+import KeyStoreModal from "../Common/KeyStore/Modal";
+import Loader from "../../components/Loader";
 const Wallet = () => {
-
 
     const popoverMemo = (
         <Popover id="popover-memo">
@@ -36,6 +37,8 @@ const Wallet = () => {
 
     return (
         <>
+            <Loader/>
+            <KeyStoreModal/>
             <FeeModal/>
             <ModalWithdraw/>
             <ModalSetWithdrawAddress/>

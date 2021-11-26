@@ -68,6 +68,7 @@ const modal = (state = false, {
     switch (type) {
     case KEYSTORE_MODAL_SHOW:
         return true;
+    case TX_SUCCESS:
     case KEYSTORE_MODAL_HIDE:
         return false;
     default:

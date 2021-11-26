@@ -26,7 +26,7 @@ const ModalUnbond = () => {
         <ReactModal
             animation={false}
             backdrop="static"
-            className="modal-custom delegate-modal"
+            className="modal-custom delegate-modal modal-unbond"
             centered={true}
             keyboard={false}
             show={show}

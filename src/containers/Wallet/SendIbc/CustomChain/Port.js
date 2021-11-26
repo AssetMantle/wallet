@@ -1,7 +1,7 @@
 import React from 'react';
 import InputText from "../../../../components/InputText";
 import {useDispatch, useSelector} from "react-redux";
-import {setTxSendAddress}from "../../../../store/actions/transactions/send";
+import {setTxIbcSendCustomPort}from "../../../../store/actions/transactions/sendIbc";
 import {useTranslation} from "react-i18next";
 import {ValidateAlphaNumeric} from "../../../../utils/validations";
 
@@ -11,7 +11,7 @@ const Port = () => {
     const dispatch = useDispatch();
 
     const onChange = (evt) => {
-        dispatch(setTxSendAddress({
+        dispatch(setTxIbcSendCustomPort({
             value:evt.target.value,
             error: {
                 message: ''

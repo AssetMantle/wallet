@@ -36,7 +36,7 @@ const ModalDelegate = (props) => {
         <ReactModal
             animation={false}
             backdrop="static"
-            className="modal-custom delegate-modal"
+            className="modal-custom delegate-modal modal-delegate"
             centered={true}
             keyboard={false}
             show={show}

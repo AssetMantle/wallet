@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {connect, useDispatch} from 'react-redux';
 import {fetchDelegationsCount} from "../../store/actions/delegations";
 import {fetchBalance, fetchTransferableVestingAmount} from "../../store/actions/balance";
@@ -11,7 +11,7 @@ import ModalViewVestingDetails from "./ModalViewVestingDetails";
 import ModalViewAmountDetails from "./ModalVIewAmountDetails";
 import Icon from "../../components/Icon";
 import {OverlayTrigger, Popover} from "react-bootstrap";
-import transactions from "../../utils/transactions";
+// import transactions from "../../utils/transactions";
 import ModalViewDelegationDetails from "./ModalViewDelegationDetails";
 import {fetchValidators} from "../../store/actions/validators";
 import NumberView from "../../components/NumberView";
@@ -22,24 +22,25 @@ const TokenInfo = (props) => {
     const {t} = useTranslation();
     const dispatch = useDispatch();
     // const [rewards, setRewards] = useState(false);
-    let address = localStorage.getItem('address');
+    // let address = localStorage.getItem('address');
 
-    useEffect(() => {
-        props.fetchDelegationsCount(address);
-        props.fetchBalance(address);
-        props.fetchRewards(address);
-        props.fetchTotalRewards(address);
-        props.fetchUnbondDelegations(address);
-        props.fetchTokenPrice();
-        props.fetchTransferableVestingAmount(address);
-        props.fetchValidators(address);
-        transactions.updateFee(address);
-        setInterval(() => props.fetchTotalRewards(address), 10000);
-    }, []);
+    // useEffect(() => {
+    //     props.fetchDelegationsCount(address);
+    //     props.fetchBalance(address);
+    //     props.fetchRewards(address);
+    //     props.fetchTotalRewards(address);
+    //     props.fetchUnbondDelegations(address);
+    //     props.fetchTokenPrice();
+    //     props.fetchTransferableVestingAmount(address);
+    //     props.fetchValidators(address);
+    //     transactions.updateFee(address);
+    //     setInterval(() => props.fetchTotalRewards(address), 10000);
+    // }, []);
 
     const handleRewards = (key) => {
         if (key === "rewards") {
             dispatch(showTxWithDrawTotalModal());
+            // setRewards(true);
         }
     };
     const popoverVesting = (

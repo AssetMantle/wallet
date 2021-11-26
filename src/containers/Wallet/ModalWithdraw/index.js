@@ -166,7 +166,7 @@ const ModalWithdraw = (props) => {
                 backdrop="static"
                 keyboard={false}
                 show={show}
-                className="modal-custom claim-rewards-modal"
+                className="modal-custom claim-rewards-modal ddd"
                 onHide={handleClose}>
                 {initialModal ?
                     <>

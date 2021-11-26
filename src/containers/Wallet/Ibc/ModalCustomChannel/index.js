@@ -26,7 +26,7 @@ const ModalCustomChannel = (props) => {
             keyboard={false}
             backdrop="static"
             show={show}
-            className="modal-custom claim-rewards-modal"
+            className="modal-custom claim-rewards-modal ddd"
             onHide={handleClose}>
             <>
                 <Modal.Header className="result-header success" closeButton>

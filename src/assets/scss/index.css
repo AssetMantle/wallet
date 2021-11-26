@@ -2990,6 +2990,7 @@ ul li em {
 .validator-limit-warning .amount-warning {
   padding-top: 10px;
   text-align: left;
+  margin: 0;
 }
 
 .delegated-validators .info-name {

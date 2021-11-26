@@ -11,6 +11,14 @@ import config from "./config";
 import icon_white from "./assets/images/icon_white.svg";
 import {useTranslation} from "react-i18next";
 import KeplerWallet from "./utils/kepler";
+import {useDispatch} from "react-redux";
+import {fetchDelegationsCount} from "./store/actions/delegations";
+import {fetchBalance, fetchTransferableVestingAmount} from "./store/actions/balance";
+import {fetchRewards, fetchTotalRewards} from "./store/actions/rewards";
+import {fetchUnbondDelegations} from "./store/actions/unbond";
+import {fetchTokenPrice} from "./store/actions/tokenPrice";
+import {fetchValidators} from "./store/actions/validators";
+import transactions from "./utils/transactions";
 
 const App = () => {
     const {t} = useTranslation();
@@ -44,6 +52,10 @@ const App = () => {
             window.removeEventListener("online", updateNetwork);
         };
     });
+
+    const dispatch = useDispatch();
+
+
     let address;
     const version = localStorage.getItem('version');
     if (version == null || config.version !== version) {
@@ -52,6 +64,25 @@ const App = () => {
     } else {
         address = localStorage.getItem('address');
     }
+
+    useEffect(() => {
+        const fetchApi = async () => {
+            if (address !== null) {
+                dispatch(fetchDelegationsCount(address));
+                dispatch(fetchBalance(address));
+                dispatch(fetchRewards(address));
+                dispatch(fetchTotalRewards(address));
+                dispatch(fetchUnbondDelegations(address));
+                dispatch(fetchTokenPrice());
+                dispatch(fetchTransferableVestingAmount(address));
+                dispatch(fetchValidators(address));
+                transactions.updateFee(address);
+                setInterval(() => dispatch(fetchTotalRewards(address)), 10000);
+            }
+        };
+        fetchApi();
+    }, []);
+
     window.addEventListener("keplr_keystorechange", () => {
         if (localStorage.getItem('loginMode') === 'kepler') {
             const kepler = KeplerWallet();
