@@ -79,6 +79,7 @@ export const addressLogin = (history) => {
             }));
             localStorage.setItem('loginInfo', JSON.stringify(loginInfo));
             history.push('/dashboard/wallet');
+            window.location.reload();
         }else {
             dispatch(setLoginInfo(
                 {

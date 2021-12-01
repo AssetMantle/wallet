@@ -11,10 +11,10 @@ const ToAddress = () => {
     const {t} = useTranslation();
     const toAddress = useSelector((state) => state.send.toAddress);
     const dispatch = useDispatch();
-
+    console.log(toAddress, "AFTER CLOSE");
     const onChange = (evt) => {
         dispatch(setTxSendAddress({
-            value:evt.target.value,
+            value:evt.target.value.toString(),
             error: {
                 message: ''
             }
@@ -23,7 +23,7 @@ const ToAddress = () => {
 
     const onBlur = (evt) =>{
         dispatch(setTxSendAddress({
-            value:evt.target.value,
+            value:evt.target.value.toString(),
             error: helper.validateAddress(evt.target.value),
         }));
     };
@@ -48,14 +48,13 @@ const ToAddress = () => {
                 <InputText
                     className="form-control"
                     name="address"
+                    placeholder="Enter Recipient's address"
+                    required={true}
                     type="text"
                     value={toAddress.value}
-                    required={true}
-                    error={toAddress.error}
                     onKeyPress={ValidateAlphaNumeric}
                     onBlur={onBlur}
-                    placeholder="Enter Recipient's address"
-                    autofocus={false}
+                    error={toAddress.error}
                     onChange={onChange}
                 />
             </div>

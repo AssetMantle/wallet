@@ -161,5 +161,6 @@ export const keyStoreLogin = (history) => {
                 message:''
             }}));
         history.push('/dashboard/wallet');
+        window.location.reload();
     };
 };

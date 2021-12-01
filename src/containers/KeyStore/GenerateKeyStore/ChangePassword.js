@@ -76,11 +76,12 @@ const ChangePassword = (props) => {
             setErrorMessage("Password must be greater than 3 letters and no spaces allowed");
         }
     };
+
     const handleResetSubmit = async () => {
         const mnemonic = response.mnemonic;
         let encryptedData = helper.createStore(mnemonic, password);
         let jsonContent = JSON.stringify(encryptedData.Response);
-        downloadFile(jsonContent);
+        await downloadFile(jsonContent);
     };
 
     const downloadFile = async (jsonContent) => {

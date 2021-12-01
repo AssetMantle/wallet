@@ -14,7 +14,7 @@ const Fee = () => {
     const fee = useSelector((state) => state.fee.fee);
     const tokenPrice = useSelector((state) => state.tokenPrice.tokenPrice);
     // const feeError = useSelector((state) => state.fee.fee.error.message);
-    const type = useSelector((state) => state.common.txInfo.value.name);
+    const type = useSelector((state) => state.common.txName.value.name);
     const gas = useSelector((state) => state.gas.gas);
     console.log(transferableAmount, "transferableAmount");
     console.log(gas, "in fee gas");

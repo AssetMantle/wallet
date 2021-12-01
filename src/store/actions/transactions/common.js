@@ -1,5 +1,5 @@
 import {SET_TX_NAME, TX_RESULT_MODAL_HIDE, TX_RESULT_MODAL_SHOW, SET_LOGIN_INFO, TX_IN_PROGRESS, TX_SUCCESS,
-    TX_RESPONSE, TX_FAILED} from "../../../constants/common";
+    TX_RESPONSE, TX_FAILED, SET_TX_INFO} from "../../../constants/common";
 
 export const showTxResultModal = (data) => {
     return {
@@ -28,6 +28,13 @@ export const setLoginInfo = (data) => {
 export const setTxName = (data) => {
     return {
         type: SET_TX_NAME,
+        data,
+    };
+};
+
+export const setTxIno = (data) => {
+    return {
+        type: SET_TX_INFO,
         data,
     };
 };

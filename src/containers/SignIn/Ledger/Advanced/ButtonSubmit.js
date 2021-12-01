@@ -15,7 +15,7 @@ const ButtonSubmit = () => {
     const disabled = (
         accountIndex.error.message !== "" || accountNumber.error.message !== ""
     );
-    console.log(disabled, "disabled");
+
     return (
         <Button
             className="button button-primary"

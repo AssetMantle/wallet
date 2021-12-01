@@ -103,5 +103,6 @@ export const keplrLogin = (history) => {
             }
         }));
         history.push('/dashboard/wallet');
+        window.location.reload();
     };
 };

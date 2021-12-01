@@ -25,7 +25,8 @@ import delegate from "./transactions/delegate";
 import redelegate from "./transactions/redelegate";
 import unbondTx from "./transactions/unbond";
 import withdrawValidatorRewards from "./transactions/withdrawValidatorRewards";
-
+import generateKeyStore from "./generateKeyStore";
+import changePassword from "./changePassword";
 const appReducer =  combineReducers({
     delegations,
     transactions,
@@ -52,7 +53,9 @@ const appReducer =  combineReducers({
     delegate,
     redelegate,
     unbondTx,
-    withdrawValidatorRewards
+    withdrawValidatorRewards,
+    generateKeyStore,
+    changePassword
 });
 
 export const rootReducer = (state, action) => {

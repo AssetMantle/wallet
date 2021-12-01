@@ -44,14 +44,7 @@ const App = () => {
     const updateNetwork = () => {
         setNetwork(window.navigator.onLine);
     };
-    useEffect(() => {
-        window.addEventListener("offline", updateNetwork);
-        window.addEventListener("online", updateNetwork);
-        return () => {
-            window.removeEventListener("offline", updateNetwork);
-            window.removeEventListener("online", updateNetwork);
-        };
-    });
+
 
     const dispatch = useDispatch();
 
@@ -67,7 +60,7 @@ const App = () => {
 
     useEffect(() => {
         const fetchApi = async () => {
-            if (address !== null && address !== undefined) {
+            if (address !== null && address !== undefined ) {
                 dispatch(fetchDelegationsCount(address));
                 dispatch(fetchBalance(address));
                 dispatch(fetchRewards(address));
@@ -82,7 +75,14 @@ const App = () => {
         };
         fetchApi();
     }, []);
-
+    useEffect(() => {
+        window.addEventListener("offline", updateNetwork);
+        window.addEventListener("online", updateNetwork);
+        return () => {
+            window.removeEventListener("offline", updateNetwork);
+            window.removeEventListener("online", updateNetwork);
+        };
+    });
     window.addEventListener("keplr_keystorechange", () => {
         if (localStorage.getItem('loginMode') === 'kepler') {
             const kepler = KeplerWallet();

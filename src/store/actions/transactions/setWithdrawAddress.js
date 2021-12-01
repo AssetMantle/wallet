@@ -4,7 +4,7 @@ import {
     TX_SET_WITH_DRAW_ADDRESS_MODAL_SHOW,
     TX_SET_WITH_DRAW_ADDRESS_MEMO_SET
 } from "../../../constants/setWithdrawAddress";
-import {setTxName} from "./common";
+import {setTxName, setTxIno} from "./common";
 import {showFeeModal} from "./fee";
 
 export const setTxWithDrawAddress = (data) => {
@@ -40,10 +40,14 @@ export const submitFormData = (messages) => (dispatch, getState) => {
     dispatch(setTxName({
         value:{
             name:"withdrawAddress",
+        }
+    }));
+    dispatch(setTxIno({
+        value:{
             modal:showTxWithDrawAddressModal(),
             data:{
                 message:messages,
-                memo:getState().common.memo.value,
+                memo:getState().setWithdrawAddress.memo.value,
             }
         }
     }));

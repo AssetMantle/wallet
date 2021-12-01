@@ -52,11 +52,11 @@ const ModalViewTxnResponse = (props) => {
     }
 
     return (
-        <Modal show={show} onHide={handleClose} backdrop="static" centered className="modal-custom">
+        <Modal show={show} onHide={handleClose} backdrop="static" centered className="modal-custom ranh">
             {
                 response !== '' && response.code === 0 ?
                     <>
-                        <Modal.Header className="result-header success">
+                        <Modal.Header className="result-header success" closeButton>
                             {props.successMsg}
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
@@ -83,7 +83,7 @@ const ModalViewTxnResponse = (props) => {
             }{
                 response !== '' && response.code !== 0 ?
                     <>
-                        <Modal.Header className="result-header error">
+                        <Modal.Header className="result-header error" closeButton>
                             {props.failedMsg}
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">

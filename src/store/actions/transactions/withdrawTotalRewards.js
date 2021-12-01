@@ -3,7 +3,7 @@ import {TX_WITH_DRAW_TOTAL_REWARDS_AMOUNT_SET, TX_WITH_DRAW_TOTAL_REWARDS_VALIDA
     TX_WITH_DRAW_TOTAL_REWARDS_VALIDATORS_COMMISSION_SET, TX_WITH_DRAW_TOTAL_REWARDS_MEMO_SET
 }
     from "../../../constants/withdrawTotalRewards";
-import {setTxName} from "./common";
+import {setTxName, setTxIno} from "./common";
 import {showFeeModal} from "./fee";
 
 export const setTxWithDrawTotalRewardsAmount = (data) => {
@@ -56,7 +56,17 @@ export const submitFormData = (messages) => (dispatch, getState) => {
             modal:showTxWithDrawTotalModal(),
             data:{
                 message:messages,
-                memo:getState().common.memo.value,
+                memo:getState().mulitpleRewardsWithDraw.memo.value,
+            }
+        }
+    }));
+    dispatch(setTxIno({
+        value:{
+            name:"withdrawMultiple",
+            modal:showTxWithDrawTotalModal(),
+            data:{
+                message:messages,
+                memo:getState().mulitpleRewardsWithDraw.memo.value,
             }
         }
     }));

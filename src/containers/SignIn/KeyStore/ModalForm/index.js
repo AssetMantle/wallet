@@ -15,7 +15,6 @@ const ModalForm = () => {
     const show = useSelector((state) => state.signInKeyStore.keyStoreModal);
     const response = useSelector((state) => state.signInKeyStore.response);
 
-    console.log(show, "show in MODAL FORM");
     const dispatch = useDispatch();
 
     const handleClose = () => {

@@ -1,6 +1,7 @@
 import transactions from "./transactions";
 import config from "../config";
-
+import helper from "./helper";
+const bip39 = require("bip39");
 const accountType = localStorage.getItem('account');
 
 export const ValidateSendAmount = (amount, value) => {
@@ -60,6 +61,19 @@ export const ValidateAlphaNumeric = e =>{
         e.preventDefault();
     }
 };
+//
+// const regEx = /^[a-z ]*$/;
+// if (regEx.test(evt.target.value)) {
+//
+// }
+
+export const ValidateString = e =>{
+    const regEx = /^[a-z]+$/;
+    if(!regEx.test(e.key)){
+        e.preventDefault();
+    }
+};
+
 
 export const ValidateSpecialCharacters = e => {
     const key = e.key.toLowerCase();
@@ -108,4 +122,21 @@ export const ValidateReDelegateAmount = (delegationAmount, amount) => {
         return new Error('Insufficient Delegated Amount');
     }
     return new Error('');
+};
+
+
+export const ValidateMnemonic = (mnemonic) => {
+    const mnemonicWords = helper.mnemonicTrim(mnemonic);
+    let validateMnemonic = bip39.validateMnemonic(mnemonicWords);
+    if(!validateMnemonic){
+        return new Error('Invalid mnemonic.');
+    }
+    return new Error('');
+};
+
+export const ValidateStringSpaces = e =>{
+    const regEx = /^[a-z ]+$/;
+    if(!regEx.test(e.key)){
+        e.preventDefault();
+    }
 };

@@ -10,8 +10,9 @@ import Icon from "../../../components/Icon";
 
 const Modal = () => {
     const show = useSelector((state) => state.fee.modal);
-    const txInfo = useSelector((state) => state.common.txInfo);
-    console.log(txInfo.value.name, " fee modalshow");
+    const txName = useSelector((state) => state.common.txName.value);
+    const txInfo = useSelector((state) => state.common.txInfo.value);
+    console.log(txInfo, " fee modalshow");
 
     const dispatch = useDispatch();
     const handleClose = () => {
@@ -27,13 +28,13 @@ const Modal = () => {
         <ReactModal
             animation={false}
             backdrop="static"
-            className="modal-custom fee-m"
+            className={show ? 'show fade modal-custom' : 'fade modal-custom'}
             centered={true}
             keyboard={false}
             show={show}
             onHide={handleClose}>
             <ReactModal.Header closeButton={true}>
-                {txInfo.value.name !== 'send' && txInfo.value.name !== 'ibc' ?
+                {txName.name !== 'send' && txName.name !== 'ibc' ?
                     <div className="previous-section txn-header">
                         <button className="button" onClick={handleBack}>
                             <Icon

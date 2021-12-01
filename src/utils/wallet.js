@@ -42,10 +42,7 @@ async function createWallet(mnemonic, walletPath = transactions.makeHdPath(), bi
     if (validateMnemonic) {
         return await getWallet(mnemonicWords, walletPath, bip39Passphrase);
     } else {
-        return {
-            success: false,
-            error: "Invalid mnemonic."
-        };
+        return new Error('Invalid mnemonic.');
     }
 }
 

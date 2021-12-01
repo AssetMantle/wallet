@@ -199,7 +199,6 @@ html, body {
   color: #2E3239;
 }
 .form-field input, .form-field .amount-field, .form-field textarea, .form-field .file-upload {
-  max-width: 500px !important;
   flex: 1;
 }
 .form-field .description-info {
@@ -757,6 +756,17 @@ ul li em {
   color: orange;
   text-decoration: underline;
   cursor: pointer;
+}
+
+.downloaded-keystore-box {
+  text-align: center;
+}
+.downloaded-keystore-box p {
+  margin: 0;
+  display: inline-flex;
+  background: #28a74514;
+  padding: 5px 20px;
+  color: #28a745;
 }
 
 .input-error {
@@ -1807,7 +1817,7 @@ ul li em {
   -webkit-transition: all 0.4s ease-in-out;
 }
 .advanced-wallet-accordion .accordion-body.show {
-  padding: 0;
+  padding: 0 4px;
   max-height: 400px;
 }
 .advanced-wallet-accordion .card {

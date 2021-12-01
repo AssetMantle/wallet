@@ -5,10 +5,13 @@ import dark_icon from "../../assets/images/dark_icon.svg";
 import ModalCreateWallet from "../../containers/CreateWallet/ModalCreateWallet";
 import Footer from "../../components/Footer";
 import {useTranslation} from "react-i18next";
-import GenerateKeyStore from "../../containers/KeyStore/GenerateKeyStore";
+// import GenerateKeyStore from "../../containers/KeyStore/GenerateKeyStore";
 import SignIn from "../../containers/SignIn";
 import {showSignInModal} from "../../store/actions/signIn/modal";
 import {useDispatch} from "react-redux";
+import GenerateKeyStore from "../../containers/GenerateKeyStore";
+import {showKeyStoreMnemonicModal} from "../../store/actions/generateKeyStore";
+import ChangeKeyStorePassword from "../../containers/ChangeKeyStorePassword";
 
 const Homepage = () => {
     const {t} = useTranslation();
@@ -16,6 +19,9 @@ const Homepage = () => {
     const [routName, setRoutName] = useState("false");
     const handleRoute = (name) => {
         setRoutName(name);
+        if(name === "importWallet"){
+            dispatch(showKeyStoreMnemonicModal());
+        }
         if(name === "signIn"){
             dispatch(showSignInModal());
         }
@@ -47,6 +53,8 @@ const Homepage = () => {
                 </div>
             </Navbar>
             <div className="home-page-body">
+                <GenerateKeyStore/>
+                <ChangeKeyStorePassword/>
                 <div className="content">
                     <h3 className="heading">
                         {t("HOME_PAGE_TEXT")}
@@ -69,11 +77,11 @@ const Homepage = () => {
                     <ModalCreateWallet setRoutName={setRoutName}/>
                     : null
             }
-            {
-                routName === "importWallet" ?
-                    <GenerateKeyStore setShowKeyStore={setRoutName} className={""}/>
-                    : null
-            }
+            {/*{*/}
+            {/*    routName === "importWallet" ?*/}
+            {/*        <GenerateKeyStore setShowKeyStore={setRoutName} className={""}/>*/}
+            {/*        : null*/}
+            {/*}*/}
             <SignIn setRoutName={setRoutName} name="homepage"/>
         </div>
 

@@ -7,7 +7,7 @@ import {
     TX_IBC_SEND_CHAIN_INFO_SET,
     TX_IBC_SEND_MEMO_SET
 } from "../../../constants/sendIbc";
-import {setTxName} from "./common";
+import {setTxName, setTxIno} from "./common";
 import {showFeeModal} from "./fee";
 
 export const setTxIbcSendAmount = (data) => {
@@ -59,19 +59,23 @@ export const setTxMemo = (data) => {
 
 
 export const submitFormData = (message) => (dispatch,getState) => {
-    dispatch(setTxName({
+    dispatch(setTxIno({
         value:{
-            name:"ibc",
             data:{
                 message:message,
                 amount: getState().sendIbc.amount.value,
                 denom: getState().sendIbc.token.value.tokenDenom,
-                memo: getState().common.memo.value,
+                memo: getState().sendIbc.memo.value,
                 channelID: getState().sendIbc.chainInfo.value.customChain ? getState().sendIbc.customChannel.value : getState().sendIbc.chainInfo.value.chainID,
                 channelUrl: getState().sendIbc.chainInfo.value.selectedChannel ? getState().sendIbc.chainInfo.value.selectedChannel.url : undefined,
                 inputPort: getState().sendIbc.chainInfo.value.customChain ? getState().sendIbc.customPort.value : "transfer",
                 toAddress:getState().sendIbc.toAddress.value,
             }
+        }
+    }));
+    dispatch(setTxName({
+        value:{
+            name:"ibc",
         }
     }));
     dispatch(showFeeModal());

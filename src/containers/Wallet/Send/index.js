@@ -3,15 +3,16 @@ import ToAddress from "./ToAddress";
 import Tokens from "./Tokens";
 import Amount from "./Amount";
 import ButtonSend from "./ButtonSend";
-import {useSelector} from "react-redux";
+// import {useSelector} from "react-redux";
 import Memo from "./Memo";
 
 const Send = () => {
 
     // let mode = localStorage.getItem('loginMode');
-    const error = useSelector(state => state.common.error);
+    // const error = useSelector(state => state.common.error);
+    // const txName = useSelector((state) => state.common.txName.value.name);
 
-    console.log(error, "error in index");
+    // console.log(error, "error in index");
 
 
     return (
@@ -21,8 +22,8 @@ const Send = () => {
                 <Tokens/>
                 <Amount/>
                 <Memo/>
-                {error !== '' ?
-                    <p className="form-error">{error.error.message}</p> : null}
+                {/*{error !== '' && txName === "send" ?*/}
+                {/*    <p className="form-error">{error.error.message}</p> : null}*/}
                 <ButtonSend/>
             </div>
         </div>

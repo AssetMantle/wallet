@@ -10,8 +10,9 @@ const InputFieldNumber = ({
     required = true,
     type = 'number',
     value,
+    max = '',
     onChange,
-    min,
+    min = '',
     onBlur= helper.emptyFunc,
     onKeyPress= helper.emptyFunc,
 }) => {
@@ -23,6 +24,7 @@ const InputFieldNumber = ({
                 className={className}
                 min={min}
                 name={name}
+                max={max}
                 placeholder={placeholder}
                 required={required}
                 type={type}

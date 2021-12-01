@@ -13,7 +13,10 @@ const Gas = () => {
     const amount = useSelector((state) => state.send.amount);
     const gas = useSelector((state) => state.gas.gas);
     const transferableAmount = useSelector((state) => state.balance.transferableAmount);
-    const type = useSelector((state) => state.common.txInfo.value.name);
+    const type = useSelector((state) => state.common.txName.value.name);
+    const datad = useSelector((state) => state.common.txInfo.value.data);
+    console.log(type, datad, "type");
+
     const dispatch = useDispatch();
 
     const onChange = (evt) =>{

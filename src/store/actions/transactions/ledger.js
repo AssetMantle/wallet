@@ -14,7 +14,7 @@ export const ledgerSubmit = (loginAddress, loginMode) => {
         const bip39PassPhrase = getState().advanced.bip39PassPhrase.value;
 
         const formData = getState().common.txInfo.value.data;
-        const txName = getState().common.txInfo.value.name;
+        const txName = getState().common.txName.value.name;
 
         const fee = getState().fee.fee.value.fee;
         const gas = getState().gas.gas.value;

@@ -70,11 +70,15 @@ async function LedgerWallet(hdpath, prefix) {
     return [signer, firstAccount.address];
 }
 
-async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(), bip39Passphrase = "", prefix = addressPrefix) {
+async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(), bip39Passphrase = "", loginAddress,  prefix = addressPrefix) {
     const loginMode = localStorage.getItem('loginMode');
     console.log(loginMode, "loginMode");
     if (loginMode === "normal") {
         const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix);
+        console.log(address, loginAddress, 'address1');
+        if (address !== loginAddress) {
+            throw new Error("Your sign in address and keystore file don’t match. Please try again or else sign in again.");
+        }
         return Transaction(wallet, address, msgs, fee, memo);
     } else {
         const [wallet, address] = await LedgerWallet(hdpath, prefix);
@@ -138,7 +142,7 @@ function XprtConversion(data) {
     return Result;
 }
 
-function PrivateKeyReader(file, password, loginAddress) {
+function PrivateKeyReader(file, password, loginAddress, accountNumber = "0", addressIndex = "0",) {
     console.log(file, password, "file, password");
     return new Promise(function (resolve, reject) {
         const fileReader = new FileReader();
@@ -151,18 +155,19 @@ function PrivateKeyReader(file, password, loginAddress) {
                     reject(decryptedData.error);
                 } else {
                     let mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
-                    const accountData = await MnemonicWalletWithPassphrase(mnemonic, makeHdPath());
+                    const accountData = await MnemonicWalletWithPassphrase(mnemonic, makeHdPath(accountNumber, addressIndex));
                     const address = accountData[1];
-                    console.log(address, event.target.result, "loginAddress");
+                    console.log(address, loginAddress, "loginAddress");
+
                     if (address === loginAddress) {
                         resolve(mnemonic);
                         localStorage.setItem('encryptedMnemonic', event.target.result);
                     } else {
-                        reject("Your sign in address and keystore file don’t match. Please try again or else sign in again.");
+                        reject(new Error("Your sign in address and keystore file don’t match. Please try again or else sign in again."));
                     }
                 }
             } else {
-                reject("Invalid File data");
+                reject(new Error("Invalid File data"));
             }
         };
     });
@@ -262,8 +267,9 @@ function checkValidatorAccountAddress(validatorAddress, address) {
 
 async function getTransactionResponse(address, data, fee, gas, mnemonic = "", txName,  accountNumber = 0, addressIndex = 0, bip39Passphrase = "") {
     if (txName === "send") {
+
         return TransactionWithMnemonic(data.message, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
-            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
     } else if (txName === "delegate") {
         console.log(address, data, fee, gas, mnemonic, "delegate", "delegate");
         return TransactionWithMnemonic(data.message, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
@@ -289,7 +295,7 @@ async function getTransactionResponse(address, data, fee, gas, mnemonic = "", tx
             makeHdPath(accountNumber, addressIndex), bip39Passphrase, "getTransactionResponse");
         return TransactionWithMnemonic(data.message,
             aminoMsgHelper.fee(Math.trunc(fee), gas),  data.memo, mnemonic,
-            makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+            makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
     }
 }
 

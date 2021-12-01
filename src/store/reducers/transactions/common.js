@@ -7,6 +7,7 @@ import {
     TX_IN_PROGRESS,
     TX_SUCCESS,
     TX_FAILED, TX_RESPONSE,
+    SET_TX_INFO
 } from "../../../constants/common";
 import {KEYSTORE_MODAL_HIDE} from "../../../constants/keyStore";
 
@@ -23,10 +24,9 @@ const modal = (state = false, {
     }
 };
 
-const txInfo = (state = {
+const txName = (state = {
     value: {
         name:'',
-        data:''
     },
 }, {
     type,
@@ -39,12 +39,37 @@ const txInfo = (state = {
             value: data.value,
         };
     case TX_SUCCESS:
-    case KEYSTORE_MODAL_HIDE:
     case TX_RESULT_MODAL_HIDE:
         return {
             ...state,
             value: {
                 name:'',
+            },
+        };
+    default:
+        return state;
+    }
+};
+
+const txInfo = (state = {
+    value: {
+        data:''
+    },
+}, {
+    type,
+    data,
+}) => {
+    switch (type) {
+    case SET_TX_INFO:
+        return {
+            ...state,
+            value: data.value,
+        };
+    case TX_SUCCESS:
+    case TX_RESULT_MODAL_HIDE:
+        return {
+            ...state,
+            value: {
                 data:''
             },
         };
@@ -54,6 +79,7 @@ const txInfo = (state = {
 };
 
 const loginInfo = (state = {
+    loggedIn:false,
     encryptedSeed: false,
     error:{
         message:''
@@ -66,6 +92,7 @@ const loginInfo = (state = {
     case SET_LOGIN_INFO:
         return {
             ...state,
+            loggedIn:data.loggedIn,
             encryptedSeed: data.encryptedSeed,
             error: {
                 ...state.error,
@@ -142,5 +169,6 @@ export default combineReducers({
     loginInfo,
     inProgress,
     txResponse,
-    error
+    error,
+    txName
 });

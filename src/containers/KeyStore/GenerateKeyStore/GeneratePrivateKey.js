@@ -65,7 +65,7 @@ const GeneratePrivateKey = (props) => {
                 <Form onSubmit={handleSubmit} className="form-privatekey">
                     {!keyFile ?
                         <div className="form-field">
-                            <p className="label"> {t("PASSWORD")}</p>
+                            <p className="label">{t("PASSWORD")}</p>
                             <Form.Control
                                 type="password"
                                 name="password"

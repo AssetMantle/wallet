@@ -4,7 +4,7 @@ import {
     TX_UNBOND_MODAL_SHOW,
     TX_UNBOND_MEMO_SET
 } from "../../../constants/unbond";
-import {setTxName} from "./common";
+import {setTxName, setTxIno} from "./common";
 import {showFeeModal} from "./fee";
 
 export const setTxUnbondAmount = (data) => {
@@ -39,10 +39,14 @@ export const submitFormData = (message) => (dispatch, getState) => {
     dispatch(setTxName({
         value:{
             name:"unbond",
+        }
+    }));
+    dispatch(setTxIno({
+        value:{
             modal:showTxUnbondModal(),
             data:{
                 message:message,
-                memo:getState().common.memo.value,
+                memo:getState().unbond.memo.value,
             }
         }
     }));

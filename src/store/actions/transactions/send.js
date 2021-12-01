@@ -4,7 +4,7 @@ import {
     TX_SEND_AMOUNT_SET,
     TX_SEND_MEMO_SET
 } from "../../../constants/send";
-import {setTxName} from "./common";
+import {setTxName,setTxIno} from "./common";
 import {showFeeModal} from "./fee";
 
 export const setTxSendAmount = (data) => {
@@ -38,11 +38,14 @@ export const submitFormData = (message) => (dispatch,getState) => {
     dispatch(setTxName({
         value:{
             name:"send",
-            
+        }
+    }));
+    dispatch(setTxIno({
+        value:{
             data:{
                 message:message,
                 token:getState().send.token.value.tokenDenom,
-                memo:getState().common.memo.value,
+                memo:getState().send.memo.value,
             }
         }
     }));

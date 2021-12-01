@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import Icon from "../../components/Icon";
 import {NavLink, useHistory} from 'react-router-dom';
 import {Nav, Navbar, NavDropdown} from "react-bootstrap";
@@ -7,12 +7,12 @@ import Copy from "../../components/Copy";
 import helper from "../../utils/helper";
 import {useTranslation} from "react-i18next";
 import Darktheme from "../DarkTheme";
-import GenerateKeyStore from "../KeyStore/GenerateKeyStore";
 import MobileSidebar from "./MobileSidebar";
 import transactions from "../../utils/transactions";
 import config from "../../config";
 import {userLogout} from "../../store/actions/logout";
 import {useDispatch} from "react-redux";
+import {showKeyStoreMnemonicModal} from "../../store/actions/generateKeyStore";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -20,7 +20,6 @@ const DashboardHeader = () => {
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const history = useHistory();
-    const [showKeyStore, setShowKeyStore] = useState(false);
     const address = localStorage.getItem('address');
     let addressTruncate;
     if (address !== null) {
@@ -48,7 +47,7 @@ const DashboardHeader = () => {
         window.location.reload();
     };
     const handleKeyStore = () => {
-        setShowKeyStore(true);
+        dispatch(showKeyStoreMnemonicModal());
     };
     const ledgerShowAddress = async () => {
         const accountNumber = localStorage.getItem('accountNumber');
@@ -150,12 +149,6 @@ const DashboardHeader = () => {
                     </Nav>
                 </div>
             </Navbar>
-
-            {showKeyStore
-                ?
-                <GenerateKeyStore setShowKeyStore={setShowKeyStore} className={""}/>
-                :
-                null}
         </div>
     );
 };

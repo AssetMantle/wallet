@@ -7,6 +7,7 @@ import {
 import { combineReducers } from 'redux';
 import {TX_RESULT_MODAL_HIDE, TX_SUCCESS} from "../../../constants/common";
 
+
 const toAddress = (state = {
     value: '',
     error: {
@@ -27,7 +28,6 @@ const toAddress = (state = {
             },
         };
     case TX_SUCCESS:
-    case TX_RESULT_MODAL_HIDE:
         return {
             ...state,
             value: '',
@@ -40,6 +40,7 @@ const toAddress = (state = {
         return state;
     }
 };
+
 
 const amount = (state = {
     value: '',
