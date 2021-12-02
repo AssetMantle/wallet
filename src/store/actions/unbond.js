@@ -7,6 +7,7 @@ import {
 import Lodash from "lodash";
 import transactions from "../../utils/transactions";
 import {QueryClientImpl} from "cosmjs-types/cosmos/staking/v1beta1/query";
+import * as Sentry from "@sentry/browser";
 
 export const fetchUnbondDelegationsProgress = () => {
     return {
@@ -52,6 +53,9 @@ export const fetchUnbondDelegations = (address) => {
                 dispatch(fetchUnbondDelegationsSuccess(transactions.XprtConversion(totalUnbond)));
             }
         }).catch((error) => {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
             dispatch(fetchUnbondDelegationsError(error.response
                 ? error.response.data.message
                 : error.message));

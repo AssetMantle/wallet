@@ -3,6 +3,7 @@ import {fetchAddress} from "../../../utils/ledger";
 import transactions, {GetAccount} from "../../../utils/transactions";
 import config from "../../../config";
 import {setLoginInfo} from "../transactions/common";
+import * as Sentry from "@sentry/browser";
 
 export const hideLedgerModal = (data) => {
     return {
@@ -50,11 +51,14 @@ export const fetchLedgerAddress = (accountNumber = "0", addressIndex = "0") => {
                     message: '',
                 },
             }));
-        }).catch(err => {
+        }).catch(error => {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
             dispatch(setLedgerInfo({
                 value:'',
                 error: {
-                    message: err.message,
+                    message: error.message,
                 },
             }));
         });
@@ -89,6 +93,9 @@ export const ledgerLogin = (history) => {
                 localStorage.setItem('account', 'non-vesting');
             }
         }).catch(error => {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
             console.log(error.message);
             loginInfo.fee = config.defaultFee;
             loginInfo.account = "non-vesting";

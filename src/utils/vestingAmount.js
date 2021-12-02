@@ -1,4 +1,5 @@
 import transactions, {GetAccount} from "../utils/transactions";
+import * as Sentry from "@sentry/browser";
 
 const config = require('../config');
 
@@ -96,6 +97,9 @@ async function getTransferableVestingAmount(address, balance) {
             return [vestingAmount, transferableAmount];
         })
         .catch(error => {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
             console.log(error.message);
         });
 

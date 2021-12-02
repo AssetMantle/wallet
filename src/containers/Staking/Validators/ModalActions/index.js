@@ -13,6 +13,7 @@ import transactions from "../../../../utils/transactions";
 import {QueryClientImpl} from "cosmjs-types/cosmos/distribution/v1beta1/query";
 import {QueryClientImpl as StakingQueryClientImpl} from "cosmjs-types/cosmos/staking/v1beta1/query";
 import config from "../../../../config";
+import * as Sentry from "@sentry/react";
 
 const NODE_CONF = process.env.REACT_APP_IBC_CONFIG;
 const ModalActions = (props) => {
@@ -60,6 +61,9 @@ const ModalActions = (props) => {
                     }
                 }
             }).catch(error => {
+                Sentry.captureException(error.response
+                    ? error.response.data.message
+                    : error.message);
                 console.log(error.response
                     ? error.response.data.message
                     : error.message);

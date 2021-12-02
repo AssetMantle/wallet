@@ -5,6 +5,7 @@ import {setLoginInfo} from "../transactions/common";
 import helper from "../../../utils/helper";
 import wallet from "../../../utils/wallet";
 import config from "../../../config";
+import * as Sentry from "@sentry/browser";
 
 export const hideKeyStoreModal = (data) => {
     return {
@@ -137,6 +138,9 @@ export const keyStoreLogin = (history) => {
                 localStorage.setItem('account', 'non-vesting');
             }
         }).catch(error => {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
             console.log(error.message);
             loginInfo.fee = config.defaultFee;
             loginInfo.account = "non-vesting";

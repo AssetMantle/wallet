@@ -10,6 +10,7 @@ import {
 } from "../../constants/generateKeyStore";
 import wallet from "../../utils/wallet";
 import helper from "../../utils/helper";
+import * as Sentry from "@sentry/browser";
 
 export const setKeyStoreMnemonic = (data) => {
     return {
@@ -87,11 +88,14 @@ export const mnemonicSubmit = () => {
             dispatch(hideKeyStoreMnemonicModal());
             dispatch(showKeyStorePasswordModal());
             // }
-        } catch (e) {
+        } catch (error) {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
             dispatch(setKeyStoreMnemonic({
                 value: '',
                 error: {
-                    message: e.message
+                    message: error.message
                 }
             }));
         }

@@ -9,6 +9,7 @@ import {useTranslation} from "react-i18next";
 import ModalKeplerInstall from "./ModalKeplerInstall";
 import Icon from "../../components/Icon";
 import transactions, {GetAccount} from "../../utils/transactions";
+import * as Sentry from "@sentry/browser";
 
 const KeplerHome = () => {
     const {t} = useTranslation();
@@ -21,8 +22,11 @@ const KeplerHome = () => {
         kepler.then(function () {
             const address = localStorage.getItem("keplerAddress");
             setAddress(address);
-        }).catch(err => {
-            setErrorMessage(err.message);
+        }).catch(error => {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
+            setErrorMessage(error.message);
         });
     }, []);
 
@@ -32,8 +36,11 @@ const KeplerHome = () => {
         kepler.then(function () {
             const address = localStorage.getItem("keplerAddress");
             setAddress(address);
-        }).catch(err => {
-            setErrorMessage(err.message);
+        }).catch(error => {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
+            setErrorMessage(error.message);
         });
     };
 
@@ -51,6 +58,9 @@ const KeplerHome = () => {
                 }
             })
             .catch(error => {
+                Sentry.captureException(error.response
+                    ? error.response.data.message
+                    : error.message);
                 console.log(error.message);
                 localStorage.setItem('fee', config.vestingAccountFee);
                 localStorage.setItem('account', 'non-vesting');

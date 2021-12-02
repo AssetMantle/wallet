@@ -4,6 +4,7 @@ import {
     QueryClientImpl
 } from "cosmjs-types/cosmos/distribution/v1beta1/query";
 import helper from "./helper";
+import * as Sentry from "@sentry/browser";
 
 async function getValidatorRewards(validatorAddress) {
     let address = localStorage.getItem('address');
@@ -19,6 +20,9 @@ async function getValidatorRewards(validatorAddress) {
             amount = (transactions.XprtConversion(rewards * 1));
         }
     }).catch(error => {
+        Sentry.captureException(error.response
+            ? error.response.data.message
+            : error.message);
         console.log(error.response);
     });
     return amount;
@@ -36,6 +40,9 @@ async function getValidatorCommission(address) {
             commission = (transactions.XprtConversion(commission * 1));
         }
     }).catch((error) => {
+        Sentry.captureException(error.response
+            ? error.response.data.message
+            : error.message);
         console.log(error.response
             ? error.response.data.message
             : error.message);

@@ -8,6 +8,7 @@ import config from "../../../config";
 import {useHistory} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import transactions, {GetAccount} from "../../../utils/transactions";
+import * as Sentry from "@sentry/react";
 
 const AdvanceMode = (props) => {
     const {t} = useTranslation();
@@ -75,6 +76,9 @@ const AdvanceMode = (props) => {
                 }
             })
             .catch(error => {
+                Sentry.captureException(error.response
+                    ? error.response.data.message
+                    : error.message);
                 console.log(error.message);
                 localStorage.setItem('fee', config.defaultFee);
                 localStorage.setItem('account', 'non-vesting');

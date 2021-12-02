@@ -13,7 +13,7 @@ import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient, QueryClient, setupIbcExtension} from "@cosmjs/stargate";
 import {QueryClientImpl} from "cosmjs-types/cosmos/bank/v1beta1/query";
 import config from "../../config";
-
+import * as Sentry from '@sentry/browser';
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
 export const fetchBalanceProgress = () => {
@@ -60,12 +60,18 @@ export const fetchBalance = (address) => {
                     });
                 }
             }).catch((error) => {
+                Sentry.captureException(error.response
+                    ? error.response.data.message
+                    : error.message);
                 dispatch(fetchBalanceError(error.response
                     ? error.response.data.message
                     : error.message));
             });
-        } catch (e) {
-            console.log(e.message);
+        } catch (error) {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
+            console.log(error.message);
         }
     };
 };
@@ -138,16 +144,25 @@ export const fetchTransferableVestingAmount = (address) => {
                             dispatch(fetchTokenListSuccess(tokenList));
                         }
                     }).catch((error) => {
+                        Sentry.captureException(error.response
+                            ? error.response.data.message
+                            : error.message);
                         dispatch(fetchBalanceError(error.response
                             ? error.response.data.message
                             : error.message));
                     });
                 }
-            }).catch(err => {
-                console.log(err);
+            }).catch(error => {
+                Sentry.captureException(error.response
+                    ? error.response.data.message
+                    : error.message);
+                console.log(error);
             });
-        } catch (e) {
-            console.log(e.message);
+        } catch (error) {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
+            console.log(error.message);
         }
     };
 };

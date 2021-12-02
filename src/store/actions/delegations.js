@@ -2,6 +2,7 @@ import {DELEGATIONS_FETCH_ERROR, DELEGATIONS_FETCH_SUCCESS, DELEGATIONS_STATUS_S
 import Lodash from "lodash";
 import transactions from "../../utils/transactions";
 import {QueryClientImpl} from "cosmjs-types/cosmos/staking/v1beta1/query";
+import * as Sentry from "@sentry/browser";
 
 export const fetchDelegationsCountSuccess = (count) => {
     return {
@@ -40,6 +41,9 @@ export const fetchDelegationsCount = (address) => {
             }
 
         }).catch((error) => {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
             dispatch(fetchProposalsCountError(error.response
                 ? error.response.data.message
                 : error.message));

@@ -1,6 +1,7 @@
 import transactions from "../../../utils/transactions";
 import {showTxResultModal,txSuccess,  txFailed, txResponse, txInProgress} from "./common";
 import {hideFeeModal} from "./fee";
+import * as Sentry from "@sentry/browser";
 
 export const ledgerSubmit = (loginAddress, loginMode) => {
     console.log(loginAddress, "loginAddress");
@@ -36,8 +37,11 @@ export const ledgerSubmit = (loginAddress, loginMode) => {
             }else {
                 console.log(result, "final result");
             }
-        }).catch(err => {
-            dispatch(txFailed(err.message));
+        }).catch(error => {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
+            dispatch(txFailed(error.message));
         });
     };
 };

@@ -13,6 +13,7 @@ import ModalGasAlert from "../../Gas/ModalGasAlert";
 import ModalViewTxnResponse from "../../Common/ModalViewTxnResponse";
 import {formatNumber} from "../../../utils/scripts";
 import NumberView from "../../../components/NumberView";
+import * as Sentry from "@sentry/react";
 
 const ModalSetWithdrawAddress = (props) => {
     const {t} = useTranslation();
@@ -53,10 +54,13 @@ const ModalSetWithdrawAddress = (props) => {
             setInitialModal(false);
             setResponse(result);
             setLoader(false);
-        }).catch(err => {
+        }).catch(error => {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
             setLoader(false);
-            helper.accountChangeCheck(err.message);
-            setErrorMessage(err.message);
+            helper.accountChangeCheck(error.message);
+            setErrorMessage(error.message);
         });
     };
 

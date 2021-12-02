@@ -4,6 +4,7 @@ import {KEYSTORE_MODAL_HIDE, KEYSTORE_MODAL_SHOW} from "../../../constants/keySt
 import {txResponse, txFailed, txSuccess, txInProgress, setLoginInfo} from "./common";
 import {showTxResultModal} from "./common";
 import helper from "../../../utils/helper";
+import * as Sentry from "@sentry/browser";
 
 export const setTxKeyStore = (data) => {
     return {
@@ -78,9 +79,12 @@ export const keyStoreSubmit = (loginAddress) => {
                 dispatch(showTxResultModal());
                 console.log(result, "result");
             }
-        }catch (err) {
-            console.log(err.message, "err.message");
-            dispatch(txFailed(err.message));
+        }catch (error) {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
+            console.log(error.message, "err.message");
+            dispatch(txFailed(error.message));
         }
     };
 };

@@ -6,6 +6,7 @@ import {keplrSubmit} from "../../../store/actions/transactions/keplr";
 import config from "../../../config";
 import transactions from "../../../utils/transactions";
 import {txFailed} from "../../../store/actions/transactions/common";
+import * as Sentry from "@sentry/browser";
 
 const ButtonSend = () => {
     const dispatch = useDispatch();
@@ -31,8 +32,11 @@ const ButtonSend = () => {
             token.value.tokenDenom, chainInfo.selectedChannel ? chainInfo.selectedChannel.url : undefined, inputPort);
         msg.then(result => {
             dispatch(submitFormData([result], inputPort, inputChannelID));
-        }).catch(err => {
-            dispatch(txFailed(err.message));
+        }).catch(error => {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
+            dispatch(txFailed(error.message));
         });
         console.log(msg, "message");
 
@@ -44,8 +48,11 @@ const ButtonSend = () => {
             token.value.tokenDenom, chainInfo.selectedChannel ? chainInfo.selectedChannel.url : undefined, inputPort);
         msg.then(result => {
             dispatch(keplrSubmit( [result]));
-        }).catch(err => {
-            dispatch(txFailed(err.message));
+        }).catch(error => {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
+            dispatch(txFailed(error.message));
         });
 
     };

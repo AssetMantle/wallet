@@ -2,6 +2,7 @@ import transactions from "../../../utils/transactions";
 import aminoMsgHelper from "../../../utils/aminoMsgHelper";
 import {showTxResultModal} from "./common";
 import {txResponse, txFailed, txSuccess, txInProgress} from "./common";
+import * as Sentry from "@sentry/browser";
 
 export const keplrSubmit = (messages) => (dispatch) => {
     dispatch(txInProgress());
@@ -25,8 +26,11 @@ export const keplrSubmit = (messages) => (dispatch) => {
         }else {
             console.log(result, "final result");
         }
-    }).catch(err => {
-        dispatch(txFailed(err.message));
+    }).catch(error => {
+        Sentry.captureException(error.response
+            ? error.response.data.message
+            : error.message);
+        dispatch(txFailed(error.message));
         // helper.accountChangeCheck(err.message);
     });
 

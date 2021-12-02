@@ -19,6 +19,8 @@ import {fetchUnbondDelegations} from "./store/actions/unbond";
 import {fetchTokenPrice} from "./store/actions/tokenPrice";
 import {fetchValidators} from "./store/actions/validators";
 import transactions from "./utils/transactions";
+import * as Sentry from "@sentry/react";
+import { Integrations } from "@sentry/tracing";
 
 const App = () => {
     const {t} = useTranslation();
@@ -90,10 +92,23 @@ const App = () => {
                 const address = localStorage.getItem("keplerAddress");
                 localStorage.setItem('address', address);
                 window.location.reload();
-            }).catch(err => {
-                console.log(err.message);
+            }).catch(error => {
+                Sentry.captureException(error.response
+                    ? error.response.data.message
+                    : error.message);
+                console.log(error.message);
             });
         }
+    });
+
+    Sentry.init({
+        dsn: "https://ca49f60d0cbd495bb9e7c4de765611ad@o1057883.ingest.sentry.io/6044970",
+        integrations: [new Integrations.BrowserTracing()],
+
+        // Set tracesSampleRate to 1.0 to capture 100%
+        // of transactions for performance monitoring.
+        // We recommend adjusting this value in production
+        tracesSampleRate: 1.0,
     });
     return (
         <>

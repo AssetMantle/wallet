@@ -12,6 +12,7 @@ import {QueryClientImpl} from "cosmjs-types/cosmos/distribution/v1beta1/query";
 import helper from "../../utils/helper";
 import ActionHelper from "../../utils/actions";
 import {QueryClientImpl as StakingQueryClientImpl} from "cosmjs-types/cosmos/staking/v1beta1/query";
+import * as Sentry from "@sentry/browser";
 
 export const fetchRewardsProgress = () => {
     return {
@@ -75,11 +76,17 @@ export const fetchTotalRewards = (address) => {
                     dispatch(fetchRewardsSuccess(fixedRewardsResponse));
                 }
             }).catch((error) => {
+                Sentry.captureException(error.response
+                    ? error.response.data.message
+                    : error.message);
                 console.log(error.response
                     ? error.response.data.message
                     : error.message);
             });
         } catch (error) {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
             console.log(error.response
                 ? error.response.data.message
                 : error.message);
@@ -117,6 +124,9 @@ export const fetchRewards = (address) => {
                             }
                             options.push(data);
                         }).catch((error) => {
+                            Sentry.captureException(error.response
+                                ? error.response.data.message
+                                : error.message);
                             dispatch(fetchValidatorRewardsListError(error.response
                                 ? error.response.data.message
                                 : error.message));
@@ -127,6 +137,9 @@ export const fetchRewards = (address) => {
                 dispatch(fetchRewardsListProgress(delegatorRewardsResponse.rewards));
             }
         }).catch((error) => {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
             dispatch(fetchRewardsError(error.response
                 ? error.response.data.message
                 : error.message));

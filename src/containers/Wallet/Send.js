@@ -15,6 +15,7 @@ import ModalGasAlert from "../Gas/ModalGasAlert";
 import ModalViewTxnResponse from "../Common/ModalViewTxnResponse";
 import {formatNumber} from "../../utils/scripts";
 import NumberView from "../../components/NumberView";
+import * as Sentry from "@sentry/browser";
 
 const Send = (props) => {
     const {t} = useTranslation();
@@ -114,10 +115,13 @@ const Send = (props) => {
                 setTxResponse(result);
                 setLoader(false);
                 setEnteredAmount('');
-            }).catch(err => {
+            }).catch(error => {
                 setLoader(false);
-                setKeplerError(err.message);
-                helper.accountChangeCheck(err.message);
+                Sentry.captureException(error.response
+                    ? error.response.data.message
+                    : error.message);
+                setKeplerError(error.message);
+                helper.accountChangeCheck(error.message);
             });
         } else {
             setLoader(false);

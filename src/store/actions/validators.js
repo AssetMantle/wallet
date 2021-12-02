@@ -16,6 +16,7 @@ import {
 
 import helper from "../../utils/helper";
 import transactions from "../../utils/transactions";
+import * as Sentry from "@sentry/browser";
 
 export const fetchValidatorsInProgress = () => {
     return {
@@ -132,6 +133,9 @@ export const fetchValidators = (address) => {
                 const delegationsResponse = await stakingQueryService.DelegatorDelegations({
                     delegatorAddr: address,
                 }).catch((error) => {
+                    Sentry.captureException(error.response
+                        ? error.response.data.message
+                        : error.message);
                     console.log(error.response
                         ? error.response.data.message
                         : error.message);
@@ -148,6 +152,9 @@ export const fetchValidators = (address) => {
                 dispatch(fetchActiveValidatorsSuccess(activeValidators));
                 dispatch(fetchInactiveValidatorsSuccess(inActiveValidators));
             }).catch((error) => {
+                Sentry.captureException(error.response
+                    ? error.response.data.message
+                    : error.message);
                 dispatch(fetchValidatorsError(error.response
                     ? error.response.data.message
                     : error.message));
@@ -188,6 +195,9 @@ export const fetchValidatorDelegations = (address) => {
                 }
             }
         }).catch(error => {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
             console.log(error.response
                 ? error.response.data.message
                 : error.message);
@@ -229,6 +239,9 @@ export const fetchValidatorRewards = (address, validatorAddress) => {
                 }));
             }
         }).catch(error => {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
             console.log(error.response
                 ? error.response.data.message
                 : error.message);

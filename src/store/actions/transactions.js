@@ -13,6 +13,7 @@ import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {decodeTxRaw, Registry} from "@cosmjs/proto-signing";
 import transactions from "../../utils/transactions";
 import helper from "../../utils/helper";
+import * as Sentry from "@sentry/browser";
 
 const {defaultRegistryTypes} = require("@cosmjs/stargate");
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
@@ -86,8 +87,11 @@ export const fetchTransactions = (address, limit, pageNumber) => {
             let txnsResponseList = txData;
             dispatch(fetchPageNumberSuccess(pageNumber, txSearch.totalCount));
             dispatch(fetchTransactionsSuccess(txnsResponseList));
-        } catch (e) {
-            console.log(e.message);
+        } catch (error) {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
+            console.log(error.message);
         }
     };
 };
@@ -174,8 +178,11 @@ export const fetchReceiveTransactions = (address, limit, pageNumber) => {
             let txnsResponseList = txData;
             dispatch(fetchReceivePageNumberSuccess(pageNumber, txSearch.totalCount));
             dispatch(fetchReceiveTransactionsSuccess(txnsResponseList));
-        } catch (e) {
-            console.log(e.message);
+        } catch (error) {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
+            console.log(error.message);
         }
     };
 };

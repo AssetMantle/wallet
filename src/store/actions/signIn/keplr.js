@@ -3,6 +3,7 @@ import KeplerWallet from "../../../utils/kepler";
 import transactions, {GetAccount} from "../../../utils/transactions";
 import config from "../../../config";
 import {setLoginInfo} from "../transactions/common";
+import * as Sentry from "@sentry/browser";
 
 export const hideKeplrModal = (data) => {
     return {
@@ -36,11 +37,14 @@ export const fetchKeplrAddress = () => {
                     message: '',
                 },
             }));
-        }).catch(err => {
+        }).catch(error => {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
             dispatch(setKeplrInfo({
                 value:'',
                 error: {
-                    message: err.message,
+                    message: error.message,
                 },
             }));
         });
@@ -77,6 +81,9 @@ export const keplrLogin = (history) => {
                 localStorage.setItem('account', 'non-vesting');
             }
         }).catch(error => {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
             console.log(error.message);
             loginInfo.fee = config.defaultFee;
             loginInfo.account = "non-vesting";

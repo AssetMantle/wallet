@@ -15,6 +15,7 @@ import {
     PeriodicVestingAccount,
 } from "cosmjs-types/cosmos/vesting/v1beta1/vesting";
 import {BaseAccount} from "cosmjs-types/cosmos/auth/v1beta1/auth";
+import * as Sentry from "@sentry/browser";
 
 const encoding = require("@cosmjs/encoding");
 const tendermint_1 = require("cosmjs-types/ibc/lightclients/tendermint/v1/tendermint");
@@ -128,6 +129,9 @@ function updateFee(address) {
                 }
             })
             .catch(error => {
+                Sentry.captureException(error.response
+                    ? error.response.data.message
+                    : error.message);
                 console.log(error.message);
                 localStorage.setItem('fee', config.defaultFee);
                 localStorage.setItem('account', 'non-vesting');
@@ -218,6 +222,9 @@ async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeo
             return TransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTime, denom, port);
         }
     }).catch(error => {
+        Sentry.captureException(error.response
+            ? error.response.data.message
+            : error.message);
         throw error;
     });
     return finalResponse;

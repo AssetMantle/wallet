@@ -6,6 +6,7 @@ import moment from "moment";
 import {QueryClientImpl} from "cosmjs-types/cosmos/auth/v1beta1/query";
 import * as vesting_1 from "cosmjs-types/cosmos/vesting/v1beta1/vesting";
 import {useTranslation} from "react-i18next";
+import * as Sentry from "@sentry/react";
 
 const ModalViewVestingDetails = () => {
     const {t} = useTranslation();
@@ -43,6 +44,9 @@ const ModalViewVestingDetails = () => {
                     setResponse(continuousVestingAccountResponse);
                 }
             }).catch(error => {
+                Sentry.captureException(error.response
+                    ? error.response.data.message
+                    : error.message);
                 console.log(error.response
                     ? error.response.data.message
                     : error.message);
