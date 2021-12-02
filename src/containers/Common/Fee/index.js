@@ -17,7 +17,7 @@ const Fee = () => {
     const type = useSelector((state) => state.common.txName.value.name);
     const gas = useSelector((state) => state.gas.gas);
     console.log(transferableAmount, "transferableAmount");
-    console.log(gas, "in fee gas");
+    console.log(gas, "in fee gas", config.averageFee*(gas.value));
     useEffect(()=>{
         dispatch(feeChangeHandler({
             value:{
@@ -26,7 +26,7 @@ const Fee = () => {
             },
             error:ValidateFee(transferableAmount, config.averageFee*(gas.value), type, amount)
         }));
-    },[]);
+    },[gas.value]);
     const handleFee = (fee, feeValue) => {
         dispatch(feeChangeHandler({
             value:{
@@ -39,7 +39,7 @@ const Fee = () => {
 
     console.log(amount , "amount in fee", fee);
     const activeFeeState = fee.value.feeType;
-    // const (gas.value) = 250000;
+
     return (
         <>
             <div className="fee-container">
@@ -49,7 +49,7 @@ const Fee = () => {
                             <div className={activeFeeState === "Low" ? "fee-box active" : "fee-box"}
                                 onClick={() => handleFee("Low", config.lowFee)}>
                                 <p className="title">Zero</p>
-                                <p className="(gas.value)"><NumberView
+                                <p className="gas"><NumberView
                                     value={formatNumber(transactions.XprtConversion((gas.value) * config.lowFee) * tokenPrice)}/>$
                                 </p>
                                 <p className="xprt"><NumberView
@@ -61,7 +61,7 @@ const Fee = () => {
                     <div className={activeFeeState === "Average" ? "fee-box active" : "fee-box"}
                         onClick={() => handleFee("Average", config.averageFee)}>
                         <p className="title">Low</p>
-                        <p className="(gas.value)"><NumberView
+                        <p className="gas"><NumberView
                             value={formatNumber(transactions.XprtConversion((gas.value) * config.averageFee) * tokenPrice)}/>$
                         </p>
                         <p className="xprt"><NumberView
@@ -71,7 +71,7 @@ const Fee = () => {
                     <div className={activeFeeState === "High" ? "fee-box active" : "fee-box"}
                         onClick={() => handleFee("High", config.highFee)}>
                         <p className="title">High</p>
-                        <p className="(gas.value)"><NumberView
+                        <p className="gas"><NumberView
                             value={formatNumber(transactions.XprtConversion((gas.value) * config.highFee) * tokenPrice)}/>$
                         </p>
                         <p className="xprt"><NumberView

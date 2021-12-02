@@ -11,7 +11,7 @@ import {showValidatorTxModal} from "../../../../store/actions/validators";
 const ModalUnbond = () => {
     const dispatch = useDispatch();
     const show = useSelector((state) => state.unbondTx.modal);
-
+    const response = useSelector(state => state.common.error);
     const handleClose = () =>{
         dispatch(hideTxUnbondModal());
     };
@@ -45,6 +45,8 @@ const ModalUnbond = () => {
             <ReactModal.Body className="delegate-modal-body">
                 <Amount/>
                 <Memo/>
+                {response.error.message !== '' ?
+                    <p className="form-error">{response.error.message}</p> : null}
                 <ButtonSubmit/>
             </ReactModal.Body>
         </ReactModal>

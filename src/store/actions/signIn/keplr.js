@@ -4,6 +4,7 @@ import transactions, {GetAccount} from "../../../utils/transactions";
 import config from "../../../config";
 import {setLoginInfo} from "../transactions/common";
 import * as Sentry from "@sentry/browser";
+import helper from "../../../utils/helper";
 
 export const hideKeplrModal = (data) => {
     return {
@@ -65,8 +66,8 @@ export const keplrLogin = (history) => {
             accountNumber: '',
             accountIndex: ''
         };
-        const accountNumber = getState().advanced.accountNumber.value;
-        const accountIndex = getState().advanced.accountIndex.value;
+        const accountNumber = helper.getAccountNumber(getState().advanced.accountNumber.value);
+        const accountIndex = helper.getAccountNumber(getState().advanced.accountIndex.value);
         GetAccount(address).then(async res => {
             const accountType = await transactions.VestingAccountCheck(res.typeUrl);
             if (accountType) {

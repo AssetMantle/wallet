@@ -4,7 +4,7 @@ import {KEYSTORE_MODAL_HIDE} from "../../../constants/keyStore";
 import {TX_RESULT_MODAL_HIDE} from "../../../constants/common";
 
 const accountIndex = (state = {
-    value: '0',
+    value: '',
     error: {
         message: '',
     },
@@ -26,7 +26,7 @@ const accountIndex = (state = {
     case KEYSTORE_MODAL_HIDE:
         return {
             ...state,
-            value: '0',
+            value: '',
             error: {
                 ...state.error,
                 message: '',
@@ -38,7 +38,7 @@ const accountIndex = (state = {
 };
 
 const accountNumber = (state = {
-    value: '0',
+    value: '',
     error: {
         message: '',
     },
@@ -60,7 +60,7 @@ const accountNumber = (state = {
     case KEYSTORE_MODAL_HIDE:
         return {
             ...state,
-            value: '0',
+            value: '',
             error: {
                 ...state.error,
                 message: '',

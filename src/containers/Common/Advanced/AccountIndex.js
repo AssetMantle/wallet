@@ -13,7 +13,7 @@ const AccountIndex = () => {
 
     const onChange = (evt) => {
         dispatch(setAccountIndex({
-            value:(evt.target.value*1),
+            value:(evt.target.value),
             error:ValidateAccountIndex(evt.target.value)
         }));
     };

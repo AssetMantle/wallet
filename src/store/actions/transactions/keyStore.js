@@ -42,8 +42,8 @@ export const keyStoreSubmit = (loginAddress) => {
             const password = getState().keyStore.password;
             const keyStoreData = getState().keyStore.keyStore;
 
-            const accountNumber = getState().advanced.accountNumber.value;
-            const accountIndex = getState().advanced.accountIndex.value;
+            const accountNumber = helper.getAccountNumber(getState().advanced.accountNumber.value);
+            const accountIndex = helper.getAccountNumber(getState().advanced.accountIndex.value);
             const bip39PassPhrase = getState().advanced.bip39PassPhrase.value;
 
             const formData = getState().common.txInfo.value.data;
@@ -60,6 +60,9 @@ export const keyStoreSubmit = (loginAddress) => {
                 const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
                 const res = JSON.parse(encryptedMnemonic);
                 const decryptedData = helper.decryptStore(res, password.value);
+                if (decryptedData.error != null) {
+                    throw new Error(decryptedData.error);
+                }
                 mnemonic = decryptedData.mnemonic;
             } else {
                 mnemonic = await transactions.PrivateKeyReader(keyStoreData.value, password.value, loginAddress, accountNumber, accountIndex);

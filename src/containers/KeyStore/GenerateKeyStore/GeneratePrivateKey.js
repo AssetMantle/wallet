@@ -49,6 +49,7 @@ const GeneratePrivateKey = (props) => {
             props.handleRoute(props.routeValue);
         }
     };
+
     return (
         <Modal backdrop="static" show={show} onHide={handleClose} centered className="create-wallet-modal seed">
             <Modal.Header closeButton>

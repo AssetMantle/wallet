@@ -12,9 +12,9 @@ const InputText = ({
     required = true,
     type = 'text',
     value,
-    onChange,
-    onKeyPress= helper.emptyFunc,
-    onBlur= helper.emptyFunc,
+    onChange = helper.emptyFunc,
+    onKeyPress = helper.emptyFunc,
+    onBlur = helper.emptyFunc,
 })=>{
     return (
         <div className="form-control-section flex-fill">

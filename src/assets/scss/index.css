@@ -225,7 +225,6 @@ html, body {
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   font-size: 12px;
-  line-height: 150%;
   color: #8D9CB5;
 }
 .form-field .info-data .value {
@@ -510,6 +509,7 @@ html, body {
 .fee-container .fee-box {
   padding: 15px;
   width: 150px;
+  overflow: auto;
   box-shadow: 0 1px 3px rgba(50, 50, 93, 0.15), 0 1px 0 rgba(0, 0, 0, 0.02);
 }
 .fee-container .fee-box p {
@@ -1546,7 +1546,6 @@ ul li em {
   outline: none;
 }
 .create-wallet-modal .create-wallet-form-body form input {
-  max-width: 300px;
   background: #F5F6FA;
   font-size: 14px;
   line-height: 150%;
@@ -2647,7 +2646,6 @@ ul li em {
   padding: 10px 40px 40px 40px;
 }
 .claim-rewards-modal .rewards-modal-body input, .claim-rewards-modal .rewards-modal-body .amount-field, .claim-rewards-modal .rewards-modal-body textarea {
-  max-width: 450px;
   flex: 1;
 }
 .claim-rewards-modal .rewards-modal-body textarea {

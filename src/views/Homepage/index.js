@@ -5,7 +5,6 @@ import dark_icon from "../../assets/images/dark_icon.svg";
 import ModalCreateWallet from "../../containers/CreateWallet/ModalCreateWallet";
 import Footer from "../../components/Footer";
 import {useTranslation} from "react-i18next";
-// import GenerateKeyStore from "../../containers/KeyStore/GenerateKeyStore";
 import SignIn from "../../containers/SignIn";
 import {showSignInModal} from "../../store/actions/signIn/modal";
 import {useDispatch} from "react-redux";
@@ -77,11 +76,6 @@ const Homepage = () => {
                     <ModalCreateWallet setRoutName={setRoutName}/>
                     : null
             }
-            {/*{*/}
-            {/*    routName === "importWallet" ?*/}
-            {/*        <GenerateKeyStore setShowKeyStore={setRoutName} className={""}/>*/}
-            {/*        : null*/}
-            {/*}*/}
             <SignIn setRoutName={setRoutName} name="homepage"/>
         </div>
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button as ReactButton} from "react-bootstrap";
+// import {Button as ReactButton} from "react-bootstrap";
 
 const Button = ({
     className,
@@ -8,13 +8,13 @@ const Button = ({
     disable = false
 }) => {
     return (
-        <ReactButton
+        <button
             className={className}
             type="button"
             onClick={onClick}
             disabled={disable}
         >{value}
-        </ReactButton>
+        </button>
     );
 };
 

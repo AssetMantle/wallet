@@ -16,6 +16,7 @@ const ModalWithdraw = () => {
     const dispatch = useDispatch();
     const show = useSelector((state) => state.withdrawValidatorRewards.modal);
     const rewards = useSelector((state) => state.validators.validatorRewards);
+    const response = useSelector(state => state.common.error);
 
     const handleClose = () =>{
         dispatch(hideTxWithdrawValidatorRewardsModal());
@@ -70,6 +71,8 @@ const ModalWithdraw = () => {
                     </div>
                 </div>
                 <Memo/>
+                {response.error.message !== '' ?
+                    <p className="form-error">{response.error.message}</p> : null}
                 <ButtonSubmit/>
                 <div className="buttons">
                     <p className="button-link"

@@ -4,6 +4,7 @@ import transactions, {GetAccount} from "../../../utils/transactions";
 import config from "../../../config";
 import {setLoginInfo} from "../transactions/common";
 import * as Sentry from "@sentry/browser";
+import helper from "../../../utils/helper";
 
 export const hideLedgerModal = (data) => {
     return {
@@ -107,13 +108,18 @@ export const ledgerLogin = (history) => {
         loginInfo.address = address;
         loginInfo.loginMode = "ledger";
         loginInfo.version = config.version;
-        loginInfo.accountNumber =  getState().signInLedger.accountNumber.value;
-        loginInfo.accountIndex = getState().signInLedger.accountIndex.value;
+        loginInfo.accountNumber =  helper.getAccountNumber(getState().signInLedger.accountNumber.value);
+        loginInfo.accountIndex = helper.getAccountNumber(getState().signInLedger.accountIndex.value);
+
+        localStorage.setItem('accountNumber', helper.getAccountNumber(getState().signInLedger.accountNumber.value));
+        localStorage.setItem('addressIndex',  helper.getAccountNumber(getState().signInLedger.accountIndex.value));
         localStorage.setItem('loginToken', 'loggedIn');
         localStorage.setItem('address', address);
         localStorage.setItem('loginMode', 'ledger');
         localStorage.setItem('version', config.version);
         localStorage.setItem('loginInfo', JSON.stringify(loginInfo));
+
+        console.log(getState().signInLedger.accountNumber.value, helper.getAccountNumber(getState().signInLedger.accountNumber.value));
         dispatch(setLoginInfo({
             encryptedSeed:false,
             error:{

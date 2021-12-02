@@ -28,11 +28,10 @@ const toAddress = (state = {
             },
         };
     case TX_SUCCESS:
+    case TX_RESULT_MODAL_HIDE:
         return {
-            ...state,
             value: '',
             error: {
-                ...state.error,
                 message: '',
             },
         };

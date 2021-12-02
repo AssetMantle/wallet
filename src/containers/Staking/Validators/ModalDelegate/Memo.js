@@ -2,10 +2,10 @@ import React, {useState} from 'react';
 import {OverlayTrigger, Popover} from "react-bootstrap";
 import Icon from "../../../../components/Icon";
 import InputText from "../../../../components/InputText";
-import helper from "../../../../utils/helper";
 import {useDispatch, useSelector} from "react-redux";
 import {setTxMemo} from "../../../../store/actions/transactions/delegate";
 import {useTranslation} from "react-i18next";
+import {ValidateAlphaNumericSpaces, ValidateMemo} from "../../../../utils/validations";
 
 
 const Memo = () => {
@@ -29,14 +29,14 @@ const Memo = () => {
     const onChange = (evt) =>{
         dispatch(setTxMemo({
             value:evt.target.value,
-            error: helper.mnemonicValidation(evt.target.value)
+            error: ValidateMemo(evt.target.value)
         }));
     };
 
     const onBlur = (evt) =>{
         dispatch(setTxMemo({
             value:evt.target.value,
-            error: helper.mnemonicValidation(evt.target.value),
+            error: ValidateMemo(evt.target.value),
         }));
     };
 
@@ -80,7 +80,7 @@ const Memo = () => {
                     value={memo.value}
                     required={false}
                     error={memo.error}
-                    onKeyPress={helper.inputSpaceValidation}
+                    onKeyPress={ValidateAlphaNumericSpaces}
                     onBlur={onBlur}
                     placeholder={t("ENTER_MEMO")}
                     autofocus={false}

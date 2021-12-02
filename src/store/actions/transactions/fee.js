@@ -29,7 +29,7 @@ export const feeSubmitKeyStore = () => (dispatch) => {
 };
 
 export const feeChangeHandler = (data) => (dispatch) => {
-    console.log(data, "data");
+    console.log(data, "feeChangeHandler");
     dispatch(setTxFee(data));
     // const response = transactions.TransactionWithKeplr([SendMsg(loginAddress, toAddress.value, (amount.value * config.xprtValue).toFixed(0), token.value.tokenDenom)], aminoMsgHelper.fee(0, 250000));
     // response.then(result => {

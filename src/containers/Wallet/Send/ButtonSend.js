@@ -5,6 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {keplrSubmit} from "../../../store/actions/transactions/keplr";
 import {SendMsg} from "../../../utils/protoMsgHelper";
 import config from "../../../config";
+import {setTxName} from "../../../store/actions/transactions/common";
 
 const ButtonSend = () => {
     const dispatch = useDispatch();
@@ -16,12 +17,17 @@ const ButtonSend = () => {
     const amount = useSelector((state) => state.send.amount);
     const toAddress = useSelector((state) => state.send.toAddress);
     const token = useSelector((state) => state.send.token);
-
+    const memo = useSelector((state) => state.send.memo);
     const disable = (
-        amount.value === '' || amount.error.message !== '' || toAddress.value === '' || toAddress.error.message !== ''
+        amount.value === '' || amount.error.message !== '' || toAddress.value === '' || toAddress.error.message !== '' || memo.error.message !== ''
     );
 
     const onClickKeplr = () => {
+        dispatch(setTxName({
+            value:{
+                name:"send",
+            }
+        }));
         dispatch(keplrSubmit( [SendMsg(loginInfo.address, toAddress.value, (amount.value * config.xprtValue).toFixed(0), token.value.tokenDenom)]));
     };
 

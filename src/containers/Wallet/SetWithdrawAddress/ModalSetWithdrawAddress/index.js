@@ -10,6 +10,8 @@ import {formatNumber} from "../../../../utils/scripts";
 import config from "../../../../config";
 import ButtonNext from "./ButtonNext";
 import {fetchWithdrawAddress} from "../../../../store/actions/withdrawAddress";
+import Icon from "../../../../components/Icon";
+import {showTxWithDrawTotalModal} from "../../../../store/actions/transactions/withdrawTotalRewards";
 const ModalSetWithdrawAddress = () => {
     const {t} = useTranslation();
     const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
@@ -28,6 +30,11 @@ const ModalSetWithdrawAddress = () => {
         dispatch(hideTxWithDrawAddressModal());
     };
 
+    const handlePrevious = () => {
+        dispatch(hideTxWithDrawAddressModal());
+        dispatch(showTxWithDrawTotalModal());
+    };
+
     return (
         <ReactModal
             animation={false}
@@ -38,6 +45,13 @@ const ModalSetWithdrawAddress = () => {
             show={show}
             onHide={handleClose}>
             <ReactModal.Header closeButton>
+                <div className="previous-section txn-header">
+                    <button className="button" onClick={() => handlePrevious()}>
+                        <Icon
+                            viewClass="arrow-right"
+                            icon="left-arrow"/>
+                    </button>
+                </div>
                 <h3 className="heading">{t("SETUP_WITHDRAWAL_ADDRESS")}</h3>
             </ReactModal.Header>
 
@@ -55,9 +69,9 @@ const ModalSetWithdrawAddress = () => {
                         <NumberView value={formatNumber(delegations)}/>{config.coinName}</p>
                 </div>
                 <Memo/>
-                <ButtonNext/>
                 {error !== '' ?
                     <p className="form-error">{error.error.message}</p> : null}
+                <ButtonNext/>
             </ReactModal.Body>
         </ReactModal>
     );

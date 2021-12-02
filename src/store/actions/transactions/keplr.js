@@ -4,19 +4,12 @@ import {showTxResultModal} from "./common";
 import {txResponse, txFailed, txSuccess, txInProgress} from "./common";
 import * as Sentry from "@sentry/browser";
 
-export const keplrSubmit = (messages) => (dispatch) => {
+export const keplrSubmit = (messages) => (dispatch, getState) => {
     dispatch(txInProgress());
-    // const {
-    //     send: {
-    //         toAddress,
-    //         amount,
-    //         token,
-    //     },
-    // } = getState();
-    // console.log(toAddress, amount,token, "loginAddress");
     console.log(messages, "messages");
     const response = transactions.TransactionWithKeplr(messages, aminoMsgHelper.fee(0, 250000));
     response.then(result => {
+        dispatch(getState().common.txInfo.value.modal);
         if (result.code !== undefined) {
             dispatch(txSuccess());
             dispatch(txResponse(result));
@@ -27,6 +20,8 @@ export const keplrSubmit = (messages) => (dispatch) => {
             console.log(result, "final result");
         }
     }).catch(error => {
+        console.log(error, "error result");
+
         Sentry.captureException(error.response
             ? error.response.data.message
             : error.message);

@@ -14,6 +14,7 @@ const KeplrModal = () => {
     const show = useSelector((state) => state.signInKeplr.keplrModal);
     const info = useSelector((state) => state.signInKeplr.keplrInfo);
 
+    console.log(info, "info");
     const dispatch = useDispatch();
 
     const handleClose = () => {

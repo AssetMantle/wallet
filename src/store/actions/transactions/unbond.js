@@ -46,7 +46,7 @@ export const submitFormData = (message) => (dispatch, getState) => {
             modal:showTxUnbondModal(),
             data:{
                 message:message,
-                memo:getState().unbond.memo.value,
+                memo:getState().unbondTx.memo.value,
             }
         }
     }));

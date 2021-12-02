@@ -61,11 +61,6 @@ export const ValidateAlphaNumeric = e =>{
         e.preventDefault();
     }
 };
-//
-// const regEx = /^[a-z ]*$/;
-// if (regEx.test(evt.target.value)) {
-//
-// }
 
 export const ValidateString = e =>{
     const regEx = /^[a-z]+$/;
@@ -90,7 +85,7 @@ export const ValidateAccountIndex = (value) => {
 
 export const ValidateBip39PassPhrase = (value) => {
     if (parseInt(value) > 50) {
-        return new Error(' "Length should be below 50 characters",');
+        return new Error('Length should be below 50 characters');
     }
     return new Error('');
 };
@@ -132,6 +127,22 @@ export const ValidateMnemonic = (mnemonic) => {
         return new Error('Invalid mnemonic.');
     }
     return new Error('');
+};
+
+export const ValidateMemo = (value) => {
+    let mnemonicWords = helper.mnemonicTrim(value);
+    let validateMnemonic = bip39.validateMnemonic(mnemonicWords);
+    if(validateMnemonic){
+        return new Error('Entered secret passphrase(mnemonic) in memo field.');
+    }
+    return new Error('');
+};
+
+export const ValidateAlphaNumericSpaces = e =>{
+    const regEx = /^[a-z0-9A-Z ]+$/;
+    if(!regEx.test(e.key)){
+        e.preventDefault();
+    }
 };
 
 export const ValidateStringSpaces = e =>{

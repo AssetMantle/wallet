@@ -287,6 +287,12 @@ function foundationNodeCheck(validatorAddress) {
         }
     }
 }
+
+function getAccountNumber(value) {
+    return value === ''  ? '0' : value;
+}
+
+
 const emptyFunc = () => ({});
 
 export default {
@@ -315,5 +321,6 @@ export default {
     sixDigitsNumber,
     stringValidation,
     emptyFunc,
-    foundationNodeCheck
+    foundationNodeCheck,
+    getAccountNumber
 };

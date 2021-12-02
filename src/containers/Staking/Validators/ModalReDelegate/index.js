@@ -11,7 +11,7 @@ import Validator from "./Validator";
 const ModalReDelegate = () => {
     const dispatch = useDispatch();
     const show = useSelector((state) => state.redelegate.modal);
-
+    const response = useSelector(state => state.common.error);
     const handleClose = () =>{
         dispatch(hideTxReDelegateModal());
     };
@@ -46,6 +46,8 @@ const ModalReDelegate = () => {
                 <Validator/>
                 <Amount/>
                 <Memo/>
+                {response.error.message !== '' ?
+                    <p className="form-error">{response.error.message}</p> : null}
                 <ButtonSubmit/>
             </ReactModal.Body>
         </ReactModal>

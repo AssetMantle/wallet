@@ -51,6 +51,7 @@ const ToAddress = () => {
                     placeholder="Enter Recipient's address"
                     required={true}
                     type="text"
+                    autofocus={false}
                     value={toAddress.value}
                     onKeyPress={ValidateAlphaNumeric}
                     onBlur={onBlur}

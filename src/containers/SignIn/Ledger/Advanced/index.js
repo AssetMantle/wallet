@@ -21,13 +21,13 @@ const Advanced = () => {
         console.log(advanceMode, "advanceMode");
         if(advanceMode){
             dispatch(setAccountIndex({
-                value:"0",
+                value:"",
                 error:{
                     message:""
                 }
             }));
             dispatch(setAccountNumber({
-                value:"0",
+                value:"",
                 error:{
                     message:""
                 }

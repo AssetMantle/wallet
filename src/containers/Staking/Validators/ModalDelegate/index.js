@@ -12,7 +12,7 @@ const ModalDelegate = (props) => {
     const dispatch = useDispatch();
     const show = useSelector((state) => state.delegate.modal);
     const {t} = useTranslation();
-
+    const response = useSelector(state => state.common.error);
     const popover = (
         <Popover id="popover-basic">
             <Popover.Content>
@@ -60,6 +60,8 @@ const ModalDelegate = (props) => {
             <ReactModal.Body className="delegate-modal-body">
                 <Amount/>
                 <Memo/>
+                {response.error.message !== '' ?
+                    <p className="form-error">{response.error.message}</p> : null}
                 <ButtonSubmit/>
             </ReactModal.Body>
         </ReactModal>

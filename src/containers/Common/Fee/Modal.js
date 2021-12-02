@@ -12,6 +12,8 @@ const Modal = () => {
     const show = useSelector((state) => state.fee.modal);
     const txName = useSelector((state) => state.common.txName.value);
     const txInfo = useSelector((state) => state.common.txInfo.value);
+    const response = useSelector((state) => state.common.error);
+
     console.log(txInfo, " fee modalshow");
 
     const dispatch = useDispatch();
@@ -20,7 +22,7 @@ const Modal = () => {
     };
 
     const handleBack = () => {
-        dispatch(txInfo.value.modal);
+        dispatch(txInfo.modal);
         dispatch(hideFeeModal());
     };
 
@@ -48,6 +50,11 @@ const Modal = () => {
             <ReactModal.Body className="create-wallet-body import-wallet-body">
                 <Fee/>
                 <Gas/>
+                {
+                    response.error.message !== "" ?
+                        <p className="form-error">{response.error.message}</p>
+                        : null
+                }
                 <Submit/>
             </ReactModal.Body>
         </ReactModal>

@@ -2,8 +2,9 @@ import React from 'react';
 import Button from "./../../../../components/Button";
 import {useDispatch, useSelector} from "react-redux";
 import {keplrSubmit} from "../../../../store/actions/transactions/keplr";
-import {submitFormData} from "../../../../store/actions/transactions/setWithdrawAddress";
+import {hideTxWithDrawAddressModal, submitFormData} from "../../../../store/actions/transactions/setWithdrawAddress";
 import {SetWithDrawAddressMsg} from "../../../../utils/protoMsgHelper";
+import {setTxIno} from "../../../../store/actions/transactions/common";
 
 const ButtonNext = () => {
     const dispatch = useDispatch();
@@ -14,13 +15,23 @@ const ButtonNext = () => {
     const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
     let revisedAddress = useSelector((state) => state.setWithdrawAddress.revisedAddress);
     const currentAddress = useSelector((state) => state.withdrawAddress.withdrawAddress);
+    const memo = useSelector((state) => state.setWithdrawAddress.memo);
 
     const onClickKeplr = () => {
+        dispatch(setTxIno({
+            value:{
+                modal:hideTxWithDrawAddressModal(),
+                data:{
+                    message:'',
+                    memo:'',
+                }
+            }
+        }));
         dispatch(keplrSubmit([SetWithDrawAddressMsg(loginInfo.address,revisedAddress.value)]));
     };
 
     const disable = (
-        revisedAddress.error.message !== '' || currentAddress === '' || revisedAddress.value === ''
+        revisedAddress.error.message !== '' || currentAddress === '' || revisedAddress.value === '' ||  memo.error.message !== ''
     );
 
     return (

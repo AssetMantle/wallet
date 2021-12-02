@@ -7,13 +7,12 @@ import {setAccountNumber} from "../../../store/actions/transactions/advanced";
 
 const AccountNumber = () => {
     const {t} = useTranslation();
-    // const token = useSelector((state) => state.send.token.value);
     const accountNumber = useSelector((state) => state.advanced.accountNumber);
     const dispatch = useDispatch();
 
     const onChange = (evt) => {
         dispatch(setAccountNumber({
-            value:(evt.target.value*1),
+            value:(evt.target.value),
             error:ValidateAccountIndex(evt.target.value)
         }));
     };

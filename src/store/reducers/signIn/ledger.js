@@ -15,7 +15,7 @@ const ledgerModal = (state = false, {
 };
 
 const accountIndex = (state = {
-    value: '0',
+    value: '',
     error: {
         message: '',
     },
@@ -39,7 +39,7 @@ const accountIndex = (state = {
 };
 
 const accountNumber = (state = {
-    value: '0',
+    value: '',
     error: {
         message: '',
     },

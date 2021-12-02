@@ -10,6 +10,12 @@ import {
     SET_TX_INFO
 } from "../../../constants/common";
 import {KEYSTORE_MODAL_HIDE} from "../../../constants/keyStore";
+import {TX_WITH_DRAW_TOTAL_REWARDS_MODAL_HIDE} from "../../../constants/withdrawTotalRewards";
+import {TX_SET_WITH_DRAW_ADDRESS_MODAL_HIDE} from "../../../constants/setWithdrawAddress";
+import {TX_DELEGATE_MODAL_HIDE} from "../../../constants/delegate";
+import {TX_RE_DELEGATE_MODAL_HIDE} from "../../../constants/redelegate";
+import {TX_UNBOND_MODAL_HIDE} from "../../../constants/unbond";
+import {TX_VALIDATOR_REWARDS_WITHDRAW_HIDE} from "../../../constants/withdrawValidatorRewards";
 
 const modal = (state = false, {
     type,
@@ -147,8 +153,15 @@ const error = (state = {
                 message: data,
             },
         };
+        
     case TX_RESULT_MODAL_HIDE:
     case KEYSTORE_MODAL_HIDE:
+    case TX_WITH_DRAW_TOTAL_REWARDS_MODAL_HIDE:
+    case TX_SET_WITH_DRAW_ADDRESS_MODAL_HIDE:
+    case TX_DELEGATE_MODAL_HIDE:
+    case TX_RE_DELEGATE_MODAL_HIDE:
+    case TX_UNBOND_MODAL_HIDE:
+    case TX_VALIDATOR_REWARDS_WITHDRAW_HIDE:
         return {
             ...state,
             error: {

@@ -2,6 +2,7 @@ import React from 'react';
 import Button from "../../../../components/Button";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchLedgerAddress} from "../../../../store/actions/signIn/ledger";
+import helper from "../../../../utils/helper";
 
 const ButtonSubmit = () => {
     const dispatch = useDispatch();
@@ -9,7 +10,7 @@ const ButtonSubmit = () => {
     const accountNumber = useSelector((state) => state.signInLedger.accountNumber);
 
     const onClick = () => {
-        dispatch(fetchLedgerAddress(accountNumber.value, accountIndex.value));
+        dispatch(fetchLedgerAddress(helper.getAccountNumber(accountNumber.value), helper.getAccountNumber(accountIndex.value)));
     };
 
     const disabled = (

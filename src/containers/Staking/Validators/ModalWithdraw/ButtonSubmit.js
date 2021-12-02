@@ -1,16 +1,19 @@
 import React from 'react';
 import Button from "./../../../../components/Button";
-import {submitFormData} from "../../../../store/actions/transactions/withdrawValidatorRewards";
+import {
+    hideTxWithdrawValidatorRewardsModal,
+    submitFormData
+} from "../../../../store/actions/transactions/withdrawValidatorRewards";
 import {useDispatch, useSelector} from "react-redux";
 import {keplrSubmit} from "../../../../store/actions/transactions/keplr";
 import { WithdrawMsg} from "../../../../utils/protoMsgHelper";
-
+import {setTxIno} from "../../../../store/actions/transactions/common";
 
 const ButtonSubmit = () => {
     const dispatch = useDispatch();
     const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
     const validatorRewards = useSelector((state) => state.validators.validatorRewards);
-
+    const memo = useSelector((state) => state.withdrawValidatorRewards.memo);
     const validator = useSelector((state) => state.validators.validator.value);
 
     const onClick = () => {
@@ -19,10 +22,19 @@ const ButtonSubmit = () => {
 
 
     const disable = (
-        validatorRewards.value === '' || validatorRewards.error.message !== '' || validator === ''
+        validatorRewards.value === '' || validatorRewards.error.message !== '' || validator === '' || validatorRewards.value === 0 || memo .error.message !== ''
     );
 
     const onClickKeplr = () => {
+        dispatch(setTxIno({
+            value:{
+                modal:hideTxWithdrawValidatorRewardsModal(),
+                data:{
+                    message:'',
+                    memo:'',
+                }
+            }
+        }));
         dispatch(keplrSubmit([WithdrawMsg(loginInfo.address, validator.operatorAddress)]));
     };
 

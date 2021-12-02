@@ -284,7 +284,6 @@ const ModalDecryptKeyStore = (props) => {
                                                     <p className="label">{t("ACCOUNT")}</p>
                                                     <Form.Control
                                                         type="number"
-                                                        min={0}
                                                         max={4294967295}
                                                         name="delegateAccountNumber"
                                                         id="delegateAccountNumber"
@@ -297,7 +296,6 @@ const ModalDecryptKeyStore = (props) => {
                                                     <p className="label">{t("ACCOUNT_INDEX")}</p>
                                                     <Form.Control
                                                         type="number"
-                                                        min={0}
                                                         max={4294967295}
                                                         name="delegateAccountIndex"
                                                         id="delegateAccountIndex"

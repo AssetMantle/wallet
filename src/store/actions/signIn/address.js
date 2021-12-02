@@ -38,8 +38,8 @@ export const addressLogin = (history) => {
             accountNumber:'',
             accountIndex:''
         };
-        const accountNumber = getState().advanced.accountNumber.value;
-        const accountIndex = getState().advanced.accountIndex.value;
+        const accountNumber = helper.getAccountNumber(getState().advanced.accountNumber.value);
+        const accountIndex = helper.getAccountNumber(getState().advanced.accountIndex.value);
         if (helper.validateAddress(address) && helper.isBech32Address(address, config.addressPrefix)) {
             GetAccount(address).then(async res => {
                 const accountType = await transactions.VestingAccountCheck(res.typeUrl);

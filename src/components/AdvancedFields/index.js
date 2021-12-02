@@ -91,7 +91,6 @@ const AdvancedFields = (props) => {
                             <p className="label"> {t("ACCOUNT")}</p>
                             <Form.Control
                                 type="number"
-                                min={0}
                                 max={4294967295}
                                 name="accountNumber"
                                 id="accountNumberReset"
@@ -105,7 +104,6 @@ const AdvancedFields = (props) => {
                             <p className="label">{t("ACCOUNT_INDEX")}</p>
                             <Form.Control
                                 type="number"
-                                min={0}
                                 max={4294967295}
                                 name="accountIndexReset"
                                 id="accountIndexReset"

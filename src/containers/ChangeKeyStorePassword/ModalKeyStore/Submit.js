@@ -38,7 +38,7 @@ const Submit = () => {
                     let mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
 
                     // localStorage.setItem('encryptedMnemonic', event.target.result);
-                    const walletPath = transactions.makeHdPath(accountNumber.value, accountIndex.value);
+                    const walletPath = transactions.makeHdPath(helper.getAccountNumber(accountNumber.value), helper.getAccountNumber(accountIndex.value));
 
                     const responseData = await wallet.createWallet(mnemonic, walletPath, bip39PassPhrase.value);
                     console.log(responseData, "here in");

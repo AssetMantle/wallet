@@ -4,11 +4,11 @@ import wallet from "../../../utils/wallet";
 import Icon from "../../../components/Icon";
 import GeneratePrivateKey from "../../KeyStore/GenerateKeyStore/GeneratePrivateKey";
 import helper from "../../../utils/helper";
-import config from "../../../config";
 import {useHistory} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import transactions, {GetAccount} from "../../../utils/transactions";
-import * as Sentry from "@sentry/react";
+import transactions from "../../../utils/transactions";
+import {useDispatch} from "react-redux";
+import {addressLogin, setAddress} from "../../../store/actions/signIn/address";
 
 const AdvanceMode = (props) => {
     const {t} = useTranslation();
@@ -20,6 +20,7 @@ const AdvanceMode = (props) => {
     const [passphraseError, setPassphraseError] = useState(false);
     const [generateKey, setGenerateKey] = useState(false);
     const [advanceMode, setAdvanceMode] = useState(false);
+    const dispatch = useDispatch();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -64,32 +65,13 @@ const AdvanceMode = (props) => {
         props.handleClose();
     };
     const handleLogin = () => {
-        GetAccount(response.address)
-            .then(async res => {
-                const accountType = await transactions.VestingAccountCheck(res.typeUrl);
-                if (accountType) {
-                    localStorage.setItem('fee', config.vestingAccountFee);
-                    localStorage.setItem('account', 'vesting');
-                } else {
-                    localStorage.setItem('fee', config.defaultFee);
-                    localStorage.setItem('account', 'non-vesting');
-                }
-            })
-            .catch(error => {
-                Sentry.captureException(error.response
-                    ? error.response.data.message
-                    : error.message);
-                console.log(error.message);
-                localStorage.setItem('fee', config.defaultFee);
-                localStorage.setItem('account', 'non-vesting');
-            });
-        localStorage.setItem('loginToken', 'loggedIn');
-        localStorage.setItem('address', response.address);
-        localStorage.setItem('loginMode', 'normal');
-        localStorage.setItem('version', config.version);
-        setShow(false);
-        props.handleClose();
-        history.push('/dashboard/wallet');
+        dispatch(setAddress({
+            value:response.address,
+            error: {
+                message:''
+            }
+        }));
+        dispatch(addressLogin(history, response.address));
     };
     const handlePrevious = (formName) => {
         if (formName === "advanceForm") {
@@ -206,7 +188,6 @@ const AdvanceMode = (props) => {
                                                     <p className="label">{t("ACCOUNT")}</p>
                                                     <Form.Control
                                                         type="number"
-                                                        min={0}
                                                         max={4294967295}
                                                         name="accountNumber"
                                                         id="createAccountNumber"
@@ -219,7 +200,6 @@ const AdvanceMode = (props) => {
                                                     <p className="label">{t("ACCOUNT_INDEX")}</p>
                                                     <Form.Control
                                                         type="number"
-                                                        min={0}
                                                         max={4294967295}
                                                         name="accountIndex"
                                                         id="createAccountIndex"

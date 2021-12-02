@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {keplrSubmit} from "../../../store/actions/transactions/keplr";
 import config from "../../../config";
 import transactions from "../../../utils/transactions";
-import {txFailed} from "../../../store/actions/transactions/common";
+import {setTxName, txFailed} from "../../../store/actions/transactions/common";
 import * as Sentry from "@sentry/browser";
 
 const ButtonSend = () => {
@@ -19,11 +19,11 @@ const ButtonSend = () => {
     const customChannel = useSelector((state) => state.sendIbc.customChannel);
     let inputChannelID = chainInfo.customChain ? customChannel.value : chainInfo.chainID;
     let inputPort = chainInfo.customChain ? customPort.value : "transfer";
-
+    const memo = useSelector((state) => state.sendIbc.memo);
     console.log(inputChannelID, inputPort, "inputPort");
 
     const disable = (
-        amount.value === '' || amount.error.message !== '' || toAddress.value === '' || toAddress.error.message !== ''
+        amount.value === '' || amount.error.message !== '' || toAddress.value === '' || toAddress.error.message !== ''|| memo.error.message !== ''
     );
 
     const onClick = async () => {
@@ -43,6 +43,11 @@ const ButtonSend = () => {
     };
 
     const onClickKeplr = async () => {
+        dispatch(setTxName({
+            value:{
+                name:"ibc",
+            }
+        }));
         let msg = await transactions.MakeIBCTransferMsg(inputChannelID, loginInfo.address,
             toAddress.value, (amount.value * config.xprtValue), undefined, undefined,
             token.value.tokenDenom, chainInfo.selectedChannel ? chainInfo.selectedChannel.url : undefined, inputPort);

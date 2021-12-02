@@ -21,7 +21,7 @@ const Submit = () => {
     const gas= useSelector((state) => state.gas.gas);
 
     const disable = (
-        fee.error.message !== '' || gas.error.message !== '' || password.error.message !== '' || accountNumber.error.message !== '' || accountIndex.error.message !== '' || bip39PassPhrase.error.message !== ''
+        password.value === '' || fee.error.message !== '' || gas.error.message !== '' || password.error.message !== '' || accountNumber.error.message !== '' || accountIndex.error.message !== '' || bip39PassPhrase.error.message !== ''
     );
 
     return (

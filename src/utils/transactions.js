@@ -274,28 +274,27 @@ function checkValidatorAccountAddress(validatorAddress, address) {
 
 async function getTransactionResponse(address, data, fee, gas, mnemonic = "", txName,  accountNumber = 0, addressIndex = 0, bip39Passphrase = "") {
     if (txName === "send") {
-
         return TransactionWithMnemonic(data.message, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
     } else if (txName === "delegate") {
         console.log(address, data, fee, gas, mnemonic, "delegate", "delegate");
         return TransactionWithMnemonic(data.message, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
-            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
     } else if (txName === "withdrawMultiple") {
         return TransactionWithMnemonic(data.message, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
-            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
     } else if (txName === "withdrawAddress") {
         return TransactionWithMnemonic(data.message, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
-            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
     } else if (txName === "reDelegate") {
         return TransactionWithMnemonic(data.message, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
-            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
     } else if (txName === "unbond") {
         return TransactionWithMnemonic(data.message, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
-            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
     } else if (txName === "withdrawValidatorRewards") {
         return TransactionWithMnemonic(data.message, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
-            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
     }else if(txName === "ibc"){
         console.log(data.message,
             aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo, mnemonic,

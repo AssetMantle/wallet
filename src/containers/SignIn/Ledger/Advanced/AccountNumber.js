@@ -13,7 +13,7 @@ const AccountNumber = () => {
 
     const onChange = (evt) => {
         dispatch(setAccountNumber({
-            value:(evt.target.value*1),
+            value:(evt.target.value),
             error:ValidateAccountIndex(evt.target.value)
         }));
     };
@@ -23,9 +23,8 @@ const AccountNumber = () => {
         <div className="form-field">
             <p className="label">{t("ACCOUNT_NUMBER")}</p>
             <InputFieldNumber
-                min={0}
                 max={4294967295}
-                name="delegateAccountNumber"
+                name="ledgerAccountNumber"
                 placeholder={t("ACCOUNT_NUMBER")}
                 type="number"
                 className="form-control"

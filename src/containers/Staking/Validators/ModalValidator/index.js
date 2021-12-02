@@ -14,7 +14,6 @@ const ModalValidator = () => {
     const {t} = useTranslation();
     const show = useSelector((state) => state.validators.validatorTxModal);
     const validator = useSelector((state) => state.validators.validator.value);
-    console.log(validator, 'validator');
     const dispatch = useDispatch();
 
 
@@ -22,10 +21,10 @@ const ModalValidator = () => {
         dispatch(hideValidatorTxModal());
     };
 
-    let commissionRate = 0;
+    // let commissionRate = 0;
 
-    // let commissionRate = helper.decimalConversion(validator.commission.commissionRates.rate) * 100;
-    // commissionRate = parseFloat(commissionRate.toFixed(6)).toLocaleString();
+    let commissionRate = helper.decimalConversion(validator.commission ? validator.commission.commissionRates.rate : 0) * 100;
+    commissionRate = parseFloat(commissionRate.toFixed(6)).toLocaleString();
 
     const handleRoute = (tx) =>{
         if(tx === "Delegate"){
@@ -45,7 +44,6 @@ const ModalValidator = () => {
     return (
         <ReactModal
             animation={false}
-            backdrop="static"
             className="actions-modal modal-action"
             centered={true}
             keyboard={false}

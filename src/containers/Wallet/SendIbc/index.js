@@ -9,7 +9,8 @@ import Chain from "./Chain";
 import CustomChain from "./CustomChain";
 const Send = () => {
     const chainInfo = useSelector((state) => state.sendIbc.chainInfo.value);
-    const error = useSelector(state => state.common.error);
+    const response = useSelector(state => state.common.error);
+    const txName = useSelector((state) => state.common.txName.value);
 
     return (
         <div className="send-container">
@@ -23,8 +24,8 @@ const Send = () => {
                 <Tokens/>
                 <Amount/>
                 <Memo/>
-                {error !== '' ?
-                    <p className="form-error">{error.error.message}</p> : null}
+                {response.error.message !== '' && txName.name === "send" ?
+                    <p className="form-error">{response.error.message}</p> : null}
                 <ButtonSend/>
             </div>
         </div>

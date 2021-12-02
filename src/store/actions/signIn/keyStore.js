@@ -65,8 +65,8 @@ export const  keyStoreSubmit = () => {
                 console.log(decryptedData.error, "responseData");
             } else {
                 mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
-                const accountNumber = getState().advanced.accountNumber.value;
-                const accountIndex = getState().advanced.accountIndex.value;
+                const accountNumber = helper.getAccountNumber(getState().advanced.accountNumber.value);
+                const accountIndex = helper.getAccountNumber(getState().advanced.accountIndex.value);
                 const bip39PassPhrase = getState().advanced.bip39PassPhrase.value;
 
                 const walletPath = transactions.makeHdPath(accountNumber, accountIndex);
@@ -111,8 +111,8 @@ export const  keyStoreSubmit = () => {
 export const keyStoreLogin = (history) => {
     return async (dispatch, getState) => {
         const address = getState().signInKeyStore.response.value.address;
-        const accountNumber = getState().advanced.accountNumber.value;
-        const accountIndex = getState().advanced.accountIndex.value;
+        const accountNumber = helper.getAccountNumber(getState().advanced.accountNumber.value);
+        const accountIndex = helper.getAccountNumber(getState().advanced.accountIndex.value);
         const loginInfo = {
             fee:'',
             account:'',

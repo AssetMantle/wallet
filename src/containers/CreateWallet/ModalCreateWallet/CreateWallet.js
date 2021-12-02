@@ -83,7 +83,6 @@ const CreateWallet = (props) => {
         if (formName === "keysForm") {
             setShow(false);
             props.setShow(true);
-            props.setModal1(true);
             props.setCreatWallet(false);
         }
         if (formName === "mnemonicQuiz") {
