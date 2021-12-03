@@ -8,7 +8,7 @@ import {
     TRANSACTIONS_FETCH_ERROR,
     TRANSACTIONS_FETCH_SUCCESS,
     TRANSACTIONS_IN_PROGRESS
-} from "../../constants/transactions";
+} from "../../constants/transactionQueries";
 
 const inProgress = (state = false, action) => {
     switch (action.type) {

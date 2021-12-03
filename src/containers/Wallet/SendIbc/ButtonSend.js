@@ -48,7 +48,7 @@ const ButtonSend = () => {
                 name:"ibc",
             }
         }));
-        let msg = await transactions.MakeIBCTransferMsg(inputChannelID, loginInfo.address,
+        let msg = transactions.MakeIBCTransferMsg(inputChannelID, loginInfo.address,
             toAddress.value, (amount.value * config.xprtValue), undefined, undefined,
             token.value.tokenDenom, chainInfo.selectedChannel ? chainInfo.selectedChannel.url : undefined, inputPort);
         msg.then(result => {

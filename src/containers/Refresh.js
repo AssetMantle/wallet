@@ -7,7 +7,7 @@ import {fetchUnbondDelegations} from "../store/actions/unbond";
 import {fetchTokenPrice} from "../store/actions/tokenPrice";
 import IconButton from '@material-ui/core/IconButton';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import {fetchReceiveTransactions, fetchTransactions} from "../store/actions/transactions";
+import {fetchReceiveTransactions, fetchTransactions} from "../store/actions/transactionQueries";
 import transactions from "../utils/transactions";
 
 const InfoRefresh = (props) => {

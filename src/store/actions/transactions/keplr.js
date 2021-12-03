@@ -9,7 +9,9 @@ export const keplrSubmit = (messages) => (dispatch, getState) => {
     console.log(messages, "messages");
     const response = transactions.TransactionWithKeplr(messages, aminoMsgHelper.fee(0, 250000));
     response.then(result => {
-        dispatch(getState().common.txInfo.value.modal);
+        if(getState().common.txName.value.name !== "send" && getState().common.txName.value.name !== "ibc" ) {
+            dispatch(getState().common.txInfo.value.modal);
+        }
         if (result.code !== undefined) {
             dispatch(txSuccess());
             dispatch(txResponse(result));

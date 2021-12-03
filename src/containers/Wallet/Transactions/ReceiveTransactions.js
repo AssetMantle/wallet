@@ -3,7 +3,7 @@ import moment from 'moment';
 import helper from "../../../utils/helper";
 import Icon from "../../../components/Icon";
 import Loader from "../../../components/Loader";
-import {fetchReceiveTransactions} from "../../../store/actions/transactions";
+import {fetchReceiveTransactions} from "../../../store/actions/transactionQueries";
 import {connect} from "react-redux";
 import DataTable from "../../../components/DataTable";
 import IconButton from "@material-ui/core/IconButton";

@@ -7,7 +7,7 @@ import {
     TRANSACTIONS_FETCH_ERROR,
     TRANSACTIONS_FETCH_SUCCESS,
     TRANSACTIONS_IN_PROGRESS
-} from "../../constants/transactions";
+} from "../../constants/transactionQueries";
 import {buildQuery} from "@cosmjs/tendermint-rpc/build/tendermint34/requests";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {decodeTxRaw, Registry} from "@cosmjs/proto-signing";
@@ -140,6 +140,7 @@ function createDefaultRegistry() {
 }
 
 const registry = createDefaultRegistry();
+
 export const fetchReceiveTransactions = (address, limit, pageNumber) => {
     return async dispatch => {
         dispatch(fetchReceiveTransactionsProgress());
