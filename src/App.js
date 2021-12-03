@@ -22,6 +22,7 @@ import transactions from "./utils/transactions";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 
+const SENTRY_API = process.env.REACT_APP_SENTRY_API;
 const App = () => {
     const {t} = useTranslation();
     const history = useHistory();
@@ -47,9 +48,7 @@ const App = () => {
         setNetwork(window.navigator.onLine);
     };
 
-
     const dispatch = useDispatch();
-
 
     let address;
     const version = localStorage.getItem('version');
@@ -102,7 +101,7 @@ const App = () => {
     });
 
     Sentry.init({
-        dsn: "https://ca49f60d0cbd495bb9e7c4de765611ad@o1057883.ingest.sentry.io/6044970",
+        dsn: SENTRY_API,
         integrations: [new Integrations.BrowserTracing()],
 
         // Set tracesSampleRate to 1.0 to capture 100%
