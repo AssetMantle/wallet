@@ -10,6 +10,7 @@ import {
 
 import helper from "../utils/helper";
 import transactions from "../utils/transactions";
+import Long from "long";
 
 export const fetchValidatorsInProgress = () => {
     return {
@@ -53,14 +54,14 @@ export const fetchValidatorsError = (count) => {
     };
 };
 
-const validatorsDelegationSort = (validators, delegations) =>{
-    let delegatedValidators =[];
+const validatorsDelegationSort = (validators, delegations) => {
+    let delegatedValidators = [];
     validators.forEach((item) => {
         for (const data of delegations) {
-            if(item.operatorAddress === data.delegation.validatorAddress){
+            if (item.operatorAddress === data.delegation.validatorAddress) {
                 let obj = {
-                    'data':item,
-                    'delegations':data.balance.amount*1
+                    'data': item,
+                    'delegations': data.balance.amount * 1
                 };
                 delegatedValidators.push(obj);
             }
@@ -81,6 +82,12 @@ export const fetchValidators = (address) => {
             const stakingQueryService = new QueryClientImpl(rpcClient);
             await stakingQueryService.Validators({
                 status: false,
+                pagination: {
+                    key: new Uint8Array(),
+                    offset: Long.fromNumber(0, true),
+                    limit: Long.fromNumber(125, true),
+                    countTotal: true
+                }
             }).then(async (res) => {
                 let validators = res.validators;
                 let activeValidators = [];
