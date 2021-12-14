@@ -7,11 +7,14 @@ import ButtonSubmit from "./ButtonSubmit";
 import {useDispatch, useSelector} from "react-redux";
 import {hideTxUnbondModal} from "../../../../store/actions/transactions/unbond";
 import {showValidatorTxModal} from "../../../../store/actions/validators";
+import config from "../../../../config";
 
 const ModalUnbond = () => {
     const dispatch = useDispatch();
     const show = useSelector((state) => state.unbondTx.modal);
     const response = useSelector(state => state.common.error);
+    const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
+
     const handleClose = () =>{
         dispatch(hideTxUnbondModal());
     };
@@ -39,12 +42,16 @@ const ModalUnbond = () => {
                             icon="left-arrow"/>
                     </button>
                 </div>
-                <h3 className="heading">Redelegate
+                <h3 className="heading">Unbond
                 </h3>
             </ReactModal.Header>
             <ReactModal.Body className="delegate-modal-body">
                 <Amount/>
-                <Memo/>
+                {loginInfo.loginMode !== config.keplrMode
+                    ?
+                    <Memo/>
+                    : null
+                }
                 {response.error.message !== '' ?
                     <p className="form-error">{response.error.message}</p> : null}
                 <ButtonSubmit/>

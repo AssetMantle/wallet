@@ -3,7 +3,10 @@ import React from 'react';
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
 import {hideTxWithDrawTotalModal} from "../../../../store/actions/transactions/withdrawTotalRewards";
-import {showTxWithDrawAddressModal} from "../../../../store/actions/transactions/setWithdrawAddress";
+import {
+    setPreviousModalName,
+    showTxWithDrawAddressModal
+} from "../../../../store/actions/transactions/setWithdrawAddress";
 import NumberView from "../../../../components/NumberView";
 import {formatNumber} from "../../../../utils/scripts";
 import ValidatorCommission from "./ValidatorCommission";
@@ -11,12 +14,14 @@ import Validators from "./Validators";
 import Memo from "./Memo";
 import ButtonNext from "./ButtonNext";
 import Icon from "../../../../components/Icon";
+import config from "../../../../config";
 const ModalWithDraw = () => {
     const {t} = useTranslation();
     const show = useSelector((state) => state.mulitpleRewardsWithDraw.modal);
     const rewards = useSelector((state) => state.rewards.rewards);
     const tokenPrice = useSelector((state) => state.tokenPrice.tokenPrice);
     let selectedValidators = useSelector((state) => state.mulitpleRewardsWithDraw.validatorsList);
+    const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
 
     const error = useSelector(state => state.common.error);
 
@@ -27,6 +32,10 @@ const ModalWithDraw = () => {
     };
 
     const setWithdrawAddressHandler = () => {
+        dispatch(setPreviousModalName({  value:'withdrawTotal',
+            error: {
+                message:''
+            }}));
         dispatch(hideTxWithDrawTotalModal());
         dispatch(showTxWithDrawAddressModal());
     };
@@ -64,7 +73,11 @@ const ModalWithDraw = () => {
                 </div>
                 <Validators/>
                 <ValidatorCommission/>
-                <Memo/>
+                {loginInfo.loginMode !== config.keplrMode
+                    ?
+                    <Memo/>
+                    : null
+                }
                 <div className="validator-limit-warning">
                     <p className="amount-warning">{selectedValidators.error.message !== '' ? "Warning:  Recommend 3 or fewer validators to avoid potential issues." : ""}</p>
                 </div>

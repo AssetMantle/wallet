@@ -5,14 +5,15 @@ import Amount from "./Amount";
 import ButtonSend from "./ButtonSend";
 import {useSelector} from "react-redux";
 import Memo from "./Memo";
+import config from "../../../config";
 
 const Send = () => {
 
-    // let mode = localStorage.getItem('loginMode');
     const response = useSelector(state => state.common.error);
     const txName = useSelector((state) => state.common.txName.value);
+    const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
 
-    console.log(response.error.message, txName.name, "error in index");
+    console.log(loginInfo, "loginInfo", response.error.message, txName.name, "error in index");
 
 
     return (
@@ -21,7 +22,11 @@ const Send = () => {
                 <ToAddress/>
                 <Tokens/>
                 <Amount/>
-                <Memo/>
+                {loginInfo.loginMode !== config.keplrMode
+                    ?
+                    <Memo/>
+                    : null
+                }
                 {response.error.message !== '' && txName.name === "send" ?
                     <p className="form-error">{response.error.message}</p> : null}
                 <ButtonSend/>

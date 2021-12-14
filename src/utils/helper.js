@@ -105,17 +105,17 @@ function fileTypeCheck(filePath) {
 
 function validateAddress(address, prefix = "persistence") {
     if (prefix === "cosmos") {
-        if(!address.startsWith(prefix) && address.length !== 45)
+        if(!address.startsWith(prefix) || address.length !== 45)
         {
             return new Error('Invalid Recipient Address');
         }
     } else if (prefix === "osmosis") {
-        if(!address.startsWith("osmo") && address.length !== 43)
+        if(!address.startsWith("osmo") || address.length !== 43)
         {
             return new Error('Invalid Recipient Address');
         }
     } else {
-        if(!address.startsWith(prefix) && address.length !== 50)
+        if(!address.startsWith(prefix) || address.length !== 50)
         {
             return new Error('Invalid Recipient Address');
         }

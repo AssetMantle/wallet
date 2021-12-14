@@ -13,6 +13,7 @@ import {
     SET_VALIDATOR_DELEGATIONS,
     SET_VALIDATOR_REWARDS
 } from "../../constants/validators";
+import Long from "long";
 
 import helper from "../../utils/helper";
 import transactions from "../../utils/transactions";
@@ -106,61 +107,72 @@ export const fetchValidators = (address) => {
             const rpcClient = await transactions.RpcClient();
 
             const stakingQueryService = new QueryClientImpl(rpcClient);
-            await stakingQueryService.Validators({
-                status: false,
-            }).then(async (res) => {
-                let validators = res.validators;
-                let activeValidators = [];
-                let delegatedValidators = [];
-                let inActiveValidators = [];
-                console.log(validators, "validators");
-                validators.forEach((item) => {
-                    if (helper.isActive(item)) {
-                        let activeValidatorsData = {
-                            'data': item,
-                            'delegations': 0
-                        };
-                        activeValidators.push(activeValidatorsData);
-                    } else {
-                        let inActiveValidatorsData = {
-                            'data': item,
-                            'delegations': 0
-                        };
-                        inActiveValidators.push(inActiveValidatorsData);
+
+            let key = new Uint8Array();
+            let validators = [];
+
+            do {
+                const response = await stakingQueryService.Validators({
+                    status: false,
+                    pagination: {
+                        key: key,
+                        offset: Long.fromNumber(0, true),
+                        limit: Long.fromNumber(0, true),
+                        countTotal: true
                     }
                 });
+                key = response.pagination.nextKey;
+                validators.push(...response.validators);
+            } while (key.length !== 0);
 
-                const delegationsResponse = await stakingQueryService.DelegatorDelegations({
-                    delegatorAddr: address,
-                }).catch((error) => {
-                    Sentry.captureException(error.response
-                        ? error.response.data.message
-                        : error.message);
-                    console.log(error.response
-                        ? error.response.data.message
-                        : error.message);
-                });
-
-                if (delegationsResponse !== undefined && delegationsResponse.delegationResponses.length) {
-                    delegatedValidators = validatorsDelegationSort(validators, delegationsResponse.delegationResponses);
+            let activeValidators = [];
+            let delegatedValidators = [];
+            let inActiveValidators = [];
+            validators.forEach((item) => {
+                if (helper.isActive(item)) {
+                    let activeValidatorsData = {
+                        'data': item,
+                        'delegations': 0
+                    };
+                    activeValidators.push(activeValidatorsData);
                 } else {
-                    delegatedValidators = [];
+                    let inActiveValidatorsData = {
+                        'data': item,
+                        'delegations': 0
+                    };
+                    inActiveValidators.push(inActiveValidatorsData);
                 }
+            });
 
-                dispatch(fetchDelegatedValidators(delegatedValidators));
-                dispatch(fetchTotalValidatorsSuccess(validators));
-                dispatch(fetchActiveValidatorsSuccess(activeValidators));
-                dispatch(fetchInactiveValidatorsSuccess(inActiveValidators));
+            const delegationsResponse = await stakingQueryService.DelegatorDelegations({
+                delegatorAddr: address,
             }).catch((error) => {
                 Sentry.captureException(error.response
                     ? error.response.data.message
                     : error.message);
-                dispatch(fetchValidatorsError(error.response
+                console.log(error.response
                     ? error.response.data.message
-                    : error.message));
+                    : error.message);
             });
-        } catch (e) {
-            console.log(e.message);
+
+            if (delegationsResponse !== undefined && delegationsResponse.delegationResponses.length) {
+                delegatedValidators = validatorsDelegationSort(validators, delegationsResponse.delegationResponses);
+            } else {
+                delegatedValidators = [];
+            }
+
+            dispatch(fetchDelegatedValidators(delegatedValidators));
+            dispatch(fetchTotalValidatorsSuccess(validators));
+            dispatch(fetchActiveValidatorsSuccess(activeValidators));
+            dispatch(fetchInactiveValidatorsSuccess(inActiveValidators));
+        } catch (error) {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
+            dispatch(fetchValidatorsError(error.response
+                ? error.response.data.message
+                : error.message));
+            console.log(error.message);
         }
 
     };
@@ -174,7 +186,6 @@ export const setValidatorDelegations = (data) => {
 };
 
 export const fetchValidatorDelegations = (address) => {
-    console.log(address, "eeee");
     return async (dispatch, getState) => {
         const validatorAddress = getState().validators.validator.value.operatorAddress;
         const rpcClient = await transactions.RpcClient();

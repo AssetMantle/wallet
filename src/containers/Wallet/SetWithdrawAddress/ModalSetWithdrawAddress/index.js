@@ -12,11 +12,14 @@ import ButtonNext from "./ButtonNext";
 import {fetchWithdrawAddress} from "../../../../store/actions/withdrawAddress";
 import Icon from "../../../../components/Icon";
 import {showTxWithDrawTotalModal} from "../../../../store/actions/transactions/withdrawTotalRewards";
+import {showTxWithdrawValidatorRewardsModal} from "../../../../store/actions/transactions/withdrawValidatorRewards";
+
 const ModalSetWithdrawAddress = () => {
     const {t} = useTranslation();
     const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
     const dispatch = useDispatch();
 
+    const previousModalName =  useSelector((state) => state.setWithdrawAddress.previousModalName);
     const show = useSelector((state) => state.setWithdrawAddress.modal);
     const withdrawAddress = useSelector((state) => state.withdrawAddress.withdrawAddress);
     const delegations = useSelector((state) => state.delegations.count);
@@ -32,7 +35,11 @@ const ModalSetWithdrawAddress = () => {
 
     const handlePrevious = () => {
         dispatch(hideTxWithDrawAddressModal());
-        dispatch(showTxWithDrawTotalModal());
+        if(previousModalName.value ==="withdrawTotal"){
+            dispatch(showTxWithDrawTotalModal());
+        }else {
+            dispatch(showTxWithdrawValidatorRewardsModal());
+        }
     };
 
     return (
@@ -68,7 +75,11 @@ const ModalSetWithdrawAddress = () => {
                     <p className={delegations === 0 ? "empty info-data" : "info-data"}>
                         <NumberView value={formatNumber(delegations)}/>{config.coinName}</p>
                 </div>
-                <Memo/>
+                {loginInfo.loginMode !== config.keplrMode
+                    ?
+                    <Memo/>
+                    : null
+                }
                 {error !== '' ?
                     <p className="form-error">{error.error.message}</p> : null}
                 <ButtonNext/>

@@ -2,7 +2,8 @@ import {
     TX_SET_WITH_DRAW_ADDRESS_MODAL_HIDE,
     TX_SET_WITH_DRAW_ADDRESS_SET,
     TX_SET_WITH_DRAW_ADDRESS_MODAL_SHOW,
-    TX_SET_WITH_DRAW_ADDRESS_MEMO_SET
+    TX_SET_WITH_DRAW_ADDRESS_MEMO_SET,
+    SET_PREVIOUS_MODAL_NAME
 } from "../../../constants/setWithdrawAddress";
 import {setTxName, setTxIno} from "./common";
 import {showFeeModal} from "./fee";
@@ -17,6 +18,13 @@ export const setTxWithDrawAddress = (data) => {
 export const showTxWithDrawAddressModal = (data) => {
     return {
         type: TX_SET_WITH_DRAW_ADDRESS_MODAL_SHOW,
+        data,
+    };
+};
+
+export const setPreviousModalName = (data) => {
+    return {
+        type: SET_PREVIOUS_MODAL_NAME,
         data,
     };
 };

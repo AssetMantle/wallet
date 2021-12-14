@@ -65,6 +65,7 @@ const CreateWallet = (props) => {
                 return;
             } else {
                 if (index === randomNumberList.length - 1) {
+                    setQuizError(false);
                     localStorage.setItem('loginToken', 'loggedIn');
                     localStorage.setItem('address', response.address);
                     setAccountInfo(true);

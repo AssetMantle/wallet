@@ -186,40 +186,46 @@ const AdvanceMode = (props) => {
 
                                                 <div className="form-field">
                                                     <p className="label">{t("ACCOUNT")}</p>
-                                                    <Form.Control
-                                                        type="number"
-                                                        max={4294967295}
-                                                        name="accountNumber"
-                                                        id="createAccountNumber"
-                                                        onKeyPress={handleAccountNumberKeypress}
-                                                        placeholder={t("ACCOUNT_NUMBER")}
-                                                        required={false}
-                                                    />
+                                                    <div className="form-control-section flex-fill">
+                                                        <Form.Control
+                                                            type="number"
+                                                            max={4294967295}
+                                                            name="accountNumber"
+                                                            id="createAccountNumber"
+                                                            onKeyPress={handleAccountNumberKeypress}
+                                                            placeholder={t("ACCOUNT_NUMBER")}
+                                                            required={false}
+                                                        />
+                                                    </div>
                                                 </div>
                                                 <div className="form-field">
                                                     <p className="label">{t("ACCOUNT_INDEX")}</p>
-                                                    <Form.Control
-                                                        type="number"
-                                                        max={4294967295}
-                                                        name="accountIndex"
-                                                        id="createAccountIndex"
-                                                        onKeyPress={handleIndexKeypress}
-                                                        placeholder={t("ACCOUNT_INDEX")}
-                                                        required={false}
-                                                    />
+                                                    <div className="form-control-section flex-fill">
+                                                        <Form.Control
+                                                            type="number"
+                                                            max={4294967295}
+                                                            name="accountIndex"
+                                                            id="createAccountIndex"
+                                                            onKeyPress={handleIndexKeypress}
+                                                            placeholder={t("ACCOUNT_INDEX")}
+                                                            required={false}
+                                                        />
+                                                    </div>
                                                 </div>
                                                 <div className="form-field passphrase-field">
                                                     <p className="label">{t("BIP_PASSPHRASE")}</p>
-                                                    <Form.Control
-                                                        type="password"
-                                                        name="bip39Passphrase"
-                                                        id="createbip39Passphrase"
-                                                        maxLength="50"
-                                                        onKeyPress={handleKeypress}
-                                                        placeholder={t("ENTER_BIP_PASSPHRASE")}
-                                                        onChange={handlePassphrase}
-                                                        required={false}
-                                                    />
+                                                    <div className="form-control-section flex-fill">
+                                                        <Form.Control
+                                                            type="password"
+                                                            name="bip39Passphrase"
+                                                            id="createbip39Passphrase"
+                                                            maxLength="50"
+                                                            onKeyPress={handleKeypress}
+                                                            placeholder={t("ENTER_BIP_PASSPHRASE")}
+                                                            onChange={handlePassphrase}
+                                                            required={false}
+                                                        />
+                                                    </div>
                                                     {passphraseError ?
                                                         <span
                                                             className="passphrase-error">{t("BIP_PASSPHRASE_ERROR")}</span>

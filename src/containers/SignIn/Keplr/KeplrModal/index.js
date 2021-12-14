@@ -83,8 +83,11 @@ const KeplrModal = () => {
                                     : <p>Fetching Address..</p>
 
                             }
+                        </div>
+                        <div className="button-section mt-3">
                             <ButtonContinue/>
                         </div>
+
                     </>
                 }
 

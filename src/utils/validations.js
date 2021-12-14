@@ -77,7 +77,7 @@ export const ValidateSpecialCharacters = e => {
     }
 };
 export const ValidateAccountIndex = (value) => {
-    if (parseInt(value) > 4294967295 || parseInt(value) < 0) {
+    if (parseInt(value) > 2147483647 || parseInt(value) < 0) {
         return new Error('Limit exceeded');
     }
     return new Error('');

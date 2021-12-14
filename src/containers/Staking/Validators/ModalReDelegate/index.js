@@ -8,10 +8,13 @@ import {useDispatch, useSelector} from "react-redux";
 import {hideTxReDelegateModal} from "../../../../store/actions/transactions/redelegate";
 import {showValidatorTxModal} from "../../../../store/actions/validators";
 import Validator from "./Validator";
+import config from "../../../../config";
 const ModalReDelegate = () => {
     const dispatch = useDispatch();
     const show = useSelector((state) => state.redelegate.modal);
     const response = useSelector(state => state.common.error);
+    const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
+
     const handleClose = () =>{
         dispatch(hideTxReDelegateModal());
     };
@@ -45,7 +48,11 @@ const ModalReDelegate = () => {
             <ReactModal.Body className="delegate-modal-body">
                 <Validator/>
                 <Amount/>
-                <Memo/>
+                {loginInfo.loginMode !== config.keplrMode
+                    ?
+                    <Memo/>
+                    : null
+                }
                 {response.error.message !== '' ?
                     <p className="form-error">{response.error.message}</p> : null}
                 <ButtonSubmit/>

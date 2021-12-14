@@ -22,6 +22,7 @@ const ToAddress = () => {
     };
 
     const onBlur = (evt) =>{
+        console.log(evt.target.value,"reeee");
         dispatch(setTxSendAddress({
             value:evt.target.value.toString(),
             error: helper.validateAddress(evt.target.value),

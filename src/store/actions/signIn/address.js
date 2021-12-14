@@ -28,6 +28,8 @@ export const setAddress = (data) => {
 export const addressLogin = (history) => {
     return async (dispatch, getState) => {
         const address = getState().signInAddress.address.value;
+        console.log("coming in", address);
+
         const loginInfo = {
             fee:'',
             account:'',

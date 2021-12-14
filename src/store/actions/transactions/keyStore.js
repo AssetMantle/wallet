@@ -55,7 +55,7 @@ export const keyStoreSubmit = (loginAddress) => {
             const gas = getState().gas.gas.value;
 
             let mnemonic = "";
-            console.log(encryptedSeed, "encryptedSeed");
+            console.log(encryptedSeed, "encryptedSeed", accountNumber, accountIndex);
             if (encryptedSeed) {
                 const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
                 const res = JSON.parse(encryptedMnemonic);
@@ -63,9 +63,12 @@ export const keyStoreSubmit = (loginAddress) => {
                 if (decryptedData.error != null) {
                     throw new Error(decryptedData.error);
                 }
+                console.log("innn", "encryptedSeed");
                 mnemonic = decryptedData.mnemonic;
             } else {
                 mnemonic = await transactions.PrivateKeyReader(keyStoreData.value, password.value, loginAddress, accountNumber, accountIndex);
+                console.log(mnemonic, "encryptedSeedmnemonic");
+
             }
             console.log(loginAddress, formData, fee, gas, mnemonic, txName, accountNumber, accountIndex, bip39PassPhrase, "txn data");
             let result = await transactions.getTransactionResponse(loginAddress, formData, fee, gas, mnemonic, txName, accountNumber, accountIndex, bip39PassPhrase);

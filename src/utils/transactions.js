@@ -156,13 +156,11 @@ function PrivateKeyReader(file, password, loginAddress, accountNumber = "0", add
                 const res = JSON.parse(event.target.result);
                 const decryptedData = helper.decryptStore(res, password);
                 if (decryptedData.error != null) {
-                    reject(decryptedData.error);
+                    reject(new Error (decryptedData.error));
                 } else {
                     let mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
                     const accountData = await MnemonicWalletWithPassphrase(mnemonic, makeHdPath(accountNumber, addressIndex));
                     const address = accountData[1];
-                    console.log(address, loginAddress, "loginAddress");
-
                     if (address === loginAddress) {
                         resolve(mnemonic);
                         localStorage.setItem('encryptedMnemonic', event.target.result);

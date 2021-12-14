@@ -1,6 +1,6 @@
 import {
     TX_SET_WITH_DRAW_ADDRESS_MODAL_HIDE, TX_SET_WITH_DRAW_ADDRESS_MODAL_SHOW,
-    TX_SET_WITH_DRAW_ADDRESS_SET, TX_SET_WITH_DRAW_ADDRESS_MEMO_SET
+    TX_SET_WITH_DRAW_ADDRESS_SET, TX_SET_WITH_DRAW_ADDRESS_MEMO_SET, SET_PREVIOUS_MODAL_NAME
 } from "../../../constants/setWithdrawAddress";
 import {TX_RESULT_MODAL_HIDE, TX_SUCCESS} from "../../../constants/common";
 import {combineReducers} from "redux";
@@ -53,6 +53,40 @@ const modal = (state = false, {
     }
 };
 
+const previousModalName = (state = {
+    value: '',
+    error: {
+        message: '',
+    },
+}, {
+    type,
+    data,
+}) => {
+    switch (type) {
+    case SET_PREVIOUS_MODAL_NAME:
+        return {
+            ...state,
+            value: data.value,
+            error: {
+                ...state.error,
+                message: data.error.message,
+            },
+        };
+    case TX_SUCCESS:
+    case TX_RESULT_MODAL_HIDE:
+        return {
+            ...state,
+            value: '',
+            error: {
+                ...state.error,
+                message: '',
+            },
+        };
+    default:
+        return state;
+    }
+};
+
 const memo = (state = {
     value: '',
     error: {
@@ -91,5 +125,6 @@ const memo = (state = {
 export default combineReducers({
     revisedAddress,
     modal,
-    memo
+    memo,
+    previousModalName
 });

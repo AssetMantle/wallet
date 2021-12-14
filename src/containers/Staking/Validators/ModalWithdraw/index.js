@@ -9,7 +9,11 @@ import {showValidatorTxModal} from "../../../../store/actions/validators";
 import NumberView from "../../../../components/NumberView";
 import {formatNumber} from "../../../../utils/scripts";
 import {useTranslation} from "react-i18next";
-import {showTxWithDrawAddressModal} from "../../../../store/actions/transactions/setWithdrawAddress";
+import {
+    setPreviousModalName,
+    showTxWithDrawAddressModal
+} from "../../../../store/actions/transactions/setWithdrawAddress";
+import config from "../../../../config";
 
 const ModalWithdraw = () => {
     const {t} = useTranslation();
@@ -17,6 +21,7 @@ const ModalWithdraw = () => {
     const show = useSelector((state) => state.withdrawValidatorRewards.modal);
     const rewards = useSelector((state) => state.validators.validatorRewards);
     const response = useSelector(state => state.common.error);
+    const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
 
     const handleClose = () =>{
         dispatch(hideTxWithdrawValidatorRewardsModal());
@@ -36,6 +41,10 @@ const ModalWithdraw = () => {
     );
 
     const setWithdrawAddressHandler = () => {
+        dispatch(setPreviousModalName({  value:'withdrawValidator',
+            error: {
+                message:''
+            }}));
         dispatch(hideTxWithdrawValidatorRewardsModal());
         dispatch(showTxWithDrawAddressModal());
     };
@@ -70,7 +79,11 @@ const ModalWithdraw = () => {
                         </p>
                     </div>
                 </div>
-                <Memo/>
+                {loginInfo.loginMode !== config.keplrMode
+                    ?
+                    <Memo/>
+                    : null
+                }
                 {response.error.message !== '' ?
                     <p className="form-error">{response.error.message}</p> : null}
                 <ButtonSubmit/>

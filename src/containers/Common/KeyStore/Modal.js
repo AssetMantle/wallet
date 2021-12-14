@@ -1,15 +1,17 @@
 import {Modal as ReactModal} from 'react-bootstrap';
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {hideKeyStoreModal} from "../../../store/actions/transactions/keyStore";
+import {hideKeyStoreModal, setTxKeyStorePassword} from "../../../store/actions/transactions/keyStore";
 import {showFeeModal} from "../../../store/actions/transactions/fee";
 import FileInput from "./FileInput";
 import Password from "./Password";
 import Submit from "./Submit";
 import Icon from "../../../components/Icon";
 import Advanced from "../Advanced";
-import {setLoginInfo} from "../../../store/actions/transactions/common";
+import {setLoginInfo, txFailed} from "../../../store/actions/transactions/common";
 import {useTranslation} from "react-i18next";
+import {setAccountIndex, setAccountNumber, setBip39Passphrase} from "../../../store/actions/transactions/advanced";
+
 const Modal = () => {
     const {t} = useTranslation();
     const show = useSelector((state) => state.keyStore.modal);
@@ -39,6 +41,23 @@ const Modal = () => {
     };
 
     const handleUpdateKeystore = () => {
+        dispatch(setAccountIndex({
+            value:'',
+            error:{message:''}
+        }));
+        dispatch(setAccountNumber({
+            value:'',
+            error:{message:''}
+        }));
+        dispatch(setBip39Passphrase({
+            value:'',
+            error:{message:''}
+        }));
+        dispatch(setTxKeyStorePassword({
+            value:'',
+            error:{message:''}
+        }));
+        dispatch(txFailed(""));
         dispatch(setLoginInfo({
             encryptedSeed:false,
             error:{
