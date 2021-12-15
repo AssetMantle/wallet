@@ -66,9 +66,9 @@ const AdvanceMode = (props) => {
     };
     const handleLogin = () => {
         dispatch(setAddress({
-            value:response.address,
+            value: response.address,
             error: {
-                message:''
+                message: ''
             }
         }));
         dispatch(addressLogin(history, response.address));

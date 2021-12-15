@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import InputFieldNumber from "../../../components/InputFieldNumber";
-import {useSelector, useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {ValidateFee, ValidateGas} from "../../../utils/validations";
 import {useTranslation} from "react-i18next";
 import Icon from "../../../components/Icon";
@@ -14,16 +14,14 @@ const Gas = () => {
     const gas = useSelector((state) => state.gas.gas);
     const transferableAmount = useSelector((state) => state.balance.transferableAmount);
     const type = useSelector((state) => state.common.txName.value.name);
-    const datad = useSelector((state) => state.common.txInfo.value.data);
-    console.log(type, datad, "type");
 
     const dispatch = useDispatch();
 
-    const onChange = (evt) =>{
+    const onChange = (evt) => {
         dispatch(setTxGas({
-            value:(evt.target.value*1),
-            feeError:ValidateFee(transferableAmount, config.averageFee*config.gas, type, amount),
-            error:ValidateGas(evt.target.value)
+            value: (evt.target.value * 1),
+            feeError: ValidateFee(transferableAmount, config.averageFee * config.gas, type, amount),
+            error: ValidateGas(evt.target.value)
         }));
     };
 
@@ -45,7 +43,7 @@ const Gas = () => {
                             icon="up-arrow"/>}
                 </p>
             </div>
-            <div className={`form-field accordion-body ${showGasField ? 'show': ''}`}>
+            <div className={`form-field accordion-body ${showGasField ? 'show' : ''}`}>
                 <p className="label info">{t("GAS")}</p>
                 <div className="amount-field">
                     <InputFieldNumber
@@ -65,8 +63,8 @@ const Gas = () => {
                 </div>
             </div>
         </div>
-        
-       
+
+
     );
 };
 

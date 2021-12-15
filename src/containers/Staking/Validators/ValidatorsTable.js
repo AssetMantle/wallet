@@ -7,10 +7,10 @@ import DataTable from "../../../components/DataTable";
 import {useTranslation} from "react-i18next";
 import {useDispatch} from "react-redux";
 import {
-    showValidatorTxModal,
-    setValidatorTxData,
     fetchValidatorDelegations,
-    fetchValidatorRewards
+    fetchValidatorRewards,
+    setValidatorTxData,
+    showValidatorTxModal
 } from "../../../store/actions/validators";
 
 const ValidatorsTable = (props) => {
@@ -20,7 +20,7 @@ const ValidatorsTable = (props) => {
     const handleModal = (name, validator) => {
         dispatch(showValidatorTxModal());
         dispatch(setValidatorTxData({
-            value:validator,
+            value: validator,
             error: new Error(''),
         }));
         dispatch(fetchValidatorDelegations(loginInfo.address));
@@ -35,7 +35,7 @@ const ValidatorsTable = (props) => {
                 return (obj1, obj2) => {
                     let val1 = obj1.data.props.children[1];
                     let val2 = obj2.data.props.children[1];
-                    return (val1.toUpperCase() < val2.toUpperCase() ? -1: 1 ) * (order === 'asc' ? 1 : -1);
+                    return (val1.toUpperCase() < val2.toUpperCase() ? -1 : 1) * (order === 'asc' ? 1 : -1);
                 };
             }
 

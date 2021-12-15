@@ -1,11 +1,10 @@
 import transactions from "../../../utils/transactions";
-import {showTxResultModal,txSuccess,  txFailed, txResponse, txInProgress} from "./common";
+import {showTxResultModal, txFailed, txInProgress, txResponse, txSuccess} from "./common";
 import {hideFeeModal} from "./fee";
 import * as Sentry from "@sentry/browser";
 import helper from "../../../utils/helper";
 
 export const ledgerSubmit = (loginAddress, loginMode) => {
-    console.log(loginAddress, "loginAddress");
     return async (dispatch, getState) => {
         dispatch(txInProgress());
         const password = getState().keyStore.password;
@@ -22,21 +21,17 @@ export const ledgerSubmit = (loginAddress, loginMode) => {
         const gas = getState().gas.gas.value;
 
         let mnemonic = "";
-        if(loginMode !=="ledger") {
+        if (loginMode !== "ledger") {
             mnemonic = await transactions.PrivateKeyReader(keyStoreData.value, password.value, loginAddress);
         }
-        console.log(loginAddress, formData, fee, gas, mnemonic,txName, accountNumber, accountIndex, bip39PassPhrase, "txn data");
-        let response = transactions.getTransactionResponse(loginAddress, formData, fee, gas, mnemonic,txName, accountNumber, accountIndex, bip39PassPhrase);
-        console.log(response, "txn response");
+        let response = transactions.getTransactionResponse(loginAddress, formData, fee, gas, mnemonic, txName, accountNumber, accountIndex, bip39PassPhrase);
         response.then(result => {
-            console.log(result, "result");
-
             if (result.code !== undefined) {
                 dispatch(hideFeeModal());
                 dispatch(txSuccess());
                 dispatch(txResponse(result));
                 dispatch(showTxResultModal());
-            }else {
+            } else {
                 console.log(result, "final result");
             }
         }).catch(error => {

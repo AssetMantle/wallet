@@ -33,7 +33,7 @@ export const fetchKeplrAddress = () => {
         kepler.then(function () {
             const address = localStorage.getItem("keplerAddress");
             dispatch(setKeplrInfo({
-                value:address,
+                value: address,
                 error: {
                     message: '',
                 },
@@ -43,7 +43,7 @@ export const fetchKeplrAddress = () => {
                 ? error.response.data.message
                 : error.message);
             dispatch(setKeplrInfo({
-                value:'',
+                value: '',
                 error: {
                     message: error.message,
                 },

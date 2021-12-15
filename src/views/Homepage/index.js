@@ -18,10 +18,10 @@ const Homepage = () => {
     const [routName, setRoutName] = useState("false");
     const handleRoute = (name) => {
         setRoutName(name);
-        if(name === "importWallet"){
+        if (name === "importWallet") {
             dispatch(showKeyStoreMnemonicModal());
         }
-        if(name === "signIn"){
+        if (name === "signIn") {
             dispatch(showSignInModal());
         }
     };

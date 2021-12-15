@@ -41,9 +41,8 @@ const ModalViewTxnResponse = (props) => {
         }
     }, [response]);
 
-    console.log(response, "response");
-    if(response === undefined){
-        return null ;
+    if (response === undefined) {
+        return null;
     }
 
     return (

@@ -15,7 +15,7 @@ const Chain = () => {
 
     let channels = [];
     if (IBC_CONF === "ibcStaging.json") {
-        channels =ibcConfig.testNetChannels;
+        channels = ibcConfig.testNetChannels;
     } else {
         channels = ibcConfig.mainNetChannels;
     }
@@ -25,10 +25,10 @@ const Chain = () => {
             dispatch(
                 setTxIbcSendChainInfo({
                     value: {
-                        customChain:true,
-                        chainID:'',
-                        chain:evt.target.value,
-                        selectedChannel:''
+                        customChain: true,
+                        chainID: '',
+                        chain: evt.target.value,
+                        selectedChannel: ''
                     },
                 })
             );
@@ -39,10 +39,10 @@ const Chain = () => {
                     dispatch(
                         setTxIbcSendChainInfo({
                             value: {
-                                customChain:false,
-                                chainID:id,
-                                chain:evt.target.value,
-                                selectedChannel:item
+                                customChain: false,
+                                chainID: id,
+                                chain: evt.target.value,
+                                selectedChannel: item
                             },
                         })
                     );

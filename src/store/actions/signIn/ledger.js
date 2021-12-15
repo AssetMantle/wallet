@@ -1,4 +1,10 @@
-import {SIGN_IN_LEDGER_MODAL_HIDE, SIGN_IN_LEDGER_MODAL_SHOW, SET_LEDGER_INFO, SET_LEDGER_ACCOUNT_NUMBER, SET_LEDGER_ACCOUNT_INDEX} from "../../../constants/signIn/ledger";
+import {
+    SET_LEDGER_ACCOUNT_INDEX,
+    SET_LEDGER_ACCOUNT_NUMBER,
+    SET_LEDGER_INFO,
+    SIGN_IN_LEDGER_MODAL_HIDE,
+    SIGN_IN_LEDGER_MODAL_SHOW
+} from "../../../constants/signIn/ledger";
 import {fetchAddress} from "../../../utils/ledger";
 import transactions, {GetAccount} from "../../../utils/transactions";
 import config from "../../../config";
@@ -27,7 +33,7 @@ export const setLedgerInfo = (data) => {
     };
 };
 
-export const setAccountNumber= (data) => {
+export const setAccountNumber = (data) => {
     return {
         type: SET_LEDGER_ACCOUNT_NUMBER,
         data,
@@ -47,7 +53,7 @@ export const fetchLedgerAddress = (accountNumber = "0", addressIndex = "0") => {
         let ledgerResponse = fetchAddress(accountNumber, addressIndex);
         ledgerResponse.then(function (result) {
             dispatch(setLedgerInfo({
-                value:result,
+                value: result,
                 error: {
                     message: '',
                 },
@@ -57,7 +63,7 @@ export const fetchLedgerAddress = (accountNumber = "0", addressIndex = "0") => {
                 ? error.response.data.message
                 : error.message);
             dispatch(setLedgerInfo({
-                value:'',
+                value: '',
                 error: {
                     message: error.message,
                 },
@@ -70,16 +76,15 @@ export const ledgerLogin = (history) => {
     return async (dispatch, getState) => {
         const address = getState().signInLedger.ledgerInfo.value;
         const loginInfo = {
-            fee:'',
-            account:'',
-            loginToken:'',
-            address:'',
-            loginMode:'',
-            version:'',
-            accountNumber:'',
-            accountIndex:''
+            fee: '',
+            account: '',
+            loginToken: '',
+            address: '',
+            loginMode: '',
+            version: '',
+            accountNumber: '',
+            accountIndex: ''
         };
-        console.log("in ledgerLogin");
         GetAccount(address).then(async res => {
             const accountType = await transactions.VestingAccountCheck(res.typeUrl);
             if (accountType) {
@@ -108,22 +113,21 @@ export const ledgerLogin = (history) => {
         loginInfo.address = address;
         loginInfo.loginMode = "ledger";
         loginInfo.version = config.version;
-        loginInfo.accountNumber =  helper.getAccountNumber(getState().signInLedger.accountNumber.value);
+        loginInfo.accountNumber = helper.getAccountNumber(getState().signInLedger.accountNumber.value);
         loginInfo.accountIndex = helper.getAccountNumber(getState().signInLedger.accountIndex.value);
 
         localStorage.setItem('accountNumber', helper.getAccountNumber(getState().signInLedger.accountNumber.value));
-        localStorage.setItem('addressIndex',  helper.getAccountNumber(getState().signInLedger.accountIndex.value));
+        localStorage.setItem('addressIndex', helper.getAccountNumber(getState().signInLedger.accountIndex.value));
         localStorage.setItem('loginToken', 'loggedIn');
         localStorage.setItem('address', address);
         localStorage.setItem('loginMode', 'ledger');
         localStorage.setItem('version', config.version);
         localStorage.setItem('loginInfo', JSON.stringify(loginInfo));
 
-        console.log(getState().signInLedger.accountNumber.value, helper.getAccountNumber(getState().signInLedger.accountNumber.value));
         dispatch(setLoginInfo({
-            encryptedSeed:false,
-            error:{
-                message:''
+            encryptedSeed: false,
+            error: {
+                message: ''
             }
         }));
         history.push('/dashboard/wallet');

@@ -71,12 +71,10 @@ async function LedgerWallet(hdpath, prefix) {
     return [signer, firstAccount.address];
 }
 
-async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(), bip39Passphrase = "", loginAddress,  prefix = addressPrefix) {
+async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(), bip39Passphrase = "", loginAddress, prefix = addressPrefix) {
     const loginMode = localStorage.getItem('loginMode');
-    console.log(loginMode, "loginMode");
     if (loginMode === "normal") {
         const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix);
-        console.log(address, loginAddress, 'address1');
         if (address !== loginAddress) {
             throw new Error("Your sign in address and keystore file don’t match. Please try again or else sign in again.");
         }
@@ -147,7 +145,6 @@ function XprtConversion(data) {
 }
 
 function PrivateKeyReader(file, password, loginAddress, accountNumber = "0", addressIndex = "0",) {
-    console.log(file, password, "file, password");
     return new Promise(function (resolve, reject) {
         const fileReader = new FileReader();
         fileReader.readAsText(file, "UTF-8");
@@ -156,7 +153,7 @@ function PrivateKeyReader(file, password, loginAddress, accountNumber = "0", add
                 const res = JSON.parse(event.target.result);
                 const decryptedData = helper.decryptStore(res, password);
                 if (decryptedData.error != null) {
-                    reject(new Error (decryptedData.error));
+                    reject(new Error(decryptedData.error));
                 } else {
                     let mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
                     const accountData = await MnemonicWalletWithPassphrase(mnemonic, makeHdPath(accountNumber, addressIndex));
@@ -192,8 +189,6 @@ function decodeTendermintConsensusStateAny(consensusState) {
 }
 
 async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp = config.timeoutTimestamp, denom = config.coinDenom, url, port = "transfer") {
-
-    console.log(channel, fromAddress, toAddress, amount, timeoutHeight, config.timeoutTimestamp, "uxprt", url, "transfer", "redd");
     const tendermintClient = await tmRPC.Tendermint34Client.connect(tendermintRPCURL);
     const queryClient = new QueryClient(tendermintClient);
 
@@ -270,12 +265,11 @@ function checkValidatorAccountAddress(validatorAddress, address) {
     return validatorAccountAddress === address;
 }
 
-async function getTransactionResponse(address, data, fee, gas, mnemonic = "", txName,  accountNumber = 0, addressIndex = 0, bip39Passphrase = "") {
+async function getTransactionResponse(address, data, fee, gas, mnemonic = "", txName, accountNumber = 0, addressIndex = 0, bip39Passphrase = "") {
     if (txName === "send") {
         return TransactionWithMnemonic(data.message, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
     } else if (txName === "delegate") {
-        console.log(address, data, fee, gas, mnemonic, "delegate", "delegate");
         return TransactionWithMnemonic(data.message, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
     } else if (txName === "withdrawMultiple") {
@@ -293,12 +287,9 @@ async function getTransactionResponse(address, data, fee, gas, mnemonic = "", tx
     } else if (txName === "withdrawValidatorRewards") {
         return TransactionWithMnemonic(data.message, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
-    }else if(txName === "ibc"){
-        console.log(data.message,
-            aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo, mnemonic,
-            makeHdPath(accountNumber, addressIndex), bip39Passphrase, "getTransactionResponse");
+    } else if (txName === "ibc") {
         return TransactionWithMnemonic(data.message,
-            aminoMsgHelper.fee(Math.trunc(fee), gas),  data.memo, mnemonic,
+            aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo, mnemonic,
             makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
     }
 }

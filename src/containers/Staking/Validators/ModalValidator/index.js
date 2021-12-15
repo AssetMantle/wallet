@@ -1,7 +1,7 @@
 import React from 'react';
 import {Modal as ReactModal} from "react-bootstrap";
 import {useDispatch, useSelector} from "react-redux";
-import { hideValidatorTxModal} from "../../../../store/actions/validators";
+import {hideValidatorTxModal} from "../../../../store/actions/validators";
 import {useTranslation} from "react-i18next";
 import Avatar from "../Avatar";
 import helper from "../../../../utils/helper";
@@ -17,26 +17,24 @@ const ModalValidator = () => {
     const dispatch = useDispatch();
 
 
-    const handleClose = () =>{
+    const handleClose = () => {
         dispatch(hideValidatorTxModal());
     };
-
-    // let commissionRate = 0;
 
     let commissionRate = helper.decimalConversion(validator.commission ? validator.commission.commissionRates.rate : 0) * 100;
     commissionRate = parseFloat(commissionRate.toFixed(6)).toLocaleString();
 
-    const handleRoute = (tx) =>{
-        if(tx === "Delegate"){
+    const handleRoute = (tx) => {
+        if (tx === "Delegate") {
             dispatch(hideValidatorTxModal());
             dispatch(showTxDelegateModal());
-        }else if(tx === "Redelegate"){
+        } else if (tx === "Redelegate") {
             dispatch(hideValidatorTxModal());
             dispatch(showTxReDelegateModal());
-        }else if(tx === "Unbond"){
+        } else if (tx === "Unbond") {
             dispatch(hideValidatorTxModal());
             dispatch(showTxUnbondModal());
-        }else if(tx === "Withdraw"){
+        } else if (tx === "Withdraw") {
             dispatch(hideValidatorTxModal());
             dispatch(showTxWithdrawValidatorRewardsModal());
         }

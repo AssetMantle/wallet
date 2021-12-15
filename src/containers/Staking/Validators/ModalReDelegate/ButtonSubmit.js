@@ -26,11 +26,11 @@ const ButtonSubmit = () => {
 
     const onClickKeplr = () => {
         dispatch(setTxIno({
-            value:{
-                modal:hideTxReDelegateModal(),
-                data:{
-                    message:'',
-                    memo:'',
+            value: {
+                modal: hideTxReDelegateModal(),
+                data: {
+                    message: '',
+                    memo: '',
                 }
             }
         }));
@@ -51,7 +51,6 @@ const ButtonSubmit = () => {
         </div>
     );
 };
-
 
 
 export default ButtonSubmit;

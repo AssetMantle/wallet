@@ -25,15 +25,15 @@ const ButtonSubmit = () => {
 
     const onClickKeplr = () => {
         dispatch(setTxIno({
-            value:{
-                modal:hideTxDelegateModal(),
-                data:{
-                    message:'',
-                    memo:'',
+            value: {
+                modal: hideTxDelegateModal(),
+                data: {
+                    message: '',
+                    memo: '',
                 }
             }
         }));
-        dispatch(keplrSubmit( [DelegateMsg(loginInfo.address, validatorAddress.value.operatorAddress, (amount.value * config.xprtValue).toFixed(0), config.coinDenom)]));
+        dispatch(keplrSubmit([DelegateMsg(loginInfo.address, validatorAddress.value.operatorAddress, (amount.value * config.xprtValue).toFixed(0), config.coinDenom)]));
     };
 
     return (
@@ -50,7 +50,6 @@ const ButtonSubmit = () => {
         </div>
     );
 };
-
 
 
 export default ButtonSubmit;

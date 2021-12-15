@@ -12,13 +12,13 @@ const Tokens = () => {
     const tokenList = useSelector((state) => state.balance.tokenList);
     const transferableAmount = useSelector((state) => state.balance.transferableAmount);
     const dispatch = useDispatch();
-    let tokenData=[];
+    let tokenData = [];
 
-    useEffect(()=>{
-        const initialObject ={
-            tokenDenom:config.coinDenom,
-            token:config.coinDenom,
-            transferableAmount:transferableAmount
+    useEffect(() => {
+        const initialObject = {
+            tokenDenom: config.coinDenom,
+            token: config.coinDenom,
+            transferableAmount: transferableAmount
         };
         tokenData.push(initialObject);
         dispatch(
@@ -26,17 +26,16 @@ const Tokens = () => {
                 value: tokenData[0],
             })
         );
-    },[]);
+    }, []);
 
-    console.log(tokenList, "tokenList");
     const onChangeSelect = (evt) => {
-        const tokenDataObject={};
+        const tokenDataObject = {};
         dispatch(
             setTxSendToken({
                 value: [],
             })
         );
-        tokenData=[];
+        tokenData = [];
         tokenDataObject.token = evt.target.value;
         if (evt.target.value === config.coinDenom) {
             tokenDataObject.tokenDenom = evt.target.value;
@@ -51,7 +50,6 @@ const Tokens = () => {
             });
         }
         tokenData.push(tokenDataObject);
-        console.log(tokenData, "tokenData");
         dispatch(
             setTxSendToken({
                 value: tokenData[0],
@@ -77,7 +75,7 @@ const Tokens = () => {
                 </Select>
             </div>
         </div>
-       
+
     );
 };
 

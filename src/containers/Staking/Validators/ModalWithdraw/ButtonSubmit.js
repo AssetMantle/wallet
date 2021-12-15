@@ -6,7 +6,7 @@ import {
 } from "../../../../store/actions/transactions/withdrawValidatorRewards";
 import {useDispatch, useSelector} from "react-redux";
 import {keplrSubmit} from "../../../../store/actions/transactions/keplr";
-import { WithdrawMsg} from "../../../../utils/protoMsgHelper";
+import {WithdrawMsg} from "../../../../utils/protoMsgHelper";
 import {setTxIno} from "../../../../store/actions/transactions/common";
 
 const ButtonSubmit = () => {
@@ -22,16 +22,16 @@ const ButtonSubmit = () => {
 
 
     const disable = (
-        validatorRewards.value === '' || validatorRewards.error.message !== '' || validator === '' || validatorRewards.value === 0 || memo .error.message !== ''
+        validatorRewards.value === '' || validatorRewards.error.message !== '' || validator === '' || validatorRewards.value === 0 || memo.error.message !== ''
     );
 
     const onClickKeplr = () => {
         dispatch(setTxIno({
-            value:{
-                modal:hideTxWithdrawValidatorRewardsModal(),
-                data:{
-                    message:'',
-                    memo:'',
+            value: {
+                modal: hideTxWithdrawValidatorRewardsModal(),
+                data: {
+                    message: '',
+                    memo: '',
                 }
             }
         }));
@@ -52,7 +52,6 @@ const ButtonSubmit = () => {
         </div>
     );
 };
-
 
 
 export default ButtonSubmit;

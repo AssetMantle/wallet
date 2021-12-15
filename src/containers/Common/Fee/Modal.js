@@ -1,4 +1,4 @@
-import { Modal as ReactModal } from 'react-bootstrap';
+import {Modal as ReactModal} from 'react-bootstrap';
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {hideFeeModal} from "../../../store/actions/transactions/fee";
@@ -60,7 +60,6 @@ const Modal = () => {
         </ReactModal>
     );
 };
-
 
 
 export default Modal;

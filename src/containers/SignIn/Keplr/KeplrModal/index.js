@@ -1,7 +1,7 @@
-import { Modal as ReactModal } from 'react-bootstrap';
+import {Modal as ReactModal} from 'react-bootstrap';
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {hideKeplrModal, fetchKeplrAddress} from "../../../../store/actions/signIn/keplr";
+import {fetchKeplrAddress, hideKeplrModal} from "../../../../store/actions/signIn/keplr";
 import {showSignInModal} from "../../../../store/actions/signIn/modal";
 import Icon from "../../../../components/Icon";
 import {useTranslation} from "react-i18next";
@@ -14,7 +14,6 @@ const KeplrModal = () => {
     const show = useSelector((state) => state.signInKeplr.keplrModal);
     const info = useSelector((state) => state.signInKeplr.keplrInfo);
 
-    console.log(info, "info");
     const dispatch = useDispatch();
 
     const handleClose = () => {
@@ -30,9 +29,9 @@ const KeplrModal = () => {
         dispatch(showSignInModal());
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(fetchKeplrAddress());
-    },[]);
+    }, []);
 
     return (
         <ReactModal

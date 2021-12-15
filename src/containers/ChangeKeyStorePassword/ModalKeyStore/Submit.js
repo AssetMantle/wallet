@@ -4,15 +4,15 @@ import {useDispatch, useSelector} from "react-redux";
 import helper from "../../../utils/helper";
 import transactions from "../../../utils/transactions";
 import wallet from "../../../utils/wallet";
-import {setResult, hideKeyStoreModal, showKeyStoreNewPasswordModal} from "../../../store/actions/changePassword";
+import {hideKeyStoreModal, setResult, showKeyStoreNewPasswordModal} from "../../../store/actions/changePassword";
 
 const Submit = () => {
     const password = useSelector((state) => state.keyStore.password);
     const keyStore = useSelector((state) => state.keyStore.keyStore);
 
-    const accountNumber =  useSelector((state) => state.advanced.accountNumber);
-    const accountIndex =  useSelector((state) => state.advanced.accountIndex);
-    const bip39PassPhrase =  useSelector((state) => state.advanced.bip39PassPhrase);
+    const accountNumber = useSelector((state) => state.advanced.accountNumber);
+    const accountIndex = useSelector((state) => state.advanced.accountIndex);
+    const bip39PassPhrase = useSelector((state) => state.advanced.bip39PassPhrase);
 
     const dispatch = useDispatch();
 
@@ -25,28 +25,23 @@ const Submit = () => {
                 const res = JSON.parse(event.target.result);
 
                 const decryptedData = helper.decryptStore(res, password.value);
-                console.log(decryptedData, "datad");
                 if (decryptedData.error != null) {
                     dispatch(setResult(
                         {
-                            value:'',
-                            error:{
-                                message:decryptedData.error
+                            value: '',
+                            error: {
+                                message: decryptedData.error
                             }
                         }));
                 } else {
                     let mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
-
-                    // localStorage.setItem('encryptedMnemonic', event.target.result);
                     const walletPath = transactions.makeHdPath(helper.getAccountNumber(accountNumber.value), helper.getAccountNumber(accountIndex.value));
-
                     const responseData = await wallet.createWallet(mnemonic, walletPath, bip39PassPhrase.value);
-                    console.log(responseData, "here in");
                     dispatch(setResult(
                         {
-                            value:responseData,
-                            error:{
-                                message:''
+                            value: responseData,
+                            error: {
+                                message: ''
                             }
                         }));
                     dispatch(hideKeyStoreModal());
@@ -56,9 +51,9 @@ const Submit = () => {
         } else {
             dispatch(setResult(
                 {
-                    value:'',
-                    error:{
-                        message:'File type not supported'
+                    value: '',
+                    error: {
+                        message: 'File type not supported'
                     }
                 }));
             console.log("error");

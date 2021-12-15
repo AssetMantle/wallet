@@ -12,9 +12,9 @@ const Address = () => {
 
     const onChange = (evt) => {
         dispatch(setAddress({
-            value:evt.target.value,
+            value: evt.target.value,
             error: {
-                message:''
+                message: ''
             }
         }));
     };

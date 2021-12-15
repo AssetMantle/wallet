@@ -1,6 +1,12 @@
 import {combineReducers} from "redux";
 import {TX_RESULT_MODAL_HIDE, TX_SUCCESS} from "../../../constants/common";
-import {TX_RE_DELEGATE_TO_ADDRESS_SET, TX_RE_DELEGATE_MODAL_SHOW, TX_RE_DELEGATE_MODAL_HIDE, TX_RE_DELEGATE_AMOUNT_SET, TX_RE_DELEGATE_MEMO_SET} from "../../../constants/redelegate";
+import {
+    TX_RE_DELEGATE_AMOUNT_SET,
+    TX_RE_DELEGATE_MEMO_SET,
+    TX_RE_DELEGATE_MODAL_HIDE,
+    TX_RE_DELEGATE_MODAL_SHOW,
+    TX_RE_DELEGATE_TO_ADDRESS_SET
+} from "../../../constants/redelegate";
 
 const amount = (state = {
     value: '',

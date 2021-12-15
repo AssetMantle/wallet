@@ -7,6 +7,7 @@ import Submit from "./Submit";
 import Icon from "../../../components/Icon";
 import {useTranslation} from "react-i18next";
 import {hideKeyStoreNewPasswordModal, showKeyStoreModal} from "../../../store/actions/changePassword";
+
 const ModalNewPassword = () => {
     const {t} = useTranslation();
     const show = useSelector((state) => state.changePassword.newPasswordModal);
@@ -59,7 +60,6 @@ const ModalNewPassword = () => {
         </ReactModal>
     );
 };
-
 
 
 export default ModalNewPassword;

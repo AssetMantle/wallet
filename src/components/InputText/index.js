@@ -15,7 +15,7 @@ const InputText = ({
     onChange = helper.emptyFunc,
     onKeyPress = helper.emptyFunc,
     onBlur = helper.emptyFunc,
-})=>{
+}) => {
     return (
         <div className="form-control-section flex-fill">
             <Form.Control

@@ -7,12 +7,13 @@ import TokenInfo from "../Common/TokenInfo";
 import InfoRefresh from "../Refresh";
 import SendIbc from "./SendIbc/index";
 import Icon from "../../components/Icon";
-import ModalWithdraw from "./WithDrawTotal/ModalWithDraw";
-import ModalSetWithdrawAddress from "./SetWithdrawAddress/ModalSetWithdrawAddress";
+import ModalWithdraw from "./ModalWithDraw";
+import ModalSetWithdrawAddress from "./ModalSetWithdrawAddress";
 import FeeModal from "../Common/Fee/Modal";
 import KeyStoreModal from "../Common/KeyStore/Modal";
 import Loader from "../../components/Loader";
 import ModalViewTxnResponse from "../Common/ModalViewTxnResponse";
+
 const Wallet = () => {
 
     const popoverMemo = (

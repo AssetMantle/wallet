@@ -23,11 +23,11 @@ const ModalWithdraw = () => {
     const response = useSelector(state => state.common.error);
     const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
 
-    const handleClose = () =>{
+    const handleClose = () => {
         dispatch(hideTxWithdrawValidatorRewardsModal());
     };
 
-    const handlePrevious = () =>{
+    const handlePrevious = () => {
         dispatch(showValidatorTxModal());
         dispatch(hideTxWithdrawValidatorRewardsModal());
     };
@@ -41,10 +41,12 @@ const ModalWithdraw = () => {
     );
 
     const setWithdrawAddressHandler = () => {
-        dispatch(setPreviousModalName({  value:'withdrawValidator',
+        dispatch(setPreviousModalName({
+            value: 'withdrawValidator',
             error: {
-                message:''
-            }}));
+                message: ''
+            }
+        }));
         dispatch(hideTxWithdrawValidatorRewardsModal());
         dispatch(showTxWithDrawAddressModal());
     };
@@ -103,7 +105,6 @@ const ModalWithdraw = () => {
         </ReactModal>
     );
 };
-
 
 
 export default ModalWithdraw;

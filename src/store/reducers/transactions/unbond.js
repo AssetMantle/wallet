@@ -1,6 +1,11 @@
 import {combineReducers} from "redux";
 import {TX_RESULT_MODAL_HIDE, TX_SUCCESS} from "../../../constants/common";
-import {TX_UNBOND_MODAL_HIDE, TX_UNBOND_MODAL_SHOW, TX_UNBOND_AMOUNT_SET, TX_UNBOND_MEMO_SET} from "../../../constants/unbond";
+import {
+    TX_UNBOND_AMOUNT_SET,
+    TX_UNBOND_MEMO_SET,
+    TX_UNBOND_MODAL_HIDE,
+    TX_UNBOND_MODAL_SHOW
+} from "../../../constants/unbond";
 
 const amount = (state = {
     value: '',

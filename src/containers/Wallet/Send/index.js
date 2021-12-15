@@ -13,8 +13,6 @@ const Send = () => {
     const txName = useSelector((state) => state.common.txName.value);
     const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
 
-    console.log(loginInfo, "loginInfo", response.error.message, txName.name, "error in index");
-
 
     return (
         <div className="send-container">
@@ -34,7 +32,6 @@ const Send = () => {
         </div>
     );
 };
-
 
 
 export default Send;

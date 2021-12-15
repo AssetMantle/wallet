@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import {combineReducers} from 'redux';
 import {TX_GAS_SET} from "../../../constants/gas";
 import {TX_RESULT_MODAL_HIDE, TX_SUCCESS} from "../../../constants/common";
 import config from "../../../config";

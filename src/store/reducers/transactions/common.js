@@ -1,13 +1,14 @@
-import { combineReducers } from 'redux';
+import {combineReducers} from 'redux';
 import {
+    SET_LOGIN_INFO,
+    SET_TX_INFO,
+    SET_TX_NAME,
+    TX_FAILED,
+    TX_IN_PROGRESS,
+    TX_RESPONSE,
     TX_RESULT_MODAL_HIDE,
     TX_RESULT_MODAL_SHOW,
-    SET_LOGIN_INFO,
-    SET_TX_NAME,
-    TX_IN_PROGRESS,
-    TX_SUCCESS,
-    TX_FAILED, TX_RESPONSE,
-    SET_TX_INFO
+    TX_SUCCESS
 } from "../../../constants/common";
 import {KEYSTORE_MODAL_HIDE} from "../../../constants/keyStore";
 import {TX_WITH_DRAW_TOTAL_REWARDS_MODAL_HIDE} from "../../../constants/withdrawTotalRewards";
@@ -32,7 +33,7 @@ const modal = (state = false, {
 
 const txName = (state = {
     value: {
-        name:'',
+        name: '',
     },
 }, {
     type,
@@ -49,7 +50,7 @@ const txName = (state = {
         return {
             ...state,
             value: {
-                name:'',
+                name: '',
             },
         };
     default:
@@ -59,7 +60,7 @@ const txName = (state = {
 
 const txInfo = (state = {
     value: {
-        data:''
+        data: ''
     },
 }, {
     type,
@@ -76,7 +77,7 @@ const txInfo = (state = {
         return {
             ...state,
             value: {
-                data:''
+                data: ''
             },
         };
     default:
@@ -85,10 +86,10 @@ const txInfo = (state = {
 };
 
 const loginInfo = (state = {
-    loggedIn:false,
+    loggedIn: false,
     encryptedSeed: false,
-    error:{
-        message:''
+    error: {
+        message: ''
     },
 }, {
     type,
@@ -98,7 +99,7 @@ const loginInfo = (state = {
     case SET_LOGIN_INFO:
         return {
             ...state,
-            loggedIn:data.loggedIn,
+            loggedIn: data.loggedIn,
             encryptedSeed: data.encryptedSeed,
             error: {
                 ...state.error,
@@ -153,7 +154,7 @@ const error = (state = {
                 message: data,
             },
         };
-        
+
     case TX_RESULT_MODAL_HIDE:
     case KEYSTORE_MODAL_HIDE:
     case TX_WITH_DRAW_TOTAL_REWARDS_MODAL_HIDE:
@@ -173,7 +174,6 @@ const error = (state = {
         return state;
     }
 };
-
 
 
 export default combineReducers({

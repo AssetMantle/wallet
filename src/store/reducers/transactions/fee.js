@@ -1,13 +1,12 @@
-import { combineReducers } from 'redux';
-import {TX_FEE_SET} from "../../../constants/fee";
+import {combineReducers} from 'redux';
+import {FEE_MODAL_HIDE, FEE_MODAL_SHOW, TX_FEE_SET} from "../../../constants/fee";
 import {TX_RESULT_MODAL_HIDE, TX_SUCCESS} from "../../../constants/common";
-import {FEE_MODAL_SHOW, FEE_MODAL_HIDE} from "../../../constants/fee";
 import config from "../../../config";
 
 const fee = (state = {
     value: {
-        fee:config.averageFee,
-        feeType:"Average",
+        fee: config.averageFee,
+        feeType: "Average",
     },
     error: {
         message: '',

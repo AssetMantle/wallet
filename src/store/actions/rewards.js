@@ -61,7 +61,6 @@ export const fetchValidatorCommissionInfoSuccess = (list) => {
 };
 
 export const fetchTotalRewards = (address) => {
-    console.log("heere");
     return async dispatch => {
         try {
             dispatch(fetchRewardsProgress());

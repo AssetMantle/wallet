@@ -20,10 +20,9 @@ const ButtonSend = () => {
     let inputChannelID = chainInfo.customChain ? customChannel.value : chainInfo.chainID;
     let inputPort = chainInfo.customChain ? customPort.value : "transfer";
     const memo = useSelector((state) => state.sendIbc.memo);
-    console.log(inputChannelID, inputPort, "inputPort");
 
     const disable = (
-        amount.value === '' || amount.error.message !== '' || toAddress.value === '' || toAddress.error.message !== ''|| memo.error.message !== ''
+        amount.value === '' || amount.error.message !== '' || toAddress.value === '' || toAddress.error.message !== '' || memo.error.message !== ''
     );
 
     const onClick = async () => {
@@ -38,21 +37,20 @@ const ButtonSend = () => {
                 : error.message);
             dispatch(txFailed(error.message));
         });
-        console.log(msg, "message");
 
     };
 
     const onClickKeplr = async () => {
         dispatch(setTxName({
-            value:{
-                name:"ibc",
+            value: {
+                name: "ibc",
             }
         }));
         let msg = transactions.MakeIBCTransferMsg(inputChannelID, loginInfo.address,
             toAddress.value, (amount.value * config.xprtValue), undefined, undefined,
             token.value.tokenDenom, chainInfo.selectedChannel ? chainInfo.selectedChannel.url : undefined, inputPort);
         msg.then(result => {
-            dispatch(keplrSubmit( [result]));
+            dispatch(keplrSubmit([result]));
         }).catch(error => {
             Sentry.captureException(error.response
                 ? error.response.data.message
@@ -76,7 +74,6 @@ const ButtonSend = () => {
         </div>
     );
 };
-
 
 
 export default ButtonSend;

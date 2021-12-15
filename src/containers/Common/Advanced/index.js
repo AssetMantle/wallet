@@ -1,9 +1,9 @@
-import React, { useState} from 'react';
+import React, {useState} from 'react';
 // import InputFieldNumber from "../../../components/InputFieldNumber";
 // import {useSelector, useDispatch} from "react-redux";
 import {useTranslation} from "react-i18next";
 import Icon from "../../../components/Icon";
-import { Card} from "react-bootstrap";
+import {Card} from "react-bootstrap";
 import AccountNumber from "./AccountNumber";
 import AccountIndex from "./AccountIndex";
 import Bip39PassPhrase from "./Bip39PassPhrase";
@@ -20,7 +20,7 @@ const Advanced = () => {
     };
 
     return (
-    // .advanced-wallet-accordion .card .collapse.show
+        // .advanced-wallet-accordion .card .collapse.show
         <div className="advanced-wallet-accordion">
             <Card>
                 <Card.Header>
@@ -43,10 +43,10 @@ const Advanced = () => {
 
                     </button>
                 </Card.Header>
-                <div className={`accordion-body ${advanceMode ? 'show': ''}`}>
+                <div className={`accordion-body ${advanceMode ? 'show' : ''}`}>
                     <AccountNumber/>
-                    <AccountIndex />
-                    <Bip39PassPhrase />
+                    <AccountIndex/>
+                    <Bip39PassPhrase/>
                 </div>
             </Card>
         </div>

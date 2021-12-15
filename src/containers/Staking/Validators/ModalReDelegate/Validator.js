@@ -9,7 +9,7 @@ import {setTxReDelegateAddress} from "../../../../store/actions/transactions/red
 const Validator = () => {
     const {t} = useTranslation();
     const dispatch = useDispatch();
-    const toAddress =  useSelector((state) => state.redelegate.toAddress);
+    const toAddress = useSelector((state) => state.redelegate.toAddress);
     const validators = useSelector((state) => state.validators.validators);
     const validator = useSelector((state) => state.validators.validator.value);
     let activeValidatorsList;
@@ -21,7 +21,7 @@ const Validator = () => {
 
     const onChangeSelect = (evt) => {
         dispatch(setTxReDelegateAddress({
-            value:evt.target.value,
+            value: evt.target.value,
             error: new Error(''),
         }));
 
@@ -73,7 +73,6 @@ const Validator = () => {
         </div>
     );
 };
-
 
 
 export default Validator;

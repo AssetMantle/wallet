@@ -1,7 +1,7 @@
 import React from 'react';
 import InputFieldNumber from "../../../components/InputFieldNumber";
 import {setTxSendAmount} from "../../../store/actions/transactions/send";
-import {useSelector, useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {formatNumber} from "../../../utils/scripts";
 import NumberView from "../../../components/NumberView";
 import {ValidateSendAmount, ValidateSpecialCharacters} from "../../../utils/validations";
@@ -16,20 +16,20 @@ const Amount = () => {
 
     const dispatch = useDispatch();
 
-    const onChange = (evt) =>{
+    const onChange = (evt) => {
         let rex = /^\d*\.?\d{0,6}$/;
         if (rex.test(evt.target.value)) {
             if (token.tokenDenom === config.coinDenom) {
                 dispatch(setTxSendAmount({
-                    value:evt.target.value,
-                    error:ValidateSendAmount(transferableAmount, (evt.target.value * 1))
+                    value: evt.target.value,
+                    error: ValidateSendAmount(transferableAmount, (evt.target.value * 1))
                 }));
 
             } else {
                 dispatch(
                     setTxSendAmount({
-                        value:evt.target.value,
-                        error:ValidateSendAmount(token.transferableAmount, (evt.target.value * 1))
+                        value: evt.target.value,
+                        error: ValidateSendAmount(token.transferableAmount, (evt.target.value * 1))
                     })
                 );
             }
@@ -41,18 +41,13 @@ const Amount = () => {
     const selectTotalBalanceHandler = (value) => {
         dispatch(
             setTxSendAmount({
-                value:value,
-                error:ValidateSendAmount(value, (value* 1))
+                value: value,
+                error: ValidateSendAmount(value, (value * 1))
             })
         );
-        // setAmountField(value.replace(/,/g, '') * 1);
-        // setEnteredAmount(value.replace(/,/g, ''));
     };
 
 
-    if(Object.keys(token).length !== 0){
-        console.log(token, "token ggg");
-    }
     return (
         <div className="form-field p-0">
             <p className="label amount-label">
@@ -80,7 +75,7 @@ const Amount = () => {
                         <span
                             className={transferableAmount === 0 ? "empty info-data" : "info-data info-link"}
                             onClick={() => selectTotalBalanceHandler(formatNumber(transferableAmount))}><span
-                                className="title">Transferable Balance:</span> 
+                                className="title">Transferable Balance:</span>
                             <span
                                 className="value"
                                 title={transferableAmount}>
@@ -102,7 +97,7 @@ const Amount = () => {
                     error={amount.error}
                     onChange={onChange}
                 />
-         
+
             </div>
         </div>
     );

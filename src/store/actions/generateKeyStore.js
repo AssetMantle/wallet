@@ -28,7 +28,6 @@ export const setKeyStorePassword = (data) => {
 
 
 export const showKeyStoreMnemonicModal = (data) => {
-    console.log("here");
     return {
         type: KEYSTORE_MNEMONIC_MODAL_SHOW,
         data,
@@ -43,7 +42,6 @@ export const hideKeyStoreMnemonicModal = (data) => {
 };
 
 export const showKeyStorePasswordModal = (data) => {
-    console.log("here");
     return {
         type: KEYSTORE_PASSWORD_MODAL_SHOW,
         data,

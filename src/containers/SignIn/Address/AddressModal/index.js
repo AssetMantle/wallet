@@ -7,11 +7,11 @@ import Icon from "../../../../components/Icon";
 import {useTranslation} from "react-i18next";
 import Address from "./Address";
 import ButtonSubmit from "./ButtonSubmit";
+
 const AddressModal = () => {
     const {t} = useTranslation();
     const show = useSelector((state) => state.signInAddress.addressModal);
     const error = useSelector((state) => state.common.loginInfo.error);
-    console.log(show, "show");
     const dispatch = useDispatch();
 
     const handleClose = () => {

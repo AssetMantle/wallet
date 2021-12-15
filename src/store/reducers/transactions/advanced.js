@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import {combineReducers} from 'redux';
 import {SET_ACCOUNT_INDEX, SET_ACCOUNT_NUMBER, SET_BIP_39_PASSPHRASE} from "../../../constants/advanced";
 import {KEYSTORE_MODAL_HIDE} from "../../../constants/keyStore";
 import {TX_RESULT_MODAL_HIDE} from "../../../constants/common";

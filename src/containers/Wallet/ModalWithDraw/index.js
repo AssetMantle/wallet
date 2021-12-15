@@ -2,19 +2,17 @@ import {Modal as ReactModal, OverlayTrigger, Popover} from 'react-bootstrap';
 import React from 'react';
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
-import {hideTxWithDrawTotalModal} from "../../../../store/actions/transactions/withdrawTotalRewards";
-import {
-    setPreviousModalName,
-    showTxWithDrawAddressModal
-} from "../../../../store/actions/transactions/setWithdrawAddress";
-import NumberView from "../../../../components/NumberView";
-import {formatNumber} from "../../../../utils/scripts";
+import {hideTxWithDrawTotalModal} from "../../../store/actions/transactions/withdrawTotalRewards";
+import {setPreviousModalName, showTxWithDrawAddressModal} from "../../../store/actions/transactions/setWithdrawAddress";
+import NumberView from "../../../components/NumberView";
+import {formatNumber} from "../../../utils/scripts";
 import ValidatorCommission from "./ValidatorCommission";
 import Validators from "./Validators";
 import Memo from "./Memo";
 import ButtonNext from "./ButtonNext";
-import Icon from "../../../../components/Icon";
-import config from "../../../../config";
+import Icon from "../../../components/Icon";
+import config from "../../../config";
+
 const ModalWithDraw = () => {
     const {t} = useTranslation();
     const show = useSelector((state) => state.mulitpleRewardsWithDraw.modal);
@@ -32,10 +30,12 @@ const ModalWithDraw = () => {
     };
 
     const setWithdrawAddressHandler = () => {
-        dispatch(setPreviousModalName({  value:'withdrawTotal',
+        dispatch(setPreviousModalName({
+            value: 'withdrawTotal',
             error: {
-                message:''
-            }}));
+                message: ''
+            }
+        }));
         dispatch(hideTxWithDrawTotalModal());
         dispatch(showTxWithDrawAddressModal());
     };

@@ -1,6 +1,6 @@
-import {SET_ACCOUNT_NUMBER, SET_ACCOUNT_INDEX, SET_BIP_39_PASSPHRASE} from "../../../constants/advanced";
+import {SET_ACCOUNT_INDEX, SET_ACCOUNT_NUMBER, SET_BIP_39_PASSPHRASE} from "../../../constants/advanced";
 
-export const setAccountNumber= (data) => {
+export const setAccountNumber = (data) => {
     return {
         type: SET_ACCOUNT_NUMBER,
         data,

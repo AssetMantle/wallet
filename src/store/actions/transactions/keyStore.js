@@ -1,8 +1,11 @@
-import {TX_KEY_STORE_SET, TX_KEY_STORE_PASSWORD_SET} from "../../../constants/keyStore";
+import {
+    KEYSTORE_MODAL_HIDE,
+    KEYSTORE_MODAL_SHOW,
+    TX_KEY_STORE_PASSWORD_SET,
+    TX_KEY_STORE_SET
+} from "../../../constants/keyStore";
 import transactions from "../../../utils/transactions";
-import {KEYSTORE_MODAL_HIDE, KEYSTORE_MODAL_SHOW} from "../../../constants/keyStore";
-import {txResponse, txFailed, txSuccess, txInProgress, setLoginInfo} from "./common";
-import {showTxResultModal} from "./common";
+import {setLoginInfo, showTxResultModal, txFailed, txInProgress, txResponse, txSuccess} from "./common";
 import helper from "../../../utils/helper";
 import * as Sentry from "@sentry/browser";
 
@@ -21,7 +24,6 @@ export const setTxKeyStorePassword = (data) => {
 };
 
 export const showKeyStoreModal = (data) => {
-    console.log("here");
     return {
         type: KEYSTORE_MODAL_SHOW,
         data,
@@ -55,7 +57,6 @@ export const keyStoreSubmit = (loginAddress) => {
             const gas = getState().gas.gas.value;
 
             let mnemonic = "";
-            console.log(encryptedSeed, "encryptedSeed", accountNumber, accountIndex);
             if (encryptedSeed) {
                 const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
                 const res = JSON.parse(encryptedMnemonic);
@@ -63,14 +64,10 @@ export const keyStoreSubmit = (loginAddress) => {
                 if (decryptedData.error != null) {
                     throw new Error(decryptedData.error);
                 }
-                console.log("innn", "encryptedSeed");
                 mnemonic = decryptedData.mnemonic;
             } else {
                 mnemonic = await transactions.PrivateKeyReader(keyStoreData.value, password.value, loginAddress, accountNumber, accountIndex);
-                console.log(mnemonic, "encryptedSeedmnemonic");
-
             }
-            console.log(loginAddress, formData, fee, gas, mnemonic, txName, accountNumber, accountIndex, bip39PassPhrase, "txn data");
             let result = await transactions.getTransactionResponse(loginAddress, formData, fee, gas, mnemonic, txName, accountNumber, accountIndex, bip39PassPhrase);
             if (result.code !== undefined) {
                 dispatch(setLoginInfo({
@@ -83,13 +80,11 @@ export const keyStoreSubmit = (loginAddress) => {
                 dispatch(txSuccess());
                 dispatch(txResponse(result));
                 dispatch(showTxResultModal());
-                console.log(result, "result");
             }
-        }catch (error) {
+        } catch (error) {
             Sentry.captureException(error.response
                 ? error.response.data.message
                 : error.message);
-            console.log(error.message, "err.message");
             dispatch(txFailed(error.message));
         }
     };

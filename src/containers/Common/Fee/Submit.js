@@ -11,15 +11,15 @@ const Submit = () => {
     const dispatch = useDispatch();
 
     const onClick = () => {
-        if(loginMode === "ledger"){
+        if (loginMode === "ledger") {
             dispatch(ledgerSubmit(loginAddress, loginMode));
-        }else {
+        } else {
             dispatch(feeSubmitKeyStore());
         }
     };
 
     const fee = useSelector((state) => state.fee.fee);
-    const gas= useSelector((state) => state.gas.gas);
+    const gas = useSelector((state) => state.gas.gas);
 
     const disable = (
         fee.error.message !== '' || gas.error.message !== ''

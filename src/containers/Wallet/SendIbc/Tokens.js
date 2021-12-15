@@ -13,13 +13,13 @@ const Tokens = () => {
     const transferableAmount = useSelector((state) => state.balance.transferableAmount);
     const dispatch = useDispatch();
 
-    let tokenData=[];
+    let tokenData = [];
 
-    useEffect(()=>{
-        const initialObject ={
-            tokenDenom:config.coinDenom,
-            token:config.coinDenom,
-            transferableAmount:transferableAmount
+    useEffect(() => {
+        const initialObject = {
+            tokenDenom: config.coinDenom,
+            token: config.coinDenom,
+            transferableAmount: transferableAmount
         };
         tokenData.push(initialObject);
         dispatch(
@@ -27,7 +27,7 @@ const Tokens = () => {
                 value: tokenData[0],
             })
         );
-    },[]);
+    }, []);
 
     const onTokenChangeSelect = (evt) => {
         dispatch(
@@ -35,8 +35,8 @@ const Tokens = () => {
                 value: [],
             })
         );
-        tokenData=[];
-        const tokenDataObject={};
+        tokenData = [];
+        const tokenDataObject = {};
         tokenDataObject.token = evt.target.value;
         if (evt.target.value === config.coinDenom) {
             tokenDataObject.tokenDenom = evt.target.value;
@@ -51,7 +51,6 @@ const Tokens = () => {
             });
         }
         tokenData.push(tokenDataObject);
-        console.log(tokenData, "tokenData");
         dispatch(
             setTxIbcSendToken({
                 value: tokenData[0],
@@ -73,7 +72,7 @@ const Tokens = () => {
                                         key={index + 1}
                                         className=""
                                         value={item.denom}>
-                                    XPRT
+                                        XPRT
                                     </MenuItem>
                                 );
                             }
@@ -83,7 +82,7 @@ const Tokens = () => {
                                         key={index + 1}
                                         className=""
                                         value={item.denomTrace}>
-                                    ATOM ({item.denom.path})
+                                        ATOM ({item.denom.path})
                                     </MenuItem>
                                 );
                             }

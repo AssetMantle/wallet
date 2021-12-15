@@ -1,6 +1,6 @@
 import React from 'react';
 import InputFieldNumber from "../../../../components/InputFieldNumber";
-import {useSelector, useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {ValidateAccountIndex, ValidateSpecialCharacters} from "../../../../utils/validations";
 import {useTranslation} from "react-i18next";
 import {setAccountIndex} from "../../../../store/actions/signIn/ledger";
@@ -13,8 +13,8 @@ const AccountIndex = () => {
 
     const onChange = (evt) => {
         dispatch(setAccountIndex({
-            value:(evt.target.value),
-            error:ValidateAccountIndex(evt.target.value)
+            value: (evt.target.value),
+            error: ValidateAccountIndex(evt.target.value)
         }));
     };
 

@@ -9,6 +9,7 @@ import Submit from "./Submit";
 import Icon from "../../../components/Icon";
 import Advanced from "../../Common/Advanced";
 import {useTranslation} from "react-i18next";
+
 const ModalKeyStore = () => {
     const {t} = useTranslation();
     const show = useSelector((state) => state.changePassword.keyStoreModal);
@@ -58,7 +59,6 @@ const ModalKeyStore = () => {
         </ReactModal>
     );
 };
-
 
 
 export default ModalKeyStore;

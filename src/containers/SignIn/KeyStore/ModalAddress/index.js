@@ -1,16 +1,16 @@
-import { Modal as ReactModal } from 'react-bootstrap';
+import {Modal as ReactModal} from 'react-bootstrap';
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {hideKeyStoreResultModal, showKeyStoreModal, keyStoreLogin} from "../../../../store/actions/signIn/keyStore";
+import {hideKeyStoreResultModal, keyStoreLogin, showKeyStoreModal} from "../../../../store/actions/signIn/keyStore";
 import Icon from "../../../../components/Icon";
 import {useTranslation} from "react-i18next";
 import {useHistory} from "react-router-dom";
+
 const ModalAddress = () => {
     const {t} = useTranslation();
     const history = useHistory();
     const show = useSelector((state) => state.signInKeyStore.keyStoreResultModal);
     const response = useSelector((state) => state.signInKeyStore.response.value);
-    console.log(response, "response");
     const dispatch = useDispatch();
 
     const handleClose = () => {
@@ -45,7 +45,7 @@ const ModalAddress = () => {
                 </div>
                 <h3 className="heading">{t("LOGIN_WITH_KEYSTORE")}</h3>
             </ReactModal.Header>
-            
+
             <ReactModal.Body className="create-wallet-body import-wallet-body">
                 <p className="mnemonic-result">
                     <b>{t("WALLET_PATH")}: </b>{response.walletPath}</p>
@@ -58,7 +58,6 @@ const ModalAddress = () => {
         </ReactModal>
     );
 };
-
 
 
 export default ModalAddress;

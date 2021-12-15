@@ -4,9 +4,10 @@ import Icon from "../../../components/Icon";
 import InputText from "../../../components/InputText";
 import helper from "../../../utils/helper";
 import {useDispatch, useSelector} from "react-redux";
-import {setTxIbcSendAddress}from "../../../store/actions/transactions/sendIbc";
+import {setTxIbcSendAddress} from "../../../store/actions/transactions/sendIbc";
 import {useTranslation} from "react-i18next";
 import {ValidateAlphaNumeric} from "../../../utils/validations";
+
 const ToAddress = () => {
     const {t} = useTranslation();
     const toAddress = useSelector((state) => state.sendIbc.toAddress);
@@ -14,16 +15,16 @@ const ToAddress = () => {
 
     const onChange = (evt) => {
         dispatch(setTxIbcSendAddress({
-            value:evt.target.value,
+            value: evt.target.value,
             error: {
                 message: ''
             }
         }));
     };
 
-    const onBlur = (evt) =>{
+    const onBlur = (evt) => {
         dispatch(setTxIbcSendAddress({
-            value:evt.target.value,
+            value: evt.target.value,
             error: helper.validateAddress(evt.target.value),
         }));
     };

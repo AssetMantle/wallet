@@ -17,24 +17,25 @@ const Modal = () => {
     const show = useSelector((state) => state.keyStore.modal);
     const encryptedSeed = useSelector((state) => state.common.loginInfo.encryptedSeed);
     const response = useSelector((state) => state.common.error);
-    console.log(response, "in ke");
     const dispatch = useDispatch();
     const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
-    useEffect(()=>{
+    useEffect(() => {
         if (encryptedMnemonic !== null) {
             dispatch(setLoginInfo({
-                encryptedSeed:true,
-                error:{
-                    message:''
-                }}));
+                encryptedSeed: true,
+                error: {
+                    message: ''
+                }
+            }));
         } else {
             dispatch(setLoginInfo({
-                encryptedSeed:false,
-                error:{
-                    message:''
-                }}));
+                encryptedSeed: false,
+                error: {
+                    message: ''
+                }
+            }));
         }
-    },[]);
+    }, []);
 
     const handleClose = () => {
         dispatch(hideKeyStoreModal());
@@ -42,27 +43,28 @@ const Modal = () => {
 
     const handleUpdateKeystore = () => {
         dispatch(setAccountIndex({
-            value:'',
-            error:{message:''}
+            value: '',
+            error: {message: ''}
         }));
         dispatch(setAccountNumber({
-            value:'',
-            error:{message:''}
+            value: '',
+            error: {message: ''}
         }));
         dispatch(setBip39Passphrase({
-            value:'',
-            error:{message:''}
+            value: '',
+            error: {message: ''}
         }));
         dispatch(setTxKeyStorePassword({
-            value:'',
-            error:{message:''}
+            value: '',
+            error: {message: ''}
         }));
         dispatch(txFailed(""));
         dispatch(setLoginInfo({
-            encryptedSeed:false,
-            error:{
-                message:''
-            }}));
+            encryptedSeed: false,
+            error: {
+                message: ''
+            }
+        }));
     };
 
 
@@ -117,7 +119,6 @@ const Modal = () => {
         </ReactModal>
     );
 };
-
 
 
 export default Modal;

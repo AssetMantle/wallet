@@ -2,18 +2,21 @@ import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import ReactMultiSelectCheckboxes from "react-multiselect-checkboxes";
 import {useTranslation} from "react-i18next";
-import transactions from "../../../../utils/transactions";
-import {WithdrawMsg} from "../../../../utils/protoMsgHelper";
-import {setTxWithDrawTotalValidators, setTxWithDrawTotalRewardsAmount} from "../../../../store/actions/transactions/withdrawTotalRewards";
-import {ValidateMultipleValidatorsClaim} from "../../../../utils/validations";
-import NumberView from "../../../../components/NumberView";
-import {formatNumber} from "../../../../utils/scripts";
+import transactions from "../../../utils/transactions";
+import {WithdrawMsg} from "../../../utils/protoMsgHelper";
+import {
+    setTxWithDrawTotalRewardsAmount,
+    setTxWithDrawTotalValidators
+} from "../../../store/actions/transactions/withdrawTotalRewards";
+import {ValidateMultipleValidatorsClaim} from "../../../utils/validations";
+import NumberView from "../../../components/NumberView";
+import {formatNumber} from "../../../utils/scripts";
 
 const Validators = () => {
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
-    const validatorsList =  useSelector((state) => state.rewards.validatorsRewardsList);
+    const validatorsList = useSelector((state) => state.rewards.validatorsRewardsList);
     let validatorsRewards = useSelector((state) => state.mulitpleRewardsWithDraw.rewards);
     const tokenPrice = useSelector((state) => state.tokenPrice.tokenPrice);
 
@@ -25,11 +28,11 @@ const Validators = () => {
             messages.push(WithdrawMsg(loginInfo.address, item.value));
         });
         dispatch(setTxWithDrawTotalValidators({
-            value:messages,
+            value: messages,
             error: ValidateMultipleValidatorsClaim(evt),
         }));
         dispatch(setTxWithDrawTotalRewardsAmount({
-            value:totalValidatorsRewards,
+            value: totalValidatorsRewards,
             error: ValidateMultipleValidatorsClaim(evt),
         }));
     };
@@ -57,7 +60,6 @@ const Validators = () => {
         </>
     );
 };
-
 
 
 export default Validators;

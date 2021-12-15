@@ -1,4 +1,4 @@
-import { Modal as ReactModal } from 'react-bootstrap';
+import {Modal as ReactModal} from 'react-bootstrap';
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {hideKeyStoreModal} from "../../../../store/actions/signIn/keyStore";
@@ -8,7 +8,7 @@ import Submit from "./Submit";
 import Icon from "../../../../components/Icon";
 import Advanced from "../../../Common/Advanced";
 import {useTranslation} from "react-i18next";
-import {showSignInModal, hideSignInModal} from "../../../../store/actions/signIn/modal";
+import {hideSignInModal, showSignInModal} from "../../../../store/actions/signIn/modal";
 
 const ModalForm = () => {
     const {t} = useTranslation();
@@ -65,7 +65,6 @@ const ModalForm = () => {
         </ReactModal>
     );
 };
-
 
 
 export default ModalForm;

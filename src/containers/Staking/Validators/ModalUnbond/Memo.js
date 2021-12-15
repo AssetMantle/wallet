@@ -26,16 +26,16 @@ const Memo = () => {
         </Popover>
     );
 
-    const onChange = (evt) =>{
+    const onChange = (evt) => {
         dispatch(setTxMemo({
-            value:evt.target.value,
+            value: evt.target.value,
             error: ValidateMemo(evt.target.value)
         }));
     };
 
-    const onBlur = (evt) =>{
+    const onBlur = (evt) => {
         dispatch(setTxMemo({
-            value:evt.target.value,
+            value: evt.target.value,
             error: ValidateMemo(evt.target.value),
         }));
     };
@@ -64,7 +64,7 @@ const Memo = () => {
                 </OverlayTrigger>
             </div>
 
-            <div className={`form-field memo-dropdown-section-body ${memoStatus ? 'show': ''}`}>
+            <div className={`form-field memo-dropdown-section-body ${memoStatus ? 'show' : ''}`}>
                 <p className="label info">{t("MEMO")}
                     <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
                         overlay={popoverMemo}>

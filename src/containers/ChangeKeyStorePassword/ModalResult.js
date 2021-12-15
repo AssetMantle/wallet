@@ -16,7 +16,6 @@ const ModalResult = () => {
     const handleClose = () => {
         dispatch(hideResultModal());
     };
-    console.log(response.value, password.value, "new data");
 
     const handleResetSubmit = async () => {
         const mnemonic = response.value.mnemonic;
@@ -37,7 +36,6 @@ const ModalResult = () => {
         link.click();
         document.body.removeChild(link);
     };
-
 
 
     return (
@@ -66,7 +64,6 @@ const ModalResult = () => {
         </ReactModal>
     );
 };
-
 
 
 export default ModalResult;

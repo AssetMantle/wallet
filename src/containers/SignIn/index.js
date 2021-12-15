@@ -41,7 +41,8 @@ const SignIn = (props) => {
             dispatch(showKeyStoreModal());
             dispatch(hideSignInModal());
             setWithKeyStore(true);
-        } if(key === "withKeplr"){
+        }
+        if (key === "withKeplr") {
             dispatch(showKeplrModal());
             dispatch(hideSignInModal());
             setWithKeplr(true);

@@ -1,10 +1,14 @@
-import { combineReducers } from 'redux';
-import {TX_KEY_STORE_SET, TX_KEY_STORE_PASSWORD_SET} from "../../../constants/keyStore";
+import {combineReducers} from 'redux';
+import {
+    KEYSTORE_MODAL_HIDE,
+    KEYSTORE_MODAL_SHOW,
+    TX_KEY_STORE_PASSWORD_SET,
+    TX_KEY_STORE_SET
+} from "../../../constants/keyStore";
 import {TX_RESULT_MODAL_HIDE, TX_SUCCESS} from "../../../constants/common";
-import {KEYSTORE_MODAL_SHOW, KEYSTORE_MODAL_HIDE} from "../../../constants/keyStore";
 
 const keyStore = (state = {
-    value:'',
+    value: '',
     error: {
         message: '',
     },

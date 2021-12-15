@@ -9,6 +9,7 @@ import ButtonSubmit from "./ButtonSubmit";
 import {showValidatorTxModal} from "../../../../store/actions/validators";
 import Memo from "./Memo";
 import config from "../../../../config";
+
 const ModalDelegate = (props) => {
     const dispatch = useDispatch();
     const show = useSelector((state) => state.delegate.modal);
@@ -25,11 +26,11 @@ const ModalDelegate = (props) => {
         </Popover>
     );
 
-    const handleClose = () =>{
+    const handleClose = () => {
         dispatch(hideTxDelegateModal());
     };
 
-    const handlePrevious = () =>{
+    const handlePrevious = () => {
         dispatch(showValidatorTxModal());
         dispatch(hideTxDelegateModal());
     };

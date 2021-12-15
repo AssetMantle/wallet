@@ -1,8 +1,4 @@
-import {
-    SIGN_IN_KEPLR_MODAL_SHOW,
-    SIGN_IN_KEPLR_MODAL_HIDE,
-    SET_KEPLR_INFO
-} from "../../../constants/signIn/keplr";
+import {SET_KEPLR_INFO, SIGN_IN_KEPLR_MODAL_HIDE, SIGN_IN_KEPLR_MODAL_SHOW} from "../../../constants/signIn/keplr";
 import {combineReducers} from "redux";
 
 const keplrModal = (state = false, {

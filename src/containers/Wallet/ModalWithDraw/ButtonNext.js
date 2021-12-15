@@ -1,12 +1,9 @@
 import React from 'react';
-import Button from "./../../../../components/Button";
+import Button from "../../../components/Button";
 import {useDispatch, useSelector} from "react-redux";
-import {keplrSubmit} from "../../../../store/actions/transactions/keplr";
-import {
-    hideTxWithDrawTotalModal,
-    submitFormData
-} from "../../../../store/actions/transactions/withdrawTotalRewards";
-import {setTxIno} from "../../../../store/actions/transactions/common";
+import {keplrSubmit} from "../../../store/actions/transactions/keplr";
+import {hideTxWithDrawTotalModal, submitFormData} from "../../../store/actions/transactions/withdrawTotalRewards";
+import {setTxIno} from "../../../store/actions/transactions/common";
 
 const ButtonNext = () => {
     const dispatch = useDispatch();
@@ -36,17 +33,16 @@ const ButtonNext = () => {
             messages.push(validatorCommission.value[0]);
         }
         dispatch(setTxIno({
-            value:{
-                modal:hideTxWithDrawTotalModal(),
-                data:{
-                    message:'',
-                    memo:'',
+            value: {
+                modal: hideTxWithDrawTotalModal(),
+                data: {
+                    message: '',
+                    memo: '',
                 }
             }
         }));
         dispatch(keplrSubmit(messages));
     };
-    console.log(validatorCommission.value[0], "validatorCommission.value.length");
     const disable = (
         validatorsRewards.value === 0 && validatorCommission.value.length === 0 || memo.error.message !== ''
     );
@@ -65,7 +61,6 @@ const ButtonNext = () => {
         </div>
     );
 };
-
 
 
 export default ButtonNext;

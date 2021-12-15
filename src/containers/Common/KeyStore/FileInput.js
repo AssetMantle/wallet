@@ -12,11 +12,10 @@ const FileInput = () => {
     const dispatch = useDispatch();
     const onChange = (event) => {
         const file = event.target.files[0];
-        console.log(file, "files", fileName);
         setFileName(file.name);
         dispatch(setTxKeyStore(
             {
-                value:file,
+                value: file,
                 error: ValidationFileTypeCheck(file.name)
             }));
     };
@@ -37,7 +36,6 @@ const FileInput = () => {
         </div>
     );
 };
-
 
 
 export default FileInput;

@@ -20,7 +20,7 @@ import {fetchTokenPrice} from "./store/actions/tokenPrice";
 import {fetchValidators} from "./store/actions/validators";
 import transactions from "./utils/transactions";
 import * as Sentry from "@sentry/react";
-import { Integrations } from "@sentry/tracing";
+import {Integrations} from "@sentry/tracing";
 import {keplrLogin, setKeplrInfo} from "./store/actions/signIn/keplr";
 
 const SENTRY_API = process.env.REACT_APP_SENTRY_API;
@@ -62,7 +62,7 @@ const App = () => {
 
     useEffect(() => {
         const fetchApi = async () => {
-            if (address !== null && address !== undefined ) {
+            if (address !== null && address !== undefined) {
                 dispatch(fetchDelegationsCount(address));
                 dispatch(fetchBalance(address));
                 dispatch(fetchRewards(address));
@@ -87,13 +87,12 @@ const App = () => {
     });
 
     window.addEventListener("keplr_keystorechange", () => {
-        console.log("changed", localStorage.getItem('loginMode'));
         if (localStorage.getItem('loginMode') === 'keplr') {
             const kepler = KeplerWallet();
             kepler.then(function () {
                 const address = localStorage.getItem("keplerAddress");
                 dispatch(setKeplrInfo({
-                    value:address,
+                    value: address,
                     error: {
                         message: '',
                     },
@@ -111,9 +110,6 @@ const App = () => {
     Sentry.init({
         dsn: SENTRY_API,
         integrations: [new Integrations.BrowserTracing()],
-        // Set tracesSampleRate to 1.0 to capture 100%
-        // of transactions for performance monitoring.
-        // We recommend adjusting this value in production
         tracesSampleRate: 1.0,
     });
 

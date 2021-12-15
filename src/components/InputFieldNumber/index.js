@@ -13,8 +13,8 @@ const InputFieldNumber = ({
     max = '',
     onChange,
     min = '',
-    onBlur= helper.emptyFunc,
-    onKeyPress= helper.emptyFunc,
+    onBlur = helper.emptyFunc,
+    onKeyPress = helper.emptyFunc,
 }) => {
     // const isError = error.message.length > 0;
 

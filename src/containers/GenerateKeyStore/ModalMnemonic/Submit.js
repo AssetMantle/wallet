@@ -5,7 +5,6 @@ import {mnemonicSubmit} from "../../../store/actions/generateKeyStore";
 
 const ButtonSubmit = () => {
     const dispatch = useDispatch();
-    const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
 
     const onClick = () => {
         dispatch(mnemonicSubmit());
@@ -16,7 +15,6 @@ const ButtonSubmit = () => {
         mnemonic.value === '' || mnemonic.error.message !== ''
     );
 
-    console.log(loginInfo, "info");
     return (
         <div className="buttons">
             <div className="button-section">
@@ -31,7 +29,6 @@ const ButtonSubmit = () => {
         </div>
     );
 };
-
 
 
 export default ButtonSubmit;

@@ -1,7 +1,7 @@
 import {
+    SET_SIGN_IN_ADDRESS,
     SIGN_IN_ADDRESS_MODAL_HIDE,
-    SIGN_IN_ADDRESS_MODAL_SHOW,
-    SET_SIGN_IN_ADDRESS
+    SIGN_IN_ADDRESS_MODAL_SHOW
 } from "../../../constants/signIn/address";
 import {combineReducers} from "redux";
 

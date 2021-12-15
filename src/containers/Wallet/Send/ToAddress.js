@@ -4,9 +4,10 @@ import Icon from "../../../components/Icon";
 import InputText from "../../../components/InputText";
 import helper from "../../../utils/helper";
 import {useDispatch, useSelector} from "react-redux";
-import {setTxSendAddress}from "../../../store/actions/transactions/send";
+import {setTxSendAddress} from "../../../store/actions/transactions/send";
 import {useTranslation} from "react-i18next";
 import {ValidateAlphaNumeric} from "../../../utils/validations";
+
 const ToAddress = () => {
     const {t} = useTranslation();
     const toAddress = useSelector((state) => state.send.toAddress);
@@ -14,17 +15,17 @@ const ToAddress = () => {
     console.log(toAddress, "AFTER CLOSE");
     const onChange = (evt) => {
         dispatch(setTxSendAddress({
-            value:evt.target.value.toString(),
+            value: evt.target.value.toString(),
             error: {
                 message: ''
             }
         }));
     };
 
-    const onBlur = (evt) =>{
-        console.log(evt.target.value,"reeee");
+    const onBlur = (evt) => {
+        console.log(evt.target.value, "reeee");
         dispatch(setTxSendAddress({
-            value:evt.target.value.toString(),
+            value: evt.target.value.toString(),
             error: helper.validateAddress(evt.target.value),
         }));
     };

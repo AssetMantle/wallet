@@ -1,13 +1,13 @@
 import {
     TX_IBC_SEND_ADDRESS_SET,
     TX_IBC_SEND_AMOUNT_SET,
-    TX_IBC_SEND_TOKEN_SET,
-    TX_IBC_SEND_CUSTOM_PORT_SET,
-    TX_IBC_SEND_CUSTOM_CHANNEL_SET,
     TX_IBC_SEND_CHAIN_INFO_SET,
-    TX_IBC_SEND_MEMO_SET
+    TX_IBC_SEND_CUSTOM_CHANNEL_SET,
+    TX_IBC_SEND_CUSTOM_PORT_SET,
+    TX_IBC_SEND_MEMO_SET,
+    TX_IBC_SEND_TOKEN_SET
 } from "../../../constants/sendIbc";
-import { combineReducers } from 'redux';
+import {combineReducers} from 'redux';
 import {TX_RESULT_MODAL_HIDE, TX_SUCCESS} from "../../../constants/common";
 import config from "../../../config";
 
@@ -161,10 +161,10 @@ const customChannel = (state = {
 
 const chainInfo = (state = {
     value: {
-        customChain:false,
-        chainID:'',
-        chain:'',
-        selectedChannel:''
+        customChain: false,
+        chainID: '',
+        chain: '',
+        selectedChannel: ''
     },
 }, {
     type,
@@ -181,10 +181,10 @@ const chainInfo = (state = {
         return {
             ...state,
             value: {
-                customChain:false,
-                chainID:'',
-                chain:'',
-                selectedChannel:''
+                customChain: false,
+                chainID: '',
+                chain: '',
+                selectedChannel: ''
             },
         };
     default:

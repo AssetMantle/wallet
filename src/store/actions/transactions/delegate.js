@@ -1,10 +1,10 @@
 import {
-    TX_DELEGATE_MODAL_SHOW,
-    TX_DELEGATE_MODAL_HIDE,
     TX_DELEGATE_AMOUNT_SET,
-    TX_DELEGATE_MEMO_SET
+    TX_DELEGATE_MEMO_SET,
+    TX_DELEGATE_MODAL_HIDE,
+    TX_DELEGATE_MODAL_SHOW
 } from "../../../constants/delegate";
-import {setTxName, setTxIno} from "./common";
+import {setTxIno, setTxName} from "./common";
 import {showFeeModal} from "./fee";
 
 export const setTxDelegateAmount = (data) => {
@@ -37,16 +37,16 @@ export const setTxMemo = (data) => {
 
 export const submitFormData = (message) => (dispatch, getState) => {
     dispatch(setTxName({
-        value:{
-            name:"delegate",
+        value: {
+            name: "delegate",
         }
     }));
     dispatch(setTxIno({
-        value:{
-            modal:showTxDelegateModal(),
-            data:{
-                message:message,
-                memo:getState().delegate.memo.value,
+        value: {
+            modal: showTxDelegateModal(),
+            data: {
+                message: message,
+                memo: getState().delegate.memo.value,
             }
         }
     }));

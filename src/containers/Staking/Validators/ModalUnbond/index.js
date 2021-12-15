@@ -15,11 +15,11 @@ const ModalUnbond = () => {
     const response = useSelector(state => state.common.error);
     const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
 
-    const handleClose = () =>{
+    const handleClose = () => {
         dispatch(hideTxUnbondModal());
     };
 
-    const handlePrevious = () =>{
+    const handlePrevious = () => {
         dispatch(showValidatorTxModal());
         dispatch(hideTxUnbondModal());
     };
@@ -59,7 +59,6 @@ const ModalUnbond = () => {
         </ReactModal>
     );
 };
-
 
 
 export default ModalUnbond;

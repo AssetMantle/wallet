@@ -24,14 +24,13 @@ const ButtonSend = () => {
 
     const onClickKeplr = () => {
         dispatch(setTxName({
-            value:{
-                name:"send",
+            value: {
+                name: "send",
             }
         }));
-        dispatch(keplrSubmit( [SendMsg(loginInfo.address, toAddress.value, (amount.value * config.xprtValue).toFixed(0), token.value.tokenDenom)]));
+        dispatch(keplrSubmit([SendMsg(loginInfo.address, toAddress.value, (amount.value * config.xprtValue).toFixed(0), token.value.tokenDenom)]));
     };
 
-    console.log(loginInfo, "info");
     return (
         <div className="buttons">
             <div className="button-section">
@@ -46,7 +45,6 @@ const ButtonSend = () => {
         </div>
     );
 };
-
 
 
 export default ButtonSend;

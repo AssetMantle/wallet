@@ -27,7 +27,8 @@ import unbondTx from "./transactions/unbond";
 import withdrawValidatorRewards from "./transactions/withdrawValidatorRewards";
 import generateKeyStore from "./generateKeyStore";
 import changePassword from "./changePassword";
-const appReducer =  combineReducers({
+
+const appReducer = combineReducers({
     delegations,
     transactions,
     validators,

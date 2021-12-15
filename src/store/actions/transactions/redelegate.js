@@ -1,11 +1,11 @@
 import {
     TX_RE_DELEGATE_AMOUNT_SET,
+    TX_RE_DELEGATE_MEMO_SET,
     TX_RE_DELEGATE_MODAL_HIDE,
     TX_RE_DELEGATE_MODAL_SHOW,
-    TX_RE_DELEGATE_TO_ADDRESS_SET,
-    TX_RE_DELEGATE_MEMO_SET
+    TX_RE_DELEGATE_TO_ADDRESS_SET
 } from "../../../constants/redelegate";
-import {setTxName, setTxIno} from "./common";
+import {setTxIno, setTxName} from "./common";
 import {showFeeModal} from "./fee";
 
 export const setTxReDelegateAmount = (data) => {
@@ -45,16 +45,16 @@ export const setTxMemo = (data) => {
 
 export const submitFormData = (message) => (dispatch, getState) => {
     dispatch(setTxName({
-        value:{
-            name:"reDelegate",
+        value: {
+            name: "reDelegate",
         }
     }));
     dispatch(setTxIno({
-        value:{
-            modal:showTxReDelegateModal(),
-            data:{
-                message:message,
-                memo:getState().redelegate.memo.value,
+        value: {
+            modal: showTxReDelegateModal(),
+            data: {
+                message: message,
+                memo: getState().redelegate.memo.value,
             }
         }
     }));

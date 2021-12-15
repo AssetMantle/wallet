@@ -13,31 +13,28 @@ const Fee = () => {
     const amount = useSelector((state) => state.send.amount.value);
     const fee = useSelector((state) => state.fee.fee);
     const tokenPrice = useSelector((state) => state.tokenPrice.tokenPrice);
-    // const feeError = useSelector((state) => state.fee.fee.error.message);
     const type = useSelector((state) => state.common.txName.value.name);
     const gas = useSelector((state) => state.gas.gas);
-    console.log(transferableAmount, "transferableAmount");
-    console.log(gas, "in fee gas", config.averageFee*(gas.value));
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(feeChangeHandler({
-            value:{
-                fee:(config.averageFee*(gas.value)),
-                feeType:"Average"
+            value: {
+                fee: (config.averageFee * (gas.value)),
+                feeType: "Average"
             },
-            error:ValidateFee(transferableAmount, config.averageFee*(gas.value), type, amount)
+            error: ValidateFee(transferableAmount, config.averageFee * (gas.value), type, amount)
         }));
-    },[gas.value]);
+    }, [gas.value]);
     const handleFee = (fee, feeValue) => {
         dispatch(feeChangeHandler({
-            value:{
-                fee:(feeValue*(gas.value)),
-                feeType:fee
+            value: {
+                fee: (feeValue * (gas.value)),
+                feeType: fee
             },
-            error:ValidateFee(transferableAmount,  feeValue*(gas.value),  type, amount)
+            error: ValidateFee(transferableAmount, feeValue * (gas.value), type, amount)
         }));
     };
 
-    console.log(amount , "amount in fee", fee);
+    console.log(amount, "amount in fee", fee);
     const activeFeeState = fee.value.feeType;
 
     return (
@@ -85,7 +82,7 @@ const Fee = () => {
                 <div className="amount-field">
                     <p className="amount-error text-center">
                         {fee.error &&
-                         fee.error.message}
+                        fee.error.message}
                         {gas.feeError &&
                         gas.feeError.message}
                     </p>

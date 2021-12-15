@@ -9,17 +9,18 @@ import {hideTxReDelegateModal} from "../../../../store/actions/transactions/rede
 import {showValidatorTxModal} from "../../../../store/actions/validators";
 import Validator from "./Validator";
 import config from "../../../../config";
+
 const ModalReDelegate = () => {
     const dispatch = useDispatch();
     const show = useSelector((state) => state.redelegate.modal);
     const response = useSelector(state => state.common.error);
     const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
 
-    const handleClose = () =>{
+    const handleClose = () => {
         dispatch(hideTxReDelegateModal());
     };
 
-    const handlePrevious = () =>{
+    const handlePrevious = () => {
         dispatch(showValidatorTxModal());
         dispatch(hideTxReDelegateModal());
     };
@@ -60,7 +61,6 @@ const ModalReDelegate = () => {
         </ReactModal>
     );
 };
-
 
 
 export default ModalReDelegate;

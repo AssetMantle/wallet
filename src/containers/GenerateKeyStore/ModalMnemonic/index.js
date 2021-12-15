@@ -1,4 +1,3 @@
-
 import {Modal as ReactModal} from 'react-bootstrap';
 import React from 'react';
 import {useTranslation} from "react-i18next";
@@ -7,17 +6,18 @@ import {useDispatch, useSelector} from "react-redux";
 import ButtonSubmit from "./Submit";
 import {hideKeyStoreMnemonicModal} from "../../../store/actions/generateKeyStore";
 import {showKeyStoreModal} from "../../../store/actions/changePassword";
+
 const ModalMnemonic = () => {
     const dispatch = useDispatch();
     const show = useSelector((state) => state.generateKeyStore.mnemonicModal);
 
     const {t} = useTranslation();
 
-    const handleClose = () =>{
+    const handleClose = () => {
         dispatch(hideKeyStoreMnemonicModal());
     };
 
-    const handleRoute = () =>{
+    const handleRoute = () => {
         dispatch(hideKeyStoreMnemonicModal());
         dispatch(showKeyStoreModal());
     };

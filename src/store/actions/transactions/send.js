@@ -1,10 +1,5 @@
-import {
-    TX_SEND_TOKEN_SET,
-    TX_SEND_ADDRESS_SET,
-    TX_SEND_AMOUNT_SET,
-    TX_SEND_MEMO_SET
-} from "../../../constants/send";
-import {setTxName,setTxIno} from "./common";
+import {TX_SEND_ADDRESS_SET, TX_SEND_AMOUNT_SET, TX_SEND_MEMO_SET, TX_SEND_TOKEN_SET} from "../../../constants/send";
+import {setTxIno, setTxName} from "./common";
 import {showFeeModal} from "./fee";
 
 export const setTxSendAmount = (data) => {
@@ -33,19 +28,18 @@ export const setTxMemo = (data) => {
     };
 };
 
-export const submitFormData = (message) => (dispatch,getState) => {
-    console.log("calling");
+export const submitFormData = (message) => (dispatch, getState) => {
     dispatch(setTxName({
-        value:{
-            name:"send",
+        value: {
+            name: "send",
         }
     }));
     dispatch(setTxIno({
-        value:{
-            data:{
-                message:message,
-                token:getState().send.token.value.tokenDenom,
-                memo:getState().send.memo.value,
+        value: {
+            data: {
+                message: message,
+                token: getState().send.token.value.tokenDenom,
+                memo: getState().send.memo.value,
             }
         }
     }));

@@ -10,9 +10,9 @@ const Submit = () => {
         dispatch(keyStoreSubmit());
     };
 
-    const accountNumber =  useSelector((state) => state.advanced.accountNumber);
-    const accountIndex =  useSelector((state) => state.advanced.accountIndex);
-    const bip39PassPhrase =  useSelector((state) => state.advanced.bip39PassPhrase);
+    const accountNumber = useSelector((state) => state.advanced.accountNumber);
+    const accountIndex = useSelector((state) => state.advanced.accountIndex);
+    const bip39PassPhrase = useSelector((state) => state.advanced.bip39PassPhrase);
 
     const disable = (
         accountNumber.error.message !== '' || accountIndex.error.message !== '' || bip39PassPhrase.error.message !== ''

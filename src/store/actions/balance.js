@@ -14,6 +14,7 @@ import {createProtobufRpcClient, QueryClient, setupIbcExtension} from "@cosmjs/s
 import {QueryClientImpl} from "cosmjs-types/cosmos/bank/v1beta1/query";
 import config from "../../config";
 import * as Sentry from '@sentry/browser';
+
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
 export const fetchBalanceProgress = () => {

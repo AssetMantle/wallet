@@ -1,6 +1,11 @@
 import {combineReducers} from "redux";
 import {TX_RESULT_MODAL_HIDE, TX_SUCCESS} from "../../../constants/common";
-import {TX_DELEGATE_AMOUNT_SET, TX_DELEGATE_MODAL_HIDE, TX_DELEGATE_MODAL_SHOW, TX_DELEGATE_MEMO_SET} from "../../../constants/delegate";
+import {
+    TX_DELEGATE_AMOUNT_SET,
+    TX_DELEGATE_MEMO_SET,
+    TX_DELEGATE_MODAL_HIDE,
+    TX_DELEGATE_MODAL_SHOW
+} from "../../../constants/delegate";
 
 const amount = (state = {
     value: '',

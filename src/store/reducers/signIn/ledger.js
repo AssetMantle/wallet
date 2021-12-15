@@ -1,4 +1,10 @@
-import {SIGN_IN_LEDGER_MODAL_SHOW, SIGN_IN_LEDGER_MODAL_HIDE, SET_LEDGER_INFO, SET_LEDGER_ACCOUNT_INDEX, SET_LEDGER_ACCOUNT_NUMBER} from "../../../constants/signIn/ledger";
+import {
+    SET_LEDGER_ACCOUNT_INDEX,
+    SET_LEDGER_ACCOUNT_NUMBER,
+    SET_LEDGER_INFO,
+    SIGN_IN_LEDGER_MODAL_HIDE,
+    SIGN_IN_LEDGER_MODAL_SHOW
+} from "../../../constants/signIn/ledger";
 import {combineReducers} from "redux";
 
 const ledgerModal = (state = false, {

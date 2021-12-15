@@ -1,4 +1,8 @@
-import {DELEGATIONS_FETCH_ERROR, DELEGATIONS_FETCH_SUCCESS, DELEGATIONS_STATUS_SUCCESS} from "../../constants/delegations";
+import {
+    DELEGATIONS_FETCH_ERROR,
+    DELEGATIONS_FETCH_SUCCESS,
+    DELEGATIONS_STATUS_SUCCESS
+} from "../../constants/delegations";
 import Lodash from "lodash";
 import transactions from "../../utils/transactions";
 import {QueryClientImpl} from "cosmjs-types/cosmos/staking/v1beta1/query";

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {setKeyStorePassword}from "../../../store/actions/generateKeyStore";
+import {setKeyStorePassword} from "../../../store/actions/generateKeyStore";
 import {useTranslation} from "react-i18next";
 import {passwordValidation, ValidateSpace} from "../../../utils/validations";
 import InputText from "../../../components/InputText";
@@ -9,19 +9,18 @@ import Icon from "../../../components/Icon";
 const Password = () => {
 
     const {t} = useTranslation();
-    const [showPassword , setShowPassword] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const password = useSelector((state) => state.generateKeyStore.password);
     const dispatch = useDispatch();
 
     const onChange = (evt) => {
         dispatch(setKeyStorePassword({
-            value:evt.target.value,
-            error:passwordValidation(evt.target.value)
+            value: evt.target.value,
+            error: passwordValidation(evt.target.value)
         }));
     };
 
-    const handleShowPassword = () =>{
-        console.log(showPassword, "raju");
+    const handleShowPassword = () => {
         setShowPassword(!showPassword);
     };
 

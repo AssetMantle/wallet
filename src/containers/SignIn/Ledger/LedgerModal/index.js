@@ -1,12 +1,13 @@
-import { Modal as ReactModal } from 'react-bootstrap';
+import {Modal as ReactModal} from 'react-bootstrap';
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {hideLedgerModal, fetchLedgerAddress} from "../../../../store/actions/signIn/ledger";
+import {fetchLedgerAddress, hideLedgerModal} from "../../../../store/actions/signIn/ledger";
 import {showSignInModal} from "../../../../store/actions/signIn/modal";
 import Icon from "../../../../components/Icon";
 import {useTranslation} from "react-i18next";
 import ButtonContinue from "./ButtonContinue";
 import Advanced from "../Advanced";
+
 const LedgerModal = () => {
     const {t} = useTranslation();
     const show = useSelector((state) => state.signInLedger.ledgerModal);
@@ -23,9 +24,9 @@ const LedgerModal = () => {
         dispatch(showSignInModal());
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(fetchLedgerAddress());
-    },[]);
+    }, []);
 
     return (
         <ReactModal

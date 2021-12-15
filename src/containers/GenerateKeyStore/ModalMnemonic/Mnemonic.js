@@ -1,20 +1,19 @@
 import React from 'react';
 import {Form} from "react-bootstrap";
 import {useDispatch, useSelector} from "react-redux";
-import {setKeyStoreMnemonic}from "../../../store/actions/generateKeyStore";
+import {setKeyStoreMnemonic} from "../../../store/actions/generateKeyStore";
 import {useTranslation} from "react-i18next";
-import {ValidateStringSpaces, ValidateMnemonic} from "../../../utils/validations";
+import {ValidateMnemonic, ValidateStringSpaces} from "../../../utils/validations";
 
 const Mnemonic = () => {
     const {t} = useTranslation();
     const mnemonic = useSelector((state) => state.generateKeyStore.mnemonic);
     const dispatch = useDispatch();
-    console.log(mnemonic, "toAddress");
-    
+
     const onChange = (evt) => {
         dispatch(setKeyStoreMnemonic({
-            value:evt.target.value,
-            error:ValidateMnemonic(evt.target.value)
+            value: evt.target.value,
+            error: ValidateMnemonic(evt.target.value)
         }));
     };
 

@@ -8,13 +8,13 @@ import Icon from "../../../components/Icon";
 
 const Password = () => {
     const {t} = useTranslation();
-    const [showPassword , setShowPassword] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const password = useSelector((state) => state.changePassword.newPassword);
     const dispatch = useDispatch();
 
-    const onChange = (evt) =>{
+    const onChange = (evt) => {
         dispatch(setKeyStoreNewPassword({
-            value:evt.target.value,
+            value: evt.target.value,
             error: passwordValidation(evt.target.value)
         }));
     };

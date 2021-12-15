@@ -1,35 +1,30 @@
-import React, { useState} from 'react';
-// import InputFieldNumber from "../../../components/InputFieldNumber";
-// import {useSelector, useDispatch} from "react-redux";
+import React, {useState} from 'react';
 import {useTranslation} from "react-i18next";
 import Icon from "../../../../components/Icon";
-import { Card} from "react-bootstrap";
+import {Card} from "react-bootstrap";
 import AccountNumber from "./AccountNumber";
 import AccountIndex from "./AccountIndex";
 import ButtonSubmit from "./ButtonSubmit";
 import {setAccountIndex, setAccountNumber} from "../../../../store/actions/signIn/ledger";
 import {useDispatch} from "react-redux";
+
 const Advanced = () => {
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const [advanceMode, setAdvanceMode] = useState(false);
-    // const amount = floatCoin(props.balance);
-    // const amount = useSelector((state) => state.send.amount);
-    // const dispatch = useDispatch();`
 
     const handleAccordion = () => {
-        console.log(advanceMode, "advanceMode");
-        if(advanceMode){
+        if (advanceMode) {
             dispatch(setAccountIndex({
-                value:"",
-                error:{
-                    message:""
+                value: "",
+                error: {
+                    message: ""
                 }
             }));
             dispatch(setAccountNumber({
-                value:"",
-                error:{
-                    message:""
+                value: "",
+                error: {
+                    message: ""
                 }
             }));
         }
@@ -37,7 +32,7 @@ const Advanced = () => {
     };
 
     return (
-    // .advanced-wallet-accordion .card .collapse.show
+        // .advanced-wallet-accordion .card .collapse.show
         <div className="advanced-wallet-accordion">
             <Card>
                 <Card.Header>
@@ -63,7 +58,7 @@ const Advanced = () => {
                 {advanceMode ?
                     <div className="collapse show">
                         <AccountNumber/>
-                        <AccountIndex />
+                        <AccountIndex/>
                         <div className="buttons">
                             <ButtonSubmit/>
                         </div>

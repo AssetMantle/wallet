@@ -264,7 +264,7 @@ let English = {
         "CURRENT_PASSWORD": "Current Password",
         "KEYSTORE_PASSWORD_RESET": "KeyStore Password Reset",
         "ENTER_NEW_PASSWORD": "Enter New Password",
-        "CHOOSE_FILE":"Choose File",
+        "CHOOSE_FILE": "Choose File",
     }
 };
 

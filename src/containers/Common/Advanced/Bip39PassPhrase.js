@@ -1,5 +1,5 @@
 import React from 'react';
-import {useSelector, useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {ValidateBip39PassPhrase} from "../../../utils/validations";
 import {useTranslation} from "react-i18next";
 import {setBip39Passphrase} from "../../../store/actions/transactions/advanced";
@@ -13,8 +13,8 @@ const Bip39PassPhrase = () => {
 
     const onChange = (evt) => {
         dispatch(setBip39Passphrase({
-            value:(evt.target.value),
-            error:ValidateBip39PassPhrase(evt.target.value)
+            value: (evt.target.value),
+            error: ValidateBip39PassPhrase(evt.target.value)
         }));
     };
 

@@ -1,4 +1,8 @@
-import {SET_SIGN_IN_ADDRESS, SIGN_IN_ADDRESS_MODAL_SHOW, SIGN_IN_ADDRESS_MODAL_HIDE} from "../../../constants/signIn/address";
+import {
+    SET_SIGN_IN_ADDRESS,
+    SIGN_IN_ADDRESS_MODAL_HIDE,
+    SIGN_IN_ADDRESS_MODAL_SHOW
+} from "../../../constants/signIn/address";
 import helper from "../../../utils/helper";
 import config from "../../../config";
 import transactions, {GetAccount} from "../../../utils/transactions";
@@ -28,17 +32,16 @@ export const setAddress = (data) => {
 export const addressLogin = (history) => {
     return async (dispatch, getState) => {
         const address = getState().signInAddress.address.value;
-        console.log("coming in", address);
 
         const loginInfo = {
-            fee:'',
-            account:'',
-            loginToken:'',
-            address:'',
-            loginMode:'',
-            version:'',
-            accountNumber:'',
-            accountIndex:''
+            fee: '',
+            account: '',
+            loginToken: '',
+            address: '',
+            loginMode: '',
+            version: '',
+            accountNumber: '',
+            accountIndex: ''
         };
         const accountNumber = helper.getAccountNumber(getState().advanced.accountNumber.value);
         const accountIndex = helper.getAccountNumber(getState().advanced.accountIndex.value);
@@ -78,20 +81,20 @@ export const addressLogin = (history) => {
             localStorage.setItem('loginMode', 'normal');
             localStorage.setItem('version', config.version);
             dispatch(setLoginInfo({
-                encryptedSeed:false,
-                error:{
-                    message:''
+                encryptedSeed: false,
+                error: {
+                    message: ''
                 }
             }));
             localStorage.setItem('loginInfo', JSON.stringify(loginInfo));
             history.push('/dashboard/wallet');
             window.location.reload();
-        }else {
+        } else {
             dispatch(setLoginInfo(
                 {
-                    encryptedSeed:false,
-                    error:{
-                        message:'Enter Valid Address'
+                    encryptedSeed: false,
+                    error: {
+                        message: 'Enter Valid Address'
                     }
                 }));
         }

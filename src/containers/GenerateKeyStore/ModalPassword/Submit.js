@@ -6,14 +6,9 @@ import helper from "../../../utils/helper";
 
 const ButtonSubmit = () => {
     const dispatch = useDispatch();
-    const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
     const password = useSelector((state) => state.generateKeyStore.password);
     const mnemonic = useSelector((state) => state.generateKeyStore.mnemonic);
 
-    // const onClick = () =>{
-    //     dispatch(hideKeyStorePasswordModal());
-    //     dispatch(showResultModal());
-    // };
     const onClick = async () => {
         let encryptedData = helper.createStore(mnemonic.value, password.value);
         let jsonContent = JSON.stringify(encryptedData.Response);
@@ -40,7 +35,6 @@ const ButtonSubmit = () => {
         password.value === '' || password.error.message !== ''
     );
 
-    console.log(loginInfo, "info");
     return (
         <div className="buttons">
             <div className="button-section">
@@ -55,7 +49,6 @@ const ButtonSubmit = () => {
         </div>
     );
 };
-
 
 
 export default ButtonSubmit;

@@ -1,17 +1,17 @@
 import {
-    KEYSTORE_PASSWORD_SET,
-    KEYSTORE_PASSWORD_MODAL_SHOW,
-    KEYSTORE_PASSWORD_MODAL_HIDE,
-    KEYSTORE_MNEMONIC_SET,
-    KEYSTORE_MNEMONIC_MODAL_SHOW,
     KEYSTORE_MNEMONIC_MODAL_HIDE,
-    KEYSTORE_RESULT_MODAL_SHOW,
-    KEYSTORE_RESULT_MODAL_HIDE
+    KEYSTORE_MNEMONIC_MODAL_SHOW,
+    KEYSTORE_MNEMONIC_SET,
+    KEYSTORE_PASSWORD_MODAL_HIDE,
+    KEYSTORE_PASSWORD_MODAL_SHOW,
+    KEYSTORE_PASSWORD_SET,
+    KEYSTORE_RESULT_MODAL_HIDE,
+    KEYSTORE_RESULT_MODAL_SHOW
 } from "../../constants/generateKeyStore";
 import {combineReducers} from "redux";
 
 const mnemonic = (state = {
-    value:'',
+    value: '',
     error: {
         message: '',
     },

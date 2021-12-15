@@ -1,4 +1,10 @@
-import { SIGN_IN_KEYSTORE_RESULT_MODAL_SHOW, SIGN_IN_KEYSTORE_RESULT_MODAL_HIDE, SET_KEYSTORE_RESULT ,SIGN_IN_KEYSTORE_MODAL_SHOW, SIGN_IN_KEYSTORE_MODAL_HIDE} from "../../../constants/signIn/keyStore";
+import {
+    SET_KEYSTORE_RESULT,
+    SIGN_IN_KEYSTORE_MODAL_HIDE,
+    SIGN_IN_KEYSTORE_MODAL_SHOW,
+    SIGN_IN_KEYSTORE_RESULT_MODAL_HIDE,
+    SIGN_IN_KEYSTORE_RESULT_MODAL_SHOW
+} from "../../../constants/signIn/keyStore";
 import {combineReducers} from "redux";
 
 const keyStoreModal = (state = false, {
@@ -59,7 +65,6 @@ const response = (state = {
         return state;
     }
 };
-
 
 
 export default combineReducers({

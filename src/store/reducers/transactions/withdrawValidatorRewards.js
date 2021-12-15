@@ -1,6 +1,11 @@
 import {combineReducers} from "redux";
 import {TX_RESULT_MODAL_HIDE, TX_SUCCESS} from "../../../constants/common";
-import {TX_VALIDATOR_REWARDS_WITHDRAW_AMOUNT_SET, TX_VALIDATOR_REWARDS_WITHDRAW_HIDE, TX_VALIDATOR_REWARDS_WITHDRAW_SHOW, TX_VALIDATOR_REWARDS_WITHDRAW_MEMO_SET} from "../../../constants/withdrawValidatorRewards";
+import {
+    TX_VALIDATOR_REWARDS_WITHDRAW_AMOUNT_SET,
+    TX_VALIDATOR_REWARDS_WITHDRAW_HIDE,
+    TX_VALIDATOR_REWARDS_WITHDRAW_MEMO_SET,
+    TX_VALIDATOR_REWARDS_WITHDRAW_SHOW
+} from "../../../constants/withdrawValidatorRewards";
 
 const amount = (state = {
     value: '',

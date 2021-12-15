@@ -9,7 +9,6 @@ const SelectField = ({
     value,
     onChange,
 }) => {
-    console.log(value, "items");
     return (
         <Select
             className={className}

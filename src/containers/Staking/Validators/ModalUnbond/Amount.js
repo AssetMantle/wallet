@@ -1,6 +1,6 @@
 import React from 'react';
 import InputFieldNumber from "../../../../components/InputFieldNumber";
-import {useSelector, useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {formatNumber} from "../../../../utils/scripts";
 import NumberView from "../../../../components/NumberView";
 import {ValidateReDelegateAmount, ValidateSpecialCharacters} from "../../../../utils/validations";
@@ -14,13 +14,13 @@ const Amount = () => {
     const validatorDelegationAmount = useSelector((state) => state.validators.validatorDelegations);
     const dispatch = useDispatch();
 
-    const onChange = (evt) =>{
+    const onChange = (evt) => {
         let rex = /^\d*\.?\d{0,6}$/;
         if (rex.test(evt.target.value)) {
             dispatch(
                 setTxUnbondAmount({
-                    value:evt.target.value,
-                    error:ValidateReDelegateAmount(validatorDelegationAmount.value, (evt.target.value * 1))
+                    value: evt.target.value,
+                    error: ValidateReDelegateAmount(validatorDelegationAmount.value, (evt.target.value * 1))
                 })
             );
         } else {
@@ -31,8 +31,8 @@ const Amount = () => {
     const selectTotalBalanceHandler = (value) => {
         dispatch(
             setTxUnbondAmount({
-                value:value,
-                error:ValidateReDelegateAmount(value, (value* 1))
+                value: value,
+                error: ValidateReDelegateAmount(value, (value * 1))
             })
         );
     };

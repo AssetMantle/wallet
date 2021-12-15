@@ -8,6 +8,7 @@ import Memo from "./Memo";
 import Chain from "./Chain";
 import CustomChain from "./CustomChain";
 import config from "../../../config";
+
 const Send = () => {
     const chainInfo = useSelector((state) => state.sendIbc.chainInfo.value);
     const response = useSelector(state => state.common.error);
@@ -37,7 +38,6 @@ const Send = () => {
         </div>
     );
 };
-
 
 
 export default Send;

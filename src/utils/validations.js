@@ -1,17 +1,18 @@
 import transactions from "./transactions";
 import config from "../config";
 import helper from "./helper";
+
 const bip39 = require("bip39");
 const accountType = localStorage.getItem('account');
 
 export const ValidateSendAmount = (amount, value) => {
-    if ((amount*1) < value) {
+    if ((amount * 1) < value) {
         return new Error('Insufficient wallet balance');
     }
     return new Error('');
 };
 
-export const ValidateFee = (transferableAmount, feeValue,  type, amount) => {
+export const ValidateFee = (transferableAmount, feeValue, type, amount) => {
     const amountTxns = (
         type === "withdrawMultiple" || type === "withdrawAddress" || type === "withdrawValidatorRewards" || type === "redelegate" || type === "unbond"
     );
@@ -26,10 +27,7 @@ export const ValidateFee = (transferableAmount, feeValue,  type, amount) => {
         }
         return new Error('');
     } else {
-        console.log(transferableAmount,amount, transactions.XprtConversion(feeValue)," oin validate");
-
         if ((transferableAmount - (amount * 1)) < transactions.XprtConversion(feeValue)) {
-            console.log(" in validate");
             return new Error('Insufficient wallet balance to process the transaction.');
         }
         return new Error('');
@@ -37,7 +35,6 @@ export const ValidateFee = (transferableAmount, feeValue,  type, amount) => {
 };
 
 export const ValidateGas = (value) => {
-    console.log("error in gas");
     if ((value * 1) < config.minGas || (value * 1) > config.maxGas) {
         return new Error('Enter Gas between 80000 to 2000000');
     }
@@ -46,25 +43,24 @@ export const ValidateGas = (value) => {
 
 export const passwordValidation = (data) => {
     const regex = /^\S{3}\S+$/;
-    console.log(/\s/g.test(data), "erted");
-    if(/\s/g.test(data)){
+    if (/\s/g.test(data)) {
         return new Error('Spaces not allowed');
-    }else if(!regex.test(data)){
+    } else if (!regex.test(data)) {
         return new Error('Password must be greater than 3 letters');
     }
     return new Error('');
 };
 
-export const ValidateAlphaNumeric = e =>{
+export const ValidateAlphaNumeric = e => {
     const regEx = /^[a-z0-9A-Z]+$/;
-    if(!regEx.test(e.key)){
+    if (!regEx.test(e.key)) {
         e.preventDefault();
     }
 };
 
-export const ValidateString = e =>{
+export const ValidateString = e => {
     const regEx = /^[a-z]+$/;
-    if(!regEx.test(e.key)){
+    if (!regEx.test(e.key)) {
         e.preventDefault();
     }
 };
@@ -93,7 +89,7 @@ export const ValidateBip39PassPhrase = (value) => {
 export const ValidationFileTypeCheck = (filePath) => {
     let allowedExtensions =
         /(\.json)$/i;
-    if(!allowedExtensions.exec(filePath)){
+    if (!allowedExtensions.exec(filePath)) {
         return new Error("File type not supported");
     }
     return new Error('');
@@ -113,7 +109,7 @@ export const ValidateMultipleValidatorsClaim = (evt) => {
 };
 
 export const ValidateReDelegateAmount = (delegationAmount, amount) => {
-    if ((delegationAmount*1) < amount) {
+    if ((delegationAmount * 1) < amount) {
         return new Error('Insufficient Delegated Amount');
     }
     return new Error('');
@@ -123,7 +119,7 @@ export const ValidateReDelegateAmount = (delegationAmount, amount) => {
 export const ValidateMnemonic = (mnemonic) => {
     const mnemonicWords = helper.mnemonicTrim(mnemonic);
     let validateMnemonic = bip39.validateMnemonic(mnemonicWords);
-    if(!validateMnemonic){
+    if (!validateMnemonic) {
         return new Error('Invalid mnemonic.');
     }
     return new Error('');
@@ -132,22 +128,22 @@ export const ValidateMnemonic = (mnemonic) => {
 export const ValidateMemo = (value) => {
     let mnemonicWords = helper.mnemonicTrim(value);
     let validateMnemonic = bip39.validateMnemonic(mnemonicWords);
-    if(validateMnemonic){
+    if (validateMnemonic) {
         return new Error('Entered secret passphrase(mnemonic) in memo field.');
     }
     return new Error('');
 };
 
-export const ValidateAlphaNumericSpaces = e =>{
+export const ValidateAlphaNumericSpaces = e => {
     const regEx = /^[a-z0-9A-Z ]+$/;
-    if(!regEx.test(e.key)){
+    if (!regEx.test(e.key)) {
         e.preventDefault();
     }
 };
 
-export const ValidateStringSpaces = e =>{
+export const ValidateStringSpaces = e => {
     const regEx = /^[a-z ]+$/;
-    if(!regEx.test(e.key)){
+    if (!regEx.test(e.key)) {
         e.preventDefault();
     }
 };

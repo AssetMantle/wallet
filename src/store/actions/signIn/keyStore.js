@@ -1,5 +1,11 @@
 // import transactions from "../../utils/transactions";
-import {SIGN_IN_KEYSTORE_MODAL_HIDE, SIGN_IN_KEYSTORE_MODAL_SHOW, SIGN_IN_KEYSTORE_RESULT_MODAL_HIDE,SET_KEYSTORE_RESULT, SIGN_IN_KEYSTORE_RESULT_MODAL_SHOW} from "../../../constants/signIn/keyStore";
+import {
+    SET_KEYSTORE_RESULT,
+    SIGN_IN_KEYSTORE_MODAL_HIDE,
+    SIGN_IN_KEYSTORE_MODAL_SHOW,
+    SIGN_IN_KEYSTORE_RESULT_MODAL_HIDE,
+    SIGN_IN_KEYSTORE_RESULT_MODAL_SHOW
+} from "../../../constants/signIn/keyStore";
 import transactions, {GetAccount} from "../../../utils/transactions";
 import {setLoginInfo} from "../transactions/common";
 import helper from "../../../utils/helper";
@@ -40,13 +46,12 @@ export const setKeyStoreResult = (data) => {
     };
 };
 
-export const  keyStoreSubmit = () => {
+export const keyStoreSubmit = () => {
     return async (dispatch, getState) => {
         const password = getState().keyStore.password;
         const keyStoreData = getState().keyStore.keyStore;
-        console.log(keyStoreData, "keyStoreData");
         const fileReader = new FileReader();
-        let mnemonic ="";
+        let mnemonic = "";
         fileReader.readAsText(keyStoreData.value, "UTF-8");
         fileReader.onload = async event => {
             localStorage.setItem('encryptedMnemonic', event.target.result);
@@ -57,7 +62,7 @@ export const  keyStoreSubmit = () => {
             if (decryptedData.error != null) {
                 dispatch(setKeyStoreResult(
                     {
-                        value:"",
+                        value: "",
                         error: {
                             message: decryptedData.error,
                         },
@@ -76,16 +81,13 @@ export const  keyStoreSubmit = () => {
                 dispatch(showKeyStoreResultModal());
                 dispatch(setKeyStoreResult(
                     {
-                        value:responseData,
+                        value: responseData,
                         error: {
                             message: "",
                         }
                     }));
             }
         };
-
-
-
 
 
         // let response = transactions.getTransactionResponse(loginAddress, formData, fee, gas, mnemonic,txName, accountNumber, accountIndex, bip39PassPhrase);
@@ -114,14 +116,14 @@ export const keyStoreLogin = (history) => {
         const accountNumber = helper.getAccountNumber(getState().advanced.accountNumber.value);
         const accountIndex = helper.getAccountNumber(getState().advanced.accountIndex.value);
         const loginInfo = {
-            fee:'',
-            account:'',
-            loginToken:'',
-            address:'',
-            loginMode:'',
-            version:'',
-            accountNumber:'',
-            accountIndex:''
+            fee: '',
+            account: '',
+            loginToken: '',
+            address: '',
+            loginMode: '',
+            version: '',
+            accountNumber: '',
+            accountIndex: ''
         };
         console.log("in keyStoreLogin");
         GetAccount(address).then(async res => {
@@ -160,10 +162,11 @@ export const keyStoreLogin = (history) => {
         localStorage.setItem('version', config.version);
         localStorage.setItem('loginInfo', JSON.stringify(loginInfo));
         dispatch(setLoginInfo({
-            encryptedSeed:true,
-            error:{
-                message:''
-            }}));
+            encryptedSeed: true,
+            error: {
+                message: ''
+            }
+        }));
         history.push('/dashboard/wallet');
         window.location.reload();
     };

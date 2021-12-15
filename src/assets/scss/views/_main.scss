@@ -443,7 +443,7 @@
   max-width: 500px;
 }
 
-.memo-dropdown-section-body{
+.memo-dropdown-section-body {
   height: auto;
   max-height: 0px;
   overflow: hidden;
@@ -451,7 +451,7 @@
   -webkit-transition: all .4s ease-in-out;
 }
 
-.memo-dropdown-section-body.show{
+.memo-dropdown-section-body.show {
   max-height: 200px;
 }
 

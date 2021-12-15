@@ -1,17 +1,17 @@
 import {
-    KEYSTORE_NEW_PASSWORD_SET,
     CHANGE_KEYSTORE_MODAL_HIDE,
     CHANGE_KEYSTORE_MODAL_SHOW,
     CHANGE_KEYSTORE_NEW_PASSWORD_MODAL_HIDE,
     CHANGE_KEYSTORE_NEW_PASSWORD_MODAL_SHOW,
     CHANGE_KEYSTORE_RESULT_MODAL_HIDE,
     CHANGE_KEYSTORE_RESULT_MODAL_SHOW,
-    CHANGE_KEYSTORE_RESULT_SET
+    CHANGE_KEYSTORE_RESULT_SET,
+    KEYSTORE_NEW_PASSWORD_SET
 } from "../../constants/changePassword";
 import {combineReducers} from "redux";
 
 const newPassword = (state = {
-    value:'',
+    value: '',
     error: {
         message: '',
     },
@@ -75,8 +75,8 @@ const resultModal = (state = false, {
 
 const response = (state = {
     value: '',
-    error:{
-        message:''
+    error: {
+        message: ''
     }
 }, {
     type,
@@ -89,7 +89,7 @@ const response = (state = {
             value: data.value,
             error: {
                 ...state.error,
-                message:  data.error.message,
+                message: data.error.message,
             },
         };
     default:

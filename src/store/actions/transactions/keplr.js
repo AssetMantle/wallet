@@ -1,24 +1,20 @@
 import transactions from "../../../utils/transactions";
 import aminoMsgHelper from "../../../utils/aminoMsgHelper";
-import {showTxResultModal} from "./common";
-import {txResponse, txFailed, txSuccess, txInProgress} from "./common";
+import {showTxResultModal, txFailed, txInProgress, txResponse, txSuccess} from "./common";
 import * as Sentry from "@sentry/browser";
 
 export const keplrSubmit = (messages) => (dispatch, getState) => {
     dispatch(txInProgress());
-    console.log(messages, "messages");
     const response = transactions.TransactionWithKeplr(messages, aminoMsgHelper.fee(0, 250000));
     response.then(result => {
-        if(getState().common.txName.value.name !== "send" && getState().common.txName.value.name !== "ibc" ) {
+        if (getState().common.txName.value.name !== "send" && getState().common.txName.value.name !== "ibc") {
             dispatch(getState().common.txInfo.value.modal);
         }
         if (result.code !== undefined) {
             dispatch(txSuccess());
             dispatch(txResponse(result));
             dispatch(showTxResultModal());
-            console.log(result, "result");
-            // helper.accountChangeCheck(result.rawLog);
-        }else {
+        } else {
             console.log(result, "final result");
         }
     }).catch(error => {
@@ -28,7 +24,6 @@ export const keplrSubmit = (messages) => (dispatch, getState) => {
             ? error.response.data.message
             : error.message);
         dispatch(txFailed(error.message));
-        // helper.accountChangeCheck(err.message);
     });
 
 };

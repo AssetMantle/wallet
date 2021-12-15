@@ -1,11 +1,10 @@
-
 import {Modal as ReactModal} from 'react-bootstrap';
 import React from 'react';
 import {useTranslation} from "react-i18next";
 import Password from "./Password";
 import {useDispatch, useSelector} from "react-redux";
 import ButtonSubmit from "./Submit";
-import {showKeyStoreMnemonicModal, hideKeyStorePasswordModal } from "../../../store/actions/generateKeyStore";
+import {hideKeyStorePasswordModal, showKeyStoreMnemonicModal} from "../../../store/actions/generateKeyStore";
 import Icon from "../../../components/Icon";
 
 const ModalPassword = () => {
@@ -14,11 +13,11 @@ const ModalPassword = () => {
 
     const {t} = useTranslation();
 
-    const handleClose = () =>{
+    const handleClose = () => {
         dispatch(hideKeyStorePasswordModal());
     };
 
-    const handlePrevious = () =>{
+    const handlePrevious = () => {
         dispatch(hideKeyStorePasswordModal());
         dispatch(showKeyStoreMnemonicModal());
     };
