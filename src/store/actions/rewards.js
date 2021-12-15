@@ -72,7 +72,7 @@ export const fetchTotalRewards = (address) => {
                 if (delegatorRewardsResponse.total.length) {
                     let rewards = helper.decimalConversion(delegatorRewardsResponse.total[0].amount, 18);
                     const fixedRewardsResponse = transactions.XprtConversion(rewards * 1);
-                    dispatch(fetchRewardsSuccess(fixedRewardsResponse));
+                    dispatch(fetchRewardsSuccess(fixedRewardsResponse.toFixed(6)));
                 }
             }).catch((error) => {
                 Sentry.captureException(error.response
