@@ -40,7 +40,7 @@ const ModalNewPassword = () => {
                             icon="left-arrow"/>
                     </button>
                 </div>
-                <p>{t("KEYSTORE_PASSWORD_RESET")}</p>
+                <h3 className="heading">{t("KEYSTORE_PASSWORD_RESET")}</h3>
             </ReactModal.Header>
             <ReactModal.Body className="create-wallet-body import-wallet-body">
                 <div className="form-field">

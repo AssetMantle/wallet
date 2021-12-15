@@ -25,7 +25,7 @@ const ModalResult = () => {
             show={show}
             onHide={handleClose}>
             <ReactModal.Header closeButton={true}>
-                <p>{t("KEYSTORE_PASSWORD_RESET")}</p>
+                <h3 className="heading">{t("KEYSTORE_PASSWORD_RESET")}</h3>
             </ReactModal.Header>
             <ReactModal.Body className="create-wallet-body create-wallet-form-body">
                 <div className="downloaded-keystore-box">

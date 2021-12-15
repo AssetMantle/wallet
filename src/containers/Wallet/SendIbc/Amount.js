@@ -2,7 +2,7 @@ import React from 'react';
 import InputFieldNumber from "../../../components/InputFieldNumber";
 import {setTxIbcSendAmount} from "../../../store/actions/transactions/sendIbc";
 import {useDispatch, useSelector} from "react-redux";
-import {formatNumber} from "../../../utils/scripts";
+import {formatNumber, removeCommas} from "../../../utils/scripts";
 import NumberView from "../../../components/NumberView";
 import {ValidateSendAmount, ValidateSpecialCharacters} from "../../../utils/validations";
 import {useTranslation} from "react-i18next";
@@ -57,7 +57,7 @@ const Amount = () => {
                         token.tokenDenom === config.coinDenom ?
                             <span
                                 className={transferableAmount === 0 ? "empty info-data" : "info-data info-link"}
-                                onClick={() => selectTotalBalanceHandler(formatNumber(transferableAmount))}><span
+                                onClick={() => selectTotalBalanceHandler(removeCommas(formatNumber(transferableAmount)))}><span
                                     className="title">Transferable Balance:</span>
                                 <span
                                     className="value"
@@ -76,7 +76,7 @@ const Amount = () => {
                                         </Popover.Content>
                                     </Popover>
                                 }>
-                                <span onClick={() => selectTotalBalanceHandler(formatNumber(token.transferableAmount))}
+                                <span onClick={() => selectTotalBalanceHandler(removeCommas(formatNumber(token.transferableAmount)))}
                                     className={token.transferableAmount === 0 ? "empty info-data" : "info-data info-link"}>
                                     <span className="title">
                                         Transferable Balance:
@@ -90,7 +90,7 @@ const Amount = () => {
                         :
                         <span
                             className={transferableAmount === 0 ? "empty info-data" : "info-data info-link"}
-                            onClick={() => selectTotalBalanceHandler(formatNumber(transferableAmount))}><span
+                            onClick={() => selectTotalBalanceHandler(removeCommas(formatNumber(transferableAmount)))}><span
                                 className="title">Transferable Balance:</span>
                             <span
                                 className="value"

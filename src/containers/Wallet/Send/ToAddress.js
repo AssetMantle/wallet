@@ -12,7 +12,6 @@ const ToAddress = () => {
     const {t} = useTranslation();
     const toAddress = useSelector((state) => state.send.toAddress);
     const dispatch = useDispatch();
-    console.log(toAddress, "AFTER CLOSE");
     const onChange = (evt) => {
         dispatch(setTxSendAddress({
             value: evt.target.value.toString(),
@@ -23,7 +22,6 @@ const ToAddress = () => {
     };
 
     const onBlur = (evt) => {
-        console.log(evt.target.value, "reeee");
         dispatch(setTxSendAddress({
             value: evt.target.value.toString(),
             error: helper.validateAddress(evt.target.value),

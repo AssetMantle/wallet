@@ -22,7 +22,7 @@ const ButtonSubmit = () => {
 
 
     const disable = (
-        validatorRewards.value === '' || validatorRewards.error.message !== '' || validator === '' || validatorRewards.value === 0 || memo.error.message !== ''
+        validatorRewards.value === '' || (validatorRewards.value*1) === 0 || validatorRewards.error.message !== '' || validator === '' || validatorRewards.value === 0 || memo.error.message !== ''
     );
 
     const onClickKeplr = () => {

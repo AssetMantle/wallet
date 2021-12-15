@@ -2,7 +2,7 @@ import React from 'react';
 import InputFieldNumber from "../../../../components/InputFieldNumber";
 import {setTxDelegateAmount} from "../../../../store/actions/transactions/delegate";
 import {useDispatch, useSelector} from "react-redux";
-import {formatNumber} from "../../../../utils/scripts";
+import {formatNumber, removeCommas} from "../../../../utils/scripts";
 import NumberView from "../../../../components/NumberView";
 import {ValidateSendAmount, ValidateSpecialCharacters} from "../../../../utils/validations";
 import {useTranslation} from "react-i18next";
@@ -44,7 +44,7 @@ const Amount = () => {
                 <span> {t("DELEGATION_AMOUNT")}</span>
                 <span
                     className={transferableAmount === 0 ? "empty info-data info-link" : "info-data info-link"}
-                    onClick={() => selectTotalBalanceHandler(formatNumber(transferableAmount))}><span
+                    onClick={() => selectTotalBalanceHandler(removeCommas(formatNumber(transferableAmount)))}><span
                         className="title">{t("BALANCE")}:</span>
                     <span
                         className="value">

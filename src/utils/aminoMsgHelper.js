@@ -87,12 +87,12 @@ function setWithdrawAddressMsg(delegator_address, withdraw_address) {
     };
 }
 
-module.exports = {
+export {
     sendMsg,
     msgs,
     fee,
     delegateMsg,
-    reDelegateMsg: redelegateMsg,
+    redelegateMsg,
     unBondMsg,
     withDrawMsg,
     setWithdrawAddressMsg,

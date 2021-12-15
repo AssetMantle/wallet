@@ -242,8 +242,9 @@ export const fetchValidatorRewards = (address, validatorAddress) => {
         }).then(response => {
             if (response.rewards[0].amount) {
                 let value = helper.decimalConversion(response.rewards[0].amount);
+                const fixedRewards = transactions.XprtConversion(value*1).toFixed(6);
                 dispatch(setValidatorRewards({
-                    value: transactions.XprtConversion(value),
+                    value: fixedRewards,
                     error: {
                         message: ''
                     }

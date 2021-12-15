@@ -31,7 +31,6 @@ export const setTxWithDrawTotalValidatorsCommission = (data) => {
 };
 
 export const showTxWithDrawTotalModal = (data) => {
-    console.log("herer");
     return {
         type: TX_WITH_DRAW_TOTAL_REWARDS_MODAL_SHOW,
         data,

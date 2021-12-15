@@ -88,24 +88,6 @@ export const keyStoreSubmit = () => {
                     }));
             }
         };
-
-
-        // let response = transactions.getTransactionResponse(loginAddress, formData, fee, gas, mnemonic,txName, accountNumber, accountIndex, bip39PassPhrase);
-        // console.log(response, "txn response");
-        // response.then(result => {
-        //     if (result.code !== undefined) {
-        //         dispatch(txSendSuccess());
-        //         dispatch(txSendResponse(result));
-        //         dispatch(showTxResultModal());
-        //         console.log(result, "result");
-        //         // helper.accountChangeCheck(result.rawLog);
-        //     }else {
-        //         console.log(result, "final result");
-        //     }
-        // }).catch(err => {
-        //     dispatch(txSendFailed(err.message));
-        //     // helper.accountChangeCheck(err.message);
-        // });
     };
 };
 
@@ -125,7 +107,6 @@ export const keyStoreLogin = (history) => {
             accountNumber: '',
             accountIndex: ''
         };
-        console.log("in keyStoreLogin");
         GetAccount(address).then(async res => {
             const accountType = await transactions.VestingAccountCheck(res.typeUrl);
             if (accountType) {

@@ -13,8 +13,6 @@ const Modal = () => {
     const txInfo = useSelector((state) => state.common.txInfo.value);
     const response = useSelector((state) => state.common.error);
 
-    console.log(txInfo, " fee modalshow");
-
     const dispatch = useDispatch();
     const handleClose = () => {
         dispatch(hideFeeModal());

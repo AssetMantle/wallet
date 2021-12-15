@@ -79,7 +79,7 @@ html, body {
 .list-modal.modal-custom .modal-dialog {
   max-width: 600px; }
 .list-modal.modal-custom .list-modal-body {
-  padding: 0px 100px 30px 100px; }
+  padding: 0px 60px 30px 60px; }
 
 .help-before-login .faq-modal-body .nav-pills .box .nav-link {
   border-color: #E3E5F4; }
@@ -272,7 +272,8 @@ html, body {
   display: -webkit-flex;
   margin-top: 20px;
   align-items: center;
-  justify-content: center; }
+  justify-content: center;
+  padding: 10px; }
   .note-section .exclamation {
     padding-right: 25px; }
     .note-section .exclamation .icon {

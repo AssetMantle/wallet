@@ -2,7 +2,7 @@ import _ from "lodash";
 import empty from "is-empty";
 import helper from "./helper";
 
-const removeCommas = str => _.replace(str, new RegExp(",", "g"), "");
+export const removeCommas = str => _.replace(str, new RegExp(",", "g"), "");
 const reverseString = str => removeCommas(_.toString(_.reverse(_.toArray(str))));
 
 const recursiveReverse = input => {

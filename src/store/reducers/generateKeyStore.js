@@ -29,7 +29,7 @@ const mnemonic = (state = {
                 message: data.error.message,
             },
         };
-    case KEYSTORE_MNEMONIC_MODAL_HIDE:
+    case KEYSTORE_PASSWORD_MODAL_HIDE:
         return {
             ...state,
             value: '',

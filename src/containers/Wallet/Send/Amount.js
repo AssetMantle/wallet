@@ -2,7 +2,7 @@ import React from 'react';
 import InputFieldNumber from "../../../components/InputFieldNumber";
 import {setTxSendAmount} from "../../../store/actions/transactions/send";
 import {useDispatch, useSelector} from "react-redux";
-import {formatNumber} from "../../../utils/scripts";
+import {formatNumber, removeCommas} from "../../../utils/scripts";
 import NumberView from "../../../components/NumberView";
 import {ValidateSendAmount, ValidateSpecialCharacters} from "../../../utils/validations";
 import {useTranslation} from "react-i18next";
@@ -57,7 +57,7 @@ const Amount = () => {
                         token.tokenDenom === config.coinDenom ?
                             <span
                                 className={transferableAmount === 0 ? "empty info-data" : "info-data info-link"}
-                                onClick={() => selectTotalBalanceHandler(formatNumber(transferableAmount))}><span
+                                onClick={() => selectTotalBalanceHandler(removeCommas(formatNumber(transferableAmount)))}><span
                                     className="title">Transferable Balance:</span>
                                 <span
                                     className="value"
@@ -74,7 +74,7 @@ const Amount = () => {
                         :
                         <span
                             className={transferableAmount === 0 ? "empty info-data" : "info-data info-link"}
-                            onClick={() => selectTotalBalanceHandler(formatNumber(transferableAmount))}><span
+                            onClick={() => selectTotalBalanceHandler(removeCommas(formatNumber(transferableAmount)))}><span
                                 className="title">Transferable Balance:</span>
                             <span
                                 className="value"
