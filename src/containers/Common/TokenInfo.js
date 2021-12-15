@@ -11,36 +11,18 @@ import ModalViewVestingDetails from "./ModalViewVestingDetails";
 import ModalViewAmountDetails from "./ModalVIewAmountDetails";
 import Icon from "../../components/Icon";
 import {OverlayTrigger, Popover} from "react-bootstrap";
-// import transactions from "../../utils/transactions";
 import ModalViewDelegationDetails from "./ModalViewDelegationDetails";
 import {fetchValidators} from "../../store/actions/validators";
 import NumberView from "../../components/NumberView";
 import {formatNumber} from "../../utils/scripts";
 import {showTxWithDrawTotalModal} from "../../store/actions/transactions/withdrawTotalRewards";
-// import ModalWithDraw from "../Wallet/WithDrawTotal";
 const TokenInfo = (props) => {
     const {t} = useTranslation();
     const dispatch = useDispatch();
-    // const [rewards, setRewards] = useState(false);
-    // let address = localStorage.getItem('address');
-
-    // useEffect(() => {
-    //     props.fetchDelegationsCount(address);
-    //     props.fetchBalance(address);
-    //     props.fetchRewards(address);
-    //     props.fetchTotalRewards(address);
-    //     props.fetchUnbondDelegations(address);
-    //     props.fetchTokenPrice();
-    //     props.fetchTransferableVestingAmount(address);
-    //     props.fetchValidators(address);
-    //     transactions.updateFee(address);
-    //     setInterval(() => props.fetchTotalRewards(address), 10000);
-    // }, []);
 
     const handleRewards = (key) => {
         if (key === "rewards") {
             dispatch(showTxWithDrawTotalModal());
-            // setRewards(true);
         }
     };
     const popoverVesting = (
@@ -212,11 +194,6 @@ const TokenInfo = (props) => {
 
                     </div>
                 </div>
-                {/*{rewards ?*/}
-                {/*    <ModalWithDraw setRewards={setRewards} totalRewards={props.rewards}/>*/}
-                {/*    : null*/}
-                {/*}*/}
-
             </div>
         </div>
 

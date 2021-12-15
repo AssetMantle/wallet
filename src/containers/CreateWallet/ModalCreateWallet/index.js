@@ -23,10 +23,10 @@ const ModalCreateWallet = (props) => {
     return (
         <div>
             <Modal show={show} onHide={handleClose} centered className="create-wallet-modal">
-                <Modal.Header className="info-modal-header" closeButton>
+                <Modal.Header className="info-modal-header " closeButton>
                     <p>{t("ABOUT_WALLET")}</p>
                 </Modal.Header>
-                <Modal.Body className="create-wallet-body">
+                <Modal.Body className="import-wallet-body pt-3">
                     <div className="info-box">
                         <p><b>{t("SIGNUP_NOTE_HEADING")}
                         </b></p>

@@ -16,7 +16,6 @@ const InputFieldNumber = ({
     onBlur = helper.emptyFunc,
     onKeyPress = helper.emptyFunc,
 }) => {
-    // const isError = error.message.length > 0;
 
     return (
         <div className="form-control-section flex-fill">

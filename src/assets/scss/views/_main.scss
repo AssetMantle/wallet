@@ -449,6 +449,9 @@
   overflow: hidden;
   transition: all .4s ease-in-out;
   -webkit-transition: all .4s ease-in-out;
+  .form-control-section{
+    padding: 5px;
+  }
 }
 
 .memo-dropdown-section-body.show {

@@ -20,9 +20,6 @@ export const GlobalStyles = createGlobalStyle`
    .txns-container table thead, .validators-section table thead{
     border-bottom: 1px solid ${({theme}) => theme.tableBorderColor} !important;
     }
-    //   .validators-section table tbody tr{
-    // border-bottom: 1px solid ${({theme}) => theme.tableBorderColor} !important;
-    // }
     
     .wallet-main-section .tabs-section .nav-tabs, .validators-section .main-header{
       border: 1px solid ${({theme}) => theme.tableBorderColor} !important;  
@@ -79,7 +76,7 @@ export const GlobalStyles = createGlobalStyle`
     .wallet-main-section .txns-container .pagination-custom{
      background-color: ${({theme}) => theme.tableBackground} !important;
     }
-    .form-field .label, .mnemonic-result {
+    .form-field .label, .mnemonic-result, .custom-file-section .custom-file .file-name {
     color: ${({theme}) => theme.labelColor} !important;
     }
     .modal-content{

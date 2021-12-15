@@ -905,14 +905,12 @@ ul li em {
     align-items: center;
 
     .file-name {
-      color: red;
       margin: 0;
       padding: 0px 10px;
     }
   }
 
   .file-button {
-    cursor: pointer;
     color: #FFFFFF;
     margin: 0;
     background: #495057;
@@ -929,9 +927,7 @@ ul li em {
     opacity: 0;
 
     input {
-      cursor: pointer;
       height: 40px;
-
     }
   }
 }

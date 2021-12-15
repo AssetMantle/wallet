@@ -15,7 +15,7 @@ import {hideTxResultModal} from "../../../store/actions/transactions/common";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
-const ModalViewTxnResponse = (props) => {
+const ModalViewTxnResponse = () => {
     const {t} = useTranslation();
     const mode = localStorage.getItem('loginMode');
     let address = localStorage.getItem('address');
@@ -51,7 +51,7 @@ const ModalViewTxnResponse = (props) => {
                 response !== '' && response.code === 0 ?
                     <>
                         <Modal.Header className="result-header success" closeButton>
-                            {props.successMsg}
+                            Transaction Successful
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
@@ -78,7 +78,7 @@ const ModalViewTxnResponse = (props) => {
                 response !== '' && response.code !== 0 ?
                     <>
                         <Modal.Header className="result-header error" closeButton>
-                            {props.failedMsg}
+                            Transaction Failed
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">

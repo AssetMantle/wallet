@@ -1,5 +1,4 @@
 import React from 'react';
-// import {Button as ReactButton} from "react-bootstrap";
 
 const Button = ({
     className,

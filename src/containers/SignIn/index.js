@@ -49,11 +49,6 @@ const SignIn = (props) => {
         }
     };
 
-    // const handleKepler = () => {
-    //     dispatch(hideSignInModal());
-    //     history.push('/keplr');
-    // };
-
     return (
         <>
             <Modal backdrop="static" show={show} onHide={handleClose} centered

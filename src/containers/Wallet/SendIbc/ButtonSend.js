@@ -22,7 +22,7 @@ const ButtonSend = () => {
     const memo = useSelector((state) => state.sendIbc.memo);
 
     const disable = (
-        amount.value === '' || amount.error.message !== '' || toAddress.value === '' || toAddress.error.message !== '' || memo.error.message !== ''
+        amount.value === '' || (amount.value*1) === 0 || amount.error.message !== '' || toAddress.value === '' || toAddress.error.message !== '' || memo.error.message !== ''
     );
 
     const onClick = async () => {

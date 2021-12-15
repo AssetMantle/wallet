@@ -21,7 +21,7 @@ const ButtonSubmit = () => {
 
 
     const disable = (
-        amount.value === '' || amount.error.message !== '' || validator === '' || memo.error.message !== ''
+        amount.value === '' || (amount.value*1) === 0 || amount.error.message !== '' || validator === '' || memo.error.message !== ''
     );
 
     const onClickKeplr = () => {

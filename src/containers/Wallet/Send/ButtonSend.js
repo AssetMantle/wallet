@@ -19,7 +19,7 @@ const ButtonSend = () => {
     const token = useSelector((state) => state.send.token);
     const memo = useSelector((state) => state.send.memo);
     const disable = (
-        amount.value === '' || amount.error.message !== '' || toAddress.value === '' || toAddress.error.message !== '' || memo.error.message !== ''
+        amount.value === '' || (amount.value*1) === 0 || amount.error.message !== '' || toAddress.value === '' || toAddress.error.message !== '' || memo.error.message !== ''
     );
 
     const onClickKeplr = () => {

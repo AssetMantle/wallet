@@ -7,6 +7,8 @@ import ImportWallet from "../../ImportWallet";
 import AdvanceMode from "./AdvanceMode";
 import Copy from "../../../components/Copy";
 import {useTranslation} from "react-i18next";
+import {useDispatch} from "react-redux";
+import {showSignInModal} from "../../../store/actions/signIn/modal";
 
 const CreateWallet = (props) => {
     const {t} = useTranslation();
@@ -21,6 +23,7 @@ const CreateWallet = (props) => {
     const [quizError, setQuizError] = useState(false);
     const [response, setResponse] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const dispatch = useDispatch();
 
     const handleClose = () => {
         setShow(false);
@@ -78,8 +81,9 @@ const CreateWallet = (props) => {
 
     const handleRoute = () => {
         setShow(false);
-        setShowImportWallet(true);
+        dispatch(showSignInModal());
     };
+
     const handlePrevious = (formName) => {
         if (formName === "keysForm") {
             setShow(false);

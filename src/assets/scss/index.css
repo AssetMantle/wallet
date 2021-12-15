@@ -665,11 +665,9 @@ ul li em {
     display: flex;
     align-items: center; }
     .custom-file-section .custom-file .file-name {
-      color: red;
       margin: 0;
       padding: 0px 10px; }
   .custom-file-section .file-button {
-    cursor: pointer;
     color: #FFFFFF;
     margin: 0;
     background: #495057;
@@ -682,7 +680,6 @@ ul li em {
     width: 150px;
     opacity: 0; }
     .custom-file-section .file-upload input {
-      cursor: pointer;
       height: 40px; }
 
 .password-field .password-field-container {
@@ -1013,6 +1010,8 @@ ul li em {
   overflow: hidden;
   transition: all .4s ease-in-out;
   -webkit-transition: all .4s ease-in-out; }
+  .memo-dropdown-section-body .form-control-section {
+    padding: 5px; }
 
 .memo-dropdown-section-body.show {
   max-height: 200px; }
