@@ -35,7 +35,7 @@ const ValidatorsTable = (props) => {
                 return (obj1, obj2) => {
                     let val1 = obj1.data.props.children[1];
                     let val2 = obj2.data.props.children[1];
-                    return (val1.length - val2.length) * (order === 'asc' ? 1 : -1);
+                    return (val1.toUpperCase() < val2.toUpperCase() ? -1: 1 ) * (order === 'asc' ? 1 : -1);
                 };
             }
 

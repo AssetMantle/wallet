@@ -6,26 +6,20 @@ import {formatNumber} from "../../../utils/scripts";
 import NumberView from "../../../components/NumberView";
 import {ValidateSendAmount, ValidateSpecialCharacters} from "../../../utils/validations";
 import {useTranslation} from "react-i18next";
+import config from "../../../config";
 
 const Amount = () => {
     const {t} = useTranslation();
-    // const amount = floatCoin(props.balance);
     const amount = useSelector((state) => state.send.amount);
     const token = useSelector((state) => state.send.token.value);
     const transferableAmount = useSelector((state) => state.balance.transferableAmount);
 
     const dispatch = useDispatch();
-    // const onChange = (evt) =>{
-    //     dispatch(setTxSendAmount({
-    //         value:evt.target.value,
-    //         error:ValidateSendAmount(transferableAmount, (evt.target.value * 1))
-    //     }));
-    // };
 
     const onChange = (evt) =>{
         let rex = /^\d*\.?\d{0,6}$/;
         if (rex.test(evt.target.value)) {
-            if (token.tokenDenom === "uxprt") {
+            if (token.tokenDenom === config.coinDenom) {
                 dispatch(setTxSendAmount({
                     value:evt.target.value,
                     error:ValidateSendAmount(transferableAmount, (evt.target.value * 1))
@@ -69,7 +63,7 @@ const Amount = () => {
                             <span
                                 className={transferableAmount === 0 ? "empty info-data" : "info-data info-link"}
                                 onClick={() => selectTotalBalanceHandler(formatNumber(transferableAmount))}><span
-                                    className="title">Transferable Balance:</span> 
+                                    className="title">Transferable Balance:</span>
                                 <span
                                     className="value"
                                     title={transferableAmount}>
