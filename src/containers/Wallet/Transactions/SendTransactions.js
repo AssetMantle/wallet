@@ -12,6 +12,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import transactions from "../../../utils/transactions";
 import NumberView from "../../../components/NumberView";
 import {formatNumber} from "../../../utils/scripts";
+import config from "../../../config";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const SendTransactions = (props) => {
@@ -105,7 +106,7 @@ const SendTransactions = (props) => {
             (stxn.fee.amount !== undefined && stxn.fee.amount.length) ?
                 (Array.isArray(stxn.fee.amount)) ?
                     stxn.fee.amount.length ?
-                        stxn.fee.amount[0].denom === 'uxprt' ?
+                        stxn.fee.amount[0].denom === config.coinDenom ?
                             <div className="fee text-left" key={index}>
                                 <NumberView
                                     value={formatNumber(transactions.XprtConversion(stxn.fee.amount[0].amount))}/>

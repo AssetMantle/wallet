@@ -10,11 +10,17 @@ import {ValidateFee} from "../../../utils/validations";
 const Fee = () => {
     const dispatch = useDispatch();
     const transferableAmount = useSelector((state) => state.balance.transferableAmount);
-    const amount = useSelector((state) => state.send.amount.value);
+    let amount = 0;
+    const formData = useSelector((state) => state.common.txInfo.value.data);
     const fee = useSelector((state) => state.fee.fee);
     const tokenPrice = useSelector((state) => state.tokenPrice.tokenPrice);
     const type = useSelector((state) => state.common.txName.value.name);
     const gas = useSelector((state) => state.gas.gas);
+
+    if(type === "send" || type === "ibc"){
+        amount = formData.amount;
+    }
+
     useEffect(() => {
         dispatch(feeChangeHandler({
             value: {
@@ -24,6 +30,7 @@ const Fee = () => {
             error: ValidateFee(transferableAmount, config.averageFee * (gas.value), type, amount)
         }));
     }, [gas.value]);
+
     const handleFee = (fee, feeValue) => {
         dispatch(feeChangeHandler({
             value: {
@@ -34,7 +41,6 @@ const Fee = () => {
         }));
     };
 
-    console.log(amount, "amount in fee", fee);
     const activeFeeState = fee.value.feeType;
 
     return (

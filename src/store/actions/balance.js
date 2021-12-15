@@ -117,7 +117,7 @@ export const fetchTransferableVestingAmount = (address) => {
                             let tokenList = [];
                             for (let i = 0; i < response.balances.length; i++) {
                                 let item = response.balances[i];
-                                if (item.denom === 'uxprt') {
+                                if (item.denom === config.coinDenom) {
                                     tokenList.push(item);
                                     const amount = transactions.XprtConversion(vestingAccount.getAccountVestingAmount(vestingAmountData, currentEpochTime));
                                     const balance = transactions.XprtConversion(item.amount * 1);

@@ -6,7 +6,6 @@ import Fee from "./index";
 import Gas from "./Gas";
 import Submit from "./Submit";
 import Icon from "../../../components/Icon";
-// import {showTxWithDrawTotalModal} from "../../../store/actions/transactions/withdrawTotalRewards";
 
 const Modal = () => {
     const show = useSelector((state) => state.fee.modal);

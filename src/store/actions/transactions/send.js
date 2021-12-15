@@ -38,6 +38,7 @@ export const submitFormData = (message) => (dispatch, getState) => {
         value: {
             data: {
                 message: message,
+                amount: getState().send.amount.value,
                 token: getState().send.token.value.tokenDenom,
                 memo: getState().send.memo.value,
             }

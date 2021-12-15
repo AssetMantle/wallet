@@ -1,3 +1,5 @@
+import config from "../config";
+
 function sendMsg(fromAddress, toAddress, amount, denom) {
     return {
         type: "cosmos-sdk/MsgSend",
@@ -19,7 +21,7 @@ function msgs(...msg) {
 }
 
 function fee(amount, gas = 250000) {
-    return {amount: [{amount: String(amount), denom: "uxprt"}], gas: String(gas)};
+    return {amount: [{amount: String(amount), denom: config.coinDenom}], gas: String(gas)};
 }
 
 function delegateMsg(amount, address, validatorAddress) {
@@ -28,7 +30,7 @@ function delegateMsg(amount, address, validatorAddress) {
         value: {
             amount: {
                 amount: String(amount),
-                denom: "uxprt"
+                denom: config.coinDenom
             },
             delegator_address: address,
             validator_address: validatorAddress
@@ -42,7 +44,7 @@ function redelegateMsg(amount, address, validatorAddress, toValidatorAddress) {
         value: {
             amount: {
                 amount: String(amount),
-                denom: "uxprt"
+                denom: config.coinDenom
             },
             delegator_address: address,
             validator_dst_address: toValidatorAddress,
@@ -57,7 +59,7 @@ function unBondMsg(amount, address, validatorAddress) {
         value: {
             amount: {
                 amount: String(amount),
-                denom: "uxprt"
+                denom: config.coinDenom
             },
             delegator_address: address,
             validator_address: validatorAddress

@@ -57,7 +57,7 @@ function RedelegateMsg(delegatorAddress, validatorSrcAddress, validatorDstAddres
             validatorSrcAddress: validatorSrcAddress,
             validatorDstAddress: validatorDstAddress,
             amount: {
-                denom: "uxprt",
+                denom: config.coinDenom,
                 amount: String(amount),
             },
         }
@@ -72,7 +72,7 @@ function UnbondMsg(delegatorAddress, validatorAddress, amount) {
             delegatorAddress: delegatorAddress,
             validatorAddress: validatorAddress,
             amount: {
-                denom: "uxprt",
+                denom: config.coinDenom,
                 amount: String(amount),
             },
         }

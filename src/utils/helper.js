@@ -143,7 +143,7 @@ function decimalConversion(data) {
 }
 
 function denomChange(denom) {
-    if (denom === "uxprt") {
+    if (denom === config.coinDenom) {
         return "XPRT";
     } else if (denom === "uatom") {
         return "ATOM";
@@ -222,7 +222,7 @@ function passwordValidation(data) {
 function denomModify(amount) {
     if (Array.isArray(amount)) {
         if (amount.length) {
-            if (amount[0].denom === "uxprt") {
+            if (amount[0].denom === config.coinDenom) {
                 return [transactions.XprtConversion(amount[0].amount), "XPRT"];
             } else {
                 return [amount[0].amount, amount[0].denom];
@@ -231,7 +231,7 @@ function denomModify(amount) {
             return '';
         }
     } else {
-        if (amount.denom === "uxprt") {
+        if (amount.denom === config.coinDenom) {
             return [transactions.XprtConversion(amount.amount), "XPRT"];
         } else {
             return [amount.amount, amount.denom];

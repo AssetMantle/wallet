@@ -7,6 +7,7 @@ import NumberView from "../../../components/NumberView";
 import {ValidateSendAmount, ValidateSpecialCharacters} from "../../../utils/validations";
 import {useTranslation} from "react-i18next";
 import {OverlayTrigger, Popover} from "react-bootstrap";
+import config from "../../../config";
 
 const Amount = () => {
     const {t} = useTranslation();
@@ -19,7 +20,7 @@ const Amount = () => {
     const onChange = (evt) => {
         let rex = /^\d*\.?\d{0,6}$/;
         if (rex.test(evt.target.value)) {
-            if (token.tokenDenom === "uxprt") {
+            if (token.tokenDenom === config.coinDenom) {
                 dispatch(setTxIbcSendAmount({
                     value: evt.target.value,
                     error: ValidateSendAmount(transferableAmount, (evt.target.value * 1))
@@ -53,7 +54,7 @@ const Amount = () => {
                 <span> {t("AMOUNT")}</span>
                 {
                     Object.keys(token).length !== 0 ?
-                        token.tokenDenom === "uxprt" ?
+                        token.tokenDenom === config.coinDenom ?
                             <span
                                 className={transferableAmount === 0 ? "empty info-data" : "info-data info-link"}
                                 onClick={() => selectTotalBalanceHandler(formatNumber(transferableAmount))}><span

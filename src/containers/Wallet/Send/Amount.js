@@ -54,7 +54,7 @@ const Amount = () => {
                 <span> {t("AMOUNT")}</span>
                 {
                     Object.keys(token).length !== 0 ?
-                        token.tokenDenom === "uxprt" ?
+                        token.tokenDenom === config.coinDenom ?
                             <span
                                 className={transferableAmount === 0 ? "empty info-data" : "info-data info-link"}
                                 onClick={() => selectTotalBalanceHandler(formatNumber(transferableAmount))}><span

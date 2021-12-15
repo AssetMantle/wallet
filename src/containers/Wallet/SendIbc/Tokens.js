@@ -66,7 +66,7 @@ const Tokens = () => {
                     onChange={onTokenChangeSelect} displayEmpty>
                     {
                         tokenList.map((item, index) => {
-                            if (item.denom === "uxprt") {
+                            if (item.denom === config.coinDenom) {
                                 return (
                                     <MenuItem
                                         key={index + 1}
