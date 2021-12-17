@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {ValidateAccountIndex, ValidateSpecialCharacters} from "../../../utils/validations";
 import {useTranslation} from "react-i18next";
 import {setAccountIndex} from "../../../store/actions/transactions/advanced";
+import config from "../../../config";
 
 const AccountIndex = () => {
     const {t} = useTranslation();
@@ -23,7 +24,7 @@ const AccountIndex = () => {
         <div className="form-field">
             <p className="label">{t("ACCOUNT_INDEX")}</p>
             <InputFieldNumber
-                max={4294967295}
+                max={config.maxAccountNumber}
                 name="delegateAccountIndex"
                 placeholder={t("ACCOUNT_INDEX")}
                 type="number"

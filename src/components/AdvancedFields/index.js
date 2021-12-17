@@ -3,7 +3,7 @@ import {Accordion, AccordionContext, Card, Form, useAccordionToggle,} from "reac
 import Icon from "../../components/Icon";
 import helper from "../../utils/helper";
 import {useTranslation} from "react-i18next";
-
+import config from "../../config";
 
 const AdvancedFields = (props) => {
     const {t} = useTranslation();
@@ -60,7 +60,7 @@ const AdvancedFields = (props) => {
             e.preventDefault();
         } else {
             const accountNumber = document.getElementById('accountNumberReset').value;
-            if (parseInt(accountNumber) > 4294967295 || parseInt(accountNumber) < 0) {
+            if (parseInt(accountNumber) > config.maxAccountNumber || parseInt(accountNumber) < 0) {
                 e.preventDefault();
             }
         }
@@ -71,7 +71,7 @@ const AdvancedFields = (props) => {
             e.preventDefault();
         } else {
             const addressIndex = document.getElementById('accountIndexReset').value;
-            if (parseInt(addressIndex) > 4294967295 || parseInt(addressIndex) < 0) {
+            if (parseInt(addressIndex) > config.maxAccountNumber || parseInt(addressIndex) < 0) {
                 e.preventDefault();
             }
         }
@@ -91,7 +91,7 @@ const AdvancedFields = (props) => {
                             <p className="label"> {t("ACCOUNT")}</p>
                             <Form.Control
                                 type="number"
-                                max={4294967295}
+                                max={config.maxAccountNumber}
                                 name="accountNumber"
                                 id="accountNumberReset"
                                 onKeyPress={handleAccountNumberKeypress}
@@ -104,7 +104,7 @@ const AdvancedFields = (props) => {
                             <p className="label">{t("ACCOUNT_INDEX")}</p>
                             <Form.Control
                                 type="number"
-                                max={4294967295}
+                                max={config.maxAccountNumber}
                                 name="accountIndexReset"
                                 id="accountIndexReset"
                                 onKeyPress={handleIndexKeypress}

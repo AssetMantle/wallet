@@ -20,6 +20,7 @@
   "ibcRevisionHeightIncrement": 1000,
   "ibcRemoteHeightIncrement": 150,
   "ibcDefaultPort": "transfer",
+  "maxAccountNumber": 2147483647,
   "valoperAddressPrefix": "persistence",
   "keplrMode": "keplr",
   "testNetFoundationNodes": [

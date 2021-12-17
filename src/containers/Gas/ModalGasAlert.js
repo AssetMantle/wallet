@@ -6,7 +6,7 @@ import transactions from "../../utils/transactions";
 import {connect} from "react-redux";
 import Icon from "../../components/Icon";
 import ModalDecryptKeyStore from "../KeyStore/ModalDecryptKeystore";
-import aminoMsgHelper from "../../utils/aminoMsgHelper";
+import {fee as feeMessage} from "../../utils/aminoMsgHelper";
 import ModalViewTxnResponse from "../Common/ModalViewTxnResponse";
 import Loader from "../../components/Loader";
 import {formatNumber} from "../../utils/scripts";
@@ -149,7 +149,7 @@ const ModalGasAlert = (props) => {
                 props.formData.toAddress, (props.formData.amount * config.xprtValue).toFixed(0), undefined, undefined, props.formData.denom, props.formData.channelUrl, props.formData.inputPort);
             await msg.then(result => {
                 response = transactions.TransactionWithMnemonic([result],
-                    aminoMsgHelper.fee(Math.trunc(fee), gas), props.formData.memo, "",
+                    feeMessage(Math.trunc(fee), gas), props.formData.memo, "",
                     transactions.makeHdPath(accountNumber, addressIndex), "");
             }).catch(err => {
                 setLoader(false);

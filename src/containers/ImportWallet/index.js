@@ -6,6 +6,7 @@ import helper from "../../utils/helper";
 import GeneratePrivateKey from "../KeyStore/GenerateKeyStore/GeneratePrivateKey";
 import {useTranslation} from "react-i18next";
 import transactions from "../../utils/transactions";
+import config from "../../config";
 
 const ModalImportWallet = (props) => {
     const {t} = useTranslation();
@@ -234,7 +235,7 @@ const ModalImportWallet = (props) => {
                                                         <p className="label"> {t("ACCOUNT")}</p>
                                                         <Form.Control
                                                             type="number"
-                                                            max={4294967295}
+                                                            max={config.maxAccountNumber}
                                                             name="accountNumber"
                                                             id="accountNumber"
                                                             placeholder={t("ACCOUNT_NUMBER")}
@@ -245,7 +246,7 @@ const ModalImportWallet = (props) => {
                                                         <p className="label">{t("ACCOUNT_INDEX")}</p>
                                                         <Form.Control
                                                             type="number"
-                                                            max={4294967295}
+                                                            max={config.maxAccountNumber}
                                                             name="accountIndex"
                                                             id="accountIndex"
                                                             placeholder={t("ACCOUNT_INDEX")}

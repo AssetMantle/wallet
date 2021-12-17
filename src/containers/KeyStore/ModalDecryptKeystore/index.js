@@ -18,7 +18,7 @@ import helper from "../../../utils/helper";
 import Loader from "../../../components/Loader";
 import ModalViewTxnResponse from "../../Common/ModalViewTxnResponse";
 import config from "../../../config";
-import aminoMsgHelper from "../../../utils/aminoMsgHelper";
+import {fee as feeMessage} from "../../../utils/aminoMsgHelper";
 
 
 const ModalDecryptKeyStore = (props) => {
@@ -130,7 +130,7 @@ const ModalDecryptKeyStore = (props) => {
                         props.formData.toAddress, (props.formData.amount * config.xprtValue).toFixed(0), undefined, undefined, props.formData.denom, props.formData.channelUrl, props.formData.inputPort);
                     await msg.then(result => {
                         response = transactions.TransactionWithMnemonic([result],
-                            aminoMsgHelper.fee(Math.trunc(props.fee), props.gas), props.formData.memo, mnemonic,
+                            feeMessage(Math.trunc(props.fee), props.gas), props.formData.memo, mnemonic,
                             transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                     }).catch(err => {
                         setLoader(false);
@@ -190,7 +190,7 @@ const ModalDecryptKeyStore = (props) => {
             e.preventDefault();
         } else {
             const accountNumber = document.getElementById('delegateAccountNumber').value;
-            if (parseInt(accountNumber) > 4294967295 || parseInt(accountNumber) < 0) {
+            if (parseInt(accountNumber) > config.maxAccountNumber || parseInt(accountNumber) < 0) {
                 e.preventDefault();
             }
         }
@@ -201,7 +201,7 @@ const ModalDecryptKeyStore = (props) => {
             e.preventDefault();
         } else {
             const addressIndex = document.getElementById('delegateAccountIndex').value;
-            if (parseInt(addressIndex) > 4294967295 || parseInt(addressIndex) < 0) {
+            if (parseInt(addressIndex) > config.maxAccountNumber || parseInt(addressIndex) < 0) {
                 e.preventDefault();
             }
         }
@@ -284,7 +284,7 @@ const ModalDecryptKeyStore = (props) => {
                                                     <p className="label">{t("ACCOUNT")}</p>
                                                     <Form.Control
                                                         type="number"
-                                                        max={4294967295}
+                                                        max={config.maxAccountNumber}
                                                         name="delegateAccountNumber"
                                                         id="delegateAccountNumber"
                                                         placeholder={t("ACCOUNT_NUMBER")}
@@ -296,7 +296,7 @@ const ModalDecryptKeyStore = (props) => {
                                                     <p className="label">{t("ACCOUNT_INDEX")}</p>
                                                     <Form.Control
                                                         type="number"
-                                                        max={4294967295}
+                                                        max={config.maxAccountNumber}
                                                         name="delegateAccountIndex"
                                                         id="delegateAccountIndex"
                                                         placeholder={t("ACCOUNT_INDEX")}
