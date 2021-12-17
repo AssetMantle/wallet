@@ -93,7 +93,7 @@ export const keplrLogin = (history) => {
         });
         loginInfo.loginToken = "loggedIn";
         loginInfo.address = address;
-        loginInfo.loginMode = "keplr";
+        loginInfo.loginMode = config.keplrMode;
         loginInfo.version = config.version;
         loginInfo.accountNumber = accountNumber;
         loginInfo.accountIndex = accountIndex;

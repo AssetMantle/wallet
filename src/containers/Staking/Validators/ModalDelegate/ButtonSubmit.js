@@ -44,7 +44,7 @@ const ButtonSubmit = () => {
                     type="button"
                     disable={disable}
                     value="Submit"
-                    onClick={loginInfo.loginMode === "keplr" ? onClickKeplr : onClick}
+                    onClick={loginInfo.loginMode === config.keplrMode ? onClickKeplr : onClick}
                 />
             </div>
         </div>

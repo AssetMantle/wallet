@@ -12,6 +12,7 @@ import {fetchUnbondDelegations} from "../../../store/actions/unbond";
 import {fetchTokenPrice} from "../../../store/actions/tokenPrice";
 import {fetchReceiveTransactions, fetchTransactions} from "../../../store/actions/transactionQueries";
 import {hideTxResultModal} from "../../../store/actions/transactions/common";
+import config from "../../../config";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -56,7 +57,7 @@ const ModalViewTxnResponse = () => {
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 <img src={success} alt="success-image"/>
-                                {mode === "kepler" ?
+                                {mode === config.keplrMode ?
                                     <a
                                         href={`${EXPLORER_API}/transactions/${response.transactionHash}`}
                                         target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
@@ -83,7 +84,7 @@ const ModalViewTxnResponse = () => {
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 <img src={failed} alt="success-image"/>
-                                {mode === "kepler" ?
+                                {mode === config.keplrMode ?
                                     <>
                                         <p>{response.rawLog}</p>
                                         <a

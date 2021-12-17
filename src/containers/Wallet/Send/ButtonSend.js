@@ -39,7 +39,7 @@ const ButtonSend = () => {
                     type="button"
                     disable={disable}
                     value="Send"
-                    onClick={loginInfo.loginMode === "keplr" ? onClickKeplr : onClick}
+                    onClick={loginInfo.loginMode === config.keplrMode ? onClickKeplr : onClick}
                 />
             </div>
         </div>
