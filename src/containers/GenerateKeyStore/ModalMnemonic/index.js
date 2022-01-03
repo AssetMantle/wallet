@@ -41,8 +41,7 @@ const ModalMnemonic = () => {
                 <Mnemonic/>
                 <ButtonSubmit/>
                 <div className="buttons">
-                    <p className="button-link" onClick={() => handleRoute()}>Change
-                        KeyStore Password</p>
+                    <p className="button-link" onClick={() => handleRoute()}>{t('CHANGE_KEYSTORE_PASSWORD')}</p>
                 </div>
             </ReactModal.Body>
         </ReactModal>

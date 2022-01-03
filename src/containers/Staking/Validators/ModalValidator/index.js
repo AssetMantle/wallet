@@ -100,8 +100,7 @@ const ModalValidator = () => {
                     </button>
                 </div>
                 {helper.foundationNodeCheck(validator.operatorAddress && validator.operatorAddress) ?
-                    <p className="amount-warning text-left"> Warning: Foundation Nodes operate at 100%
-                        commission, you will not be receiving any staking rewards.</p> : ""
+                    <p className="amount-warning text-left"> {t('FOUNDATION_NODE_WARNING')}</p> : ""
                 }
             </ReactModal.Body>
         </ReactModal>

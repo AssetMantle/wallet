@@ -31,8 +31,7 @@ const ToAddress = () => {
     const popover = (
         <Popover id="popover">
             <Popover.Content>
-                Recipient’s address starts with persistence; for example:
-                persistence14zmyw2q8keywcwhpttfr0d4xpggylsrmd4caf4
+                {t("RECIPIENT_ADDRESS_EXAMPLE")}
             </Popover.Content>
         </Popover>
     );

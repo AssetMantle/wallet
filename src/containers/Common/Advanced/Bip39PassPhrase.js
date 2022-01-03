@@ -7,7 +7,6 @@ import InputText from "../../../components/InputText";
 
 const Bip39PassPhrase = () => {
     const {t} = useTranslation();
-    // const token = useSelector((state) => state.send.token.value);
     const bip39PassPhrase = useSelector((state) => state.advanced.bip39PassPhrase);
     const dispatch = useDispatch();
 

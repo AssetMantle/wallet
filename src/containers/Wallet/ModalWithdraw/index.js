@@ -66,7 +66,9 @@ const ModalWithDraw = () => {
                     <div className="available-tokens">
                         <p className="tokens"
                             title={rewards}>
-                            <NumberView value={formatNumber(rewards)}/>XPRT</p>
+                            <NumberView value={formatNumber(rewards)}/>
+                            {config.coinName}
+                        </p>
                         <p className="usd">= $<NumberView
                             value={formatNumber(rewards * tokenPrice)}/></p>
                     </div>
@@ -79,7 +81,7 @@ const ModalWithDraw = () => {
                     : null
                 }
                 <div className="validator-limit-warning">
-                    <p className="amount-warning">{selectedValidators.error.message !== '' ? "Warning:  Recommend 3 or fewer validators to avoid potential issues." : ""}</p>
+                    <p className="amount-warning">{selectedValidators.error.message !== '' ? t('VALIDATORS_SELECTION_WARNING') : ""}</p>
                 </div>
                 {error.error.message !== '' ?
                     <p className="form-error">{error.error.message}</p> : null}

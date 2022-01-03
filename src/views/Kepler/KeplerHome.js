@@ -137,7 +137,7 @@ const KeplerHome = () => {
                                         address !== ""
                                             ?
                                             <p>{address}</p>
-                                            : <p>Fetching Address..</p>
+                                            : <p>{t("FETCHING_ADDRESS")}..</p>
 
                                     }
 

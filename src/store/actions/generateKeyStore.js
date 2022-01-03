@@ -73,9 +73,6 @@ export const mnemonicSubmit = () => {
     return async (dispatch, getState) => {
         try {
             await wallet.createWallet(getState().generateKeyStore.mnemonic.value);
-            // if (responseData.error) {
-            //     setErrorMessage(responseData.error);
-            // } else {
             let mnemonic = helper.mnemonicTrim(getState().generateKeyStore.mnemonic.value);
             dispatch(setKeyStoreMnemonic({
                 value: mnemonic,
@@ -85,7 +82,6 @@ export const mnemonicSubmit = () => {
             }));
             dispatch(hideKeyStoreMnemonicModal());
             dispatch(showKeyStorePasswordModal());
-            // }
         } catch (error) {
             Sentry.captureException(error.response
                 ? error.response.data.message

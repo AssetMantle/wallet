@@ -61,7 +61,7 @@ const LedgerModal = () => {
                             <Advanced/>
                         </>
                         :
-                        <p className="fetching">Fetching Address</p>
+                        <p className="fetching">{t("FETCHING_ADDRESS")}</p>
                 }
 
             </ReactModal.Body>

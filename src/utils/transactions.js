@@ -266,32 +266,34 @@ function checkValidatorAccountAddress(validatorAddress, address) {
 }
 
 async function getTransactionResponse(address, data, feeAmount, gas, mnemonic = "", txName, accountNumber = 0, addressIndex = 0, bip39Passphrase = "") {
-    if (txName === "send") {
+    switch (txName) {
+    case "send":
         return TransactionWithMnemonic(data.message, fee(Math.trunc(feeAmount), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
-    } else if (txName === "delegate") {
+    case "delegate":
         return TransactionWithMnemonic(data.message, fee(Math.trunc(feeAmount), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
-    } else if (txName === "withdrawMultiple") {
+    case "withdrawMultiple":
         return TransactionWithMnemonic(data.message, fee(Math.trunc(feeAmount), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
-    } else if (txName === "withdrawAddress") {
+    case "withdrawAddress":
         return TransactionWithMnemonic(data.message, fee(Math.trunc(feeAmount), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
-    } else if (txName === "reDelegate") {
+    case "reDelegate":
         return TransactionWithMnemonic(data.message, fee(Math.trunc(feeAmount), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
-    } else if (txName === "unbond") {
+    case  "unbond":
         return TransactionWithMnemonic(data.message, fee(Math.trunc(feeAmount), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
-    } else if (txName === "withdrawValidatorRewards") {
+    case "withdrawValidatorRewards":
         return TransactionWithMnemonic(data.message, fee(Math.trunc(feeAmount), gas), data.memo,
             mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
-    } else if (txName === "ibc") {
+    case "ibc":
         return TransactionWithMnemonic(data.message,
             fee(Math.trunc(feeAmount), gas), data.memo, mnemonic,
             makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
     }
+    
 }
 
 /**

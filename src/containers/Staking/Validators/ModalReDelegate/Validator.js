@@ -47,7 +47,7 @@ const Validator = () => {
                                         className="validator-item"
                                         value={validator.operatorAddress}>
                                         <span>{validator.description.moniker}</span>
-                                        <span className="state active">active </span>
+                                        <span className="state active">{t("ACTIVE")} </span>
                                     </MenuItem>
                                 );
                             }
@@ -62,7 +62,7 @@ const Validator = () => {
                                         className="validator-item"
                                         value={validator.operatorAddress}>
                                         <span>{validator.description.moniker}</span>
-                                        <span className="state inactive">inActive </span>
+                                        <span className="state inactive">{t("IN_ACTIVE")}</span>
                                     </MenuItem>
                                 );
                             }

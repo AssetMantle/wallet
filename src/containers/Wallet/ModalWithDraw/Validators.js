@@ -11,6 +11,7 @@ import {
 import {ValidateMultipleValidatorsClaim} from "../../../utils/validations";
 import NumberView from "../../../components/NumberView";
 import {formatNumber} from "../../../utils/scripts";
+import config from "../../../config";
 
 const Validators = () => {
     const {t} = useTranslation();
@@ -52,7 +53,9 @@ const Validators = () => {
                 <p className="label"></p>
                 <div className="available-tokens">
                     <p className="tokens">{t("CLAIMING_REWARDS")} <NumberView
-                        value={formatNumber(validatorsRewards.value)}/><span>XPRT</span></p>
+                        value={formatNumber(validatorsRewards.value)}/><span>
+                        {config.coinName}
+                    </span></p>
                     <p className="usd">= $<NumberView
                         value={formatNumber(validatorsRewards.value * tokenPrice)}/></p>
                 </div>

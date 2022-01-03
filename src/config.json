@@ -1,7 +1,6 @@
 {
-  "chainID": "test-core-1",
-  "chainName": "Persistence test-net",
   "addressPrefix": "persistence",
+  "mainNetChainID": "core-1",
   "coinType": "750",
   "coinDenom": "uxprt",
   "coinName": "XPRT",

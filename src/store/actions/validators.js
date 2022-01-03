@@ -213,15 +213,6 @@ export const fetchValidatorDelegations = (address) => {
                 ? error.response.data.message
                 : error.message);
         });
-        // } catch (error) {
-        //     dispatch(setValidatorDelegations({
-        //         value: 0,
-        //         status: false,
-        //         error: {
-        //             message: error.response
-        //         }
-        //     }));
-        // }
     };
 };
 

@@ -263,8 +263,18 @@ let English = {
         "LOGIN_WITH_KEYSTORE": "Login With KeyStore",
         "CURRENT_PASSWORD": "Current Password",
         "KEYSTORE_PASSWORD_RESET": "KeyStore Password Reset",
+        "CHANGE_KEYSTORE_PASSWORD": "Change KeyStore Password",
         "ENTER_NEW_PASSWORD": "Enter New Password",
         "CHOOSE_FILE": "Choose File",
+        "KEYSTORE_DOWNLOADED_SUCCESSFULLY":"Keystore Successfully downloaded",
+        "FETCHING_ADDRESS":"Fetching Address",
+        "RECIPIENT_ADDRESS_EXAMPLE":"Recipient’s address starts with persistence; for example: " +
+            "persistence14zmyw2q8keywcwhpttfr0d4xpggylsrmd4caf4",
+        "VALIDATORS_SELECTION_WARNING":"Warning:  Recommend 3 or fewer validators to avoid potential issues.",
+        "FOUNDATION_NODE_WARNING":"Warning: Foundation Nodes operate at 100%" +
+            " commission, you will not be receiving any staking rewards.",
+
+
     }
 };
 

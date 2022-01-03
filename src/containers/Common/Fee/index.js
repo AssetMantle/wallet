@@ -56,7 +56,8 @@ const Fee = () => {
                                     value={formatNumber(transactions.XprtConversion((gas.value) * config.lowFee) * tokenPrice)}/>$
                                 </p>
                                 <p className="xprt"><NumberView
-                                    value={formatNumber(transactions.XprtConversion((gas.value) * config.lowFee))}/>XPRT
+                                    value={formatNumber(transactions.XprtConversion((gas.value) * config.lowFee))}/>
+                                {config.coinName}
                                 </p>
                             </div>
                             : null
@@ -68,7 +69,8 @@ const Fee = () => {
                             value={formatNumber(transactions.XprtConversion((gas.value) * config.averageFee) * tokenPrice)}/>$
                         </p>
                         <p className="xprt"><NumberView
-                            value={formatNumber(transactions.XprtConversion((gas.value) * config.averageFee))}/>XPRT
+                            value={formatNumber(transactions.XprtConversion((gas.value) * config.averageFee))}/>
+                        {config.coinName}
                         </p>
                     </div>
                     <div className={activeFeeState === "High" ? "fee-box active" : "fee-box"}
@@ -78,7 +80,8 @@ const Fee = () => {
                             value={formatNumber(transactions.XprtConversion((gas.value) * config.highFee) * tokenPrice)}/>$
                         </p>
                         <p className="xprt"><NumberView
-                            value={formatNumber(transactions.XprtConversion((gas.value) * config.highFee))}/>XPRT
+                            value={formatNumber(transactions.XprtConversion((gas.value) * config.highFee))}/>
+                        {config.coinName}
                         </p>
                     </div>
                 </>

@@ -101,11 +101,6 @@ const SignIn = (props) => {
                 />
                 : null
             }
-            {/*{withKeyStore ?*/}
-            {/*    <KeyStoreLogin setWithLedger={setWithLedger} handleClose={handleClose} setShow={setShow}*/}
-            {/*    />*/}
-            {/*    : null*/}
-            {/*}*/}
         </>
     );
 };

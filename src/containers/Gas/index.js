@@ -38,7 +38,7 @@ const GasContainer = (props) => {
                         onClick={() => props.onClick("Low", 0)}>
                         <p className="title">Zero</p>
                         <p className="gas">0 $</p>
-                        <p className="xprt">0 XPRT</p>
+                        <p className="xprt">0 {config.coinName}</p>
                     </div>
                 }
             </div>

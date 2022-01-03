@@ -1,4 +1,3 @@
-// import transactions from "../../utils/transactions";
 import {
     SET_KEYSTORE_RESULT,
     SIGN_IN_KEYSTORE_MODAL_HIDE,

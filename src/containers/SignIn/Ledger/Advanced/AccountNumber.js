@@ -8,7 +8,6 @@ import config from "../../../../config";
 
 const AccountNumber = () => {
     const {t} = useTranslation();
-    // const token = useSelector((state) => state.send.token.value);
     const accountNumber = useSelector((state) => state.signInLedger.accountNumber);
     const dispatch = useDispatch();
 

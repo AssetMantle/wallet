@@ -1,5 +1,4 @@
 import {FEE_MODAL_HIDE, FEE_MODAL_SHOW, TX_FEE_SET} from "../../../constants/fee";
-// import config from "../../config";
 import {showKeyStoreModal} from "./keyStore";
 
 export const setTxFee = (data) => {

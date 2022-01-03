@@ -6,7 +6,6 @@ import {showSignInModal} from "../../../../store/actions/signIn/modal";
 import Icon from "../../../../components/Icon";
 import {useTranslation} from "react-i18next";
 import ButtonContinue from "./ButtonContinue";
-// import ModalKeplerInstall from "../../../../views/Kepler/ModalKeplerInstall";
 import Button from "../../../../components/Button";
 
 const KeplrModal = () => {
@@ -79,7 +78,7 @@ const KeplrModal = () => {
                                 info.value !== ""
                                     ?
                                     <p>{info.value}</p>
-                                    : <p>Fetching Address..</p>
+                                    : <p>{t("FETCHING_ADDRESS")}..</p>
 
                             }
                         </div>

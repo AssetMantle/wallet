@@ -80,7 +80,6 @@ const amount = (state = {
 };
 
 const token = (state = {value: []}, action) => {
-// const token = (state = {value: []}, {type, data}) => {
     if (action.type === TX_IBC_SEND_TOKEN_SET) {
         return {
             ...state,

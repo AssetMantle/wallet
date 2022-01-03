@@ -8,7 +8,6 @@ import config from "../../../../config";
 
 const AccountIndex = () => {
     const {t} = useTranslation();
-    // const token = useSelector((state) => state.send.token.value);
     const accountIndex = useSelector((state) => state.signInLedger.accountIndex);
     const dispatch = useDispatch();
 

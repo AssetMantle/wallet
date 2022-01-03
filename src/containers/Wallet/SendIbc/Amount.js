@@ -62,7 +62,8 @@ const Amount = () => {
                                 <span
                                     className="value"
                                     title={transferableAmount}>
-                                    <NumberView value={formatNumber(transferableAmount)}/>XPRT
+                                    <NumberView value={formatNumber(transferableAmount)}/>
+                                    {config.coinName}
                                 </span> 
                             </span>
                             :
@@ -95,7 +96,7 @@ const Amount = () => {
                             <span
                                 className="value"
                                 title={transferableAmount}>
-                                <NumberView value={formatNumber(transferableAmount)}/>XPRT
+                                <NumberView value={formatNumber(transferableAmount)}/>{config.coinName}
                             </span> 
                         </span>
                 }

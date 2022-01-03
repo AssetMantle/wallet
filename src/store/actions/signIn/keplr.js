@@ -101,7 +101,7 @@ export const keplrLogin = (history) => {
 
         localStorage.setItem('loginToken', 'loggedIn');
         localStorage.setItem('address', address);
-        localStorage.setItem('loginMode', 'keplr');
+        localStorage.setItem('loginMode', config.keplrMode);
         localStorage.setItem('version', config.version);
         localStorage.setItem('loginInfo', JSON.stringify(loginInfo));
         dispatch(setLoginInfo({

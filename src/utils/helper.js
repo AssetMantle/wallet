@@ -1,6 +1,7 @@
 import {Decimal} from "@cosmjs/math";
 import transactions from "./transactions";
 import config from "../config";
+import {COIN_ATOM, COIN_ATOM_DENOM} from "../constants/keyWords";
 
 const encoding = require("@cosmjs/encoding");
 const bip39 = require("bip39");
@@ -15,7 +16,6 @@ function randomNum(min, max) {
         if (randomNumbers.indexOf(random_number) == -1) {
             randomNumbers.push(random_number);
         }
-
     }
     return randomNumbers;
 }
@@ -143,10 +143,13 @@ function decimalConversion(data) {
 }
 
 function denomChange(denom) {
-    if (denom === config.coinDenom) {
-        return "XPRT";
-    } else if (denom === "uatom") {
-        return "ATOM";
+    switch (denom) {
+    case config.coinDenom:
+        return config.coinName;
+    case COIN_ATOM_DENOM:
+        return COIN_ATOM;
+    default:
+        return null;
     }
 }
 
@@ -285,8 +288,11 @@ function getAccountNumber(value) {
     return value === '' ? '0' : value;
 }
 
-
 const emptyFunc = () => ({});
+
+const stringToNumber = (stringData) => {
+    return +stringData;
+};
 
 export default {
     randomNum,
@@ -315,5 +321,6 @@ export default {
     stringValidation,
     emptyFunc,
     foundationNodeCheck,
-    getAccountNumber
+    getAccountNumber,
+    stringToNumber
 };

@@ -73,7 +73,7 @@ const ModalWithdraw = () => {
             </ReactModal.Header>
             <ReactModal.Body className="delegate-modal-body">
                 <div className="form-field p-0">
-                    <p className="label">{t("AVAILABLE")} (XPRT)</p>
+                    <p className="label">{t("AVAILABLE")} ({config.coinName})</p>
                     <div className="available-tokens">
                         <p className={rewards.value === 0 ? "empty info-data" : "info-data"}
                             title={rewards.value}>

@@ -53,7 +53,7 @@ const ModalDelegate = (props) => {
                             icon="left-arrow"/>
                     </button>
                 </div>
-                <h3 className="heading">Delegate {props.moniker}
+                <h3 className="heading">{t('DELEGATE')} {props.moniker}
                     <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
                         <button className="icon-button info" type="button"><Icon
                             viewClass="arrow-right"

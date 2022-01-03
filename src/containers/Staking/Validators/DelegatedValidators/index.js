@@ -14,6 +14,7 @@ import {
 import {connect, useDispatch} from "react-redux";
 import transactions from "../../../../utils/transactions";
 import {useTranslation} from "react-i18next";
+import config from "../../../../config";
 
 const DelegatedValidators = (props) => {
     const {t} = useTranslation();
@@ -46,7 +47,7 @@ const DelegatedValidators = (props) => {
         }
     }, {
         name: 'delegatedAmount',
-        label: `${t("DELEGATED_AMOUNT")}(XPRT)`,
+        label: `${t("DELEGATED_AMOUNT")}(${config.coinName})`,
         options: {
             sortCompare: (order) => {
                 return (obj1, obj2) => {

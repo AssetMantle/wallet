@@ -32,7 +32,6 @@ const Advanced = () => {
     };
 
     return (
-        // .advanced-wallet-accordion .card .collapse.show
         <div className="advanced-wallet-accordion">
             <Card>
                 <Card.Header>

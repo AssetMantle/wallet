@@ -22,7 +22,8 @@ import transactions from "./utils/transactions";
 import * as Sentry from "@sentry/react";
 import {Integrations} from "@sentry/tracing";
 import {keplrLogin, setKeplrInfo} from "./store/actions/signIn/keplr";
-
+import helper from "./utils/helper";
+const chainID = process.env.REACT_APP_CHAIN_ID;
 const SENTRY_API = process.env.REACT_APP_SENTRY_API;
 const App = () => {
     const {t} = useTranslation();
@@ -86,8 +87,10 @@ const App = () => {
         };
     });
 
+    console.log("1"*5, 2 * +"2.12312321323", "value", helper.stringToNumber(localStorage.getItem("fee")));
+
     window.addEventListener("keplr_keystorechange", () => {
-        if (localStorage.getItem('loginMode') === 'keplr') {
+        if (localStorage.getItem('loginMode') === config.keplrMode) {
             const kepler = KeplerWallet();
             kepler.then(function () {
                 const address = localStorage.getItem("keplerAddress");
@@ -107,11 +110,13 @@ const App = () => {
         }
     });
 
-    Sentry.init({
-        dsn: SENTRY_API,
-        integrations: [new Integrations.BrowserTracing()],
-        tracesSampleRate: 1.0,
-    });
+    if(chainID === config.mainNetChainID) {
+        Sentry.init({
+            dsn: SENTRY_API,
+            integrations: [new Integrations.BrowserTracing()],
+            tracesSampleRate: 1.0,
+        });
+    }
 
     return (
         <>

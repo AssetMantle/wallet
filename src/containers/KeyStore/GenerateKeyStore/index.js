@@ -89,8 +89,9 @@ const GenerateKeyStore = (props) => {
                                     </div>
                                 </Form>
                                 <div className="buttons">
-                                    <p className="button-link" onClick={() => handleRoute('changePassword')}>Change
-                                        KeyStore Password</p>
+                                    <p className="button-link" onClick={() => handleRoute('changePassword')}>
+                                        {t('CHANGE_KEYSTORE_PASSWORD')}
+                                    </p>
                                 </div>
                             </div>
                         </>

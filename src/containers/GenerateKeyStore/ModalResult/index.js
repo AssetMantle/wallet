@@ -29,7 +29,7 @@ const ModalResult = () => {
             </ReactModal.Header>
             <ReactModal.Body className="create-wallet-body create-wallet-form-body">
                 <div className="downloaded-keystore-box">
-                    <p>Keystore Successfully downloaded</p>
+                    <p>{t("KEYSTORE_DOWNLOADED_SUCCESSFULLY")}</p>
                 </div>
                 <div className="note-section">
                     <div className="exclamation"><Icon

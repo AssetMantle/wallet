@@ -110,7 +110,7 @@ const SendTransactions = (props) => {
                             <div className="fee text-left" key={index}>
                                 <NumberView
                                     value={formatNumber(transactions.XprtConversion(stxn.fee.amount[0].amount))}/>
-                                XPRT
+                                {config.coinName}
                             </div>
                             :
                             <div className="fee text-left" key={index}>
