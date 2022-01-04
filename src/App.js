@@ -87,8 +87,6 @@ const App = () => {
         };
     });
 
-    console.log("1"*5, 2 * +"2.12312321323", "value", helper.stringToNumber(localStorage.getItem("fee")));
-
     window.addEventListener("keplr_keystorechange", () => {
         if (localStorage.getItem('loginMode') === config.keplrMode) {
             const kepler = KeplerWallet();
