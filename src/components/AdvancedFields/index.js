@@ -60,7 +60,7 @@ const AdvancedFields = (props) => {
             e.preventDefault();
         } else {
             const accountNumber = document.getElementById('accountNumberReset').value;
-            if (parseInt(accountNumber) > config.maxAccountNumber || parseInt(accountNumber) < 0) {
+            if (parseInt(accountNumber) > config.maxAccountIndex || parseInt(accountNumber) < 0) {
                 e.preventDefault();
             }
         }
@@ -71,7 +71,7 @@ const AdvancedFields = (props) => {
             e.preventDefault();
         } else {
             const addressIndex = document.getElementById('accountIndexReset').value;
-            if (parseInt(addressIndex) > config.maxAccountNumber || parseInt(addressIndex) < 0) {
+            if (parseInt(addressIndex) > config.maxAccountIndex || parseInt(addressIndex) < 0) {
                 e.preventDefault();
             }
         }
@@ -91,7 +91,7 @@ const AdvancedFields = (props) => {
                             <p className="label"> {t("ACCOUNT")}</p>
                             <Form.Control
                                 type="number"
-                                max={config.maxAccountNumber}
+                                max={config.maxAccountIndex}
                                 name="accountNumber"
                                 id="accountNumberReset"
                                 onKeyPress={handleAccountNumberKeypress}
@@ -104,7 +104,7 @@ const AdvancedFields = (props) => {
                             <p className="label">{t("ACCOUNT_INDEX")}</p>
                             <Form.Control
                                 type="number"
-                                max={config.maxAccountNumber}
+                                max={config.maxAccountIndex}
                                 name="accountIndexReset"
                                 id="accountIndexReset"
                                 onKeyPress={handleIndexKeypress}

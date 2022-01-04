@@ -190,7 +190,7 @@ const ModalDecryptKeyStore = (props) => {
             e.preventDefault();
         } else {
             const accountNumber = document.getElementById('delegateAccountNumber').value;
-            if (parseInt(accountNumber) > config.maxAccountNumber || parseInt(accountNumber) < 0) {
+            if (parseInt(accountNumber) > config.maxAccountIndex || parseInt(accountNumber) < 0) {
                 e.preventDefault();
             }
         }
@@ -201,7 +201,7 @@ const ModalDecryptKeyStore = (props) => {
             e.preventDefault();
         } else {
             const addressIndex = document.getElementById('delegateAccountIndex').value;
-            if (parseInt(addressIndex) > config.maxAccountNumber || parseInt(addressIndex) < 0) {
+            if (parseInt(addressIndex) > config.maxAccountIndex || parseInt(addressIndex) < 0) {
                 e.preventDefault();
             }
         }
@@ -284,7 +284,7 @@ const ModalDecryptKeyStore = (props) => {
                                                     <p className="label">{t("ACCOUNT")}</p>
                                                     <Form.Control
                                                         type="number"
-                                                        max={config.maxAccountNumber}
+                                                        max={config.maxAccountIndex}
                                                         name="delegateAccountNumber"
                                                         id="delegateAccountNumber"
                                                         placeholder={t("ACCOUNT_NUMBER")}
@@ -296,7 +296,7 @@ const ModalDecryptKeyStore = (props) => {
                                                     <p className="label">{t("ACCOUNT_INDEX")}</p>
                                                     <Form.Control
                                                         type="number"
-                                                        max={config.maxAccountNumber}
+                                                        max={config.maxAccountIndex}
                                                         name="delegateAccountIndex"
                                                         id="delegateAccountIndex"
                                                         placeholder={t("ACCOUNT_INDEX")}

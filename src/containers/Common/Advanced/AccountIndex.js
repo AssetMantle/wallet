@@ -23,7 +23,7 @@ const AccountIndex = () => {
         <div className="form-field">
             <p className="label">{t("ACCOUNT_INDEX")}</p>
             <InputFieldNumber
-                max={config.maxAccountNumber}
+                max={config.maxAccountIndex}
                 name="delegateAccountIndex"
                 placeholder={t("ACCOUNT_INDEX")}
                 type="number"

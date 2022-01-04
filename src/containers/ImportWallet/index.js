@@ -235,7 +235,7 @@ const ModalImportWallet = (props) => {
                                                         <p className="label"> {t("ACCOUNT")}</p>
                                                         <Form.Control
                                                             type="number"
-                                                            max={config.maxAccountNumber}
+                                                            max={config.maxAccountIndex}
                                                             name="accountNumber"
                                                             id="accountNumber"
                                                             placeholder={t("ACCOUNT_NUMBER")}
@@ -246,7 +246,7 @@ const ModalImportWallet = (props) => {
                                                         <p className="label">{t("ACCOUNT_INDEX")}</p>
                                                         <Form.Control
                                                             type="number"
-                                                            max={config.maxAccountNumber}
+                                                            max={config.maxAccountIndex}
                                                             name="accountIndex"
                                                             id="accountIndex"
                                                             placeholder={t("ACCOUNT_INDEX")}
