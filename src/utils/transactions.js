@@ -66,7 +66,8 @@ async function LedgerWallet(hdpath, prefix) {
     const signer = new LedgerSigner(transport, {
         testModeAllowed: true,
         hdPaths: [hdpath],
-        prefix: prefix
+        prefix: prefix,
+        ledgerAppName:config.persistenceLedgerAppName
     });
     const [firstAccount] = await signer.getAccounts();
     return [signer, firstAccount.address];
