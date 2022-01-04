@@ -13,7 +13,7 @@ import ModalViewTxnResponse from "../Common/ModalViewTxnResponse";
 import ModalReDelegate from "./Validators/ModalReDelegate";
 import ModalUnbond from "./Validators/ModalUnbond";
 import ModalValidatorWithdraw from "./Validators/ModalWithdraw";
-import ModalWithdraw from "../Wallet/ModalWithdraw";
+import ModalWithDraw from "../Wallet/ModalWithDraw";
 import ModalSetWithdrawAddress from "../Wallet/ModalSetWithdrawAddress";
 import Loader from "../../components/Loader";
 
@@ -29,7 +29,7 @@ const Staking = () => {
             <FeeModal/>
             <KeyStoreModal/>
             <ModalUnbond/>
-            <ModalWithdraw/>
+            <ModalWithDraw/>
             <ModalViewTxnResponse/>
             <ModalValidatorWithdraw/>
             <ModalSetWithdrawAddress/>
