@@ -18,8 +18,6 @@ export const keplrSubmit = (messages) => (dispatch, getState) => {
             console.log(result, "final result");
         }
     }).catch(error => {
-        console.log(error, "error result");
-
         Sentry.captureException(error.response
             ? error.response.data.message
             : error.message);

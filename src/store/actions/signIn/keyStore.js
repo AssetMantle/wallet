@@ -55,9 +55,7 @@ export const keyStoreSubmit = () => {
         fileReader.onload = async event => {
             localStorage.setItem('encryptedMnemonic', event.target.result);
             const res = JSON.parse(event.target.result);
-            console.log(password, " res keyStoreData");
             const decryptedData = helper.decryptStore(res, password.value);
-            console.log(decryptedData, " decryptedData res keyStoreData");
             if (decryptedData.error != null) {
                 dispatch(setKeyStoreResult(
                     {
@@ -75,7 +73,6 @@ export const keyStoreSubmit = () => {
 
                 const walletPath = transactions.makeHdPath(accountNumber, accountIndex);
                 const responseData = await wallet.createWallet(mnemonic, walletPath, bip39PassPhrase);
-                console.log(responseData, "responseData");
                 dispatch(hideKeyStoreModal());
                 dispatch(showKeyStoreResultModal());
                 dispatch(setKeyStoreResult(

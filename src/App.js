@@ -22,7 +22,6 @@ import transactions from "./utils/transactions";
 import * as Sentry from "@sentry/react";
 import {Integrations} from "@sentry/tracing";
 import {keplrLogin, setKeplrInfo} from "./store/actions/signIn/keplr";
-import helper from "./utils/helper";
 const chainID = process.env.REACT_APP_CHAIN_ID;
 const SENTRY_API = process.env.REACT_APP_SENTRY_API;
 const App = () => {

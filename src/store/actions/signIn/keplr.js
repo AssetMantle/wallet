@@ -97,7 +97,6 @@ export const keplrLogin = (history) => {
         loginInfo.version = config.version;
         loginInfo.accountNumber = accountNumber;
         loginInfo.accountIndex = accountIndex;
-        console.log(JSON.stringify(loginInfo), "in keyStoreLogin");
 
         localStorage.setItem('loginToken', 'loggedIn');
         localStorage.setItem('address', address);
