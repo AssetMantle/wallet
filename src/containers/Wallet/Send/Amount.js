@@ -70,8 +70,14 @@ const Amount = () => {
                             <span title={token.tokenItem.denomTrace}
                                 className={token.transferableAmount === 0 ? "empty info-data" : "info-data"}>
                                 <span
-                                    className="title">Transferable Balance:</span> <span
-                                    className="value">{token.transferableAmount.toLocaleString()} ATOM ( IBC Trace path - {token.tokenItem.denom.path} , denom: {token.tokenItem.denom.baseDenom} )</span> </span>
+                                    className="title">Transferable Balance:</span>
+                                <span
+                                    className="value">{token.transferableAmount.toLocaleString()}
+                                    {helper.denomChange(token.tokenItem.denom.baseDenom)}
+                                    ( IBC Trace path - {token.tokenItem.denom.path} ,
+                                    denom: {token.tokenItem.denom.baseDenom} )
+                                </span>
+                            </span>
                         :
                         <span
                             className={transferableAmount === 0 ? "empty info-data" : "info-data info-link"}
@@ -80,7 +86,7 @@ const Amount = () => {
                             <span
                                 className="value"
                                 title={transferableAmount}>
-                                <NumberView value={formatNumber(transferableAmount)}/>XPRT
+                                <NumberView value={formatNumber(transferableAmount)}/>{config.coinName}
                             </span> 
                         </span>
                 }

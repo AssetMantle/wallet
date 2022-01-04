@@ -74,7 +74,10 @@ const Amount = () => {
                                     <Popover id="popover-memo">
                                         <Popover.Content>
                                             {`${token.transferableAmount.toLocaleString()} 
-                                            ATOM ( IBC Trace path - ${token.tokenItem.denom.path} , denom: ${token.tokenItem.denom.baseDenom} ) ${token.tokenItem.denomTrace}`}
+                                            ${helper.denomChange(token.tokenItem.denom.baseDenom)}
+                                            ( IBC Trace path - ${token.tokenItem.denom.path} , 
+                                            denom: ${token.tokenItem.denom.baseDenom} ) 
+                                            ${token.tokenItem.denomTrace}`}
                                         </Popover.Content>
                                     </Popover>
                                 }>
@@ -84,7 +87,7 @@ const Amount = () => {
                                         Transferable Balance:
                                     </span>
                                     <span className="value">
-                                        {token.transferableAmount.toLocaleString()} ATOM 
+                                        {token.transferableAmount.toLocaleString()} {helper.denomChange(token.tokenItem.denom.baseDenom)}
                                     </span> 
                                 </span>
                             </OverlayTrigger>
