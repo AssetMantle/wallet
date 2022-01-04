@@ -14,6 +14,7 @@ import {createProtobufRpcClient, QueryClient, setupIbcExtension} from "@cosmjs/s
 import {QueryClientImpl} from "cosmjs-types/cosmos/bank/v1beta1/query";
 import config from "../../config";
 import * as Sentry from '@sentry/browser';
+import helper from "../../utils/helper";
 
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
@@ -55,7 +56,7 @@ export const fetchBalance = (address) => {
                     dispatch(fetchBalanceListSuccess(allBalancesResponse.balances));
                     allBalancesResponse.balances.forEach((item) => {
                         if (item.denom === config.coinDenom) {
-                            const totalBalance = item.amount * 1;
+                            const totalBalance = helper.stringToNumber(item.amount);
                             dispatch(fetchBalanceSuccess(transactions.XprtConversion(totalBalance)));
                         }
                     });
@@ -120,7 +121,7 @@ export const fetchTransferableVestingAmount = (address) => {
                                 if (item.denom === config.coinDenom) {
                                     tokenList.push(item);
                                     const amount = transactions.XprtConversion(vestingAccount.getAccountVestingAmount(vestingAmountData, currentEpochTime));
-                                    const balance = transactions.XprtConversion(item.amount * 1);
+                                    const balance = transactions.XprtConversion(helper.stringToNumber(item.amount ));
                                     vestingAmount = amount;
                                     if ((balance - amount) < 0) {
                                         transferableAmount = 0;

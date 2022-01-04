@@ -71,7 +71,7 @@ export const fetchTotalRewards = (address) => {
             }).then(async (delegatorRewardsResponse) => {
                 if (delegatorRewardsResponse.total.length) {
                     let rewards = helper.decimalConversion(delegatorRewardsResponse.total[0].amount, 18);
-                    const fixedRewardsResponse = transactions.XprtConversion(rewards * 1);
+                    const fixedRewardsResponse = transactions.XprtConversion(helper.stringToNumber(rewards));
                     dispatch(fetchRewardsSuccess(fixedRewardsResponse.toFixed(6)));
                 }
             }).catch((error) => {

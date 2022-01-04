@@ -6,6 +6,7 @@ import {keplrSubmit} from "../../../../store/actions/transactions/keplr";
 import config from "../../../../config";
 import {RedelegateMsg} from "../../../../utils/protoMsgHelper";
 import {setTxIno} from "../../../../store/actions/transactions/common";
+import helper from "../../../../utils/helper";
 
 const ButtonSubmit = () => {
     const dispatch = useDispatch();
@@ -21,7 +22,7 @@ const ButtonSubmit = () => {
 
 
     const disable = (
-        amount.value === '' || (amount.value*1) === 0 || amount.error.message !== '' || toAddress.value === '' || toAddress.error.message !== '' || memo.error.message !== ''
+        amount.value === '' || helper.stringToNumber(amount.value) === 0 || amount.error.message !== '' || toAddress.value === '' || toAddress.error.message !== '' || memo.error.message !== ''
     );
 
     const onClickKeplr = () => {

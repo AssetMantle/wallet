@@ -7,6 +7,7 @@ import {ValidateReDelegateAmount, ValidateSpecialCharacters} from "../../../../u
 import {useTranslation} from "react-i18next";
 import config from "../../../../config";
 import {setTxUnbondAmount} from "../../../../store/actions/transactions/unbond";
+import helper from "../../../../utils/helper";
 
 const Amount = () => {
     const {t} = useTranslation();
@@ -20,7 +21,7 @@ const Amount = () => {
             dispatch(
                 setTxUnbondAmount({
                     value: evt.target.value,
-                    error: ValidateReDelegateAmount(validatorDelegationAmount.value, (evt.target.value * 1))
+                    error: ValidateReDelegateAmount(validatorDelegationAmount.value, (helper.stringToNumber(evt.target.value)))
                 })
             );
         } else {
@@ -32,7 +33,7 @@ const Amount = () => {
         dispatch(
             setTxUnbondAmount({
                 value: value,
-                error: ValidateReDelegateAmount(value, (value * 1))
+                error: ValidateReDelegateAmount(value, (helper.stringToNumber(value)))
             })
         );
     };

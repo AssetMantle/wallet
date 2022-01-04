@@ -57,7 +57,7 @@ const ModalViewDelegationDetails = (props) => {
                                                 <td>
                                                     <span className="amount">
                                                         <NumberView
-                                                            value={formatNumber(transactions.XprtConversion(delegation.delegations * 1))}/>XPRT
+                                                            value={formatNumber(transactions.XprtConversion(helper.stringToNumber(delegation.delegations)))}/>XPRT
                                                     </span>
                                                 </td>
                                                 <td>

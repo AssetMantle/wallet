@@ -6,7 +6,7 @@ const bip39 = require("bip39");
 const accountType = localStorage.getItem('account');
 
 export const ValidateSendAmount = (amount, value) => {
-    if ((amount * 1) < value) {
+    if (helper.stringToNumber(amount ) < value) {
         return new Error('Insufficient wallet balance');
     }
     return new Error('');
@@ -27,7 +27,7 @@ export const ValidateFee = (transferableAmount, feeValue, type, amount) => {
         }
         return new Error('');
     } else {
-        if ((transferableAmount - (amount * 1)) < transactions.XprtConversion(feeValue)) {
+        if ((transferableAmount - (helper.stringToNumber(amount))) < transactions.XprtConversion(feeValue)) {
             return new Error('Insufficient wallet balance to process the transaction.');
         }
         return new Error('');
@@ -35,7 +35,7 @@ export const ValidateFee = (transferableAmount, feeValue, type, amount) => {
 };
 
 export const ValidateGas = (value) => {
-    if ((value * 1) < config.minGas || (value * 1) > config.maxGas) {
+    if (helper.stringToNumber(value) < config.minGas || (helper.stringToNumber(value)) > config.maxGas) {
         return new Error('Enter Gas between 80000 to 2000000');
     }
     return new Error('');
@@ -109,7 +109,7 @@ export const ValidateMultipleValidatorsClaim = (evt) => {
 };
 
 export const ValidateReDelegateAmount = (delegationAmount, amount) => {
-    if ((delegationAmount * 1) < amount) {
+    if (helper.stringToNumber(delegationAmount) < amount) {
         return new Error('Insufficient Delegated Amount');
     }
     return new Error('');

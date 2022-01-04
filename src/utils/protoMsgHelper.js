@@ -107,7 +107,7 @@ function TransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, tim
         value: MsgTransfer.fromPartial({
             sourcePort: port,
             sourceChannel: channel,
-            token: coin(amount * 1, denom),
+            token: coin(helper.stringToNumber(amount), denom),
             sender: helper.trimWhiteSpaces(fromAddress),
             receiver: helper.trimWhiteSpaces(toAddress),
             timeoutHeight: {

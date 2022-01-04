@@ -9,6 +9,7 @@ import {keplrSubmit} from "../../../../store/actions/transactions/keplr";
 import {WithdrawMsg} from "../../../../utils/protoMsgHelper";
 import {setTxIno} from "../../../../store/actions/transactions/common";
 import config from "../../../../config";
+import helper from "../../../../utils/helper";
 
 const ButtonSubmit = () => {
     const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const ButtonSubmit = () => {
 
 
     const disable = (
-        validatorRewards.value === '' || (validatorRewards.value*1) === 0 || validatorRewards.error.message !== '' || validator === '' || validatorRewards.value === 0 || memo.error.message !== ''
+        validatorRewards.value === '' || helper.stringToNumber(validatorRewards.value) === 0 || validatorRewards.error.message !== '' || validator === '' || validatorRewards.value === 0 || memo.error.message !== ''
     );
 
     const onClickKeplr = () => {

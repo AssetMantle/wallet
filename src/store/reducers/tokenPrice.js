@@ -1,5 +1,6 @@
 import {combineReducers} from 'redux';
 import {TOKEN_PRICE_FETCH_ERROR, TOKEN_PRICE_FETCH_SUCCESS,} from "../../constants/tokenPrice";
+import helper from "../../utils/helper";
 
 
 const tokenPrice = (state = 0, action) => {
@@ -11,7 +12,7 @@ const tokenPrice = (state = 0, action) => {
 
 const _ = (state = {}, action) => {
     if (action.type === TOKEN_PRICE_FETCH_ERROR) {
-        return (action.data * 1);
+        return (helper.stringToNumber(action.data));
     } else {
         return state;
     }

@@ -7,6 +7,7 @@ import {useTranslation} from "react-i18next";
 import NumberView from "../../../components/NumberView";
 import {formatNumber} from "../../../utils/scripts";
 import config from "../../../config";
+import helper from "../../../utils/helper";
 
 const ModalViewUnbondDetails = (props) => {
     const {t} = useTranslation();
@@ -47,7 +48,7 @@ const ModalViewUnbondDetails = (props) => {
                                             <div className="unbonding-schedule-list" key={entryIndex}>
                                                 <p><span className="amount">
                                                     <NumberView
-                                                        value={formatNumber(transactions.XprtConversion(entry.balance * 1))}/>
+                                                        value={formatNumber(transactions.XprtConversion(helper.stringToNumber(entry.balance )))}/>
                                                     {config.coinName}
                                                 </span></p>
                                                 <p><span

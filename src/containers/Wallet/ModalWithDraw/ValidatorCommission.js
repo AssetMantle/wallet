@@ -4,6 +4,7 @@ import {useTranslation} from "react-i18next";
 import {ValidatorCommissionMsg} from "../../../utils/protoMsgHelper";
 import {setTxWithDrawTotalValidatorsCommission} from "../../../store/actions/transactions/withdrawTotalRewards";
 import {Form} from "react-bootstrap";
+import helper from "../../../utils/helper";
 
 const ValidatorCommission = () => {
     const {t} = useTranslation();
@@ -28,7 +29,7 @@ const ValidatorCommission = () => {
                 <p className="label"></p>
                 <div className="check-box-container">
                     <p className="label"
-                        title={(validatorCommissionInfo[0] * 1)}>{t("Claim Commission")}({(validatorCommissionInfo[0] * 1).toLocaleString()} XPRT)</p>
+                        title={(helper.stringToNumber(validatorCommissionInfo[0]))}>{t("Claim Commission")}({(validatorCommissionInfo[0] * 1).toLocaleString()} XPRT)</p>
                     <Form.Control
                         type="checkbox"
                         name="claimCommission"

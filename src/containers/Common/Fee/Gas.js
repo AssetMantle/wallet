@@ -6,6 +6,7 @@ import {useTranslation} from "react-i18next";
 import Icon from "../../../components/Icon";
 import {setTxGas} from "../../../store/actions/transactions/gas";
 import config from "../../../config";
+import helper from "../../../utils/helper";
 
 const Gas = () => {
     const {t} = useTranslation();
@@ -19,7 +20,7 @@ const Gas = () => {
 
     const onChange = (evt) => {
         dispatch(setTxGas({
-            value: (evt.target.value * 1),
+            value: (helper.stringToNumber(evt.target.value)),
             feeError: ValidateFee(transferableAmount, config.averageFee * config.gas, type, amount),
             error: ValidateGas(evt.target.value)
         }));

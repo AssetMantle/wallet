@@ -7,6 +7,7 @@ import config from "../../../config";
 import transactions from "../../../utils/transactions";
 import {setTxName, txFailed} from "../../../store/actions/transactions/common";
 import * as Sentry from "@sentry/browser";
+import helper from "../../../utils/helper";
 
 const ButtonSend = () => {
     const dispatch = useDispatch();
@@ -22,7 +23,7 @@ const ButtonSend = () => {
     const memo = useSelector((state) => state.sendIbc.memo);
 
     const disable = (
-        amount.value === '' || (amount.value*1) === 0 || amount.error.message !== '' || toAddress.value === '' || toAddress.error.message !== '' || memo.error.message !== ''
+        amount.value === '' || helper.stringToNumber(amount.value) === 0 || amount.error.message !== '' || toAddress.value === '' || toAddress.error.message !== '' || memo.error.message !== ''
     );
 
     const onClick = async () => {

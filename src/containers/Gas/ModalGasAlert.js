@@ -11,6 +11,7 @@ import ModalViewTxnResponse from "../Common/ModalViewTxnResponse";
 import Loader from "../../components/Loader";
 import {formatNumber} from "../../utils/scripts";
 import NumberView from "../../components/NumberView";
+import helper from "../../utils/helper";
 
 const ModalGasAlert = (props) => {
     const {t} = useTranslation();
@@ -42,7 +43,7 @@ const ModalGasAlert = (props) => {
                 setCheckAmountError(false);
             }
         } else {
-            if ((props.transferableAmount - (props.formData.amount * 1)) < transactions.XprtConversion(gas * fee)) {
+            if ((props.transferableAmount - (helper.stringToNumber(props.formData.amount ))) < transactions.XprtConversion(gas * fee)) {
                 setCheckAmountError(true);
             } else {
                 setCheckAmountError(false);
@@ -64,33 +65,33 @@ const ModalGasAlert = (props) => {
     };
 
     const handleGasChange = (event) => {
-        if ((event.target.value * 1) >= 80000 && (event.target.value * 1) <= 2000000) {
+        if ((helper.stringToNumber(event.target.value)) >= 80000 && (helper.stringToNumber(event.target.value )) <= 2000000) {
             setGasValidationError(false);
-            setGas(event.target.value * 1);
+            setGas(helper.stringToNumber(event.target.value ));
 
             if (activeFeeState === "Average") {
-                setFee((event.target.value * 1) * config.averageFee);
+                setFee((helper.stringToNumber(event.target.value )) * config.averageFee);
             } else if (activeFeeState === "High") {
-                setFee((event.target.value * 1) * config.highFee);
+                setFee((helper.stringToNumber(event.target.value)) * config.highFee);
             } else if (activeFeeState === "Low") {
-                setFee((event.target.value * 1) * config.lowFee);
+                setFee((helper.stringToNumber(event.target.value )) * config.lowFee);
             }
             if (amountTxns || vestingDelegationCheck) {
-                if (activeFeeState === "Average" && (transactions.XprtConversion((event.target.value * 1) * config.averageFee)) > props.transferableAmount) {
+                if (activeFeeState === "Average" && (transactions.XprtConversion((helper.stringToNumber(event.target.value )) * config.averageFee)) > props.transferableAmount) {
                     setCheckAmountError(true);
-                } else if (activeFeeState === "High" && (transactions.XprtConversion((event.target.value * 1) * config.highFee)) > props.transferableAmount) {
+                } else if (activeFeeState === "High" && (transactions.XprtConversion((helper.stringToNumber(event.target.value)) * config.highFee)) > props.transferableAmount) {
                     setCheckAmountError(true);
-                } else if (activeFeeState === "Low" && (transactions.XprtConversion((event.target.value * 1) * config.lowFee)) > props.transferableAmount) {
+                } else if (activeFeeState === "Low" && (transactions.XprtConversion((helper.stringToNumber(event.target.value )) * config.lowFee)) > props.transferableAmount) {
                     setCheckAmountError(true);
                 } else {
                     setCheckAmountError(false);
                 }
             } else {
-                if (activeFeeState === "Average" && (transactions.XprtConversion((event.target.value * 1) * config.averageFee)) + props.formData.amount > props.transferableAmount) {
+                if (activeFeeState === "Average" && (transactions.XprtConversion((helper.stringToNumber(event.target.value )) * config.averageFee)) + props.formData.amount > props.transferableAmount) {
                     setCheckAmountError(true);
-                } else if (activeFeeState === "High" && (transactions.XprtConversion((event.target.value * 1) * config.highFee)) + props.formData.amount > props.transferableAmount) {
+                } else if (activeFeeState === "High" && (transactions.XprtConversion((helper.stringToNumber(event.target.value)) * config.highFee)) + props.formData.amount > props.transferableAmount) {
                     setCheckAmountError(true);
-                } else if (activeFeeState === "Low" && (transactions.XprtConversion((event.target.value * 1) * config.lowFee)) + props.formData.amount > props.transferableAmount) {
+                } else if (activeFeeState === "Low" && (transactions.XprtConversion((helper.stringToNumber(event.target.value )) * config.lowFee)) + props.formData.amount > props.transferableAmount) {
                     setCheckAmountError(true);
                 } else {
                     setCheckAmountError(false);
@@ -114,7 +115,7 @@ const ModalGasAlert = (props) => {
                 setCheckAmountError(false);
             }
         } else {
-            if ((props.transferableAmount - (props.formData.amount * 1)) < transactions.XprtConversion(gas * feeValue)) {
+            if ((props.transferableAmount - (helper.stringToNumber(props.formData.amount ))) < transactions.XprtConversion(gas * feeValue)) {
                 setCheckAmountError(true);
             } else {
                 setCheckAmountError(false);
@@ -141,8 +142,8 @@ const ModalGasAlert = (props) => {
         const loginAddress = localStorage.getItem('address');
         let response;
 
-        let accountNumber = localStorage.getItem('accountNumber') * 1;
-        let addressIndex = localStorage.getItem('addressIndex') * 1;
+        let accountNumber = helper.stringToNumber(localStorage.getItem('accountNumber'));
+        let addressIndex = helper.stringToNumber(localStorage.getItem('addressIndex'));
 
         if (props.formData.formName === "ibc") {
             let msg = transactions.MakeIBCTransferMsg(props.formData.channelID, loginAddress,

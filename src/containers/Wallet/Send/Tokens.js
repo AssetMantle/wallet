@@ -6,6 +6,7 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import {useTranslation} from "react-i18next";
 import config from "../../../config";
+import helper from "../../../utils/helper";
 
 const Tokens = () => {
     const {t} = useTranslation();
@@ -44,7 +45,7 @@ const Tokens = () => {
             tokenList.forEach((item) => {
                 if (evt.target.value === item.denomTrace) {
                     tokenDataObject.tokenDenom = item.denom.baseDenom;
-                    tokenDataObject.transferableAmount = transactions.XprtConversion(item.amount * 1);
+                    tokenDataObject.transferableAmount = transactions.XprtConversion(helper.stringToNumber(item.amount ));
                     tokenDataObject.tokenItem = item;
                 }
             });

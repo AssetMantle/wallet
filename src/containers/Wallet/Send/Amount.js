@@ -7,6 +7,7 @@ import NumberView from "../../../components/NumberView";
 import {ValidateSendAmount, ValidateSpecialCharacters} from "../../../utils/validations";
 import {useTranslation} from "react-i18next";
 import config from "../../../config";
+import helper from "../../../utils/helper";
 
 const Amount = () => {
     const {t} = useTranslation();
@@ -22,14 +23,14 @@ const Amount = () => {
             if (token.tokenDenom === config.coinDenom) {
                 dispatch(setTxSendAmount({
                     value: evt.target.value,
-                    error: ValidateSendAmount(transferableAmount, (evt.target.value * 1))
+                    error: ValidateSendAmount(transferableAmount, (helper.stringToNumber(evt.target.value)))
                 }));
 
             } else {
                 dispatch(
                     setTxSendAmount({
                         value: evt.target.value,
-                        error: ValidateSendAmount(token.transferableAmount, (evt.target.value * 1))
+                        error: ValidateSendAmount(token.transferableAmount, (helper.stringToNumber(evt.target.value)))
                     })
                 );
             }
@@ -42,7 +43,7 @@ const Amount = () => {
         dispatch(
             setTxSendAmount({
                 value: value,
-                error: ValidateSendAmount(value, (value * 1))
+                error: ValidateSendAmount(value, (helper.stringToNumber(value )))
             })
         );
     };

@@ -8,6 +8,7 @@ import {ValidateSendAmount, ValidateSpecialCharacters} from "../../../utils/vali
 import {useTranslation} from "react-i18next";
 import {OverlayTrigger, Popover} from "react-bootstrap";
 import config from "../../../config";
+import helper from "../../../utils/helper";
 
 const Amount = () => {
     const {t} = useTranslation();
@@ -23,14 +24,14 @@ const Amount = () => {
             if (token.tokenDenom === config.coinDenom) {
                 dispatch(setTxIbcSendAmount({
                     value: evt.target.value,
-                    error: ValidateSendAmount(transferableAmount, (evt.target.value * 1))
+                    error: ValidateSendAmount(transferableAmount, (helper.stringToNumber(evt.target.value)))
                 }));
 
             } else {
                 dispatch(
                     setTxIbcSendAmount({
                         value: evt.target.value,
-                        error: ValidateSendAmount(token.transferableAmount, (evt.target.value * 1))
+                        error: ValidateSendAmount(token.transferableAmount, (helper.stringToNumber(evt.target.value)))
                     })
                 );
             }
@@ -43,7 +44,7 @@ const Amount = () => {
         dispatch(
             setTxIbcSendAmount({
                 value: value,
-                error: ValidateSendAmount(value, (value * 1))
+                error: ValidateSendAmount(value, (helper.stringToNumber(value)))
             })
         );
     };
