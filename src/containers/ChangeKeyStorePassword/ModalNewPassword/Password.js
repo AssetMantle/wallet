@@ -3,7 +3,7 @@ import InputText from "../../../components/InputText";
 import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
 import {setKeyStoreNewPassword} from "../../../store/actions/changePassword";
-import {passwordValidation, ValidateSpace} from "../../../utils/validations";
+import {PasswordValidation, ValidateSpace} from "../../../utils/validations";
 import Icon from "../../../components/Icon";
 
 const Password = () => {
@@ -15,7 +15,7 @@ const Password = () => {
     const onChange = (evt) => {
         dispatch(setKeyStoreNewPassword({
             value: evt.target.value,
-            error: passwordValidation(evt.target.value)
+            error: PasswordValidation(evt.target.value)
         }));
     };
 

@@ -2,7 +2,6 @@ import {Modal} from 'react-bootstrap';
 import React, {useState} from 'react';
 import {connect} from "react-redux";
 import transactions from "../../../utils/transactions";
-import moment from "moment";
 import {useTranslation} from "react-i18next";
 import NumberView from "../../../components/NumberView";
 import {formatNumber} from "../../../utils/scripts";
@@ -52,7 +51,9 @@ const ModalViewUnbondDetails = (props) => {
                                                     {config.coinName}
                                                 </span></p>
                                                 <p><span
-                                                    className="date">{moment(new Date(entry["completionTime"]).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</span>
+                                                    className="date">
+                                                    {helper.localTime(entry["completionTime"])}
+                                                </span>
                                                 </p>
                                             </div>
                                         );

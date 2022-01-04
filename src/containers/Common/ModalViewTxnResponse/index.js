@@ -28,18 +28,23 @@ const ModalViewTxnResponse = () => {
     };
 
     useEffect(() => {
-        if (response !== undefined) {
-            dispatch(fetchDelegationsCount(address));
-            dispatch(fetchBalance(address));
-            dispatch(fetchRewards(address));
-            dispatch(fetchTotalRewards(address));
-            dispatch(fetchUnbondDelegations(address));
-            dispatch(fetchTokenPrice());
-            dispatch(fetchTransferableVestingAmount(address));
-            dispatch(fetchTransactions(address, 5, 1));
-            dispatch(fetchReceiveTransactions(address, 5, 1));
-            transactions.updateFee(address);
-        }
+        const fetchCalls = async () => {
+            if (response !== undefined) {
+                await Promise.all([
+                    dispatch(fetchDelegationsCount(address)),
+                    dispatch(fetchBalance(address)),
+                    dispatch(fetchRewards(address)),
+                    dispatch(fetchTotalRewards(address)),
+                    dispatch(fetchUnbondDelegations(address)),
+                    dispatch(fetchTokenPrice()),
+                    dispatch(fetchTransferableVestingAmount(address)),
+                    dispatch(fetchTransactions(address, 5, 1)),
+                    dispatch(fetchReceiveTransactions(address, 5, 1)),
+                    transactions.updateFee(address),
+                ]);
+            }
+        };
+        fetchCalls();
     }, [response]);
 
     if (response === undefined) {

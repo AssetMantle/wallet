@@ -41,7 +41,7 @@ export const ValidateGas = (value) => {
     return new Error('');
 };
 
-export const passwordValidation = (data) => {
+export const PasswordValidation = (data) => {
     const regex = /^\S{3}\S+$/;
     if (/\s/g.test(data)) {
         return new Error('Spaces not allowed');

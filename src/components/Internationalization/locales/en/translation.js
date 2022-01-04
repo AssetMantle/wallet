@@ -197,7 +197,7 @@ let English = {
         "DELEGATION_AMOUNT": "Delegation Amount",
         "REDELEGATION_AMOUNT": "Redelegation Amount",
         "AMOUNT": "Amount",
-        "UNBOND_AMOUNT": " Unbound Amount",
+        "UNBOND_AMOUNT": " Unbond Amount",
         "MEMO_NOTE": "Do not provide any sensitive information such as password or mnemonic in this field. Centralized exchanges use this info to identify a transaction when crediting to an account.",
         "VESTING_NOTE": "Maximum amount that can be locked as per the vesting schedule. You may want to delegate or un-delegate the vested balance but you can’t transfer it until it’s vested (unlocked).",
         "DELEGATABLE_NOTE": "Sum of all balances that are yet to be delegated. (Transferable or Vested Balance + Vesting Amount) - (Delegated + Unbonding Amount)",
@@ -273,6 +273,7 @@ let English = {
         "VALIDATORS_SELECTION_WARNING":"Warning:  Recommend 3 or fewer validators to avoid potential issues.",
         "FOUNDATION_NODE_WARNING":"Warning: Foundation Nodes operate at 100%" +
             " commission, you will not be receiving any staking rewards.",
+        "VERIFY":"Verify"
 
 
     }

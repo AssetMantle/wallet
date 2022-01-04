@@ -2,6 +2,7 @@ import {Decimal} from "@cosmjs/math";
 import transactions from "./transactions";
 import config from "../config";
 import {COIN_ATOM, COIN_ATOM_DENOM} from "../constants/keyWords";
+import moment from "moment";
 
 const encoding = require("@cosmjs/encoding");
 const bip39 = require("bip39");
@@ -294,6 +295,10 @@ const stringToNumber = (stringData) => {
     return +stringData;
 };
 
+const localTime = (stringData) => {
+    return moment(new Date(stringData).toString()).format('dddd MMMM Do YYYY, h:mm:ss a');
+};
+
 export default {
     randomNum,
     stringTruncate,
@@ -322,5 +327,6 @@ export default {
     emptyFunc,
     foundationNodeCheck,
     getAccountNumber,
-    stringToNumber
+    stringToNumber,
+    localTime
 };

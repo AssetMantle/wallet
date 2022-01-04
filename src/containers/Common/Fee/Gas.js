@@ -33,7 +33,7 @@ const Gas = () => {
     return (
         <div className="advanced-wallet-accordion">
             <div className="select-gas">
-                <p onClick={handleGas} className="text-center">{!showGasField ? "Advanced" : "Advanced"}
+                <p onClick={handleGas} className="text-center">{!showGasField ? t('ADVANCED') : t('ADVANCED')}
                     {!showGasField ?
                         <Icon
                             viewClass="arrow-right"
@@ -48,8 +48,8 @@ const Gas = () => {
                 <p className="label info">{t("GAS")}</p>
                 <div className="amount-field">
                     <InputFieldNumber
-                        min={80000}
-                        max={2000000}
+                        min={config.minGas}
+                        max={config.maxGas}
                         name="gas"
                         placeholder={t("ENTER_GAS")}
                         step="any"

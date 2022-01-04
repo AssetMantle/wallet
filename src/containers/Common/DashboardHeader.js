@@ -132,7 +132,7 @@ const DashboardHeader = () => {
                                         {
                                             localStorage.getItem('loginMode') === 'ledger' ?
                                                 <button className="ledger-verify"
-                                                    onClick={ledgerShowAddress}>Verify</button>
+                                                    onClick={ledgerShowAddress}>{t("VERIFY")}</button>
                                                 : ""
                                         }</p>
                                     <div className="address"><span>{addressTruncate}</span> <Copy id={address}/>

@@ -22,7 +22,6 @@ import transactions from "./utils/transactions";
 import * as Sentry from "@sentry/react";
 import {Integrations} from "@sentry/tracing";
 import {keplrLogin, setKeplrInfo} from "./store/actions/signIn/keplr";
-const chainID = process.env.REACT_APP_CHAIN_ID;
 const SENTRY_API = process.env.REACT_APP_SENTRY_API;
 const App = () => {
     const {t} = useTranslation();
@@ -107,13 +106,11 @@ const App = () => {
         }
     });
 
-    if(chainID === config.mainNetChainID) {
-        Sentry.init({
-            dsn: SENTRY_API,
-            integrations: [new Integrations.BrowserTracing()],
-            tracesSampleRate: 1.0,
-        });
-    }
+    Sentry.init({
+        dsn: SENTRY_API,
+        integrations: [new Integrations.BrowserTracing()],
+        tracesSampleRate: 1.0,
+    });
 
     return (
         <>

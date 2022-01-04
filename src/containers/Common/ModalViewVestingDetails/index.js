@@ -2,11 +2,11 @@ import {Modal, Table} from 'react-bootstrap';
 import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import transactions from "../../../utils/transactions";
-import moment from "moment";
 import {QueryClientImpl} from "cosmjs-types/cosmos/auth/v1beta1/query";
 import * as vesting_1 from "cosmjs-types/cosmos/vesting/v1beta1/vesting";
 import {useTranslation} from "react-i18next";
 import * as Sentry from "@sentry/react";
+import helper from "../../../utils/helper";
 
 const ModalViewVestingDetails = () => {
     const {t} = useTranslation();
@@ -84,9 +84,13 @@ const ModalViewVestingDetails = () => {
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>{transactions.XprtConversion(parseInt(response.baseVestingAccount.originalVesting[0].amount))}</td>
-                                            <td>{moment(new Date(parseInt(response.startTime.low) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</td>
-                                            <td>{moment(new Date((response.baseVestingAccount.endTime.low) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</td>
+                                            <td>{transactions.XprtConversion(parseInt(response.baseVestingAccount.originalVesting.length && response.baseVestingAccount.originalVesting[0].amount))}</td>
+                                            <td>
+                                                {helper.localTime(parseInt(response.startTime.low) * 1000)}
+                                            </td>
+                                            <td>
+                                                {helper.localTime((response.baseVestingAccount.endTime.low) * 1000)}
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </Table>
@@ -100,8 +104,8 @@ const ModalViewVestingDetails = () => {
                                 {response.baseVestingAccount ?
                                     <>
                                         <p>Total vesting
-                                            tokens {transactions.XprtConversion(parseInt(response.baseVestingAccount.originalVesting[0].amount))} at
-                                            Date {moment(new Date(parseInt(response.startTime.low) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</p>
+                                            tokens {transactions.XprtConversion(parseInt(response.baseVestingAccount.originalVesting.length && response.baseVestingAccount.originalVesting[0].amount))} at
+                                            Date {helper.localTime(parseInt(response.startTime.low) * 1000)} </p>
                                         <Table borderless>
                                             <thead>
                                                 <tr>
@@ -120,7 +124,9 @@ const ModalViewVestingDetails = () => {
                                                             <tbody key={index}>
                                                                 <tr>
                                                                     <td>{transactions.XprtConversion(period.amount[0].amount)}</td>
-                                                                    <td>{moment(new Date(vestingPeriod * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</td>
+                                                                    <td>
+                                                                        {helper.localTime(vestingPeriod * 1000)}
+                                                                    </td>
                                                                 </tr>
                                                             </tbody>
 
@@ -147,7 +153,9 @@ const ModalViewVestingDetails = () => {
                                     <tbody>
                                         <tr>
                                             <td>{transactions.XprtConversion(parseInt(response.baseVestingAccount.originalVesting[0].amount))}</td>
-                                            <td>{moment(new Date((response.baseVestingAccount.endTime.low) * 1000).toString()).format('dddd MMMM Do YYYY, h:mm:ss.js a')}</td>
+                                            <td>
+                                                {helper.localTime((response.baseVestingAccount.endTime.low) * 1000)}
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </Table>

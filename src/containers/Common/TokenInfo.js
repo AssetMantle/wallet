@@ -14,6 +14,7 @@ import {OverlayTrigger, Popover} from "react-bootstrap";
 import ModalViewDelegationDetails from "./ModalViewDelegationDetails";
 import {fetchValidators} from "../../store/actions/validators";
 import NumberView from "../../components/NumberView";
+import config from "../../config";
 import {formatNumber} from "../../utils/scripts";
 import {showTxWithDrawTotalModal} from "../../store/actions/transactions/withdrawTotalRewards";
 const TokenInfo = (props) => {
@@ -72,7 +73,7 @@ const TokenInfo = (props) => {
                                 </OverlayTrigger>
                             </p>
                             <p className="value"
-                                title={(props.delegations + props.balance + props.unbond).toFixed(6)}>
+                                title={(props.delegations + props.balance + props.unbond).toFixed(config.coinDecimals)}>
                                 <span
                                     className="inner-grid-icon">
                                     {

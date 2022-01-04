@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {setKeyStorePassword} from "../../../store/actions/generateKeyStore";
 import {useTranslation} from "react-i18next";
-import {passwordValidation, ValidateSpace} from "../../../utils/validations";
+import {PasswordValidation, ValidateSpace} from "../../../utils/validations";
 import InputText from "../../../components/InputText";
 import Icon from "../../../components/Icon";
 
@@ -16,7 +16,7 @@ const Password = () => {
     const onChange = (evt) => {
         dispatch(setKeyStorePassword({
             value: evt.target.value,
-            error: passwordValidation(evt.target.value)
+            error: PasswordValidation(evt.target.value)
         }));
     };
 
