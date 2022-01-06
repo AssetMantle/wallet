@@ -23,6 +23,7 @@
   "maxAccountIndex": 2147483647,
   "valoperAddressPrefix": "persistence",
   "keplrMode": "keplr",
+  "persistenceLedgerAppName": "Persistence",
   "testNetFoundationNodes": [
     "persistencevaloper1xepyv8lf99pa4x0w2ptr3vx3rr7wfs6msh2m76"
   ],
