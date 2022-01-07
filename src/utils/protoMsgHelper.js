@@ -8,6 +8,7 @@ import {
 import {MsgTransfer} from "cosmjs-types/ibc/applications/transfer/v1/tx";
 import {coin} from "@cosmjs/stargate";
 import helper from "./helper";
+import config from "../config";
 
 const msgSendTypeUrl = "/cosmos.bank.v1beta1.MsgSend";
 const msgDelegateTypeUrl = "/cosmos.staking.v1beta1.MsgDelegate";
@@ -33,14 +34,14 @@ function SendMsg(fromAddress, toAddress, amount, denom) {
 }
 
 
-function DelegateMsg(delegatorAddress, validatorAddress, amount) {
+function DelegateMsg(delegatorAddress, validatorAddress, amount, denom = config.coinDenom) {
     return {
         typeUrl: msgDelegateTypeUrl,
         value: MsgDelegate.fromPartial({
             delegatorAddress: delegatorAddress,
             validatorAddress: validatorAddress,
             amount: {
-                denom: "uxprt",
+                denom: denom,
                 amount: String(amount),
             },
         }
@@ -56,7 +57,7 @@ function RedelegateMsg(delegatorAddress, validatorSrcAddress, validatorDstAddres
             validatorSrcAddress: validatorSrcAddress,
             validatorDstAddress: validatorDstAddress,
             amount: {
-                denom: "uxprt",
+                denom: config.coinDenom,
                 amount: String(amount),
             },
         }
@@ -71,7 +72,7 @@ function UnbondMsg(delegatorAddress, validatorAddress, amount) {
             delegatorAddress: delegatorAddress,
             validatorAddress: validatorAddress,
             amount: {
-                denom: "uxprt",
+                denom: config.coinDenom,
                 amount: String(amount),
             },
         }
@@ -100,13 +101,13 @@ function SetWithDrawAddressMsg(delegatorAddress, withdrawAddress) {
     };
 }
 
-function TransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp, denom , port = "transfer") {
+function TransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp, denom, port = "transfer") {
     return {
         typeUrl: msgTransferTypeUrl,
         value: MsgTransfer.fromPartial({
             sourcePort: port,
             sourceChannel: channel,
-            token: coin(amount*1,denom),
+            token: coin(helper.stringToNumber(amount), denom),
             sender: helper.trimWhiteSpaces(fromAddress),
             receiver: helper.trimWhiteSpaces(toAddress),
             timeoutHeight: {
@@ -118,7 +119,7 @@ function TransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, tim
     };
 }
 
-function ValidatorCommissionMsg(address){
+function ValidatorCommissionMsg(address) {
     return {
         typeUrl: msgValidatorCommission,
         value: MsgWithdrawValidatorCommission.fromPartial({
@@ -127,4 +128,13 @@ function ValidatorCommissionMsg(address){
     };
 }
 
-export {SendMsg, DelegateMsg, RedelegateMsg, UnbondMsg, WithdrawMsg, SetWithDrawAddressMsg, TransferMsg, ValidatorCommissionMsg};
+export {
+    SendMsg,
+    DelegateMsg,
+    RedelegateMsg,
+    UnbondMsg,
+    WithdrawMsg,
+    SetWithDrawAddressMsg,
+    TransferMsg,
+    ValidatorCommissionMsg
+};

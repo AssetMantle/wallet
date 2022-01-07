@@ -9,37 +9,37 @@ const socialList = [
     {
         url: 'https://twitter.com/PersistenceOne',
         iconName: 'twitter-logo',
-        tooltip:'twitter'
+        tooltip: 'twitter'
     },
     {
         url: 'https://t.me/PersistenceOneChat',
         iconName: 'telegram-plane',
-        tooltip:'telegram'
+        tooltip: 'telegram'
     },
     {
         url: 'https://t.me/PersistenceOne',
         iconName: 'announcements',
-        tooltip:'announcements'
+        tooltip: 'announcements'
     }, {
         url: 'https://discord.gg/SaBKpjbnhH',
         iconName: 'discord',
-        tooltip:'discord'
+        tooltip: 'discord'
     }, {
         url: 'https://www.reddit.com/r/PersistenceOne/',
         iconName: 'reddit-round',
-        tooltip:'reddit'
+        tooltip: 'reddit'
     }, {
         url: 'https://www.youtube.com/channel/UC5wqI1ZRdkCjWWVOCQdhxLQ/featured',
         iconName: 'youtube',
-        tooltip:'youtube'
+        tooltip: 'youtube'
     }, {
         url: 'https://medium.com/persistence-blog',
         iconName: 'medium-m',
-        tooltip:'medium'
+        tooltip: 'medium'
     }, {
         url: 'https://www.linkedin.com/company/persistenceone/',
         iconName: 'linkedin-footer',
-        tooltip:'linkedIn'
+        tooltip: 'linkedIn'
     },
 ];
 
@@ -61,12 +61,16 @@ const Footer = () => {
                                     <h6>About</h6>
                                     <div className="text-muted mt-30">
                                         <ul className="list-unstyled footer-list">
-                                            <li><a href="https://persistence.one/vision" rel="noopener noreferrer" target="_blank">Company</a></li>
-                                            <li><a href="https://persistence.one/roadmap" rel="noopener noreferrer" target="_blank">Roadmap</a></li>
+                                            <li><a href="https://persistence.one/vision" rel="noopener noreferrer"
+                                                target="_blank">Company</a></li>
+                                            <li><a href="https://persistence.one/roadmap" rel="noopener noreferrer"
+                                                target="_blank">Roadmap</a></li>
                                             <li><a href={whitepaper} target="_blank"
                                                 rel="noopener noreferrer">Protocol paper</a></li>
-                                            <li><a href="https://persistence.one/ecosystem" rel="noopener noreferrer" target="_blank">Ecosystem</a></li>
-                                            <li><a href="https://persistence.one/technology" rel="noopener noreferrer" target="_blank">Technology</a></li>
+                                            <li><a href="https://persistence.one/ecosystem" rel="noopener noreferrer"
+                                                target="_blank">Ecosystem</a></li>
+                                            <li><a href="https://persistence.one/technology" rel="noopener noreferrer"
+                                                target="_blank">Technology</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -74,10 +78,14 @@ const Footer = () => {
                                     <h6>Products</h6>
                                     <div className="text-muted mt-30">
                                         <ul className="list-unstyled footer-list">
-                                            <li><a href="https://comdex.sg/" rel="noopener noreferrer" target="_blank">Comdex</a></li>
-                                            <li><a href="https://audit.one/" rel="noopener noreferrer" target="_blank">Audit.one</a></li>
-                                            <li><a href="https://twitter.com/pStakeFinance" rel="noopener noreferrer" target="_blank">pStake</a></li>
-                                            <li><a href="https://twitter.com/AssetMantle" rel="noopener noreferrer" target="_blank">Asset Mantle</a></li>
+                                            <li><a href="https://comdex.sg/" rel="noopener noreferrer"
+                                                target="_blank">Comdex</a></li>
+                                            <li><a href="https://audit.one/" rel="noopener noreferrer"
+                                                target="_blank">Audit.one</a></li>
+                                            <li><a href="https://twitter.com/pStakeFinance" rel="noopener noreferrer"
+                                                target="_blank">pStake</a></li>
+                                            <li><a href="https://twitter.com/AssetMantle" rel="noopener noreferrer"
+                                                target="_blank">Asset Mantle</a></li>
                                             <li><p className="inactive" title="Coming Soon">pLend</p></li>
                                         </ul>
                                     </div>
@@ -85,7 +93,8 @@ const Footer = () => {
                                 <div className="col-lg-4 col-md-6 col-sm-12 margin-t-20">
                                     <h6>Get in touch</h6>
                                     <div className="text-muted mt-30 email">
-                                        <a className="footer-text email" href="mailto:hello@persistence.one">hello@persistence.one</a>
+                                        <a className="footer-text email"
+                                            href="mailto:hello@persistence.one">hello@persistence.one</a>
                                     </div>
                                 </div>
                             </div>

@@ -6,6 +6,7 @@ import helper from "../../../utils/helper";
 import {useTranslation} from "react-i18next";
 import {formatNumber} from "../../../utils/scripts";
 import NumberView from "../../../components/NumberView";
+import config from "../../../config";
 const tmRPC = require("@cosmjs/tendermint-rpc");
 const {QueryClient, setupIbcExtension} = require("@cosmjs/stargate");
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
@@ -20,8 +21,8 @@ const ModalViewAmountDetails = (props) => {
     const handleModal = async () => {
         setShow(true);
         props.list.map(async (item) => {
-            if (item.denom !== 'uxprt') {
-                let denom = item.denom.substr(item.denom.indexOf('/') +1);
+            if (item.denom !== config.coinDenom) {
+                let denom = item.denom.substr(item.denom.indexOf('/') + 1);
                 const tendermintClient = await tmRPC.Tendermint34Client.connect(tendermintRPCURL);
                 const queryClient = new QueryClient(tendermintClient);
                 const ibcExtension = setupIbcExtension(queryClient);
@@ -53,10 +54,13 @@ const ModalViewAmountDetails = (props) => {
                     <ul className="modal-list-data">
                         {props.list ?
                             ibcList.map((item, index) => {
-                                if (item.dataResponse.denom !== 'uxprt') {
+                                if (item.dataResponse.denom !== config.coinDenom) {
                                     return (
                                         <li className="" key={index} title={item.dataResponse.denom}>
-                                            <NumberView value={formatNumber(transactions.XprtConversion(item.dataResponse.amount))}/>{helper.denomChange(item.denomResponse.denomTrace.baseDenom)} ( IBC Trace path - {item.denomResponse.denomTrace.path}, denom: {item.denomResponse.denomTrace.baseDenom} ) {item.dataResponse.denom}
+                                            <NumberView
+                                                value={formatNumber(transactions.XprtConversion(item.dataResponse.amount))}/>{helper.denomChange(item.denomResponse.denomTrace.baseDenom)} (
+                                            IBC Trace path - {item.denomResponse.denomTrace.path},
+                                            denom: {item.denomResponse.denomTrace.baseDenom} ) {item.dataResponse.denom}
                                         </li>
                                     );
                                 }

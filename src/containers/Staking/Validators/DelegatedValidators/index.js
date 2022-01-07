@@ -1,23 +1,36 @@
-import React, {useState} from "react";
+import React from "react";
 import helper from "../../../../utils/helper";
 import Avatar from "../Avatar";
 import activeIcon from "../../../../assets/images/active.svg";
 import inActiveIcon from "../../../../assets/images/inactive.svg";
-import ModalActions from "../ModalActions";
 import DataTable from "../../../../components/DataTable";
-import {fetchValidators} from "../../../../actions/validators";
-import {connect} from "react-redux";
+import {
+    fetchValidatorDelegations,
+    fetchValidatorRewards,
+    fetchValidators,
+    setValidatorTxData,
+    showValidatorTxModal
+} from "../../../../store/actions/validators";
+import {connect, useDispatch} from "react-redux";
 import transactions from "../../../../utils/transactions";
 import {useTranslation} from "react-i18next";
+import config from "../../../../config";
 
 const DelegatedValidators = (props) => {
     const {t} = useTranslation();
-    const [modalDelegate, setModalOpen] = useState();
-    const [validator, setValidator] = useState('');
+    const dispatch = useDispatch();
+    const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
     const handleModal = (name, validator) => {
-        setModalOpen(name);
-        setValidator(validator);
+        dispatch(showValidatorTxModal());
+        dispatch(setValidatorTxData({
+            value: validator,
+            error: new Error(''),
+        }));
+        dispatch(fetchValidatorDelegations(loginInfo.address));
+        dispatch(fetchValidatorRewards(loginInfo.address, validator.operatorAddress));
     };
+
+
     const columns = [{
         name: 'validator',
         label: t("VALIDATOR"),
@@ -34,7 +47,7 @@ const DelegatedValidators = (props) => {
         }
     }, {
         name: 'delegatedAmount',
-        label: `${t("DELEGATED_AMOUNT")}(XPRT)`,
+        label: `${t("DELEGATED_AMOUNT")}(${config.coinName})`,
         options: {
             sortCompare: (order) => {
                 return (obj1, obj2) => {
@@ -44,7 +57,7 @@ const DelegatedValidators = (props) => {
                 };
             }
         }
-    },{
+    }, {
         name: 'status',
         label: t("STATUS"),
         options: {sort: false}
@@ -93,7 +106,7 @@ const DelegatedValidators = (props) => {
         print: false,
         download: false,
         filter: false,
-        viewColumns:false,
+        viewColumns: false,
         search: false,
     };
 
@@ -104,12 +117,6 @@ const DelegatedValidators = (props) => {
                 data={tableData}
                 name=""
                 options={options}/>
-            {
-                modalDelegate === 'ModalActions' ?
-                    <ModalActions setModalOpen={setModalOpen} validator={validator}/>
-                    : null
-            }
-
         </div>
     );
 };

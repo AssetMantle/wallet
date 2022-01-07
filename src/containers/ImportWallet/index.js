@@ -1,17 +1,12 @@
 import React, {useContext, useState} from "react";
-import {
-    Form,
-    Accordion,
-    Card,
-    AccordionContext,
-    useAccordionToggle, Modal
-} from "react-bootstrap";
+import {Accordion, AccordionContext, Card, Form, Modal, useAccordionToggle} from "react-bootstrap";
 import Icon from "../../components/Icon";
 import wallet from "../../utils/wallet";
 import helper from "../../utils/helper";
 import GeneratePrivateKey from "../KeyStore/GenerateKeyStore/GeneratePrivateKey";
 import {useTranslation} from "react-i18next";
 import transactions from "../../utils/transactions";
+import config from "../../config";
 
 const ModalImportWallet = (props) => {
     const {t} = useTranslation();
@@ -31,7 +26,7 @@ const ModalImportWallet = (props) => {
         let fileInput =
             document.getElementById('importDecryptFile');
         let filePath = fileInput.value;
-        if(helper.fileTypeCheck(filePath)) {
+        if (helper.fileTypeCheck(filePath)) {
             const password = event.target.password.value;
             event.preventDefault();
             const fileReader = new FileReader();
@@ -50,7 +45,7 @@ const ModalImportWallet = (props) => {
                     setErrorMessage("");
                 }
             };
-        }else{
+        } else {
             setErrorMessage("File type not supported");
         }
     };
@@ -196,7 +191,6 @@ const ModalImportWallet = (props) => {
                                 </Form>
 
 
-
                             </div>
                         </>
                         : null
@@ -241,11 +235,10 @@ const ModalImportWallet = (props) => {
                                                         <p className="label"> {t("ACCOUNT")}</p>
                                                         <Form.Control
                                                             type="number"
-                                                            min={0}
-                                                            max={4294967295}
+                                                            max={config.maxAccountIndex}
                                                             name="accountNumber"
                                                             id="accountNumber"
-                                                            placeholder= {t("ACCOUNT_NUMBER")}
+                                                            placeholder={t("ACCOUNT_NUMBER")}
                                                             required={false}
                                                         />
                                                     </div>
@@ -253,8 +246,7 @@ const ModalImportWallet = (props) => {
                                                         <p className="label">{t("ACCOUNT_INDEX")}</p>
                                                         <Form.Control
                                                             type="number"
-                                                            min={0}
-                                                            max={4294967295}
+                                                            max={config.maxAccountIndex}
                                                             name="accountIndex"
                                                             id="accountIndex"
                                                             placeholder={t("ACCOUNT_INDEX")}
@@ -273,7 +265,8 @@ const ModalImportWallet = (props) => {
                                                             required={false}
                                                         />
                                                         {passphraseError ?
-                                                            <span className="passphrase-error">{t("BIP_PASSPHRASE_ERROR")}</span>
+                                                            <span
+                                                                className="passphrase-error">{t("BIP_PASSPHRASE_ERROR")}</span>
                                                             : null}
                                                     </div>
                                                 </>
@@ -303,7 +296,8 @@ const ModalImportWallet = (props) => {
                             <h3 className="heading">{t("IMPORT_WALLET")}</h3>
                         </Modal.Header>
                         <div className="create-wallet-body create-wallet-form-body">
-                            <p className="mnemonic-result"><b>{t("WALLET_PATH")}: </b>{advancedFormResponseData.walletPath}</p>
+                            <p className="mnemonic-result">
+                                <b>{t("WALLET_PATH")}: </b>{advancedFormResponseData.walletPath}</p>
                             <p className="mnemonic-result"><b>{t("ADDRESS")}: </b>{advancedFormResponseData.address}</p>
                             <div className="buttons">
                                 <button className="button button-primary" onClick={handleClose}>{t("DONE")}</button>

@@ -341,7 +341,7 @@
     padding: 10px 20px;
 
     &:hover {
-      background: rgba(0,0,0,.075);
+      background: rgba(0, 0, 0, .075);
     }
 
     p {
@@ -441,8 +441,23 @@
   align-items: center;
   justify-content: center;
   max-width: 500px;
-  padding-top: 10px;
 }
+
+.memo-dropdown-section-body {
+  height: auto;
+  max-height: 0px;
+  overflow: hidden;
+  transition: all .4s ease-in-out;
+  -webkit-transition: all .4s ease-in-out;
+  .form-control-section{
+    padding: 5px;
+  }
+}
+
+.memo-dropdown-section-body.show {
+  max-height: 200px;
+}
+
 
 .memo-dropdown {
   margin: 0;

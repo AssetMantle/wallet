@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from "react";
+import React, {useEffect} from "react";
 import Icon from "../../components/Icon";
 import {NavLink, useHistory} from 'react-router-dom';
 import {Nav, Navbar, NavDropdown} from "react-bootstrap";
@@ -7,16 +7,19 @@ import Copy from "../../components/Copy";
 import helper from "../../utils/helper";
 import {useTranslation} from "react-i18next";
 import Darktheme from "../DarkTheme";
-import GenerateKeyStore from "../KeyStore/GenerateKeyStore";
 import MobileSidebar from "./MobileSidebar";
 import transactions from "../../utils/transactions";
 import config from "../../config";
+import {userLogout} from "../../store/actions/logout";
+import {useDispatch} from "react-redux";
+import {showKeyStoreMnemonicModal} from "../../store/actions/generateKeyStore";
+
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const DashboardHeader = () => {
     const {t} = useTranslation();
+    const dispatch = useDispatch();
     const history = useHistory();
-    const [showKeyStore, setShowKeyStore] = useState(false);
     const address = localStorage.getItem('address');
     let addressTruncate;
     if (address !== null) {
@@ -24,13 +27,12 @@ const DashboardHeader = () => {
     }
     useEffect(() => {
         const localTheme = window.localStorage.getItem('theme');
-        if(localTheme === 'light'){
+        if (localTheme === 'light') {
             if (document.getElementById('root').classList.contains('dark-mode')) {
                 document.getElementById('root').classList.add('light-mode');
                 document.getElementById('root').classList.remove('dark-mode');
             }
-        }
-        else{
+        } else {
             if (document.getElementById('root').classList.contains('light-mode')) {
                 document.getElementById('root').classList.add('dark-mode');
                 document.getElementById('root').classList.remove('light-mode');
@@ -39,15 +41,16 @@ const DashboardHeader = () => {
 
     }, []);
     const closeWallet = () => {
+        dispatch(userLogout());
         localStorage.clear();
         history.push('/');
         window.location.reload();
     };
-    const handleKeyStore = () =>{
-        setShowKeyStore(true);
+    const handleKeyStore = () => {
+        dispatch(showKeyStoreMnemonicModal());
     };
-    const ledgerShowAddress = async () =>{
-        const accountNumber= localStorage.getItem('accountNumber');
+    const ledgerShowAddress = async () => {
+        const accountNumber = localStorage.getItem('accountNumber');
         const addressIndex = localStorage.getItem('addressIndex');
         const [wallet] = await transactions.LedgerWallet(transactions.makeHdPath(accountNumber, addressIndex), config.addressPrefix);
         await wallet.showAddress(transactions.makeHdPath(accountNumber, addressIndex));
@@ -108,7 +111,8 @@ const DashboardHeader = () => {
                         </li>
                         <li className="nav-item link mobile-nav-item">
                             <a className="nav-link primary-medium-color"
-                                href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer" target="_blank">
+                                href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer"
+                                target="_blank">
                                 <div className="icon-box">
                                     <Icon
                                         viewClass="icon"
@@ -127,7 +131,8 @@ const DashboardHeader = () => {
                                     <p className="key"> {t("WALLET_ADDRESS")}
                                         {
                                             localStorage.getItem('loginMode') === 'ledger' ?
-                                                <button className="ledger-verify" onClick={ledgerShowAddress}>Verify</button>
+                                                <button className="ledger-verify"
+                                                    onClick={ledgerShowAddress}>{t("VERIFY")}</button>
                                                 : ""
                                         }</p>
                                     <div className="address"><span>{addressTruncate}</span> <Copy id={address}/>
@@ -144,12 +149,6 @@ const DashboardHeader = () => {
                     </Nav>
                 </div>
             </Navbar>
-
-            {showKeyStore
-                ?
-                <GenerateKeyStore setShowKeyStore={setShowKeyStore} className={""}/>
-                :
-                null}
         </div>
     );
 };

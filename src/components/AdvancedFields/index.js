@@ -1,14 +1,9 @@
 import React, {useContext, useState} from "react";
-import {
-    Accordion, AccordionContext,
-    Card,
-    Form, useAccordionToggle,
-} from "react-bootstrap";
+import {Accordion, AccordionContext, Card, Form, useAccordionToggle,} from "react-bootstrap";
 import Icon from "../../components/Icon";
 import helper from "../../utils/helper";
 import {useTranslation} from "react-i18next";
-
-
+import config from "../../config";
 
 const AdvancedFields = (props) => {
     const {t} = useTranslation();
@@ -63,9 +58,9 @@ const AdvancedFields = (props) => {
     const handleAccountNumberKeypress = e => {
         if (e.key === "e" || e.key === "-" || e.key === "+") {
             e.preventDefault();
-        }else {
+        } else {
             const accountNumber = document.getElementById('accountNumberReset').value;
-            if (parseInt(accountNumber) > 4294967295 || parseInt(accountNumber) < 0) {
+            if (parseInt(accountNumber) > config.maxAccountIndex || parseInt(accountNumber) < 0) {
                 e.preventDefault();
             }
         }
@@ -74,9 +69,9 @@ const AdvancedFields = (props) => {
     const handleIndexKeypress = e => {
         if (e.key === "e" || e.key === "-" || e.key === "+") {
             e.preventDefault();
-        }else {
+        } else {
             const addressIndex = document.getElementById('accountIndexReset').value;
-            if (parseInt(addressIndex) > 4294967295 || parseInt(addressIndex) < 0) {
+            if (parseInt(addressIndex) > config.maxAccountIndex || parseInt(addressIndex) < 0) {
                 e.preventDefault();
             }
         }
@@ -96,13 +91,12 @@ const AdvancedFields = (props) => {
                             <p className="label"> {t("ACCOUNT")}</p>
                             <Form.Control
                                 type="number"
-                                min={0}
-                                max={4294967295}
+                                max={config.maxAccountIndex}
                                 name="accountNumber"
                                 id="accountNumberReset"
                                 onKeyPress={handleAccountNumberKeypress}
                                 onChange={handleAccountNumberChange}
-                                placeholder= {t("ACCOUNT_NUMBER")}
+                                placeholder={t("ACCOUNT_NUMBER")}
                                 required={false}
                             />
                         </div>
@@ -110,8 +104,7 @@ const AdvancedFields = (props) => {
                             <p className="label">{t("ACCOUNT_INDEX")}</p>
                             <Form.Control
                                 type="number"
-                                min={0}
-                                max={4294967295}
+                                max={config.maxAccountIndex}
                                 name="accountIndexReset"
                                 id="accountIndexReset"
                                 onKeyPress={handleIndexKeypress}

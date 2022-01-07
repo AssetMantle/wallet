@@ -1,6 +1,12 @@
 import {
+    Accordion,
+    AccordionContext,
+    Card,
+    Form,
     Modal,
-    Form, OverlayTrigger, Accordion, Card, AccordionContext, useAccordionToggle, Popover
+    OverlayTrigger,
+    Popover,
+    useAccordionToggle
 } from 'react-bootstrap';
 import React, {useContext, useEffect, useState} from 'react';
 import {useTranslation} from "react-i18next";
@@ -12,7 +18,7 @@ import helper from "../../../utils/helper";
 import Loader from "../../../components/Loader";
 import ModalViewTxnResponse from "../../Common/ModalViewTxnResponse";
 import config from "../../../config";
-import aminoMsgHelper from "../../../utils/aminoMsgHelper";
+import {fee as feeMessage} from "../../../utils/aminoMsgHelper";
 
 
 const ModalDecryptKeyStore = (props) => {
@@ -83,9 +89,9 @@ const ModalDecryptKeyStore = (props) => {
                 document.getElementById('decryptFile');
 
             let filePath = fileInput.value;
-            if(helper.fileTypeCheck(filePath)) {
+            if (helper.fileTypeCheck(filePath)) {
                 const password = event.target.password.value;
-                if(helper.passwordValidation(password)) {
+                if (helper.passwordValidation(password)) {
                     let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);
                     await promise.then(function (result) {
                         mnemonic = result;
@@ -93,10 +99,10 @@ const ModalDecryptKeyStore = (props) => {
                         setLoader(false);
                         setErrorMessage(err);
                     });
-                }else {
+                } else {
                     setErrorMessage("Password must be greater than 3 letters and no spaces allowed");
                 }
-            }else {
+            } else {
                 setErrorMessage("File type not supported");
             }
         } else {
@@ -113,18 +119,18 @@ const ModalDecryptKeyStore = (props) => {
             }
         }
         if (mnemonic !== undefined) {
-            const accountData = await transactions.MnemonicWalletWithPassphrase(mnemonic, transactions.makeHdPath(),bip39Passphrase);
+            const accountData = await transactions.MnemonicWalletWithPassphrase(mnemonic, transactions.makeHdPath(), bip39Passphrase);
             const address = accountData[1];
 
             if (address === loginAddress) {
                 setImportMnemonic(false);
                 let response;
-                if(props.formData.formName === "ibc"){
-                    let msg =  transactions.MakeIBCTransferMsg(props.formData.channelID, address,
-                        props.formData.toAddress,(props.formData.amount * config.xprtValue).toFixed(0), undefined, undefined, props.formData.denom, props.formData.channelUrl, props.formData.inputPort);
+                if (props.formData.formName === "ibc") {
+                    let msg = transactions.MakeIBCTransferMsg(props.formData.channelID, address,
+                        props.formData.toAddress, (props.formData.amount * config.xprtValue).toFixed(0), undefined, undefined, props.formData.denom, props.formData.channelUrl, props.formData.inputPort);
                     await msg.then(result => {
-                        response = transactions.TransactionWithMnemonic( [result],
-                            aminoMsgHelper.fee(Math.trunc(props.fee), props.gas), props.formData.memo, mnemonic,
+                        response = transactions.TransactionWithMnemonic([result],
+                            feeMessage(Math.trunc(props.fee), props.gas), props.formData.memo, mnemonic,
                             transactions.makeHdPath(accountNumber, addressIndex), bip39Passphrase);
                     }).catch(err => {
                         setLoader(false);
@@ -132,10 +138,10 @@ const ModalDecryptKeyStore = (props) => {
                             ? err.response.data.message
                             : err.message);
                     });
-                }else {
+                } else {
                     response = transactions.getTransactionResponse(address, props.formData, props.fee, props.gas, mnemonic, accountNumber, addressIndex, bip39Passphrase);
                 }
-                if(response !== undefined){
+                if (response !== undefined) {
                     response.then(result => {
                         setResponse(result);
                         setLoader(false);
@@ -169,7 +175,7 @@ const ModalDecryptKeyStore = (props) => {
         </Popover>
     );
 
-    const handlePrevious = () =>{
+    const handlePrevious = () => {
         props.setShowDecryptModal(false);
         props.setFeeModal(true);
     };
@@ -182,9 +188,9 @@ const ModalDecryptKeyStore = (props) => {
     const handleAccountNumberKeypress = e => {
         if (e.key === "e" || e.key === "-" || e.key === "+") {
             e.preventDefault();
-        }else {
+        } else {
             const accountNumber = document.getElementById('delegateAccountNumber').value;
-            if (parseInt(accountNumber) > 4294967295 || parseInt(accountNumber) < 0) {
+            if (parseInt(accountNumber) > config.maxAccountIndex || parseInt(accountNumber) < 0) {
                 e.preventDefault();
             }
         }
@@ -193,9 +199,9 @@ const ModalDecryptKeyStore = (props) => {
     const handleIndexKeypress = e => {
         if (e.key === "e" || e.key === "-" || e.key === "+") {
             e.preventDefault();
-        }else {
+        } else {
             const addressIndex = document.getElementById('delegateAccountIndex').value;
-            if (parseInt(addressIndex) > 4294967295 || parseInt(addressIndex) < 0) {
+            if (parseInt(addressIndex) > config.maxAccountIndex || parseInt(addressIndex) < 0) {
                 e.preventDefault();
             }
         }
@@ -218,13 +224,14 @@ const ModalDecryptKeyStore = (props) => {
                                 {props.formData.formName === "delegate" ?
                                     <>
                                         {props.formData.modalHeader}
-                                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
+                                        <OverlayTrigger trigger={['hover', 'focus']} placement="bottom"
+                                            overlay={popover}>
                                             <button className="icon-button info" type="button"><Icon
                                                 viewClass="arrow-right"
                                                 icon="info"/></button>
                                         </OverlayTrigger>
                                     </>
-                                    : props.formData.modalHeader }
+                                    : props.formData.modalHeader}
                             </h3>
                         </Modal.Header>
                         <Modal.Body className="create-wallet-body import-wallet-body modal-body">
@@ -277,8 +284,7 @@ const ModalDecryptKeyStore = (props) => {
                                                     <p className="label">{t("ACCOUNT")}</p>
                                                     <Form.Control
                                                         type="number"
-                                                        min={0}
-                                                        max={4294967295}
+                                                        max={config.maxAccountIndex}
                                                         name="delegateAccountNumber"
                                                         id="delegateAccountNumber"
                                                         placeholder={t("ACCOUNT_NUMBER")}
@@ -290,8 +296,7 @@ const ModalDecryptKeyStore = (props) => {
                                                     <p className="label">{t("ACCOUNT_INDEX")}</p>
                                                     <Form.Control
                                                         type="number"
-                                                        min={0}
-                                                        max={4294967295}
+                                                        max={config.maxAccountIndex}
                                                         name="delegateAccountIndex"
                                                         id="delegateAccountIndex"
                                                         placeholder={t("ACCOUNT_INDEX")}
@@ -336,9 +341,9 @@ const ModalDecryptKeyStore = (props) => {
                     </>
                     :
                     <ModalViewTxnResponse
-                        response = {response}
-                        successMsg = {props.formData.successMsg}
-                        failedMsg = {props.formData.failedMsg}
+                        response={response}
+                        successMsg={props.formData.successMsg}
+                        failedMsg={props.formData.failedMsg}
                         handleClose={props.handleClose}
                     />
             }

@@ -5,12 +5,34 @@ import DelegatedValidators from "./Validators/DelegatedValidators";
 import {Nav, Tab} from "react-bootstrap";
 import InfoRefresh from "../Refresh";
 import {useTranslation} from "react-i18next";
+import ModalValidator from "./Validators/ModalValidator";
+import ModalDelegate from "./Validators/ModalDelegate";
+import FeeModal from "../Common/Fee/Modal";
+import KeyStoreModal from "../Common/KeyStore/Modal";
+import ModalViewTxnResponse from "../Common/ModalViewTxnResponse";
+import ModalReDelegate from "./Validators/ModalReDelegate";
+import ModalUnbond from "./Validators/ModalUnbond";
+import ModalValidatorWithdraw from "./Validators/ModalWithdraw";
+import ModalWithDraw from "../Wallet/ModalWithDraw";
+import ModalSetWithdrawAddress from "../Wallet/ModalSetWithdrawAddress";
+import Loader from "../../components/Loader";
 
 const Staking = () => {
     const {t} = useTranslation();
     return (
         <div className="staking-main-section">
+            <Loader/>
+            <ModalValidator/>
+            <ModalDelegate/>
+            <ModalReDelegate/>
             <TokenInfo/>
+            <FeeModal/>
+            <KeyStoreModal/>
+            <ModalUnbond/>
+            <ModalWithDraw/>
+            <ModalViewTxnResponse/>
+            <ModalValidatorWithdraw/>
+            <ModalSetWithdrawAddress/>
             <div className="validators-section">
                 <div className="txns-container">
                     <Tab.Container id="lrr" defaultActiveKey="all">

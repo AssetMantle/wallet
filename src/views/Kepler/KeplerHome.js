@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import "../../utils/kepler";
 import KeplerWallet from "../../utils/kepler";
-import {useHistory, NavLink} from "react-router-dom";
+import {NavLink, useHistory} from "react-router-dom";
 import {Nav, Navbar} from "react-bootstrap";
 import logo from "../../assets/images/logo_lite.svg";
 import config from "../../config";
@@ -9,6 +9,7 @@ import {useTranslation} from "react-i18next";
 import ModalKeplerInstall from "./ModalKeplerInstall";
 import Icon from "../../components/Icon";
 import transactions, {GetAccount} from "../../utils/transactions";
+import * as Sentry from "@sentry/browser";
 
 const KeplerHome = () => {
     const {t} = useTranslation();
@@ -21,8 +22,11 @@ const KeplerHome = () => {
         kepler.then(function () {
             const address = localStorage.getItem("keplerAddress");
             setAddress(address);
-        }).catch(err => {
-            setErrorMessage(err.message);
+        }).catch(error => {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
+            setErrorMessage(error.message);
         });
     }, []);
 
@@ -32,8 +36,11 @@ const KeplerHome = () => {
         kepler.then(function () {
             const address = localStorage.getItem("keplerAddress");
             setAddress(address);
-        }).catch(err => {
-            setErrorMessage(err.message);
+        }).catch(error => {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
+            setErrorMessage(error.message);
         });
     };
 
@@ -42,15 +49,18 @@ const KeplerHome = () => {
         GetAccount(address)
             .then(async res => {
                 const accountType = await transactions.VestingAccountCheck(res.typeUrl);
-                if(accountType){
+                if (accountType) {
                     localStorage.setItem('fee', config.vestingAccountFee);
                     localStorage.setItem('account', 'vesting');
-                }else {
+                } else {
                     localStorage.setItem('fee', config.vestingAccountFee);
                     localStorage.setItem('account', 'non-vesting');
                 }
             })
             .catch(error => {
+                Sentry.captureException(error.response
+                    ? error.response.data.message
+                    : error.message);
                 console.log(error.message);
                 localStorage.setItem('fee', config.vestingAccountFee);
                 localStorage.setItem('account', 'non-vesting');
@@ -78,7 +88,8 @@ const KeplerHome = () => {
                                 rel="noopener noreferrer">{t("LEARN_MORE")}</a>
                             <li className="nav-item link">
                                 <a className="nav-link primary-medium-color"
-                                    href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer" target="_blank">
+                                    href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer"
+                                    target="_blank">
                                     {t("HELP")}
                                 </a>
                             </li>
@@ -126,7 +137,7 @@ const KeplerHome = () => {
                                         address !== ""
                                             ?
                                             <p>{address}</p>
-                                            : <p>Fetching Address..</p>
+                                            : <p>{t("FETCHING_ADDRESS")}..</p>
 
                                     }
 

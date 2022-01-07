@@ -1,8 +1,5 @@
 import React, {useState} from "react";
-import {
-    Form,
-    Modal
-} from "react-bootstrap";
+import {Form, Modal} from "react-bootstrap";
 import wallet from "../../../utils/wallet";
 import GeneratePrivateKey from "./GeneratePrivateKey";
 import ChangePassword from "./ChangePassword";
@@ -36,11 +33,11 @@ const GenerateKeyStore = (props) => {
     const handleRoute = (key) => {
         if (key === "generateKey") {
             setGenerateKey(true);
-        }else if (key === "hideGenerateKeyStore") {
+        } else if (key === "hideGenerateKeyStore") {
             setGenerateKey(false);
             setMnemonicForm(true);
             setShow(true);
-        }else if(key === "changePassword"){
+        } else if (key === "changePassword") {
             setChangePassword(true);
             setMnemonicForm(false);
             setErrorMessage("");
@@ -76,7 +73,8 @@ const GenerateKeyStore = (props) => {
                                     <div className="form-field">
                                         <p className="label">{t("ENTER_MNEMONIC")}</p>
                                         <Form.Control as="textarea" rows={3} name="mnemonic"
-                                            placeholder={t("SEED_PHRASE")} onKeyPress={helper.stringValidation}
+                                            placeholder={t("SEED_PHRASE")}
+                                            onKeyPress={helper.stringValidation}
                                             required={true}/>
                                     </div>
 
@@ -91,7 +89,9 @@ const GenerateKeyStore = (props) => {
                                     </div>
                                 </Form>
                                 <div className="buttons">
-                                    <p className="button-link" onClick={()=>handleRoute('changePassword')}>Change KeyStore Password</p>
+                                    <p className="button-link" onClick={() => handleRoute('changePassword')}>
+                                        {t('CHANGE_KEYSTORE_PASSWORD')}
+                                    </p>
                                 </div>
                             </div>
                         </>
@@ -102,12 +102,14 @@ const GenerateKeyStore = (props) => {
 
             {generateKey ?
                 <GeneratePrivateKey mnemonic={userMnemonic} handleRoute={handleRoute} setGenerateKey={setGenerateKey}
-                    routeValue="hideGenerateKeyStore" formName="Generate KeyStore File" handleClose={handleClose}/>
+                    routeValue="hideGenerateKeyStore" formName="Generate KeyStore File"
+                    handleClose={handleClose}/>
                 : null
             }
             {changePassword ?
                 <ChangePassword mnemonic={userMnemonic} handleRoute={handleRoute} setChangePassword={setChangePassword}
-                    routeValue="hideGenerateKeyStore" formName="Generate KeyStore File" handleClose={handleClose}/>
+                    routeValue="hideGenerateKeyStore" formName="Generate KeyStore File"
+                    handleClose={handleClose}/>
                 : null
             }
         </>

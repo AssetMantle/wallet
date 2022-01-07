@@ -3,7 +3,7 @@ import moment from 'moment';
 import helper from "../../../utils/helper";
 import Icon from "../../../components/Icon";
 import Loader from "../../../components/Loader";
-import {fetchTransactions} from "../../../actions/transactions";
+import {fetchTransactions} from "../../../store/actions/transactionQueries";
 import {connect} from "react-redux";
 import DataTable from "../../../components/DataTable";
 import IconButton from "@material-ui/core/IconButton";
@@ -12,6 +12,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import transactions from "../../../utils/transactions";
 import NumberView from "../../../components/NumberView";
 import {formatNumber} from "../../../utils/scripts";
+import config from "../../../config";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const SendTransactions = (props) => {
@@ -58,8 +59,8 @@ const SendTransactions = (props) => {
         print: false,
         download: false,
         filter: false,
-        search:false,
-        viewColumns:false,
+        search: false,
+        viewColumns: false,
     };
 
     const tableData = props.list && props.list.length > 0
@@ -72,14 +73,18 @@ const SendTransactions = (props) => {
             </a>,
             (stxn.typeUrl === "/ibc.applications.transfer.v1.MsgTransfer") ?
                 stxn.messageCount > 1 ?
-                    <span key={index} className="type"><span className="name">{(stxn.typeUrl).substr((stxn.typeUrl).indexOf('/')+1)}</span> + {stxn.messageCount}</span>
+                    <span key={index} className="type"><span
+                        className="name">{(stxn.typeUrl).substr((stxn.typeUrl).indexOf('/') + 1)}</span> + {stxn.messageCount}</span>
                     :
-                    <span key={index} className="type"><span className="name">{(stxn.typeUrl).substr((stxn.typeUrl).indexOf('/')+1)}</span></span>
+                    <span key={index} className="type"><span
+                        className="name">{(stxn.typeUrl).substr((stxn.typeUrl).indexOf('/') + 1)}</span></span>
                 :
                 stxn.messageCount > 1 ?
-                    <span key={index} className="type"><span className="name">{(stxn.typeUrl).substr((stxn.typeUrl).indexOf('v1beta1.') + 11)}</span>+{stxn.messageCount}</span>
+                    <span key={index} className="type"><span
+                        className="name">{(stxn.typeUrl).substr((stxn.typeUrl).indexOf('v1beta1.') + 11)}</span>+{stxn.messageCount}</span>
                     :
-                    <span key={index} className="type"><span className="name">{(stxn.typeUrl).substr((stxn.typeUrl).indexOf('v1beta1.') + 11)}</span></span>
+                    <span key={index} className="type"><span
+                        className="name">{(stxn.typeUrl).substr((stxn.typeUrl).indexOf('v1beta1.') + 11)}</span></span>
             ,
             <div key={index} className="result">
                 <span className="icon-box success">
@@ -90,7 +95,7 @@ const SendTransactions = (props) => {
             </div>,
             (stxn.body.amount !== undefined || stxn.body.token !== undefined || stxn.body.value !== undefined) ?
                 stxn.amount !== '' && stxn.amount !== undefined ?
-                    <div className="amount" >
+                    <div className="amount">
                         <NumberView value={formatNumber(stxn.amount[0])}/>
                         <span className="string-truncate">
                            &nbsp;{stxn.amount[1]}
@@ -101,17 +106,19 @@ const SendTransactions = (props) => {
             (stxn.fee.amount !== undefined && stxn.fee.amount.length) ?
                 (Array.isArray(stxn.fee.amount)) ?
                     stxn.fee.amount.length ?
-                        stxn.fee.amount[0].denom === 'uxprt' ?
+                        stxn.fee.amount[0].denom === config.coinDenom ?
                             <div className="fee text-left" key={index}>
-                                <NumberView value={formatNumber(transactions.XprtConversion(stxn.fee.amount[0].amount))}/>
-                                XPRT
+                                <NumberView
+                                    value={formatNumber(transactions.XprtConversion(stxn.fee.amount[0].amount))}/>
+                                {config.coinName}
                             </div>
                             :
                             <div className="fee text-left" key={index}>
-                                <NumberView value={formatNumber(transactions.XprtConversion(stxn.fee.amount[0].amount))}/>
+                                <NumberView
+                                    value={formatNumber(transactions.XprtConversion(stxn.fee.amount[0].amount))}/>
                                 {stxn.fee.amount[0].denom}
                             </div>
-                        :""
+                        : ""
                     :
                     <div className="fee text-left" key={index}>
                         <NumberView value={formatNumber(transactions.XprtConversion(stxn.fee.amount.amount))}/>
@@ -128,7 +135,7 @@ const SendTransactions = (props) => {
         return <Loader/>;
     }
     const handleNext = () => {
-        if(!helper.checkLastPage(props.pageNumber[0], 5, props.pageNumber[1])) {
+        if (!helper.checkLastPage(props.pageNumber[0], 5, props.pageNumber[1])) {
             props.fetchTransactions(address, 5, props.pageNumber[0] + 1);
         }
     };
@@ -153,7 +160,8 @@ const SendTransactions = (props) => {
                     </IconButton>
                 </div>
                 <div className="before buttons">
-                    <IconButton aria-label="next" className="next" onClick={handleNext} disabled={helper.checkLastPage(props.pageNumber[0], 5, props.pageNumber[1])?true : false}>
+                    <IconButton aria-label="next" className="next" onClick={handleNext}
+                        disabled={helper.checkLastPage(props.pageNumber[0], 5, props.pageNumber[1]) ? true : false}>
                         <ChevronRightIcon/>
                     </IconButton>
                 </div>

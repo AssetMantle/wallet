@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Switch, Route, withRouter, useHistory} from 'react-router-dom';
+import {Route, Switch, useHistory, withRouter} from 'react-router-dom';
 import DashboardWallet from "./views/DashboardWallet";
 import Homepage from "./views/Homepage";
 import DashboardStaking from "./views/Staking";
@@ -11,6 +11,18 @@ import config from "./config";
 import icon_white from "./assets/images/icon_white.svg";
 import {useTranslation} from "react-i18next";
 import KeplerWallet from "./utils/kepler";
+import {useDispatch} from "react-redux";
+import {fetchDelegationsCount} from "./store/actions/delegations";
+import {fetchBalance, fetchTransferableVestingAmount} from "./store/actions/balance";
+import {fetchRewards, fetchTotalRewards} from "./store/actions/rewards";
+import {fetchUnbondDelegations} from "./store/actions/unbond";
+import {fetchTokenPrice} from "./store/actions/tokenPrice";
+import {fetchValidators} from "./store/actions/validators";
+import transactions from "./utils/transactions";
+import * as Sentry from "@sentry/react";
+import {Integrations} from "@sentry/tracing";
+import {keplrLogin, setKeplrInfo} from "./store/actions/signIn/keplr";
+const SENTRY_API = process.env.REACT_APP_SENTRY_API;
 const App = () => {
     const {t} = useTranslation();
     const history = useHistory();
@@ -35,14 +47,9 @@ const App = () => {
     const updateNetwork = () => {
         setNetwork(window.navigator.onLine);
     };
-    useEffect(() => {
-        window.addEventListener("offline", updateNetwork);
-        window.addEventListener("online", updateNetwork);
-        return () => {
-            window.removeEventListener("offline", updateNetwork);
-            window.removeEventListener("online", updateNetwork);
-        };
-    });
+
+    const dispatch = useDispatch();
+
     let address;
     const version = localStorage.getItem('version');
     if (version == null || config.version !== version) {
@@ -51,18 +58,60 @@ const App = () => {
     } else {
         address = localStorage.getItem('address');
     }
+
+    useEffect(() => {
+        const fetchApi = async () => {
+            if (address !== null && address !== undefined) {
+                dispatch(fetchDelegationsCount(address));
+                dispatch(fetchBalance(address));
+                dispatch(fetchRewards(address));
+                dispatch(fetchTotalRewards(address));
+                dispatch(fetchUnbondDelegations(address));
+                dispatch(fetchTokenPrice());
+                dispatch(fetchTransferableVestingAmount(address));
+                dispatch(fetchValidators(address));
+                transactions.updateFee(address);
+                setInterval(() => dispatch(fetchTotalRewards(address)), 10000);
+            }
+        };
+        fetchApi();
+    }, []);
+    useEffect(() => {
+        window.addEventListener("offline", updateNetwork);
+        window.addEventListener("online", updateNetwork);
+        return () => {
+            window.removeEventListener("offline", updateNetwork);
+            window.removeEventListener("online", updateNetwork);
+        };
+    });
+
     window.addEventListener("keplr_keystorechange", () => {
-        if(localStorage.getItem('loginMode') === 'kepler'){
+        if (localStorage.getItem('loginMode') === config.keplrMode) {
             const kepler = KeplerWallet();
             kepler.then(function () {
                 const address = localStorage.getItem("keplerAddress");
-                localStorage.setItem('address', address);
-                window.location.reload();
-            }).catch(err => {
-                console.log(err.message);
+                dispatch(setKeplrInfo({
+                    value: address,
+                    error: {
+                        message: '',
+                    },
+                }));
+                dispatch(keplrLogin(history));
+            }).catch(error => {
+                Sentry.captureException(error.response
+                    ? error.response.data.message
+                    : error.message);
+                console.log(error.message);
             });
         }
     });
+
+    Sentry.init({
+        dsn: SENTRY_API,
+        integrations: [new Integrations.BrowserTracing()],
+        tracesSampleRate: 1.0,
+    });
+
     return (
         <>
             {

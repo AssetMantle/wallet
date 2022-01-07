@@ -58,10 +58,16 @@ html, body {
 }
 
 .loader {
-  position: fixed;
-  z-index: 2;
-  top: 50%;
-  left: 50%;
+  .modal-content {
+    text-align: center;
+    background: transparent !important;
+    display: flex;
+    align-items: center;
+
+    img {
+      width: 80px;
+    }
+  }
 }
 
 .hidden {
@@ -88,11 +94,11 @@ html, body {
 
 .list-modal.modal-custom {
   .modal-dialog {
-    max-width: 700px;
+    max-width: 600px;
   }
 
   .list-modal-body {
-    padding: 0px 100px 30px 100px;
+    padding: 0px 60px 30px 60px;
   }
 }
 
@@ -149,7 +155,7 @@ html, body {
   }
 
   .modal-dialog {
-    max-width: 700px;
+    max-width: 600px;
   }
 
   .modal-body {
@@ -212,22 +218,16 @@ html, body {
 }
 
 .form-field {
-  display: flex;
-  display: -webkit-flex;
-  align-items: center;
-  padding-bottom: 15px;
-
   .label {
     font-weight: 500;
     font-size: 14px;
     line-height: 150%;
-    margin: 0;
+    margin: 0 0 5px 0;
     color: #2E3239;
-    width: 150px;
   }
 
-  input, .amount-field, textarea, .file-upload, .info-data {
-    max-width: 450px !important;
+  input, .amount-field, textarea, .file-upload {
+    //max-width: 500px !important;
     flex: 1;
   }
 
@@ -239,16 +239,16 @@ html, body {
     color: #8D9CB5;
   }
 
-  .info-link{
+  .info-link {
     text-decoration: underline;
     display: inline-flex !important;
     align-items: center;
-    text-decoration-color:#8D9CB5;
+    text-decoration-color: #8D9CB5;
     cursor: pointer;
   }
 
   .info-data {
-    margin: 0 0 10px 0;
+    margin: 0;
     display: block;
     font-weight: 500;
     font-size: 16px;
@@ -257,7 +257,6 @@ html, body {
       font-family: 'Poppins', sans-serif;
       font-weight: 500;
       font-size: 12px;
-      line-height: 150%;
       color: #8D9CB5;
     }
 
@@ -371,10 +370,9 @@ html, body {
   display: flex;
   display: -webkit-flex;
   margin-top: 20px;
-  padding: 20px;
   align-items: center;
   justify-content: center;
-
+  padding: 10px;
   .exclamation {
     padding-right: 25px;
 
@@ -468,8 +466,9 @@ html, body {
 }
 
 .validators-list-selection {
-  max-width: 450px !important;
+  max-width: 500px !important;
   flex: 1;
+  width: 100%;
   background: #F5F6FA;
   font-size: 14px;
   line-height: 150%;
@@ -477,39 +476,47 @@ html, body {
   border-radius: 0;
   padding-left: 10px;
 
-  .MuiSelect-select{
+  .MuiSelect-select {
     &:focus {
       background-color: transparent;
     }
+
     display: flex !important;
     justify-content: space-between !important;
-    .state{
+
+    .state {
       display: none !important;
+    }
+
+    em {
+      font-style: normal;
     }
   }
 
 }
-.MuiMenu-list{
-  .validator-item:last-child{
+
+
+.MuiMenu-list {
+  .validator-item:last-child {
     border: 0px solid !important;
   }
 }
-.validator-item{
-  border-bottom:1px solid rgba(224, 224, 224, 1) !important;
+
+.validator-item {
   display: flex !important;
   justify-content: space-between !important;
 }
 
-.validators-list-selection .MuiSelect-select .state.active, .validator-item .state.active, .active-icon-box{
+.validators-list-selection .MuiSelect-select .state.active, .validator-item .state.active, .active-icon-box {
   background: rgba(29, 158, 97, 0.15);
   color: #1D9E61;
   font-size: 12px;
   padding: 0px 7px;
-  display: inline ;
+  display: inline;
   margin-left: 5px;
 }
 
-.validators-list-selection .MuiSelect-select .state.inactive, .validator-item .state.inactive, .inactive-icon-box{
+.validators-list-selection .MuiSelect-select .state.inactive, .validator-item .state.inactive, .inactive-icon-box {
   background: #e51f0c33;
   color: #e50913;
   font-size: 12px;
@@ -517,6 +524,7 @@ html, body {
   display: inline;
   margin-left: 5px;
 }
+
 .MuiInput-underline::before {
   border: 0px solid !important;
 }
@@ -572,6 +580,7 @@ html, body {
   .fee-box {
     padding: 15px;
     width: 150px;
+    overflow: auto;
     box-shadow: 0 1px 3px rgba(50, 50, 93, 0.15), 0 1px 0 rgba(0, 0, 0, 0.02);
 
     p {
@@ -748,7 +757,7 @@ html, body {
   display: block;
 }
 
-.delegation-rank{
+.delegation-rank {
   width: 30px;
   height: 30px;
   display: flex;
@@ -766,11 +775,12 @@ html, body {
   justify-content: center;
 }
 
-.delegation-rank.active{
+.delegation-rank.active {
   background: #e50913;
   color: #fff;
 }
-.delegation-rank.inactive{
+
+.delegation-rank.inactive {
   color: #e50913;
   background: #e509130f;
 }
@@ -779,8 +789,8 @@ html, body {
   overflow: hidden;
   display: inline-block;
   vertical-align: bottom;
-  -webkit-animation: ellipsis steps(4,end) 1500ms infinite;
-  animation: ellipsis steps(4,end) 1500ms infinite;
+  -webkit-animation: ellipsis steps(4, end) 1500ms infinite;
+  animation: ellipsis steps(4, end) 1500ms infinite;
   content: "\2026"; /* ascii code for the ellipsis character */
   width: 0px;
 }
@@ -813,23 +823,25 @@ html, body {
   }
 }
 
-ul li em{
+ul li em {
   font-style: normal;
 }
 
-.digits{
-  .start{
+.digits {
+  .start {
     font-size: 16px;
   }
-  .end{
+
+  .end {
     font-size: 13px;
   }
 }
 
-.download-keystore-box{
-text-align: center;
-  p{
-    margin:0;
+.download-keystore-box {
+  text-align: center;
+
+  p {
+    margin: 0;
     display: inline-flex;
     background: #ffa5000d;
     padding: 5px 20px;
@@ -837,4 +849,103 @@ text-align: center;
     text-decoration: underline;
     cursor: pointer;
   }
+}
+
+.downloaded-keystore-box {
+  text-align: center;
+
+  p {
+    margin: 0;
+    display: inline-flex;
+    background: #28a74514;
+    padding: 5px 20px;
+    color: #28a745;
+  }
+}
+
+.input-error {
+  margin: 0;
+  font-size: 12px;
+  color: #E50913;
+  font-weight: 500;
+}
+
+.form-control-section {
+  position: relative;
+  padding-bottom: 20px;
+
+  .input-error {
+    position: absolute;
+    bottom: 0;
+  }
+}
+
+.error-popover {
+  background: red;
+
+  .popover-arrow {
+    background: red;
+
+  }
+}
+
+.amount-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.custom-file-section {
+  position: relative;
+  height: 40px;
+  margin-bottom: 20px;
+
+  .custom-file {
+    display: flex;
+    align-items: center;
+
+    .file-name {
+      margin: 0;
+      padding: 0px 10px;
+    }
+  }
+
+  .file-button {
+    color: #FFFFFF;
+    margin: 0;
+    background: #495057;
+    width: 150px;
+    padding: 5px;
+    text-align: center;
+    //box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
+  }
+
+  .file-upload {
+    position: absolute;
+    top: 0px;
+    width: 150px;
+    opacity: 0;
+
+    input {
+      height: 40px;
+    }
+  }
+}
+
+.password-field {
+  .password-field-container {
+    position: relative;
+
+    .password-icon-section {
+      cursor: pointer;
+      position: absolute;
+      top: 10px;
+      right: 15px;
+    }
+
+    .icon {
+      width: 24px;
+    }
+  }
+
 }

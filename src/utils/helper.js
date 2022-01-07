@@ -1,9 +1,14 @@
 import {Decimal} from "@cosmjs/math";
 import transactions from "./transactions";
+import config from "../config";
+import {COIN_ATOM, COIN_ATOM_DENOM} from "../constants/keyWords";
+import moment from "moment";
+
 const encoding = require("@cosmjs/encoding");
 const bip39 = require("bip39");
 const crypto = require("crypto");
 const passwordHashAlgorithm = "sha512";
+const NODE_CONF = process.env.REACT_APP_IBC_CONFIG;
 
 function randomNum(min, max) {
     let randomNumbers = [];
@@ -12,7 +17,6 @@ function randomNum(min, max) {
         if (randomNumbers.indexOf(random_number) == -1) {
             randomNumbers.push(random_number);
         }
-
     }
     return randomNumbers;
 }
@@ -93,7 +97,6 @@ function checkLastPage(pageNumber, limit, totalTransactions) {
 
 function validatePassphrase(value) {
     return value.length === 50;
-
 }
 
 function fileTypeCheck(filePath) {
@@ -102,22 +105,29 @@ function fileTypeCheck(filePath) {
     return allowedExtensions.exec(filePath);
 }
 
-function validateAddress(address, prefix="persistence") {
-    if(prefix === "cosmos"){
-        return address.startsWith(prefix) && address.length === 45;
-    }else if(prefix === "osmosis"){
-        return address.startsWith("osmo") && address.length === 43;
+function validateAddress(address, prefix = "persistence") {
+    if (prefix === "cosmos") {
+        if (!address.startsWith(prefix) || address.length !== 45) {
+            return new Error('Invalid Recipient Address');
+        }
+    } else if (prefix === "osmosis") {
+        if (!address.startsWith("osmo") || address.length !== 43) {
+            return new Error('Invalid Recipient Address');
+        }
     } else {
-        return address.startsWith(prefix) && address.length === 50;
+        if (!address.startsWith(prefix) || address.length !== 50) {
+            return new Error('Invalid Recipient Address');
+        }
     }
+    return new Error('');
 }
 
 
 function accountChangeCheck(errorMessage) {
-    if(errorMessage === 'Unsupported type: \'/cosmos.vesting.v1beta1.ContinuousVestingAccount\'' ||
+    if (errorMessage === 'Unsupported type: \'/cosmos.vesting.v1beta1.ContinuousVestingAccount\'' ||
         errorMessage === 'Unsupported type: \'/cosmos.vesting.v1beta1.DelayedVestingAccount\'' ||
-        errorMessage === 'Unsupported type: \'/cosmos.vesting.v1beta1.PeriodicVestingAccount\''||
-        errorMessage.startsWith("pubKey does not match signer address")){
+        errorMessage === 'Unsupported type: \'/cosmos.vesting.v1beta1.PeriodicVestingAccount\'' ||
+        errorMessage.startsWith("pubKey does not match signer address")) {
         alert("Account address changed please login again");
         localStorage.setItem('loginToken', '');
         localStorage.setItem('address', '');
@@ -128,16 +138,19 @@ function accountChangeCheck(errorMessage) {
     }
 }
 
-function decimalConversion(data){
+function decimalConversion(data) {
     let value = Decimal.fromAtomics(data, 18).toString();
     return value;
 }
 
 function denomChange(denom) {
-    if(denom === "uxprt"){
-        return "XPRT";
-    }else if(denom === "uatom"){
-        return "ATOM";
+    switch (denom) {
+    case config.coinDenom:
+        return config.coinName;
+    case COIN_ATOM_DENOM:
+        return COIN_ATOM;
+    default:
+        return null;
     }
 }
 
@@ -162,20 +175,20 @@ function mnemonicValidation(memo) {
     return validateMnemonic;
 }
 
-function ValidateAmount(value){
+function ValidateAmount(value) {
     if (value === 0) {
         return new Error('Value must be greater than 0');
     }
     return new Error('');
 }
 
-function inputSpaceValidation(e){
+function inputSpaceValidation(e) {
     if (e.key === " ") {
         e.preventDefault();
     }
 }
 
-function inputAmountValidation(e){
+function inputAmountValidation(e) {
     if (e.key === "e" || e.key === "-" || e.key === "+") {
         e.preventDefault();
     }
@@ -185,19 +198,19 @@ function stringValidation(evt) {
     const regEx = /^[a-z ]*$/;
     if (regEx.test(evt.target.value)) {
         return true;
-    }
-    else {
+    } else {
         evt.preventDefault();
     }
 
 }
-function trimWhiteSpaces(data){
+
+function trimWhiteSpaces(data) {
     return data.split(' ').join('');
 }
 
 
-function isBech32Address(address, prefix){
-    try{
+function isBech32Address(address, prefix) {
+    try {
         let decodedAddress = encoding.Bech32.decode(address);
         return decodedAddress.prefix === prefix;
     } catch (e) {
@@ -205,56 +218,86 @@ function isBech32Address(address, prefix){
     }
 }
 
-function passwordValidation(data){
-    const regex= /^\S{3}\S+$/;
+function passwordValidation(data) {
+    const regex = /^\S{3}\S+$/;
     return regex.test(data);
 }
 
-function denomModify(amount){
-    if(Array.isArray(amount)){
-        if(amount.length){
-            if(amount[0].denom ==="uxprt"){
+function denomModify(amount) {
+    if (Array.isArray(amount)) {
+        if (amount.length) {
+            if (amount[0].denom === config.coinDenom) {
                 return [transactions.XprtConversion(amount[0].amount), "XPRT"];
-            }else {
+            } else {
                 return [amount[0].amount, amount[0].denom];
             }
-        }else {
+        } else {
             return '';
         }
-    }else {
-        if(amount.denom ==="uxprt"){
+    } else {
+        if (amount.denom === config.coinDenom) {
             return [transactions.XprtConversion(amount.amount), "XPRT"];
-        }else {
+        } else {
             return [amount.amount, amount.denom];
         }
     }
 }
 
 function getTransactionAmount(data) {
-    if(data.amount !== undefined || data.token !== undefined || data.value !== undefined){
-        if(data.amount !== undefined){
+    if (data.amount !== undefined || data.token !== undefined || data.value !== undefined) {
+        if (data.amount !== undefined) {
             return denomModify(data.amount);
-        }else if(data.token !== undefined){
+        } else if (data.token !== undefined) {
             return denomModify(data.token);
-        }else {
+        } else {
             return denomModify(data.value);
         }
     }
 }
 
-function sixDigitsNumber(value, length= 6) {
+function sixDigitsNumber(value, length = 6) {
     let inputValue = value.toString();
-    if(inputValue.length >= length){
-        return inputValue.substr(0,6);
-    }else {
+    if (inputValue.length >= length) {
+        return inputValue.substr(0, 6);
+    } else {
         const stringLength = length - inputValue.length;
         let newString = inputValue;
-        for(let i = 0; i < stringLength; i++) {
-            newString+="0";
+        for (let i = 0; i < stringLength; i++) {
+            newString += "0";
         }
         return newString;
     }
 }
+
+function foundationNodeCheck(validatorAddress) {
+    if (NODE_CONF === "ibcStaging.json") {
+        if (config.testNetFoundationNodes.includes(validatorAddress)) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        if (config.mainNetFoundationNodes.includes(validatorAddress)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
+function getAccountNumber(value) {
+    return value === '' ? '0' : value;
+}
+
+const emptyFunc = () => ({});
+
+const stringToNumber = (stringData) => {
+    return +stringData;
+};
+
+const localTime = (stringData) => {
+    return moment(new Date(stringData).toString()).format('dddd MMMM Do YYYY, h:mm:ss a');
+};
 
 export default {
     randomNum,
@@ -280,5 +323,10 @@ export default {
     passwordValidation,
     getTransactionAmount,
     sixDigitsNumber,
-    stringValidation
+    stringValidation,
+    emptyFunc,
+    foundationNodeCheck,
+    getAccountNumber,
+    stringToNumber,
+    localTime
 };

@@ -1,5 +1,4 @@
-@media (min-width: 1600px)
-{
+@media (min-width: 1600px) {
   .container {
     max-width: 1540px;
   }
@@ -16,24 +15,26 @@
     width: 100%;
   }
 }
+
 @media (max-width: 767px) {
-  .form-field{
+  .form-field {
     display: block;
   }
-  .form-field .label{
+  .form-field .label {
     width: auto;
     margin-bottom: 5px !important;
   }
-  .amount-field{
+  .amount-field {
     display: block;
+
     .range-buttons {
       padding-top: 10px;
     }
   }
-  .import-wallet-body form .form-field .label{
+  .import-wallet-body form .form-field .label {
     text-align: left;
   }
-  .navbar .navbar-nav li .profile-dropdown, .header .navbar .navbar-nav li .dark-mode-button{
+  .navbar .navbar-nav li .profile-dropdown, .header .navbar .navbar-nav li .dark-mode-button {
     padding: .5rem .7rem;
   }
 }
@@ -42,18 +43,22 @@
   .modal-custom {
     .modal-header {
       padding: 20px 0px;
-      .heading{
+
+      .heading {
         font-size: 14px;
       }
-      .previous-section.txn-header button{
+
+      .previous-section.txn-header button {
         left: 15px;
         line-height: normal;
         top: 20px;
-        .icon{
+
+        .icon {
           width: 14px;
         }
       }
-      button.close{
+
+      button.close {
         right: 15px;
         top: 20px;
         font-size: 28px;

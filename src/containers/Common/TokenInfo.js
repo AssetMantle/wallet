@@ -1,43 +1,29 @@
-import React, {useState, useEffect} from "react";
-import {connect} from 'react-redux';
-import ModalWithdraw from "../Wallet/ModalWithdraw";
-import {fetchDelegationsCount} from "../../actions/delegations";
-import {fetchBalance, fetchTransferableVestingAmount} from "../../actions/balance";
-import {fetchRewards, fetchTotalRewards} from "../../actions/rewards";
-import {fetchUnbondDelegations} from "../../actions/unbond";
-import {fetchTokenPrice} from "../../actions/tokenPrice";
+import React from "react";
+import {connect, useDispatch} from 'react-redux';
+import {fetchDelegationsCount} from "../../store/actions/delegations";
+import {fetchBalance, fetchTransferableVestingAmount} from "../../store/actions/balance";
+import {fetchRewards, fetchTotalRewards} from "../../store/actions/rewards";
+import {fetchUnbondDelegations} from "../../store/actions/unbond";
+import {fetchTokenPrice} from "../../store/actions/tokenPrice";
 import {useTranslation} from "react-i18next";
 import ModalViewUnbondDetails from "./ModalViewUnbondDetails";
 import ModalViewVestingDetails from "./ModalViewVestingDetails";
 import ModalViewAmountDetails from "./ModalVIewAmountDetails";
 import Icon from "../../components/Icon";
 import {OverlayTrigger, Popover} from "react-bootstrap";
-import transactions from "../../utils/transactions";
 import ModalViewDelegationDetails from "./ModalViewDelegationDetails";
-import {fetchValidators} from "../../actions/validators";
+import {fetchValidators} from "../../store/actions/validators";
 import NumberView from "../../components/NumberView";
+import config from "../../config";
 import {formatNumber} from "../../utils/scripts";
+import {showTxWithDrawTotalModal} from "../../store/actions/transactions/withdrawTotalRewards";
 const TokenInfo = (props) => {
     const {t} = useTranslation();
-    const [rewards, setRewards] = useState(false);
-    let address = localStorage.getItem('address');
-
-    useEffect(() => {
-        props.fetchDelegationsCount(address);
-        props.fetchBalance(address);
-        props.fetchRewards(address);
-        props.fetchTotalRewards(address);
-        props.fetchUnbondDelegations(address);
-        props.fetchTokenPrice();
-        props.fetchTransferableVestingAmount(address);
-        props.fetchValidators(address);
-        transactions.updateFee(address);
-        setInterval(() => props.fetchTotalRewards(address), 10000);
-    }, []);
+    const dispatch = useDispatch();
 
     const handleRewards = (key) => {
         if (key === "rewards") {
-            setRewards(true);
+            dispatch(showTxWithDrawTotalModal());
         }
     };
     const popoverVesting = (
@@ -87,7 +73,7 @@ const TokenInfo = (props) => {
                                 </OverlayTrigger>
                             </p>
                             <p className="value"
-                                title={(props.delegations + props.balance + props.unbond).toFixed(6)}>
+                                title={(props.delegations + props.balance + props.unbond).toFixed(config.coinDecimals)}>
                                 <span
                                     className="inner-grid-icon">
                                     {
@@ -108,7 +94,8 @@ const TokenInfo = (props) => {
                         <div className="line">
                             <p className="key">{t("CURRENT_VALUE")}</p>
                             <p className="value"><span className="inner-grid-icon"/>
-                                $<NumberView value={formatNumber((props.delegations + props.balance + props.unbond)* props.tokenPrice)}/>
+                                $<NumberView
+                                    value={formatNumber((props.delegations + props.balance + props.unbond) * props.tokenPrice)}/>
                             </p>
                         </div>
 
@@ -145,8 +132,9 @@ const TokenInfo = (props) => {
                                         icon="info"/></button>
                                 </OverlayTrigger>
                             </p>
-                            <p className="value" title={props.transferableAmount.toFixed(6)}><span className="inner-grid-icon"/>
-                                <NumberView value={formatNumber(props.transferableAmount)}/> XPRT
+                            <p className="value" title={props.transferableAmount.toFixed(6)}><span
+                                className="inner-grid-icon"/>
+                            <NumberView value={formatNumber(props.transferableAmount)}/> XPRT
                             </p>
                         </div>
                         <div className="line">
@@ -182,10 +170,11 @@ const TokenInfo = (props) => {
                         </div>
                         <div className="line">
                             <p className="key">{t("REWARDS")}</p>
-                            <p className="value rewards"><span onClick={() => handleRewards("rewards")} className="claim inner-grid">{t("CLAIM")}</span>
-                                <span title={props.rewards}>
-                                    <NumberView value={formatNumber(props.rewards)}/> XPRT
-                                </span>
+                            <p className="value rewards"><span onClick={() => handleRewards("rewards")}
+                                className="claim inner-grid">{t("CLAIM")}</span>
+                            <span title={props.rewards}>
+                                <NumberView value={formatNumber(props.rewards)}/> XPRT
+                            </span>
                             </p>
                         </div>
                         <div className="line">
@@ -206,11 +195,6 @@ const TokenInfo = (props) => {
 
                     </div>
                 </div>
-                {rewards ?
-                    <ModalWithdraw setRewards={setRewards} totalRewards={props.rewards}/>
-                    : null
-                }
-
             </div>
         </div>
 
@@ -226,8 +210,8 @@ const stateToProps = (state) => {
         unbond: state.unbond.unbond,
         tokenPrice: state.tokenPrice.tokenPrice,
         list: state.balance.list,
-        transferableAmount:state.balance.transferableAmount,
-        vestingAmount:state.balance.vestingAmount
+        transferableAmount: state.balance.transferableAmount,
+        vestingAmount: state.balance.vestingAmount
     };
 };
 

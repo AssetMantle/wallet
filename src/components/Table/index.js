@@ -1,7 +1,5 @@
-import { Button, Paper, Table as MaterialTable, TableBody } from '@material-ui/core';
-import * as PropTypes from 'prop-types';
+import {Paper, Table as MaterialTable, TableBody} from '@material-ui/core';
 import React from 'react';
-import { NavLink } from 'react-router-dom';
 import Loader from '../Loader';
 import NoData from '../NoData';
 import Header from './Header';

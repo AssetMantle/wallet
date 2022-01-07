@@ -7,6 +7,8 @@ import ImportWallet from "../../ImportWallet";
 import AdvanceMode from "./AdvanceMode";
 import Copy from "../../../components/Copy";
 import {useTranslation} from "react-i18next";
+import {useDispatch} from "react-redux";
+import {showSignInModal} from "../../../store/actions/signIn/modal";
 
 const CreateWallet = (props) => {
     const {t} = useTranslation();
@@ -21,13 +23,14 @@ const CreateWallet = (props) => {
     const [quizError, setQuizError] = useState(false);
     const [response, setResponse] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const dispatch = useDispatch();
 
     const handleClose = () => {
         setShow(false);
         props.handleClose();
     };
     useEffect(() => {
-        const getWallet = async () =>{
+        const getWallet = async () => {
             const responseData = await wallet.createRandomWallet();
             setResponse(responseData);
             let mnemonic = responseData.mnemonic;
@@ -58,13 +61,14 @@ const CreateWallet = (props) => {
     };
 
     const handleSubmitMnemonic = () => {
-        for (let index = 0; index < randomNumberList.length; index++){
+        for (let index = 0; index < randomNumberList.length; index++) {
             let phrase = document.getElementById('mnemonicKey' + randomNumberList[index]).value;
             if (mnemonicList[randomNumberList[index]] !== phrase) {
                 setQuizError(true);
                 return;
             } else {
                 if (index === randomNumberList.length - 1) {
+                    setQuizError(false);
                     localStorage.setItem('loginToken', 'loggedIn');
                     localStorage.setItem('address', response.address);
                     setAccountInfo(true);
@@ -77,13 +81,13 @@ const CreateWallet = (props) => {
 
     const handleRoute = () => {
         setShow(false);
-        setShowImportWallet(true);
+        dispatch(showSignInModal());
     };
+
     const handlePrevious = (formName) => {
         if (formName === "keysForm") {
             setShow(false);
             props.setShow(true);
-            props.setModal1(true);
             props.setCreatWallet(false);
         }
         if (formName === "mnemonicQuiz") {
@@ -102,7 +106,7 @@ const CreateWallet = (props) => {
         if (!regex.test(key) && e.key !== "Enter") {
             e.preventDefault();
             return false;
-        }else {
+        } else {
             if (e.key === "Enter") {
                 handleSubmitMnemonic();
             }
@@ -132,7 +136,8 @@ const CreateWallet = (props) => {
                                     onClick={handleRoute}>{t("IMPORT_WALLET")}</span>
                                 </p>
                                 <div className="seed-section">
-                                    <h3 className="heading copy">{t("MNEMONIC")} ({t("SEED_PHRASE")}) <Copy id={response.mnemonic}/>
+                                    <h3 className="heading copy">{t("MNEMONIC")} ({t("SEED_PHRASE")}) <Copy
+                                        id={response.mnemonic}/>
                                     </h3>
                                     <div className="menmonic-list">
                                         {mnemonicList ?

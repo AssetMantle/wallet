@@ -1,20 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { createBrowserHistory } from "history";
+import {createBrowserHistory} from "history";
 import * as serviceWorker from "./serviceWorker";
-import { Router } from "react-router-dom";
+import {Router} from "react-router-dom";
 import './components/Internationalization/i18n';
 import "../src/assets/scss/index.css";
-import { Provider } from 'react-redux';
-import { applyMiddleware, createStore } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
+import {Provider} from 'react-redux';
+import {applyMiddleware, createStore} from 'redux';
+import {composeWithDevTools} from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
-import reducer from './reducers';
+import {rootReducer} from "./store/reducers";
+
 const history = createBrowserHistory();
 
 const store = createStore(
-    reducer,
+    rootReducer,
     composeWithDevTools({
         trace: true,
     })(applyMiddleware(thunk)),

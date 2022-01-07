@@ -2,9 +2,10 @@ import React from "react";
 import {NavLink} from 'react-router-dom';
 import {Nav, Navbar} from "react-bootstrap";
 import logo from "../assets/images/logo_bold.svg";
+import {useTranslation} from "react-i18next";
 
 const RouteNotFound = () => {
-
+    const {t} = useTranslation();
     return (
         <div className="home-page pageError">
             <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -19,8 +20,9 @@ const RouteNotFound = () => {
                                 rel="noopener noreferrer">Learn More</a>
                             <li className="nav-item link">
                                 <a className="nav-link primary-medium-color"
-                                    href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer" target="_blank">
-                                    HELP
+                                    href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer"
+                                    target="_blank">
+                                    {t("HELP")}
                                 </a>
                             </li>
                         </Nav>

@@ -2,10 +2,11 @@ import {Modal} from 'react-bootstrap';
 import React, {useState} from 'react';
 import {connect} from "react-redux";
 import transactions from "../../../utils/transactions";
-import moment from "moment";
 import {useTranslation} from "react-i18next";
 import NumberView from "../../../components/NumberView";
 import {formatNumber} from "../../../utils/scripts";
+import config from "../../../config";
+import helper from "../../../utils/helper";
 
 const ModalViewUnbondDetails = (props) => {
     const {t} = useTranslation();
@@ -45,9 +46,15 @@ const ModalViewUnbondDetails = (props) => {
                                         return (
                                             <div className="unbonding-schedule-list" key={entryIndex}>
                                                 <p><span className="amount">
-                                                    <NumberView value={formatNumber(transactions.XprtConversion(entry.balance*1))}/> XPRT
+                                                    <NumberView
+                                                        value={formatNumber(transactions.XprtConversion(helper.stringToNumber(entry.balance )))}/>
+                                                    {config.coinName}
                                                 </span></p>
-                                                <p><span className="date">{moment(new Date (entry["completionTime"]).toString()).format('dddd MMMM Do YYYY, h:mm:ss a')}</span></p>
+                                                <p><span
+                                                    className="date">
+                                                    {helper.localTime(entry["completionTime"])}
+                                                </span>
+                                                </p>
                                             </div>
                                         );
                                     })

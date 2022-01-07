@@ -1,39 +1,52 @@
 import {Modal} from 'react-bootstrap';
 import React, {useState} from 'react';
-import AddressImport from "../ImportWallet/AddressImport";
-import {useHistory} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import LedgerLogin from "./LedgerLogin";
-import KeyStoreLogin from "./KeyStoreLogin";
+import KeyStore from "./KeyStore";
+import {showKeyStoreModal} from "../../store/actions/signIn/keyStore";
+import {useDispatch, useSelector} from "react-redux";
+import {hideSignInModal} from "../../store/actions/signIn/modal";
+import Ledger from "./Ledger";
+import Keplr from "./Keplr";
+import {showLedgerModal} from "../../store/actions/signIn/ledger";
+import {showAddressModal} from "../../store/actions/signIn/address";
+import Address from "./Address";
+import {showKeplrModal} from "../../store/actions/signIn/keplr";
 
 const SignIn = (props) => {
-    const history = useHistory();
     const {t} = useTranslation();
-    const [show, setShow] = useState(true);
+    const show = useSelector((state) => state.signInModal.modal);
     const [withAddress, setWithAddress] = useState(false);
     const [withKeyStore, setWithKeyStore] = useState(false);
     const [withLedger, setWithLedger] = useState(false);
+    const [withKeplr, setWithKeplr] = useState(false);
+    const dispatch = useDispatch();
+
     const handleClose = () => {
-        setShow(false);
+        dispatch(hideSignInModal());
         props.setRoutName("");
     };
+
     const handleRoute = async (key) => {
         if (key === "withAddress") {
+            dispatch(showAddressModal());
+            dispatch(hideSignInModal());
             setWithAddress(true);
-            setShow(false);
         }
         if (key === "ledger") {
-            setShow(false);
+            dispatch(hideSignInModal());
+            dispatch(showLedgerModal());
             setWithLedger(true);
         }
         if (key === "withKeyStore") {
-            setShow(false);
+            dispatch(showKeyStoreModal());
+            dispatch(hideSignInModal());
             setWithKeyStore(true);
         }
-    };
-
-    const handleKepler = () => {
-        history.push('/keplr');
+        if (key === "withKeplr") {
+            dispatch(showKeplrModal());
+            dispatch(hideSignInModal());
+            setWithKeplr(true);
+        }
     };
 
     return (
@@ -51,7 +64,8 @@ const SignIn = (props) => {
                             </button>
                         </div>
                         <div className="buttons">
-                            <button className="button button-primary" onClick={() => handleKepler("kepler")}>{t("USE_KEPLER")}
+                            <button className="button button-primary"
+                                onClick={() => handleRoute("withKeplr")}>{t("USE_KEPLER")}
                             </button>
                         </div>
                         <div className="buttons">
@@ -68,17 +82,22 @@ const SignIn = (props) => {
                 </>
             </Modal>
             {withAddress ?
-                <AddressImport setWithAddress={setWithAddress} handleClose={handleClose} setShow={setShow}
+                <Address setWithAddress={setWithAddress} handleClose={handleClose}
                 />
                 : null
             }
             {withLedger ?
-                <LedgerLogin setWithLedger={setWithLedger} handleClose={handleClose} setShow={setShow}
+                <Ledger setWithLedger={setWithLedger} handleClose={handleClose}
                 />
                 : null
             }
             {withKeyStore ?
-                <KeyStoreLogin setWithLedger={setWithLedger} handleClose={handleClose} setShow={setShow}
+                <KeyStore setWithLedger={setWithLedger} handleClose={handleClose}
+                />
+                : null
+            }
+            {withKeplr ?
+                <Keplr setWithLedger={setWithLedger} handleClose={handleClose}
                 />
                 : null
             }

@@ -1,61 +1,68 @@
-import {
-    Modal,
-} from 'react-bootstrap';
+import {Modal,} from 'react-bootstrap';
 import React, {useEffect} from 'react';
 import {useTranslation} from "react-i18next";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import success from "../../../assets/images/success.svg";
 import failed from "../../../assets/images/inactive.svg";
 import transactions from "../../../utils/transactions";
-import {fetchDelegationsCount} from "../../../actions/delegations";
-import {fetchBalance, fetchTransferableVestingAmount} from "../../../actions/balance";
-import {fetchRewards, fetchTotalRewards} from "../../../actions/rewards";
-import {fetchUnbondDelegations} from "../../../actions/unbond";
-import {fetchTokenPrice} from "../../../actions/tokenPrice";
-import {fetchValidators} from "../../../actions/validators";
-import {fetchReceiveTransactions, fetchTransactions} from "../../../actions/transactions";
+import {fetchDelegationsCount} from "../../../store/actions/delegations";
+import {fetchBalance, fetchTransferableVestingAmount} from "../../../store/actions/balance";
+import {fetchRewards, fetchTotalRewards} from "../../../store/actions/rewards";
+import {fetchUnbondDelegations} from "../../../store/actions/unbond";
+import {fetchTokenPrice} from "../../../store/actions/tokenPrice";
+import {fetchReceiveTransactions, fetchTransactions} from "../../../store/actions/transactionQueries";
+import {hideTxResultModal} from "../../../store/actions/transactions/common";
+import config from "../../../config";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
-const ModalViewTxnResponse = (props) => {
+const ModalViewTxnResponse = () => {
     const {t} = useTranslation();
     const mode = localStorage.getItem('loginMode');
     let address = localStorage.getItem('address');
-
-    useEffect(()=>{
-        if(props.response !== undefined) {
-            props.fetchDelegationsCount(address);
-            props.fetchBalance(address);
-            props.fetchRewards(address);
-            props.fetchTotalRewards(address);
-            props.fetchUnbondDelegations(address);
-            props.fetchTokenPrice();
-            props.fetchTransactions(address, 5, 1);
-            props.fetchReceiveTransactions(address, 5, 1);
-            props.fetchTransferableVestingAmount(address);
-            transactions.updateFee(address);
-        }
-    },[]);
-
-    let response = props.response;
-
-    const handleClose = () =>{
-        props.fetchValidators(address);
-        props.handleClose();
+    const dispatch = useDispatch();
+    const show = useSelector((state) => state.common.modal);
+    const response = useSelector(state => state.common.txResponse.value);
+    const handleClose = () => {
+        dispatch(hideTxResultModal());
     };
 
+    useEffect(() => {
+        const fetchCalls = async () => {
+            if (response !== undefined) {
+                await Promise.all([
+                    dispatch(fetchDelegationsCount(address)),
+                    dispatch(fetchBalance(address)),
+                    dispatch(fetchRewards(address)),
+                    dispatch(fetchTotalRewards(address)),
+                    dispatch(fetchUnbondDelegations(address)),
+                    dispatch(fetchTokenPrice()),
+                    dispatch(fetchTransferableVestingAmount(address)),
+                    dispatch(fetchTransactions(address, 5, 1)),
+                    dispatch(fetchReceiveTransactions(address, 5, 1)),
+                    transactions.updateFee(address),
+                ]);
+            }
+        };
+        fetchCalls();
+    }, [response]);
+
+    if (response === undefined) {
+        return null;
+    }
+
     return (
-        <>
+        <Modal show={show} onHide={handleClose} backdrop="static" centered className="modal-custom ranh">
             {
                 response !== '' && response.code === 0 ?
                     <>
-                        <Modal.Header className="result-header success">
-                            {props.successMsg}
+                        <Modal.Header className="result-header success" closeButton>
+                            Transaction Successful
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 <img src={success} alt="success-image"/>
-                                {mode === "kepler" ?
+                                {mode === config.keplrMode ?
                                     <a
                                         href={`${EXPLORER_API}/transactions/${response.transactionHash}`}
                                         target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
@@ -76,13 +83,13 @@ const ModalViewTxnResponse = (props) => {
             }{
                 response !== '' && response.code !== 0 ?
                     <>
-                        <Modal.Header className="result-header error">
-                            {props.failedMsg}
+                        <Modal.Header className="result-header error" closeButton>
+                            Transaction Failed
                         </Modal.Header>
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 <img src={failed} alt="success-image"/>
-                                {mode === "kepler" ?
+                                {mode === config.keplrMode ?
                                     <>
                                         <p>{response.rawLog}</p>
                                         <a
@@ -107,21 +114,9 @@ const ModalViewTxnResponse = (props) => {
                     </>
                     : null
             }
-        </>
+        </Modal>
     );
 };
 
-const actionsToProps = {
-    fetchDelegationsCount,
-    fetchBalance,
-    fetchRewards,
-    fetchUnbondDelegations,
-    fetchTokenPrice,
-    fetchTransactions,
-    fetchReceiveTransactions,
-    fetchTransferableVestingAmount,
-    fetchTotalRewards,
-    fetchValidators
-};
 
-export default connect(null, actionsToProps)(ModalViewTxnResponse);
+export default ModalViewTxnResponse;

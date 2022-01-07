@@ -1,13 +1,12 @@
 import React, {useState} from "react";
-import {
-    Form, Modal,
-} from "react-bootstrap";
+import {Form, Modal,} from "react-bootstrap";
 import Icon from "../../components/Icon";
 import {useHistory} from "react-router-dom";
 import config from "../../config";
 import helper from "../../utils/helper";
 import {useTranslation} from "react-i18next";
 import transactions, {GetAccount} from "../../utils/transactions";
+
 const AddressImport = (props) => {
     const {t} = useTranslation();
     const history = useHistory();
@@ -21,10 +20,10 @@ const AddressImport = (props) => {
             GetAccount(address)
                 .then(async res => {
                     const accountType = await transactions.VestingAccountCheck(res.typeUrl);
-                    if(accountType){
+                    if (accountType) {
                         localStorage.setItem('fee', config.vestingAccountFee);
                         localStorage.setItem('account', 'vesting');
-                    }else {
+                    } else {
                         localStorage.setItem('fee', config.defaultFee);
                         localStorage.setItem('account', 'non-vesting');
                     }

@@ -1,16 +1,15 @@
 import React, {useContext, useState} from "react";
-import {
-    Accordion, AccordionContext, Card,
-    Form, Modal, useAccordionToggle,
-} from "react-bootstrap";
+import {Accordion, AccordionContext, Card, Form, Modal, useAccordionToggle,} from "react-bootstrap";
 import wallet from "../../../utils/wallet";
 import Icon from "../../../components/Icon";
 import GeneratePrivateKey from "../../KeyStore/GenerateKeyStore/GeneratePrivateKey";
 import helper from "../../../utils/helper";
-import config from "../../../config";
 import {useHistory} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import transactions, {GetAccount} from "../../../utils/transactions";
+import transactions from "../../../utils/transactions";
+import {useDispatch} from "react-redux";
+import {addressLogin, setAddress} from "../../../store/actions/signIn/address";
+import config from "../../../config";
 
 const AdvanceMode = (props) => {
     const {t} = useTranslation();
@@ -22,20 +21,21 @@ const AdvanceMode = (props) => {
     const [passphraseError, setPassphraseError] = useState(false);
     const [generateKey, setGenerateKey] = useState(false);
     const [advanceMode, setAdvanceMode] = useState(false);
+    const dispatch = useDispatch();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         let accountNumber = 0;
         let addressIndex = 0;
         let bip39Passphrase = "";
-        if(advanceMode){
+        if (advanceMode) {
             accountNumber = document.getElementById('createAccountNumber').value;
             addressIndex = document.getElementById('createAccountIndex').value;
             bip39Passphrase = document.getElementById('createbip39Passphrase').value;
-            if(accountNumber === ""){
+            if (accountNumber === "") {
                 accountNumber = 0;
             }
-            if(addressIndex === ""){
+            if (addressIndex === "") {
                 addressIndex = 0;
             }
         }
@@ -66,45 +66,29 @@ const AdvanceMode = (props) => {
         props.handleClose();
     };
     const handleLogin = () => {
-        GetAccount(response.address)
-            .then(async res => {
-                const accountType = await transactions.VestingAccountCheck(res.typeUrl);
-                if(accountType){
-                    localStorage.setItem('fee', config.vestingAccountFee);
-                    localStorage.setItem('account', 'vesting');
-                }else {
-                    localStorage.setItem('fee', config.defaultFee);
-                    localStorage.setItem('account', 'non-vesting');
-                }
-            })
-            .catch(error => {
-                console.log(error.message);
-                localStorage.setItem('fee', config.defaultFee);
-                localStorage.setItem('account', 'non-vesting');
-            });
-        localStorage.setItem('loginToken', 'loggedIn');
-        localStorage.setItem('address', response.address);
-        localStorage.setItem('loginMode', 'normal');
-        localStorage.setItem('version', config.version);
-        setShow(false);
-        props.handleClose();
-        history.push('/dashboard/wallet');
+        dispatch(setAddress({
+            value: response.address,
+            error: {
+                message: ''
+            }
+        }));
+        dispatch(addressLogin(history, response.address));
     };
     const handlePrevious = (formName) => {
-        if(formName === "advanceForm"){
+        if (formName === "advanceForm") {
             setAdvanceForm(false);
             props.setAccountInfo(false);
             props.setShow(true);
             props.setMnemonicQuiz(true);
         }
-        if(formName === "response"){
+        if (formName === "response") {
             setAdvanceForm(true);
             setResponseShow(false);
         }
     };
 
     const handleKeypress = e => {
-        if(e.key === "Enter") {
+        if (e.key === "Enter") {
             handleSubmit(e);
         }
     };
@@ -113,11 +97,11 @@ const AdvanceMode = (props) => {
     const handleAccountNumberKeypress = e => {
         if (e.key === "e" || e.key === "-" || e.key === "+") {
             e.preventDefault();
-        }else if (e.key === "Enter") {
+        } else if (e.key === "Enter") {
             handleSubmit(e);
-        }else {
+        } else {
             const accountNumber = document.getElementById('createAccountNumber').value;
-            if (parseInt(accountNumber) > 4294967295 || parseInt(accountNumber) < 0) {
+            if (parseInt(accountNumber) > config.maxAccountIndex || parseInt(accountNumber) < 0) {
                 e.preventDefault();
             }
         }
@@ -126,11 +110,11 @@ const AdvanceMode = (props) => {
     const handleIndexKeypress = e => {
         if (e.key === "e" || e.key === "-" || e.key === "+") {
             e.preventDefault();
-        }else if (e.key === "Enter") {
+        } else if (e.key === "Enter") {
             handleSubmit(e);
-        }else {
+        } else {
             const addressIndex = document.getElementById('createAccountIndex').value;
-            if (parseInt(addressIndex) > 4294967295 || parseInt(addressIndex) < 0) {
+            if (parseInt(addressIndex) > config.maxAccountIndex || parseInt(addressIndex) < 0) {
                 e.preventDefault();
             }
         }
@@ -203,44 +187,49 @@ const AdvanceMode = (props) => {
 
                                                 <div className="form-field">
                                                     <p className="label">{t("ACCOUNT")}</p>
-                                                    <Form.Control
-                                                        type="number"
-                                                        min={0}
-                                                        max={4294967295}
-                                                        name="accountNumber"
-                                                        id="createAccountNumber"
-                                                        onKeyPress={handleAccountNumberKeypress}
-                                                        placeholder={t("ACCOUNT_NUMBER")}
-                                                        required={false}
-                                                    />
+                                                    <div className="form-control-section flex-fill">
+                                                        <Form.Control
+                                                            type="number"
+                                                            max={config.maxAccountIndex}
+                                                            name="accountNumber"
+                                                            id="createAccountNumber"
+                                                            onKeyPress={handleAccountNumberKeypress}
+                                                            placeholder={t("ACCOUNT_NUMBER")}
+                                                            required={false}
+                                                        />
+                                                    </div>
                                                 </div>
                                                 <div className="form-field">
                                                     <p className="label">{t("ACCOUNT_INDEX")}</p>
-                                                    <Form.Control
-                                                        type="number"
-                                                        min={0}
-                                                        max={4294967295}
-                                                        name="accountIndex"
-                                                        id="createAccountIndex"
-                                                        onKeyPress={handleIndexKeypress}
-                                                        placeholder={t("ACCOUNT_INDEX")}
-                                                        required={false}
-                                                    />
+                                                    <div className="form-control-section flex-fill">
+                                                        <Form.Control
+                                                            type="number"
+                                                            max={config.maxAccountIndex}
+                                                            name="accountIndex"
+                                                            id="createAccountIndex"
+                                                            onKeyPress={handleIndexKeypress}
+                                                            placeholder={t("ACCOUNT_INDEX")}
+                                                            required={false}
+                                                        />
+                                                    </div>
                                                 </div>
                                                 <div className="form-field passphrase-field">
                                                     <p className="label">{t("BIP_PASSPHRASE")}</p>
-                                                    <Form.Control
-                                                        type="password"
-                                                        name="bip39Passphrase"
-                                                        id="createbip39Passphrase"
-                                                        maxLength="50"
-                                                        onKeyPress={handleKeypress}
-                                                        placeholder={t("ENTER_BIP_PASSPHRASE")}
-                                                        onChange={handlePassphrase}
-                                                        required={false}
-                                                    />
+                                                    <div className="form-control-section flex-fill">
+                                                        <Form.Control
+                                                            type="password"
+                                                            name="bip39Passphrase"
+                                                            id="createbip39Passphrase"
+                                                            maxLength="50"
+                                                            onKeyPress={handleKeypress}
+                                                            placeholder={t("ENTER_BIP_PASSPHRASE")}
+                                                            onChange={handlePassphrase}
+                                                            required={false}
+                                                        />
+                                                    </div>
                                                     {passphraseError ?
-                                                        <span className="passphrase-error">{t("BIP_PASSPHRASE_ERROR")}</span>
+                                                        <span
+                                                            className="passphrase-error">{t("BIP_PASSPHRASE_ERROR")}</span>
                                                         : null}
                                                 </div>
 
@@ -286,7 +275,8 @@ const AdvanceMode = (props) => {
                     : null}
             </Modal>
             {generateKey ?
-                <GeneratePrivateKey mnemonic={props.mnemonic} handleRoute={handleRoute} setGenerateKey={setGenerateKey} routeValue="hideGenerateKey" formName="Create Wallet"/>
+                <GeneratePrivateKey mnemonic={props.mnemonic} handleRoute={handleRoute} setGenerateKey={setGenerateKey}
+                    routeValue="hideGenerateKey" formName="Create Wallet"/>
                 : null
             }
         </>

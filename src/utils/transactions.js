@@ -1,23 +1,21 @@
 import {DirectSecp256k1HdWallet} from "@cosmjs/proto-signing";
 import config from "../config.json";
-import {stringToPath, sha256} from "@cosmjs/crypto";
+import {sha256, stringToPath} from "@cosmjs/crypto";
 import helper from "./helper";
 import Long from "long";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient} from "@cosmjs/stargate";
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import {LedgerSigner} from "@cosmjs/ledger-amino";
-import {DelegateMsg, RedelegateMsg, SendMsg, SetWithDrawAddressMsg, UnbondMsg, WithdrawMsg} from "./protoMsgHelper";
-import aminoMsgHelper from "./aminoMsgHelper";
+import {fee} from "./aminoMsgHelper";
 import {QueryClientImpl} from "cosmjs-types/cosmos/auth/v1beta1/query";
 import {
     ContinuousVestingAccount,
     DelayedVestingAccount,
     PeriodicVestingAccount,
 } from "cosmjs-types/cosmos/vesting/v1beta1/vesting";
-import {
-    BaseAccount
-} from "cosmjs-types/cosmos/auth/v1beta1/auth";
+import {BaseAccount} from "cosmjs-types/cosmos/auth/v1beta1/auth";
+import * as Sentry from "@sentry/browser";
 
 const encoding = require("@cosmjs/encoding");
 const tendermint_1 = require("cosmjs-types/ibc/lightclients/tendermint/v1/tendermint");
@@ -50,13 +48,14 @@ async function KeplrWallet(chainID = configChainID) {
     return [offlineSigner, accounts[0].address];
 }
 
-async function TransactionWithLedger(msgs, fee, memo = "",  hdpath = makeHdPath(), prefix = addressPrefix) {
+async function TransactionWithLedger(msgs, fee, memo = "", hdpath = makeHdPath(), prefix = addressPrefix) {
     const [wallet, address] = await LedgerWallet(hdpath, prefix);
     return Transaction(wallet, address, msgs, fee, memo);
 }
 
 async function LedgerWallet(hdpath, prefix) {
     const interactiveTimeout = 120_000;
+
     async function createTransport() {
         const ledgerTransport = await TransportWebUSB.create(interactiveTimeout, interactiveTimeout);
         return ledgerTransport;
@@ -66,19 +65,22 @@ async function LedgerWallet(hdpath, prefix) {
     const signer = new LedgerSigner(transport, {
         testModeAllowed: true,
         hdPaths: [hdpath],
-        prefix: prefix
+        prefix: prefix,
+        ledgerAppName:config.persistenceLedgerAppName
     });
     const [firstAccount] = await signer.getAccounts();
     return [signer, firstAccount.address];
 }
 
-async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(), bip39Passphrase = "", prefix = addressPrefix) {
+async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(), bip39Passphrase = "", loginAddress, prefix = addressPrefix) {
     const loginMode = localStorage.getItem('loginMode');
-
-    if(loginMode === "normal"){
+    if (loginMode === "normal") {
         const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix);
+        if (address !== loginAddress) {
+            throw new Error("Your sign in address and keystore file don’t match. Please try again or else sign in again.");
+        }
         return Transaction(wallet, address, msgs, fee, memo);
-    }else {
+    } else {
         const [wallet, address] = await LedgerWallet(hdpath, prefix);
         return Transaction(wallet, address, msgs, fee, memo);
     }
@@ -117,7 +119,7 @@ function updateFee(address) {
         GetAccount(address)
             .then(async res => {
                 const accountType = await VestingAccountCheck(res.typeUrl);
-                if(accountType){
+                if (accountType) {
                     localStorage.setItem('fee', config.vestingAccountFee);
                     localStorage.setItem('account', 'vesting');
                 } else {
@@ -126,11 +128,14 @@ function updateFee(address) {
                 }
             })
             .catch(error => {
+                Sentry.captureException(error.response
+                    ? error.response.data.message
+                    : error.message);
                 console.log(error.message);
                 localStorage.setItem('fee', config.defaultFee);
                 localStorage.setItem('account', 'non-vesting');
             });
-    }else {
+    } else {
         localStorage.setItem('fee', config.vestingAccountFee);
     }
 }
@@ -140,29 +145,29 @@ function XprtConversion(data) {
     return Result;
 }
 
-function PrivateKeyReader(file, password, accountNumber, addressIndex, bip39Passphrase, loginAddress) {
+function PrivateKeyReader(file, password, loginAddress, accountNumber = "0", addressIndex = "0",) {
     return new Promise(function (resolve, reject) {
         const fileReader = new FileReader();
         fileReader.readAsText(file, "UTF-8");
-        fileReader.onload =async event => {
-            if(event.target.result !== '') {
+        fileReader.onload = async event => {
+            if (event.target.result !== '') {
                 const res = JSON.parse(event.target.result);
                 const decryptedData = helper.decryptStore(res, password);
                 if (decryptedData.error != null) {
-                    reject(decryptedData.error);
+                    reject(new Error(decryptedData.error));
                 } else {
                     let mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
-                    const accountData = await MnemonicWalletWithPassphrase(mnemonic, makeHdPath());
+                    const accountData = await MnemonicWalletWithPassphrase(mnemonic, makeHdPath(accountNumber, addressIndex));
                     const address = accountData[1];
                     if (address === loginAddress) {
                         resolve(mnemonic);
                         localStorage.setItem('encryptedMnemonic', event.target.result);
                     } else {
-                        reject("Your sign in address and keystore file don’t match. Please try again or else sign in again.");
+                        reject(new Error("Your sign in address and keystore file don’t match. Please try again or else sign in again."));
                     }
                 }
-            }else {
-                reject("Invalid File data");
+            } else {
+                reject(new Error("Invalid File data"));
             }
         };
     });
@@ -184,26 +189,26 @@ function decodeTendermintConsensusStateAny(consensusState) {
     return tendermint_1.ConsensusState.decode(consensusState.value);
 }
 
-async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp = config.timeoutTimestamp, denom = "uxprt", url, port = "transfer") {
+async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp = config.timeoutTimestamp, denom = config.coinDenom, url, port = "transfer") {
     const tendermintClient = await tmRPC.Tendermint34Client.connect(tendermintRPCURL);
     const queryClient = new QueryClient(tendermintClient);
 
     const ibcExtension = setupIbcExtension(queryClient);
 
-    const finalResponse = await ibcExtension.ibc.channel.clientState(port, channel).then(async (clientStateResponse ) => {
+    const finalResponse = await ibcExtension.ibc.channel.clientState(port, channel).then(async (clientStateResponse) => {
         const clientStateResponseDecoded = decodeTendermintClientStateAny(clientStateResponse.identifiedClientState.clientState);
         timeoutHeight = {
             revisionHeight: clientStateResponseDecoded.latestHeight.revisionHeight.add(config.ibcRevisionHeightIncrement),
             revisionNumber: clientStateResponseDecoded.latestHeight.revisionNumber
         };
-        if (url === undefined){
+        if (url === undefined) {
             const consensusStateResponse = await ibcExtension.ibc.channel.consensusState(port, channel,
                 clientStateResponseDecoded.latestHeight.revisionNumber.toInt(), clientStateResponseDecoded.latestHeight.revisionHeight.toInt());
             const consensusStateResponseDecoded = decodeTendermintConsensusStateAny(consensusStateResponse.consensusState);
 
             const timeoutTime = Long.fromNumber(consensusStateResponseDecoded.timestamp.getTime() / 1000).add(timeoutTimestamp).multiply(1000000000); //get time in nanoesconds
             return TransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTime, denom, port);
-        }else{
+        } else {
             const remoteTendermintClient = await tmRPC.Tendermint34Client.connect(url);
             const latestBlockHeight = (await remoteTendermintClient.status()).syncInfo.latestBlockHeight;
             timeoutHeight.revisionHeight = Long.fromNumber(latestBlockHeight).add(config.ibcRemoteHeightIncrement);
@@ -211,7 +216,9 @@ async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeo
             return TransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTime, denom, port);
         }
     }).catch(error => {
-
+        Sentry.captureException(error.response
+            ? error.response.data.message
+            : error.message);
         throw error;
     });
     return finalResponse;
@@ -223,25 +230,24 @@ async function RpcClient() {
     return createProtobufRpcClient(queryClient);
 }
 
-export async function GetAccount(address){
+export async function GetAccount(address) {
     const rpcClient = await RpcClient();
     const authAccountService = new QueryClientImpl(rpcClient);
     const accountResponse = await authAccountService.Account({
         address: address,
     });
-    if(accountResponse.account.typeUrl === "/cosmos.auth.v1beta1.BaseAccount"){
+    if (accountResponse.account.typeUrl === "/cosmos.auth.v1beta1.BaseAccount") {
         let baseAccountResponse = BaseAccount.decode(accountResponse.account.value);
-        return {"typeUrl": accountResponse.account.typeUrl, "accountData" : baseAccountResponse};
-    }
-    else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
+        return {"typeUrl": accountResponse.account.typeUrl, "accountData": baseAccountResponse};
+    } else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
         let periodicVestingAccountResponse = PeriodicVestingAccount.decode(accountResponse.account.value);
-        return {"typeUrl": accountResponse.account.typeUrl, "accountData" : periodicVestingAccountResponse};
+        return {"typeUrl": accountResponse.account.typeUrl, "accountData": periodicVestingAccountResponse};
     } else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.DelayedVestingAccount") {
         let delayedVestingAccountResponse = DelayedVestingAccount.decode(accountResponse.account.value);
-        return {"typeUrl": accountResponse.account.typeUrl, "accountData" : delayedVestingAccountResponse};
+        return {"typeUrl": accountResponse.account.typeUrl, "accountData": delayedVestingAccountResponse};
     } else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
         let continuousVestingAccountResponse = ContinuousVestingAccount.decode(accountResponse.account.value);
-        return {"typeUrl": accountResponse.account.typeUrl, "accountData" : continuousVestingAccountResponse};
+        return {"typeUrl": accountResponse.account.typeUrl, "accountData": continuousVestingAccountResponse};
     }
 }
 
@@ -260,32 +266,35 @@ function checkValidatorAccountAddress(validatorAddress, address) {
     return validatorAccountAddress === address;
 }
 
-async function getTransactionResponse(address, data, fee, gas, mnemonic="", accountNumber=0, addressIndex=0, bip39Passphrase="") {
-    if(data.formName === "send"){
-        return TransactionWithMnemonic([SendMsg(address, data.toAddress, (data.amount * config.xprtValue).toFixed(0), data.denom)], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
-            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
+async function getTransactionResponse(address, data, feeAmount, gas, mnemonic = "", txName, accountNumber = 0, addressIndex = 0, bip39Passphrase = "") {
+    switch (txName) {
+    case "send":
+        return TransactionWithMnemonic(data.message, fee(Math.trunc(feeAmount), gas), data.memo,
+            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
+    case "delegate":
+        return TransactionWithMnemonic(data.message, fee(Math.trunc(feeAmount), gas), data.memo,
+            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
+    case "withdrawMultiple":
+        return TransactionWithMnemonic(data.message, fee(Math.trunc(feeAmount), gas), data.memo,
+            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
+    case "withdrawAddress":
+        return TransactionWithMnemonic(data.message, fee(Math.trunc(feeAmount), gas), data.memo,
+            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
+    case "reDelegate":
+        return TransactionWithMnemonic(data.message, fee(Math.trunc(feeAmount), gas), data.memo,
+            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
+    case  "unbond":
+        return TransactionWithMnemonic(data.message, fee(Math.trunc(feeAmount), gas), data.memo,
+            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
+    case "withdrawValidatorRewards":
+        return TransactionWithMnemonic(data.message, fee(Math.trunc(feeAmount), gas), data.memo,
+            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
+    case "ibc":
+        return TransactionWithMnemonic(data.message,
+            fee(Math.trunc(feeAmount), gas), data.memo, mnemonic,
+            makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
     }
-    else if (data.formName === "delegate"){
-        return TransactionWithMnemonic([DelegateMsg(address, data.validatorAddress, (data.amount * config.xprtValue).toFixed(0))], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
-            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-    }
-    else if(data.formName === "withdrawMultiple"){
-        return TransactionWithMnemonic(data.messages, aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
-            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-    } else if(data.formName === "withdrawAddress"){
-        return TransactionWithMnemonic([SetWithDrawAddressMsg(address, data.validatorAddress)], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
-            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-    }
-    else if(data.formName === "redelegate"){
-        return TransactionWithMnemonic([RedelegateMsg(address, data.validatorAddress, data.toValidatorAddress, (data.amount * config.xprtValue).toFixed(0))], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
-            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-    }else if(data.formName === "unbond"){
-        return TransactionWithMnemonic([UnbondMsg(address, data.validatorAddress, (data.amount * config.xprtValue).toFixed(0))], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
-            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-    }else if(data.formName === "withdrawValidatorRewards"){
-        return TransactionWithMnemonic([WithdrawMsg(address, data.validatorAddress)], aminoMsgHelper.fee(Math.trunc(fee), gas), data.memo,
-            mnemonic, makeHdPath(accountNumber, addressIndex), bip39Passphrase);
-    }
+    
 }
 
 /**
@@ -297,7 +306,7 @@ async function VestingAccountCheck(type) {
         type === "/cosmos.vesting.v1beta1.ContinuousVestingAccount";
 }
 
-function generateHash(txBytes){
+function generateHash(txBytes) {
     return encoding.toHex(sha256(txBytes)).toUpperCase();
 }
 

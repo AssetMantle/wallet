@@ -142,4 +142,5 @@ async function KeplerWallet() {
     localStorage.setItem('keplerAddress', accounts[0].address);
 
 }
+
 export default KeplerWallet;

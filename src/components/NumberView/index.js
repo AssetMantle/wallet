@@ -1,4 +1,5 @@
 import React from "react";
+
 const NumberView = ({value = "0.000000"}) => {
     const split = value.split(".");
     return (

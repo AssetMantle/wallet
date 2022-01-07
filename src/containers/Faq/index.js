@@ -1,9 +1,10 @@
-import {Tab, Nav, Modal} from 'react-bootstrap';
+import {Modal, Nav, Tab} from 'react-bootstrap';
 import React, {useState} from 'react';
 import Icon from "../../components/Icon";
 import WalletFaq from "./WalletFaq";
 import StakingFaq from "./StakingFaq";
 import {useTranslation} from "react-i18next";
+
 const ModalFaq = (props) => {
     const {t} = useTranslation();
     const [show, setShow] = useState(true);

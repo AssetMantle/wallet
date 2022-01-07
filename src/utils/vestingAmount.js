@@ -1,4 +1,6 @@
 import transactions, {GetAccount} from "../utils/transactions";
+import * as Sentry from "@sentry/browser";
+
 const config = require('../config');
 
 const periodicVesting = "/cosmos.vesting.v1beta1.PeriodicVestingAccount";
@@ -82,9 +84,9 @@ async function getTransferableVestingAmount(address, balance) {
     const currentEpochTime = Math.floor(new Date().getTime() / 1000);
     let vestingAmount = 0;
     let transferableAmount = 0;
-    
+
     GetAccount(address)
-        .then(res =>{
+        .then(res => {
             const amount = transactions.XprtConversion(getAccountVestingAmount(res, currentEpochTime));
             vestingAmount = amount;
             if ((balance - amount) < 0) {
@@ -95,6 +97,9 @@ async function getTransferableVestingAmount(address, balance) {
             return [vestingAmount, transferableAmount];
         })
         .catch(error => {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
             console.log(error.message);
         });
 

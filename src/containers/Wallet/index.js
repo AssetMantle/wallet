@@ -1,15 +1,20 @@
 import React from "react";
 import {OverlayTrigger, Popover, Tab, Tabs} from "react-bootstrap";
-import Send from "./Send";
+import Send from "./Send/index";
 import Receive from "./Receive";
 import Transactions from "./Transactions/index";
 import TokenInfo from "../Common/TokenInfo";
 import InfoRefresh from "../Refresh";
-import IbcTxn from "./Ibc/IbcTxn";
+import SendIbc from "./SendIbc/index";
 import Icon from "../../components/Icon";
+import ModalWithdraw from "./ModalWithDraw";
+import ModalSetWithdrawAddress from "./ModalSetWithdrawAddress";
+import FeeModal from "../Common/Fee/Modal";
+import KeyStoreModal from "../Common/KeyStore/Modal";
+import Loader from "../../components/Loader";
+import ModalViewTxnResponse from "../Common/ModalViewTxnResponse";
 
 const Wallet = () => {
-
 
     const popoverMemo = (
         <Popover id="popover-memo">
@@ -33,30 +38,38 @@ const Wallet = () => {
     );
 
     return (
-        <div className="wallet-main-section">
-            <TokenInfo/>
-            <div className="tabs-section">
-                <Tabs defaultActiveKey="Send" id="uncontrolled-tab-example">
-                    <Tab eventKey="Send" title="Send">
-                        <Send/>
-                    </Tab>
-                    <Tab eventKey="IBC" title={ibcTitle} tabClassName="ibc-tab">
-                        <IbcTxn/>
-                    </Tab>
-                    <Tab eventKey="Receive" title="Receive">
-                        <Receive/>
-                    </Tab>
-                    <Tab eventKey="Transactions" title="Transactions">
-                        <Transactions/>
-                    </Tab>
+        <>
+            <Loader/>
+            <KeyStoreModal/>
+            <FeeModal/>
+            <ModalWithdraw/>
+            <ModalSetWithdrawAddress/>
+            <ModalViewTxnResponse/>
+            <div className="wallet-main-section">
+                <TokenInfo/>
+                <div className="tabs-section">
+                    <Tabs defaultActiveKey="Send" id="uncontrolled-tab-example">
+                        <Tab eventKey="Send" title="Send">
+                            <Send/>
+                        </Tab>
+                        <Tab eventKey="IBC" title={ibcTitle} tabClassName="ibc-tab">
+                            <SendIbc/>
+                        </Tab>
+                        <Tab eventKey="Receive" title="Receive">
+                            <Receive/>
+                        </Tab>
+                        <Tab eventKey="Transactions" title="Transactions">
+                            <Transactions/>
+                        </Tab>
 
-                </Tabs>
-                <div>
-                    <InfoRefresh/>
+                    </Tabs>
+                    <div>
+                        <InfoRefresh/>
+                    </div>
                 </div>
-            </div>
 
-        </div>
+            </div>
+        </>
     );
 };
 export default Wallet;
