@@ -133,7 +133,7 @@ function accountChangeCheck(errorMessage) {
         localStorage.setItem('address', '');
         localStorage.setItem('loginMode', '');
         localStorage.setItem('fee', '');
-        localStorage.setItem('keplerAddress', '');
+        localStorage.setItem('keplrAddress', '');
         window.location.reload();
     }
 }

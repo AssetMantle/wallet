@@ -947,23 +947,23 @@ ul li em {
 .icon-button {
   cursor: pointer; }
 
-.kepler-modal .modal-dialog {
+.keplr-modal .modal-dialog {
   max-width: 500px; }
-.kepler-modal .kepler-modal-body {
+.keplr-modal .keplr-modal-body {
   padding: 40px; }
-  .kepler-modal .kepler-modal-body p {
+  .keplr-modal .keplr-modal-body p {
     text-align: center; }
-  .kepler-modal .kepler-modal-body .installed-note {
+  .keplr-modal .keplr-modal-body .installed-note {
     padding: 20px 0;
     cursor: pointer;
     font-weight: 500;
     text-decoration: underline; }
-  .kepler-modal .kepler-modal-body .chrome-box {
+  .keplr-modal .keplr-modal-body .chrome-box {
     display: flex;
     display: -webkit-flex;
     flex-direction: row;
     justify-content: center; }
-    .kepler-modal .kepler-modal-body .chrome-box .chrome-link {
+    .keplr-modal .keplr-modal-body .chrome-box .chrome-link {
       padding: 20px;
       display: flex;
       display: -webkit-flex;
@@ -974,13 +974,13 @@ ul li em {
       border-radius: 6px;
       box-shadow: 0 0 32px 0 rgba(136, 152, 170, 0.15);
       border: solid 1px rgba(0, 0, 0, 0.05); }
-      .kepler-modal .kepler-modal-body .chrome-box .chrome-link p {
+      .keplr-modal .keplr-modal-body .chrome-box .chrome-link p {
         font-size: 16px;
         line-height: 1.75;
         letter-spacing: -0.3px;
         text-align: center;
         color: #525f7f; }
-    .kepler-modal .kepler-modal-body .chrome-box img {
+    .keplr-modal .keplr-modal-body .chrome-box img {
       width: 80px;
       height: 80px; }
 
@@ -2494,49 +2494,49 @@ ul li em {
 /*--------------------------------------------------------------
 # importwallet styles
 --------------------------------------------------------------*/
-.kepler-section {
+.keplr-section {
   background: radial-gradient(99.06% 99.06% at 49.65% 0.94%, #222426 0, #282932 100%); }
 
-.kepler-container {
+.keplr-container {
   height: calc(100vh - 62px);
   overflow: auto;
   padding-top: 170px; }
-  .kepler-container .info {
+  .keplr-container .info {
     max-width: 650px;
     background: #FFFFFF;
     margin: auto; }
-    .kepler-container .info .text {
+    .keplr-container .info .text {
       padding: 20px 0; }
-      .kepler-container .info .text p {
+      .keplr-container .info .text p {
         margin-bottom: 10px; }
-    .kepler-container .info h3 {
+    .keplr-container .info h3 {
       font-family: 'Poppins', sans-serif;
       font-size: 24px;
       padding-bottom: 20px; }
-    .kepler-container .info .buttons-list {
+    .keplr-container .info .buttons-list {
       display: flex;
       display: -webkit-flex;
       align-content: center;
       justify-content: space-between;
       flex-wrap: wrap; }
-      .kepler-container .info .buttons-list p {
+      .keplr-container .info .buttons-list p {
         margin: 0; }
-      .kepler-container .info .buttons-list .button {
+      .keplr-container .info .buttons-list .button {
         line-height: 1.3; }
-    .kepler-container .info .header-info {
+    .keplr-container .info .header-info {
       position: relative;
       display: flex;
       display: -webkit-flex;
       align-items: center;
       justify-content: center;
       padding: 30px 30px 0 30px; }
-      .kepler-container .info .header-info .previous-section .button {
+      .keplr-container .info .header-info .previous-section .button {
         position: absolute;
         left: 30px;
         top: 30px; }
-        .kepler-container .info .header-info .previous-section .button .icon {
+        .keplr-container .info .header-info .previous-section .button .icon {
           width: 20px; }
-    .kepler-container .info .info-body {
+    .keplr-container .info .info-body {
       padding: 30px; }
 
 /*--------------------------------------------------------------

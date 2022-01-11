@@ -1,5 +1,5 @@
 import {SET_KEPLR_INFO, SIGN_IN_KEPLR_MODAL_HIDE, SIGN_IN_KEPLR_MODAL_SHOW} from "../../../constants/signIn/keplr";
-import KeplerWallet from "../../../utils/kepler";
+import KeplrWallet from "../../../utils/keplr";
 import transactions, {GetAccount} from "../../../utils/transactions";
 import config from "../../../config";
 import {setLoginInfo} from "../transactions/common";
@@ -29,9 +29,9 @@ export const setKeplrInfo = (data) => {
 
 export const fetchKeplrAddress = () => {
     return async (dispatch) => {
-        const kepler = KeplerWallet();
-        kepler.then(function () {
-            const address = localStorage.getItem("keplerAddress");
+        const keplr = KeplrWallet();
+        keplr.then(function () {
+            const address = localStorage.getItem("keplrAddress");
             dispatch(setKeplrInfo({
                 value: address,
                 error: {

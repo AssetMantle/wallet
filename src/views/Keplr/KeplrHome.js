@@ -1,26 +1,26 @@
 import React, {useEffect, useState} from "react";
-import "../../utils/kepler";
-import KeplerWallet from "../../utils/kepler";
+import "../../utils/keplr";
+import KeplrWallet from "../../utils/keplr";
 import {NavLink, useHistory} from "react-router-dom";
 import {Nav, Navbar} from "react-bootstrap";
 import logo from "../../assets/images/logo_lite.svg";
 import config from "../../config";
 import {useTranslation} from "react-i18next";
-import ModalKeplerInstall from "./ModalKeplerInstall";
+import ModalKeplrInstall from "./ModalKeplrInstall";
 import Icon from "../../components/Icon";
 import transactions, {GetAccount} from "../../utils/transactions";
 import * as Sentry from "@sentry/browser";
 
-const KeplerHome = () => {
+const KeplrHome = () => {
     const {t} = useTranslation();
     const history = useHistory();
     const [errorMessage, setErrorMessage] = useState("");
     const [address, setAddress] = useState("");
     useEffect(() => {
         setErrorMessage("");
-        const kepler = KeplerWallet();
-        kepler.then(function () {
-            const address = localStorage.getItem("keplerAddress");
+        const keplr = KeplrWallet();
+        keplr.then(function () {
+            const address = localStorage.getItem("keplrAddress");
             setAddress(address);
         }).catch(error => {
             Sentry.captureException(error.response
@@ -30,11 +30,11 @@ const KeplerHome = () => {
         });
     }, []);
 
-    const handleKepler = () => {
+    const handleKeplr = () => {
         setErrorMessage("");
-        const kepler = KeplerWallet();
-        kepler.then(function () {
-            const address = localStorage.getItem("keplerAddress");
+        const keplr = KeplrWallet();
+        keplr.then(function () {
+            const address = localStorage.getItem("keplrAddress");
             setAddress(address);
         }).catch(error => {
             Sentry.captureException(error.response
@@ -45,7 +45,7 @@ const KeplerHome = () => {
     };
 
     const handleRoute = () => {
-        const address = localStorage.getItem("keplerAddress");
+        const address = localStorage.getItem("keplrAddress");
         GetAccount(address)
             .then(async res => {
                 const accountType = await transactions.VestingAccountCheck(res.typeUrl);
@@ -68,14 +68,14 @@ const KeplerHome = () => {
         localStorage.setItem('address', address);
         localStorage.setItem('loginToken', 'loggedIn');
         localStorage.setItem('version', config.version);
-        localStorage.setItem('loginMode', 'kepler');
+        localStorage.setItem('loginMode', 'keplr');
         history.push('/dashboard/wallet');
     };
     const handlePrevious = () => {
         history.push('/');
     };
     return (
-        <div className="kepler-section">
+        <div className="keplr-section">
             <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
                 <div className="container">
                     <Navbar.Brand><NavLink to="/">
@@ -97,7 +97,7 @@ const KeplerHome = () => {
                     </Navbar.Collapse>
                 </div>
             </Navbar>
-            <div className="kepler-container">
+            <div className="keplr-container">
                 <div className="info">
                     <div className="header-info">
                         <div className="previous-section">
@@ -107,22 +107,22 @@ const KeplerHome = () => {
                                     icon="left-arrow"/>
                             </button>
                         </div>
-                        <h3>{t("USE_KEPLER_BROWSER_EXTENSION")}</h3>
+                        <h3>{t("USE_KEPLR_BROWSER_EXTENSION")}</h3>
                     </div>
                     <div className="info-body">
                         {errorMessage !== "" ?
                             <>
                                 <div className="buttons">
                                     <button className="button button-primary"
-                                        onClick={() => handleKepler()}>{t("CONNECT")}
+                                        onClick={() => handleKeplr()}>{t("CONNECT")}
                                     </button>
                                 </div>
                                 {
                                     errorMessage === "install keplr extension" ?
-                                        <ModalKeplerInstall/>
+                                        <ModalKeplrInstall/>
                                         :
                                         <div className="text">
-                                            <p>{t("KEPLER_ERROR")}</p>
+                                            <p>{t("KEPLR_ERROR")}</p>
                                             <p className="form-error">{errorMessage}</p>
                                         </div>
                                 }
@@ -131,7 +131,7 @@ const KeplerHome = () => {
                             :
                             <>
 
-                                <p>{t("KEPLER_ACCOUNT_NOTE")}</p>
+                                <p>{t("KEPLR_ACCOUNT_NOTE")}</p>
                                 <div className="buttons-list">
                                     {
                                         address !== ""
@@ -153,4 +153,4 @@ const KeplerHome = () => {
         </div>
     );
 };
-export default KeplerHome;
+export default KeplrHome;

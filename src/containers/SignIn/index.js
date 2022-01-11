@@ -65,7 +65,7 @@ const SignIn = (props) => {
                         </div>
                         <div className="buttons">
                             <button className="button button-primary"
-                                onClick={() => handleRoute("withKeplr")}>{t("USE_KEPLER")}
+                                onClick={() => handleRoute("withKeplr")}>{t("USE_KEPLR")}
                             </button>
                         </div>
                         <div className="buttons">
