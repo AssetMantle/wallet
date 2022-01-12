@@ -6,6 +6,7 @@ import config from "../../config";
 import helper from "../../utils/helper";
 import {useTranslation} from "react-i18next";
 import transactions, {GetAccount} from "../../utils/transactions";
+import {ACCOUNT, ADDRESS, FEE, LOGIN_MODE, LOGIN_TOKEN, VERSION} from "../../constants/localStorage";
 
 const AddressImport = (props) => {
     const {t} = useTranslation();
@@ -21,22 +22,22 @@ const AddressImport = (props) => {
                 .then(async res => {
                     const accountType = await transactions.VestingAccountCheck(res.typeUrl);
                     if (accountType) {
-                        localStorage.setItem('fee', config.vestingAccountFee);
-                        localStorage.setItem('account', 'vesting');
+                        localStorage.setItem(FEE, config.vestingAccountFee);
+                        localStorage.setItem(ACCOUNT, 'vesting');
                     } else {
-                        localStorage.setItem('fee', config.defaultFee);
-                        localStorage.setItem('account', 'non-vesting');
+                        localStorage.setItem(FEE, config.defaultFee);
+                        localStorage.setItem(ACCOUNT, 'non-vesting');
                     }
                 })
                 .catch(error => {
                     console.log(error.message);
-                    localStorage.setItem('fee', config.defaultFee);
-                    localStorage.setItem('account', 'non-vesting');
+                    localStorage.setItem(FEE, config.defaultFee);
+                    localStorage.setItem(ACCOUNT, 'non-vesting');
                 });
-            localStorage.setItem('loginToken', 'loggedIn');
-            localStorage.setItem('address', address);
-            localStorage.setItem('loginMode', 'normal');
-            localStorage.setItem('version', config.version);
+            localStorage.setItem(LOGIN_TOKEN, 'loggedIn');
+            localStorage.setItem(ADDRESS, address);
+            localStorage.setItem(LOGIN_MODE, 'normal');
+            localStorage.setItem(VERSION, config.version);
             history.push('/dashboard/wallet');
             setShow(false);
         } else {

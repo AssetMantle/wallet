@@ -5,15 +5,16 @@ import {useTranslation} from "react-i18next";
 import config from "../../config";
 import ModalGasAlert from "./ModalGasAlert";
 import helper from "../../utils/helper";
+import {FEE, LOGIN_MODE} from "../../constants/localStorage";
 
 const GasContainer = (props) => {
-    let mode = localStorage.getItem('loginMode');
+    let mode = localStorage.getItem(LOGIN_MODE);
     const {t} = useTranslation();
     return (
         <>
             <p className="fee-title">Fee</p>
             <div className="fee-container">
-                {mode === "normal" && (helper.stringToNumber(localStorage.getItem("fee"))) !== 0 ?
+                {mode === "normal" && (helper.stringToNumber(localStorage.getItem(FEE))) !== 0 ?
                     <>
                         <div className={props.activeFeeState === "Low" ? "fee-box active" : "fee-box"}
                             onClick={() => props.onClick("Low", config.lowFee)}>

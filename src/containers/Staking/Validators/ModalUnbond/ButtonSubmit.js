@@ -7,11 +7,12 @@ import config from "../../../../config";
 import {UnbondMsg} from "../../../../utils/protoMsgHelper";
 import {setTxIno} from "../../../../store/actions/transactions/common";
 import helper from "../../../../utils/helper";
+import {LOGIN_INFO} from "../../../../constants/localStorage";
 
 
 const ButtonSubmit = () => {
     const dispatch = useDispatch();
-    const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
     const amount = useSelector((state) => state.unbondTx.amount);
     const memo = useSelector((state) => state.unbondTx.memo);
     const validator = useSelector((state) => state.validators.validator.value);

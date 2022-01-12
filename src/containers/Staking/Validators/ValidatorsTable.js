@@ -12,11 +12,12 @@ import {
     setValidatorTxData,
     showValidatorTxModal
 } from "../../../store/actions/validators";
+import {LOGIN_INFO} from "../../../constants/localStorage";
 
 const ValidatorsTable = (props) => {
     const {t} = useTranslation();
     const dispatch = useDispatch();
-    const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
     const handleModal = (name, validator) => {
         dispatch(showValidatorTxModal());
         dispatch(setValidatorTxData({

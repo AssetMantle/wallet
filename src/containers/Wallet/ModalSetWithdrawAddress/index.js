@@ -13,10 +13,11 @@ import {fetchWithdrawAddress} from "../../../store/actions/withdrawAddress";
 import Icon from "../../../components/Icon";
 import {showTxWithDrawTotalModal} from "../../../store/actions/transactions/withdrawTotalRewards";
 import {showTxWithdrawValidatorRewardsModal} from "../../../store/actions/transactions/withdrawValidatorRewards";
+import {LOGIN_INFO} from "../../../constants/localStorage";
 
 const ModalSetWithdrawAddress = () => {
     const {t} = useTranslation();
-    const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
     const dispatch = useDispatch();
 
     const previousModalName = useSelector((state) => state.setWithdrawAddress.previousModalName);

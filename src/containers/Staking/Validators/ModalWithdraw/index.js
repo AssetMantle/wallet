@@ -14,6 +14,7 @@ import {
     showTxWithDrawAddressModal
 } from "../../../../store/actions/transactions/setWithdrawAddress";
 import config from "../../../../config";
+import {LOGIN_INFO} from "../../../../constants/localStorage";
 
 const ModalWithdraw = () => {
     const {t} = useTranslation();
@@ -21,7 +22,7 @@ const ModalWithdraw = () => {
     const show = useSelector((state) => state.withdrawValidatorRewards.modal);
     const rewards = useSelector((state) => state.validators.validatorRewards);
     const response = useSelector(state => state.common.error);
-    const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
 
     const handleClose = () => {
         dispatch(hideTxWithdrawValidatorRewardsModal());
