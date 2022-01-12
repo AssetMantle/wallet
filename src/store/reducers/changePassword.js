@@ -92,6 +92,15 @@ const response = (state = {
                 message: data.error.message,
             },
         };
+    case CHANGE_KEYSTORE_NEW_PASSWORD_MODAL_HIDE:
+        return {
+            ...state,
+            value: '',
+            error: {
+                ...state.error,
+                message: '',
+            },
+        };
     default:
         return state;
     }

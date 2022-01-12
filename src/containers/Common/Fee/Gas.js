@@ -58,7 +58,6 @@ const Gas = () => {
                         className="form-control"
                         value={gas.value}
                         error={gas.error}
-
                         onChange={onChange}
                     />
                 </div>
