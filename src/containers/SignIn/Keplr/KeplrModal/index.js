@@ -65,14 +65,14 @@ const KeplrModal = () => {
                         </div>
                         {
                             <div className="text">
-                                <p>{t("KEPLER_ERROR")}</p>
+                                <p>{t("KEPLR_ERROR")}</p>
                                 <p className="form-error">{info.error.message}</p>
                             </div>
                         }
                     </>
                     :
                     <>
-                        <p>{t("KEPLER_ACCOUNT_NOTE")}</p>
+                        <p>{t("KEPLR_ACCOUNT_NOTE")}</p>
                         <div className="buttons-list">
                             {
                                 info.value !== ""

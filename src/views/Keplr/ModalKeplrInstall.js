@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import chrome from "../../assets/images/chrome.svg";
 import {useTranslation} from "react-i18next";
 
-const ModalKeplerInstall = () => {
+const ModalKeplrInstall = () => {
     const {t} = useTranslation();
     const [show, setShow] = useState(true);
     const handleClose = () => {
@@ -18,9 +18,9 @@ const ModalKeplerInstall = () => {
                 centered={true}
                 show={show}
                 size="lg"
-                className="kepler-modal"
+                className="keplr-modal"
                 onHide={handleClose}>
-                <Modal.Body className="kepler-modal-body">
+                <Modal.Body className="keplr-modal-body">
                     <p>{t("KEPLR_INSTALL_NOTE")}</p>
                     <div className="chrome-box">
                         <a className="chrome-link"
@@ -38,5 +38,5 @@ const ModalKeplerInstall = () => {
     );
 };
 
-export default ModalKeplerInstall;
+export default ModalKeplrInstall;
 

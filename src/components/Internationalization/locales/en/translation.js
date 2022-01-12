@@ -93,12 +93,12 @@ let English = {
         "WALLET": "Wallet",
         "IMPORT_WALLET": "Import Wallet",
         "FAQ": "Frequently Asked Questions",
-        "USE_KEPLER": "Use Keplr",
+        "USE_KEPLR": "Use Keplr",
         "CONTINUE_WITH_ADDRESS": "Continue with Address",
-        "USE_KEPLER_BROWSER_EXTENSION": "Use Keplr Browser Extension",
+        "USE_KEPLR_BROWSER_EXTENSION": "Use Keplr Browser Extension",
         "CONNECT": "Connect",
-        "KEPLER_ERROR": "There was an error connecting to the Keplr extension:",
-        "KEPLER_ACCOUNT_NOTE": "\n" +
+        "KEPLR_ERROR": "There was an error connecting to the Keplr extension:",
+        "KEPLR_ACCOUNT_NOTE": "\n" +
             "Below account we've received from the Keplr browser extension.",
         "USE": "Use",
         "KEPLR_INSTALL_NOTE": "Please Install the Keplr browser extension to start using Keplr",

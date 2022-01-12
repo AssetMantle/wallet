@@ -5,12 +5,12 @@ import Homepage from "./views/Homepage";
 import DashboardStaking from "./views/Staking";
 import PrivateRoute from "./containers/PrivateRoute";
 import ImportWallet from "./containers/ImportWallet";
-import KeplerHome from "./views/Kepler/KeplerHome";
+import KeplrHome from "./views/Keplr/KeplrHome";
 import RouteNotFound from "./components/RouteNotFound";
 import config from "./config";
 import icon_white from "./assets/images/icon_white.svg";
 import {useTranslation} from "react-i18next";
-import KeplerWallet from "./utils/kepler";
+import KeplrWallet from "./utils/keplr";
 import {useDispatch} from "react-redux";
 import {fetchDelegationsCount} from "./store/actions/delegations";
 import {fetchBalance, fetchTransferableVestingAmount} from "./store/actions/balance";
@@ -40,7 +40,7 @@ const App = () => {
         private: false,
     }, {
         path: '/keplr',
-        component: KeplerHome,
+        component: KeplrHome,
         private: false,
     }];
     const [isOnline, setNetwork] = useState(window.navigator.onLine);
@@ -87,9 +87,9 @@ const App = () => {
 
     window.addEventListener("keplr_keystorechange", () => {
         if (localStorage.getItem('loginMode') === config.keplrMode) {
-            const kepler = KeplerWallet();
-            kepler.then(function () {
-                const address = localStorage.getItem("keplerAddress");
+            const keplr = KeplrWallet();
+            keplr.then(function () {
+                const address = localStorage.getItem("keplrAddress");
                 dispatch(setKeplrInfo({
                     value: address,
                     error: {
