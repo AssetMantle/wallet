@@ -7,7 +7,7 @@
   "xprtValue": 1000000,
   "gas": 250000,
   "minGas": 80000,
-  "maxGas": 4000000,
+  "maxGas": 2000000,
   "lowFee": 0,
   "averageFee": 0.025,
   "highFee": 0.04,

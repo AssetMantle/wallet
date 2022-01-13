@@ -2,7 +2,6 @@ import {combineReducers} from 'redux';
 import {TX_GAS_SET} from "../../../constants/gas";
 import {TX_RESULT_MODAL_HIDE, TX_SUCCESS} from "../../../constants/common";
 import config from "../../../config";
-import {FEE_MODAL_HIDE} from "../../../constants/fee";
 
 const gas = (state = {
     value: config.gas,
@@ -31,7 +30,6 @@ const gas = (state = {
             },
         };
     case TX_SUCCESS:
-    case FEE_MODAL_HIDE:
     case TX_RESULT_MODAL_HIDE:
         return {
             ...state,

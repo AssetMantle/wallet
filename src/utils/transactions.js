@@ -267,6 +267,7 @@ function checkValidatorAccountAddress(validatorAddress, address) {
 }
 
 async function getTransactionResponse(address, data, feeAmount, gas, mnemonic = "", txName, accountNumber = 0, addressIndex = 0, bip39Passphrase = "") {
+    console.log(data, gas, feeAmount, fee(Math.trunc(feeAmount), gas), "feeAmount");
     switch (txName) {
     case "send":
         return TransactionWithMnemonic(data.message, fee(Math.trunc(feeAmount), gas), data.memo,

@@ -1,8 +1,9 @@
 import React from 'react';
 import Button from "./../../../components/Button";
-import {feeSubmitKeyStore} from "../../../store/actions/transactions/fee";
+import {feeChangeHandler, feeSubmitKeyStore} from "../../../store/actions/transactions/fee";
 import {useDispatch, useSelector} from "react-redux";
 import {ledgerSubmit} from "../../../store/actions/transactions/ledger";
+import config from "../../../config";
 
 const Submit = () => {
     let loginMode = localStorage.getItem('loginMode');
@@ -12,6 +13,15 @@ const Submit = () => {
 
     const onClick = () => {
         if (loginMode === "ledger") {
+            dispatch(feeChangeHandler({
+                value: {
+                    fee: config.averageFee,
+                    feeType: "Average",
+                },
+                error: {
+                    message: '',
+                },
+            }));
             dispatch(ledgerSubmit(loginAddress, loginMode));
         } else {
             dispatch(feeSubmitKeyStore());

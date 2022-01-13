@@ -26,7 +26,6 @@ const fee = (state = {
             },
         };
     case TX_SUCCESS:
-    case FEE_MODAL_HIDE:
     case TX_RESULT_MODAL_HIDE:
         return {
             ...state,

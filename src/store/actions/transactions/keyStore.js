@@ -56,6 +56,8 @@ export const keyStoreSubmit = (loginAddress) => {
             const fee = getState().fee.fee.value.fee;
             const gas = getState().gas.gas.value;
 
+            console.log(fee, gas, "key feeAmount");
+
             let mnemonic = "";
             if (encryptedSeed) {
                 const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
@@ -68,6 +70,7 @@ export const keyStoreSubmit = (loginAddress) => {
             } else {
                 mnemonic = await transactions.PrivateKeyReader(keyStoreData.value, password.value, loginAddress, accountNumber, accountIndex);
             }
+
             let result = await transactions.getTransactionResponse(loginAddress, formData, fee, gas, mnemonic, txName, accountNumber, accountIndex, bip39PassPhrase);
             if (result.code !== undefined) {
                 dispatch(setLoginInfo({
