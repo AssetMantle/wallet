@@ -56,8 +56,6 @@ export const keyStoreSubmit = (loginAddress) => {
             const fee = getState().fee.fee.value.fee;
             const gas = getState().gas.gas.value;
 
-            console.log(fee, gas, "key feeAmount");
-
             let mnemonic = "";
             if (encryptedSeed) {
                 const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
