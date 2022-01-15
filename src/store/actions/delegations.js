@@ -32,27 +32,34 @@ export const fetchDelegationStatusSuccess = (value) => {
 
 export const fetchDelegationsCount = (address) => {
     return async dispatch => {
-        const rpcClient = await transactions.RpcClient();
-        const stakingQueryService = new QueryClientImpl(rpcClient);
-        await stakingQueryService.DelegatorDelegations({
-            delegatorAddr: address,
-        }).then((delegationsResponse) => {
-            if (delegationsResponse.delegationResponses.length) {
-                dispatch(fetchDelegationStatusSuccess(true));
-                let totalDelegationsCount = Lodash.sumBy(delegationsResponse.delegationResponses, (delegation) => {
-                    return helper.stringToNumber(delegation.balance.amount);
-                });
-                dispatch(fetchDelegationsCountSuccess(transactions.XprtConversion(totalDelegationsCount)));
-            }
+        try {
+            const rpcClient = await transactions.RpcClient();
+            const stakingQueryService = new QueryClientImpl(rpcClient);
+            await stakingQueryService.DelegatorDelegations({
+                delegatorAddr: address,
+            }).then((delegationsResponse) => {
+                if (delegationsResponse.delegationResponses.length) {
+                    dispatch(fetchDelegationStatusSuccess(true));
+                    let totalDelegationsCount = Lodash.sumBy(delegationsResponse.delegationResponses, (delegation) => {
+                        return helper.stringToNumber(delegation.balance.amount);
+                    });
+                    dispatch(fetchDelegationsCountSuccess(transactions.XprtConversion(totalDelegationsCount)));
+                }
 
-        }).catch((error) => {
+            }).catch((error) => {
+                Sentry.captureException(error.response
+                    ? error.response.data.message
+                    : error.message);
+                dispatch(fetchProposalsCountError(error.response
+                    ? error.response.data.message
+                    : error.message));
+            });
+        }catch (error) {
             Sentry.captureException(error.response
                 ? error.response.data.message
                 : error.message);
-            dispatch(fetchProposalsCountError(error.response
-                ? error.response.data.message
-                : error.message));
-        });
+            console.log(error.message);
+        }
 
     };
 };

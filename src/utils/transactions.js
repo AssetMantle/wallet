@@ -231,23 +231,30 @@ async function RpcClient() {
 }
 
 export async function GetAccount(address) {
-    const rpcClient = await RpcClient();
-    const authAccountService = new QueryClientImpl(rpcClient);
-    const accountResponse = await authAccountService.Account({
-        address: address,
-    });
-    if (accountResponse.account.typeUrl === "/cosmos.auth.v1beta1.BaseAccount") {
-        let baseAccountResponse = BaseAccount.decode(accountResponse.account.value);
-        return {"typeUrl": accountResponse.account.typeUrl, "accountData": baseAccountResponse};
-    } else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
-        let periodicVestingAccountResponse = PeriodicVestingAccount.decode(accountResponse.account.value);
-        return {"typeUrl": accountResponse.account.typeUrl, "accountData": periodicVestingAccountResponse};
-    } else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.DelayedVestingAccount") {
-        let delayedVestingAccountResponse = DelayedVestingAccount.decode(accountResponse.account.value);
-        return {"typeUrl": accountResponse.account.typeUrl, "accountData": delayedVestingAccountResponse};
-    } else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
-        let continuousVestingAccountResponse = ContinuousVestingAccount.decode(accountResponse.account.value);
-        return {"typeUrl": accountResponse.account.typeUrl, "accountData": continuousVestingAccountResponse};
+    try {
+        const rpcClient = await RpcClient();
+        const authAccountService = new QueryClientImpl(rpcClient);
+        const accountResponse = await authAccountService.Account({
+            address: address,
+        });
+        if (accountResponse.account.typeUrl === "/cosmos.auth.v1beta1.BaseAccount") {
+            let baseAccountResponse = BaseAccount.decode(accountResponse.account.value);
+            return {"typeUrl": accountResponse.account.typeUrl, "accountData": baseAccountResponse};
+        } else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
+            let periodicVestingAccountResponse = PeriodicVestingAccount.decode(accountResponse.account.value);
+            return {"typeUrl": accountResponse.account.typeUrl, "accountData": periodicVestingAccountResponse};
+        } else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.DelayedVestingAccount") {
+            let delayedVestingAccountResponse = DelayedVestingAccount.decode(accountResponse.account.value);
+            return {"typeUrl": accountResponse.account.typeUrl, "accountData": delayedVestingAccountResponse};
+        } else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
+            let continuousVestingAccountResponse = ContinuousVestingAccount.decode(accountResponse.account.value);
+            return {"typeUrl": accountResponse.account.typeUrl, "accountData": continuousVestingAccountResponse};
+        }
+    }catch (error) {
+        Sentry.captureException(error.response
+            ? error.response.data.message
+            : error.message);
+        console.log(error.message);
     }
 }
 
