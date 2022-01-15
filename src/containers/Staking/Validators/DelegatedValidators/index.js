@@ -37,10 +37,9 @@ const DelegatedValidators = (props) => {
         options: {
             sortCompare: (order) => {
                 return (obj1, obj2) => {
-
                     let val1 = obj1.data.props.children[1];
                     let val2 = obj2.data.props.children[1];
-                    return (val1.length - val2.length) * (order === 'asc' ? 1 : -1);
+                    return (val1.toUpperCase() < val2.toUpperCase() ? -1 : 1) * (order === 'asc' ? 1 : -1);
                 };
             }
 
@@ -51,8 +50,8 @@ const DelegatedValidators = (props) => {
         options: {
             sortCompare: (order) => {
                 return (obj1, obj2) => {
-                    let val1 = parseInt(obj1.data.props.children);
-                    let val2 = parseInt(obj2.data.props.children);
+                    let val1 = helper.stringToNumber(obj1.data.props.children);
+                    let val2 = helper.stringToNumber(obj2.data.props.children);
                     return (val1 - val2) * (order === 'asc' ? 1 : -1);
                 };
             }
