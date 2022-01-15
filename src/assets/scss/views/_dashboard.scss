@@ -432,6 +432,18 @@
       word-break: break-word;
     }
   }
+
+  .transaction-loader{
+    height: 300px;
+    position: relative;
+    .loader{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-right: -50%;
+      transform: translate(-50%, -50%)
+    }
+  }
 }
 
 .header {

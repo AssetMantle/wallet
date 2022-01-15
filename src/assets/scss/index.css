@@ -1770,6 +1770,15 @@ ul li em {
     align-items: center;
     justify-content: center;
     word-break: break-word; }
+.wallet-main-section .transaction-loader {
+  height: 300px;
+  position: relative; }
+  .wallet-main-section .transaction-loader .loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%); }
 
 .header .navbar .nav-menu-icon button {
   outline: none !important;

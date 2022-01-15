@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import moment from 'moment';
 import helper from "../../../utils/helper";
 import Icon from "../../../components/Icon";
-import Loader from "../../../components/Loader";
+import loader from "../../../assets/images/loader.svg";
 import {fetchReceiveTransactions} from "../../../store/actions/transactionQueries";
 import {connect} from "react-redux";
 import DataTable from "../../../components/DataTable";
@@ -129,9 +129,7 @@ const ReceiveTransactions = (props) => {
         ])
         :
         [];
-    if (props.inProgress && props.list.length) {
-        return <Loader/>;
-    }
+
     const handleNext = () => {
         if (!helper.checkLastPage(props.pageNumber[0], 5, props.pageNumber[1])) {
             props.fetchReceiveTransactions(address, 5, props.pageNumber[0] + 1);
@@ -142,6 +140,13 @@ const ReceiveTransactions = (props) => {
             props.fetchReceiveTransactions(address, 5, props.pageNumber[0] - 1);
         }
     };
+
+    if (props.inProgress && props.list.length) {
+        return <div className="transaction-loader">
+            <img src={loader} alt="loader" className="loader"/>
+        </div>;
+    }
+
     return (
         <div className="txns-container">
             <DataTable
