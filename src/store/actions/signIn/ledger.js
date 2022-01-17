@@ -11,6 +11,16 @@ import config from "../../../config";
 import {setLoginInfo} from "../transactions/common";
 import * as Sentry from "@sentry/browser";
 import helper from "../../../utils/helper";
+import {
+    ACCOUNT,
+    ACCOUNT_NUMBER,
+    ADDRESS,
+    ADDRESS_INDEX, FEE,
+    LOGIN_INFO,
+    LOGIN_MODE,
+    LOGIN_TOKEN,
+    VERSION
+} from "../../../constants/localStorage";
 
 export const hideLedgerModal = (data) => {
     return {
@@ -90,13 +100,13 @@ export const ledgerLogin = (history) => {
             if (accountType) {
                 loginInfo.fee = config.vestingAccountFee;
                 loginInfo.account = "vesting";
-                localStorage.setItem('fee', config.vestingAccountFee);
-                localStorage.setItem('account', 'vesting');
+                localStorage.setItem(FEE, config.vestingAccountFee);
+                localStorage.setItem(ACCOUNT, 'vesting');
             } else {
                 loginInfo.fee = config.defaultFee;
                 loginInfo.account = "non-vesting";
-                localStorage.setItem('fee', config.defaultFee);
-                localStorage.setItem('account', 'non-vesting');
+                localStorage.setItem(FEE, config.defaultFee);
+                localStorage.setItem(ACCOUNT, 'non-vesting');
             }
         }).catch(error => {
             Sentry.captureException(error.response
@@ -105,8 +115,8 @@ export const ledgerLogin = (history) => {
             console.log(error.message);
             loginInfo.fee = config.defaultFee;
             loginInfo.account = "non-vesting";
-            localStorage.setItem('fee', config.defaultFee);
-            localStorage.setItem('account', 'non-vesting');
+            localStorage.setItem(FEE, config.defaultFee);
+            localStorage.setItem(ACCOUNT, 'non-vesting');
         });
 
         loginInfo.loginToken = "loggedIn";
@@ -116,13 +126,13 @@ export const ledgerLogin = (history) => {
         loginInfo.accountNumber = helper.getAccountNumber(getState().signInLedger.accountNumber.value);
         loginInfo.accountIndex = helper.getAccountNumber(getState().signInLedger.accountIndex.value);
 
-        localStorage.setItem('accountNumber', helper.getAccountNumber(getState().signInLedger.accountNumber.value));
-        localStorage.setItem('addressIndex', helper.getAccountNumber(getState().signInLedger.accountIndex.value));
-        localStorage.setItem('loginToken', 'loggedIn');
-        localStorage.setItem('address', address);
-        localStorage.setItem('loginMode', 'ledger');
-        localStorage.setItem('version', config.version);
-        localStorage.setItem('loginInfo', JSON.stringify(loginInfo));
+        localStorage.setItem(ACCOUNT_NUMBER, helper.getAccountNumber(getState().signInLedger.accountNumber.value));
+        localStorage.setItem(ADDRESS_INDEX, helper.getAccountNumber(getState().signInLedger.accountIndex.value));
+        localStorage.setItem(LOGIN_TOKEN, 'loggedIn');
+        localStorage.setItem(ADDRESS, address);
+        localStorage.setItem(LOGIN_MODE, 'ledger');
+        localStorage.setItem(VERSION, config.version);
+        localStorage.setItem(LOGIN_INFO, JSON.stringify(loginInfo));
 
         dispatch(setLoginInfo({
             encryptedSeed: false,

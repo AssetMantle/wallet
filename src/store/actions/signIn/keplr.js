@@ -5,6 +5,16 @@ import config from "../../../config";
 import {setLoginInfo} from "../transactions/common";
 import * as Sentry from "@sentry/browser";
 import helper from "../../../utils/helper";
+import {
+    ACCOUNT,
+    ADDRESS,
+    FEE,
+    KEPLR_ADDRESS,
+    LOGIN_INFO,
+    LOGIN_MODE,
+    LOGIN_TOKEN,
+    VERSION
+} from "../../../constants/localStorage";
 
 export const hideKeplrModal = (data) => {
     return {
@@ -31,7 +41,7 @@ export const fetchKeplrAddress = () => {
     return async (dispatch) => {
         const keplr = KeplrWallet();
         keplr.then(function () {
-            const address = localStorage.getItem("keplrAddress");
+            const address = localStorage.getItem(KEPLR_ADDRESS);
             dispatch(setKeplrInfo({
                 value: address,
                 error: {
@@ -73,13 +83,13 @@ export const keplrLogin = (history) => {
             if (accountType) {
                 loginInfo.fee = config.vestingAccountFee;
                 loginInfo.account = "vesting";
-                localStorage.setItem('fee', config.vestingAccountFee);
-                localStorage.setItem('account', 'vesting');
+                localStorage.setItem(FEE, config.vestingAccountFee);
+                localStorage.setItem(ACCOUNT, 'vesting');
             } else {
                 loginInfo.fee = config.defaultFee;
                 loginInfo.account = "non-vesting";
-                localStorage.setItem('fee', config.defaultFee);
-                localStorage.setItem('account', 'non-vesting');
+                localStorage.setItem(FEE, config.defaultFee);
+                localStorage.setItem(ACCOUNT, 'non-vesting');
             }
         }).catch(error => {
             Sentry.captureException(error.response
@@ -88,8 +98,8 @@ export const keplrLogin = (history) => {
             console.log(error.message);
             loginInfo.fee = config.defaultFee;
             loginInfo.account = "non-vesting";
-            localStorage.setItem('fee', config.defaultFee);
-            localStorage.setItem('account', 'non-vesting');
+            localStorage.setItem(FEE, config.defaultFee);
+            localStorage.setItem(ACCOUNT, 'non-vesting');
         });
         loginInfo.loginToken = "loggedIn";
         loginInfo.address = address;
@@ -98,11 +108,11 @@ export const keplrLogin = (history) => {
         loginInfo.accountNumber = accountNumber;
         loginInfo.accountIndex = accountIndex;
 
-        localStorage.setItem('loginToken', 'loggedIn');
-        localStorage.setItem('address', address);
-        localStorage.setItem('loginMode', config.keplrMode);
-        localStorage.setItem('version', config.version);
-        localStorage.setItem('loginInfo', JSON.stringify(loginInfo));
+        localStorage.setItem(LOGIN_TOKEN, 'loggedIn');
+        localStorage.setItem(ADDRESS, address);
+        localStorage.setItem(LOGIN_MODE, config.keplrMode);
+        localStorage.setItem(VERSION, config.version);
+        localStorage.setItem(LOGIN_INFO, JSON.stringify(loginInfo));
         dispatch(setLoginInfo({
             encryptedSeed: false,
             error: {

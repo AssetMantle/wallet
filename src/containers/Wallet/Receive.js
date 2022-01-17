@@ -1,9 +1,10 @@
 import React from "react";
 import ReactQRCode from 'qrcode.react';
 import Copy from "../../components/Copy";
+import {ADDRESS} from "../../constants/localStorage";
 
 const Receive = () => {
-    let address = localStorage.getItem('address');
+    let address = localStorage.getItem(ADDRESS);
     return (
         <div className="receive-container">
             <ReactQRCode value={address}/>

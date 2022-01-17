@@ -9,12 +9,13 @@ import {hideTxReDelegateModal} from "../../../../store/actions/transactions/rede
 import {showValidatorTxModal} from "../../../../store/actions/validators";
 import Validator from "./Validator";
 import config from "../../../../config";
+import {LOGIN_INFO} from "../../../../constants/localStorage";
 
 const ModalReDelegate = () => {
     const dispatch = useDispatch();
     const show = useSelector((state) => state.redelegate.modal);
     const response = useSelector(state => state.common.error);
-    const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
 
     const handleClose = () => {
         dispatch(hideTxReDelegateModal());

@@ -5,9 +5,10 @@ import {
 } from "cosmjs-types/cosmos/distribution/v1beta1/query";
 import helper from "./helper";
 import * as Sentry from "@sentry/browser";
+import {ADDRESS} from "../constants/localStorage";
 
 async function getValidatorRewards(validatorAddress) {
-    let address = localStorage.getItem('address');
+    let address = localStorage.getItem(ADDRESS);
     const rpcClient = await transactions.RpcClient();
     const stakingQueryService = new QueryClientImpl(rpcClient);
     let amount = 0;

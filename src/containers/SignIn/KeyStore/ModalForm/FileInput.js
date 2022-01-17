@@ -4,6 +4,7 @@ import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
 import {setTxKeyStore} from "../../../../store/actions/transactions/keyStore";
 import {ValidationFileTypeCheck} from "../../../../utils/validations";
+import {ENCRYPTED_MNEMONIC} from "../../../../constants/localStorage";
 
 const FileInput = () => {
     const [fileName, setFileName] = useState('No file chosen');
@@ -13,7 +14,7 @@ const FileInput = () => {
     const onChange = (event) => {
         const file = event.target.files[0];
         setFileName(file.name);
-        localStorage.setItem('encryptedMnemonic', file);
+        localStorage.setItem(ENCRYPTED_MNEMONIC, file);
         dispatch(setTxKeyStore(
             {
                 value: file,

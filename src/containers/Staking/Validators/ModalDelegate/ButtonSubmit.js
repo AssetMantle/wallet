@@ -7,10 +7,11 @@ import config from "../../../../config";
 import {DelegateMsg} from "../../../../utils/protoMsgHelper";
 import {setTxIno} from "../../../../store/actions/transactions/common";
 import helper from "../../../../utils/helper";
+import {LOGIN_INFO} from "../../../../constants/localStorage";
 
 const ButtonSubmit = () => {
     const dispatch = useDispatch();
-    const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
     const amount = useSelector((state) => state.delegate.amount);
     const memo = useSelector((state) => state.delegate.memo);
     const validatorAddress = useSelector((state) => state.validators.validator);
