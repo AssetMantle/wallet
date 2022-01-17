@@ -60,7 +60,7 @@ const AdvancedFields = (props) => {
             e.preventDefault();
         } else {
             const accountNumber = document.getElementById('accountNumberReset').value;
-            if (parseInt(accountNumber) > config.maxAccountIndex || parseInt(accountNumber) < 0) {
+            if (parseInt(accountNumber) > config.maxAccountNumber || parseInt(accountNumber) < 0) {
                 e.preventDefault();
             }
         }
@@ -91,7 +91,7 @@ const AdvancedFields = (props) => {
                             <p className="label"> {t("ACCOUNT")}</p>
                             <Form.Control
                                 type="number"
-                                max={config.maxAccountIndex}
+                                max={config.maxAccountNumber}
                                 name="accountNumber"
                                 id="accountNumberReset"
                                 onKeyPress={handleAccountNumberKeypress}

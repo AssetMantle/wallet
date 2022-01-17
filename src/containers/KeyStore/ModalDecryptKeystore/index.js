@@ -191,7 +191,7 @@ const ModalDecryptKeyStore = (props) => {
             e.preventDefault();
         } else {
             const accountNumber = document.getElementById('delegateAccountNumber').value;
-            if (parseInt(accountNumber) > config.maxAccountIndex || parseInt(accountNumber) < 0) {
+            if (parseInt(accountNumber) > config.maxAccountNumber || parseInt(accountNumber) < 0) {
                 e.preventDefault();
             }
         }
@@ -285,7 +285,7 @@ const ModalDecryptKeyStore = (props) => {
                                                     <p className="label">{t("ACCOUNT")}</p>
                                                     <Form.Control
                                                         type="number"
-                                                        max={config.maxAccountIndex}
+                                                        max={config.maxAccountNumber}
                                                         name="delegateAccountNumber"
                                                         id="delegateAccountNumber"
                                                         placeholder={t("ACCOUNT_NUMBER")}

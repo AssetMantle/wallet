@@ -101,7 +101,7 @@ const AdvanceMode = (props) => {
             handleSubmit(e);
         } else {
             const accountNumber = document.getElementById('createAccountNumber').value;
-            if (parseInt(accountNumber) > config.maxAccountIndex || parseInt(accountNumber) < 0) {
+            if (parseInt(accountNumber) > config.maxAccountNumber || parseInt(accountNumber) < 0) {
                 e.preventDefault();
             }
         }
@@ -190,7 +190,7 @@ const AdvanceMode = (props) => {
                                                     <div className="form-control-section flex-fill">
                                                         <Form.Control
                                                             type="number"
-                                                            max={config.maxAccountIndex}
+                                                            max={config.maxAccountNumber}
                                                             name="accountNumber"
                                                             id="createAccountNumber"
                                                             onKeyPress={handleAccountNumberKeypress}
