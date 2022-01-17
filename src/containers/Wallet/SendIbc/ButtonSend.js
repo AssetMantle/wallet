@@ -28,7 +28,7 @@ const ButtonSend = () => {
 
     const onClick = async () => {
         let msg = transactions.MakeIBCTransferMsg(inputChannelID, loginInfo.address,
-            toAddress.value, (amount.value * config.xprtValue), undefined, undefined,
+            toAddress.value, (amount.value * config.tokenValue), undefined, undefined,
             token.value.tokenDenom, chainInfo.selectedChannel ? chainInfo.selectedChannel.url : undefined, inputPort);
         msg.then(result => {
             dispatch(submitFormData([result], inputPort, inputChannelID));
@@ -48,7 +48,7 @@ const ButtonSend = () => {
             }
         }));
         let msg = transactions.MakeIBCTransferMsg(inputChannelID, loginInfo.address,
-            toAddress.value, (amount.value * config.xprtValue), undefined, undefined,
+            toAddress.value, (amount.value * config.tokenValue), undefined, undefined,
             token.value.tokenDenom, chainInfo.selectedChannel ? chainInfo.selectedChannel.url : undefined, inputPort);
         msg.then(result => {
             dispatch(keplrSubmit([result]));

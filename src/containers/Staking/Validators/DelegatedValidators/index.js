@@ -74,7 +74,7 @@ const DelegatedValidators = (props) => {
                 {validator.data.description.moniker}
             </div>,
             <div className="voting" key={index}>
-                {transactions.XprtConversion(validator.delegations)}
+                {transactions.TokenValueConversion(validator.delegations)}
             </div>
             ,
             <div className="" key={index}>

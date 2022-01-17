@@ -18,7 +18,7 @@ const ButtonSubmit = () => {
     const validator = useSelector((state) => state.validators.validator.value);
 
     const onClick = () => {
-        dispatch(submitFormData([UnbondMsg(loginInfo.address, validator.operatorAddress, (amount.value * config.xprtValue).toFixed(0))]));
+        dispatch(submitFormData([UnbondMsg(loginInfo.address, validator.operatorAddress, (amount.value * config.tokenValue).toFixed(0))]));
     };
 
 
@@ -36,7 +36,7 @@ const ButtonSubmit = () => {
                 }
             }
         }));
-        dispatch(keplrSubmit([UnbondMsg(loginInfo.address, validator.operatorAddress, (amount.value * config.xprtValue).toFixed(0))]));
+        dispatch(keplrSubmit([UnbondMsg(loginInfo.address, validator.operatorAddress, (amount.value * config.tokenValue).toFixed(0))]));
     };
 
     return (

@@ -59,11 +59,11 @@ const Amount = () => {
                             <span
                                 className={transferableAmount === 0 ? "empty info-data" : "info-data info-link"}
                                 onClick={() => selectTotalBalanceHandler(removeCommas(formatNumber(transferableAmount)))}><span
-                                    className="title">Transferable Balance:</span>
+                                    className="title">{t("TRANSFERABLE_BALANCE")}:</span>
                                 <span
                                     className="value"
                                     title={transferableAmount}>
-                                    <NumberView value={formatNumber(transferableAmount)}/>XPRT
+                                    <NumberView value={formatNumber(transferableAmount)}/>{config.coinName}
                                 </span> 
                             </span>
                             :
@@ -82,7 +82,7 @@ const Amount = () => {
                         <span
                             className={transferableAmount === 0 ? "empty info-data" : "info-data info-link"}
                             onClick={() => selectTotalBalanceHandler(removeCommas(formatNumber(transferableAmount)))}><span
-                                className="title">Transferable Balance:</span>
+                                className="title">{t("TRANSFERABLE_BALANCE")}:</span>
                             <span
                                 className="value"
                                 title={transferableAmount}>

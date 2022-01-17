@@ -8,7 +8,7 @@ const baseAccount = "/cosmos.auth.v1beta1.BaseAccount";
 const delayedVesting = "/cosmos.vesting.v1beta1.DelayedVestingAccount";
 const continuousVesting = "/cosmos.vesting.v1beta1.ContinuousVestingAccount";
 
-function getUXPRT_Balance(amountList) {
+function getUTOKEN_Balance(amountList) {
     let balance = 0;
     for (let i = 0; i < amountList.length; i++) {
         if (amountList[i].denom === config.coinDenom) {
@@ -20,7 +20,7 @@ function getUXPRT_Balance(amountList) {
 }
 
 function getPeriodicVestingAmount(account, currentEpochTime) {
-    let accountVestingAmount = getUXPRT_Balance(account.accountData.baseVestingAccount.originalVesting);
+    let accountVestingAmount = getUTOKEN_Balance(account.accountData.baseVestingAccount.originalVesting);
     let freeBalance = 0;
     const endTime = parseInt(account.accountData.baseVestingAccount.endTime);
     if (endTime >= currentEpochTime) {
@@ -29,7 +29,7 @@ function getPeriodicVestingAmount(account, currentEpochTime) {
             let length = parseInt(account.accountData.vestingPeriods[i]["length"]);
             vestingTimes = vestingTimes + length;
             if (currentEpochTime >= vestingTimes) {
-                freeBalance = freeBalance + getUXPRT_Balance(account.accountData.vestingPeriods[i].amount);
+                freeBalance = freeBalance + getUTOKEN_Balance(account.accountData.vestingPeriods[i].amount);
             }
         }
     } else {
@@ -42,7 +42,7 @@ function getPeriodicVestingAmount(account, currentEpochTime) {
 function getDelayedVestingAmount(account, currentEpochTime) {
     const endTime = parseInt(account.accountData.baseVestingAccount.endTime);
     if (endTime >= currentEpochTime) {
-        return getUXPRT_Balance(account.accountData.baseVestingAccount.originalVesting);
+        return getUTOKEN_Balance(account.accountData.baseVestingAccount.originalVesting);
     } else {
         return 0;
     }
@@ -52,7 +52,7 @@ function getContinuousVestingAmount(account, currentEpochTime) {
     const endTime = parseInt(account.accountData.baseVestingAccount.endTime);
     const startTime = parseInt(account.accountData.startTime);
     if (endTime >= currentEpochTime) {
-        let originalVestingAmount = getUXPRT_Balance(account.accountData.baseVestingAccount.originalVesting);
+        let originalVestingAmount = getUTOKEN_Balance(account.accountData.baseVestingAccount.originalVesting);
         return (originalVestingAmount * (endTime - currentEpochTime)) / (endTime - startTime);
     } else {
         return 0;
@@ -87,7 +87,7 @@ async function getTransferableVestingAmount(address, balance) {
 
     GetAccount(address)
         .then(res => {
-            const amount = transactions.XprtConversion(getAccountVestingAmount(res, currentEpochTime));
+            const amount = transactions.TokenValueConversion(getAccountVestingAmount(res, currentEpochTime));
             vestingAmount = amount;
             if ((balance - amount) < 0) {
                 transferableAmount = 0;

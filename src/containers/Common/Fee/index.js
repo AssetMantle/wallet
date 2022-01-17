@@ -53,10 +53,10 @@ const Fee = () => {
                                 onClick={() => handleFee("Low", config.lowFee)}>
                                 <p className="title">Zero</p>
                                 <p className="gas"><NumberView
-                                    value={formatNumber(transactions.XprtConversion((gas.value) * config.lowFee) * tokenPrice)}/>$
+                                    value={formatNumber(transactions.TokenValueConversion((gas.value) * config.lowFee) * tokenPrice)}/>$
                                 </p>
-                                <p className="xprt"><NumberView
-                                    value={formatNumber(transactions.XprtConversion((gas.value) * config.lowFee))}/>
+                                <p className="token"><NumberView
+                                    value={formatNumber(transactions.TokenValueConversion((gas.value) * config.lowFee))}/>
                                 {config.coinName}
                                 </p>
                             </div>
@@ -66,10 +66,10 @@ const Fee = () => {
                         onClick={() => handleFee("Average", config.averageFee)}>
                         <p className="title">Low</p>
                         <p className="gas"><NumberView
-                            value={formatNumber(transactions.XprtConversion((gas.value) * config.averageFee) * tokenPrice)}/>$
+                            value={formatNumber(transactions.TokenValueConversion((gas.value) * config.averageFee) * tokenPrice)}/>$
                         </p>
-                        <p className="xprt"><NumberView
-                            value={formatNumber(transactions.XprtConversion((gas.value) * config.averageFee))}/>
+                        <p className="token"><NumberView
+                            value={formatNumber(transactions.TokenValueConversion((gas.value) * config.averageFee))}/>
                         {config.coinName}
                         </p>
                     </div>
@@ -77,10 +77,10 @@ const Fee = () => {
                         onClick={() => handleFee("High", config.highFee)}>
                         <p className="title">High</p>
                         <p className="gas"><NumberView
-                            value={formatNumber(transactions.XprtConversion((gas.value) * config.highFee) * tokenPrice)}/>$
+                            value={formatNumber(transactions.TokenValueConversion((gas.value) * config.highFee) * tokenPrice)}/>$
                         </p>
-                        <p className="xprt"><NumberView
-                            value={formatNumber(transactions.XprtConversion((gas.value) * config.highFee))}/>
+                        <p className="token"><NumberView
+                            value={formatNumber(transactions.TokenValueConversion((gas.value) * config.highFee))}/>
                         {config.coinName}
                         </p>
                     </div>

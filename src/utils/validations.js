@@ -23,12 +23,12 @@ export const ValidateFee = (transferableAmount, feeValue, type, amount) => {
     );
 
     if (amountTxns || vestingDelegationCheck) {
-        if (transferableAmount < transactions.XprtConversion(feeValue)) {
+        if (transferableAmount < transactions.TokenValueConversion(feeValue)) {
             return new Error('Insufficient wallet balance to process the transaction.');
         }
         return new Error('');
     } else {
-        if ((transferableAmount - (helper.stringToNumber(amount))) < transactions.XprtConversion(feeValue)) {
+        if ((transferableAmount - (helper.stringToNumber(amount))) < transactions.TokenValueConversion(feeValue)) {
             return new Error('Insufficient wallet balance to process the transaction.');
         }
         return new Error('');

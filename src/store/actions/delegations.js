@@ -43,7 +43,7 @@ export const fetchDelegationsCount = (address) => {
                     let totalDelegationsCount = Lodash.sumBy(delegationsResponse.delegationResponses, (delegation) => {
                         return helper.stringToNumber(delegation.balance.amount);
                     });
-                    dispatch(fetchDelegationsCountSuccess(transactions.XprtConversion(totalDelegationsCount)));
+                    dispatch(fetchDelegationsCountSuccess(transactions.TokenValueConversion(totalDelegationsCount)));
                 }
 
             }).catch((error) => {

@@ -6,6 +6,7 @@ import {useTranslation} from "react-i18next";
 import helper from "../../../utils/helper";
 import {formatNumber} from "../../../utils/scripts";
 import NumberView from "../../../components/NumberView";
+import config from "../../../config";
 
 const ModalViewDelegationDetails = (props) => {
     const {t} = useTranslation();
@@ -57,7 +58,7 @@ const ModalViewDelegationDetails = (props) => {
                                                 <td>
                                                     <span className="amount">
                                                         <NumberView
-                                                            value={formatNumber(transactions.XprtConversion(helper.stringToNumber(delegation.delegations)))}/>XPRT
+                                                            value={formatNumber(transactions.TokenValueConversion(helper.stringToNumber(delegation.delegations)))}/>{config.coinName}
                                                     </span>
                                                 </td>
                                                 <td>
@@ -81,7 +82,7 @@ const ModalViewDelegationDetails = (props) => {
                     </ul>
                 </Modal.Body>
             </Modal>
-            <span className="view-button" onClick={handleModal} title="View Unbonding XPRT Schedule">{t("VIEW")}</span>
+            <span className="view-button" onClick={handleModal} title={`View Unbonding ${config.coinName} Schedule`}>{t("VIEW")}</span>
         </>
 
     );

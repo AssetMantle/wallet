@@ -46,7 +46,7 @@ const Tokens = () => {
             tokenList.forEach((item) => {
                 if (evt.target.value === item.denomTrace) {
                     tokenDataObject.tokenDenom = evt.target.value;
-                    tokenDataObject.transferableAmount = transactions.XprtConversion(helper.stringToNumber(item.amount));
+                    tokenDataObject.transferableAmount = transactions.TokenValueConversion(helper.stringToNumber(item.amount));
                     tokenDataObject.tokenItem = item;
                 }
             });
@@ -73,7 +73,7 @@ const Tokens = () => {
                                         key={index + 1}
                                         className=""
                                         value={item.denom}>
-                                        XPRT
+                                        {config.coinName}
                                     </MenuItem>
                                 );
                             }

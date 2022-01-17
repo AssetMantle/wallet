@@ -13,6 +13,7 @@ import helper from "../../utils/helper";
 import ActionHelper from "../../utils/actions";
 import {QueryClientImpl as StakingQueryClientImpl} from "cosmjs-types/cosmos/staking/v1beta1/query";
 import * as Sentry from "@sentry/browser";
+import config from "../../config";
 
 export const fetchRewardsProgress = () => {
     return {
@@ -71,7 +72,7 @@ export const fetchTotalRewards = (address) => {
             }).then(async (delegatorRewardsResponse) => {
                 if (delegatorRewardsResponse.total.length) {
                     let rewards = helper.decimalConversion(delegatorRewardsResponse.total[0].amount, 18);
-                    const fixedRewardsResponse = transactions.XprtConversion(helper.stringToNumber(rewards));
+                    const fixedRewardsResponse = transactions.TokenValueConversion(helper.stringToNumber(rewards));
                     dispatch(fetchRewardsSuccess(fixedRewardsResponse.toFixed(6)));
                 }
             }).catch((error) => {
@@ -113,7 +114,7 @@ export const fetchRewards = (address) => {
                                 validatorAddr: item.validatorAddress,
                             }).then(async (res) => {
                                 const data = {
-                                    label: `${res.validator.description.moniker} - ${transactions.XprtConversion(helper.decimalConversion(item.reward[0] && item.reward[0].amount)).toLocaleString(undefined, {minimumFractionDigits: 6})} XPRT`,
+                                    label: `${res.validator.description.moniker} - ${transactions.TokenValueConversion(helper.decimalConversion(item.reward[0] && item.reward[0].amount)).toLocaleString(undefined, {minimumFractionDigits: 6})} ${config.coinName}`,
                                     value: res.validator.operatorAddress,
                                     rewards: helper.decimalConversion(item.reward[0] && item.reward[0].amount)
                                 };

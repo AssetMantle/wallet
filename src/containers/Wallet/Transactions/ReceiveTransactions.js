@@ -107,19 +107,19 @@ const ReceiveTransactions = (props) => {
                         stxn.fee.amount[0].denom === config.coinDenom ?
                             <div className="fee text-left" key={index}>
                                 <NumberView
-                                    value={formatNumber(transactions.XprtConversion(stxn.fee.amount[0].amount))}/>
+                                    value={formatNumber(transactions.TokenValueConversion(stxn.fee.amount[0].amount))}/>
                                 {config.coinName}
                             </div>
                             :
                             <div className="fee text-left" key={index}>
                                 <NumberView
-                                    value={formatNumber(transactions.XprtConversion(stxn.fee.amount[0].amount))}/>
+                                    value={formatNumber(transactions.TokenValueConversion(stxn.fee.amount[0].amount))}/>
                                 {stxn.fee.amount[0].denom}
                             </div>
                         : ""
                     :
                     <div className="fee text-left" key={index}>
-                        <NumberView value={formatNumber(transactions.XprtConversion(stxn.fee.amount.amount))}/>
+                        <NumberView value={formatNumber(transactions.TokenValueConversion(stxn.fee.amount.amount))}/>
                         {stxn.fee.amount.denom}
                     </div>
                 : '',

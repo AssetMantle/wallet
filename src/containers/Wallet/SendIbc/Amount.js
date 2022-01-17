@@ -59,7 +59,7 @@ const Amount = () => {
                             <span
                                 className={transferableAmount === 0 ? "empty info-data" : "info-data info-link"}
                                 onClick={() => selectTotalBalanceHandler(removeCommas(formatNumber(transferableAmount)))}><span
-                                    className="title">Transferable Balance:</span>
+                                    className="title">{t("TRANSFERABLE_BALANCE")}:</span>
                                 <span
                                     className="value"
                                     title={transferableAmount}>
@@ -84,7 +84,7 @@ const Amount = () => {
                                 <span onClick={() => selectTotalBalanceHandler(removeCommas(formatNumber(token.transferableAmount)))}
                                     className={token.transferableAmount === 0 ? "empty info-data" : "info-data info-link"}>
                                     <span className="title">
-                                        Transferable Balance:
+                                        {t("TRANSFERABLE_BALANCE")}:
                                     </span>
                                     <span className="value">
                                         {token.transferableAmount.toLocaleString()} {helper.denomChange(token.tokenItem.denom.baseDenom)}

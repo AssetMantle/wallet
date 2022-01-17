@@ -128,7 +128,7 @@ const ModalDecryptKeyStore = (props) => {
                 let response;
                 if (props.formData.formName === "ibc") {
                     let msg = transactions.MakeIBCTransferMsg(props.formData.channelID, address,
-                        props.formData.toAddress, (props.formData.amount * config.xprtValue).toFixed(0), undefined, undefined, props.formData.denom, props.formData.channelUrl, props.formData.inputPort);
+                        props.formData.toAddress, (props.formData.amount * config.tokenValue).toFixed(0), undefined, undefined, props.formData.denom, props.formData.channelUrl, props.formData.inputPort);
                     await msg.then(result => {
                         response = transactions.TransactionWithMnemonic([result],
                             feeMessage(Math.trunc(props.fee), props.gas), props.formData.memo, mnemonic,
