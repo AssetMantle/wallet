@@ -46,6 +46,9 @@ const App = () => {
     }];
     const [isOnline, setNetwork] = useState(window.navigator.onLine);
     const updateNetwork = () => {
+        if(window.navigator.onLine){
+            window.location.reload();
+        }
         setNetwork(window.navigator.onLine);
     };
 

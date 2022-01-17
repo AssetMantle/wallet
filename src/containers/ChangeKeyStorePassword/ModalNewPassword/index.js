@@ -1,7 +1,6 @@
 import {Modal as ReactModal} from 'react-bootstrap';
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {hideKeyStoreModal} from "../../../store/actions/transactions/keyStore";
 import Password from "./Password";
 import Submit from "./Submit";
 import Icon from "../../../components/Icon";
@@ -15,7 +14,7 @@ const ModalNewPassword = () => {
     const dispatch = useDispatch();
 
     const handleClose = () => {
-        dispatch(hideKeyStoreModal());
+        dispatch(hideKeyStoreNewPasswordModal());
     };
 
     const keyStorePrevious = () => {
@@ -45,9 +44,9 @@ const ModalNewPassword = () => {
             <ReactModal.Body className="create-wallet-body import-wallet-body">
                 <div className="form-field">
                     <p className="label"> {t("ADDRESS")}</p>
-                    <p className="info-data">
-                        {response.value.address}
-                    </p>
+                    <div className="available-tokens">
+                        <p className="tokens">{response.value.address} </p>
+                    </div>
                 </div>
                 <Password/>
                 {

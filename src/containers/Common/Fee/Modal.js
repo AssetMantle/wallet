@@ -1,11 +1,12 @@
 import {Modal as ReactModal} from 'react-bootstrap';
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {hideFeeModal} from "../../../store/actions/transactions/fee";
+import {feeChangeHandler, hideFeeModal} from "../../../store/actions/transactions/fee";
 import Fee from "./index";
 import Gas from "./Gas";
 import Submit from "./Submit";
 import Icon from "../../../components/Icon";
+import config from "../../../config";
 
 const Modal = () => {
     const show = useSelector((state) => state.fee.modal);
@@ -15,6 +16,15 @@ const Modal = () => {
 
     const dispatch = useDispatch();
     const handleClose = () => {
+        dispatch(feeChangeHandler({
+            value: {
+                fee: config.averageFee,
+                feeType: "Average",
+            },
+            error: {
+                message: '',
+            },
+        }));
         dispatch(hideFeeModal());
     };
 

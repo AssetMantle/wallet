@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import moment from 'moment';
 import helper from "../../../utils/helper";
 import Icon from "../../../components/Icon";
-import Loader from "../../../components/Loader";
+import loader from "../../../assets/images/loader.svg";
 import {fetchTransactions} from "../../../store/actions/transactionQueries";
 import {connect} from "react-redux";
 import DataTable from "../../../components/DataTable";
@@ -132,7 +132,9 @@ const SendTransactions = (props) => {
         :
         [];
     if (props.inProgress && props.list.length) {
-        return <Loader/>;
+        return <div className="transaction-loader">
+            <img src={loader} alt="loader" className="loader"/>
+        </div>;
     }
     const handleNext = () => {
         if (!helper.checkLastPage(props.pageNumber[0], 5, props.pageNumber[1])) {

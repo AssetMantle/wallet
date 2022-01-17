@@ -95,53 +95,60 @@ export const fetchTotalRewards = (address) => {
 
 export const fetchRewards = (address) => {
     return async dispatch => {
-        dispatch(fetchRewardsProgress());
-        const rpcClient = await transactions.RpcClient();
-        const distributionQueryService = new QueryClientImpl(rpcClient);
-        await distributionQueryService.DelegationTotalRewards({
-            delegatorAddress: address,
-        }).then(async (delegatorRewardsResponse) => {
-            if (delegatorRewardsResponse.rewards.length) {
-                let options = [];
-
+        try {
+            dispatch(fetchRewardsProgress());
+            const rpcClient = await transactions.RpcClient();
+            const distributionQueryService = new QueryClientImpl(rpcClient);
+            await distributionQueryService.DelegationTotalRewards({
+                delegatorAddress: address,
+            }).then(async (delegatorRewardsResponse) => {
                 if (delegatorRewardsResponse.rewards.length) {
-                    for (const item of delegatorRewardsResponse.rewards) {
-                        const stakingQueryService = new StakingQueryClientImpl(rpcClient);
+                    let options = [];
 
-                        await stakingQueryService.Validator({
-                            validatorAddr: item.validatorAddress,
-                        }).then(async (res) => {
-                            const data = {
-                                label: `${res.validator.description.moniker} - ${transactions.XprtConversion(helper.decimalConversion(item.reward[0] && item.reward[0].amount)).toLocaleString(undefined, {minimumFractionDigits: 6})} XPRT`,
-                                value: res.validator.operatorAddress,
-                                rewards: helper.decimalConversion(item.reward[0] && item.reward[0].amount)
-                            };
+                    if (delegatorRewardsResponse.rewards.length) {
+                        for (const item of delegatorRewardsResponse.rewards) {
+                            const stakingQueryService = new StakingQueryClientImpl(rpcClient);
 
-                            if (transactions.checkValidatorAccountAddress(res.validator.operatorAddress, address)) {
-                                let commissionInfo = await ActionHelper.getValidatorCommission(res.validator.operatorAddress);
-                                dispatch(fetchValidatorCommissionInfoSuccess([commissionInfo, res.validator.operatorAddress, true]));
-                            }
-                            options.push(data);
-                        }).catch((error) => {
-                            Sentry.captureException(error.response
-                                ? error.response.data.message
-                                : error.message);
-                            dispatch(fetchValidatorRewardsListError(error.response
-                                ? error.response.data.message
-                                : error.message));
-                        });
+                            await stakingQueryService.Validator({
+                                validatorAddr: item.validatorAddress,
+                            }).then(async (res) => {
+                                const data = {
+                                    label: `${res.validator.description.moniker} - ${transactions.XprtConversion(helper.decimalConversion(item.reward[0] && item.reward[0].amount)).toLocaleString(undefined, {minimumFractionDigits: 6})} XPRT`,
+                                    value: res.validator.operatorAddress,
+                                    rewards: helper.decimalConversion(item.reward[0] && item.reward[0].amount)
+                                };
+
+                                if (transactions.checkValidatorAccountAddress(res.validator.operatorAddress, address)) {
+                                    let commissionInfo = await ActionHelper.getValidatorCommission(res.validator.operatorAddress);
+                                    dispatch(fetchValidatorCommissionInfoSuccess([commissionInfo, res.validator.operatorAddress, true]));
+                                }
+                                options.push(data);
+                            }).catch((error) => {
+                                Sentry.captureException(error.response
+                                    ? error.response.data.message
+                                    : error.message);
+                                dispatch(fetchValidatorRewardsListError(error.response
+                                    ? error.response.data.message
+                                    : error.message));
+                            });
+                        }
                     }
+                    dispatch(fetchValidatorRewardsListSuccess(options));
+                    dispatch(fetchRewardsListProgress(delegatorRewardsResponse.rewards));
                 }
-                dispatch(fetchValidatorRewardsListSuccess(options));
-                dispatch(fetchRewardsListProgress(delegatorRewardsResponse.rewards));
-            }
-        }).catch((error) => {
+            }).catch((error) => {
+                Sentry.captureException(error.response
+                    ? error.response.data.message
+                    : error.message);
+                dispatch(fetchRewardsError(error.response
+                    ? error.response.data.message
+                    : error.message));
+            });
+        }catch (error) {
             Sentry.captureException(error.response
                 ? error.response.data.message
                 : error.message);
-            dispatch(fetchRewardsError(error.response
-                ? error.response.data.message
-                : error.message));
-        });
+            console.log(error.message);
+        }
     };
 };

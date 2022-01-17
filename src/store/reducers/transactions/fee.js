@@ -29,7 +29,10 @@ const fee = (state = {
     case TX_RESULT_MODAL_HIDE:
         return {
             ...state,
-            value: '',
+            value: {
+                fee: config.averageFee,
+                feeType: "Average",
+            },
             error: {
                 ...state.error,
                 message: '',

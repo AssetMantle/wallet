@@ -28,6 +28,7 @@ const amount = (state = {
         };
 
     case TX_SUCCESS:
+    case TX_DELEGATE_MODAL_HIDE:
     case TX_RESULT_MODAL_HIDE:
         return {
             ...state,

@@ -18,23 +18,30 @@ export const fetchAddressError = (data) => {
 
 export const fetchWithdrawAddress = (address) => {
     return async dispatch => {
-        const rpcClient = await transactions.RpcClient();
+        try {
+            const rpcClient = await transactions.RpcClient();
 
-        const stakingQueryService = new QueryClientImpl(rpcClient);
-        await stakingQueryService.DelegatorWithdrawAddress({
-            delegatorAddress: address,
-        }).then((res) => {
-            if (res.withdrawAddress) {
-                dispatch(fetchAddressSuccess(res.withdrawAddress));
-            }
-        }).catch((error) => {
+            const stakingQueryService = new QueryClientImpl(rpcClient);
+            await stakingQueryService.DelegatorWithdrawAddress({
+                delegatorAddress: address,
+            }).then((res) => {
+                if (res.withdrawAddress) {
+                    dispatch(fetchAddressSuccess(res.withdrawAddress));
+                }
+            }).catch((error) => {
+                Sentry.captureException(error.response
+                    ? error.response.data.message
+                    : error.message);
+                dispatch(fetchAddressError(error.response
+                    ? error.response.data.message
+                    : error.message));
+            });
+        }catch (error) {
             Sentry.captureException(error.response
                 ? error.response.data.message
                 : error.message);
-            dispatch(fetchAddressError(error.response
-                ? error.response.data.message
-                : error.message));
-        });
+            console.log(error.message);
+        }
 
     };
 };

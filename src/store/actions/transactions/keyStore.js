@@ -68,6 +68,7 @@ export const keyStoreSubmit = (loginAddress) => {
             } else {
                 mnemonic = await transactions.PrivateKeyReader(keyStoreData.value, password.value, loginAddress, accountNumber, accountIndex);
             }
+
             let result = await transactions.getTransactionResponse(loginAddress, formData, fee, gas, mnemonic, txName, accountNumber, accountIndex, bip39PassPhrase);
             if (result.code !== undefined) {
                 dispatch(setLoginInfo({

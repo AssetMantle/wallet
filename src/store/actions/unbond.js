@@ -35,30 +35,37 @@ export const fetchUnbondDelegationsList = (list) => {
 
 export const fetchUnbondDelegations = (address) => {
     return async dispatch => {
-        dispatch(fetchUnbondDelegationsProgress());
-        const rpcClient = await transactions.RpcClient();
-        const stakingQueryService = new QueryClientImpl(rpcClient);
-        await stakingQueryService.DelegatorUnbondingDelegations({
-            delegatorAddr: address,
-        }).then((unbondingDelegationsResponse) => {
-            if (unbondingDelegationsResponse.unbondingResponses.length) {
-                dispatch(fetchUnbondDelegationsList(unbondingDelegationsResponse.unbondingResponses));
-                const totalUnbond = Lodash.sumBy(unbondingDelegationsResponse.unbondingResponses, (item) => {
-                    if (item.entries.length) {
-                        return Lodash.sumBy(item.entries, (entry) => {
-                            return parseInt(entry["balance"]);
-                        });
-                    }
-                });
-                dispatch(fetchUnbondDelegationsSuccess(transactions.XprtConversion(totalUnbond)));
-            }
-        }).catch((error) => {
+        try {
+            dispatch(fetchUnbondDelegationsProgress());
+            const rpcClient = await transactions.RpcClient();
+            const stakingQueryService = new QueryClientImpl(rpcClient);
+            await stakingQueryService.DelegatorUnbondingDelegations({
+                delegatorAddr: address,
+            }).then((unbondingDelegationsResponse) => {
+                if (unbondingDelegationsResponse.unbondingResponses.length) {
+                    dispatch(fetchUnbondDelegationsList(unbondingDelegationsResponse.unbondingResponses));
+                    const totalUnbond = Lodash.sumBy(unbondingDelegationsResponse.unbondingResponses, (item) => {
+                        if (item.entries.length) {
+                            return Lodash.sumBy(item.entries, (entry) => {
+                                return parseInt(entry["balance"]);
+                            });
+                        }
+                    });
+                    dispatch(fetchUnbondDelegationsSuccess(transactions.XprtConversion(totalUnbond)));
+                }
+            }).catch((error) => {
+                Sentry.captureException(error.response
+                    ? error.response.data.message
+                    : error.message);
+                dispatch(fetchUnbondDelegationsError(error.response
+                    ? error.response.data.message
+                    : error.message));
+            });
+        }catch (error) {
             Sentry.captureException(error.response
                 ? error.response.data.message
                 : error.message);
-            dispatch(fetchUnbondDelegationsError(error.response
-                ? error.response.data.message
-                : error.message));
-        });
+            console.log(error.message);
+        }
     };
 };
