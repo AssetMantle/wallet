@@ -1,4 +1,4 @@
-import {DirectSecp256k1HdWallet} from "@cosmjs/proto-signing";
+import {DirectSecp256k1HdWallet, Registry} from "@cosmjs/proto-signing";
 import config from "../config.json";
 import {sha256, stringToPath} from "@cosmjs/crypto";
 import helper from "./helper";
@@ -18,6 +18,8 @@ import {BaseAccount} from "cosmjs-types/cosmos/auth/v1beta1/auth";
 import * as Sentry from "@sentry/browser";
 import {ACCOUNT, ENCRYPTED_MNEMONIC, FEE, LOGIN_MODE} from "../constants/localStorage";
 
+const txAuthz = require("cosmjs-types/cosmos/authz/v1beta1/tx");
+
 const encoding = require("@cosmjs/encoding");
 const tendermint_1 = require("cosmjs-types/ibc/lightclients/tendermint/v1/tendermint");
 const {SigningStargateClient, QueryClient, setupIbcExtension} = require("@cosmjs/stargate");
@@ -29,10 +31,20 @@ const configCoinType = config.coinType;
 const valoperAddressPrefix = config.valoperAddressPrefix;
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
+const {defaultRegistryTypes} = require("@cosmjs/stargate");
+
+// function createDefaultRegistry() {
+//     return new Registry([...defaultRegistryTypes, ["/cosmos.authz.v1beta1.MsgGrant", txAuthz.MsgGrant]);
+// }
+// {registry:new Registry([...defaultRegistryTypes, ["/cosmos.authz.v1beta1.MsgGrant" , txAuthz.MsgGrant]])}
+// const rrr = createDefaultRegistry();
+
 async function Transaction(wallet, signerAddress, msgs, fee, memo = "") {
+    console.log(wallet, signerAddress, msgs, fee);
     const cosmJS = await SigningStargateClient.connectWithSigner(
         tendermintRPCURL,
         wallet,
+        {registry:new Registry([...defaultRegistryTypes, ["/cosmos.authz.v1beta1.MsgGrant" , txAuthz.MsgGrant]])}
     );
     return await cosmJS.signAndBroadcast(signerAddress, msgs, fee, memo);
 }

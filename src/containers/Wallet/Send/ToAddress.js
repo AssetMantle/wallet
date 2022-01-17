@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {setTxSendAddress} from "../../../store/actions/transactions/send";
 import {useTranslation} from "react-i18next";
 import {ValidateAlphaNumeric} from "../../../utils/validations";
+import config from "../../../config";
 
 const ToAddress = () => {
     const {t} = useTranslation();
@@ -24,7 +25,7 @@ const ToAddress = () => {
     const onBlur = (evt) => {
         dispatch(setTxSendAddress({
             value: evt.target.value.toString(),
-            error: helper.validateAddress(evt.target.value),
+            error: helper.validateAddress(evt.target.value, config.addressPrefix),
         }));
     };
 

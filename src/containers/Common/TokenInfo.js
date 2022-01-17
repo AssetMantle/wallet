@@ -82,7 +82,7 @@ const TokenInfo = (props) => {
                                             : ""
                                     }
                                 </span>
-                                <NumberView value={formatNumber(props.delegations + props.balance + props.unbond)}/>XPRT
+                                <NumberView value={formatNumber(props.delegations + props.balance + props.unbond)}/>{config.coinName}
                             </p>
                         </div>
                         <div className="line">
@@ -120,7 +120,7 @@ const TokenInfo = (props) => {
                                             : ""
                                     }
                                 </span>
-                                <NumberView value={formatNumber(props.vestingAmount)}/> XPRT
+                                <NumberView value={formatNumber(props.vestingAmount)}/> {config.coinName}
                             </p>
                         </div>
                         <div className="line">
@@ -134,7 +134,7 @@ const TokenInfo = (props) => {
                             </p>
                             <p className="value" title={props.transferableAmount.toFixed(6)}><span
                                 className="inner-grid-icon"/>
-                            <NumberView value={formatNumber(props.transferableAmount)}/> XPRT
+                            <NumberView value={formatNumber(props.transferableAmount)}/> {config.coinName}
                             </p>
                         </div>
                         <div className="line">
@@ -147,7 +147,7 @@ const TokenInfo = (props) => {
                                 </OverlayTrigger>
                             </p>
                             <p className="value" title={props.balance.toFixed(6)}><span className="inner-grid-icon"/>
-                                <NumberView value={formatNumber(props.balance)}/> XPRT</p>
+                                <NumberView value={formatNumber(props.balance)}/> {config.coinName}</p>
                         </div>
 
                     </div>
@@ -165,7 +165,7 @@ const TokenInfo = (props) => {
                                             : ""
                                     }
                                 </span>
-                                <span> <NumberView value={formatNumber(props.delegations)}/> XPRT</span>
+                                <span> <NumberView value={formatNumber(props.delegations)}/> {config.coinName}</span>
                             </p>
                         </div>
                         <div className="line">
@@ -173,7 +173,7 @@ const TokenInfo = (props) => {
                             <p className="value rewards"><span onClick={() => handleRewards("rewards")}
                                 className="claim inner-grid">{t("CLAIM")}</span>
                             <span title={props.rewards}>
-                                <NumberView value={formatNumber(props.rewards)}/> XPRT
+                                <NumberView value={formatNumber(props.rewards)}/> {config.coinName}
                             </span>
                             </p>
                         </div>
@@ -188,7 +188,7 @@ const TokenInfo = (props) => {
                                 }
                             </span>
                             <span title={props.unbond}>
-                                <NumberView value={formatNumber(props.unbond)}/>XPRT
+                                <NumberView value={formatNumber(props.unbond)}/>{config.coinName}
                             </span>
                             </p>
                         </div>

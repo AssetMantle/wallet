@@ -42,6 +42,8 @@ const AdvanceMode = (props) => {
 
         const walletPath = transactions.makeHdPath(accountNumber, addressIndex);
         const responseData = await wallet.createWallet(props.mnemonic, walletPath, bip39Passphrase);
+
+        console.log(responseData, "responseData");
         setResponse(responseData);
         setResponseShow(true);
         setAdvanceForm(false);

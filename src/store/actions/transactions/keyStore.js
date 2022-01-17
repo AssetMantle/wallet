@@ -86,6 +86,7 @@ export const keyStoreSubmit = (loginAddress) => {
             Sentry.captureException(error.response
                 ? error.response.data.message
                 : error.message);
+            console.log(error, "Error");
             dispatch(txFailed(error.message));
         }
     };

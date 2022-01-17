@@ -1,4 +1,5 @@
 import {MsgSend} from "cosmjs-types/cosmos/bank/v1beta1/tx";
+import {MsgGrant} from "cosmjs-types/cosmos/authz/v1beta1/tx";
 import {MsgBeginRedelegate, MsgDelegate, MsgUndelegate} from "cosmjs-types/cosmos/staking/v1beta1/tx";
 import {
     MsgSetWithdrawAddress,
@@ -11,6 +12,7 @@ import helper from "./helper";
 import config from "../config";
 
 const msgSendTypeUrl = "/cosmos.bank.v1beta1.MsgSend";
+const msgGrantTypeUrl = "/cosmos.authz.v1beta1.MsgGrant";
 const msgDelegateTypeUrl = "/cosmos.staking.v1beta1.MsgDelegate";
 const msgRedelegateTypeUrl = "/cosmos.staking.v1beta1.MsgBeginRedelegate";
 const msgUnbondTypeUrl = "/cosmos.staking.v1beta1.MsgUndelegate";
@@ -33,6 +35,34 @@ function SendMsg(fromAddress, toAddress, amount, denom) {
     };
 }
 
+function GrantMsg(granterAddress, granteeAddress) {
+    return {
+        typeUrl: msgGrantTypeUrl,
+        value: MsgGrant.fromPartial({
+            granter:granterAddress,
+            grantee:granteeAddress,
+            grant:{
+                authorization:{
+                    typeUrl:msgDelegateTypeUrl,
+                    value:MsgDelegate
+                },
+                expiration:{
+                    seconds:'200000',
+                    nanos: 12232
+                }
+            }
+        })
+        //
+        //     .fromPartial({
+        //     fromAddress: helper.trimWhiteSpaces(fromAddress),
+        //     toAddress: helper.trimWhiteSpaces(toAddress),
+        //     amount: [{
+        //         denom: denom,
+        //         amount: String(amount),
+        //     }],
+        // }),
+    };
+}
 
 function DelegateMsg(delegatorAddress, validatorAddress, amount, denom = config.coinDenom) {
     return {
@@ -136,5 +166,6 @@ export {
     WithdrawMsg,
     SetWithDrawAddressMsg,
     TransferMsg,
-    ValidatorCommissionMsg
+    ValidatorCommissionMsg,
+    GrantMsg
 };
