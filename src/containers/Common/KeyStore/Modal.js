@@ -11,6 +11,7 @@ import Advanced from "../Advanced";
 import {setLoginInfo, txFailed} from "../../../store/actions/transactions/common";
 import {useTranslation} from "react-i18next";
 import {setAccountIndex, setAccountNumber, setBip39Passphrase} from "../../../store/actions/transactions/advanced";
+import {ENCRYPTED_MNEMONIC} from "../../../constants/localStorage";
 
 const Modal = () => {
     const {t} = useTranslation();
@@ -18,7 +19,7 @@ const Modal = () => {
     const encryptedSeed = useSelector((state) => state.common.loginInfo.encryptedSeed);
     const response = useSelector((state) => state.common.error);
     const dispatch = useDispatch();
-    const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
+    const encryptedMnemonic = localStorage.getItem(ENCRYPTED_MNEMONIC);
     useEffect(() => {
         if (encryptedMnemonic !== null) {
             dispatch(setLoginInfo({

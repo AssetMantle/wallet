@@ -7,6 +7,7 @@ import GeneratePrivateKey from "../KeyStore/GenerateKeyStore/GeneratePrivateKey"
 import {useTranslation} from "react-i18next";
 import transactions from "../../utils/transactions";
 import config from "../../config";
+import {ENCRYPTED_MNEMONIC} from "../../constants/localStorage";
 
 const ModalImportWallet = (props) => {
     const {t} = useTranslation();
@@ -38,7 +39,7 @@ const ModalImportWallet = (props) => {
                     setErrorMessage(decryptedData.error);
                 } else {
                     let mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
-                    localStorage.setItem('encryptedMnemonic', event.target.result);
+                    localStorage.setItem(ENCRYPTED_MNEMONIC, event.target.result);
                     setUserMnemonic(mnemonic);
                     setAdvancedForm(true);
                     setMnemonicForm(false);
@@ -235,7 +236,7 @@ const ModalImportWallet = (props) => {
                                                         <p className="label"> {t("ACCOUNT")}</p>
                                                         <Form.Control
                                                             type="number"
-                                                            max={config.maxAccountIndex}
+                                                            max={config.maxAccountNumber}
                                                             name="accountNumber"
                                                             id="accountNumber"
                                                             placeholder={t("ACCOUNT_NUMBER")}

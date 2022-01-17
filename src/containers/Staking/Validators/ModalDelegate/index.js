@@ -9,13 +9,14 @@ import ButtonSubmit from "./ButtonSubmit";
 import {showValidatorTxModal} from "../../../../store/actions/validators";
 import Memo from "./Memo";
 import config from "../../../../config";
+import {LOGIN_INFO} from "../../../../constants/localStorage";
 
 const ModalDelegate = (props) => {
     const dispatch = useDispatch();
     const show = useSelector((state) => state.delegate.modal);
     const {t} = useTranslation();
     const response = useSelector(state => state.common.error);
-    const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
 
     const popover = (
         <Popover id="popover-basic">

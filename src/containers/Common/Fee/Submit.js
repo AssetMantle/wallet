@@ -3,11 +3,12 @@ import Button from "./../../../components/Button";
 import {feeChangeHandler, feeSubmitKeyStore} from "../../../store/actions/transactions/fee";
 import {useDispatch, useSelector} from "react-redux";
 import {ledgerSubmit} from "../../../store/actions/transactions/ledger";
+import {ADDRESS, LOGIN_MODE} from "../../../constants/localStorage";
 import config from "../../../config";
 
 const Submit = () => {
-    let loginMode = localStorage.getItem('loginMode');
-    let loginAddress = localStorage.getItem('address');
+    let loginMode = localStorage.getItem(LOGIN_MODE);
+    let loginAddress = localStorage.getItem(ADDRESS);
 
     const dispatch = useDispatch();
 

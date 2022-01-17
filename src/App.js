@@ -22,6 +22,7 @@ import transactions from "./utils/transactions";
 import * as Sentry from "@sentry/react";
 import {Integrations} from "@sentry/tracing";
 import {keplrLogin, setKeplrInfo} from "./store/actions/signIn/keplr";
+import {ADDRESS, KEPLR_ADDRESS, LOGIN_MODE, VERSION} from "./constants/localStorage";
 const SENTRY_API = process.env.REACT_APP_SENTRY_API;
 const App = () => {
     const {t} = useTranslation();
@@ -54,12 +55,12 @@ const App = () => {
     const dispatch = useDispatch();
 
     let address;
-    const version = localStorage.getItem('version');
+    const version = localStorage.getItem(VERSION);
     if (version == null || config.version !== version) {
         localStorage.clear();
         history.push('/');
     } else {
-        address = localStorage.getItem('address');
+        address = localStorage.getItem(ADDRESS);
     }
 
     useEffect(() => {
@@ -89,10 +90,10 @@ const App = () => {
     });
 
     window.addEventListener("keplr_keystorechange", () => {
-        if (localStorage.getItem('loginMode') === config.keplrMode) {
+        if (localStorage.getItem(LOGIN_MODE) === config.keplrMode) {
             const keplr = KeplrWallet();
             keplr.then(function () {
-                const address = localStorage.getItem("keplrAddress");
+                const address = localStorage.getItem(KEPLR_ADDRESS);
                 dispatch(setKeplrInfo({
                     value: address,
                     error: {

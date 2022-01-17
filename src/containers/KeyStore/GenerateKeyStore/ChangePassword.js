@@ -6,6 +6,7 @@ import {useTranslation} from "react-i18next";
 import transactions from "../../../utils/transactions";
 import wallet from "../../../utils/wallet";
 import AdvancedFields from "../../../components/AdvancedFields";
+import {ENCRYPTED_MNEMONIC} from "../../../constants/localStorage";
 
 
 const ChangePassword = (props) => {
@@ -38,7 +39,7 @@ const ChangePassword = (props) => {
                     setErrorMessage(decryptedData.error);
                 } else {
                     let mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
-                    localStorage.setItem('encryptedMnemonic', event.target.result);
+                    localStorage.setItem(ENCRYPTED_MNEMONIC, event.target.result);
                     let accountNumber = 0;
                     let addressIndex = 0;
                     let bip39Passphrase = "";

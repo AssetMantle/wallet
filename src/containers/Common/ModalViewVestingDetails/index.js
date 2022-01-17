@@ -7,6 +7,7 @@ import * as vesting_1 from "cosmjs-types/cosmos/vesting/v1beta1/vesting";
 import {useTranslation} from "react-i18next";
 import * as Sentry from "@sentry/react";
 import helper from "../../../utils/helper";
+import {ADDRESS} from "../../../constants/localStorage";
 
 const ModalViewVestingDetails = () => {
     const {t} = useTranslation();
@@ -15,7 +16,7 @@ const ModalViewVestingDetails = () => {
     const [showPeriodicVesting, setShowPeriodicVesting] = useState(false);
     const [showDelayedVesting, setShowDelayedVesting] = useState(false);
     const [response, setResponse] = useState({});
-    const loginAddress = localStorage.getItem('address');
+    const loginAddress = localStorage.getItem(ADDRESS);
     const handleClose = () => {
         setShow(false);
     };

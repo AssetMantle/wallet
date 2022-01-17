@@ -16,6 +16,7 @@ import {
 } from "cosmjs-types/cosmos/vesting/v1beta1/vesting";
 import {BaseAccount} from "cosmjs-types/cosmos/auth/v1beta1/auth";
 import * as Sentry from "@sentry/browser";
+import {ACCOUNT, ENCRYPTED_MNEMONIC, FEE, LOGIN_MODE} from "../constants/localStorage";
 
 const encoding = require("@cosmjs/encoding");
 const tendermint_1 = require("cosmjs-types/ibc/lightclients/tendermint/v1/tendermint");
@@ -73,7 +74,7 @@ async function LedgerWallet(hdpath, prefix) {
 }
 
 async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(), bip39Passphrase = "", loginAddress, prefix = addressPrefix) {
-    const loginMode = localStorage.getItem('loginMode');
+    const loginMode = localStorage.getItem(LOGIN_MODE);
     if (loginMode === "normal") {
         const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix);
         if (address !== loginAddress) {
@@ -115,16 +116,16 @@ function getAccountNumberAndSequence(authResponse) {
 }
 
 function updateFee(address) {
-    if (localStorage.getItem('loginMode') === 'normal') {
+    if (localStorage.getItem(LOGIN_MODE) === 'normal') {
         GetAccount(address)
             .then(async res => {
                 const accountType = await VestingAccountCheck(res.typeUrl);
                 if (accountType) {
-                    localStorage.setItem('fee', config.vestingAccountFee);
-                    localStorage.setItem('account', 'vesting');
+                    localStorage.setItem(FEE, config.vestingAccountFee);
+                    localStorage.setItem(ACCOUNT, 'vesting');
                 } else {
-                    localStorage.setItem('fee', config.defaultFee);
-                    localStorage.setItem('account', 'non-vesting');
+                    localStorage.setItem(FEE, config.defaultFee);
+                    localStorage.setItem(ACCOUNT, 'non-vesting');
                 }
             })
             .catch(error => {
@@ -132,11 +133,11 @@ function updateFee(address) {
                     ? error.response.data.message
                     : error.message);
                 console.log(error.message);
-                localStorage.setItem('fee', config.defaultFee);
-                localStorage.setItem('account', 'non-vesting');
+                localStorage.setItem(FEE, config.defaultFee);
+                localStorage.setItem(ACCOUNT, 'non-vesting');
             });
     } else {
-        localStorage.setItem('fee', config.vestingAccountFee);
+        localStorage.setItem(FEE, config.vestingAccountFee);
     }
 }
 
@@ -161,7 +162,7 @@ function PrivateKeyReader(file, password, loginAddress, accountNumber = "0", add
                     const address = accountData[1];
                     if (address === loginAddress) {
                         resolve(mnemonic);
-                        localStorage.setItem('encryptedMnemonic', event.target.result);
+                        localStorage.setItem(ENCRYPTED_MNEMONIC, event.target.result);
                     } else {
                         reject(new Error("Your sign in address and keystore file don’t match. Please try again or else sign in again."));
                     }

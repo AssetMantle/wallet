@@ -6,6 +6,7 @@ import {hideTxWithDrawAddressModal, submitFormData} from "../../../store/actions
 import {SetWithDrawAddressMsg} from "../../../utils/protoMsgHelper";
 import {setTxIno} from "../../../store/actions/transactions/common";
 import config from "../../../config";
+import {LOGIN_INFO} from "../../../constants/localStorage";
 
 const ButtonNext = () => {
     const dispatch = useDispatch();
@@ -13,7 +14,7 @@ const ButtonNext = () => {
         dispatch(submitFormData([SetWithDrawAddressMsg(loginInfo.address, revisedAddress.value)]));
     };
 
-    const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
     let revisedAddress = useSelector((state) => state.setWithdrawAddress.revisedAddress);
     const currentAddress = useSelector((state) => state.withdrawAddress.withdrawAddress);
     const memo = useSelector((state) => state.setWithdrawAddress.memo);

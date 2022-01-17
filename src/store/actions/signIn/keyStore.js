@@ -11,6 +11,16 @@ import helper from "../../../utils/helper";
 import wallet from "../../../utils/wallet";
 import config from "../../../config";
 import * as Sentry from "@sentry/browser";
+import {
+    ACCOUNT,
+    ADDRESS,
+    ENCRYPTED_MNEMONIC,
+    FEE,
+    LOGIN_INFO,
+    LOGIN_MODE,
+    LOGIN_TOKEN,
+    VERSION
+} from "../../../constants/localStorage";
 
 export const hideKeyStoreModal = (data) => {
     return {
@@ -53,7 +63,7 @@ export const keyStoreSubmit = () => {
         let mnemonic = "";
         fileReader.readAsText(keyStoreData.value, "UTF-8");
         fileReader.onload = async event => {
-            localStorage.setItem('encryptedMnemonic', event.target.result);
+            localStorage.setItem(ENCRYPTED_MNEMONIC, event.target.result);
             const res = JSON.parse(event.target.result);
             const decryptedData = helper.decryptStore(res, password.value);
             if (decryptedData.error != null) {
@@ -108,13 +118,13 @@ export const keyStoreLogin = (history) => {
             if (accountType) {
                 loginInfo.fee = config.vestingAccountFee;
                 loginInfo.account = "vesting";
-                localStorage.setItem('fee', config.vestingAccountFee);
-                localStorage.setItem('account', 'vesting');
+                localStorage.setItem(FEE, config.vestingAccountFee);
+                localStorage.setItem(ACCOUNT, 'vesting');
             } else {
                 loginInfo.fee = config.defaultFee;
                 loginInfo.account = "non-vesting";
-                localStorage.setItem('fee', config.defaultFee);
-                localStorage.setItem('account', 'non-vesting');
+                localStorage.setItem(FEE, config.defaultFee);
+                localStorage.setItem(ACCOUNT, 'non-vesting');
             }
         }).catch(error => {
             Sentry.captureException(error.response
@@ -123,8 +133,8 @@ export const keyStoreLogin = (history) => {
             console.log(error.message);
             loginInfo.fee = config.defaultFee;
             loginInfo.account = "non-vesting";
-            localStorage.setItem('fee', config.defaultFee);
-            localStorage.setItem('account', 'non-vesting');
+            localStorage.setItem(FEE, config.defaultFee);
+            localStorage.setItem(ACCOUNT, 'non-vesting');
         });
 
         loginInfo.loginToken = "loggedIn";
@@ -133,11 +143,11 @@ export const keyStoreLogin = (history) => {
         loginInfo.version = config.version;
         loginInfo.accountNumber = accountNumber;
         loginInfo.accountIndex = accountIndex;
-        localStorage.setItem('loginToken', 'loggedIn');
-        localStorage.setItem('address', address);
-        localStorage.setItem('loginMode', 'normal');
-        localStorage.setItem('version', config.version);
-        localStorage.setItem('loginInfo', JSON.stringify(loginInfo));
+        localStorage.setItem(LOGIN_TOKEN, 'loggedIn');
+        localStorage.setItem(ADDRESS, address);
+        localStorage.setItem(LOGIN_MODE, 'normal');
+        localStorage.setItem(VERSION, config.version);
+        localStorage.setItem(LOGIN_INFO, JSON.stringify(loginInfo));
         dispatch(setLoginInfo({
             encryptedSeed: true,
             error: {

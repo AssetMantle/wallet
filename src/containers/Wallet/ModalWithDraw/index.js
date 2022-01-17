@@ -12,6 +12,7 @@ import Memo from "./Memo";
 import ButtonNext from "./ButtonNext";
 import Icon from "../../../components/Icon";
 import config from "../../../config";
+import {LOGIN_INFO} from "../../../constants/localStorage";
 
 const ModalWithDraw = () => {
     const {t} = useTranslation();
@@ -19,7 +20,7 @@ const ModalWithDraw = () => {
     const rewards = useSelector((state) => state.rewards.rewards);
     const tokenPrice = useSelector((state) => state.tokenPrice.tokenPrice);
     let selectedValidators = useSelector((state) => state.mulitpleRewardsWithDraw.validatorsList);
-    const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
 
     const error = useSelector(state => state.common.error);
 

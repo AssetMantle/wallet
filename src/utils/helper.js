@@ -3,6 +3,7 @@ import transactions from "./transactions";
 import config from "../config";
 import {COIN_ATOM, COIN_ATOM_DENOM} from "../constants/keyWords";
 import moment from "moment";
+import {ADDRESS, FEE, KEPLR_ADDRESS, LOGIN_MODE, LOGIN_TOKEN} from "../constants/localStorage";
 
 const encoding = require("@cosmjs/encoding");
 const bip39 = require("bip39");
@@ -129,11 +130,11 @@ function accountChangeCheck(errorMessage) {
         errorMessage === 'Unsupported type: \'/cosmos.vesting.v1beta1.PeriodicVestingAccount\'' ||
         errorMessage.startsWith("pubKey does not match signer address")) {
         alert("Account address changed please login again");
-        localStorage.setItem('loginToken', '');
-        localStorage.setItem('address', '');
-        localStorage.setItem('loginMode', '');
-        localStorage.setItem('fee', '');
-        localStorage.setItem('keplrAddress', '');
+        localStorage.setItem(LOGIN_TOKEN, '');
+        localStorage.setItem(ADDRESS, '');
+        localStorage.setItem(LOGIN_MODE, '');
+        localStorage.setItem(FEE, '');
+        localStorage.setItem(KEPLR_ADDRESS, '');
         window.location.reload();
     }
 }

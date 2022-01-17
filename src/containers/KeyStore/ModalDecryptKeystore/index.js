@@ -19,6 +19,7 @@ import Loader from "../../../components/Loader";
 import ModalViewTxnResponse from "../../Common/ModalViewTxnResponse";
 import config from "../../../config";
 import {fee as feeMessage} from "../../../utils/aminoMsgHelper";
+import {ADDRESS, ENCRYPTED_MNEMONIC} from "../../../constants/localStorage";
 
 
 const ModalDecryptKeyStore = (props) => {
@@ -27,11 +28,11 @@ const ModalDecryptKeyStore = (props) => {
     const [advanceMode, setAdvanceMode] = useState(false);
     const [importMnemonic, setImportMnemonic] = useState(false);
     const [loader, setLoader] = useState(false);
-    const loginAddress = localStorage.getItem('address');
+    const loginAddress = localStorage.getItem(ADDRESS);
     const [response, setResponse] = useState('');
 
     useEffect(() => {
-        const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
+        const encryptedMnemonic = localStorage.getItem(ENCRYPTED_MNEMONIC);
         if (encryptedMnemonic !== null) {
             setImportMnemonic(false);
         } else {
@@ -107,7 +108,7 @@ const ModalDecryptKeyStore = (props) => {
             }
         } else {
             const password = event.target.password.value;
-            const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
+            const encryptedMnemonic = localStorage.getItem(ENCRYPTED_MNEMONIC);
             const res = JSON.parse(encryptedMnemonic);
             const decryptedData = helper.decryptStore(res, password);
             if (decryptedData.error != null) {
@@ -182,7 +183,7 @@ const ModalDecryptKeyStore = (props) => {
 
     const handleUpdateKeystore = () => {
         setImportMnemonic(true);
-        localStorage.removeItem('encryptedMnemonic');
+        localStorage.removeItem(ENCRYPTED_MNEMONIC);
     };
 
     const handleAccountNumberKeypress = e => {
@@ -190,7 +191,7 @@ const ModalDecryptKeyStore = (props) => {
             e.preventDefault();
         } else {
             const accountNumber = document.getElementById('delegateAccountNumber').value;
-            if (parseInt(accountNumber) > config.maxAccountIndex || parseInt(accountNumber) < 0) {
+            if (parseInt(accountNumber) > config.maxAccountNumber || parseInt(accountNumber) < 0) {
                 e.preventDefault();
             }
         }
@@ -284,7 +285,7 @@ const ModalDecryptKeyStore = (props) => {
                                                     <p className="label">{t("ACCOUNT")}</p>
                                                     <Form.Control
                                                         type="number"
-                                                        max={config.maxAccountIndex}
+                                                        max={config.maxAccountNumber}
                                                         name="delegateAccountNumber"
                                                         id="delegateAccountNumber"
                                                         placeholder={t("ACCOUNT_NUMBER")}

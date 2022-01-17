@@ -3,9 +3,10 @@ import {OverlayTrigger, Popover} from "react-bootstrap";
 import Icon from "../Icon";
 import transactions from "../../utils/transactions";
 import helper from "../../utils/helper";
+import {FEE, LOGIN_MODE} from "../../constants/localStorage";
 
 const FeeContainer = () => {
-    const mode = localStorage.getItem('loginMode');
+    const mode = localStorage.getItem(LOGIN_MODE);
     const popoverSetupAddress = (
         <Popover id="popover-memo">
             <Popover.Content>
@@ -18,7 +19,7 @@ const FeeContainer = () => {
             {
                 mode === "normal" ?
                     <p className="fee">A default fee
-                        of {transactions.XprtConversion(helper.stringToNumber(localStorage.getItem('fee') ))} XPRT is
+                        of {transactions.XprtConversion(helper.stringToNumber(localStorage.getItem(FEE) ))} XPRT is
                         deducted from your wallet.
                     <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popoverSetupAddress}>
                         <button className="icon-button info" type="button">

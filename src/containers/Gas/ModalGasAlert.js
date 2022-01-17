@@ -12,6 +12,7 @@ import Loader from "../../components/Loader";
 import {formatNumber} from "../../utils/scripts";
 import NumberView from "../../components/NumberView";
 import helper from "../../utils/helper";
+import {ACCOUNT, ACCOUNT_NUMBER, ADDRESS, ADDRESS_INDEX, LOGIN_MODE} from "../../constants/localStorage";
 
 const ModalGasAlert = (props) => {
     const {t} = useTranslation();
@@ -25,10 +26,10 @@ const ModalGasAlert = (props) => {
     const [gas, setGas] = useState(config.gas);
     const [fee, setFee] = useState(config.averageFee);
     const [response, setResponse] = useState('');
-    const loginMode = localStorage.getItem('loginMode');
+    const loginMode = localStorage.getItem(LOGIN_MODE);
     const [loader, setLoader] = useState(false);
 
-    const accountType = localStorage.getItem('account');
+    const accountType = localStorage.getItem(ACCOUNT);
     useEffect(() => {
         if (props.formData.formName === "withdrawMultiple" || props.formData.formName === "withdrawAddress" || props.formData.formName === "withdrawValidatorRewards" || props.formData.formName === "redelegate" || props.formData.formName === "unbond") {
             if (props.transferableAmount < transactions.XprtConversion(gas * fee)) {
@@ -139,11 +140,11 @@ const ModalGasAlert = (props) => {
 
     const handleLedgerSubmit = async () => {
         setLoader(true);
-        const loginAddress = localStorage.getItem('address');
+        const loginAddress = localStorage.getItem(ADDRESS);
         let response;
 
-        let accountNumber = helper.stringToNumber(localStorage.getItem('accountNumber'));
-        let addressIndex = helper.stringToNumber(localStorage.getItem('addressIndex'));
+        let accountNumber = helper.stringToNumber(localStorage.getItem(ACCOUNT_NUMBER));
+        let addressIndex = helper.stringToNumber(localStorage.getItem(ADDRESS_INDEX));
 
         if (props.formData.formName === "ibc") {
             let msg = transactions.MakeIBCTransferMsg(props.formData.channelID, loginAddress,

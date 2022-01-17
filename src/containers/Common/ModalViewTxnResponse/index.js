@@ -13,13 +13,14 @@ import {fetchTokenPrice} from "../../../store/actions/tokenPrice";
 import {fetchReceiveTransactions, fetchTransactions} from "../../../store/actions/transactionQueries";
 import {hideTxResultModal} from "../../../store/actions/transactions/common";
 import config from "../../../config";
+import {ADDRESS, LOGIN_MODE} from "../../../constants/localStorage";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const ModalViewTxnResponse = () => {
     const {t} = useTranslation();
-    const mode = localStorage.getItem('loginMode');
-    let address = localStorage.getItem('address');
+    const mode = localStorage.getItem(LOGIN_MODE);
+    let address = localStorage.getItem(ADDRESS);
     const dispatch = useDispatch();
     const show = useSelector((state) => state.common.modal);
     const response = useSelector(state => state.common.txResponse.value);

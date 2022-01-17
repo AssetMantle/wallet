@@ -15,11 +15,12 @@ import {connect, useDispatch} from "react-redux";
 import transactions from "../../../../utils/transactions";
 import {useTranslation} from "react-i18next";
 import config from "../../../../config";
+import {LOGIN_INFO} from "../../../../constants/localStorage";
 
 const DelegatedValidators = (props) => {
     const {t} = useTranslation();
     const dispatch = useDispatch();
-    const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
     const handleModal = (name, validator) => {
         dispatch(showValidatorTxModal());
         dispatch(setValidatorTxData({

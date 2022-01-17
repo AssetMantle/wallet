@@ -1,9 +1,10 @@
 import transactions from "./transactions";
 import config from "../config";
 import helper from "./helper";
+import {ACCOUNT} from "../constants/localStorage";
 
 const bip39 = require("bip39");
-const accountType = localStorage.getItem('account');
+const accountType = localStorage.getItem(ACCOUNT);
 
 export const ValidateSendAmount = (amount, value) => {
     if (helper.stringToNumber(amount ) < value) {

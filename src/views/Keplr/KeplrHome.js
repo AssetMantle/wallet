@@ -10,6 +10,7 @@ import ModalKeplrInstall from "./ModalKeplrInstall";
 import Icon from "../../components/Icon";
 import transactions, {GetAccount} from "../../utils/transactions";
 import * as Sentry from "@sentry/browser";
+import {ACCOUNT, ADDRESS, FEE, KEPLR_ADDRESS, LOGIN_MODE, LOGIN_TOKEN, VERSION} from "../../constants/localStorage";
 
 const KeplrHome = () => {
     const {t} = useTranslation();
@@ -20,7 +21,7 @@ const KeplrHome = () => {
         setErrorMessage("");
         const keplr = KeplrWallet();
         keplr.then(function () {
-            const address = localStorage.getItem("keplrAddress");
+            const address = localStorage.getItem(KEPLR_ADDRESS);
             setAddress(address);
         }).catch(error => {
             Sentry.captureException(error.response
@@ -34,7 +35,7 @@ const KeplrHome = () => {
         setErrorMessage("");
         const keplr = KeplrWallet();
         keplr.then(function () {
-            const address = localStorage.getItem("keplrAddress");
+            const address = localStorage.getItem(KEPLR_ADDRESS);
             setAddress(address);
         }).catch(error => {
             Sentry.captureException(error.response
@@ -45,16 +46,16 @@ const KeplrHome = () => {
     };
 
     const handleRoute = () => {
-        const address = localStorage.getItem("keplrAddress");
+        const address = localStorage.getItem(KEPLR_ADDRESS);
         GetAccount(address)
             .then(async res => {
                 const accountType = await transactions.VestingAccountCheck(res.typeUrl);
                 if (accountType) {
-                    localStorage.setItem('fee', config.vestingAccountFee);
-                    localStorage.setItem('account', 'vesting');
+                    localStorage.setItem(FEE, config.vestingAccountFee);
+                    localStorage.setItem(ACCOUNT, 'vesting');
                 } else {
-                    localStorage.setItem('fee', config.vestingAccountFee);
-                    localStorage.setItem('account', 'non-vesting');
+                    localStorage.setItem(FEE, config.vestingAccountFee);
+                    localStorage.setItem(ACCOUNT, 'non-vesting');
                 }
             })
             .catch(error => {
@@ -62,13 +63,13 @@ const KeplrHome = () => {
                     ? error.response.data.message
                     : error.message);
                 console.log(error.message);
-                localStorage.setItem('fee', config.vestingAccountFee);
-                localStorage.setItem('account', 'non-vesting');
+                localStorage.setItem(FEE, config.vestingAccountFee);
+                localStorage.setItem(ACCOUNT, 'non-vesting');
             });
-        localStorage.setItem('address', address);
-        localStorage.setItem('loginToken', 'loggedIn');
-        localStorage.setItem('version', config.version);
-        localStorage.setItem('loginMode', 'keplr');
+        localStorage.setItem(ADDRESS, address);
+        localStorage.setItem(LOGIN_TOKEN, 'loggedIn');
+        localStorage.setItem(VERSION, config.version);
+        localStorage.setItem(LOGIN_MODE, 'keplr');
         history.push('/dashboard/wallet');
     };
     const handlePrevious = () => {

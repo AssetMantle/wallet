@@ -9,10 +9,11 @@ import IconButton from '@material-ui/core/IconButton';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import {fetchReceiveTransactions, fetchTransactions} from "../store/actions/transactionQueries";
 import transactions from "../utils/transactions";
+import {ADDRESS} from "../constants/localStorage";
 
 const InfoRefresh = (props) => {
     const [inProgress, setInProgress] = useState(false);
-    let address = localStorage.getItem('address');
+    let address = localStorage.getItem(ADDRESS);
     const handleRefresh = () => {
         setInProgress(true);
         setTimeout(() => {

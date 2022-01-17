@@ -13,6 +13,7 @@ import config from "../../config";
 import {userLogout} from "../../store/actions/logout";
 import {useDispatch} from "react-redux";
 import {showKeyStoreMnemonicModal} from "../../store/actions/generateKeyStore";
+import {ACCOUNT_NUMBER, ADDRESS, ADDRESS_INDEX, LOGIN_MODE, THEME} from "../../constants/localStorage";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -20,13 +21,13 @@ const DashboardHeader = () => {
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const history = useHistory();
-    const address = localStorage.getItem('address');
+    const address = localStorage.getItem(ADDRESS);
     let addressTruncate;
     if (address !== null) {
         addressTruncate = helper.stringTruncate(address);
     }
     useEffect(() => {
-        const localTheme = window.localStorage.getItem('theme');
+        const localTheme = window.localStorage.getItem(THEME);
         if (localTheme === 'light') {
             if (document.getElementById('root').classList.contains('dark-mode')) {
                 document.getElementById('root').classList.add('light-mode');
@@ -50,8 +51,8 @@ const DashboardHeader = () => {
         dispatch(showKeyStoreMnemonicModal());
     };
     const ledgerShowAddress = async () => {
-        const accountNumber = localStorage.getItem('accountNumber');
-        const addressIndex = localStorage.getItem('addressIndex');
+        const accountNumber = localStorage.getItem(ACCOUNT_NUMBER);
+        const addressIndex = localStorage.getItem(ADDRESS_INDEX);
         const [wallet] = await transactions.LedgerWallet(transactions.makeHdPath(accountNumber, addressIndex), config.addressPrefix);
         await wallet.showAddress(transactions.makeHdPath(accountNumber, addressIndex));
     };
@@ -130,7 +131,7 @@ const DashboardHeader = () => {
 
                                     <p className="key"> {t("WALLET_ADDRESS")}
                                         {
-                                            localStorage.getItem('loginMode') === 'ledger' ?
+                                            localStorage.getItem(LOGIN_MODE) === 'ledger' ?
                                                 <button className="ledger-verify"
                                                     onClick={ledgerShowAddress}>{t("VERIFY")}</button>
                                                 : ""
