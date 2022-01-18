@@ -3,7 +3,7 @@ import Button from "./../../../components/Button";
 import {submitFormData} from "../../../store/actions/transactions/send";
 import {useDispatch, useSelector} from "react-redux";
 import {keplrSubmit} from "../../../store/actions/transactions/keplr";
-import {SendMsg, GrantMsg} from "../../../utils/protoMsgHelper";
+import {StakingGrantMsg} from "../../../utils/protoMsgHelper";
 import config from "../../../config";
 import {setTxName} from "../../../store/actions/transactions/common";
 import helper from "../../../utils/helper";
@@ -13,7 +13,7 @@ const ButtonSend = () => {
     const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
 
     const onClick = () => {
-        dispatch(submitFormData([GrantMsg(loginInfo.address, toAddress.value, (amount.value * config.xprtValue).toFixed(0), token.value.tokenDenom)]));
+        dispatch(submitFormData([StakingGrantMsg(loginInfo.address, toAddress.value, (amount.value * config.xprtValue).toFixed(0), token.value.tokenDenom)]));
     };
     const amount = useSelector((state) => state.send.amount);
     const toAddress = useSelector((state) => state.send.toAddress);
@@ -29,7 +29,7 @@ const ButtonSend = () => {
                 name: "send",
             }
         }));
-        dispatch(keplrSubmit([SendMsg(loginInfo.address, toAddress.value, (amount.value * config.xprtValue).toFixed(0), token.value.tokenDenom)]));
+        dispatch(keplrSubmit([StakingGrantMsg(loginInfo.address, toAddress.value, (amount.value * config.xprtValue).toFixed(0), token.value.tokenDenom)]));
     };
 
     return (
