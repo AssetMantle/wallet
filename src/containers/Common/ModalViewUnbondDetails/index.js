@@ -47,7 +47,7 @@ const ModalViewUnbondDetails = (props) => {
                                             <div className="unbonding-schedule-list" key={entryIndex}>
                                                 <p><span className="amount">
                                                     <NumberView
-                                                        value={formatNumber(transactions.XprtConversion(helper.stringToNumber(entry.balance )))}/>
+                                                        value={formatNumber(transactions.TokenValueConversion(helper.stringToNumber(entry.balance )))}/>
                                                     {config.coinName}
                                                 </span></p>
                                                 <p><span
@@ -64,7 +64,7 @@ const ModalViewUnbondDetails = (props) => {
                     }
                 </Modal.Body>
             </Modal>
-            <span className="view-button" onClick={handleModal} title="View Unbonding XPRT Schedule">{t("VIEW")}</span>
+            <span className="view-button" onClick={handleModal} title={`View Unbonding ${config.coinName} Schedule`}>{t("VIEW")}</span>
         </>
 
     );

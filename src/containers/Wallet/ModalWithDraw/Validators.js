@@ -26,7 +26,7 @@ const Validators = () => {
         let totalValidatorsRewards = 0;
         let messages = [];
         evt.forEach(async (item) => {
-            totalValidatorsRewards = totalValidatorsRewards + (helper.stringToNumber(transactions.XprtConversion(item.rewards).toFixed(6)));
+            totalValidatorsRewards = totalValidatorsRewards + (helper.stringToNumber(transactions.TokenValueConversion(item.rewards).toFixed(6)));
             messages.push(WithdrawMsg(loginInfo.address, item.value));
         });
         dispatch(setTxWithDrawTotalValidators({

@@ -13,7 +13,7 @@ const ButtonSend = () => {
     const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
 
     const onClick = () => {
-        dispatch(submitFormData([SendMsg(loginInfo.address, toAddress.value, (amount.value * config.xprtValue).toFixed(0), token.value.tokenDenom)]));
+        dispatch(submitFormData([SendMsg(loginInfo.address, toAddress.value, (amount.value * config.tokenValue).toFixed(0), token.value.tokenDenom)]));
     };
     const amount = useSelector((state) => state.send.amount);
     const toAddress = useSelector((state) => state.send.toAddress);
@@ -29,7 +29,7 @@ const ButtonSend = () => {
                 name: "send",
             }
         }));
-        dispatch(keplrSubmit([SendMsg(loginInfo.address, toAddress.value, (amount.value * config.xprtValue).toFixed(0), token.value.tokenDenom)]));
+        dispatch(keplrSubmit([SendMsg(loginInfo.address, toAddress.value, (amount.value * config.tokenValue).toFixed(0), token.value.tokenDenom)]));
     };
 
     return (

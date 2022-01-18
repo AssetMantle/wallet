@@ -57,7 +57,7 @@ export const fetchBalance = (address) => {
                     allBalancesResponse.balances.forEach((item) => {
                         if (item.denom === config.coinDenom) {
                             const totalBalance = helper.stringToNumber(item.amount);
-                            dispatch(fetchBalanceSuccess(transactions.XprtConversion(totalBalance)));
+                            dispatch(fetchBalanceSuccess(transactions.TokenValueConversion(totalBalance)));
                         }
                     });
                 }
@@ -120,8 +120,8 @@ export const fetchTransferableVestingAmount = (address) => {
                                 let item = response.balances[i];
                                 if (item.denom === config.coinDenom) {
                                     tokenList.push(item);
-                                    const amount = transactions.XprtConversion(vestingAccount.getAccountVestingAmount(vestingAmountData, currentEpochTime));
-                                    const balance = transactions.XprtConversion(helper.stringToNumber(item.amount ));
+                                    const amount = transactions.TokenValueConversion(vestingAccount.getAccountVestingAmount(vestingAmountData, currentEpochTime));
+                                    const balance = transactions.TokenValueConversion(helper.stringToNumber(item.amount ));
                                     vestingAmount = amount;
                                     if ((balance - amount) < 0) {
                                         transferableAmount = 0;

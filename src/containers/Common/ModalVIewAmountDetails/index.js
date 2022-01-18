@@ -58,7 +58,7 @@ const ModalViewAmountDetails = (props) => {
                                     return (
                                         <li className="" key={index} title={item.dataResponse.denom}>
                                             <NumberView
-                                                value={formatNumber(transactions.XprtConversion(item.dataResponse.amount))}/>{helper.denomChange(item.denomResponse.denomTrace.baseDenom)} (
+                                                value={formatNumber(transactions.TokenValueConversion(item.dataResponse.amount))}/>{helper.denomChange(item.denomResponse.denomTrace.baseDenom)} (
                                             IBC Trace path - {item.denomResponse.denomTrace.path},
                                             denom: {item.denomResponse.denomTrace.baseDenom} ) {item.dataResponse.denom}
                                         </li>

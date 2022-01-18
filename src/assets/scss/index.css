@@ -431,7 +431,7 @@ html, body {
     .fee-container .fee-box .title {
       font-size: 14px;
       font-weight: 500; }
-    .fee-container .fee-box .gas, .fee-container .fee-box .xprt {
+    .fee-container .fee-box .gas, .fee-container .fee-box .token {
       font-size: 10px; }
   .fee-container .fee-box.active {
     background: #e50913; }
@@ -1989,7 +1989,7 @@ ul li em {
         left: 0;
         right: 0;
         bottom: 0; }
-  .token-info-section .xprt-info .total-supply {
+  .token-info-section .token-info .total-supply {
     font-weight: 800;
     font-size: 32px;
     line-height: 150%;
@@ -2645,7 +2645,7 @@ ul li em {
     padding: 15px 0; }
     .token-info-section .token-info-section-body .info-box {
       padding: 15px 20px; }
-    .token-info-section .token-info-section-body .xprt-info .total-supply {
+    .token-info-section .token-info-section-body .token-info .total-supply {
       font-size: 26px; }
 
   .wallet-main-section .send-container {
@@ -2677,7 +2677,7 @@ ul li em {
 
   .token-info-section .token-info-section-body .info-box {
     padding: 10px 10px; }
-  .token-info-section .token-info-section-body .xprt-info .total-supply {
+  .token-info-section .token-info-section-body .token-info .total-supply {
     font-size: 18px; } }
 @media (max-width: 991px) {
   .token-info-section .token-info-section-body {
@@ -2691,7 +2691,7 @@ ul li em {
         border: 1px solid;
         border-right: 0px solid;
         border-left: 0px solid; }
-    .token-info-section .token-info-section-body .xprt-info {
+    .token-info-section .token-info-section-body .token-info {
       padding-left: 10px !important; }
 
   .wallet-main-section .send-container {

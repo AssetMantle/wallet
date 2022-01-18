@@ -141,9 +141,8 @@ function updateFee(address) {
     }
 }
 
-function XprtConversion(data) {
-    const Result = data / config.xprtValue;
-    return Result;
+function TokenValueConversion(data) {
+    return data / config.tokenValue;
 }
 
 function PrivateKeyReader(file, password, loginAddress, accountNumber = "0", addressIndex = "0",) {
@@ -325,7 +324,7 @@ export default {
     makeHdPath,
     getAccountNumberAndSequence,
     updateFee,
-    XprtConversion,
+    TokenValueConversion,
     PrivateKeyReader,
     MakeIBCTransferMsg,
     RpcClient,

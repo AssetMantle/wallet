@@ -45,7 +45,7 @@ const Tokens = () => {
             tokenList.forEach((item) => {
                 if (evt.target.value === item.denomTrace) {
                     tokenDataObject.tokenDenom = item.denom.baseDenom;
-                    tokenDataObject.transferableAmount = transactions.XprtConversion(helper.stringToNumber(item.amount ));
+                    tokenDataObject.transferableAmount = transactions.TokenValueConversion(helper.stringToNumber(item.amount ));
                     tokenDataObject.tokenItem = item;
                 }
             });

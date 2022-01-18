@@ -85,7 +85,7 @@ const ModalViewVestingDetails = () => {
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>{transactions.XprtConversion(parseInt(response.baseVestingAccount.originalVesting.length && response.baseVestingAccount.originalVesting[0].amount))}</td>
+                                            <td>{transactions.TokenValueConversion(parseInt(response.baseVestingAccount.originalVesting.length && response.baseVestingAccount.originalVesting[0].amount))}</td>
                                             <td>
                                                 {helper.localTime(parseInt(response.startTime.low) * 1000)}
                                             </td>
@@ -105,7 +105,7 @@ const ModalViewVestingDetails = () => {
                                 {response.baseVestingAccount ?
                                     <>
                                         <p>Total vesting
-                                            tokens {transactions.XprtConversion(parseInt(response.baseVestingAccount.originalVesting.length && response.baseVestingAccount.originalVesting[0].amount))} at
+                                            tokens {transactions.TokenValueConversion(parseInt(response.baseVestingAccount.originalVesting.length && response.baseVestingAccount.originalVesting[0].amount))} at
                                             Date {helper.localTime(parseInt(response.startTime.low) * 1000)} </p>
                                         <Table borderless>
                                             <thead>
@@ -124,7 +124,7 @@ const ModalViewVestingDetails = () => {
                                                         return (
                                                             <tbody key={index}>
                                                                 <tr>
-                                                                    <td>{transactions.XprtConversion(period.amount[0].amount)}</td>
+                                                                    <td>{transactions.TokenValueConversion(period.amount[0].amount)}</td>
                                                                     <td>
                                                                         {helper.localTime(vestingPeriod * 1000)}
                                                                     </td>
@@ -153,7 +153,7 @@ const ModalViewVestingDetails = () => {
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>{transactions.XprtConversion(parseInt(response.baseVestingAccount.originalVesting[0].amount))}</td>
+                                            <td>{transactions.TokenValueConversion(parseInt(response.baseVestingAccount.originalVesting[0].amount))}</td>
                                             <td>
                                                 {helper.localTime((response.baseVestingAccount.endTime.low) * 1000)}
                                             </td>

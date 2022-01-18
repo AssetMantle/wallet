@@ -197,7 +197,7 @@ export const fetchValidatorDelegations = (address) => {
             for (const item of delegationResponseList) {
                 if (item.delegation.validatorAddress === validatorAddress) {
                     dispatch(setValidatorDelegations({
-                        value: transactions.XprtConversion(helper.stringToNumber(item.balance.amount)),
+                        value: transactions.TokenValueConversion(helper.stringToNumber(item.balance.amount)),
                         status: true,
                         error: {
                             message: ''
@@ -233,7 +233,7 @@ export const fetchValidatorRewards = (address, validatorAddress) => {
         }).then(response => {
             if (response.rewards[0].amount) {
                 let value = helper.decimalConversion(response.rewards[0].amount);
-                const fixedRewards = helper.stringToNumber(transactions.XprtConversion(value)).toFixed(6);
+                const fixedRewards = helper.stringToNumber(transactions.TokenValueConversion(value)).toFixed(6);
                 dispatch(setValidatorRewards({
                     value: fixedRewards,
                     error: {

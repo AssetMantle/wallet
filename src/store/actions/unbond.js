@@ -51,7 +51,7 @@ export const fetchUnbondDelegations = (address) => {
                             });
                         }
                     });
-                    dispatch(fetchUnbondDelegationsSuccess(transactions.XprtConversion(totalUnbond)));
+                    dispatch(fetchUnbondDelegationsSuccess(transactions.TokenValueConversion(totalUnbond)));
                 }
             }).catch((error) => {
                 Sentry.captureException(error.response
