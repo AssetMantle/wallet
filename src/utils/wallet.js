@@ -1,10 +1,11 @@
 import transactions from "./transactions";
 import {pathToString} from "@cosmjs/crypto";
+import {makeHdPath} from "./helper";
 
 const bip39 = require("bip39");
 const prefix = "persistence";
 
-async function getWallet(mnemonic, walletPath = transactions.makeHdPath(), bip39Passphrase = "") {
+async function getWallet(mnemonic, walletPath = makeHdPath(), bip39Passphrase = "") {
     try {
         const [wallet, address] = await transactions.MnemonicWalletWithPassphrase(mnemonic, walletPath, bip39Passphrase, prefix);
         return {
@@ -21,11 +22,11 @@ async function getWallet(mnemonic, walletPath = transactions.makeHdPath(), bip39
     }
 }
 
-async function createRandomWallet(walletPath = transactions.makeHdPath(), bip39Passphrase = "") {
+async function createRandomWallet(walletPath = makeHdPath(), bip39Passphrase = "") {
     return await getWallet(bip39.generateMnemonic(256), walletPath, bip39Passphrase);
 }
 
-async function createWallet(mnemonic, walletPath = transactions.makeHdPath(), bip39Passphrase = "") {
+async function createWallet(mnemonic, walletPath = makeHdPath(), bip39Passphrase = "") {
     let mnemonicList = mnemonic.replace(/\s/g, " ").split(/\s/g);
     let mnemonicWords = [];
     for (let word of mnemonicList) {

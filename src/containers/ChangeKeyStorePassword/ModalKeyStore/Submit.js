@@ -1,8 +1,7 @@
 import React from 'react';
 import Button from "./../../../components/Button";
 import {useDispatch, useSelector} from "react-redux";
-import helper, {decryptKeyStore} from "../../../utils/helper";
-import transactions from "../../../utils/transactions";
+import helper, {decryptKeyStore, makeHdPath} from "../../../utils/helper";
 import wallet from "../../../utils/wallet";
 import {hideKeyStoreModal, setResult, showKeyStoreNewPasswordModal} from "../../../store/actions/changePassword";
 import {fileTypeCheck, mnemonicTrim} from "../../../utils/scripts";
@@ -36,7 +35,7 @@ const Submit = () => {
                         }));
                 } else {
                     let mnemonic = mnemonicTrim(decryptedData.mnemonic);
-                    const walletPath = transactions.makeHdPath(helper.getAccountNumber(accountNumber.value), helper.getAccountNumber(accountIndex.value));
+                    const walletPath = makeHdPath(helper.getAccountNumber(accountNumber.value), helper.getAccountNumber(accountIndex.value));
                     const responseData = await wallet.createWallet(mnemonic, walletPath, bip39PassPhrase.value);
                     dispatch(setResult(
                         {

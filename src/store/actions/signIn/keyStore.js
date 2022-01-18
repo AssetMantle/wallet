@@ -5,9 +5,8 @@ import {
     SIGN_IN_KEYSTORE_RESULT_MODAL_HIDE,
     SIGN_IN_KEYSTORE_RESULT_MODAL_SHOW
 } from "../../../constants/signIn/keyStore";
-import transactions from "../../../utils/transactions";
 import {setLoginInfo} from "../transactions/common";
-import helper, {decryptKeyStore, vestingAccountCheck, getAccount} from "../../../utils/helper";
+import helper, {decryptKeyStore, vestingAccountCheck, getAccount, makeHdPath} from "../../../utils/helper";
 import wallet from "../../../utils/wallet";
 import config from "../../../config";
 import * as Sentry from "@sentry/browser";
@@ -82,7 +81,7 @@ export const keyStoreSubmit = () => {
                 const accountIndex = helper.getAccountNumber(getState().advanced.accountIndex.value);
                 const bip39PassPhrase = getState().advanced.bip39PassPhrase.value;
 
-                const walletPath = transactions.makeHdPath(accountNumber, accountIndex);
+                const walletPath = makeHdPath(accountNumber, accountIndex);
                 const responseData = await wallet.createWallet(mnemonic, walletPath, bip39PassPhrase);
                 dispatch(hideKeyStoreModal());
                 dispatch(showKeyStoreResultModal());

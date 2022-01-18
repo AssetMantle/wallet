@@ -1,8 +1,16 @@
 import transactions from "./transactions";
 import config from "../config";
 import {COIN_ATOM, COIN_ATOM_DENOM} from "../constants/keyWords";
-import {ACCOUNT, ADDRESS, FEE, KEPLR_ADDRESS, LOGIN_MODE, LOGIN_TOKEN} from "../constants/localStorage";
-import {sha256} from "@cosmjs/crypto";
+import {
+    ACCOUNT,
+    ADDRESS,
+    ENCRYPTED_MNEMONIC,
+    FEE,
+    KEPLR_ADDRESS,
+    LOGIN_MODE,
+    LOGIN_TOKEN
+} from "../constants/localStorage";
+import {sha256, stringToPath} from "@cosmjs/crypto";
 import {QueryClientImpl} from "cosmjs-types/cosmos/auth/v1beta1/query";
 import {BaseAccount} from "cosmjs-types/cosmos/auth/v1beta1/auth";
 import {
@@ -11,13 +19,16 @@ import {
     PeriodicVestingAccount
 } from "cosmjs-types/cosmos/vesting/v1beta1/vesting";
 import * as Sentry from "@sentry/browser";
+import {mnemonicTrim} from "./scripts";
 
+const tendermint_1 = require("cosmjs-types/ibc/lightclients/tendermint/v1/tendermint");
 const encoding = require("@cosmjs/encoding");
 const crypto = require("crypto");
 const passwordHashAlgorithm = "sha512";
 const NODE_CONF = process.env.REACT_APP_IBC_CONFIG;
 const valoperAddressPrefix = config.valoperAddressPrefix;
 const addressPrefix = config.addressPrefix;
+const configCoinType = config.coinType;
 
 export const createKeyStore = (mnemonic, password) => {
     try {
@@ -244,6 +255,69 @@ export const updateFee = (address) => {
 export const tokenValueConversion = (data) => {
     return data / config.tokenValue;
 };
+
+export const privateKeyReader = (file, password, loginAddress, accountNumber = "0", addressIndex = "0",) => {
+    return new Promise(function (resolve, reject) {
+        const fileReader = new FileReader();
+        fileReader.readAsText(file, "UTF-8");
+        fileReader.onload = async event => {
+            if (event.target.result !== '') {
+                const res = JSON.parse(event.target.result);
+                const decryptedData = decryptKeyStore(res, password);
+                if (decryptedData.error != null) {
+                    reject(new Error(decryptedData.error));
+                } else {
+                    let mnemonic = mnemonicTrim(decryptedData.mnemonic);
+                    const accountData = await transactions.MnemonicWalletWithPassphrase(mnemonic, makeHdPath(accountNumber, addressIndex));
+                    const address = accountData[1];
+                    if (address === loginAddress) {
+                        resolve(mnemonic);
+                        localStorage.setItem(ENCRYPTED_MNEMONIC, event.target.result);
+                    } else {
+                        reject(new Error("Your sign in address and keystore file don’t match. Please try again or else sign in again."));
+                    }
+                }
+            } else {
+                reject(new Error("Invalid File data"));
+            }
+        };
+    });
+};
+
+export const makeHdPath = (accountNumber = "0", addressIndex = "0", coinType = configCoinType) => {
+    return stringToPath("m/44'/" + coinType + "'/" + accountNumber + "'/0/" + addressIndex);
+};
+
+export const getAccountNumberAndSequence = (authResponse) => {
+    if (authResponse.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
+        return [authResponse.account.base_vesting_account.base_account.account_number, authResponse.account.base_vesting_account.base_account.sequence];
+    } else if (authResponse.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount") {
+        return [authResponse.account.base_vesting_account.base_account.account_number, authResponse.account.base_vesting_account.base_account.sequence];
+    } else if (authResponse.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
+        return [authResponse.account.base_vesting_account.base_account.account_number, authResponse.account.base_vesting_account.base_account.sequence];
+    } else if (authResponse.account["@type"] === "/cosmos.auth.v1beta1.BaseAccount") {
+        return [authResponse.account.account_number, authResponse.account.sequence];
+    } else {
+        return [-1, -1];
+    }
+};
+
+// copied from node_modules/@cosmjs/stargate/build/queries/ibc.js
+export const decodeTendermintClientStateAny = (clientState) => {
+    if ((clientState === null || clientState === void 0 ? void 0 : clientState.typeUrl) !== "/ibc.lightclients.tendermint.v1.ClientState") {
+        throw new Error(`Unexpected client state type: ${clientState === null || clientState === void 0 ? void 0 : clientState.typeUrl}`);
+    }
+    return tendermint_1.ClientState.decode(clientState.value);
+};
+
+// copied from node_modules/@cosmjs/stargate/build/queries/ibc.js
+export const decodeTendermintConsensusStateAny = (consensusState) => {
+    if ((consensusState === null || consensusState === void 0 ? void 0 : consensusState.typeUrl) !== "/ibc.lightclients.tendermint.v1.ConsensusState") {
+        throw new Error(`Unexpected client state type: ${consensusState === null || consensusState === void 0 ? void 0 : consensusState.typeUrl}`);
+    }
+    return tendermint_1.ConsensusState.decode(consensusState.value);
+};
+
 
 export default {
     isActive,
