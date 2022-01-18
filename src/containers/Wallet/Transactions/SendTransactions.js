@@ -11,7 +11,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import transactions from "../../../utils/transactions";
 import NumberView from "../../../components/NumberView";
-import {formatNumber} from "../../../utils/scripts";
+import {formatNumber, stringTruncate} from "../../../utils/scripts";
 import config from "../../../config";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
@@ -69,7 +69,7 @@ const SendTransactions = (props) => {
             <a key={index}
                 href={`${EXPLORER_API}/transactions/${stxn.hash}`}
                 target="_blank" className="tx-hash" rel="noopener noreferrer">
-                {helper.stringTruncate(stxn.hash)}
+                {stringTruncate(stxn.hash)}
             </a>,
             (stxn.typeUrl === "/ibc.applications.transfer.v1.MsgTransfer") ?
                 stxn.messageCount > 1 ?

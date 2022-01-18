@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import transactions from "../../../utils/transactions";
 import {useTranslation} from "react-i18next";
 import helper from "../../../utils/helper";
-import {formatNumber, stringToNumber} from "../../../utils/scripts";
+import {formatNumber, stringToNumber, stringTruncate} from "../../../utils/scripts";
 import NumberView from "../../../components/NumberView";
 import config from "../../../config";
 
@@ -48,7 +48,7 @@ const ModalViewDelegationDetails = (props) => {
                             <tbody>
                                 {props.validatorsList ?
                                     props.validatorsList.map((delegation, index) => {
-                                        addressTruncate = helper.stringTruncate(delegation.data.operatorAddress);
+                                        addressTruncate = stringTruncate(delegation.data.operatorAddress);
                                         return (
                                             <tr key={index}>
                                                 <td>{delegation.data.description.moniker}

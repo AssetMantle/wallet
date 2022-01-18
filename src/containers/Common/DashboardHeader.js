@@ -4,7 +4,6 @@ import {NavLink, useHistory} from 'react-router-dom';
 import {Nav, Navbar, NavDropdown} from "react-bootstrap";
 import ReactQRCode from "qrcode.react";
 import Copy from "../../components/Copy";
-import helper from "../../utils/helper";
 import {useTranslation} from "react-i18next";
 import Darktheme from "../DarkTheme";
 import MobileSidebar from "./MobileSidebar";
@@ -14,6 +13,7 @@ import {userLogout} from "../../store/actions/logout";
 import {useDispatch} from "react-redux";
 import {showKeyStoreMnemonicModal} from "../../store/actions/generateKeyStore";
 import {ACCOUNT_NUMBER, ADDRESS, ADDRESS_INDEX, LOGIN_MODE, THEME} from "../../constants/localStorage";
+import {stringTruncate} from "../../utils/scripts";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -24,7 +24,7 @@ const DashboardHeader = () => {
     const address = localStorage.getItem(ADDRESS);
     let addressTruncate;
     if (address !== null) {
-        addressTruncate = helper.stringTruncate(address);
+        addressTruncate = stringTruncate(address);
     }
     useEffect(() => {
         const localTheme = window.localStorage.getItem(THEME);

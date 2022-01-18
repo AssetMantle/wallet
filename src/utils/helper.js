@@ -10,23 +10,6 @@ const crypto = require("crypto");
 const passwordHashAlgorithm = "sha512";
 const NODE_CONF = process.env.REACT_APP_IBC_CONFIG;
 
-function randomNum(min, max) {
-    let randomNumbers = [];
-    for (var i = 0; i < 3; i++) {
-        var random_number = Math.floor(Math.random() * (max - min) + min);
-        if (randomNumbers.indexOf(random_number) == -1) {
-            randomNumbers.push(random_number);
-        }
-    }
-    return randomNumbers;
-}
-
-function stringTruncate(str) {
-    if (str.length > 30) {
-        return str.substr(0, 10) + '...' + str.substr(str.length - 10, str.length);
-    }
-    return str;
-}
 
 function createStore(mnemonic, password) {
     try {
@@ -290,8 +273,6 @@ function getAccountNumber(value) {
 }
 
 export default {
-    randomNum,
-    stringTruncate,
     createStore,
     decryptStore,
     isActive,

@@ -2,13 +2,13 @@ import React, {useEffect, useState} from "react";
 import {Form, Modal} from "react-bootstrap";
 import Icon from "../../../components/Icon";
 import wallet from "../../../utils/wallet";
-import helper from "../../../utils/helper";
 import ImportWallet from "../../ImportWallet";
 import AdvanceMode from "./AdvanceMode";
 import Copy from "../../../components/Copy";
 import {useTranslation} from "react-i18next";
 import {useDispatch} from "react-redux";
 import {showSignInModal} from "../../../store/actions/signIn/modal";
+import {randomNum} from "../../../utils/scripts";
 
 const CreateWallet = (props) => {
     const {t} = useTranslation();
@@ -36,7 +36,7 @@ const CreateWallet = (props) => {
             let mnemonic = responseData.mnemonic;
             const mnemonicArray = mnemonic.split(' ');
             setMnemonicList(mnemonicArray);
-            let randomNumbers = helper.randomNum(1, 24);
+            let randomNumbers = randomNum(1, 24);
             setRandomNumberList(randomNumbers);
             let newMnemonicList = [];
             mnemonicArray.map((key, index) => {
