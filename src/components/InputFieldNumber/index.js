@@ -1,6 +1,6 @@
 import React from 'react';
 import {Form} from "react-bootstrap";
-import helper from "../../utils/helper";
+import {emptyFunc} from "../../utils/scripts";
 
 const InputFieldNumber = ({
     className,
@@ -13,8 +13,8 @@ const InputFieldNumber = ({
     max = '',
     onChange,
     min = '',
-    onBlur = helper.emptyFunc,
-    onKeyPress = helper.emptyFunc,
+    onBlur = emptyFunc,
+    onKeyPress = emptyFunc,
 }) => {
 
     return (

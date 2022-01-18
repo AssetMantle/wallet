@@ -6,8 +6,8 @@ import {QueryClientImpl} from "cosmjs-types/cosmos/auth/v1beta1/query";
 import * as vesting_1 from "cosmjs-types/cosmos/vesting/v1beta1/vesting";
 import {useTranslation} from "react-i18next";
 import * as Sentry from "@sentry/react";
-import helper from "../../../utils/helper";
 import {ADDRESS} from "../../../constants/localStorage";
+import {localTime} from "../../../utils/scripts";
 
 const ModalViewVestingDetails = () => {
     const {t} = useTranslation();
@@ -87,10 +87,10 @@ const ModalViewVestingDetails = () => {
                                         <tr>
                                             <td>{transactions.TokenValueConversion(parseInt(response.baseVestingAccount.originalVesting.length && response.baseVestingAccount.originalVesting[0].amount))}</td>
                                             <td>
-                                                {helper.localTime(parseInt(response.startTime.low) * 1000)}
+                                                {localTime(parseInt(response.startTime.low) * 1000)}
                                             </td>
                                             <td>
-                                                {helper.localTime((response.baseVestingAccount.endTime.low) * 1000)}
+                                                {localTime((response.baseVestingAccount.endTime.low) * 1000)}
                                             </td>
                                         </tr>
                                     </tbody>
@@ -106,7 +106,7 @@ const ModalViewVestingDetails = () => {
                                     <>
                                         <p>Total vesting
                                             tokens {transactions.TokenValueConversion(parseInt(response.baseVestingAccount.originalVesting.length && response.baseVestingAccount.originalVesting[0].amount))} at
-                                            Date {helper.localTime(parseInt(response.startTime.low) * 1000)} </p>
+                                            Date {localTime(parseInt(response.startTime.low) * 1000)} </p>
                                         <Table borderless>
                                             <thead>
                                                 <tr>
@@ -126,7 +126,7 @@ const ModalViewVestingDetails = () => {
                                                                 <tr>
                                                                     <td>{transactions.TokenValueConversion(period.amount[0].amount)}</td>
                                                                     <td>
-                                                                        {helper.localTime(vestingPeriod * 1000)}
+                                                                        {localTime(vestingPeriod * 1000)}
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
@@ -155,7 +155,7 @@ const ModalViewVestingDetails = () => {
                                         <tr>
                                             <td>{transactions.TokenValueConversion(parseInt(response.baseVestingAccount.originalVesting[0].amount))}</td>
                                             <td>
-                                                {helper.localTime((response.baseVestingAccount.endTime.low) * 1000)}
+                                                {localTime((response.baseVestingAccount.endTime.low) * 1000)}
                                             </td>
                                         </tr>
                                     </tbody>

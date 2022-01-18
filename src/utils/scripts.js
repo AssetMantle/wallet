@@ -1,6 +1,7 @@
 import _ from "lodash";
 import empty from "is-empty";
 import helper from "./helper";
+import moment from "moment";
 
 export const removeCommas = str => _.replace(str, new RegExp(",", "g"), "");
 const reverseString = str => removeCommas(_.toString(_.reverse(_.toArray(str))));
@@ -26,3 +27,12 @@ export const formatNumber = (v = 0, size = 3) => {
     return `${recursiveReverse(arr)}${substr[1] ? `.${substr[1]}` : ""}`;
 };
 
+export const localTime = (stringData) => {
+    return moment(new Date(stringData).toString()).format('dddd MMMM Do YYYY, h:mm:ss a');
+};
+
+export const emptyFunc = () => ({});
+
+export const stringToNumber = (stringData) => {
+    return +stringData;
+};

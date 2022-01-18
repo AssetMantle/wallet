@@ -2,7 +2,7 @@ import React from 'react';
 import InputFieldNumber from "../../../components/InputFieldNumber";
 import {setTxSendAmount} from "../../../store/actions/transactions/send";
 import {useDispatch, useSelector} from "react-redux";
-import {formatNumber, removeCommas} from "../../../utils/scripts";
+import {formatNumber, removeCommas, stringToNumber} from "../../../utils/scripts";
 import NumberView from "../../../components/NumberView";
 import {ValidateSendAmount, ValidateSpecialCharacters} from "../../../utils/validations";
 import {useTranslation} from "react-i18next";
@@ -23,14 +23,14 @@ const Amount = () => {
             if (token.tokenDenom === config.coinDenom) {
                 dispatch(setTxSendAmount({
                     value: evt.target.value,
-                    error: ValidateSendAmount(transferableAmount, (helper.stringToNumber(evt.target.value)))
+                    error: ValidateSendAmount(transferableAmount, (stringToNumber(evt.target.value)))
                 }));
 
             } else {
                 dispatch(
                     setTxSendAmount({
                         value: evt.target.value,
-                        error: ValidateSendAmount(token.transferableAmount, (helper.stringToNumber(evt.target.value)))
+                        error: ValidateSendAmount(token.transferableAmount, (stringToNumber(evt.target.value)))
                     })
                 );
             }
@@ -43,7 +43,7 @@ const Amount = () => {
         dispatch(
             setTxSendAmount({
                 value: value,
-                error: ValidateSendAmount(value, (helper.stringToNumber(value )))
+                error: ValidateSendAmount(value, (stringToNumber(value )))
             })
         );
     };

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Form} from "react-bootstrap";
 import './index.css';
-import helper from "../../utils/helper";
+import {emptyFunc} from "../../utils/scripts";
 
 const InputText = ({
     autofocus = false,
@@ -12,9 +12,9 @@ const InputText = ({
     required = true,
     type = 'text',
     value,
-    onChange = helper.emptyFunc,
-    onKeyPress = helper.emptyFunc,
-    onBlur = helper.emptyFunc,
+    onChange = emptyFunc,
+    onKeyPress = emptyFunc,
+    onBlur = emptyFunc,
 }) => {
     return (
         <div className="form-control-section flex-fill">

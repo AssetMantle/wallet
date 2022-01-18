@@ -4,8 +4,8 @@ import {connect} from "react-redux";
 import {useTranslation} from "react-i18next";
 import config from "../../config";
 import ModalGasAlert from "./ModalGasAlert";
-import helper from "../../utils/helper";
 import {FEE, LOGIN_MODE} from "../../constants/localStorage";
+import {stringToNumber} from "../../utils/scripts";
 
 const GasContainer = (props) => {
     let mode = localStorage.getItem(LOGIN_MODE);
@@ -14,7 +14,7 @@ const GasContainer = (props) => {
         <>
             <p className="fee-title">Fee</p>
             <div className="fee-container">
-                {mode === "normal" && (helper.stringToNumber(localStorage.getItem(FEE))) !== 0 ?
+                {mode === "normal" && (stringToNumber(localStorage.getItem(FEE))) !== 0 ?
                     <>
                         <div className={props.activeFeeState === "Low" ? "fee-box active" : "fee-box"}
                             onClick={() => props.onClick("Low", config.lowFee)}>

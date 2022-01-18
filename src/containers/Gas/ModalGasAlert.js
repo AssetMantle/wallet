@@ -9,9 +9,8 @@ import ModalDecryptKeyStore from "../KeyStore/ModalDecryptKeystore";
 import {fee as feeMessage} from "../../utils/aminoMsgHelper";
 import ModalViewTxnResponse from "../Common/ModalViewTxnResponse";
 import Loader from "../../components/Loader";
-import {formatNumber} from "../../utils/scripts";
+import {formatNumber, stringToNumber} from "../../utils/scripts";
 import NumberView from "../../components/NumberView";
-import helper from "../../utils/helper";
 import {ACCOUNT, ACCOUNT_NUMBER, ADDRESS, ADDRESS_INDEX, LOGIN_MODE} from "../../constants/localStorage";
 
 const ModalGasAlert = (props) => {
@@ -44,7 +43,7 @@ const ModalGasAlert = (props) => {
                 setCheckAmountError(false);
             }
         } else {
-            if ((props.transferableAmount - (helper.stringToNumber(props.formData.amount ))) < transactions.TokenValueConversion(gas * fee)) {
+            if ((props.transferableAmount - (stringToNumber(props.formData.amount ))) < transactions.TokenValueConversion(gas * fee)) {
                 setCheckAmountError(true);
             } else {
                 setCheckAmountError(false);
@@ -66,33 +65,33 @@ const ModalGasAlert = (props) => {
     };
 
     const handleGasChange = (event) => {
-        if ((helper.stringToNumber(event.target.value)) >= 80000 && (helper.stringToNumber(event.target.value )) <= 2000000) {
+        if ((stringToNumber(event.target.value)) >= 80000 && (stringToNumber(event.target.value )) <= 2000000) {
             setGasValidationError(false);
-            setGas(helper.stringToNumber(event.target.value ));
+            setGas(stringToNumber(event.target.value ));
 
             if (activeFeeState === "Average") {
-                setFee((helper.stringToNumber(event.target.value )) * config.averageFee);
+                setFee((stringToNumber(event.target.value )) * config.averageFee);
             } else if (activeFeeState === "High") {
-                setFee((helper.stringToNumber(event.target.value)) * config.highFee);
+                setFee((stringToNumber(event.target.value)) * config.highFee);
             } else if (activeFeeState === "Low") {
-                setFee((helper.stringToNumber(event.target.value )) * config.lowFee);
+                setFee((stringToNumber(event.target.value )) * config.lowFee);
             }
             if (amountTxns || vestingDelegationCheck) {
-                if (activeFeeState === "Average" && (transactions.TokenValueConversion((helper.stringToNumber(event.target.value )) * config.averageFee)) > props.transferableAmount) {
+                if (activeFeeState === "Average" && (transactions.TokenValueConversion((stringToNumber(event.target.value )) * config.averageFee)) > props.transferableAmount) {
                     setCheckAmountError(true);
-                } else if (activeFeeState === "High" && (transactions.TokenValueConversion((helper.stringToNumber(event.target.value)) * config.highFee)) > props.transferableAmount) {
+                } else if (activeFeeState === "High" && (transactions.TokenValueConversion((stringToNumber(event.target.value)) * config.highFee)) > props.transferableAmount) {
                     setCheckAmountError(true);
-                } else if (activeFeeState === "Low" && (transactions.TokenValueConversion((helper.stringToNumber(event.target.value )) * config.lowFee)) > props.transferableAmount) {
+                } else if (activeFeeState === "Low" && (transactions.TokenValueConversion((stringToNumber(event.target.value )) * config.lowFee)) > props.transferableAmount) {
                     setCheckAmountError(true);
                 } else {
                     setCheckAmountError(false);
                 }
             } else {
-                if (activeFeeState === "Average" && (transactions.TokenValueConversion((helper.stringToNumber(event.target.value )) * config.averageFee)) + props.formData.amount > props.transferableAmount) {
+                if (activeFeeState === "Average" && (transactions.TokenValueConversion((stringToNumber(event.target.value )) * config.averageFee)) + props.formData.amount > props.transferableAmount) {
                     setCheckAmountError(true);
-                } else if (activeFeeState === "High" && (transactions.TokenValueConversion((helper.stringToNumber(event.target.value)) * config.highFee)) + props.formData.amount > props.transferableAmount) {
+                } else if (activeFeeState === "High" && (transactions.TokenValueConversion((stringToNumber(event.target.value)) * config.highFee)) + props.formData.amount > props.transferableAmount) {
                     setCheckAmountError(true);
-                } else if (activeFeeState === "Low" && (transactions.TokenValueConversion((helper.stringToNumber(event.target.value )) * config.lowFee)) + props.formData.amount > props.transferableAmount) {
+                } else if (activeFeeState === "Low" && (transactions.TokenValueConversion((stringToNumber(event.target.value )) * config.lowFee)) + props.formData.amount > props.transferableAmount) {
                     setCheckAmountError(true);
                 } else {
                     setCheckAmountError(false);
@@ -116,7 +115,7 @@ const ModalGasAlert = (props) => {
                 setCheckAmountError(false);
             }
         } else {
-            if ((props.transferableAmount - (helper.stringToNumber(props.formData.amount ))) < transactions.TokenValueConversion(gas * feeValue)) {
+            if ((props.transferableAmount - (stringToNumber(props.formData.amount ))) < transactions.TokenValueConversion(gas * feeValue)) {
                 setCheckAmountError(true);
             } else {
                 setCheckAmountError(false);
@@ -143,8 +142,8 @@ const ModalGasAlert = (props) => {
         const loginAddress = localStorage.getItem(ADDRESS);
         let response;
 
-        let accountNumber = helper.stringToNumber(localStorage.getItem(ACCOUNT_NUMBER));
-        let addressIndex = helper.stringToNumber(localStorage.getItem(ADDRESS_INDEX));
+        let accountNumber = stringToNumber(localStorage.getItem(ACCOUNT_NUMBER));
+        let addressIndex = stringToNumber(localStorage.getItem(ADDRESS_INDEX));
 
         if (props.formData.formName === "ibc") {
             let msg = transactions.MakeIBCTransferMsg(props.formData.channelID, loginAddress,

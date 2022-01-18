@@ -10,9 +10,8 @@ import {
 } from "../../../store/actions/transactions/withdrawTotalRewards";
 import {ValidateMultipleValidatorsClaim} from "../../../utils/validations";
 import NumberView from "../../../components/NumberView";
-import {formatNumber} from "../../../utils/scripts";
+import {formatNumber, stringToNumber} from "../../../utils/scripts";
 import config from "../../../config";
-import helper from "../../../utils/helper";
 
 const Validators = () => {
     const {t} = useTranslation();
@@ -26,7 +25,7 @@ const Validators = () => {
         let totalValidatorsRewards = 0;
         let messages = [];
         evt.forEach(async (item) => {
-            totalValidatorsRewards = totalValidatorsRewards + (helper.stringToNumber(transactions.TokenValueConversion(item.rewards).toFixed(6)));
+            totalValidatorsRewards = totalValidatorsRewards + (stringToNumber(transactions.TokenValueConversion(item.rewards).toFixed(6)));
             messages.push(WithdrawMsg(loginInfo.address, item.value));
         });
         dispatch(setTxWithDrawTotalValidators({

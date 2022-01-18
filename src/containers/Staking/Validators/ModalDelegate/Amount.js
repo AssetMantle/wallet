@@ -2,12 +2,11 @@ import React from 'react';
 import InputFieldNumber from "../../../../components/InputFieldNumber";
 import {setTxDelegateAmount} from "../../../../store/actions/transactions/delegate";
 import {useDispatch, useSelector} from "react-redux";
-import {formatNumber, removeCommas} from "../../../../utils/scripts";
+import {formatNumber, removeCommas, stringToNumber} from "../../../../utils/scripts";
 import NumberView from "../../../../components/NumberView";
 import {ValidateSendAmount, ValidateSpecialCharacters} from "../../../../utils/validations";
 import {useTranslation} from "react-i18next";
 import config from "../../../../config";
-import helper from "../../../../utils/helper";
 
 const Amount = () => {
     const {t} = useTranslation();
@@ -22,7 +21,7 @@ const Amount = () => {
             dispatch(
                 setTxDelegateAmount({
                     value: evt.target.value,
-                    error: ValidateSendAmount(transferableAmount, (helper.stringToNumber(evt.target.value)))
+                    error: ValidateSendAmount(transferableAmount, (stringToNumber(evt.target.value)))
                 })
             );
         } else {
@@ -34,7 +33,7 @@ const Amount = () => {
         dispatch(
             setTxDelegateAmount({
                 value: value,
-                error: ValidateSendAmount(value, (helper.stringToNumber(value)))
+                error: ValidateSendAmount(value, (stringToNumber(value)))
             })
         );
     };

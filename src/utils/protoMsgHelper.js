@@ -9,6 +9,7 @@ import {MsgTransfer} from "cosmjs-types/ibc/applications/transfer/v1/tx";
 import {coin} from "@cosmjs/stargate";
 import helper from "./helper";
 import config from "../config";
+import {stringToNumber} from "./scripts";
 
 const msgSendTypeUrl = "/cosmos.bank.v1beta1.MsgSend";
 const msgDelegateTypeUrl = "/cosmos.staking.v1beta1.MsgDelegate";
@@ -107,7 +108,7 @@ function TransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, tim
         value: MsgTransfer.fromPartial({
             sourcePort: port,
             sourceChannel: channel,
-            token: coin(helper.stringToNumber(amount), denom),
+            token: coin(stringToNumber(amount), denom),
             sender: helper.trimWhiteSpaces(fromAddress),
             receiver: helper.trimWhiteSpaces(toAddress),
             timeoutHeight: {

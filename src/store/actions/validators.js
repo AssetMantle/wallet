@@ -18,6 +18,7 @@ import Long from "long";
 import helper from "../../utils/helper";
 import transactions from "../../utils/transactions";
 import * as Sentry from "@sentry/browser";
+import {stringToNumber} from "../../utils/scripts";
 
 export const fetchValidatorsInProgress = () => {
     return {
@@ -75,7 +76,7 @@ const validatorsDelegationSort = (validators, delegations) => {
             if (item.operatorAddress === data.delegation.validatorAddress) {
                 let obj = {
                     'data': item,
-                    'delegations': helper.stringToNumber(data.balance.amount)
+                    'delegations': stringToNumber(data.balance.amount)
                 };
                 delegatedValidators.push(obj);
             }
@@ -197,7 +198,7 @@ export const fetchValidatorDelegations = (address) => {
             for (const item of delegationResponseList) {
                 if (item.delegation.validatorAddress === validatorAddress) {
                     dispatch(setValidatorDelegations({
-                        value: transactions.TokenValueConversion(helper.stringToNumber(item.balance.amount)),
+                        value: transactions.TokenValueConversion(stringToNumber(item.balance.amount)),
                         status: true,
                         error: {
                             message: ''
@@ -233,7 +234,7 @@ export const fetchValidatorRewards = (address, validatorAddress) => {
         }).then(response => {
             if (response.rewards[0].amount) {
                 let value = helper.decimalConversion(response.rewards[0].amount);
-                const fixedRewards = helper.stringToNumber(transactions.TokenValueConversion(value)).toFixed(6);
+                const fixedRewards = stringToNumber(transactions.TokenValueConversion(value)).toFixed(6);
                 dispatch(setValidatorRewards({
                     value: fixedRewards,
                     error: {

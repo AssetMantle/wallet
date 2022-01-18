@@ -16,6 +16,7 @@ import transactions from "../../../../utils/transactions";
 import {useTranslation} from "react-i18next";
 import config from "../../../../config";
 import {LOGIN_INFO} from "../../../../constants/localStorage";
+import {stringToNumber} from "../../../../utils/scripts";
 
 const DelegatedValidators = (props) => {
     const {t} = useTranslation();
@@ -51,8 +52,8 @@ const DelegatedValidators = (props) => {
         options: {
             sortCompare: (order) => {
                 return (obj1, obj2) => {
-                    let val1 = helper.stringToNumber(obj1.data.props.children);
-                    let val2 = helper.stringToNumber(obj2.data.props.children);
+                    let val1 = stringToNumber(obj1.data.props.children);
+                    let val2 = stringToNumber(obj2.data.props.children);
                     return (val1 - val2) * (order === 'asc' ? 1 : -1);
                 };
             }

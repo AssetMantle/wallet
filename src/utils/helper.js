@@ -2,7 +2,6 @@ import {Decimal} from "@cosmjs/math";
 import transactions from "./transactions";
 import config from "../config";
 import {COIN_ATOM, COIN_ATOM_DENOM} from "../constants/keyWords";
-import moment from "moment";
 import {ADDRESS, FEE, KEPLR_ADDRESS, LOGIN_MODE, LOGIN_TOKEN} from "../constants/localStorage";
 
 const encoding = require("@cosmjs/encoding");
@@ -290,16 +289,6 @@ function getAccountNumber(value) {
     return value === '' ? '0' : value;
 }
 
-const emptyFunc = () => ({});
-
-const stringToNumber = (stringData) => {
-    return +stringData;
-};
-
-const localTime = (stringData) => {
-    return moment(new Date(stringData).toString()).format('dddd MMMM Do YYYY, h:mm:ss a');
-};
-
 export default {
     randomNum,
     stringTruncate,
@@ -325,9 +314,6 @@ export default {
     getTransactionAmount,
     sixDigitsNumber,
     stringValidation,
-    emptyFunc,
     foundationNodeCheck,
     getAccountNumber,
-    stringToNumber,
-    localTime
 };

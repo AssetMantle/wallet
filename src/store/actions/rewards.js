@@ -14,6 +14,7 @@ import ActionHelper from "../../utils/actions";
 import {QueryClientImpl as StakingQueryClientImpl} from "cosmjs-types/cosmos/staking/v1beta1/query";
 import * as Sentry from "@sentry/browser";
 import config from "../../config";
+import {stringToNumber} from "../../utils/scripts";
 
 export const fetchRewardsProgress = () => {
     return {
@@ -72,7 +73,7 @@ export const fetchTotalRewards = (address) => {
             }).then(async (delegatorRewardsResponse) => {
                 if (delegatorRewardsResponse.total.length) {
                     let rewards = helper.decimalConversion(delegatorRewardsResponse.total[0].amount, 18);
-                    const fixedRewardsResponse = transactions.TokenValueConversion(helper.stringToNumber(rewards));
+                    const fixedRewardsResponse = transactions.TokenValueConversion(stringToNumber(rewards));
                     dispatch(fetchRewardsSuccess(fixedRewardsResponse.toFixed(6)));
                 }
             }).catch((error) => {

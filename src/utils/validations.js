@@ -2,12 +2,13 @@ import transactions from "./transactions";
 import config from "../config";
 import helper from "./helper";
 import {ACCOUNT} from "../constants/localStorage";
+import {stringToNumber} from "./scripts";
 
 const bip39 = require("bip39");
 const accountType = localStorage.getItem(ACCOUNT);
 
 export const ValidateSendAmount = (amount, value) => {
-    if (helper.stringToNumber(amount ) < value) {
+    if (stringToNumber(amount ) < value) {
         return new Error('Insufficient wallet balance');
     }
     return new Error('');
@@ -28,7 +29,7 @@ export const ValidateFee = (transferableAmount, feeValue, type, amount) => {
         }
         return new Error('');
     } else {
-        if ((transferableAmount - (helper.stringToNumber(amount))) < transactions.TokenValueConversion(feeValue)) {
+        if ((transferableAmount - (stringToNumber(amount))) < transactions.TokenValueConversion(feeValue)) {
             return new Error('Insufficient wallet balance to process the transaction.');
         }
         return new Error('');
@@ -36,7 +37,7 @@ export const ValidateFee = (transferableAmount, feeValue, type, amount) => {
 };
 
 export const ValidateGas = (value) => {
-    if (helper.stringToNumber(value) < config.minGas || (helper.stringToNumber(value)) > config.maxGas) {
+    if (stringToNumber(value) < config.minGas || (stringToNumber(value)) > config.maxGas) {
         return new Error('Enter Gas between 80000 to 2000000');
     }
     return new Error('');
@@ -110,7 +111,7 @@ export const ValidateMultipleValidatorsClaim = (evt) => {
 };
 
 export const ValidateReDelegateAmount = (delegationAmount, amount) => {
-    if (helper.stringToNumber(delegationAmount) < amount) {
+    if (stringToNumber(delegationAmount) < amount) {
         return new Error('Insufficient Delegated Amount');
     }
     return new Error('');

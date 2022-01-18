@@ -6,6 +6,7 @@ import {
 import helper from "./helper";
 import * as Sentry from "@sentry/browser";
 import {ADDRESS} from "../constants/localStorage";
+import {stringToNumber} from "./scripts";
 
 async function getValidatorRewards(validatorAddress) {
     let address = localStorage.getItem(ADDRESS);
@@ -18,7 +19,7 @@ async function getValidatorRewards(validatorAddress) {
     }).then(response => {
         if (response.rewards.length) {
             let rewards = helper.decimalConversion(response.rewards[0].amount);
-            amount = (transactions.TokenValueConversion(helper.stringToNumber(rewards)));
+            amount = (transactions.TokenValueConversion(stringToNumber(rewards)));
         }
     }).catch(error => {
         Sentry.captureException(error.response
@@ -38,7 +39,7 @@ async function getValidatorCommission(address) {
     }).then((res) => {
         if (res.commission.commission[0].amount) {
             commission = helper.decimalConversion(res.commission.commission[0].amount);
-            commission = helper.stringToNumber(transactions.TokenValueConversion(helper.stringToNumber(commission)).toFixed(6));
+            commission = stringToNumber(transactions.TokenValueConversion(stringToNumber(commission)).toFixed(6));
         }
     }).catch((error) => {
         Sentry.captureException(error.response
