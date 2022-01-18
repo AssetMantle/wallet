@@ -15,7 +15,7 @@ import {
 } from "../../constants/validators";
 import Long from "long";
 
-import helper from "../../utils/helper";
+import helper, {tokenValueConversion} from "../../utils/helper";
 import transactions from "../../utils/transactions";
 import * as Sentry from "@sentry/browser";
 import {decimalConversion, stringToNumber} from "../../utils/scripts";
@@ -198,7 +198,7 @@ export const fetchValidatorDelegations = (address) => {
             for (const item of delegationResponseList) {
                 if (item.delegation.validatorAddress === validatorAddress) {
                     dispatch(setValidatorDelegations({
-                        value: transactions.TokenValueConversion(stringToNumber(item.balance.amount)),
+                        value: tokenValueConversion(stringToNumber(item.balance.amount)),
                         status: true,
                         error: {
                             message: ''
@@ -234,7 +234,7 @@ export const fetchValidatorRewards = (address, validatorAddress) => {
         }).then(response => {
             if (response.rewards[0].amount) {
                 let value = decimalConversion(response.rewards[0].amount);
-                const fixedRewards = stringToNumber(transactions.TokenValueConversion(value)).toFixed(6);
+                const fixedRewards = stringToNumber(tokenValueConversion(value)).toFixed(6);
                 dispatch(setValidatorRewards({
                     value: fixedRewards,
                     error: {

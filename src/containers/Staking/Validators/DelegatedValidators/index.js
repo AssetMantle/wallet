@@ -1,5 +1,5 @@
 import React from "react";
-import helper from "../../../../utils/helper";
+import helper, {tokenValueConversion} from "../../../../utils/helper";
 import Avatar from "../Avatar";
 import activeIcon from "../../../../assets/images/active.svg";
 import inActiveIcon from "../../../../assets/images/inactive.svg";
@@ -12,7 +12,6 @@ import {
     showValidatorTxModal
 } from "../../../../store/actions/validators";
 import {connect, useDispatch} from "react-redux";
-import transactions from "../../../../utils/transactions";
 import {useTranslation} from "react-i18next";
 import config from "../../../../config";
 import {LOGIN_INFO} from "../../../../constants/localStorage";
@@ -75,7 +74,7 @@ const DelegatedValidators = (props) => {
                 {validator.data.description.moniker}
             </div>,
             <div className="voting" key={index}>
-                {transactions.TokenValueConversion(validator.delegations)}
+                {tokenValueConversion(validator.delegations)}
             </div>
             ,
             <div className="" key={index}>

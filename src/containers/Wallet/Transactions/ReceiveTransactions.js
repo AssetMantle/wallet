@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import moment from 'moment';
-import helper from "../../../utils/helper";
+import helper, {tokenValueConversion} from "../../../utils/helper";
 import Icon from "../../../components/Icon";
 import loader from "../../../assets/images/loader.svg";
 import {fetchReceiveTransactions} from "../../../store/actions/transactionQueries";
@@ -9,7 +9,6 @@ import DataTable from "../../../components/DataTable";
 import IconButton from "@material-ui/core/IconButton";
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import transactions from "../../../utils/transactions";
 import {formatNumber, stringTruncate} from "../../../utils/scripts";
 import NumberView from "../../../components/NumberView";
 import config from "../../../config";
@@ -107,19 +106,19 @@ const ReceiveTransactions = (props) => {
                         stxn.fee.amount[0].denom === config.coinDenom ?
                             <div className="fee text-left" key={index}>
                                 <NumberView
-                                    value={formatNumber(transactions.TokenValueConversion(stxn.fee.amount[0].amount))}/>
+                                    value={formatNumber(tokenValueConversion(stxn.fee.amount[0].amount))}/>
                                 {config.coinName}
                             </div>
                             :
                             <div className="fee text-left" key={index}>
                                 <NumberView
-                                    value={formatNumber(transactions.TokenValueConversion(stxn.fee.amount[0].amount))}/>
+                                    value={formatNumber(tokenValueConversion(stxn.fee.amount[0].amount))}/>
                                 {stxn.fee.amount[0].denom}
                             </div>
                         : ""
                     :
                     <div className="fee text-left" key={index}>
-                        <NumberView value={formatNumber(transactions.TokenValueConversion(stxn.fee.amount.amount))}/>
+                        <NumberView value={formatNumber(tokenValueConversion(stxn.fee.amount.amount))}/>
                         {stxn.fee.amount.denom}
                     </div>
                 : '',

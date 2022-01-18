@@ -110,7 +110,7 @@ function denomModify(amount) {
     if (Array.isArray(amount)) {
         if (amount.length) {
             if (amount[0].denom === config.coinDenom) {
-                return [transactions.TokenValueConversion(amount[0].amount), config.coinName];
+                return [tokenValueConversion(amount[0].amount), config.coinName];
             } else {
                 return [amount[0].amount, amount[0].denom];
             }
@@ -119,7 +119,7 @@ function denomModify(amount) {
         }
     } else {
         if (amount.denom === config.coinDenom) {
-            return [transactions.TokenValueConversion(amount.amount), config.coinName];
+            return [tokenValueConversion(amount.amount), config.coinName];
         } else {
             return [amount.amount, amount.denom];
         }
@@ -239,6 +239,10 @@ export const updateFee = (address) => {
     } else {
         localStorage.setItem(FEE, config.vestingAccountFee);
     }
+};
+
+export const tokenValueConversion = (data) => {
+    return data / config.tokenValue;
 };
 
 export default {

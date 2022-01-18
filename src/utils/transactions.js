@@ -107,11 +107,6 @@ function getAccountNumberAndSequence(authResponse) {
     }
 }
 
-
-function TokenValueConversion(data) {
-    return data / config.tokenValue;
-}
-
 function PrivateKeyReader(file, password, loginAddress, accountNumber = "0", addressIndex = "0",) {
     return new Promise(function (resolve, reject) {
         const fileReader = new FileReader();
@@ -236,7 +231,6 @@ export default {
     TransactionWithLedger,
     makeHdPath,
     getAccountNumberAndSequence,
-    TokenValueConversion,
     PrivateKeyReader,
     MakeIBCTransferMsg,
     RpcClient,

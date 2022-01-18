@@ -14,7 +14,7 @@ import {QueryClientImpl as StakingQueryClientImpl} from "cosmjs-types/cosmos/sta
 import * as Sentry from "@sentry/browser";
 import config from "../../config";
 import {decimalConversion, stringToNumber} from "../../utils/scripts";
-import {checkValidatorAccountAddress} from "../../utils/helper";
+import {checkValidatorAccountAddress, tokenValueConversion} from "../../utils/helper";
 
 export const fetchRewardsProgress = () => {
     return {
@@ -73,7 +73,7 @@ export const fetchTotalRewards = (address) => {
             }).then(async (delegatorRewardsResponse) => {
                 if (delegatorRewardsResponse.total.length) {
                     let rewards = decimalConversion(delegatorRewardsResponse.total[0].amount, 18);
-                    const fixedRewardsResponse = transactions.TokenValueConversion(stringToNumber(rewards));
+                    const fixedRewardsResponse = tokenValueConversion(stringToNumber(rewards));
                     dispatch(fetchRewardsSuccess(fixedRewardsResponse.toFixed(6)));
                 }
             }).catch((error) => {
@@ -115,7 +115,7 @@ export const fetchRewards = (address) => {
                                 validatorAddr: item.validatorAddress,
                             }).then(async (res) => {
                                 const data = {
-                                    label: `${res.validator.description.moniker} - ${transactions.TokenValueConversion(decimalConversion(item.reward[0] && item.reward[0].amount)).toLocaleString(undefined, {minimumFractionDigits: 6})} ${config.coinName}`,
+                                    label: `${res.validator.description.moniker} - ${tokenValueConversion(decimalConversion(item.reward[0] && item.reward[0].amount)).toLocaleString(undefined, {minimumFractionDigits: 6})} ${config.coinName}`,
                                     value: res.validator.operatorAddress,
                                     rewards: decimalConversion(item.reward[0] && item.reward[0].amount)
                                 };

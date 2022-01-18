@@ -2,10 +2,10 @@ import React, {useEffect} from 'react';
 import config from "../../../config";
 import NumberView from "../../../components/NumberView";
 import {formatNumber} from "../../../utils/scripts";
-import transactions from "../../../utils/transactions";
 import {useDispatch, useSelector} from "react-redux";
 import {feeChangeHandler} from "../../../store/actions/transactions/fee";
 import {ValidateFee} from "../../../utils/validations";
+import {tokenValueConversion} from "../../../utils/helper";
 
 const Fee = () => {
     const dispatch = useDispatch();
@@ -53,10 +53,10 @@ const Fee = () => {
                                 onClick={() => handleFee("Low", config.lowFee)}>
                                 <p className="title">Zero</p>
                                 <p className="gas"><NumberView
-                                    value={formatNumber(transactions.TokenValueConversion((gas.value) * config.lowFee) * tokenPrice)}/>$
+                                    value={formatNumber(tokenValueConversion((gas.value) * config.lowFee) * tokenPrice)}/>$
                                 </p>
                                 <p className="token"><NumberView
-                                    value={formatNumber(transactions.TokenValueConversion((gas.value) * config.lowFee))}/>
+                                    value={formatNumber(tokenValueConversion((gas.value) * config.lowFee))}/>
                                 {config.coinName}
                                 </p>
                             </div>
@@ -66,10 +66,10 @@ const Fee = () => {
                         onClick={() => handleFee("Average", config.averageFee)}>
                         <p className="title">Low</p>
                         <p className="gas"><NumberView
-                            value={formatNumber(transactions.TokenValueConversion((gas.value) * config.averageFee) * tokenPrice)}/>$
+                            value={formatNumber(tokenValueConversion((gas.value) * config.averageFee) * tokenPrice)}/>$
                         </p>
                         <p className="token"><NumberView
-                            value={formatNumber(transactions.TokenValueConversion((gas.value) * config.averageFee))}/>
+                            value={formatNumber(tokenValueConversion((gas.value) * config.averageFee))}/>
                         {config.coinName}
                         </p>
                     </div>
@@ -77,10 +77,10 @@ const Fee = () => {
                         onClick={() => handleFee("High", config.highFee)}>
                         <p className="title">High</p>
                         <p className="gas"><NumberView
-                            value={formatNumber(transactions.TokenValueConversion((gas.value) * config.highFee) * tokenPrice)}/>$
+                            value={formatNumber(tokenValueConversion((gas.value) * config.highFee) * tokenPrice)}/>$
                         </p>
                         <p className="token"><NumberView
-                            value={formatNumber(transactions.TokenValueConversion((gas.value) * config.highFee))}/>
+                            value={formatNumber(tokenValueConversion((gas.value) * config.highFee))}/>
                         {config.coinName}
                         </p>
                     </div>

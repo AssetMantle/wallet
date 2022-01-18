@@ -1,6 +1,5 @@
-import transactions from "../utils/transactions";
 import * as Sentry from "@sentry/browser";
-import {getAccount} from "./helper";
+import {getAccount, tokenValueConversion} from "./helper";
 
 const config = require('../config');
 
@@ -88,7 +87,7 @@ async function getTransferableVestingAmount(address, balance) {
 
     getAccount(address)
         .then(res => {
-            const amount = transactions.TokenValueConversion(getAccountVestingAmount(res, currentEpochTime));
+            const amount = tokenValueConversion(getAccountVestingAmount(res, currentEpochTime));
             vestingAmount = amount;
             if ((balance - amount) < 0) {
                 transferableAmount = 0;

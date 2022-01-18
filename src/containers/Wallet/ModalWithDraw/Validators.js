@@ -2,7 +2,6 @@ import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import ReactMultiSelectCheckboxes from "react-multiselect-checkboxes";
 import {useTranslation} from "react-i18next";
-import transactions from "../../../utils/transactions";
 import {WithdrawMsg} from "../../../utils/protoMsgHelper";
 import {
     setTxWithDrawTotalRewardsAmount,
@@ -12,6 +11,7 @@ import {ValidateMultipleValidatorsClaim} from "../../../utils/validations";
 import NumberView from "../../../components/NumberView";
 import {formatNumber, stringToNumber} from "../../../utils/scripts";
 import config from "../../../config";
+import {tokenValueConversion} from "../../../utils/helper";
 
 const Validators = () => {
     const {t} = useTranslation();
@@ -25,7 +25,7 @@ const Validators = () => {
         let totalValidatorsRewards = 0;
         let messages = [];
         evt.forEach(async (item) => {
-            totalValidatorsRewards = totalValidatorsRewards + (stringToNumber(transactions.TokenValueConversion(item.rewards).toFixed(6)));
+            totalValidatorsRewards = totalValidatorsRewards + (stringToNumber(tokenValueConversion(item.rewards).toFixed(6)));
             messages.push(WithdrawMsg(loginInfo.address, item.value));
         });
         dispatch(setTxWithDrawTotalValidators({

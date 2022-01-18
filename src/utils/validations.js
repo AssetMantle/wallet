@@ -1,7 +1,7 @@
-import transactions from "./transactions";
 import config from "../config";
 import {ACCOUNT} from "../constants/localStorage";
 import {mnemonicTrim, stringToNumber} from "./scripts";
+import {tokenValueConversion} from "./helper";
 
 const bip39 = require("bip39");
 const accountType = localStorage.getItem(ACCOUNT);
@@ -23,12 +23,12 @@ export const ValidateFee = (transferableAmount, feeValue, type, amount) => {
     );
 
     if (amountTxns || vestingDelegationCheck) {
-        if (transferableAmount < transactions.TokenValueConversion(feeValue)) {
+        if (transferableAmount < tokenValueConversion(feeValue)) {
             return new Error('Insufficient wallet balance to process the transaction.');
         }
         return new Error('');
     } else {
-        if ((transferableAmount - (stringToNumber(amount))) < transactions.TokenValueConversion(feeValue)) {
+        if ((transferableAmount - (stringToNumber(amount))) < tokenValueConversion(feeValue)) {
             return new Error('Insufficient wallet balance to process the transaction.');
         }
         return new Error('');

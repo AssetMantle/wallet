@@ -8,6 +8,7 @@ import {useTranslation} from "react-i18next";
 import * as Sentry from "@sentry/react";
 import {ADDRESS} from "../../../constants/localStorage";
 import {localTime} from "../../../utils/scripts";
+import {tokenValueConversion} from "../../../utils/helper";
 
 const ModalViewVestingDetails = () => {
     const {t} = useTranslation();
@@ -85,7 +86,7 @@ const ModalViewVestingDetails = () => {
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>{transactions.TokenValueConversion(parseInt(response.baseVestingAccount.originalVesting.length && response.baseVestingAccount.originalVesting[0].amount))}</td>
+                                            <td>{tokenValueConversion(parseInt(response.baseVestingAccount.originalVesting.length && response.baseVestingAccount.originalVesting[0].amount))}</td>
                                             <td>
                                                 {localTime(parseInt(response.startTime.low) * 1000)}
                                             </td>
@@ -105,7 +106,7 @@ const ModalViewVestingDetails = () => {
                                 {response.baseVestingAccount ?
                                     <>
                                         <p>Total vesting
-                                            tokens {transactions.TokenValueConversion(parseInt(response.baseVestingAccount.originalVesting.length && response.baseVestingAccount.originalVesting[0].amount))} at
+                                            tokens {tokenValueConversion(parseInt(response.baseVestingAccount.originalVesting.length && response.baseVestingAccount.originalVesting[0].amount))} at
                                             Date {localTime(parseInt(response.startTime.low) * 1000)} </p>
                                         <Table borderless>
                                             <thead>
@@ -124,7 +125,7 @@ const ModalViewVestingDetails = () => {
                                                         return (
                                                             <tbody key={index}>
                                                                 <tr>
-                                                                    <td>{transactions.TokenValueConversion(period.amount[0].amount)}</td>
+                                                                    <td>{tokenValueConversion(period.amount[0].amount)}</td>
                                                                     <td>
                                                                         {localTime(vestingPeriod * 1000)}
                                                                     </td>
@@ -153,7 +154,7 @@ const ModalViewVestingDetails = () => {
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>{transactions.TokenValueConversion(parseInt(response.baseVestingAccount.originalVesting[0].amount))}</td>
+                                            <td>{tokenValueConversion(parseInt(response.baseVestingAccount.originalVesting[0].amount))}</td>
                                             <td>
                                                 {localTime((response.baseVestingAccount.endTime.low) * 1000)}
                                             </td>

@@ -15,7 +15,7 @@ import {QueryClientImpl} from "cosmjs-types/cosmos/bank/v1beta1/query";
 import config from "../../config";
 import * as Sentry from '@sentry/browser';
 import {stringToNumber} from "../../utils/scripts";
-import {getAccount} from "../../utils/helper";
+import {getAccount, tokenValueConversion} from "../../utils/helper";
 
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
@@ -58,7 +58,7 @@ export const fetchBalance = (address) => {
                     allBalancesResponse.balances.forEach((item) => {
                         if (item.denom === config.coinDenom) {
                             const totalBalance = stringToNumber(item.amount);
-                            dispatch(fetchBalanceSuccess(transactions.TokenValueConversion(totalBalance)));
+                            dispatch(fetchBalanceSuccess(tokenValueConversion(totalBalance)));
                         }
                     });
                 }
@@ -121,8 +121,8 @@ export const fetchTransferableVestingAmount = (address) => {
                                 let item = response.balances[i];
                                 if (item.denom === config.coinDenom) {
                                     tokenList.push(item);
-                                    const amount = transactions.TokenValueConversion(vestingAccount.getAccountVestingAmount(vestingAmountData, currentEpochTime));
-                                    const balance = transactions.TokenValueConversion(stringToNumber(item.amount ));
+                                    const amount = tokenValueConversion(vestingAccount.getAccountVestingAmount(vestingAmountData, currentEpochTime));
+                                    const balance = tokenValueConversion(stringToNumber(item.amount ));
                                     vestingAmount = amount;
                                     if ((balance - amount) < 0) {
                                         transferableAmount = 0;

@@ -8,6 +8,7 @@ import transactions from "../../utils/transactions";
 import {QueryClientImpl} from "cosmjs-types/cosmos/staking/v1beta1/query";
 import * as Sentry from "@sentry/browser";
 import {stringToNumber} from "../../utils/scripts";
+import {tokenValueConversion} from "../../utils/helper";
 
 export const fetchDelegationsCountSuccess = (count) => {
     return {
@@ -43,7 +44,7 @@ export const fetchDelegationsCount = (address) => {
                     let totalDelegationsCount = Lodash.sumBy(delegationsResponse.delegationResponses, (delegation) => {
                         return stringToNumber(delegation.balance.amount);
                     });
-                    dispatch(fetchDelegationsCountSuccess(transactions.TokenValueConversion(totalDelegationsCount)));
+                    dispatch(fetchDelegationsCountSuccess(tokenValueConversion(totalDelegationsCount)));
                 }
 
             }).catch((error) => {
