@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from "./../../../components/Button";
 import {useDispatch, useSelector} from "react-redux";
-import helper from "../../../utils/helper";
+import helper, {decryptKeyStore} from "../../../utils/helper";
 import transactions from "../../../utils/transactions";
 import wallet from "../../../utils/wallet";
 import {hideKeyStoreModal, setResult, showKeyStoreNewPasswordModal} from "../../../store/actions/changePassword";
@@ -25,7 +25,7 @@ const Submit = () => {
             fileReader.onload = async event => {
                 const res = JSON.parse(event.target.result);
 
-                const decryptedData = helper.decryptStore(res, password.value);
+                const decryptedData = decryptKeyStore(res, password.value);
                 if (decryptedData.error != null) {
                     dispatch(setResult(
                         {

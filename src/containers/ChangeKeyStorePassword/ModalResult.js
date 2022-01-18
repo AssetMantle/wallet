@@ -3,7 +3,7 @@ import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
 import Icon from "../../components/Icon";
-import helper from "../../utils/helper";
+import {createKeyStore} from "../../utils/helper";
 import {hideResultModal} from "../../store/actions/changePassword";
 
 const ModalResult = () => {
@@ -19,7 +19,7 @@ const ModalResult = () => {
 
     const handleResetSubmit = async () => {
         const mnemonic = response.value.mnemonic;
-        let encryptedData = helper.createStore(mnemonic, password.value);
+        let encryptedData = createKeyStore(mnemonic, password.value);
         let jsonContent = JSON.stringify(encryptedData.Response);
         await downloadFile(jsonContent);
     };

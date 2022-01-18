@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {Form, Modal,} from "react-bootstrap";
 import Icon from "../../../components/Icon";
-import helper from "../../../utils/helper";
+import {createKeyStore} from "../../../utils/helper";
 import {useTranslation} from "react-i18next";
 
 const GeneratePrivateKey = (props) => {
@@ -15,7 +15,7 @@ const GeneratePrivateKey = (props) => {
         const password = event.target.password.value;
         if (regex.test(password)) {
             const mnemonic = props.mnemonic;
-            let encryptedData = helper.createStore(mnemonic, password);
+            let encryptedData = createKeyStore(mnemonic, password);
             let jsonContent = JSON.stringify(encryptedData.Response);
             setKeyFile(true);
             downloadFile(jsonContent);

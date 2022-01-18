@@ -8,9 +8,9 @@ import config from "../../config";
 import {useTranslation} from "react-i18next";
 import ModalKeplrInstall from "./ModalKeplrInstall";
 import Icon from "../../components/Icon";
-import transactions, {GetAccount} from "../../utils/transactions";
 import * as Sentry from "@sentry/browser";
 import {ACCOUNT, ADDRESS, FEE, KEPLR_ADDRESS, LOGIN_MODE, LOGIN_TOKEN, VERSION} from "../../constants/localStorage";
+import {vestingAccountCheck, getAccount} from "../../utils/helper";
 
 const KeplrHome = () => {
     const {t} = useTranslation();
@@ -47,9 +47,9 @@ const KeplrHome = () => {
 
     const handleRoute = () => {
         const address = localStorage.getItem(KEPLR_ADDRESS);
-        GetAccount(address)
+        getAccount(address)
             .then(async res => {
-                const accountType = await transactions.VestingAccountCheck(res.typeUrl);
+                const accountType = await vestingAccountCheck(res.typeUrl);
                 if (accountType) {
                     localStorage.setItem(FEE, config.vestingAccountFee);
                     localStorage.setItem(ACCOUNT, 'vesting');

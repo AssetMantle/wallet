@@ -2,7 +2,7 @@ import React from 'react';
 import Button from "./../../../components/Button";
 import {useDispatch, useSelector} from "react-redux";
 import {hideKeyStorePasswordModal, showResultModal} from "../../../store/actions/generateKeyStore";
-import helper from "../../../utils/helper";
+import  {createKeyStore} from "../../../utils/helper";
 
 const ButtonSubmit = () => {
     const dispatch = useDispatch();
@@ -10,7 +10,7 @@ const ButtonSubmit = () => {
     const mnemonic = useSelector((state) => state.generateKeyStore.mnemonic);
 
     const onClick = async () => {
-        let encryptedData = helper.createStore(mnemonic.value, password.value);
+        let encryptedData = createKeyStore(mnemonic.value, password.value);
         let jsonContent = JSON.stringify(encryptedData.Response);
         dispatch(hideKeyStorePasswordModal());
         dispatch(showResultModal());

@@ -14,6 +14,7 @@ import {QueryClientImpl as StakingQueryClientImpl} from "cosmjs-types/cosmos/sta
 import * as Sentry from "@sentry/browser";
 import config from "../../config";
 import {decimalConversion, stringToNumber} from "../../utils/scripts";
+import {checkValidatorAccountAddress} from "../../utils/helper";
 
 export const fetchRewardsProgress = () => {
     return {
@@ -119,7 +120,7 @@ export const fetchRewards = (address) => {
                                     rewards: decimalConversion(item.reward[0] && item.reward[0].amount)
                                 };
 
-                                if (transactions.checkValidatorAccountAddress(res.validator.operatorAddress, address)) {
+                                if (checkValidatorAccountAddress(res.validator.operatorAddress, address)) {
                                     let commissionInfo = await ActionHelper.getValidatorCommission(res.validator.operatorAddress);
                                     dispatch(fetchValidatorCommissionInfoSuccess([commissionInfo, res.validator.operatorAddress, true]));
                                 }

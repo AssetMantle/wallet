@@ -8,13 +8,14 @@ import {
     VESTING_BALANCE_FETCH_SUCCESS
 } from "../../constants/balance";
 import vestingAccount from "../../utils/vestingAmount";
-import transactions, {GetAccount} from "../../utils/transactions";
+import transactions from "../../utils/transactions";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient, QueryClient, setupIbcExtension} from "@cosmjs/stargate";
 import {QueryClientImpl} from "cosmjs-types/cosmos/bank/v1beta1/query";
 import config from "../../config";
 import * as Sentry from '@sentry/browser';
 import {stringToNumber} from "../../utils/scripts";
+import {getAccount} from "../../utils/helper";
 
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
@@ -102,7 +103,7 @@ export const fetchTokenListSuccess = (list) => {
 export const fetchTransferableVestingAmount = (address) => {
     return async dispatch => {
         try {
-            GetAccount(address).then(async vestingAmountData => {
+            getAccount(address).then(async vestingAmountData => {
                 const currentEpochTime = Math.floor(new Date().getTime() / 1000);
                 let vestingAmount = 0;
                 let transferableAmount = 0;

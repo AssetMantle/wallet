@@ -11,8 +11,7 @@ import {
 import {buildQuery} from "@cosmjs/tendermint-rpc/build/tendermint34/requests";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {decodeTxRaw, Registry} from "@cosmjs/proto-signing";
-import transactions from "../../utils/transactions";
-import helper from "../../utils/helper";
+import helper, {generateHash} from "../../utils/helper";
 import * as Sentry from "@sentry/browser";
 
 const {defaultRegistryTypes} = require("@cosmjs/stargate");
@@ -60,7 +59,7 @@ export const fetchTransactions = (address, limit, pageNumber) => {
                 const decodedTransaction = decodeTxRaw(transaction.tx);
                 const block = await tmClient.block(transaction.height);
                 if (transaction.result.code === 0) {
-                    const txHash = transactions.generateHash(transaction.tx);
+                    const txHash = generateHash(transaction.tx);
                     let body;
                     let typeUrl;
                     if (decodedTransaction.body.messages.length > 1) {
@@ -153,7 +152,7 @@ export const fetchReceiveTransactions = (address, limit, pageNumber) => {
                 const block = await tmClient.block(transaction.height);
 
                 if (transaction.result.code === 0) {
-                    const txHash = transactions.generateHash(transaction.tx);
+                    const txHash = generateHash(transaction.tx);
                     let body;
                     let typeUrl;
                     if (decodedTransaction.body.messages.length > 1) {

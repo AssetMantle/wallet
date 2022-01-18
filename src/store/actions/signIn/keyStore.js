@@ -5,9 +5,9 @@ import {
     SIGN_IN_KEYSTORE_RESULT_MODAL_HIDE,
     SIGN_IN_KEYSTORE_RESULT_MODAL_SHOW
 } from "../../../constants/signIn/keyStore";
-import transactions, {GetAccount} from "../../../utils/transactions";
+import transactions from "../../../utils/transactions";
 import {setLoginInfo} from "../transactions/common";
-import helper from "../../../utils/helper";
+import helper, {decryptKeyStore, vestingAccountCheck, getAccount} from "../../../utils/helper";
 import wallet from "../../../utils/wallet";
 import config from "../../../config";
 import * as Sentry from "@sentry/browser";
@@ -66,7 +66,7 @@ export const keyStoreSubmit = () => {
         fileReader.onload = async event => {
             localStorage.setItem(ENCRYPTED_MNEMONIC, event.target.result);
             const res = JSON.parse(event.target.result);
-            const decryptedData = helper.decryptStore(res, password.value);
+            const decryptedData = decryptKeyStore(res, password.value);
             if (decryptedData.error != null) {
                 dispatch(setKeyStoreResult(
                     {
@@ -114,8 +114,8 @@ export const keyStoreLogin = (history) => {
             accountNumber: '',
             accountIndex: ''
         };
-        GetAccount(address).then(async res => {
-            const accountType = await transactions.VestingAccountCheck(res.typeUrl);
+        getAccount(address).then(async res => {
+            const accountType = await vestingAccountCheck(res.typeUrl);
             if (accountType) {
                 loginInfo.fee = config.vestingAccountFee;
                 loginInfo.account = "vesting";

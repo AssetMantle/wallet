@@ -1,25 +1,17 @@
 import {DirectSecp256k1HdWallet} from "@cosmjs/proto-signing";
 import config from "../config.json";
-import {sha256, stringToPath} from "@cosmjs/crypto";
-import helper from "./helper";
+import {stringToPath} from "@cosmjs/crypto";
+import {decryptKeyStore} from "./helper";
 import Long from "long";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient} from "@cosmjs/stargate";
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import {LedgerSigner} from "@cosmjs/ledger-amino";
 import {fee} from "./aminoMsgHelper";
-import {QueryClientImpl} from "cosmjs-types/cosmos/auth/v1beta1/query";
-import {
-    ContinuousVestingAccount,
-    DelayedVestingAccount,
-    PeriodicVestingAccount,
-} from "cosmjs-types/cosmos/vesting/v1beta1/vesting";
-import {BaseAccount} from "cosmjs-types/cosmos/auth/v1beta1/auth";
 import * as Sentry from "@sentry/browser";
-import {ACCOUNT, ENCRYPTED_MNEMONIC, FEE, LOGIN_MODE} from "../constants/localStorage";
+import { ENCRYPTED_MNEMONIC, LOGIN_MODE} from "../constants/localStorage";
 import {mnemonicTrim} from "./scripts";
 
-const encoding = require("@cosmjs/encoding");
 const tendermint_1 = require("cosmjs-types/ibc/lightclients/tendermint/v1/tendermint");
 const {SigningStargateClient, QueryClient, setupIbcExtension} = require("@cosmjs/stargate");
 const tmRPC = require("@cosmjs/tendermint-rpc");
@@ -27,7 +19,6 @@ const {TransferMsg} = require("./protoMsgHelper");
 const addressPrefix = config.addressPrefix;
 const configChainID = process.env.REACT_APP_CHAIN_ID;
 const configCoinType = config.coinType;
-const valoperAddressPrefix = config.valoperAddressPrefix;
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
 async function Transaction(wallet, signerAddress, msgs, fee, memo = "") {
@@ -116,31 +107,6 @@ function getAccountNumberAndSequence(authResponse) {
     }
 }
 
-function updateFee(address) {
-    if (localStorage.getItem(LOGIN_MODE) === 'normal') {
-        GetAccount(address)
-            .then(async res => {
-                const accountType = await VestingAccountCheck(res.typeUrl);
-                if (accountType) {
-                    localStorage.setItem(FEE, config.vestingAccountFee);
-                    localStorage.setItem(ACCOUNT, 'vesting');
-                } else {
-                    localStorage.setItem(FEE, config.defaultFee);
-                    localStorage.setItem(ACCOUNT, 'non-vesting');
-                }
-            })
-            .catch(error => {
-                Sentry.captureException(error.response
-                    ? error.response.data.message
-                    : error.message);
-                console.log(error.message);
-                localStorage.setItem(FEE, config.defaultFee);
-                localStorage.setItem(ACCOUNT, 'non-vesting');
-            });
-    } else {
-        localStorage.setItem(FEE, config.vestingAccountFee);
-    }
-}
 
 function TokenValueConversion(data) {
     return data / config.tokenValue;
@@ -153,7 +119,7 @@ function PrivateKeyReader(file, password, loginAddress, accountNumber = "0", add
         fileReader.onload = async event => {
             if (event.target.result !== '') {
                 const res = JSON.parse(event.target.result);
-                const decryptedData = helper.decryptStore(res, password);
+                const decryptedData = decryptKeyStore(res, password);
                 if (decryptedData.error != null) {
                     reject(new Error(decryptedData.error));
                 } else {
@@ -231,48 +197,6 @@ async function RpcClient() {
     return createProtobufRpcClient(queryClient);
 }
 
-export async function GetAccount(address) {
-    try {
-        const rpcClient = await RpcClient();
-        const authAccountService = new QueryClientImpl(rpcClient);
-        const accountResponse = await authAccountService.Account({
-            address: address,
-        });
-        if (accountResponse.account.typeUrl === "/cosmos.auth.v1beta1.BaseAccount") {
-            let baseAccountResponse = BaseAccount.decode(accountResponse.account.value);
-            return {"typeUrl": accountResponse.account.typeUrl, "accountData": baseAccountResponse};
-        } else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
-            let periodicVestingAccountResponse = PeriodicVestingAccount.decode(accountResponse.account.value);
-            return {"typeUrl": accountResponse.account.typeUrl, "accountData": periodicVestingAccountResponse};
-        } else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.DelayedVestingAccount") {
-            let delayedVestingAccountResponse = DelayedVestingAccount.decode(accountResponse.account.value);
-            return {"typeUrl": accountResponse.account.typeUrl, "accountData": delayedVestingAccountResponse};
-        } else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
-            let continuousVestingAccountResponse = ContinuousVestingAccount.decode(accountResponse.account.value);
-            return {"typeUrl": accountResponse.account.typeUrl, "accountData": continuousVestingAccountResponse};
-        }
-    }catch (error) {
-        Sentry.captureException(error.response
-            ? error.response.data.message
-            : error.message);
-        console.log(error.message);
-    }
-}
-
-function addrToValoper(address) {
-    let data = encoding.Bech32.decode(address).data;
-    return encoding.Bech32.encode(valoperAddressPrefix, data);
-}
-
-function valoperToAddr(valoperAddr) {
-    let data = encoding.Bech32.decode(valoperAddr).data;
-    return encoding.Bech32.encode(addressPrefix, data);
-}
-
-function checkValidatorAccountAddress(validatorAddress, address) {
-    let validatorAccountAddress = valoperToAddr(validatorAddress);
-    return validatorAccountAddress === address;
-}
 
 async function getTransactionResponse(address, data, feeAmount, gas, mnemonic = "", txName, accountNumber = 0, addressIndex = 0, bip39Passphrase = "") {
     switch (txName) {
@@ -305,18 +229,6 @@ async function getTransactionResponse(address, data, feeAmount, gas, mnemonic = 
     
 }
 
-/**
- * @return {boolean}
- */
-async function VestingAccountCheck(type) {
-    return type === "/cosmos.vesting.v1beta1.PeriodicVestingAccount" ||
-        type === "/cosmos.vesting.v1beta1.DelayedVestingAccount" ||
-        type === "/cosmos.vesting.v1beta1.ContinuousVestingAccount";
-}
-
-function generateHash(txBytes) {
-    return encoding.toHex(sha256(txBytes)).toUpperCase();
-}
 
 export default {
     TransactionWithKeplr,
@@ -324,18 +236,11 @@ export default {
     TransactionWithLedger,
     makeHdPath,
     getAccountNumberAndSequence,
-    updateFee,
     TokenValueConversion,
     PrivateKeyReader,
     MakeIBCTransferMsg,
     RpcClient,
-    addrToValoper,
-    valoperToAddr,
-    checkValidatorAccountAddress,
     getTransactionResponse,
     LedgerWallet,
-    GetAccount,
-    VestingAccountCheck,
     MnemonicWalletWithPassphrase,
-    generateHash
 };

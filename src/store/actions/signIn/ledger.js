@@ -6,11 +6,10 @@ import {
     SIGN_IN_LEDGER_MODAL_SHOW
 } from "../../../constants/signIn/ledger";
 import {fetchAddress} from "../../../utils/ledger";
-import transactions, {GetAccount} from "../../../utils/transactions";
 import config from "../../../config";
 import {setLoginInfo} from "../transactions/common";
 import * as Sentry from "@sentry/browser";
-import helper from "../../../utils/helper";
+import helper, {vestingAccountCheck, getAccount} from "../../../utils/helper";
 import {
     ACCOUNT,
     ACCOUNT_NUMBER,
@@ -95,8 +94,8 @@ export const ledgerLogin = (history) => {
             accountNumber: '',
             accountIndex: ''
         };
-        GetAccount(address).then(async res => {
-            const accountType = await transactions.VestingAccountCheck(res.typeUrl);
+        getAccount(address).then(async res => {
+            const accountType = await vestingAccountCheck(res.typeUrl);
             if (accountType) {
                 loginInfo.fee = config.vestingAccountFee;
                 loginInfo.account = "vesting";

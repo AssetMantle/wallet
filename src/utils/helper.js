@@ -1,14 +1,25 @@
 import transactions from "./transactions";
 import config from "../config";
 import {COIN_ATOM, COIN_ATOM_DENOM} from "../constants/keyWords";
-import {ADDRESS, FEE, KEPLR_ADDRESS, LOGIN_MODE, LOGIN_TOKEN} from "../constants/localStorage";
+import {ACCOUNT, ADDRESS, FEE, KEPLR_ADDRESS, LOGIN_MODE, LOGIN_TOKEN} from "../constants/localStorage";
+import {sha256} from "@cosmjs/crypto";
+import {QueryClientImpl} from "cosmjs-types/cosmos/auth/v1beta1/query";
+import {BaseAccount} from "cosmjs-types/cosmos/auth/v1beta1/auth";
+import {
+    ContinuousVestingAccount,
+    DelayedVestingAccount,
+    PeriodicVestingAccount
+} from "cosmjs-types/cosmos/vesting/v1beta1/vesting";
+import * as Sentry from "@sentry/browser";
 
+const encoding = require("@cosmjs/encoding");
 const crypto = require("crypto");
 const passwordHashAlgorithm = "sha512";
 const NODE_CONF = process.env.REACT_APP_IBC_CONFIG;
+const valoperAddressPrefix = config.valoperAddressPrefix;
+const addressPrefix = config.addressPrefix;
 
-
-function createStore(mnemonic, password) {
+export const createKeyStore = (mnemonic, password) => {
     try {
         const key = crypto.randomBytes(32);
         const iv = crypto.randomBytes(16);
@@ -31,9 +42,9 @@ function createStore(mnemonic, password) {
             error: exception.message
         };
     }
-}
+};
 
-function decryptStore(fileData, password) {
+export const decryptKeyStore = (fileData, password) => {
     let hashpwd = fileData.hashpwd;
     let iv = fileData.iv;
     let salt = fileData.salt;
@@ -58,7 +69,7 @@ function decryptStore(fileData, password) {
             error: "Incorrect password."
         };
     }
-}
+};
 
 function isActive(item) {
     return item.jailed === false && item.status === 3;
@@ -148,9 +159,89 @@ function getAccountNumber(value) {
     return value === '' ? '0' : value;
 }
 
+export const addrToValoper = (address) => {
+    let data = encoding.Bech32.decode(address).data;
+    return encoding.Bech32.encode(valoperAddressPrefix, data);
+};
+
+export const valoperToAddr = (valoperAddr) => {
+    let data = encoding.Bech32.decode(valoperAddr).data;
+    return encoding.Bech32.encode(addressPrefix, data);
+};
+
+export const checkValidatorAccountAddress = (validatorAddress, address) => {
+    let validatorAccountAddress = valoperToAddr(validatorAddress);
+    return validatorAccountAddress === address;
+};
+
+/**
+ * @return {boolean}
+ */
+export const vestingAccountCheck = async (type) =>{
+    return type === "/cosmos.vesting.v1beta1.PeriodicVestingAccount" ||
+        type === "/cosmos.vesting.v1beta1.DelayedVestingAccount" ||
+        type === "/cosmos.vesting.v1beta1.ContinuousVestingAccount";
+};
+
+export const generateHash = (txBytes) =>{
+    return encoding.toHex(sha256(txBytes)).toUpperCase();
+};
+
+export async function getAccount(address) {
+    try {
+        const rpcClient = await transactions.RpcClient();
+        const authAccountService = new QueryClientImpl(rpcClient);
+        const accountResponse = await authAccountService.Account({
+            address: address,
+        });
+        if (accountResponse.account.typeUrl === "/cosmos.auth.v1beta1.BaseAccount") {
+            let baseAccountResponse = BaseAccount.decode(accountResponse.account.value);
+            return {"typeUrl": accountResponse.account.typeUrl, "accountData": baseAccountResponse};
+        } else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
+            let periodicVestingAccountResponse = PeriodicVestingAccount.decode(accountResponse.account.value);
+            return {"typeUrl": accountResponse.account.typeUrl, "accountData": periodicVestingAccountResponse};
+        } else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.DelayedVestingAccount") {
+            let delayedVestingAccountResponse = DelayedVestingAccount.decode(accountResponse.account.value);
+            return {"typeUrl": accountResponse.account.typeUrl, "accountData": delayedVestingAccountResponse};
+        } else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
+            let continuousVestingAccountResponse = ContinuousVestingAccount.decode(accountResponse.account.value);
+            return {"typeUrl": accountResponse.account.typeUrl, "accountData": continuousVestingAccountResponse};
+        }
+    }catch (error) {
+        Sentry.captureException(error.response
+            ? error.response.data.message
+            : error.message);
+        console.log(error.message);
+    }
+}
+
+export const updateFee = (address) => {
+    if (localStorage.getItem(LOGIN_MODE) === 'normal') {
+        getAccount(address)
+            .then(async res => {
+                const accountType = await vestingAccountCheck(res.typeUrl);
+                if (accountType) {
+                    localStorage.setItem(FEE, config.vestingAccountFee);
+                    localStorage.setItem(ACCOUNT, 'vesting');
+                } else {
+                    localStorage.setItem(FEE, config.defaultFee);
+                    localStorage.setItem(ACCOUNT, 'non-vesting');
+                }
+            })
+            .catch(error => {
+                Sentry.captureException(error.response
+                    ? error.response.data.message
+                    : error.message);
+                console.log(error.message);
+                localStorage.setItem(FEE, config.defaultFee);
+                localStorage.setItem(ACCOUNT, 'non-vesting');
+            });
+    } else {
+        localStorage.setItem(FEE, config.vestingAccountFee);
+    }
+};
+
 export default {
-    createStore,
-    decryptStore,
     isActive,
     checkLastPage,
     accountChangeCheck,
