@@ -10,6 +10,8 @@ import {MsgTransfer} from "cosmjs-types/ibc/applications/transfer/v1/tx";
 import {coin} from "@cosmjs/stargate";
 import helper from "./helper";
 import config from "../config";
+import {Any} from "cosmjs-types/google/protobuf/any";
+import {GenericAuthorization, Grant} from "cosmjs-types/cosmos/authz/v1beta1/authz";
 
 const msgSendTypeUrl = "/cosmos.bank.v1beta1.MsgSend";
 const msgGrantTypeUrl = "/cosmos.authz.v1beta1.MsgGrant";
@@ -41,24 +43,15 @@ function GrantMsg(granterAddress, granteeAddress) {
         value: MsgGrant.fromPartial({
             granter:granterAddress,
             grantee:granteeAddress,
-            grant: {
-                authorization: {
+            grant: Grant.fromPartial({
+                authorization: Any.fromPartial({
                     typeUrl: '/cosmos.authz.v1beta1.GenericAuthorization',
-                    msg:"/cosmos.gov.v1beta1.MsgVote"
-                    // value: {
-                    //     // "max_tokens": null,
-                    //     // "allow_list":
-                    //     //     {
-                    //     //         "address": ["cosmosvaloper1sjllsnramtg3ewxqwwrwjxfgc4n4ef9u2lcnj0"]
-                    //     //     },
-                    //     // "authorization_type": "AUTHORIZATION_TYPE_DELEGATE"
-                    // }
-                },
+                    value: Uint8Array.from(GenericAuthorization.encode(GenericAuthorization.fromJSON({msg: "/cosmos.gov.v1beta1.MsgVote"})).finish())}),
                 expiration: {
-                    seconds: '200000',
+                    seconds: '1642586850',
                     nanos: 12232
                 }
-            }
+            })
         })
     };
 }
