@@ -12,6 +12,7 @@ import transactions, {GetAccount} from "../../utils/transactions";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient, QueryClient, setupIbcExtension} from "@cosmjs/stargate";
 import {QueryClientImpl} from "cosmjs-types/cosmos/bank/v1beta1/query";
+// import {QueryClientImpl} from "cosmjs-types/cosmos/authz/v1beta1/query"
 import config from "../../config";
 import * as Sentry from '@sentry/browser';
 import helper from "../../utils/helper";

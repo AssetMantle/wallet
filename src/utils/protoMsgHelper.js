@@ -41,26 +41,25 @@ function GrantMsg(granterAddress, granteeAddress) {
         value: MsgGrant.fromPartial({
             granter:granterAddress,
             grantee:granteeAddress,
-            grant:{
-                authorization:{
-                    typeUrl:msgDelegateTypeUrl,
-                    value:MsgDelegate
+            grant: {
+                authorization: {
+                    typeUrl: '/cosmos.authz.v1beta1.GenericAuthorization',
+                    msg:"/cosmos.gov.v1beta1.MsgVote"
+                    // value: {
+                    //     // "max_tokens": null,
+                    //     // "allow_list":
+                    //     //     {
+                    //     //         "address": ["cosmosvaloper1sjllsnramtg3ewxqwwrwjxfgc4n4ef9u2lcnj0"]
+                    //     //     },
+                    //     // "authorization_type": "AUTHORIZATION_TYPE_DELEGATE"
+                    // }
                 },
-                expiration:{
-                    seconds:'200000',
+                expiration: {
+                    seconds: '200000',
                     nanos: 12232
                 }
             }
         })
-        //
-        //     .fromPartial({
-        //     fromAddress: helper.trimWhiteSpaces(fromAddress),
-        //     toAddress: helper.trimWhiteSpaces(toAddress),
-        //     amount: [{
-        //         denom: denom,
-        //         amount: String(amount),
-        //     }],
-        // }),
     };
 }
 
