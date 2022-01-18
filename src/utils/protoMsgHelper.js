@@ -67,9 +67,9 @@ function StakingGrantMsg(granterAddress, granteeAddress) {
                 authorization: Any.fromPartial({
                     typeUrl: '/cosmos.staking.v1beta1.StakeAuthorization',
                     value: Uint8Array.from(StakeAuthorization.encode(StakeAuthorization.fromJSON({
-                        max_tokens: null,
-                        allow_list:{address:["cosmosvaloper1sjllsnramtg3ewxqwwrwjxfgc4n4ef9u2lcnj0"]},
-                        authorization_type: AuthorizationType.AUTHORIZATION_TYPE_DELEGATE
+                        maxTokens: null,
+                        allowList:{address:["cosmosvaloper1sjllsnramtg3ewxqwwrwjxfgc4n4ef9u2lcnj0"]},
+                        authorizationType: AuthorizationType.AUTHORIZATION_TYPE_DELEGATE
                     })).finish())}),
                 expiration: {
                     seconds: '1642586850',
