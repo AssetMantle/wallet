@@ -2,11 +2,10 @@ import React from 'react';
 import {OverlayTrigger, Popover} from "react-bootstrap";
 import Icon from "../../../components/Icon";
 import InputText from "../../../components/InputText";
-import helper from "../../../utils/helper";
 import {useDispatch, useSelector} from "react-redux";
 import {setTxIbcSendAddress} from "../../../store/actions/transactions/sendIbc";
 import {useTranslation} from "react-i18next";
-import {ValidateAlphaNumeric} from "../../../utils/validations";
+import {validateAddress, ValidateAlphaNumeric} from "../../../utils/validations";
 
 const ToAddress = () => {
     const {t} = useTranslation();
@@ -25,7 +24,7 @@ const ToAddress = () => {
     const onBlur = (evt) => {
         dispatch(setTxIbcSendAddress({
             value: evt.target.value,
-            error: helper.validateAddress(evt.target.value),
+            error: validateAddress(evt.target.value),
         }));
     };
 

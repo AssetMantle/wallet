@@ -1,8 +1,7 @@
 import transactions from "./transactions";
 import config from "../config";
-import helper from "./helper";
 import {ACCOUNT} from "../constants/localStorage";
-import {stringToNumber} from "./scripts";
+import {mnemonicTrim, stringToNumber} from "./scripts";
 
 const bip39 = require("bip39");
 const accountType = localStorage.getItem(ACCOUNT);
@@ -118,7 +117,7 @@ export const ValidateReDelegateAmount = (delegationAmount, amount) => {
 };
 
 export const ValidateMnemonic = (mnemonic) => {
-    const mnemonicWords = helper.mnemonicTrim(mnemonic);
+    const mnemonicWords = mnemonicTrim(mnemonic);
     let validateMnemonic = bip39.validateMnemonic(mnemonicWords);
     if (!validateMnemonic) {
         return new Error('Invalid mnemonic.');
@@ -127,7 +126,7 @@ export const ValidateMnemonic = (mnemonic) => {
 };
 
 export const ValidateMemo = (value) => {
-    let mnemonicWords = helper.mnemonicTrim(value);
+    let mnemonicWords = mnemonicTrim(value);
     let validateMnemonic = bip39.validateMnemonic(mnemonicWords);
     if (validateMnemonic) {
         return new Error('Entered secret passphrase(mnemonic) in memo field.');
@@ -147,4 +146,21 @@ export const ValidateStringSpaces = e => {
     if (!regEx.test(e.key)) {
         e.preventDefault();
     }
+};
+
+export const validateAddress = (address, prefix = "persistence") => {
+    if (prefix === "cosmos") {
+        if (!address.startsWith(prefix) || address.length !== 45) {
+            return new Error('Invalid Recipient Address');
+        }
+    } else if (prefix === "osmosis") {
+        if (!address.startsWith("osmo") || address.length !== 43) {
+            return new Error('Invalid Recipient Address');
+        }
+    } else {
+        if (!address.startsWith(prefix) || address.length !== 50) {
+            return new Error('Invalid Recipient Address');
+        }
+    }
+    return new Error('');
 };

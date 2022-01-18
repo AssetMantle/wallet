@@ -11,8 +11,9 @@ const GeneratePrivateKey = (props) => {
     const [errorMessage, setErrorMessage] = useState("");
     const handleSubmit = async event => {
         event.preventDefault();
+        const regex = /^\S{3}\S+$/;
         const password = event.target.password.value;
-        if (helper.passwordValidation(password)) {
+        if (regex.test(password)) {
             const mnemonic = props.mnemonic;
             let encryptedData = helper.createStore(mnemonic, password);
             let jsonContent = JSON.stringify(encryptedData.Response);

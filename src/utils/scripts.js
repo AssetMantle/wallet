@@ -2,6 +2,7 @@ import _ from "lodash";
 import empty from "is-empty";
 import moment from "moment";
 import {Decimal} from "@cosmjs/math";
+const encoding = require("@cosmjs/encoding");
 
 export const removeCommas = str => _.replace(str, new RegExp(",", "g"), "");
 const reverseString = str => removeCommas(_.toString(_.reverse(_.toArray(str))));
@@ -82,4 +83,28 @@ export const sixDigitsNumber = (value, length = 6) => {
         }
         return newString;
     }
+};
+
+export const isBech32Address = (address, prefix) => {
+    try {
+        let decodedAddress = encoding.Bech32.decode(address);
+        return decodedAddress.prefix === prefix;
+    } catch (e) {
+        return false;
+    }
+};
+
+export const mnemonicTrim = (mnemonic) => {
+    let mnemonicList = mnemonic.replace(/\s/g, " ").split(/\s/g);
+    let mnemonicWords = [];
+    for (let word of mnemonicList) {
+        if (word === "") {
+            console.log();
+        } else {
+            let trimmedWord = word.replace(/\s/g, "");
+            mnemonicWords.push(trimmedWord);
+        }
+    }
+    mnemonicWords = mnemonicWords.join(" ");
+    return mnemonicWords;
 };

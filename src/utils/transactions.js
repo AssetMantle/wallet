@@ -17,6 +17,7 @@ import {
 import {BaseAccount} from "cosmjs-types/cosmos/auth/v1beta1/auth";
 import * as Sentry from "@sentry/browser";
 import {ACCOUNT, ENCRYPTED_MNEMONIC, FEE, LOGIN_MODE} from "../constants/localStorage";
+import {mnemonicTrim} from "./scripts";
 
 const encoding = require("@cosmjs/encoding");
 const tendermint_1 = require("cosmjs-types/ibc/lightclients/tendermint/v1/tendermint");
@@ -156,7 +157,7 @@ function PrivateKeyReader(file, password, loginAddress, accountNumber = "0", add
                 if (decryptedData.error != null) {
                     reject(new Error(decryptedData.error));
                 } else {
-                    let mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
+                    let mnemonic = mnemonicTrim(decryptedData.mnemonic);
                     const accountData = await MnemonicWalletWithPassphrase(mnemonic, makeHdPath(accountNumber, addressIndex));
                     const address = accountData[1];
                     if (address === loginAddress) {

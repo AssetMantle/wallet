@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import {Form, Modal} from "react-bootstrap";
 import Icon from "../../../components/Icon";
 import wallet from "../../../utils/wallet";
-import ImportWallet from "../../ImportWallet";
 import AdvanceMode from "./AdvanceMode";
 import Copy from "../../../components/Copy";
 import {useTranslation} from "react-i18next";
@@ -13,7 +12,6 @@ import {randomNum} from "../../../utils/scripts";
 const CreateWallet = (props) => {
     const {t} = useTranslation();
     const [show, setShow] = useState(true);
-    const [showImportWallet, setShowImportWallet] = useState(false);
     const [mnemonicQuiz, setMnemonicQuiz] = useState(false);
     const [keysForm, setKeysForm] = useState(true);
     const [mnemonicList, setMnemonicList] = useState('');
@@ -250,10 +248,6 @@ const CreateWallet = (props) => {
             {accountInfo ?
                 <AdvanceMode mnemonic={response.mnemonic} setAccountInfo={setAccountInfo} setShow={setShow}
                     setMnemonicQuiz={setMnemonicQuiz} handleClose={handleClose}/>
-                : null
-            }
-            {showImportWallet ?
-                <ImportWallet setShowImportWallet={setShowImportWallet} name="createWallet" handleClose={handleClose}/>
                 : null
             }
         </div>

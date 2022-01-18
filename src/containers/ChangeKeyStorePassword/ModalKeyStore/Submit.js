@@ -5,7 +5,7 @@ import helper from "../../../utils/helper";
 import transactions from "../../../utils/transactions";
 import wallet from "../../../utils/wallet";
 import {hideKeyStoreModal, setResult, showKeyStoreNewPasswordModal} from "../../../store/actions/changePassword";
-import {fileTypeCheck} from "../../../utils/scripts";
+import {fileTypeCheck, mnemonicTrim} from "../../../utils/scripts";
 
 const Submit = () => {
     const password = useSelector((state) => state.keyStore.password);
@@ -35,7 +35,7 @@ const Submit = () => {
                             }
                         }));
                 } else {
-                    let mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
+                    let mnemonic = mnemonicTrim(decryptedData.mnemonic);
                     const walletPath = transactions.makeHdPath(helper.getAccountNumber(accountNumber.value), helper.getAccountNumber(accountIndex.value));
                     const responseData = await wallet.createWallet(mnemonic, walletPath, bip39PassPhrase.value);
                     dispatch(setResult(

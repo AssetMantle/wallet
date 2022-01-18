@@ -21,6 +21,7 @@ import {
     LOGIN_TOKEN,
     VERSION
 } from "../../../constants/localStorage";
+import {mnemonicTrim} from "../../../utils/scripts";
 
 export const hideKeyStoreModal = (data) => {
     return {
@@ -76,7 +77,7 @@ export const keyStoreSubmit = () => {
                     }));
                 console.log(decryptedData.error, "responseData");
             } else {
-                mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
+                mnemonic = mnemonicTrim(decryptedData.mnemonic);
                 const accountNumber = helper.getAccountNumber(getState().advanced.accountNumber.value);
                 const accountIndex = helper.getAccountNumber(getState().advanced.accountIndex.value);
                 const bip39PassPhrase = getState().advanced.bip39PassPhrase.value;

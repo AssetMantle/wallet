@@ -1,10 +1,9 @@
 import React from 'react';
 import InputText from "../../../components/InputText";
-import helper from "../../../utils/helper";
 import {useDispatch, useSelector} from "react-redux";
 import {setTxWithDrawAddress} from "../../../store/actions/transactions/setWithdrawAddress";
 import {useTranslation} from "react-i18next";
-import {ValidateAlphaNumeric} from "../../../utils/validations";
+import {validateAddress, ValidateAlphaNumeric} from "../../../utils/validations";
 
 const RevisedAddress = () => {
     const {t} = useTranslation();
@@ -23,7 +22,7 @@ const RevisedAddress = () => {
     const onBlur = (evt) => {
         dispatch(setTxWithDrawAddress({
             value: evt.target.value,
-            error: helper.validateAddress(evt.target.value),
+            error: validateAddress(evt.target.value),
         }));
     };
 

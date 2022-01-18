@@ -9,6 +9,8 @@ import transactions, {GetAccount} from "../../../utils/transactions";
 import {setLoginInfo} from "../transactions/common";
 import * as Sentry from "@sentry/browser";
 import {ACCOUNT, ADDRESS, FEE, LOGIN_INFO, LOGIN_MODE, LOGIN_TOKEN, VERSION} from "../../../constants/localStorage";
+import {isBech32Address} from "../../../utils/scripts";
+import {validateAddress} from "../../../utils/validations";
 
 export const hideAddressModal = (data) => {
     return {
@@ -46,7 +48,7 @@ export const addressLogin = (history) => {
         };
         const accountNumber = helper.getAccountNumber(getState().advanced.accountNumber.value);
         const accountIndex = helper.getAccountNumber(getState().advanced.accountIndex.value);
-        if (helper.validateAddress(address) && helper.isBech32Address(address, config.addressPrefix)) {
+        if ( validateAddress(address) && isBech32Address(address, config.addressPrefix)) {
             GetAccount(address).then(async res => {
                 const accountType = await transactions.VestingAccountCheck(res.typeUrl);
                 if (accountType) {

@@ -4,7 +4,6 @@ import DashboardWallet from "./views/DashboardWallet";
 import Homepage from "./views/Homepage";
 import DashboardStaking from "./views/Staking";
 import PrivateRoute from "./containers/PrivateRoute";
-import ImportWallet from "./containers/ImportWallet";
 import KeplrHome from "./views/Keplr/KeplrHome";
 import RouteNotFound from "./components/RouteNotFound";
 import config from "./config";
@@ -35,10 +34,6 @@ const App = () => {
         path: '/dashboard/staking',
         component: DashboardStaking,
         private: true,
-    }, {
-        path: '/import_wallet',
-        component: ImportWallet,
-        private: false,
     }, {
         path: '/keplr',
         component: KeplrHome,

@@ -3,7 +3,6 @@ import config from "../config";
 import {COIN_ATOM, COIN_ATOM_DENOM} from "../constants/keyWords";
 import {ADDRESS, FEE, KEPLR_ADDRESS, LOGIN_MODE, LOGIN_TOKEN} from "../constants/localStorage";
 
-const encoding = require("@cosmjs/encoding");
 const crypto = require("crypto");
 const passwordHashAlgorithm = "sha512";
 const NODE_CONF = process.env.REACT_APP_IBC_CONFIG;
@@ -69,28 +68,6 @@ function checkLastPage(pageNumber, limit, totalTransactions) {
     return totalTransactions / limit <= pageNumber;
 }
 
-function validatePassphrase(value) {
-    return value.length === 50;
-}
-
-function validateAddress(address, prefix = "persistence") {
-    if (prefix === "cosmos") {
-        if (!address.startsWith(prefix) || address.length !== 45) {
-            return new Error('Invalid Recipient Address');
-        }
-    } else if (prefix === "osmosis") {
-        if (!address.startsWith("osmo") || address.length !== 43) {
-            return new Error('Invalid Recipient Address');
-        }
-    } else {
-        if (!address.startsWith(prefix) || address.length !== 50) {
-            return new Error('Invalid Recipient Address');
-        }
-    }
-    return new Error('');
-}
-
-
 function accountChangeCheck(errorMessage) {
     if (errorMessage === 'Unsupported type: \'/cosmos.vesting.v1beta1.ContinuousVestingAccount\'' ||
         errorMessage === 'Unsupported type: \'/cosmos.vesting.v1beta1.DelayedVestingAccount\'' ||
@@ -117,42 +94,6 @@ function denomChange(denom) {
     }
 }
 
-function mnemonicTrim(mnemonic) {
-    let mnemonicList = mnemonic.replace(/\s/g, " ").split(/\s/g);
-    let mnemonicWords = [];
-    for (let word of mnemonicList) {
-        if (word === "") {
-            console.log();
-        } else {
-            let trimmedWord = word.replace(/\s/g, "");
-            mnemonicWords.push(trimmedWord);
-        }
-    }
-    mnemonicWords = mnemonicWords.join(" ");
-    return mnemonicWords;
-}
-
-
-function inputSpaceValidation(e) {
-    if (e.key === " ") {
-        e.preventDefault();
-    }
-}
-
-
-function isBech32Address(address, prefix) {
-    try {
-        let decodedAddress = encoding.Bech32.decode(address);
-        return decodedAddress.prefix === prefix;
-    } catch (e) {
-        return false;
-    }
-}
-
-function passwordValidation(data) {
-    const regex = /^\S{3}\S+$/;
-    return regex.test(data);
-}
 
 function denomModify(amount) {
     if (Array.isArray(amount)) {
@@ -211,15 +152,9 @@ export default {
     createStore,
     decryptStore,
     isActive,
-    validatePassphrase,
     checkLastPage,
-    validateAddress,
     accountChangeCheck,
     denomChange,
-    mnemonicTrim,
-    inputSpaceValidation,
-    isBech32Address,
-    passwordValidation,
     getTransactionAmount,
     foundationNodeCheck,
     getAccountNumber,
