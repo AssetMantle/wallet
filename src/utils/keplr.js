@@ -53,7 +53,7 @@ async function KeplrWallet() {
                     bip44: {
                         // You can only set the coin type of BIP44.
                         // 'Purpose' is fixed to 44.
-                        coinType: 750,
+                        coinType: config.coinType,
                     },
                     // Bech32 configuration to show the address to user.
                     // This field is the interface of

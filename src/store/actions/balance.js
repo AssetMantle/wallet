@@ -12,7 +12,7 @@ import transactions, {GetAccount} from "../../utils/transactions";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient, QueryClient, setupIbcExtension} from "@cosmjs/stargate";
 import {QueryClientImpl} from "cosmjs-types/cosmos/bank/v1beta1/query";
-// import {QueryClientImpl} from "cosmjs-types/cosmos/authz/v1beta1/query"
+import {QueryClientImpl as AuthzQueryClientImp} from "cosmjs-types/cosmos/authz/v1beta1/query";
 import config from "../../config";
 import * as Sentry from '@sentry/browser';
 import helper from "../../utils/helper";
@@ -41,6 +41,35 @@ export const fetchBalanceListSuccess = (list) => {
     return {
         type: BALANCE_LIST_FETCH_SUCCESS,
         list,
+    };
+};
+
+export const fetchAuthz = (granterAddress, granteeAddress) => {
+    return async dispatch => {
+        dispatch(fetchBalanceProgress());
+        try {
+            const rpcClient = await transactions.RpcClient();
+            const   AuthQueryService = new AuthzQueryClientImp(rpcClient);
+            await AuthQueryService.Grants({
+                grantee:granterAddress,
+                granter:granteeAddress,
+                msgTypeUrl:''
+            }).then((grantResponse) => {
+                console.log(grantResponse, "grantResponse");
+            }).catch((error) => {
+                Sentry.captureException(error.response
+                    ? error.response.data.message
+                    : error.message);
+                dispatch(fetchBalanceError(error.response
+                    ? error.response.data.message
+                    : error.message));
+            });
+        } catch (error) {
+            Sentry.captureException(error.response
+                ? error.response.data.message
+                : error.message);
+            console.log(error.message);
+        }
     };
 };
 

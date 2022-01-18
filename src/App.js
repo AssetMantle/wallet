@@ -13,7 +13,7 @@ import {useTranslation} from "react-i18next";
 import KeplrWallet from "./utils/keplr";
 import {useDispatch} from "react-redux";
 import {fetchDelegationsCount} from "./store/actions/delegations";
-import {fetchBalance, fetchTransferableVestingAmount} from "./store/actions/balance";
+import {fetchAuthz, fetchBalance, fetchTransferableVestingAmount} from "./store/actions/balance";
 import {fetchRewards, fetchTotalRewards} from "./store/actions/rewards";
 import {fetchUnbondDelegations} from "./store/actions/unbond";
 import {fetchTokenPrice} from "./store/actions/tokenPrice";
@@ -67,6 +67,7 @@ const App = () => {
         const fetchApi = async () => {
             if (address !== null && address !== undefined) {
                 dispatch(fetchDelegationsCount(address));
+                dispatch(fetchAuthz(address, "cosmos14zzn8t9v5262el849gh5ahhqz05cdscz9ym6e3"));
                 dispatch(fetchBalance(address));
                 dispatch(fetchRewards(address));
                 dispatch(fetchTotalRewards(address));
