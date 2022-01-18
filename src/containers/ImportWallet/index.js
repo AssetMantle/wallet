@@ -8,6 +8,7 @@ import {useTranslation} from "react-i18next";
 import transactions from "../../utils/transactions";
 import config from "../../config";
 import {ENCRYPTED_MNEMONIC} from "../../constants/localStorage";
+import {fileTypeCheck} from "../../utils/scripts";
 
 const ModalImportWallet = (props) => {
     const {t} = useTranslation();
@@ -27,7 +28,7 @@ const ModalImportWallet = (props) => {
         let fileInput =
             document.getElementById('importDecryptFile');
         let filePath = fileInput.value;
-        if (helper.fileTypeCheck(filePath)) {
+        if (fileTypeCheck(filePath)) {
             const password = event.target.password.value;
             event.preventDefault();
             const fileReader = new FileReader();

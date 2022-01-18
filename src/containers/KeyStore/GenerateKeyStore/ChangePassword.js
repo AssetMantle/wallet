@@ -27,7 +27,7 @@ const ChangePassword = (props) => {
         let fileInput =
             document.getElementById('resetPasswordFile');
         let filePath = fileInput.value;
-        if (helper.fileTypeCheck(filePath)) {
+        if (fileTypeCheck(filePath)) {
             const password = event.target.password.value;
             event.preventDefault();
             const fileReader = new FileReader();

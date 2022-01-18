@@ -18,7 +18,7 @@ import Long from "long";
 import helper from "../../utils/helper";
 import transactions from "../../utils/transactions";
 import * as Sentry from "@sentry/browser";
-import {stringToNumber} from "../../utils/scripts";
+import {decimalConversion, stringToNumber} from "../../utils/scripts";
 
 export const fetchValidatorsInProgress = () => {
     return {
@@ -233,7 +233,7 @@ export const fetchValidatorRewards = (address, validatorAddress) => {
             validatorAddress: validatorAddress,
         }).then(response => {
             if (response.rewards[0].amount) {
-                let value = helper.decimalConversion(response.rewards[0].amount);
+                let value = decimalConversion(response.rewards[0].amount);
                 const fixedRewards = stringToNumber(transactions.TokenValueConversion(value)).toFixed(6);
                 dispatch(setValidatorRewards({
                     value: fixedRewards,

@@ -20,6 +20,7 @@ import ModalViewTxnResponse from "../../Common/ModalViewTxnResponse";
 import config from "../../../config";
 import {fee as feeMessage} from "../../../utils/aminoMsgHelper";
 import {ADDRESS, ENCRYPTED_MNEMONIC} from "../../../constants/localStorage";
+import {fileTypeCheck} from "../../../utils/scripts";
 
 
 const ModalDecryptKeyStore = (props) => {
@@ -90,7 +91,7 @@ const ModalDecryptKeyStore = (props) => {
                 document.getElementById('decryptFile');
 
             let filePath = fileInput.value;
-            if (helper.fileTypeCheck(filePath)) {
+            if (fileTypeCheck(filePath)) {
                 const password = event.target.password.value;
                 if (helper.passwordValidation(password)) {
                     let promise = transactions.PrivateKeyReader(event.target.uploadFile.files[0], password, accountNumber, addressIndex, bip39Passphrase, loginAddress);

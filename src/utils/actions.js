@@ -3,10 +3,9 @@ import {
     QueryClientImpl as DistributionQueryClient,
     QueryClientImpl
 } from "cosmjs-types/cosmos/distribution/v1beta1/query";
-import helper from "./helper";
 import * as Sentry from "@sentry/browser";
 import {ADDRESS} from "../constants/localStorage";
-import {stringToNumber} from "./scripts";
+import {decimalConversion, stringToNumber} from "./scripts";
 
 async function getValidatorRewards(validatorAddress) {
     let address = localStorage.getItem(ADDRESS);
@@ -18,7 +17,7 @@ async function getValidatorRewards(validatorAddress) {
         validatorAddress: validatorAddress,
     }).then(response => {
         if (response.rewards.length) {
-            let rewards = helper.decimalConversion(response.rewards[0].amount);
+            let rewards = decimalConversion(response.rewards[0].amount);
             amount = (transactions.TokenValueConversion(stringToNumber(rewards)));
         }
     }).catch(error => {
@@ -38,7 +37,7 @@ async function getValidatorCommission(address) {
         validatorAddress: address
     }).then((res) => {
         if (res.commission.commission[0].amount) {
-            commission = helper.decimalConversion(res.commission.commission[0].amount);
+            commission = decimalConversion(res.commission.commission[0].amount);
             commission = stringToNumber(transactions.TokenValueConversion(stringToNumber(commission)).toFixed(6));
         }
     }).catch((error) => {

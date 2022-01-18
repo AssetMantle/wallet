@@ -5,6 +5,7 @@ import GeneratePrivateKey from "./GeneratePrivateKey";
 import ChangePassword from "./ChangePassword";
 import {useTranslation} from "react-i18next";
 import helper from "../../../utils/helper";
+import {ValidateStringSpaces} from "../../../utils/validations";
 
 const GenerateKeyStore = (props) => {
     const {t} = useTranslation();
@@ -74,7 +75,7 @@ const GenerateKeyStore = (props) => {
                                         <p className="label">{t("ENTER_MNEMONIC")}</p>
                                         <Form.Control as="textarea" rows={3} name="mnemonic"
                                             placeholder={t("SEED_PHRASE")}
-                                            onKeyPress={helper.stringValidation}
+                                            onKeyPress={ValidateStringSpaces}
                                             required={true}/>
                                     </div>
 

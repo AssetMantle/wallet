@@ -117,7 +117,6 @@ export const ValidateReDelegateAmount = (delegationAmount, amount) => {
     return new Error('');
 };
 
-
 export const ValidateMnemonic = (mnemonic) => {
     const mnemonicWords = helper.mnemonicTrim(mnemonic);
     let validateMnemonic = bip39.validateMnemonic(mnemonicWords);

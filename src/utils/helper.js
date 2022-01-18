@@ -1,11 +1,9 @@
-import {Decimal} from "@cosmjs/math";
 import transactions from "./transactions";
 import config from "../config";
 import {COIN_ATOM, COIN_ATOM_DENOM} from "../constants/keyWords";
 import {ADDRESS, FEE, KEPLR_ADDRESS, LOGIN_MODE, LOGIN_TOKEN} from "../constants/localStorage";
 
 const encoding = require("@cosmjs/encoding");
-const bip39 = require("bip39");
 const crypto = require("crypto");
 const passwordHashAlgorithm = "sha512";
 const NODE_CONF = process.env.REACT_APP_IBC_CONFIG;
@@ -67,25 +65,12 @@ function isActive(item) {
     return item.jailed === false && item.status === 3;
 }
 
-function validateFrom(value) {
-    if (value.length === 0) {
-        return new Error('Length must be greater than 0');
-    }
-    return new Error('');
-}
-
 function checkLastPage(pageNumber, limit, totalTransactions) {
     return totalTransactions / limit <= pageNumber;
 }
 
 function validatePassphrase(value) {
     return value.length === 50;
-}
-
-function fileTypeCheck(filePath) {
-    let allowedExtensions =
-        /(\.json)$/i;
-    return allowedExtensions.exec(filePath);
 }
 
 function validateAddress(address, prefix = "persistence") {
@@ -121,11 +106,6 @@ function accountChangeCheck(errorMessage) {
     }
 }
 
-function decimalConversion(data) {
-    let value = Decimal.fromAtomics(data, 18).toString();
-    return value;
-}
-
 function denomChange(denom) {
     switch (denom) {
     case config.coinDenom:
@@ -152,43 +132,11 @@ function mnemonicTrim(mnemonic) {
     return mnemonicWords;
 }
 
-function mnemonicValidation(memo) {
-    const mnemonicWords = mnemonicTrim(memo);
-    let validateMnemonic = bip39.validateMnemonic(mnemonicWords);
-    return validateMnemonic;
-}
-
-function ValidateAmount(value) {
-    if (value === 0) {
-        return new Error('Value must be greater than 0');
-    }
-    return new Error('');
-}
 
 function inputSpaceValidation(e) {
     if (e.key === " ") {
         e.preventDefault();
     }
-}
-
-function inputAmountValidation(e) {
-    if (e.key === "e" || e.key === "-" || e.key === "+") {
-        e.preventDefault();
-    }
-}
-
-function stringValidation(evt) {
-    const regEx = /^[a-z ]*$/;
-    if (regEx.test(evt.target.value)) {
-        return true;
-    } else {
-        evt.preventDefault();
-    }
-
-}
-
-function trimWhiteSpaces(data) {
-    return data.split(' ').join('');
 }
 
 
@@ -238,19 +186,6 @@ function getTransactionAmount(data) {
     }
 }
 
-function sixDigitsNumber(value, length = 6) {
-    let inputValue = value.toString();
-    if (inputValue.length >= length) {
-        return inputValue.substr(0, 6);
-    } else {
-        const stringLength = length - inputValue.length;
-        let newString = inputValue;
-        for (let i = 0; i < stringLength; i++) {
-            newString += "0";
-        }
-        return newString;
-    }
-}
 
 function foundationNodeCheck(validatorAddress) {
     if (NODE_CONF === "ibcStaging.json") {
@@ -276,25 +211,16 @@ export default {
     createStore,
     decryptStore,
     isActive,
-    validateFrom,
     validatePassphrase,
     checkLastPage,
     validateAddress,
     accountChangeCheck,
-    decimalConversion,
     denomChange,
     mnemonicTrim,
-    mnemonicValidation,
-    ValidateAmount,
     inputSpaceValidation,
-    inputAmountValidation,
-    trimWhiteSpaces,
-    fileTypeCheck,
     isBech32Address,
     passwordValidation,
     getTransactionAmount,
-    sixDigitsNumber,
-    stringValidation,
     foundationNodeCheck,
     getAccountNumber,
 };

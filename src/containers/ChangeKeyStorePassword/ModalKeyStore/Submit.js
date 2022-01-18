@@ -5,6 +5,7 @@ import helper from "../../../utils/helper";
 import transactions from "../../../utils/transactions";
 import wallet from "../../../utils/wallet";
 import {hideKeyStoreModal, setResult, showKeyStoreNewPasswordModal} from "../../../store/actions/changePassword";
+import {fileTypeCheck} from "../../../utils/scripts";
 
 const Submit = () => {
     const password = useSelector((state) => state.keyStore.password);
@@ -18,7 +19,7 @@ const Submit = () => {
 
     const onClick = () => {
         let filePath = keyStore.value.name;
-        if (helper.fileTypeCheck(filePath)) {
+        if (fileTypeCheck(filePath)) {
             const fileReader = new FileReader();
             fileReader.readAsText(keyStore.value, "UTF-8");
             fileReader.onload = async event => {

@@ -1,7 +1,7 @@
 import _ from "lodash";
 import empty from "is-empty";
-import helper from "./helper";
 import moment from "moment";
+import {Decimal} from "@cosmjs/math";
 
 export const removeCommas = str => _.replace(str, new RegExp(",", "g"), "");
 const reverseString = str => removeCommas(_.toString(_.reverse(_.toArray(str))));
@@ -19,7 +19,7 @@ export const formatNumber = (v = 0, size = 3) => {
     if (substr[1] === undefined) {
         substr.push('000000');
     } else {
-        substr[1] = helper.sixDigitsNumber(substr[1]);
+        substr[1] = sixDigitsNumber(substr[1]);
     }
     str = reverseString(substr[0]);
     const regex = `.{1,${size}}`;
@@ -59,4 +59,27 @@ export const fileTypeCheck = (filePath) => {
     let allowedExtensions =
         /(\.json)$/i;
     return allowedExtensions.exec(filePath);
+};
+
+export const decimalConversion = (data) => {
+    let value = Decimal.fromAtomics(data, 18).toString();
+    return value;
+};
+
+export const trimWhiteSpaces = (data) => {
+    return data.split(' ').join('');
+};
+
+export const sixDigitsNumber = (value, length = 6) => {
+    let inputValue = value.toString();
+    if (inputValue.length >= length) {
+        return inputValue.substr(0, 6);
+    } else {
+        const stringLength = length - inputValue.length;
+        let newString = inputValue;
+        for (let i = 0; i < stringLength; i++) {
+            newString += "0";
+        }
+        return newString;
+    }
 };
