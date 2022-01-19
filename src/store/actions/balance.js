@@ -51,8 +51,8 @@ export const fetchAuthz = (granterAddress, granteeAddress) => {
             const AuthQueryService = new AuthzQueryClientImp(rpcClient);
             console.log(granterAddress, granteeAddress);
             const grantResponse = await AuthQueryService.Grants({
-                grantee:granterAddress,
-                granter:granteeAddress,
+                granter:granterAddress,
+                grantee:granteeAddress,
                 msgTypeUrl:''
             }).catch((error) => {
                 Sentry.captureException(error.response
