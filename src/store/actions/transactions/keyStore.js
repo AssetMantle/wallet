@@ -8,6 +8,7 @@ import transactions from "../../../utils/transactions";
 import {setLoginInfo, showTxResultModal, txFailed, txInProgress, txResponse, txSuccess} from "./common";
 import helper, {decryptKeyStore, privateKeyReader} from "../../../utils/helper";
 import * as Sentry from "@sentry/browser";
+import {ENCRYPTED_MNEMONIC} from "../../../constants/localStorage";
 
 export const setTxKeyStore = (data) => {
     return {
@@ -58,7 +59,7 @@ export const keyStoreSubmit = (loginAddress) => {
 
             let mnemonic = "";
             if (encryptedSeed) {
-                const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
+                const encryptedMnemonic = localStorage.getItem(ENCRYPTED_MNEMONIC);
                 const res = JSON.parse(encryptedMnemonic);
                 const decryptedData = decryptKeyStore(res, password.value);
                 if (decryptedData.error != null) {

@@ -6,12 +6,13 @@ import ButtonSend from "./ButtonSend";
 import {useSelector} from "react-redux";
 import Memo from "./Memo";
 import config from "../../../config";
+import {LOGIN_INFO} from "../../../constants/localStorage";
 
 const Send = () => {
 
     const response = useSelector(state => state.common.error);
     const txName = useSelector((state) => state.common.txName.value);
-    const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
 
 
     return (

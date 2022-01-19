@@ -12,15 +12,14 @@ import {fetchTokenPrice} from "../../../store/actions/tokenPrice";
 import {fetchReceiveTransactions, fetchTransactions} from "../../../store/actions/transactionQueries";
 import {hideTxResultModal} from "../../../store/actions/transactions/common";
 import config from "../../../config";
-import {ADDRESS, LOGIN_MODE} from "../../../constants/localStorage";
+import {LOGIN_INFO} from "../../../constants/localStorage";
 import {updateFee} from "../../../utils/helper";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
 const ModalViewTxnResponse = () => {
     const {t} = useTranslation();
-    const mode = localStorage.getItem(LOGIN_MODE);
-    let address = localStorage.getItem(ADDRESS);
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
     const dispatch = useDispatch();
     const show = useSelector((state) => state.common.modal);
     const response = useSelector(state => state.common.txResponse.value);
@@ -32,16 +31,16 @@ const ModalViewTxnResponse = () => {
         const fetchCalls = async () => {
             if (response !== undefined) {
                 await Promise.all([
-                    dispatch(fetchDelegationsCount(address)),
-                    dispatch(fetchBalance(address)),
-                    dispatch(fetchRewards(address)),
-                    dispatch(fetchTotalRewards(address)),
-                    dispatch(fetchUnbondDelegations(address)),
+                    dispatch(fetchDelegationsCount(loginInfo.address)),
+                    dispatch(fetchBalance(loginInfo.address)),
+                    dispatch(fetchRewards(loginInfo.address)),
+                    dispatch(fetchTotalRewards(loginInfo.address)),
+                    dispatch(fetchUnbondDelegations(loginInfo.address)),
                     dispatch(fetchTokenPrice()),
-                    dispatch(fetchTransferableVestingAmount(address)),
-                    dispatch(fetchTransactions(address, 5, 1)),
-                    dispatch(fetchReceiveTransactions(address, 5, 1)),
-                    updateFee(address),
+                    dispatch(fetchTransferableVestingAmount(loginInfo.address)),
+                    dispatch(fetchTransactions(loginInfo.address, 5, 1)),
+                    dispatch(fetchReceiveTransactions(loginInfo.address, 5, 1)),
+                    updateFee(loginInfo.address),
                 ]);
             }
         };
@@ -63,7 +62,7 @@ const ModalViewTxnResponse = () => {
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 <img src={success} alt="success-image"/>
-                                {mode === config.keplrMode ?
+                                {loginInfo.loginMode === config.keplrMode ?
                                     <a
                                         href={`${EXPLORER_API}/transactions/${response.transactionHash}`}
                                         target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
@@ -90,7 +89,7 @@ const ModalViewTxnResponse = () => {
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 <img src={failed} alt="success-image"/>
-                                {mode === config.keplrMode ?
+                                {loginInfo.loginMode === config.keplrMode ?
                                     <>
                                         <p>{response.rawLog}</p>
                                         <a

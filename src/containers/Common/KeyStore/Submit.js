@@ -2,10 +2,10 @@ import React from 'react';
 import Button from "./../../../components/Button";
 import {useDispatch, useSelector} from "react-redux";
 import {keyStoreSubmit} from "../../../store/actions/transactions/keyStore";
-import {ADDRESS} from "../../../constants/localStorage";
+import {LOGIN_INFO} from "../../../constants/localStorage";
 
 const Submit = () => {
-    let loginAddress = localStorage.getItem(ADDRESS);
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
     const type = useSelector((state) => state.common.txName.value.name);
     const password = useSelector((state) => state.keyStore.password);
     const accountNumber = useSelector((state) => state.advanced.accountNumber);
@@ -15,7 +15,7 @@ const Submit = () => {
     const dispatch = useDispatch();
 
     const onClick = () => {
-        dispatch(keyStoreSubmit(loginAddress, type));
+        dispatch(keyStoreSubmit(loginInfo.address, type));
     };
 
     const fee = useSelector((state) => state.fee.fee);

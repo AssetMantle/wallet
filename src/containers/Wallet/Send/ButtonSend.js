@@ -7,10 +7,11 @@ import {SendMsg} from "../../../utils/protoMsgHelper";
 import config from "../../../config";
 import {setTxName} from "../../../store/actions/transactions/common";
 import {stringToNumber} from "../../../utils/scripts";
+import {LOGIN_INFO} from "../../../constants/localStorage";
 
 const ButtonSend = () => {
     const dispatch = useDispatch();
-    const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
 
     const onClick = () => {
         dispatch(submitFormData([SendMsg(loginInfo.address, toAddress.value, (amount.value * config.tokenValue).toFixed(0), token.value.tokenDenom)]));

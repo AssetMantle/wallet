@@ -12,11 +12,13 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import {formatNumber, stringTruncate} from "../../../utils/scripts";
 import NumberView from "../../../components/NumberView";
 import config from "../../../config";
+import {LOGIN_INFO} from "../../../constants/localStorage";
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const ReceiveTransactions = (props) => {
-    const address = localStorage.getItem('address');
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
+
     useEffect(() => {
-        props.fetchReceiveTransactions(address, 5, 1);
+        props.fetchReceiveTransactions(loginInfo.address, 5, 1);
     }, []);
     const columns = [{
         name: 'txHash',
@@ -131,12 +133,12 @@ const ReceiveTransactions = (props) => {
 
     const handleNext = () => {
         if (!helper.checkLastPage(props.pageNumber[0], 5, props.pageNumber[1])) {
-            props.fetchReceiveTransactions(address, 5, props.pageNumber[0] + 1);
+            props.fetchReceiveTransactions(loginInfo.address, 5, props.pageNumber[0] + 1);
         }
     };
     const handlePrevious = () => {
         if (props.pageNumber[0] >= 2) {
-            props.fetchReceiveTransactions(address, 5, props.pageNumber[0] - 1);
+            props.fetchReceiveTransactions(loginInfo.address, 5, props.pageNumber[0] - 1);
         }
     };
 

@@ -6,7 +6,7 @@ import {QueryClientImpl} from "cosmjs-types/cosmos/auth/v1beta1/query";
 import * as vesting_1 from "cosmjs-types/cosmos/vesting/v1beta1/vesting";
 import {useTranslation} from "react-i18next";
 import * as Sentry from "@sentry/react";
-import {ADDRESS} from "../../../constants/localStorage";
+import {LOGIN_INFO} from "../../../constants/localStorage";
 import {localTime} from "../../../utils/scripts";
 import {tokenValueConversion} from "../../../utils/helper";
 
@@ -17,7 +17,7 @@ const ModalViewVestingDetails = () => {
     const [showPeriodicVesting, setShowPeriodicVesting] = useState(false);
     const [showDelayedVesting, setShowDelayedVesting] = useState(false);
     const [response, setResponse] = useState({});
-    const loginAddress = localStorage.getItem(ADDRESS);
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
     const handleClose = () => {
         setShow(false);
     };
@@ -30,7 +30,7 @@ const ModalViewVestingDetails = () => {
             const rpcClient = await transactions.RpcClient();
             const AuthQueryService = new QueryClientImpl(rpcClient);
             await AuthQueryService.Account({
-                address: loginAddress,
+                address: loginInfo.address,
             }).then(accountResponse => {
                 if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
                     let periodicVestingAccountResponse = vesting_1.PeriodicVestingAccount.decode(accountResponse.account.value);

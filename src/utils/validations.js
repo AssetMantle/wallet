@@ -1,10 +1,10 @@
 import config from "../config";
-import {ACCOUNT} from "../constants/localStorage";
+import {LOGIN_INFO} from "../constants/localStorage";
 import {mnemonicTrim, stringToNumber} from "./scripts";
 import {tokenValueConversion} from "./helper";
 
 const bip39 = require("bip39");
-const accountType = localStorage.getItem(ACCOUNT);
+const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
 
 export const ValidateSendAmount = (amount, value) => {
     if (stringToNumber(amount ) < value) {
@@ -19,7 +19,7 @@ export const ValidateFee = (transferableAmount, feeValue, type, amount) => {
     );
 
     const vestingDelegationCheck = (
-        accountType === "vesting" && type === "delegate"
+        loginInfo.account === "vesting" && type === "delegate"
     );
 
     if (amountTxns || vestingDelegationCheck) {
