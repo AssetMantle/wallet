@@ -4,7 +4,6 @@ import DashboardWallet from "./views/DashboardWallet";
 import Homepage from "./views/Homepage";
 import DashboardStaking from "./views/Staking";
 import PrivateRoute from "./containers/PrivateRoute";
-import KeplrHome from "./views/Keplr/KeplrHome";
 import RouteNotFound from "./components/RouteNotFound";
 import config from "./config";
 import icon_white from "./assets/images/icon_white.svg";
@@ -27,7 +26,6 @@ const App = () => {
     const {t} = useTranslation();
     const history = useHistory();
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
-
     const routes = [{
         path: '/dashboard/wallet',
         component: DashboardWallet,
@@ -36,10 +34,6 @@ const App = () => {
         path: '/dashboard/staking',
         component: DashboardStaking,
         private: true,
-    }, {
-        path: '/keplr',
-        component: KeplrHome,
-        private: false,
     }];
     const [isOnline, setNetwork] = useState(window.navigator.onLine);
     const updateNetwork = () => {
@@ -52,7 +46,7 @@ const App = () => {
     const dispatch = useDispatch();
 
     let address;
-    const version = loginInfo.version;
+    const version = loginInfo && loginInfo.version;
     if (version == null || config.version !== version) {
         localStorage.clear();
         history.push('/');

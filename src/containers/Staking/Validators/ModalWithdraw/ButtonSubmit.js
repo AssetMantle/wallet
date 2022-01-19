@@ -10,10 +10,11 @@ import {WithdrawMsg} from "../../../../utils/protoMsgHelper";
 import {setTxIno} from "../../../../store/actions/transactions/common";
 import config from "../../../../config";
 import {stringToNumber} from "../../../../utils/scripts";
+import {LOGIN_INFO} from "../../../../constants/localStorage";
 
 const ButtonSubmit = () => {
     const dispatch = useDispatch();
-    const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
     const validatorRewards = useSelector((state) => state.validators.validatorRewards);
     const memo = useSelector((state) => state.withdrawValidatorRewards.memo);
     const validator = useSelector((state) => state.validators.validator.value);

@@ -2,11 +2,10 @@ import transactions from "./transactions";
 import config from "../config";
 import {COIN_ATOM, COIN_ATOM_DENOM} from "../constants/keyWords";
 import {
-    ACCOUNT,
     ADDRESS,
     ENCRYPTED_MNEMONIC,
     FEE,
-    KEPLR_ADDRESS,
+    KEPLR_ADDRESS, LOGIN_INFO,
     LOGIN_MODE,
     LOGIN_TOKEN
 } from "../constants/localStorage";
@@ -227,16 +226,17 @@ export async function getAccount(address) {
 }
 
 export const updateFee = (address) => {
-    if (localStorage.getItem(LOGIN_MODE) === 'normal') {
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
+    if (loginInfo.loginMode === 'normal') {
         getAccount(address)
             .then(async res => {
                 const accountType = await vestingAccountCheck(res.typeUrl);
                 if (accountType) {
-                    localStorage.setItem(FEE, config.vestingAccountFee);
-                    localStorage.setItem(ACCOUNT, 'vesting');
+                    loginInfo.fee = config.vestingAccountFee;
+                    loginInfo.account = "vesting";
                 } else {
-                    localStorage.setItem(FEE, config.defaultFee);
-                    localStorage.setItem(ACCOUNT, 'non-vesting');
+                    loginInfo.fee = config.defaultFee;
+                    loginInfo.account = "non-vesting";
                 }
             })
             .catch(error => {
@@ -244,11 +244,13 @@ export const updateFee = (address) => {
                     ? error.response.data.message
                     : error.message);
                 console.log(error.message);
-                localStorage.setItem(FEE, config.defaultFee);
-                localStorage.setItem(ACCOUNT, 'non-vesting');
+                loginInfo.fee = config.defaultFee;
+                loginInfo.account = "non-vesting";
             });
+        localStorage.setItem(LOGIN_INFO, JSON.stringify(loginInfo));
     } else {
-        localStorage.setItem(FEE, config.vestingAccountFee);
+        loginInfo.fee = config.vestingAccountFee;
+        localStorage.setItem(LOGIN_INFO, JSON.stringify(loginInfo));
     }
 };
 

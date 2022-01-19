@@ -6,6 +6,7 @@ import {useTranslation} from "react-i18next";
 const ModalKeplrInstall = () => {
     const {t} = useTranslation();
     const [show, setShow] = useState(true);
+
     const handleClose = () => {
         window.location.reload();
         setShow(false);

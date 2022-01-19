@@ -12,7 +12,7 @@ import config from "../../config";
 import {userLogout} from "../../store/actions/logout";
 import {useDispatch} from "react-redux";
 import {showKeyStoreMnemonicModal} from "../../store/actions/generateKeyStore";
-import {LOGIN_INFO, LOGIN_MODE, THEME} from "../../constants/localStorage";
+import {LOGIN_INFO, THEME} from "../../constants/localStorage";
 import {stringTruncate} from "../../utils/scripts";
 import {makeHdPath} from "../../utils/helper";
 
@@ -67,7 +67,6 @@ const DashboardHeader = () => {
                     </div>
                     <Navbar.Brand>
                         <NavLink to="/dashboard/wallet" className="header-logo">
-                            {/*<img src={theme === 'light' ? logo : logoDark} alt="logo"/>*/}
                         </NavLink>
                     </Navbar.Brand>
 
@@ -132,7 +131,7 @@ const DashboardHeader = () => {
 
                                     <p className="key"> {t("WALLET_ADDRESS")}
                                         {
-                                            localStorage.getItem(LOGIN_MODE) === 'ledger' ?
+                                            loginInfo.loginMode === 'ledger' ?
                                                 <button className="ledger-verify"
                                                     onClick={ledgerShowAddress}>{t("VERIFY")}</button>
                                                 : ""
@@ -141,8 +140,8 @@ const DashboardHeader = () => {
                                     </div>
                                 </div>
                                 <div className="dropdown-footer">
-                                    <p onClick={closeWallet} className="link-close">Logout</p>
-                                    <p onClick={handleKeyStore} className="generate-keystore">Generate KeyStore</p>
+                                    <p onClick={closeWallet} className="link-close">{t("LOGOUT")}</p>
+                                    <p onClick={handleKeyStore} className="generate-keystore">{t("GENERATE_KEYSTORE")}</p>
                                 </div>
                             </NavDropdown>
                         </li>
