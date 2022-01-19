@@ -2,7 +2,7 @@ import React, {useContext, useState} from "react";
 import {Accordion, AccordionContext, Card, Form, Modal, useAccordionToggle,} from "react-bootstrap";
 import wallet from "../../../utils/wallet";
 import Icon from "../../../components/Icon";
-import GeneratePrivateKey from "../../KeyStore/GenerateKeyStore/GeneratePrivateKey";
+import GeneratePrivateKey from "./GeneratePrivateKey";
 import helper from "../../../utils/helper";
 import {useHistory} from "react-router-dom";
 import {useTranslation} from "react-i18next";

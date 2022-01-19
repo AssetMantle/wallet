@@ -48,7 +48,9 @@
       .buttons {
         padding: 50px 0;
         text-align: center;
-
+        display: flex;
+        align-items: center;
+        flex-direction: column;
         .import {
           font-size: 14px;
           line-height: 180%;
