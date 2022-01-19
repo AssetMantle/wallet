@@ -46,16 +46,14 @@ export const fetchBalanceListSuccess = (list) => {
 
 export const fetchAuthz = (granterAddress, granteeAddress) => {
     return async dispatch => {
-        dispatch(fetchBalanceProgress());
         try {
             const rpcClient = await transactions.RpcClient();
-            const   AuthQueryService = new AuthzQueryClientImp(rpcClient);
-            await AuthQueryService.Grants({
+            const AuthQueryService = new AuthzQueryClientImp(rpcClient);
+            console.log(granterAddress, granteeAddress);
+            const grantResponse = await AuthQueryService.Grants({
                 grantee:granterAddress,
                 granter:granteeAddress,
                 msgTypeUrl:''
-            }).then((grantResponse) => {
-                console.log(grantResponse, "grantResponse");
             }).catch((error) => {
                 Sentry.captureException(error.response
                     ? error.response.data.message
@@ -64,6 +62,7 @@ export const fetchAuthz = (granterAddress, granteeAddress) => {
                     ? error.response.data.message
                     : error.message));
             });
+            console.log(grantResponse, "grantResponse");
         } catch (error) {
             Sentry.captureException(error.response
                 ? error.response.data.message
