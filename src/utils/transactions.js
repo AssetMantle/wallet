@@ -7,7 +7,7 @@ import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import {LedgerSigner} from "@cosmjs/ledger-amino";
 import {fee} from "./aminoMsgHelper";
 import * as Sentry from "@sentry/browser";
-import { LOGIN_MODE} from "../constants/localStorage";
+import {LOGIN_INFO} from "../constants/localStorage";
 import {decodeTendermintClientStateAny, decodeTendermintConsensusStateAny, makeHdPath} from "./helper";
 
 const {SigningStargateClient, QueryClient, setupIbcExtension} = require("@cosmjs/stargate");
@@ -63,8 +63,8 @@ async function LedgerWallet(hdpath, prefix) {
 }
 
 async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(), bip39Passphrase = "", loginAddress, prefix = addressPrefix) {
-    const loginMode = localStorage.getItem(LOGIN_MODE);
-    if (loginMode === "normal") {
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
+    if (loginInfo.loginMode === "normal") {
         const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix);
         if (address !== loginAddress) {
             throw new Error("Your sign in address and keystore file don’t match. Please try again or else sign in again.");

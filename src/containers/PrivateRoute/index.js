@@ -8,7 +8,7 @@ const PrivateRoute = ({component: Component}) => {
         <Route
             render={
                 (props) => {
-                    if (loginInfo.loginToken === '' || loginInfo.loginToken === null) {
+                    if (loginInfo && loginInfo.loginToken === '' || loginInfo && loginInfo.loginToken === null) {
                         return <Redirect to={'/'}/>;
                     }
 
