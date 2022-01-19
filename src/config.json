@@ -14,7 +14,7 @@
   "coinDecimals": 6,
   "defaultFee": "5000",
   "vestingAccountFee": "0",
-  "version": "v0.1.12",
+  "version": "v0.1.15",
   "timeoutTimestamp": 1000,
   "ibcRevisionHeightIncrement": 1000,
   "ibcRemoteHeightIncrement": 150,
