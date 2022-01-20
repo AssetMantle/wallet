@@ -8,7 +8,7 @@ import {
     TRANSFERABLE_BALANCE_LIST_FETCH_SUCCESS,
     VESTING_BALANCE_FETCH_SUCCESS
 } from "../../constants/balance";
-import helper from "../../utils/helper";
+import {stringToNumber} from "../../utils/scripts";
 
 const inProgress = (state = false, action) => {
     switch (action.type) {
@@ -31,7 +31,7 @@ const amount = (state = 0, action) => {
 
 const _ = (state = 0, action) => {
     if (action.type === BALANCE_FETCH_ERROR) {
-        return (helper.stringToNumber(action.data));
+        return (stringToNumber(action.data));
     } else {
         return state;
     }

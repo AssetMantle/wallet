@@ -17,11 +17,11 @@ import {fetchRewards, fetchTotalRewards} from "./store/actions/rewards";
 import {fetchUnbondDelegations} from "./store/actions/unbond";
 import {fetchTokenPrice} from "./store/actions/tokenPrice";
 import {fetchValidators} from "./store/actions/validators";
-import transactions from "./utils/transactions";
 import * as Sentry from "@sentry/react";
 import {Integrations} from "@sentry/tracing";
 import {keplrLogin, setKeplrInfo} from "./store/actions/signIn/keplr";
 import {ADDRESS, KEPLR_ADDRESS, LOGIN_MODE, VERSION} from "./constants/localStorage";
+import {updateFee} from "./utils/helper";
 const SENTRY_API = process.env.REACT_APP_SENTRY_API;
 const App = () => {
     const {t} = useTranslation();
@@ -69,7 +69,7 @@ const App = () => {
                 dispatch(fetchTokenPrice());
                 dispatch(fetchTransferableVestingAmount(address));
                 dispatch(fetchValidators(address));
-                transactions.updateFee(address);
+                updateFee(address);
                 setInterval(() => dispatch(fetchTotalRewards(address)), 10000);
             }
         };

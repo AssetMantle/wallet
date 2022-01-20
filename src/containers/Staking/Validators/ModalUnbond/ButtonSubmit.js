@@ -6,8 +6,8 @@ import {keplrSubmit} from "../../../../store/actions/transactions/keplr";
 import config from "../../../../config";
 import {UnbondMsg} from "../../../../utils/protoMsgHelper";
 import {setTxIno} from "../../../../store/actions/transactions/common";
-import helper from "../../../../utils/helper";
 import {LOGIN_INFO} from "../../../../constants/localStorage";
+import {stringToNumber} from "../../../../utils/scripts";
 
 
 const ButtonSubmit = () => {
@@ -23,7 +23,7 @@ const ButtonSubmit = () => {
 
 
     const disable = (
-        amount.value === '' || helper.stringToNumber(amount.value) === 0 || amount.error.message !== '' || validator === '' || memo.error.message !== ''
+        amount.value === '' || stringToNumber(amount.value) === 0 || amount.error.message !== '' || validator === '' || memo.error.message !== ''
     );
 
     const onClickKeplr = () => {

@@ -6,7 +6,7 @@ import {
 } from "../../../constants/keyStore";
 import transactions from "../../../utils/transactions";
 import {setLoginInfo, showTxResultModal, txFailed, txInProgress, txResponse, txSuccess} from "./common";
-import helper from "../../../utils/helper";
+import helper, {decryptKeyStore, privateKeyReader} from "../../../utils/helper";
 import * as Sentry from "@sentry/browser";
 
 export const setTxKeyStore = (data) => {
@@ -60,13 +60,13 @@ export const keyStoreSubmit = (loginAddress) => {
             if (encryptedSeed) {
                 const encryptedMnemonic = localStorage.getItem('encryptedMnemonic');
                 const res = JSON.parse(encryptedMnemonic);
-                const decryptedData = helper.decryptStore(res, password.value);
+                const decryptedData = decryptKeyStore(res, password.value);
                 if (decryptedData.error != null) {
                     throw new Error(decryptedData.error);
                 }
                 mnemonic = decryptedData.mnemonic;
             } else {
-                mnemonic = await transactions.PrivateKeyReader(keyStoreData.value, password.value, loginAddress, accountNumber, accountIndex);
+                mnemonic = await privateKeyReader(keyStoreData.value, password.value, loginAddress, accountNumber, accountIndex);
             }
 
             let result = await transactions.getTransactionResponse(loginAddress, formData, fee, gas, mnemonic, txName, accountNumber, accountIndex, bip39PassPhrase);

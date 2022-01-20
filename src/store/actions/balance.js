@@ -8,13 +8,14 @@ import {
     VESTING_BALANCE_FETCH_SUCCESS
 } from "../../constants/balance";
 import vestingAccount from "../../utils/vestingAmount";
-import transactions, {GetAccount} from "../../utils/transactions";
+import transactions from "../../utils/transactions";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient, QueryClient, setupIbcExtension} from "@cosmjs/stargate";
 import {QueryClientImpl} from "cosmjs-types/cosmos/bank/v1beta1/query";
 import config from "../../config";
 import * as Sentry from '@sentry/browser';
-import helper from "../../utils/helper";
+import {stringToNumber} from "../../utils/scripts";
+import {getAccount, tokenValueConversion} from "../../utils/helper";
 
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
@@ -56,8 +57,8 @@ export const fetchBalance = (address) => {
                     dispatch(fetchBalanceListSuccess(allBalancesResponse.balances));
                     allBalancesResponse.balances.forEach((item) => {
                         if (item.denom === config.coinDenom) {
-                            const totalBalance = helper.stringToNumber(item.amount);
-                            dispatch(fetchBalanceSuccess(transactions.TokenValueConversion(totalBalance)));
+                            const totalBalance = stringToNumber(item.amount);
+                            dispatch(fetchBalanceSuccess(tokenValueConversion(totalBalance)));
                         }
                     });
                 }
@@ -102,7 +103,7 @@ export const fetchTokenListSuccess = (list) => {
 export const fetchTransferableVestingAmount = (address) => {
     return async dispatch => {
         try {
-            GetAccount(address).then(async vestingAmountData => {
+            getAccount(address).then(async vestingAmountData => {
                 const currentEpochTime = Math.floor(new Date().getTime() / 1000);
                 let vestingAmount = 0;
                 let transferableAmount = 0;
@@ -120,8 +121,8 @@ export const fetchTransferableVestingAmount = (address) => {
                                 let item = response.balances[i];
                                 if (item.denom === config.coinDenom) {
                                     tokenList.push(item);
-                                    const amount = transactions.TokenValueConversion(vestingAccount.getAccountVestingAmount(vestingAmountData, currentEpochTime));
-                                    const balance = transactions.TokenValueConversion(helper.stringToNumber(item.amount ));
+                                    const amount = tokenValueConversion(vestingAccount.getAccountVestingAmount(vestingAmountData, currentEpochTime));
+                                    const balance = tokenValueConversion(stringToNumber(item.amount ));
                                     vestingAmount = amount;
                                     if ((balance - amount) < 0) {
                                         transferableAmount = 0;

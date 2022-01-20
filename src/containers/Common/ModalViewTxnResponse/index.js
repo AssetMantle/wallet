@@ -4,7 +4,6 @@ import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
 import success from "../../../assets/images/success.svg";
 import failed from "../../../assets/images/inactive.svg";
-import transactions from "../../../utils/transactions";
 import {fetchDelegationsCount} from "../../../store/actions/delegations";
 import {fetchBalance, fetchTransferableVestingAmount} from "../../../store/actions/balance";
 import {fetchRewards, fetchTotalRewards} from "../../../store/actions/rewards";
@@ -14,6 +13,7 @@ import {fetchReceiveTransactions, fetchTransactions} from "../../../store/action
 import {hideTxResultModal} from "../../../store/actions/transactions/common";
 import config from "../../../config";
 import {ADDRESS, LOGIN_MODE} from "../../../constants/localStorage";
+import {updateFee} from "../../../utils/helper";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -41,7 +41,7 @@ const ModalViewTxnResponse = () => {
                     dispatch(fetchTransferableVestingAmount(address)),
                     dispatch(fetchTransactions(address, 5, 1)),
                     dispatch(fetchReceiveTransactions(address, 5, 1)),
-                    transactions.updateFee(address),
+                    updateFee(address),
                 ]);
             }
         };

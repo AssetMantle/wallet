@@ -1,13 +1,12 @@
 import React from 'react';
 import InputFieldNumber from "../../../../components/InputFieldNumber";
 import {useDispatch, useSelector} from "react-redux";
-import {formatNumber, removeCommas} from "../../../../utils/scripts";
+import {formatNumber, removeCommas, stringToNumber} from "../../../../utils/scripts";
 import NumberView from "../../../../components/NumberView";
 import {ValidateReDelegateAmount, ValidateSpecialCharacters} from "../../../../utils/validations";
 import {useTranslation} from "react-i18next";
 import config from "../../../../config";
 import {setTxReDelegateAmount} from "../../../../store/actions/transactions/redelegate";
-import helper from "../../../../utils/helper";
 
 const Amount = () => {
     const {t} = useTranslation();
@@ -20,7 +19,7 @@ const Amount = () => {
             dispatch(
                 setTxReDelegateAmount({
                     value: evt.target.value,
-                    error: ValidateReDelegateAmount(validatorDelegationAmount.value, (helper.stringToNumber(evt.target.value)))
+                    error: ValidateReDelegateAmount(validatorDelegationAmount.value, (stringToNumber(evt.target.value)))
                 })
             );
         } else {
@@ -32,7 +31,7 @@ const Amount = () => {
         dispatch(
             setTxReDelegateAmount({
                 value: value,
-                error: ValidateReDelegateAmount(value, (helper.stringToNumber(value)))
+                error: ValidateReDelegateAmount(value, (stringToNumber(value)))
             })
         );
     };

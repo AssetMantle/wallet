@@ -3,13 +3,12 @@ import {Accordion, AccordionContext, Card, Form, Modal, useAccordionToggle,} fro
 import wallet from "../../../utils/wallet";
 import Icon from "../../../components/Icon";
 import GeneratePrivateKey from "./GeneratePrivateKey";
-import helper from "../../../utils/helper";
 import {useHistory} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import transactions from "../../../utils/transactions";
 import {useDispatch} from "react-redux";
 import {addressLogin, setAddress} from "../../../store/actions/signIn/address";
 import config from "../../../config";
+import {makeHdPath} from "../../../utils/helper";
 
 const AdvanceMode = (props) => {
     const {t} = useTranslation();
@@ -40,7 +39,7 @@ const AdvanceMode = (props) => {
             }
         }
 
-        const walletPath = transactions.makeHdPath(accountNumber, addressIndex);
+        const walletPath = makeHdPath(accountNumber, addressIndex);
         const responseData = await wallet.createWallet(props.mnemonic, walletPath, bip39Passphrase);
         setResponse(responseData);
         setResponseShow(true);
@@ -58,7 +57,7 @@ const AdvanceMode = (props) => {
         }
     };
     const handlePassphrase = (evt) => {
-        const result = helper.validatePassphrase(evt.target.value);
+        const result = (evt.target.value).length === 50;
         setPassphraseError(result);
     };
     const handleClose = () => {

@@ -2,7 +2,7 @@ import transactions from "../../../utils/transactions";
 import {showTxResultModal, txFailed, txInProgress, txResponse, txSuccess} from "./common";
 import {hideFeeModal} from "./fee";
 import * as Sentry from "@sentry/browser";
-import helper from "../../../utils/helper";
+import helper, {privateKeyReader} from "../../../utils/helper";
 
 export const ledgerSubmit = (loginAddress, loginMode) => {
     return async (dispatch, getState) => {
@@ -22,7 +22,7 @@ export const ledgerSubmit = (loginAddress, loginMode) => {
 
         let mnemonic = "";
         if (loginMode !== "ledger") {
-            mnemonic = await transactions.PrivateKeyReader(keyStoreData.value, password.value, loginAddress);
+            mnemonic = await privateKeyReader(keyStoreData.value, password.value, loginAddress);
         }
         let response = transactions.getTransactionResponse(loginAddress, formData, fee, gas, mnemonic, txName, accountNumber, accountIndex, bip39PassPhrase);
         response.then(result => {

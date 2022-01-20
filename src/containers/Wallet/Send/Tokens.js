@@ -1,12 +1,12 @@
 import {setTxSendToken} from '../../../store/actions/transactions/send';
 import React, {useEffect} from 'react';
-import transactions from "../../../utils/transactions";
 import {useDispatch, useSelector} from "react-redux";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import {useTranslation} from "react-i18next";
 import config from "../../../config";
-import helper from "../../../utils/helper";
+import {stringToNumber} from "../../../utils/scripts";
+import {tokenValueConversion} from "../../../utils/helper";
 
 const Tokens = () => {
     const {t} = useTranslation();
@@ -45,7 +45,7 @@ const Tokens = () => {
             tokenList.forEach((item) => {
                 if (evt.target.value === item.denomTrace) {
                     tokenDataObject.tokenDenom = item.denom.baseDenom;
-                    tokenDataObject.transferableAmount = transactions.TokenValueConversion(helper.stringToNumber(item.amount ));
+                    tokenDataObject.transferableAmount = tokenValueConversion(stringToNumber(item.amount ));
                     tokenDataObject.tokenItem = item;
                 }
             });

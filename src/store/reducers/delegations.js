@@ -1,10 +1,10 @@
 import {combineReducers} from 'redux';
 import {DELEGATIONS_FETCH_SUCCESS, DELEGATIONS_STATUS_SUCCESS} from "../../constants/delegations";
-import helper from "../../utils/helper";
+import {stringToNumber} from "../../utils/scripts";
 
 const count = (state = 0, action) => {
     if (action.type === DELEGATIONS_FETCH_SUCCESS) {
-        return (helper.stringToNumber(action.count));
+        return (stringToNumber(action.count));
     }
     return state;
 };
@@ -18,12 +18,11 @@ const status = (state = false, action) => {
 
 const _ = (state = 0, action) => {
     if (action.type === DELEGATIONS_FETCH_SUCCESS) {
-        return (helper.stringToNumber(action.count));
+        return (stringToNumber(action.count));
     } else {
         return state;
     }
 };
-
 
 export default combineReducers({
     count,

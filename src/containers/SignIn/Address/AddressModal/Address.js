@@ -1,9 +1,9 @@
 import React from 'react';
 import InputText from "../../../../components/InputText";
-import helper from "../../../../utils/helper";
 import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
 import {setAddress} from "../../../../store/actions/signIn/address";
+import {ValidateSpace} from "../../../../utils/validations";
 
 const Address = () => {
     const {t} = useTranslation();
@@ -30,7 +30,7 @@ const Address = () => {
                     value={address.value}
                     required={true}
                     error={address.error}
-                    onKeyPress={helper.inputSpaceValidation}
+                    onKeyPress={ValidateSpace}
                     placeholder={t("ENTER_ADDRESS")}
                     autofocus={false}
                     onChange={onChange}

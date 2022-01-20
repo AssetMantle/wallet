@@ -5,9 +5,8 @@ import {
     SIGN_IN_KEYSTORE_RESULT_MODAL_HIDE,
     SIGN_IN_KEYSTORE_RESULT_MODAL_SHOW
 } from "../../../constants/signIn/keyStore";
-import transactions, {GetAccount} from "../../../utils/transactions";
 import {setLoginInfo} from "../transactions/common";
-import helper from "../../../utils/helper";
+import helper, {decryptKeyStore, vestingAccountCheck, getAccount, makeHdPath} from "../../../utils/helper";
 import wallet from "../../../utils/wallet";
 import config from "../../../config";
 import * as Sentry from "@sentry/browser";
@@ -21,6 +20,7 @@ import {
     LOGIN_TOKEN,
     VERSION
 } from "../../../constants/localStorage";
+import {mnemonicTrim} from "../../../utils/scripts";
 
 export const hideKeyStoreModal = (data) => {
     return {
@@ -65,7 +65,7 @@ export const keyStoreSubmit = () => {
         fileReader.onload = async event => {
             localStorage.setItem(ENCRYPTED_MNEMONIC, event.target.result);
             const res = JSON.parse(event.target.result);
-            const decryptedData = helper.decryptStore(res, password.value);
+            const decryptedData = decryptKeyStore(res, password.value);
             if (decryptedData.error != null) {
                 dispatch(setKeyStoreResult(
                     {
@@ -76,12 +76,12 @@ export const keyStoreSubmit = () => {
                     }));
                 console.log(decryptedData.error, "responseData");
             } else {
-                mnemonic = helper.mnemonicTrim(decryptedData.mnemonic);
+                mnemonic = mnemonicTrim(decryptedData.mnemonic);
                 const accountNumber = helper.getAccountNumber(getState().advanced.accountNumber.value);
                 const accountIndex = helper.getAccountNumber(getState().advanced.accountIndex.value);
                 const bip39PassPhrase = getState().advanced.bip39PassPhrase.value;
 
-                const walletPath = transactions.makeHdPath(accountNumber, accountIndex);
+                const walletPath = makeHdPath(accountNumber, accountIndex);
                 const responseData = await wallet.createWallet(mnemonic, walletPath, bip39PassPhrase);
                 dispatch(hideKeyStoreModal());
                 dispatch(showKeyStoreResultModal());
@@ -113,8 +113,8 @@ export const keyStoreLogin = (history) => {
             accountNumber: '',
             accountIndex: ''
         };
-        GetAccount(address).then(async res => {
-            const accountType = await transactions.VestingAccountCheck(res.typeUrl);
+        getAccount(address).then(async res => {
+            const accountType = await vestingAccountCheck(res.typeUrl);
             if (accountType) {
                 loginInfo.fee = config.vestingAccountFee;
                 loginInfo.account = "vesting";

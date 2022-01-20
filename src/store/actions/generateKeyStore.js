@@ -9,8 +9,8 @@ import {
     KEYSTORE_RESULT_MODAL_SHOW
 } from "../../constants/generateKeyStore";
 import wallet from "../../utils/wallet";
-import helper from "../../utils/helper";
 import * as Sentry from "@sentry/browser";
+import {mnemonicTrim} from "../../utils/scripts";
 
 export const setKeyStoreMnemonic = (data) => {
     return {
@@ -73,7 +73,7 @@ export const mnemonicSubmit = () => {
     return async (dispatch, getState) => {
         try {
             await wallet.createWallet(getState().generateKeyStore.mnemonic.value);
-            let mnemonic = helper.mnemonicTrim(getState().generateKeyStore.mnemonic.value);
+            let mnemonic = mnemonicTrim(getState().generateKeyStore.mnemonic.value);
             dispatch(setKeyStoreMnemonic({
                 value: mnemonic,
                 error: {

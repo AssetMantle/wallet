@@ -4,7 +4,6 @@ import {NavLink, useHistory} from 'react-router-dom';
 import {Nav, Navbar, NavDropdown} from "react-bootstrap";
 import ReactQRCode from "qrcode.react";
 import Copy from "../../components/Copy";
-import helper from "../../utils/helper";
 import {useTranslation} from "react-i18next";
 import Darktheme from "../DarkTheme";
 import MobileSidebar from "./MobileSidebar";
@@ -14,6 +13,8 @@ import {userLogout} from "../../store/actions/logout";
 import {useDispatch} from "react-redux";
 import {showKeyStoreMnemonicModal} from "../../store/actions/generateKeyStore";
 import {ACCOUNT_NUMBER, ADDRESS, ADDRESS_INDEX, LOGIN_MODE, THEME} from "../../constants/localStorage";
+import {stringTruncate} from "../../utils/scripts";
+import {makeHdPath} from "../../utils/helper";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -24,7 +25,7 @@ const DashboardHeader = () => {
     const address = localStorage.getItem(ADDRESS);
     let addressTruncate;
     if (address !== null) {
-        addressTruncate = helper.stringTruncate(address);
+        addressTruncate = stringTruncate(address);
     }
     useEffect(() => {
         const localTheme = window.localStorage.getItem(THEME);
@@ -53,8 +54,8 @@ const DashboardHeader = () => {
     const ledgerShowAddress = async () => {
         const accountNumber = localStorage.getItem(ACCOUNT_NUMBER);
         const addressIndex = localStorage.getItem(ADDRESS_INDEX);
-        const [wallet] = await transactions.LedgerWallet(transactions.makeHdPath(accountNumber, addressIndex), config.addressPrefix);
-        await wallet.showAddress(transactions.makeHdPath(accountNumber, addressIndex));
+        const [wallet] = await transactions.LedgerWallet(makeHdPath(accountNumber, addressIndex), config.addressPrefix);
+        await wallet.showAddress(makeHdPath(accountNumber, addressIndex));
     };
     const ProfileIcon = <Icon viewClass="profile" icon="profile"/>;
     return (

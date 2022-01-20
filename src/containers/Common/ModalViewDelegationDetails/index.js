@@ -1,10 +1,9 @@
 import {Modal, Table} from 'react-bootstrap';
 import React, {useState} from 'react';
 import {connect} from "react-redux";
-import transactions from "../../../utils/transactions";
 import {useTranslation} from "react-i18next";
-import helper from "../../../utils/helper";
-import {formatNumber} from "../../../utils/scripts";
+import helper, {tokenValueConversion} from "../../../utils/helper";
+import {formatNumber, stringToNumber, stringTruncate} from "../../../utils/scripts";
 import NumberView from "../../../components/NumberView";
 import config from "../../../config";
 
@@ -48,7 +47,7 @@ const ModalViewDelegationDetails = (props) => {
                             <tbody>
                                 {props.validatorsList ?
                                     props.validatorsList.map((delegation, index) => {
-                                        addressTruncate = helper.stringTruncate(delegation.data.operatorAddress);
+                                        addressTruncate = stringTruncate(delegation.data.operatorAddress);
                                         return (
                                             <tr key={index}>
                                                 <td>{delegation.data.description.moniker}
@@ -58,7 +57,7 @@ const ModalViewDelegationDetails = (props) => {
                                                 <td>
                                                     <span className="amount">
                                                         <NumberView
-                                                            value={formatNumber(transactions.TokenValueConversion(helper.stringToNumber(delegation.delegations)))}/>{config.coinName}
+                                                            value={formatNumber(tokenValueConversion(stringToNumber(delegation.delegations)))}/>{config.coinName}
                                                     </span>
                                                 </td>
                                                 <td>

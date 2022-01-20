@@ -1,35 +1,36 @@
-import {Decimal} from "@cosmjs/math";
 import transactions from "./transactions";
 import config from "../config";
 import {COIN_ATOM, COIN_ATOM_DENOM} from "../constants/keyWords";
-import moment from "moment";
-import {ADDRESS, FEE, KEPLR_ADDRESS, LOGIN_MODE, LOGIN_TOKEN} from "../constants/localStorage";
+import {
+    ACCOUNT,
+    ADDRESS,
+    ENCRYPTED_MNEMONIC,
+    FEE,
+    KEPLR_ADDRESS,
+    LOGIN_MODE,
+    LOGIN_TOKEN
+} from "../constants/localStorage";
+import {sha256, stringToPath} from "@cosmjs/crypto";
+import {QueryClientImpl} from "cosmjs-types/cosmos/auth/v1beta1/query";
+import {BaseAccount} from "cosmjs-types/cosmos/auth/v1beta1/auth";
+import {
+    ContinuousVestingAccount,
+    DelayedVestingAccount,
+    PeriodicVestingAccount
+} from "cosmjs-types/cosmos/vesting/v1beta1/vesting";
+import * as Sentry from "@sentry/browser";
+import {mnemonicTrim} from "./scripts";
 
+const tendermint_1 = require("cosmjs-types/ibc/lightclients/tendermint/v1/tendermint");
 const encoding = require("@cosmjs/encoding");
-const bip39 = require("bip39");
 const crypto = require("crypto");
 const passwordHashAlgorithm = "sha512";
 const NODE_CONF = process.env.REACT_APP_IBC_CONFIG;
+const valoperAddressPrefix = config.valoperAddressPrefix;
+const addressPrefix = config.addressPrefix;
+const configCoinType = config.coinType;
 
-function randomNum(min, max) {
-    let randomNumbers = [];
-    for (var i = 0; i < 3; i++) {
-        var random_number = Math.floor(Math.random() * (max - min) + min);
-        if (randomNumbers.indexOf(random_number) == -1) {
-            randomNumbers.push(random_number);
-        }
-    }
-    return randomNumbers;
-}
-
-function stringTruncate(str) {
-    if (str.length > 30) {
-        return str.substr(0, 10) + '...' + str.substr(str.length - 10, str.length);
-    }
-    return str;
-}
-
-function createStore(mnemonic, password) {
+export const createKeyStore = (mnemonic, password) => {
     try {
         const key = crypto.randomBytes(32);
         const iv = crypto.randomBytes(16);
@@ -52,9 +53,9 @@ function createStore(mnemonic, password) {
             error: exception.message
         };
     }
-}
+};
 
-function decryptStore(fileData, password) {
+export const decryptKeyStore = (fileData, password) => {
     let hashpwd = fileData.hashpwd;
     let iv = fileData.iv;
     let salt = fileData.salt;
@@ -79,50 +80,15 @@ function decryptStore(fileData, password) {
             error: "Incorrect password."
         };
     }
-}
+};
 
 function isActive(item) {
     return item.jailed === false && item.status === 3;
 }
 
-function validateFrom(value) {
-    if (value.length === 0) {
-        return new Error('Length must be greater than 0');
-    }
-    return new Error('');
-}
-
 function checkLastPage(pageNumber, limit, totalTransactions) {
     return totalTransactions / limit <= pageNumber;
 }
-
-function validatePassphrase(value) {
-    return value.length === 50;
-}
-
-function fileTypeCheck(filePath) {
-    let allowedExtensions =
-        /(\.json)$/i;
-    return allowedExtensions.exec(filePath);
-}
-
-function validateAddress(address, prefix = "persistence") {
-    if (prefix === "cosmos") {
-        if (!address.startsWith(prefix) || address.length !== 45) {
-            return new Error('Invalid Recipient Address');
-        }
-    } else if (prefix === "osmosis") {
-        if (!address.startsWith("osmo") || address.length !== 43) {
-            return new Error('Invalid Recipient Address');
-        }
-    } else {
-        if (!address.startsWith(prefix) || address.length !== 50) {
-            return new Error('Invalid Recipient Address');
-        }
-    }
-    return new Error('');
-}
-
 
 function accountChangeCheck(errorMessage) {
     if (errorMessage === 'Unsupported type: \'/cosmos.vesting.v1beta1.ContinuousVestingAccount\'' ||
@@ -139,11 +105,6 @@ function accountChangeCheck(errorMessage) {
     }
 }
 
-function decimalConversion(data) {
-    let value = Decimal.fromAtomics(data, 18).toString();
-    return value;
-}
-
 function denomChange(denom) {
     switch (denom) {
     case config.coinDenom:
@@ -155,80 +116,12 @@ function denomChange(denom) {
     }
 }
 
-function mnemonicTrim(mnemonic) {
-    let mnemonicList = mnemonic.replace(/\s/g, " ").split(/\s/g);
-    let mnemonicWords = [];
-    for (let word of mnemonicList) {
-        if (word === "") {
-            console.log();
-        } else {
-            let trimmedWord = word.replace(/\s/g, "");
-            mnemonicWords.push(trimmedWord);
-        }
-    }
-    mnemonicWords = mnemonicWords.join(" ");
-    return mnemonicWords;
-}
-
-function mnemonicValidation(memo) {
-    const mnemonicWords = mnemonicTrim(memo);
-    let validateMnemonic = bip39.validateMnemonic(mnemonicWords);
-    return validateMnemonic;
-}
-
-function ValidateAmount(value) {
-    if (value === 0) {
-        return new Error('Value must be greater than 0');
-    }
-    return new Error('');
-}
-
-function inputSpaceValidation(e) {
-    if (e.key === " ") {
-        e.preventDefault();
-    }
-}
-
-function inputAmountValidation(e) {
-    if (e.key === "e" || e.key === "-" || e.key === "+") {
-        e.preventDefault();
-    }
-}
-
-function stringValidation(evt) {
-    const regEx = /^[a-z ]*$/;
-    if (regEx.test(evt.target.value)) {
-        return true;
-    } else {
-        evt.preventDefault();
-    }
-
-}
-
-function trimWhiteSpaces(data) {
-    return data.split(' ').join('');
-}
-
-
-function isBech32Address(address, prefix) {
-    try {
-        let decodedAddress = encoding.Bech32.decode(address);
-        return decodedAddress.prefix === prefix;
-    } catch (e) {
-        return false;
-    }
-}
-
-function passwordValidation(data) {
-    const regex = /^\S{3}\S+$/;
-    return regex.test(data);
-}
 
 function denomModify(amount) {
     if (Array.isArray(amount)) {
         if (amount.length) {
             if (amount[0].denom === config.coinDenom) {
-                return [transactions.TokenValueConversion(amount[0].amount), config.coinName];
+                return [tokenValueConversion(amount[0].amount), config.coinName];
             } else {
                 return [amount[0].amount, amount[0].denom];
             }
@@ -237,7 +130,7 @@ function denomModify(amount) {
         }
     } else {
         if (amount.denom === config.coinDenom) {
-            return [transactions.TokenValueConversion(amount.amount), config.coinName];
+            return [tokenValueConversion(amount.amount), config.coinName];
         } else {
             return [amount.amount, amount.denom];
         }
@@ -256,19 +149,6 @@ function getTransactionAmount(data) {
     }
 }
 
-function sixDigitsNumber(value, length = 6) {
-    let inputValue = value.toString();
-    if (inputValue.length >= length) {
-        return inputValue.substr(0, 6);
-    } else {
-        const stringLength = length - inputValue.length;
-        let newString = inputValue;
-        for (let i = 0; i < stringLength; i++) {
-            newString += "0";
-        }
-        return newString;
-    }
-}
 
 function foundationNodeCheck(validatorAddress) {
     if (NODE_CONF === "ibcStaging.json") {
@@ -290,44 +170,161 @@ function getAccountNumber(value) {
     return value === '' ? '0' : value;
 }
 
-const emptyFunc = () => ({});
-
-const stringToNumber = (stringData) => {
-    return +stringData;
+export const addrToValoper = (address) => {
+    let data = encoding.Bech32.decode(address).data;
+    return encoding.Bech32.encode(valoperAddressPrefix, data);
 };
 
-const localTime = (stringData) => {
-    return moment(new Date(stringData).toString()).format('dddd MMMM Do YYYY, h:mm:ss a');
+export const valoperToAddr = (valoperAddr) => {
+    let data = encoding.Bech32.decode(valoperAddr).data;
+    return encoding.Bech32.encode(addressPrefix, data);
 };
+
+export const checkValidatorAccountAddress = (validatorAddress, address) => {
+    let validatorAccountAddress = valoperToAddr(validatorAddress);
+    return validatorAccountAddress === address;
+};
+
+/**
+ * @return {boolean}
+ */
+export const vestingAccountCheck = async (type) =>{
+    return type === "/cosmos.vesting.v1beta1.PeriodicVestingAccount" ||
+        type === "/cosmos.vesting.v1beta1.DelayedVestingAccount" ||
+        type === "/cosmos.vesting.v1beta1.ContinuousVestingAccount";
+};
+
+export const generateHash = (txBytes) =>{
+    return encoding.toHex(sha256(txBytes)).toUpperCase();
+};
+
+export async function getAccount(address) {
+    try {
+        const rpcClient = await transactions.RpcClient();
+        const authAccountService = new QueryClientImpl(rpcClient);
+        const accountResponse = await authAccountService.Account({
+            address: address,
+        });
+        if (accountResponse.account.typeUrl === "/cosmos.auth.v1beta1.BaseAccount") {
+            let baseAccountResponse = BaseAccount.decode(accountResponse.account.value);
+            return {"typeUrl": accountResponse.account.typeUrl, "accountData": baseAccountResponse};
+        } else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
+            let periodicVestingAccountResponse = PeriodicVestingAccount.decode(accountResponse.account.value);
+            return {"typeUrl": accountResponse.account.typeUrl, "accountData": periodicVestingAccountResponse};
+        } else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.DelayedVestingAccount") {
+            let delayedVestingAccountResponse = DelayedVestingAccount.decode(accountResponse.account.value);
+            return {"typeUrl": accountResponse.account.typeUrl, "accountData": delayedVestingAccountResponse};
+        } else if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
+            let continuousVestingAccountResponse = ContinuousVestingAccount.decode(accountResponse.account.value);
+            return {"typeUrl": accountResponse.account.typeUrl, "accountData": continuousVestingAccountResponse};
+        }
+    }catch (error) {
+        Sentry.captureException(error.response
+            ? error.response.data.message
+            : error.message);
+        console.log(error.message);
+    }
+}
+
+export const updateFee = (address) => {
+    if (localStorage.getItem(LOGIN_MODE) === 'normal') {
+        getAccount(address)
+            .then(async res => {
+                const accountType = await vestingAccountCheck(res.typeUrl);
+                if (accountType) {
+                    localStorage.setItem(FEE, config.vestingAccountFee);
+                    localStorage.setItem(ACCOUNT, 'vesting');
+                } else {
+                    localStorage.setItem(FEE, config.defaultFee);
+                    localStorage.setItem(ACCOUNT, 'non-vesting');
+                }
+            })
+            .catch(error => {
+                Sentry.captureException(error.response
+                    ? error.response.data.message
+                    : error.message);
+                console.log(error.message);
+                localStorage.setItem(FEE, config.defaultFee);
+                localStorage.setItem(ACCOUNT, 'non-vesting');
+            });
+    } else {
+        localStorage.setItem(FEE, config.vestingAccountFee);
+    }
+};
+
+export const tokenValueConversion = (data) => {
+    return data / config.tokenValue;
+};
+
+export const privateKeyReader = (file, password, loginAddress, accountNumber = "0", addressIndex = "0",) => {
+    return new Promise(function (resolve, reject) {
+        const fileReader = new FileReader();
+        fileReader.readAsText(file, "UTF-8");
+        fileReader.onload = async event => {
+            if (event.target.result !== '') {
+                const res = JSON.parse(event.target.result);
+                const decryptedData = decryptKeyStore(res, password);
+                if (decryptedData.error != null) {
+                    reject(new Error(decryptedData.error));
+                } else {
+                    let mnemonic = mnemonicTrim(decryptedData.mnemonic);
+                    const accountData = await transactions.MnemonicWalletWithPassphrase(mnemonic, makeHdPath(accountNumber, addressIndex));
+                    const address = accountData[1];
+                    if (address === loginAddress) {
+                        resolve(mnemonic);
+                        localStorage.setItem(ENCRYPTED_MNEMONIC, event.target.result);
+                    } else {
+                        reject(new Error("Your sign in address and keystore file don’t match. Please try again or else sign in again."));
+                    }
+                }
+            } else {
+                reject(new Error("Invalid File data"));
+            }
+        };
+    });
+};
+
+export const makeHdPath = (accountNumber = "0", addressIndex = "0", coinType = configCoinType) => {
+    return stringToPath("m/44'/" + coinType + "'/" + accountNumber + "'/0/" + addressIndex);
+};
+
+export const getAccountNumberAndSequence = (authResponse) => {
+    if (authResponse.account["@type"] === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
+        return [authResponse.account.base_vesting_account.base_account.account_number, authResponse.account.base_vesting_account.base_account.sequence];
+    } else if (authResponse.account["@type"] === "/cosmos.vesting.v1beta1.DelayedVestingAccount") {
+        return [authResponse.account.base_vesting_account.base_account.account_number, authResponse.account.base_vesting_account.base_account.sequence];
+    } else if (authResponse.account["@type"] === "/cosmos.vesting.v1beta1.ContinuousVestingAccount") {
+        return [authResponse.account.base_vesting_account.base_account.account_number, authResponse.account.base_vesting_account.base_account.sequence];
+    } else if (authResponse.account["@type"] === "/cosmos.auth.v1beta1.BaseAccount") {
+        return [authResponse.account.account_number, authResponse.account.sequence];
+    } else {
+        return [-1, -1];
+    }
+};
+
+// copied from node_modules/@cosmjs/stargate/build/queries/ibc.js
+export const decodeTendermintClientStateAny = (clientState) => {
+    if ((clientState === null || clientState === void 0 ? void 0 : clientState.typeUrl) !== "/ibc.lightclients.tendermint.v1.ClientState") {
+        throw new Error(`Unexpected client state type: ${clientState === null || clientState === void 0 ? void 0 : clientState.typeUrl}`);
+    }
+    return tendermint_1.ClientState.decode(clientState.value);
+};
+
+// copied from node_modules/@cosmjs/stargate/build/queries/ibc.js
+export const decodeTendermintConsensusStateAny = (consensusState) => {
+    if ((consensusState === null || consensusState === void 0 ? void 0 : consensusState.typeUrl) !== "/ibc.lightclients.tendermint.v1.ConsensusState") {
+        throw new Error(`Unexpected client state type: ${consensusState === null || consensusState === void 0 ? void 0 : consensusState.typeUrl}`);
+    }
+    return tendermint_1.ConsensusState.decode(consensusState.value);
+};
+
 
 export default {
-    randomNum,
-    stringTruncate,
-    createStore,
-    decryptStore,
     isActive,
-    validateFrom,
-    validatePassphrase,
     checkLastPage,
-    validateAddress,
     accountChangeCheck,
-    decimalConversion,
     denomChange,
-    mnemonicTrim,
-    mnemonicValidation,
-    ValidateAmount,
-    inputSpaceValidation,
-    inputAmountValidation,
-    trimWhiteSpaces,
-    fileTypeCheck,
-    isBech32Address,
-    passwordValidation,
     getTransactionAmount,
-    sixDigitsNumber,
-    stringValidation,
-    emptyFunc,
     foundationNodeCheck,
     getAccountNumber,
-    stringToNumber,
-    localTime
 };

@@ -1,10 +1,10 @@
 import React from 'react';
 import {OverlayTrigger, Popover} from "react-bootstrap";
 import Icon from "../Icon";
-import transactions from "../../utils/transactions";
-import helper from "../../utils/helper";
 import {FEE, LOGIN_MODE} from "../../constants/localStorage";
 import config from "../../config";
+import {stringToNumber} from "../../utils/scripts";
+import {tokenValueConversion} from "../../utils/helper";
 
 const FeeContainer = () => {
     const mode = localStorage.getItem(LOGIN_MODE);
@@ -20,7 +20,7 @@ const FeeContainer = () => {
             {
                 mode === "normal" ?
                     <p className="fee">A default fee
-                        of {transactions.TokenValueConversion(helper.stringToNumber(localStorage.getItem(FEE) ))} {config.coinName} is
+                        of {tokenValueConversion(stringToNumber(localStorage.getItem(FEE) ))} {config.coinName} is
                         deducted from your wallet.
                     <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popoverSetupAddress}>
                         <button className="icon-button info" type="button">

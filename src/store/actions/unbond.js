@@ -8,6 +8,7 @@ import Lodash from "lodash";
 import transactions from "../../utils/transactions";
 import {QueryClientImpl} from "cosmjs-types/cosmos/staking/v1beta1/query";
 import * as Sentry from "@sentry/browser";
+import {tokenValueConversion} from "../../utils/helper";
 
 export const fetchUnbondDelegationsProgress = () => {
     return {
@@ -51,7 +52,7 @@ export const fetchUnbondDelegations = (address) => {
                             });
                         }
                     });
-                    dispatch(fetchUnbondDelegationsSuccess(transactions.TokenValueConversion(totalUnbond)));
+                    dispatch(fetchUnbondDelegationsSuccess(tokenValueConversion(totalUnbond)));
                 }
             }).catch((error) => {
                 Sentry.captureException(error.response

@@ -6,7 +6,7 @@ import {keplrSubmit} from "../../../store/actions/transactions/keplr";
 import {SendMsg} from "../../../utils/protoMsgHelper";
 import config from "../../../config";
 import {setTxName} from "../../../store/actions/transactions/common";
-import helper from "../../../utils/helper";
+import {stringToNumber} from "../../../utils/scripts";
 
 const ButtonSend = () => {
     const dispatch = useDispatch();
@@ -20,7 +20,7 @@ const ButtonSend = () => {
     const token = useSelector((state) => state.send.token);
     const memo = useSelector((state) => state.send.memo);
     const disable = (
-        amount.value === '' || helper.stringToNumber(amount.value) === 0 || amount.error.message !== '' || toAddress.value === '' || toAddress.error.message !== '' || memo.error.message !== ''
+        amount.value === '' || stringToNumber(amount.value) === 0 || amount.error.message !== '' || toAddress.value === '' || toAddress.error.message !== '' || memo.error.message !== ''
     );
 
     const onClickKeplr = () => {

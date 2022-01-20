@@ -13,6 +13,7 @@ import {
     showValidatorTxModal
 } from "../../../store/actions/validators";
 import {LOGIN_INFO} from "../../../constants/localStorage";
+import {decimalConversion} from "../../../utils/scripts";
 
 const ValidatorsTable = (props) => {
     const {t} = useTranslation();
@@ -91,7 +92,7 @@ const ValidatorsTable = (props) => {
             </div>
             ,
             <span className="voting"
-                key={index}>{`${parseFloat((helper.decimalConversion(validator.data.commission.commissionRates.rate) * 100).toFixed(6))}`} %</span>,
+                key={index}>{`${parseFloat((decimalConversion(validator.data.commission.commissionRates.rate) * 100).toFixed(6))}`} %</span>,
             <div className="" key={index}>
                 {helper.isActive(validator.data) ?
                     <span className="icon-box" title="active">

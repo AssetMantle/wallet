@@ -1,10 +1,10 @@
 import {SET_KEPLR_INFO, SIGN_IN_KEPLR_MODAL_HIDE, SIGN_IN_KEPLR_MODAL_SHOW} from "../../../constants/signIn/keplr";
 import KeplrWallet from "../../../utils/keplr";
-import transactions, {GetAccount} from "../../../utils/transactions";
+import {getAccount} from "../../../utils/helper";
 import config from "../../../config";
 import {setLoginInfo} from "../transactions/common";
 import * as Sentry from "@sentry/browser";
-import helper from "../../../utils/helper";
+import helper, {vestingAccountCheck} from "../../../utils/helper";
 import {
     ACCOUNT,
     ADDRESS,
@@ -78,8 +78,8 @@ export const keplrLogin = (history) => {
         };
         const accountNumber = helper.getAccountNumber(getState().advanced.accountNumber.value);
         const accountIndex = helper.getAccountNumber(getState().advanced.accountIndex.value);
-        GetAccount(address).then(async res => {
-            const accountType = await transactions.VestingAccountCheck(res.typeUrl);
+        getAccount(address).then(async res => {
+            const accountType = await vestingAccountCheck(res.typeUrl);
             if (accountType) {
                 loginInfo.fee = config.vestingAccountFee;
                 loginInfo.account = "vesting";

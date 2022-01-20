@@ -3,12 +3,14 @@ import {
     SIGN_IN_ADDRESS_MODAL_HIDE,
     SIGN_IN_ADDRESS_MODAL_SHOW
 } from "../../../constants/signIn/address";
-import helper from "../../../utils/helper";
+import helper, {vestingAccountCheck} from "../../../utils/helper";
 import config from "../../../config";
-import transactions, {GetAccount} from "../../../utils/transactions";
+import {getAccount} from "../../../utils/helper";
 import {setLoginInfo} from "../transactions/common";
 import * as Sentry from "@sentry/browser";
 import {ACCOUNT, ADDRESS, FEE, LOGIN_INFO, LOGIN_MODE, LOGIN_TOKEN, VERSION} from "../../../constants/localStorage";
+import {isBech32Address} from "../../../utils/scripts";
+import {validateAddress} from "../../../utils/validations";
 
 export const hideAddressModal = (data) => {
     return {
@@ -46,9 +48,9 @@ export const addressLogin = (history) => {
         };
         const accountNumber = helper.getAccountNumber(getState().advanced.accountNumber.value);
         const accountIndex = helper.getAccountNumber(getState().advanced.accountIndex.value);
-        if (helper.validateAddress(address) && helper.isBech32Address(address, config.addressPrefix)) {
-            GetAccount(address).then(async res => {
-                const accountType = await transactions.VestingAccountCheck(res.typeUrl);
+        if ( validateAddress(address) && isBech32Address(address, config.addressPrefix)) {
+            getAccount(address).then(async res => {
+                const accountType = await vestingAccountCheck(res.typeUrl);
                 if (accountType) {
                     loginInfo.fee = config.vestingAccountFee;
                     loginInfo.account = "vesting";

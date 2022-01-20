@@ -17,4 +17,5 @@ const DashboardWallet = () => {
         </div>
     );
 };
+
 export default DashboardWallet;

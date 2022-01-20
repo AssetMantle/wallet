@@ -1,13 +1,13 @@
-import transactions from "./transactions";
 import config from "../config";
-import helper from "./helper";
 import {ACCOUNT} from "../constants/localStorage";
+import {mnemonicTrim, stringToNumber} from "./scripts";
+import {tokenValueConversion} from "./helper";
 
 const bip39 = require("bip39");
 const accountType = localStorage.getItem(ACCOUNT);
 
 export const ValidateSendAmount = (amount, value) => {
-    if (helper.stringToNumber(amount ) < value) {
+    if (stringToNumber(amount ) < value) {
         return new Error('Insufficient wallet balance');
     }
     return new Error('');
@@ -23,12 +23,12 @@ export const ValidateFee = (transferableAmount, feeValue, type, amount) => {
     );
 
     if (amountTxns || vestingDelegationCheck) {
-        if (transferableAmount < transactions.TokenValueConversion(feeValue)) {
+        if (transferableAmount < tokenValueConversion(feeValue)) {
             return new Error('Insufficient wallet balance to process the transaction.');
         }
         return new Error('');
     } else {
-        if ((transferableAmount - (helper.stringToNumber(amount))) < transactions.TokenValueConversion(feeValue)) {
+        if ((transferableAmount - (stringToNumber(amount))) < tokenValueConversion(feeValue)) {
             return new Error('Insufficient wallet balance to process the transaction.');
         }
         return new Error('');
@@ -36,7 +36,7 @@ export const ValidateFee = (transferableAmount, feeValue, type, amount) => {
 };
 
 export const ValidateGas = (value) => {
-    if (helper.stringToNumber(value) < config.minGas || (helper.stringToNumber(value)) > config.maxGas) {
+    if (stringToNumber(value) < config.minGas || (stringToNumber(value)) > config.maxGas) {
         return new Error('Enter Gas between 80000 to 2000000');
     }
     return new Error('');
@@ -110,15 +110,14 @@ export const ValidateMultipleValidatorsClaim = (evt) => {
 };
 
 export const ValidateReDelegateAmount = (delegationAmount, amount) => {
-    if (helper.stringToNumber(delegationAmount) < amount) {
+    if (stringToNumber(delegationAmount) < amount) {
         return new Error('Insufficient Delegated Amount');
     }
     return new Error('');
 };
 
-
 export const ValidateMnemonic = (mnemonic) => {
-    const mnemonicWords = helper.mnemonicTrim(mnemonic);
+    const mnemonicWords = mnemonicTrim(mnemonic);
     let validateMnemonic = bip39.validateMnemonic(mnemonicWords);
     if (!validateMnemonic) {
         return new Error('Invalid mnemonic.');
@@ -127,7 +126,7 @@ export const ValidateMnemonic = (mnemonic) => {
 };
 
 export const ValidateMemo = (value) => {
-    let mnemonicWords = helper.mnemonicTrim(value);
+    let mnemonicWords = mnemonicTrim(value);
     let validateMnemonic = bip39.validateMnemonic(mnemonicWords);
     if (validateMnemonic) {
         return new Error('Entered secret passphrase(mnemonic) in memo field.');
@@ -147,4 +146,21 @@ export const ValidateStringSpaces = e => {
     if (!regEx.test(e.key)) {
         e.preventDefault();
     }
+};
+
+export const validateAddress = (address, prefix = "persistence") => {
+    if (prefix === "cosmos") {
+        if (!address.startsWith(prefix) || address.length !== 45) {
+            return new Error('Invalid Recipient Address');
+        }
+    } else if (prefix === "osmosis") {
+        if (!address.startsWith("osmo") || address.length !== 43) {
+            return new Error('Invalid Recipient Address');
+        }
+    } else {
+        if (!address.startsWith(prefix) || address.length !== 50) {
+            return new Error('Invalid Recipient Address');
+        }
+    }
+    return new Error('');
 };
