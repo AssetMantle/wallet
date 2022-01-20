@@ -61,7 +61,7 @@ const Submit = () => {
     };
 
     const disable = (
-        keyStore.error.message !== '' || password.error.message !== '' || accountNumber.error.message !== '' || accountIndex.error.message !== '' || bip39PassPhrase.error.message !== ''
+        keyStore.error.message !== '' ||  keyStore.value === '' ||  password.value === '' || password.error.message !== '' || accountNumber.error.message !== '' || accountIndex.error.message !== '' || bip39PassPhrase.error.message !== ''
     );
 
     return (

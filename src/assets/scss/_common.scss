@@ -400,8 +400,9 @@ html, body {
     font-weight: 500;
     text-shadow: none;
     position: absolute;
-    right: 30px;
-    top: 30px;
+    right: 50px;
+    top: 40px;
+    padding: 0;
     outline: none !important;
     font-size: 34px;
   }
@@ -721,6 +722,7 @@ html, body {
   text-align: center;
   font-size: 14px;
   font-weight: 500;
+  margin-top: 1rem;
 }
 
 .amount-warning.hide {

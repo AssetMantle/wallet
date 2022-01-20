@@ -27,6 +27,18 @@ const keyStore = (state = {
                 message: data.error.message,
             },
         };
+    case KEYSTORE_MODAL_HIDE:
+    case CHANGE_KEYSTORE_MODAL_HIDE:
+    case TX_SUCCESS:
+    case TX_RESULT_MODAL_HIDE:
+        return {
+            ...state,
+            value: '',
+            error: {
+                ...state.error,
+                message: '',
+            },
+        };
     default:
         return state;
     }

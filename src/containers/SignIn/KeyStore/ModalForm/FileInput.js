@@ -13,13 +13,15 @@ const FileInput = () => {
     const dispatch = useDispatch();
     const onChange = (event) => {
         const file = event.target.files[0];
-        setFileName(file.name);
-        localStorage.setItem(ENCRYPTED_MNEMONIC, file);
-        dispatch(setTxKeyStore(
-            {
-                value: file,
-                error: ValidationFileTypeCheck(file.name)
-            }));
+        if(file) {
+            setFileName(file.name);
+            localStorage.setItem(ENCRYPTED_MNEMONIC, file);
+            dispatch(setTxKeyStore(
+                {
+                    value: file,
+                    error: ValidationFileTypeCheck(file.name)
+                }));
+        }
     };
     return (
         <div className="form-field upload">
