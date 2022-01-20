@@ -12,11 +12,12 @@ import NumberView from "../../../components/NumberView";
 import {formatNumber, stringToNumber} from "../../../utils/scripts";
 import config from "../../../config";
 import {tokenValueConversion} from "../../../utils/helper";
+import {LOGIN_INFO} from "../../../constants/localStorage";
 
 const Validators = () => {
     const {t} = useTranslation();
     const dispatch = useDispatch();
-    const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
     const validatorsList = useSelector((state) => state.rewards.validatorsRewardsList);
     let validatorsRewards = useSelector((state) => state.mulitpleRewardsWithDraw.rewards);
     const tokenPrice = useSelector((state) => state.tokenPrice.tokenPrice);

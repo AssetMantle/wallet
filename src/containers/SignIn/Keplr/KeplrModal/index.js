@@ -7,6 +7,7 @@ import Icon from "../../../../components/Icon";
 import {useTranslation} from "react-i18next";
 import ButtonContinue from "./ButtonContinue";
 import Button from "../../../../components/Button";
+import ModalKeplrInstall from "../../../../views/Keplr/ModalKeplrInstall";
 
 const KeplrModal = () => {
     const {t} = useTranslation();
@@ -31,6 +32,10 @@ const KeplrModal = () => {
     useEffect(() => {
         dispatch(fetchKeplrAddress());
     }, []);
+
+    const reconnectHandler = () =>{
+        dispatch(fetchKeplrAddress());
+    };
 
     return (
         <ReactModal
@@ -60,14 +65,17 @@ const KeplrModal = () => {
                                 className="button button-primary"
                                 type="button"
                                 value={t("CONNECT")}
-                                onClick={fetchKeplrAddress()}
+                                onClick={reconnectHandler}
                             />
                         </div>
                         {
-                            <div className="text">
-                                <p>{t("KEPLR_ERROR")}</p>
-                                <p className="form-error">{info.error.message}</p>
-                            </div>
+                            info.error.message === "install keplr extension" ?
+                                <ModalKeplrInstall/>
+                                :
+                                <div className="text">
+                                    <p>{t("KEPLR_ERROR")}</p>
+                                    <p className="form-error">{info.error.message}</p>
+                                </div>
                         }
                     </>
                     :

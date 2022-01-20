@@ -4,17 +4,17 @@ import {
     QueryClientImpl
 } from "cosmjs-types/cosmos/distribution/v1beta1/query";
 import * as Sentry from "@sentry/browser";
-import {ADDRESS} from "../constants/localStorage";
+import {LOGIN_INFO} from "../constants/localStorage";
 import {decimalConversion, stringToNumber} from "./scripts";
 import {tokenValueConversion} from "./helper";
 
 async function getValidatorRewards(validatorAddress) {
-    let address = localStorage.getItem(ADDRESS);
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
     const rpcClient = await transactions.RpcClient();
     const stakingQueryService = new QueryClientImpl(rpcClient);
     let amount = 0;
     await stakingQueryService.DelegationRewards({
-        delegatorAddress: address,
+        delegatorAddress: loginInfo.address,
         validatorAddress: validatorAddress,
     }).then(response => {
         if (response.rewards.length) {

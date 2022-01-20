@@ -12,7 +12,7 @@ import config from "../../config";
 import {userLogout} from "../../store/actions/logout";
 import {useDispatch} from "react-redux";
 import {showKeyStoreMnemonicModal} from "../../store/actions/generateKeyStore";
-import {ACCOUNT_NUMBER, ADDRESS, ADDRESS_INDEX, LOGIN_MODE, THEME} from "../../constants/localStorage";
+import {LOGIN_INFO, THEME} from "../../constants/localStorage";
 import {stringTruncate} from "../../utils/scripts";
 import {makeHdPath} from "../../utils/helper";
 
@@ -22,10 +22,10 @@ const DashboardHeader = () => {
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const history = useHistory();
-    const address = localStorage.getItem(ADDRESS);
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
     let addressTruncate;
-    if (address !== null) {
-        addressTruncate = stringTruncate(address);
+    if (loginInfo.address !== null) {
+        addressTruncate = stringTruncate(loginInfo.address);
     }
     useEffect(() => {
         const localTheme = window.localStorage.getItem(THEME);
@@ -52,8 +52,8 @@ const DashboardHeader = () => {
         dispatch(showKeyStoreMnemonicModal());
     };
     const ledgerShowAddress = async () => {
-        const accountNumber = localStorage.getItem(ACCOUNT_NUMBER);
-        const addressIndex = localStorage.getItem(ADDRESS_INDEX);
+        const accountNumber = loginInfo.accountNumber;
+        const addressIndex = loginInfo.accountIndex;
         const [wallet] = await transactions.LedgerWallet(makeHdPath(accountNumber, addressIndex), config.addressPrefix);
         await wallet.showAddress(makeHdPath(accountNumber, addressIndex));
     };
@@ -67,7 +67,6 @@ const DashboardHeader = () => {
                     </div>
                     <Navbar.Brand>
                         <NavLink to="/dashboard/wallet" className="header-logo">
-                            {/*<img src={theme === 'light' ? logo : logoDark} alt="logo"/>*/}
                         </NavLink>
                     </Navbar.Brand>
 
@@ -127,22 +126,22 @@ const DashboardHeader = () => {
                             <NavDropdown title={ProfileIcon} id="basic-nav-dropdown" className="profile-dropdown">
                                 <div className="info">
                                     <div className="qr-box">
-                                        <ReactQRCode value={address}/>
+                                        <ReactQRCode value={loginInfo.address}/>
                                     </div>
 
                                     <p className="key"> {t("WALLET_ADDRESS")}
                                         {
-                                            localStorage.getItem(LOGIN_MODE) === 'ledger' ?
+                                            loginInfo.loginMode === 'ledger' ?
                                                 <button className="ledger-verify"
                                                     onClick={ledgerShowAddress}>{t("VERIFY")}</button>
                                                 : ""
                                         }</p>
-                                    <div className="address"><span>{addressTruncate}</span> <Copy id={address}/>
+                                    <div className="address"><span>{addressTruncate}</span> <Copy id={loginInfo.address}/>
                                     </div>
                                 </div>
                                 <div className="dropdown-footer">
-                                    <p onClick={closeWallet} className="link-close">Logout</p>
-                                    <p onClick={handleKeyStore} className="generate-keystore">Generate KeyStore</p>
+                                    <p onClick={closeWallet} className="link-close">{t("LOGOUT")}</p>
+                                    <p onClick={handleKeyStore} className="generate-keystore">{t("GENERATE_KEYSTORE")}</p>
                                 </div>
                             </NavDropdown>
                         </li>

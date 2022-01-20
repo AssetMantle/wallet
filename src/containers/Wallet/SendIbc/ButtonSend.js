@@ -8,10 +8,11 @@ import transactions from "../../../utils/transactions";
 import {setTxName, txFailed} from "../../../store/actions/transactions/common";
 import * as Sentry from "@sentry/browser";
 import {stringToNumber} from "../../../utils/scripts";
+import {LOGIN_INFO} from "../../../constants/localStorage";
 
 const ButtonSend = () => {
     const dispatch = useDispatch();
-    const loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
     const amount = useSelector((state) => state.sendIbc.amount);
     const toAddress = useSelector((state) => state.sendIbc.toAddress);
     const token = useSelector((state) => state.sendIbc.token);

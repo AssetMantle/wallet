@@ -194,7 +194,9 @@ let English = {
         "FOUNDATION_NODE_WARNING":"Warning: Foundation Nodes operate at 100%" +
             " commission, you will not be receiving any staking rewards.",
         "VERIFY":"Verify",
-        "TRANSFERABLE_BALANCE":"Transferable Balance"
+        "TRANSFERABLE_BALANCE":"Transferable Balance",
+        "GENERATE_KEYSTORE":"Generate KeyStore",
+        "LOGOUT":"Logout"
 
 
     }

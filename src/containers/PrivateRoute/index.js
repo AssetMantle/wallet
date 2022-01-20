@@ -1,13 +1,14 @@
 import {Redirect, Route} from 'react-router-dom';
 import React from 'react';
+import {LOGIN_INFO} from "../../constants/localStorage";
 
 const PrivateRoute = ({component: Component}) => {
-    let token = localStorage.getItem('loginToken');
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
     return (
         <Route
             render={
                 (props) => {
-                    if (token === '' || token === null) {
+                    if (loginInfo && loginInfo.loginToken === '' || loginInfo && loginInfo.loginToken === null) {
                         return <Redirect to={'/'}/>;
                     }
 

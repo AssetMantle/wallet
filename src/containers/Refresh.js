@@ -8,27 +8,27 @@ import {fetchTokenPrice} from "../store/actions/tokenPrice";
 import IconButton from '@material-ui/core/IconButton';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import {fetchReceiveTransactions, fetchTransactions} from "../store/actions/transactionQueries";
-import {ADDRESS} from "../constants/localStorage";
+import {LOGIN_INFO} from "../constants/localStorage";
 import {updateFee} from "../utils/helper";
 
 const InfoRefresh = (props) => {
     const [inProgress, setInProgress] = useState(false);
-    let address = localStorage.getItem(ADDRESS);
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
     const handleRefresh = () => {
         setInProgress(true);
         setTimeout(() => {
             setInProgress(false);
         }, 1000);
-        props.fetchDelegationsCount(address);
-        props.fetchBalance(address);
-        props.fetchRewards(address);
-        props.fetchTotalRewards(address);
-        props.fetchUnbondDelegations(address);
+        props.fetchDelegationsCount(loginInfo.address);
+        props.fetchBalance(loginInfo.address);
+        props.fetchRewards(loginInfo.address);
+        props.fetchTotalRewards(loginInfo.address);
+        props.fetchUnbondDelegations(loginInfo.address);
         props.fetchTokenPrice();
-        props.fetchTransactions(address, 5, 1);
-        props.fetchReceiveTransactions(address, 5, 1);
-        props.fetchTransferableVestingAmount(address);
-        updateFee(address);
+        props.fetchTransactions(loginInfo.address, 5, 1);
+        props.fetchReceiveTransactions(loginInfo.address, 5, 1);
+        props.fetchTransferableVestingAmount(loginInfo.address);
+        updateFee(loginInfo.address);
     };
     return (
         <IconButton

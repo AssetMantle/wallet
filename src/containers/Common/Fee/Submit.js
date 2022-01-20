@@ -3,17 +3,16 @@ import Button from "./../../../components/Button";
 import {feeChangeHandler, feeSubmitKeyStore} from "../../../store/actions/transactions/fee";
 import {useDispatch, useSelector} from "react-redux";
 import {ledgerSubmit} from "../../../store/actions/transactions/ledger";
-import {ADDRESS, LOGIN_MODE} from "../../../constants/localStorage";
+import {LOGIN_INFO} from "../../../constants/localStorage";
 import config from "../../../config";
 
 const Submit = () => {
-    let loginMode = localStorage.getItem(LOGIN_MODE);
-    let loginAddress = localStorage.getItem(ADDRESS);
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
 
     const dispatch = useDispatch();
 
     const onClick = () => {
-        if (loginMode === "ledger") {
+        if (loginInfo.loginMode === "ledger") {
             dispatch(feeChangeHandler({
                 value: {
                     fee: config.averageFee,
@@ -23,7 +22,7 @@ const Submit = () => {
                     message: '',
                 },
             }));
-            dispatch(ledgerSubmit(loginAddress, loginMode));
+            dispatch(ledgerSubmit(loginInfo.address, loginInfo.loginMode));
         } else {
             dispatch(feeSubmitKeyStore());
         }

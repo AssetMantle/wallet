@@ -4,7 +4,6 @@ import DashboardWallet from "./views/DashboardWallet";
 import Homepage from "./views/Homepage";
 import DashboardStaking from "./views/Staking";
 import PrivateRoute from "./containers/PrivateRoute";
-import KeplrHome from "./views/Keplr/KeplrHome";
 import RouteNotFound from "./components/RouteNotFound";
 import config from "./config";
 import icon_white from "./assets/images/icon_white.svg";
@@ -20,12 +19,13 @@ import {fetchValidators} from "./store/actions/validators";
 import * as Sentry from "@sentry/react";
 import {Integrations} from "@sentry/tracing";
 import {keplrLogin, setKeplrInfo} from "./store/actions/signIn/keplr";
-import {ADDRESS, KEPLR_ADDRESS, LOGIN_MODE, VERSION} from "./constants/localStorage";
+import { KEPLR_ADDRESS, LOGIN_INFO} from "./constants/localStorage";
 import {updateFee} from "./utils/helper";
 const SENTRY_API = process.env.REACT_APP_SENTRY_API;
 const App = () => {
     const {t} = useTranslation();
     const history = useHistory();
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
     const routes = [{
         path: '/dashboard/wallet',
         component: DashboardWallet,
@@ -34,10 +34,6 @@ const App = () => {
         path: '/dashboard/staking',
         component: DashboardStaking,
         private: true,
-    }, {
-        path: '/keplr',
-        component: KeplrHome,
-        private: false,
     }];
     const [isOnline, setNetwork] = useState(window.navigator.onLine);
     const updateNetwork = () => {
@@ -50,12 +46,12 @@ const App = () => {
     const dispatch = useDispatch();
 
     let address;
-    const version = localStorage.getItem(VERSION);
+    const version = loginInfo && loginInfo.version;
     if (version == null || config.version !== version) {
         localStorage.clear();
         history.push('/');
     } else {
-        address = localStorage.getItem(ADDRESS);
+        address = loginInfo.address;
     }
 
     useEffect(() => {
@@ -85,7 +81,7 @@ const App = () => {
     });
 
     window.addEventListener("keplr_keystorechange", () => {
-        if (localStorage.getItem(LOGIN_MODE) === config.keplrMode) {
+        if (loginInfo.loginMode === config.keplrMode) {
             const keplr = KeplrWallet();
             keplr.then(function () {
                 const address = localStorage.getItem(KEPLR_ADDRESS);
