@@ -605,8 +605,6 @@ html, body {
   align-content: center;
   justify-content: space-between;
   flex-wrap: wrap; }
-  .buttons-list p {
-    margin: 0; }
   .buttons-list .button {
     line-height: 1.3; }
 

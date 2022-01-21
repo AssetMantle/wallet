@@ -24,7 +24,7 @@ const DashboardHeader = () => {
     const history = useHistory();
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
     let addressTruncate;
-    if (loginInfo.address !== null) {
+    if (loginInfo && loginInfo.address !== null) {
         addressTruncate = stringTruncate(loginInfo.address);
     }
     useEffect(() => {

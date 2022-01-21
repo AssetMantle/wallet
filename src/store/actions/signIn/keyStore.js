@@ -70,6 +70,7 @@ export const keyStoreSubmit = () => {
                     }));
             } else {
                 mnemonic = mnemonicTrim(decryptedData.mnemonic);
+                console.log(mnemonic, "rr");
                 const accountNumber = helper.getAccountNumber(getState().advanced.accountNumber.value);
                 const accountIndex = helper.getAccountNumber(getState().advanced.accountIndex.value);
                 const bip39PassPhrase = getState().advanced.bip39PassPhrase.value;
