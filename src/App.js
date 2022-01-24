@@ -59,7 +59,6 @@ const App = () => {
     useEffect(() => {
         const fetchApi = async () => {
             if (address !== null && address !== undefined) {
-                ledgerDisconnect();
                 dispatch(fetchDelegationsCount(address));
                 dispatch(fetchBalance(address));
                 dispatch(fetchRewards(address));
@@ -70,6 +69,9 @@ const App = () => {
                 dispatch(fetchValidators(address));
                 updateFee(address);
                 setInterval(() => dispatch(fetchTotalRewards(address)), 10000);
+                if(loginInfo && loginInfo.loginMode === "ledger"){
+                    ledgerDisconnect(dispatch, history);
+                }
             }
         };
         fetchApi();

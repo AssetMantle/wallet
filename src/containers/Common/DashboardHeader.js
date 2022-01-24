@@ -56,8 +56,8 @@ const DashboardHeader = () => {
         dispatch(showKeyStoreMnemonicModal());
     };
     const ledgerShowAddress = async () => {
-        const accountNumber = loginInfo.accountNumber;
-        const addressIndex = loginInfo.accountIndex;
+        const accountNumber = loginInfo && loginInfo.accountNumber;
+        const addressIndex = loginInfo && loginInfo.accountIndex;
         const [wallet] = await transactions.LedgerWallet(makeHdPath(accountNumber, addressIndex), config.addressPrefix);
         await wallet.showAddress(makeHdPath(accountNumber, addressIndex));
     };

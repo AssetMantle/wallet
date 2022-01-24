@@ -3,7 +3,7 @@ import {LedgerSigner} from "@cosmjs/ledger-amino";
 import config from "../config";
 import {makeHdPath} from "./helper";
 import * as Sentry from "@sentry/browser";
-import {setLedgerInfo} from "../store/actions/signIn/ledger";
+import {userLogout} from "../store/actions/logout";
 
 const interactiveTimeout = 120_000;
 
@@ -23,24 +23,21 @@ export const fetchAddress = async (accountNumber = "0", addressIndex = "0") => {
     return firstAccount.address;
 };
 
-export const ledgerDisconnect = async (dispatch) =>{
+export const ledgerDisconnect = async (dispatch, history) =>{
     try {
         let transport = await createTransport();
         transport.on("disconnect", () => {
             alert("ledger disconnected please login again");
+            history.push('/');
+            dispatch(userLogout());
             localStorage.clear();
             window.location.reload();
+
         });
     }catch (error) {
         Sentry.captureException(error.response
             ? error.response.data.message
             : error.message);
         console.log(error, " error result");
-        dispatch(setLedgerInfo({
-            value: '',
-            error: {
-                message: error.message,
-            },
-        }));
     }
 };
