@@ -5,7 +5,7 @@ import KeyStore from "./KeyStore";
 import {showKeyStoreModal} from "../../store/actions/signIn/keyStore";
 import {useDispatch, useSelector} from "react-redux";
 import {hideSignInModal} from "../../store/actions/signIn/modal";
-import Ledger from "./Ledger";
+import LedgerModal from "./Ledger/LedgerModal";
 import Keplr from "./Keplr";
 import {showLedgerModal} from "../../store/actions/signIn/ledger";
 import {showAddressModal} from "../../store/actions/signIn/address";
@@ -87,7 +87,7 @@ const SignIn = (props) => {
                 : null
             }
             {withLedger ?
-                <Ledger setWithLedger={setWithLedger} handleClose={handleClose}
+                <LedgerModal setWithLedger={setWithLedger} handleClose={handleClose}
                 />
                 : null
             }

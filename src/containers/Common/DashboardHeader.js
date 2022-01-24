@@ -15,6 +15,7 @@ import {showKeyStoreMnemonicModal} from "../../store/actions/generateKeyStore";
 import {LOGIN_INFO, THEME} from "../../constants/localStorage";
 import {stringTruncate} from "../../utils/scripts";
 import {makeHdPath} from "../../utils/helper";
+import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -47,6 +48,9 @@ const DashboardHeader = () => {
         localStorage.clear();
         history.push('/');
         window.location.reload();
+        if(loginInfo && loginInfo.loginMode==="ledger"){
+            TransportWebUSB.close();
+        }
     };
     const handleKeyStore = () => {
         dispatch(showKeyStoreMnemonicModal());
@@ -126,17 +130,17 @@ const DashboardHeader = () => {
                             <NavDropdown title={ProfileIcon} id="basic-nav-dropdown" className="profile-dropdown">
                                 <div className="info">
                                     <div className="qr-box">
-                                        <ReactQRCode value={loginInfo.address}/>
+                                        <ReactQRCode value={loginInfo && loginInfo.address}/>
                                     </div>
 
                                     <p className="key"> {t("WALLET_ADDRESS")}
                                         {
-                                            loginInfo.loginMode === 'ledger' ?
+                                            loginInfo && loginInfo.loginMode === 'ledger' ?
                                                 <button className="ledger-verify"
                                                     onClick={ledgerShowAddress}>{t("VERIFY")}</button>
                                                 : ""
                                         }</p>
-                                    <div className="address"><span>{addressTruncate}</span> <Copy id={loginInfo.address}/>
+                                    <div className="address"><span>{addressTruncate}</span> <Copy id={loginInfo && loginInfo.address}/>
                                     </div>
                                 </div>
                                 <div className="dropdown-footer">

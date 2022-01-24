@@ -21,7 +21,8 @@ import {Integrations} from "@sentry/tracing";
 import {keplrLogin, setKeplrInfo} from "./store/actions/signIn/keplr";
 import { KEPLR_ADDRESS, LOGIN_INFO} from "./constants/localStorage";
 import {updateFee} from "./utils/helper";
-import {createTransport} from "./utils/ledger";
+import {ledgerDisconnect} from "./utils/ledger";
+
 const SENTRY_API = process.env.REACT_APP_SENTRY_API;
 const App = () => {
     const {t} = useTranslation();
@@ -52,12 +53,13 @@ const App = () => {
         localStorage.clear();
         history.push('/');
     } else {
-        address = loginInfo.address;
+        address = loginInfo && loginInfo.address;
     }
 
     useEffect(() => {
         const fetchApi = async () => {
             if (address !== null && address !== undefined) {
+                ledgerDisconnect();
                 dispatch(fetchDelegationsCount(address));
                 dispatch(fetchBalance(address));
                 dispatch(fetchRewards(address));
@@ -73,15 +75,6 @@ const App = () => {
         fetchApi();
     }, []);
     useEffect(() => {
-        const fetchLedgerStatus = async () => {
-            let transport = await createTransport();
-            transport.on("disconnect", () => {
-                alert("ledger disconnected please login again");
-                localStorage.clear();
-                window.location.reload();
-            });
-        };
-        fetchLedgerStatus();
         window.addEventListener("offline", updateNetwork);
         window.addEventListener("online", updateNetwork);
         return () => {

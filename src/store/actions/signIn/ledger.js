@@ -52,15 +52,27 @@ export const setAccountIndex = (data) => {
 
 export const fetchLedgerAddress = (accountNumber = "0", addressIndex = "0") => {
     return async (dispatch) => {
-        let ledgerResponse = fetchAddress(accountNumber, addressIndex);
-        ledgerResponse.then(function (result) {
-            dispatch(setLedgerInfo({
-                value: result,
-                error: {
-                    message: '',
-                },
-            }));
-        }).catch(error => {
+        try {
+            let ledgerResponse = fetchAddress(accountNumber, addressIndex);
+            ledgerResponse.then(function (result) {
+                dispatch(setLedgerInfo({
+                    value: result,
+                    error: {
+                        message: '',
+                    },
+                }));
+            }).catch(error => {
+                Sentry.captureException(error.response
+                    ? error.response.data.message
+                    : error.message);
+                dispatch(setLedgerInfo({
+                    value: '',
+                    error: {
+                        message: error.message,
+                    },
+                }));
+            });
+        }catch (error) {
             Sentry.captureException(error.response
                 ? error.response.data.message
                 : error.message);
@@ -70,7 +82,7 @@ export const fetchLedgerAddress = (accountNumber = "0", addressIndex = "0") => {
                     message: error.message,
                 },
             }));
-        });
+        }
     };
 };
 
