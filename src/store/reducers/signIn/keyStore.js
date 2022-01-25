@@ -3,7 +3,8 @@ import {
     SIGN_IN_KEYSTORE_MODAL_HIDE,
     SIGN_IN_KEYSTORE_MODAL_SHOW,
     SIGN_IN_KEYSTORE_RESULT_MODAL_HIDE,
-    SIGN_IN_KEYSTORE_RESULT_MODAL_SHOW
+    SIGN_IN_KEYSTORE_RESULT_MODAL_SHOW,
+    SIGN_IN_KEYSTORE_MODAL_NEXT
 } from "../../../constants/signIn/keyStore";
 import {combineReducers} from "redux";
 
@@ -13,6 +14,7 @@ const keyStoreModal = (state = false, {
     switch (type) {
     case SIGN_IN_KEYSTORE_MODAL_SHOW:
         return true;
+    case SIGN_IN_KEYSTORE_MODAL_NEXT:
     case SIGN_IN_KEYSTORE_MODAL_HIDE:
         return false;
     default:
@@ -52,6 +54,7 @@ const response = (state = {
                 message: data.error.message,
             },
         };
+    case SIGN_IN_KEYSTORE_MODAL_HIDE:
     case SIGN_IN_KEYSTORE_RESULT_MODAL_SHOW:
         return {
             ...state,

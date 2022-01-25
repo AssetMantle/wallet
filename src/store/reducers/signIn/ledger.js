@@ -87,6 +87,15 @@ const ledgerInfo = (state = {
                 message: data.error.message,
             },
         };
+    case SIGN_IN_LEDGER_MODAL_HIDE:
+        return {
+            ...state,
+            value: '',
+            error: {
+                ...state.error,
+                message: '',
+            },
+        };
     default:
         return state;
     }

@@ -3,7 +3,8 @@ import {
     SIGN_IN_KEYSTORE_MODAL_HIDE,
     SIGN_IN_KEYSTORE_MODAL_SHOW,
     SIGN_IN_KEYSTORE_RESULT_MODAL_HIDE,
-    SIGN_IN_KEYSTORE_RESULT_MODAL_SHOW
+    SIGN_IN_KEYSTORE_RESULT_MODAL_SHOW,
+    SIGN_IN_KEYSTORE_MODAL_NEXT
 } from "../../../constants/signIn/keyStore";
 import {setLoginInfo} from "../transactions/common";
 import helper, {decryptKeyStore, vestingAccountCheck, getAccount, makeHdPath} from "../../../utils/helper";
@@ -22,6 +23,14 @@ export const hideKeyStoreModal = (data) => {
         data,
     };
 };
+
+export const keyStoreModalNext = (data) => {
+    return {
+        type: SIGN_IN_KEYSTORE_MODAL_NEXT,
+        data,
+    };
+};
+
 export const showKeyStoreModal = (data) => {
     return {
         type: SIGN_IN_KEYSTORE_MODAL_SHOW,
@@ -70,14 +79,13 @@ export const keyStoreSubmit = () => {
                     }));
             } else {
                 mnemonic = mnemonicTrim(decryptedData.mnemonic);
-                console.log(mnemonic, "rr");
                 const accountNumber = helper.getAccountNumber(getState().advanced.accountNumber.value);
                 const accountIndex = helper.getAccountNumber(getState().advanced.accountIndex.value);
                 const bip39PassPhrase = getState().advanced.bip39PassPhrase.value;
 
                 const walletPath = makeHdPath(accountNumber, accountIndex);
                 const responseData = await wallet.createWallet(mnemonic, walletPath, bip39PassPhrase);
-                dispatch(hideKeyStoreModal());
+                dispatch(keyStoreModalNext());
                 dispatch(showKeyStoreResultModal());
                 dispatch(setKeyStoreResult(
                     {

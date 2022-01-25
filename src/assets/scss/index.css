@@ -175,7 +175,7 @@ html, body {
 .form-field .info-link {
   text-decoration: underline;
   display: inline-flex !important;
-  align-items: center;
+  align-items: baseline;
   text-decoration-color: #8D9CB5;
   cursor: pointer; }
 .form-field .info-data {

@@ -63,8 +63,6 @@ async function LedgerWallet(hdpath, prefix) {
 }
 
 async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(), bip39Passphrase = "", loginAddress, prefix = addressPrefix) {
-    console.log(msgs, fee, memo, mnemonic , "info");
-
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
     if (loginInfo.loginMode === "normal") {
         const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix);

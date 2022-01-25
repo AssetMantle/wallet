@@ -25,8 +25,8 @@ const LedgerModal = () => {
     };
 
     useEffect(() => {
-        dispatch(fetchLedgerAddress());
-    }, []);
+        if(show) dispatch(fetchLedgerAddress());
+    }, [show]);
 
     return (
         <ReactModal

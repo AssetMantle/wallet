@@ -70,7 +70,7 @@ const Amount = () => {
                             <span title={token.tokenItem.denomTrace}
                                 className={token.transferableAmount === 0 ? "empty info-data" : "info-data"}>
                                 <span
-                                    className="title">Transferable Balance:</span>
+                                    className="title">{t("TRANSFERABLE_BALANCE")}:</span>
                                 <span
                                     className="value">{token.transferableAmount.toLocaleString()}
                                     {helper.denomChange(token.tokenItem.denom.baseDenom)}

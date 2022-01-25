@@ -6,7 +6,8 @@ import {
     KEYSTORE_PASSWORD_MODAL_SHOW,
     KEYSTORE_PASSWORD_SET,
     KEYSTORE_RESULT_MODAL_HIDE,
-    KEYSTORE_RESULT_MODAL_SHOW
+    KEYSTORE_RESULT_MODAL_SHOW,
+    KEYSTORE_MNEMONIC_MODAL_NEXT
 } from "../../constants/generateKeyStore";
 import wallet from "../../utils/wallet";
 import * as Sentry from "@sentry/browser";
@@ -33,6 +34,14 @@ export const showKeyStoreMnemonicModal = (data) => {
         data,
     };
 };
+
+export const keyStoreMnemonicModalNext = (data) => {
+    return {
+        type: KEYSTORE_MNEMONIC_MODAL_NEXT,
+        data,
+    };
+};
+
 
 export const hideKeyStoreMnemonicModal = (data) => {
     return {
@@ -80,7 +89,7 @@ export const mnemonicSubmit = () => {
                     message: ''
                 }
             }));
-            dispatch(hideKeyStoreMnemonicModal());
+            dispatch(keyStoreMnemonicModalNext());
             dispatch(showKeyStorePasswordModal());
         } catch (error) {
             Sentry.captureException(error.response

@@ -6,7 +6,8 @@ import {
     KEYSTORE_PASSWORD_MODAL_SHOW,
     KEYSTORE_PASSWORD_SET,
     KEYSTORE_RESULT_MODAL_HIDE,
-    KEYSTORE_RESULT_MODAL_SHOW
+    KEYSTORE_RESULT_MODAL_SHOW,
+    KEYSTORE_MNEMONIC_MODAL_NEXT
 } from "../../constants/generateKeyStore";
 import {combineReducers} from "redux";
 
@@ -29,6 +30,7 @@ const mnemonic = (state = {
                 message: data.error.message,
             },
         };
+    case KEYSTORE_MNEMONIC_MODAL_HIDE:
     case KEYSTORE_PASSWORD_MODAL_HIDE:
         return {
             ...state,
@@ -82,6 +84,7 @@ const mnemonicModal = (state = false, {
     switch (type) {
     case KEYSTORE_MNEMONIC_MODAL_SHOW:
         return true;
+    case KEYSTORE_MNEMONIC_MODAL_NEXT:
     case KEYSTORE_MNEMONIC_MODAL_HIDE:
         return false;
     default:

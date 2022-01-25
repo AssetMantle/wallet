@@ -30,8 +30,10 @@ const KeplrModal = () => {
     };
 
     useEffect(() => {
-        dispatch(fetchKeplrAddress());
-    }, []);
+        if(show) {
+            dispatch(fetchKeplrAddress());
+        }
+    }, [show]);
 
     const reconnectHandler = () =>{
         dispatch(fetchKeplrAddress());
@@ -60,7 +62,7 @@ const KeplrModal = () => {
             <ReactModal.Body className="create-wallet-body create-wallet-form-body">
                 {info.error.message ?
                     <>
-                        <div className="buttons">
+                        <div className="buttons mb-3">
                             <Button
                                 className="button button-primary"
                                 type="button"
@@ -72,8 +74,8 @@ const KeplrModal = () => {
                             info.error.message === "install keplr extension" ?
                                 <ModalKeplrInstall/>
                                 :
-                                <div className="text">
-                                    <p>{t("KEPLR_ERROR")}</p>
+                                <div>
+                                    <p className="m-0 text-center">{t("KEPLR_ERROR")}</p>
                                     <p className="form-error">{info.error.message}</p>
                                 </div>
                         }
@@ -83,7 +85,7 @@ const KeplrModal = () => {
                         <p>{t("KEPLR_ACCOUNT_NOTE")}</p>
                         <div className="buttons-list">
                             {
-                                info.value !== ""
+                                info.value !== ''
                                     ?
                                     <p>{info.value}</p>
                                     : <p>{t("FETCHING_ADDRESS")}..</p>
