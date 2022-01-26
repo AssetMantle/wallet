@@ -21,7 +21,6 @@ const Fee = () => {
         amount = formData.amount;
     }
 
-    console.log(amount, "amount");
     useEffect(() => {
         dispatch(feeChangeHandler({
             value: {
