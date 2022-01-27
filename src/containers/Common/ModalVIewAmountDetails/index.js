@@ -1,8 +1,7 @@
 import {Modal} from 'react-bootstrap';
 import React, {useState} from 'react';
 import {connect} from "react-redux";
-import transactions from "../../../utils/transactions";
-import helper from "../../../utils/helper";
+import helper, {tokenValueConversion} from "../../../utils/helper";
 import {useTranslation} from "react-i18next";
 import {formatNumber} from "../../../utils/scripts";
 import NumberView from "../../../components/NumberView";
@@ -58,7 +57,7 @@ const ModalViewAmountDetails = (props) => {
                                     return (
                                         <li className="" key={index} title={item.dataResponse.denom}>
                                             <NumberView
-                                                value={formatNumber(transactions.TokenValueConversion(item.dataResponse.amount))}/>{helper.denomChange(item.denomResponse.denomTrace.baseDenom)} (
+                                                value={formatNumber(tokenValueConversion(item.dataResponse.amount))}/>{helper.denomChange(item.denomResponse.denomTrace.baseDenom)} (
                                             IBC Trace path - {item.denomResponse.denomTrace.path},
                                             denom: {item.denomResponse.denomTrace.baseDenom} ) {item.dataResponse.denom}
                                         </li>
