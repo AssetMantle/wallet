@@ -3,6 +3,7 @@ import {showTxResultModal, txFailed, txInProgress, txResponse, txSuccess} from "
 import {hideFeeModal} from "./fee";
 import * as Sentry from "@sentry/browser";
 import helper, {privateKeyReader} from "../../../utils/helper";
+import {LOGIN_INFO} from "../../../constants/localStorage";
 
 export const ledgerSubmit = (loginAddress, loginMode) => {
     return async (dispatch, getState) => {
@@ -10,8 +11,10 @@ export const ledgerSubmit = (loginAddress, loginMode) => {
         const password = getState().keyStore.password;
         const keyStoreData = getState().keyStore.keyStore;
 
-        const accountNumber = helper.getAccountNumber(getState().advanced.accountNumber.value);
-        const accountIndex = helper.getAccountNumber(getState().advanced.accountIndex.value);
+        const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
+
+        const accountNumber = helper.getAccountNumber(loginInfo.accountNumber);
+        const accountIndex = helper.getAccountNumber(loginInfo.accountIndex);
         const bip39PassPhrase = getState().advanced.bip39PassPhrase.value;
 
         const formData = getState().common.txInfo.value.data;
