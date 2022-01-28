@@ -3,7 +3,11 @@ import Button from "./../../../components/Button";
 import {useDispatch, useSelector} from "react-redux";
 import helper, {decryptKeyStore, makeHdPath} from "../../../utils/helper";
 import wallet from "../../../utils/wallet";
-import {hideKeyStoreModal, setResult, showKeyStoreNewPasswordModal} from "../../../store/actions/changePassword";
+import {
+    keyStoreModalNext,
+    setResult,
+    showKeyStoreNewPasswordModal
+} from "../../../store/actions/changePassword";
 import {fileTypeCheck, mnemonicTrim} from "../../../utils/scripts";
 
 const Submit = () => {
@@ -44,7 +48,7 @@ const Submit = () => {
                                 message: ''
                             }
                         }));
-                    dispatch(hideKeyStoreModal());
+                    dispatch(keyStoreModalNext());
                     dispatch(showKeyStoreNewPasswordModal());
                 }
             };
@@ -61,7 +65,7 @@ const Submit = () => {
     };
 
     const disable = (
-        keyStore.error.message !== '' || password.error.message !== '' || accountNumber.error.message !== '' || accountIndex.error.message !== '' || bip39PassPhrase.error.message !== ''
+        keyStore.error.message !== '' ||  keyStore.value === '' ||  password.value === '' || password.error.message !== '' || accountNumber.error.message !== '' || accountIndex.error.message !== '' || bip39PassPhrase.error.message !== ''
     );
 
     return (

@@ -1,5 +1,5 @@
 import {
-    CHANGE_KEYSTORE_MODAL_HIDE,
+    CHANGE_KEYSTORE_MODAL_HIDE, CHANGE_KEYSTORE_MODAL_NEXT,
     CHANGE_KEYSTORE_MODAL_SHOW,
     CHANGE_KEYSTORE_NEW_PASSWORD_MODAL_HIDE,
     CHANGE_KEYSTORE_NEW_PASSWORD_MODAL_SHOW,
@@ -49,6 +49,7 @@ const keyStoreModal = (state = false, {
     switch (type) {
     case CHANGE_KEYSTORE_MODAL_SHOW:
         return true;
+    case CHANGE_KEYSTORE_MODAL_NEXT:
     case CHANGE_KEYSTORE_MODAL_HIDE:
         return false;
     default:
@@ -102,6 +103,7 @@ const response = (state = {
             },
         };
     case CHANGE_KEYSTORE_NEW_PASSWORD_MODAL_HIDE:
+    case CHANGE_KEYSTORE_MODAL_HIDE:
         return {
             ...state,
             value: '',

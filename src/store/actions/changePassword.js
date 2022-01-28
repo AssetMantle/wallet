@@ -6,7 +6,8 @@ import {
     CHANGE_KEYSTORE_RESULT_MODAL_HIDE,
     CHANGE_KEYSTORE_RESULT_MODAL_SHOW,
     CHANGE_KEYSTORE_RESULT_SET,
-    KEYSTORE_NEW_PASSWORD_SET
+    KEYSTORE_NEW_PASSWORD_SET,
+    CHANGE_KEYSTORE_MODAL_NEXT
 } from "../../constants/changePassword";
 
 export const setKeyStoreNewPassword = (data) => {
@@ -19,6 +20,13 @@ export const setKeyStoreNewPassword = (data) => {
 export const showKeyStoreModal = (data) => {
     return {
         type: CHANGE_KEYSTORE_MODAL_SHOW,
+        data,
+    };
+};
+
+export const keyStoreModalNext = (data) => {
+    return {
+        type: CHANGE_KEYSTORE_MODAL_NEXT,
         data,
     };
 };

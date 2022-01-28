@@ -13,9 +13,13 @@ const Submit = () => {
     const accountNumber = useSelector((state) => state.advanced.accountNumber);
     const accountIndex = useSelector((state) => state.advanced.accountIndex);
     const bip39PassPhrase = useSelector((state) => state.advanced.bip39PassPhrase);
+    const keyStoreData = useSelector((state) => state.keyStore.keyStore);
+    const password = useSelector((state) => state.keyStore.password);
 
     const disable = (
-        accountNumber.error.message !== '' || accountIndex.error.message !== '' || bip39PassPhrase.error.message !== ''
+        keyStoreData.error.message !== '' || keyStoreData.value === '' || password.value === '' ||
+        password.error.message !== '' || accountNumber.error.message !== '' || accountIndex.error.message !== ''
+        || bip39PassPhrase.error.message !== ''
     );
 
     return (

@@ -1,4 +1,4 @@
-import {FEE_MODAL_HIDE, FEE_MODAL_SHOW, TX_FEE_SET} from "../../../constants/fee";
+import {FEE_MODAL_HIDE, FEE_MODAL_SHOW, TX_FEE_SET, FEE_MODAL_NEXT} from "../../../constants/fee";
 import {showKeyStoreModal} from "./keyStore";
 
 export const setTxFee = (data) => {
@@ -15,6 +15,13 @@ export const showFeeModal = (data) => {
     };
 };
 
+export const feeModalNext = (data) => {
+    return {
+        type: FEE_MODAL_NEXT,
+        data,
+    };
+};
+
 export const hideFeeModal = (data) => {
     return {
         type: FEE_MODAL_HIDE,
@@ -24,7 +31,7 @@ export const hideFeeModal = (data) => {
 
 export const feeSubmitKeyStore = () => (dispatch) => {
     dispatch(showKeyStoreModal());
-    dispatch(hideFeeModal());
+    dispatch(feeModalNext());
 };
 
 export const feeChangeHandler = (data) => (dispatch) => {

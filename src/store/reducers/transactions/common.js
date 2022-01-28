@@ -17,6 +17,7 @@ import {TX_DELEGATE_MODAL_HIDE} from "../../../constants/delegate";
 import {TX_RE_DELEGATE_MODAL_HIDE} from "../../../constants/redelegate";
 import {TX_UNBOND_MODAL_HIDE} from "../../../constants/unbond";
 import {TX_VALIDATOR_REWARDS_WITHDRAW_HIDE} from "../../../constants/withdrawValidatorRewards";
+import {SIGN_IN_ADDRESS_MODAL_HIDE} from "../../../constants/signIn/address";
 
 const modal = (state = false, {
     type,
@@ -106,6 +107,16 @@ const loginInfo = (state = {
                 message: data.error.message,
             },
         };
+    case SIGN_IN_ADDRESS_MODAL_HIDE:
+        return {
+            ...state,
+            loggedIn: false,
+            encryptedSeed: false,
+            error: {
+                ...state.error,
+                message: '',
+            },
+        };  
     default:
         return state;
     }

@@ -11,6 +11,8 @@ const Submit = () => {
     const accountNumber = useSelector((state) => state.advanced.accountNumber);
     const accountIndex = useSelector((state) => state.advanced.accountIndex);
     const bip39PassPhrase = useSelector((state) => state.advanced.bip39PassPhrase);
+    const keyStoreData = useSelector((state) => state.keyStore.keyStore);
+    const encryptedSeed = useSelector((state) => state.common.loginInfo.encryptedSeed);
 
     const dispatch = useDispatch();
 
@@ -22,7 +24,7 @@ const Submit = () => {
     const gas = useSelector((state) => state.gas.gas);
 
     const disable = (
-        password.value === '' || fee.error.message !== '' || gas.error.message !== '' || password.error.message !== '' || accountNumber.error.message !== '' || accountIndex.error.message !== '' || bip39PassPhrase.error.message !== ''
+        keyStoreData.error.message !== '' || (keyStoreData.value === '' && !encryptedSeed) || password.value === '' || fee.error.message !== '' || gas.error.message !== '' || password.error.message !== '' || accountNumber.error.message !== '' || accountIndex.error.message !== '' || bip39PassPhrase.error.message !== ''
     );
 
     return (
