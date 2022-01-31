@@ -24,7 +24,8 @@ const ButtonSend = () => {
     const memo = useSelector((state) => state.sendIbc.memo);
 
     const disable = (
-        amount.value === '' || stringToNumber(amount.value) === 0 || amount.error.message !== '' || toAddress.value === '' || toAddress.error.message !== '' || memo.error.message !== ''
+        amount.value === '' || stringToNumber(amount.value) === 0 || amount.error.message !== '' || toAddress.value === ''
+        || toAddress.error.message !== '' || memo.error.message !== '' || chainInfo.chain === ''
     );
 
     const onClick = async () => {
