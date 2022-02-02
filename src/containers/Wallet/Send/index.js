@@ -21,7 +21,7 @@ const Send = () => {
                 <ToAddress/>
                 <Tokens/>
                 <Amount/>
-                {loginInfo.loginMode !== config.keplrMode
+                {loginInfo && loginInfo.loginMode !== config.keplrMode
                     ?
                     <Memo/>
                     : null

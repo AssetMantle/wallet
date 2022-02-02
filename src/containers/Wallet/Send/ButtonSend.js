@@ -14,7 +14,7 @@ const ButtonSend = () => {
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
 
     const onClick = () => {
-        dispatch(submitFormData([SendMsg(loginInfo.address, toAddress.value, (amount.value * config.tokenValue).toFixed(0), token.value.tokenDenom)]));
+        dispatch(submitFormData([SendMsg(loginInfo && loginInfo.address, toAddress.value, (amount.value * config.tokenValue).toFixed(0), token.value.tokenDenom)]));
     };
     const amount = useSelector((state) => state.send.amount);
     const toAddress = useSelector((state) => state.send.toAddress);
@@ -30,7 +30,7 @@ const ButtonSend = () => {
                 name: "send",
             }
         }));
-        dispatch(keplrSubmit([SendMsg(loginInfo.address, toAddress.value, (amount.value * config.tokenValue).toFixed(0), token.value.tokenDenom)]));
+        dispatch(keplrSubmit([SendMsg(loginInfo && loginInfo.address, toAddress.value, (amount.value * config.tokenValue).toFixed(0), token.value.tokenDenom)]));
     };
 
     return (
@@ -41,7 +41,7 @@ const ButtonSend = () => {
                     type="button"
                     disable={disable}
                     value="Send"
-                    onClick={loginInfo.loginMode === config.keplrMode ? onClickKeplr : onClick}
+                    onClick={loginInfo && loginInfo.loginMode === config.keplrMode ? onClickKeplr : onClick}
                 />
             </div>
         </div>

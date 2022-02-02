@@ -48,7 +48,7 @@ const ModalUnbond = () => {
             </ReactModal.Header>
             <ReactModal.Body className="delegate-modal-body">
                 <Amount/>
-                {loginInfo.loginMode !== config.keplrMode
+                {loginInfo && loginInfo.loginMode !== config.keplrMode
                     ?
                     <Memo/>
                     : null

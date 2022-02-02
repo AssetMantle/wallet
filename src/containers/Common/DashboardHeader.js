@@ -28,7 +28,7 @@ const DashboardHeader = () => {
     let addressTruncate;
 
     if (loginInfo && loginInfo.address !== null) {
-        addressTruncate = stringTruncate(loginInfo.address);
+        addressTruncate = stringTruncate(loginInfo && loginInfo.address);
     }
 
     useEffect(() => {

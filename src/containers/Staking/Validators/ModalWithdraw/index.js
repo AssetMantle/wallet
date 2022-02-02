@@ -87,7 +87,7 @@ const ModalWithdraw = () => {
                         </p>
                     </div>
                 </div>
-                {loginInfo.loginMode !== config.keplrMode
+                {loginInfo && loginInfo.loginMode !== config.keplrMode
                     ?
                     <Memo/>
                     : null

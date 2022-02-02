@@ -64,7 +64,7 @@ async function LedgerWallet(hdpath, prefix) {
 
 async function TransactionWithMnemonic(msgs, fee, memo, mnemonic, hdpath = makeHdPath(), bip39Passphrase = "", loginAddress, prefix = addressPrefix) {
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
-    if (loginInfo.loginMode === "normal") {
+    if (loginInfo && loginInfo.loginMode === "normal") {
         const [wallet, address] = await MnemonicWalletWithPassphrase(mnemonic, hdpath, bip39Passphrase, prefix);
         if (address !== loginAddress) {
             throw new Error("Your sign in address and keystore file don’t match. Please try again or else sign in again.");

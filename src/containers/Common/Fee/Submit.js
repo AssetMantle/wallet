@@ -11,8 +11,8 @@ const Submit = () => {
     const dispatch = useDispatch();
 
     const onClick = () => {
-        if (loginInfo.loginMode === "ledger") {
-            dispatch(ledgerSubmit(loginInfo.address, loginInfo.loginMode));
+        if (loginInfo && loginInfo.loginMode === "ledger") {
+            dispatch(ledgerSubmit(loginInfo && loginInfo.address, loginInfo && loginInfo.loginMode));
         } else {
             dispatch(feeSubmitKeyStore());
         }

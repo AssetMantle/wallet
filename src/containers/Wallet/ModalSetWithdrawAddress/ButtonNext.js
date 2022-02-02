@@ -11,7 +11,7 @@ import {LOGIN_INFO} from "../../../constants/localStorage";
 const ButtonNext = () => {
     const dispatch = useDispatch();
     const onClick = () => {
-        dispatch(submitFormData([SetWithDrawAddressMsg(loginInfo.address, revisedAddress.value)]));
+        dispatch(submitFormData([SetWithDrawAddressMsg(loginInfo && loginInfo.address, revisedAddress.value)]));
     };
 
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
@@ -29,7 +29,7 @@ const ButtonNext = () => {
                 }
             }
         }));
-        dispatch(keplrSubmit([SetWithDrawAddressMsg(loginInfo.address, revisedAddress.value)]));
+        dispatch(keplrSubmit([SetWithDrawAddressMsg(loginInfo && loginInfo.address, revisedAddress.value)]));
     };
 
     const disable = (
@@ -44,7 +44,7 @@ const ButtonNext = () => {
                     type="button"
                     disable={disable}
                     value="Next"
-                    onClick={loginInfo.loginMode === config.keplrMode ? onClickKeplr : onClick}
+                    onClick={loginInfo && loginInfo.loginMode === config.keplrMode ? onClickKeplr : onClick}
                 />
             </div>
         </div>
