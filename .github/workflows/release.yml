@@ -6,7 +6,7 @@ on:
     types: [created]
     
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     strategy:
       matrix:
