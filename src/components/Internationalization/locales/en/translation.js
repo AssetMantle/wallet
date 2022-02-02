@@ -196,8 +196,14 @@ let English = {
         "VERIFY":"Verify",
         "TRANSFERABLE_BALANCE":"Transferable Balance",
         "GENERATE_KEYSTORE":"Generate KeyStore",
-        "LOGOUT":"Logout"
-
+        "LOGOUT":"Logout",
+        "DASHBOARD":"Dashboard",
+        "DELEGATED_MODAL_VIEW":"Delegated tokens modal",
+        "CLICK_DELEGATED_MODAL_VIEW":"Delegated tokens modal",
+        "UNBONDING_MODAL_VIEW":"Unbonding tokens modal",
+        "CLICK_UNBONDING_MODAL_VIEW":"Clicked on Unbonding tokens modal",
+        "TOTAL_TOKENS_MODAL_VIEW":"Total tokens modal",
+        "CLICK_TOTAL_TOKENS_MODAL_VIEW":"Clicked on Total tokens modal",
 
     }
 };

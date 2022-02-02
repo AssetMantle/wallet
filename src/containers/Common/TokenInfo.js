@@ -17,11 +17,16 @@ import NumberView from "../../components/NumberView";
 import config from "../../config";
 import {formatNumber} from "../../utils/scripts";
 import {showTxWithDrawTotalModal} from "../../store/actions/transactions/withdrawTotalRewards";
+import ReactGA from "react-ga";
 const TokenInfo = (props) => {
     const {t} = useTranslation();
     const dispatch = useDispatch();
 
     const handleRewards = (key) => {
+        ReactGA.event({
+            category: `claim ${key} modal`,
+            action: `Clicked on claim ${key} modal`
+        });
         if (key === "rewards") {
             dispatch(showTxWithDrawTotalModal());
         }
@@ -55,6 +60,7 @@ const TokenInfo = (props) => {
             </Popover.Content>
         </Popover>
     );
+
 
     return (
         <div className="token-info-section">

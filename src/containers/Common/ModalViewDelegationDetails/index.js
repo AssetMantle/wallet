@@ -6,6 +6,7 @@ import helper, {tokenValueConversion} from "../../../utils/helper";
 import {formatNumber, stringToNumber, stringTruncate} from "../../../utils/scripts";
 import NumberView from "../../../components/NumberView";
 import config from "../../../config";
+import ReactGA from "react-ga";
 
 const ModalViewDelegationDetails = (props) => {
     const {t} = useTranslation();
@@ -14,6 +15,10 @@ const ModalViewDelegationDetails = (props) => {
         setShow(false);
     };
     const handleModal = () => {
+        ReactGA.event({
+            category: t('DELEGATED_MODAL_VIEW'),
+            action: t('CLICK_DELEGATED_MODAL_VIEW')
+        });
         setShow(true);
     };
     let addressTruncate;

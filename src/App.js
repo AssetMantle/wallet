@@ -22,8 +22,19 @@ import {keplrLogin, setKeplrInfo} from "./store/actions/signIn/keplr";
 import { KEPLR_ADDRESS, LOGIN_INFO} from "./constants/localStorage";
 import {updateFee} from "./utils/helper";
 import {ledgerDisconnect} from "./utils/ledger";
+import ReactGA from 'react-ga';
 
 const SENTRY_API = process.env.REACT_APP_SENTRY_API;
+const GOOGLE_ANALYTICS = process.env.REACT_APP_GA_TRACKING_ID;
+
+ReactGA.initialize(GOOGLE_ANALYTICS);
+
+const trackPage = page => {
+    ReactGA.set({ page });
+    ReactGA.pageview(page);
+};
+
+
 const App = () => {
     const {t} = useTranslation();
     const history = useHistory();
@@ -55,6 +66,11 @@ const App = () => {
     } else {
         address = loginInfo && loginInfo.address;
     }
+
+    useEffect(() => {
+        const page = location.pathname;
+        trackPage(page);
+    }, [location]);
 
     useEffect(() => {
         const fetchApi = async () => {

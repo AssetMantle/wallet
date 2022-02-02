@@ -16,6 +16,7 @@ import {LOGIN_INFO, THEME} from "../../constants/localStorage";
 import {stringTruncate} from "../../utils/scripts";
 import {makeHdPath} from "../../utils/helper";
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
+import ReactGA from 'react-ga';
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -25,9 +26,11 @@ const DashboardHeader = () => {
     const history = useHistory();
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
     let addressTruncate;
+
     if (loginInfo && loginInfo.address !== null) {
         addressTruncate = stringTruncate(loginInfo.address);
     }
+
     useEffect(() => {
         const localTheme = window.localStorage.getItem(THEME);
         if (localTheme === 'light') {
@@ -41,8 +44,8 @@ const DashboardHeader = () => {
                 document.getElementById('root').classList.remove('light-mode');
             }
         }
-
     }, []);
+
     const closeWallet = () => {
         dispatch(userLogout());
         localStorage.clear();
@@ -52,16 +55,27 @@ const DashboardHeader = () => {
             TransportWebUSB.close();
         }
     };
+
     const handleKeyStore = () => {
         dispatch(showKeyStoreMnemonicModal());
     };
+
     const ledgerShowAddress = async () => {
         const accountNumber = loginInfo && loginInfo.accountNumber;
         const addressIndex = loginInfo && loginInfo.accountIndex;
         const [wallet] = await transactions.LedgerWallet(makeHdPath(accountNumber, addressIndex), config.addressPrefix);
         await wallet.showAddress(makeHdPath(accountNumber, addressIndex));
     };
+
+    const onClick = (name) => {
+        ReactGA.event({
+            category: name,
+            action: `Clicked on ${name}`
+        });
+    };
+
     const ProfileIcon = <Icon viewClass="profile" icon="profile"/>;
+
     return (
         <div className="header dashboard">
             <Navbar collapseOnSelect expand="lg">
@@ -74,7 +88,7 @@ const DashboardHeader = () => {
                         </NavLink>
                     </Navbar.Brand>
 
-                    <Nav className="ml-auto">
+                    <Nav className="ml-auto" onClick={()=>onClick(t("DASHBOARD"))}>
                         <li className="nav-item link mobile-nav-item">
                             <NavLink className="nav-link primary-medium-color"
                                 to="/dashboard/wallet">
@@ -88,7 +102,7 @@ const DashboardHeader = () => {
                             </NavLink>
                         </li>
                         <li className="nav-item link mobile-nav-item">
-                            <NavLink className="nav-link primary-medium-color"
+                            <NavLink className="nav-link primary-medium-color" onClick={()=>onClick(t("STAKING"))}
                                 to="/dashboard/staking">
                                 <div className="icon-box">
                                     <Icon
@@ -100,7 +114,7 @@ const DashboardHeader = () => {
                         </li>
                         <li className="nav-item link mobile-nav-item">
                             <a className="nav-link primary-medium-color" href={EXPLORER_API}
-                                rel="noopener noreferrer" target="_blank">
+                                rel="noopener noreferrer" target="_blank" onClick={() => onClick(t("EXPLORER"))}>
                                 <div className="icon-box">
                                     <Icon
                                         viewClass="icon"
@@ -117,7 +131,7 @@ const DashboardHeader = () => {
                         <li className="nav-item link mobile-nav-item">
                             <a className="nav-link primary-medium-color"
                                 href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer"
-                                target="_blank">
+                                target="_blank" onClick={() => onClick(t("HELP"))}>
                                 <div className="icon-box">
                                     <Icon
                                         viewClass="icon"
@@ -150,7 +164,6 @@ const DashboardHeader = () => {
                             </NavDropdown>
                         </li>
                         <li className="nav-item link"><Darktheme/></li>
-
                     </Nav>
                 </div>
             </Navbar>

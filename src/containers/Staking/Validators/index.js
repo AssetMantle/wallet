@@ -4,6 +4,7 @@ import Loader from "../../../components/Loader";
 import ValidatorsTable from "./ValidatorsTable";
 import {connect} from "react-redux";
 import {useTranslation} from "react-i18next";
+import ReactGA from "react-ga";
 
 const Validators = (props) => {
     const {t} = useTranslation();
@@ -12,9 +13,16 @@ const Validators = (props) => {
         return <Loader/>;
     }
 
+    const onClick = (key) => {
+        ReactGA.event({
+            category: `${key} Validators`,
+            action: `Clicked on ${key} Validators`
+        });
+    };
+
     return (
         <div className="txns-container">
-            <Tab.Container id="left-tabs-example" defaultActiveKey="active">
+            <Tab.Container id="left-tabs-example" defaultActiveKey="active" onSelect={onClick}>
                 <div className="tab-header active-inactive-validators">
                     <div className="info">
                         <div className="left">

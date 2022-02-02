@@ -13,6 +13,7 @@ import ButtonNext from "./ButtonNext";
 import Icon from "../../../components/Icon";
 import config from "../../../config";
 import {LOGIN_INFO} from "../../../constants/localStorage";
+import ReactGA from "react-ga";
 
 const ModalWithDraw = () => {
     const {t} = useTranslation();
@@ -31,6 +32,10 @@ const ModalWithDraw = () => {
     };
 
     const setWithdrawAddressHandler = () => {
+        ReactGA.event({
+            category: `Setup Rewards Withdrawal Address`,
+            action: `Clicked on Setup Rewards Withdrawal Address`
+        });
         dispatch(setPreviousModalName({
             value: 'withdrawTotal',
             error: {

@@ -15,6 +15,7 @@ import {
 } from "../../../../store/actions/transactions/setWithdrawAddress";
 import config from "../../../../config";
 import {LOGIN_INFO} from "../../../../constants/localStorage";
+import ReactGA from "react-ga";
 
 const ModalWithdraw = () => {
     const {t} = useTranslation();
@@ -42,6 +43,10 @@ const ModalWithdraw = () => {
     );
 
     const setWithdrawAddressHandler = () => {
+        ReactGA.event({
+            category: `Setup Rewards Withdrawal Address`,
+            action: `Clicked on Setup Rewards Withdrawal Address`
+        });
         dispatch(setPreviousModalName({
             value: 'withdrawValidator',
             error: {

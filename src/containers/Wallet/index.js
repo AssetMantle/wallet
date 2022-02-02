@@ -13,6 +13,7 @@ import FeeModal from "../Common/Fee/Modal";
 import KeyStoreModal from "../Common/KeyStore/Modal";
 import Loader from "../../components/Loader";
 import ModalViewTxnResponse from "../Common/ModalViewTxnResponse";
+import ReactGA from "react-ga";
 
 const Wallet = () => {
 
@@ -37,6 +38,13 @@ const Wallet = () => {
         </p>
     );
 
+    const onClick = (key) => {
+        ReactGA.event({
+            category: key,
+            action: `Clicked on ${key} Tab`
+        });
+    };
+
     return (
         <>
             <Loader/>
@@ -48,7 +56,7 @@ const Wallet = () => {
             <div className="wallet-main-section">
                 <TokenInfo/>
                 <div className="tabs-section">
-                    <Tabs defaultActiveKey="Send" id="uncontrolled-tab-example">
+                    <Tabs defaultActiveKey="Send" id="uncontrolled-tab-example" onSelect={onClick}>
                         <Tab eventKey="Send" title="Send">
                             <Send/>
                         </Tab>
