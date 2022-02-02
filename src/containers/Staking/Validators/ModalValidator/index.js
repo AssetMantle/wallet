@@ -10,6 +10,7 @@ import {showTxReDelegateModal} from "../../../../store/actions/transactions/rede
 import {showTxUnbondModal} from "../../../../store/actions/transactions/unbond";
 import {showTxWithdrawValidatorRewardsModal} from "../../../../store/actions/transactions/withdrawValidatorRewards";
 import {decimalConversion} from "../../../../utils/scripts";
+import ReactGA from "react-ga";
 
 const ModalValidator = () => {
     const {t} = useTranslation();
@@ -26,6 +27,10 @@ const ModalValidator = () => {
     commissionRate = parseFloat(commissionRate.toFixed(6)).toLocaleString();
 
     const handleRoute = (tx) => {
+        ReactGA.event({
+            category: `${tx} transaction modal`,
+            action: `Clicked on ${tx} transaction modal`
+        });
         if (tx === "Delegate") {
             dispatch(hideValidatorTxModal());
             dispatch(showTxDelegateModal());

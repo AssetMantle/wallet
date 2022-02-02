@@ -10,11 +10,17 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 import {fetchReceiveTransactions, fetchTransactions} from "../store/actions/transactionQueries";
 import {LOGIN_INFO} from "../constants/localStorage";
 import {updateFee} from "../utils/helper";
+import ReactGA from "react-ga";
 
 const InfoRefresh = (props) => {
     const [inProgress, setInProgress] = useState(false);
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
+
     const handleRefresh = () => {
+        ReactGA.event({
+            category: `Refresh`,
+            action: `Clicked on Refresh`
+        });
         setInProgress(true);
         setTimeout(() => {
             setInProgress(false);

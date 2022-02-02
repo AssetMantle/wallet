@@ -16,9 +16,18 @@ import ModalValidatorWithdraw from "./Validators/ModalWithdraw";
 import ModalWithDraw from "../Wallet/ModalWithDraw";
 import ModalSetWithdrawAddress from "../Wallet/ModalSetWithdrawAddress";
 import Loader from "../../components/Loader";
+import ReactGA from "react-ga";
 
 const Staking = () => {
     const {t} = useTranslation();
+
+    const onClick = (name) => {
+        ReactGA.event({
+            category: `${name} Validators`,
+            action: `Clicked on ${name} Validators`
+        });
+    };
+
     return (
         <div className="staking-main-section">
             <Loader/>
@@ -35,16 +44,16 @@ const Staking = () => {
             <ModalSetWithdrawAddress/>
             <div className="validators-section">
                 <div className="txns-container">
-                    <Tab.Container id="lrr" defaultActiveKey="all">
+                    <Tab.Container id="lrr" defaultActiveKey="all" onSelect={onClick}>
                         <div className="tab-header main-header">
                             <div className="info">
                                 <div className="left">
                                     <Nav variant="pills">
                                         <Nav.Item>
-                                            <Nav.Link eventKey="all">{t("ALL_VALIDATORS")}</Nav.Link>
+                                            <Nav.Link eventKey="all" onClick={() => onClick(t("ALL_VALIDATORS"))}>{t("ALL_VALIDATORS")}</Nav.Link>
                                         </Nav.Item>
                                         <Nav.Item>
-                                            <Nav.Link eventKey="delegated">{t("DELEGATED")}</Nav.Link>
+                                            <Nav.Link eventKey="delegated" onClick={() => onClick(t("DELEGATED"))}>{t("DELEGATED")}</Nav.Link>
                                         </Nav.Item>
                                     </Nav>
                                 </div>

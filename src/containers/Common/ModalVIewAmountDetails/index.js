@@ -6,6 +6,7 @@ import {useTranslation} from "react-i18next";
 import {formatNumber} from "../../../utils/scripts";
 import NumberView from "../../../components/NumberView";
 import config from "../../../config";
+import ReactGA from "react-ga";
 const tmRPC = require("@cosmjs/tendermint-rpc");
 const {QueryClient, setupIbcExtension} = require("@cosmjs/stargate");
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
@@ -19,6 +20,10 @@ const ModalViewAmountDetails = (props) => {
     };
     const handleModal = async () => {
         setShow(true);
+        ReactGA.event({
+            category: t('TOTAL_TOKENS_MODAL_VIEW'),
+            action: t('CLICK_TOTAL_TOKENS_MODAL_VIEW')
+        });
         props.list.map(async (item) => {
             if (item.denom !== config.coinDenom) {
                 let denom = item.denom.substr(item.denom.indexOf('/') + 1);

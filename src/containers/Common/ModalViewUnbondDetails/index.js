@@ -6,6 +6,7 @@ import NumberView from "../../../components/NumberView";
 import {formatNumber, localTime, stringToNumber} from "../../../utils/scripts";
 import config from "../../../config";
 import {tokenValueConversion} from "../../../utils/helper";
+import ReactGA from "react-ga";
 
 const ModalViewUnbondDetails = (props) => {
     const {t} = useTranslation();
@@ -14,6 +15,10 @@ const ModalViewUnbondDetails = (props) => {
         setShow(false);
     };
     const handleModal = () => {
+        ReactGA.event({
+            category: t('UNBONDING_MODAL_VIEW'),
+            action: t('CLICK_UNBONDING_MODAL_VIEW')
+        });
         setShow(true);
     };
 
