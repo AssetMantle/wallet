@@ -1,12 +1,12 @@
-
+---
 name: Release
 
 on:
   release:
-    types: [created]
+    types: [published]
     
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     strategy:
       matrix:
