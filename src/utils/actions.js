@@ -14,7 +14,7 @@ async function getValidatorRewards(validatorAddress) {
     const stakingQueryService = new QueryClientImpl(rpcClient);
     let amount = 0;
     await stakingQueryService.DelegationRewards({
-        delegatorAddress: loginInfo.address,
+        delegatorAddress: loginInfo && loginInfo.address,
         validatorAddress: validatorAddress,
     }).then(response => {
         if (response.rewards.length) {

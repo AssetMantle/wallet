@@ -29,7 +29,7 @@ const ButtonSend = () => {
     );
 
     const onClick = async () => {
-        let msg = transactions.MakeIBCTransferMsg(inputChannelID, loginInfo.address,
+        let msg = transactions.MakeIBCTransferMsg(inputChannelID, loginInfo && loginInfo.address,
             toAddress.value, (amount.value * config.tokenValue), undefined, undefined,
             token.value.tokenDenom, chainInfo.selectedChannel ? chainInfo.selectedChannel.url : undefined, inputPort);
         msg.then(result => {
@@ -49,7 +49,7 @@ const ButtonSend = () => {
                 name: "ibc",
             }
         }));
-        let msg = transactions.MakeIBCTransferMsg(inputChannelID, loginInfo.address,
+        let msg = transactions.MakeIBCTransferMsg(inputChannelID, loginInfo && loginInfo.address,
             toAddress.value, (amount.value * config.tokenValue), undefined, undefined,
             token.value.tokenDenom, chainInfo.selectedChannel ? chainInfo.selectedChannel.url : undefined, inputPort);
         msg.then(result => {
@@ -71,7 +71,7 @@ const ButtonSend = () => {
                     type="button"
                     disable={disable}
                     value="Send"
-                    onClick={loginInfo.loginMode === config.keplrMode ? onClickKeplr : onClick}
+                    onClick={loginInfo && loginInfo.loginMode === config.keplrMode ? onClickKeplr : onClick}
                 />
             </div>
         </div>

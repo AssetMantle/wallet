@@ -32,17 +32,17 @@ const ModalViewTxnResponse = () => {
         const fetchCalls = async () => {
             if (response !== undefined) {
                 await Promise.all([
-                    dispatch(fetchDelegationsCount(loginInfo.address)),
-                    dispatch(fetchBalance(loginInfo.address)),
-                    dispatch(fetchRewards(loginInfo.address)),
-                    dispatch(fetchTotalRewards(loginInfo.address)),
-                    dispatch(fetchUnbondDelegations(loginInfo.address)),
+                    dispatch(fetchDelegationsCount(loginInfo && loginInfo.address)),
+                    dispatch(fetchBalance(loginInfo && loginInfo.address)),
+                    dispatch(fetchRewards(loginInfo && loginInfo.address)),
+                    dispatch(fetchTotalRewards(loginInfo && loginInfo.address)),
+                    dispatch(fetchUnbondDelegations(loginInfo && loginInfo.address)),
                     dispatch(fetchTokenPrice()),
-                    dispatch(fetchTransferableVestingAmount(loginInfo.address)),
-                    dispatch(fetchTransactions(loginInfo.address, 5, 1)),
-                    dispatch(fetchReceiveTransactions(loginInfo.address, 5, 1)),
-                    dispatch(fetchValidators(loginInfo.address)),
-                    updateFee(loginInfo.address),
+                    dispatch(fetchTransferableVestingAmount(loginInfo && loginInfo.address)),
+                    dispatch(fetchTransactions(loginInfo && loginInfo.address, 5, 1)),
+                    dispatch(fetchReceiveTransactions(loginInfo && loginInfo.address, 5, 1)),
+                    dispatch(fetchValidators(loginInfo && loginInfo.address)),
+                    updateFee(loginInfo && loginInfo.address),
                 ]);
             }
         };
@@ -64,7 +64,7 @@ const ModalViewTxnResponse = () => {
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 <img src={success} alt="success-image"/>
-                                {loginInfo.loginMode === config.keplrMode ?
+                                {loginInfo && loginInfo.loginMode === config.keplrMode ?
                                     <a
                                         href={`${EXPLORER_API}/transactions/${response.transactionHash}`}
                                         target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
@@ -91,7 +91,7 @@ const ModalViewTxnResponse = () => {
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 <img src={failed} alt="success-image"/>
-                                {loginInfo.loginMode === config.keplrMode ?
+                                {loginInfo && loginInfo.loginMode === config.keplrMode ?
                                     <>
                                         <p>{response.rawLog}</p>
                                         <a

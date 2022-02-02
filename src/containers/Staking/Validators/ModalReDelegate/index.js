@@ -50,7 +50,7 @@ const ModalReDelegate = () => {
             <ReactModal.Body className="delegate-modal-body">
                 <Validator/>
                 <Amount/>
-                {loginInfo.loginMode !== config.keplrMode
+                {loginInfo && loginInfo.loginMode !== config.keplrMode
                     ?
                     <Memo/>
                     : null

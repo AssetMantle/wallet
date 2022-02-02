@@ -27,7 +27,7 @@ const ModalSetWithdrawAddress = () => {
     const error = useSelector(state => state.common.error);
 
     useEffect(() => {
-        dispatch(fetchWithdrawAddress(loginInfo.address));
+        dispatch(fetchWithdrawAddress(loginInfo && loginInfo.address));
     }, []);
 
     const handleClose = () => {
@@ -76,7 +76,7 @@ const ModalSetWithdrawAddress = () => {
                     <p className={delegations === 0 ? "empty info-data" : "info-data"}>
                         <NumberView value={formatNumber(delegations)}/>{config.coinName}</p>
                 </div>
-                {loginInfo.loginMode !== config.keplrMode
+                {loginInfo && loginInfo.loginMode !== config.keplrMode
                     ?
                     <Memo/>
                     : null

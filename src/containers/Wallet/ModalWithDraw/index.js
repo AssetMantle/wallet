@@ -22,7 +22,6 @@ const ModalWithDraw = () => {
     const tokenPrice = useSelector((state) => state.tokenPrice.tokenPrice);
     let selectedValidators = useSelector((state) => state.mulitpleRewardsWithDraw.validatorsList);
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
-
     const error = useSelector(state => state.common.error);
 
     const dispatch = useDispatch();
@@ -81,7 +80,7 @@ const ModalWithDraw = () => {
                 </div>
                 <Validators/>
                 <ValidatorCommission/>
-                {loginInfo.loginMode !== config.keplrMode
+                {loginInfo && loginInfo.loginMode !== config.keplrMode
                     ?
                     <Memo/>
                     : null

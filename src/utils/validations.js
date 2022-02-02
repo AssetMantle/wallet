@@ -19,7 +19,7 @@ export const ValidateFee = (transferableAmount, feeValue, type, amount) => {
     );
 
     const vestingDelegationCheck = (
-        loginInfo.account === "vesting" && type === "delegate"
+        loginInfo && loginInfo.account === "vesting" && type === "delegate"
     );
 
     if (amountTxns || vestingDelegationCheck) {
