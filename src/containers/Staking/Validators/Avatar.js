@@ -21,15 +21,18 @@ const Avatar = ({identity}) => {
         const url = 'https://keybase.io/_/api/1.0/user/lookup.json' +
             `?key_suffix=${identity}&fields=pictures`;
 
-        Axios.get(url)
-            .then((res) => {
-                const url = res?.data?.them[0]?.pictures?.primary?.url;
-                if (url) {
-                    globals.validators.avatars[identity] = url;
-                    setAvatarURL(url);
-                }
-            })
-            .catch(console.error);
+        const getAvatar = async () =>{
+            await Axios.get(url)
+                .then((res) => {
+                    const url = res?.data?.them[0]?.pictures?.primary?.url;
+                    if (url) {
+                        globals.validators.avatars[identity] = url;
+                        setAvatarURL(url);
+                    }
+                })
+                .catch(console.error);
+        };
+        getAvatar();
     }, [identity]);
 
     return (
