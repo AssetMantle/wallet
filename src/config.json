@@ -20,8 +20,6 @@
   "ibcRemoteHeightIncrement": 150,
   "ibcDefaultPort": "transfer",
   "maxAccountIndex": 2147483647,
-  "stagingTrackingID": "UA-219125621-1",
-  "mainNetTrackingID": "UA-219210130-1",
   "maxAccountNumber": 2147483647,
   "valoperAddressPrefix": "persistence",
   "keplrMode": "keplr",
