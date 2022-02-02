@@ -1,17 +1,20 @@
 import React from "react";
 import {Nav, Tab,} from "react-bootstrap";
-import Loader from "../../../components/Loader";
 import ValidatorsTable from "./ValidatorsTable";
 import {connect} from "react-redux";
 import {useTranslation} from "react-i18next";
 import ReactGA from "react-ga";
+import loader from "../../../assets/images/loader.svg";
 
 const Validators = (props) => {
     const {t} = useTranslation();
 
     if (props.inProgress) {
-        return <Loader/>;
+        return <div className="transaction-loader">
+            <img src={loader} alt="loader" className="loader"/>
+        </div>;
     }
+
 
     const onClick = (key) => {
         ReactGA.event({
