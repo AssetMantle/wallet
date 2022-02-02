@@ -25,13 +25,9 @@ import {ledgerDisconnect} from "./utils/ledger";
 import ReactGA from 'react-ga';
 
 const SENTRY_API = process.env.REACT_APP_SENTRY_API;
-const NODE_CONF = process.env.REACT_APP_IBC_CONFIG;
+const GOOGLE_ANALYTICS = process.env.REACT_APP_GA_TRACKING_ID;
 
-if (NODE_CONF === "ibcStaging.json") {
-    ReactGA.initialize(config.stagingTrackingID);
-}else {
-    ReactGA.initialize(config.mainNetTrackingID);
-}
+ReactGA.initialize(GOOGLE_ANALYTICS);
 
 const trackPage = page => {
     ReactGA.set({ page });
