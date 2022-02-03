@@ -143,6 +143,7 @@ const App = () => {
 
     Sentry.init({
         dsn: SENTRY_API,
+        release: "wallet"+config.version,
         integrations: [new Integrations.BrowserTracing()],
         tracesSampleRate: 1.0,
     });
