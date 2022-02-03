@@ -30,7 +30,7 @@ const ModalViewVestingDetails = () => {
             const rpcClient = await transactions.RpcClient();
             const AuthQueryService = new QueryClientImpl(rpcClient);
             await AuthQueryService.Account({
-                address: loginInfo.address,
+                address: loginInfo && loginInfo.address,
             }).then(accountResponse => {
                 if (accountResponse.account.typeUrl === "/cosmos.vesting.v1beta1.PeriodicVestingAccount") {
                     let periodicVestingAccountResponse = vesting_1.PeriodicVestingAccount.decode(accountResponse.account.value);

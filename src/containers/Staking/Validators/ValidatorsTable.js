@@ -26,7 +26,7 @@ const ValidatorsTable = (props) => {
             error: new Error(''),
         }));
         dispatch(fetchValidatorDelegations(loginInfo && loginInfo.address));
-        dispatch(fetchValidatorRewards(loginInfo.address, validator.operatorAddress));
+        dispatch(fetchValidatorRewards(loginInfo && loginInfo.address, validator.operatorAddress));
 
     };
     const columns = [{
@@ -40,7 +40,6 @@ const ValidatorsTable = (props) => {
                     return (val1.toUpperCase() < val2.toUpperCase() ? -1 : 1) * (order === 'asc' ? 1 : -1);
                 };
             }
-
         }
     }, {
         name: 'votingPower',

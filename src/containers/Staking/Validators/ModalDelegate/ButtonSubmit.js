@@ -35,7 +35,7 @@ const ButtonSubmit = () => {
                 }
             }
         }));
-        dispatch(keplrSubmit([DelegateMsg(loginInfo.address, validatorAddress.value.operatorAddress, (amount.value * config.tokenValue).toFixed(0), config.coinDenom)]));
+        dispatch(keplrSubmit([DelegateMsg(loginInfo && loginInfo.address, validatorAddress.value.operatorAddress, (amount.value * config.tokenValue).toFixed(0), config.coinDenom)]));
     };
 
     return (
@@ -46,7 +46,7 @@ const ButtonSubmit = () => {
                     type="button"
                     disable={disable}
                     value="Submit"
-                    onClick={loginInfo.loginMode === config.keplrMode ? onClickKeplr : onClick}
+                    onClick={loginInfo && loginInfo.loginMode === config.keplrMode ? onClickKeplr : onClick}
                 />
             </div>
         </div>

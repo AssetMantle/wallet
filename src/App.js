@@ -23,6 +23,8 @@ import { KEPLR_ADDRESS, LOGIN_INFO} from "./constants/localStorage";
 import {updateFee} from "./utils/helper";
 import {ledgerDisconnect} from "./utils/ledger";
 import ReactGA from 'react-ga';
+import {userLogout} from "./store/actions/logout";
+import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 
 const SENTRY_API = process.env.REACT_APP_SENTRY_API;
 const GOOGLE_ANALYTICS = process.env.REACT_APP_GA_TRACKING_ID;
@@ -39,6 +41,7 @@ const App = () => {
     const {t} = useTranslation();
     const history = useHistory();
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
+
     const routes = [{
         path: '/dashboard/wallet',
         component: DashboardWallet,
@@ -75,23 +78,27 @@ const App = () => {
     useEffect(() => {
         const fetchApi = async () => {
             if (address !== null && address !== undefined) {
-                dispatch(fetchDelegationsCount(address));
-                dispatch(fetchBalance(address));
-                dispatch(fetchRewards(address));
-                dispatch(fetchTotalRewards(address));
-                dispatch(fetchUnbondDelegations(address));
-                dispatch(fetchTokenPrice());
-                dispatch(fetchTransferableVestingAmount(address));
-                dispatch(fetchValidators(address));
-                updateFee(address);
-                setInterval(() => dispatch(fetchTotalRewards(address)), 10000);
+                await Promise.all([
+                    dispatch(fetchDelegationsCount(address)),
+                    dispatch(fetchBalance(address)),
+                    dispatch(fetchRewards(address)),
+                    dispatch(fetchTotalRewards(address)),
+                    dispatch(fetchUnbondDelegations(address)),
+                    dispatch(fetchTokenPrice()),
+                    dispatch(fetchTransferableVestingAmount(address)),
+                    dispatch(fetchValidators(address)),
+                    updateFee(address),
+                    setInterval(() => dispatch(fetchTotalRewards(address)), 10000),
+                ]);
                 if(loginInfo && loginInfo.loginMode === "ledger"){
                     ledgerDisconnect(dispatch, history);
                 }
             }
         };
         fetchApi();
+
     }, []);
+
     useEffect(() => {
         window.addEventListener("offline", updateNetwork);
         window.addEventListener("online", updateNetwork);
@@ -101,6 +108,17 @@ const App = () => {
         };
     });
 
+    window.addEventListener('storage', () => {
+        if (JSON.parse(localStorage.getItem(LOGIN_INFO)) === null){
+            dispatch(userLogout());
+            localStorage.clear();
+            history.push('/');
+            window.location.reload();
+            if(loginInfo && loginInfo.loginMode==="ledger"){
+                TransportWebUSB.close();
+            }
+        }
+    });
 
     window.addEventListener("keplr_keystorechange", () => {
         if (loginInfo && loginInfo.loginMode === config.keplrMode) {
@@ -125,6 +143,7 @@ const App = () => {
 
     Sentry.init({
         dsn: SENTRY_API,
+        release: "wallet"+config.version,
         integrations: [new Integrations.BrowserTracing()],
         tracesSampleRate: 1.0,
     });
@@ -154,7 +173,8 @@ const App = () => {
                 <Route
                     key="/"
                     exact
-                    component={address === undefined || address === null || address === '' ? withRouter(Homepage) : withRouter(DashboardWallet)}
+                    component={(JSON.parse(window.localStorage.getItem(LOGIN_INFO)) === null || address === undefined ||
+                        address === null || address === '') ? withRouter(Homepage) : withRouter(DashboardWallet)}
                     path="/"/>
                 {
                     routes.map((route) => {

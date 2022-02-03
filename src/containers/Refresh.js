@@ -16,7 +16,7 @@ const InfoRefresh = (props) => {
     const [inProgress, setInProgress] = useState(false);
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
 
-    const handleRefresh = () => {
+    const handleRefresh = async () => {
         ReactGA.event({
             category: `Refresh`,
             action: `Clicked on Refresh`
@@ -25,16 +25,18 @@ const InfoRefresh = (props) => {
         setTimeout(() => {
             setInProgress(false);
         }, 1000);
-        props.fetchDelegationsCount(loginInfo.address);
-        props.fetchBalance(loginInfo.address);
-        props.fetchRewards(loginInfo.address);
-        props.fetchTotalRewards(loginInfo.address);
-        props.fetchUnbondDelegations(loginInfo.address);
-        props.fetchTokenPrice();
-        props.fetchTransactions(loginInfo.address, 5, 1);
-        props.fetchReceiveTransactions(loginInfo.address, 5, 1);
-        props.fetchTransferableVestingAmount(loginInfo.address);
-        updateFee(loginInfo.address);
+        await Promise.all([
+            props.fetchDelegationsCount(loginInfo.address),
+            props.fetchBalance(loginInfo.address),
+            props.fetchRewards(loginInfo.address),
+            props.fetchTotalRewards(loginInfo.address),
+            props.fetchUnbondDelegations(loginInfo.address),
+            props.fetchTokenPrice(),
+            props.fetchTransactions(loginInfo.address, 5, 1),
+            props.fetchReceiveTransactions(loginInfo.address, 5, 1),
+            props.fetchTransferableVestingAmount(loginInfo.address),
+            updateFee(loginInfo.address),
+        ]);
     };
     return (
         <IconButton
