@@ -144,7 +144,7 @@ const DashboardHeader = () => {
                             <NavDropdown title={ProfileIcon} id="basic-nav-dropdown" className="profile-dropdown">
                                 <div className="info">
                                     <div className="qr-box">
-                                        <ReactQRCode value={loginInfo && loginInfo.address}/>
+                                        <ReactQRCode value={loginInfo ? loginInfo.address : ''}/>
                                     </div>
 
                                     <p className="key"> {t("WALLET_ADDRESS")}

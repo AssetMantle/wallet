@@ -13,8 +13,8 @@ export const ledgerSubmit = (loginAddress, loginMode) => {
 
         const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
 
-        const accountNumber = helper.getAccountNumber(loginInfo.accountNumber);
-        const accountIndex = helper.getAccountNumber(loginInfo.accountIndex);
+        const accountNumber = helper.getAccountNumber(loginInfo && loginInfo.accountNumber);
+        const accountIndex = helper.getAccountNumber(loginInfo && loginInfo.accountIndex);
         const bip39PassPhrase = getState().advanced.bip39PassPhrase.value;
 
         const formData = getState().common.txInfo.value.data;

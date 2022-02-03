@@ -27,8 +27,8 @@ const DelegatedValidators = (props) => {
             value: validator,
             error: new Error(''),
         }));
-        dispatch(fetchValidatorDelegations(loginInfo.address));
-        dispatch(fetchValidatorRewards(loginInfo.address, validator.operatorAddress));
+        dispatch(fetchValidatorDelegations(loginInfo && loginInfo.address));
+        dispatch(fetchValidatorRewards(loginInfo && loginInfo.address, validator.operatorAddress));
     };
 
 

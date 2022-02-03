@@ -26,7 +26,7 @@ const ValidatorsTable = (props) => {
             error: new Error(''),
         }));
         dispatch(fetchValidatorDelegations(loginInfo && loginInfo.address));
-        dispatch(fetchValidatorRewards(loginInfo &&loginInfo.address, validator.operatorAddress));
+        dispatch(fetchValidatorRewards(loginInfo && loginInfo.address, validator.operatorAddress));
 
     };
     const columns = [{

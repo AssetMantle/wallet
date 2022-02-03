@@ -17,7 +17,7 @@ const Submit = () => {
     const dispatch = useDispatch();
 
     const onClick = () => {
-        dispatch(keyStoreSubmit(loginInfo.address, type));
+        dispatch(keyStoreSubmit(loginInfo && loginInfo.address, type));
     };
 
     const fee = useSelector((state) => state.fee.fee);
