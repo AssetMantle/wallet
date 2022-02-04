@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from "./../../../components/Button";
 import {useDispatch, useSelector} from "react-redux";
-import {hideKeyStoreNewPasswordModal, showResultModal} from "../../../store/actions/changePassword";
+import {keyStoreNewPasswordModalNext, showResultModal} from "../../../store/actions/changePassword";
 
 const Submit = () => {
     const password = useSelector((state) => state.changePassword.newPassword);
@@ -9,7 +9,7 @@ const Submit = () => {
     const dispatch = useDispatch();
 
     const onClick = () => {
-        dispatch(hideKeyStoreNewPasswordModal());
+        dispatch(keyStoreNewPasswordModalNext());
         dispatch(showResultModal());
     };
 
