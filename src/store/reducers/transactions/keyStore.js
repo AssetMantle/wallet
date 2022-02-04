@@ -6,7 +6,7 @@ import {
     TX_KEY_STORE_SET
 } from "../../../constants/keyStore";
 import {TX_RESULT_MODAL_HIDE, TX_SUCCESS} from "../../../constants/common";
-import {CHANGE_KEYSTORE_MODAL_HIDE} from "../../../constants/changePassword";
+import {CHANGE_KEYSTORE_MODAL_HIDE, CHANGE_KEYSTORE_MODAL_NEXT} from "../../../constants/changePassword";
 import {SIGN_IN_KEYSTORE_MODAL_HIDE} from "../../../constants/signIn/keyStore";
 
 const keyStore = (state = {
@@ -66,6 +66,7 @@ const password = (state = {
             },
         };
     case KEYSTORE_MODAL_HIDE:
+    case CHANGE_KEYSTORE_MODAL_NEXT:
     case CHANGE_KEYSTORE_MODAL_HIDE:
     case TX_SUCCESS:
     case TX_RESULT_MODAL_HIDE:
