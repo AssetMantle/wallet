@@ -1,6 +1,5 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import ReactMultiSelectCheckboxes from "react-multiselect-checkboxes";
 import {useTranslation} from "react-i18next";
 import {WithdrawMsg} from "../../../utils/protoMsgHelper";
 import {
@@ -13,16 +12,34 @@ import {formatNumber, stringToNumber} from "../../../utils/scripts";
 import config from "../../../config";
 import {tokenValueConversion} from "../../../utils/helper";
 import {LOGIN_INFO} from "../../../constants/localStorage";
+import Select from 'react-select';
+import { components } from "react-select";
+
+const Option = (props) => {
+    return (
+        <div>
+            <components.Option {...props}>
+                <input
+                    type="checkbox"
+                    checked={props.isSelected}
+                    onChange={() => null}
+                />{" "}
+                <label>{props.label}</label>
+            </components.Option>
+        </div>
+    );
+};
 
 const Validators = () => {
     const {t} = useTranslation();
     const dispatch = useDispatch();
+    const [optionSelected, setOptionSelected] = useState(null);
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
     const validatorsList = useSelector((state) => state.rewards.validatorsRewardsList);
     let validatorsRewards = useSelector((state) => state.mulitpleRewardsWithDraw.rewards);
     const tokenPrice = useSelector((state) => state.tokenPrice.tokenPrice);
-
     const onChangeSelect = (evt) => {
+        setOptionSelected(evt);
         let totalValidatorsRewards = 0;
         let messages = [];
         evt.forEach(async (item) => {
@@ -43,12 +60,30 @@ const Validators = () => {
         <>
             <div className="form-field rewards-validators-list">
                 <p className="label">{t("SELECT_VALIDATOR")}</p>
-                <ReactMultiSelectCheckboxes
-                    options={validatorsList}
+                <Select
                     onChange={onChangeSelect}
-                    placeholderButtonLabel="Select"
+                    options={validatorsList}
+                    isMulti
+                    components={{
+                        Option
+                    }}
+                    theme={(theme) => ({
+                        ...theme,
+                        borderRadius: 0,
+                        colors: {
+                            ...theme.colors,
+                            primary: '#F5F6FA',
+                        },
+                    })}
+                    classNamePrefix="react-select"
+                    closeMenuOnSelect={false}
+                    hideSelectedOptions={false}
+                    MultiValueRemove={true}
+                    MultiValueContainer={false}
+                    MultiValueLabel={false}
+                    valueContainer={false}
+                    defaultValue={optionSelected}
                 />
-
             </div>
             <div className="form-field p-0">
                 <p className="label"></p>

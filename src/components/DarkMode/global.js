@@ -116,7 +116,9 @@ export const GlobalStyles = createGlobalStyle`
     .validators-list-selection, .copy-section .copy-result{
       color: #8D9CB5 !important;
     }
-    .form-control, .validators-list-selection, .claim-rewards-modal .rewards-modal-body input, .rewards-validators-list > div > div:nth-child(2), .rewards-validators-list > div button{
+    .form-control, .validators-list-selection, .claim-rewards-modal .rewards-modal-body input, .rewards-validators-list >
+     div > div:nth-child(2), .rewards-validators-list > div button, .rewards-validators-list .react-select__control ,
+     .rewards-validators-list .react-select__menu, .react-select__menu .react-select__option:active{
         background-color: ${({theme}) => theme.inputBackground} !important;
     }
     
@@ -136,16 +138,14 @@ export const GlobalStyles = createGlobalStyle`
     .rewards-validators-list > div button{
      color: #8D9CB5 !important;
     }
-    .rewards-validators-list > div > div > div > div:first-child, .rewards-validators-list > div > div > div > div:first-child:hover{
-       background-color: ${({theme}) => theme.inputBackground} !important;
-        border-color:${({theme}) => theme.inputBackground} !important;
-    }
-    .rewards-validators-list > div > div:nth-child(2) div:first-child input{
+
+    .rewards-validators-list > div > div:nth-child(2) div:first-child input, {
      color: #8D9CB5 !important;
      background-color: #F5F6FA !important;
      border-color:#F5F6FA !important;
     }
-    .rewards-validators-list > div > div:nth-child(2) > div > div{
+    .rewards-validators-list > div > div:nth-child(2) > div > div,  .react-select__menu .react-select__option:active, 
+    .react-select__menu .react-select__menu-list .react-select__option{
      color: #8D9CB5 !important;
     }
     .list-modal-body .unbonding-schedule-list p{
@@ -233,4 +233,3 @@ export const GlobalStyles = createGlobalStyle`
    }
 
 `;
-

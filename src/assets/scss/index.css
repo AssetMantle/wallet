@@ -2414,6 +2414,17 @@ ul li em {
     width: 100%; }
 .rewards-validators-list input[type=checkbox], .rewards-validators-list input {
   height: auto !important; }
+.rewards-validators-list .react-select__control {
+  border: 0px solid !important; }
+  .rewards-validators-list .react-select__control:hover, .rewards-validators-list .react-select__control:focus {
+    border: 0px solid !important;
+    outline: none !important;
+    box-shadow: none !important; }
+  .rewards-validators-list .react-select__control .react-select__value-container {
+    height: 34px;
+    overflow: hidden; }
+  .rewards-validators-list .react-select__control .react-select__input-container input {
+    background: none !important; }
 
 .claim-check-box {
   padding: 0; }
@@ -2592,8 +2603,6 @@ ul li em {
       .modal-custom .modal-header .previous-section.txn-header button .icon {
         width: 14px; }
     .modal-custom .modal-header button.close {
-      right: 15px;
-      top: 20px;
       font-size: 28px; } }
 /*--------------------------------------------------------------
 # homepagemediaqueries styles

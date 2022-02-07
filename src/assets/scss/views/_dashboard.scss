@@ -1429,6 +1429,27 @@
   input[type=checkbox], input {
     height: auto !important;
   }
+
+  .react-select__control {
+    border: 0px solid !important;
+    &:hover , &:focus{
+      border: 0px solid !important;
+      outline: none !important;
+      box-shadow: none !important;
+    }
+    .react-select__value-container {
+      height: 34px;
+      overflow: hidden;
+    }
+
+    .react-select__input-container input {
+      background: none !important;
+    }
+    .react-select__menu{
+
+    }
+  }
+
 }
 
 .claim-check-box {
