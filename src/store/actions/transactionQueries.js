@@ -20,6 +20,18 @@ const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 const vestingTx = require("cosmjs-types/cosmos/vesting/v1beta1/tx");
 const tx_7 = require("cosmjs-types/ibc/core/channel/v1/tx");
 const authzTx = require("cosmjs-types/cosmos/authz/v1beta1/tx");
+const feeGrantTx = require("cosmjs-types/cosmos/feegrant/v1beta1/tx");
+
+function createDefaultRegistry() {
+    return new Registry([...defaultRegistryTypes, ['/cosmos.authz.v1beta1.MsgGrant', authzTx.MsgGrant],
+        ["/cosmos.vesting.v1beta1.MsgCreateVestingAccount", vestingTx.MsgCreateVestingAccount],
+        ["/ibc.core.channel.v1.MsgTimeout", tx_7.MsgTimeout],
+        ["/cosmos.feegrant.v1beta1.MsgGrantAllowance", feeGrantTx.MsgGrantAllowance],
+        ["/cosmos.feegrant.v1beta1.MsgRevokeAllowance", feeGrantTx.MsgRevokeAllowance],
+        ["/cosmos.authz.v1beta1.MsgExec", authzTx.MsgExec], ["/cosmos.authz.v1beta1.MsgRevoke", authzTx.MsgRevoke]]);
+}
+
+const registry = createDefaultRegistry();
 
 export const fetchTransactionsProgress = () => {
     return {
@@ -135,12 +147,6 @@ function txSearchParams(recipientAddress, pageNumber, perPage, type) {
         }), page: pageNumber, per_page: perPage, prove: true, order_by: 'desc'
     };
 }
-
-function createDefaultRegistry() {
-    return new Registry([...defaultRegistryTypes, ['/cosmos.authz.v1beta1.MsgGrant', authzTx.MsgGrant], ["/cosmos.vesting.v1beta1.MsgCreateVestingAccount", vestingTx.MsgCreateVestingAccount], ["/ibc.core.channel.v1.MsgTimeout", tx_7.MsgTimeout]]);
-}
-
-const registry = createDefaultRegistry();
 
 export const fetchReceiveTransactions = (address, limit, pageNumber) => {
     return async dispatch => {

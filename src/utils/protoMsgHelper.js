@@ -1,5 +1,6 @@
 import {MsgSend} from "cosmjs-types/cosmos/bank/v1beta1/tx";
 import {MsgGrant} from "cosmjs-types/cosmos/authz/v1beta1/tx";
+import {MsgGrantAllowance} from "cosmjs-types/cosmos/feegrant/v1beta1/tx";
 import {MsgBeginRedelegate, MsgDelegate, MsgUndelegate} from "cosmjs-types/cosmos/staking/v1beta1/tx";
 import {
     MsgSetWithdrawAddress,
@@ -12,6 +13,7 @@ import helper from "./helper";
 import config from "../config";
 import {Any} from "cosmjs-types/google/protobuf/any";
 import {GenericAuthorization, Grant} from "cosmjs-types/cosmos/authz/v1beta1/authz";
+import {BasicAllowance} from "cosmjs-types/cosmos/feegrant/v1beta1/feegrant";
 import {AuthorizationType, StakeAuthorization} from "cosmjs-types/cosmos/staking/v1beta1/authz";
 
 const msgSendTypeUrl = "/cosmos.bank.v1beta1.MsgSend";
@@ -76,6 +78,29 @@ function StakingGrantMsg(granterAddress, granteeAddress) {
                     nanos: 12232
                 }
             })
+        })
+    };
+}
+
+function GrantAllowancesMsg(granterAddress, granteeAddress) {
+    return {
+        typeUrl: msgGrantAllowanceTypeUrl,
+        value: MsgGrantAllowance.fromPartial({
+            granter:granterAddress,
+            grantee:granteeAddress,
+            allowance:Any.fromPartial({
+                typeUrl: '/cosmos.feegrant.v1beta1.BasicAllowance',
+                value: Uint8Array.from(BasicAllowance.encode(BasicAllowance.fromJSON({
+                    spendLimit: [{
+                        denom: 'uxprt',
+                        amount: String(1000000),
+                    }],
+                    expiration: {
+                        seconds: '1642586850',
+                        nanos: 12232
+                    },
+                })).finish())
+            }),
         })
     };
 }
@@ -185,5 +210,6 @@ export {
     TransferMsg,
     ValidatorCommissionMsg,
     GrantMsg,
-    StakingGrantMsg
+    StakingGrantMsg,
+    GrantAllowancesMsg
 };

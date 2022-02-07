@@ -19,6 +19,7 @@ import * as Sentry from "@sentry/browser";
 import {ACCOUNT, ENCRYPTED_MNEMONIC, FEE, LOGIN_MODE} from "../constants/localStorage";
 
 const txAuthz = require("cosmjs-types/cosmos/authz/v1beta1/tx");
+const txFeeGrant = require("cosmjs-types/cosmos/feegrant/v1beta1/tx");
 
 const encoding = require("@cosmjs/encoding");
 const tendermint_1 = require("cosmjs-types/ibc/lightclients/tendermint/v1/tendermint");
@@ -44,10 +45,11 @@ async function Transaction(wallet, signerAddress, msgs, fee, memo = "") {
     const cosmJS = await SigningStargateClient.connectWithSigner(
         tendermintRPCURL,
         wallet,
-        {registry:new Registry([...defaultRegistryTypes, ["/cosmos.authz.v1beta1.MsgGrant" , txAuthz.MsgGrant]])}
+        {registry:new Registry([...defaultRegistryTypes, ["/cosmos.authz.v1beta1.MsgGrant" , txAuthz.MsgGrant], ["/cosmos.feegrant.v1beta1.MsgGrantAllowance" , txFeeGrant.MsgGrantAllowance]])}
     );
     return await cosmJS.signAndBroadcast(signerAddress, msgs, fee, memo);
 }
+
 
 async function TransactionWithKeplr(msgs, fee, memo = "", chainID = configChainID) {
     const [wallet, address] = await KeplrWallet(chainID);
