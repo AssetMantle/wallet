@@ -2,13 +2,16 @@ import {DirectSecp256k1HdWallet} from "@cosmjs/proto-signing";
 import config from "../config.json";
 import Long from "long";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
-import {createProtobufRpcClient} from "@cosmjs/stargate";
+import {createProtobufRpcClient, setupAuthExtension, setupTxExtension} from "@cosmjs/stargate";
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import {LedgerSigner} from "@cosmjs/ledger-amino";
 import {fee} from "./aminoMsgHelper";
 import * as Sentry from "@sentry/browser";
 import {LOGIN_INFO} from "../constants/localStorage";
 import {decodeTendermintClientStateAny, decodeTendermintConsensusStateAny, makeHdPath} from "./helper";
+import {BaseAccount} from "cosmjs-types/cosmos/auth/v1beta1/auth";
+import {SendMsg} from "./protoMsgHelper";
+import {PubKey} from "cosmjs-types/cosmos/crypto/secp256k1/keys";
 
 const {SigningStargateClient, QueryClient, setupIbcExtension} = require("@cosmjs/stargate");
 const tmRPC = require("@cosmjs/tendermint-rpc");
@@ -23,7 +26,24 @@ async function Transaction(wallet, signerAddress, msgs, fee, memo = "") {
         tendermintRPCURL,
         wallet,
     );
+    console.log(await cosmJS.simulate(signerAddress,msgs, ""),"simulate result", wallet);
     return await cosmJS.signAndBroadcast(signerAddress, msgs, fee, memo);
+}
+
+export async function Simulate() {
+    const tendermintClient = await tmRPC.Tendermint34Client.connect(tendermintRPCURL);
+    const queryClient = new QueryClient(tendermintClient);
+    const txEx = new setupTxExtension(queryClient);
+    const authEx = new setupAuthExtension(queryClient);
+    const authResp = await authEx.auth.account("persistence1wv9879c57ag7zthrtcvundrw3yvvt0a92wmmhq");
+    const parsedAuthResp = BaseAccount.decode(authResp.value);
+    const pubKey = PubKey.decode(parsedAuthResp.pubKey.value);
+    console.log(authResp,  "parsedAuthResp", parsedAuthResp);
+    const autoGas = await txEx.tx.simulate([SendMsg("persistence1wv9879c57ag7zthrtcvundrw3yvvt0a92wmmhq",
+        "persistence1wv9879c57ag7zthrtcvundrw3yvvt0a92wmmhq", "1000000", "uxprt")], "",
+    pubKey, parsedAuthResp.sequence);
+    console.log(autoGas, "autoGas", parsedAuthResp);
+    return autoGas.gasInfo.gasUsed;
 }
 
 async function TransactionWithKeplr(msgs, fee, memo = "", chainID = configChainID) {
@@ -169,4 +189,5 @@ export default {
     getTransactionResponse,
     LedgerWallet,
     MnemonicWalletWithPassphrase,
+    Simulate
 };
