@@ -13,7 +13,7 @@ import {BaseAccount} from "cosmjs-types/cosmos/auth/v1beta1/auth";
 import {SendMsg} from "./protoMsgHelper";
 import {PubKey} from "cosmjs-types/cosmos/crypto/secp256k1/keys";
 
-const {SigningStargateClient, QueryClient, setupIbcExtension} = require("@cosmjs/stargate");
+const {SigningStargateClient, QueryClient, setupIbcExtension, GasPrice} = require("@cosmjs/stargate");
 const tmRPC = require("@cosmjs/tendermint-rpc");
 const {TransferMsg} = require("./protoMsgHelper");
 const addressPrefix = config.addressPrefix;
@@ -22,12 +22,20 @@ const configChainID = process.env.REACT_APP_CHAIN_ID;
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
 async function Transaction(wallet, signerAddress, msgs, fee, memo = "") {
+    const gasPrice = GasPrice.fromString("0.025uxprt");
+    console.log(gasPrice, "gasPrice");
     const cosmJS = await SigningStargateClient.connectWithSigner(
         tendermintRPCURL,
         wallet,
+        {gasPrice:gasPrice}
     );
-    console.log(await cosmJS.simulate(signerAddress,msgs, ""),"simulate result", wallet);
-    return await cosmJS.signAndBroadcast(signerAddress, msgs, fee, memo);
+    // const autoGas = await cosmJS.simulate(signerAddress ,msgs, "");
+    // const feeFinal = calculateFee(Math.round(autoGas * 0.025), gasPrice);
+    console.log(gasPrice, "gasPrice");
+
+    // console.log(await cosmJS.simulate(signerAddress,msgs, ""),"simulate result", wallet);
+    console.log(await cosmJS.sign(signerAddress, msgs, fee, memo));
+    // return await cosmJS.sign(signerAddress, msgs, "auto", memo);
 }
 
 export async function Simulate() {
