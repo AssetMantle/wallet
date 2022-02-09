@@ -56,7 +56,7 @@ const ModalViewUnbondDetails = (props) => {
                                                 </span></p>
                                                 <p><span
                                                     className="date">
-                                                    {localTime(entry["completionTime"])}
+                                                    {localTime(entry["completionTime"].seconds.low*1000)}
                                                 </span>
                                                 </p>
                                             </div>
