@@ -87,7 +87,6 @@ async function MnemonicWalletWithPassphrase(mnemonic, hdPath = makeHdPath(), pas
 }
 
 async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp = config.timeoutTimestamp, denom = config.coinDenom, url, port = "transfer") {
-    console.log(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp = config.timeoutTimestamp, denom = config.coinDenom, url, port = "transfer");
 
     const tendermintClient = await tmRPC.Tendermint34Client.connect(tendermintRPCURL);
     const queryClient = new QueryClient(tendermintClient);
@@ -104,7 +103,6 @@ async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeo
             const consensusStateResponse = await ibcExtension.ibc.channel.consensusState(port, channel,
                 clientStateResponseDecoded.latestHeight.revisionNumber.toInt(), clientStateResponseDecoded.latestHeight.revisionHeight.toInt());
             const consensusStateResponseDecoded = decodeTendermintConsensusStateAny(consensusStateResponse.consensusState);
-            console.log(consensusStateResponseDecoded, "consensusStateResponseDecoded");
 
             const timeoutTime = Long.fromNumber(consensusStateResponseDecoded.timestamp.getTime() / 1000).add(timeoutTimestamp).multiply(1000000000); //get time in nanoesconds
             return TransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTime, denom, port);
