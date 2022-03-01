@@ -179,8 +179,8 @@ const TokenInfo = (props) => {
                             <p className="key">{t("REWARDS")}</p>
                             <p className="value rewards"><span onClick={() => handleRewards("rewards")}
                                 className="claim inner-grid">{t("CLAIM")}</span>
-                            <span title={props.rewards}>
-                                <NumberView value={formatNumber(props.rewards)}/> {config.coinName}
+                            <span title={props.rewards[2]}>
+                                <NumberView value={formatNumber(props.rewards[2])}/> {config.coinName}
                             </span>
                             </p>
                         </div>

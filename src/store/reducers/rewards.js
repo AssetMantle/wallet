@@ -28,7 +28,7 @@ const list = (state = [], action) => {
 };
 
 
-const rewards = (state = 0, action) => {
+const rewards = (state = [], action) => {
     if (action.type === REWARDS_FETCH_SUCCESS) {
         return action.data;
     }

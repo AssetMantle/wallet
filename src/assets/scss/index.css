@@ -1150,6 +1150,8 @@ ul li em {
 .create-wallet-modal .modal-header {
   background: #F0F1F2;
   justify-content: center; }
+  .create-wallet-modal .modal-header button.close {
+    top: 30px; }
   .create-wallet-modal .modal-header p {
     font-family: 'Poppins', sans-serif;
     font-weight: 600;

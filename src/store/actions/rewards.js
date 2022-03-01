@@ -15,6 +15,7 @@ import * as Sentry from "@sentry/browser";
 import config from "../../config";
 import {decimalConversion, stringToNumber} from "../../utils/scripts";
 import {checkValidatorAccountAddress, tokenValueConversion} from "../../utils/helper";
+import Lodash from "lodash";
 
 export const fetchRewardsProgress = () => {
     return {
@@ -72,10 +73,40 @@ export const fetchTotalRewards = (address) => {
                 delegatorAddress: address,
             }).then(async (delegatorRewardsResponse) => {
                 if (delegatorRewardsResponse.total.length) {
-                    let rewards = decimalConversion(delegatorRewardsResponse.total[0].amount, 18);
-                    const fixedRewardsResponse = tokenValueConversion(stringToNumber(rewards));
-                    dispatch(fetchRewardsSuccess(fixedRewardsResponse.toFixed(6)));
+                    let allTokensRewards = [];
+                    for (const token of delegatorRewardsResponse.total) {
+                        let rewards = decimalConversion(token.amount, 18);
+                        const fixedRewardsResponse = tokenValueConversion(stringToNumber(rewards));
+                        const fixedRewards = stringToNumber(fixedRewardsResponse).toFixed(6);
+                        const data = {
+                            denom : token.denom,
+                            amount :fixedRewards
+                        };
+                        allTokensRewards.push(data);
+                    }
+                    let xprtRewards = Lodash.sumBy(delegatorRewardsResponse.total, (token) => {
+                        if(token.denom === config.coinDenom){
+                            let rewards = decimalConversion(token.amount, 18);
+                            const fixedRewardsResponse = tokenValueConversion(stringToNumber(rewards));
+                            return stringToNumber(fixedRewardsResponse);
+                        }else {
+                            return 0;
+                        }
+                    });
+                    let ibcRewards = Lodash.sumBy(delegatorRewardsResponse.total, (token) => {
+                        if(token.denom !== config.coinDenom) {
+                            let rewards = decimalConversion(token.amount, 18);
+                            const fixedRewardsResponse = tokenValueConversion(stringToNumber(rewards));
+                            return stringToNumber(fixedRewardsResponse);
+                        }else {
+                            return 0;
+                        }
+                    });
+                    const totalRewards = [xprtRewards.toFixed(6), allTokensRewards,
+                        ((stringToNumber(xprtRewards) + stringToNumber(ibcRewards)).toFixed(6))];
+                    dispatch(fetchRewardsSuccess(totalRewards));
                 }
+
             }).catch((error) => {
                 Sentry.captureException(error.response
                     ? error.response.data.message
@@ -109,30 +140,38 @@ export const fetchRewards = (address) => {
 
                     if (delegatorRewardsResponse.rewards.length) {
                         for (const item of delegatorRewardsResponse.rewards) {
-                            const stakingQueryService = new StakingQueryClientImpl(rpcClient);
+                            let rewardItem;
+                            if((item.reward[0] && item.reward[0].denom === config.coinDenom)){
+                                rewardItem = item.reward[0];
+                            }else if((item.reward[1] && item.reward[1].denom === config.coinDenom)){
+                                rewardItem = item.reward[1];
+                            }
+                            if(rewardItem) {
+                                const stakingQueryService = new StakingQueryClientImpl(rpcClient);
+                                await stakingQueryService.Validator({
+                                    validatorAddr: item.validatorAddress,
+                                }).then(async (res) => {
+                                    const data = {
+                                        label: `${res.validator.description.moniker} - 
+                                    ${tokenValueConversion(decimalConversion(rewardItem && rewardItem.amount)).toLocaleString(undefined, {minimumFractionDigits: 6})} ${config.coinName}`,
+                                        value: res.validator.operatorAddress,
+                                        rewards: decimalConversion(rewardItem && rewardItem.amount)
+                                    };
 
-                            await stakingQueryService.Validator({
-                                validatorAddr: item.validatorAddress,
-                            }).then(async (res) => {
-                                const data = {
-                                    label: `${res.validator.description.moniker} - ${tokenValueConversion(decimalConversion(item.reward[0] && item.reward[0].amount)).toLocaleString(undefined, {minimumFractionDigits: 6})} ${config.coinName}`,
-                                    value: res.validator.operatorAddress,
-                                    rewards: decimalConversion(item.reward[0] && item.reward[0].amount)
-                                };
-
-                                if (checkValidatorAccountAddress(res.validator.operatorAddress, address)) {
-                                    let commissionInfo = await ActionHelper.getValidatorCommission(res.validator.operatorAddress);
-                                    dispatch(fetchValidatorCommissionInfoSuccess([commissionInfo, res.validator.operatorAddress, true]));
-                                }
-                                options.push(data);
-                            }).catch((error) => {
-                                Sentry.captureException(error.response
-                                    ? error.response.data.message
-                                    : error.message);
-                                dispatch(fetchValidatorRewardsListError(error.response
-                                    ? error.response.data.message
-                                    : error.message));
-                            });
+                                    if (checkValidatorAccountAddress(res.validator.operatorAddress, address)) {
+                                        let commissionInfo = await ActionHelper.getValidatorCommission(res.validator.operatorAddress);
+                                        dispatch(fetchValidatorCommissionInfoSuccess([commissionInfo, res.validator.operatorAddress, true]));
+                                    }
+                                    options.push(data);
+                                }).catch((error) => {
+                                    Sentry.captureException(error.response
+                                        ? error.response.data.message
+                                        : error.message);
+                                    dispatch(fetchValidatorRewardsListError(error.response
+                                        ? error.response.data.message
+                                        : error.message));
+                                });
+                            }
                         }
                     }
                     dispatch(fetchValidatorRewardsListSuccess(options));
@@ -154,3 +193,4 @@ export const fetchRewards = (address) => {
         }
     };
 };
+
