@@ -164,3 +164,17 @@ export const validateAddress = (address, prefix = "persistence") => {
     }
     return new Error('');
 };
+
+export const sortTokensByDenom = (list, denom) =>{
+    let tokenRewards;
+    if(list.reward.length) {
+        for (const token of list.reward) {
+            if (token && token.denom === denom) {
+                console.log(token, "inside tokenRewards");
+
+                tokenRewards = token;
+            }
+        }
+    }
+    return tokenRewards;
+};

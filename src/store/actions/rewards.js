@@ -16,6 +16,7 @@ import config from "../../config";
 import {decimalConversion, stringToNumber} from "../../utils/scripts";
 import {checkValidatorAccountAddress, tokenValueConversion} from "../../utils/helper";
 import Lodash from "lodash";
+import {sortTokensByDenom} from "../../utils/validations";
 
 export const fetchRewardsProgress = () => {
     return {
@@ -140,12 +141,7 @@ export const fetchRewards = (address) => {
 
                     if (delegatorRewardsResponse.rewards.length) {
                         for (const item of delegatorRewardsResponse.rewards) {
-                            let rewardItem;
-                            if((item.reward[0] && item.reward[0].denom === config.coinDenom)){
-                                rewardItem = item.reward[0];
-                            }else if((item.reward[1] && item.reward[1].denom === config.coinDenom)){
-                                rewardItem = item.reward[1];
-                            }
+                            let rewardItem = sortTokensByDenom(item, config.coinDenom);
                             if(rewardItem) {
                                 const stakingQueryService = new StakingQueryClientImpl(rpcClient);
                                 await stakingQueryService.Validator({

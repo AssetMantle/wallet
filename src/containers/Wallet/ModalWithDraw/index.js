@@ -78,7 +78,7 @@ const ModalWithDraw = () => {
                     <div className="available-tokens">
                         <p className="tokens"
                             title={rewards.length ? (rewards[2] * tokenPrice) : 0}>
-                            <NumberView value={formatNumber(rewards.length ? (rewards[2] * tokenPrice) : 0)}/>
+                            <NumberView value={formatNumber(rewards.length ? (rewards[2]) : 0)}/>
                             {config.coinName}
                         </p>
                         <p className="usd">= $<NumberView
