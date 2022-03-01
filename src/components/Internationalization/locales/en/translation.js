@@ -204,6 +204,7 @@ let English = {
         "CLICK_UNBONDING_MODAL_VIEW":"Clicked on Unbonding tokens modal",
         "TOTAL_TOKENS_MODAL_VIEW":"Total tokens modal",
         "CLICK_TOTAL_TOKENS_MODAL_VIEW":"Clicked on Total tokens modal",
+        "IBC_REWARDS":"IBC Rewards"
 
     }
 };

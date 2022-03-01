@@ -10,7 +10,9 @@
   .modal-header {
     background: #F0F1F2;
     justify-content: center;
-
+    button.close{
+      top: 30px;
+    }
     p {
       font-family: 'Poppins', sans-serif;
       font-weight: 600;

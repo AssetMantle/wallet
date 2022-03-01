@@ -87,6 +87,7 @@ async function MnemonicWalletWithPassphrase(mnemonic, hdPath = makeHdPath(), pas
 }
 
 async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp = config.timeoutTimestamp, denom = config.coinDenom, url, port = "transfer") {
+
     const tendermintClient = await tmRPC.Tendermint34Client.connect(tendermintRPCURL);
     const queryClient = new QueryClient(tendermintClient);
 

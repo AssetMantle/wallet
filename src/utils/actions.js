@@ -7,6 +7,7 @@ import * as Sentry from "@sentry/browser";
 import {LOGIN_INFO} from "../constants/localStorage";
 import {decimalConversion, stringToNumber} from "./scripts";
 import {tokenValueConversion} from "./helper";
+import config from "../config.json";
 
 async function getValidatorRewards(validatorAddress) {
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
@@ -37,9 +38,13 @@ async function getValidatorCommission(address) {
     await stakingQueryService.ValidatorCommission({
         validatorAddress: address
     }).then((res) => {
-        if (res.commission.commission[0].amount) {
-            commission = decimalConversion(res.commission.commission[0].amount);
-            commission = stringToNumber(tokenValueConversion(stringToNumber(commission)).toFixed(6));
+        if (res.commission.commission) {
+            for (const item of res.commission.commission) {
+                if (item && item.denom === config.coinDenom) {
+                    commission = decimalConversion(item.amount);
+                    commission = stringToNumber(tokenValueConversion(stringToNumber(commission)).toFixed(6));
+                }
+            }
         }
     }).catch((error) => {
         Sentry.captureException(error.response
