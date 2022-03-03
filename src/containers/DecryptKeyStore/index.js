@@ -6,7 +6,6 @@ import Advanced from "../Common/Advanced";
 import Submit from "./ModalForm/Submit";
 import Icon from "../../components/Icon";
 import {useTranslation} from "react-i18next";
-import {ENCRYPTED_MNEMONIC} from "../../constants/localStorage";
 import helper, {decryptKeyStore, makeHdPath} from "../../utils/helper";
 import {mnemonicTrim} from "../../utils/scripts";
 import wallet from "../../utils/wallet";
