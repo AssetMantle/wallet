@@ -11,6 +11,8 @@ import {useDispatch} from "react-redux";
 import GenerateKeyStore from "../../containers/GenerateKeyStore";
 import {showKeyStoreMnemonicModal} from "../../store/actions/generateKeyStore";
 import ChangeKeyStorePassword from "../../containers/ChangeKeyStorePassword";
+import KeyStore from "../../containers/DecryptKeyStore";
+import {showKeyStoreModal} from "../../store/actions/signIn/keyStore";
 
 const Homepage = () => {
     const {t} = useTranslation();
@@ -23,6 +25,9 @@ const Homepage = () => {
         }
         if (name === "signIn") {
             dispatch(showSignInModal());
+        }
+        if (name === "decryptKeyStore") {
+            dispatch(showKeyStoreModal());
         }
     };
 
@@ -65,6 +70,8 @@ const Homepage = () => {
                         </button>
                         <p onClick={() => handleRoute('importWallet')} className="import">{t("GENERATE_KEY_STORE")}
                         </p>
+                        <p onClick={() => handleRoute('decryptKeyStore')} className="import">{t("DECRYPT_KEY_STORE")}
+                        </p>
                     </div>
                     <p className="border-logo"><img src={dark_icon} alt="dark-icon"/></p>
                 </div>
@@ -76,6 +83,7 @@ const Homepage = () => {
                     <ModalCreateWallet setRoutName={setRoutName}/>
                     : null
             }
+            <KeyStore setRoutName={setRoutName}/>
             <SignIn setRoutName={setRoutName} name="homepage"/>
         </div>
 

@@ -150,3 +150,45 @@ export const keyStoreLogin = (history) => {
         
     };
 };
+
+export const keyStoreDecryptSubmit = () => {
+    return async (dispatch, getState) => {
+        const password = getState().keyStore.password;
+        const keyStoreData = getState().keyStore.keyStore;
+        const fileReader = new FileReader();
+        let mnemonic = "";
+        fileReader.readAsText(keyStoreData.value, "UTF-8");
+        fileReader.onload = async event => {
+            localStorage.setItem(ENCRYPTED_MNEMONIC, event.target.result);
+            const res = JSON.parse(event.target.result);
+            const decryptedData = decryptKeyStore(res, password.value);
+            if (decryptedData.error != null) {
+                dispatch(setKeyStoreResult(
+                    {
+                        value: "",
+                        error: {
+                            message: decryptedData.error,
+                        },
+                    }));
+            } else {
+                mnemonic = mnemonicTrim(decryptedData.mnemonic);
+                const accountNumber = helper.getAccountNumber(getState().advanced.accountNumber.value);
+                const accountIndex = helper.getAccountNumber(getState().advanced.accountIndex.value);
+                const bip39PassPhrase = getState().advanced.bip39PassPhrase.value;
+
+                const walletPath = makeHdPath(accountNumber, accountIndex);
+                const responseData = await wallet.createWallet(mnemonic, walletPath, bip39PassPhrase);
+                const data = [mnemonic, responseData];
+                dispatch(keyStoreModalNext());
+                dispatch(showKeyStoreResultModal());
+                dispatch(setKeyStoreResult(
+                    {
+                        value: data,
+                        error: {
+                            message: "",
+                        }
+                    }));
+            }
+        };
+    };
+};
