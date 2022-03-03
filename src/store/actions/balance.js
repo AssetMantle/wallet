@@ -121,15 +121,10 @@ export const fetchTransferableVestingAmount = (address) => {
                                 let item = response.balances[i];
                                 if (item.denom === config.coinDenom) {
                                     tokenList.push(item);
-                                    const amount = tokenValueConversion(vestingAccount.getAccountVestingAmount(vestingAmountData, currentEpochTime));
-                                    const balance = tokenValueConversion(stringToNumber(item.amount ));
-                                    vestingAmount = amount;
-                                    if ((balance - amount) < 0) {
-                                        transferableAmount = 0;
-                                    } else {
-                                        transferableAmount = balance - amount;
-                                    }
-                                    dispatch(fetchTransferableBalanceSuccess(transferableAmount));
+                                    vestingAmount = tokenValueConversion(vestingAccount.getAccountVestingAmount(vestingAmountData, currentEpochTime));
+                                    const balance = tokenValueConversion(stringToNumber(item.amount));
+                                    transferableAmount = await vestingAccount.getTransferableVestingAmount(address, balance);
+                                    dispatch(fetchTransferableBalanceSuccess(transferableAmount[1]));
                                     dispatch(fetchVestingBalanceSuccess(vestingAmount));
                                 } else {
                                     let denomText = item.denom.substr(item.denom.indexOf('/') + 1);
