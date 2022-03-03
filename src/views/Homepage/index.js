@@ -12,7 +12,7 @@ import GenerateKeyStore from "../../containers/GenerateKeyStore";
 import {showKeyStoreMnemonicModal} from "../../store/actions/generateKeyStore";
 import ChangeKeyStorePassword from "../../containers/ChangeKeyStorePassword";
 import KeyStore from "../../containers/DecryptKeyStore";
-import {showKeyStoreModal} from "../../store/actions/signIn/keyStore";
+// import {showKeyStoreModal} from "../../store/actions/signIn/keyStore";
 
 const Homepage = () => {
     const {t} = useTranslation();
@@ -26,9 +26,9 @@ const Homepage = () => {
         if (name === "signIn") {
             dispatch(showSignInModal());
         }
-        if (name === "decryptKeyStore") {
-            dispatch(showKeyStoreModal());
-        }
+        // if (name === "decryptKeyStore") {
+        //     dispatch(showKeyStoreModal());
+        // }
     };
 
     return (
@@ -83,7 +83,12 @@ const Homepage = () => {
                     <ModalCreateWallet setRoutName={setRoutName}/>
                     : null
             }
-            <KeyStore setRoutName={setRoutName}/>
+            {
+                routName === "decryptKeyStore" ?
+                    <KeyStore setRoutName={setRoutName}/>
+                    : null
+            }
+            {/*<KeyStore setRoutName={setRoutName}/>*/}
             <SignIn setRoutName={setRoutName} name="homepage"/>
         </div>
 

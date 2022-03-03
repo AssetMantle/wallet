@@ -1,14 +1,8 @@
 import React from 'react';
 import Button from "../../../components/Button";
-import {useDispatch, useSelector} from "react-redux";
-import {keyStoreDecryptSubmit} from "../../../store/actions/signIn/keyStore";
+import {useSelector} from "react-redux";
 
-const Submit = () => {
-    const dispatch = useDispatch();
-
-    const onClick = () => {
-        dispatch(keyStoreDecryptSubmit());
-    };
+const Submit = (props) => {
 
     const accountNumber = useSelector((state) => state.advanced.accountNumber);
     const accountIndex = useSelector((state) => state.advanced.accountIndex);
@@ -30,7 +24,7 @@ const Submit = () => {
                     className="button button-primary"
                     type="button"
                     value="Next"
-                    onClick={onClick}
+                    onClick={props.onClick}
                 />
             </div>
         </div>
