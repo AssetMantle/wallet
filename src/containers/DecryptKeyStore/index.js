@@ -69,7 +69,6 @@ const KeyStore = (props) => {
         let mnemonic = "";
         fileReader.readAsText(keyStoreData.value, "UTF-8");
         fileReader.onload = async event => {
-            localStorage.setItem(ENCRYPTED_MNEMONIC, event.target.result);
             const res = JSON.parse(event.target.result);
             const decryptedData = decryptKeyStore(res, password.value);
             if (decryptedData.error != null) {
