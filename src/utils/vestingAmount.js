@@ -79,37 +79,22 @@ function getAccountVestingAmount(account, currentEpochTime) {
     return accountVestingAmount;
 }
 
-/*
-Bank balance = amount in bank (could be vesting)
-Vesting amount = amount CAP that is time capped.
-Delegated free = amount of tokens delegated that are not in vesting
-delegated vesting = amount of tokens delegated that are vesting
-Delegated_tokens= delegated free + delegated vesting, total tokens delegated.
-
-transferable = balance + delegatedVesting + delegatedFree - Vesting
-
-* */
-
 async function getTransferableVestingAmount(address, balance) {
     try {
         const currentEpochTime = Math.floor(new Date().getTime() / 1000);
-        let vestingAmount = 0;
         let transferableAmount = 0;
 
         const res = await getAccount(address);
         const amount = tokenValueConversion(getAccountVestingAmount(res, currentEpochTime));
         let delegatedVesting = 0;
-        let delegatedFree = 0;
         if (res.typeUrl !== baseAccount) {
             delegatedVesting = tokenValueConversion(getDenomAmount(res.accountData.baseVestingAccount.delegatedVesting));
-            delegatedFree = tokenValueConversion(getDenomAmount(res.accountData.baseVestingAccount.delegatedFree));
         }
-        vestingAmount = amount; //why does this line exist?
-        transferableAmount = balance + delegatedVesting + delegatedFree - amount;
+        transferableAmount = balance + delegatedVesting  - amount;
         if (transferableAmount < 0) {
             transferableAmount = 0;
         }
-        return [vestingAmount, transferableAmount];
+        return [amount, transferableAmount];
     } catch (error) {
         Sentry.captureException(error.response
             ? error.response.data.message
