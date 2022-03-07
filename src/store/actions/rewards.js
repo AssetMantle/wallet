@@ -138,36 +138,32 @@ export const fetchRewards = (address) => {
             }).then(async (delegatorRewardsResponse) => {
                 if (delegatorRewardsResponse.rewards.length) {
                     let options = [];
-
-                    if (delegatorRewardsResponse.rewards.length) {
-                        for (const item of delegatorRewardsResponse.rewards) {
-                            let rewardItem = sortTokensByDenom(item, config.coinDenom);
-                            if(rewardItem) {
-                                const stakingQueryService = new StakingQueryClientImpl(rpcClient);
-                                await stakingQueryService.Validator({
-                                    validatorAddr: item.validatorAddress,
-                                }).then(async (res) => {
-                                    const data = {
-                                        label: `${res.validator.description.moniker} - 
+                    for (const item of delegatorRewardsResponse.rewards) {
+                        let rewardItem = sortTokensByDenom(item, config.coinDenom);
+                        if(rewardItem) {
+                            const stakingQueryService = new StakingQueryClientImpl(rpcClient);
+                            await stakingQueryService.Validator({
+                                validatorAddr: item.validatorAddress,
+                            }).then(async (res) => {
+                                const data = {
+                                    label: `${res.validator.description.moniker} - 
                                     ${tokenValueConversion(decimalConversion(rewardItem && rewardItem.amount)).toLocaleString(undefined, {minimumFractionDigits: 6})} ${config.coinName}`,
-                                        value: res.validator.operatorAddress,
-                                        rewards: decimalConversion(rewardItem && rewardItem.amount)
-                                    };
-
-                                    if (checkValidatorAccountAddress(res.validator.operatorAddress, address)) {
-                                        let commissionInfo = await ActionHelper.getValidatorCommission(res.validator.operatorAddress);
-                                        dispatch(fetchValidatorCommissionInfoSuccess([commissionInfo, res.validator.operatorAddress, true]));
-                                    }
-                                    options.push(data);
-                                }).catch((error) => {
-                                    Sentry.captureException(error.response
-                                        ? error.response.data.message
-                                        : error.message);
-                                    dispatch(fetchValidatorRewardsListError(error.response
-                                        ? error.response.data.message
-                                        : error.message));
-                                });
-                            }
+                                    value: res.validator.operatorAddress,
+                                    rewards: decimalConversion(rewardItem && rewardItem.amount)
+                                };
+                                options.push(data);
+                            }).catch((error) => {
+                                Sentry.captureException(error.response
+                                    ? error.response.data.message
+                                    : error.message);
+                                dispatch(fetchValidatorRewardsListError(error.response
+                                    ? error.response.data.message
+                                    : error.message));
+                            });
+                        }
+                        if (checkValidatorAccountAddress(item.validatorAddress, address)) {
+                            let commissionInfo = await ActionHelper.getValidatorCommission(item.validatorAddress);
+                            dispatch(fetchValidatorCommissionInfoSuccess([commissionInfo, item.validatorAddress, true]));
                         }
                     }
                     dispatch(fetchValidatorRewardsListSuccess(options));
