@@ -70,8 +70,8 @@ const Homepage = () => {
                         </button>
                         <p onClick={() => handleRoute('importWallet')} className="import">{t("GENERATE_KEY_STORE")}
                         </p>
-                        <p onClick={() => handleRoute('decryptKeyStore')} className="import">{t("DECRYPT_KEY_STORE")}
-                        </p>
+                        {/*<p onClick={() => handleRoute('decryptKeyStore')} className="import">{t("DECRYPT_KEY_STORE")}*/}
+                        {/*</p>*/}
                     </div>
                     <p className="border-logo"><img src={dark_icon} alt="dark-icon"/></p>
                 </div>
