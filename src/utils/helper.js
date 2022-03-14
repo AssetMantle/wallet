@@ -1,6 +1,6 @@
 import transactions from "./transactions";
 import config from "../config";
-import {COIN_ATOM, COIN_ATOM_DENOM} from "../constants/keyWords";
+import {COIN_ATOM, COIN_ATOM_DENOM, COIN_PSTAKE} from "../constants/keyWords";
 import {
     ADDRESS,
     ENCRYPTED_MNEMONIC,
@@ -110,6 +110,8 @@ function denomChange(denom) {
         return config.coinName;
     case COIN_ATOM_DENOM:
         return COIN_ATOM;
+    case config.pstakeTokenDenom:
+        return COIN_PSTAKE;
     default:
         return null;
     }

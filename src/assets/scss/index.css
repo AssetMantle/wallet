@@ -361,6 +361,8 @@ html, body {
       display: none !important; }
     .validators-list-selection .MuiSelect-select em {
       font-style: normal; }
+  .validators-list-selection.Mui-disabled {
+    opacity: 0.6; }
 
 .MuiMenu-list .validator-item:last-child {
   border: 0px solid !important; }
@@ -1655,6 +1657,8 @@ ul li em {
           width: 14px; }
     .wallet-main-section .send-container .form-section .form-field input {
       height: calc(2.3em + .75rem + 2px); }
+    .wallet-main-section .send-container .form-section .form-field .form-control:disabled, .wallet-main-section .send-container .form-section .form-field .form-control[readonly] {
+      opacity: 0.6; }
     .wallet-main-section .send-container .form-section .form-field .form-control {
       max-width: 500px;
       background: #F5F6FA;

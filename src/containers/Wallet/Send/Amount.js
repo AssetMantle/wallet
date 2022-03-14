@@ -8,13 +8,14 @@ import {ValidateSendAmount, ValidateSpecialCharacters} from "../../../utils/vali
 import {useTranslation} from "react-i18next";
 import config from "../../../config";
 import helper from "../../../utils/helper";
+import {Decimal} from "@cosmjs/math";
 
 const Amount = () => {
     const {t} = useTranslation();
     const amount = useSelector((state) => state.send.amount);
     const token = useSelector((state) => state.send.token.value);
     const transferableAmount = useSelector((state) => state.balance.transferableAmount);
-
+    console.log(token, "tt");
     const dispatch = useDispatch();
 
     const onChange = (evt) => {
@@ -67,17 +68,30 @@ const Amount = () => {
                                 </span> 
                             </span>
                             :
-                            <span title={token.tokenItem.denomTrace}
-                                className={token.transferableAmount === 0 ? "empty info-data" : "info-data"}>
-                                <span
-                                    className="title">{t("TRANSFERABLE_BALANCE")}:</span>
-                                <span
-                                    className="value">{token.transferableAmount.toLocaleString()}
-                                    {helper.denomChange(token.tokenItem.denom.baseDenom)}
-                                    ( IBC Trace path - {token.tokenItem.denom.path} ,
-                                    denom: {token.tokenItem.denom.baseDenom} )
+                            (token.tokenItem.denom.baseDenom === config.pstakeTokenDenom) ?
+                                <span className={transferableAmount === 0 ? "empty info-data" : "info-data info-link"}
+                                    onClick={() => selectTotalBalanceHandler(Decimal.fromAtomics(token.transferableAmount.toString(), 18).toString())}>
+                                    <span
+                                        className="title">{t("TRANSFERABLE_BALANCE")}:</span>
+                                    <span
+                                        className="value">
+                                        <NumberView value={Decimal.fromAtomics(token.transferableAmount.toString(), 18).toString()}/>
+                                        &nbsp;{helper.denomChange(token.tokenItem.denom.baseDenom)}
+                                    </span>
                                 </span>
-                            </span>
+                                
+                                :
+                                <span title={token.tokenItem.denomTrace}
+                                    className={token.transferableAmount === 0 ? "empty info-data" : "info-data"}>
+                                    <span
+                                        className="title">{t("TRANSFERABLE_BALANCE")}:</span>
+                                    <span
+                                        className="value">{Decimal.fromAtomics(token.transferableAmount.toString(), 18).toString()}
+                                        {helper.denomChange(token.tokenItem.denom.baseDenom)}
+                                        ( IBC Trace path - {token.tokenItem.denom.path} ,
+                                        denom: {token.tokenItem.denom.baseDenom} )
+                                    </span>
+                                </span>
                         :
                         <span
                             className={transferableAmount === 0 ? "empty info-data" : "info-data info-link"}

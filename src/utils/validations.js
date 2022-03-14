@@ -157,6 +157,14 @@ export const validateAddress = (address, prefix = "persistence") => {
         if (!address.startsWith("osmo") || address.length !== 43) {
             return new Error('Invalid Recipient Address');
         }
+    } else if (prefix === "gravity") {
+        if (!address.startsWith("gravity") || address.length !== 46) {
+            return new Error('Invalid Recipient Address');
+        }
+    } else if (prefix === "juno") {
+        if (!address.startsWith("juno") || address.length !== 46) {
+            return new Error('Invalid Recipient Address');
+        }
     } else {
         if (!address.startsWith(prefix) || address.length !== 50) {
             return new Error('Invalid Recipient Address');

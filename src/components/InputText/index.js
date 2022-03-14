@@ -15,6 +15,7 @@ const InputText = ({
     onChange = emptyFunc,
     onKeyPress = emptyFunc,
     onBlur = emptyFunc,
+    disable= false
 }) => {
     return (
         <div className="form-control-section flex-fill">
@@ -29,6 +30,7 @@ const InputText = ({
                 onChange={onChange}
                 onBlur={onBlur}
                 required={required}
+                disabled={disable}
             />
             <p className="input-error">{error.message}</p>
         </div>

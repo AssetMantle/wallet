@@ -238,6 +238,10 @@
           height: calc(2.3em + .75rem + 2px);
         }
 
+        .form-control:disabled, .form-control[readonly]{
+          opacity: 0.6;
+        }
+
         .form-control {
           max-width: 500px;
           background: #F5F6FA;

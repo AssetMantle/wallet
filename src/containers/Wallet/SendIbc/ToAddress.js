@@ -10,6 +10,11 @@ import {validateAddress, ValidateAlphaNumeric} from "../../../utils/validations"
 const ToAddress = () => {
     const {t} = useTranslation();
     const toAddress = useSelector((state) => state.sendIbc.toAddress);
+    const chainInfo = useSelector((state) => state.sendIbc.chainInfo.value);
+    console.log(chainInfo, "in to add");
+    const disable = (
+        chainInfo.chain === ''
+    );
     const dispatch = useDispatch();
 
     const onChange = (evt) => {
@@ -22,16 +27,20 @@ const ToAddress = () => {
     };
 
     const onBlur = (evt) => {
-        dispatch(setTxIbcSendAddress({
-            value: evt.target.value,
-            error: validateAddress(evt.target.value),
-        }));
+        const dd= "gravity15md2qvgma8lnvqv67w0umu2paqkqkhega6t5dh";
+        console.log(dd.length);
+        if(!chainInfo.customChain){
+            dispatch(setTxIbcSendAddress({
+                value: evt.target.value,
+                error: validateAddress(evt.target.value, chainInfo.selectedChannel.name),
+            }));
+        }
     };
 
     const popover = (
         <Popover id="popover">
             <Popover.Content>
-                {t("RECIPIENT_ADDRESS_EXAMPLE")}
+                Recipient’s address starts with {!chainInfo.customChain ? chainInfo.selectedChannel.name : ""}
             </Popover.Content>
         </Popover>
     );
@@ -56,6 +65,7 @@ const ToAddress = () => {
                     placeholder="Enter Recipient's address"
                     autofocus={false}
                     onChange={onChange}
+                    disable={disable}
                 />
             </div>
         </>

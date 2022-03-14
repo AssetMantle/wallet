@@ -16,19 +16,20 @@ const ButtonSend = () => {
     const amount = useSelector((state) => state.sendIbc.amount);
     const toAddress = useSelector((state) => state.sendIbc.toAddress);
     const token = useSelector((state) => state.sendIbc.token);
-    const chainInfo = useSelector((state) => state.sendIbc.chainInfo.value);
     const customPort = useSelector((state) => state.sendIbc.customPort);
     const customChannel = useSelector((state) => state.sendIbc.customChannel);
+    const chainInfo = useSelector((state) => state.sendIbc.chainInfo.value);
     let inputChannelID = chainInfo.customChain ? customChannel.value : chainInfo.chainID;
     let inputPort = chainInfo.customChain ? customPort.value : "transfer";
     const memo = useSelector((state) => state.sendIbc.memo);
-
+    console.log(chainInfo,"chainInfo");
     const disable = (
         amount.value === '' || stringToNumber(amount.value) === 0 || amount.error.message !== '' || toAddress.value === ''
         || toAddress.error.message !== '' || memo.error.message !== '' || chainInfo.chain === ''
     );
 
     const onClick = async () => {
+        console.log(token, "onClick 111token");
         let msg = transactions.MakeIBCTransferMsg(inputChannelID, loginInfo && loginInfo.address,
             toAddress.value, (amount.value * config.tokenValue), undefined, undefined,
             token.value.tokenDenom, chainInfo.selectedChannel ? chainInfo.selectedChannel.url : undefined, inputPort);
@@ -49,6 +50,7 @@ const ButtonSend = () => {
                 name: "ibc",
             }
         }));
+        console.log(inputChannelID, chainInfo, "111token");
         let msg = transactions.MakeIBCTransferMsg(inputChannelID, loginInfo && loginInfo.address,
             toAddress.value, (amount.value * config.tokenValue), undefined, undefined,
             token.value.tokenDenom, chainInfo.selectedChannel ? chainInfo.selectedChannel.url : undefined, inputPort);

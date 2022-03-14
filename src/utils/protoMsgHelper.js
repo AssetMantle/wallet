@@ -20,6 +20,7 @@ const msgTransferTypeUrl = "/ibc.applications.transfer.v1.MsgTransfer";
 const msgValidatorCommission = '/cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission';
 
 function SendMsg(fromAddress, toAddress, amount, denom) {
+    console.log(fromAddress, toAddress, amount, denom, "111");
     return {
         typeUrl: msgSendTypeUrl,
         value: MsgSend.fromPartial({

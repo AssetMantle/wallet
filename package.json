@@ -26,6 +26,7 @@
     "@types/secp256k1": "^4.0.1",
     "async": "^3.2.0",
     "axios": "^0.21.1",
+    "bignumber.js": "^9.0.2",
     "bip32": "^2.0.5",
     "bip39": "^3.0.2",
     "bitcoinjs-lib": "^4.0.2",
@@ -58,7 +59,8 @@
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
     "styled-components": "^5.1.1",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^1.0.1",
+    "web3": "^1.7.1"
   },
   "scripts": {
     "start": "react-scripts start",

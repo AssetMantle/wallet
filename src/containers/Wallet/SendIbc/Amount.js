@@ -9,15 +9,21 @@ import {useTranslation} from "react-i18next";
 import {OverlayTrigger, Popover} from "react-bootstrap";
 import config from "../../../config";
 import helper from "../../../utils/helper";
+import {Decimal} from "@cosmjs/math";
 
 const Amount = () => {
     const {t} = useTranslation();
     const amount = useSelector((state) => state.sendIbc.amount);
     const token = useSelector((state) => state.sendIbc.token.value);
     const transferableAmount = useSelector((state) => state.balance.transferableAmount);
+    const chainInfo = useSelector((state) => state.sendIbc.chainInfo.value);
+    const disable = (
+        chainInfo.chain === ''
+    );
 
+    console.log(token, "tokentokentoken");
     const dispatch = useDispatch();
-
+    console.log(token, "tokkk");
     const onChange = (evt) => {
         let rex = /^\d*\.?\d{0,6}$/;
         if (rex.test(evt.target.value)) {
@@ -68,29 +74,42 @@ const Amount = () => {
                                 </span> 
                             </span>
                             :
-                            <OverlayTrigger trigger={['hover', 'focus']}
-                                placement="bottom"
-                                overlay={
-                                    <Popover id="popover-memo">
-                                        <Popover.Content>
-                                            {`${token.transferableAmount.toLocaleString()} 
+                            (token.tokenItem.denom.baseDenom === config.pstakeTokenDenom) ?
+                                <span className={transferableAmount === 0 ? "empty info-data" : "info-data info-link"}
+                                    onClick={() => selectTotalBalanceHandler(Decimal.fromAtomics(token.transferableAmount.toString(), 18).toString())}>
+                                    <span
+                                        className="title">{t("TRANSFERABLE_BALANCE")}:</span>
+                                    <span
+                                        className="value">
+                                        <NumberView value={Decimal.fromAtomics(token.transferableAmount.toString(), 18).toString()}/>
+                                        &nbsp;{helper.denomChange(token.tokenItem.denom.baseDenom)}
+                                    </span>
+                                </span>
+                                :
+                                <OverlayTrigger trigger={['hover', 'focus']}
+                                    placement="bottom"
+                                    overlay={
+                                        <Popover id="popover-memo">
+                                            <Popover.Content>
+                                                {`${token.transferableAmount.toLocaleString()} 
                                             ${helper.denomChange(token.tokenItem.denom.baseDenom)}
                                             ( IBC Trace path - ${token.tokenItem.denom.path} , 
                                             denom: ${token.tokenItem.denom.baseDenom} ) 
                                             ${token.tokenItem.denomTrace}`}
-                                        </Popover.Content>
-                                    </Popover>
-                                }>
-                                <span onClick={() => selectTotalBalanceHandler(removeCommas(formatNumber(token.transferableAmount)))}
-                                    className={token.transferableAmount === 0 ? "empty info-data" : "info-data info-link"}>
-                                    <span className="title">
-                                        {t("TRANSFERABLE_BALANCE")}:
+                                            </Popover.Content>
+                                        </Popover>
+                                    }>
+                                    <span onClick={() => selectTotalBalanceHandler(removeCommas(formatNumber(token.transferableAmount)))}
+                                        className={token.transferableAmount === 0 ? "empty info-data" : "info-data info-link"}>
+                                        <span className="title">
+                                            {t("TRANSFERABLE_BALANCE")}:
+                                        </span>
+                                        <span className="value">
+                                            <NumberView value={formatNumber(token.transferableAmount)}/>
+                                            {helper.denomChange(token.tokenItem.denom.baseDenom)}
+                                        </span>
                                     </span>
-                                    <span className="value">
-                                        {token.transferableAmount.toLocaleString()} {helper.denomChange(token.tokenItem.denom.baseDenom)}
-                                    </span> 
-                                </span>
-                            </OverlayTrigger>
+                                </OverlayTrigger>
 
                         :
                         <span
@@ -117,6 +136,7 @@ const Amount = () => {
                     onKeyPress={ValidateSpecialCharacters}
                     error={amount.error}
                     onChange={onChange}
+                    disable={disable}
                 />
 
             </div>

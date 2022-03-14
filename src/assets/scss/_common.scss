@@ -494,7 +494,9 @@ html, body {
       font-style: normal;
     }
   }
-
+  &.Mui-disabled{
+    opacity: 0.6;
+  }
 }
 
 

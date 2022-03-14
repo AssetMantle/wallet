@@ -5,14 +5,18 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import {useTranslation} from "react-i18next";
 import config from "../../../config";
-import {stringToNumber} from "../../../utils/scripts";
-import {tokenValueConversion} from "../../../utils/helper";
+// import {stringToNumber} from "../../../utils/scripts";
+// import {tokenValueConversion} from "../../../utils/helper";
+import {Decimal} from "@cosmjs/math";
+import {unDecimalize} from "../../../utils/scripts";
+
 
 const Tokens = () => {
     const {t} = useTranslation();
     const tokenList = useSelector((state) => state.balance.tokenList);
     const transferableAmount = useSelector((state) => state.balance.transferableAmount);
     const dispatch = useDispatch();
+    console.log(tokenList, "tokenList");
     let tokenData = [];
 
     useEffect(() => {
@@ -38,6 +42,8 @@ const Tokens = () => {
         );
         tokenData = [];
         tokenDataObject.token = evt.target.value;
+        console.log(evt.target.value, "evt.target.value");
+
         if (evt.target.value === config.coinDenom) {
             tokenDataObject.tokenDenom = evt.target.value;
             tokenDataObject.transferableAmount = transferableAmount;
@@ -45,7 +51,7 @@ const Tokens = () => {
             tokenList.forEach((item) => {
                 if (evt.target.value === item.denomTrace) {
                     tokenDataObject.tokenDenom = item.denom.baseDenom;
-                    tokenDataObject.transferableAmount = tokenValueConversion(stringToNumber(item.amount ));
+                    tokenDataObject.transferableAmount = item.amount;
                     tokenDataObject.tokenItem = item;
                 }
             });
@@ -68,11 +74,31 @@ const Tokens = () => {
                     defaultValue={config.coinDenom}
                     required={true}
                     onChange={onChangeSelect}>
-                    <MenuItem
-                        className=""
-                        value={config.coinDenom}>
-                        {config.coinName}
-                    </MenuItem>
+                    {
+                        tokenList.map((item, index) => {
+                            if (item.denom === config.coinDenom) {
+                                return (
+                                    <MenuItem
+                                        key={index + 1}
+                                        className=""
+                                        value={item.denom}>
+                                        {config.coinName}
+                                    </MenuItem>
+                                );
+                            }
+                            if (item.denom.baseDenom === "gravity0xfB5c6815cA3AC72Ce9F5006869AE67f18bF77006") {
+                                console.log(Decimal.fromAtomics(item.amount, 18).toString(), "hellooo", Number(unDecimalize(Decimal.fromAtomics(item.amount, 18).toString(), 18)).toString());
+                                return (
+                                    <MenuItem
+                                        key={index + 1}
+                                        className=""
+                                        value={item.denomTrace}>
+                                        PSTAKE ({item.denom.path})
+                                    </MenuItem>
+                                );
+                            }
+                        })
+                    }
                 </Select>
             </div>
         </div>

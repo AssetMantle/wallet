@@ -6,7 +6,7 @@ import {keplrSubmit} from "../../../store/actions/transactions/keplr";
 import {SendMsg} from "../../../utils/protoMsgHelper";
 import config from "../../../config";
 import {setTxName} from "../../../store/actions/transactions/common";
-import {stringToNumber} from "../../../utils/scripts";
+import {stringToNumber, unDecimalize} from "../../../utils/scripts";
 import {LOGIN_INFO} from "../../../constants/localStorage";
 
 const ButtonSend = () => {
@@ -20,6 +20,7 @@ const ButtonSend = () => {
     const toAddress = useSelector((state) => state.send.toAddress);
     const token = useSelector((state) => state.send.token);
     const memo = useSelector((state) => state.send.memo);
+    console.log(token, "token");
     const disable = (
         amount.value === '' || stringToNumber(amount.value) === 0 || amount.error.message !== '' || toAddress.value === '' || toAddress.error.message !== '' || memo.error.message !== ''
     );
@@ -30,7 +31,15 @@ const ButtonSend = () => {
                 name: "send",
             }
         }));
-        dispatch(keplrSubmit([SendMsg(loginInfo && loginInfo.address, toAddress.value, (amount.value * config.tokenValue).toFixed(0), token.value.tokenDenom)]));
+        let sendAmount;
+        if(token.value.tokenDenom === config.pstakeTokenDenom){
+            // console.log(unDecimalize(Decimal.fromAtomics(amount.value, 18).toString(), 18))
+            sendAmount = Number(unDecimalize(amount.value, 18)).toString();
+        }else {
+            sendAmount = amount.value * config.tokenValue;
+        }
+        console.log(sendAmount, "sendAmount");
+        dispatch(keplrSubmit([SendMsg(loginInfo && loginInfo.address, toAddress.value, sendAmount, token.value.token)], token));
     };
 
     return (

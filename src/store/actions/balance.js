@@ -135,6 +135,7 @@ export const fetchTransferableVestingAmount = (address) => {
                                         denomTrace: item.denom,
                                         amount: item.amount,
                                     };
+                                    console.log(ibcDenomeResponse, "transeDenomData");
 
                                     tokenList.push(transeDenomData);
                                 }
