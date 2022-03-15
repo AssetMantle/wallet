@@ -4,9 +4,9 @@ import {connect} from "react-redux";
 import {useTranslation} from "react-i18next";
 import NumberView from "../../../components/NumberView";
 import {formatNumber, localTime, stringToNumber} from "../../../utils/scripts";
-import config from "../../../testConfig.json";
 import {tokenValueConversion} from "../../../utils/helper";
 import ReactGA from "react-ga";
+import {DefaultChainInfo} from "../../../config";
 
 const ModalViewUnbondDetails = (props) => {
     const {t} = useTranslation();
@@ -52,7 +52,7 @@ const ModalViewUnbondDetails = (props) => {
                                                 <p><span className="amount">
                                                     <NumberView
                                                         value={formatNumber(tokenValueConversion(stringToNumber(entry.balance )))}/>
-                                                    {config.coinName}
+                                                    {DefaultChainInfo.currency.coinDenom}
                                                 </span></p>
                                                 <p><span
                                                     className="date">
@@ -68,7 +68,7 @@ const ModalViewUnbondDetails = (props) => {
                     }
                 </Modal.Body>
             </Modal>
-            <span className="view-button" onClick={handleModal} title={`View Unbonding ${config.coinName} Schedule`}>{t("VIEW")}</span>
+            <span className="view-button" onClick={handleModal} title={`View Unbonding ${DefaultChainInfo.currency.coinDenom} Schedule`}>{t("VIEW")}</span>
         </>
 
     );

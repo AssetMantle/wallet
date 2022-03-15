@@ -5,8 +5,8 @@ import {useTranslation} from "react-i18next";
 import helper, {tokenValueConversion} from "../../../utils/helper";
 import {formatNumber, stringToNumber, stringTruncate} from "../../../utils/scripts";
 import NumberView from "../../../components/NumberView";
-import config from "../../../testConfig.json";
 import ReactGA from "react-ga";
+import {DefaultChainInfo} from "../../../config";
 
 const ModalViewDelegationDetails = (props) => {
     const {t} = useTranslation();
@@ -62,7 +62,7 @@ const ModalViewDelegationDetails = (props) => {
                                                 <td>
                                                     <span className="amount">
                                                         <NumberView
-                                                            value={formatNumber(tokenValueConversion(stringToNumber(delegation.delegations)))}/>{config.coinName}
+                                                            value={formatNumber(tokenValueConversion(stringToNumber(delegation.delegations)))}/>{DefaultChainInfo.currency.coinDenom}
                                                     </span>
                                                 </td>
                                                 <td>
@@ -86,7 +86,7 @@ const ModalViewDelegationDetails = (props) => {
                     </ul>
                 </Modal.Body>
             </Modal>
-            <span className="view-button" onClick={handleModal} title={`View Unbonding ${config.coinName} Schedule`}>{t("VIEW")}</span>
+            <span className="view-button" onClick={handleModal} title={`View Unbonding ${DefaultChainInfo.currency.coinDenom} Schedule`}>{t("VIEW")}</span>
         </>
 
     );

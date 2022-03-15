@@ -3,8 +3,7 @@ import {fee} from "../../../utils/aminoMsgHelper";
 import {showTxResultModal, txFailed, txInProgress, txResponse, txSuccess} from "./common";
 import * as Sentry from "@sentry/browser";
 
-export const keplrSubmit = (messages, token = "") => (dispatch, getState) => {
-    console.log(token, "denom");
+export const keplrSubmit = (messages = "") => (dispatch, getState) => {
     dispatch(txInProgress());
     const response = transactions.TransactionWithKeplr(messages, fee(0, 250000),"");
     response.then(result => {

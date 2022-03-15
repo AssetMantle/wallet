@@ -13,9 +13,9 @@ import {
 } from "../../../../store/actions/validators";
 import {connect, useDispatch} from "react-redux";
 import {useTranslation} from "react-i18next";
-import config from "../../../../testConfig.json";
 import {LOGIN_INFO} from "../../../../constants/localStorage";
 import {stringToNumber} from "../../../../utils/scripts";
+import {DefaultChainInfo} from "../../../../config";
 
 const DelegatedValidators = (props) => {
     const {t} = useTranslation();
@@ -47,7 +47,7 @@ const DelegatedValidators = (props) => {
         }
     }, {
         name: 'delegatedAmount',
-        label: `${t("DELEGATED_AMOUNT")}(${config.coinName})`,
+        label: `${t("DELEGATED_AMOUNT")}(${DefaultChainInfo.currency.coinDenom})`,
         options: {
             sortCompare: (order) => {
                 return (obj1, obj2) => {

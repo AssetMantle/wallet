@@ -1,5 +1,6 @@
 {
   "name": "pwallet",
+  "version": "2.1.0",
   "private": true,
   "dependencies": {
     "@cosmjs/amino": "^v0.27.1",

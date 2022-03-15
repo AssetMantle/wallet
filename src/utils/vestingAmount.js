@@ -1,7 +1,6 @@
 import * as Sentry from "@sentry/browser";
 import {getAccount, tokenValueConversion} from "./helper";
-
-const config = require('../testConfig.json');
+import {DefaultChainInfo} from "../config";
 
 const periodicVesting = "/cosmos.vesting.v1beta1.PeriodicVestingAccount";
 const baseAccount = "/cosmos.auth.v1beta1.BaseAccount";
@@ -11,7 +10,7 @@ const continuousVesting = "/cosmos.vesting.v1beta1.ContinuousVestingAccount";
 function getUTOKEN_Balance(amountList) {
     let balance = 0;
     for (let i = 0; i < amountList.length; i++) {
-        if (amountList[i].denom === config.coinDenom) {
+        if (amountList[i].denom === DefaultChainInfo.currency.coinMinimalDenom) {
             balance = parseInt(amountList[i].amount);
             break;
         }
@@ -103,7 +102,7 @@ async function getTransferableVestingAmount(address, balance) {
     }
 }
 
-function getDenomAmount(coins, denom = config.coinDenom) {
+function getDenomAmount(coins, denom = DefaultChainInfo.currency.coinMinimalDenom) {
     if (coins.length > 0) {
         for (let coin of coins) {
             if (coin.denom === denom) {

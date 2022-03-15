@@ -9,11 +9,11 @@ import {
 import {ValidateMultipleValidatorsClaim} from "../../../utils/validations";
 import NumberView from "../../../components/NumberView";
 import {formatNumber, stringToNumber} from "../../../utils/scripts";
-import config from "../../../testConfig.json";
 import {tokenValueConversion} from "../../../utils/helper";
 import {LOGIN_INFO} from "../../../constants/localStorage";
 import Select from 'react-select';
 import { components } from "react-select";
+import {DefaultChainInfo} from "../../../config";
 
 const Option = (props) => {
     return (
@@ -90,7 +90,7 @@ const Validators = () => {
                 <div className="available-tokens">
                     <p className="tokens">{t("CLAIMING_REWARDS")} <NumberView
                         value={formatNumber(validatorsRewards.value)}/><span>
-                        {config.coinName}
+                        {DefaultChainInfo.currency.coinDenom}
                     </span></p>
                     <p className="usd">= $<NumberView
                         value={formatNumber(validatorsRewards.value * tokenPrice)}/></p>

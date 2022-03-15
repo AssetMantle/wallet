@@ -1,9 +1,9 @@
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import {LedgerSigner} from "@cosmjs/ledger-amino";
-import config from "../testConfig.json";
 import {makeHdPath} from "./helper";
 import * as Sentry from "@sentry/browser";
 import {userLogout} from "../store/actions/logout";
+import {DefaultChainInfo} from "../config";
 
 const interactiveTimeout = 120_000;
 
@@ -17,8 +17,8 @@ export const fetchAddress = async (accountNumber = "0", addressIndex = "0") => {
     const signer = new LedgerSigner(transport, {
         testModeAllowed: true,
         hdPaths: [makeHdPath(accountNumber, addressIndex)],
-        prefix: config.addressPrefix,
-        ledgerAppName:config.persistenceLedgerAppName
+        prefix: DefaultChainInfo.prefix,
+        ledgerAppName:DefaultChainInfo.ledgerAppName
     });
     const [firstAccount] = await signer.getAccounts();
     return firstAccount.address;

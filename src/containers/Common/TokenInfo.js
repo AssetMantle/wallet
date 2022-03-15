@@ -14,10 +14,10 @@ import {OverlayTrigger, Popover} from "react-bootstrap";
 import ModalViewDelegationDetails from "./ModalViewDelegationDetails";
 import {fetchValidators} from "../../store/actions/validators";
 import NumberView from "../../components/NumberView";
-import config from "../../testConfig.json";
 import {formatNumber} from "../../utils/scripts";
 import {showTxWithDrawTotalModal} from "../../store/actions/transactions/withdrawTotalRewards";
 import ReactGA from "react-ga";
+import {DefaultChainInfo} from "../../config";
 const TokenInfo = (props) => {
     const {t} = useTranslation();
     const dispatch = useDispatch();
@@ -79,7 +79,7 @@ const TokenInfo = (props) => {
                                 </OverlayTrigger>
                             </p>
                             <p className="value"
-                                title={(props.delegations + props.balance + props.unbond).toFixed(config.coinDecimals)}>
+                                title={(props.delegations + props.balance + props.unbond).toFixed(DefaultChainInfo.currency.coinDecimals)}>
                                 <span
                                     className="inner-grid-icon">
                                     {
@@ -89,7 +89,7 @@ const TokenInfo = (props) => {
                                     }
                                 </span>
                                 <NumberView value={formatNumber(props.delegations + props.balance + props.unbond)}/>
-                                {config.coinName}
+                                {DefaultChainInfo.currency.coinDenom}
                             </p>
                         </div>
                         <div className="line">
@@ -127,7 +127,7 @@ const TokenInfo = (props) => {
                                             : ""
                                     }
                                 </span>
-                                <NumberView value={formatNumber(props.vestingAmount)}/> {config.coinName}
+                                <NumberView value={formatNumber(props.vestingAmount)}/> {DefaultChainInfo.currency.coinDenom}
                             </p>
                         </div>
                         <div className="line">
@@ -141,7 +141,7 @@ const TokenInfo = (props) => {
                             </p>
                             <p className="value" title={props.transferableAmount.toFixed(6)}><span
                                 className="inner-grid-icon"/>
-                            <NumberView value={formatNumber(props.transferableAmount)}/> {config.coinName}
+                            <NumberView value={formatNumber(props.transferableAmount)}/> {DefaultChainInfo.currency.coinDenom}
                             </p>
                         </div>
                         <div className="line">
@@ -154,7 +154,7 @@ const TokenInfo = (props) => {
                                 </OverlayTrigger>
                             </p>
                             <p className="value" title={props.balance.toFixed(6)}><span className="inner-grid-icon"/>
-                                <NumberView value={formatNumber(props.balance)}/> {config.coinName}</p>
+                                <NumberView value={formatNumber(props.balance)}/> {DefaultChainInfo.currency.coinDenom}</p>
                         </div>
 
                     </div>
@@ -172,7 +172,7 @@ const TokenInfo = (props) => {
                                             : ""
                                     }
                                 </span>
-                                <span> <NumberView value={formatNumber(props.delegations)}/> {config.coinName}</span>
+                                <span> <NumberView value={formatNumber(props.delegations)}/> {DefaultChainInfo.currency.coinDenom}</span>
                             </p>
                         </div>
                         <div className="line">
@@ -180,7 +180,7 @@ const TokenInfo = (props) => {
                             <p className="value rewards"><span onClick={() => handleRewards("rewards")}
                                 className="claim inner-grid">{t("CLAIM")}</span>
                             <span title={props.rewards[2]}>
-                                <NumberView value={formatNumber(props.rewards[2])}/> {config.coinName}
+                                <NumberView value={formatNumber(props.rewards[2])}/> {DefaultChainInfo.currency.coinDenom}
                             </span>
                             </p>
                         </div>
@@ -195,7 +195,7 @@ const TokenInfo = (props) => {
                                 }
                             </span>
                             <span title={props.unbond}>
-                                <NumberView value={formatNumber(props.unbond)}/>{config.coinName}
+                                <NumberView value={formatNumber(props.unbond)}/>{DefaultChainInfo.currency.coinDenom}
                             </span>
                             </p>
                         </div>

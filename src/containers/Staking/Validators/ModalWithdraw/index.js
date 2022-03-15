@@ -13,9 +13,9 @@ import {
     setPreviousModalName,
     showTxWithDrawAddressModal
 } from "../../../../store/actions/transactions/setWithdrawAddress";
-import config from "../../../../testConfig.json";
 import {LOGIN_INFO} from "../../../../constants/localStorage";
 import ReactGA from "react-ga";
+import {DefaultChainInfo} from "../../../../config";
 
 const ModalWithdraw = () => {
     const {t} = useTranslation();
@@ -79,7 +79,7 @@ const ModalWithdraw = () => {
             </ReactModal.Header>
             <ReactModal.Body className="delegate-modal-body">
                 <div className="form-field p-0">
-                    <p className="label">{t("AVAILABLE")} ({config.coinName})</p>
+                    <p className="label">{t("AVAILABLE")} ({DefaultChainInfo.currency.coinDenom})</p>
                     <div className="available-tokens">
                         <p className={rewards.value === 0 ? "empty info-data" : "info-data"}
                             title={rewards.value}>
@@ -87,7 +87,7 @@ const ModalWithdraw = () => {
                         </p>
                     </div>
                 </div>
-                {loginInfo && loginInfo.loginMode !== config.keplrMode
+                {loginInfo && loginInfo.loginMode !== "keplr"
                     ?
                     <Memo/>
                     : null

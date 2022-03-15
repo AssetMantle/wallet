@@ -11,9 +11,8 @@ const ToAddress = () => {
     const {t} = useTranslation();
     const toAddress = useSelector((state) => state.sendIbc.toAddress);
     const chainInfo = useSelector((state) => state.sendIbc.chainInfo.value);
-    console.log(chainInfo, "in to add");
     const disable = (
-        chainInfo.chain === ''
+        chainInfo.chainName === ''
     );
     const dispatch = useDispatch();
 
@@ -27,12 +26,10 @@ const ToAddress = () => {
     };
 
     const onBlur = (evt) => {
-        const dd= "gravity15md2qvgma8lnvqv67w0umu2paqkqkhega6t5dh";
-        console.log(dd.length);
         if(!chainInfo.customChain){
             dispatch(setTxIbcSendAddress({
                 value: evt.target.value,
-                error: validateAddress(evt.target.value, chainInfo.selectedChannel.name),
+                error: validateAddress(evt.target.value, chainInfo.prefix),
             }));
         }
     };
@@ -40,7 +37,7 @@ const ToAddress = () => {
     const popover = (
         <Popover id="popover">
             <Popover.Content>
-                Recipient’s address starts with {!chainInfo.customChain ? chainInfo.selectedChannel.name : ""}
+                Recipient’s address starts with {!chainInfo.customChain ? chainInfo.chainName : ""}
             </Popover.Content>
         </Popover>
     );

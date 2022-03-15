@@ -11,8 +11,8 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NumberView from "../../../components/NumberView";
 import {formatNumber, stringTruncate} from "../../../utils/scripts";
-import config from "../../../testConfig.json";
 import { LOGIN_INFO} from "../../../constants/localStorage";
+import {DefaultChainInfo} from "../../../config";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const SendTransactions = (props) => {
@@ -107,11 +107,11 @@ const SendTransactions = (props) => {
             (stxn.fee.amount !== undefined && stxn.fee.amount.length) ?
                 (Array.isArray(stxn.fee.amount)) ?
                     stxn.fee.amount.length ?
-                        stxn.fee.amount[0].denom === config.coinDenom ?
+                        stxn.fee.amount[0].denom === DefaultChainInfo.currency.coinMinimalDenom ?
                             <div className="fee text-left" key={index}>
                                 <NumberView
                                     value={formatNumber(tokenValueConversion(stxn.fee.amount[0].amount))}/>
-                                {config.coinName}
+                                {DefaultChainInfo.currency.coinDenom}
                             </div>
                             :
                             <div className="fee text-left" key={index}>

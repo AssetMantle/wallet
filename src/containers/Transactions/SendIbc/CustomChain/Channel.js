@@ -3,7 +3,6 @@ import InputText from "../../../../components/InputText";
 import {useDispatch, useSelector} from "react-redux";
 import {setTxIbcSendCustomChannel} from "../../../../store/actions/transactions/sendIbc";
 import {useTranslation} from "react-i18next";
-import {ValidateAlphaNumeric} from "../../../../utils/validations";
 
 const Channel = () => {
     const {t} = useTranslation();
@@ -30,7 +29,6 @@ const Channel = () => {
                     value={customChannel.value}
                     required={true}
                     error={customChannel.error}
-                    onKeyPress={ValidateAlphaNumeric}
                     placeholder={t("ENTER_CHANNEL")}
                     autofocus={false}
                     onChange={onChange}

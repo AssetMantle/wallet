@@ -1,5 +1,4 @@
 import {DirectSecp256k1HdWallet} from "@cosmjs/proto-signing";
-import config from "../testConfig.json";
 import Long from "long";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient} from "@cosmjs/stargate";
@@ -9,11 +8,12 @@ import {fee} from "./aminoMsgHelper";
 import * as Sentry from "@sentry/browser";
 import {LOGIN_INFO} from "../constants/localStorage";
 import {decodeTendermintClientStateAny, decodeTendermintConsensusStateAny, makeHdPath} from "./helper";
+import {DefaultChainInfo, IBCConfiguration} from "../config";
 
 const {SigningStargateClient, QueryClient, setupIbcExtension} = require("@cosmjs/stargate");
 const tmRPC = require("@cosmjs/tendermint-rpc");
 const {TransferMsg} = require("./protoMsgHelper");
-const addressPrefix = config.addressPrefix;
+const addressPrefix = DefaultChainInfo.prefix;
 const configChainID = process.env.REACT_APP_CHAIN_ID;
 
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
@@ -28,7 +28,6 @@ async function Transaction(wallet, signerAddress, msgs, fee, memo = "") {
 
 async function TransactionWithKeplr(msgs, fee, memo = "", chainID = configChainID) {
     console.log(msgs, "msgs");
-
     const [wallet, address] = await KeplrWallet(chainID);
     return Transaction(wallet, address, msgs, fee, memo);
 }
@@ -58,7 +57,7 @@ async function LedgerWallet(hdpath, prefix) {
         testModeAllowed: true,
         hdPaths: [hdpath],
         prefix: prefix,
-        ledgerAppName:config.persistenceLedgerAppName
+        ledgerAppName:DefaultChainInfo.ledgerAppName
     });
     const [firstAccount] = await signer.getAccounts();
     return [signer, firstAccount.address];
@@ -88,8 +87,7 @@ async function MnemonicWalletWithPassphrase(mnemonic, hdPath = makeHdPath(), pas
     return [wallet, firstAccount.address];
 }
 
-async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp = config.timeoutTimestamp, denom = config.coinDenom, url, port = "transfer") {
-
+async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp = IBCConfiguration.timeoutTimestamp, denom = DefaultChainInfo.currency.coinMinimalDenom, url, port = "transfer") {
     const tendermintClient = await tmRPC.Tendermint34Client.connect(tendermintRPCURL);
     const queryClient = new QueryClient(tendermintClient);
 
@@ -98,20 +96,19 @@ async function MakeIBCTransferMsg(channel, fromAddress, toAddress, amount, timeo
     const finalResponse = await ibcExtension.ibc.channel.clientState(port, channel).then(async (clientStateResponse) => {
         const clientStateResponseDecoded = decodeTendermintClientStateAny(clientStateResponse.identifiedClientState.clientState);
         timeoutHeight = {
-            revisionHeight: clientStateResponseDecoded.latestHeight.revisionHeight.add(config.ibcRevisionHeightIncrement),
+            revisionHeight: clientStateResponseDecoded.latestHeight.revisionHeight.add(IBCConfiguration.ibcRevisionHeightIncrement),
             revisionNumber: clientStateResponseDecoded.latestHeight.revisionNumber
         };
         if (url === undefined) {
             const consensusStateResponse = await ibcExtension.ibc.channel.consensusState(port, channel,
                 clientStateResponseDecoded.latestHeight.revisionNumber.toInt(), clientStateResponseDecoded.latestHeight.revisionHeight.toInt());
             const consensusStateResponseDecoded = decodeTendermintConsensusStateAny(consensusStateResponse.consensusState);
-
-            const timeoutTime = Long.fromNumber(consensusStateResponseDecoded.timestamp.getTime() / 1000).add(timeoutTimestamp).multiply(1000000000); //get time in nanoesconds
+            const timeoutTime = Long.fromNumber(consensusStateResponseDecoded.timestamp.seconds.toNumber()).add(timeoutTimestamp).multiply(1000000000); //get time in nanoesconds
             return TransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTime, denom, port);
         } else {
             const remoteTendermintClient = await tmRPC.Tendermint34Client.connect(url);
             const latestBlockHeight = (await remoteTendermintClient.status()).syncInfo.latestBlockHeight;
-            timeoutHeight.revisionHeight = Long.fromNumber(latestBlockHeight).add(config.ibcRemoteHeightIncrement);
+            timeoutHeight.revisionHeight = Long.fromNumber(latestBlockHeight).add(IBCConfiguration.ibcRemoteHeightIncrement);
             const timeoutTime = Long.fromNumber(0);
             return TransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTime, denom, port);
         }

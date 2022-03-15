@@ -5,9 +5,9 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import {useTranslation} from "react-i18next";
 import {Decimal} from "@cosmjs/math";
-import {unDecimalize} from "../../../utils/scripts";
+import {decimalize, stringToNumber, unDecimalize} from "../../../utils/scripts";
 import {PstakeInfo, DefaultChainInfo} from "../../../config";
-import helper from "../../../utils/helper";
+import helper, {tokenValueConversion} from "../../../utils/helper";
 
 const Tokens = () => {
     const {t} = useTranslation();
@@ -46,8 +46,12 @@ const Tokens = () => {
         } else {
             tokenList.forEach((item) => {
                 if (evt.target.value === item.denom) {
+                    if(item.denom === PstakeInfo.coinMinimalDenom) {
+                        tokenDataObject.transferableAmount = decimalize(item.amount, PstakeInfo.coinDecimals);
+                    } else {
+                        tokenDataObject.transferableAmount = tokenValueConversion(stringToNumber(item.amount));
+                    }
                     tokenDataObject.tokenDenom = item.denom;
-                    tokenDataObject.transferableAmount = item.amount;
                     tokenDataObject.tokenItem = item;
                 }
             });

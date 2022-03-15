@@ -5,8 +5,8 @@ import {ValidateFee, ValidateGas} from "../../../utils/validations";
 import {useTranslation} from "react-i18next";
 import Icon from "../../../components/Icon";
 import {setTxGas} from "../../../store/actions/transactions/gas";
-import config from "../../../testConfig.json";
 import {stringToNumber} from "../../../utils/scripts";
+import {FeeInfo, GasInfo} from "../../../config";
 
 const Gas = () => {
     const {t} = useTranslation();
@@ -21,7 +21,7 @@ const Gas = () => {
     const onChange = (evt) => {
         dispatch(setTxGas({
             value: (stringToNumber(evt.target.value)),
-            feeError: ValidateFee(transferableAmount, config.averageFee * config.gas, type, amount),
+            feeError: ValidateFee(transferableAmount, FeeInfo.averageFee * GasInfo.gas, type, amount),
             error: ValidateGas(evt.target.value)
         }));
     };
@@ -48,8 +48,8 @@ const Gas = () => {
                 <p className="label info">{t("GAS")}</p>
                 <div className="amount-field">
                     <InputFieldNumber
-                        min={config.minGas}
-                        max={config.maxGas}
+                        min={GasInfo.minGas}
+                        max={GasInfo.maxGas}
                         name="gas"
                         placeholder={t("ENTER_GAS")}
                         step="any"

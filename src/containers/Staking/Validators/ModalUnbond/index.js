@@ -7,7 +7,6 @@ import ButtonSubmit from "./ButtonSubmit";
 import {useDispatch, useSelector} from "react-redux";
 import {hideTxUnbondModal} from "../../../../store/actions/transactions/unbond";
 import {showValidatorTxModal} from "../../../../store/actions/validators";
-import config from "../../../../testConfig.json";
 import {LOGIN_INFO} from "../../../../constants/localStorage";
 
 const ModalUnbond = () => {
@@ -48,7 +47,7 @@ const ModalUnbond = () => {
             </ReactModal.Header>
             <ReactModal.Body className="delegate-modal-body">
                 <Amount/>
-                {loginInfo && loginInfo.loginMode !== config.keplrMode
+                {loginInfo && loginInfo.loginMode !== 'keplr'
                     ?
                     <Memo/>
                     : null

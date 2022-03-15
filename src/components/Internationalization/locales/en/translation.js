@@ -1,9 +1,9 @@
-import config from "../../../../testConfig.json";
+import {DefaultChainInfo} from "../../../../config";
 
 let English = {
     translations: {
-        "HOME_PAGE_TEXT": `Securely store, transfer and stake your  ${config.coinName} tokens with the Persistence Wallet`,
-        "HOME_PAGE_SUB_TEXT": `Earn upto 35% annual rewards by staking your  ${config.coinName}`,
+        "HOME_PAGE_TEXT": `Securely store, transfer and stake your  ${DefaultChainInfo.currency.coinDenom} tokens with the Persistence Wallet`,
+        "HOME_PAGE_SUB_TEXT": `Earn upto 35% annual rewards by staking your  ${DefaultChainInfo.currency.coinDenom}`,
         "CREATE_WALLET": "Create Wallet",
         "IMPORT_EXISTS_WALLET": "Import an existing wallet",
         "SIGN_IN": "Sign In",
@@ -62,7 +62,7 @@ let English = {
         "TOTAL_BALANCE": "Total Balance",
         "DELEGATED": "Delegated",
         "DELEGATABLE": "Delegatable",
-        "CURRENT_PRICE":  `Current Price per ${config.coinName}`,
+        "CURRENT_PRICE":  `Current Price per ${DefaultChainInfo.currency.coinDenom}`,
         "CURRENT_VALUE": "Current Value",
         "AMOUNT_UNDER_VESTING": "Vesting Balance",
         "TRANSFERABLE_AMOUNT": "Transferable Amount",
@@ -127,7 +127,7 @@ let English = {
         "KEY_STORE_PASSWORD": "KeyStore file password",
         "AMOUNT_ERROR_MESSAGE": "Insufficient wallet balance to process the transaction.",
         "AMOUNT_WARNING_MESSAGE": "Insufficient wallet balance for your future transactions",
-        "TOTAL_BALANCE_NOTE": `Delegatable ${config.coinName} + Delegated ${config.coinName} + Unbonded ${config.coinName}`,
+        "TOTAL_BALANCE_NOTE": `Delegatable ${DefaultChainInfo.currency.coinDenom} + Delegated ${DefaultChainInfo.currency.coinDenom} + Unbonded ${DefaultChainInfo.currency.coinDenom}`,
         "MEMO_MNEMONIC_CHECK_ERROR": "Entered secret passphrase(mnemonic) in memo field. Don't input any secrete information.",
         "NO_INTERNET": "No Internet",
         "NO_INTERNET_NOTE1": "Checking the network cables, modem and router",
@@ -136,7 +136,7 @@ let English = {
         "KEPLR_INSTALLED_WARNING": "Already Installed Restart the Application ?",
         "ERROR_MNEMONIC_EXPECT_STRING": "Mnemonic expects a string",
         "ERROR_MNEMONIC_INVALID_SECTION": "Mnemonic phrases have invalid checksums",
-        "DELEGATE_HEADER_HINT": `Delegate your ${config.coinName} and earn staking rewards.`,
+        "DELEGATE_HEADER_HINT": `Delegate your ${DefaultChainInfo.currency.coinDenom} and earn staking rewards.`,
         "DELEGATE_HEADER_HINT_NOTE": "Unstaking or unbonding period: 21 days",
         "FAQS": "FAQ",
         "SELECT_CHAIN": "Select Chain",
@@ -162,7 +162,7 @@ let English = {
         "AVAILABLE_REWARDS": "Available Rewards",
         "RECEIVED_IBC_TOKENS": "Tokens received via IBC",
         "VIEW": "View",
-        "VIEW_UNBOND_SCHEDULE": `View Unbonding ${config.coinName} Schedule`,
+        "VIEW_UNBOND_SCHEDULE": `View Unbonding ${DefaultChainInfo.currency.coinDenom} Schedule`,
         "UNBONDING_AMOUNT": "Unbonding Amount",
         "DATE": "Date",
         "VESTING_SCHEDULE": "Vesting Schedule",

@@ -12,11 +12,11 @@ import {QueryClientImpl} from "cosmjs-types/cosmos/distribution/v1beta1/query";
 import ActionHelper from "../../utils/actions";
 import {QueryClientImpl as StakingQueryClientImpl} from "cosmjs-types/cosmos/staking/v1beta1/query";
 import * as Sentry from "@sentry/browser";
-import config from "../../testConfig.json";
-import {decimalConversion, stringToNumber} from "../../utils/scripts";
+import {decimalize, stringToNumber} from "../../utils/scripts";
 import {checkValidatorAccountAddress, tokenValueConversion} from "../../utils/helper";
 import Lodash from "lodash";
 import {sortTokensByDenom} from "../../utils/validations";
+import {DefaultChainInfo} from "../../config";
 
 export const fetchRewardsProgress = () => {
     return {
@@ -76,7 +76,7 @@ export const fetchTotalRewards = (address) => {
                 if (delegatorRewardsResponse.total.length) {
                     let allTokensRewards = [];
                     for (const token of delegatorRewardsResponse.total) {
-                        let rewards = decimalConversion(token.amount, 18);
+                        let rewards = decimalize(token.amount, 18);
                         const fixedRewardsResponse = tokenValueConversion(stringToNumber(rewards));
                         const fixedRewards = stringToNumber(fixedRewardsResponse).toFixed(6);
                         const data = {
@@ -86,8 +86,8 @@ export const fetchTotalRewards = (address) => {
                         allTokensRewards.push(data);
                     }
                     let xprtRewards = Lodash.sumBy(delegatorRewardsResponse.total, (token) => {
-                        if(token.denom === config.coinDenom){
-                            let rewards = decimalConversion(token.amount, 18);
+                        if(token.denom === DefaultChainInfo.currency.coinMinimalDenom){
+                            let rewards = decimalize(token.amount, 18);
                             const fixedRewardsResponse = tokenValueConversion(stringToNumber(rewards));
                             return stringToNumber(fixedRewardsResponse);
                         }else {
@@ -95,8 +95,8 @@ export const fetchTotalRewards = (address) => {
                         }
                     });
                     let ibcRewards = Lodash.sumBy(delegatorRewardsResponse.total, (token) => {
-                        if(token.denom !== config.coinDenom) {
-                            let rewards = decimalConversion(token.amount, 18);
+                        if(token.denom !== DefaultChainInfo.currency.coinMinimalDenom) {
+                            let rewards = decimalize(token.amount, 18);
                             const fixedRewardsResponse = tokenValueConversion(stringToNumber(rewards));
                             return stringToNumber(fixedRewardsResponse);
                         }else {
@@ -139,7 +139,7 @@ export const fetchRewards = (address) => {
                 if (delegatorRewardsResponse.rewards.length) {
                     let options = [];
                     for (const item of delegatorRewardsResponse.rewards) {
-                        let rewardItem = sortTokensByDenom(item, config.coinDenom);
+                        let rewardItem = sortTokensByDenom(item, DefaultChainInfo.currency.coinMinimalDenom);
                         if(rewardItem) {
                             const stakingQueryService = new StakingQueryClientImpl(rpcClient);
                             await stakingQueryService.Validator({
@@ -147,9 +147,9 @@ export const fetchRewards = (address) => {
                             }).then(async (res) => {
                                 const data = {
                                     label: `${res.validator.description.moniker} - 
-                                    ${tokenValueConversion(decimalConversion(rewardItem && rewardItem.amount)).toLocaleString(undefined, {minimumFractionDigits: 6})} ${config.coinName}`,
+                                    ${tokenValueConversion(decimalize(rewardItem && rewardItem.amount)).toLocaleString(undefined, {minimumFractionDigits: 6})} ${DefaultChainInfo.currency.coinDenom}`,
                                     value: res.validator.operatorAddress,
-                                    rewards: decimalConversion(rewardItem && rewardItem.amount)
+                                    rewards: decimalize(rewardItem && rewardItem.amount)
                                 };
                                 options.push(data);
                             }).catch((error) => {

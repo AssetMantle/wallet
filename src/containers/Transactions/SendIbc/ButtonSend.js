@@ -8,7 +8,7 @@ import {setTxName, txFailed} from "../../../store/actions/transactions/common";
 import * as Sentry from "@sentry/browser";
 import {stringToNumber, unDecimalize} from "../../../utils/scripts";
 import {LOGIN_INFO} from "../../../constants/localStorage";
-import {PstakeInfo} from "../../../config";
+import {ExternalChains, PstakeInfo} from "../../../config";
 
 const ButtonSend = () => {
     const dispatch = useDispatch();
@@ -22,9 +22,11 @@ const ButtonSend = () => {
     let inputChannelID = chainInfo.customChain ? customChannel.value : chainInfo.chainID;
     let inputPort = chainInfo.customChain ? customPort.value : "transfer";
     const memo = useSelector((state) => state.sendIbc.memo);
+    const channelUrl = ExternalChains.find(chain => chain.chainName === chainInfo.chainName);
     let sendAmount;
+
     if(token.value.tokenDenom === PstakeInfo.coinMinimalDenom){
-        sendAmount = Number(unDecimalize(amount.value, 18)).toString();
+        sendAmount = unDecimalize(amount.value, PstakeInfo.coinDecimals);
     }else {
         sendAmount = (amount.value * 1000000).toFixed(0);
     }
@@ -37,7 +39,7 @@ const ButtonSend = () => {
     const onClick = async () => {
         let msg = transactions.MakeIBCTransferMsg(inputChannelID, loginInfo && loginInfo.address,
             toAddress.value, sendAmount, undefined, undefined,
-            token.value.tokenDenom, chainInfo.selectedChannel ? chainInfo.selectedChannel.url : undefined, inputPort);
+            token.value.tokenDenom, channelUrl && channelUrl.rpc !=='' ? channelUrl.rpc : undefined, inputPort);
         msg.then(result => {
             dispatch(submitFormData([result], inputPort, inputChannelID));
         }).catch(error => {
@@ -57,8 +59,7 @@ const ButtonSend = () => {
         }));
         let msg = transactions.MakeIBCTransferMsg(inputChannelID, loginInfo && loginInfo.address,
             toAddress.value, sendAmount, undefined, undefined,
-            token.value.tokenDenom, chainInfo.selectedChannel ? chainInfo.selectedChannel.url : undefined, inputPort);
-
+            token.value.tokenDenom, channelUrl && channelUrl.rpc !=='' ? channelUrl.rpc : undefined, inputPort);
 
         msg.then(result => {
             dispatch(keplrSubmit([result]));

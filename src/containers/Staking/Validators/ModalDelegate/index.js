@@ -8,7 +8,6 @@ import {hideTxDelegateModal} from "../../../../store/actions/transactions/delega
 import ButtonSubmit from "./ButtonSubmit";
 import {showValidatorTxModal} from "../../../../store/actions/validators";
 import Memo from "./Memo";
-import config from "../../../../testConfig.json";
 import {LOGIN_INFO} from "../../../../constants/localStorage";
 
 const ModalDelegate = (props) => {
@@ -64,7 +63,7 @@ const ModalDelegate = (props) => {
             </ReactModal.Header>
             <ReactModal.Body className="delegate-modal-body">
                 <Amount/>
-                {loginInfo && loginInfo.loginMode !== config.keplrMode
+                {loginInfo && loginInfo.loginMode !== 'keplr'
                     ?
                     <Memo/>
                     : null

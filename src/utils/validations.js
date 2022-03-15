@@ -1,7 +1,7 @@
-import config from "../testConfig.json";
 import {LOGIN_INFO} from "../constants/localStorage";
 import {mnemonicTrim, stringToNumber} from "./scripts";
 import {tokenValueConversion} from "./helper";
+import {GasInfo} from "../config";
 
 const bip39 = require("bip39");
 const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
@@ -36,7 +36,7 @@ export const ValidateFee = (transferableAmount, feeValue, type, amount) => {
 };
 
 export const ValidateGas = (value) => {
-    if (stringToNumber(value) < config.minGas || (stringToNumber(value)) > config.maxGas) {
+    if (stringToNumber(value) < GasInfo.minGas || (stringToNumber(value)) > GasInfo.maxGas) {
         return new Error('Enter Gas between 80000 to 2000000');
     }
     return new Error('');
@@ -153,8 +153,8 @@ export const validateAddress = (address, prefix = "persistence") => {
         if (!address.startsWith(prefix) || address.length !== 45) {
             return new Error('Invalid Recipient Address');
         }
-    } else if (prefix === "osmosis") {
-        if (!address.startsWith("osmo") || address.length !== 43) {
+    } else if (prefix === "osmo") {
+        if (!address.startsWith(prefix) || address.length !== 43) {
             return new Error('Invalid Recipient Address');
         }
     } else if (prefix === "gravity") {
@@ -162,7 +162,7 @@ export const validateAddress = (address, prefix = "persistence") => {
             return new Error('Invalid Recipient Address');
         }
     } else if (prefix === "juno") {
-        if (!address.startsWith("juno") || address.length !== 46) {
+        if (!address.startsWith("juno") || address.length !== 43) {
             return new Error('Invalid Recipient Address');
         }
     } else {

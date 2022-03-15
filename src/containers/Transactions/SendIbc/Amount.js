@@ -8,7 +8,6 @@ import {ValidateSendAmount, ValidateSpecialCharacters} from "../../../utils/vali
 import {useTranslation} from "react-i18next";
 import {OverlayTrigger, Popover} from "react-bootstrap";
 import helper from "../../../utils/helper";
-import {Decimal} from "@cosmjs/math";
 import {DefaultChainInfo, PstakeInfo} from "../../../config";
 
 const Amount = () => {
@@ -19,7 +18,7 @@ const Amount = () => {
     const chainInfo = useSelector((state) => state.sendIbc.chainInfo.value);
 
     const disable = (
-        chainInfo.chain === ''
+        chainInfo.chainName === ''
     );
 
     const dispatch = useDispatch();
@@ -75,12 +74,12 @@ const Amount = () => {
                             :
                             (token.tokenDenom === PstakeInfo.coinMinimalDenom) ?
                                 <span className={transferableAmount === 0 ? "empty info-data" : "info-data info-link"}
-                                    onClick={() => selectTotalBalanceHandler(Decimal.fromAtomics(token.transferableAmount.toString(), 18).toString())}>
+                                    onClick={() => selectTotalBalanceHandler(token.transferableAmount)}>
                                     <span
                                         className="title">{t("TRANSFERABLE_BALANCE")}:</span>
                                     <span
                                         className="value">
-                                        <NumberView value={formatNumber(Decimal.fromAtomics(token.transferableAmount.toString(), 18).toString())}/>
+                                        <NumberView value={formatNumber(token.transferableAmount)}/>
                                         &nbsp;{helper.denomChange(token.tokenItem.denomTrace.baseDenom)}
                                     </span>
                                 </span>
