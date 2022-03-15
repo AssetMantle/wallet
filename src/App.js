@@ -36,6 +36,8 @@ const trackPage = page => {
     ReactGA.pageview(page);
 };
 
+//Update the package.json version everytime whenever new deployment happened to production to clear the browser cache.
+
 const App = () => {
     const {t} = useTranslation();
     const history = useHistory();
