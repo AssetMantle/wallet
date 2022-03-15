@@ -8,7 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {hideTxReDelegateModal} from "../../../../store/actions/transactions/redelegate";
 import {showValidatorTxModal} from "../../../../store/actions/validators";
 import Validator from "./Validator";
-import config from "../../../../config";
+import config from "../../../../testConfig.json";
 import {LOGIN_INFO} from "../../../../constants/localStorage";
 
 const ModalReDelegate = () => {

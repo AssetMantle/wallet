@@ -19,7 +19,7 @@ import helper, {tokenValueConversion} from "../../utils/helper";
 import transactions from "../../utils/transactions";
 import * as Sentry from "@sentry/browser";
 import {decimalConversion, stringToNumber} from "../../utils/scripts";
-import config from "../../config.json";
+import config from "../../testConfig.json";
 
 export const fetchValidatorsInProgress = () => {
     return {

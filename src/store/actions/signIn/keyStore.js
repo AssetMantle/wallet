@@ -9,7 +9,7 @@ import {
 import {setLoginInfo} from "../transactions/common";
 import helper, {decryptKeyStore, vestingAccountCheck, getAccount, makeHdPath} from "../../../utils/helper";
 import wallet from "../../../utils/wallet";
-import config from "../../../config";
+import config from "../../../testConfig.json";
 import * as Sentry from "@sentry/browser";
 import {
     ENCRYPTED_MNEMONIC,

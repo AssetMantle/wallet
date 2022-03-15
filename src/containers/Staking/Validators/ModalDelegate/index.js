@@ -8,7 +8,7 @@ import {hideTxDelegateModal} from "../../../../store/actions/transactions/delega
 import ButtonSubmit from "./ButtonSubmit";
 import {showValidatorTxModal} from "../../../../store/actions/validators";
 import Memo from "./Memo";
-import config from "../../../../config";
+import config from "../../../../testConfig.json";
 import {LOGIN_INFO} from "../../../../constants/localStorage";
 
 const ModalDelegate = (props) => {

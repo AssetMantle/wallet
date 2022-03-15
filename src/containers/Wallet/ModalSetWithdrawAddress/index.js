@@ -7,7 +7,7 @@ import RevisedAddress from "./RevisedAddress";
 import Memo from "./Memo";
 import NumberView from "../../../components/NumberView";
 import {formatNumber} from "../../../utils/scripts";
-import config from "../../../config";
+import config from "../../../testConfig.json";
 import ButtonNext from "./ButtonNext";
 import {fetchWithdrawAddress} from "../../../store/actions/withdrawAddress";
 import Icon from "../../../components/Icon";

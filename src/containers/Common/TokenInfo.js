@@ -14,7 +14,7 @@ import {OverlayTrigger, Popover} from "react-bootstrap";
 import ModalViewDelegationDetails from "./ModalViewDelegationDetails";
 import {fetchValidators} from "../../store/actions/validators";
 import NumberView from "../../components/NumberView";
-import config from "../../config";
+import config from "../../testConfig.json";
 import {formatNumber} from "../../utils/scripts";
 import {showTxWithDrawTotalModal} from "../../store/actions/transactions/withdrawTotalRewards";
 import ReactGA from "react-ga";

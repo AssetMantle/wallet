@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {ValidateAccountIndex, ValidateSpecialCharacters} from "../../../utils/validations";
 import {useTranslation} from "react-i18next";
 import {setAccountIndex} from "../../../store/actions/transactions/advanced";
-import config from "../../../config";
+import config from "../../../testConfig.json";
 
 const AccountIndex = () => {
     const {t} = useTranslation();

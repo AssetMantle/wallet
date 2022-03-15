@@ -13,7 +13,7 @@ import {
 } from "../../../../store/actions/validators";
 import {connect, useDispatch} from "react-redux";
 import {useTranslation} from "react-i18next";
-import config from "../../../../config";
+import config from "../../../../testConfig.json";
 import {LOGIN_INFO} from "../../../../constants/localStorage";
 import {stringToNumber} from "../../../../utils/scripts";
 

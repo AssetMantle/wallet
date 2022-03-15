@@ -8,7 +8,7 @@ import {useTranslation} from "react-i18next";
 import Darktheme from "../DarkTheme";
 import MobileSidebar from "./MobileSidebar";
 import transactions from "../../utils/transactions";
-import config from "../../config";
+import config from "../../testConfig.json";
 import {userLogout} from "../../store/actions/logout";
 import {useDispatch} from "react-redux";
 import {showKeyStoreMnemonicModal} from "../../store/actions/generateKeyStore";

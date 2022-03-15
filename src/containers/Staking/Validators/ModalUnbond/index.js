@@ -7,7 +7,7 @@ import ButtonSubmit from "./ButtonSubmit";
 import {useDispatch, useSelector} from "react-redux";
 import {hideTxUnbondModal} from "../../../../store/actions/transactions/unbond";
 import {showValidatorTxModal} from "../../../../store/actions/validators";
-import config from "../../../../config";
+import config from "../../../../testConfig.json";
 import {LOGIN_INFO} from "../../../../constants/localStorage";
 
 const ModalUnbond = () => {

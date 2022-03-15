@@ -1,7 +1,7 @@
 import {SET_KEPLR_INFO, SIGN_IN_KEPLR_MODAL_HIDE, SIGN_IN_KEPLR_MODAL_SHOW} from "../../../constants/signIn/keplr";
 import KeplrWallet from "../../../utils/keplr";
 import {getAccount} from "../../../utils/helper";
-import config from "../../../config";
+import config from "../../../testConfig.json";
 import {setLoginInfo} from "../transactions/common";
 import * as Sentry from "@sentry/browser";
 import helper, {vestingAccountCheck} from "../../../utils/helper";

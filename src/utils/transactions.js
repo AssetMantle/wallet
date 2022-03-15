@@ -1,5 +1,5 @@
 import {DirectSecp256k1HdWallet} from "@cosmjs/proto-signing";
-import config from "../config.json";
+import config from "../testConfig.json";
 import Long from "long";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient} from "@cosmjs/stargate";

@@ -1,4 +1,4 @@
-import config from "../config";
+import config from "../testConfig.json";
 import {LOGIN_INFO} from "../constants/localStorage";
 import {mnemonicTrim, stringToNumber} from "./scripts";
 import {tokenValueConversion} from "./helper";

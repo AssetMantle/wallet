@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import config from "../../../config";
+import config from "../../../testConfig.json";
 import NumberView from "../../../components/NumberView";
 import {formatNumber} from "../../../utils/scripts";
 import {useDispatch, useSelector} from "react-redux";

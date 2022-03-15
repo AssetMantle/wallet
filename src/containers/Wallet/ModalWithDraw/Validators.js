@@ -9,7 +9,7 @@ import {
 import {ValidateMultipleValidatorsClaim} from "../../../utils/validations";
 import NumberView from "../../../components/NumberView";
 import {formatNumber, stringToNumber} from "../../../utils/scripts";
-import config from "../../../config";
+import config from "../../../testConfig.json";
 import {tokenValueConversion} from "../../../utils/helper";
 import {LOGIN_INFO} from "../../../constants/localStorage";
 import Select from 'react-select';

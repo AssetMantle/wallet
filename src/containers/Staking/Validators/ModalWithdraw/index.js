@@ -13,7 +13,7 @@ import {
     setPreviousModalName,
     showTxWithDrawAddressModal
 } from "../../../../store/actions/transactions/setWithdrawAddress";
-import config from "../../../../config";
+import config from "../../../../testConfig.json";
 import {LOGIN_INFO} from "../../../../constants/localStorage";
 import ReactGA from "react-ga";
 

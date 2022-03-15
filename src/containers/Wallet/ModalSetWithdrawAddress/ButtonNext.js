@@ -5,7 +5,7 @@ import {keplrSubmit} from "../../../store/actions/transactions/keplr";
 import {hideTxWithDrawAddressModal, submitFormData} from "../../../store/actions/transactions/setWithdrawAddress";
 import {SetWithDrawAddressMsg} from "../../../utils/protoMsgHelper";
 import {setTxIno} from "../../../store/actions/transactions/common";
-import config from "../../../config";
+import config from "../../../testConfig.json";
 import {LOGIN_INFO} from "../../../constants/localStorage";
 
 const ButtonNext = () => {

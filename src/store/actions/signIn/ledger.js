@@ -6,7 +6,7 @@ import {
     SIGN_IN_LEDGER_MODAL_SHOW
 } from "../../../constants/signIn/ledger";
 import {fetchAddress} from "../../../utils/ledger";
-import config from "../../../config";
+import config from "../../../testConfig.json";
 import {setLoginInfo} from "../transactions/common";
 import * as Sentry from "@sentry/browser";
 import helper, {vestingAccountCheck, getAccount} from "../../../utils/helper";

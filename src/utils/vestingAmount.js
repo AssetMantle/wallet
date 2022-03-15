@@ -1,7 +1,7 @@
 import * as Sentry from "@sentry/browser";
 import {getAccount, tokenValueConversion} from "./helper";
 
-const config = require('../config');
+const config = require('../testConfig.json');
 
 const periodicVesting = "/cosmos.vesting.v1beta1.PeriodicVestingAccount";
 const baseAccount = "/cosmos.auth.v1beta1.BaseAccount";

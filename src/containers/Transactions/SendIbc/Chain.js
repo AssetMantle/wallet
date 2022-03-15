@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import {useTranslation} from "react-i18next";
-import ibcConfig from "../../../ibcConfig";
+import ibcConfig from "../../../ibcConfig.json";
 import {setTxIbcSendChainInfo} from "../../../store/actions/transactions/sendIbc";
 
 const IBC_CONF = process.env.REACT_APP_IBC_CONFIG;

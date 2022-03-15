@@ -3,7 +3,7 @@ import Button from "./../../../../components/Button";
 import {hideTxReDelegateModal, submitFormData} from "../../../../store/actions/transactions/redelegate";
 import {useDispatch, useSelector} from "react-redux";
 import {keplrSubmit} from "../../../../store/actions/transactions/keplr";
-import config from "../../../../config";
+import config from "../../../../testConfig.json";
 import {RedelegateMsg} from "../../../../utils/protoMsgHelper";
 import {setTxIno} from "../../../../store/actions/transactions/common";
 import {LOGIN_INFO} from "../../../../constants/localStorage";
