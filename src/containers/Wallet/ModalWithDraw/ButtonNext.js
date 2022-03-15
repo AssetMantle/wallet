@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {keplrSubmit} from "../../../store/actions/transactions/keplr";
 import {hideTxWithDrawTotalModal, submitFormData} from "../../../store/actions/transactions/withdrawTotalRewards";
 import {setTxIno} from "../../../store/actions/transactions/common";
-import config from "../../../config";
+import config from "../../../testConfig.json";
 import {LOGIN_INFO} from "../../../constants/localStorage";
 
 const ButtonNext = () => {

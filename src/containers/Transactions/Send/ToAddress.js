@@ -3,18 +3,17 @@ import {OverlayTrigger, Popover} from "react-bootstrap";
 import Icon from "../../../components/Icon";
 import InputText from "../../../components/InputText";
 import {useDispatch, useSelector} from "react-redux";
-import {setTxIbcSendAddress} from "../../../store/actions/transactions/sendIbc";
+import {setTxSendAddress} from "../../../store/actions/transactions/send";
 import {useTranslation} from "react-i18next";
 import {validateAddress, ValidateAlphaNumeric} from "../../../utils/validations";
 
 const ToAddress = () => {
     const {t} = useTranslation();
-    const toAddress = useSelector((state) => state.sendIbc.toAddress);
+    const toAddress = useSelector((state) => state.send.toAddress);
     const dispatch = useDispatch();
-
     const onChange = (evt) => {
-        dispatch(setTxIbcSendAddress({
-            value: evt.target.value,
+        dispatch(setTxSendAddress({
+            value: evt.target.value.toString(),
             error: {
                 message: ''
             }
@@ -22,9 +21,9 @@ const ToAddress = () => {
     };
 
     const onBlur = (evt) => {
-        dispatch(setTxIbcSendAddress({
-            value: evt.target.value,
-            error: validateAddress(evt.target.value),
+        dispatch(setTxSendAddress({
+            value: evt.target.value.toString(),
+            error: validateAddress(evt.target.value, ),
         }));
     };
 
@@ -47,14 +46,14 @@ const ToAddress = () => {
                 <InputText
                     className="form-control"
                     name="address"
-                    type="text"
-                    value={toAddress.value}
+                    placeholder="Enter Recipient's address"
                     required={true}
-                    error={toAddress.error}
+                    type="text"
+                    autofocus={false}
+                    value={toAddress.value}
                     onKeyPress={ValidateAlphaNumeric}
                     onBlur={onBlur}
-                    placeholder="Enter Recipient's address"
-                    autofocus={false}
+                    error={toAddress.error}
                     onChange={onChange}
                 />
             </div>

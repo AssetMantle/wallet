@@ -5,7 +5,7 @@ import {formatNumber, removeCommas, stringToNumber} from "../../../../utils/scri
 import NumberView from "../../../../components/NumberView";
 import {ValidateReDelegateAmount, ValidateSpecialCharacters} from "../../../../utils/validations";
 import {useTranslation} from "react-i18next";
-import config from "../../../../config";
+import config from "../../../../testConfig.json";
 import {setTxReDelegateAmount} from "../../../../store/actions/transactions/redelegate";
 
 const Amount = () => {

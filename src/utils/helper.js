@@ -1,6 +1,6 @@
 import transactions from "./transactions";
-import config from "../config";
-import {COIN_ATOM, COIN_ATOM_DENOM} from "../constants/keyWords";
+import config from "../testConfig.json";
+import {COIN_ATOM, COIN_ATOM_DENOM, COIN_GRAVITY, COIN_GRAVITY_DENOM, COIN_PSTAKE} from "../constants/keyWords";
 import {
     ADDRESS,
     ENCRYPTED_MNEMONIC,
@@ -19,6 +19,7 @@ import {
 } from "cosmjs-types/cosmos/vesting/v1beta1/vesting";
 import * as Sentry from "@sentry/browser";
 import {mnemonicTrim} from "./scripts";
+import {PstakeInfo} from "../config";
 
 const tendermint_1 = require("cosmjs-types/ibc/lightclients/tendermint/v1/tendermint");
 const encoding = require("@cosmjs/encoding");
@@ -110,6 +111,10 @@ function denomChange(denom) {
         return config.coinName;
     case COIN_ATOM_DENOM:
         return COIN_ATOM;
+    case PstakeInfo.baseDenom:
+        return COIN_PSTAKE;
+    case COIN_GRAVITY_DENOM:
+        return COIN_GRAVITY;
     default:
         return null;
     }

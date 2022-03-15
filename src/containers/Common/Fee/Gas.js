@@ -5,7 +5,7 @@ import {ValidateFee, ValidateGas} from "../../../utils/validations";
 import {useTranslation} from "react-i18next";
 import Icon from "../../../components/Icon";
 import {setTxGas} from "../../../store/actions/transactions/gas";
-import config from "../../../config";
+import config from "../../../testConfig.json";
 import {stringToNumber} from "../../../utils/scripts";
 
 const Gas = () => {

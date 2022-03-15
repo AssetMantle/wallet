@@ -1,4 +1,4 @@
-import config from "../config";
+import config from "../testConfig.json";
 
 function sendMsg(fromAddress, toAddress, amount, denom) {
     return {

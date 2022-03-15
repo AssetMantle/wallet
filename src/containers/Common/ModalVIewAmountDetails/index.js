@@ -5,8 +5,9 @@ import helper, {tokenValueConversion} from "../../../utils/helper";
 import {useTranslation} from "react-i18next";
 import {formatNumber} from "../../../utils/scripts";
 import NumberView from "../../../components/NumberView";
-import config from "../../../config";
+import config from "../../../testConfig.json";
 import ReactGA from "react-ga";
+import {Decimal} from "@cosmjs/math";
 const tmRPC = require("@cosmjs/tendermint-rpc");
 const {QueryClient, setupIbcExtension} = require("@cosmjs/stargate");
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
@@ -35,6 +36,8 @@ const ModalViewAmountDetails = (props) => {
                     dataResponse: item,
                     denomResponse: ibcDenomeResponse
                 };
+                console.log(data, "ibcDenomeResponse");
+
                 setIbcList(ibcList => [...ibcList, data]);
             }
         });
@@ -59,14 +62,25 @@ const ModalViewAmountDetails = (props) => {
                         {props.list ?
                             ibcList.map((item, index) => {
                                 if (item.dataResponse.denom !== config.coinDenom) {
-                                    return (
-                                        <li className="" key={index} title={item.dataResponse.denom}>
-                                            <NumberView
-                                                value={formatNumber(tokenValueConversion(item.dataResponse.amount))}/>{helper.denomChange(item.denomResponse.denomTrace.baseDenom)} (
-                                            IBC Trace path - {item.denomResponse.denomTrace.path},
-                                            denom: {item.denomResponse.denomTrace.baseDenom} ) {item.dataResponse.denom}
-                                        </li>
-                                    );
+                                    console.log(item.dataResponse.denom, "item.dataResponse.denom");
+                                    if(item.dataResponse.denom === config.pstakeToken){
+                                        return (
+                                            <li className="" key={index} title={item.dataResponse.denom}>
+                                                {Decimal.fromAtomics(item.dataResponse.amount, 18).toString()}
+                                                &nbsp;{helper.denomChange(item.denomResponse.denomTrace.baseDenom)}
+                                            </li>
+                                        );
+                                    }
+                                    else {
+                                        return (
+                                            <li className="" key={index} title={item.dataResponse.denom}>
+                                                <NumberView
+                                                    value={formatNumber(tokenValueConversion(item.dataResponse.amount))}/>{helper.denomChange(item.denomResponse.denomTrace.baseDenom)} (
+                                                IBC Trace path - {item.denomResponse.denomTrace.path},
+                                                denom: {item.denomResponse.denomTrace.baseDenom} ) {item.dataResponse.denom}
+                                            </li>
+                                        );
+                                    }
                                 }
                             }) : null
                         }

@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import {useTranslation} from "react-i18next";
 import NumberView from "../../../components/NumberView";
 import {formatNumber, localTime, stringToNumber} from "../../../utils/scripts";
-import config from "../../../config";
+import config from "../../../testConfig.json";
 import {tokenValueConversion} from "../../../utils/helper";
 import ReactGA from "react-ga";
 

@@ -7,26 +7,31 @@ import NumberView from "../../../components/NumberView";
 import {ValidateSendAmount, ValidateSpecialCharacters} from "../../../utils/validations";
 import {useTranslation} from "react-i18next";
 import {OverlayTrigger, Popover} from "react-bootstrap";
-import config from "../../../config";
 import helper from "../../../utils/helper";
+import {Decimal} from "@cosmjs/math";
+import {DefaultChainInfo, PstakeInfo} from "../../../config";
 
 const Amount = () => {
     const {t} = useTranslation();
     const amount = useSelector((state) => state.sendIbc.amount);
     const token = useSelector((state) => state.sendIbc.token.value);
     const transferableAmount = useSelector((state) => state.balance.transferableAmount);
+    const chainInfo = useSelector((state) => state.sendIbc.chainInfo.value);
+
+    const disable = (
+        chainInfo.chain === ''
+    );
 
     const dispatch = useDispatch();
 
     const onChange = (evt) => {
         let rex = /^\d*\.?\d{0,6}$/;
         if (rex.test(evt.target.value)) {
-            if (token.tokenDenom === config.coinDenom) {
+            if (token.tokenDenom === DefaultChainInfo.currency.coinMinimalDenom) {
                 dispatch(setTxIbcSendAmount({
                     value: evt.target.value,
                     error: ValidateSendAmount(transferableAmount, (stringToNumber(evt.target.value)))
                 }));
-
             } else {
                 dispatch(
                     setTxIbcSendAmount({
@@ -55,7 +60,7 @@ const Amount = () => {
                 <span> {t("AMOUNT")}</span>
                 {
                     Object.keys(token).length !== 0 ?
-                        token.tokenDenom === config.coinDenom ?
+                        token.tokenDenom === DefaultChainInfo.currency.coinMinimalDenom ?
                             <span
                                 className={transferableAmount === 0 ? "empty info-data" : "info-data info-link"}
                                 onClick={() => selectTotalBalanceHandler(removeCommas(formatNumber(transferableAmount)))}><span
@@ -64,43 +69,56 @@ const Amount = () => {
                                     className="value"
                                     title={transferableAmount}>
                                     <NumberView value={formatNumber(transferableAmount)}/>
-                                    {config.coinName}
+                                    {DefaultChainInfo.currency.coinDenom}
                                 </span> 
                             </span>
                             :
-                            <OverlayTrigger trigger={['hover', 'focus']}
-                                placement="bottom"
-                                overlay={
-                                    <Popover id="popover-memo">
-                                        <Popover.Content>
-                                            {`${token.transferableAmount.toLocaleString()} 
-                                            ${helper.denomChange(token.tokenItem.denom.baseDenom)}
-                                            ( IBC Trace path - ${token.tokenItem.denom.path} , 
-                                            denom: ${token.tokenItem.denom.baseDenom} ) 
-                                            ${token.tokenItem.denomTrace}`}
-                                        </Popover.Content>
-                                    </Popover>
-                                }>
-                                <span onClick={() => selectTotalBalanceHandler(removeCommas(formatNumber(token.transferableAmount)))}
-                                    className={token.transferableAmount === 0 ? "empty info-data" : "info-data info-link"}>
-                                    <span className="title">
-                                        {t("TRANSFERABLE_BALANCE")}:
+                            (token.tokenDenom === PstakeInfo.coinMinimalDenom) ?
+                                <span className={transferableAmount === 0 ? "empty info-data" : "info-data info-link"}
+                                    onClick={() => selectTotalBalanceHandler(Decimal.fromAtomics(token.transferableAmount.toString(), 18).toString())}>
+                                    <span
+                                        className="title">{t("TRANSFERABLE_BALANCE")}:</span>
+                                    <span
+                                        className="value">
+                                        <NumberView value={formatNumber(Decimal.fromAtomics(token.transferableAmount.toString(), 18).toString())}/>
+                                        &nbsp;{helper.denomChange(token.tokenItem.denomTrace.baseDenom)}
                                     </span>
-                                    <span className="value">
-                                        {token.transferableAmount.toLocaleString()} {helper.denomChange(token.tokenItem.denom.baseDenom)}
-                                    </span> 
                                 </span>
-                            </OverlayTrigger>
+                                :
+                                <OverlayTrigger trigger={['hover', 'focus']}
+                                    placement="bottom"
+                                    overlay={
+                                        <Popover id="popover-memo">
+                                            <Popover.Content>
+                                                {`${token.transferableAmount.toLocaleString()} 
+                                            ${helper.denomChange(token.tokenItem.denomTrace.baseDenom)}
+                                            ( IBC Trace path - ${token.tokenItem.denomTrace.path}, 
+                                            denom: ${token.tokenItem.denomTrace.baseDenom}), ${token.tokenDenom}` }
+                                            </Popover.Content>
+                                        </Popover>
+                                    }>
+                                    <span onClick={() => selectTotalBalanceHandler(removeCommas(formatNumber(token.transferableAmount)))}
+                                        className={token.transferableAmount === 0 ? "empty info-data" : "info-data info-link"}>
+                                        <span className="title">
+                                            {t("TRANSFERABLE_BALANCE")}:
+                                        </span>
+                                        <span className="value">
+                                            <NumberView value={formatNumber(token.transferableAmount)}/>
+                                            {helper.denomChange(token.tokenItem.denomTrace.baseDenom)}
+                                        </span>
+                                    </span>
+                                </OverlayTrigger>
 
                         :
                         <span
                             className={transferableAmount === 0 ? "empty info-data" : "info-data info-link"}
                             onClick={() => selectTotalBalanceHandler(removeCommas(formatNumber(transferableAmount)))}><span
-                                className="title">Transferable Balance:</span>
+                                className="title">{t("TRANSFERABLE_BALANCE")}:</span>
                             <span
                                 className="value"
                                 title={transferableAmount}>
-                                <NumberView value={formatNumber(transferableAmount)}/>{config.coinName}
+                                <NumberView value={formatNumber(transferableAmount)}/>
+                                {DefaultChainInfo.currency.coinDenom}
                             </span> 
                         </span>
                 }
@@ -117,6 +135,7 @@ const Amount = () => {
                     onKeyPress={ValidateSpecialCharacters}
                     error={amount.error}
                     onChange={onChange}
+                    disable={disable}
                 />
 
             </div>

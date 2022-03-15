@@ -14,7 +14,8 @@ const InputFieldNumber = ({
     onChange,
     min = '',
     onBlur = emptyFunc,
-    onKeyPress = emptyFunc,
+    onKeyPress = emptyFunc, 
+    disable = false
 }) => {
 
     return (
@@ -31,6 +32,7 @@ const InputFieldNumber = ({
                 onChange={onChange}
                 onBlur={onBlur}
                 onKeyPress={onKeyPress}
+                disabled={disable}
             />
             <p className="input-error">{error.message}</p>
         </div>

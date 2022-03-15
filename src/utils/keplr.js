@@ -1,4 +1,4 @@
-import config from "../config.json";
+import config from "../testConfig.json";
 import {stringToNumber} from "./scripts";
 
 const restAPI = process.env.REACT_APP_API_KEY;

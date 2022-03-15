@@ -1,6 +1,6 @@
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import {LedgerSigner} from "@cosmjs/ledger-amino";
-import config from "../config";
+import config from "../testConfig.json";
 import {makeHdPath} from "./helper";
 import * as Sentry from "@sentry/browser";
 import {userLogout} from "../store/actions/logout";

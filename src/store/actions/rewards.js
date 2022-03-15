@@ -12,7 +12,7 @@ import {QueryClientImpl} from "cosmjs-types/cosmos/distribution/v1beta1/query";
 import ActionHelper from "../../utils/actions";
 import {QueryClientImpl as StakingQueryClientImpl} from "cosmjs-types/cosmos/staking/v1beta1/query";
 import * as Sentry from "@sentry/browser";
-import config from "../../config";
+import config from "../../testConfig.json";
 import {decimalConversion, stringToNumber} from "../../utils/scripts";
 import {checkValidatorAccountAddress, tokenValueConversion} from "../../utils/helper";
 import Lodash from "lodash";

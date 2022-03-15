@@ -11,7 +11,7 @@ import {fetchUnbondDelegations} from "../../../store/actions/unbond";
 import {fetchTokenPrice} from "../../../store/actions/tokenPrice";
 import {fetchReceiveTransactions, fetchTransactions} from "../../../store/actions/transactionQueries";
 import {hideTxResultModal} from "../../../store/actions/transactions/common";
-import config from "../../../config";
+import config from "../../../testConfig.json";
 import {LOGIN_INFO} from "../../../constants/localStorage";
 import {updateFee} from "../../../utils/helper";
 import {fetchValidators} from "../../../store/actions/validators";

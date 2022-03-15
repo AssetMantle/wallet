@@ -1,11 +1,11 @@
 import React from "react";
 import {OverlayTrigger, Popover, Tab, Tabs} from "react-bootstrap";
-import Send from "./Send/index";
+import Send from "../Transactions/Send/index";
 import Receive from "./Receive";
 import Transactions from "./Transactions/index";
 import TokenInfo from "../Common/TokenInfo";
 import InfoRefresh from "../Refresh";
-import SendIbc from "./SendIbc/index";
+import SendIbc from "../Transactions/SendIbc/index";
 import Icon from "../../components/Icon";
 import ModalWithdraw from "./ModalWithDraw";
 import ModalSetWithdrawAddress from "./ModalSetWithdrawAddress";

@@ -1,4 +1,4 @@
-import config from "../config";
+import config from "../testConfig.json";
 import {LOGIN_INFO} from "../constants/localStorage";
 import {mnemonicTrim, stringToNumber} from "./scripts";
 import {tokenValueConversion} from "./helper";
@@ -155,6 +155,14 @@ export const validateAddress = (address, prefix = "persistence") => {
         }
     } else if (prefix === "osmosis") {
         if (!address.startsWith("osmo") || address.length !== 43) {
+            return new Error('Invalid Recipient Address');
+        }
+    } else if (prefix === "gravity") {
+        if (!address.startsWith("gravity") || address.length !== 46) {
+            return new Error('Invalid Recipient Address');
+        }
+    } else if (prefix === "juno") {
+        if (!address.startsWith("juno") || address.length !== 46) {
             return new Error('Invalid Recipient Address');
         }
     } else {

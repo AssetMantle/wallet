@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {ValidateAccountIndex, ValidateSpecialCharacters} from "../../../../utils/validations";
 import {useTranslation} from "react-i18next";
 import {setAccountNumber} from "../../../../store/actions/signIn/ledger";
-import config from "../../../../config";
+import config from "../../../../testConfig.json";
 
 const AccountNumber = () => {
     const {t} = useTranslation();

@@ -9,7 +9,7 @@ import {
 } from "../../../constants/sendIbc";
 import {combineReducers} from 'redux';
 import {TX_RESULT_MODAL_HIDE, TX_SUCCESS} from "../../../constants/common";
-import config from "../../../config";
+import config from "../../../testConfig.json";
 
 const toAddress = (state = {
     value: '',

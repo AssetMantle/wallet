@@ -7,7 +7,7 @@ import * as Sentry from "@sentry/browser";
 import {LOGIN_INFO} from "../constants/localStorage";
 import {decimalConversion, stringToNumber} from "./scripts";
 import {tokenValueConversion} from "./helper";
-import config from "../config.json";
+import config from "../testConfig.json";
 
 async function getValidatorRewards(validatorAddress) {
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));

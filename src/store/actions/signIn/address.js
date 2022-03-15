@@ -4,7 +4,7 @@ import {
     SIGN_IN_ADDRESS_MODAL_SHOW
 } from "../../../constants/signIn/address";
 import helper, {vestingAccountCheck} from "../../../utils/helper";
-import config from "../../../config";
+import config from "../../../testConfig.json";
 import {getAccount} from "../../../utils/helper";
 import {setLoginInfo} from "../transactions/common";
 import * as Sentry from "@sentry/browser";

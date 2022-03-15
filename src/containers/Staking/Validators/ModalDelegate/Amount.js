@@ -6,7 +6,7 @@ import {formatNumber, removeCommas, stringToNumber} from "../../../../utils/scri
 import NumberView from "../../../../components/NumberView";
 import {ValidateSendAmount, ValidateSpecialCharacters} from "../../../../utils/validations";
 import {useTranslation} from "react-i18next";
-import config from "../../../../config";
+import config from "../../../../testConfig.json";
 
 const Amount = () => {
     const {t} = useTranslation();

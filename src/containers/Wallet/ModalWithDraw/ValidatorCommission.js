@@ -4,7 +4,7 @@ import {useTranslation} from "react-i18next";
 import {ValidatorCommissionMsg} from "../../../utils/protoMsgHelper";
 import {setTxWithDrawTotalValidatorsCommission} from "../../../store/actions/transactions/withdrawTotalRewards";
 import {Form} from "react-bootstrap";
-import config from "../../../config";
+import config from "../../../testConfig.json";
 import {stringToNumber} from "../../../utils/scripts";
 
 const ValidatorCommission = () => {

@@ -5,23 +5,28 @@ import Amount from "./Amount";
 import ButtonSend from "./ButtonSend";
 import {useSelector} from "react-redux";
 import Memo from "./Memo";
-import config from "../../../config";
+import Chain from "./Chain";
+import CustomChain from "./CustomChain";
 import {LOGIN_INFO} from "../../../constants/localStorage";
 
 const Send = () => {
-
+    const chainInfo = useSelector((state) => state.sendIbc.chainInfo.value);
     const response = useSelector(state => state.common.error);
     const txName = useSelector((state) => state.common.txName.value);
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
 
-
     return (
         <div className="send-container">
             <div className="form-section">
+                <Chain/>
+                {chainInfo.customChain ?
+                    <CustomChain/>
+                    : null
+                }
                 <ToAddress/>
                 <Tokens/>
                 <Amount/>
-                {loginInfo && loginInfo.loginMode !== config.keplrMode
+                {loginInfo && loginInfo.loginMode !== "keplr"
                     ?
                     <Memo/>
                     : null

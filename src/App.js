@@ -5,7 +5,7 @@ import Homepage from "./views/Homepage";
 import DashboardStaking from "./views/Staking";
 import PrivateRoute from "./containers/PrivateRoute";
 import RouteNotFound from "./components/RouteNotFound";
-import config from "./config";
+import config from "./testConfig.json";
 import icon_white from "./assets/images/icon_white.svg";
 import {useTranslation} from "react-i18next";
 import KeplrWallet from "./utils/keplr";

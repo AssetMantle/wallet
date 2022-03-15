@@ -1,5 +1,5 @@
 import {DirectSecp256k1HdWallet} from "@cosmjs/proto-signing";
-import config from "../config.json";
+import config from "../testConfig.json";
 import Long from "long";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient} from "@cosmjs/stargate";
@@ -27,6 +27,8 @@ async function Transaction(wallet, signerAddress, msgs, fee, memo = "") {
 }
 
 async function TransactionWithKeplr(msgs, fee, memo = "", chainID = configChainID) {
+    console.log(msgs, "msgs");
+
     const [wallet, address] = await KeplrWallet(chainID);
     return Transaction(wallet, address, msgs, fee, memo);
 }

@@ -12,7 +12,7 @@ import transactions from "../../utils/transactions";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient, QueryClient, setupIbcExtension} from "@cosmjs/stargate";
 import {QueryClientImpl} from "cosmjs-types/cosmos/bank/v1beta1/query";
-import config from "../../config";
+import config from "../../testConfig.json";
 import * as Sentry from '@sentry/browser';
 import {stringToNumber} from "../../utils/scripts";
 import {getAccount, tokenValueConversion} from "../../utils/helper";
@@ -120,6 +120,7 @@ export const fetchTransferableVestingAmount = (address) => {
                             for (let i = 0; i < response.balances.length; i++) {
                                 let item = response.balances[i];
                                 if (item.denom === config.coinDenom) {
+                                    item.ibcBalance = false;
                                     tokenList.push(item);
                                     vestingAmount = tokenValueConversion(vestingAccount.getAccountVestingAmount(vestingAmountData, currentEpochTime));
                                     const balance = tokenValueConversion(stringToNumber(item.amount));
@@ -130,11 +131,15 @@ export const fetchTransferableVestingAmount = (address) => {
                                     let denomText = item.denom.substr(item.denom.indexOf('/') + 1);
                                     const ibcExtension = setupIbcExtension(queryClient);
                                     let ibcDenomeResponse = await ibcExtension.ibc.transfer.denomTrace(denomText);
+
                                     let transeDenomData = {
-                                        denom: ibcDenomeResponse.denomTrace,
-                                        denomTrace: item.denom,
+                                        denom:item.denom,
+                                        denomTrace: ibcDenomeResponse.denomTrace,
                                         amount: item.amount,
+                                        ibcBalance: true,
                                     };
+
+                                    console.log(ibcDenomeResponse, "transeDenomData");
 
                                     tokenList.push(transeDenomData);
                                 }

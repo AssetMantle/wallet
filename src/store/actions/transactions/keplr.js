@@ -3,9 +3,10 @@ import {fee} from "../../../utils/aminoMsgHelper";
 import {showTxResultModal, txFailed, txInProgress, txResponse, txSuccess} from "./common";
 import * as Sentry from "@sentry/browser";
 
-export const keplrSubmit = (messages) => (dispatch, getState) => {
+export const keplrSubmit = (messages, token = "") => (dispatch, getState) => {
+    console.log(token, "denom");
     dispatch(txInProgress());
-    const response = transactions.TransactionWithKeplr(messages, fee(0, 250000));
+    const response = transactions.TransactionWithKeplr(messages, fee(0, 250000),"");
     response.then(result => {
         if (getState().common.txName.value.name !== "send" && getState().common.txName.value.name !== "ibc") {
             dispatch(getState().common.txInfo.value.modal);

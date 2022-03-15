@@ -4,22 +4,26 @@ import {useDispatch, useSelector} from "react-redux";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import {useTranslation} from "react-i18next";
-import config from "../../../config";
 import {stringToNumber} from "../../../utils/scripts";
-import {tokenValueConversion} from "../../../utils/helper";
+import helper, {tokenValueConversion} from "../../../utils/helper";
+import {DefaultChainInfo, PstakeInfo} from "../../../config";
 
 const Tokens = () => {
     const {t} = useTranslation();
     const tokenList = useSelector((state) => state.balance.tokenList);
     const transferableAmount = useSelector((state) => state.balance.transferableAmount);
+    const chainInfo = useSelector((state) => state.sendIbc.chainInfo.value);
+    const disable = (
+        chainInfo.chain === ''
+    );
+    console.log(tokenList, "tokenList");
     const dispatch = useDispatch();
-
     let tokenData = [];
 
     useEffect(() => {
         const initialObject = {
-            tokenDenom: config.coinDenom,
-            token: config.coinDenom,
+            tokenDenom: DefaultChainInfo.currency.coinMinimalDenom,
+            token: DefaultChainInfo.currency.coinMinimalDenom,
             transferableAmount: transferableAmount
         };
         tokenData.push(initialObject);
@@ -39,14 +43,18 @@ const Tokens = () => {
         tokenData = [];
         const tokenDataObject = {};
         tokenDataObject.token = evt.target.value;
-        if (evt.target.value === config.coinDenom) {
+        if (evt.target.value === DefaultChainInfo.currency.coinMinimalDenom) {
             tokenDataObject.tokenDenom = evt.target.value;
             tokenDataObject.transferableAmount = transferableAmount;
         } else {
             tokenList.forEach((item) => {
-                if (evt.target.value === item.denomTrace) {
+                if (evt.target.value === item.denom) {
                     tokenDataObject.tokenDenom = evt.target.value;
-                    tokenDataObject.transferableAmount = tokenValueConversion(stringToNumber(item.amount));
+                    if(item.denom === PstakeInfo.coinMinimalDenom) {
+                        tokenDataObject.transferableAmount = item.amount;
+                    } else {
+                        tokenDataObject.transferableAmount = tokenValueConversion(stringToNumber(item.amount));
+                    }
                     tokenDataObject.tokenItem = item;
                 }
             });
@@ -63,27 +71,26 @@ const Tokens = () => {
         <div className="form-field">
             <p className="label">{t("TOKEN")}</p>
             <div className="form-control-section flex-fill">
-                <Select defaultValue={config.coinDenom} className="validators-list-selection"
-                    onChange={onTokenChangeSelect} displayEmpty>
+                <Select defaultValue={DefaultChainInfo.currency.coinMinimalDenom} className="validators-list-selection"
+                    onChange={onTokenChangeSelect} displayEmpty disabled={disable}>
                     {
                         tokenList.map((item, index) => {
-                            if (item.denom === config.coinDenom) {
+                            if (item.denom === DefaultChainInfo.currency.coinMinimalDenom && !item.ibcBalance) {
                                 return (
                                     <MenuItem
                                         key={index + 1}
                                         className=""
                                         value={item.denom}>
-                                        {config.coinName}
+                                        {DefaultChainInfo.currency.coinDenom}
                                     </MenuItem>
                                 );
-                            }
-                            if (item.denom.baseDenom === "uatom") {
+                            }else {
                                 return (
                                     <MenuItem
                                         key={index + 1}
                                         className=""
-                                        value={item.denomTrace}>
-                                        ATOM ({item.denom.path})
+                                        value={item.denom}>
+                                        {helper.denomChange(item.denomTrace.baseDenom)} ({item.denomTrace.path})
                                     </MenuItem>
                                 );
                             }

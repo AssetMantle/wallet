@@ -8,7 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {keplrSubmit} from "../../../../store/actions/transactions/keplr";
 import {WithdrawMsg} from "../../../../utils/protoMsgHelper";
 import {setTxIno} from "../../../../store/actions/transactions/common";
-import config from "../../../../config";
+import config from "../../../../testConfig.json";
 import {stringToNumber} from "../../../../utils/scripts";
 import {LOGIN_INFO} from "../../../../constants/localStorage";
 

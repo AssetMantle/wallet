@@ -7,7 +7,7 @@ import {useHistory} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {useDispatch} from "react-redux";
 import {addressLogin, setAddress} from "../../../store/actions/signIn/address";
-import config from "../../../config";
+import config from "../../../testConfig.json";
 import {makeHdPath} from "../../../utils/helper";
 
 const AdvanceMode = (props) => {

@@ -6,7 +6,7 @@ import Fee from "./index";
 import Gas from "./Gas";
 import Submit from "./Submit";
 import Icon from "../../../components/Icon";
-import config from "../../../config";
+import config from "../../../testConfig.json";
 
 const Modal = () => {
     const show = useSelector((state) => state.fee.modal);
