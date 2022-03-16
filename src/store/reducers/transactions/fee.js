@@ -1,11 +1,12 @@
 import {combineReducers} from 'redux';
 import {FEE_MODAL_HIDE, FEE_MODAL_NEXT, FEE_MODAL_SHOW, TX_FEE_SET} from "../../../constants/fee";
 import {TX_RESULT_MODAL_HIDE, TX_SUCCESS} from "../../../constants/common";
-import config from "../../../testConfig.json";
+import {FeeInfo} from "../../../config";
+
 
 const fee = (state = {
     value: {
-        fee: config.averageFee,
+        fee: FeeInfo.averageFee,
         feeType: "Average",
     },
     error: {
@@ -30,7 +31,7 @@ const fee = (state = {
         return {
             ...state,
             value: {
-                fee: config.averageFee,
+                fee: FeeInfo.averageFee,
                 feeType: "Average",
             },
             error: {

@@ -5,7 +5,6 @@ import Homepage from "./views/Homepage";
 import DashboardStaking from "./views/Staking";
 import PrivateRoute from "./containers/PrivateRoute";
 import RouteNotFound from "./components/RouteNotFound";
-import config from "./testConfig.json";
 import icon_white from "./assets/images/icon_white.svg";
 import {useTranslation} from "react-i18next";
 import KeplrWallet from "./utils/keplr";
@@ -25,6 +24,7 @@ import {ledgerDisconnect} from "./utils/ledger";
 import ReactGA from 'react-ga';
 import {userLogout} from "./store/actions/logout";
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
+import packageJson from "../package.json";
 
 const SENTRY_API = process.env.REACT_APP_SENTRY_API;
 const GOOGLE_ANALYTICS = process.env.REACT_APP_GA_TRACKING_ID;
@@ -36,6 +36,7 @@ const trackPage = page => {
     ReactGA.pageview(page);
 };
 
+//Update the package.json version everytime whenever new deployment happened to production to clear the browser cache.
 
 const App = () => {
     const {t} = useTranslation();
@@ -51,6 +52,7 @@ const App = () => {
         component: DashboardStaking,
         private: true,
     }];
+
     const [isOnline, setNetwork] = useState(window.navigator.onLine);
     const updateNetwork = () => {
         if(window.navigator.onLine){
@@ -63,7 +65,7 @@ const App = () => {
 
     let address;
     const version = loginInfo && loginInfo.version;
-    if (version == null || config.version !== version) {
+    if (version == null || packageJson.version !== version) {
         localStorage.clear();
         history.push('/');
     } else {
@@ -96,7 +98,6 @@ const App = () => {
             }
         };
         fetchApi();
-
     }, []);
 
     useEffect(() => {
@@ -121,7 +122,7 @@ const App = () => {
     });
 
     window.addEventListener("keplr_keystorechange", () => {
-        if (loginInfo && loginInfo.loginMode === config.keplrMode) {
+        if (loginInfo && loginInfo.loginMode === "keplr") {
             const keplr = KeplrWallet();
             keplr.then(function () {
                 const address = localStorage.getItem(KEPLR_ADDRESS);
@@ -143,7 +144,7 @@ const App = () => {
 
     Sentry.init({
         dsn: SENTRY_API,
-        release: "wallet"+config.version,
+        release: "wallet"+packageJson.version,
         integrations: [new Integrations.BrowserTracing()],
         tracesSampleRate: 1.0,
     });

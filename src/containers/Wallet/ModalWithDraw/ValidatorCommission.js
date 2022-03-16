@@ -4,8 +4,8 @@ import {useTranslation} from "react-i18next";
 import {ValidatorCommissionMsg} from "../../../utils/protoMsgHelper";
 import {setTxWithDrawTotalValidatorsCommission} from "../../../store/actions/transactions/withdrawTotalRewards";
 import {Form} from "react-bootstrap";
-import config from "../../../testConfig.json";
 import {stringToNumber} from "../../../utils/scripts";
+import {DefaultChainInfo} from "../../../config";
 
 const ValidatorCommission = () => {
     const {t} = useTranslation();
@@ -30,7 +30,7 @@ const ValidatorCommission = () => {
                 <p className="label"></p>
                 <div className="check-box-container">
                     <p className="label"
-                        title={(stringToNumber(validatorCommissionInfo[0]))}>{t("Claim Commission")}({(validatorCommissionInfo[0] * 1).toLocaleString()} {config.coinName})</p>
+                        title={(stringToNumber(validatorCommissionInfo[0]))}>{t("Claim Commission")}({(validatorCommissionInfo[0] * 1).toLocaleString()} {DefaultChainInfo.currency.coinDenom})</p>
                     <Form.Control
                         type="checkbox"
                         name="claimCommission"

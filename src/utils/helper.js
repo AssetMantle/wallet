@@ -1,5 +1,4 @@
 import transactions from "./transactions";
-import config from "../testConfig.json";
 import {COIN_ATOM, COIN_ATOM_DENOM, COIN_GRAVITY, COIN_GRAVITY_DENOM, COIN_PSTAKE} from "../constants/keyWords";
 import {
     ADDRESS,
@@ -19,16 +18,16 @@ import {
 } from "cosmjs-types/cosmos/vesting/v1beta1/vesting";
 import * as Sentry from "@sentry/browser";
 import {mnemonicTrim} from "./scripts";
-import {PstakeInfo} from "../config";
+import {DefaultChainInfo, FeeInfo, MainNetFoundationNodes, PstakeInfo, TestNetFoundationNodes} from "../config";
 
 const tendermint_1 = require("cosmjs-types/ibc/lightclients/tendermint/v1/tendermint");
 const encoding = require("@cosmjs/encoding");
 const crypto = require("crypto");
 const passwordHashAlgorithm = "sha512";
 const NODE_CONF = process.env.REACT_APP_IBC_CONFIG;
-const valoperAddressPrefix = config.valoperAddressPrefix;
-const addressPrefix = config.addressPrefix;
-const configCoinType = config.coinType;
+const valoperAddressPrefix = DefaultChainInfo.prefix;
+const addressPrefix = DefaultChainInfo.prefix;
+const configCoinType = DefaultChainInfo.coinType;
 
 export const createKeyStore = (mnemonic, password) => {
     try {
@@ -107,8 +106,8 @@ function accountChangeCheck(errorMessage) {
 
 function denomChange(denom) {
     switch (denom) {
-    case config.coinDenom:
-        return config.coinName;
+    case DefaultChainInfo.currency.coinMinimalDenom:
+        return DefaultChainInfo.currency.coinDenom;
     case COIN_ATOM_DENOM:
         return COIN_ATOM;
     case PstakeInfo.baseDenom:
@@ -124,8 +123,8 @@ function denomChange(denom) {
 function denomModify(amount) {
     if (Array.isArray(amount)) {
         if (amount.length) {
-            if (amount[0].denom === config.coinDenom) {
-                return [tokenValueConversion(amount[0].amount), config.coinName];
+            if (amount[0].denom === DefaultChainInfo.currency.coinMinimalDenom) {
+                return [tokenValueConversion(amount[0].amount), DefaultChainInfo.currency.coinDenom];
             } else {
                 return [amount[0].amount, amount[0].denom];
             }
@@ -133,8 +132,8 @@ function denomModify(amount) {
             return '';
         }
     } else {
-        if (amount.denom === config.coinDenom) {
-            return [tokenValueConversion(amount.amount), config.coinName];
+        if (amount.denom === DefaultChainInfo.currency.coinMinimalDenom) {
+            return [tokenValueConversion(amount.amount), DefaultChainInfo.currency.coinDenom];
         } else {
             return [amount.amount, amount.denom];
         }
@@ -156,13 +155,13 @@ function getTransactionAmount(data) {
 
 function foundationNodeCheck(validatorAddress) {
     if (NODE_CONF === "ibcStaging.json") {
-        if (config.testNetFoundationNodes.includes(validatorAddress)) {
+        if (TestNetFoundationNodes.includes(validatorAddress)) {
             return true;
         } else {
             return false;
         }
     } else {
-        if (config.mainNetFoundationNodes.includes(validatorAddress)) {
+        if (MainNetFoundationNodes.includes(validatorAddress)) {
             return true;
         } else {
             return false;
@@ -237,10 +236,10 @@ export const updateFee = (address) => {
             .then(async res => {
                 const accountType = await vestingAccountCheck(res.typeUrl);
                 if (accountType) {
-                    loginInfo.fee = config.vestingAccountFee;
+                    loginInfo.fee = FeeInfo.vestingAccountFee;
                     loginInfo.account = "vesting";
                 } else {
-                    loginInfo.fee = config.defaultFee;
+                    loginInfo.fee = FeeInfo.defaultFee;
                     loginInfo.account = "non-vesting";
                 }
             })
@@ -249,18 +248,18 @@ export const updateFee = (address) => {
                     ? error.response.data.message
                     : error.message);
                 console.log(error.message);
-                loginInfo.fee = config.defaultFee;
+                loginInfo.fee = FeeInfo.defaultFee;
                 loginInfo.account = "non-vesting";
             });
         localStorage.setItem(LOGIN_INFO, JSON.stringify(loginInfo));
     } else {
-        loginInfo.fee = config.vestingAccountFee;
+        loginInfo.fee = FeeInfo.vestingAccountFee;
         localStorage.setItem(LOGIN_INFO, JSON.stringify(loginInfo));
     }
 };
 
 export const tokenValueConversion = (data) => {
-    return data / config.tokenValue;
+    return data / DefaultChainInfo.uTokenValue;
 };
 
 export const privateKeyReader = (file, password, loginAddress, accountNumber = "0", addressIndex = "0",) => {

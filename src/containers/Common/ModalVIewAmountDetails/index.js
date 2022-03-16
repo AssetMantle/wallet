@@ -3,14 +3,14 @@ import React, {useState} from 'react';
 import {connect} from "react-redux";
 import helper, {tokenValueConversion} from "../../../utils/helper";
 import {useTranslation} from "react-i18next";
-import {formatNumber} from "../../../utils/scripts";
+import {decimalize, formatNumber} from "../../../utils/scripts";
 import NumberView from "../../../components/NumberView";
-import config from "../../../testConfig.json";
 import ReactGA from "react-ga";
-import {Decimal} from "@cosmjs/math";
+import {DefaultChainInfo, PstakeInfo} from "../../../config";
 const tmRPC = require("@cosmjs/tendermint-rpc");
 const {QueryClient, setupIbcExtension} = require("@cosmjs/stargate");
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
+
 const ModalViewAmountDetails = (props) => {
     const {t} = useTranslation();
     const [ibcList, setIbcList] = useState([]);
@@ -26,7 +26,7 @@ const ModalViewAmountDetails = (props) => {
             action: t('CLICK_TOTAL_TOKENS_MODAL_VIEW')
         });
         props.list.map(async (item) => {
-            if (item.denom !== config.coinDenom) {
+            if (item.denom !== DefaultChainInfo.currency.coinMinimalDenom) {
                 let denom = item.denom.substr(item.denom.indexOf('/') + 1);
                 const tendermintClient = await tmRPC.Tendermint34Client.connect(tendermintRPCURL);
                 const queryClient = new QueryClient(tendermintClient);
@@ -36,8 +36,6 @@ const ModalViewAmountDetails = (props) => {
                     dataResponse: item,
                     denomResponse: ibcDenomeResponse
                 };
-                console.log(data, "ibcDenomeResponse");
-
                 setIbcList(ibcList => [...ibcList, data]);
             }
         });
@@ -61,12 +59,11 @@ const ModalViewAmountDetails = (props) => {
                     <ul className="modal-list-data">
                         {props.list ?
                             ibcList.map((item, index) => {
-                                if (item.dataResponse.denom !== config.coinDenom) {
-                                    console.log(item.dataResponse.denom, "item.dataResponse.denom");
-                                    if(item.dataResponse.denom === config.pstakeToken){
+                                if (item.dataResponse.denom !== DefaultChainInfo.currency.coinMinimalDenom) {
+                                    if(item.dataResponse.denom === PstakeInfo.coinMinimalDenom){
                                         return (
                                             <li className="" key={index} title={item.dataResponse.denom}>
-                                                {Decimal.fromAtomics(item.dataResponse.amount, 18).toString()}
+                                                {decimalize(item.dataResponse.amount, PstakeInfo.coinDecimals)}
                                                 &nbsp;{helper.denomChange(item.denomResponse.denomTrace.baseDenom)}
                                             </li>
                                         );

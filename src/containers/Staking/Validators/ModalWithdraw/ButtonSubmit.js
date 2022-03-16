@@ -8,7 +8,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {keplrSubmit} from "../../../../store/actions/transactions/keplr";
 import {WithdrawMsg} from "../../../../utils/protoMsgHelper";
 import {setTxIno} from "../../../../store/actions/transactions/common";
-import config from "../../../../testConfig.json";
 import {stringToNumber} from "../../../../utils/scripts";
 import {LOGIN_INFO} from "../../../../constants/localStorage";
 
@@ -49,7 +48,7 @@ const ButtonSubmit = () => {
                     type="button"
                     disable={disable}
                     value="Submit"
-                    onClick={loginInfo && loginInfo.loginMode === config.keplrMode ? onClickKeplr : onClick}
+                    onClick={loginInfo && loginInfo.loginMode === 'keplr' ? onClickKeplr : onClick}
                 />
             </div>
         </div>

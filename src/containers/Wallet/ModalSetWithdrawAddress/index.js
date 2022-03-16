@@ -7,13 +7,13 @@ import RevisedAddress from "./RevisedAddress";
 import Memo from "./Memo";
 import NumberView from "../../../components/NumberView";
 import {formatNumber} from "../../../utils/scripts";
-import config from "../../../testConfig.json";
 import ButtonNext from "./ButtonNext";
 import {fetchWithdrawAddress} from "../../../store/actions/withdrawAddress";
 import Icon from "../../../components/Icon";
 import {showTxWithDrawTotalModal} from "../../../store/actions/transactions/withdrawTotalRewards";
 import {showTxWithdrawValidatorRewardsModal} from "../../../store/actions/transactions/withdrawValidatorRewards";
 import {LOGIN_INFO} from "../../../constants/localStorage";
+import {DefaultChainInfo} from "../../../config";
 
 const ModalSetWithdrawAddress = () => {
     const {t} = useTranslation();
@@ -74,9 +74,9 @@ const ModalSetWithdrawAddress = () => {
                 <div className="form-field p-0">
                     <p className="label"> {t("DELEGATIONS")}</p>
                     <p className={delegations === 0 ? "empty info-data" : "info-data"}>
-                        <NumberView value={formatNumber(delegations)}/>{config.coinName}</p>
+                        <NumberView value={formatNumber(delegations)}/>{DefaultChainInfo.currency.coinDenom}</p>
                 </div>
-                {loginInfo && loginInfo.loginMode !== config.keplrMode
+                {loginInfo && loginInfo.loginMode !== 'keplr'
                     ?
                     <Memo/>
                     : null

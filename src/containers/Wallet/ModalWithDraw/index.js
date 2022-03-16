@@ -11,9 +11,9 @@ import Validators from "./Validators";
 import Memo from "./Memo";
 import ButtonNext from "./ButtonNext";
 import Icon from "../../../components/Icon";
-import config from "../../../testConfig.json";
 import {LOGIN_INFO} from "../../../constants/localStorage";
 import ReactGA from "react-ga";
+import {DefaultChainInfo} from "../../../config";
 
 const ModalWithDraw = () => {
     const {t} = useTranslation();
@@ -56,7 +56,7 @@ const ModalWithDraw = () => {
 
     let ibcRewards = [];
     if(rewards && rewards[1]) {
-        ibcRewards = (rewards[1].filter(item => item.denom !== config.coinDenom));
+        ibcRewards = (rewards[1].filter(item => item.denom !== DefaultChainInfo.currency.coinMinimalDenom));
     }
 
     return (
@@ -79,7 +79,7 @@ const ModalWithDraw = () => {
                         <p className="tokens"
                             title={rewards.length ? (rewards[2] * tokenPrice) : 0}>
                             <NumberView value={formatNumber(rewards.length ? (rewards[2]) : 0)}/>
-                            {config.coinName}
+                            {DefaultChainInfo.currency.coinDenom}
                         </p>
                         <p className="usd">= $<NumberView
                             value={formatNumber(rewards.length ? (rewards[2] * tokenPrice) : 0)}/></p>
@@ -103,7 +103,7 @@ const ModalWithDraw = () => {
                 <Validators/>
                 <ValidatorCommission/>
                 
-                {loginInfo && loginInfo.loginMode !== config.keplrMode
+                {loginInfo && loginInfo.loginMode !== 'keplr'
                     ?
                     <Memo/>
                     : null

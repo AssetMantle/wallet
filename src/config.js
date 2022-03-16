@@ -1,6 +1,8 @@
 export const DefaultChainInfo = {
     counterpartyChainId: 'core-1',
     chainName:'Persistence',
+    prefix:'persistence',
+    ledgerAppName:'Persistence',
     currency: {
         coinDenom: 'XPRT',
         coinMinimalDenom: 'uxprt',
@@ -8,6 +10,12 @@ export const DefaultChainInfo = {
         coinGeckoId: 'persistence',
     },
     coinType: 750,
+    uTokenValue:1000000,
+};
+
+export const AccountInfo = {
+    maxAccountIndex: 2147483647,
+    maxAccountNumber: 2147483647,
 };
 
 export const PstakeInfo = {
@@ -38,6 +46,17 @@ export const IBCConfiguration = {
     ibcDefaultPort: "transfer",
 };
 
+export const TestIBCChainInfos = [
+    {
+        counterpartyChainId: '',
+        chainName: "Persistence",
+        sourceChannelId: "channel-30",
+        portID: "transfer",
+        prefix:'persistence',
+    }
+];
+
+
 export const IBCChainInfos = [
     {
         counterpartyChainId: 'osmosis-1',
@@ -45,6 +64,7 @@ export const IBCChainInfos = [
         sourceChannelId: 'channel-6',
         portID:'transfer',
         coinMinimalDenom: 'uatom',
+        prefix:'osmo'
     },
     {
         counterpartyChainId: 'cosmoshub-4',
@@ -52,13 +72,15 @@ export const IBCChainInfos = [
         sourceChannelId: 'channel-24',
         portID:'transfer',
         coinMinimalDenom: 'uatom',
+        prefix:'cosmos'
     },
     {
         counterpartyChainId: 'juno-1',
         chainName:'Juno',
-        sourceChannelId: 'channel-42',
+        sourceChannelId: 'channel-37',
         portID:'transfer',
         coinMinimalDenom: 'ujuno',
+        prefix:'juno'
     },
     {
         counterpartyChainId: 'gravity-bridge-3',
@@ -66,10 +88,25 @@ export const IBCChainInfos = [
         sourceChannelId: 'channel-38',
         portID:'transfer',
         coinMinimalDenom: 'ugraviton',
+        prefix:'gravity'
     },
 ];
 
 export const ExternalChains = [
+    {
+        rpc: 'https://rpc.core.persistence.one/',
+        rest: 'https://rest.core.persistence.one/',
+        chainId: 'core-1',
+        chainName: 'Persistence',
+        portID: 'transfer',
+        currency: {
+            coinDenom: 'XPRT',
+            coinMinimalDenom: 'uxprt',
+            coinDecimals: 6,
+            coinGeckoId: 'persistence',
+        },
+        coinType: 750,
+    },
     {
         rpc: 'https://rpc.osmosis-1.audit.one/',
         rest: 'https://rest.osmosis-1.audit.one/',
@@ -110,4 +147,31 @@ export const ExternalChains = [
         },
         coinType: 118,
     },
+    {
+        rpc: '',
+        rest: '',
+        chainId: 'juno-1',
+        chainName: 'Juno',
+        currency: {
+            coinDenom: 'Juno',
+            coinMinimalDenom: 'ujuno',
+            coinDecimals: 6,
+            coinGeckoId: '',
+        },
+        coinType: 118,
+    },
 ];
+
+export const TestNetFoundationNodes = [
+    "persistencevaloper1xepyv8lf99pa4x0w2ptr3vx3rr7wfs6msh2m76"
+];
+
+export const MainNetFoundationNodes = [
+    "persistencevaloper19ehhcj0fqw22vwqgll9g70njsv7eq9068pprfu",
+    "persistencevaloper1hndk2s0dx9p0pxd9pxwmls3eywpdu5ha76kpqs",
+    "persistencevaloper1ve9ls5wnczj72mxldewze8u46sarlatmgmp3nd",
+    "persistencevaloper1emrvay43wy7f4ylwen3yxhm9qxddy8zc9zdk5y",
+    "persistencevaloper13dv6h3wtmhmt0jprhaw9pv343qanttkty4685v"
+];
+
+

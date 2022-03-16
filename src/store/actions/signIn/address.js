@@ -4,13 +4,14 @@ import {
     SIGN_IN_ADDRESS_MODAL_SHOW
 } from "../../../constants/signIn/address";
 import helper, {vestingAccountCheck} from "../../../utils/helper";
-import config from "../../../testConfig.json";
 import {getAccount} from "../../../utils/helper";
 import {setLoginInfo} from "../transactions/common";
 import * as Sentry from "@sentry/browser";
 import {LOGIN_INFO} from "../../../constants/localStorage";
 import {isBech32Address} from "../../../utils/scripts";
 import {validateAddress} from "../../../utils/validations";
+import {DefaultChainInfo, FeeInfo} from "../../../config";
+import packageJson from "../../../../package.json";
 
 export const hideAddressModal = (data) => {
     return {
@@ -47,27 +48,27 @@ export const addressLogin = (history) => {
         };
         const accountNumber = helper.getAccountNumber(getState().advanced.accountNumber.value);
         const accountIndex = helper.getAccountNumber(getState().advanced.accountIndex.value);
-        if (validateAddress(address) && isBech32Address(address, config.addressPrefix)) {
+        if (validateAddress(address) && isBech32Address(address, DefaultChainInfo.prefix)) {
             const res = getAccount(address).catch(error => {
                 Sentry.captureException(error.response
                     ? error.response.data.message
                     : error.message);
                 console.log(error.message);
-                loginInfo.fee = config.defaultFee;
+                loginInfo.fee = FeeInfo.defaultFee;
                 loginInfo.account = "non-vesting";
             });
             const accountType = await vestingAccountCheck(res && res.typeUrl);
             if (accountType) {
-                loginInfo.fee = config.vestingAccountFee;
+                loginInfo.fee = FeeInfo.vestingAccountFee;
                 loginInfo.account = "vesting";
             } else {
-                loginInfo.fee = config.defaultFee;
+                loginInfo.fee = FeeInfo.defaultFee;
                 loginInfo.account = "non-vesting";
             }
             loginInfo.loginToken = "loggedIn";
             loginInfo.address = address;
             loginInfo.loginMode = "normal";
-            loginInfo.version = config.version;
+            loginInfo.version = packageJson.version;
             loginInfo.accountNumber = accountNumber;
             loginInfo.accountIndex = accountIndex;
             dispatch(setLoginInfo({

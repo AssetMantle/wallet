@@ -9,7 +9,7 @@ import {
 } from "../../../constants/sendIbc";
 import {combineReducers} from 'redux';
 import {TX_RESULT_MODAL_HIDE, TX_SUCCESS} from "../../../constants/common";
-import config from "../../../testConfig.json";
+import {IBCConfiguration} from "../../../config";
 
 const toAddress = (state = {
     value: '',
@@ -91,7 +91,7 @@ const token = (state = {value: []}, action) => {
 };
 
 const customPort = (state = {
-    value: config.ibcDefaultPort,
+    value: IBCConfiguration.ibcDefaultPort,
     error: {
         message: '',
     },
@@ -113,7 +113,7 @@ const customPort = (state = {
     case TX_RESULT_MODAL_HIDE:
         return {
             ...state,
-            value: config.ibcDefaultPort,
+            value: IBCConfiguration.ibcDefaultPort,
             error: {
                 ...state.error,
                 message: '',
@@ -162,8 +162,8 @@ const chainInfo = (state = {
     value: {
         customChain: false,
         chainID: '',
-        chain: '',
-        selectedChannel: ''
+        prefix:'',
+        chainName: '',
     },
 }, {
     type,
@@ -182,8 +182,8 @@ const chainInfo = (state = {
             value: {
                 customChain: false,
                 chainID: '',
-                chain: '',
-                selectedChannel: ''
+                prefix: '',
+                chainName: '',
             },
         };
     default:

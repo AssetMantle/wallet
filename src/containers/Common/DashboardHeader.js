@@ -8,7 +8,6 @@ import {useTranslation} from "react-i18next";
 import Darktheme from "../DarkTheme";
 import MobileSidebar from "./MobileSidebar";
 import transactions from "../../utils/transactions";
-import config from "../../testConfig.json";
 import {userLogout} from "../../store/actions/logout";
 import {useDispatch} from "react-redux";
 import {showKeyStoreMnemonicModal} from "../../store/actions/generateKeyStore";
@@ -17,6 +16,7 @@ import {stringTruncate} from "../../utils/scripts";
 import {makeHdPath} from "../../utils/helper";
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import ReactGA from 'react-ga';
+import {DefaultChainInfo} from "../../config";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 
@@ -63,7 +63,7 @@ const DashboardHeader = () => {
     const ledgerShowAddress = async () => {
         const accountNumber = loginInfo && loginInfo.accountNumber;
         const addressIndex = loginInfo && loginInfo.accountIndex;
-        const [wallet] = await transactions.LedgerWallet(makeHdPath(accountNumber, addressIndex), config.addressPrefix);
+        const [wallet] = await transactions.LedgerWallet(makeHdPath(accountNumber, addressIndex), DefaultChainInfo.prefix);
         await wallet.showAddress(makeHdPath(accountNumber, addressIndex));
     };
 

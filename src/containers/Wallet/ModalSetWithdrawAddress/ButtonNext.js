@@ -5,7 +5,6 @@ import {keplrSubmit} from "../../../store/actions/transactions/keplr";
 import {hideTxWithDrawAddressModal, submitFormData} from "../../../store/actions/transactions/setWithdrawAddress";
 import {SetWithDrawAddressMsg} from "../../../utils/protoMsgHelper";
 import {setTxIno} from "../../../store/actions/transactions/common";
-import config from "../../../testConfig.json";
 import {LOGIN_INFO} from "../../../constants/localStorage";
 
 const ButtonNext = () => {
@@ -44,7 +43,7 @@ const ButtonNext = () => {
                     type="button"
                     disable={disable}
                     value="Next"
-                    onClick={loginInfo && loginInfo.loginMode === config.keplrMode ? onClickKeplr : onClick}
+                    onClick={loginInfo && loginInfo.loginMode === 'keplr' ? onClickKeplr : onClick}
                 />
             </div>
         </div>

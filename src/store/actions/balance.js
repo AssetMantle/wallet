@@ -12,10 +12,10 @@ import transactions from "../../utils/transactions";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient, QueryClient, setupIbcExtension} from "@cosmjs/stargate";
 import {QueryClientImpl} from "cosmjs-types/cosmos/bank/v1beta1/query";
-import config from "../../testConfig.json";
 import * as Sentry from '@sentry/browser';
 import {stringToNumber} from "../../utils/scripts";
 import {getAccount, tokenValueConversion} from "../../utils/helper";
+import {DefaultChainInfo} from "../../config";
 
 const tendermintRPCURL = process.env.REACT_APP_TENDERMINT_RPC_ENDPOINT;
 
@@ -56,7 +56,7 @@ export const fetchBalance = (address) => {
                 if (allBalancesResponse.balances.length) {
                     dispatch(fetchBalanceListSuccess(allBalancesResponse.balances));
                     allBalancesResponse.balances.forEach((item) => {
-                        if (item.denom === config.coinDenom) {
+                        if (item.denom === DefaultChainInfo.currency.coinMinimalDenom) {
                             const totalBalance = stringToNumber(item.amount);
                             dispatch(fetchBalanceSuccess(tokenValueConversion(totalBalance)));
                         }
@@ -119,7 +119,7 @@ export const fetchTransferableVestingAmount = (address) => {
                             let tokenList = [];
                             for (let i = 0; i < response.balances.length; i++) {
                                 let item = response.balances[i];
-                                if (item.denom === config.coinDenom) {
+                                if (item.denom === DefaultChainInfo.currency.coinMinimalDenom) {
                                     item.ibcBalance = false;
                                     tokenList.push(item);
                                     vestingAmount = tokenValueConversion(vestingAccount.getAccountVestingAmount(vestingAmountData, currentEpochTime));
@@ -138,9 +138,6 @@ export const fetchTransferableVestingAmount = (address) => {
                                         amount: item.amount,
                                         ibcBalance: true,
                                     };
-
-                                    console.log(ibcDenomeResponse, "transeDenomData");
-
                                     tokenList.push(transeDenomData);
                                 }
                             }

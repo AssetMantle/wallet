@@ -20,8 +20,7 @@ const ButtonSend = () => {
     let sendAmount;
 
     if(token.value.tokenDenom === PstakeInfo.coinMinimalDenom){
-        // console.log(unDecimalize(Decimal.fromAtomics(amount.value, 18).toString(), 18))
-        sendAmount = Number(unDecimalize(amount.value, 18)).toString();
+        sendAmount = Number(unDecimalize(amount.value)).toString();
     }else {
         sendAmount = (amount.value * 1000000).toFixed(0);
     }
@@ -40,7 +39,7 @@ const ButtonSend = () => {
                 name: "send",
             }
         }));
-        dispatch(keplrSubmit([SendMsg(loginInfo && loginInfo.address, toAddress.value, sendAmount, token.value.token)], token));
+        dispatch(keplrSubmit([SendMsg(loginInfo && loginInfo.address, toAddress.value, sendAmount, token.value.token)]));
     };
 
     return (

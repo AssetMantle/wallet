@@ -18,8 +18,8 @@ import Long from "long";
 import helper, {tokenValueConversion} from "../../utils/helper";
 import transactions from "../../utils/transactions";
 import * as Sentry from "@sentry/browser";
-import {decimalConversion, stringToNumber} from "../../utils/scripts";
-import config from "../../testConfig.json";
+import {decimalize, stringToNumber} from "../../utils/scripts";
+import {DefaultChainInfo} from "../../config";
 
 export const fetchValidatorsInProgress = () => {
     return {
@@ -235,8 +235,8 @@ export const fetchValidatorRewards = (address, validatorAddress) => {
         }).then(response => {
             if (response.rewards) {
                 for (const item of response.rewards) {
-                    if(item && item.denom === config.coinDenom){
-                        let value = decimalConversion(item.amount);
+                    if(item && item.denom === DefaultChainInfo.currency.coinMinimalDenom){
+                        let value = decimalize(item.amount);
                         const fixedRewards = stringToNumber(tokenValueConversion(value)).toFixed(6);
                         dispatch(setValidatorRewards({
                             value: fixedRewards,

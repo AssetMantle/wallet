@@ -3,11 +3,11 @@ import Button from "./../../../../components/Button";
 import {hideTxReDelegateModal, submitFormData} from "../../../../store/actions/transactions/redelegate";
 import {useDispatch, useSelector} from "react-redux";
 import {keplrSubmit} from "../../../../store/actions/transactions/keplr";
-import config from "../../../../testConfig.json";
 import {RedelegateMsg} from "../../../../utils/protoMsgHelper";
 import {setTxIno} from "../../../../store/actions/transactions/common";
 import {LOGIN_INFO} from "../../../../constants/localStorage";
 import {stringToNumber} from "../../../../utils/scripts";
+import {DefaultChainInfo} from "../../../../config";
 
 const ButtonSubmit = () => {
     const dispatch = useDispatch();
@@ -18,7 +18,7 @@ const ButtonSubmit = () => {
     const validator = useSelector((state) => state.validators.validator.value);
 
     const onClick = () => {
-        dispatch(submitFormData([RedelegateMsg(loginInfo && loginInfo.address, validator.operatorAddress, toAddress.value, (amount.value * config.tokenValue).toFixed(0))]));
+        dispatch(submitFormData([RedelegateMsg(loginInfo && loginInfo.address, validator.operatorAddress, toAddress.value, (amount.value * DefaultChainInfo.uTokenValue).toFixed(0))]));
     };
 
 
@@ -36,7 +36,7 @@ const ButtonSubmit = () => {
                 }
             }
         }));
-        dispatch(keplrSubmit([RedelegateMsg(loginInfo && loginInfo.address, validator.operatorAddress, toAddress.value, (amount.value * config.tokenValue).toFixed(0))]));
+        dispatch(keplrSubmit([RedelegateMsg(loginInfo && loginInfo.address, validator.operatorAddress, toAddress.value, (amount.value * DefaultChainInfo.uTokenValue).toFixed(0))]));
     };
 
     return (
@@ -47,7 +47,7 @@ const ButtonSubmit = () => {
                     type="button"
                     disable={disable}
                     value="Submit"
-                    onClick={loginInfo && loginInfo.loginMode === config.keplrMode ? onClickKeplr : onClick}
+                    onClick={loginInfo && loginInfo.loginMode === 'keplr' ? onClickKeplr : onClick}
                 />
             </div>
         </div>

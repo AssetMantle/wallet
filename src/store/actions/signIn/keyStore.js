@@ -9,13 +9,14 @@ import {
 import {setLoginInfo} from "../transactions/common";
 import helper, {decryptKeyStore, vestingAccountCheck, getAccount, makeHdPath} from "../../../utils/helper";
 import wallet from "../../../utils/wallet";
-import config from "../../../testConfig.json";
 import * as Sentry from "@sentry/browser";
 import {
     ENCRYPTED_MNEMONIC,
     LOGIN_INFO,
 } from "../../../constants/localStorage";
 import {mnemonicTrim} from "../../../utils/scripts";
+import {FeeInfo} from "../../../config";
+import packageJson from "../../../../package.json";
 
 export const hideKeyStoreModal = (data) => {
     return {
@@ -120,22 +121,22 @@ export const keyStoreLogin = (history) => {
                 ? error.response.data.message
                 : error.message);
             console.log(error.message);
-            loginInfo.fee = config.defaultFee;
+            loginInfo.fee = FeeInfo.defaultFee;
             loginInfo.account = "non-vesting";
         });
 
         const accountType = await vestingAccountCheck(res && res.typeUrl);
         if (accountType) {
-            loginInfo.fee = config.vestingAccountFee;
+            loginInfo.fee = FeeInfo.vestingAccountFee;
             loginInfo.account = "vesting";
         } else {
-            loginInfo.fee = config.defaultFee;
+            loginInfo.fee = FeeInfo.defaultFee;
             loginInfo.account = "non-vesting";
         }
         loginInfo.loginToken = "loggedIn";
         loginInfo.address = address;
         loginInfo.loginMode = "normal";
-        loginInfo.version = config.version;
+        loginInfo.version = packageJson.version;
         loginInfo.accountNumber = accountNumber;
         loginInfo.accountIndex = accountIndex;
         localStorage.setItem(LOGIN_INFO, JSON.stringify(loginInfo));

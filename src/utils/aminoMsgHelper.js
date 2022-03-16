@@ -1,4 +1,4 @@
-import config from "../testConfig.json";
+import {DefaultChainInfo} from "../config";
 
 function sendMsg(fromAddress, toAddress, amount, denom) {
     return {
@@ -21,7 +21,7 @@ function msgs(...msg) {
 }
 
 function fee(amount, gas = 250000) {
-    return {amount: [{amount: String(amount), denom: config.coinDenom}], gas: String(gas)};
+    return {amount: [{amount: String(amount), denom: DefaultChainInfo.currency.coinMinimalDenom}], gas: String(gas)};
 }
 
 function delegateMsg(amount, address, validatorAddress) {
@@ -30,7 +30,7 @@ function delegateMsg(amount, address, validatorAddress) {
         value: {
             amount: {
                 amount: String(amount),
-                denom: config.coinDenom
+                denom: DefaultChainInfo.currency.coinMinimalDenom
             },
             delegator_address: address,
             validator_address: validatorAddress
@@ -44,7 +44,7 @@ function redelegateMsg(amount, address, validatorAddress, toValidatorAddress) {
         value: {
             amount: {
                 amount: String(amount),
-                denom: config.coinDenom
+                denom: DefaultChainInfo.currency.coinMinimalDenom
             },
             delegator_address: address,
             validator_dst_address: toValidatorAddress,
@@ -59,7 +59,7 @@ function unBondMsg(amount, address, validatorAddress) {
         value: {
             amount: {
                 amount: String(amount),
-                denom: config.coinDenom
+                denom: DefaultChainInfo.currency.coinMinimalDenom
             },
             delegator_address: address,
             validator_address: validatorAddress

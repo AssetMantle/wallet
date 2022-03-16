@@ -2,10 +2,9 @@ import _ from "lodash";
 import empty from "is-empty";
 import moment from "moment";
 import {Decimal} from "@cosmjs/math";
-import BigNumber from "bignumber.js";
+// import BigNumber from "bignumber.js";
 import Web3 from "web3";
 const encoding = require("@cosmjs/encoding");
-let decimalPlaces = 6;
 
 export const removeCommas = str => _.replace(str, new RegExp(",", "g"), "");
 const reverseString = str => removeCommas(_.toString(_.reverse(_.toArray(str))));
@@ -65,11 +64,6 @@ export const fileTypeCheck = (filePath) => {
     return allowedExtensions.exec(filePath);
 };
 
-export const decimalConversion = (data) => {
-    let value = Decimal.fromAtomics(data, 18).toString();
-    return value;
-};
-
 export const trimWhiteSpaces = (data) => {
     return data.split(' ').join('');
 };
@@ -113,23 +107,14 @@ export const mnemonicTrim = (mnemonic) => {
 };
 
 export const getWeb3 = () => {
-    //return web3;
-    // temporarily set it as the browser's injected web3
     const myWeb3 = new Web3(window.ethereum);
     return myWeb3;
 };
 
-export const unDecimalize = (valueString, decimals = decimalPlaces) => {
-    const web3Local = getWeb3();
-    // since BN.js doesn't accept decimals, we'll use BigNumber.js
-    let bnValueString = valueString
-        ? new BigNumber(valueString.toString())
-        : new BigNumber(0);
-    let bnDecimalPlaces = new BigNumber(decimals);
-    let bnBase = new BigNumber(10);
-    let bnMultiplier = bnBase.pow(bnDecimalPlaces);
-    let bnResult = bnValueString.multipliedBy(bnMultiplier).toFixed(0);
+export const decimalize = (valueString, decimals = 18) => {
+    return Decimal.fromAtomics(valueString.toString(), decimals).toString();
+};
 
-    let bnFinalValueToBN = web3Local.utils.toBN(bnResult.toString());
-    return bnFinalValueToBN;
+export const unDecimalize = (valueString, decimals = 18) => {
+    return Decimal.fromUserInput(valueString, decimals).atomics;
 };

@@ -7,7 +7,6 @@ import NumberView from "../../../components/NumberView";
 import {ValidateSendAmount, ValidateSpecialCharacters} from "../../../utils/validations";
 import {useTranslation} from "react-i18next";
 import helper from "../../../utils/helper";
-import {Decimal} from "@cosmjs/math";
 import {DefaultChainInfo, PstakeInfo} from "../../../config";
 
 const Amount = () => {
@@ -71,12 +70,12 @@ const Amount = () => {
                             :
                             (token.tokenDenom === PstakeInfo.coinMinimalDenom) ?
                                 <span className={transferableAmount === 0 ? "empty info-data" : "info-data info-link"}
-                                    onClick={() => selectTotalBalanceHandler(Decimal.fromAtomics(token.transferableAmount.toString(), 18).toString())}>
+                                    onClick={() => selectTotalBalanceHandler(token.transferableAmount)}>
                                     <span
                                         className="title">{t("TRANSFERABLE_BALANCE")}:</span>
                                     <span
                                         className="value">
-                                        <NumberView value={formatNumber(Decimal.fromAtomics(token.transferableAmount.toString(), 18).toString())}/>
+                                        <NumberView value={formatNumber(token.transferableAmount)}/>
                                         &nbsp;{helper.denomChange(token.tokenItem.denomTrace.baseDenom)}
                                     </span>
                                 </span>
@@ -87,7 +86,7 @@ const Amount = () => {
                                     <span
                                         className="title">{t("TRANSFERABLE_BALANCE")}:</span>
                                     <span
-                                        className="value">{Decimal.fromAtomics(token.transferableAmount.toString(), 18).toString()}
+                                        className="value">{token.transferableAmount.toLocaleString()}
                                         {helper.denomChange(token.tokenItem.denomTrace.baseDenom)}
                                         ( IBC Trace path - {token.tokenItem.denomTrace.path} ,
                                         denom: {token.tokenItem.denomTrace.baseDenom}, {token.tokenDenom})

@@ -9,7 +9,7 @@ import {showTxDelegateModal} from "../../../../store/actions/transactions/delega
 import {showTxReDelegateModal} from "../../../../store/actions/transactions/redelegate";
 import {showTxUnbondModal} from "../../../../store/actions/transactions/unbond";
 import {showTxWithdrawValidatorRewardsModal} from "../../../../store/actions/transactions/withdrawValidatorRewards";
-import {decimalConversion} from "../../../../utils/scripts";
+import {decimalize} from "../../../../utils/scripts";
 import ReactGA from "react-ga";
 
 const ModalValidator = () => {
@@ -23,7 +23,7 @@ const ModalValidator = () => {
         dispatch(hideValidatorTxModal());
     };
 
-    let commissionRate = decimalConversion(validator.commission ? validator.commission.commissionRates.rate : 0) * 100;
+    let commissionRate = decimalize(validator.commission ? validator.commission.commissionRates.rate : 0) * 100;
     commissionRate = parseFloat(commissionRate.toFixed(6)).toLocaleString();
 
     const handleRoute = (tx) => {

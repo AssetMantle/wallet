@@ -11,7 +11,6 @@ import {fetchUnbondDelegations} from "../../../store/actions/unbond";
 import {fetchTokenPrice} from "../../../store/actions/tokenPrice";
 import {fetchReceiveTransactions, fetchTransactions} from "../../../store/actions/transactionQueries";
 import {hideTxResultModal} from "../../../store/actions/transactions/common";
-import config from "../../../testConfig.json";
 import {LOGIN_INFO} from "../../../constants/localStorage";
 import {updateFee} from "../../../utils/helper";
 import {fetchValidators} from "../../../store/actions/validators";
@@ -64,7 +63,7 @@ const ModalViewTxnResponse = () => {
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 <img src={success} alt="success-image"/>
-                                {loginInfo && loginInfo.loginMode === config.keplrMode ?
+                                {loginInfo && loginInfo.loginMode === 'keplr' ?
                                     <a
                                         href={`${EXPLORER_API}/transactions/${response.transactionHash}`}
                                         target="_blank" className="tx-hash" rel="noopener noreferrer">Tx
@@ -91,7 +90,7 @@ const ModalViewTxnResponse = () => {
                         <Modal.Body className="delegate-modal-body">
                             <div className="result-container">
                                 <img src={failed} alt="success-image"/>
-                                {loginInfo && loginInfo.loginMode === config.keplrMode ?
+                                {loginInfo && loginInfo.loginMode === 'keplr' ?
                                     <>
                                         <p>{response.rawLog}</p>
                                         <a

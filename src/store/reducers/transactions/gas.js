@@ -1,11 +1,11 @@
 import {combineReducers} from 'redux';
 import {TX_GAS_SET} from "../../../constants/gas";
 import {TX_RESULT_MODAL_HIDE, TX_SUCCESS} from "../../../constants/common";
-import config from "../../../testConfig.json";
 import {FEE_MODAL_HIDE} from "../../../constants/fee";
+import {GasInfo} from "../../../config";
 
 const gas = (state = {
-    value: config.gas,
+    value: GasInfo.gas,
     feeError: {
         message: '',
     },
@@ -35,7 +35,7 @@ const gas = (state = {
     case TX_RESULT_MODAL_HIDE:
         return {
             ...state,
-            value: config.gas,
+            value: GasInfo.gas,
             feeError: {
                 message: '',
             },

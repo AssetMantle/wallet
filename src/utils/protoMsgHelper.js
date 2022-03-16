@@ -7,8 +7,8 @@ import {
 } from "cosmjs-types/cosmos/distribution/v1beta1/tx";
 import {MsgTransfer} from "cosmjs-types/ibc/applications/transfer/v1/tx";
 import {coin} from "@cosmjs/stargate";
-import config from "../testConfig.json";
 import {trimWhiteSpaces} from "./scripts";
+import {DefaultChainInfo} from "../config";
 
 const msgSendTypeUrl = "/cosmos.bank.v1beta1.MsgSend";
 const msgDelegateTypeUrl = "/cosmos.staking.v1beta1.MsgDelegate";
@@ -20,7 +20,6 @@ const msgTransferTypeUrl = "/ibc.applications.transfer.v1.MsgTransfer";
 const msgValidatorCommission = '/cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission';
 
 function SendMsg(fromAddress, toAddress, amount, denom) {
-    console.log(fromAddress, toAddress, amount, denom, "111");
     return {
         typeUrl: msgSendTypeUrl,
         value: MsgSend.fromPartial({
@@ -35,7 +34,7 @@ function SendMsg(fromAddress, toAddress, amount, denom) {
 }
 
 
-function DelegateMsg(delegatorAddress, validatorAddress, amount, denom = config.coinDenom) {
+function DelegateMsg(delegatorAddress, validatorAddress, amount, denom = DefaultChainInfo.currency.coinMinimalDenom) {
     return {
         typeUrl: msgDelegateTypeUrl,
         value: MsgDelegate.fromPartial({
@@ -58,7 +57,7 @@ function RedelegateMsg(delegatorAddress, validatorSrcAddress, validatorDstAddres
             validatorSrcAddress: validatorSrcAddress,
             validatorDstAddress: validatorDstAddress,
             amount: {
-                denom: config.coinDenom,
+                denom: DefaultChainInfo.currency.coinMinimalDenom,
                 amount: String(amount),
             },
         }
@@ -73,7 +72,7 @@ function UnbondMsg(delegatorAddress, validatorAddress, amount) {
             delegatorAddress: delegatorAddress,
             validatorAddress: validatorAddress,
             amount: {
-                denom: config.coinDenom,
+                denom: DefaultChainInfo.currency.coinMinimalDenom,
                 amount: String(amount),
             },
         }
@@ -103,8 +102,6 @@ function SetWithDrawAddressMsg(delegatorAddress, withdrawAddress) {
 }
 
 function TransferMsg(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp, denom, port = "transfer") {
-    console.log(channel, fromAddress, toAddress, amount, timeoutHeight, timeoutTimestamp, denom, "ddddd");
-
     return {
         typeUrl: msgTransferTypeUrl,
         value: MsgTransfer.fromPartial({

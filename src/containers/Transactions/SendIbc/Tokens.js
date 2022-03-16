@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import {useTranslation} from "react-i18next";
-import {stringToNumber} from "../../../utils/scripts";
+import {decimalize, stringToNumber} from "../../../utils/scripts";
 import helper, {tokenValueConversion} from "../../../utils/helper";
 import {DefaultChainInfo, PstakeInfo} from "../../../config";
 
@@ -14,9 +14,8 @@ const Tokens = () => {
     const transferableAmount = useSelector((state) => state.balance.transferableAmount);
     const chainInfo = useSelector((state) => state.sendIbc.chainInfo.value);
     const disable = (
-        chainInfo.chain === ''
+        chainInfo.chainName === ''
     );
-    console.log(tokenList, "tokenList");
     const dispatch = useDispatch();
     let tokenData = [];
 
@@ -51,7 +50,7 @@ const Tokens = () => {
                 if (evt.target.value === item.denom) {
                     tokenDataObject.tokenDenom = evt.target.value;
                     if(item.denom === PstakeInfo.coinMinimalDenom) {
-                        tokenDataObject.transferableAmount = item.amount;
+                        tokenDataObject.transferableAmount = decimalize(item.amount, PstakeInfo.coinDecimals);
                     } else {
                         tokenDataObject.transferableAmount = tokenValueConversion(stringToNumber(item.amount));
                     }

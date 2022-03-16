@@ -8,7 +8,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {hideTxReDelegateModal} from "../../../../store/actions/transactions/redelegate";
 import {showValidatorTxModal} from "../../../../store/actions/validators";
 import Validator from "./Validator";
-import config from "../../../../testConfig.json";
 import {LOGIN_INFO} from "../../../../constants/localStorage";
 
 const ModalReDelegate = () => {
@@ -50,7 +49,7 @@ const ModalReDelegate = () => {
             <ReactModal.Body className="delegate-modal-body">
                 <Validator/>
                 <Amount/>
-                {loginInfo && loginInfo.loginMode !== config.keplrMode
+                {loginInfo && loginInfo.loginMode !== 'keplr'
                     ?
                     <Memo/>
                     : null

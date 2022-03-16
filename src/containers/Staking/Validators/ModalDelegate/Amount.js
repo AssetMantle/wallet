@@ -6,7 +6,7 @@ import {formatNumber, removeCommas, stringToNumber} from "../../../../utils/scri
 import NumberView from "../../../../components/NumberView";
 import {ValidateSendAmount, ValidateSpecialCharacters} from "../../../../utils/validations";
 import {useTranslation} from "react-i18next";
-import config from "../../../../testConfig.json";
+import {DefaultChainInfo} from "../../../../config";
 
 const Amount = () => {
     const {t} = useTranslation();
@@ -49,7 +49,7 @@ const Amount = () => {
                     <span
                         className="value">
                         <NumberView value={formatNumber(transferableAmount)}/>
-                        {config.coinName}
+                        {DefaultChainInfo.currency.coinDenom}
                     </span>
                 </span>
 

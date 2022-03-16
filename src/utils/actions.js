@@ -5,9 +5,9 @@ import {
 } from "cosmjs-types/cosmos/distribution/v1beta1/query";
 import * as Sentry from "@sentry/browser";
 import {LOGIN_INFO} from "../constants/localStorage";
-import {decimalConversion, stringToNumber} from "./scripts";
+import {decimalize, stringToNumber} from "./scripts";
 import {tokenValueConversion} from "./helper";
-import config from "../testConfig.json";
+import {DefaultChainInfo} from "../config";
 
 async function getValidatorRewards(validatorAddress) {
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
@@ -19,7 +19,7 @@ async function getValidatorRewards(validatorAddress) {
         validatorAddress: validatorAddress,
     }).then(response => {
         if (response.rewards.length) {
-            let rewards = decimalConversion(response.rewards[0].amount);
+            let rewards = decimalize(response.rewards[0].amount);
             amount = (tokenValueConversion(stringToNumber(rewards)));
         }
     }).catch(error => {
@@ -40,8 +40,8 @@ async function getValidatorCommission(address) {
     }).then((res) => {
         if (res.commission.commission) {
             for (const item of res.commission.commission) {
-                if (item && item.denom === config.coinDenom) {
-                    commission = decimalConversion(item.amount);
+                if (item && item.denom === DefaultChainInfo.currency.coinMinimalDenom) {
+                    commission = decimalize(item.amount);
                     commission = stringToNumber(tokenValueConversion(stringToNumber(commission)).toFixed(6));
                 }
             }

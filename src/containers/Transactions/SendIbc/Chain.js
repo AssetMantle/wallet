@@ -3,8 +3,8 @@ import {useDispatch, useSelector} from "react-redux";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import {useTranslation} from "react-i18next";
-import ibcConfig from "../../../ibcConfig.json";
 import {setTxIbcSendChainInfo} from "../../../store/actions/transactions/sendIbc";
+import {IBCChainInfos, TestIBCChainInfos} from "../../../config";
 
 const IBC_CONF = process.env.REACT_APP_IBC_CONFIG;
 
@@ -15,11 +15,10 @@ const Chain = () => {
 
     let channels = [];
     if (IBC_CONF === "ibcStaging.json") {
-        channels = ibcConfig.testNetChannels;
+        channels = TestIBCChainInfos;
     } else {
-        channels = ibcConfig.mainNetChannels;
+        channels = IBCChainInfos;
     }
-
     const onChangeSelect = (evt) => {
         if (evt.target.value === "Custom") {
             dispatch(
@@ -27,22 +26,23 @@ const Chain = () => {
                     value: {
                         customChain: true,
                         chainID: '',
-                        chain: evt.target.value,
-                        selectedChannel: ''
+                        prefix:'',
+                        chainName: evt.target.value,
                     },
                 })
             );
         } else {
-            let id = evt.target.value.substr(evt.target.value.indexOf('/') + 1);
+            // let id = evt.target.value.substr(evt.target.value.indexOf('/') + 1);
             channels.forEach(async (item) => {
-                if (evt.target.value === item.id) {
+
+                if (evt.target.value === item.chainName) {
                     dispatch(
                         setTxIbcSendChainInfo({
                             value: {
                                 customChain: false,
-                                chainID: id,
-                                chain: evt.target.value,
-                                selectedChannel: item
+                                chainID: item.sourceChannelId,
+                                prefix: item.prefix,
+                                chainName:item.chainName,
                             },
                         })
                     );
@@ -56,7 +56,7 @@ const Chain = () => {
             <div className="form-field">
                 <p className="label">{t("CHAIN")}</p>
                 <div className="form-control-section flex-fill">
-                    <Select value={chainInfo.chain} className="validators-list-selection"
+                    <Select value={chainInfo.chainName} className="validators-list-selection"
                         onChange={onChangeSelect} displayEmpty>
                         <MenuItem value="" key={0}>
                             <em>{t("SELECT_CHAIN")}</em>
@@ -67,8 +67,8 @@ const Chain = () => {
                                     <MenuItem
                                         key={index + 1}
                                         className=""
-                                        value={channel.id}>
-                                        {channel.name} ({channel.id.substr(channel.id.indexOf('/') + 1)} / {channel.port})
+                                        value={channel.chainName}>
+                                        {channel.chainName} ({channel.sourceChannelId} / {channel.portID})
                                     </MenuItem>
                                 );
                             })
@@ -82,14 +82,14 @@ const Chain = () => {
                     </Select>
                 </div>
             </div>
-            {chainInfo.selectedChannel ?
-                <div className="form-field form-control-section">
-                    <p className="label info">{t("DESCRIPTION")}</p>
-                    <div className="amount-field"><span
-                        className="description-info">{chainInfo.selectedChannel.description}</span></div>
-                </div>
+            {/*{chainInfo.selectedChannel ?*/}
+            {/*    <div className="form-field form-control-section">*/}
+            {/*        <p className="label info">{t("DESCRIPTION")}</p>*/}
+            {/*        <div className="amount-field"><span*/}
+            {/*            className="description-info">{chainInfo.selectedChannel.description}</span></div>*/}
+            {/*    </div>*/}
 
-                : ""}
+            {/*    : ""}*/}
         </>
 
     );

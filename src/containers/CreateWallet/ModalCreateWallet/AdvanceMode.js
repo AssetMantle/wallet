@@ -7,8 +7,8 @@ import {useHistory} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {useDispatch} from "react-redux";
 import {addressLogin, setAddress} from "../../../store/actions/signIn/address";
-import config from "../../../testConfig.json";
 import {makeHdPath} from "../../../utils/helper";
+import {AccountInfo} from "../../../config";
 
 const AdvanceMode = (props) => {
     const {t} = useTranslation();
@@ -100,7 +100,7 @@ const AdvanceMode = (props) => {
             handleSubmit(e);
         } else {
             const accountNumber = document.getElementById('createAccountNumber').value;
-            if (parseInt(accountNumber) > config.maxAccountNumber || parseInt(accountNumber) < 0) {
+            if (parseInt(accountNumber) > AccountInfo.maxAccountNumber || parseInt(accountNumber) < 0) {
                 e.preventDefault();
             }
         }
@@ -113,7 +113,7 @@ const AdvanceMode = (props) => {
             handleSubmit(e);
         } else {
             const addressIndex = document.getElementById('createAccountIndex').value;
-            if (parseInt(addressIndex) > config.maxAccountIndex || parseInt(addressIndex) < 0) {
+            if (parseInt(addressIndex) > AccountInfo.maxAccountIndex|| parseInt(addressIndex) < 0) {
                 e.preventDefault();
             }
         }
@@ -189,7 +189,7 @@ const AdvanceMode = (props) => {
                                                     <div className="form-control-section flex-fill">
                                                         <Form.Control
                                                             type="number"
-                                                            max={config.maxAccountNumber}
+                                                            max={AccountInfo.maxAccountNumber}
                                                             name="accountNumber"
                                                             id="createAccountNumber"
                                                             onKeyPress={handleAccountNumberKeypress}
@@ -203,7 +203,7 @@ const AdvanceMode = (props) => {
                                                     <div className="form-control-section flex-fill">
                                                         <Form.Control
                                                             type="number"
-                                                            max={config.maxAccountIndex}
+                                                            max={AccountInfo.maxAccountIndex}
                                                             name="accountIndex"
                                                             id="createAccountIndex"
                                                             onKeyPress={handleIndexKeypress}

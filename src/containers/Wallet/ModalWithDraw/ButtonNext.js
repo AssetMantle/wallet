@@ -4,7 +4,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {keplrSubmit} from "../../../store/actions/transactions/keplr";
 import {hideTxWithDrawTotalModal, submitFormData} from "../../../store/actions/transactions/withdrawTotalRewards";
 import {setTxIno} from "../../../store/actions/transactions/common";
-import config from "../../../testConfig.json";
 import {LOGIN_INFO} from "../../../constants/localStorage";
 
 const ButtonNext = () => {
@@ -57,7 +56,7 @@ const ButtonNext = () => {
                     type="button"
                     disable={disable}
                     value="Next"
-                    onClick={loginInfo && loginInfo.loginMode === config.keplrMode ? onClickKeplr : onClick}
+                    onClick={loginInfo && loginInfo.loginMode === 'keplr' ? onClickKeplr : onClick}
                 />
             </div>
         </div>

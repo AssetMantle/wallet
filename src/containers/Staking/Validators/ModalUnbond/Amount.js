@@ -5,8 +5,8 @@ import {formatNumber, removeCommas, stringToNumber} from "../../../../utils/scri
 import NumberView from "../../../../components/NumberView";
 import {ValidateReDelegateAmount, ValidateSpecialCharacters} from "../../../../utils/validations";
 import {useTranslation} from "react-i18next";
-import config from "../../../../testConfig.json";
 import {setTxUnbondAmount} from "../../../../store/actions/transactions/unbond";
+import {DefaultChainInfo} from "../../../../config";
 
 const Amount = () => {
     const {t} = useTranslation();
@@ -47,7 +47,7 @@ const Amount = () => {
                         className="title">{t("DELEGATED_AMOUNT")}:</span> <span
                         className="value">
                         <NumberView
-                            value={formatNumber(validatorDelegationAmount.value)}/> {config.coinName}</span> </span>
+                            value={formatNumber(validatorDelegationAmount.value)}/> {DefaultChainInfo.currency.coinDenom}</span> </span>
 
             </p>
             <div className="amount-field">

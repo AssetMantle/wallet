@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {ValidateAccountIndex, ValidateSpecialCharacters} from "../../../../utils/validations";
 import {useTranslation} from "react-i18next";
 import {setAccountIndex} from "../../../../store/actions/signIn/ledger";
-import config from "../../../../testConfig.json";
+import {AccountInfo} from "../../../../config";
 
 const AccountIndex = () => {
     const {t} = useTranslation();
@@ -23,7 +23,7 @@ const AccountIndex = () => {
         <div className="form-field">
             <p className="label">{t("ACCOUNT_INDEX")}</p>
             <InputFieldNumber
-                max={config.maxAccountIndex}
+                max={AccountInfo.maxAccountIndex}
                 name="ledgerAccountIndex"
                 placeholder={t("ACCOUNT_INDEX")}
                 type="number"

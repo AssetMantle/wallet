@@ -9,6 +9,7 @@ import {
 } from "../../../constants/sendIbc";
 import {setTxIno, setTxName} from "./common";
 import {showFeeModal} from "./fee";
+import {ExternalChains} from "../../../config";
 
 export const setTxIbcSendAmount = (data) => {
     return {
@@ -59,6 +60,7 @@ export const setTxMemo = (data) => {
 
 
 export const submitFormData = (message) => (dispatch, getState) => {
+    const channelUrl = ExternalChains.find(chain => chain.chainName === getState().sendIbc.chainInfo.chainName);
     dispatch(setTxIno({
         value: {
             data: {
@@ -67,7 +69,7 @@ export const submitFormData = (message) => (dispatch, getState) => {
                 denom: getState().sendIbc.token.value.tokenDenom,
                 memo: getState().sendIbc.memo.value,
                 channelID: getState().sendIbc.chainInfo.value.customChain ? getState().sendIbc.customChannel.value : getState().sendIbc.chainInfo.value.chainID,
-                channelUrl: getState().sendIbc.chainInfo.value.selectedChannel ? getState().sendIbc.chainInfo.value.selectedChannel.url : undefined,
+                channelUrl : channelUrl && channelUrl.rpc !=='' ? channelUrl.rpc : undefined,
                 inputPort: getState().sendIbc.chainInfo.value.customChain ? getState().sendIbc.customPort.value : "transfer",
                 toAddress: getState().sendIbc.toAddress.value,
             }
