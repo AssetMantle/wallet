@@ -2,8 +2,6 @@ import _ from "lodash";
 import empty from "is-empty";
 import moment from "moment";
 import {Decimal} from "@cosmjs/math";
-// import BigNumber from "bignumber.js";
-import Web3 from "web3";
 const encoding = require("@cosmjs/encoding");
 
 export const removeCommas = str => _.replace(str, new RegExp(",", "g"), "");
@@ -104,11 +102,6 @@ export const mnemonicTrim = (mnemonic) => {
     }
     mnemonicWords = mnemonicWords.join(" ");
     return mnemonicWords;
-};
-
-export const getWeb3 = () => {
-    const myWeb3 = new Web3(window.ethereum);
-    return myWeb3;
 };
 
 export const decimalize = (valueString, decimals = 18) => {

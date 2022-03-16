@@ -148,8 +148,8 @@ export const ExternalChains = [
         coinType: 118,
     },
     {
-        rpc: '',
-        rest: '',
+        rpc: 'https://rpc-juno.itastakers.com/',
+        rest: 'https://lcd-juno.itastakers.com/',
         chainId: 'juno-1',
         chainName: 'Juno',
         currency: {
