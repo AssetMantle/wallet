@@ -1,7 +1,7 @@
 import {LOGIN_INFO} from "../constants/localStorage";
 import {mnemonicTrim, stringToNumber} from "./scripts";
 import {tokenValueConversion} from "./helper";
-import {GasInfo} from "../config";
+import {DefaultChainInfo, GasInfo} from "../config";
 
 const bip39 = require("bip39");
 const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
@@ -13,7 +13,7 @@ export const ValidateSendAmount = (amount, value) => {
     return new Error('');
 };
 
-export const ValidateFee = (transferableAmount, feeValue, type, amount) => {
+export const ValidateFee = (transferableAmount, feeValue, type, amount, tokenDenom = DefaultChainInfo.currency.coinMinimalDenom) => {
     const amountTxns = (
         type === "withdrawMultiple" || type === "withdrawAddress" || type === "withdrawValidatorRewards" || type === "redelegate" || type === "unbond"
     );
@@ -28,10 +28,17 @@ export const ValidateFee = (transferableAmount, feeValue, type, amount) => {
         }
         return new Error('');
     } else {
-        if ((transferableAmount - (stringToNumber(amount))).toFixed(6) < tokenValueConversion(feeValue)) {
-            return new Error('Insufficient wallet balance to process the transaction.');
+        if(tokenDenom !== DefaultChainInfo.currency.coinMinimalDenom) {
+            if (transferableAmount < tokenValueConversion(feeValue)) {
+                return new Error('Insufficient wallet balance to process the transaction.');
+            }
+            return new Error('');
+        }else {
+            if ((transferableAmount - (stringToNumber(amount))).toFixed(6) < tokenValueConversion(feeValue)) {
+                return new Error('Insufficient wallet balance to process the transaction.11');
+            }
+            return new Error('');
         }
-        return new Error('');
     }
 };
 
