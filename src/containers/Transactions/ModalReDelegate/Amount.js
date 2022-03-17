@@ -1,24 +1,23 @@
 import React from 'react';
-import InputFieldNumber from "../../../../components/InputFieldNumber";
+import InputFieldNumber from "../../../components/InputFieldNumber";
 import {useDispatch, useSelector} from "react-redux";
-import {formatNumber, removeCommas, stringToNumber} from "../../../../utils/scripts";
-import NumberView from "../../../../components/NumberView";
-import {ValidateReDelegateAmount, ValidateSpecialCharacters} from "../../../../utils/validations";
+import {formatNumber, removeCommas, stringToNumber} from "../../../utils/scripts";
+import NumberView from "../../../components/NumberView";
+import {ValidateReDelegateAmount, ValidateSpecialCharacters} from "../../../utils/validations";
 import {useTranslation} from "react-i18next";
-import {setTxUnbondAmount} from "../../../../store/actions/transactions/unbond";
-import {DefaultChainInfo} from "../../../../config";
+import {setTxReDelegateAmount} from "../../../store/actions/transactions/redelegate";
+import {DefaultChainInfo} from "../../../config";
 
 const Amount = () => {
     const {t} = useTranslation();
-    const amount = useSelector((state) => state.unbondTx.amount);
+    const amount = useSelector((state) => state.redelegate.amount);
     const validatorDelegationAmount = useSelector((state) => state.validators.validatorDelegations);
     const dispatch = useDispatch();
-
     const onChange = (evt) => {
         let rex = /^\d*\.?\d{0,6}$/;
         if (rex.test(evt.target.value)) {
             dispatch(
-                setTxUnbondAmount({
+                setTxReDelegateAmount({
                     value: evt.target.value,
                     error: ValidateReDelegateAmount(validatorDelegationAmount.value, (stringToNumber(evt.target.value)))
                 })
@@ -30,7 +29,7 @@ const Amount = () => {
 
     const selectTotalBalanceHandler = (value) => {
         dispatch(
-            setTxUnbondAmount({
+            setTxReDelegateAmount({
                 value: value,
                 error: ValidateReDelegateAmount(value, (stringToNumber(value)))
             })
@@ -40,7 +39,7 @@ const Amount = () => {
     return (
         <div className="form-field p-0">
             <p className="label amount-label">
-                <span> {t("UNBOND_AMOUNT")}</span>
+                <span> {t("REDELEGATION_AMOUNT")}</span>
                 <span
                     className={validatorDelegationAmount.value === 0 ? "empty info-data info-link" : "info-data info-link"}
                     onClick={() => selectTotalBalanceHandler(removeCommas(formatNumber(validatorDelegationAmount.value)))}><span
@@ -55,7 +54,7 @@ const Amount = () => {
                     className="form-control"
                     min={0}
                     name="amount"
-                    placeholder={t("UNBOND_AMOUNT")}
+                    placeholder={t("REDELEGATION_AMOUNT")}
                     required={true}
                     type="number"
                     value={amount.value}

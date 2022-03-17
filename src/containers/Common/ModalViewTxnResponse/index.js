@@ -9,7 +9,7 @@ import {fetchBalance, fetchTransferableVestingAmount} from "../../../store/actio
 import {fetchRewards, fetchTotalRewards} from "../../../store/actions/rewards";
 import {fetchUnbondDelegations} from "../../../store/actions/unbond";
 import {fetchTokenPrice} from "../../../store/actions/tokenPrice";
-import {fetchReceiveTransactions, fetchTransactions} from "../../../store/actions/transactionQueries";
+import {fetchReceiveTransactions, fetchTransactions} from "../../../store/actions/transactionHistory";
 import {hideTxResultModal} from "../../../store/actions/transactions/common";
 import {LOGIN_INFO} from "../../../constants/localStorage";
 import {updateFee} from "../../../utils/helper";

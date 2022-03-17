@@ -7,7 +7,7 @@ import {fetchUnbondDelegations} from "../store/actions/unbond";
 import {fetchTokenPrice} from "../store/actions/tokenPrice";
 import IconButton from '@material-ui/core/IconButton';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import {fetchReceiveTransactions, fetchTransactions} from "../store/actions/transactionQueries";
+import {fetchReceiveTransactions, fetchTransactions} from "../store/actions/transactionHistory";
 import {LOGIN_INFO} from "../constants/localStorage";
 import {updateFee} from "../utils/helper";
 import ReactGA from "react-ga";

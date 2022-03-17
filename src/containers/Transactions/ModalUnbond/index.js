@@ -1,28 +1,27 @@
 import React from 'react';
 import {Modal as ReactModal} from "react-bootstrap";
-import Icon from "../../../../components/Icon";
+import Icon from "../../../components/Icon";
 import Amount from "./Amount";
 import Memo from "./Memo";
 import ButtonSubmit from "./ButtonSubmit";
 import {useDispatch, useSelector} from "react-redux";
-import {hideTxReDelegateModal} from "../../../../store/actions/transactions/redelegate";
-import {showValidatorTxModal} from "../../../../store/actions/validators";
-import Validator from "./Validator";
-import {LOGIN_INFO} from "../../../../constants/localStorage";
+import {hideTxUnbondModal} from "../../../store/actions/transactions/unbond";
+import {showValidatorTxModal} from "../../../store/actions/validators";
+import {LOGIN_INFO} from "../../../constants/localStorage";
 
-const ModalReDelegate = () => {
+const ModalUnbond = () => {
     const dispatch = useDispatch();
-    const show = useSelector((state) => state.redelegate.modal);
+    const show = useSelector((state) => state.unbondTx.modal);
     const response = useSelector(state => state.common.error);
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
 
     const handleClose = () => {
-        dispatch(hideTxReDelegateModal());
+        dispatch(hideTxUnbondModal());
     };
 
     const handlePrevious = () => {
         dispatch(showValidatorTxModal());
-        dispatch(hideTxReDelegateModal());
+        dispatch(hideTxUnbondModal());
     };
 
     return (
@@ -30,7 +29,7 @@ const ModalReDelegate = () => {
         <ReactModal
             animation={false}
             backdrop="static"
-            className="modal-custom delegate-modal modal-redelegate"
+            className="modal-custom delegate-modal modal-unbond"
             centered={true}
             keyboard={false}
             show={show}
@@ -43,11 +42,10 @@ const ModalReDelegate = () => {
                             icon="left-arrow"/>
                     </button>
                 </div>
-                <h3 className="heading">Redelegate
+                <h3 className="heading">Unbond
                 </h3>
             </ReactModal.Header>
             <ReactModal.Body className="delegate-modal-body">
-                <Validator/>
                 <Amount/>
                 {loginInfo && loginInfo.loginMode !== 'keplr'
                     ?
@@ -63,4 +61,4 @@ const ModalReDelegate = () => {
 };
 
 
-export default ModalReDelegate;
+export default ModalUnbond;
