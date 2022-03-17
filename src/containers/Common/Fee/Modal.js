@@ -6,7 +6,7 @@ import Fee from "./index";
 import Gas from "./Gas";
 import Submit from "./Submit";
 import Icon from "../../../components/Icon";
-import {GasInfo} from "../../../config";
+import {FeeInfo} from "../../../config";
 
 const Modal = () => {
     const show = useSelector((state) => state.fee.modal);
@@ -18,7 +18,7 @@ const Modal = () => {
     const handleClose = () => {
         dispatch(feeChangeHandler({
             value: {
-                fee: GasInfo.averageFee,
+                fee: FeeInfo.averageFee,
                 feeType: "Average",
             },
             error: {
