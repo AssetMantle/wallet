@@ -3,23 +3,22 @@ import moment from 'moment';
 import helper, {tokenValueConversion} from "../../../utils/helper";
 import Icon from "../../../components/Icon";
 import loader from "../../../assets/images/loader.svg";
-import {fetchTransactions} from "../../../store/actions/transactionQueries";
+import {fetchReceiveTransactions} from "../../../store/actions/transactionHistory";
 import {connect} from "react-redux";
 import DataTable from "../../../components/DataTable";
 import IconButton from "@material-ui/core/IconButton";
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NumberView from "../../../components/NumberView";
 import {formatNumber, stringTruncate} from "../../../utils/scripts";
-import { LOGIN_INFO} from "../../../constants/localStorage";
+import NumberView from "../../../components/NumberView";
+import {LOGIN_INFO} from "../../../constants/localStorage";
 import {DefaultChainInfo} from "../../../config";
-
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
-const SendTransactions = (props) => {
+const ReceiveTransactions = (props) => {
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
 
     useEffect(() => {
-        props.fetchTransactions(loginInfo && loginInfo.address, 5, 1);
+        props.fetchReceiveTransactions(loginInfo && loginInfo.address, 5, 1);
     }, []);
     const columns = [{
         name: 'txHash',
@@ -63,7 +62,6 @@ const SendTransactions = (props) => {
         search: false,
         viewColumns: false,
     };
-
     const tableData = props.list && props.list.length > 0
         ?
         props.list.map((stxn, index) => [
@@ -132,21 +130,24 @@ const SendTransactions = (props) => {
         ])
         :
         [];
+
+    const handleNext = () => {
+        if (!helper.checkLastPage(props.pageNumber[0], 5, props.pageNumber[1])) {
+            props.fetchReceiveTransactions(loginInfo && loginInfo.address, 5, props.pageNumber[0] + 1);
+        }
+    };
+    const handlePrevious = () => {
+        if (props.pageNumber[0] >= 2) {
+            props.fetchReceiveTransactions(loginInfo && loginInfo.address, 5, props.pageNumber[0] - 1);
+        }
+    };
+
     if (props.inProgress && props.list.length) {
         return <div className="transaction-loader">
             <img src={loader} alt="loader" className="loader"/>
         </div>;
     }
-    const handleNext = () => {
-        if (!helper.checkLastPage(props.pageNumber[0], 5, props.pageNumber[1])) {
-            props.fetchTransactions(loginInfo && loginInfo.address, 5, props.pageNumber[0] + 1);
-        }
-    };
-    const handlePrevious = () => {
-        if (props.pageNumber[0] >= 2) {
-            props.fetchTransactions(loginInfo && loginInfo.address, 5, props.pageNumber[0] - 1);
-        }
-    };
+
     return (
         <div className="txns-container">
             <DataTable
@@ -176,14 +177,14 @@ const SendTransactions = (props) => {
 
 const stateToProps = (state) => {
     return {
-        list: state.transactions.list,
-        inProgress: state.transactions.inProgress,
-        pageNumber: state.transactions.pageNumber
+        list: state.transactions.receiveTxnList,
+        inProgress: state.transactions.inReceiveTxnProgress,
+        pageNumber: state.transactions.receiveTxnPageNumber
     };
 };
 
 const actionsToProps = {
-    fetchTransactions,
+    fetchReceiveTransactions,
 };
 
-export default connect(stateToProps, actionsToProps)(SendTransactions);
+export default connect(stateToProps, actionsToProps)(ReceiveTransactions);

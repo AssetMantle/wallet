@@ -3,8 +3,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
-import helper from "../../../../utils/helper";
-import {setTxReDelegateAddress} from "../../../../store/actions/transactions/redelegate";
+import helper from "../../../utils/helper";
+import {setTxReDelegateAddress} from "../../../store/actions/transactions/redelegate";
 
 const Validator = () => {
     const {t} = useTranslation();

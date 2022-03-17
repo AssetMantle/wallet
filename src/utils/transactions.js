@@ -34,7 +34,7 @@ async function TransactionWithKeplr(msgs, fee, memo = "", chainID = configChainI
 
 async function KeplrWallet(chainID = configChainID) {
     await window.keplr.enable(chainID);
-    const offlineSigner = window.getOfflineSigner(chainID);
+    const offlineSigner = window.getOfflineSignerOnlyAmino(chainID);
     const accounts = await offlineSigner.getAccounts();
     return [offlineSigner, accounts[0].address];
 }

@@ -1,27 +1,38 @@
+import {Modal as ReactModal, OverlayTrigger, Popover,} from 'react-bootstrap';
 import React from 'react';
-import {Modal as ReactModal} from "react-bootstrap";
-import Icon from "../../../../components/Icon";
+import Icon from "../../../components/Icon";
+import {useTranslation} from "react-i18next";
 import Amount from "./Amount";
-import Memo from "./Memo";
-import ButtonSubmit from "./ButtonSubmit";
 import {useDispatch, useSelector} from "react-redux";
-import {hideTxUnbondModal} from "../../../../store/actions/transactions/unbond";
-import {showValidatorTxModal} from "../../../../store/actions/validators";
-import {LOGIN_INFO} from "../../../../constants/localStorage";
+import {hideTxDelegateModal} from "../../../store/actions/transactions/delegate";
+import ButtonSubmit from "./ButtonSubmit";
+import {showValidatorTxModal} from "../../../store/actions/validators";
+import Memo from "./Memo";
+import {LOGIN_INFO} from "../../../constants/localStorage";
 
-const ModalUnbond = () => {
+const ModalDelegate = (props) => {
     const dispatch = useDispatch();
-    const show = useSelector((state) => state.unbondTx.modal);
+    const show = useSelector((state) => state.delegate.modal);
+    const {t} = useTranslation();
     const response = useSelector(state => state.common.error);
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
 
+    const popover = (
+        <Popover id="popover-basic">
+            <Popover.Content>
+                {t("DELEGATE_HEADER_HINT")}
+                <p><b>Note:</b> {t("DELEGATE_HEADER_HINT_NOTE")} </p>
+            </Popover.Content>
+        </Popover>
+    );
+
     const handleClose = () => {
-        dispatch(hideTxUnbondModal());
+        dispatch(hideTxDelegateModal());
     };
 
     const handlePrevious = () => {
         dispatch(showValidatorTxModal());
-        dispatch(hideTxUnbondModal());
+        dispatch(hideTxDelegateModal());
     };
 
     return (
@@ -29,7 +40,7 @@ const ModalUnbond = () => {
         <ReactModal
             animation={false}
             backdrop="static"
-            className="modal-custom delegate-modal modal-unbond"
+            className="modal-custom delegate-modal modal-delegate"
             centered={true}
             keyboard={false}
             show={show}
@@ -42,7 +53,12 @@ const ModalUnbond = () => {
                             icon="left-arrow"/>
                     </button>
                 </div>
-                <h3 className="heading">Unbond
+                <h3 className="heading">{t('DELEGATE')} {props.moniker}
+                    <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
+                        <button className="icon-button info" type="button"><Icon
+                            viewClass="arrow-right"
+                            icon="info"/></button>
+                    </OverlayTrigger>
                 </h3>
             </ReactModal.Header>
             <ReactModal.Body className="delegate-modal-body">
@@ -57,8 +73,8 @@ const ModalUnbond = () => {
                 <ButtonSubmit/>
             </ReactModal.Body>
         </ReactModal>
+
     );
 };
 
-
-export default ModalUnbond;
+export default ModalDelegate;
