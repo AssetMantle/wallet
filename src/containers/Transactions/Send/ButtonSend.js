@@ -20,7 +20,7 @@ const ButtonSend = () => {
     let sendAmount;
 
     if(token.value.tokenDenom === PstakeInfo.coinMinimalDenom){
-        sendAmount = Number(unDecimalize(amount.value)).toString();
+        sendAmount = unDecimalize(amount.value).toString();
     }else {
         sendAmount = (amount.value * 1000000).toFixed(0);
     }

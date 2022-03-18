@@ -1,21 +1,21 @@
 import React from 'react';
 import {Modal as ReactModal, OverlayTrigger, Popover} from "react-bootstrap";
-import Icon from "../../../../components/Icon";
+import Icon from "../../../components/Icon";
 import Memo from "./Memo";
 import ButtonSubmit from "./ButtonSubmit";
 import {useDispatch, useSelector} from "react-redux";
-import {hideTxWithdrawValidatorRewardsModal} from "../../../../store/actions/transactions/withdrawValidatorRewards";
-import {showValidatorTxModal} from "../../../../store/actions/validators";
-import NumberView from "../../../../components/NumberView";
-import {formatNumber} from "../../../../utils/scripts";
+import {hideTxWithdrawValidatorRewardsModal} from "../../../store/actions/transactions/withdrawValidatorRewards";
+import {showValidatorTxModal} from "../../../store/actions/validators";
+import NumberView from "../../../components/NumberView";
+import {formatNumber} from "../../../utils/scripts";
 import {useTranslation} from "react-i18next";
 import {
     setPreviousModalName,
     showTxWithDrawAddressModal
-} from "../../../../store/actions/transactions/setWithdrawAddress";
-import {LOGIN_INFO} from "../../../../constants/localStorage";
+} from "../../../store/actions/transactions/setWithdrawAddress";
+import {LOGIN_INFO} from "../../../constants/localStorage";
 import ReactGA from "react-ga";
-import {DefaultChainInfo} from "../../../../config";
+import {DefaultChainInfo} from "../../../config";
 
 const ModalWithdraw = () => {
     const {t} = useTranslation();

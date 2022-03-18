@@ -1,38 +1,28 @@
-import {Modal as ReactModal, OverlayTrigger, Popover,} from 'react-bootstrap';
 import React from 'react';
-import Icon from "../../../../components/Icon";
-import {useTranslation} from "react-i18next";
+import {Modal as ReactModal} from "react-bootstrap";
+import Icon from "../../../components/Icon";
 import Amount from "./Amount";
-import {useDispatch, useSelector} from "react-redux";
-import {hideTxDelegateModal} from "../../../../store/actions/transactions/delegate";
-import ButtonSubmit from "./ButtonSubmit";
-import {showValidatorTxModal} from "../../../../store/actions/validators";
 import Memo from "./Memo";
-import {LOGIN_INFO} from "../../../../constants/localStorage";
+import ButtonSubmit from "./ButtonSubmit";
+import {useDispatch, useSelector} from "react-redux";
+import {hideTxReDelegateModal} from "../../../store/actions/transactions/redelegate";
+import {showValidatorTxModal} from "../../../store/actions/validators";
+import Validator from "./Validator";
+import {LOGIN_INFO} from "../../../constants/localStorage";
 
-const ModalDelegate = (props) => {
+const ModalReDelegate = () => {
     const dispatch = useDispatch();
-    const show = useSelector((state) => state.delegate.modal);
-    const {t} = useTranslation();
+    const show = useSelector((state) => state.redelegate.modal);
     const response = useSelector(state => state.common.error);
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
 
-    const popover = (
-        <Popover id="popover-basic">
-            <Popover.Content>
-                {t("DELEGATE_HEADER_HINT")}
-                <p><b>Note:</b> {t("DELEGATE_HEADER_HINT_NOTE")} </p>
-            </Popover.Content>
-        </Popover>
-    );
-
     const handleClose = () => {
-        dispatch(hideTxDelegateModal());
+        dispatch(hideTxReDelegateModal());
     };
 
     const handlePrevious = () => {
         dispatch(showValidatorTxModal());
-        dispatch(hideTxDelegateModal());
+        dispatch(hideTxReDelegateModal());
     };
 
     return (
@@ -40,7 +30,7 @@ const ModalDelegate = (props) => {
         <ReactModal
             animation={false}
             backdrop="static"
-            className="modal-custom delegate-modal modal-delegate"
+            className="modal-custom delegate-modal modal-redelegate"
             centered={true}
             keyboard={false}
             show={show}
@@ -53,15 +43,11 @@ const ModalDelegate = (props) => {
                             icon="left-arrow"/>
                     </button>
                 </div>
-                <h3 className="heading">{t('DELEGATE')} {props.moniker}
-                    <OverlayTrigger trigger={['hover', 'focus']} placement="bottom" overlay={popover}>
-                        <button className="icon-button info" type="button"><Icon
-                            viewClass="arrow-right"
-                            icon="info"/></button>
-                    </OverlayTrigger>
+                <h3 className="heading">Redelegate
                 </h3>
             </ReactModal.Header>
             <ReactModal.Body className="delegate-modal-body">
+                <Validator/>
                 <Amount/>
                 {loginInfo && loginInfo.loginMode !== 'keplr'
                     ?
@@ -73,8 +59,8 @@ const ModalDelegate = (props) => {
                 <ButtonSubmit/>
             </ReactModal.Body>
         </ReactModal>
-
     );
 };
 
-export default ModalDelegate;
+
+export default ModalReDelegate;

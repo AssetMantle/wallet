@@ -1,13 +1,13 @@
 import React from 'react';
-import Button from "./../../../../components/Button";
-import {hideTxUnbondModal, submitFormData} from "../../../../store/actions/transactions/unbond";
+import Button from "../../../components/Button";
+import {hideTxUnbondModal, submitFormData} from "../../../store/actions/transactions/unbond";
 import {useDispatch, useSelector} from "react-redux";
-import {keplrSubmit} from "../../../../store/actions/transactions/keplr";
-import {UnbondMsg} from "../../../../utils/protoMsgHelper";
-import {setTxIno} from "../../../../store/actions/transactions/common";
-import {LOGIN_INFO} from "../../../../constants/localStorage";
-import {stringToNumber} from "../../../../utils/scripts";
-import {DefaultChainInfo} from "../../../../config";
+import {keplrSubmit} from "../../../store/actions/transactions/keplr";
+import {UnbondMsg} from "../../../utils/protoMsgHelper";
+import {setTxIno} from "../../../store/actions/transactions/common";
+import {LOGIN_INFO} from "../../../constants/localStorage";
+import {stringToNumber} from "../../../utils/scripts";
+import {DefaultChainInfo} from "../../../config";
 
 
 const ButtonSubmit = () => {

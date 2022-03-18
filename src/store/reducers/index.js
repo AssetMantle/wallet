@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux';
 import delegations from './delegations';
-import transactions from "./transactionQueries";
+import transactions from "./transactionsHistory";
 import validators from "./validators";
 import balance from "./balance";
 import rewards from "./rewards";

@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {feeChangeHandler} from "../../../store/actions/transactions/fee";
 import {ValidateFee} from "../../../utils/validations";
 import {tokenValueConversion} from "../../../utils/helper";
-import {DefaultChainInfo, FeeInfo, GasInfo} from "../../../config";
+import {DefaultChainInfo, FeeInfo} from "../../../config";
 
 const Fee = () => {
     const dispatch = useDispatch();
@@ -16,18 +16,27 @@ const Fee = () => {
     const tokenPrice = useSelector((state) => state.tokenPrice.tokenPrice);
     const type = useSelector((state) => state.common.txName.value.name);
     const gas = useSelector((state) => state.gas.gas);
+    const token = useSelector((state) => state.send.token.value);
+    const tokenIbc = useSelector((state) => state.sendIbc.token.value);
 
+    let denom;
     if(type === "send" || type === "ibc"){
         amount = formData.amount;
+        if(type === "send"){
+            denom = token.tokenDenom;
+        }else {
+            denom = tokenIbc.tokenDenom;
+        }
     }
+
 
     useEffect(() => {
         dispatch(feeChangeHandler({
             value: {
-                fee: (FeeInfo.averageFee * (GasInfo.value)),
+                fee: (FeeInfo.averageFee * (gas.value)),
                 feeType: "Average"
             },
-            error: ValidateFee(transferableAmount, FeeInfo.averageFee * (gas.value), type, amount)
+            error: ValidateFee(transferableAmount, FeeInfo.averageFee * (gas.value), type, amount, denom)
         }));
     }, [gas.value]);
 
@@ -37,7 +46,7 @@ const Fee = () => {
                 fee: (feeValue * (gas.value)),
                 feeType: fee
             },
-            error: ValidateFee(transferableAmount, feeValue * (gas.value), type, amount)
+            error: ValidateFee(transferableAmount, feeValue * (gas.value), type, amount, denom)
         }));
     };
 
