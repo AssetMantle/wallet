@@ -14,7 +14,7 @@ const InputFieldNumber = ({
     onChange,
     min = '',
     onBlur = emptyFunc,
-    onKeyPress = emptyFunc, 
+    onKeyPress = emptyFunc,
     disable = false
 }) => {
 
@@ -33,6 +33,7 @@ const InputFieldNumber = ({
                 onBlur={onBlur}
                 onKeyPress={onKeyPress}
                 disabled={disable}
+                onWheel={(e) => e.target.blur()}
             />
             <p className="input-error">{error.message}</p>
         </div>
