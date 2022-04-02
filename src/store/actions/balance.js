@@ -49,8 +49,8 @@ export const fetchBalance = (address) => {
         dispatch(fetchBalanceProgress());
         try {
             const rpcClient = await transactions.RpcClient();
-            const stakingQueryService = new QueryClientImpl(rpcClient);
-            await stakingQueryService.AllBalances({
+            const bankQueryService = new QueryClientImpl(rpcClient);
+            await bankQueryService.AllBalances({
                 address: address,
             }).then((allBalancesResponse) => {
                 if (allBalancesResponse.balances.length) {
