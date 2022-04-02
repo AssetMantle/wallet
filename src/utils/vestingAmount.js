@@ -89,9 +89,12 @@ async function getTransferableVestingAmount(address, balance) {
         if (res.typeUrl !== baseAccount) {
             delegatedVesting = tokenValueConversion(getDenomAmount(res.accountData.baseVestingAccount.delegatedVesting));
         }
-        transferableAmount = balance + delegatedVesting  - amount;
+        transferableAmount = balance + delegatedVesting - amount;
         if (transferableAmount < 0) {
             transferableAmount = 0;
+        }
+        if (delegatedVesting > amount) {
+            transferableAmount = balance;
         }
         return [amount, transferableAmount];
     } catch (error) {
