@@ -78,11 +78,12 @@ export const fetchTotalRewards = (address) => {
                     for (const token of delegatorRewardsResponse.total) {
                         let rewards;
                         if (token.denom === PstakeInfo.coinMinimalDenom){
-                            rewards = decimalize(token.amount, PstakeInfo.coinDecimals+PstakeInfo.coinDecimals);
+                            const decimalizedValue = decimalize(token.amount);
+                            rewards = decimalize(parseInt(decimalizedValue));
                         }
                         else {
                             rewards = decimalize(token.amount);
-                            const fixedRewardsResponse = tokenValueConversion(stringToNumber(rewards));
+                            const fixedRewardsResponse = tokenValueConversion(stringToNumber(parseInt(rewards)));
                             rewards = stringToNumber(fixedRewardsResponse).toFixed(6);
                         }
                         const data = {
@@ -91,11 +92,10 @@ export const fetchTotalRewards = (address) => {
                         };
                         allTokensRewards.push(data);
                     }
-
                     let xprtRewards = Lodash.sumBy(delegatorRewardsResponse.total, (token) => {
                         if(token.denom === DefaultChainInfo.currency.coinMinimalDenom){
                             let rewards = decimalize(token.amount);
-                            const fixedRewardsResponse = tokenValueConversion(stringToNumber(rewards));
+                            const fixedRewardsResponse = tokenValueConversion(stringToNumber(parseInt(rewards)));
                             return stringToNumber(fixedRewardsResponse);
                         }else {
                             return 0;
@@ -103,7 +103,12 @@ export const fetchTotalRewards = (address) => {
                     });
                     let ibcRewards = Lodash.sumBy(delegatorRewardsResponse.total, (token) => {
                         if(token.denom === PstakeInfo.coinMinimalDenom) {
-                            return decimalize(token.amount, PstakeInfo.coinDecimals + PstakeInfo.coinDecimals);
+                            const decimalizedValue = decimalize(token.amount);
+                            return decimalize(parseInt(decimalizedValue));
+                        }else if(token.denom !== PstakeInfo.coinMinimalDenom && token.denom !== DefaultChainInfo.currency.coinMinimalDenom) {
+                            let rewards = decimalize(token.amount);
+                            const fixedRewardsResponse = tokenValueConversion(stringToNumber(parseInt(rewards)));
+                            return stringToNumber(fixedRewardsResponse);
                         }else {
                             return 0;
                         }
