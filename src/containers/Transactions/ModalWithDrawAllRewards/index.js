@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {hideTxWithDrawTotalModal} from "../../../store/actions/transactions/withdrawTotalRewards";
 import {setPreviousModalName, showTxWithDrawAddressModal} from "../../../store/actions/transactions/setWithdrawAddress";
 import NumberView from "../../../components/NumberView";
-import {formatNumber, stringTruncate} from "../../../utils/scripts";
+import {formatNumber, stringToNumber, stringTruncate} from "../../../utils/scripts";
 import ValidatorCommission from "./ValidatorCommission";
 import Validators from "./Validators";
 import Memo from "./Memo";
@@ -13,7 +13,7 @@ import ButtonNext from "./ButtonNext";
 import Icon from "../../../components/Icon";
 import {LOGIN_INFO} from "../../../constants/localStorage";
 import ReactGA from "react-ga";
-import {DefaultChainInfo} from "../../../config";
+import {DefaultChainInfo, PstakeInfo} from "../../../config";
 
 const ModalWithDraw = () => {
     const {t} = useTranslation();
@@ -74,30 +74,38 @@ const ModalWithDraw = () => {
 
             <ReactModal.Body className="rewards-modal-body">
                 <div className="form-field">
-                    <p className="label">{t("TOTAL_AVAILABLE_BALANCE")}</p>
+                    <p className="label">{t("TOTAL_AVAILABLE_XPRT_REWARDS")}</p>
                     <div className="available-tokens">
                         <p className="tokens"
-                            title={rewards.length ? (rewards[2] * tokenPrice) : 0}>
-                            <NumberView value={formatNumber(rewards.length ? (rewards[2]) : 0)}/>
+                            title={rewards.length ? (rewards[0] * tokenPrice) : 0}>
+                            <NumberView value={formatNumber(rewards.length ? (rewards[0]) : 0)}/>
                             {DefaultChainInfo.currency.coinDenom}
                         </p>
                         <p className="usd">= $<NumberView
-                            value={formatNumber(rewards.length ? (rewards[2] * tokenPrice) : 0)}/></p>
+                            value={formatNumber(rewards.length ? (rewards[0] * tokenPrice) : 0)}/></p>
                     </div>
                 </div>
                 {ibcRewards.length ?
-                    <div className="form-field">
-                        <p className="label">{t("IBC_REWARDS")}</p>
-                        <div className="available-tokens">
-                            <p className="tokens"
-                                title={ibcRewards[0].amount}>
-                                <NumberView value={formatNumber(ibcRewards[0].amount)}/>
-                                <span title={ibcRewards[0].denom}>{stringTruncate(ibcRewards[0].denom)}</span>
-                            </p>
-                            <p className="usd">= $<NumberView
-                                value={formatNumber(ibcRewards[0].amount * tokenPrice)}/></p>
-                        </div>
-                    </div>
+                    ibcRewards.map((item, index) => {
+                        if(stringToNumber(item.amount) > 0) {
+                            return (
+                                <div className="form-field" key={index}>
+                                    <p className="label">{t("IBC_REWARDS")}</p>
+                                    <div className="available-tokens">
+                                        <p className="tokens"
+                                            title={item.amount}>
+                                            {item.denom === PstakeInfo.coinMinimalDenom ?
+                                                item.amount
+                                                :
+                                                <NumberView value={formatNumber(item.amount)}/>
+                                            }
+                                            &nbsp;<span title={item.denom}>{stringTruncate(item.denom)}</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            );
+                        }
+                    })
                     : ""
                 }
                 <Validators/>
