@@ -209,7 +209,6 @@ const TokenInfo = (props) => {
 };
 
 const stateToProps = (state) => {
-    console.log(state.rewards.rewards, "state.rewards.rewards");
     return {
         delegations: state.delegations.count,
         delegationStatus: state.delegations.status,
