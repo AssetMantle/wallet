@@ -75,6 +75,7 @@ let English = {
         "SELECT_VALIDATOR": "Select Validator",
         "TOTAL_AVAILABLE": "Total Available",
         "TOTAL_AVAILABLE_BALANCE": "Total Available Amount",
+        "TOTAL_AVAILABLE_XPRT_REWARDS": "Total Available XPRT Rewards",
         "MEMO": "Memo",
         "ENTER_MEMO": "Enter Memo(Optional)",
         "SET_WITHDRAW_ADDRESS": "Setup Address for Rewards Withdrawal",

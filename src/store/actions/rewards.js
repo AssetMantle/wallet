@@ -16,7 +16,7 @@ import {decimalize, stringToNumber} from "../../utils/scripts";
 import {checkValidatorAccountAddress, tokenValueConversion} from "../../utils/helper";
 import Lodash from "lodash";
 import {sortTokensByDenom} from "../../utils/validations";
-import {DefaultChainInfo} from "../../config";
+import {DefaultChainInfo, PstakeInfo} from "../../config";
 
 export const fetchRewardsProgress = () => {
     return {
@@ -76,15 +76,22 @@ export const fetchTotalRewards = (address) => {
                 if (delegatorRewardsResponse.total.length) {
                     let allTokensRewards = [];
                     for (const token of delegatorRewardsResponse.total) {
-                        let rewards = decimalize(token.amount);
-                        const fixedRewardsResponse = tokenValueConversion(stringToNumber(rewards));
-                        const fixedRewards = stringToNumber(fixedRewardsResponse).toFixed(6);
+                        let rewards;
+                        if (token.denom === PstakeInfo.coinMinimalDenom){
+                            rewards = decimalize(token.amount, PstakeInfo.coinDecimals+PstakeInfo.coinDecimals);
+                        }
+                        else {
+                            rewards = decimalize(token.amount);
+                            const fixedRewardsResponse = tokenValueConversion(stringToNumber(rewards));
+                            rewards = stringToNumber(fixedRewardsResponse).toFixed(6);
+                        }
                         const data = {
                             denom : token.denom,
-                            amount :fixedRewards
+                            amount :rewards
                         };
                         allTokensRewards.push(data);
                     }
+
                     let xprtRewards = Lodash.sumBy(delegatorRewardsResponse.total, (token) => {
                         if(token.denom === DefaultChainInfo.currency.coinMinimalDenom){
                             let rewards = decimalize(token.amount);
@@ -95,16 +102,14 @@ export const fetchTotalRewards = (address) => {
                         }
                     });
                     let ibcRewards = Lodash.sumBy(delegatorRewardsResponse.total, (token) => {
-                        if(token.denom !== DefaultChainInfo.currency.coinMinimalDenom) {
-                            let rewards = decimalize(token.amount);
-                            const fixedRewardsResponse = tokenValueConversion(stringToNumber(rewards));
-                            return stringToNumber(fixedRewardsResponse);
+                        if(token.denom === PstakeInfo.coinMinimalDenom) {
+                            return decimalize(token.amount, PstakeInfo.coinDecimals + PstakeInfo.coinDecimals);
                         }else {
                             return 0;
                         }
                     });
                     const totalRewards = [xprtRewards.toFixed(6), allTokensRewards,
-                        ((stringToNumber(xprtRewards) + stringToNumber(ibcRewards)).toFixed(6))];
+                        (stringToNumber(ibcRewards))];
                     dispatch(fetchRewardsSuccess(totalRewards));
                 }
 

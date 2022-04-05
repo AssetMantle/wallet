@@ -179,8 +179,8 @@ const TokenInfo = (props) => {
                             <p className="key">{t("REWARDS")}</p>
                             <p className="value rewards"><span onClick={() => handleRewards("rewards")}
                                 className="claim inner-grid">{t("CLAIM")}</span>
-                            <span title={props.rewards[2]}>
-                                <NumberView value={formatNumber(props.rewards[2])}/> {DefaultChainInfo.currency.coinDenom}
+                            <span title={props.rewards[0]}>
+                                <NumberView value={formatNumber(props.rewards[0])}/> {DefaultChainInfo.currency.coinDenom}
                             </span>
                             </p>
                         </div>
@@ -209,6 +209,7 @@ const TokenInfo = (props) => {
 };
 
 const stateToProps = (state) => {
+    console.log(state.rewards.rewards, "state.rewards.rewards");
     return {
         delegations: state.delegations.count,
         delegationStatus: state.delegations.status,
