@@ -45,7 +45,7 @@ async function KeplrWallet() {
                         coinDecimals: 6,
                         // (Optional) Keplr can show the fiat value of the coin if a coingecko id is provided.
                         // You can get id from https://api.coingecko.com/api/v3/coins/list if it is listed.
-                        coinGeckoId: "persistence"
+                        coinGeckoId: DefaultChainInfo.currency.coinGeckoId
                     },
                     // (Optional) If you have a wallet webpage used to stake the coin then provide the url to the website in `walletUrlForStaking`.
                     // The 'stake' button in Keplr extension will link to the webpage.
@@ -84,7 +84,7 @@ async function KeplrWallet() {
                         coinDecimals: 6,
                         // (Optional) Keplr can show the fiat value of the coin if a coingecko id is provided.
                         // You can get id from https://api.coingecko.com/api/v3/coins/list if it is listed.
-                        coinGeckoId: "persistence"
+                        coinGeckoId: DefaultChainInfo.currency.coinGeckoId
                     }],
                     // List of coin/tokens used as a fee token in this chain.
                     feeCurrencies: [{
@@ -96,7 +96,7 @@ async function KeplrWallet() {
                         coinDecimals: 6,
                         // (Optional) Keplr can show the fiat value of the coin if a coingecko id is provided.
                         // You can get id from https://api.coingecko.com/api/v3/coins/list if it is listed.
-                        coinGeckoId: "persistence"
+                        coinGeckoId: DefaultChainInfo.currency.coinGeckoId
                     }],
                     // (Optional) The number of the coin type.
                     // This field is only used to fetch the address from ENS.
