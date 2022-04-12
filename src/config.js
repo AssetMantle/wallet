@@ -4,8 +4,8 @@ export const DefaultChainInfo = {
     prefix:'persistence',
     ledgerAppName:'Persistence',
     currency: {
-        coinDenom: 'XPRT',
-        coinMinimalDenom: 'uxprt',
+        coinDenom: 'MNTL',
+        coinMinimalDenom: 'uMNTL',
         coinDecimals: 6,
         coinGeckoId: 'persistence',
     },
@@ -100,8 +100,8 @@ export const ExternalChains = [
         chainName: 'Persistence',
         portID: 'transfer',
         currency: {
-            coinDenom: 'XPRT',
-            coinMinimalDenom: 'uxprt',
+            coinDenom: 'MNTL',
+            coinMinimalDenom: 'uMNTL',
             coinDecimals: 6,
             coinGeckoId: 'persistence',
         },

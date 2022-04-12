@@ -16,11 +16,11 @@ const RouteNotFound = () => {
                     <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="ml-auto">
-                            <a className="nav-link" href="https://persistence.one/" target="_blank"
+                            <a className="nav-link" href="https://AssetMantle.one/" target="_blank"
                                 rel="noopener noreferrer">Learn More</a>
                             <li className="nav-item link">
                                 <a className="nav-link primary-medium-color"
-                                    href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer"
+                                    href="https://notes.AssetMantle.one/s/9l80_chis" rel="noopener noreferrer"
                                     target="_blank">
                                     {t("HELP")}
                                 </a>

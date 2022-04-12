@@ -34,9 +34,9 @@ const DashboardHeader = () => {
     useEffect(() => {
         const localTheme = window.localStorage.getItem(THEME);
         if (localTheme === 'light') {
-            if (document.getElementById('root').classList.contains('dark-mode')) {
-                document.getElementById('root').classList.add('light-mode');
-                document.getElementById('root').classList.remove('dark-mode');
+            if (document.getElementById('root').classList.contains('light-mode')) {
+                document.getElementById('root').classList.add('dark-mode');
+                document.getElementById('root').classList.remove('light-mode');
             }
         } else {
             if (document.getElementById('root').classList.contains('light-mode')) {

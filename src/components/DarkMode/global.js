@@ -178,7 +178,7 @@ export const GlobalStyles = createGlobalStyle`
     .faq-modal-body .accordion .card-body p{
         color: ${({theme}) => theme.lineValueColor};
     }
-    .claim-rewards-modal .rewards-modal-body .available-tokens .usd, .fee-container .fee-box .title, .fee-container .fee-box .gas, .fee-container .fee-box .xprt{
+    .claim-rewards-modal .rewards-modal-body .available-tokens .usd, .fee-container .fee-box .title, .fee-container .fee-box .gas, .fee-container .fee-box .MNTL{
     color: ${({theme}) => theme.lineValueColor};
     }
     .navigate-buttons .button-secondary, .modal-header .previous-section .button{
