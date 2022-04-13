@@ -1,6 +1,6 @@
 {
-  "short_name": "pWallet",
-  "name": "Persistence Web Wallet",
+  "short_name": "amWallet",
+  "name": "AssetMantle Web Wallet",
   "icons": [
     {
       "src": "/favicons/android-chrome-36x36.png",
