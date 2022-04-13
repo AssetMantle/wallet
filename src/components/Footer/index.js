@@ -1,6 +1,6 @@
 import React from 'react';
 import icon from '../../assets/images/footer_logo.svg';
-import whitepaper from '../../assets/images/whitepaper.pdf';
+// import whitepaper from '../../assets/images/whitepaper.pdf';
 import Mailchimp from "./MailChimp";
 import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 import Icon from "../Icon";
@@ -43,7 +43,7 @@ const socialList = [
     //     tooltip: 'medium'
     // }, 
     {
-        url: 'https://www.linkedin.com/company/AssetMantleone/',
+        url: 'https://www.linkedin.com/company/assetmantle/',
         iconName: 'linkedin-footer',
         tooltip: 'linkedIn'
     },
@@ -67,32 +67,16 @@ const Footer = () => {
                                     <h6>About</h6>
                                     <div className="text-muted mt-30">
                                         <ul className="list-unstyled footer-list">
-                                            <li><a href="https://AssetMantle.one/vision" rel="noopener noreferrer"
+                                            <li><a href="https://assetmantle.one/" rel="noopener noreferrer"
                                                 target="_blank">Company</a></li>
-                                            <li><a href="https://AssetMantle.one/roadmap" rel="noopener noreferrer"
+                                            <li><a href="https://blog.assetmantle.one/2022/02/23/assetmantle-roadmap-2022/" rel="noopener noreferrer"
                                                 target="_blank">Roadmap</a></li>
-                                            <li><a href={whitepaper} target="_blank"
+                                            <li><a href="https://docs.assetmantle.one/AssetMantle_Whitepaper/" target="_blank"
                                                 rel="noopener noreferrer">Protocol paper</a></li>
-                                            <li><a href="https://AssetMantle.one/ecosystem" rel="noopener noreferrer"
-                                                target="_blank">Ecosystem</a></li>
-                                            <li><a href="https://AssetMantle.one/technology" rel="noopener noreferrer"
-                                                target="_blank">Technology</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div className="col-lg-4 col-md-6 col-sm-12 margin-t-20">
-                                    <h6>Products</h6>
-                                    <div className="text-muted mt-30">
-                                        <ul className="list-unstyled footer-list">
-                                            <li><a href="https://comdex.sg/" rel="noopener noreferrer"
-                                                target="_blank">Comdex</a></li>
-                                            <li><a href="https://audit.one/" rel="noopener noreferrer"
-                                                target="_blank">Audit.one</a></li>
-                                            <li><a href="https://twitter.com/pStakeFinance" rel="noopener noreferrer"
-                                                target="_blank">pStake</a></li>
-                                            <li><a href="https://twitter.com/AssetMantle" rel="noopener noreferrer"
-                                                target="_blank">Asset Mantle</a></li>
-                                            <li><p className="inactive" title="Coming Soon">pLend</p></li>
+                                            <li><a href="https://docs.assetmantle.one/" rel="noopener noreferrer"
+                                                target="_blank">Documentation</a></li>
+                                            {/* <li><a href="https://AssetMantle.one/technology" rel="noopener noreferrer"
+                                                target="_blank">Technology</a></li> */}
                                         </ul>
                                     </div>
                                 </div>
