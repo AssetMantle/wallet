@@ -65,6 +65,16 @@
                   d="M13.67 2.239l-7.851 8.166a1.078 1.078 0 0 1-1.574 0L.328 6.295a1.194 1.194 0 0 1 0-1.643 1.078 1.078 0 0 1 1.574 0l3.147 3.287L12.114.595a1.078 1.078 0 0 1 1.573 0c.42.455.42 1.19-.017 1.644z"
                   fill="#4FBE89"/>
         </symbol>
+        <symbol id="icon-failed" fill="none" viewBox="0 0 12 12">
+            <line x1="1" y1="11"
+                  x2="11" y2="1"
+                  stroke="red"
+                  stroke-width="2"/>
+            <line x1="1" y1="1"
+                  x2="11" y2="11"
+                  stroke="red"
+                  stroke-width="2"/>
+        </symbol>
         <symbol id="icon-pending" fill="none" viewBox="0 0 16 6">
             <circle cx="2" cy="4" r="2" fill="#FFC554"/>
             <circle cx="8" cy="2" r="2" fill="#FFC554"/>

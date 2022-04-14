@@ -2,7 +2,7 @@ import {DefaultChainInfo} from "../../../../config";
 
 let English = {
     translations: {
-        "HOME_PAGE_TEXT": `Securely store, transfer and stake your  $${DefaultChainInfo.currency.coinDenom} tokens with the AssetMantle Wallet`,
+        "HOME_PAGE_TEXT": `Securely store, transfer and stake your  ${DefaultChainInfo.currency.coinDenom} tokens with the AssetMantle Wallet`,
         "HOME_PAGE_SUB_TEXT": `Earn upto 35% annual rewards by staking your  ${DefaultChainInfo.currency.coinDenom}`,
         "CREATE_WALLET": "Create Wallet",
         "IMPORT_EXISTS_WALLET": "Import an existing wallet",
@@ -75,7 +75,7 @@ let English = {
         "SELECT_VALIDATOR": "Select Validator",
         "TOTAL_AVAILABLE": "Total Available",
         "TOTAL_AVAILABLE_BALANCE": "Total Available Amount",
-        "TOTAL_AVAILABLE_MNTL_REWARDS": "Total Available MNTL Rewards",
+        "TOTAL_AVAILABLE_MNTL_REWARDS": "Total Available $MNTL Rewards",
         "MEMO": "Memo",
         "ENTER_MEMO": "Enter Memo(Optional)",
         "SET_WITHDRAW_ADDRESS": "Setup Address for Rewards Withdrawal",

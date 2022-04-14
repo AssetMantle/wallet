@@ -14,7 +14,7 @@ const Darktheme = () => {
     return (
         <ThemeProvider theme={themeMode}>
             <GlobalStyles/>
-            <button onClick={e=>e.preventDefault()} className="dark-mode-button"
+            <button onClick={e=>e.preventDefault()} className="dark-mode-button hidden"
                 title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}>
                 <Icon
                     viewClass="icon"

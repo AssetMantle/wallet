@@ -409,10 +409,13 @@ html, body {
     width: 16px; }
 
 .icon-box.success {
-  background: #E5F6EE; }
+  background: #1f2023; }
 
 .icon-box.error {
-  background: #FFEECC; }
+  background: #1f2023; }
+
+.icon-box.failed {
+  background: #1f2023; }
 
 .navigate-buttons .button-secondary {
   float: left;
@@ -1725,9 +1728,9 @@ ul li em {
   color: #e50813;
   font-family: 'Poppins', sans-serif; }
   .wallet-main-section .txns-container table tbody .type .name {
-    background: #e508131c;
+    background: #ffc8131c;
     padding: 2px 10px;
-    color: #e50813;
+    color: #ffc942;
     border-radius: 10px;
     font-family: 'Poppins', sans-serif; }
 .wallet-main-section .txns-container table tbody .tx-hash {

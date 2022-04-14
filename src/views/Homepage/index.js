@@ -43,11 +43,11 @@ const Homepage = () => {
                         <Nav className="ml-auto">
                             <NavLink className="nav-link" onClick={() => handleRoute('signIn')} target="_blank"
                                 rel="noopener noreferrer">{t("SIGN_IN")}</NavLink>
-                            <a className="nav-link" href="https://AssetMantle.one/" target="_blank"
+                            <a className="nav-link" href="https://assetMantle.one/" target="_blank"
                                 rel="noopener noreferrer">  {t("LEARN_MORE")}</a>
                             <li className="nav-item link">
                                 <a className="nav-link primary-medium-color"
-                                    href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer"
+                                    href="https://docs.assetmantle.one" rel="noopener noreferrer"
                                     target="_blank">
                                     {t("HELP")}
                                 </a>

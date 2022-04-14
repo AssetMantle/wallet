@@ -130,7 +130,7 @@ const DashboardHeader = () => {
                         </li>
                         <li className="nav-item link mobile-nav-item">
                             <a className="nav-link primary-medium-color"
-                                href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer"
+                                href="https://docs.assetmantle.one/" rel="noopener noreferrer"
                                 target="_blank" onClick={() => onClick(t("HELP"))}>
                                 <div className="icon-box">
                                     <Icon
