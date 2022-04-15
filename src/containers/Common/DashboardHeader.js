@@ -33,6 +33,10 @@ const DashboardHeader = () => {
     }
 
     useEffect(() => {
+        addressTruncate = localStorage.keplrAddress ? stringTruncate(localStorage.keplrAddress) : null;
+    }, [loginInfo]);
+
+    useEffect(() => {
         const localTheme = window.localStorage.getItem(THEME);
         if (localTheme === 'light') {
             if (document.getElementById('root').classList.contains('light-mode')) {
