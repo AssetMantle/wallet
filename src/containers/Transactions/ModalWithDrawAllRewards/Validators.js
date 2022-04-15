@@ -17,7 +17,7 @@ import {DefaultChainInfo} from "../../../config";
 
 const Option = (props) => {
     return (
-        <div>
+        <div className='AHJ-Option'>
             <components.Option {...props}>
                 <input
                     type="checkbox"

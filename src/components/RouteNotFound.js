@@ -1,7 +1,7 @@
 import React from "react";
 import {NavLink} from 'react-router-dom';
 import {Nav, Navbar} from "react-bootstrap";
-import logo from "../assets/images/logo_bold.svg";
+import logo from "../assets/images/footer_logo.svg";
 import {useTranslation} from "react-i18next";
 
 const RouteNotFound = () => {

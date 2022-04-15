@@ -25,6 +25,7 @@ const DashboardHeader = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
+    
     let addressTruncate;
 
     if (loginInfo && loginInfo.address !== null) {
