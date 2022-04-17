@@ -10,3 +10,5 @@ compatibility_date = "2021-10-08"
 [env.staging-wallet]
 routes = ["https://staging-wallet.assetmantle.one/*"]
 
+[env.staging-testnet-wallet]
+routes =  ["https://staging-testnet-wallet.assetmantle.one/*"]
