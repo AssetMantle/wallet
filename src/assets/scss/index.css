@@ -2993,7 +2993,7 @@ ul li em {
   display: flex;
   display: -webkit-flex;
   align-items: center;
-  padding: 0px 20px !important;
+  /* padding: 0px 20px !important; */
 }
 .actions-td .show.dropdown .button.button-primary .icon {
   transform: rotate(0deg);
