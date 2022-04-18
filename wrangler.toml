@@ -12,3 +12,6 @@ routes = ["https://staging-wallet.assetmantle.one/*"]
 
 [env.staging-testnet-wallet]
 routes =  ["https://staging-testnet-wallet.assetmantle.one/*"]
+
+[env.mainnet-wallet]
+routes = ["https://wallet.assetmantle.one/*"]
