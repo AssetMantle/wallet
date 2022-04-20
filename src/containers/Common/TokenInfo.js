@@ -104,7 +104,7 @@ const TokenInfo = (props) => {
                             <p className="value"><span className="inner-grid-icon"/>
                                 {/*$<NumberView*/}
                                 {/*    value={formatNumber((props.delegations + props.balance + props.unbond) * props.tokenPrice)}/>*/}
-                                NaN
+                                N/A
                             </p>
                         </div>
 
