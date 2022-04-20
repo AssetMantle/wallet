@@ -5,7 +5,7 @@ name: Staging
 
 on:
   push:
-    branches: [ 0xankit/wallet-ibc ]
+    branches: [ main ]
 jobs:
   testchain:
 
