@@ -81,8 +81,8 @@ const ModalWithDraw = () => {
                             <NumberView value={formatNumber(rewards.length ? (rewards[0]) : 0)}/>
                             {DefaultChainInfo.currency.coinDenom}
                         </p>
-                        <p className="usd" style={{color: "#9d9d9d" }}>= $<NumberView
-                            value={formatNumber(rewards.length ? (rewards[0] * tokenPrice) : 0)}/></p>
+                        {/*<p className="usd" style={{color: "#9d9d9d" }}>= $<NumberView*/}
+                        {/*    value={formatNumber(rewards.length ? (rewards[0] * tokenPrice) : 0)}/></p>*/}
                     </div>
                 </div>
                 {ibcRewards.length ?
