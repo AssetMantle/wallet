@@ -23,7 +23,7 @@ const socialList = [
     //     tooltip: 'announcements'
     // }, 
     {
-        url: 'https://discord.gg/BSdBQ4495d',
+        url: 'https://discord.gg/FHNJhYgUYd',
         iconName: 'discord',
         tooltip: 'discord'
     }, 
