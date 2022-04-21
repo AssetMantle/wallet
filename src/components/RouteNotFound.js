@@ -16,7 +16,7 @@ const RouteNotFound = () => {
                     <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="ml-auto">
-                            <a className="nav-link" href="https://assetMantle.one/" target="_blank"
+                            <a className="nav-link" href="https://assetmantle.one/" target="_blank"
                                 rel="noopener noreferrer">Learn More</a>
                             <li className="nav-item link">
                                 <a className="nav-link primary-medium-color"

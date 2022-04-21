@@ -43,7 +43,7 @@ const Homepage = () => {
                         <Nav className="ml-auto">
                             <NavLink className="nav-link" onClick={() => handleRoute('signIn')} target="_blank"
                                 rel="noopener noreferrer">{t("SIGN_IN")}</NavLink>
-                            <a className="nav-link" href="https://assetMantle.one/" target="_blank"
+                            <a className="nav-link" href="https://assetmantle.one/" target="_blank"
                                 rel="noopener noreferrer">  {t("LEARN_MORE")}</a>
                             <li className="nav-item link">
                                 <a className="nav-link primary-medium-color"
