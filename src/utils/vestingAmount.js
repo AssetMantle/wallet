@@ -51,9 +51,11 @@ function getDelayedVestingAmount(account, currentEpochTime) {
 function getContinuousVestingAmount(account, currentEpochTime) {
     const endTime = parseInt(account.accountData.baseVestingAccount.endTime);
     const startTime = parseInt(account.accountData.startTime);
+    let originalVestingAmount = getUTOKEN_Balance(account.accountData.baseVestingAccount.originalVesting);
     if (endTime >= currentEpochTime && startTime <= currentEpochTime) {
-        let originalVestingAmount = getUTOKEN_Balance(account.accountData.baseVestingAccount.originalVesting);
         return (originalVestingAmount * (endTime - currentEpochTime)) / (endTime - startTime);
+    } else if (startTime <= currentEpochTime) {
+        return originalVestingAmount;
     } else {
         return 0;
     }
