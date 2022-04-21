@@ -54,7 +54,7 @@ function getContinuousVestingAmount(account, currentEpochTime) {
     let originalVestingAmount = getUTOKEN_Balance(account.accountData.baseVestingAccount.originalVesting);
     if (endTime >= currentEpochTime && startTime <= currentEpochTime) {
         return (originalVestingAmount * (endTime - currentEpochTime)) / (endTime - startTime);
-    } else if (startTime <= currentEpochTime) {
+    } else if (startTime > currentEpochTime) {
         return originalVestingAmount;
     } else {
         return 0;
