@@ -23,7 +23,7 @@ const socialList = [
     //     tooltip: 'announcements'
     // }, 
     {
-        url: 'https://discord.gg/BSdBQ4495d',
+        url: 'https://discord.gg/FHNJhYgUYd',
         iconName: 'discord',
         tooltip: 'discord'
     }, 
@@ -75,7 +75,7 @@ const Footer = () => {
                                                 rel="noopener noreferrer">Protocol paper</a></li>
                                             <li><a href="https://docs.assetmantle.one/" rel="noopener noreferrer"
                                                 target="_blank">Documentation</a></li>
-                                            {/* <li><a href="https://AssetMantle.one/technology" rel="noopener noreferrer"
+                                            {/* <li><a href="https://assetmantle.one/technology" rel="noopener noreferrer"
                                                 target="_blank">Technology</a></li> */}
                                         </ul>
                                     </div>
