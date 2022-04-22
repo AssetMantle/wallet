@@ -22,7 +22,8 @@ function getPeriodicVestingAmount(account, currentEpochTime) {
     let accountVestingAmount = getUTOKEN_Balance(account.accountData.baseVestingAccount.originalVesting);
     let freeBalance = 0;
     const endTime = parseInt(account.accountData.baseVestingAccount.endTime);
-    if (endTime >= currentEpochTime) {
+    const startTime = parseInt(account.accountData.baseVestingAccount.startTime);
+    if (endTime >= currentEpochTime && startTime <= currentEpochTime) {
         let vestingTimes = parseInt(account.accountData.startTime);
         for (let i = 0; i < account.accountData.vestingPeriods.length; i++) {
             let length = parseInt(account.accountData.vestingPeriods[i]["length"]);
@@ -50,9 +51,11 @@ function getDelayedVestingAmount(account, currentEpochTime) {
 function getContinuousVestingAmount(account, currentEpochTime) {
     const endTime = parseInt(account.accountData.baseVestingAccount.endTime);
     const startTime = parseInt(account.accountData.startTime);
-    if (endTime >= currentEpochTime) {
-        let originalVestingAmount = getUTOKEN_Balance(account.accountData.baseVestingAccount.originalVesting);
+    let originalVestingAmount = getUTOKEN_Balance(account.accountData.baseVestingAccount.originalVesting);
+    if (endTime >= currentEpochTime && startTime <= currentEpochTime) {
         return (originalVestingAmount * (endTime - currentEpochTime)) / (endTime - startTime);
+    } else if (startTime > currentEpochTime) {
+        return originalVestingAmount;
     } else {
         return 0;
     }

@@ -5,11 +5,13 @@
 }
 
 .dark-mode .header .navbar .header-logo {
-  background: url(../../../src/assets/images/logo_bold.svg) no-repeat;
+  background: url(../../../src/assets/images/footer_logo.svg) no-repeat;
+background-size: contain;
 }
 
 .light-mode .header .navbar .header-logo {
-  background: url(../../../src/assets/images/logo_bold_dark.svg) no-repeat;
+  background: url(../../../src/assets/images/footer_logo.svg) no-repeat;
+background-size: contain;
 }
 
 .dashboard .navbar-expand-lg .navbar-nav, .dashboard .navbar-nav {
@@ -33,23 +35,23 @@
         padding-bottom: 8px;
         justify-content: flex-start;
         text-decoration: none;
-        font-family: "Poppins", sans-serif;
+        font-family: 'Lato', sans-serif;
         font-weight: 600;
         font-size: 14px;
         line-height: 1.5;
         letter-spacing: .1em;
-        color: #5F646C;
+        color: #c2c2c2;
 
         .icon {
-          fill: #5F646C;
+          fill: #c2c2c2;
         }
       }
 
       a:hover, a.active, a:focus {
-        color: #e50913 !important;
+        color: #ffc942 !important;
 
         .icon {
-          fill: #e50913;
+          fill: #ffc942;
         }
       }
     }
@@ -68,7 +70,7 @@
     outline: none !important;
 
     svg {
-      fill: #ffffff;
+      fill: #c2c2c2;
     }
   }
 }

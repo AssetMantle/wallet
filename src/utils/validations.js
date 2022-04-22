@@ -155,7 +155,7 @@ export const ValidateStringSpaces = e => {
     }
 };
 
-export const validateAddress = (address, prefix = "persistence") => {
+export const validateAddress = (address, prefix = "mantle") => {
     if (prefix === "cosmos") {
         if (!address.startsWith(prefix) || address.length !== 45) {
             return new Error('Invalid Recipient Address');
@@ -172,8 +172,12 @@ export const validateAddress = (address, prefix = "persistence") => {
         if (!address.startsWith("juno") || address.length !== 43) {
             return new Error('Invalid Recipient Address');
         }
+    } else if (prefix === "persistence") {
+        if (!address.startsWith("persistence") || address.length !== 50) {
+            return new Error('Invalid Recipient Address');
+        }
     } else {
-        if (!address.startsWith(prefix) || address.length !== 50) {
+        if (!address.startsWith(prefix) || address.length !== 45) {
             return new Error('Invalid Recipient Address');
         }
     }

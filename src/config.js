@@ -1,15 +1,15 @@
 export const DefaultChainInfo = {
-    counterpartyChainId: 'core-1',
-    chainName:'Persistence',
-    prefix:'persistence',
-    ledgerAppName:'Persistence',
+    counterpartyChainId: process.env.CHAIN_ID,
+    chainName: process.env.REACT_APP_CHAIN_NAME,
+    prefix: "mantle",
+    ledgerAppName: "AssetMantle",
     currency: {
-        coinDenom: 'XPRT',
-        coinMinimalDenom: 'uxprt',
+        coinDenom: '$MNTL',
+        coinMinimalDenom: 'umntl',
         coinDecimals: 6,
-        coinGeckoId: 'persistence',
+        coinGeckoId: 'assetmantle',
     },
-    coinType: 750,
+    coinType: 118,
     uTokenValue:1000000,
 };
 

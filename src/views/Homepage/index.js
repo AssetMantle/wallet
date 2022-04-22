@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {Nav, Navbar, NavLink} from "react-bootstrap";
-import logo from "../../assets/images/logo_bold.svg";
-import dark_icon from "../../assets/images/dark_icon.svg";
+import logo from "../../assets/images/footer_logo.svg";
+// import dark_icon from "../../assets/images/dark_icon.svg";
 import ModalCreateWallet from "../../containers/CreateWallet/ModalCreateWallet";
 import Footer from "../../components/Footer";
 import {useTranslation} from "react-i18next";
@@ -43,11 +43,11 @@ const Homepage = () => {
                         <Nav className="ml-auto">
                             <NavLink className="nav-link" onClick={() => handleRoute('signIn')} target="_blank"
                                 rel="noopener noreferrer">{t("SIGN_IN")}</NavLink>
-                            <a className="nav-link" href="https://persistence.one/" target="_blank"
+                            <a className="nav-link" href="https://assetmantle.one/" target="_blank"
                                 rel="noopener noreferrer">  {t("LEARN_MORE")}</a>
                             <li className="nav-item link">
                                 <a className="nav-link primary-medium-color"
-                                    href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer"
+                                    href="https://docs.assetmantle.one" rel="noopener noreferrer"
                                     target="_blank">
                                     {t("HELP")}
                                 </a>
@@ -73,7 +73,7 @@ const Homepage = () => {
                         {/*<p onClick={() => handleRoute('decryptKeyStore')} className="import">{t("DECRYPT_KEY_STORE")}*/}
                         {/*</p>*/}
                     </div>
-                    <p className="border-logo"><img src={dark_icon} alt="dark-icon"/></p>
+                    {/* <p className="border-logo"><img src={dark_icon} alt="dark-icon"/></p> */}
                 </div>
 
             </div>

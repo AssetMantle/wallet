@@ -14,7 +14,7 @@
       font-size: 14px;
       line-height: 21px;
       text-align: right;
-      color: #FFFFFF;
+      color: #c2c2c2;
     }
   }
 
@@ -32,7 +32,7 @@
         font-size: 40px;
         line-height: 60px;
         text-align: center;
-        color: #FFFFFF;
+        color: #c2c2c2;
       }
 
       .sub-text {
@@ -54,15 +54,15 @@
           line-height: 180%;
           font-family: 'Poppins', sans-serif;
           text-decoration-line: underline;
-          color: #FFFFFF;
+          color: #c2c2c2;
           cursor: pointer;
         }
 
         .button-primary {
-          box-shadow: 0 0 10px #e50913 !important;
+          box-shadow: 0 0 10px #ffc942 !important;
 
           &::first-letter {
-            border-top: 2.5px solid #FFFFFF;
+            border-top: 2.5px solid #c2c2c2;
           }
         }
 

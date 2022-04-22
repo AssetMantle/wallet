@@ -2,7 +2,7 @@ import {DefaultChainInfo} from "../../../../config";
 
 let English = {
     translations: {
-        "HOME_PAGE_TEXT": `Securely store, transfer and stake your  ${DefaultChainInfo.currency.coinDenom} tokens with the Persistence Wallet`,
+        "HOME_PAGE_TEXT": `Securely store, transfer and stake your  ${DefaultChainInfo.currency.coinDenom} tokens with the AssetMantle Wallet`,
         "HOME_PAGE_SUB_TEXT": `Earn upto 35% annual rewards by staking your  ${DefaultChainInfo.currency.coinDenom}`,
         "CREATE_WALLET": "Create Wallet",
         "IMPORT_EXISTS_WALLET": "Import an existing wallet",
@@ -26,7 +26,7 @@ let English = {
         "SUBMIT": "Submit",
         "NEXT": "Next",
         "ENTER_ADDRESS": "Enter Address",
-        "ABOUT_WALLET": "About Persistence Wallet",
+        "ABOUT_WALLET": "About AssetMantle Wallet",
         "SIGNUP_NOTE_HEADING": "Take a moment to read through this content for your own safety",
         "SIGNUP_NOTE_TEXT1": "Users need to securely store their Mnemonic (seed phrase) to prevent loss of funds. Losing or exposing this phrase could potentially lead to users' funds being stolen.",
         "SIGNUP_NOTE_TEXT2": "Users can view and save their mnemonic while creating a wallet.",
@@ -75,7 +75,7 @@ let English = {
         "SELECT_VALIDATOR": "Select Validator",
         "TOTAL_AVAILABLE": "Total Available",
         "TOTAL_AVAILABLE_BALANCE": "Total Available Amount",
-        "TOTAL_AVAILABLE_XPRT_REWARDS": "Total Available XPRT Rewards",
+        "TOTAL_AVAILABLE_MNTL_REWARDS": "Total Available $MNTL Rewards",
         "MEMO": "Memo",
         "ENTER_MEMO": "Enter Memo(Optional)",
         "SET_WITHDRAW_ADDRESS": "Setup Address for Rewards Withdrawal",
@@ -189,8 +189,8 @@ let English = {
         "CHOOSE_FILE": "Choose File",
         "KEYSTORE_DOWNLOADED_SUCCESSFULLY":"Keystore Successfully downloaded",
         "FETCHING_ADDRESS":"Fetching Address",
-        "RECIPIENT_ADDRESS_EXAMPLE":"Recipient’s address starts with persistence; for example: " +
-            "persistence14zmyw2q8keywcwhpttfr0d4xpggylsrmd4caf4",
+        "RECIPIENT_ADDRESS_EXAMPLE":"Recipient’s address starts with mantle; for example: " +
+            "mantle14zmyw2q8keywcwhpttfr0d4xpggylsrmd4caf4",
         "VALIDATORS_SELECTION_WARNING":"Warning:  Recommend 3 or fewer validators to avoid potential issues.",
         "FOUNDATION_NODE_WARNING":"Warning: Foundation Nodes operate at 100%" +
             " commission, you will not be receiving any staking rewards.",

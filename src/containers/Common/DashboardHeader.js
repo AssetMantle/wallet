@@ -25,6 +25,7 @@ const DashboardHeader = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
+    
     let addressTruncate;
 
     if (loginInfo && loginInfo.address !== null) {
@@ -32,11 +33,15 @@ const DashboardHeader = () => {
     }
 
     useEffect(() => {
+        addressTruncate = localStorage.keplrAddress ? stringTruncate(localStorage.keplrAddress) : null;
+    }, [loginInfo]);
+
+    useEffect(() => {
         const localTheme = window.localStorage.getItem(THEME);
         if (localTheme === 'light') {
-            if (document.getElementById('root').classList.contains('dark-mode')) {
-                document.getElementById('root').classList.add('light-mode');
-                document.getElementById('root').classList.remove('dark-mode');
+            if (document.getElementById('root').classList.contains('light-mode')) {
+                document.getElementById('root').classList.add('dark-mode');
+                document.getElementById('root').classList.remove('light-mode');
             }
         } else {
             if (document.getElementById('root').classList.contains('light-mode')) {
@@ -130,7 +135,7 @@ const DashboardHeader = () => {
                         </li>
                         <li className="nav-item link mobile-nav-item">
                             <a className="nav-link primary-medium-color"
-                                href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer"
+                                href="https://docs.assetmantle.one/" rel="noopener noreferrer"
                                 target="_blank" onClick={() => onClick(t("HELP"))}>
                                 <div className="icon-box">
                                     <Icon

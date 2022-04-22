@@ -17,7 +17,7 @@ import {DefaultChainInfo} from "../../../config";
 
 const Option = (props) => {
     return (
-        <div>
+        <div className='AHJ-Option'>
             <components.Option {...props}>
                 <input
                     type="checkbox"
@@ -37,7 +37,7 @@ const Validators = () => {
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
     const validatorsList = useSelector((state) => state.rewards.validatorsRewardsList);
     let validatorsRewards = useSelector((state) => state.mulitpleRewardsWithDraw.rewards);
-    const tokenPrice = useSelector((state) => state.tokenPrice.tokenPrice);
+    // const tokenPrice = useSelector((state) => state.tokenPrice.tokenPrice);
     const onChangeSelect = (evt) => {
         setOptionSelected(evt);
         let totalValidatorsRewards = 0;
@@ -92,8 +92,8 @@ const Validators = () => {
                         value={formatNumber(validatorsRewards.value)}/><span>
                         {DefaultChainInfo.currency.coinDenom}
                     </span></p>
-                    <p className="usd">= $<NumberView
-                        value={formatNumber(validatorsRewards.value * tokenPrice)}/></p>
+                    {/*<p className="usd">= $<NumberView*/}
+                    {/*    value={formatNumber(validatorsRewards.value * tokenPrice)}/></p>*/}
                 </div>
             </div>
         </>

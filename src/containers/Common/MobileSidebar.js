@@ -83,7 +83,7 @@ const MobileSidebar = () => {
 
                 <li className="nav-item link">
                     <a className="nav-link primary-medium-color"
-                        href="https://notes.persistence.one/s/9l80_chis" rel="noopener noreferrer" target="_blank">
+                        href="https://docs.assetmantle.one" rel="noopener noreferrer" target="_blank">
                         <div className="icon-container">
                             <div className="icon-box">
                                 <Icon

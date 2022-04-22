@@ -74,15 +74,15 @@ const ModalWithDraw = () => {
 
             <ReactModal.Body className="rewards-modal-body">
                 <div className="form-field">
-                    <p className="label">{t("TOTAL_AVAILABLE_XPRT_REWARDS")}</p>
+                    <p className="label">{t("TOTAL_AVAILABLE_MNTL_REWARDS")}</p>
                     <div className="available-tokens">
                         <p className="tokens"
                             title={rewards.length ? (rewards[0] * tokenPrice) : 0}>
                             <NumberView value={formatNumber(rewards.length ? (rewards[0]) : 0)}/>
                             {DefaultChainInfo.currency.coinDenom}
                         </p>
-                        <p className="usd">= $<NumberView
-                            value={formatNumber(rewards.length ? (rewards[0] * tokenPrice) : 0)}/></p>
+                        {/*<p className="usd" style={{color: "#9d9d9d" }}>= $<NumberView*/}
+                        {/*    value={formatNumber(rewards.length ? (rewards[0] * tokenPrice) : 0)}/></p>*/}
                     </div>
                 </div>
                 {ibcRewards.length ?

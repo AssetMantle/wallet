@@ -8,7 +8,7 @@
   }
 
   .modal-header {
-    background: #F0F1F2;
+    background: #c2c2c2;
     justify-content: center;
     button.close{
       top: 30px;
@@ -46,7 +46,7 @@
       }
 
       .question-mark-box {
-        background: #FFFFFF;
+        background: #c2c2c2;
         box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
         border-radius: 6px;
         width: 55px;
@@ -61,7 +61,7 @@
         span {
           font-weight: 500;
           font-size: 48px;
-          color: #E50913;
+          color: #ffc942;
         }
       }
     }
@@ -131,7 +131,7 @@
         line-height: 150%;
         cursor: pointer;
         text-align: center;
-        color: #E50913;
+        color: #ffc942;
       }
     }
 
@@ -238,13 +238,13 @@
       }
 
       .custom-control-input:checked ~ .custom-control-label::before {
-        border-color: #E50913;
-        background-color: #E50913;
+        border-color: #ffc942;
+        background-color: #ffc942;
       }
 
       .custom-control-input:focus ~ .custom-control-label::before {
-        box-shadow: 0 0 0 0.2rem #e5091354;
-        border-color: #e5091354 !important;
+        box-shadow: 0 0 0 0.2rem #ffc94254;
+        border-color: #ffc94254 !important;
       }
     }
 
@@ -309,7 +309,7 @@
       padding: 40px;
       max-width: 900px !important;
       margin: auto;
-      background: #FFFFFF;
+      background: #c2c2c2;
 
       .buttons {
         padding-top: 30px;

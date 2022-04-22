@@ -1,43 +1,49 @@
 import React from 'react';
 import icon from '../../assets/images/footer_logo.svg';
-import whitepaper from '../../assets/images/whitepaper.pdf';
+// import whitepaper from '../../assets/images/whitepaper.pdf';
 import Mailchimp from "./MailChimp";
 import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 import Icon from "../Icon";
+import styled from "styled-components";
 
 const socialList = [
     {
-        url: 'https://twitter.com/PersistenceOne',
+        url: 'https://twitter.com/AssetMantle',
         iconName: 'twitter-logo',
         tooltip: 'twitter'
     },
     {
-        url: 'https://t.me/PersistenceOneChat',
+        url: 'https://t.me/assetmantlechat',
         iconName: 'telegram-plane',
         tooltip: 'telegram'
     },
+    // {
+    //     url: 'https://t.me/AssetMantleOne',
+    //     iconName: 'announcements',
+    //     tooltip: 'announcements'
+    // }, 
     {
-        url: 'https://t.me/PersistenceOne',
-        iconName: 'announcements',
-        tooltip: 'announcements'
-    }, {
-        url: 'https://discord.gg/SaBKpjbnhH',
+        url: 'https://discord.gg/FHNJhYgUYd',
         iconName: 'discord',
         tooltip: 'discord'
-    }, {
-        url: 'https://www.reddit.com/r/PersistenceOne/',
-        iconName: 'reddit-round',
-        tooltip: 'reddit'
-    }, {
-        url: 'https://www.youtube.com/channel/UC5wqI1ZRdkCjWWVOCQdhxLQ/featured',
-        iconName: 'youtube',
-        tooltip: 'youtube'
-    }, {
-        url: 'https://medium.com/persistence-blog',
-        iconName: 'medium-m',
-        tooltip: 'medium'
-    }, {
-        url: 'https://www.linkedin.com/company/persistenceone/',
+    }, 
+    // {
+    //     url: 'https://www.reddit.com/r/AssetMantleOne/',
+    //     iconName: 'reddit-round',
+    //     tooltip: 'reddit'
+    // }, 
+    // {
+    //     url: 'https://www.youtube.com/channel/UC5wqI1ZRdkCjWWVOCQdhxLQ/featured',
+    //     iconName: 'youtube',
+    //     tooltip: 'youtube'
+    // }, 
+    // {
+    //     url: 'https://medium.com/AssetMantle-blog',
+    //     iconName: 'medium-m',
+    //     tooltip: 'medium'
+    // }, 
+    {
+        url: 'https://www.linkedin.com/company/assetmantle/',
         iconName: 'linkedin-footer',
         tooltip: 'linkedIn'
     },
@@ -61,32 +67,16 @@ const Footer = () => {
                                     <h6>About</h6>
                                     <div className="text-muted mt-30">
                                         <ul className="list-unstyled footer-list">
-                                            <li><a href="https://persistence.one/vision" rel="noopener noreferrer"
+                                            <li><a href="https://assetmantle.one/" rel="noopener noreferrer"
                                                 target="_blank">Company</a></li>
-                                            <li><a href="https://persistence.one/roadmap" rel="noopener noreferrer"
+                                            <li><a href="https://blog.assetmantle.one/2022/02/23/assetmantle-roadmap-2022/" rel="noopener noreferrer"
                                                 target="_blank">Roadmap</a></li>
-                                            <li><a href={whitepaper} target="_blank"
+                                            <li><a href="https://docs.assetmantle.one/AssetMantle_Whitepaper/" target="_blank"
                                                 rel="noopener noreferrer">Protocol paper</a></li>
-                                            <li><a href="https://persistence.one/ecosystem" rel="noopener noreferrer"
-                                                target="_blank">Ecosystem</a></li>
-                                            <li><a href="https://persistence.one/technology" rel="noopener noreferrer"
-                                                target="_blank">Technology</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div className="col-lg-4 col-md-6 col-sm-12 margin-t-20">
-                                    <h6>Products</h6>
-                                    <div className="text-muted mt-30">
-                                        <ul className="list-unstyled footer-list">
-                                            <li><a href="https://comdex.sg/" rel="noopener noreferrer"
-                                                target="_blank">Comdex</a></li>
-                                            <li><a href="https://audit.one/" rel="noopener noreferrer"
-                                                target="_blank">Audit.one</a></li>
-                                            <li><a href="https://twitter.com/pStakeFinance" rel="noopener noreferrer"
-                                                target="_blank">pStake</a></li>
-                                            <li><a href="https://twitter.com/AssetMantle" rel="noopener noreferrer"
-                                                target="_blank">Asset Mantle</a></li>
-                                            <li><p className="inactive" title="Coming Soon">pLend</p></li>
+                                            <li><a href="https://docs.assetmantle.one/" rel="noopener noreferrer"
+                                                target="_blank">Documentation</a></li>
+                                            {/* <li><a href="https://assetmantle.one/technology" rel="noopener noreferrer"
+                                                target="_blank">Technology</a></li> */}
                                         </ul>
                                     </div>
                                 </div>
@@ -94,7 +84,7 @@ const Footer = () => {
                                     <h6>Get in touch</h6>
                                     <div className="text-muted mt-30 email">
                                         <a className="footer-text email"
-                                            href="mailto:hello@persistence.one">hello@persistence.one</a>
+                                            href="mailto:hello@assetmantle.one">hello@assetmantle.one</a>
                                     </div>
                                 </div>
                             </div>
@@ -139,8 +129,8 @@ const Footer = () => {
                 </div>
                 <div className="footer-bottom-section">
                     <div className="footer-logo-section container ">
-                        <img className="dark-logo" src={icon} alt="icon-logo" title="logo"/>
-                        <p className="copy-rights mb-sm-0">{new Date().getFullYear()} © Persistence</p>
+                        <FooterImageLogo className="dark-logo" src={icon} alt="icon-logo" title="logo"/>
+                        <p className="copy-rights mb-sm-0">{new Date().getFullYear()} © AssetMantle</p>
                     </div>
                 </div>
             </footer>
@@ -148,5 +138,8 @@ const Footer = () => {
     );
 };
 
+const FooterImageLogo = styled.img`
+filter: grayscale(100%);
+`;
 
 export default Footer;

@@ -92,7 +92,7 @@ export const fetchTotalRewards = (address) => {
                         };
                         allTokensRewards.push(data);
                     }
-                    let xprtRewards = Lodash.sumBy(delegatorRewardsResponse.total, (token) => {
+                    let MNTLRewards = Lodash.sumBy(delegatorRewardsResponse.total, (token) => {
                         if(token.denom === DefaultChainInfo.currency.coinMinimalDenom){
                             let rewards = decimalize(token.amount);
                             const fixedRewardsResponse = tokenValueConversion(stringToNumber(parseInt(rewards)));
@@ -113,7 +113,7 @@ export const fetchTotalRewards = (address) => {
                             return 0;
                         }
                     });
-                    const totalRewards = [xprtRewards.toFixed(6), allTokensRewards,
+                    const totalRewards = [MNTLRewards.toFixed(6), allTokensRewards,
                         (stringToNumber(ibcRewards))];
                     dispatch(fetchRewardsSuccess(totalRewards));
                 }

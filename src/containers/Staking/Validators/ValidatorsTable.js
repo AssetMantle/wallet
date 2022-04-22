@@ -1,8 +1,8 @@
 import React from "react";
 import helper from "../../../utils/helper";
 import Avatar from "./Avatar";
-import activeIcon from "../../../assets/images/active.svg";
-import inActiveIcon from "../../../assets/images/inactive.svg";
+// import activeIcon from "../../../assets/images/active.svg";
+// import inActiveIcon from "../../../assets/images/inactive.svg";
 import DataTable from "../../../components/DataTable";
 import {useTranslation} from "react-i18next";
 import {useDispatch} from "react-redux";
@@ -14,6 +14,7 @@ import {
 } from "../../../store/actions/validators";
 import {LOGIN_INFO} from "../../../constants/localStorage";
 import {decimalize} from "../../../utils/scripts";
+import Icon from "../../../components/Icon";
 
 const ValidatorsTable = (props) => {
     const {t} = useTranslation();
@@ -94,12 +95,16 @@ const ValidatorsTable = (props) => {
                 key={index}>{`${parseFloat((decimalize(validator.data.commission.commissionRates.rate) * 100).toFixed(6))}`} %</span>,
             <div className="" key={index}>
                 {helper.isActive(validator.data) ?
-                    <span className="icon-box" title="active">
-                        <img src={activeIcon} alt="activeIcon"/>
+                    <span className="icon-box success">
+                        <Icon
+                            viewClass="arrow-right"
+                            icon="success"/>
                     </span>
                     :
-                    <span className="icon-box" title="Inactive">
-                        <img src={inActiveIcon} alt="inActiveIcon"/>
+                    <span className="icon-box failed">
+                        <Icon
+                            viewClass="arrow-right"
+                            icon="failed"/>
                     </span>
                 }
             </div>,

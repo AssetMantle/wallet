@@ -1,9 +1,10 @@
 import transactions from "./transactions";
 import {pathToString} from "@cosmjs/crypto";
 import {makeHdPath} from "./helper";
+import {DefaultChainInfo} from "../config";
 
 const bip39 = require("bip39");
-const prefix = "persistence";
+const prefix = DefaultChainInfo.prefix;
 
 async function getWallet(mnemonic, walletPath = makeHdPath(), bip39Passphrase = "") {
     try {
