@@ -27,6 +27,10 @@ const Gas = () => {
         }
     }
 
+    if (type === "reDelegate") {
+        gas.value = GasInfo.redelegateGas;
+    }
+
     const dispatch = useDispatch();
 
     const onChange = (evt) => {

@@ -26,6 +26,7 @@ export const PstakeInfo = {
 };
 
 export const GasInfo ={
+    redelegateGas: 500000,
     gas: 250000,
     minGas: 80000,
     maxGas : 2000000,

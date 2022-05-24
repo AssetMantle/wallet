@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {feeChangeHandler} from "../../../store/actions/transactions/fee";
 import {ValidateFee} from "../../../utils/validations";
 import {tokenValueConversion} from "../../../utils/helper";
-import {DefaultChainInfo, FeeInfo} from "../../../config";
+import {DefaultChainInfo, FeeInfo, GasInfo} from "../../../config";
 
 const Fee = () => {
     const dispatch = useDispatch();
@@ -15,7 +15,7 @@ const Fee = () => {
     const fee = useSelector((state) => state.fee.fee);
     const tokenPrice = useSelector((state) => state.tokenPrice.tokenPrice);
     const type = useSelector((state) => state.common.txName.value.name);
-    const gas = useSelector((state) => state.gas.gas);
+    let gas = useSelector((state) => state.gas.gas);
     const token = useSelector((state) => state.send.token.value);
     const tokenIbc = useSelector((state) => state.sendIbc.token.value);
 
@@ -27,6 +27,10 @@ const Fee = () => {
         }else {
             denom = tokenIbc.tokenDenom;
         }
+    }
+
+    if (type === "reDelegate") {
+        gas.value = GasInfo.redelegateGas;
     }
 
 
