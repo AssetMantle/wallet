@@ -7,7 +7,7 @@ import {
     KEYSTORE_PASSWORD_SET,
     KEYSTORE_RESULT_MODAL_HIDE,
     KEYSTORE_RESULT_MODAL_SHOW,
-    KEYSTORE_MNEMONIC_MODAL_NEXT
+    KEYSTORE_MNEMONIC_MODAL_NEXT, KEYSTORE_COIN_TYPE_SET, KEYSTORE_COIN_TYPE_MODAL_HIDE,
 } from "../../constants/generateKeyStore";
 import {combineReducers} from "redux";
 
@@ -78,6 +78,39 @@ const password = (state = {
     }
 };
 
+const coinType = (state = {
+    value: '',
+    error: {
+        message: '',
+    },
+}, {
+    type,
+    data,
+}) => {
+    switch (type) {
+    case KEYSTORE_COIN_TYPE_SET:
+        return {
+            ...state,
+            value: data.value,
+            error: {
+                ...state.error,
+                message: data.error.message,
+            },
+        };
+    case KEYSTORE_COIN_TYPE_MODAL_HIDE:
+        return {
+            ...state,
+            value: '',
+            error: {
+                ...state.error,
+                message: '',
+            },
+        };
+    default:
+        return state;
+    }
+};
+
 const mnemonicModal = (state = false, {
     type,
 }) => {
@@ -120,6 +153,7 @@ const resultModal = (state = false, {
 export default combineReducers({
     mnemonic,
     password,
+    coinType,
     mnemonicModal,
     passwordModal,
     resultModal

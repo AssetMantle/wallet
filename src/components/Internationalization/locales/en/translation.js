@@ -47,6 +47,8 @@ let English = {
         "WALLET_PATH_WARNING": "Please securely store the wallet path for future use",
         "USE_PRIVATE_KEY": "Use Private Key",
         "ENTER_MNEMONIC": "Enter Mnemonic (Seed Phrase)",
+        "COIN_TYPE": "Coin Type",
+        "ENTER_COIN_TYPE": "Enter coin type",
         "USE_MNEMONIC": "Use Mnemonic",
         "PASSWORD": "Password",
         "ENTER_PASSWORD": "Enter Password",

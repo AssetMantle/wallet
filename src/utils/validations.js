@@ -132,6 +132,15 @@ export const ValidateMnemonic = (mnemonic) => {
     return new Error('');
 };
 
+export const ValidateCoinType1 = (coinType) => {
+    const regEx = /^[0-9 ]+$/;
+    let validateMnemonic = regEx.test(coinType);
+    if (!validateMnemonic) {
+        return new Error('Invalid mnemonic.');
+    }
+    return new Error('');
+};
+
 export const ValidateMemo = (value) => {
     let mnemonicWords = mnemonicTrim(value);
     let validateMnemonic = bip39.validateMnemonic(mnemonicWords);
@@ -153,6 +162,16 @@ export const ValidateStringSpaces = e => {
     if (!regEx.test(e.key)) {
         e.preventDefault();
     }
+};
+
+export const ValidateCoinType = (data) => {
+    const regex = /^[0-9 ]+$/;
+    if (/\s/g.test(data)) {
+        return new Error('Spaces not allowed');
+    } else if (!regex.test(data)) {
+        return new Error('CoinType must be greater than 3 letters');
+    }
+    return new Error('');
 };
 
 export const validateAddress = (address, prefix = "mantle") => {

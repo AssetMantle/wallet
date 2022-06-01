@@ -7,7 +7,7 @@ import {
     KEYSTORE_PASSWORD_SET,
     KEYSTORE_RESULT_MODAL_HIDE,
     KEYSTORE_RESULT_MODAL_SHOW,
-    KEYSTORE_MNEMONIC_MODAL_NEXT
+    KEYSTORE_MNEMONIC_MODAL_NEXT, KEYSTORE_COIN_TYPE_SET
 } from "../../constants/generateKeyStore";
 import wallet from "../../utils/wallet";
 import * as Sentry from "@sentry/browser";
@@ -16,6 +16,13 @@ import {mnemonicTrim} from "../../utils/scripts";
 export const setKeyStoreMnemonic = (data) => {
     return {
         type: KEYSTORE_MNEMONIC_SET,
+        data,
+    };
+};
+
+export const setKeyStoreCoinType = (data) => {
+    return {
+        type: KEYSTORE_COIN_TYPE_SET,
         data,
     };
 };
