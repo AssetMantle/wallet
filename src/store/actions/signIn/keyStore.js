@@ -83,8 +83,9 @@ export const keyStoreSubmit = () => {
                 const accountNumber = helper.getAccountNumber(getState().advanced.accountNumber.value);
                 const accountIndex = helper.getAccountNumber(getState().advanced.accountIndex.value);
                 const bip39PassPhrase = getState().advanced.bip39PassPhrase.value;
+                const coinType = getState().advanced.coinType.value;
 
-                const walletPath = makeHdPath(accountNumber, accountIndex);
+                const walletPath = makeHdPath(accountNumber, accountIndex,coinType);
                 const responseData = await wallet.createWallet(mnemonic, walletPath, bip39PassPhrase);
                 dispatch(keyStoreModalNext());
                 dispatch(showKeyStoreResultModal());

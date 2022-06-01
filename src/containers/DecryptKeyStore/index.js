@@ -11,7 +11,12 @@ import {mnemonicTrim} from "../../utils/scripts";
 import wallet from "../../utils/wallet";
 import {useDispatch, useSelector} from "react-redux";
 import {setTxKeyStore, setTxKeyStorePassword} from "../../store/actions/transactions/keyStore";
-import {setAccountIndex, setAccountNumber, setBip39Passphrase} from "../../store/actions/transactions/advanced";
+import {
+    setAccountIndex,
+    setAccountNumber,
+    setBip39Passphrase,
+    setCoinType
+} from "../../store/actions/transactions/advanced";
 
 const KeyStore = (props) => {
     const {t} = useTranslation();
@@ -23,6 +28,7 @@ const KeyStore = (props) => {
     let accountNumber = useSelector((state) => state.advanced.accountNumber);
     let accountIndex = useSelector((state) => state.advanced.accountIndex);
     let bip39PassPhrase = useSelector((state) => state.advanced.bip39PassPhrase);
+    // let coinType = useSelector((state) => state.advanced.coinType);
 
     const dispatch = useDispatch();
 
@@ -60,6 +66,12 @@ const KeyStore = (props) => {
                 message: '',
             }
         }));
+        dispatch(setCoinType({
+            value: "",
+            error: {
+                message: '',
+            }
+        }));
     };
 
 
@@ -78,6 +90,8 @@ const KeyStore = (props) => {
                 accountNumber = helper.getAccountNumber(accountNumber.value);
                 accountIndex = helper.getAccountNumber(accountIndex.value);
                 bip39PassPhrase = bip39PassPhrase.value;
+                // coinType = coinType.value;
+                // console.log(coinType);
 
                 const walletPath = makeHdPath(accountNumber, accountIndex);
                 const responseData = await wallet.createWallet(mnemonic, walletPath, bip39PassPhrase);
@@ -109,6 +123,12 @@ const KeyStore = (props) => {
                     }
                 }));
                 dispatch(setBip39Passphrase({
+                    value: "",
+                    error: {
+                        message: '',
+                    }
+                }));
+                dispatch(setCoinType({
                     value: "",
                     error: {
                         message: '',

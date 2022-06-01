@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux';
-import {SET_ACCOUNT_INDEX, SET_ACCOUNT_NUMBER, SET_BIP_39_PASSPHRASE} from "../../../constants/advanced";
+import {SET_ACCOUNT_INDEX, SET_ACCOUNT_NUMBER, SET_BIP_39_PASSPHRASE, SET_COIN_TYPE} from "../../../constants/advanced";
 import {KEYSTORE_MODAL_HIDE} from "../../../constants/keyStore";
 import {TX_RESULT_MODAL_HIDE} from "../../../constants/common";
 
@@ -103,8 +103,43 @@ const bip39PassPhrase = (state = {
         return state;
     }
 };
+
+const coinType = (state = {
+    value: '',
+    error: {
+        message: '',
+    },
+}, {
+    type,
+    data,
+}) => {
+    switch (type) {
+    case SET_COIN_TYPE:
+        return {
+            ...state,
+            value: data.value,
+            error: {
+                ...state.error,
+                message: data.error.message,
+            },
+        };
+    case TX_RESULT_MODAL_HIDE:
+    case KEYSTORE_MODAL_HIDE:
+        return {
+            ...state,
+            value: '',
+            error: {
+                ...state.error,
+                message: '',
+            },
+        };
+    default:
+        return state;
+    }
+};
 export default combineReducers({
     accountIndex,
     accountNumber,
-    bip39PassPhrase
+    bip39PassPhrase,
+    coinType
 });

@@ -27,6 +27,7 @@ const AdvanceMode = (props) => {
         let accountNumber = 0;
         let addressIndex = 0;
         let bip39Passphrase = "";
+        const coinType = getState().advanced.coinType.value;
         if (advanceMode) {
             accountNumber = document.getElementById('createAccountNumber').value;
             addressIndex = document.getElementById('createAccountIndex').value;

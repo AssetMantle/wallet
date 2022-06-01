@@ -27,7 +27,7 @@ const passwordHashAlgorithm = "sha512";
 const NODE_CONF = process.env.REACT_APP_IBC_CONFIG;
 const valoperAddressPrefix = DefaultChainInfo.prefix;
 const addressPrefix = DefaultChainInfo.prefix;
-const configCoinType = DefaultChainInfo.coinType;
+let configCoinType = DefaultChainInfo.coinType;
 
 export const createKeyStore = (mnemonic, password) => {
     try {

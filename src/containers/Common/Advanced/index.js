@@ -5,6 +5,7 @@ import {Card} from "react-bootstrap";
 import AccountNumber from "./AccountNumber";
 import AccountIndex from "./AccountIndex";
 import Bip39PassPhrase from "./Bip39PassPhrase";
+import CoinType from "./CoinType";
 
 const Advanced = () => {
     const {t} = useTranslation();
@@ -41,6 +42,7 @@ const Advanced = () => {
                     <AccountNumber/>
                     <AccountIndex/>
                     <Bip39PassPhrase/>
+                    <CoinType/>
                 </div>
             </Card>
         </div>
