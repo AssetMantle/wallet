@@ -230,7 +230,7 @@ export async function getAccount(address) {
 }
 
 export const updateFee = (address) => {
-    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
+    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO)) || {};
     if (loginInfo && loginInfo.loginMode === 'normal') {
         getAccount(address)
             .then(async res => {
@@ -253,6 +253,7 @@ export const updateFee = (address) => {
             });
         localStorage.setItem(LOGIN_INFO, JSON.stringify(loginInfo));
     } else {
+        console.log("LOGININFO: ", loginInfo);
         loginInfo.fee = FeeInfo.vestingAccountFee;
         localStorage.setItem(LOGIN_INFO, JSON.stringify(loginInfo));
     }

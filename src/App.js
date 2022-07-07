@@ -9,18 +9,10 @@ import icon_white from "./assets/images/icon_white.svg";
 import {useTranslation} from "react-i18next";
 import KeplrWallet from "./utils/keplr";
 import {useDispatch} from "react-redux";
-import {fetchDelegationsCount} from "./store/actions/delegations";
-import {fetchBalance, fetchTransferableVestingAmount} from "./store/actions/balance";
-import {fetchRewards, fetchTotalRewards} from "./store/actions/rewards";
-import {fetchUnbondDelegations} from "./store/actions/unbond";
-import {fetchTokenPrice} from "./store/actions/tokenPrice";
-import {fetchValidators} from "./store/actions/validators";
 import * as Sentry from "@sentry/react";
 import {Integrations} from "@sentry/tracing";
 import {keplrLogin, setKeplrInfo} from "./store/actions/signIn/keplr";
 import { KEPLR_ADDRESS, LOGIN_INFO} from "./constants/localStorage";
-import {updateFee} from "./utils/helper";
-import {ledgerDisconnect} from "./utils/ledger";
 import ReactGA from 'react-ga';
 import {userLogout} from "./store/actions/logout";
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
@@ -44,10 +36,16 @@ const App = () => {
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
 
     const routes = [{
+        path: '/dashboard/wallet/:walletAddress',
+        component: DashboardWallet,
+        private: false,
+    }, 
+    {
         path: '/dashboard/wallet',
         component: DashboardWallet,
-        private: true,
-    }, {
+        private: false,
+    },
+    {
         path: '/dashboard/staking',
         component: DashboardStaking,
         private: true,
@@ -78,26 +76,7 @@ const App = () => {
     }, [location]);
 
     useEffect(() => {
-        const fetchApi = async () => {
-            if (address !== null && address !== undefined) {
-                await Promise.all([
-                    dispatch(fetchDelegationsCount(address)),
-                    dispatch(fetchBalance(address)),
-                    dispatch(fetchRewards(address)),
-                    dispatch(fetchTotalRewards(address)),
-                    dispatch(fetchUnbondDelegations(address)),
-                    dispatch(fetchTokenPrice()),
-                    dispatch(fetchTransferableVestingAmount(address)),
-                    dispatch(fetchValidators(address)),
-                    updateFee(address),
-                    setInterval(() => dispatch(fetchTotalRewards(address)), 10000),
-                ]);
-                if(loginInfo && loginInfo.loginMode === "ledger"){
-                    ledgerDisconnect(dispatch, history);
-                }
-            }
-        };
-        fetchApi();
+        
     }, []);
 
     useEffect(() => {
