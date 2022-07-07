@@ -15,10 +15,11 @@ import {fetchTokenPrice} from "../../store/actions/tokenPrice";
 import {fetchValidators} from "../../store/actions/validators";
 import {updateFee} from "../../utils/helper";
 import {ledgerDisconnect} from "../../utils/ledger";
-import RouteNotFound from "../../components/RouteNotFound";
+import RouteNotFound from "../../components/RouteNotFound";  
 import { validateAddress } from "../../utils/validations";
 import { isBech32Address } from "../../utils/scripts";
 import { DefaultChainInfo } from "../../config";
+import LoadingComponent from "../../components/LoadingComponent";
 
 const DashboardWallet = () => {
     console.log("inside DashboardWallet");
@@ -34,7 +35,7 @@ const DashboardWallet = () => {
         const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO)) || {};
 
         if((walletAddress == null || walletAddress == undefined) && (loginInfo.address == null || loginInfo.address == undefined)) {
-            setInvalidPage(true);
+            history.push('/');
             return;
         } else {
             address = walletAddress || loginInfo.address;
@@ -85,7 +86,7 @@ const DashboardWallet = () => {
     }, [walletAddress]);
     
     if(loading) {
-        return "loading";
+        return <LoadingComponent />;
     }
 
     if(invalidPage) {

@@ -53,13 +53,14 @@ const DashboardHeader = () => {
     }, []);
 
     const closeWallet = () => {
-        dispatch(userLogout());
-        localStorage.clear();
-        history.push('/');
-        window.location.reload();
         if(loginInfo && loginInfo.loginMode==="ledger"){
             TransportWebUSB.close();
         }
+        
+        history.push('/');
+        window.location.reload();
+        localStorage.clear();
+        dispatch(userLogout());
     };
 
     const handleKeyStore = () => {
