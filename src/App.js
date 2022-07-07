@@ -31,6 +31,7 @@ const trackPage = page => {
 //Update the package.json version everytime whenever new deployment happened to production to clear the browser cache.
 
 const App = () => {
+    console.log("inside App.js");
     const {t} = useTranslation();
     const history = useHistory();
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
@@ -61,25 +62,24 @@ const App = () => {
 
     const dispatch = useDispatch();
 
-    let address;
-    const version = loginInfo && loginInfo.version;
+    let address = loginInfo && loginInfo.address;
+
+    /* const version = loginInfo && loginInfo.version;
     if (version == null || packageJson.version !== version) {
         localStorage.clear();
         history.push('/');
     } else {
         address = loginInfo && loginInfo.address;
-    }
+    } */
 
     useEffect(() => {
+        console.log("inside useEffect");
         const page = location.pathname;
         trackPage(page);
     }, [location]);
 
     useEffect(() => {
-        
-    }, []);
-
-    useEffect(() => {
+        console.log("inside useEffect");
         window.addEventListener("offline", updateNetwork);
         window.addEventListener("online", updateNetwork);
         return () => {
@@ -127,6 +127,9 @@ const App = () => {
         integrations: [new Integrations.BrowserTracing()],
         tracesSampleRate: 1.0,
     });
+
+    console.log("localstorage: ", JSON.parse(window.localStorage.getItem(LOGIN_INFO)));
+    console.log("address: ", address);
 
     return (
         <>

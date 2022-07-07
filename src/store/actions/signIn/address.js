@@ -108,7 +108,7 @@ export const addressDetails = (address) => {
         };
         const accountNumber = helper.getAccountNumber(getState().advanced.accountNumber.value);
         const accountIndex = helper.getAccountNumber(getState().advanced.accountIndex.value);
-        if (validateAddress(address) && isBech32Address(address, DefaultChainInfo.prefix)) {
+        if (address && validateAddress(address) && isBech32Address(address, DefaultChainInfo.prefix)) {
             const res = getAccount(address).catch(error => {
                 Sentry.captureException(error.response
                     ? error.response.data.message
@@ -138,6 +138,7 @@ export const addressDetails = (address) => {
                     message: ''
                 }
             }));
+            
             localStorage.setItem(LOGIN_INFO, JSON.stringify(loginInfo));
             // window.location.reload();
 

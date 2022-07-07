@@ -253,7 +253,6 @@ export const updateFee = (address) => {
             });
         localStorage.setItem(LOGIN_INFO, JSON.stringify(loginInfo));
     } else {
-        console.log("LOGININFO: ", loginInfo);
         loginInfo.fee = FeeInfo.vestingAccountFee;
         localStorage.setItem(LOGIN_INFO, JSON.stringify(loginInfo));
     }

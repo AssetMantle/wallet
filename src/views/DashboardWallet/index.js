@@ -4,7 +4,7 @@ import DashboardHeader from "../../containers/Common/DashboardHeader";
 import GenerateKeyStore from "../../containers/GenerateKeyStore";
 import ChangeKeyStorePassword from "../../containers/ChangeKeyStorePassword";
 import {useDispatch} from "react-redux";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { LOGIN_INFO} from "../../constants/localStorage";
 import {addressDetails, setAddress} from "../../store/actions/signIn/address";
 import {fetchDelegationsCount} from "../../store/actions/delegations";
@@ -15,30 +15,38 @@ import {fetchTokenPrice} from "../../store/actions/tokenPrice";
 import {fetchValidators} from "../../store/actions/validators";
 import {updateFee} from "../../utils/helper";
 import {ledgerDisconnect} from "../../utils/ledger";
+import RouteNotFound from "../../components/RouteNotFound";
+import { validateAddress } from "../../utils/validations";
+import { isBech32Address } from "../../utils/scripts";
+import { DefaultChainInfo } from "../../config";
 
 const DashboardWallet = () => {
-
-
+    console.log("inside DashboardWallet");
     const {walletAddress} = useParams();
     const dispatch = useDispatch();
-    // const history = useHistory();
+    const history = useHistory();
     const [loading, setLoading] = useState(false);
+    const [invalidPage, setInvalidPage] = useState(false);
 
     useEffect(() => {
-        setLoading(true);
+        console.log("inside useEffect of DashboardWallet");
         let address;
         const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO)) || {};
 
+        if((walletAddress == null || walletAddress == undefined) && (loginInfo.address == null || loginInfo.address == undefined)) {
+            setInvalidPage(true);
+            return;
+        } else {
+            address = walletAddress || loginInfo.address;
+            if(!(address && validateAddress(address) && isBech32Address(address, DefaultChainInfo.prefix))) {
+                setInvalidPage(true);
+                return;
+            }
+        }
+
+        setLoading(true);
+
         // if match params exist then fetch address details using the param
-        if (walletAddress !== null && walletAddress !== undefined){
-            address = walletAddress;
-        } 
-
-        // if match params doesnt exist then fetch address details using the param
-        else {
-            address = loginInfo && loginInfo.address;
-        } 
-
         localStorage.removeItem(LOGIN_INFO);
         console.log("address: ", address);
 
@@ -78,6 +86,10 @@ const DashboardWallet = () => {
     
     if(loading) {
         return "loading";
+    }
+
+    if(invalidPage) {
+        return <RouteNotFound />;
     }
 
 
