@@ -29,6 +29,27 @@ const DashboardWallet = () => {
     const [loading, setLoading] = useState(false);
     const [invalidPage, setInvalidPage] = useState(false);
 
+    const fetchApi = async (address, loginInfo) => {
+        if (address !== null && address !== undefined) {
+            await Promise.all([
+                dispatch(fetchDelegationsCount(address)),
+                dispatch(fetchBalance(address)),
+                dispatch(fetchRewards(address)),
+                dispatch(fetchTotalRewards(address)),
+                dispatch(fetchUnbondDelegations(address)),
+                dispatch(fetchTokenPrice()),
+                dispatch(fetchTransferableVestingAmount(address)),
+                dispatch(fetchValidators(address)),
+                updateFee(address),
+                setInterval(() => dispatch(fetchTotalRewards(address)), 10000),
+            ]);
+            if(loginInfo && loginInfo.loginMode === "ledger"){
+                ledgerDisconnect(dispatch, history);
+            }
+        }
+        setLoading(false);
+    };
+
     useEffect(() => {
         console.log("inside useEffect of DashboardWallet");
         let address;
@@ -37,51 +58,53 @@ const DashboardWallet = () => {
         if((walletAddress == null || walletAddress == undefined) && (loginInfo.address == null || loginInfo.address == undefined)) {
             history.push('/');
             return;
-        } else {
-            address = walletAddress || loginInfo.address;
-            if(!(address && validateAddress(address) && isBech32Address(address, DefaultChainInfo.prefix))) {
-                setInvalidPage(true);
+        } 
+        else {
+            if(walletAddress) {
+                address = walletAddress;
+                if(!(address && validateAddress(address) && isBech32Address(address, DefaultChainInfo.prefix))) {
+                    setInvalidPage(true);
+                    return;
+                }
+                setLoading(true);
+
+                // if match params exist then fetch address details using the param
+                localStorage.removeItem(LOGIN_INFO);
+
+                // assign the value of signIn.address
+                dispatch(setAddress({
+                    value: address,
+                    error: {
+                        message: ''
+                    }
+                }));
+                
+                // retrieve login info details
+                dispatch(addressDetails(address));
+
+                // retrieve wallet related details
+                fetchApi(address, loginInfo);
+
+            } else if(!(loginInfo.address == null || loginInfo.address == undefined)) {
+                address = loginInfo && loginInfo.address;
+                setLoading(true);
+                // assign the value of signIn.address
+                dispatch(setAddress({
+                    value: address,
+                    error: {
+                        message: ''
+                    }
+                }));
+                
+                // retrieve wallet related details
+                fetchApi(address, loginInfo);
+
+            } else {
+                history.push('/');
                 return;
             }
+            
         }
-
-        setLoading(true);
-
-        // if match params exist then fetch address details using the param
-        localStorage.removeItem(LOGIN_INFO);
-        console.log("address: ", address);
-
-        // assign the value of signIn.address
-        dispatch(setAddress({
-            value: address,
-            error: {
-                message: ''
-            }
-        }));
-
-        dispatch(addressDetails(address));
-
-        const fetchApi = async () => {
-            if (address !== null && address !== undefined) {
-                await Promise.all([
-                    dispatch(fetchDelegationsCount(address)),
-                    dispatch(fetchBalance(address)),
-                    dispatch(fetchRewards(address)),
-                    dispatch(fetchTotalRewards(address)),
-                    dispatch(fetchUnbondDelegations(address)),
-                    dispatch(fetchTokenPrice()),
-                    dispatch(fetchTransferableVestingAmount(address)),
-                    dispatch(fetchValidators(address)),
-                    updateFee(address),
-                    setInterval(() => dispatch(fetchTotalRewards(address)), 10000),
-                ]);
-                if(loginInfo && loginInfo.loginMode === "ledger"){
-                    ledgerDisconnect(dispatch, history);
-                }
-            }
-            setLoading(false);
-        };
-        fetchApi();
 
     }, [walletAddress]);
     
