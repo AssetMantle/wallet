@@ -17,6 +17,7 @@ import ReactGA from 'react-ga';
 import {userLogout} from "./store/actions/logout";
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import packageJson from "../package.json";
+// import ViewAddress from './views/ViewAddress';
 
 const SENTRY_API = process.env.REACT_APP_SENTRY_API;
 const GOOGLE_ANALYTICS = process.env.REACT_APP_GA_TRACKING_ID;
@@ -37,20 +38,26 @@ const App = () => {
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
 
     const routes = [{
-        path: '/dashboard/wallet/:walletAddress',
+        path: '/dashboard/:loginMode',
         component: DashboardWallet,
         private: false,
-    }, 
+    },
+    /* {
+        path: '/address/:walletAddress',
+        component: ViewAddress,
+        private: false,
+    }, */ 
     {
-        path: '/dashboard/wallet',
+        path: '/dashboard',
         component: DashboardWallet,
-        private: false,
+        private: true,
     },
     {
         path: '/dashboard/staking',
         component: DashboardStaking,
         private: true,
-    }];
+    }
+    ];
 
     const [isOnline, setNetwork] = useState(window.navigator.onLine);
     const updateNetwork = () => {

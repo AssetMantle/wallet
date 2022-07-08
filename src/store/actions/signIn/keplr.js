@@ -102,7 +102,7 @@ export const keplrLogin = (history) => {
                 message: ''
             }
         }));
-        history.push('/dashboard/wallet');
+        history.push('/dashboard/keplr');
         window.location.reload();
     };
 };

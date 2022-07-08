@@ -6,6 +6,7 @@ import ChangeKeyStorePassword from "../../containers/ChangeKeyStorePassword";
 import {useDispatch} from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { LOGIN_INFO} from "../../constants/localStorage";
+import {addressDetails, setAddress} from "../../store/actions/signIn/address";
 import {fetchDelegationsCount} from "../../store/actions/delegations";
 import {fetchBalance, fetchTransferableVestingAmount} from "../../store/actions/balance";
 import {fetchRewards, fetchTotalRewards} from "../../store/actions/rewards";
@@ -14,17 +15,21 @@ import {fetchTokenPrice} from "../../store/actions/tokenPrice";
 import {fetchValidators} from "../../store/actions/validators";
 import {updateFee} from "../../utils/helper";
 import {ledgerDisconnect} from "../../utils/ledger";
+import RouteNotFound from "../../components/RouteNotFound";  
+import { validateAddress } from "../../utils/validations";
+import { isBech32Address } from "../../utils/scripts";
+import { DefaultChainInfo } from "../../config";
 import LoadingComponent from "../../components/LoadingComponent";
 
-const DashboardWallet = () => {
-    console.log("inside DashboardWallet");
-    const {loginMode} = useParams();
+const ViewAddress = () => {
+    console.log("inside ViewAddress");
+    const {walletAddress} = useParams();
     const dispatch = useDispatch();
     const history = useHistory();
     const [loading, setLoading] = useState(false);
-    const loginModesArray = ["keplr", "ledger", "keystore"];
+    const [invalidPage, setInvalidPage] = useState(false);
 
-    const fetchApi = async (address, loginMode) => {
+    const fetchAddressApi = async (address, loginInfo) => {
         if (address !== null && address !== undefined) {
             await Promise.all([
                 dispatch(fetchDelegationsCount(address)),
@@ -38,7 +43,7 @@ const DashboardWallet = () => {
                 updateFee(address),
                 setInterval(() => dispatch(fetchTotalRewards(address)), 10000),
             ]);
-            if(loginMode === "ledger"){
+            if(loginInfo && loginInfo.loginMode === "ledger"){
                 ledgerDisconnect(dispatch, history);
             }
         }
@@ -46,36 +51,71 @@ const DashboardWallet = () => {
     };
 
     useEffect(() => {
-        console.log("inside useEffect of DashboardWallet");
+        console.log("inside useEffect of ViewAddress");
         let address;
-        let loginModeLocal;
         const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO)) || {};
 
-        if(!loginInfo || loginInfo.address == null || loginInfo.address == undefined || loginInfo.loginMode == null || loginInfo.loginMode == undefined) {
+        if((walletAddress == null || walletAddress == undefined) && (loginInfo.address == null || loginInfo.address == undefined)) {
             history.push('/');
             return;
-        }
-        
-        address = loginInfo && loginInfo.address;
-        loginModeLocal = loginInfo && loginInfo.loginMode;
-        console.log("address: ", address, " loginMode: ", loginMode, " loginModeLocal: ", loginModeLocal);
+        } 
+        else {
+            if(walletAddress) {
+                address = walletAddress;
+                if(!(address && validateAddress(address) && isBech32Address(address, DefaultChainInfo.prefix))) {
+                    setInvalidPage(true);
+                    return;
+                }
+                setLoading(true);
 
-        // if the dynamic uri path is missing or doesnt match the current logged in mode, then redirect to correct one
-        if(!loginMode || loginModesArray.indexOf(loginMode) == -1 || loginMode !== loginModeLocal) {
-            history.push(`/dashboard/${loginModeLocal}`);
-            return;
-        } else {
-            setLoading(true);
+                // if match params exist then fetch address details using the param
+                localStorage.removeItem(LOGIN_INFO);
 
-            // retrieve wallet related details
-            fetchApi(address, loginModeLocal);
+                // assign the value of signIn.address
+                dispatch(setAddress({
+                    value: address,
+                    error: {
+                        message: ''
+                    }
+                }));
+                
+                // retrieve login info details
+                dispatch(addressDetails(address));
+
+                // retrieve wallet related details
+                fetchAddressApi(address, loginInfo);
+
+            } else if(!(loginInfo.address == null || loginInfo.address == undefined)) {
+                address = loginInfo && loginInfo.address;
+                setLoading(true);
+                // assign the value of signIn.address
+                dispatch(setAddress({
+                    value: address,
+                    error: {
+                        message: ''
+                    }
+                }));
+                
+                // retrieve wallet related details
+                fetchAddressApi(address, loginInfo);
+
+            } else {
+                history.push('/');
+                return;
+            }
+            
         }
-        
-    }, [loginMode]);
+
+    }, [walletAddress]);
     
     if(loading) {
         return <LoadingComponent />;
     }
+
+    if(invalidPage) {
+        return <RouteNotFound />;
+    }
+
 
     return (
         <div className="main-section">
@@ -89,4 +129,4 @@ const DashboardWallet = () => {
     );
 };
 
-export default DashboardWallet;
+export default ViewAddress;

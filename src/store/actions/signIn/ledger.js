@@ -132,7 +132,7 @@ export const ledgerLogin = (history) => {
                 message: ''
             }
         }));
-        history.push('/dashboard/wallet');
+        history.push('/dashboard/ledger');
         window.location.reload();
     };
 };
