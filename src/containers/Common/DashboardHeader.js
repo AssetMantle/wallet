@@ -25,6 +25,7 @@ const DashboardHeader = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
+    console.log("loginInfo: ", loginInfo);
     
     let addressTruncate;
 
@@ -52,13 +53,14 @@ const DashboardHeader = () => {
     }, []);
 
     const closeWallet = () => {
-        dispatch(userLogout());
-        localStorage.clear();
-        history.push('/');
-        window.location.reload();
         if(loginInfo && loginInfo.loginMode==="ledger"){
             TransportWebUSB.close();
         }
+        
+        history.push('/');
+        window.location.reload();
+        localStorage.clear();
+        dispatch(userLogout());
     };
 
     const handleKeyStore = () => {
@@ -89,14 +91,14 @@ const DashboardHeader = () => {
                         <MobileSidebar/>
                     </div>
                     <Navbar.Brand>
-                        <NavLink to="/dashboard/wallet" className="header-logo">
+                        <NavLink to="/dashboard" className="header-logo">
                         </NavLink>
                     </Navbar.Brand>
 
                     <Nav className="ml-auto" onClick={()=>onClick(t("DASHBOARD"))}>
                         <li className="nav-item link mobile-nav-item">
                             <NavLink className="nav-link primary-medium-color"
-                                to="/dashboard/wallet">
+                                to="/dashboard">
                                 <div className="icon-box">
                                     <Icon
                                         viewClass="icon"
