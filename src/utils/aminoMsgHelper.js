@@ -87,6 +87,17 @@ function setWithdrawAddressMsg(delegator_address, withdraw_address) {
     };
 }
 
+function voteMsg(proposal_id, voter, option) {
+    return {
+        type: "cosmos-sdk/MsgVote",
+        value: {
+            proposal_id: proposal_id.toString(),
+            voter: voter,
+            option: option
+        }
+    };
+}
+
 export {
     sendMsg,
     msgs,
@@ -96,4 +107,5 @@ export {
     unBondMsg,
     withDrawMsg,
     setWithdrawAddressMsg,
+    voteMsg
 };

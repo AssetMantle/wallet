@@ -5,6 +5,7 @@ import {
     MsgWithdrawDelegatorReward,
     MsgWithdrawValidatorCommission
 } from "cosmjs-types/cosmos/distribution/v1beta1/tx";
+import {MsgVote} from "cosmjs-types/cosmos/gov/v1beta1/tx";
 import {MsgTransfer} from "cosmjs-types/ibc/applications/transfer/v1/tx";
 import {coin} from "@cosmjs/stargate";
 import {trimWhiteSpaces} from "./scripts";
@@ -18,6 +19,7 @@ const msgWithdrawRewardsTypeUrl = "/cosmos.distribution.v1beta1.MsgWithdrawDeleg
 const msgSetWithdrawAddressTypeUrl = "/cosmos.distribution.v1beta1.MsgSetWithdrawAddress";
 const msgTransferTypeUrl = "/ibc.applications.transfer.v1.MsgTransfer";
 const msgValidatorCommission = '/cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission';
+const msgVote = '/cosmos.gov.v1beta1.MsgVote';
 
 function SendMsg(fromAddress, toAddress, amount, denom) {
     return {
@@ -128,6 +130,17 @@ function ValidatorCommissionMsg(address) {
     };
 }
 
+function VoteMsg(proposalId, voter, option) {
+    return {
+        typeUrl: msgVote,
+        value: MsgVote.fromPartial({
+            proposalId: proposalId,
+            voter: voter,
+            option: option
+        }),
+    };
+}
+
 export {
     SendMsg,
     DelegateMsg,
@@ -136,5 +149,6 @@ export {
     WithdrawMsg,
     SetWithDrawAddressMsg,
     TransferMsg,
-    ValidatorCommissionMsg
+    ValidatorCommissionMsg,
+    VoteMsg
 };
