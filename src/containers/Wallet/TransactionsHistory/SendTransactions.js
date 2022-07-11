@@ -11,15 +11,16 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NumberView from "../../../components/NumberView";
 import {formatNumber, stringTruncate} from "../../../utils/scripts";
-import { LOGIN_INFO} from "../../../constants/localStorage";
+// import { LOGIN_INFO} from "../../../constants/localStorage";
 import {DefaultChainInfo} from "../../../config";
 
 const EXPLORER_API = process.env.REACT_APP_EXPLORER_API;
 const SendTransactions = (props) => {
-    const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
+    // const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
+    const {address = ""} = props || "";
 
     useEffect(() => {
-        props.fetchTransactions(loginInfo && loginInfo.address, 5, 1);
+        props.fetchTransactions(address, 5, 1);
     }, []);
     const columns = [{
         name: 'txHash',
@@ -139,12 +140,12 @@ const SendTransactions = (props) => {
     }
     const handleNext = () => {
         if (!helper.checkLastPage(props.pageNumber[0], 5, props.pageNumber[1])) {
-            props.fetchTransactions(loginInfo && loginInfo.address, 5, props.pageNumber[0] + 1);
+            props.fetchTransactions(address, 5, props.pageNumber[0] + 1);
         }
     };
     const handlePrevious = () => {
         if (props.pageNumber[0] >= 2) {
-            props.fetchTransactions(loginInfo && loginInfo.address, 5, props.pageNumber[0] - 1);
+            props.fetchTransactions(address, 5, props.pageNumber[0] - 1);
         }
     };
     return (

@@ -15,7 +15,7 @@ import Loader from "../../components/Loader";
 import ModalViewTxnResponse from "../Common/ModalViewTxnResponse";
 import ReactGA from "react-ga";
 
-const Wallet = () => {
+const Wallet = ({address}) => {
 
     const popoverMemo = (
         <Popover id="popover-memo">
@@ -64,10 +64,10 @@ const Wallet = () => {
                             <SendIbc/>
                         </Tab>
                         <Tab eventKey="Receive" title="Receive">
-                            <Receive/>
+                            <Receive address={address}/>
                         </Tab>
                         <Tab eventKey="Transactions" title="Transactions">
-                            <Transactions/>
+                            <Transactions address={address}/>
                         </Tab>
 
                     </Tabs>

@@ -30,7 +30,7 @@ const LoadingComponent = () => {
                 </div>
             </Navbar>
             <div className="text-container">
-                <h3>Loading...</h3>
+                <h3>LOADING...</h3>
             </div>
         </div>
     );

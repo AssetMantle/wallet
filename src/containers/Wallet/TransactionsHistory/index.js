@@ -4,7 +4,7 @@ import SendTransactions from "./SendTransactions";
 import ReceiveTransactions from "./ReceiveTransactions";
 import ReactGA from "react-ga";
 
-const Transactions = () => {
+const Transactions = ({address}) => {
     const onClick = (key) => {
         ReactGA.event({
             category: `${key} transactions`,
@@ -31,10 +31,10 @@ const Transactions = () => {
                 </div>
                 <Tab.Content>
                     <Tab.Pane eventKey="sent">
-                        <SendTransactions/>
+                        <SendTransactions address={address}/>
                     </Tab.Pane>
                     <Tab.Pane eventKey="receive">
-                        <ReceiveTransactions/>
+                        <ReceiveTransactions address={address}/>
                     </Tab.Pane>
                 </Tab.Content>
             </Tab.Container>
