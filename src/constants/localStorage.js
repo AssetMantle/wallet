@@ -15,3 +15,4 @@ export const THEME = "theme";
 export const ACCOUNT_NUMBER = "accountNumber";
 export const LEDGER = "ledger";
 export const ADDRESS_INDEX = "addressIndex";
+export const LOGIN_MODES_ARRAY = ["keplr", "ledger", "keystore", "address"];
