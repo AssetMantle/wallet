@@ -68,7 +68,10 @@ const App = () => {
 
     /* const version = loginInfo && loginInfo.version;
     if (version == null || packageJson.version !== version) {
-        localStorage.clear();
+        localStorage.removeItem("loginInfo");
+        localStorage.removeItem("keplrAddress");
+        localStorage.removeItem("encryptedMnemonic");
+        localStorage.removeItem("keyStoreOnUse");
         history.push('/');
     } else {
         address = loginInfo && loginInfo.address;
@@ -93,7 +96,10 @@ const App = () => {
     window.addEventListener('storage', () => {
         if (JSON.parse(localStorage.getItem(LOGIN_INFO)) === null){
             dispatch(userLogout());
-            localStorage.clear();
+            
+            localStorage.removeItem("loginInfo");
+            localStorage.removeItem("keplrAddress");
+            localStorage.removeItem("encryptedMnemonic");
             history.push('/');
             window.location.reload();
             if(loginInfo && loginInfo.loginMode==="ledger"){
