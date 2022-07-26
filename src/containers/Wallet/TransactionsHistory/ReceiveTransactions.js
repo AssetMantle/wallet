@@ -22,6 +22,8 @@ const ReceiveTransactions = (props) => {
 
 
     const loginInfo = JSON.parse(localStorage.getItem(LOGIN_INFO));
+    console.log("props list: ", props.list);
+
 
     useEffect(() => {
         console.log("inside useEffect() loginAddress: ", loginInfo && loginInfo.address);

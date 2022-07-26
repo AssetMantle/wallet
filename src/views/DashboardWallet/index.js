@@ -30,9 +30,7 @@ const DashboardWallet = () => {
     const [invalidPage, setInvalidPage] = useState(false);
     const {selectedLoginMode} = useParams();
 
-
     const loginModesArray = LOGIN_MODES_ARRAY;
-
 
     const fetchApi = async (address, loginMode) => {
         console.log("inside fetchApi, address: ", address, " loginMode: ", loginMode);

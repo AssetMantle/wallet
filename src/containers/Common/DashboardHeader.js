@@ -93,14 +93,14 @@ const DashboardHeader = () => {
                         <MobileSidebar/>
                     </div>
                     <Navbar.Brand>
-                        <NavLink to="/dashboard" className="header-logo">
+                        <NavLink to="/" className="header-logo">
                         </NavLink>
                     </Navbar.Brand>
 
                     <Nav className="ml-auto" onClick={()=>onClick(t("DASHBOARD"))}>
                         <li className="nav-item link mobile-nav-item">
                             <NavLink className="nav-link primary-medium-color"
-                                to="/dashboard">
+                                to="/">
                                 <div className="icon-box">
                                     <Icon
                                         viewClass="icon"
@@ -110,7 +110,7 @@ const DashboardHeader = () => {
                                 {t("WALLET")}
                             </NavLink>
                         </li>
-                        <li className="nav-item link mobile-nav-item">
+                        {/* <li className="nav-item link mobile-nav-item">
                             <NavLink className="nav-link primary-medium-color" onClick={()=>onClick(t("STAKING"))}
                                 to="/dashboard/staking">
                                 <div className="icon-box">
@@ -120,7 +120,7 @@ const DashboardHeader = () => {
                                 </div>
                                 {t("STAKING")}
                             </NavLink>
-                        </li>
+                        </li> */}
                         <li className="nav-item link mobile-nav-item">
                             <a className="nav-link primary-medium-color" href={EXPLORER_API}
                                 rel="noopener noreferrer" target="_blank" onClick={() => onClick(t("EXPLORER"))}>
