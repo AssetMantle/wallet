@@ -23,14 +23,26 @@ import ModalValidatorWithdraw from "../Transactions/ModalWithdrawValidatorReward
 import Validators from "../Staking/Validators";
 import DelegatedValidators from "../Staking/Validators/DelegatedValidators";
 
-
 const Wallet = () => {
     const onClick = (key) => {
+        window.location.hash = key;
         ReactGA.event({
             category: key,
             action: `Clicked on ${key} Tab`
         });
     };
+
+    const DefaultTab = () => {
+        let hash= window.location.hash.replace("#", "");
+        console.log("now "+hash.toLowerCase());
+        if(hash.toLowerCase() === "send" ||
+        hash.toLowerCase() === "receive" ||
+        hash.toLowerCase() === "transactions" ||
+        hash.toLowerCase() === "all" ||
+        hash.toLowerCase() === "delegated") {
+            return hash.toLowerCase();
+        } else {"Send";}
+    };    
 
     return (
         <>
@@ -49,14 +61,14 @@ const Wallet = () => {
             <div className="wallet-main-section">
                 <TokenInfo/>
                 <div className="tabs-section">
-                    <Tabs defaultActiveKey="Send" id="uncontrolled-tab-example" onSelect={onClick}>
-                        <Tab eventKey="Send" title="Send">
+                    <Tabs defaultActiveKey={DefaultTab} id="uncontrolled-tab-example" onSelect={onClick}>
+                        <Tab eventKey="send" title="Send">
                             <Send/>
                         </Tab>
-                        <Tab eventKey="Receive" title="Receive">
+                        <Tab eventKey="receive" title="Receive">
                             <Receive/>
                         </Tab>
-                        <Tab eventKey="Transactions" title="Transactions">
+                        <Tab eventKey="transactions" title="Transactions">
                             <Transactions/>
                         </Tab>
                         <Tab eventKey="all" title="All Validators">
