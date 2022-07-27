@@ -177,4 +177,6 @@ export const MainNetFoundationNodes = [
     "mantlevaloper1ehe4etw8wc6ey556l2hwrg2jxdl0j7htwcqtrd"
 ];
 
+export const LOGIN_MODES_ARRAY = ["keplr", "ledger", "keystore", "address"];
+export const WALLET_TABS_ARRAY = ["send", "receive", "transactions", "all", "delegated"];
 

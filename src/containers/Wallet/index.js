@@ -22,8 +22,9 @@ import ModalWithDraw from "../Transactions/ModalWithDrawAllRewards";
 import ModalValidatorWithdraw from "../Transactions/ModalWithdrawValidatorRewards";
 import Validators from "../Staking/Validators";
 import DelegatedValidators from "../Staking/Validators/DelegatedValidators";
+import { WALLET_TABS_ARRAY } from "../../config";
 
-const Wallet = () => {
+const Wallet = ({hash}) => {
     const onClick = (key) => {
         window.location.hash = key;
         ReactGA.event({
@@ -33,15 +34,9 @@ const Wallet = () => {
     };
 
     const DefaultTab = () => {
-        let hash= window.location.hash.replace("#", "");
-        console.log("now "+hash.toLowerCase());
-        if(hash.toLowerCase() === "send" ||
-        hash.toLowerCase() === "receive" ||
-        hash.toLowerCase() === "transactions" ||
-        hash.toLowerCase() === "all" ||
-        hash.toLowerCase() === "delegated") {
-            return hash.toLowerCase();
-        } else {"Send";}
+        const walletTabsArray = WALLET_TABS_ARRAY;
+        let finalHash = walletTabsArray.indexOf(hash) == -1 ? walletTabsArray[0] : hash;
+        return finalHash;
     };    
 
     return (
