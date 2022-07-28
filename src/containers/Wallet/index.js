@@ -22,7 +22,6 @@ import ModalWithDraw from "../Transactions/ModalWithDrawAllRewards";
 import ModalValidatorWithdraw from "../Transactions/ModalWithdrawValidatorRewards";
 import Validators from "../Staking/Validators";
 import DelegatedValidators from "../Staking/Validators/DelegatedValidators";
-import { WALLET_TABS_ARRAY } from "../../config";
 
 const Wallet = ({hash}) => {
     const onClick = (key) => {
@@ -33,8 +32,11 @@ const Wallet = ({hash}) => {
         });
     };
 
+    const walletTabsArray = ["send", "receive", "transactions", "all", "delegated"];
+    const walletTabsTitleArray = ["Send", "Receive", "Transactions", "All Validators", "Delegated"];
+
+
     const DefaultTab = () => {
-        const walletTabsArray = WALLET_TABS_ARRAY;
         let finalHash = walletTabsArray.indexOf(hash) == -1 ? walletTabsArray[0] : hash;
         return finalHash;
     };    
@@ -57,19 +59,19 @@ const Wallet = ({hash}) => {
                 <TokenInfo/>
                 <div className="tabs-section">
                     <Tabs defaultActiveKey={DefaultTab} id="uncontrolled-tab-example" onSelect={onClick}>
-                        <Tab eventKey="send" title="Send">
+                        <Tab eventKey={walletTabsArray[0]} title={walletTabsTitleArray[0]}>
                             <Send/>
                         </Tab>
-                        <Tab eventKey="receive" title="Receive">
+                        <Tab eventKey={walletTabsArray[1]} title={walletTabsTitleArray[1]}>
                             <Receive/>
                         </Tab>
-                        <Tab eventKey="transactions" title="Transactions">
+                        <Tab eventKey={walletTabsArray[2]} title={walletTabsTitleArray[2]}>
                             <Transactions/>
                         </Tab>
-                        <Tab eventKey="all" title="All Validators">
+                        <Tab eventKey={walletTabsArray[3]} title={walletTabsTitleArray[3]}>
                             <Validators/>
                         </Tab>
-                        <Tab eventKey="delegated" title="Delegated">
+                        <Tab eventKey={walletTabsArray[4]} title={walletTabsTitleArray[4]}>
                             <DelegatedValidators/>
                         </Tab>
                     </Tabs>

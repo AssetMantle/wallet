@@ -178,5 +178,5 @@ export const MainNetFoundationNodes = [
 ];
 
 export const LOGIN_MODES_ARRAY = ["keplr", "ledger", "keystore", "address"];
-export const WALLET_TABS_ARRAY = ["send", "receive", "transactions", "all", "delegated"];
+
 
