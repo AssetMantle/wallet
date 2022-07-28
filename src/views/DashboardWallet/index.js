@@ -4,8 +4,8 @@ import DashboardHeader from "../../containers/Common/DashboardHeader";
 import GenerateKeyStore from "../../containers/GenerateKeyStore";
 import ChangeKeyStorePassword from "../../containers/ChangeKeyStorePassword";
 import {useDispatch} from "react-redux";
-import { useHistory, useParams } from "react-router-dom";
-import { LOGIN_INFO, LOGIN_MODES_ARRAY} from "../../constants/localStorage";
+import { useHistory, useLocation, useParams } from "react-router-dom";
+import { LOGIN_INFO} from "../../constants/localStorage";
 import {addressDetails, setAddress} from "../../store/actions/signIn/address";
 import {fetchDelegationsCount} from "../../store/actions/delegations";
 import {fetchBalance, fetchTransferableVestingAmount} from "../../store/actions/balance";
@@ -18,7 +18,7 @@ import {ledgerDisconnect} from "../../utils/ledger";
 import RouteNotFound from "../../components/RouteNotFound";  
 import { validateAddress } from "../../utils/validations";
 import { isBech32Address } from "../../utils/scripts";
-import { DefaultChainInfo } from "../../config";
+import { DefaultChainInfo, LOGIN_MODES_ARRAY } from "../../config";
 import LoadingComponent from "../../components/LoadingComponent";
 
 const DashboardWallet = () => {
@@ -29,6 +29,10 @@ const DashboardWallet = () => {
     const [loading, setLoading] = useState(false);
     const [invalidPage, setInvalidPage] = useState(false);
     const {selectedLoginMode} = useParams();
+    let {hash} = useLocation();
+    hash = hash.replace("#","");
+    console.log("location.hash: ", hash);
+
 
     const loginModesArray = LOGIN_MODES_ARRAY;
 
@@ -71,7 +75,7 @@ const DashboardWallet = () => {
 
         // if the dynamic uri path is missing 
         if(!selectedLoginMode ||  (loginModesArray.indexOf(selectedLoginMode) != -1 && selectedLoginMode !== loginModeLocal)) {
-            history.push(`/dashboard/${loginModeLocal}`);
+            history.push(`/dashboard/${loginModeLocal}#${hash}`);
             return;
         } 
 
@@ -135,7 +139,7 @@ const DashboardWallet = () => {
             <GenerateKeyStore/>
             <ChangeKeyStorePassword/>
             <div className="content-section container">
-                <Wallet/>
+                <Wallet hash={hash}/>
             </div>
         </div>
     );
