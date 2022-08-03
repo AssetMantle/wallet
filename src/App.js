@@ -66,7 +66,7 @@ const App = () => {
 
     let address = loginInfo && loginInfo.address;
 
-    /* const version = loginInfo && loginInfo.version;
+    const version = loginInfo && loginInfo.version;
     if (version == null || packageJson.version !== version) {
         localStorage.removeItem("loginInfo");
         localStorage.removeItem("keplrAddress");
@@ -75,7 +75,7 @@ const App = () => {
         history.push('/');
     } else {
         address = loginInfo && loginInfo.address;
-    } */
+    } 
 
     useEffect(() => {
         console.log("inside useEffect");
