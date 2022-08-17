@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Route, Switch, useHistory, withRouter} from 'react-router-dom';
 import DashboardWallet from "./views/DashboardWallet";
 import Homepage from "./views/Homepage";
-import DashboardStaking from "./views/Staking";
+// import DashboardStaking from "./views/Staking";
 import PrivateRoute from "./containers/PrivateRoute";
 import RouteNotFound from "./components/RouteNotFound";
 import icon_white from "./assets/images/icon_white.svg";
@@ -38,20 +38,15 @@ const App = () => {
 
     const routes = [
         {
-            path: '/dashboard/staking',
-            component: DashboardStaking,
-            private: true,
-        },
+            path: '/dashboard',
+            component: DashboardWallet,
+            private: false,
+        }, 
         {
             path: '/dashboard/:selectedLoginMode',
             component: DashboardWallet,
             private: false,
         }, 
-        /* {
-            path: '/dashboard',
-            component: DashboardWallet,
-            private: false,
-        }, */
     ];
 
     const [isOnline, setNetwork] = useState(window.navigator.onLine);
