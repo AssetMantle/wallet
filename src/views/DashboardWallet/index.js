@@ -31,7 +31,7 @@ const DashboardWallet = () => {
     const {selectedLoginMode} = useParams();
     let {hash} = useLocation();
     hash = hash.replace("#","");
-    console.log("location.hash: ", hash);
+    console.log("selectedLoginMode: ", selectedLoginMode);
 
 
     const loginModesArray = LOGIN_MODES_ARRAY;
@@ -84,6 +84,17 @@ const DashboardWallet = () => {
             address = selectedLoginMode;
             loginModeLocal = "address";
 
+            if(selectedLoginMode == "wallet") {
+                history.push(`/`); 
+                return;
+            }
+
+            if(selectedLoginMode == "staking")
+            {
+                history.push("/#delegated"); 
+                return;
+            }
+
             // if the address in the dynamic uri path is an invalid address, go to invalid page
             if(!(address && validateAddress(address) && isBech32Address(address, DefaultChainInfo.prefix))) {
                 setInvalidPage(true);
@@ -131,7 +142,6 @@ const DashboardWallet = () => {
     if(invalidPage) {
         return <RouteNotFound />;
     }
-
 
     return (
         <div className="main-section">
