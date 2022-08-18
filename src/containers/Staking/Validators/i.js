@@ -26,7 +26,7 @@ const Validators = (props) => {
     return (
         <div className="txns-container">
             <Tab.Container id="left-tabs-example" defaultActiveKey="active" onSelect={onClick}>
-                <div className="tab-header">
+                <div className="tab-header active-inactive-validators">
                     <div className="info">
                         <div className="left">
                             <p className="info-name"></p>
