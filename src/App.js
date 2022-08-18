@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {Route, Switch, useHistory, withRouter} from 'react-router-dom';
 import DashboardWallet from "./views/DashboardWallet";
 import Homepage from "./views/Homepage";
-// import DashboardStaking from "./views/Staking";
 import PrivateRoute from "./containers/PrivateRoute";
 import RouteNotFound from "./components/RouteNotFound";
 import icon_white from "./assets/images/icon_white.svg";
