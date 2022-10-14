@@ -1,10 +1,10 @@
-import {Modal} from 'react-bootstrap';
-import React, {useState} from 'react';
+import { Modal } from 'react-bootstrap';
+import React, { useState } from 'react';
 import chrome from "../../assets/images/chrome.svg";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 const ModalCosmostationInstall = () => {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const [show, setShow] = useState(true);
 
     const handleClose = () => {
@@ -25,9 +25,9 @@ const ModalCosmostationInstall = () => {
                     <p>{t("COSMOSTATION_INSTALL_NOTE")}</p>
                     <div className="chrome-box">
                         <a className="chrome-link"
-                            href="https://chrome.google.com/webstore/detail/keplr/dmkamcknogkgcdfhhbddcghachkejeap"
+                            href="https://chrome.google.com/webstore/detail/cosmostation/fpkhgmpbidmiogeglndfbkegfdlnajnf"
                             rel="noopener noreferrer" target="_blank">
-                            <img src={chrome} alt="chrome"/>
+                            <img src={chrome} alt="chrome" />
                             <p>{t("INSTALL_CHROME")}</p>
                         </a>
                     </div>
