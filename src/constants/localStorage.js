@@ -2,6 +2,7 @@ export const LOGIN_MODE = "loginMode";
 export const ADDRESS = "address";
 export const VERSION = "version";
 export const KEPLR_ADDRESS = "keplrAddress";
+export const COSMOSTATION_ADDRESS = "cosmostationAddress";
 export const FEE = "fee";
 export const ACCOUNT = "account";
 export const ENCRYPTED_MNEMONIC = "encryptedMnemonic";
