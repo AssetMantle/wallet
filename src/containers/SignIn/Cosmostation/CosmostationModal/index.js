@@ -20,7 +20,7 @@ const CosmostationModal = () => {
         dispatch(hideCosmostationModal());
     };
 
-    window.addEventListener("keplr_keystorechange", () => {
+    window.addEventListener("cosmostation_keystorechange", () => {
         dispatch(fetchCosmostationAddress());
     });
 

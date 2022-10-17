@@ -1,19 +1,17 @@
-import {
-    SIGN_IN_COSMOSTATION_MODAL_HIDE,
-    SIGN_IN_COSMOSTATION_MODAL_SHOW,
-    SET_COSMOSTATION_INFO
-} from "../../../constants/signIn/cosmostation";
-import { getAccount } from "../../../utils/helper";
-import { setLoginInfo } from "../transactions/common";
 import * as Sentry from "@sentry/browser";
-import helper, { vestingAccountCheck } from "../../../utils/helper";
+import packageJson from "../../../../package.json";
 import {
     COSMOSTATION_ADDRESS,
-    LOGIN_INFO,
+    LOGIN_INFO
 } from "../../../constants/localStorage";
-import { FeeInfo } from "../../../config";
-import packageJson from "../../../../package.json";
+import {
+    SET_COSMOSTATION_INFO, SIGN_IN_COSMOSTATION_MODAL_HIDE,
+    SIGN_IN_COSMOSTATION_MODAL_SHOW
+} from "../../../constants/signIn/cosmostation";
 import CosmostationWallet from "../../../utils/cosmostation";
+import { setLoginInfo } from "../transactions/common";
+import helper from "../../../utils/helper";
+
 
 export const hideCosmostationModal = (data) => {
     return {
@@ -54,7 +52,7 @@ export const fetchCosmostationAddress = () => {
             dispatch(setCosmostationInfo({
                 value: '',
                 error: {
-                    message: error.message,
+                    message: error.message?.replace(".", "") + error.code === -32600 ? ", make sure you have a cosmostation wallet" : "",
                 },
             }));
         });
@@ -64,7 +62,7 @@ export const fetchCosmostationAddress = () => {
 
 export const cosmostationLogin = (history) => {
     return async (dispatch, getState) => {
-        const address = getState().signInKeplr.keplrInfo.value;
+        const address = getState().signInCosmostation.cosmostationInfo.value;
         const loginInfo = {
             fee: '',
             account: '',
@@ -77,25 +75,9 @@ export const cosmostationLogin = (history) => {
         };
         const accountNumber = helper.getAccountNumber(getState().advanced.accountNumber.value);
         const accountIndex = helper.getAccountNumber(getState().advanced.accountIndex.value);
-        const res = await getAccount(address).catch(error => {
-            Sentry.captureException(error.response
-                ? error.response.data.message
-                : error.message);
-            console.log(error.message);
-            loginInfo.fee = FeeInfo.defaultFee;
-            loginInfo.account = "non-vesting";
-        });
-        const accountType = await vestingAccountCheck(res && res.typeUrl);
-        if (accountType) {
-            loginInfo.fee = FeeInfo.vestingAccountFee;
-            loginInfo.account = "vesting";
-        } else {
-            loginInfo.fee = FeeInfo.defaultFee;
-            loginInfo.account = "non-vesting";
-        }
         loginInfo.loginToken = "loggedIn";
         loginInfo.address = address;
-        loginInfo.loginMode = 'keplr';
+        loginInfo.loginMode = 'cosmostation';
         loginInfo.version = packageJson.version;
         loginInfo.accountNumber = accountNumber;
         loginInfo.accountIndex = accountIndex;

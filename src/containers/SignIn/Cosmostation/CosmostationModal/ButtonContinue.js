@@ -1,15 +1,15 @@
 import React from 'react';
 import Button from "../../../../components/Button";
 import {useDispatch} from "react-redux";
-import {keplrLogin} from "../../../../store/actions/signIn/keplr";
 import {useHistory} from "react-router-dom";
+import { cosmostationLogin } from '../../../../store/actions/signIn/cosmostation';
 
 const ButtonContinue = () => {
     const history = useHistory();
     const dispatch = useDispatch();
 
     const onClick = () => {
-        dispatch(keplrLogin(history));
+        dispatch(cosmostationLogin(history));
     };
 
     return (
