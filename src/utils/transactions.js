@@ -2,6 +2,7 @@ import {DirectSecp256k1HdWallet} from "@cosmjs/proto-signing";
 import Long from "long";
 import {Tendermint34Client} from "@cosmjs/tendermint-rpc";
 import {createProtobufRpcClient} from "@cosmjs/stargate";
+import {getOfflineSigner} from '@cosmostation/cosmos-client';
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
 import {LedgerSigner} from "@cosmjs/ledger-amino";
 import {fee} from "./aminoMsgHelper";
@@ -30,6 +31,12 @@ async function TransactionWithKeplr(msgs, fee, memo = "", chainID = configChainI
     console.log(msgs, "msgs");
     const [wallet, address] = await KeplrWallet(chainID);
     return Transaction(wallet, address, msgs, fee, memo);
+}
+
+async function TransactionWithCosmostation(msgs, fee, memo = "", chainID = configChainID) {
+    const signer = await getOfflineSigner(chainID);
+    const [account] = await signer.getAccounts();
+    return Transaction(signer, account.address, msgs, fee, memo);
 }
 
 async function KeplrWallet(chainID = configChainID) {
@@ -158,12 +165,13 @@ async function getTransactionResponse(address, data, feeAmount, gas, mnemonic = 
             fee(Math.trunc(feeAmount), gas), data.memo, mnemonic,
             makeHdPath(accountNumber, addressIndex), bip39Passphrase, address);
     }
-    
+
 }
 
 
 export default {
     TransactionWithKeplr,
+    TransactionWithCosmostation,
     TransactionWithMnemonic,
     TransactionWithLedger,
     MakeIBCTransferMsg,

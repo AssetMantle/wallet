@@ -1,4 +1,4 @@
-import {DefaultChainInfo} from "../../../../config";
+import { DefaultChainInfo } from "../../../../config";
 
 let English = {
     translations: {
@@ -14,14 +14,20 @@ let English = {
         "IMPORT_WALLET": "Import Wallet",
         "FAQ": "Frequently Asked Questions",
         "USE_KEPLR": "Use Keplr",
+        "USE_COSMOSTATION": "Use Cosmostation",
         "CONTINUE_WITH_ADDRESS": "Continue with Address",
         "USE_KEPLR_BROWSER_EXTENSION": "Use Keplr Browser Extension",
+        "USE_COSMOSTATION_BROWSER_EXTENSION": "Use Cosmostation Browser Extension",
         "CONNECT": "Connect",
         "KEPLR_ERROR": "There was an error connecting to the Keplr extension:",
+        "COSMOSTATION_ERROR": "There was an error connecting to the Cosmostation extension:",
+        "COSMOSTATION_ACCOUNT_NOTE": "\n" +
+            "Below account we've received from the Cosmostation browser extension.",
         "KEPLR_ACCOUNT_NOTE": "\n" +
             "Below account we've received from the Keplr browser extension.",
         "USE": "Use",
         "KEPLR_INSTALL_NOTE": "Please Install the Keplr browser extension to start using Keplr",
+        "COSMOSTATION_INSTALL_NOTE": "Please Install the Cosmostation browser extension to start using Cosmostation ",
         "ADDRESS": "Address",
         "SUBMIT": "Submit",
         "NEXT": "Next",
@@ -62,7 +68,7 @@ let English = {
         "TOTAL_BALANCE": "Total Balance",
         "DELEGATED": "Delegated",
         "DELEGATABLE": "Delegatable",
-        "CURRENT_PRICE":  `Current Price per ${DefaultChainInfo.currency.coinDenom}`,
+        "CURRENT_PRICE": `Current Price per ${DefaultChainInfo.currency.coinDenom}`,
         "CURRENT_VALUE": "Current Value",
         "AMOUNT_UNDER_VESTING": "Vesting Balance",
         "TRANSFERABLE_AMOUNT": "Transferable Amount",
@@ -187,26 +193,26 @@ let English = {
         "CHANGE_KEYSTORE_PASSWORD": "Change KeyStore Password",
         "ENTER_NEW_PASSWORD": "Enter New Password",
         "CHOOSE_FILE": "Choose File",
-        "KEYSTORE_DOWNLOADED_SUCCESSFULLY":"Keystore Successfully downloaded",
-        "FETCHING_ADDRESS":"Fetching Address",
-        "RECIPIENT_ADDRESS_EXAMPLE":"Recipient’s address starts with mantle; for example: " +
+        "KEYSTORE_DOWNLOADED_SUCCESSFULLY": "Keystore Successfully downloaded",
+        "FETCHING_ADDRESS": "Fetching Address",
+        "RECIPIENT_ADDRESS_EXAMPLE": "Recipient’s address starts with mantle; for example: " +
             "mantle14zmyw2q8keywcwhpttfr0d4xpggylsrmd4caf4",
-        "VALIDATORS_SELECTION_WARNING":"Warning:  Recommend 3 or fewer validators to avoid potential issues.",
-        "FOUNDATION_NODE_WARNING":"Warning: Foundation Nodes operate at 100%" +
+        "VALIDATORS_SELECTION_WARNING": "Warning:  Recommend 3 or fewer validators to avoid potential issues.",
+        "FOUNDATION_NODE_WARNING": "Warning: Foundation Nodes operate at 100%" +
             " commission, you will not be receiving any staking rewards.",
-        "VERIFY":"Verify",
-        "TRANSFERABLE_BALANCE":"Transferable Balance",
-        "GENERATE_KEYSTORE":"Generate KeyStore",
-        "LOGOUT":"Logout",
-        "DASHBOARD":"Dashboard",
-        "DELEGATED_MODAL_VIEW":"Delegated tokens modal",
-        "CLICK_DELEGATED_MODAL_VIEW":"Delegated tokens modal",
-        "UNBONDING_MODAL_VIEW":"Unbonding tokens modal",
-        "CLICK_UNBONDING_MODAL_VIEW":"Clicked on Unbonding tokens modal",
-        "TOTAL_TOKENS_MODAL_VIEW":"Total tokens modal",
-        "CLICK_TOTAL_TOKENS_MODAL_VIEW":"Clicked on Total tokens modal",
-        "IBC_REWARDS":"IBC Rewards",
-        "DECRYPT_KEY_STORE":"Decrypt KeyStore"
+        "VERIFY": "Verify",
+        "TRANSFERABLE_BALANCE": "Transferable Balance",
+        "GENERATE_KEYSTORE": "Generate KeyStore",
+        "LOGOUT": "Logout",
+        "DASHBOARD": "Dashboard",
+        "DELEGATED_MODAL_VIEW": "Delegated tokens modal",
+        "CLICK_DELEGATED_MODAL_VIEW": "Delegated tokens modal",
+        "UNBONDING_MODAL_VIEW": "Unbonding tokens modal",
+        "CLICK_UNBONDING_MODAL_VIEW": "Clicked on Unbonding tokens modal",
+        "TOTAL_TOKENS_MODAL_VIEW": "Total tokens modal",
+        "CLICK_TOTAL_TOKENS_MODAL_VIEW": "Clicked on Total tokens modal",
+        "IBC_REWARDS": "IBC Rewards",
+        "DECRYPT_KEY_STORE": "Decrypt KeyStore"
 
     }
 };

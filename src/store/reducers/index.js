@@ -18,6 +18,7 @@ import signInModal from "./signIn/modal";
 import signInLedger from "./signIn/ledger";
 import signInAddress from "./signIn/address";
 import signInKeplr from "./signIn/keplr";
+import signInCosmostation from "./signIn/cosmostation";
 import mulitpleRewardsWithDraw from "./transactions/withdrawTotalRewards";
 import sendIbc from "./transactions/sendIbc";
 import setWithdrawAddress from "./transactions/setWithdrawAddress";
@@ -48,6 +49,7 @@ const appReducer = combineReducers({
     signInLedger,
     signInAddress,
     signInKeplr,
+    signInCosmostation,
     mulitpleRewardsWithDraw,
     sendIbc,
     setWithdrawAddress,

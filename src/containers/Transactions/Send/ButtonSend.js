@@ -1,13 +1,14 @@
 import React from 'react';
 import Button from "../../../components/Button";
-import {submitFormData} from "../../../store/actions/transactions/send";
-import {useDispatch, useSelector} from "react-redux";
-import {keplrSubmit} from "../../../store/actions/transactions/keplr";
-import {SendMsg} from "../../../utils/protoMsgHelper";
-import {PstakeInfo} from "../../../config";
-import {setTxName} from "../../../store/actions/transactions/common";
-import {stringToNumber, unDecimalize} from "../../../utils/scripts";
-import {LOGIN_INFO} from "../../../constants/localStorage";
+import { submitFormData } from "../../../store/actions/transactions/send";
+import { useDispatch, useSelector } from "react-redux";
+import { keplrSubmit } from "../../../store/actions/transactions/keplr";
+import { SendMsg } from "../../../utils/protoMsgHelper";
+import { PstakeInfo } from "../../../config";
+import { setTxName } from "../../../store/actions/transactions/common";
+import { stringToNumber, unDecimalize } from "../../../utils/scripts";
+import { LOGIN_INFO } from "../../../constants/localStorage";
+import { cosmostationSubmit } from '../../../store/actions/transactions/cosmostation';
 
 const ButtonSend = () => {
     const dispatch = useDispatch();
@@ -19,9 +20,9 @@ const ButtonSend = () => {
 
     let sendAmount;
 
-    if(token.value.tokenDenom === PstakeInfo.coinMinimalDenom){
+    if (token.value.tokenDenom === PstakeInfo.coinMinimalDenom) {
         sendAmount = unDecimalize(amount.value).toString();
-    }else {
+    } else {
         sendAmount = (amount.value * 1000000).toFixed(0);
     }
 
@@ -42,6 +43,15 @@ const ButtonSend = () => {
         dispatch(keplrSubmit([SendMsg(loginInfo && loginInfo.address, toAddress.value, sendAmount, token.value.token)]));
     };
 
+    const onClickCosmostation = () => {
+        dispatch(setTxName({
+            value: {
+                name: "send",
+            }
+        }));
+        dispatch(cosmostationSubmit([SendMsg(loginInfo && loginInfo.address, toAddress.value, sendAmount, token.value.token)]));
+    };
+
     return (
         <div className="buttons">
             <div className="button-section">
@@ -50,7 +60,7 @@ const ButtonSend = () => {
                     type="button"
                     disable={disable}
                     value="Send"
-                    onClick={loginInfo && loginInfo.loginMode === "keplr" ? onClickKeplr : onClick}
+                    onClick={loginInfo && loginInfo.loginMode === "keplr" ? onClickKeplr : loginInfo.loginMode === "cosmostation" ? onClickCosmostation : onClick}
                 />
             </div>
         </div>
