@@ -4,12 +4,13 @@ import {
     hideTxWithdrawValidatorRewardsModal,
     submitFormData
 } from "../../../store/actions/transactions/withdrawValidatorRewards";
-import {useDispatch, useSelector} from "react-redux";
-import {keplrSubmit} from "../../../store/actions/transactions/keplr";
-import {WithdrawMsg} from "../../../utils/protoMsgHelper";
-import {setTxIno} from "../../../store/actions/transactions/common";
-import {stringToNumber} from "../../../utils/scripts";
-import {LOGIN_INFO} from "../../../constants/localStorage";
+import { useDispatch, useSelector } from "react-redux";
+import { keplrSubmit } from "../../../store/actions/transactions/keplr";
+import { WithdrawMsg } from "../../../utils/protoMsgHelper";
+import { setTxIno } from "../../../store/actions/transactions/common";
+import { stringToNumber } from "../../../utils/scripts";
+import { LOGIN_INFO } from "../../../constants/localStorage";
+import { cosmostationSubmit } from '../../../store/actions/transactions/cosmostation';
 
 const ButtonSubmit = () => {
     const dispatch = useDispatch();
@@ -39,6 +40,19 @@ const ButtonSubmit = () => {
         dispatch(keplrSubmit([WithdrawMsg(loginInfo && loginInfo.address, validator.operatorAddress)]));
     };
 
+    const onClickCosmostation = () => {
+        dispatch(setTxIno({
+            value: {
+                modal: hideTxWithdrawValidatorRewardsModal(),
+                data: {
+                    message: '',
+                    memo: '',
+                }
+            }
+        }));
+        dispatch(cosmostationSubmit([WithdrawMsg(loginInfo && loginInfo.address, validator.operatorAddress)]));
+    };
+
     return (
         <div className="buttons">
             <div className="button-section">
@@ -47,7 +61,7 @@ const ButtonSubmit = () => {
                     type="button"
                     disable={disable}
                     value="Submit"
-                    onClick={loginInfo && loginInfo.loginMode === 'keplr' ? onClickKeplr : onClick}
+                    onClick={loginInfo && loginInfo.loginMode === 'keplr' ? onClickKeplr : loginInfo?.loginMode === 'cosmostation' ? onClickCosmostation : onClick}
                 />
             </div>
         </div>

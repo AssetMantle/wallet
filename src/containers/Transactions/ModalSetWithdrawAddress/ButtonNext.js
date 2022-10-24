@@ -6,6 +6,7 @@ import {hideTxWithDrawAddressModal, submitFormData} from "../../../store/actions
 import {SetWithDrawAddressMsg} from "../../../utils/protoMsgHelper";
 import {setTxIno} from "../../../store/actions/transactions/common";
 import {LOGIN_INFO} from "../../../constants/localStorage";
+import { cosmostationSubmit } from '../../../store/actions/transactions/cosmostation';
 
 const ButtonNext = () => {
     const dispatch = useDispatch();
@@ -31,6 +32,19 @@ const ButtonNext = () => {
         dispatch(keplrSubmit([SetWithDrawAddressMsg(loginInfo && loginInfo.address, revisedAddress.value)]));
     };
 
+    const onClickCosmostation = () => {
+        dispatch(setTxIno({
+            value: {
+                modal: hideTxWithDrawAddressModal(),
+                data: {
+                    message: '',
+                    memo: '',
+                }
+            }
+        }));
+        dispatch(cosmostationSubmit([SetWithDrawAddressMsg(loginInfo && loginInfo.address, revisedAddress.value)]));
+    };
+
     const disable = (
         revisedAddress.error.message !== '' || currentAddress === '' || revisedAddress.value === '' || memo.error.message !== ''
     );
@@ -43,7 +57,7 @@ const ButtonNext = () => {
                     type="button"
                     disable={disable}
                     value="Next"
-                    onClick={loginInfo && loginInfo.loginMode === 'keplr' ? onClickKeplr : onClick}
+                    onClick={loginInfo && loginInfo.loginMode === 'keplr' ? onClickKeplr : loginInfo?.loginMode === 'cosmostation' ? onClickCosmostation : onClick}
                 />
             </div>
         </div>

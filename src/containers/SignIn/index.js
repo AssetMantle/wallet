@@ -1,24 +1,27 @@
-import {Modal} from 'react-bootstrap';
-import React, {useState} from 'react';
-import {useTranslation} from "react-i18next";
+import { Modal } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { useTranslation } from "react-i18next";
 import KeyStore from "./KeyStore";
-import {showKeyStoreModal} from "../../store/actions/signIn/keyStore";
-import {useDispatch, useSelector} from "react-redux";
-import {hideSignInModal} from "../../store/actions/signIn/modal";
+import { showKeyStoreModal } from "../../store/actions/signIn/keyStore";
+import { useDispatch, useSelector } from "react-redux";
+import { hideSignInModal } from "../../store/actions/signIn/modal";
 import LedgerModal from "./Ledger/LedgerModal";
 import Keplr from "./Keplr";
-import {showLedgerModal} from "../../store/actions/signIn/ledger";
-import {showAddressModal} from "../../store/actions/signIn/address";
+import Cosmostation from "./Cosmostation";
+import { showLedgerModal } from "../../store/actions/signIn/ledger";
+import { showAddressModal } from "../../store/actions/signIn/address";
 import Address from "./Address";
-import {showKeplrModal} from "../../store/actions/signIn/keplr";
+import { showKeplrModal } from "../../store/actions/signIn/keplr";
+import { showCosmostationModal } from '../../store/actions/signIn/cosmostation';
 
 const SignIn = (props) => {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const show = useSelector((state) => state.signInModal.modal);
     const [withAddress, setWithAddress] = useState(false);
     const [withKeyStore, setWithKeyStore] = useState(false);
     const [withLedger, setWithLedger] = useState(false);
     const [withKeplr, setWithKeplr] = useState(false);
+    const [withCosmostation, setWithCosmostation] = useState(false);
     const dispatch = useDispatch();
 
     const handleClose = () => {
@@ -47,6 +50,11 @@ const SignIn = (props) => {
             dispatch(hideSignInModal());
             setWithKeplr(true);
         }
+        if (key === "withCosmostation") {
+            dispatch(showCosmostationModal());
+            dispatch(hideSignInModal());
+            setWithCosmostation(true);
+        }
     };
 
     return (
@@ -66,6 +74,11 @@ const SignIn = (props) => {
                         <div className="buttons">
                             <button className="button button-primary"
                                 onClick={() => handleRoute("withKeplr")}>{t("USE_KEPLR")}
+                            </button>
+                        </div>
+                        <div className="buttons">
+                            <button className="button button-primary"
+                                onClick={() => handleRoute("withCosmostation")}>{t("USE_COSMOSTATION")}
                             </button>
                         </div>
                         <div className="buttons">
@@ -98,6 +111,11 @@ const SignIn = (props) => {
             }
             {withKeplr ?
                 <Keplr setWithLedger={setWithLedger} handleClose={handleClose}
+                />
+                : null
+            }
+            {withCosmostation ?
+                <Cosmostation setWithLedger={setWithLedger} handleClose={handleClose}
                 />
                 : null
             }
