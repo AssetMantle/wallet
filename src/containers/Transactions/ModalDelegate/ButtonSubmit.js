@@ -1,13 +1,14 @@
 import React from 'react';
 import Button from "../../../components/Button";
-import {hideTxDelegateModal, submitFormData} from "../../../store/actions/transactions/delegate";
-import {useDispatch, useSelector} from "react-redux";
-import {keplrSubmit} from "../../../store/actions/transactions/keplr";
-import {DelegateMsg} from "../../../utils/protoMsgHelper";
-import {setTxIno} from "../../../store/actions/transactions/common";
-import {LOGIN_INFO} from "../../../constants/localStorage";
-import {stringToNumber} from "../../../utils/scripts";
-import {DefaultChainInfo} from "../../../config";
+import { hideTxDelegateModal, submitFormData } from "../../../store/actions/transactions/delegate";
+import { useDispatch, useSelector } from "react-redux";
+import { keplrSubmit } from "../../../store/actions/transactions/keplr";
+import { DelegateMsg } from "../../../utils/protoMsgHelper";
+import { setTxIno } from "../../../store/actions/transactions/common";
+import { LOGIN_INFO } from "../../../constants/localStorage";
+import { stringToNumber } from "../../../utils/scripts";
+import { DefaultChainInfo } from "../../../config";
+import { cosmostationSubmit } from '../../../store/actions/transactions/cosmostation';
 
 const ButtonSubmit = () => {
     const dispatch = useDispatch();
@@ -22,7 +23,7 @@ const ButtonSubmit = () => {
 
 
     const disable = (
-        amount.value === '' || stringToNumber(amount.value) === 0  || amount.error.message !== '' || validatorAddress.value === '' || validatorAddress.error.message !== '' || memo.error.message !== ''
+        amount.value === '' || stringToNumber(amount.value) === 0 || amount.error.message !== '' || validatorAddress.value === '' || validatorAddress.error.message !== '' || memo.error.message !== ''
     );
 
     const onClickKeplr = () => {
@@ -38,6 +39,19 @@ const ButtonSubmit = () => {
         dispatch(keplrSubmit([DelegateMsg(loginInfo && loginInfo.address, validatorAddress.value.operatorAddress, (amount.value * DefaultChainInfo.uTokenValue).toFixed(0), DefaultChainInfo.currency.coinMinimalDenom)]));
     };
 
+    const onClickCosmostation = () => {
+        dispatch(setTxIno({
+            value: {
+                modal: hideTxDelegateModal(),
+                data: {
+                    message: '',
+                    memo: '',
+                }
+            }
+        }));
+        dispatch(cosmostationSubmit([DelegateMsg(loginInfo && loginInfo.address, validatorAddress.value.operatorAddress, (amount.value * DefaultChainInfo.uTokenValue).toFixed(0), DefaultChainInfo.currency.coinMinimalDenom)]));
+    };
+
     return (
         <div className="buttons">
             <div className="button-section">
@@ -46,7 +60,7 @@ const ButtonSubmit = () => {
                     type="button"
                     disable={disable}
                     value="Submit"
-                    onClick={loginInfo && loginInfo.loginMode === 'keplr' ? onClickKeplr : onClick}
+                    onClick={loginInfo && loginInfo.loginMode === 'keplr' ? onClickKeplr : loginInfo?.loginMode === 'cosmostation' ? onClickCosmostation : onClick}
                 />
             </div>
         </div>

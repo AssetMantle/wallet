@@ -1,10 +1,11 @@
 import React from 'react';
 import Button from "../../../components/Button";
-import {useDispatch, useSelector} from "react-redux";
-import {keplrSubmit} from "../../../store/actions/transactions/keplr";
-import {hideTxWithDrawTotalModal, submitFormData} from "../../../store/actions/transactions/withdrawTotalRewards";
-import {setTxIno} from "../../../store/actions/transactions/common";
-import {LOGIN_INFO} from "../../../constants/localStorage";
+import { useDispatch, useSelector } from "react-redux";
+import { keplrSubmit } from "../../../store/actions/transactions/keplr";
+import { hideTxWithDrawTotalModal, submitFormData } from "../../../store/actions/transactions/withdrawTotalRewards";
+import { setTxIno } from "../../../store/actions/transactions/common";
+import { LOGIN_INFO } from "../../../constants/localStorage";
+import { cosmostationSubmit } from '../../../store/actions/transactions/cosmostation';
 
 const ButtonNext = () => {
     const dispatch = useDispatch();
@@ -44,6 +45,27 @@ const ButtonNext = () => {
         }));
         dispatch(keplrSubmit(messages));
     };
+
+    const onClickCosmostation = () => {
+        let messages = [];
+        if (validatorsList.value.length) {
+            messages = validatorsList.value;
+        }
+        if (validatorCommission.value.length) {
+            messages.push(validatorCommission.value[0]);
+        }
+        dispatch(setTxIno({
+            value: {
+                modal: hideTxWithDrawTotalModal(),
+                data: {
+                    message: '',
+                    memo: '',
+                }
+            }
+        }));
+        dispatch(cosmostationSubmit(messages));
+    };
+
     const disable = (
         validatorsRewards.value === 0 && validatorCommission.value.length === 0 || memo.error.message !== ''
     );
@@ -56,7 +78,7 @@ const ButtonNext = () => {
                     type="button"
                     disable={disable}
                     value="Next"
-                    onClick={loginInfo && loginInfo.loginMode === 'keplr' ? onClickKeplr : onClick}
+                    onClick={loginInfo && loginInfo.loginMode === 'keplr' ? onClickKeplr : loginInfo?.loginMode === 'cosmostation' ? onClickCosmostation : onClick}
                 />
             </div>
         </div>
