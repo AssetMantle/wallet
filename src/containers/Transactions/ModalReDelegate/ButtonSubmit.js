@@ -1,13 +1,14 @@
 import React from 'react';
 import Button from "../../../components/Button";
-import {hideTxReDelegateModal, submitFormData} from "../../../store/actions/transactions/redelegate";
-import {useDispatch, useSelector} from "react-redux";
-import {keplrSubmit} from "../../../store/actions/transactions/keplr";
-import {RedelegateMsg} from "../../../utils/protoMsgHelper";
-import {setTxIno} from "../../../store/actions/transactions/common";
-import {LOGIN_INFO} from "../../../constants/localStorage";
-import {stringToNumber} from "../../../utils/scripts";
-import {DefaultChainInfo} from "../../../config";
+import { hideTxReDelegateModal, submitFormData } from "../../../store/actions/transactions/redelegate";
+import { useDispatch, useSelector } from "react-redux";
+import { keplrSubmit } from "../../../store/actions/transactions/keplr";
+import { RedelegateMsg } from "../../../utils/protoMsgHelper";
+import { setTxIno } from "../../../store/actions/transactions/common";
+import { LOGIN_INFO } from "../../../constants/localStorage";
+import { stringToNumber } from "../../../utils/scripts";
+import { DefaultChainInfo } from "../../../config";
+import { cosmostationSubmit } from '../../../store/actions/transactions/cosmostation';
 
 const ButtonSubmit = () => {
     const dispatch = useDispatch();
@@ -39,6 +40,19 @@ const ButtonSubmit = () => {
         dispatch(keplrSubmit([RedelegateMsg(loginInfo && loginInfo.address, validator.operatorAddress, toAddress.value, (amount.value * DefaultChainInfo.uTokenValue).toFixed(0))]));
     };
 
+    const onClickCosmostation = () => {
+        dispatch(setTxIno({
+            value: {
+                modal: hideTxReDelegateModal(),
+                data: {
+                    message: '',
+                    memo: '',
+                }
+            }
+        }));
+        dispatch(cosmostationSubmit([RedelegateMsg(loginInfo && loginInfo.address, validator.operatorAddress, toAddress.value, (amount.value * DefaultChainInfo.uTokenValue).toFixed(0))]));
+    };
+
     return (
         <div className="buttons">
             <div className="button-section">
@@ -47,7 +61,7 @@ const ButtonSubmit = () => {
                     type="button"
                     disable={disable}
                     value="Submit"
-                    onClick={loginInfo && loginInfo.loginMode === 'keplr' ? onClickKeplr : onClick}
+                    onClick={loginInfo && loginInfo.loginMode === 'keplr' ? onClickKeplr : loginInfo?.loginMode === 'cosmostation' ? onClickCosmostation : onClick}
                 />
             </div>
         </div>

@@ -52,7 +52,7 @@ export const fetchCosmostationAddress = () => {
             dispatch(setCosmostationInfo({
                 value: '',
                 error: {
-                    message: error.message?.replace(".", "") + error.code === -32600 ? ", make sure you have a cosmostation wallet" : "",
+                    message: error.message?.replace(".", "") + (error.code === -32600 ? ", make sure you have a cosmostation wallet" : ""),
                 },
             }));
         });
