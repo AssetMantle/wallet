@@ -2,7 +2,9 @@ import React, {useEffect} from "react";
 import Icon from "../../components/Icon";
 import {NavLink, useHistory} from 'react-router-dom';
 import {Nav, Navbar, NavDropdown} from "react-bootstrap";
+import logo from "../../assets/images/footer_logo.svg";
 import ReactQRCode from "qrcode.react";
+import pumpkin from "../../assets/images/Pumpkin.svg";
 import Copy from "../../components/Copy";
 import {useTranslation} from "react-i18next";
 import Darktheme from "../DarkTheme";
@@ -93,7 +95,9 @@ const DashboardHeader = () => {
                         <MobileSidebar/>
                     </div>
                     <Navbar.Brand>
-                        <NavLink to="/" className="header-logo">
+                        <NavLink to="/" >
+                            <img className='halloween-logo' src={logo} alt="logo"/>
+                            <img style={{maxWidth: "30px",marginTop: "40px",marginLeft: "-10px",rotate: "15deg",}} src={pumpkin} alt="logo"/>
                         </NavLink>
                     </Navbar.Brand>
 
