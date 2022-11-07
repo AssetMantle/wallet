@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { WalletConnectSection } from "../components";
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -13,6 +14,9 @@ export default function Home() {
           Get started by editing{" "}
           <code className={styles.code}>app/page.tsx</code>
         </p>
+        <hr />
+        <br />
+        <WalletConnectSection />
 
         <div className={styles.grid}>
           <a href="https://beta.nextjs.org/docs" className={styles.card}>
