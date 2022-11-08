@@ -3701,11 +3701,6 @@ ul li em {
   display: block;
 }
 
-.halloween-logo{
-  width: 180px;
-  height: 30px;
-}
-
 .dark-mode .header .navbar .header-logo {
   background: url(../../../src/assets/images/footer_logo.svg) no-repeat;
   background-size: contain;
