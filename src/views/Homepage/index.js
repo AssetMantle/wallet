@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import {Nav, Navbar, NavLink} from "react-bootstrap";
 import logo from "../../assets/images/footer_logo.svg";
-import pumpkin from "../../assets/images/Pumpkin.svg";
 // import dark_icon from "../../assets/images/dark_icon.svg";
 import ModalCreateWallet from "../../containers/CreateWallet/ModalCreateWallet";
 import Footer from "../../components/Footer";
@@ -39,7 +38,6 @@ const Homepage = () => {
                 <div className="container">
                     <Navbar.Brand><Nav.Link>
                         <img src={logo} alt="logo"/>
-                        <img style={{maxWidth: "30px",marginTop: "40px",marginLeft: "-10px",rotate: "15deg",}} src={pumpkin} alt="logo"/>
                     </Nav.Link></Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
                     <Navbar.Collapse id="responsive-navbar-nav">
