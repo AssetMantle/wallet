@@ -1,8 +1,10 @@
 import Image from "next/image";
-import { WalletConnectSection } from "../components";
+import { Suspense } from "react";
+import WalletSection from "../components/wallet";
 import styles from "./page.module.css";
 
 export default function Home() {
+  console.log("inside home page");
   return (
     <div className={styles.container}>
       <main className={styles.main}>
@@ -16,8 +18,9 @@ export default function Home() {
         </p>
         <hr />
         <br />
-        <WalletConnectSection />
-
+        <Suspense fallback={<p>Loading feed...</p>}>
+          <WalletSection />
+        </Suspense>
         <div className={styles.grid}>
           <a href="https://beta.nextjs.org/docs" className={styles.card}>
             <h2>Documentation &rarr;</h2>

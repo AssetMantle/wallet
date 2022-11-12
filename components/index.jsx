@@ -1,5 +1,2 @@
-"use client";
-
-
-export * from './react';
-export * from './WalletConnectSection';
+export * from "./react";
+export * from "./wallet.jsx"
