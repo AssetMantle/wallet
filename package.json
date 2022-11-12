@@ -1,0 +1,46 @@
+{
+  "name": "mantlewallet",
+  "version": "2.0.0",
+  "private": false,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@chakra-ui/icons": "2.0.11",
+    "@chakra-ui/react": "2.3.7",
+    "@cosmjs/amino": "^0.29.3",
+    "@cosmjs/cosmwasm-stargate": "0.29.3",
+    "@cosmjs/proto-signing": "^0.29.3",
+    "@cosmjs/stargate": "^0.29.3",
+    "@cosmjs/tendermint-rpc": "^0.29.3",
+    "@cosmos-kit/core": "0.24.0",
+    "@cosmos-kit/keplr": "0.26.0",
+    "@cosmos-kit/react": "0.23.0",
+    "@emotion/react": "11.10.5",
+    "@emotion/styled": "11.10.5",
+    "@osmonauts/lcd": "^0.8.0",
+    "chain-registry": "1.4.0",
+    "framer-motion": "7.6.5",
+    "next": "12.2.5",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-icons": "4.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "18.11.9",
+    "@types/react": "18.0.25",
+    "@types/react-dom": "18.0.8",
+    "eslint": "8.27.0",
+    "eslint-config-next": "12.2.5",
+    "eslint-config-prettier": "^8.5.0",
+    "typescript": "4.8.4"
+  },
+  "description": "Default wallet app for AssetMantle",
+  "main": "app/index.jsx",
+  "repository": "https://github.com/AssetMantle/wallet.git",
+  "author": "Kamlesh P <kamlesh@assetmantle.one>",
+  "license": "MIT"
+}
