@@ -1,5 +1,7 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import { wallets } from "@cosmos-kit/keplr";
+import { wallets as cosmostationWallets } from "@cosmos-kit/cosmostation";
+import { wallets as keplrWallet } from "@cosmos-kit/keplr";
+import { wallets as leapwallets } from "@cosmos-kit/leap";
 import { WalletProvider } from "@cosmos-kit/react";
 import { defaultTheme } from "../config";
 import "../styles/globals.css";
@@ -18,7 +20,7 @@ function CreateCosmosApp({ Component, pageProps }) {
       <WalletProvider
         chains={chains}
         assetLists={assets}
-        wallets={wallets}
+        wallets={[...keplrWallet, ...leapwallets, ...cosmostationWallets]}
         signerOptions={signerOptions}
       >
         <Component {...pageProps} />
