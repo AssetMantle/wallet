@@ -3,7 +3,7 @@ const BasicData = {
   title: "Mantle Wallet",
   navs: [
     {
-      title: "Wallet",
+      title: "Transact",
       href: "/",
       variant: "am-link",
     },
