@@ -4,7 +4,7 @@ const BasicData = {
   navs: [
     {
       title: "Transact",
-      href: "/",
+      href: "/transact",
       variant: "am-link",
     },
     {

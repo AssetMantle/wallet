@@ -1,30 +1,27 @@
-import Head from "next/head";
 import {
   Box,
+  Button,
+  Container,
   Divider,
+  Flex,
   Grid,
   Heading,
-  Text,
-  Stack,
-  Container,
-  Link,
-  Button,
-  Flex,
   Icon,
+  Link,
+  Stack,
+  Text,
   useColorMode,
-  useColorModeValue,
 } from "@chakra-ui/react";
+import Head from "next/head";
 import { BsFillMoonStarsFill, BsFillSunFill } from "react-icons/bs";
-import { Product, Dependency, WalletSection } from "../components";
+import { Dependency, Product, WalletSection } from "../components";
 import { dependencies, products } from "../config";
-import WalletPage from "../views/WalletPage";
 
 export default function Home() {
   const { colorMode, toggleColorMode } = useColorMode();
 
   return (
     <>
-      <WalletPage />
       <Container maxW="5xl" py={10}>
         <Head>
           <title>MantleWallet</title>

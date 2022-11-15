@@ -3,7 +3,7 @@ import { SlReload } from "react-icons/sl";
 import { MdOutlineContentCopy } from "react-icons/md";
 import Image from "next/image";
 
-export default function WalletPage() {
+export default function Transact() {
   const [Tab, setTab] = useState(0);
   const [Address, setAddress] = useState("");
   const [Token, setToken] = useState("$MNTL");
