@@ -58,9 +58,6 @@ export default function Home() {
           </Text> */}
         </Heading>
       </Box>
-      <a href="#" data-bs-toggle="tooltip" data-bs-title="Default tooltip">
-        inline links
-      </a>
       <WalletSection />
       <Grid
         templateColumns={{
