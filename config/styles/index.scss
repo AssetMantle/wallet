@@ -296,6 +296,14 @@ hr {
   background-color: $white-400 !important;
   border-radius: 4px !important;
 }
+.am-input {
+  border: 1px solid $gray-200;
+  outline: none;
+  &:hover,
+  &:focus {
+    outline: none;
+  }
+}
 
 // specific styles
 .fixed-height {
