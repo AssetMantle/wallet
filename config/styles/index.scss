@@ -304,6 +304,9 @@ hr {
     outline: none;
   }
 }
+.transitionAll {
+  transition: all 0.3s ease-in-out;
+}
 
 // specific styles
 .fixed-height {
