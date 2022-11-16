@@ -9,7 +9,7 @@ const BasicData = {
     },
     {
       title: "Delegate",
-      href: "/",
+      href: "/delegate",
       variant: "am-link",
     },
     {
@@ -20,7 +20,7 @@ const BasicData = {
     },
     {
       title: "IBC Transaction",
-      href: "/",
+      href: "/ibc",
       variant: "am-link",
     },
   ],
