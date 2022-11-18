@@ -6,6 +6,7 @@ export default function Portfolio() {
     vesting: "0000.23000",
     transferable: "0000.23000",
     delegable: "0000.23000",
+    usd: "0.83",
   };
   return (
     <section className="rounded-5 p-4 bg-gray-800 width-100 d-flex flex-column gap-3">
@@ -19,6 +20,9 @@ export default function Portfolio() {
             </span>
           </p>
           <p className="caption">{dataSet.vesting} $MNTL</p>
+          <p className="caption">
+            {Number(dataSet.vesting) * Number(dataSet.usd)} USD
+          </p>
         </div>
       </div>
       <div className="nav-bg p-3 rounded-4 gap-3">
@@ -30,6 +34,9 @@ export default function Portfolio() {
             </span>
           </p>
           <p className="caption">{dataSet.transferable} $MNTL</p>
+          <p className="caption">
+            {Number(dataSet.transferable) * Number(dataSet.usd)} USD
+          </p>
         </div>
       </div>
       <div className="nav-bg p-3 rounded-4 gap-3">
@@ -41,6 +48,9 @@ export default function Portfolio() {
             </span>
           </p>
           <p className="caption">{dataSet.delegable} $MNTL</p>
+          <p className="caption">
+            {Number(dataSet.delegable) * Number(dataSet.usd)} USD
+          </p>
         </div>
       </div>
     </section>

@@ -18,6 +18,9 @@ export default function Balance() {
             </span>
           </p>
           <p className="caption">{dataSet.totalBalance} $MNTL</p>
+          {/* <p className="caption">
+            {Number(dataSet.totalBalance) * Number(dataSet.price)} $USD
+          </p> */}
         </div>
       </div>
       <div className="nav-bg p-3 rounded-4 gap-3">
@@ -25,7 +28,7 @@ export default function Balance() {
           <p className="caption d-flex gap-2 align-items-center">
             Current Price per $MNTL
           </p>
-          <p className="caption">{dataSet.price} $MNTL</p>
+          <p className="caption">{dataSet.price} USD</p>
         </div>
       </div>
       <div className="nav-bg p-3 rounded-4 gap-3">
@@ -34,7 +37,7 @@ export default function Balance() {
             Current Value
           </p>
           <p className="caption">
-            {Number(dataSet.totalBalance) * Number(dataSet.price)} $MNTL
+            {Number(dataSet.totalBalance) * Number(dataSet.price)} USD
           </p>
         </div>
       </div>
