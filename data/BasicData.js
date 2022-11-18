@@ -23,6 +23,11 @@ const BasicData = {
       href: "/ibc",
       variant: "am-link",
     },
+    {
+      title: "Interchain",
+      href: "/interchain",
+      variant: "am-link",
+    },
   ],
 };
 
