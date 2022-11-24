@@ -4,20 +4,20 @@ import { IoMdSwap } from "react-icons/io";
 
 export default function ICFormETH() {
   const [SwapEth, setSwapEth] = useState(false);
-  const [Chain1, setChain1] = useState("");
+  const [Chain1, setChain1] = useState("mntl");
   const [Chain1Amount, setChain1Amount] = useState(65);
-  const [Chain2, setChain2] = useState("");
+  const [Chain2, setChain2] = useState("eth");
   const [Chain2Amount, setChain2Amount] = useState(434);
   const [Address1, setAddress1] = useState("");
   const [Address2, setAddress2] = useState("");
   const [Amount, setAmount] = useState("");
 
   const chains1 = [
-    { name: "Chain 1s", value: "chain-1" },
+    { name: "AssetMantle", value: "mntl" },
     { name: "Chain 2s", value: "chain-2" },
   ];
   const chains2 = [
-    { name: "Chain 1", value: "chain-1" },
+    { name: "Ethereum", value: "eth" },
     { name: "Chain 2", value: "chain-2" },
   ];
 
@@ -34,10 +34,11 @@ export default function ICFormETH() {
     >
       <div className="caption d-flex gap-2 align-items-center justify-content-between">
         <select
-          className="flex-grow-1"
+          className="flex-grow-1 am-select rounded-3"
           name="chain"
           id="chain"
           value={!SwapEth ? Chain1 : Chain2}
+          disabled={true}
           onChange={(e) =>
             !SwapEth ? setChain1(e.target.value) : setChain2(e.target.value)
           }
@@ -55,7 +56,9 @@ export default function ICFormETH() {
                 ))
           )}
         </select>
-        <span>Transferable Balance : {Chain1Amount} $MNTL</span>
+        <span>
+          Transferable: {!SwapEth ? Chain1Amount : Chain2Amount} $MNTL
+        </span>
       </div>
       <InputEdit
         value={!SwapEth ? Address1 : Address2}
@@ -70,10 +73,11 @@ export default function ICFormETH() {
       </button>
       <div className="caption d-flex gap-2 align-items-center justify-content-between">
         <select
-          className="flex-grow-1"
+          className="flex-grow-1 am-select rounded-3"
           name="chain"
           id="chain"
           value={SwapEth ? Chain1 : Chain2}
+          disabled={true}
           onChange={(e) =>
             SwapEth ? setChain1(e.target.value) : setChain2(e.target.value)
           }
@@ -91,7 +95,7 @@ export default function ICFormETH() {
                 ))
           )}
         </select>
-        <span>Transferable Balance : {Chain2Amount} $MNTL</span>
+        <span>Transferable: {SwapEth ? Chain1Amount : Chain2Amount} $MNTL</span>
       </div>
       <InputEdit
         value={SwapEth ? Address1 : Address2}
@@ -101,7 +105,8 @@ export default function ICFormETH() {
         className="caption d-flex gap-2 align-items-center justify-content-between"
         htmlFor="amount"
       >
-        Amount <span>Transferable Balance : {balance} $MNTL</span>
+        Amount
+        {/* <span>Transferable: {balance} $MNTL</span> */}
       </label>
       <div className="p-3 py-2 d-flex rounded-2 gap-2 am-input">
         <input
@@ -127,6 +132,7 @@ export default function ICFormETH() {
           max
         </button>
       </div>
+      {Amount && <div className="ms-auto">Value: {Amount} $MNTL</div>}
       <button
         className="btn button-primary px-5"
         type="submit"
