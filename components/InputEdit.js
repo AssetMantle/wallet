@@ -7,7 +7,9 @@ export default function InputEdit({
   const [CanEdit, setCanEdit] = useState(false);
   return (
     <div
-      className={`p-3 py-2 d-flex rounded-2 gap-2 ${CanEdit ? "am-input" : ""}`}
+      className={`p-3 py-2 d-flex rounded-2 gap-2 ${
+        CanEdit ? "am-input" : ""
+      } am-input`}
     >
       {CanEdit ? (
         <input
