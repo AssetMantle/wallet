@@ -304,6 +304,22 @@ hr {
     outline: none;
   }
 }
+.am-select {
+  padding: 8px 16px;
+  background-color: transparent;
+  border: 1px solid $gray-200;
+  outline: none;
+  color: $primary-main;
+  & > option {
+    background-color: $gray-800;
+    padding: 8px 16px;
+    border-radius: 0;
+    &:hover {
+      color: $gray-800;
+      background-color: $primary-main;
+    }
+  }
+}
 .transitionAll {
   transition: all 0.3s ease-in-out;
 }
