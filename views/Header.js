@@ -1,10 +1,10 @@
+import Image from "next/image";
+import Link from "next/link";
 import React from "react";
-import BasicData from "../data/BasicData";
 import { MdOutlineContentCopy } from "react-icons/md";
 import { RiKey2Fill } from "react-icons/ri";
 import { VscSignOut } from "react-icons/vsc";
-import Image from "next/image";
-import Link from "next/link";
+import { BasicData } from "../data";
 
 export default function Header({ Connected, setConnected }) {
   const dataSet = {
@@ -39,7 +39,7 @@ export default function Header({ Connected, setConnected }) {
           {Connected ? (
             <div className="nav-item dropdown">
               <button
-                className="nav-link dropdown-toggle am-link text-primary"
+                className="nav-link  dropdown-toggle am-link text-primary"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >

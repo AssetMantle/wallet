@@ -1,7 +1,12 @@
-const BasicData = {
+export const BasicData = {
   logo: "/logo.svg",
   title: "Mantle Wallet",
   navs: [
+    {
+      title: "Connect",
+      href: "/",
+      variant: "am-link",
+    },
     {
       title: "Transact",
       href: "/transact",
@@ -30,5 +35,3 @@ const BasicData = {
     },
   ],
 };
-
-export default BasicData;

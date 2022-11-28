@@ -59,42 +59,6 @@ export default function Home() {
           </Heading>
         </Box>
         <WalletSection />
-        <Grid
-          templateColumns={{
-            md: "repeat(2, 1fr)",
-            lg: "repeat(3, 1fr)",
-          }}
-          gap={8}
-          mb={14}
-        >
-          {products.map((product) => (
-            <Product key={product.title} {...product}></Product>
-          ))}
-        </Grid>
-        <Grid templateColumns={{ md: "1fr 1fr" }} gap={8} mb={20}>
-          {dependencies.map((dependency) => (
-            <Dependency key={dependency.title} {...dependency}></Dependency>
-          ))}
-        </Grid>
-        <Box mb={3}>
-          <Divider />
-        </Box>
-        <Stack
-          isInline={true}
-          spacing={1}
-          justifyContent="center"
-          opacity={0.5}
-          fontSize="sm"
-        >
-          <Text>Built with</Text>
-          <Link
-            href="https://cosmology.tech/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Cosmology
-          </Link>
-        </Stack>
       </Container>
     </>
   );

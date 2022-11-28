@@ -1,15 +1,215 @@
-import React, { useState } from "react";
-import { SlReload } from "react-icons/sl";
-import { MdOutlineContentCopy } from "react-icons/md";
 import Image from "next/image";
+import React, { useReducer, useState } from "react";
+import { MdOutlineContentCopy } from "react-icons/md";
+import { chainGasFee, chainSymbol } from "../config";
+import { formConstants } from "../data";
+import {
+  fromDenom,
+  isInvalidAddress,
+  toDenom,
+  useAvailableBalance,
+} from "../data/swrStore";
+import { isObjEmpty } from "../utils/basicJavascript";
 
 export default function Transact() {
+  const { availableBalance } = useAvailableBalance();
+
+  const initialState = {
+    recipientAddress: "",
+    transferAmount: "",
+    // all error values -> errorMessages: {recipientAddressErrorMsg: "", transferAmountErrorMsg: "" }
+    errorMessages: {},
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    formDispatch({
+      type: "SUBMIT",
+    });
+    console.log("inside handleSubmit()");
+  };
+
+  const formReducer = (state = initialState, action) => {
+    switch (action.type) {
+      // handle onChange for Recipient Address Input Box
+      case "CHANGE_RECIPIENT_ADDRESS": {
+        console.log("inside CHANGE_RECIPIENT_ADDRESS");
+        // if invalid address is input, populate error message and updated recipient address
+        if (!action.payload) {
+          return {
+            ...state,
+            recipientAddress: action.payload,
+            errorMessages: {
+              ...state.errorMessages,
+              recipientAddressErrorMsg: formConstants.requiredErrorMsg,
+            },
+          };
+        } else if (isInvalidAddress(action.payload)) {
+          return {
+            ...state,
+            recipientAddress: action.payload,
+            errorMessages: {
+              ...state.errorMessages,
+              recipientAddressErrorMsg: formConstants.recipientAddressErrorMsg,
+            },
+          };
+        }
+        // if valid address, remove any previous error message set and return updated recipient address
+        else {
+          // delete the error message key if already exists
+          delete state.errorMessages.recipientAddressErrorMsg;
+          return {
+            ...state,
+            recipientAddress: action.payload,
+          };
+        }
+      }
+
+      case "CHANGE_AMOUNT": {
+        console.log(
+          "inside CHANGE_AMOUNT, action.payload: ",
+          toDenom(action.payload) + parseFloat(chainGasFee)
+        );
+        // if amount is greater than current balance, populate error message and update amount
+        if (isNaN(toDenom(action.payload))) {
+          return {
+            ...state,
+            transferAmount: action.payload,
+            errorMessages: {
+              ...state.errorMessages,
+              transferAmountErrorMsg: formConstants.requiredErrorMsg,
+            },
+          };
+        } else if (
+          isNaN(parseFloat(availableBalance)) ||
+          toDenom(action.payload) + parseFloat(chainGasFee) >
+            parseFloat(availableBalance)
+        ) {
+          return {
+            ...state,
+            transferAmount: action.payload,
+            errorMessages: {
+              ...state.errorMessages,
+              transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
+            },
+          };
+        }
+        // if valid amount, remove any previous error message set and return updated amount
+        else {
+          // delete the error message key if already exists
+          delete state.errorMessages.transferAmountErrorMsg;
+          return {
+            ...state,
+            transferAmount: action.payload,
+          };
+        }
+      }
+
+      case "SET_HALF_AMOUNT": {
+        // if available balance is invalid, set error message
+        if (
+          isNaN(parseFloat(availableBalance)) ||
+          parseFloat(availableBalance) / 2 < parseFloat(chainGasFee)
+        ) {
+          return {
+            ...state,
+            transferAmount: 0,
+            errorMessages: {
+              ...state.errorMessages,
+              transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
+            },
+          };
+        }
+        // if valid available balance then set half value
+        else {
+          // delete the error message key if already exists
+          delete state.errorMessages.transferAmountErrorMsg;
+          return {
+            ...state,
+            transferAmount: (fromDenom(availableBalance) / 2).toString(),
+          };
+        }
+      }
+
+      case "SET_MAX_AMOUNT": {
+        // if available balance is invalid, set error message
+        if (
+          isNaN(parseFloat(availableBalance)) ||
+          parseFloat(availableBalance) < parseFloat(chainGasFee)
+        ) {
+          console.log(
+            "available balance: ",
+            parseFloat(availableBalance),
+            " gas: ",
+            parseFloat(chainGasFee)
+          );
+          return {
+            ...state,
+            transferAmount: 0,
+            errorMessages: {
+              ...state.errorMessages,
+              transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
+            },
+          };
+        }
+        // if valid available balance then set half value
+        else {
+          // delete the error message key if already exists
+          delete state.errorMessages?.transferAmountErrorMsg;
+          console.log(
+            "state error message: ",
+            state.errorMessages?.transferAmountErrorMsg
+          );
+          return {
+            ...state,
+            transferAmount: fromDenom(
+              parseFloat(availableBalance) - parseFloat(chainGasFee)
+            ).toString(),
+          };
+        }
+      }
+
+      case "SUBMIT": {
+        // if any required field is blank, set error message
+
+        let localErrorMessages = state?.errorMessages;
+        if (!state.recipientAddress) {
+          localErrorMessages = {
+            ...localErrorMessages,
+            recipientAddressErrorMsg: formConstants.requiredErrorMsg,
+          };
+        }
+
+        if (!state.transferAmount) {
+          localErrorMessages = {
+            ...localErrorMessages,
+            transferAmountErrorMsg: formConstants.requiredErrorMsg,
+          };
+        }
+
+        if (!isObjEmpty(localErrorMessages)) {
+          return {
+            ...state,
+            errorMessages: {
+              ...state.errorMessages,
+              ...localErrorMessages,
+            },
+          };
+        } else {
+          return {
+            ...state,
+          };
+        }
+      }
+
+      default:
+        console.log("default case");
+    }
+  };
+
+  const [formState, formDispatch] = useReducer(formReducer, initialState);
+
   const [Tab, setTab] = useState(0);
-  const [Address, setAddress] = useState("");
-  const [Token, setToken] = useState("$MNTL");
-  const [Amount, setAmount] = useState("");
-  const balance = 100.0;
-  const gasFee = 0.3;
   const tabs = [
     { name: "Send", href: "#send" },
     { name: "Receive", href: "#receive" },
@@ -18,40 +218,25 @@ export default function Transact() {
   const WalletQrCode = "/qr-code.svg";
   const WalletAddress = "ThequickbrownfoxjumpsoverthelazydogfIfthedogr";
 
-  const handleReload = () => {
-    setAddress("");
-    setAmount("");
-    setToken("$MNTL");
-  };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
   return (
     <section className="rounded-5 p-4 bg-gray-800 width-100 d-flex flex-column gap-3 transitionAll">
       <nav className="d-flex align-items-center justify-content-between gap-3">
         <div className="d-flex gap-3 align-items-center">
-          {React.Children.toArray(
-            tabs.map((tab, index) => (
-              <button
-                className={`am-link ${Tab === index ? "" : "text-white"} body2`}
-                onClick={() => setTab(index)}
-              >
-                {tab.name}
-              </button>
-            ))
-          )}
+          {tabs.map((tab, index) => (
+            <button
+              key={index}
+              className={`am-link ${Tab === index ? "" : "text-white"} body2`}
+              onClick={() => setTab(index)}
+            >
+              {tab.name}
+            </button>
+          ))}
         </div>
-        <button className="body2 text-primary" onClick={() => handleReload()}>
-          <SlReload />
-        </button>
       </nav>
       {
         {
           0: (
-            <form
-              className="nav-bg p-3 rounded-4 d-flex flex-column gap-3"
-              onSubmit={(e) => handleSubmit(e)}
-            >
+            <>
               <label
                 className="caption d-flex gap-2 align-items-center"
                 htmlFor="recipientAddress"
@@ -63,10 +248,22 @@ export default function Transact() {
                 type="text"
                 name="recipientAddress"
                 id="recipientAddress"
-                value={Address}
+                value={formState?.recipientAddress}
                 placeholder="Enter Recipient’s Address"
-                onChange={(e) => setAddress(e.target.value)}
+                onChange={(e) =>
+                  formDispatch({
+                    type: "CHANGE_RECIPIENT_ADDRESS",
+                    payload: e.target.value,
+                  })
+                }
               />
+              <small
+                id="addressInputErrorMsg"
+                className="form-text text-danger"
+              >
+                {formState?.errorMessages?.recipientAddressErrorMsg}
+              </small>
+
               <label
                 className="caption d-flex gap-2 align-items-center"
                 htmlFor="token"
@@ -79,15 +276,19 @@ export default function Transact() {
                 name="token"
                 id="token"
                 readOnly
-                value={Token}
+                value={chainSymbol}
                 placeholder="Enter Recipient’s Token"
-                onChange={(e) => setToken(e.target.value)}
               />
+
               <label
                 className="caption d-flex gap-2 align-items-center justify-content-between"
                 htmlFor="amount"
               >
-                Amount <span>Transferable Balance : {balance} $MNTL</span>
+                Amount{" "}
+                <span>
+                  Balance : {fromDenom(availableBalance).toString()}&nbsp;
+                  {chainSymbol}
+                </span>
               </label>
               <div className="p-3 py-2 d-flex rounded-2 gap-2 am-input">
                 <input
@@ -95,32 +296,49 @@ export default function Transact() {
                   type="number"
                   name="amount"
                   id="amount"
-                  value={Amount}
+                  value={formState?.transferAmount}
                   placeholder="Enter Amount"
                   style={{ flex: "1", border: "none", outline: "none" }}
-                  onChange={(e) => setAmount(e.target.value)}
+                  onChange={(e) =>
+                    formDispatch({
+                      type: "CHANGE_AMOUNT",
+                      payload: e.target.value,
+                    })
+                  }
                 />
                 <button
                   className="bg-gray-800 p-1 px-2 text-primary"
-                  onClick={() => setAmount(balance / 2)}
+                  onClick={() =>
+                    formDispatch({
+                      type: "SET_HALF_AMOUNT",
+                    })
+                  }
                 >
                   half
                 </button>
                 <button
                   className="bg-gray-800 p-1 px-2 text-primary"
-                  onClick={() => setAmount(balance - gasFee)}
+                  onClick={() =>
+                    formDispatch({
+                      type: "SET_MAX_AMOUNT",
+                    })
+                  }
                 >
                   max
                 </button>
               </div>
+              <small id="amountInputErrorMsg" className="form-text text-danger">
+                {formState?.errorMessages?.transferAmountErrorMsg}
+              </small>
               <button
                 className="btn button-primary px-5"
                 type="submit"
-                disabled={!(Address && Token && Amount)}
+                disabled={!isObjEmpty(formState?.errorMessages)}
+                onClick={handleSubmit}
               >
                 Send
               </button>
-            </form>
+            </>
           ),
           1: (
             <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-2 align-items-center justify-content-center">
