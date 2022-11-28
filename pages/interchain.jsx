@@ -16,7 +16,7 @@ export default function Interchain() {
 
   return (
     <section className="rounded-5 p-4 bg-gray-800 width-100 d-flex flex-column gap-3 transitionAll">
-      <nav className="d-flex align-items-center justify-content-between gap-3">
+      {/* <nav className="d-flex align-items-center justify-content-between gap-3">
         <div className="d-flex gap-3 align-items-center">
           {React.Children.toArray(
             tabs.map((tab, index) => (
@@ -32,13 +32,14 @@ export default function Interchain() {
         <button className="body2 text-primary" onClick={() => handleReload()}>
           <SlReload />
         </button>
-      </nav>
-      {
+      </nav> */}
+      {/* {
         {
           0: <ICFormETH />,
           1: <ICFormPolygon />,
         }[Tab]
-      }
+      } */}
+      <ICFormPolygon />
     </section>
   );
 }
