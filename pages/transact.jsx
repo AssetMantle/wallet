@@ -236,7 +236,7 @@ export default function Transact() {
       {
         {
           0: (
-            <>
+            <div className="nav-bg rounded-4 d-flex flex-column p-3 gap-2">
               <label
                 className="caption d-flex gap-2 align-items-center"
                 htmlFor="recipientAddress"
@@ -331,14 +331,14 @@ export default function Transact() {
                 {formState?.errorMessages?.transferAmountErrorMsg}
               </small>
               <button
-                className="btn button-primary px-5"
+                className="btn button-primary px-5 ms-auto"
                 type="submit"
                 disabled={!isObjEmpty(formState?.errorMessages)}
                 onClick={handleSubmit}
               >
                 Send
               </button>
-            </>
+            </div>
           ),
           1: (
             <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-2 align-items-center justify-content-center">
