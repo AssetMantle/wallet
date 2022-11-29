@@ -127,6 +127,10 @@ body {
   @include fontRoot("Roboto", 300, 1rem);
   line-height: 100%;
 }
+.caption2 {
+  @include fontRoot("Roboto", 300, 0.8rem);
+  line-height: 100%;
+}
 
 .gradient-text {
   font-feature-settings: "liga" off;
@@ -226,8 +230,14 @@ a:hover {
 .text-gray {
   color: $gray-100;
 }
+.text-dark {
+  color: $dark-400;
+}
 .text-primary {
   color: $primary-main !important;
+}
+.text-error {
+  color: $error;
 }
 .border-color-light_gray {
   border-color: $gray-100;
@@ -322,6 +332,14 @@ hr {
 }
 .transitionAll {
   transition: all 0.3s ease-in-out;
+}
+.hoverShowChild {
+  cursor: pointer;
+  &:hover {
+    & > * {
+      display: flex !important;
+    }
+  }
 }
 
 // specific styles
