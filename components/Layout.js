@@ -15,10 +15,7 @@ export default function Layout({ children }) {
             <Balance />
             <Portfolio />
           </div>
-          <div className="col-6">{children}</div>
-          <div className="col-3">
-            <StakedToken />
-          </div>
+          <div className="col-9">{children}</div>
         </div>
       </main>
     </>
