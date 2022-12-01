@@ -16,7 +16,7 @@ export default function Header({ Connected, setConnected }) {
   };
   return (
     <header className="nav-bg">
-      <div className="container-lg d-flex align-items-center justify-content-between p-2">
+      <div className="container-xxl d-flex align-items-center justify-content-between p-3 px-4">
         <div
           className="d-flex position-relative"
           style={{ width: "min(196px,30%)", aspectRatio: "196/34" }}
