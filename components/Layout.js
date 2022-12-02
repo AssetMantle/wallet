@@ -6,6 +6,7 @@ import StakedToken from "../views/StakedToken";
 
 export default function Layout({ children }) {
   const [Connected, setConnected] = useState(false);
+
   return (
     <>
       <Header Connected={Connected} setConnected={setConnected} />

@@ -7,6 +7,8 @@ import {
   mntlUsdApi,
   placeholderAvailableBalance,
   placeholderMntlUsdValue,
+  placeholderTotalDelegations,
+  placeholderTotalUnbonding,
 } from "../config";
 import { cosmos } from "../modules";
 
@@ -99,6 +101,181 @@ export const useWalletSwr = () => {
   };
 };
 
+export const useExample = () => {
+  const data = "adasdsad";
+  const error = "wrroe";
+  return {
+    data,
+    error,
+  };
+};
+
+export const useTotalUnbonding = () => {
+  // get the connected wallet parameters from useWallet hook
+  const walletManager = useWallet();
+  // const { walletStatus, address, currentWalletInfo } = walletManager;
+
+  const address = "mantle1jxe2fpgx6twqe7nlxn4g96nej280zcemgqjmk0";
+
+  const fetchTotalUnbonding = async (url, address) => {
+    let totalUnbonding;
+
+    try {
+      const { unbonding_responses } =
+        await client.cosmos.staking.v1beta1.delegatorUnbondingDelegations({
+          delegatorAddr: address,
+        });
+
+      totalUnbonding = unbonding_responses.reduce(
+        (total, currentValue) =>
+          parseFloat(total) + parseFloat(currentValue?.entries[0]?.balance),
+        parseFloat("0")
+      );
+
+      // totalUnbonding = unbonding_responses;
+    } catch (error) {
+      console.error(`swr fetcher error: ${url}`);
+      throw error;
+    }
+    return totalUnbonding;
+  };
+
+  const { data: totalUnbonding, error } = useSwr(
+    address ? ["unbonding", address] : null,
+    fetchTotalUnbonding,
+    {
+      fallbackData: [
+        {
+          entries: [
+            {
+              initial_balance: "0",
+              balance: "0",
+            },
+          ],
+        },
+      ],
+      refreshInterval: 1000,
+      suspense: true,
+    }
+  );
+
+  return {
+    allUnbonding: totalUnbonding,
+    isLoadingUnbonding: !error && !totalUnbonding,
+    errorUnbonding: error,
+  };
+};
+
+export const useTotalRewards = () => {
+  // get the connected wallet parameters from useWallet hook
+  const walletManager = useWallet();
+  // const { walletStatus, address, currentWalletInfo } = walletManager;
+
+  const address = "mantle1jxe2fpgx6twqe7nlxn4g96nej280zcemgqjmk0";
+
+  const fetchTotalRewards = async (url, address) => {
+    let totalRewards;
+
+    try {
+      const { rewards } =
+        await client.cosmos.distribution.v1beta1.delegationTotalRewards({
+          delegatorAddress: address,
+        });
+      console.log(rewards);
+      totalRewards = rewards.reduce(
+        (total, currentValue) =>
+          parseFloat(total) + parseFloat(currentValue?.reward[0].amount),
+        parseFloat("0")
+      );
+    } catch (error) {
+      console.error(`swr fetcher error: ${url}`);
+      console.log(error);
+      throw error;
+    }
+    return totalRewards;
+  };
+  const { data: rewardsArray, error } = useSwr(
+    address ? ["rewards", address] : null,
+    fetchTotalRewards,
+    {
+      fallbackData: [
+        {
+          validator_address: "validator",
+          reward: [{ denom: "umntl", amount: "amount" }],
+        },
+      ],
+
+      refreshInterval: 1000,
+      suspense: true,
+    }
+  );
+  return {
+    allRewards: rewardsArray,
+    isLoadingRewards: !error && !rewardsArray,
+    errorUnbonding: error,
+  };
+};
+
+export const useTotalDelegated = () => {
+  // get the connected wallet parameters from useWallet hook
+  const walletManager = useWallet();
+  // const { walletStatus, address, currentWalletInfo } = walletManager;
+
+  let address = "mantle1jxe2fpgx6twqe7nlxn4g96nej280zcemgqjmk0";
+
+  // let address = null;
+  // console.log("address: ", address, " currentWalletInfo: ", currentWalletInfo);
+
+  // fetcher function for useSwr of useAvailableBalance()
+  const fetchTotalDelegations = async (url, address) => {
+    let totalDelegations;
+
+    // use a try catch block for creating rich Error object
+    try {
+      // get the data from cosmos queryClient
+      const { delegation_responses } =
+        await client.cosmos.staking.v1beta1.delegatorDelegations({
+          delegatorAddr: address,
+        });
+      totalDelegations = delegation_responses.reduce(
+        (total, currentValue) =>
+          parseFloat(total) + parseFloat(currentValue?.balance?.amount),
+        parseFloat("0")
+      );
+    } catch (error) {
+      console.error(`swr fetcher error: ${url}`);
+      throw error;
+    }
+
+    // return the data
+    return totalDelegations;
+  };
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: delegationsArray, error } = useSwr(
+    address ? ["delegations", address] : null,
+    fetchTotalDelegations,
+    {
+      fallbackData: [
+        {
+          balance: { denom: "umntl", amount: 0 },
+          delegation: {
+            delegator_address: "delegator_address",
+            validator_address: "validator_address",
+            shares: "298317289",
+          },
+        },
+      ],
+      suspense: true,
+      refreshInterval: 1000,
+    }
+  );
+  return {
+    allDelegations: delegationsArray,
+    isLoadingDelegations: !error && !delegationsArray,
+    errorDelegations: error,
+  };
+};
+
 export const useMntlUsd = () => {
   // fetcher function for useSwr of useAvailableBalance()
   const fetchMntlUsd = async (url) => {
@@ -108,7 +285,7 @@ export const useMntlUsd = () => {
     // use a try catch block for creating rich Error object
     try {
       // fetch the data from API
-      const res = fetch(mntlUsdApi);
+      const res = fetch(url);
       mntlUsdValue = res.json();
       // console.log("swr fetcher success: ", url);
     } catch (error) {
@@ -122,7 +299,7 @@ export const useMntlUsd = () => {
 
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: mntlUsdValue, error } = useSwr(
-    address ? ["mntlusd", address] : null,
+    address ? [mntlUsdApi, address] : null,
     fetchMntlUsd,
     {
       fallbackData: placeholderMntlUsdValue,
