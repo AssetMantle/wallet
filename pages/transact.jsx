@@ -2,14 +2,14 @@ import Image from "next/image";
 import React, { useReducer, useState } from "react";
 import { MdOutlineContentCopy } from "react-icons/md";
 import { chainGasFee, chainSymbol } from "../config";
-import { formConstants } from "../data";
 import {
+  formConstants,
   fromDenom,
   isInvalidAddress,
   toDenom,
   useAvailableBalance,
-} from "../data/swrStore";
-import { isObjEmpty } from "../utils/basicJavascript";
+} from "../data";
+import { isObjEmpty } from "../lib";
 import { BsChevronDown } from "react-icons/bs";
 
 export default function Transact() {

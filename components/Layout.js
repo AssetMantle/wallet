@@ -13,7 +13,7 @@ export default function Layout({ children }) {
         <div className="row px-2">
           <div className="col-3 d-flex flex-column gap-4">
             <Balance />
-            <Portfolio />
+            {/* <Portfolio /> */}
           </div>
           <div className="col-9">{children}</div>
         </div>

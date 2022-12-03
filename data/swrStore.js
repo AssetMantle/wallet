@@ -108,9 +108,9 @@ export const useMntlUsd = () => {
     // use a try catch block for creating rich Error object
     try {
       // fetch the data from API
-      const res = fetch(mntlUsdApi);
-      mntlUsdValue = res.json();
-      // console.log("swr fetcher success: ", url);
+      const res = await fetch(mntlUsdApi);
+      const resJson = await res.json();
+      mntlUsdValue = resJson?.assetmantle?.usd;
     } catch (error) {
       console.error(`swr fetcher error: ${url}`);
       throw error;
@@ -121,21 +121,18 @@ export const useMntlUsd = () => {
   };
 
   // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: mntlUsdValue, error } = useSwr(
-    address ? ["mntlusd", address] : null,
-    fetchMntlUsd,
-    {
-      fallbackData: placeholderMntlUsdValue,
-      refreshInterval: 10000,
-    }
-  );
+  const { data: mntlUsdValue, error } = useSwr("mntlusd", fetchMntlUsd, {
+    fallbackData: placeholderMntlUsdValue,
+    refreshInterval: 10000,
+    suspense: true,
+  });
 
   console.log("data: ", mntlUsdValue);
 
   return {
-    mntlUsdValue: mntlUsdValue?.assetmantle,
-    isLoading: !error && !mntlUsdValue,
-    error,
+    mntlUsdValue: mntlUsdValue,
+    // isLoadingMntlUsdValue: !error && !mntlUsdValue,
+    errorMntlUsdValue: error,
   };
 };
 
@@ -180,13 +177,14 @@ export const useAvailableBalance = () => {
     {
       fallbackData: { amount: placeholderAvailableBalance, denom },
       refreshInterval: 1000,
+      suspense: true,
     }
   );
 
   return {
     availableBalance: balanceObject?.amount,
     denom: balanceObject?.denom,
-    isLoadingAvailableBalance: !error && !balanceObject,
+    // isLoadingAvailableBalance: !error && !balanceObject,
     errorAvailableBalance: error,
   };
 };
