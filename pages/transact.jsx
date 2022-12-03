@@ -10,8 +10,10 @@ import {
   useAvailableBalance,
 } from "../data/swrStore";
 import { isObjEmpty } from "../utils/basicJavascript";
+import { BsChevronDown } from "react-icons/bs";
 
 export default function Transact() {
+  const [advanced, setAdvanced] = useState(false);
   const { availableBalance } = useAvailableBalance();
 
   const initialState = {
@@ -210,161 +212,201 @@ export default function Transact() {
   const [formState, formDispatch] = useReducer(formReducer, initialState);
 
   const [Tab, setTab] = useState(0);
-  const tabs = [
-    { name: "Send", href: "#send" },
-    { name: "Receive", href: "#receive" },
-  ];
+  const tabs = [{ name: "Send", href: "#send" }];
 
   const WalletQrCode = "/qr-code.svg";
   const WalletAddress = "ThequickbrownfoxjumpsoverthelazydogfIfthedogr";
 
   return (
-    <section className="rounded-5 p-4 bg-gray-800 width-100 d-flex flex-column gap-3 transitionAll">
-      <nav className="d-flex align-items-center justify-content-between gap-3">
-        <div className="d-flex gap-3 align-items-center">
-          {tabs.map((tab, index) => (
-            <button
-              key={index}
-              className={`am-link ${Tab === index ? "" : "text-white"} body2`}
-              onClick={() => setTab(index)}
+    <section className="row">
+      <div className="col-12 col-lg-8">
+        <div className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-2 transitionAll">
+          <nav className="d-flex align-items-center justify-content-between gap-3">
+            <div className="d-flex gap-3 align-items-center">
+              {tabs.map((tab, index) => (
+                <button
+                  key={index}
+                  className={`am-link ${
+                    Tab === index ? "" : "text-white"
+                  } body2`}
+                  onClick={() => setTab(index)}
+                >
+                  {tab.name}
+                </button>
+              ))}
+            </div>
+          </nav>
+          <div className="nav-bg rounded-4 d-flex flex-column p-3 gap-3">
+            <label
+              className="caption d-flex gap-2 align-items-center"
+              htmlFor="recipientAddress"
             >
-              {tab.name}
-            </button>
-          ))}
-        </div>
-      </nav>
-      {
-        {
-          0: (
-            <div className="nav-bg rounded-4 d-flex flex-column p-3 gap-2">
-              <label
-                className="caption d-flex gap-2 align-items-center"
-                htmlFor="recipientAddress"
-              >
-                Recipient Address
-              </label>
+              Recipient Address
+            </label>
+            <input
+              className="bg-t p-3 py-2 rounded-2 am-input"
+              type="text"
+              name="recipientAddress"
+              id="recipientAddress"
+              value={formState?.recipientAddress}
+              placeholder="Enter Recipient’s Address"
+              onChange={(e) =>
+                formDispatch({
+                  type: "CHANGE_RECIPIENT_ADDRESS",
+                  payload: e.target.value,
+                })
+              }
+            />
+            <small id="addressInputErrorMsg" className="form-text text-danger">
+              {formState?.errorMessages?.recipientAddressErrorMsg}
+            </small>
+
+            <label
+              className="caption d-flex gap-2 align-items-center"
+              htmlFor="token"
+            >
+              Token
+            </label>
+            <input
+              className="bg-t p-3 py-2 rounded-2 am-input"
+              type="text"
+              name="token"
+              id="token"
+              readOnly
+              value={chainSymbol}
+              placeholder="Enter Recipient’s Token"
+            />
+
+            <label
+              className="caption d-flex gap-2 align-items-end justify-content-between"
+              htmlFor="amount"
+            >
+              Amount{" "}
+              <small>
+                Balance : {fromDenom(availableBalance).toString()}&nbsp;
+                {chainSymbol}
+              </small>
+            </label>
+            <div className="p-3 py-2 d-flex rounded-2 gap-2 am-input">
               <input
-                className="bg-t p-3 py-2 rounded-2 am-input"
-                type="text"
-                name="recipientAddress"
-                id="recipientAddress"
-                value={formState?.recipientAddress}
-                placeholder="Enter Recipient’s Address"
+                className="bg-t"
+                type="number"
+                name="amount"
+                id="amount"
+                value={formState?.transferAmount}
+                placeholder="Enter Amount"
+                style={{ flex: "1", border: "none", outline: "none" }}
                 onChange={(e) =>
                   formDispatch({
-                    type: "CHANGE_RECIPIENT_ADDRESS",
+                    type: "CHANGE_AMOUNT",
                     payload: e.target.value,
                   })
                 }
               />
-              <small
-                id="addressInputErrorMsg"
-                className="form-text text-danger"
-              >
-                {formState?.errorMessages?.recipientAddressErrorMsg}
-              </small>
-
-              <label
-                className="caption d-flex gap-2 align-items-center"
-                htmlFor="token"
-              >
-                Token
-              </label>
-              <input
-                className="bg-t p-3 py-2 rounded-2 am-input"
-                type="text"
-                name="token"
-                id="token"
-                readOnly
-                value={chainSymbol}
-                placeholder="Enter Recipient’s Token"
-              />
-
-              <label
-                className="caption d-flex gap-2 align-items-center justify-content-between"
-                htmlFor="amount"
-              >
-                Amount{" "}
-                <span>
-                  Balance : {fromDenom(availableBalance).toString()}&nbsp;
-                  {chainSymbol}
-                </span>
-              </label>
-              <div className="p-3 py-2 d-flex rounded-2 gap-2 am-input">
-                <input
-                  className="bg-t"
-                  type="number"
-                  name="amount"
-                  id="amount"
-                  value={formState?.transferAmount}
-                  placeholder="Enter Amount"
-                  style={{ flex: "1", border: "none", outline: "none" }}
-                  onChange={(e) =>
-                    formDispatch({
-                      type: "CHANGE_AMOUNT",
-                      payload: e.target.value,
-                    })
-                  }
-                />
-                <button
-                  className="bg-gray-800 p-1 px-2 text-primary"
-                  onClick={() =>
-                    formDispatch({
-                      type: "SET_HALF_AMOUNT",
-                    })
-                  }
-                >
-                  half
-                </button>
-                <button
-                  className="bg-gray-800 p-1 px-2 text-primary"
-                  onClick={() =>
-                    formDispatch({
-                      type: "SET_MAX_AMOUNT",
-                    })
-                  }
-                >
-                  max
-                </button>
-              </div>
-              <small id="amountInputErrorMsg" className="form-text text-danger">
-                {formState?.errorMessages?.transferAmountErrorMsg}
-              </small>
               <button
-                className="btn button-primary px-5 ms-auto"
-                type="submit"
-                disabled={!isObjEmpty(formState?.errorMessages)}
-                onClick={handleSubmit}
+                className="bg-gray-800 p-1 px-2 text-primary"
+                onClick={() =>
+                  formDispatch({
+                    type: "SET_HALF_AMOUNT",
+                  })
+                }
               >
-                Send
+                half
+              </button>
+              <button
+                className="bg-gray-800 p-1 px-2 text-primary"
+                onClick={() =>
+                  formDispatch({
+                    type: "SET_MAX_AMOUNT",
+                  })
+                }
+              >
+                max
               </button>
             </div>
-          ),
-          1: (
-            <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-2 align-items-center justify-content-center">
-              <div
+            <small id="amountInputErrorMsg" className="form-text text-danger">
+              {formState?.errorMessages?.transferAmountErrorMsg}
+            </small>
+            <button
+              className="text-primary d-flex gap-2 align-items-center caption"
+              onClick={() => setAdvanced(!advanced)}
+            >
+              Advanced Details{" "}
+              <span
+                className="transitionAll d-flex align-items-center justify-content-center"
                 style={{
-                  width: "min(140px, 100%)",
-                  aspectRatio: "1/1",
-                  position: "relative",
+                  transform: advanced ? "rotate(180deg)" : "rotate(0deg)",
+                  transformOrigin: "center",
                 }}
               >
-                <Image layout="fill" src={WalletQrCode} alt="address QR code" />
-              </div>
-              <h4 className="body2 text-primary">Wallet Address</h4>
-              <button
-                className="d-flex align-items-center justify-content-center gap-2 text-center caption"
-                onClick={() => navigator.clipboard.writeText(dataSet.address)}
-              >
-                {WalletAddress}
-                <span className="text-primary">
-                  <MdOutlineContentCopy />
-                </span>
-              </button>
+                <BsChevronDown />
+              </span>
+            </button>
+            {advanced && (
+              <>
+                <label
+                  className="caption d-flex gap-2 align-items-center pt-2"
+                  htmlFor="memo"
+                >
+                  Memo
+                </label>
+                <input
+                  className="bg-t p-3 py-2 rounded-2 am-input"
+                  type="text"
+                  name="memo"
+                  id="memo"
+                  placeholder="Enter Memo"
+                />
+              </>
+            )}
+            <button
+              className="btn button-primary px-5 ms-auto"
+              type="submit"
+              disabled={!isObjEmpty(formState?.errorMessages)}
+              onClick={handleSubmit}
+            >
+              Send
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className="col-12 pt-3 pt-lg-0 col-lg-4">
+        <div className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-2 transitionAll">
+          <nav className="d-flex align-items-center justify-content-between gap-3">
+            <div className="d-flex gap-3 align-items-center">
+              <button className={`am-link body2`}>Receive</button>
             </div>
-          ),
-        }[Tab]
-      }
+          </nav>
+          <div className="nav-bg rounded-4 d-flex flex-column p-3 gap-2 align-items-center justify-content-center">
+            <div
+              style={{
+                width: "min(140px, 100%)",
+                aspectRatio: "1/1",
+                position: "relative",
+              }}
+            >
+              <Image layout="fill" src={WalletQrCode} alt="address QR code" />
+            </div>
+            <h4 className="body2 text-primary">Wallet Address</h4>
+            <button
+              className="d-flex align-items-center justify-content-center gap-2 text-center caption"
+              onClick={() => navigator.clipboard.writeText(WalletAddress)}
+              style={{ wordBreak: "break-all" }}
+            >
+              {`${WalletAddress.substring(
+                0,
+                12
+              )}.......${WalletAddress.substring(
+                WalletAddress.length - 9,
+                WalletAddress.length
+              )}`}
+              <span className="text-primary">
+                <MdOutlineContentCopy />
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }
