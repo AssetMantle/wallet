@@ -197,6 +197,37 @@ a:hover {
   @include LinkRoot();
 }
 
+.am-nav-item {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 115%;
+    height: 2.5px;
+    background-color: $primary-main;
+    transform: translateX(-50%) translateY(190%) scaleX(0);
+    border-radius: 3px;
+    transition: all 200ms ease-in-out;
+    transform-origin: left;
+  }
+  &:hover {
+    &::after {
+      transform: translateX(-50%) translateY(190%) scaleX(1);
+    }
+  }
+  &.active {
+    & > span {
+      color: $primary-main !important;
+    }
+    color: $primary-main !important;
+    &::after {
+      transform: translateX(-50%) translateY(190%) scaleX(1);
+    }
+  }
+}
+
 // customs as needed
 // globally
 .nav-bg {
