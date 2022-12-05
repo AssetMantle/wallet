@@ -1,3 +1,6 @@
+import { IoSwapHorizontal } from "react-icons/io5";
+import { AiOutlineQuestionCircle } from "react-icons/ai";
+
 export const BasicData = {
   logo: "/logo.svg",
   title: "Mantle Wallet",
@@ -11,6 +14,7 @@ export const BasicData = {
       title: "Transact",
       href: "/transact",
       variant: "am-link",
+      icon: <IoSwapHorizontal />,
     },
     {
       title: "Delegate",
@@ -32,6 +36,14 @@ export const BasicData = {
       title: "Interchain",
       href: "/interchain",
       variant: "am-link",
+    },
+  ],
+  rightNav: [
+    {
+      title: "Help",
+      href: "",
+      variant: "am-link",
+      icon: <AiOutlineQuestionCircle />,
     },
   ],
 };
