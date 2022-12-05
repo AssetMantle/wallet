@@ -13,7 +13,7 @@ import Layout from "../components/Layout";
 
 function CreateCosmosApp({ Component, pageProps }) {
   useEffect(() => {
-    import("bootstrap/dist/js/bootstrap");
+    require("bootstrap/dist/js/bootstrap.bundle.min.js");
   }, []);
   const signerOptions = {
     // stargate: (_chain: Chain) => {
