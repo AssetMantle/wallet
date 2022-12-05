@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React, { useReducer, useState } from "react";
 import { MdOutlineContentCopy } from "react-icons/md";
-import { chainGasFee, chainSymbol } from "../config";
+import { chainDenom, chainGasFee, chainSymbol } from "../config";
 import {
   formConstants,
   fromDenom,
@@ -11,10 +11,14 @@ import {
 } from "../data";
 import { isObjEmpty } from "../lib";
 import { BsChevronDown } from "react-icons/bs";
+import { cosmos } from "../modules";
+import { useWallet } from "@cosmos-kit/react";
 
 export default function Transact() {
   const [advanced, setAdvanced] = useState(false);
   const { availableBalance } = useAvailableBalance();
+  const walletManager = useWallet();
+  const { getSigningStargateClient, address } = walletManager;
 
   const initialState = {
     recipientAddress: "",
@@ -23,12 +27,47 @@ export default function Transact() {
     errorMessages: {},
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     formDispatch({
       type: "SUBMIT",
     });
     console.log("inside handleSubmit()");
+    const stargateClient = await getSigningStargateClient();
+    if (!stargateClient || !address) {
+      console.error("stargateClient undefined or address undefined.");
+      return;
+    }
+    const amountInDenom = toDenom(formState.transferAmount).toString();
+    const toAddress = formState.recipientAddress.toString();
+    const fromAddress = address;
+    const denom = chainDenom;
+    const memo = "";
+    const { send } = cosmos.bank.v1beta1.MessageComposer.withTypeUrl;
+    const msg = send({
+      fromAddress,
+      amount: [
+        {
+          denom,
+          amount: amountInDenom,
+        },
+      ],
+      toAddress,
+    });
+
+    const fee = {
+      amount: [{ denom, amount: "864" }],
+      gas: "86364",
+    };
+
+    console.log("fromAddress: ", fromAddress);
+
+    await stargateClient.signAndBroadcast(
+      fromAddress.toString(),
+      [msg],
+      fee,
+      memo
+    );
   };
 
   const formReducer = (state = initialState, action) => {
