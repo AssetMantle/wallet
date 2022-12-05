@@ -1,5 +1,8 @@
-import { IoSwapHorizontal } from "react-icons/io5";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
+import { GiServerRack } from "react-icons/gi";
+import { IoSwapHorizontal } from "react-icons/io5";
+import { BsArrowUpRight } from "react-icons/bs";
+import { BiBookOpen } from "react-icons/bi";
 
 export const BasicData = {
   logo: "/logo.svg",
@@ -17,6 +20,12 @@ export const BasicData = {
       icon: <IoSwapHorizontal />,
     },
     {
+      title: "Vote",
+      href: "/vote",
+      variant: "am-link",
+      icon: <GiServerRack />,
+    },
+    {
       title: "Delegate",
       href: "/delegate",
       variant: "am-link",
@@ -26,6 +35,8 @@ export const BasicData = {
       href: "https://explorer.assetmantle.one/",
       variant: "am-link",
       target: "_blank",
+      icon: <BiBookOpen />,
+      endIcon: <BsArrowUpRight />,
     },
     {
       title: "IBC Transaction",
