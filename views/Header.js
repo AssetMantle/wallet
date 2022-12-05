@@ -50,6 +50,9 @@ export default function Header({ Connected, setConnected }) {
                       <span className="caption">{navItem.icon}</span>
                     )}
                     {navItem.title}
+                    {navItem.endIcon && (
+                      <span className="caption">{navItem.endIcon}</span>
+                    )}
                   </a>
                 </Link>
               ))
@@ -71,6 +74,9 @@ export default function Header({ Connected, setConnected }) {
                       <span className="caption">{navItem.icon}</span>
                     )}
                     {navItem.title}
+                    {navItem.endIcon && (
+                      <span className="caption">{navItem.endIcon}</span>
+                    )}
                   </a>
                 </Link>
               ))
