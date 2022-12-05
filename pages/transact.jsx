@@ -266,8 +266,11 @@ export default function Transact() {
               />
               <small
                 id="addressInputErrorMsg"
-                className="form-text text-danger"
+                className="form-text text-danger d-flex align-items-center gap-1"
               >
+                {formState?.errorMessages?.recipientAddressErrorMsg && (
+                  <AiOutlineInfoCircle />
+                )}{" "}
                 {formState?.errorMessages?.recipientAddressErrorMsg}
               </small>
             </div>
@@ -337,7 +340,13 @@ export default function Transact() {
                   max
                 </button>
               </div>
-              <small id="amountInputErrorMsg" className="form-text text-danger">
+              <small
+                id="amountInputErrorMsg"
+                className="form-text text-danger d-flex align-items-center gap-1"
+              >
+                {formState?.errorMessages?.transferAmountErrorMsg && (
+                  <AiOutlineInfoCircle />
+                )}{" "}
                 {formState?.errorMessages?.transferAmountErrorMsg}
               </small>
             </div>
