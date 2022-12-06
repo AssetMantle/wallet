@@ -1,6 +1,6 @@
-import { Timestamp } from "../../../google/protobuf/timestamp";
+import { Timestamp, TimestampSDKType } from "../../../google/protobuf/timestamp";
 import * as _m0 from "protobufjs/minimal";
-import { toTimestamp, Long, fromTimestamp, DeepPartial } from "../../../helpers";
+import { Long, isSet, fromJsonTimestamp, fromTimestamp } from "../../../helpers";
 /**
  * A TWAP record should be indexed in state by pool_id, (asset pair), timestamp
  * The asset pair assets should be lexicographically sorted.
@@ -27,7 +27,7 @@ export interface TwapRecord {
    * machine, mapping prior block heights within {TIME RANGE} to times.
    */
 
-  time?: Date;
+  time?: Timestamp;
   /**
    * We store the last spot prices in the struct, so that we can interpolate
    * accumulator values for times between when accumulator records are stored.
@@ -43,7 +43,7 @@ export interface TwapRecord {
    * TWAP, due to an unforeseen underlying error.
    */
 
-  lastErrorTime?: Date;
+  lastErrorTime?: Timestamp;
 }
 /**
  * A TWAP record should be indexed in state by pool_id, (asset pair), timestamp
@@ -71,7 +71,7 @@ export interface TwapRecordSDKType {
    * machine, mapping prior block heights within {TIME RANGE} to times.
    */
 
-  time?: Date;
+  time?: TimestampSDKType;
   /**
    * We store the last spot prices in the struct, so that we can interpolate
    * accumulator values for times between when accumulator records are stored.
@@ -87,7 +87,7 @@ export interface TwapRecordSDKType {
    * TWAP, due to an unforeseen underlying error.
    */
 
-  last_error_time?: Date;
+  last_error_time?: TimestampSDKType;
 }
 
 function createBaseTwapRecord(): TwapRecord {
@@ -124,7 +124,7 @@ export const TwapRecord = {
     }
 
     if (message.time !== undefined) {
-      Timestamp.encode(toTimestamp(message.time), writer.uint32(42).fork()).ldelim();
+      Timestamp.encode(message.time, writer.uint32(42).fork()).ldelim();
     }
 
     if (message.p0LastSpotPrice !== "") {
@@ -144,7 +144,7 @@ export const TwapRecord = {
     }
 
     if (message.lastErrorTime !== undefined) {
-      Timestamp.encode(toTimestamp(message.lastErrorTime), writer.uint32(90).fork()).ldelim();
+      Timestamp.encode(message.lastErrorTime, writer.uint32(90).fork()).ldelim();
     }
 
     return writer;
@@ -176,7 +176,7 @@ export const TwapRecord = {
           break;
 
         case 5:
-          message.time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.time = Timestamp.decode(reader, reader.uint32());
           break;
 
         case 6:
@@ -196,7 +196,7 @@ export const TwapRecord = {
           break;
 
         case 11:
-          message.lastErrorTime = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.lastErrorTime = Timestamp.decode(reader, reader.uint32());
           break;
 
         default:
@@ -208,18 +208,48 @@ export const TwapRecord = {
     return message;
   },
 
-  fromPartial(object: DeepPartial<TwapRecord>): TwapRecord {
+  fromJSON(object: any): TwapRecord {
+    return {
+      poolId: isSet(object.poolId) ? Long.fromValue(object.poolId) : Long.UZERO,
+      asset0Denom: isSet(object.asset0Denom) ? String(object.asset0Denom) : "",
+      asset1Denom: isSet(object.asset1Denom) ? String(object.asset1Denom) : "",
+      height: isSet(object.height) ? Long.fromValue(object.height) : Long.ZERO,
+      time: isSet(object.time) ? fromJsonTimestamp(object.time) : undefined,
+      p0LastSpotPrice: isSet(object.p0LastSpotPrice) ? String(object.p0LastSpotPrice) : "",
+      p1LastSpotPrice: isSet(object.p1LastSpotPrice) ? String(object.p1LastSpotPrice) : "",
+      p0ArithmeticTwapAccumulator: isSet(object.p0ArithmeticTwapAccumulator) ? String(object.p0ArithmeticTwapAccumulator) : "",
+      p1ArithmeticTwapAccumulator: isSet(object.p1ArithmeticTwapAccumulator) ? String(object.p1ArithmeticTwapAccumulator) : "",
+      lastErrorTime: isSet(object.lastErrorTime) ? fromJsonTimestamp(object.lastErrorTime) : undefined
+    };
+  },
+
+  toJSON(message: TwapRecord): unknown {
+    const obj: any = {};
+    message.poolId !== undefined && (obj.poolId = (message.poolId || Long.UZERO).toString());
+    message.asset0Denom !== undefined && (obj.asset0Denom = message.asset0Denom);
+    message.asset1Denom !== undefined && (obj.asset1Denom = message.asset1Denom);
+    message.height !== undefined && (obj.height = (message.height || Long.ZERO).toString());
+    message.time !== undefined && (obj.time = fromTimestamp(message.time).toISOString());
+    message.p0LastSpotPrice !== undefined && (obj.p0LastSpotPrice = message.p0LastSpotPrice);
+    message.p1LastSpotPrice !== undefined && (obj.p1LastSpotPrice = message.p1LastSpotPrice);
+    message.p0ArithmeticTwapAccumulator !== undefined && (obj.p0ArithmeticTwapAccumulator = message.p0ArithmeticTwapAccumulator);
+    message.p1ArithmeticTwapAccumulator !== undefined && (obj.p1ArithmeticTwapAccumulator = message.p1ArithmeticTwapAccumulator);
+    message.lastErrorTime !== undefined && (obj.lastErrorTime = fromTimestamp(message.lastErrorTime).toISOString());
+    return obj;
+  },
+
+  fromPartial(object: Partial<TwapRecord>): TwapRecord {
     const message = createBaseTwapRecord();
     message.poolId = object.poolId !== undefined && object.poolId !== null ? Long.fromValue(object.poolId) : Long.UZERO;
     message.asset0Denom = object.asset0Denom ?? "";
     message.asset1Denom = object.asset1Denom ?? "";
     message.height = object.height !== undefined && object.height !== null ? Long.fromValue(object.height) : Long.ZERO;
-    message.time = object.time ?? undefined;
+    message.time = object.time !== undefined && object.time !== null ? Timestamp.fromPartial(object.time) : undefined;
     message.p0LastSpotPrice = object.p0LastSpotPrice ?? "";
     message.p1LastSpotPrice = object.p1LastSpotPrice ?? "";
     message.p0ArithmeticTwapAccumulator = object.p0ArithmeticTwapAccumulator ?? "";
     message.p1ArithmeticTwapAccumulator = object.p1ArithmeticTwapAccumulator ?? "";
-    message.lastErrorTime = object.lastErrorTime ?? undefined;
+    message.lastErrorTime = object.lastErrorTime !== undefined && object.lastErrorTime !== null ? Timestamp.fromPartial(object.lastErrorTime) : undefined;
     return message;
   }
 

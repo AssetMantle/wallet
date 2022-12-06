@@ -1,20 +1,20 @@
-import { Timestamp } from "../../../google/protobuf/timestamp";
+import { Timestamp, TimestampSDKType } from "../../../google/protobuf/timestamp";
 import { Params, ParamsSDKType } from "./genesis";
 import * as _m0 from "protobufjs/minimal";
-import { toTimestamp, Long, fromTimestamp, DeepPartial } from "../../../helpers";
+import { Long, isSet, fromJsonTimestamp, fromTimestamp } from "../../../helpers";
 export interface ArithmeticTwapRequest {
   poolId: Long;
   baseAsset: string;
   quoteAsset: string;
-  startTime?: Date;
-  endTime?: Date;
+  startTime?: Timestamp;
+  endTime?: Timestamp;
 }
 export interface ArithmeticTwapRequestSDKType {
   pool_id: Long;
   base_asset: string;
   quote_asset: string;
-  start_time?: Date;
-  end_time?: Date;
+  start_time?: TimestampSDKType;
+  end_time?: TimestampSDKType;
 }
 export interface ArithmeticTwapResponse {
   arithmeticTwap: string;
@@ -26,13 +26,13 @@ export interface ArithmeticTwapToNowRequest {
   poolId: Long;
   baseAsset: string;
   quoteAsset: string;
-  startTime?: Date;
+  startTime?: Timestamp;
 }
 export interface ArithmeticTwapToNowRequestSDKType {
   pool_id: Long;
   base_asset: string;
   quote_asset: string;
-  start_time?: Date;
+  start_time?: TimestampSDKType;
 }
 export interface ArithmeticTwapToNowResponse {
   arithmeticTwap: string;
@@ -74,11 +74,11 @@ export const ArithmeticTwapRequest = {
     }
 
     if (message.startTime !== undefined) {
-      Timestamp.encode(toTimestamp(message.startTime), writer.uint32(34).fork()).ldelim();
+      Timestamp.encode(message.startTime, writer.uint32(34).fork()).ldelim();
     }
 
     if (message.endTime !== undefined) {
-      Timestamp.encode(toTimestamp(message.endTime), writer.uint32(42).fork()).ldelim();
+      Timestamp.encode(message.endTime, writer.uint32(42).fork()).ldelim();
     }
 
     return writer;
@@ -106,11 +106,11 @@ export const ArithmeticTwapRequest = {
           break;
 
         case 4:
-          message.startTime = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.startTime = Timestamp.decode(reader, reader.uint32());
           break;
 
         case 5:
-          message.endTime = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.endTime = Timestamp.decode(reader, reader.uint32());
           break;
 
         default:
@@ -122,13 +122,33 @@ export const ArithmeticTwapRequest = {
     return message;
   },
 
-  fromPartial(object: DeepPartial<ArithmeticTwapRequest>): ArithmeticTwapRequest {
+  fromJSON(object: any): ArithmeticTwapRequest {
+    return {
+      poolId: isSet(object.poolId) ? Long.fromValue(object.poolId) : Long.UZERO,
+      baseAsset: isSet(object.baseAsset) ? String(object.baseAsset) : "",
+      quoteAsset: isSet(object.quoteAsset) ? String(object.quoteAsset) : "",
+      startTime: isSet(object.startTime) ? fromJsonTimestamp(object.startTime) : undefined,
+      endTime: isSet(object.endTime) ? fromJsonTimestamp(object.endTime) : undefined
+    };
+  },
+
+  toJSON(message: ArithmeticTwapRequest): unknown {
+    const obj: any = {};
+    message.poolId !== undefined && (obj.poolId = (message.poolId || Long.UZERO).toString());
+    message.baseAsset !== undefined && (obj.baseAsset = message.baseAsset);
+    message.quoteAsset !== undefined && (obj.quoteAsset = message.quoteAsset);
+    message.startTime !== undefined && (obj.startTime = fromTimestamp(message.startTime).toISOString());
+    message.endTime !== undefined && (obj.endTime = fromTimestamp(message.endTime).toISOString());
+    return obj;
+  },
+
+  fromPartial(object: Partial<ArithmeticTwapRequest>): ArithmeticTwapRequest {
     const message = createBaseArithmeticTwapRequest();
     message.poolId = object.poolId !== undefined && object.poolId !== null ? Long.fromValue(object.poolId) : Long.UZERO;
     message.baseAsset = object.baseAsset ?? "";
     message.quoteAsset = object.quoteAsset ?? "";
-    message.startTime = object.startTime ?? undefined;
-    message.endTime = object.endTime ?? undefined;
+    message.startTime = object.startTime !== undefined && object.startTime !== null ? Timestamp.fromPartial(object.startTime) : undefined;
+    message.endTime = object.endTime !== undefined && object.endTime !== null ? Timestamp.fromPartial(object.endTime) : undefined;
     return message;
   }
 
@@ -171,7 +191,19 @@ export const ArithmeticTwapResponse = {
     return message;
   },
 
-  fromPartial(object: DeepPartial<ArithmeticTwapResponse>): ArithmeticTwapResponse {
+  fromJSON(object: any): ArithmeticTwapResponse {
+    return {
+      arithmeticTwap: isSet(object.arithmeticTwap) ? String(object.arithmeticTwap) : ""
+    };
+  },
+
+  toJSON(message: ArithmeticTwapResponse): unknown {
+    const obj: any = {};
+    message.arithmeticTwap !== undefined && (obj.arithmeticTwap = message.arithmeticTwap);
+    return obj;
+  },
+
+  fromPartial(object: Partial<ArithmeticTwapResponse>): ArithmeticTwapResponse {
     const message = createBaseArithmeticTwapResponse();
     message.arithmeticTwap = object.arithmeticTwap ?? "";
     return message;
@@ -203,7 +235,7 @@ export const ArithmeticTwapToNowRequest = {
     }
 
     if (message.startTime !== undefined) {
-      Timestamp.encode(toTimestamp(message.startTime), writer.uint32(34).fork()).ldelim();
+      Timestamp.encode(message.startTime, writer.uint32(34).fork()).ldelim();
     }
 
     return writer;
@@ -231,7 +263,7 @@ export const ArithmeticTwapToNowRequest = {
           break;
 
         case 4:
-          message.startTime = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.startTime = Timestamp.decode(reader, reader.uint32());
           break;
 
         default:
@@ -243,12 +275,30 @@ export const ArithmeticTwapToNowRequest = {
     return message;
   },
 
-  fromPartial(object: DeepPartial<ArithmeticTwapToNowRequest>): ArithmeticTwapToNowRequest {
+  fromJSON(object: any): ArithmeticTwapToNowRequest {
+    return {
+      poolId: isSet(object.poolId) ? Long.fromValue(object.poolId) : Long.UZERO,
+      baseAsset: isSet(object.baseAsset) ? String(object.baseAsset) : "",
+      quoteAsset: isSet(object.quoteAsset) ? String(object.quoteAsset) : "",
+      startTime: isSet(object.startTime) ? fromJsonTimestamp(object.startTime) : undefined
+    };
+  },
+
+  toJSON(message: ArithmeticTwapToNowRequest): unknown {
+    const obj: any = {};
+    message.poolId !== undefined && (obj.poolId = (message.poolId || Long.UZERO).toString());
+    message.baseAsset !== undefined && (obj.baseAsset = message.baseAsset);
+    message.quoteAsset !== undefined && (obj.quoteAsset = message.quoteAsset);
+    message.startTime !== undefined && (obj.startTime = fromTimestamp(message.startTime).toISOString());
+    return obj;
+  },
+
+  fromPartial(object: Partial<ArithmeticTwapToNowRequest>): ArithmeticTwapToNowRequest {
     const message = createBaseArithmeticTwapToNowRequest();
     message.poolId = object.poolId !== undefined && object.poolId !== null ? Long.fromValue(object.poolId) : Long.UZERO;
     message.baseAsset = object.baseAsset ?? "";
     message.quoteAsset = object.quoteAsset ?? "";
-    message.startTime = object.startTime ?? undefined;
+    message.startTime = object.startTime !== undefined && object.startTime !== null ? Timestamp.fromPartial(object.startTime) : undefined;
     return message;
   }
 
@@ -291,7 +341,19 @@ export const ArithmeticTwapToNowResponse = {
     return message;
   },
 
-  fromPartial(object: DeepPartial<ArithmeticTwapToNowResponse>): ArithmeticTwapToNowResponse {
+  fromJSON(object: any): ArithmeticTwapToNowResponse {
+    return {
+      arithmeticTwap: isSet(object.arithmeticTwap) ? String(object.arithmeticTwap) : ""
+    };
+  },
+
+  toJSON(message: ArithmeticTwapToNowResponse): unknown {
+    const obj: any = {};
+    message.arithmeticTwap !== undefined && (obj.arithmeticTwap = message.arithmeticTwap);
+    return obj;
+  },
+
+  fromPartial(object: Partial<ArithmeticTwapToNowResponse>): ArithmeticTwapToNowResponse {
     const message = createBaseArithmeticTwapToNowResponse();
     message.arithmeticTwap = object.arithmeticTwap ?? "";
     return message;
@@ -326,7 +388,16 @@ export const ParamsRequest = {
     return message;
   },
 
-  fromPartial(_: DeepPartial<ParamsRequest>): ParamsRequest {
+  fromJSON(_: any): ParamsRequest {
+    return {};
+  },
+
+  toJSON(_: ParamsRequest): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(_: Partial<ParamsRequest>): ParamsRequest {
     const message = createBaseParamsRequest();
     return message;
   }
@@ -370,7 +441,19 @@ export const ParamsResponse = {
     return message;
   },
 
-  fromPartial(object: DeepPartial<ParamsResponse>): ParamsResponse {
+  fromJSON(object: any): ParamsResponse {
+    return {
+      params: isSet(object.params) ? Params.fromJSON(object.params) : undefined
+    };
+  },
+
+  toJSON(message: ParamsResponse): unknown {
+    const obj: any = {};
+    message.params !== undefined && (obj.params = message.params ? Params.toJSON(message.params) : undefined);
+    return obj;
+  },
+
+  fromPartial(object: Partial<ParamsResponse>): ParamsResponse {
     const message = createBaseParamsResponse();
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
     return message;
