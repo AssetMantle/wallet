@@ -1,30 +1,36 @@
+import { useWallet } from "@cosmos-kit/react";
 import Image from "next/image";
 import React, { useReducer, useState } from "react";
+import { AiOutlineInfoCircle } from "react-icons/ai";
+import { BsChevronDown } from "react-icons/bs";
 import { MdOutlineContentCopy } from "react-icons/md";
-import { chainDenom, chainGasFee, chainSymbol } from "../config";
+import Tooltip from "../components/Tooltip";
+import {
+  defaultChainGasFee,
+  defaultChainMemoSize,
+  defaultChainName,
+  defaultChainSymbol,
+} from "../config";
 import {
   formConstants,
   fromDenom,
   isInvalidAddress,
+  sendTokensTxn,
   toDenom,
   useAvailableBalance,
 } from "../data";
 import { isObjEmpty } from "../lib";
-import { AiOutlineInfoCircle } from "react-icons/ai";
-import { BsChevronDown } from "react-icons/bs";
-import Tooltip from "../components/Tooltip";
-import { cosmos } from "../modules";
-import { useWallet } from "@cosmos-kit/react";
 
 export default function Transact() {
   const [advanced, setAdvanced] = useState(false);
   const { availableBalance } = useAvailableBalance();
   const walletManager = useWallet();
-  const { getSigningStargateClient, address } = walletManager;
+  const { getSigningStargateClient, address, status } = walletManager;
 
   const initialState = {
     recipientAddress: "",
     transferAmount: "",
+    memo: "",
     // all error values -> errorMessages: {recipientAddressErrorMsg: "", transferAmountErrorMsg: "" }
     errorMessages: {},
   };
@@ -35,41 +41,14 @@ export default function Transact() {
       type: "SUBMIT",
     });
     console.log("inside handleSubmit()");
-    const stargateClient = await getSigningStargateClient();
-    if (!stargateClient || !address) {
-      console.error("stargateClient undefined or address undefined.");
-      return;
-    }
-    const amountInDenom = toDenom(formState.transferAmount).toString();
-    const toAddress = formState.recipientAddress.toString();
-    const fromAddress = address;
-    const denom = chainDenom;
-    const memo = "";
-    const { send } = cosmos.bank.v1beta1.MessageComposer.withTypeUrl;
-    const msg = send({
-      fromAddress,
-      amount: [
-        {
-          denom,
-          amount: amountInDenom,
-        },
-      ],
-      toAddress,
-    });
-
-    const fee = {
-      amount: [{ denom, amount: "864" }],
-      gas: "86364",
-    };
-
-    console.log("fromAddress: ", fromAddress);
-
-    await stargateClient.signAndBroadcast(
-      fromAddress.toString(),
-      [msg],
-      fee,
-      memo
+    const { response, error } = await sendTokensTxn(
+      address,
+      formState.recipientAddress,
+      formState.transferAmount,
+      formState.memo,
+      { getSigningStargateClient }
     );
+    console.log("response: ", response, " error: ", error);
   };
 
   const formReducer = (state = initialState, action) => {
@@ -111,7 +90,7 @@ export default function Transact() {
       case "CHANGE_AMOUNT": {
         console.log(
           "inside CHANGE_AMOUNT, action.payload: ",
-          toDenom(action.payload) + parseFloat(chainGasFee)
+          toDenom(action.payload) + parseFloat(defaultChainGasFee)
         );
         // if amount is greater than current balance, populate error message and update amount
         if (isNaN(toDenom(action.payload))) {
@@ -125,7 +104,7 @@ export default function Transact() {
           };
         } else if (
           isNaN(parseFloat(availableBalance)) ||
-          toDenom(action.payload) + parseFloat(chainGasFee) >
+          toDenom(action.payload) + parseFloat(defaultChainGasFee) >
             parseFloat(availableBalance)
         ) {
           return {
@@ -152,7 +131,7 @@ export default function Transact() {
         // if available balance is invalid, set error message
         if (
           isNaN(parseFloat(availableBalance)) ||
-          parseFloat(availableBalance) / 2 < parseFloat(chainGasFee)
+          parseFloat(availableBalance) / 2 < parseFloat(defaultChainGasFee)
         ) {
           return {
             ...state,
@@ -178,13 +157,13 @@ export default function Transact() {
         // if available balance is invalid, set error message
         if (
           isNaN(parseFloat(availableBalance)) ||
-          parseFloat(availableBalance) < parseFloat(chainGasFee)
+          parseFloat(availableBalance) < parseFloat(defaultChainGasFee)
         ) {
           console.log(
             "available balance: ",
             parseFloat(availableBalance),
             " gas: ",
-            parseFloat(chainGasFee)
+            parseFloat(defaultChainGasFee)
           );
           return {
             ...state,
@@ -206,8 +185,24 @@ export default function Transact() {
           return {
             ...state,
             transferAmount: fromDenom(
-              parseFloat(availableBalance) - parseFloat(chainGasFee)
+              parseFloat(availableBalance) - parseFloat(defaultChainGasFee)
             ).toString(),
+          };
+        }
+      }
+
+      case "CHANGE_MEMO": {
+        console.log("inside CHANGE_MEMO");
+        // if the memo size limit is exceeded
+        console.log("memo: "), state.memo;
+        if (action?.payload?.toString()?.length < defaultChainMemoSize) {
+          return {
+            ...state,
+            memo: action.payload,
+          };
+        } else {
+          return {
+            ...state,
           };
         }
       }
@@ -326,7 +321,7 @@ export default function Transact() {
               name="token"
               id="token"
               readOnly
-              value={chainSymbol}
+              value={defaultChainSymbol}
               placeholder="Enter Recipient’s Token"
             />
 
@@ -337,7 +332,7 @@ export default function Transact() {
               Amount{" "}
               <small>
                 Balance : {fromDenom(availableBalance).toString()}&nbsp;
-                {chainSymbol}
+                {defaultChainSymbol}
               </small>
             </label>
 
@@ -423,6 +418,13 @@ export default function Transact() {
                   name="memo"
                   id="memo"
                   placeholder="Enter Memo"
+                  value={formState.memo}
+                  onChange={(e) =>
+                    formDispatch({
+                      type: "CHANGE_MEMO",
+                      payload: e.target.value,
+                    })
+                  }
                 />
               </>
             )}

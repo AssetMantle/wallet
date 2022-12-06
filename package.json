@@ -5,7 +5,7 @@
   "description": "Default wallet app for AssetMantle",
   "homepage": "https://wallet.assetmantle.one/",
   "main": "app/index.jsx",
-  "author": "Kamlesh P <kamlesh@assetmantle.one>",
+  "author": "KOMBOS <kamlesh@assetmantle.one>",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -37,6 +37,7 @@
     "@emotion/react": "11.10.5",
     "@emotion/styled": "11.10.5",
     "@osmonauts/lcd": "^0.8.0",
+    "bignumber.js": "^9.1.1",
     "bootstrap": "^5.2.2",
     "chain-registry": "1.4.0",
     "framer-motion": "7.6.5",
