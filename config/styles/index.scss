@@ -356,6 +356,16 @@ hr {
     outline: none;
   }
 }
+.am-input-secondary {
+  background: transparent;
+  border: none;
+  outline: none;
+  &:hover,
+  &:focus {
+    border: none;
+    outline: none;
+  }
+}
 .am-select {
   padding: 8px 16px;
   background-color: transparent;
