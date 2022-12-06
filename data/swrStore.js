@@ -423,13 +423,14 @@ export const useAvailableBalance = () => {
     {
       fallbackData: { amount: placeholderAvailableBalance, denom },
       refreshInterval: 1000,
+      suspense: true,
     }
   );
 
   return {
     availableBalance: balanceObject?.amount,
     denom: balanceObject?.denom,
-    isLoadingAvailableBalance: !error && !balanceObject,
+    // isLoadingAvailableBalance: !error && !balanceObject,
     errorAvailableBalance: error,
   };
 };

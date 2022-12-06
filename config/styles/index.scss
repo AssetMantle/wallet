@@ -66,7 +66,7 @@ $background-selected-tag: $yellow-900;
 body {
   background-color: $dark-200 !important;
   color: $primary-light;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .my-16 {
@@ -195,6 +195,40 @@ a:hover {
 
 .am-link {
   @include LinkRoot();
+}
+
+.am-nav-item {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 115%;
+    height: 2.5px;
+    background-color: $primary-main;
+    transform: translateX(-50%) translateY(190%) scaleX(0);
+    border-radius: 3px;
+    transition: all 200ms ease-in-out;
+    transform-origin: left;
+  }
+  &:hover {
+    & > span {
+      color: $primary-main;
+    }
+    &::after {
+      transform: translateX(-50%) translateY(190%) scaleX(1);
+    }
+  }
+  &.active {
+    color: $primary-main !important;
+    & > span {
+      color: $primary-main !important;
+    }
+    &::after {
+      transform: translateX(-50%) translateY(190%) scaleX(1);
+    }
+  }
 }
 
 // customs as needed
@@ -343,6 +377,32 @@ hr {
 }
 
 // specific styles
+.box-nav {
+  border: 2px solid $gray-500;
+  border-radius: 4px;
+  &-item {
+    color: $primary-light;
+    &.active {
+      background-color: $primary-main;
+      color: $gray-600;
+      &:hover {
+        color: $gray-600 !important;
+      }
+      & > span {
+        color: $gray-600 !important;
+      }
+    }
+    &:first-child {
+      border-radius: 4px 0 0 4px;
+    }
+    &:last-child {
+      border-radius: 0 4px 4px 0;
+    }
+    &:not(:last-child) {
+      border-right: 2px solid $gray-500;
+    }
+  }
+}
 .fixed-height {
   height: 100vh;
   @media (max-width: 548px) {
