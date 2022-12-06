@@ -41,14 +41,16 @@ export default function Transact() {
       type: "SUBMIT",
     });
     console.log("inside handleSubmit()");
-    const { response, error } = await sendTokensTxn(
-      address,
-      formState.recipientAddress,
-      formState.transferAmount,
-      formState.memo,
-      { getSigningStargateClient }
-    );
-    console.log("response: ", response, " error: ", error);
+    if (!formState.errorMessages) {
+      const { response, error } = await sendTokensTxn(
+        address,
+        formState.recipientAddress,
+        formState.transferAmount,
+        formState.memo,
+        { getSigningStargateClient }
+      );
+      console.log("response: ", response, " error: ", error);
+    }
   };
 
   const formReducer = (state = initialState, action) => {
