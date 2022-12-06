@@ -19,9 +19,10 @@ export default function ICFormPolygon() {
     "equickbrownfoxjumpsoverthelazydogfIfthedogrth"
   );
   const [EthereumAddress, setEthereumAddress] = useState("0xxxxxxxxxxxxx");
-  const [GravityAmount, setGravityAmount] = useState("");
-  const [EthAmount, setEthAmount] = useState("");
-  const [PolygonAmount, setPolygonAmount] = useState("");
+
+  const [GravityAmount, setGravityAmount] = useState();
+  const [EthAmount, setEthAmount] = useState();
+  const [PolygonAmount, setPolygonAmount] = useState();
 
   const [MNtlBalance, setMNtlBalance] = useState(20);
   const [GravityBalance, setGravityBalance] = useState(30);
