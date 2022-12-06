@@ -231,6 +231,14 @@ a:hover {
   }
 }
 
+.am-progress {
+  width: 100%;
+  height: 10px;
+  &-bar {
+    height: 100%;
+  }
+}
+
 // customs as needed
 // globally
 .nav-bg {
@@ -364,6 +372,26 @@ hr {
     }
   }
 }
+.am-tooltip {
+  cursor: pointer;
+  & > p {
+    display: none;
+    transition: all 200ms ease-in;
+    max-width: max-content;
+    width: 0px;
+  }
+  &:hover {
+    & > p {
+      display: flex;
+      bottom: 100%;
+      right: 50%;
+      max-width: max-content;
+      width: min(95vw, 260px);
+      transform: translateX(50%) translateY(-10%);
+      box-shadow: 1px 1px 5px $dark-100;
+    }
+  }
+}
 .transitionAll {
   transition: all 0.3s ease-in-out;
 }
@@ -403,6 +431,7 @@ hr {
     }
   }
 }
+
 .fixed-height {
   height: 100vh;
   @media (max-width: 548px) {
