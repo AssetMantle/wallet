@@ -3,7 +3,7 @@ name: Staging
 on:
   push:
     branches: [ main ]
-    
+
 jobs:
   Mainnet:
     runs-on: ubuntu-latest
