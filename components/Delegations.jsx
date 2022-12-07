@@ -12,18 +12,31 @@ import {
 
 const denomDisplay = chainSymbol;
 
-const Delegations = () => {
+const Delegations = ({ selectedValidator }) => {
   const {
-    delegators,
+    delegatedValidators,
     totalDelegatedAmount,
     isLoadingDelegatedAmount,
     errorDelegatedAmount,
   } = useDelegatedValidators();
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
 
-  const delegationsDisplay = errorDelegatedAmount
+  const selectedDelegations = delegatedValidators
+    ?.filter((delegatedObject) =>
+      selectedValidator.includes(delegatedObject?.operator_address)
+    )
+    .reduce(
+      (accumulator, currentValue) =>
+        accumulator + parseFloat(currentValue?.delegatedAmount),
+      0
+    );
+  const cumulativeDelegations = errorDelegatedAmount
     ? placeholderTotalDelegations
     : fromDenom(totalDelegatedAmount);
+
+  const delegationsDisplay = selectedValidator.length
+    ? fromDenom(selectedDelegations)
+    : fromDenom(cumulativeDelegations);
 
   const delegationsInUSDDisplay =
     errorDelegatedAmount ||

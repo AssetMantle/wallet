@@ -8,21 +8,38 @@ import { fromDenom, useTotalUnbonding, useMntlUsd } from "../data/swrStore";
 
 const denomDisplay = chainSymbol;
 
-const Unbonded = () => {
-  const { allUnbonding, isLoadingUnbonding, errorUnbonding } =
-    useTotalUnbonding();
+const Unbonded = ({ selectedValidator }) => {
+  const {
+    totalUnbondingAmount,
+    allUnbonding,
+    isLoadingUnbonding,
+    errorUnbonding,
+  } = useTotalUnbonding();
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
 
-  const unbondingDisplay = errorUnbonding
+  const selectedUnbonding = allUnbonding
+    ?.filter((unbondingObject) =>
+      selectedValidator?.includes(unbondingObject.validator_address)
+    )
+    .reduce(
+      (accumulator, currentValue) =>
+        accumulator + parseFloat(currentValue?.entries[0]?.balance),
+      0
+    );
+
+  const cumulativeUnbonding = errorUnbonding
     ? placeholderTotalUnbonding
-    : fromDenom(allUnbonding);
+    : fromDenom(totalUnbondingAmount);
+  const unbondingDisplay = selectedValidator.length
+    ? fromDenom(selectedUnbonding)
+    : fromDenom(cumulativeUnbonding);
 
   const unbondingInUSDDisplay =
     errorUnbonding ||
-    errorMntlUsdValue | isNaN(fromDenom(allUnbonding)) ||
+    errorMntlUsdValue | isNaN(fromDenom(totalUnbondingAmount)) ||
     isNaN(parseFloat(mntlUsdValue))
       ? placeholderMntlUsdValue
-      : (fromDenom(allUnbonding) * parseFloat(mntlUsdValue))
+      : (fromDenom(totalUnbondingAmount) * parseFloat(mntlUsdValue))
           .toFixed(6)
           .toString();
 

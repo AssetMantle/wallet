@@ -117,28 +117,30 @@ export const useTotalUnbonding = () => {
   const address = "mantle1jxe2fpgx6twqe7nlxn4g96nej280zcemgqjmk0";
 
   const fetchTotalUnbonding = async (url, address) => {
-    let totalUnbonding;
+    let totalUnbondingAmount;
+    let allUnbonding;
 
     try {
       const { unbonding_responses } =
         await client.cosmos.staking.v1beta1.delegatorUnbondingDelegations({
           delegatorAddr: address,
         });
-      totalUnbonding = unbonding_responses.reduce(
+      allUnbonding = unbonding_responses;
+      totalUnbondingAmount = unbonding_responses.reduce(
         (total, currentValue) =>
           parseFloat(total) + parseFloat(currentValue?.entries[0]?.balance),
         parseFloat("0")
       );
 
-      // totalUnbonding = unbonding_responses;
+      // totalUnbondingAmount = unbonding_responses;
     } catch (error) {
       console.error(`swr fetcher error: ${url}`);
       throw error;
     }
-    return totalUnbonding;
+    return { totalUnbondingAmount, allUnbonding };
   };
 
-  const { data: totalUnbonding, error } = useSwr(
+  const { data: unbondingObject, error } = useSwr(
     address ? ["unbonding", address] : null,
     fetchTotalUnbonding,
     {
@@ -158,8 +160,9 @@ export const useTotalUnbonding = () => {
   );
 
   return {
-    allUnbonding: totalUnbonding,
-    isLoadingUnbonding: !error && !totalUnbonding,
+    totalUnbondingAmount: unbondingObject.totalUnbondingAmount,
+    allUnbonding: unbondingObject.allUnbonding,
+    isLoadingUnbonding: !error && !unbondingObject,
     errorUnbonding: error,
   };
 };
@@ -174,12 +177,14 @@ export const useTotalRewards = () => {
 
   const fetchTotalRewards = async (url, address) => {
     let totalRewards;
+    let rewardsArray;
 
     try {
       const { rewards } =
         await client.cosmos.distribution.v1beta1.delegationTotalRewards({
           delegatorAddress: address,
         });
+      rewardsArray = rewards;
       totalRewards = rewards.reduce(
         (total, currentValue) =>
           parseFloat(total) + parseFloat(currentValue?.reward[0].amount),
@@ -189,9 +194,9 @@ export const useTotalRewards = () => {
       console.error(`swr fetcher error: ${url}`);
       throw error;
     }
-    return totalRewards;
+    return { totalRewards, rewardsArray };
   };
-  const { data: rewardsArray, error } = useSwr(
+  const { data: rewardsObject, error } = useSwr(
     address ? ["rewards", address] : null,
     fetchTotalRewards,
     {
@@ -207,8 +212,9 @@ export const useTotalRewards = () => {
     }
   );
   return {
-    allRewards: rewardsArray,
-    isLoadingRewards: !error && !rewardsArray,
+    allRewards: rewardsObject.totalRewards,
+    rewardsArray: rewardsObject.rewardsArray,
+    isLoadingRewards: !error && !rewardsObject,
     errorRewards: error,
   };
 };
@@ -464,11 +470,10 @@ export const useAllValidators = () => {
       // get the data from cosmos queryClient
       const { validators } = await client.cosmos.staking.v1beta1.validators();
       allValidators = validators;
-      // const iconUrlsArray = validators.map(
-      //   (validator) =>
-      //     `https://keybase.io/_/api/1.0/user/lookup.json?key_suffix=${validator?.description?.identity}&fields=pictures`
-      // );
-      // const data = await multifetch(iconUrlsArray);
+      // const iconUrlsArray = validators.map((validator, index) => {
+      //   return `https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/${validator.operator_address}.png`;
+      // });
+      // const data = await fetch(iconUrlsArray);
       // console.log("data: ", data);
     } catch (error) {
       console.error(`swr fetcher error: ${url}`);
