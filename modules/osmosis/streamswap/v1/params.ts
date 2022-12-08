@@ -1,7 +1,7 @@
 import { Coin, CoinSDKType } from "../../../cosmos/base/v1beta1/coin";
 import { Duration, DurationSDKType } from "../../../google/protobuf/duration";
 import * as _m0 from "protobufjs/minimal";
-import { DeepPartial } from "../../../helpers";
+import { isSet } from "../../../helpers";
 /** Params holds parameters for the streamswap module */
 
 export interface Params {
@@ -109,7 +109,31 @@ export const Params = {
     return message;
   },
 
-  fromPartial(object: DeepPartial<Params>): Params {
+  fromJSON(object: any): Params {
+    return {
+      saleCreationFee: Array.isArray(object?.saleCreationFee) ? object.saleCreationFee.map((e: any) => Coin.fromJSON(e)) : [],
+      saleCreationFeeRecipient: isSet(object.saleCreationFeeRecipient) ? String(object.saleCreationFeeRecipient) : "",
+      minDurationUntilStartTime: isSet(object.minDurationUntilStartTime) ? Duration.fromJSON(object.minDurationUntilStartTime) : undefined,
+      minSaleDuration: isSet(object.minSaleDuration) ? Duration.fromJSON(object.minSaleDuration) : undefined
+    };
+  },
+
+  toJSON(message: Params): unknown {
+    const obj: any = {};
+
+    if (message.saleCreationFee) {
+      obj.saleCreationFee = message.saleCreationFee.map(e => e ? Coin.toJSON(e) : undefined);
+    } else {
+      obj.saleCreationFee = [];
+    }
+
+    message.saleCreationFeeRecipient !== undefined && (obj.saleCreationFeeRecipient = message.saleCreationFeeRecipient);
+    message.minDurationUntilStartTime !== undefined && (obj.minDurationUntilStartTime = message.minDurationUntilStartTime ? Duration.toJSON(message.minDurationUntilStartTime) : undefined);
+    message.minSaleDuration !== undefined && (obj.minSaleDuration = message.minSaleDuration ? Duration.toJSON(message.minSaleDuration) : undefined);
+    return obj;
+  },
+
+  fromPartial(object: Partial<Params>): Params {
     const message = createBaseParams();
     message.saleCreationFee = object.saleCreationFee?.map(e => Coin.fromPartial(e)) || [];
     message.saleCreationFeeRecipient = object.saleCreationFeeRecipient ?? "";

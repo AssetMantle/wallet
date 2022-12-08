@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   useTotalDelegations,
   useDelegatedValidators,
   useAllValidators,
 } from "../data/swrStore";
 import StakedToken from "../views/StakedToken";
+import { sendRedelegation } from "../data";
 
 const Stake = () => {
   const [delegated, setDelegated] = useState(false);
@@ -17,6 +18,8 @@ const Stake = () => {
   } = useDelegatedValidators();
   const { allValidators, isLoadingValidators, errorValidators } =
     useAllValidators();
+
+  useEffect(() => {}, []);
 
   let validatorsArray = allValidators.sort((a, b) => b.tokens - a.tokens);
   validatorsArray.forEach((item, index) => {

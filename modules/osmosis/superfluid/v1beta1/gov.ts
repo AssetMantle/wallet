@@ -1,6 +1,6 @@
 import { SuperfluidAsset, SuperfluidAssetSDKType } from "../superfluid";
 import * as _m0 from "protobufjs/minimal";
-import { DeepPartial } from "../../../helpers";
+import { isSet } from "../../../helpers";
 /**
  * SetSuperfluidAssetsProposal is a gov Content type to update the superfluid
  * assets
@@ -97,7 +97,29 @@ export const SetSuperfluidAssetsProposal = {
     return message;
   },
 
-  fromPartial(object: DeepPartial<SetSuperfluidAssetsProposal>): SetSuperfluidAssetsProposal {
+  fromJSON(object: any): SetSuperfluidAssetsProposal {
+    return {
+      title: isSet(object.title) ? String(object.title) : "",
+      description: isSet(object.description) ? String(object.description) : "",
+      assets: Array.isArray(object?.assets) ? object.assets.map((e: any) => SuperfluidAsset.fromJSON(e)) : []
+    };
+  },
+
+  toJSON(message: SetSuperfluidAssetsProposal): unknown {
+    const obj: any = {};
+    message.title !== undefined && (obj.title = message.title);
+    message.description !== undefined && (obj.description = message.description);
+
+    if (message.assets) {
+      obj.assets = message.assets.map(e => e ? SuperfluidAsset.toJSON(e) : undefined);
+    } else {
+      obj.assets = [];
+    }
+
+    return obj;
+  },
+
+  fromPartial(object: Partial<SetSuperfluidAssetsProposal>): SetSuperfluidAssetsProposal {
     const message = createBaseSetSuperfluidAssetsProposal();
     message.title = object.title ?? "";
     message.description = object.description ?? "";
@@ -162,7 +184,29 @@ export const RemoveSuperfluidAssetsProposal = {
     return message;
   },
 
-  fromPartial(object: DeepPartial<RemoveSuperfluidAssetsProposal>): RemoveSuperfluidAssetsProposal {
+  fromJSON(object: any): RemoveSuperfluidAssetsProposal {
+    return {
+      title: isSet(object.title) ? String(object.title) : "",
+      description: isSet(object.description) ? String(object.description) : "",
+      superfluidAssetDenoms: Array.isArray(object?.superfluidAssetDenoms) ? object.superfluidAssetDenoms.map((e: any) => String(e)) : []
+    };
+  },
+
+  toJSON(message: RemoveSuperfluidAssetsProposal): unknown {
+    const obj: any = {};
+    message.title !== undefined && (obj.title = message.title);
+    message.description !== undefined && (obj.description = message.description);
+
+    if (message.superfluidAssetDenoms) {
+      obj.superfluidAssetDenoms = message.superfluidAssetDenoms.map(e => e);
+    } else {
+      obj.superfluidAssetDenoms = [];
+    }
+
+    return obj;
+  },
+
+  fromPartial(object: Partial<RemoveSuperfluidAssetsProposal>): RemoveSuperfluidAssetsProposal {
     const message = createBaseRemoveSuperfluidAssetsProposal();
     message.title = object.title ?? "";
     message.description = object.description ?? "";

@@ -1,6 +1,6 @@
 import { FeeToken, FeeTokenSDKType } from "./feetoken";
 import * as _m0 from "protobufjs/minimal";
-import { DeepPartial, Long } from "../../../helpers";
+import { isSet, Long } from "../../../helpers";
 export interface QueryFeeTokensRequest {}
 export interface QueryFeeTokensRequestSDKType {}
 export interface QueryFeeTokensResponse {
@@ -91,7 +91,16 @@ export const QueryFeeTokensRequest = {
     return message;
   },
 
-  fromPartial(_: DeepPartial<QueryFeeTokensRequest>): QueryFeeTokensRequest {
+  fromJSON(_: any): QueryFeeTokensRequest {
+    return {};
+  },
+
+  toJSON(_: QueryFeeTokensRequest): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(_: Partial<QueryFeeTokensRequest>): QueryFeeTokensRequest {
     const message = createBaseQueryFeeTokensRequest();
     return message;
   }
@@ -135,7 +144,25 @@ export const QueryFeeTokensResponse = {
     return message;
   },
 
-  fromPartial(object: DeepPartial<QueryFeeTokensResponse>): QueryFeeTokensResponse {
+  fromJSON(object: any): QueryFeeTokensResponse {
+    return {
+      feeTokens: Array.isArray(object?.feeTokens) ? object.feeTokens.map((e: any) => FeeToken.fromJSON(e)) : []
+    };
+  },
+
+  toJSON(message: QueryFeeTokensResponse): unknown {
+    const obj: any = {};
+
+    if (message.feeTokens) {
+      obj.feeTokens = message.feeTokens.map(e => e ? FeeToken.toJSON(e) : undefined);
+    } else {
+      obj.feeTokens = [];
+    }
+
+    return obj;
+  },
+
+  fromPartial(object: Partial<QueryFeeTokensResponse>): QueryFeeTokensResponse {
     const message = createBaseQueryFeeTokensResponse();
     message.feeTokens = object.feeTokens?.map(e => FeeToken.fromPartial(e)) || [];
     return message;
@@ -180,7 +207,19 @@ export const QueryDenomSpotPriceRequest = {
     return message;
   },
 
-  fromPartial(object: DeepPartial<QueryDenomSpotPriceRequest>): QueryDenomSpotPriceRequest {
+  fromJSON(object: any): QueryDenomSpotPriceRequest {
+    return {
+      denom: isSet(object.denom) ? String(object.denom) : ""
+    };
+  },
+
+  toJSON(message: QueryDenomSpotPriceRequest): unknown {
+    const obj: any = {};
+    message.denom !== undefined && (obj.denom = message.denom);
+    return obj;
+  },
+
+  fromPartial(object: Partial<QueryDenomSpotPriceRequest>): QueryDenomSpotPriceRequest {
     const message = createBaseQueryDenomSpotPriceRequest();
     message.denom = object.denom ?? "";
     return message;
@@ -234,7 +273,21 @@ export const QueryDenomSpotPriceResponse = {
     return message;
   },
 
-  fromPartial(object: DeepPartial<QueryDenomSpotPriceResponse>): QueryDenomSpotPriceResponse {
+  fromJSON(object: any): QueryDenomSpotPriceResponse {
+    return {
+      poolID: isSet(object.poolID) ? Long.fromValue(object.poolID) : Long.UZERO,
+      spotPrice: isSet(object.spotPrice) ? String(object.spotPrice) : ""
+    };
+  },
+
+  toJSON(message: QueryDenomSpotPriceResponse): unknown {
+    const obj: any = {};
+    message.poolID !== undefined && (obj.poolID = (message.poolID || Long.UZERO).toString());
+    message.spotPrice !== undefined && (obj.spotPrice = message.spotPrice);
+    return obj;
+  },
+
+  fromPartial(object: Partial<QueryDenomSpotPriceResponse>): QueryDenomSpotPriceResponse {
     const message = createBaseQueryDenomSpotPriceResponse();
     message.poolID = object.poolID !== undefined && object.poolID !== null ? Long.fromValue(object.poolID) : Long.UZERO;
     message.spotPrice = object.spotPrice ?? "";
@@ -280,7 +333,19 @@ export const QueryDenomPoolIdRequest = {
     return message;
   },
 
-  fromPartial(object: DeepPartial<QueryDenomPoolIdRequest>): QueryDenomPoolIdRequest {
+  fromJSON(object: any): QueryDenomPoolIdRequest {
+    return {
+      denom: isSet(object.denom) ? String(object.denom) : ""
+    };
+  },
+
+  toJSON(message: QueryDenomPoolIdRequest): unknown {
+    const obj: any = {};
+    message.denom !== undefined && (obj.denom = message.denom);
+    return obj;
+  },
+
+  fromPartial(object: Partial<QueryDenomPoolIdRequest>): QueryDenomPoolIdRequest {
     const message = createBaseQueryDenomPoolIdRequest();
     message.denom = object.denom ?? "";
     return message;
@@ -325,7 +390,19 @@ export const QueryDenomPoolIdResponse = {
     return message;
   },
 
-  fromPartial(object: DeepPartial<QueryDenomPoolIdResponse>): QueryDenomPoolIdResponse {
+  fromJSON(object: any): QueryDenomPoolIdResponse {
+    return {
+      poolID: isSet(object.poolID) ? Long.fromValue(object.poolID) : Long.UZERO
+    };
+  },
+
+  toJSON(message: QueryDenomPoolIdResponse): unknown {
+    const obj: any = {};
+    message.poolID !== undefined && (obj.poolID = (message.poolID || Long.UZERO).toString());
+    return obj;
+  },
+
+  fromPartial(object: Partial<QueryDenomPoolIdResponse>): QueryDenomPoolIdResponse {
     const message = createBaseQueryDenomPoolIdResponse();
     message.poolID = object.poolID !== undefined && object.poolID !== null ? Long.fromValue(object.poolID) : Long.UZERO;
     return message;
@@ -360,7 +437,16 @@ export const QueryBaseDenomRequest = {
     return message;
   },
 
-  fromPartial(_: DeepPartial<QueryBaseDenomRequest>): QueryBaseDenomRequest {
+  fromJSON(_: any): QueryBaseDenomRequest {
+    return {};
+  },
+
+  toJSON(_: QueryBaseDenomRequest): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(_: Partial<QueryBaseDenomRequest>): QueryBaseDenomRequest {
     const message = createBaseQueryBaseDenomRequest();
     return message;
   }
@@ -404,7 +490,19 @@ export const QueryBaseDenomResponse = {
     return message;
   },
 
-  fromPartial(object: DeepPartial<QueryBaseDenomResponse>): QueryBaseDenomResponse {
+  fromJSON(object: any): QueryBaseDenomResponse {
+    return {
+      baseDenom: isSet(object.baseDenom) ? String(object.baseDenom) : ""
+    };
+  },
+
+  toJSON(message: QueryBaseDenomResponse): unknown {
+    const obj: any = {};
+    message.baseDenom !== undefined && (obj.baseDenom = message.baseDenom);
+    return obj;
+  },
+
+  fromPartial(object: Partial<QueryBaseDenomResponse>): QueryBaseDenomResponse {
     const message = createBaseQueryBaseDenomResponse();
     message.baseDenom = object.baseDenom ?? "";
     return message;

@@ -1,12 +1,12 @@
 import React from "react";
 import {
-  chainSymbol,
+  defaultChainSymbol,
   placeholderAvailableBalance,
   placeholderMntlUsdValue,
 } from "../../config";
 import { fromDenom, useAvailableBalance, useMntlUsd } from "../../data";
 
-const denomDisplay = chainSymbol;
+const denomDisplay = defaultChainSymbol;
 
 export const AvailableBalance = () => {
   console.log("inside AvailableBalance");

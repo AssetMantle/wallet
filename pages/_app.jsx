@@ -1,9 +1,8 @@
-import { useEffect } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 import { wallets as cosmostationWallets } from "@cosmos-kit/cosmostation";
 import { wallets as leapwallets } from "@cosmos-kit/leap";
-import { wallets as keplrWallets2 } from "@cosmos-kit/keplr";
 import { WalletProvider } from "@cosmos-kit/react";
+import { useEffect } from "react";
 import { defaultTheme, wallets as keplrWallets } from "../config";
 
 import "../config/styles/index.scss";
@@ -13,7 +12,7 @@ import Layout from "../components/Layout";
 
 function CreateCosmosApp({ Component, pageProps }) {
   useEffect(() => {
-    import("bootstrap/dist/js/bootstrap");
+    require("bootstrap/dist/js/bootstrap.bundle.js");
   }, []);
   const signerOptions = {
     // stargate: (_chain: Chain) => {

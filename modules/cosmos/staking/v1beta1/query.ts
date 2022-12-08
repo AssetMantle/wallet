@@ -21,7 +21,7 @@ import {
   ParamsSDKType,
 } from "./staking";
 import * as _m0 from "protobufjs/minimal";
-import { DeepPartial, Long } from "../../../helpers";
+import { isSet, Long } from "../../../helpers";
 /** QueryValidatorsRequest is request type for Query/Validators RPC method. */
 
 export interface QueryValidatorsRequest {
@@ -2147,7 +2147,16 @@ export const QueryPoolRequest = {
     return message;
   },
 
-  fromPartial(_: DeepPartial<QueryPoolRequest>): QueryPoolRequest {
+  fromJSON(_: any): QueryPoolRequest {
+    return {};
+  },
+
+  toJSON(_: QueryPoolRequest): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(_: Partial<QueryPoolRequest>): QueryPoolRequest {
     const message = createBaseQueryPoolRequest();
     return message;
   },
@@ -2193,7 +2202,20 @@ export const QueryPoolResponse = {
     return message;
   },
 
-  fromPartial(object: DeepPartial<QueryPoolResponse>): QueryPoolResponse {
+  fromJSON(object: any): QueryPoolResponse {
+    return {
+      pool: isSet(object.pool) ? Pool.fromJSON(object.pool) : undefined,
+    };
+  },
+
+  toJSON(message: QueryPoolResponse): unknown {
+    const obj: any = {};
+    message.pool !== undefined &&
+      (obj.pool = message.pool ? Pool.toJSON(message.pool) : undefined);
+    return obj;
+  },
+
+  fromPartial(object: Partial<QueryPoolResponse>): QueryPoolResponse {
     const message = createBaseQueryPoolResponse();
     message.pool =
       object.pool !== undefined && object.pool !== null
@@ -2233,7 +2255,16 @@ export const QueryParamsRequest = {
     return message;
   },
 
-  fromPartial(_: DeepPartial<QueryParamsRequest>): QueryParamsRequest {
+  fromJSON(_: any): QueryParamsRequest {
+    return {};
+  },
+
+  toJSON(_: QueryParamsRequest): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(_: Partial<QueryParamsRequest>): QueryParamsRequest {
     const message = createBaseQueryParamsRequest();
     return message;
   },
@@ -2279,7 +2310,20 @@ export const QueryParamsResponse = {
     return message;
   },
 
-  fromPartial(object: DeepPartial<QueryParamsResponse>): QueryParamsResponse {
+  fromJSON(object: any): QueryParamsResponse {
+    return {
+      params: isSet(object.params) ? Params.fromJSON(object.params) : undefined,
+    };
+  },
+
+  toJSON(message: QueryParamsResponse): unknown {
+    const obj: any = {};
+    message.params !== undefined &&
+      (obj.params = message.params ? Params.toJSON(message.params) : undefined);
+    return obj;
+  },
+
+  fromPartial(object: Partial<QueryParamsResponse>): QueryParamsResponse {
     const message = createBaseQueryParamsResponse();
     message.params =
       object.params !== undefined && object.params !== null
