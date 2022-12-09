@@ -2,20 +2,24 @@ import { useWallet } from "@cosmos-kit/react";
 import { assets, chains } from "chain-registry";
 import useSwr from "swr";
 import {
-  chainDenomExponent,
-  chainName,
+  defaultChainDenom,
+  defaultChainDenomExponent,
+  defaultChainName,
   mntlUsdApi,
   placeholderAvailableBalance,
   placeholderMntlUsdValue,
 } from "../config";
 import { cosmos } from "../modules";
+import BigNumber from "bignumber.js";
 
 // get the rest endpoint from the chain registry inside the Cosmos Kit
-const restEndpoint = chains.find((_chain) => _chain?.chain_name === chainName)
-  ?.apis?.rest[0]?.address;
+const restEndpoint = chains.find(
+  (_chain) => _chain?.chain_name === defaultChainName
+)?.apis?.rest[0]?.address;
 
-const denom = assets.find((assetObj) => assetObj?.chain_name === chainName)
-  ?.assets[0]?.base;
+const denom = assets.find(
+  (assetObj) => assetObj?.chain_name === defaultChainName
+)?.assets[0]?.base;
 
 // console.log("assets: ", assets);
 // console.log("AssetMantle Endpoint: ", restEndpoint);
@@ -25,20 +29,71 @@ const client = await cosmos.ClientFactory.createLCDClient({
   restEndpoint,
 });
 
-export const fromDenom = (value, exponent = chainDenomExponent) => {
+export const fromDenom = (value, exponent = defaultChainDenomExponent) => {
   return parseFloat(
     (parseFloat(value) / Math.pow(10, parseFloat(exponent))).toFixed(6)
   );
 };
 
-export const toDenom = (value, exponent = chainDenomExponent) => {
+export const toDenom = (value, exponent = defaultChainDenomExponent) => {
   return parseFloat(
     (parseFloat(value) * Math.pow(10, parseFloat(exponent))).toFixed(0)
   );
 };
 
+export const fromChainDenom = (
+  value,
+  chainName = defaultChainName,
+  chainDenom = defaultChainDenom
+) => {
+  let amount;
+  // get the chain assets for the specified chain
+  const chainassets = assets.find((chain) => chain.chain_name === chainName);
+  // get the coin data from the chain assets data
+  const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
+  // Get the display exponent
+  // we can get the exponent from chain registry asset denom_units
+  const exp = coin.denom_units.find(
+    (unit) => unit.denom === coin.display
+  )?.exponent;
+  // show balance in display values by exponentiating it
+  const valueBigNumber = new BigNumber(value.toString() || 0);
+  if (BigNumber.isBigNumber(valueBigNumber)) {
+    amount = valueBigNumber.multipliedBy(10 ** -exp).toString();
+  } else {
+    return "-1";
+  }
+  return amount;
+};
+
+export const toChainDenom = (
+  value,
+  chainName = defaultChainName,
+  chainDenom = defaultChainDenom
+) => {
+  console.log("inside tochaindenom, value: ", value);
+  let amount;
+  // get the chain assets for the specified chain
+  const chainassets = assets.find((chain) => chain.chain_name === chainName);
+  // get the coin data from the chain assets data
+  const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
+  // Get the display exponent
+  // we can get the exponent from chain registry asset denom_units
+  const exp = coin.denom_units.find(
+    (unit) => unit.denom === coin.display
+  )?.exponent;
+  // show balance in display values by exponentiating it
+  const valueBigNumber = new BigNumber(value.toString() || 0);
+  if (BigNumber.isBigNumber(valueBigNumber)) {
+    amount = valueBigNumber.multipliedBy(10 ** exp).toString();
+  } else {
+    return "-1";
+  }
+  return amount;
+};
+
 // function to check whether an address is invalid
-export const isInvalidAddress = (address, chain = chainName) => {
+export const isInvalidAddress = (address, chain = defaultChainName) => {
   return false;
 };
 

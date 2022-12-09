@@ -26,7 +26,7 @@ import {
   RejectedWarn,
   WalletConnectComponent,
 } from "../components";
-import { chainName } from "../config";
+import { defaultChainName } from "../config";
 
 export const WalletSection = () => {
   const walletManager = useWallet();
@@ -45,7 +45,7 @@ export const WalletSection = () => {
   } = walletManager;
 
   useEffect(() => {
-    setCurrentChain(chainName);
+    setCurrentChain(defaultChainName);
   }, [setCurrentChain]);
 
   const chain = {

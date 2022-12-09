@@ -1,5 +1,5 @@
 import * as _m0 from "protobufjs/minimal";
-import { DeepPartial } from "../../../helpers";
+import { isSet } from "../../../helpers";
 /** MsgUnjail defines the Msg/Unjail request type */
 
 export interface MsgUnjail {
@@ -54,7 +54,19 @@ export const MsgUnjail = {
     return message;
   },
 
-  fromPartial(object: DeepPartial<MsgUnjail>): MsgUnjail {
+  fromJSON(object: any): MsgUnjail {
+    return {
+      validatorAddr: isSet(object.validatorAddr) ? String(object.validatorAddr) : ""
+    };
+  },
+
+  toJSON(message: MsgUnjail): unknown {
+    const obj: any = {};
+    message.validatorAddr !== undefined && (obj.validatorAddr = message.validatorAddr);
+    return obj;
+  },
+
+  fromPartial(object: Partial<MsgUnjail>): MsgUnjail {
     const message = createBaseMsgUnjail();
     message.validatorAddr = object.validatorAddr ?? "";
     return message;
@@ -89,7 +101,16 @@ export const MsgUnjailResponse = {
     return message;
   },
 
-  fromPartial(_: DeepPartial<MsgUnjailResponse>): MsgUnjailResponse {
+  fromJSON(_: any): MsgUnjailResponse {
+    return {};
+  },
+
+  toJSON(_: MsgUnjailResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(_: Partial<MsgUnjailResponse>): MsgUnjailResponse {
     const message = createBaseMsgUnjailResponse();
     return message;
   }

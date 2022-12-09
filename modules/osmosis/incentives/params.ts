@@ -1,5 +1,5 @@
 import * as _m0 from "protobufjs/minimal";
-import { DeepPartial } from "../../helpers";
+import { isSet } from "../../helpers";
 /** Params holds parameters for the incentives module */
 
 export interface Params {
@@ -56,7 +56,19 @@ export const Params = {
     return message;
   },
 
-  fromPartial(object: DeepPartial<Params>): Params {
+  fromJSON(object: any): Params {
+    return {
+      distrEpochIdentifier: isSet(object.distrEpochIdentifier) ? String(object.distrEpochIdentifier) : ""
+    };
+  },
+
+  toJSON(message: Params): unknown {
+    const obj: any = {};
+    message.distrEpochIdentifier !== undefined && (obj.distrEpochIdentifier = message.distrEpochIdentifier);
+    return obj;
+  },
+
+  fromPartial(object: Partial<Params>): Params {
     const message = createBaseParams();
     message.distrEpochIdentifier = object.distrEpochIdentifier ?? "";
     return message;

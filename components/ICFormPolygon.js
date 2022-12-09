@@ -1,65 +1,54 @@
 import React, { useState } from "react";
-import InputEdit from "./InputEdit";
-import { IoMdSwap } from "react-icons/io";
 import Image from "next/image";
+import Tooltip from "./Tooltip";
+import { AiOutlineInfoCircle } from "react-icons/ai";
 
 export default function ICFormPolygon() {
   const [SwapChains, setSwapChains] = useState(false);
-  const [AmountError, setAmountError] = useState(false);
-  const [ConnectionStat, setConnectionStat] = useState(false);
-  const [Chain1, setChain1] = useState({
-    name: "Mntl",
-    value: "mntl",
-    icon: "/chainLogos/mntl.webp",
-    chain: "AssetMantle",
-  });
-  const [Chain1Amount, setChain1Amount] = useState(65);
-  const [Chain2, setChain2] = useState({
-    name: "Polygon",
-    value: "polygon",
-    icon: "/chainLogos/polygon.svg",
-    chain: "Ethereum",
-  });
-  const [Chain2Amount, setChain2Amount] = useState(434);
-  const [Address1, setAddress1] = useState(
+
+  const [EthConnectionStat, setEthConnectionStat] = useState(false);
+
+  const [GravityAmountError, setGravityAmountError] = useState(false);
+  const [EthAmountError, setEthAmountError] = useState(false);
+  const [PolygonAmountError, setPolygonAmountError] = useState(false);
+
+  const [MNtlAddress, setMNtlAddress] = useState(
     "ThequickbrownfoxjumpsoverthelazydogfIfthedogr"
   );
-  const [Address2, setAddress2] = useState(
+  const [GravityAddress, setGravityAddress] = useState(
     "equickbrownfoxjumpsoverthelazydogfIfthedogrth"
   );
-  const [Amount, setAmount] = useState("");
+  const [EthereumAddress, setEthereumAddress] = useState("0xxxxxxxxxxxxx");
 
-  const chains1 = [
-    {
-      name: "Mntl",
-      value: "mntl",
-      icon: "/chainLogos/mntl.webp",
-      chain: "AssetMantle",
-    },
-    {
-      name: "Chain 2 Polygon",
-      value: "chain-2",
-      icon: "/chainLogos",
-      chain: "",
-    },
-  ];
-  const chains2 = [
-    {
-      name: "Polygon",
-      value: "polygon",
-      icon: "/chainLogos/polygon.svg",
-      chain: "Ethereum",
-    },
-    { name: "Chain 2 hd", value: "chain-2", icon: "/chainLogos", chain: "" },
-  ];
+  const [GravityAmount, setGravityAmount] = useState();
+  const [EthAmount, setEthAmount] = useState();
+  const [PolygonAmount, setPolygonAmount] = useState();
 
-  const balance = !SwapChains ? Chain1Amount : Chain2Amount;
+  const [MNtlBalance, setMNtlBalance] = useState(20);
+  const [GravityBalance, setGravityBalance] = useState(30);
+  const [EthBalance, setEthBalance] = useState(40);
 
-  const handleAmountChange = (e) => {
-    setAmount(e.target.value);
-    e.target.value < 0.001 || e.target.value > balance
-      ? setAmountError("Insufficient Balance.")
-      : setAmountError();
+  const handleGravityAmountChange = (e) => {
+    setGravityAmount(e.target.value);
+    e.target.value < 0.001 || e.target.value > MNtlBalance
+      ? setGravityAmountError("Insufficient Balance.")
+      : setGravityAmountError();
+  };
+  const handleEthAmountChange = (e) => {
+    setEthAmount(e.target.value);
+    e.target.value < 0.001 || e.target.value > GravityBalance
+      ? setEthAmountError("Insufficient Balance.")
+      : setEthAmountError();
+  };
+  const handlePolygonAmountChange = (e) => {
+    setPolygonAmount(e.target.value);
+    e.target.value < 0.001 || e.target.value > EthBalance
+      ? setPolygonAmountError("Insufficient Balance.")
+      : setPolygonAmountError();
+  };
+
+  const handleEthConnect = () => {
+    setEthConnectionStat(true);
   };
 
   const handleSubmit = (e) => {
@@ -67,138 +56,248 @@ export default function ICFormPolygon() {
   };
 
   return (
-    <form
-      className="d-flex flex-column gap-3"
-      onSubmit={(e) => handleSubmit(e)}
-    >
-      <div className="nav-bg px-3 py-4 rounded-4 d-flex flex-column gap-3 position-relative">
-        <div
+    <div className="d-flex flex-column gap-3">
+      <div className="nav-bg px-3 py-4 rounded-4 d-flex flex-column gap-3">
+        {/* <div
           className="position-absolute top-0 body2"
           style={{ transform: "translateY(-50%)" }}
         >
           From
-        </div>
+        </div> */}
         <div className="caption d-flex gap-2 align-items-center justify-content-between">
-          <button className="d-flex gap-2 align-items-center">
+          <button className="d-flex gap-2 align-items-center position-relative">
             <div
               className="position-relative"
               style={{ width: "40px", aspectRatio: "1/1" }}
             >
               <Image
-                src={!SwapChains ? Chain1.icon : Chain2.icon}
-                alt={!SwapChains ? Chain1.name : Chain2.name}
+                src="/chainLogos/mntl.webp"
+                alt="AssetMantle"
                 layout="fill"
               />
             </div>
             <div className="d-flex flex-column text-start">
-              <h5 className="body2">
-                {!SwapChains ? Chain1.name : Chain2.name}
-              </h5>
+              <h5 className="caption">MNTL</h5>
               <p className="caption2">
-                {!SwapChains ? Chain1.chain : Chain2.chain}
-              </p>
-            </div>
-          </button>
-          <div className="d-flex flex-column gap-1 text-end text-end">
-            <p className="caption">
-              Available: {!SwapChains ? Chain1Amount : Chain2Amount} $MNTL
-            </p>
-            <p className="caption2 position-relative hoverShowChild">
-              {(SwapChains ? Address1 : Address2)
-                ? `${(!SwapChains ? Address1 : Address2).substring(
+                <Tooltip
+                  title={`${MNtlAddress.substring(
                     0,
                     10
-                  )}...${(!SwapChains ? Address1 : Address2).substring(
-                    (!SwapChains ? Address1 : Address2).length - 7,
-                    (!SwapChains ? Address1 : Address2).length
-                  )}`
-                : "wallet is not connected"}
-              <span
-                className=" d-none nav-bg text-primary position-absolute bottom-0 start-0 p-1 rounded-2"
-                style={{ transform: "translate(-50%,100%)" }}
-              >
-                {!SwapChains ? Address1 : Address2}
-              </span>
-            </p>
-            {SwapChains && (
-              <button className="caption2 p-1 bg-gray-800 text-primary d-inline ms-auto">
-                {ConnectionStat ? "Disconnect" : "Connect"}
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-      <div
-        className="d-flex position-relative"
-        style={{ margin: "-30px 0", zIndex: "1" }}
-      >
-        <button
-          className="h3 text-dark p-2 m-auto transitionAll rounded-circle bg-yellow-100"
-          style={{
-            transform: `rotate(${SwapChains ? "90deg" : "270deg"})`,
-            aspectRatio: "1/1",
-            width: "45px",
-          }}
-          onClick={() => setSwapChains(!SwapChains)}
-        >
-          <IoMdSwap />
-        </button>
-      </div>
-      <div className="nav-bg px-3 py-4 rounded-4 d-flex flex-column gap-3 position-relative">
-        <div
-          className="position-absolute top-0 body2"
-          style={{ transform: "translateY(-50%)" }}
-        >
-          To
-        </div>
-        <div className="caption d-flex gap-2 align-items-center justify-content-between">
-          <button className="d-flex gap-2 align-items-center">
+                  )}...${MNtlAddress.substring(
+                    MNtlAddress.length - 7,
+                    MNtlAddress.length
+                  )}`}
+                  description={MNtlAddress}
+                  style={{ wordBreak: "break-word" }}
+                />
+              </p>
+              <p className="caption2">Balance: {MNtlBalance}</p>
+            </div>
+          </button>
+          <button className="d-flex gap-2 align-items-center position-relative">
             <div
               className="position-relative"
               style={{ width: "40px", aspectRatio: "1/1" }}
             >
               <Image
-                src={SwapChains ? Chain1.icon : Chain2.icon}
-                alt={SwapChains ? Chain1.name : Chain2.name}
+                src="/chainLogos/grav.svg"
+                alt="Gravity Bridge"
                 layout="fill"
               />
             </div>
             <div className="d-flex flex-column text-start">
-              <h5 className="body2">
-                {SwapChains ? Chain1.name : Chain2.name}
-              </h5>
+              <h5 className="caption">Grav</h5>
               <p className="caption2">
-                {SwapChains ? Chain1.chain : Chain2.chain}
-              </p>
-            </div>
-          </button>
-          <div className="d-flex flex-column gap-1 text-end text-end">
-            <p className="caption">
-              Available: {SwapChains ? Chain1Amount : Chain2Amount} $MNTL
-            </p>
-            <p className="caption2 position-relative hoverShowChild">
-              {(SwapChains ? Address1 : Address2)
-                ? `${(SwapChains ? Address1 : Address2).substring(
+                <Tooltip
+                  title={`${GravityAddress.substring(
                     0,
                     10
-                  )}...${(SwapChains ? Address1 : Address2).substring(
-                    (SwapChains ? Address1 : Address2).length - 7,
-                    (SwapChains ? Address1 : Address2).length
-                  )}`
-                : "wallet is not connected"}
-              <span
-                className=" d-none nav-bg text-primary position-absolute bottom-0 start-0 p-1 rounded-2"
-                style={{ transform: "translate(-50%,100%)" }}
-              >
-                {SwapChains ? Address1 : Address2}
-              </span>
-            </p>
-            {!SwapChains && (
-              <button className="caption2 p-1 bg-gray-800 text-primary d-inline ms-auto">
-                {ConnectionStat ? "Disconnect" : "Connect"}
-              </button>
-            )}
-          </div>
+                  )}...${GravityAddress.substring(
+                    GravityAddress.length - 7,
+                    GravityAddress.length
+                  )}`}
+                  description={GravityAddress}
+                  style={{ wordBreak: "break-word" }}
+                />
+              </p>
+              <div className="d-flex">
+                <input
+                  type="number"
+                  placeholder="Enter Amount"
+                  className="am-input-secondary caption2 flex-grow-1"
+                  value={GravityAmount}
+                  onChange={(e) => handleGravityAmountChange(e)}
+                />
+                {GravityAmountError && (
+                  <span className="text-error">
+                    <Tooltip
+                      title={<AiOutlineInfoCircle />}
+                      description={GravityAmountError}
+                    />
+                  </span>
+                )}
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+      <div className="nav-bg px-3 py-4 rounded-4 d-flex flex-column gap-3">
+        <div className="caption d-flex gap-2 align-items-center justify-content-between">
+          <button className="d-flex gap-2 align-items-center position-relative">
+            <div
+              className="position-relative"
+              style={{ width: "40px", aspectRatio: "1/1" }}
+            >
+              <Image
+                src="/chainLogos/grav.svg"
+                alt="Gravity Bridge"
+                layout="fill"
+              />
+            </div>
+            <div className="d-flex flex-column text-start">
+              <h5 className="caption">Grav</h5>
+              <p className="caption2">
+                <Tooltip
+                  title={`${GravityAddress.substring(
+                    0,
+                    10
+                  )}...${GravityAddress.substring(
+                    GravityAddress.length - 7,
+                    GravityAddress.length
+                  )}`}
+                  description={GravityAddress}
+                  style={{ wordBreak: "break-word" }}
+                />
+              </p>
+              <p className="caption2">Balance: {GravityBalance}</p>
+            </div>
+          </button>
+          <button className="d-flex gap-2 align-items-center position-relative">
+            <div
+              className="position-relative"
+              style={{ width: "40px", aspectRatio: "1/1" }}
+            >
+              <Image src="/chainLogos/eth.svg" alt="Ethereum" layout="fill" />
+            </div>
+            <div className="d-flex flex-column text-start">
+              <h5 className="caption">ETH</h5>
+              <div className="d-flex">
+                {EthConnectionStat ? (
+                  <p className="caption2">
+                    <Tooltip
+                      title={`${EthereumAddress.substring(
+                        0,
+                        10
+                      )}...${EthereumAddress.substring(
+                        EthereumAddress.length - 7,
+                        EthereumAddress.length
+                      )}`}
+                      description={EthereumAddress}
+                      style={{ wordBreak: "break-word" }}
+                    />
+                  </p>
+                ) : (
+                  <button
+                    className="caption2 p-1 bg-gray-800 text-primary d-inline"
+                    onClick={() => handleEthConnect()}
+                  >
+                    Connect
+                  </button>
+                )}
+              </div>
+              <div className="d-flex">
+                <input
+                  type="number"
+                  placeholder="Enter Amount"
+                  className="am-input-secondary caption2 flex-grow-1"
+                  value={EthAmount}
+                  onChange={(e) => handleEthAmountChange(e)}
+                />
+                {EthAmountError && (
+                  <span className="text-error">
+                    <Tooltip
+                      title={<AiOutlineInfoCircle />}
+                      description={EthAmountError}
+                    />
+                  </span>
+                )}
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+      <div className="nav-bg px-3 py-4 rounded-4 d-flex flex-column gap-3">
+        <div className="caption d-flex gap-2 align-items-center justify-content-between">
+          <button className="d-flex gap-2 align-items-center position-relative">
+            <div
+              className="position-relative"
+              style={{ width: "40px", aspectRatio: "1/1" }}
+            >
+              <Image src="/chainLogos/eth.svg" alt="Ethereum" layout="fill" />
+            </div>
+            <div className="d-flex flex-column text-start">
+              <h5 className="caption">ETH</h5>
+              <p className="caption2">
+                <Tooltip
+                  title={`${EthereumAddress.substring(
+                    0,
+                    10
+                  )}...${EthereumAddress.substring(
+                    EthereumAddress.length - 7,
+                    EthereumAddress.length
+                  )}`}
+                  description={EthereumAddress}
+                  style={{ wordBreak: "break-word" }}
+                />
+              </p>
+              <p className="caption2">Balance: {EthBalance}</p>
+            </div>
+          </button>
+          <button className="d-flex gap-2 align-items-center position-relative">
+            <div
+              className="position-relative"
+              style={{ width: "40px", aspectRatio: "1/1" }}
+            >
+              <Image
+                src="/chainLogos/polygon.svg"
+                alt="Polygon"
+                layout="fill"
+              />
+            </div>
+            <div className="d-flex flex-column text-start">
+              <h5 className="caption">MATIC</h5>
+              <p className="caption2">
+                <Tooltip
+                  title={`${EthereumAddress.substring(
+                    0,
+                    10
+                  )}...${EthereumAddress.substring(
+                    EthereumAddress.length - 7,
+                    EthereumAddress.length
+                  )}`}
+                  description={EthereumAddress}
+                  style={{ wordBreak: "break-word" }}
+                />
+              </p>
+              <div className="d-flex">
+                <input
+                  type="number"
+                  placeholder="Enter Amount"
+                  className="am-input-secondary caption2 flex-grow-1"
+                  value={PolygonAmount}
+                  onChange={(e) => handlePolygonAmountChange(e)}
+                />
+                {PolygonAmountError && (
+                  <span className="text-error">
+                    <Tooltip
+                      title={<AiOutlineInfoCircle />}
+                      description={PolygonAmountError}
+                    />
+                  </span>
+                )}
+              </div>
+            </div>
+          </button>
         </div>
       </div>
       <div className="nav-bg p-3 rounded-4 position-relative caption d-flex flex-column gap-2">
@@ -211,51 +310,20 @@ export default function ICFormPolygon() {
           <p className="col-6 text-end">~2 minutes</p>
         </div>
       </div>
-      <div className="rounded-4 position-relative caption d-flex flex-column gap-2">
-        <label
-          className="caption d-flex gap-2 align-items-center justify-content-between"
-          htmlFor="amount"
-        >
-          Amount
-        </label>
-        <div className="p-3 py-1 d-flex rounded-2 gap-2 am-input">
-          <input
-            className="bg-t"
-            type="number"
-            name="amount"
-            id="amount"
-            value={Amount}
-            placeholder="Enter Amount"
-            style={{ flex: "1", border: "none", outline: "none" }}
-            onChange={(e) => handleAmountChange(e)}
-          />
-          <button
-            className="bg-gray-800 p-1 px-2 text-primary"
-            onClick={() => setAmount(balance / 2)}
-          >
-            half
-          </button>
-          <button
-            className="bg-gray-800 p-1 px-2 text-primary"
-            onClick={() => setAmount(balance)}
-          >
-            max
-          </button>
-        </div>
-        {Amount && AmountError && (
-          <div className="text-error caption2">{AmountError}</div>
-        )}
-        {Amount && !AmountError && (
-          <div className="ms-auto caption2">Value: {Amount} USD</div>
-        )}
-      </div>
       <button
-        className="btn button-primary px-5"
-        type="submit"
-        disabled={!(Address1 && Address2 && Amount && !AmountError)}
+        className="btn button-primary px-5 ms-auto"
+        onClick={(e) => handleSubmit(e)}
+        disabled={
+          !(
+            MNtlAddress &&
+            EthereumAddress &&
+            GravityAmount &&
+            !GravityAmountError
+          )
+        }
       >
         Send
       </button>
-    </form>
+    </div>
   );
 }

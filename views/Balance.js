@@ -2,10 +2,10 @@ import React, { Suspense } from "react";
 import { BsInfoCircle } from "react-icons/bs";
 import { MntlUsdPrice } from "../components";
 import { AvailableBalance, AvailableBalanceUsd } from "../components";
-import { chainSymbol } from "../config";
+import { defaultChainSymbol } from "../config";
 
 export default function Balance() {
-  const denomDisplay = chainSymbol;
+  const denomDisplay = defaultChainSymbol;
 
   return (
     <section className="rounded-5 p-4 bg-gray-800 width-100 d-flex flex-column gap-3">

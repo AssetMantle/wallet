@@ -1,5 +1,5 @@
 import * as _m0 from "protobufjs/minimal";
-import { DeepPartial } from "../../../helpers";
+import { isSet } from "../../../helpers";
 /**
  * DenomAuthorityMetadata specifies metadata for addresses that have specific
  * capabilities over a token factory denom. Right now there is only one Admin
@@ -58,7 +58,19 @@ export const DenomAuthorityMetadata = {
     return message;
   },
 
-  fromPartial(object: DeepPartial<DenomAuthorityMetadata>): DenomAuthorityMetadata {
+  fromJSON(object: any): DenomAuthorityMetadata {
+    return {
+      admin: isSet(object.admin) ? String(object.admin) : ""
+    };
+  },
+
+  toJSON(message: DenomAuthorityMetadata): unknown {
+    const obj: any = {};
+    message.admin !== undefined && (obj.admin = message.admin);
+    return obj;
+  },
+
+  fromPartial(object: Partial<DenomAuthorityMetadata>): DenomAuthorityMetadata {
     const message = createBaseDenomAuthorityMetadata();
     message.admin = object.admin ?? "";
     return message;
