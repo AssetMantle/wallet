@@ -72,7 +72,7 @@ export const sendRedelegation = async (
   validatorSrcAddress,
   validatorDstAddress,
   amount,
-  memo = "",
+  memo,
   {
     getSigningStargateClient,
     chainName = defaultChainName,
@@ -86,32 +86,29 @@ export const sendRedelegation = async (
     const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
     // get the amount in denom terms
     const amountInDenom = toChainDenom(amount, chainName, chainDenom);
-    // populate the optional argument fromAddress
-    fromAddress = fromAddress || address;
-    // initialize stargate client and create txn
+    // // populate the optional argument fromAddress
+    const fromAddress = delegatorAddress;
+    // // initialize stargate client and create txn
     const stargateClient = await getSigningStargateClient();
     if (!stargateClient || !fromAddress) {
       throw new error("stargateClient or from address undefined");
     }
+
     // create a message template from the composer
     const { beginRedelegate } =
       cosmos.staking.v1beta1.MessageComposer.withTypeUrl;
+
     const msg = beginRedelegate({
       delegatorAddress,
-      validatorSrcAddress,
       validatorDstAddress,
-      amount: [
-        {
-          denom: coin.base,
-          amount: amountInDenom,
-        },
-      ],
+      validatorSrcAddress,
+      amount,
     });
     // populate the fee data
     const fee = {
       amount: [
         {
-          denom: coin.base,
+          denom: "umntl",
           amount: "2000",
         },
       ],
@@ -119,7 +116,184 @@ export const sendRedelegation = async (
     };
     // use the stargate client to dispatch the transaction
     const response = await stargateClient.signAndBroadcast(
-      fromAddress,
+      delegatorAddress,
+      [msg],
+      fee,
+      memo
+    );
+    console.log("msg: ", msg, " amount: ", amountInDenom);
+    return { response, error: null };
+  } catch (error) {
+    console.error("Error during transaction: ", error?.message);
+    return { response: null, error };
+  }
+};
+
+export const sendDelegation = async (
+  delegatorAddress,
+  validatorAddress,
+  amount,
+  memo,
+  {
+    getSigningStargateClient,
+    chainName = defaultChainName,
+    chainDenom = defaultChainDenom,
+  }
+) => {
+  try {
+    console.log(getSigningStargateClient);
+    // get the chain assets for the specified chain
+    const chainassets = assets.find((chain) => chain.chain_name === chainName);
+    // get the coin data from the chain assets data
+    const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
+    // get the amount in denom terms
+    const amountInDenom = toChainDenom(amount, chainName, chainDenom);
+    // // populate the optional argument fromAddress
+    const fromAddress = delegatorAddress;
+    // // initialize stargate client and create txn
+    const stargateClient = await getSigningStargateClient();
+    if (!stargateClient || !fromAddress) {
+      throw new error("stargateClient or from address undefined");
+    }
+
+    // create a message template from the composer
+    const { delegate } = cosmos.staking.v1beta1.MessageComposer.withTypeUrl;
+
+    const msg = delegate({
+      delegatorAddress,
+      validatorAddress,
+      amount,
+    });
+    // populate the fee data
+    const fee = {
+      amount: [
+        {
+          denom: "umntl",
+          amount: "2000",
+        },
+      ],
+      gas: "86364",
+    };
+    // use the stargate client to dispatch the transaction
+    const response = await stargateClient.signAndBroadcast(
+      delegatorAddress,
+      [msg],
+      fee,
+      memo
+    );
+    console.log("msg: ", msg, " amount: ", amountInDenom);
+    return { response, error: null };
+  } catch (error) {
+    console.error("Error during transaction: ", error?.message);
+    return { response: null, error };
+  }
+};
+
+export const sendUndelegation = async (
+  delegatorAddress,
+  validatorAddress,
+  amount,
+  memo,
+  {
+    getSigningStargateClient,
+    chainName = defaultChainName,
+    chainDenom = defaultChainDenom,
+  }
+) => {
+  try {
+    // get the chain assets for the specified chain
+    const chainassets = assets.find((chain) => chain.chain_name === chainName);
+    // get the coin data from the chain assets data
+    const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
+    // get the amount in denom terms
+    const amountInDenom = toChainDenom(amount, chainName, chainDenom);
+    // // populate the optional argument fromAddress
+    const fromAddress = delegatorAddress;
+    // // initialize stargate client and create txn
+    const stargateClient = await getSigningStargateClient();
+    if (!stargateClient || !fromAddress) {
+      throw new error("stargateClient or from address undefined");
+    }
+
+    // create a message template from the composer
+    const { undelegate } = cosmos.staking.v1beta1.MessageComposer.withTypeUrl;
+
+    const msg = undelegate({
+      delegatorAddress,
+      validatorAddress,
+      amount,
+    });
+    // populate the fee data
+    const fee = {
+      amount: [
+        {
+          denom: "umntl",
+          amount: "2000",
+        },
+      ],
+      gas: "86364",
+    };
+    // use the stargate client to dispatch the transaction
+    const response = await stargateClient.signAndBroadcast(
+      delegatorAddress,
+      [msg],
+      fee,
+      memo
+    );
+    console.log("msg: ", msg, " amount: ", amountInDenom);
+    return { response, error: null };
+  } catch (error) {
+    console.error("Error during transaction: ", error?.message);
+    return { response: null, error };
+  }
+};
+
+export const sendRewards = async (
+  delegatorAddress,
+  validatorAddress,
+  memo,
+  {
+    getSigningStargateClient,
+    chainName = defaultChainName,
+    chainDenom = defaultChainDenom,
+  }
+) => {
+  try {
+    // get the chain assets for the specified chain
+    const chainassets = assets.find((chain) => chain.chain_name === chainName);
+    // get the coin data from the chain assets data
+    const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
+    // // get the amount in denom terms
+    // const amountInDenom = toChainDenom(amount, chainName, chainDenom);
+    // // populate the optional argument fromAddress
+    const fromAddress = delegatorAddress;
+    // // initialize stargate client and create txn
+    const stargateClient = await getSigningStargateClient();
+    if (!stargateClient || !fromAddress) {
+      throw new error("stargateClient or from address undefined");
+    }
+
+    // create a message template from the composer
+    const { withdrawDelegatorReward } =
+      cosmos.distribution.v1beta1.MessageComposer.withTypeUrl;
+
+    const msg = withdrawDelegatorReward({
+      delegatorAddress,
+      validatorAddress,
+    });
+    // populate the fee data
+    const fee = {
+      amount: [
+        {
+          denom: "umntl",
+          amount: "2000",
+        },
+      ],
+      gas: "86364",
+    };
+    // use the stargate client to dispatch the transaction
+    const response = await stargateClient.signAndBroadcast(
+      delegatorAddress,
       [msg],
       fee,
       memo

@@ -5,6 +5,7 @@ import {
   placeholderMntlUsdValue,
   placeholderRewards,
 } from "../config";
+import { sendRewards } from "../data";
 import { fromDenom, useTotalRewards, useMntlUsd } from "../data/swrStore";
 
 const denomDisplay = chainSymbol;
@@ -41,10 +42,26 @@ const Rewards = ({ selectedValidator }) => {
           .toFixed(6)
           .toString();
 
+  const handleClaim = async () => {
+    const { response, error } = await sendRewards(
+      dataObject?.delegatorAddress,
+      dataObject?.validatorSrcAddress,
+      dataObject?.memo,
+      { getSigningStargateClient }
+    );
+    console.log("response: ", response, " error: ", error);
+  };
+
   return (
     <div className="nav-bg p-3 rounded-4 gap-3">
       <div className="d-flex flex-column gap-2">
-        <p className="caption d-flex gap-2 align-items-center">Rewards</p>
+        {selectedValidator.length ? (
+          <p className="caption d-flex gap-2 align-items-center">
+            Cumulative Rewards
+          </p>
+        ) : (
+          <p className="caption d-flex gap-2 align-items-center"> Rewards</p>
+        )}
         <p className="caption">
           {rewardsDisplay}&nbsp;
           {denomDisplay}
@@ -52,7 +69,11 @@ const Rewards = ({ selectedValidator }) => {
         <p className="caption">
           {rewardsInUSDDisplay}&nbsp;{"$USD"}
         </p>
-        <button className="am-link text-start">Claim</button>
+        <div className="d-flex justify-content-end">
+          <button onClick={handleClaim} className="am-link text-start">
+            <i className="text-primary bi bi-box-arrow-in-down"></i>Claim
+          </button>
+        </div>
       </div>
     </div>
   );
