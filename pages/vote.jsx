@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { BsArrowUpRight } from "react-icons/bs";
+import {
+  BsArrowUpRight,
+  BsFillCheckCircleFill,
+  BsDashCircleFill,
+  BsFillXCircleFill,
+} from "react-icons/bs";
 
 export default function Vote() {
   const [ActiveNav, setActiveNav] = useState(0);
@@ -10,9 +15,72 @@ export default function Vote() {
   const pastVotingPower =
     1 === 2 ? { display: "4/10", value: 40 } : { display: "X/X", value: "" };
 
+  const Proposals = [
+    {
+      id: "123",
+      idIcon: 0,
+      name: "Signaling Proposal",
+      title: "Lorem ipsum dolor Sit Amet consectetur ",
+      description: "Lorem ipsum dolor sit amet, consectetur elit.",
+      votingStarts: "00:00:00  DD-MM-YYYY",
+      votingEnds: "00:00:00  DD-MM-YYYY",
+      status: "Voting period",
+    },
+    {
+      id: "123",
+      idIcon: 1,
+      name: "Signaling Proposal",
+      title: "Lorem ipsum dolor Sit Amet consectetur ",
+      description: "Lorem ipsum dolor sit amet, consectetur elit.",
+      votingStarts: "00:00:00  DD-MM-YYYY",
+      votingEnds: "00:00:00  DD-MM-YYYY",
+      status: "Voting period",
+    },
+    {
+      id: "123",
+      idIcon: 2,
+      name: "Signaling Proposal",
+      title: "Lorem ipsum dolor Sit Amet consectetur ",
+      description: "Lorem ipsum dolor sit amet, consectetur elit.",
+      votingStarts: "00:00:00  DD-MM-YYYY",
+      votingEnds: "00:00:00  DD-MM-YYYY",
+      status: "Voting period",
+    },
+    {
+      id: "123",
+      idIcon: 3,
+      name: "Signaling Proposal",
+      title: "Lorem ipsum dolor Sit Amet consectetur ",
+      description: "Lorem ipsum dolor sit amet, consectetur elit.",
+      votingStarts: "00:00:00  DD-MM-YYYY",
+      votingEnds: "00:00:00  DD-MM-YYYY",
+      status: "Voting period",
+    },
+    {
+      id: "123",
+      idIcon: 0,
+      name: "Signaling Proposal",
+      title: "Lorem ipsum dolor Sit Amet consectetur ",
+      description: "Lorem ipsum dolor sit amet, consectetur elit.",
+      votingStarts: "00:00:00  DD-MM-YYYY",
+      votingEnds: "00:00:00  DD-MM-YYYY",
+      status: "Voting period",
+    },
+    {
+      id: "123",
+      idIcon: 0,
+      name: "Signaling Proposal",
+      title: "Lorem ipsum dolor Sit Amet consectetur ",
+      description: "Lorem ipsum dolor sit amet, consectetur elit.",
+      votingStarts: "00:00:00  DD-MM-YYYY",
+      votingEnds: "00:00:00  DD-MM-YYYY",
+      status: "Voting period",
+    },
+  ];
+
   return (
     <section className="row">
-      <div className="col-12 col-lg-8">
+      <div className="col-12 col-lg-8 px-1">
         <div className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-2 transitionAll">
           <nav className="d-flex align-items-center justify-content-between gap-3">
             <h1 className="body2 text-primary">Proposals</h1>
@@ -38,7 +106,78 @@ export default function Vote() {
               </button>
             </div>
           </nav>
-          <div className="nav-bg rounded-4 d-flex flex-column p-3 gap-3"></div>
+          <div className="nav-bg rounded-4 d-flex flex-column px-3 py-2 gap-3">
+            <div className="row">
+              {React.Children.toArray(
+                Proposals.map((proposal) => (
+                  <div className={`col-12 col-md-6 p-2`}>
+                    <div
+                      className={`bg-translucent rounded-3`}
+                      style={{ opacity: proposal.idIcon ? "1" : "0.6" }}
+                    >
+                      <div className="d-flex flex-column gap-2 p-2">
+                        <div className="d-flex justify-content-between gap-3 pb-2">
+                          <h4 className="d-flex gap-1 align-items-center body2 text-primary">
+                            {proposal.id}{" "}
+                            {proposal.idIcon ? (
+                              <span
+                                className={
+                                  {
+                                    1: "text-success",
+                                    2: "text-error",
+                                    3: "text-gray",
+                                  }[proposal.idIcon]
+                                }
+                              >
+                                {
+                                  {
+                                    1: <BsFillCheckCircleFill />,
+                                    2: <BsFillXCircleFill />,
+                                    3: <BsDashCircleFill />,
+                                  }[proposal.idIcon]
+                                }
+                              </span>
+                            ) : (
+                              ""
+                            )}
+                          </h4>
+                          <div
+                            className="button-secondary caption bg-translucent px-2 pb-0 pt-1"
+                            style={{ fontWeight: "400" }}
+                          >
+                            {proposal.name}
+                          </div>
+                        </div>
+                        <h5 className="caption2 text-primary">
+                          {proposal.title}
+                        </h5>
+                        <p className="small pb-2">{proposal.description}</p>
+                        <p className="caption2">
+                          Voting Start : {proposal.votingStarts}
+                        </p>
+                        <p className="caption2">
+                          Voting End : {proposal.votingEnds}
+                        </p>
+                      </div>
+                      <div className="py-2">
+                        <p
+                          className="small bg-blue-100 p-2 pe-4 text-dark text-uppercase"
+                          style={{
+                            clipPath:
+                              "polygon(0% 0%, 80% 0%, 100% 50%, 80% 100%, 0% 100%)",
+                            width: "max-content",
+                            fontWeight: "700",
+                          }}
+                        >
+                          {proposal.status}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
         </div>
       </div>
       <div className="col-12 pt-3 pt-lg-0 col-lg-4">
