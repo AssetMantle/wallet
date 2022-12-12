@@ -103,7 +103,7 @@ const Delegations = ({ selectedValidator }) => {
           </p>
           {showRedelegateUndelegateAndClaim ? (
             <div className="d-flex justify-content-end">
-              <div className="d-flex w-75 justify-content-around">
+              <div className="d-flex flex-row w-75 justify-content-around">
                 <button
                   onClick={handleRedelegate}
                   className="am-link text-start"
