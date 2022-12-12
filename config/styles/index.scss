@@ -280,6 +280,9 @@ a:hover {
 .text-white {
   color: $primary-light !important;
 }
+.text-white-200 {
+  color: $white-200 !important;
+}
 .text-gray {
   color: $gray-100;
 }
@@ -297,6 +300,9 @@ a:hover {
 }
 .border-color-light_gray {
   border-color: $gray-100;
+}
+.border-color-white {
+  border-color: $primary-light !important;
 }
 .overflow-y {
   overflow: hidden;
