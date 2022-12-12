@@ -7,10 +7,22 @@ import {
 } from "../config";
 import { sendRewards } from "../data";
 import { fromDenom, useTotalRewards, useMntlUsd } from "../data/swrStore";
+import { useWallet } from "@cosmos-kit/react";
 
 const denomDisplay = chainSymbol;
 
+const dataObject = {
+  delegatorAddress: "mantle1jxe2fpgx6twqe7nlxn4g96nej280zcemgqjmk0",
+  validatorSrcAddress: "mantlevaloper1qpkax9dxey2ut8u39meq8ewjp6rfsm3hlsyceu",
+  validatorDstAddress: "mantlevaloper1p0wy6wdnw05h33rfeavqt3ueh7274hcl420svt",
+  amount: 1,
+  option: "yes",
+};
+
 const Rewards = ({ selectedValidator }) => {
+  const walletManager = useWallet();
+  const { getSigningStargateClient, address, status } = walletManager;
+
   const { allRewards, rewardsArray, isLoadingRewards, errorRewards } =
     useTotalRewards();
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();

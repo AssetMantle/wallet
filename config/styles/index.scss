@@ -241,6 +241,16 @@ a:hover {
 
 // customs as needed
 // globally
+
+$primary: $yellow-100;
+$card-bg: $gray-800;
+$modal-content-bg: $gray-400;
+
+.btn-inactive {
+  background-color: $gray-800;
+  color: white !important;
+  border: 1px solid #383838 !important;
+}
 .nav-bg {
   background-color: $nav-bg;
 }
@@ -355,6 +365,9 @@ hr {
   &:focus {
     outline: none;
   }
+}
+.input-white {
+  border: 1px solid $white-400;
 }
 .am-input-secondary {
   background: transparent;
@@ -659,3 +672,5 @@ tbody {
     content: "";
   }
 }
+
+@import "../../node_modules/bootstrap/scss/bootstrap";

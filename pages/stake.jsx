@@ -1,25 +1,18 @@
 import React, { useState, useEffect } from "react";
 import {
-  useTotalDelegations,
   useDelegatedValidators,
   useAllValidators,
   useAllProposals,
 } from "../data/swrStore";
 import StakedToken from "../views/StakedToken";
-import {
-  sendRedelegation,
-  sendRewards,
-  sendDelegation,
-  sendUndelegation,
-  sendVote,
-} from "../data";
 import { useWallet } from "@cosmos-kit/react";
 
 const Stake = () => {
+  const [activeValidators, setActiveValidators] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [delegated, setDelegated] = useState(false);
   const [selectedValidator, setSelectedValidator] = useState([]);
-  const walletManager = useWallet();
-  const { getSigningStargateClient, address, status } = walletManager;
+  const [validatorAvatar, setValidatorAvatar] = useState([]);
   const {
     delegatedValidators,
     totalDelegatedAmount,
@@ -40,6 +33,55 @@ const Stake = () => {
     }
   });
 
+  //function for fetching avatars of all validators
+  const fetchIcons = async () => {
+    if (allValidators?.length != 1) {
+      let allValidatorUrls = allValidators.map(
+        (validator) =>
+          `https://keybase.io/_/api/1.0/user/lookup.json?key_suffix=${validator?.description?.identity}&fields=pictures`
+      );
+      let limitValue = 10;
+
+      const singleFetch = async (url) => {
+        try {
+          const res = await fetch(url);
+          const data = await res.json();
+          if ("them" in data) {
+            const img = data?.them[0]?.pictures?.primary?.url || "";
+            return img;
+          }
+          return "";
+        } catch (error) {
+          throw error;
+        }
+      };
+
+      const multifetch = async (urls) => {
+        if (urls?.length > 0) {
+          return Promise.all(urls.map(singleFetch));
+        }
+        return [];
+      };
+
+      const updateChunk = async (startIndex) => {
+        try {
+          let slicedArray = allValidatorUrls.slice(
+            startIndex,
+            startIndex + limitValue
+          );
+          let urlChunkArray = await multifetch(slicedArray);
+          setValidatorAvatar((pre) => [...pre, ...urlChunkArray]);
+          if (startIndex < allValidatorUrls.length) {
+            await updateChunk(startIndex + limitValue, allValidatorUrls);
+          }
+        } catch (error) {
+          return [];
+        }
+      };
+      await updateChunk(0, allValidatorUrls);
+    }
+  };
+
   //calculate total tokens to calculate voting power for each validator
   const totalTokens = validatorsArray.reduce(
     (accumulator, currentValue) => accumulator + parseInt(currentValue.tokens),
@@ -55,38 +97,37 @@ const Stake = () => {
     option: "yes",
   };
 
-  const handleStake = async () => {
-    const { response, error } = await sendDelegation(
-      dataObject?.delegatorAddress,
-      dataObject?.validatorSrcAddress,
-      { amount: dataObject?.amount.toString(), denom: "umntl" },
-      dataObject?.memo,
-      { getSigningStargateClient }
-    );
-    console.log("response: ", response, " error: ", error);
-  };
-
-  const handleVote = async () => {
-    const { response, error } = await sendVote(
-      dataObject?.proposalId,
-      dataObject?.delegatorAddress,
-      dataObject?.option,
-      dataObject?.memo,
-      { getSigningStargateClient }
-    );
-    console.log("response: ", response, " error: ", error);
-  };
+  useEffect(() => {
+    setIsLoading(true);
+    (async () => {
+      await fetchIcons();
+      setIsLoading(false);
+    })();
+  }, [allValidators?.length]);
 
   return (
     <>
       <section className="row">
-        <button onClick={handleVote}>click</button>
         <div className="card bg-gray-800 col-12 col-lg-8">
           <div className="d-flex justify-content-between">
             <p className="text-primary fs-3">Validators</p>
             <div className="btn-group">
-              <button className="btn btn-primary">Active</button>
-              <button className="btn btn-primary">Inactive</button>
+              <button
+                className={
+                  activeValidators ? "btn btn-primary" : "btn btn-inactive"
+                }
+                onClick={() => setActiveValidators(true)}
+              >
+                Active
+              </button>
+              <button
+                className={
+                  !activeValidators ? "btn btn-primary" : "btn btn-inactive"
+                }
+                onClick={() => setActiveValidators(false)}
+              >
+                Inactive
+              </button>
             </div>
           </div>
           <div className="card-body ">
@@ -125,6 +166,9 @@ const Stake = () => {
                     Rank
                   </th>
                   <th className="text-white" scope="col">
+                    Avatar
+                  </th>
+                  <th className="text-white" scope="col">
                     Validator Name
                   </th>
                   <th className="text-white" scope="col">
@@ -138,7 +182,7 @@ const Stake = () => {
                   </th>
                 </tr>
                 {delegated
-                  ? delegatedValidators.map((item, index) => (
+                  ? delegatedValidators?.map((item, index) => (
                       <tr key={index}>
                         <td>
                           <input
@@ -160,11 +204,13 @@ const Stake = () => {
                         </td>
                         <td className="text-white">{index + 1}</td>
                         <td className="text-white">
-                          {/* <img
-                    alt="validator-logo"
-                    // src={`https://keybase.io/_/api/1.0/user/lookup.json?key_suffix=${item?.description?.identity}&fields=pictures`}
-                    src={()=}
-                  ></img> */}
+                          {isLoading ? (
+                            "load.."
+                          ) : (
+                            <img src={validatorAvatar[index]} />
+                          )}
+                        </td>
+                        <td className="text-white">
                           {item?.description?.moniker}
                         </td>
                         <td className="text-white">
@@ -204,11 +250,13 @@ const Stake = () => {
                         </td>
                         <td className="text-white">{index + 1}</td>
                         <td className="text-white">
-                          {/* <img
-                    alt="validator-logo"
-                    // src={`https://keybase.io/_/api/1.0/user/lookup.json?key_suffix=${item?.description?.identity}&fields=pictures`}
-                    src={()=}
-                  ></img> */}
+                          {isLoading ? (
+                            "load.."
+                          ) : (
+                            <img src={validatorAvatar[index]} />
+                          )}
+                        </td>
+                        <td className="text-white">
                           {item?.description?.moniker}
                         </td>
                         <td className="text-white">

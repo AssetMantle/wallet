@@ -79,6 +79,7 @@ export const sendRedelegation = async (
     chainDenom = defaultChainDenom,
   }
 ) => {
+  console.log(getSigningStargateClient);
   try {
     // get the chain assets for the specified chain
     const chainassets = assets.find((chain) => chain.chain_name === chainName);
@@ -90,6 +91,7 @@ export const sendRedelegation = async (
     const fromAddress = delegatorAddress;
     // // initialize stargate client and create txn
     const stargateClient = await getSigningStargateClient();
+    console.log(stargateClient);
     if (!stargateClient || !fromAddress) {
       throw new error("stargateClient or from address undefined");
     }
@@ -140,8 +142,8 @@ export const sendDelegation = async (
     chainDenom = defaultChainDenom,
   }
 ) => {
+  console.log(getSigningStargateClient);
   try {
-    console.log(getSigningStargateClient);
     // get the chain assets for the specified chain
     const chainassets = assets.find((chain) => chain.chain_name === chainName);
     // get the coin data from the chain assets data

@@ -53,7 +53,11 @@ const Unbonded = ({ selectedValidator }) => {
         <p className="caption">
           {unbondingInUSDDisplay}&nbsp;{"$USD"}
         </p>
-        <button className="am-link text-start">View</button>
+        <div className="d-flex justify-content-end">
+          <button className="am-link text-start">
+            <i className="text-primary bi bi-eye"></i>View
+          </button>
+        </div>
       </div>
     </div>
   );
