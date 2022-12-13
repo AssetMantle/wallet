@@ -32,7 +32,6 @@ const Stake = () => {
       validatorsArray.push(validatorsArray.splice(index, 1)[0]);
     }
   });
-
   //function for fetching avatars of all validators
   const fetchIcons = async () => {
     if (allValidators?.length != 1) {
@@ -181,6 +180,8 @@ const Stake = () => {
                     Delegated Amount
                   </th>
                 </tr>
+              </thead>
+              <tbody>
                 {delegated
                   ? delegatedValidators?.map((item, index) => (
                       <tr key={index}>
@@ -268,7 +269,7 @@ const Stake = () => {
                         <td className="text-white">{item?.tokens / 1000000}</td>
                       </tr>
                     ))}
-              </thead>
+              </tbody>
             </table>
           </div>
         </div>

@@ -95,8 +95,6 @@ const Delegations = ({ selectedValidator }) => {
     console.log("response: ", response, " error: ", error);
   };
 
-  console.log(delegatedValidators);
-
   return (
     <>
       {selectedValidator.length ? (
@@ -186,7 +184,11 @@ const Delegations = ({ selectedValidator }) => {
                 </div>
               </div>
               <div className="modal-footer ">
-                <button type="button" className="btn btn-primary">
+                <button
+                  onClick={handleUndelegate}
+                  type="button"
+                  className="btn btn-primary"
+                >
                   Submit
                 </button>
               </div>

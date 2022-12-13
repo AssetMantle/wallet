@@ -203,6 +203,7 @@ export const sendUndelegation = async (
   }
 ) => {
   try {
+    console.log(getSigningStargateClient);
     // get the chain assets for the specified chain
     const chainassets = assets.find((chain) => chain.chain_name === chainName);
     // get the coin data from the chain assets data
