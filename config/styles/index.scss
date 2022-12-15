@@ -211,8 +211,9 @@ a:hover {
     left: 50%;
     width: 115%;
     height: 2.5px;
+    border: 0;
     background-color: $primary-main;
-    transform: translateX(-50%) translateY(190%) scaleX(0);
+    transform: translateX(-50%) translateY(510%) scaleX(0);
     border-radius: 3px;
     transition: all 200ms ease-in-out;
     transform-origin: left;
@@ -222,7 +223,7 @@ a:hover {
       color: $primary-main;
     }
     &::after {
-      transform: translateX(-50%) translateY(190%) scaleX(1);
+      transform: translateX(-50%) translateY(510%) scaleX(1);
     }
   }
   &.active {
@@ -231,7 +232,7 @@ a:hover {
       color: $primary-main !important;
     }
     &::after {
-      transform: translateX(-50%) translateY(190%) scaleX(1);
+      transform: translateX(-50%) translateY(510%) scaleX(1);
     }
   }
 }
@@ -435,6 +436,17 @@ hr {
 }
 
 // specific styles
+.dropdown-toggle {
+  & > .rotatableIcon {
+    transition: all 300ms ease-in-out;
+    transform: rotate(0deg);
+  }
+  &:focus {
+    & > .rotatableIcon {
+      transform: rotate(180deg);
+    }
+  }
+}
 .box-nav {
   border: 2px solid $gray-500;
   border-radius: 4px;
