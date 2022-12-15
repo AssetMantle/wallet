@@ -4,7 +4,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { MdOutlineContentCopy } from "react-icons/md";
 import { RiKey2Fill } from "react-icons/ri";
 import { TbUnlink } from "react-icons/tb";
-import { BsWallet2, BsLink45Deg, BsCheckCircle } from "react-icons/bs";
+import {
+  BsWallet2,
+  BsLink45Deg,
+  BsCheckCircle,
+  BsChevronDown,
+} from "react-icons/bs";
 import { BasicData } from "../data";
 import ModalContainer from "../components/ModalContainer";
 import ConnectModal from "./ConnectModal";
@@ -114,19 +119,42 @@ export default function Header({ Connected, setConnected }) {
                   </Link>
                 ))
               )}
-              <div className="nav-item dropdown">
-                <button
-                  className="nav-link p-0 d-flex gap-1 align-items-center dropdown-toggle am-link text-white am-nav-item"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                  ref={profileRef}
-                >
-                  <span className="body1">
-                    <BsWallet2 />
-                  </span>
-                </button>
-                <div className="dropdown-menu nav-bg p-3 rounded-4 text-white">
-                  {Connected ? (
+              {Connected ? (
+                <div className="nav-item dropdown">
+                  <button
+                    className="button-secondary nav-link d-flex gap-2 align-items-center dropdown-toggle am-nav-item py-1 px-3"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    ref={profileRef}
+                  >
+                    <div
+                      className="position-relative rounded-circle"
+                      style={{ width: "23px", aspectRatio: "1/1" }}
+                    >
+                      <Image
+                        layout="fill"
+                        className="rounded-circle"
+                        src={
+                          ConnectOptionObject[ConnectOption.toLowerCase()].icon
+                        }
+                        alt={
+                          ConnectOptionObject[ConnectOption.toLowerCase()].name
+                        }
+                      />
+                    </div>
+                    {dataSet.address &&
+                      `${dataSet.address.substring(
+                        0,
+                        5
+                      )}...${dataSet.address.substring(
+                        dataSet.address.length - 5,
+                        dataSet.address.length
+                      )}`}
+                    <span className="rotatableIcon">
+                      <BsChevronDown />
+                    </span>
+                  </button>
+                  <div className="dropdown-menu nav-bg p-3 rounded-4 text-white">
                     <>
                       <div className="d-flex gap-3 py-3">
                         <div
@@ -211,13 +239,6 @@ export default function Header({ Connected, setConnected }) {
                         </div>
                       </div>
                       <hr className="my-3" />
-                      <button className="d-flex align-items-center justify-content-center gap-2 text-center body2">
-                        <span className="text-primary">
-                          <RiKey2Fill />
-                        </span>
-                        Generate KeyStore
-                      </button>
-                      <hr className="my-3" />
                       <button
                         className="d-flex align-items-center justify-content-center gap-2 text-center body2"
                         onClick={() => setConnected(false)}
@@ -228,16 +249,19 @@ export default function Header({ Connected, setConnected }) {
                         Disconnect
                       </button>
                     </>
-                  ) : (
-                    <button
-                      className="d-flex align-items-center justify-content-center gap-2 text-center body2 text-primary px-5"
-                      onClick={() => setConnectFlow(1)}
-                    >
-                      <BsLink45Deg /> Connect
-                    </button>
-                  )}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <button
+                  className="button-secondary d-flex gap-1 align-items-center am-nav-item py-1 px-3"
+                  onClick={() => setConnectFlow(1)}
+                >
+                  <span className="text-primary">
+                    <BsWallet2 />
+                  </span>
+                  Connect
+                </button>
+              )}
             </div>
           </nav>
         </div>
