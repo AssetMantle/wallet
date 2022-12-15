@@ -1,4 +1,5 @@
 import { assets } from "chain-registry";
+import { get } from "https";
 import { defaultChainDenom, defaultChainName } from "../config";
 import { cosmos } from "../modules";
 import { toChainDenom } from "./swrStore";
@@ -142,7 +143,6 @@ export const sendDelegation = async (
     chainDenom = defaultChainDenom,
   }
 ) => {
-  console.log(getSigningStargateClient);
   try {
     // get the chain assets for the specified chain
     const chainassets = assets.find((chain) => chain.chain_name === chainName);
@@ -203,7 +203,6 @@ export const sendUndelegation = async (
   }
 ) => {
   try {
-    console.log(getSigningStargateClient);
     // get the chain assets for the specified chain
     const chainassets = assets.find((chain) => chain.chain_name === chainName);
     // get the coin data from the chain assets data

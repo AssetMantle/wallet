@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   chainSymbol,
   placeholderMntlUsdValue,
@@ -14,6 +14,7 @@ import {
 const denomDisplay = chainSymbol;
 
 const Unbonded = ({ selectedValidator }) => {
+  const [activeValidators, setActiveValidators] = useState(true);
   const {
     totalUnbondingAmount,
     allUnbonding,
@@ -37,8 +38,6 @@ const Unbonded = ({ selectedValidator }) => {
         accumulator + parseFloat(currentValue?.entries[0]?.balance),
       0
     );
-
-  console.log(delegatedValidators);
 
   const cumulativeUnbonding = errorUnbonding
     ? placeholderTotalUnbonding
@@ -100,88 +99,93 @@ const Unbonded = ({ selectedValidator }) => {
         <div className="modal-dialog modal-dialog-centered" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 class="modal-title">Undelegating Lisst</h5>
+              <h5 className="modal-title">Undelegating List</h5>
               <button
                 type="button"
-                class="btn-close primary"
+                className="btn-close primary"
                 data-bs-dismiss="modal"
                 aria-label="Close"
               ></button>
             </div>
             <div className="modal-body p-4 text-center d-flex flex-column">
               <div className="d-flex justify-content-between nav-bg">
-                {/* <div className="input-group">
-                  <span className="input-group-text" id="basic-addon1">
-                    <i className="bi bi-search text-primary"></i>
-                  </span>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Search"
-                    aria-label="Search"
-                  ></input>
-                </div> */}
-                <table className="table nav-bg">
-                  <thead>
-                    <tr>
-                      <th className="text-white" scope="col">
-                        Validator Name
-                      </th>
-                      <th className="text-white" scope="col">
-                        Unelegating Amount
-                      </th>
-                      <th className="text-white" scope="col">
-                        Duration Left
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {delegatedValidators
-                      ?.filter(
-                        (item) =>
-                          item?.validator_address ===
-                          allUnbonding.find(
-                            (element) =>
-                              item?.operator_address ===
-                              element?.validator_address
-                          )
-                      )
-                      .map((item, index) => (
-                        <tr className="text-white" key={index}>
-                          <td>{item?.description?.moniker}</td>
-                          <td>{item?.delegatedAmount}</td>
-                          <td>
-                            {/* {getTimeRemaining(
-                              allUnbonding?.find(
-                                (element) =>
-                                  element.validator_address ===
-                                  item?.operator_address
-                              )?.entries[0].completion_time
-                            )} */}
-                            {
-                              // getTimeRemaining(
-                              allUnbonding?.find(
-                                (element) =>
-                                  element.validator_address ===
-                                  item?.operator_address
-                              )?.entries[0]?.completion_time
-                              // ).hours
+                <div className="d-flex flex-column">
+                  <div className="input-group d-flex">
+                    <span className="input-group-text" id="basic-addon1">
+                      <i className="bi bi-search text-primary"></i>
+                    </span>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Search"
+                      aria-label="Search"
+                    ></input>
+                    <div className="btn-group">
+                      <button
+                        className={
+                          activeValidators
+                            ? "btn btn-primary"
+                            : "btn btn-inactive"
+                        }
+                        onClick={() => setActiveValidators(true)}
+                      >
+                        Active
+                      </button>
+                      <button
+                        className={
+                          !activeValidators
+                            ? "btn btn-primary"
+                            : "btn btn-inactive"
+                        }
+                        onClick={() => setActiveValidators(false)}
+                      >
+                        Inactive
+                      </button>
+                    </div>
+                  </div>
+                  <table className="table nav-bg">
+                    <thead>
+                      <tr>
+                        <th className="text-white" scope="col">
+                          Validator Name
+                        </th>
+                        <th className="text-white" scope="col">
+                          Unelegating Amount
+                        </th>
+                        <th className="text-white" scope="col">
+                          Duration Left
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {allUnbonding?.map((item, index) => (
+                        <tr key={index}>
+                          <td
+                            data-bs-toggle="modal"
+                            data-bs-target="#viewUndelegatingModal"
+                            className="text-white"
+                            onClick={() =>
+                              selectedValidator.push(item?.address)
                             }
+                          >
+                            {
+                              delegatedValidators?.find(
+                                (ele) => ele?.operator_address === item?.address
+                              )?.description?.moniker
+                            }
+                          </td>
+                          <td className="text-white">{item?.balance}</td>
+                          <td className="text-white">
+                            {getTimeRemaining(item?.completion_time).days} days,{" "}
+                            {getTimeRemaining(item?.completion_time).hours}{" "}
+                            hours
                           </td>
                         </tr>
                       ))}
-                  </tbody>
-                </table>
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
-            <div className="modal-footer ">
-              <button
-                // onClick={handleUndelegate}
-                type="button"
-                className="btn btn-primary"
-              >
-                Submit
-              </button>
             </div>
           </div>
         </div>

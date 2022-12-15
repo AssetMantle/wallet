@@ -167,31 +167,36 @@ export const useExample = () => {
 export const useTotalUnbonding = () => {
   // get the connected wallet parameters from useWallet hook
   const walletManager = useWallet();
-  // const { walletStatus, address, currentWalletInfo } = walletManager;
-
-  const address = "mantle1jxe2fpgx6twqe7nlxn4g96nej280zcemgqjmk0";
+  const { walletStatus, address, currentWalletInfo } = walletManager;
 
   const fetchTotalUnbonding = async (url, address) => {
     let totalUnbondingAmount;
-    let allUnbonding;
+    let allUnbonding = [];
 
     try {
       const { unbonding_responses } =
         await client.cosmos.staking.v1beta1.delegatorUnbondingDelegations({
           delegatorAddr: address,
         });
-      allUnbonding = unbonding_responses;
-      totalUnbondingAmount = unbonding_responses.reduce(
-        (total, currentValue) =>
-          parseFloat(total) + parseFloat(currentValue?.entries[0]?.balance),
-        parseFloat("0")
-      );
-
-      // totalUnbondingAmount = unbonding_responses;
+      unbonding_responses?.map((item) => {
+        item?.entries.map((ele) =>
+          allUnbonding.push({
+            address: item.validator_address,
+            balance: ele.balance,
+            completion_time: ele.completion_time,
+          })
+        );
+        totalUnbondingAmount = allUnbonding?.reduce(
+          (total, currentValue) =>
+            parseFloat(total) + parseFloat(currentValue?.balance),
+          parseFloat("0")
+        );
+      });
     } catch (error) {
       console.error(`swr fetcher error: ${url}`);
       throw error;
     }
+    // console.log(totalUnbondingAmount, allUnbonding);
     return { totalUnbondingAmount, allUnbonding };
   };
 
@@ -226,9 +231,7 @@ export const useTotalUnbonding = () => {
 export const useTotalRewards = () => {
   // get the connected wallet parameters from useWallet hook
   const walletManager = useWallet();
-  // const { walletStatus, address, currentWalletInfo } = walletManager;
-
-  const address = "mantle1jxe2fpgx6twqe7nlxn4g96nej280zcemgqjmk0";
+  const { walletStatus, address, currentWalletInfo } = walletManager;
 
   const fetchTotalRewards = async (url, address) => {
     let totalRewards;
@@ -278,9 +281,7 @@ export const useTotalRewards = () => {
 export const useDelegatedValidators = () => {
   // get the connected wallet parameters from useWallet hook
   const walletManager = useWallet();
-  // const { walletStatus, address, currentWalletInfo } = walletManager;
-
-  let address = "mantle1jxe2fpgx6twqe7nlxn4g96nej280zcemgqjmk0";
+  const { walletStatus, address, currentWalletInfo } = walletManager;
 
   // let address = null;
   // console.log("address: ", address, " currentWalletInfo: ", currentWalletInfo);
@@ -296,13 +297,11 @@ export const useDelegatedValidators = () => {
 
       //Fetch a list of all validators
       const { validators } = await client.cosmos.staking.v1beta1.validators();
-
       //Fetch a list of all validators that have been delegated by the delegator
       const { delegation_responses } =
         await client.cosmos.staking.v1beta1.delegatorDelegations({
           delegatorAddr: address,
         });
-
       //Create an array of delegated validators with all additional information about them
       delegation_responses.map((item) => {
         let match = validators.find(
@@ -356,9 +355,7 @@ export const useDelegatedValidators = () => {
 export const useTotalDelegations = () => {
   // get the connected wallet parameters from useWallet hook
   const walletManager = useWallet();
-  // const { walletStatus, address, currentWalletInfo } = walletManager;
-
-  let address = "mantle1jxe2fpgx6twqe7nlxn4g96nej280zcemgqjmk0";
+  const { walletStatus, address, currentWalletInfo } = walletManager;
 
   // let address = null;
   // console.log("address: ", address, " currentWalletInfo: ", currentWalletInfo);
@@ -448,11 +445,6 @@ export const useAvailableBalance = () => {
   const walletManager = useWallet();
   const { walletStatus, address, currentWalletInfo } = walletManager;
 
-  // let address = "mantle1egdwq4khcmsyd0tk6mpq28r7eawjpe6n5jdrm4";
-
-  // let address = null;
-  // console.log("address: ", address, " currentWalletInfo: ", currentWalletInfo);
-
   // fetcher function for useSwr of useAvailableBalance()
   const fetchAvailableBalance = async (url, address) => {
     // console.log("inside fetchAvailableBalance, url: ", url);
@@ -465,7 +457,6 @@ export const useAvailableBalance = () => {
         address,
         denom,
       });
-
       balanceValue = balance;
       // console.log("swr fetcher success: ", url);
     } catch (error) {
@@ -500,7 +491,7 @@ export const useAvailableBalance = () => {
 export const useAllValidators = () => {
   // get the connected wallet parameters from useWallet hook
   const walletManager = useWallet();
-  // const { walletStatus, address, currentWalletInfo } = walletManager;
+  const { walletStatus, address, currentWalletInfo } = walletManager;
   // const multifetch = (urlsArray) => {
   //   const fetchEach = (url) => fetch(url).then((response) => response.json());
 
@@ -510,8 +501,6 @@ export const useAllValidators = () => {
 
   //   return null;
   // };
-
-  let address = "mantle1jxe2fpgx6twqe7nlxn4g96nej280zcemgqjmk0";
 
   // let address = null;
   // console.log("address: ", address, " currentWalletInfo: ", currentWalletInfo);
@@ -566,7 +555,7 @@ export const useAllValidators = () => {
 export const useAllProposals = () => {
   // get the connected wallet parameters from useWallet hook
   const walletManager = useWallet();
-  // const { walletStatus, address, currentWalletInfo } = walletManager;
+  const { walletStatus, address, currentWalletInfo } = walletManager;
   // const multifetch = (urlsArray) => {
   //   const fetchEach = (url) => fetch(url).then((response) => response.json());
 
@@ -576,8 +565,6 @@ export const useAllProposals = () => {
 
   //   return null;
   // };
-
-  let address = "mantle1jxe2fpgx6twqe7nlxn4g96nej280zcemgqjmk0";
 
   // let address = null;
   // console.log("address: ", address, " currentWalletInfo: ", currentWalletInfo);
