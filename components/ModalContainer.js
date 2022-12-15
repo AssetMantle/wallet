@@ -8,30 +8,34 @@ export default function ModalContainer({ active, children }) {
   }, [active]);
 
   return (
-    active && (
-      <div
-        className="position-fixed top-0 bottom-0 left-0 right-0 d-flex  pb-4"
-        style={{
-          width: "100dvw",
-          height: "100dvh",
-          background: "rgba(0, 0, 0, 0.7)",
-          backdropFilter: "blur(5px)",
-          zIndex: "500",
-          paddingTop: "80px",
-        }}
-      >
+    <>
+      {active && active !== 0 ? (
         <div
-          className="d-flex m-auto p-2 align-items-center justify-content-center"
+          className="position-fixed top-0 bottom-0 left-0 right-0 d-flex  pb-4"
           style={{
-            width: "min(600px,100%)",
-            height: "100%",
-            overflowX: "hidden",
-            overflowY: "auto",
+            width: "100dvw",
+            height: "100dvh",
+            background: "rgba(0, 0, 0, 0.7)",
+            backdropFilter: "blur(5px)",
+            zIndex: "500",
+            paddingTop: "80px",
           }}
         >
-          {children}
+          <div
+            className="d-flex m-auto p-2 align-items-center justify-content-center"
+            style={{
+              width: "min(600px,100%)",
+              height: "100%",
+              overflowX: "hidden",
+              overflowY: "auto",
+            }}
+          >
+            {children}
+          </div>
         </div>
-      </div>
-    )
+      ) : (
+        ""
+      )}
+    </>
   );
 }
