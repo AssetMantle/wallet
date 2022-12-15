@@ -26,6 +26,8 @@ $dark-200: #111111;
 $dark-300: #040404cc;
 $dark-400: #030301;
 
+$blue-100: #6fb4b5;
+
 $success: #148919;
 $error: #e44651;
 
@@ -62,7 +64,6 @@ $background-selected-tag: $yellow-900;
     background: transparent;
   }
 }
-
 body {
   background-color: $dark-200 !important;
   color: $primary-light;
@@ -128,6 +129,10 @@ body {
   line-height: 100%;
 }
 .caption2 {
+  @include fontRoot("Roboto", 300, 0.9rem);
+  line-height: 100%;
+}
+.small {
   @include fontRoot("Roboto", 300, 0.8rem);
   line-height: 100%;
 }
@@ -260,6 +265,9 @@ $text-muted: $white-400;
 .bg-t {
   background-color: transparent !important;
 }
+.bg-gray-700 {
+  background-color: $gray-700;
+}
 .bg-gray-800 {
   background-color: $gray-800;
 }
@@ -276,6 +284,9 @@ $text-muted: $white-400;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(30px);
 }
+.bg-blue-100 {
+  background-color: $blue-100;
+}
 .text-white {
   color: $primary-light !important;
 }
@@ -290,6 +301,9 @@ $text-muted: $white-400;
 }
 .text-error {
   color: $error;
+}
+.text-success {
+  color: $success;
 }
 .border-color-light_gray {
   border-color: $gray-100;
