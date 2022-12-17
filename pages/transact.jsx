@@ -8,6 +8,7 @@ import Tooltip from "../components/Tooltip";
 import {
   defaultChainGasFee,
   defaultChainMemoSize,
+  defaultChainName,
   defaultChainSymbol,
 } from "../config";
 import {
@@ -39,7 +40,8 @@ export default function Transact() {
     formDispatch({
       type: "SUBMIT",
     });
-    if (isObjEmpty(formState.errorMessages)) {
+    console.log("inside handleSubmit()");
+    if (formState.errorMessages) {
       const { response, error } = await sendTokensTxn(
         address,
         formState.recipientAddress,

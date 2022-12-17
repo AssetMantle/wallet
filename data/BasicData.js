@@ -27,16 +27,8 @@ export const BasicData = {
     },
     {
       title: "Delegate",
-      href: "/delegate",
+      href: "/stake",
       variant: "am-link",
-    },
-    {
-      title: "Explorer",
-      href: "https://explorer.assetmantle.one/",
-      variant: "am-link",
-      target: "_blank",
-      icon: <BiBookOpen />,
-      endIcon: <BsArrowUpRight />,
     },
     {
       title: "IBC Transaction",
@@ -47,6 +39,14 @@ export const BasicData = {
       title: "Interchain",
       href: "/interchain",
       variant: "am-link",
+    },
+    {
+      title: "Explorer",
+      href: "https://explorer.assetmantle.one/",
+      variant: "am-link",
+      target: "_blank",
+      icon: <BiBookOpen />,
+      endIcon: <BsArrowUpRight />,
     },
   ],
   rightNav: [
