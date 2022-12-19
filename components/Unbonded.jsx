@@ -13,7 +13,7 @@ import {
 
 const denomDisplay = chainSymbol;
 
-const Unbonded = ({ selectedValidator }) => {
+const Unbonded = ({ selectedValidator, setSelectedUndelegation }) => {
   const [activeValidators, setActiveValidators] = useState(true);
   const {
     totalUnbondingAmount,
@@ -165,7 +165,7 @@ const Unbonded = ({ selectedValidator }) => {
                             data-bs-target="#viewUndelegatingModal"
                             className="text-white"
                             onClick={() =>
-                              selectedValidator.push(item?.address)
+                              setSelectedUndelegation(item?.address)
                             }
                           >
                             {

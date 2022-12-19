@@ -1,4 +1,4 @@
-import React, { Suspense, useReducer } from "react";
+import React, { Suspense, useReducer, useState } from "react";
 import Delegations from "../components/Delegations";
 import Rewards from "../components/Rewards";
 import Unbonded from "../components/Unbonded";
@@ -8,7 +8,13 @@ import { fromDenom, defaultChainSymbol } from "../data";
 import { useAvailableBalance } from "../data";
 import { defaultChainGasFee } from "../config";
 
-export default function StakedToken({ selectedValidator, totalTokens }) {
+export default function StakedToken({
+  selectedValidator,
+  totalTokens,
+  setShowClaimError,
+  showClaimError,
+}) {
+  const [selectedUndelegation, setSelectedUndelegation] = useState("");
   const { availableBalance } = useAvailableBalance();
   const walletManager = useWallet();
   const { getSigningStargateClient, address, status } = walletManager;
@@ -105,20 +111,13 @@ export default function StakedToken({ selectedValidator, totalTokens }) {
 
   const handleStake = async (validator) => {
     const { response, error } = await sendDelegation(
-      dataObject?.delegatorAddress,
+      address,
       validator,
-      { amount: formState.transferAmount.toString(), denom: "umntl" },
-      dataObject?.memo,
+      formState.transferAmount,
+      formState?.memo,
       { getSigningStargateClient }
     );
     console.log("response: ", response, " error: ", error);
-  };
-  const dataObject = {
-    delegatorAddress: "mantle1jxe2fpgx6twqe7nlxn4g96nej280zcemgqjmk0",
-    validatorSrcAddress: "mantlevaloper1qpkax9dxey2ut8u39meq8ewjp6rfsm3hlsyceu",
-    validatorDstAddress: "mantlevaloper1p0wy6wdnw05h33rfeavqt3ueh7274hcl420svt",
-    amount: 1,
-    memo: "yes",
   };
 
   return (
@@ -132,16 +131,23 @@ export default function StakedToken({ selectedValidator, totalTokens }) {
         <h4 className="body1 text-primary">Staked Tokens</h4>
         <Suspense>
           <Delegations
+            selectedUndelegation={selectedUndelegation}
             totalTokens={totalTokens}
             selectedValidator={selectedValidator || []}
           />
         </Suspense>
         <Suspense>
-          <Rewards selectedValidator={selectedValidator || []} />
+          <Rewards
+            setShowClaimError={setShowClaimError}
+            selectedValidator={selectedValidator || []}
+          />
         </Suspense>
         {!selectedValidator?.length ? (
           <Suspense>
-            <Unbonded selectedValidator={selectedValidator || []} />
+            <Unbonded
+              setSelectedUndelegation={setSelectedUndelegation}
+              selectedValidator={selectedValidator || []}
+            />
           </Suspense>
         ) : null}
         {selectedValidator?.length === 1 ? (
@@ -153,11 +159,11 @@ export default function StakedToken({ selectedValidator, totalTokens }) {
             Delegate
           </button>
         ) : null}
-        {selectedValidator?.length > 5 ? (
+        {selectedValidator?.length > 5 || showClaimError ? (
           <div className="d-flex justify-content-between">
             <i className="bi bi-exclamation-circle text-error"></i>
             <p className="text-error ">
-              Culmulative Rewards can be claimed only for 5 or less validators.{" "}
+              Culmulative Rewards can be claimed only for 5 or less validators
             </p>
           </div>
         ) : null}
@@ -210,7 +216,9 @@ export default function StakedToken({ selectedValidator, totalTokens }) {
               </div>
               <div className="modal-footer ">
                 <button
-                  onClick={() => handleStake(selectedValidator[0])}
+                  onClick={() => {
+                    handleStake(selectedValidator[0]);
+                  }}
                   type="button"
                   className="btn btn-primary"
                 >

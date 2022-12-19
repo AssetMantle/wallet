@@ -1,5 +1,5 @@
 import { match } from "assert";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   chainSymbol,
   placeholderMntlUsdValue,
@@ -25,7 +25,7 @@ const dataObject = {
   option: "yes",
 };
 
-const Rewards = ({ selectedValidator }) => {
+const Rewards = ({ selectedValidator, setShowClaimError }) => {
   const walletManager = useWallet();
   const {
     delegatedValidators,
@@ -47,17 +47,16 @@ const Rewards = ({ selectedValidator }) => {
     )
     .reduce(
       (accumulator, currentValue) =>
-        accumulator + parseFloat(currentValue?.reward[0].amount),
+        accumulator + parseFloat(currentValue?.reward[0]?.amount),
       0
     );
-
   const cumulativeRewards = errorRewards
     ? placeholderRewards
     : fromDenom(allRewards);
 
   const rewardsDisplay = selectedValidator.length
     ? fromDenom(selectedRewards)
-    : fromDenom(cumulativeRewards);
+    : cumulativeRewards;
 
   const rewardsInUSDDisplay =
     errorRewards ||
@@ -70,14 +69,13 @@ const Rewards = ({ selectedValidator }) => {
 
   const handleClaim = async () => {
     const { response, error } = await sendRewards(
-      dataObject?.delegatorAddress,
-      dataObject?.validatorSrcAddress,
+      address,
+      selectedValidator,
       dataObject?.memo,
       { getSigningStargateClient }
     );
     console.log("response: ", response, " error: ", error);
   };
-
   return (
     <div className="nav-bg p-3 rounded-4 gap-3">
       <div className="d-flex flex-column gap-2">
@@ -99,8 +97,18 @@ const Rewards = ({ selectedValidator }) => {
           {selectedValidator?.length > 5 ? null : (
             <button
               className="am-link text-start"
-              data-bs-toggle="modal"
+              data-bs-toggle={
+                delegatedValidators?.length > 5 &&
+                selectedValidator.length === 0
+                  ? ""
+                  : "modal"
+              }
               data-bs-target="#claimRewardsModal"
+              onClick={() =>
+                delegatedValidators?.length > 5 &&
+                selectedValidator.length === 0 &&
+                setShowClaimError(true)
+              }
             >
               <i className="text-primary bi bi-box-arrow-in-down"></i>Claim
             </button>
@@ -117,7 +125,7 @@ const Rewards = ({ selectedValidator }) => {
         <div className="modal-dialog modal-dialog-centered" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 class="modal-title">Claim Rewards</h5>
+              <h5 className="modal-title">Claim Rewards</h5>
               <button
                 type="button"
                 class="btn-close primary"
@@ -127,7 +135,25 @@ const Rewards = ({ selectedValidator }) => {
             </div>
             <div className="modal-body p-4 d-flex flex-column text-white">
               <h6>Total Available $MNTL rewards:</h6>
-              <p>3 $MNTL</p>
+              <p>
+                {selectedValidator.length
+                  ? rewardsArray
+                      ?.filter((item) =>
+                        selectedValidator?.includes(item?.validator_address)
+                      )
+                      .reduce(
+                        (accumulator, currentValue) =>
+                          parseFloat(accumulator) +
+                            parseFloat(currentValue?.reward[0]?.amount) || 0,
+                        parseFloat(0)
+                      )
+                  : rewardsArray?.reduce(
+                      (accumulator, currentValue) =>
+                        parseFloat(accumulator) +
+                          parseFloat(currentValue?.reward[0]?.amount) || 0,
+                      parseFloat(0)
+                    )}
+              </p>
               <p>Selected Validator</p>
               <table className="table nav-bg">
                 <thead>
@@ -171,7 +197,7 @@ const Rewards = ({ selectedValidator }) => {
                                 (element) =>
                                   element?.validator_address ===
                                   item?.operator_address
-                              )?.reward[0].amount / 1000000}
+                              )?.reward[0]?.amount / 1000000}
                             </td>
                           </tr>
                         ))
@@ -197,7 +223,7 @@ const Rewards = ({ selectedValidator }) => {
                             (element) =>
                               element?.validator_address ===
                               item?.operator_address
-                          )?.reward[0].amount / 1000000}
+                          )?.reward[0]?.amount / 1000000}
                         </td>
                       </tr>
                     ))
@@ -211,7 +237,7 @@ const Rewards = ({ selectedValidator }) => {
                 </tbody>
               </table>
               <h6>Current wallet adress for claiming staking rewards:</h6>
-              <p>mantle10x0k7tfhd4hm4hgasfuyg689khb34w4a6kbd6v2v</p>
+              <p>{address}</p>
               <div className="d-flex gap-2">
                 <p>
                   Want to claim your staking rewards to another wallet address?

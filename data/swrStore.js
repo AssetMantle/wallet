@@ -232,11 +232,9 @@ export const useTotalRewards = () => {
   // get the connected wallet parameters from useWallet hook
   const walletManager = useWallet();
   const { walletStatus, address, currentWalletInfo } = walletManager;
-
-  const fetchTotalRewards = async (url, address) => {
+  const fetchTotalRewards = async (url) => {
     let totalRewards;
     let rewardsArray;
-
     try {
       const { rewards } =
         await client.cosmos.distribution.v1beta1.delegationTotalRewards({
@@ -245,11 +243,12 @@ export const useTotalRewards = () => {
       rewardsArray = rewards;
       totalRewards = rewards.reduce(
         (total, currentValue) =>
-          parseFloat(total) + parseFloat(currentValue?.reward[0].amount),
-        parseFloat("0")
+          parseFloat(total) + parseFloat(currentValue?.reward[0]?.amount) || 0,
+        0
       );
     } catch (error) {
       console.error(`swr fetcher error: ${url}`);
+      console.log(error);
       throw error;
     }
     return { totalRewards, rewardsArray };
@@ -277,7 +276,7 @@ export const useTotalRewards = () => {
   };
 };
 
-//Get total amount delegated
+//Get total amount delegated and everyone delegated to
 export const useDelegatedValidators = () => {
   // get the connected wallet parameters from useWallet hook
   const walletManager = useWallet();
