@@ -9,7 +9,7 @@ export default function WalletConnect({
   setStep,
 }) {
   return (
-    <div className="bg-gray-800 p-4 rounded-4 w-100">
+    <div className="bg-gray-800 p-4 rounded-4 w-100 my-auto">
       <div className="d-flex align-items-center justify-content-between ">
         <h1 className="body1 text-primary d-flex align-items-center gap-2">
           <div

@@ -10,6 +10,8 @@ export default function ChooseOption({
   byWallet,
   close,
   connect,
+  WalletAddress,
+  setWalletAddress,
 }) {
   const handleSelect = (name, step) => {
     byWallet(name);
@@ -25,17 +27,23 @@ export default function ChooseOption({
     }, 500);
   };
 
+  const handleGenerateMode = (e) => {
+    e.target.value.length === 45 && setStep(11);
+    setWalletAddress(e.target.value);
+  };
+
   return (
-    <div className="bg-gray-800 p-3 rounded-4 w-100 pb-5">
+    <div className="bg-gray-800 p-4 rounded-4 w-100 my-auto">
       <div className="d-flex align-items-center justify-content-between ">
-        <h1 className="body1 text-primary">Connect</h1>
+        <h1 className="body1 text-primary">Connect Wallet</h1>
         <button className="btn text-primary body1" onClick={() => close()}>
           <span className="text-primary">
             <IoCloseSharp />
           </span>
         </button>
       </div>
-      <p className="text-white-200 caption my-1">
+      <div className="text-white body2 my-1 text-center">Connect With</div>
+      <p className="text-white-200 caption my-1 text-center">
         Connect your wallet using any of the options below
       </p>
       <div className="d-flex flex-column gap-3 mt-5">
@@ -61,7 +69,7 @@ export default function ChooseOption({
               ))
             )}
         </div>
-        <hr />
+        <hr className="my-2" />
         <h2 className="caption text-white">Connect with Ledger</h2>
         <div className="d-flex">
           <button
@@ -77,7 +85,7 @@ export default function ChooseOption({
             </div>
           </button>
         </div>
-        <hr />
+        <hr className="my-2" />
         <h2 className="caption text-white">Connect with Keystore</h2>
         <div className="d-flex">
           <button
@@ -93,6 +101,24 @@ export default function ChooseOption({
             </div>
           </button>
         </div>
+        <div className="d-flex align-items-center gap-2 body2">
+          <hr className="divider" />
+          Or
+          <hr className="divider" />
+        </div>
+        <div className="d-flex flex-column">
+          <div className="text-white body2 text-center">Generate Only Mode</div>
+          <p className="text-white-200 caption text-center">
+            Use this option to view only and generate .json for transactions
+          </p>
+        </div>
+        <input
+          type="text"
+          className="am-input border-color-white bg-transparent px-4 py-1 rounded-2 mt-3"
+          placeholder="Input your wallet address"
+          value={WalletAddress}
+          onChange={(e) => handleGenerateMode(e)}
+        />
       </div>
     </div>
   );
