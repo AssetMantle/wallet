@@ -105,15 +105,15 @@ export default function Header({ Connected, setConnected }) {
                         navItem.variant
                       } text-white ${
                         path && path === navItem.href ? "active" : ""
-                      } am-nav-item`}
+                      }`}
                       target={navItem.target ? navItem.target : "_self"}
                     >
                       {navItem.icon && (
-                        <span className="caption">{navItem.icon}</span>
+                        <span className="body2">{navItem.icon}</span>
                       )}
                       {navItem.title}
                       {navItem.endIcon && (
-                        <span className="caption">{navItem.endIcon}</span>
+                        <span className="body2">{navItem.endIcon}</span>
                       )}
                     </a>
                   </Link>
