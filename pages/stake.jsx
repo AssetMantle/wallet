@@ -1,25 +1,17 @@
-import React, { useState, useEffect } from "react";
-import {
-  useDelegatedValidators,
-  useAllValidators,
-  useAllProposals,
-} from "../data/swrStore";
+import React, { useState, useReducer } from "react";
+import AllValidators from "../components/AllValidators";
+import DelegatedValidators from "../components/DelegatedValidators";
+import { useDelegatedValidators, useAllValidators } from "../data/swrStore";
+import useStakeReducer from "../data/useStakeReducer";
 import StakedToken from "../views/StakedToken";
-import { useWallet } from "@cosmos-kit/react";
 
 const Stake = () => {
+  const { stakeDispatch, stakeState } = useStakeReducer();
+  const [showClaimError, setShowClaimError] = useState(false);
   const [activeValidators, setActiveValidators] = useState(true);
   const [delegated, setDelegated] = useState(false);
-  const [selectedValidator, setSelectedValidator] = useState([]);
-  const {
-    delegatedValidators,
-    totalDelegatedAmount,
-    isLoadingDelegatedAmount,
-    errorDelegatedAmount,
-  } = useDelegatedValidators();
   const { allValidators, isLoadingValidators, errorValidators } =
     useAllValidators();
-
   let validatorsArray = allValidators.sort((a, b) => b.tokens - a.tokens);
 
   //Put all foundation nodes at the end of the array
@@ -39,31 +31,9 @@ const Stake = () => {
     <>
       <section className="row">
         <div className="card bg-gray-800 col-12 col-lg-8">
-          <div
-            className="d-flex align-items-center"
-            onClick={() => {
-              setDelegated((prev) => !prev);
-              setSelectedValidator([]);
-            }}
-          >
-            Delegated
-            {delegated ? (
-              <i className="bi bi-toggle-on fs-1 text-primary"></i>
-            ) : (
-              <i className="bi bi-toggle-off fs-1 text-primary"></i>
-            )}
-          </div>
-          <div className="card-body ">
-            <div className="input-group d-flex">
-              <span className="input-group-text" id="basic-addon1">
-                <i className="bi bi-search text-primary"></i>
-              </span>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Search"
-                aria-label="Search"
-              ></input>
+          <div className="card-body">
+            <div className="d-flex justify-content-between">
+              <div className="card-title">Validators</div>
               <div className="btn-group">
                 <button
                   className={
@@ -83,242 +53,89 @@ const Stake = () => {
                 </button>
               </div>
             </div>
-            <table className="table nav-bg">
-              <thead>
-                <tr>
-                  <th>
-                    <input type="checkbox"></input>
-                  </th>
-                  <th className="text-white" scope="col">
-                    Rank
-                  </th>
-                  <th className="text-white" scope="col">
-                    Avatar
-                  </th>
-                  <th className="text-white" scope="col">
-                    Validator Name
-                  </th>
-                  <th className="text-white" scope="col">
-                    Voting Power
-                  </th>
-                  <th className="text-white" scope="col">
-                    Commission
-                  </th>
-                  <th className="text-white" scope="col">
-                    Delegated Amount
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {delegated
-                  ? activeValidators
-                    ? delegatedValidators
-                        ?.filter(
-                          (item) => item?.status === "BOND_STATUS_BONDED"
-                        )
-                        ?.map((item, index) => (
-                          <tr key={index}>
-                            <td>
-                              <input
-                                type="checkbox"
-                                onChange={() => {
-                                  selectedValidator.includes(
-                                    item?.operator_address
-                                  )
-                                    ? setSelectedValidator((prev) =>
-                                        prev.filter(
-                                          (element) =>
-                                            element !== item?.operator_address
-                                        )
-                                      )
-                                    : setSelectedValidator((prev) => [
-                                        ...prev,
-                                        item?.operator_address,
-                                      ]);
-                                }}
-                              ></input>
-                            </td>
-                            <td className="text-white">{index + 1}</td>
-                            <td className="text-white">
-                              <img
-                                style={{ height: "25px" }}
-                                src={`https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/${item?.operator_address}.png`}
-                                onerror="this.src='favicon.png';"
-                              />
-                            </td>
-                            <td className="text-white">
-                              {item?.description?.moniker}
-                            </td>
-                            <td className="text-white">
-                              {" "}
-                              {((item?.tokens * 100) / totalTokens).toFixed(4)}%
-                            </td>
-                            <td className="text-white">
-                              {item?.commission?.commission_rates?.rate * 100}%
-                            </td>
-                            <td className="text-white">
-                              {item?.tokens / 1000000}
-                            </td>
-                          </tr>
-                        ))
-                    : delegatedValidators
-                        ?.filter(
-                          (item) => item?.status === "BOND_STATUS_UNBONDED"
-                        )
-                        ?.map((item, index) => (
-                          <tr key={index}>
-                            <td>
-                              <input
-                                type="checkbox"
-                                onChange={() => {
-                                  selectedValidator.includes(
-                                    item?.operator_address
-                                  )
-                                    ? setSelectedValidator((prev) =>
-                                        prev.filter(
-                                          (element) =>
-                                            element !== item?.operator_address
-                                        )
-                                      )
-                                    : setSelectedValidator((prev) => [
-                                        ...prev,
-                                        item?.operator_address,
-                                      ]);
-                                }}
-                              ></input>
-                            </td>
-                            <td className="text-white">{index + 1}</td>
-                            <td className="text-white">
-                              <img
-                                style={{ height: "25px" }}
-                                src={`https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/${item?.operator_address}.png`}
-                                onerror="this.src='favicon.png';"
-                              />
-                            </td>
-                            <td className="text-white">
-                              {item?.description?.moniker}
-                            </td>
-                            <td className="text-white">
-                              {" "}
-                              {((item?.tokens * 100) / totalTokens).toFixed(4)}%
-                            </td>
-                            <td className="text-white">
-                              {item?.commission?.commission_rates?.rate * 100}%
-                            </td>
-                            <td className="text-white">
-                              {item?.tokens / 1000000}
-                            </td>
-                          </tr>
-                        ))
-                  : allValidators.length !== 1 &&
-                    allValidators &&
-                    activeValidators
-                  ? validatorsArray
-                      ?.filter((item) => item?.status === "BOND_STATUS_BONDED")
-                      ?.map((item, index) => (
-                        <tr key={index}>
-                          <td>
-                            <input
-                              type="checkbox"
-                              checked={selectedValidator.includes(
-                                item?.operator_address
-                              )}
-                              onChange={() => {
-                                selectedValidator.includes(
-                                  item?.operator_address
-                                )
-                                  ? setSelectedValidator((prev) =>
-                                      prev.filter(
-                                        (element) =>
-                                          element !== item?.operator_address
-                                      )
-                                    )
-                                  : setSelectedValidator((prev) => [
-                                      ...prev,
-                                      item?.operator_address,
-                                    ]);
-                              }}
-                            ></input>
-                          </td>
-                          <td className="text-white">{index + 1}</td>
-                          <td className="text-white">
-                            <img
-                              style={{ height: "25px" }}
-                              src={`https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/${item?.operator_address}.png`}
-                            />
-                          </td>
-                          <td className="text-white">
-                            {item?.description?.moniker}
-                          </td>
-                          <td className="text-white">
-                            {((item?.tokens * 100) / totalTokens).toFixed(4)}%
-                          </td>
-                          <td className="text-white">
-                            {item?.commission?.commission_rates?.rate * 100}%
-                          </td>
-                          <td className="text-white">
-                            {item?.tokens / 1000000}
-                          </td>
-                        </tr>
-                      ))
-                  : validatorsArray
-                      ?.filter(
-                        (item) => item?.status === "BOND_STATUS_UNBONDED"
-                      )
-                      ?.map((item, index) => (
-                        <tr key={index}>
-                          <td>
-                            <input
-                              type="checkbox"
-                              checked={selectedValidator.includes(
-                                item?.operator_address
-                              )}
-                              onChange={() => {
-                                selectedValidator.includes(
-                                  item?.operator_address
-                                )
-                                  ? setSelectedValidator((prev) =>
-                                      prev.filter(
-                                        (element) =>
-                                          element !== item?.operator_address
-                                      )
-                                    )
-                                  : setSelectedValidator((prev) => [
-                                      ...prev,
-                                      item?.operator_address,
-                                    ]);
-                              }}
-                            ></input>
-                          </td>
-                          <td className="text-white">{index + 1}</td>
-                          <td className="text-white">
-                            <img
-                              style={{ height: "25px" }}
-                              src={`https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/${item?.operator_address}.png`}
-                            />
-                          </td>
-                          <td className="text-white">
-                            {item?.description?.moniker}
-                          </td>
-                          <td className="text-white">
-                            {((item?.tokens * 100) / totalTokens).toFixed(4)}%
-                          </td>
-                          <td className="text-white">
-                            {item?.commission?.commission_rates?.rate * 100}%
-                          </td>
-                          <td className="text-white">
-                            {item?.tokens / 1000000}
-                          </td>
-                        </tr>
-                      ))}
-              </tbody>
-            </table>
+          </div>
+          <div className="nav-bg">
+            <div className="input-group d-flex">
+              <span className="input-group-text" id="basic-addon1">
+                <i className="bi bi-search text-primary"></i>
+              </span>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search"
+                aria-label="Search"
+              ></input>
+              <div
+                className="d-flex align-items-center"
+                onClick={() => {
+                  setDelegated((prev) => !prev);
+                  stakeDispatch({ type: "EMPTY_SELECTED_VALIDATORS" });
+                }}
+              >
+                Delegated
+                {delegated ? (
+                  <i className="bi bi-toggle-on fs-1 text-primary"></i>
+                ) : (
+                  <i className="bi bi-toggle-off fs-1 text-primary"></i>
+                )}
+              </div>
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>
+                      <input type="checkbox"></input>
+                    </th>
+                    <th className="text-white" scope="col">
+                      Rank
+                    </th>
+                    <th className="text-white" scope="col">
+                      Avatar
+                    </th>
+                    <th className="text-white" scope="col">
+                      Validator Name
+                    </th>
+                    <th className="text-white" scope="col">
+                      Voting Power
+                    </th>
+                    <th className="text-white" scope="col">
+                      Commission
+                    </th>
+                    <th className="text-white" scope="col">
+                      Delegated Amount
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {delegated ? (
+                    <DelegatedValidators
+                      stakeState={stakeState}
+                      activeValidators={activeValidators}
+                      totalTokens={totalTokens}
+                    />
+                  ) : (
+                    allValidators.length !== 1 &&
+                    allValidators && (
+                      <AllValidators
+                        stakeState={stakeState}
+                        validatorsArray={validatorsArray}
+                        activeValidators={activeValidators}
+                        totalTokens={totalTokens}
+                      />
+                    )
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
         <StakedToken
+          stakeState={stakeState}
+          stakeDispatch={stakeDispatch}
+          showClaimError={showClaimError}
+          setShowClaimError={setShowClaimError}
           totalTokens={totalTokens}
-          selectedValidator={selectedValidator}
+          selectedValidators={stakeState?.selectedValidators}
         />
         <div className="modal " tabIndex="-1" role="dialog" id="manifestModal">
           <div className="modal-dialog modal-dialog-centered" role="document">

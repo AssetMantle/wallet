@@ -232,11 +232,9 @@ export const useTotalRewards = () => {
   // get the connected wallet parameters from useWallet hook
   const walletManager = useWallet();
   const { walletStatus, address, currentWalletInfo } = walletManager;
-
-  const fetchTotalRewards = async (url, address) => {
+  const fetchTotalRewards = async (url) => {
     let totalRewards;
     let rewardsArray;
-
     try {
       const { rewards } =
         await client.cosmos.distribution.v1beta1.delegationTotalRewards({
@@ -245,11 +243,12 @@ export const useTotalRewards = () => {
       rewardsArray = rewards;
       totalRewards = rewards.reduce(
         (total, currentValue) =>
-          parseFloat(total) + parseFloat(currentValue?.reward[0].amount),
-        parseFloat("0")
+          parseFloat(total) + parseFloat(currentValue?.reward[0]?.amount) || 0,
+        0
       );
     } catch (error) {
       console.error(`swr fetcher error: ${url}`);
+      console.log(error);
       throw error;
     }
     return { totalRewards, rewardsArray };
@@ -277,7 +276,7 @@ export const useTotalRewards = () => {
   };
 };
 
-//Get total amount delegated
+//Get total amount delegated and everyone delegated to
 export const useDelegatedValidators = () => {
   // get the connected wallet parameters from useWallet hook
   const walletManager = useWallet();
@@ -552,22 +551,64 @@ export const useAllValidators = () => {
   };
 };
 
+export const useProposal = (proposalId) => {
+  // get the connected wallet parameters from useWallet hook
+  const walletManager = useWallet();
+  const { walletStatus, address, currentWalletInfo } = walletManager;
+
+  // fetcher function for useSwr of useAvailableBalance()
+  const fetchProposal = async (url, address) => {
+    let proposalInfo;
+
+    // use a try catch block for creating rich Error object
+    try {
+      // get the data from cosmos queryClient
+      const { proposal } = await client.cosmos.gov.v1beta1.proposal({
+        proposalId,
+      });
+      proposalInfo = proposal;
+      // const iconUrlsArray = validators.map((validator, index) => {
+      //   return `https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/${validator.operator_address}.png`;
+      // });
+      // const data = await fetch(iconUrlsArray);
+      // console.log("data: ", data);
+    } catch (error) {
+      console.error(`swr fetcher error: ${url}`);
+      throw error;
+    }
+    // return the data
+    return proposalInfo;
+  };
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: proposalObject, error } = useSwr(
+    proposalId ? ["validators", proposalId] : null,
+    fetchProposal,
+    {
+      fallbackData: [
+        {
+          balance: { denom: "umntl", amount: 0 },
+          delegation: {
+            delegator_address: "delegator_address",
+            validator_address: "validator_address",
+            shares: "298317289",
+          },
+        },
+      ],
+      suspense: true,
+      refreshInterval: 1000,
+    }
+  );
+  return {
+    proposalInfo: proposalObject,
+    isLoadingProposal: !error && !proposalObject,
+    errorProposal: error,
+  };
+};
+
 export const useAllProposals = () => {
   // get the connected wallet parameters from useWallet hook
   const walletManager = useWallet();
   const { walletStatus, address, currentWalletInfo } = walletManager;
-  // const multifetch = (urlsArray) => {
-  //   const fetchEach = (url) => fetch(url).then((response) => response.json());
-
-  //   if (urlsArray?.length >= 0) {
-  //     return Promise.all(urlsArray.map(fetchEach));
-  //   }
-
-  //   return null;
-  // };
-
-  // let address = null;
-  // console.log("address: ", address, " currentWalletInfo: ", currentWalletInfo);
 
   // fetcher function for useSwr of useAvailableBalance()
   const fetchAllProposals = async () => {

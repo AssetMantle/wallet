@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer, useState, useEffect } from "react";
 import {
   chainSymbol,
   placeholderTotalDelegations,
@@ -19,17 +19,7 @@ import { useWallet } from "@cosmos-kit/react";
 
 const denomDisplay = chainSymbol;
 
-//Dummy Data
-const dataObject = {
-  delegatorAddress: "mantle1jxe2fpgx6twqe7nlxn4g96nej280zcemgqjmk0",
-  validatorSrcAddress: "mantlevaloper1qpkax9dxey2ut8u39meq8ewjp6rfsm3hlsyceu",
-  validatorDstAddress: "mantlevaloper1p0wy6wdnw05h33rfeavqt3ueh7274hcl420svt",
-  amount: 1,
-  option: "yes",
-};
-
-const Delegations = ({ selectedValidator, totalTokens }) => {
-  const { availableBalance } = useAvailableBalance();
+const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
   const { allValidators, isLoadingValidators, errorValidators } =
     useAllValidators();
 
@@ -55,7 +45,9 @@ const Delegations = ({ selectedValidator, totalTokens }) => {
   //Create array of validators selected from list
   const selectedDelegations = delegatedValidators
     ?.filter((delegatedObject) =>
-      selectedValidator.includes(delegatedObject?.operator_address)
+      stakeState?.selectedValidators?.includes(
+        delegatedObject?.operator_address
+      )
     )
     .reduce(
       (accumulator, currentValue) =>
@@ -69,148 +61,9 @@ const Delegations = ({ selectedValidator, totalTokens }) => {
     : fromDenom(totalDelegatedAmount);
 
   //Show total delegated amount if no validators selected or show cumulative delegated amount of selected validators
-  const delegationsDisplay = selectedValidator.length
+  const delegationsDisplay = stakeState?.selectedValidators?.length
     ? fromDenom(selectedDelegations)
     : fromDenom(cumulativeDelegations);
-
-  const initialState = {
-    recipientAddress: "",
-    redelegationAddress: "",
-    redelegationAmount: "",
-    transferAmount: "",
-    memo: "",
-    // all error values -> errorMessages: {recipientAddressErrorMsg: "", transferAmountErrorMsg: "" }
-    errorMessages: {},
-  };
-
-  const formReducer = (state = initialState, action) => {
-    switch (action.type) {
-      case "SET_MAX_AMOUNT": {
-        const delegatedAmount = delegatedValidators?.find(
-          (item) => item.operator_address === selectedValidator[0]
-        )?.delegatedAmount;
-        if (
-          isNaN(parseFloat(delegatedAmount)) ||
-          parseFloat(delegatedAmount) < parseFloat(defaultChainGasFee)
-        ) {
-          console.log(
-            "available balance: ",
-            parseFloat(delegatedAmount),
-            " gas: ",
-            parseFloat(defaultChainGasFee)
-          );
-          return {
-            ...state,
-            transferAmount: 0,
-            errorMessages: {
-              ...state.errorMessages,
-              transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
-            },
-          };
-        }
-        // if valid available balance then set half value
-        else {
-          // delete the error message key if already exists
-          delete state.errorMessages?.transferAmountErrorMsg;
-          console.log(
-            "state error message: ",
-            state.errorMessages?.transferAmountErrorMsg
-          );
-          return {
-            ...state,
-            transferAmount: fromDenom(
-              parseFloat(delegatedAmount) - parseFloat(defaultChainGasFee)
-            ).toString(),
-          };
-        }
-      }
-      case "CHANGE_AMOUNT": {
-        console.log(
-          "inside CHANGE_AMOUNT, action.payload: ",
-          toDenom(action.payload) + parseFloat(defaultChainGasFee)
-        );
-        // if amount is greater than current balance, populate error message and update amount
-        if (isNaN(toDenom(action.payload))) {
-          return {
-            ...state,
-            transferAmount: action.payload,
-            errorMessages: {
-              ...state.errorMessages,
-              transferAmountErrorMsg: formConstants.requiredErrorMsg,
-            },
-          };
-        } else if (
-          isNaN(parseFloat(availableBalance)) ||
-          toDenom(action.payload) + parseFloat(defaultChainGasFee) >
-            parseFloat(availableBalance)
-        ) {
-          return {
-            ...state,
-            transferAmount: action.payload,
-            errorMessages: {
-              ...state.errorMessages,
-              transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
-            },
-          };
-        }
-        // if valid amount, remove any previous error message set and return updated amount
-        else {
-          // delete the error message key if already exists
-          delete state.errorMessages.transferAmountErrorMsg;
-          return {
-            ...state,
-            transferAmount: action.payload,
-          };
-        }
-      }
-      case "SET_REDELEGATION_DESTINATION_ADDRESS": {
-        console.log(
-          "inside SET_REDELEGATION_DESTINATION_ADDRESS, action.payload: ",
-          action.payload
-        );
-      }
-      case "CHANGE_REDELEGATION_AMOUNT": {
-        console.log(
-          "inside CHANGE_REDELEGATION_AMOUNT, action.payload: ",
-          toDenom(action.payload) + parseFloat(defaultChainGasFee)
-        );
-        // if amount is greater than current balance, populate error message and update amount
-        if (isNaN(toDenom(action.payload))) {
-          return {
-            ...state,
-            transferAmount: action.payload,
-            errorMessages: {
-              ...state.errorMessages,
-              transferAmountErrorMsg: formConstants.requiredErrorMsg,
-            },
-          };
-        } else if (
-          isNaN(parseFloat(availableBalance)) ||
-          toDenom(action.payload) + parseFloat(defaultChainGasFee) >
-            parseFloat(availableBalance)
-        ) {
-          return {
-            ...state,
-            transferAmount: action.payload,
-            errorMessages: {
-              ...state.errorMessages,
-              transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
-            },
-          };
-        }
-        // if valid amount, remove any previous error message set and return updated amount
-        else {
-          // delete the error message key if already exists
-          delete state.errorMessages.transferAmountErrorMsg;
-          return {
-            ...state,
-            transferAmount: action.payload,
-          };
-        }
-      }
-    }
-  };
-  const [formState, formDispatch] = useReducer(formReducer, initialState);
 
   const delegationsInUSDDisplay =
     errorDelegatedAmount ||
@@ -223,46 +76,50 @@ const Delegations = ({ selectedValidator, totalTokens }) => {
 
   //Get number of validators delegated to out of selected validators
   const delegatedOutOfSelectedValidators = delegatedValidators?.filter((item) =>
-    selectedValidator?.includes(item.operator_address)
+    stakeState?.selectedValidators?.includes(item?.operator_address)
   );
 
   //Flag to see if the redelegate, undelegate and claim buttons will show up
   const showRedelegateUndelegateAndClaim =
-    selectedValidator.length && delegatedOutOfSelectedValidators.length > 0;
+    stakeState?.selectedValidators?.length &&
+    delegatedOutOfSelectedValidators?.length > 0;
 
-  const handleRedelegate = async (validator) => {
+  const handleRedelegate = async () => {
+    // final form validation before txn is
+
     const { response, error } = await sendRedelegation(
-      dataObject?.delegatorAddress,
-      validator,
-      formState.redelegationAddress,
-      { amount: formState?.redelegationAmount.toString(), denom: "umntl" },
-      dataObject?.memo,
+      address,
+      stakeState?.redelegationSrc,
+      stakeState?.redelegationDestination,
+      stakeState?.redelegationAmount,
+      stakeState?.memo,
       { getSigningStargateClient }
     );
     console.log("response: ", response, " error: ", error);
   };
-  const handleUndelegate = async (validator) => {
+  const handleUndelegate = async () => {
     const { response, error } = await sendUndelegation(
-      dataObject?.delegatorAddress,
-      validator,
-      { amount: formState.transferAmount.toString(), denom: "umntl" },
-      dataObject?.memo,
+      address,
+      stakeState?.undelegationSrc,
+      stakeState.undelegationAmount.toString(),
+      stakeState?.memo,
       { getSigningStargateClient }
     );
-    console.log("response: ", response, " error: ", error);
+    console.log("response:", response, "error:", error);
   };
 
   return (
     <>
-      {selectedValidator.length ? (
+      {stakeState?.selectedValidators?.length ? (
         <p>
-          {delegatedOutOfSelectedValidators.length} out of{" "}
-          {selectedValidator.length} selected are Delegated Validators
+          {delegatedOutOfSelectedValidators?.length} out of{" "}
+          {stakeState?.selectedValidators?.length} selected are Delegated
+          Validators
         </p>
       ) : null}
       <div className="nav-bg p-3 rounded-4 gap-3">
         <div className="d-flex flex-column gap-2">
-          {selectedValidator.length ? (
+          {stakeState?.selectedValidators?.length ? (
             <p className="caption d-flex gap-2 align-items-center">
               Cumulative Delegated
             </p>
@@ -279,13 +136,21 @@ const Delegations = ({ selectedValidator, totalTokens }) => {
             {delegationsInUSDDisplay}&nbsp;{"$USD"}
           </p>
           {showRedelegateUndelegateAndClaim &&
-          selectedValidator?.length === 1 ? (
+          stakeState?.selectedValidators?.length === 1 ? (
             <div className="d-flex justify-content-end">
               <div className="d-flex flex-row w-75 justify-content-around">
                 <button
                   data-bs-toggle="modal"
                   data-bs-target="#viewRedelegatingModal"
                   className="am-link text-start"
+                  onClick={() => {
+                    {
+                      stakeDispatch({
+                        type: "SET_REDELEGATION_SRC_ADDRESS",
+                        payload: stakeState?.selectedValidators[0],
+                      });
+                    }
+                  }}
                 >
                   <i className="text-primary bi bi-arrow-clockwise"></i>
                   Redelegate
@@ -294,6 +159,12 @@ const Delegations = ({ selectedValidator, totalTokens }) => {
                   data-bs-toggle="modal"
                   data-bs-target="#viewUndelegatingModal"
                   className="am-link text-start"
+                  onClick={() =>
+                    stakeDispatch({
+                      type: "SET_UNDELEGATION_SRC_ADDRESS",
+                      payload: stakeState?.selectedValidators[0],
+                    })
+                  }
                 >
                   <i className="text-primary bi bi-arrow-counterclockwise"></i>
                   Undelegate
@@ -327,7 +198,8 @@ const Delegations = ({ selectedValidator, totalTokens }) => {
                     Delegated Amount:
                     {fromDenom(
                       delegatedValidators?.find(
-                        (item) => item.operator_address === selectedValidator[0]
+                        (item) =>
+                          item?.operator_address === stakeState?.undelegationSrc
                       )?.delegatedAmount
                     )}
                   </small>
@@ -337,19 +209,19 @@ const Delegations = ({ selectedValidator, totalTokens }) => {
                     className="bg-t"
                     id="delegationAmount"
                     style={{ flex: "1", border: "none", outline: "none" }}
-                    value={formState?.transferAmount}
+                    value={stakeState?.undelegationAmount}
                     type="text"
                     onChange={(e) =>
-                      formDispatch({
-                        type: "CHANGE_AMOUNT",
+                      stakeDispatch({
+                        type: "CHANGE_UNDELEGATION_AMOUNT",
                         payload: e.target.value,
                       })
                     }
                   ></input>
                   <button
                     onClick={() =>
-                      formDispatch({
-                        type: "SET_MAX_AMOUNT",
+                      stakeDispatch({
+                        type: "SET_MAX_UNDELEGATION_AMOUNT",
                       })
                     }
                     className="text-primary"
@@ -360,7 +232,7 @@ const Delegations = ({ selectedValidator, totalTokens }) => {
               </div>
               <div className="modal-footer ">
                 <button
-                  onClick={() => handleUndelegate(selectedValidator)}
+                  onClick={() => handleUndelegate()}
                   type="button"
                   className="btn btn-primary"
                 >
@@ -394,7 +266,9 @@ const Delegations = ({ selectedValidator, totalTokens }) => {
                   Validator Name :
                   {
                     delegatedValidators?.find(
-                      (item) => item.operator_address === selectedValidator[0]
+                      (item) =>
+                        item?.operator_address ===
+                        stakeState?.selectedValidators[0]
                     )?.description?.moniker
                   }
                 </p>
@@ -402,7 +276,9 @@ const Delegations = ({ selectedValidator, totalTokens }) => {
                   Delegated Amount:
                   {
                     delegatedValidators?.find(
-                      (item) => item.operator_address === selectedValidator[0]
+                      (item) =>
+                        item?.operator_address ===
+                        stakeState?.selectedValidators[0]
                     )?.delegatedAmount
                   }
                 </p>
@@ -465,38 +341,89 @@ const Delegations = ({ selectedValidator, totalTokens }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {validatorsArray?.map((item, index) => (
-                      <tr key={index} className="text-white">
-                        <td>
-                          <input
-                            type="radio"
-                            name="radio"
-                            onChange={() =>
-                              formDispatch({
-                                type: "SET_REDELEGATION_DESTINATION_ADDRESS",
-                                payload: item?.operator_address,
-                              })
-                            }
-                          />
-                        </td>
-                        <td>{index + 1}</td>
-                        <td>{item?.description?.moniker}</td>
-                        <td>
-                          {((item?.tokens * 100) / totalTokens).toFixed(4)}%
-                        </td>
-                        <td>
-                          {item?.commission?.commission_rates?.rate * 100}%
-                        </td>
-                        <td>{item?.tokens / 1000000}</td>
-                        <td>{item.delegatedAmount}</td>
-                      </tr>
-                    ))}
+                    {activeValidators
+                      ? validatorsArray
+                          ?.filter(
+                            (item) => item?.status === "BOND_STATUS_BONDED"
+                          )
+                          ?.map((item, index) => (
+                            <tr key={index} className="text-white">
+                              <td>
+                                <input
+                                  type="radio"
+                                  name="radio"
+                                  onChange={() =>
+                                    stakeDispatch({
+                                      type: "SET_REDELEGATION_DESTINATION_ADDRESS",
+                                      payload: item?.operator_address,
+                                    })
+                                  }
+                                />
+                              </td>
+                              <td>{index + 1}</td>
+                              <td>{item?.description?.moniker}</td>
+                              <td>
+                                {((item?.tokens * 100) / totalTokens).toFixed(
+                                  4
+                                )}
+                                %
+                              </td>
+                              <td>
+                                {item?.commission?.commission_rates?.rate * 100}
+                                %
+                              </td>
+                              <td>{item?.tokens / 1000000}</td>
+                              <td>{item.delegatedAmount}</td>
+                            </tr>
+                          ))
+                      : validatorsArray
+                          ?.filter(
+                            (item) => item?.status === "BOND_STATUS_UNBONDED"
+                          )
+                          ?.map((item, index) => (
+                            <tr key={index} className="text-white">
+                              <td>
+                                <input
+                                  type="radio"
+                                  name="radio"
+                                  onChange={() =>
+                                    stakeDispatch({
+                                      type: "SET_REDELEGATION_DESTINATION_ADDRESS",
+                                      payload: item?.operator_address,
+                                    })
+                                  }
+                                />
+                              </td>
+                              <td>{index + 1}</td>
+                              <td>{item?.description?.moniker}</td>
+                              <td>
+                                {((item?.tokens * 100) / totalTokens).toFixed(
+                                  4
+                                )}
+                                %
+                              </td>
+                              <td>
+                                {item?.commission?.commission_rates?.rate * 100}
+                                %
+                              </td>
+                              <td>{item?.tokens / 1000000}</td>
+                              <td>{item.delegatedAmount}</td>
+                            </tr>
+                          ))}
                   </tbody>
                 </table>
                 <div className="d-flex justify-content-between">
                   <label htmlFor="delegationAmount">Delegation amount</label>{" "}
                   <small>
-                    Balance : {fromDenom(availableBalance).toString()}&nbsp;
+                    Delegated Amount :{" "}
+                    {fromDenom(
+                      delegatedValidators?.find((item) =>
+                        item?.operator_address.includes(
+                          stakeState?.selectedValidators
+                        )
+                      )?.delegatedAmount
+                    ).toString()}
+                    &nbsp;
                     {defaultChainSymbol}
                   </small>
                 </div>
@@ -506,20 +433,27 @@ const Delegations = ({ selectedValidator, totalTokens }) => {
                     id="delegationAmount"
                     style={{ flex: "1", border: "none", outline: "none" }}
                     type="text"
-                    value={formState?.redelegationAmount}
+                    value={stakeState?.redelegationAmount}
                     onChange={(e) =>
-                      formDispatch({
+                      stakeDispatch({
                         type: "CHANGE_REDELEGATION_AMOUNT",
                         payload: e.target.value,
                       })
                     }
                   ></input>
-                  <button className="text-primary">Max</button>
+                  <button
+                    onClick={() =>
+                      stakeDispatch({ type: "SET_MAX_REDELEGATION_AMOUNT" })
+                    }
+                    className="text-primary"
+                  >
+                    Max
+                  </button>
                 </div>
               </div>
               <div className="modal-footer ">
                 <button
-                  onClick={() => handleRedelegate(selectedValidator)}
+                  onClick={() => handleRedelegate()}
                   type="button"
                   className="btn btn-primary"
                 >

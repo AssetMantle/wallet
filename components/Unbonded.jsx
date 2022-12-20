@@ -13,7 +13,7 @@ import {
 
 const denomDisplay = chainSymbol;
 
-const Unbonded = ({ selectedValidator }) => {
+const Unbonded = ({ stakeState, stakeDispatch }) => {
   const [activeValidators, setActiveValidators] = useState(true);
   const {
     totalUnbondingAmount,
@@ -31,18 +31,18 @@ const Unbonded = ({ selectedValidator }) => {
 
   const selectedUnbonding = allUnbonding
     ?.filter((unbondingObject) =>
-      selectedValidator?.includes(unbondingObject.validator_address)
+      stakeState?.selectedValidators?.includes(unbondingObject.address)
     )
     .reduce(
       (accumulator, currentValue) =>
-        accumulator + parseFloat(currentValue?.entries[0]?.balance),
+        accumulator + parseFloat(currentValue?.balance),
       0
     );
 
   const cumulativeUnbonding = errorUnbonding
     ? placeholderTotalUnbonding
     : fromDenom(totalUnbondingAmount);
-  const unbondingDisplay = selectedValidator.length
+  const unbondingDisplay = stakeState?.selectedValidators.length
     ? fromDenom(selectedUnbonding)
     : fromDenom(cumulativeUnbonding);
 
@@ -165,7 +165,10 @@ const Unbonded = ({ selectedValidator }) => {
                             data-bs-target="#viewUndelegatingModal"
                             className="text-white"
                             onClick={() =>
-                              selectedValidator.push(item?.address)
+                              stakeDispatch({
+                                type: "SET_UNDELEGATION_SRC_ADDRESS",
+                                payload: item?.address,
+                              })
                             }
                           >
                             {
