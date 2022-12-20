@@ -5,7 +5,7 @@ import {
   placeholderMntlUsdValue,
   placeholderRewards,
 } from "../config";
-import { sendRewards } from "../data";
+import { sendRewardsBatched } from "../data";
 import {
   fromDenom,
   useTotalRewards,
@@ -17,15 +17,7 @@ import { useWallet } from "@cosmos-kit/react";
 
 const denomDisplay = chainSymbol;
 
-const dataObject = {
-  delegatorAddress: "mantle1jxe2fpgx6twqe7nlxn4g96nej280zcemgqjmk0",
-  validatorSrcAddress: "mantlevaloper1qpkax9dxey2ut8u39meq8ewjp6rfsm3hlsyceu",
-  validatorDstAddress: "mantlevaloper1p0wy6wdnw05h33rfeavqt3ueh7274hcl420svt",
-  amount: 1,
-  option: "yes",
-};
-
-const Rewards = ({ selectedValidator, setShowClaimError }) => {
+const Rewards = ({ setShowClaimError, stakeState }) => {
   const walletManager = useWallet();
   const {
     delegatedValidators,
@@ -43,7 +35,7 @@ const Rewards = ({ selectedValidator, setShowClaimError }) => {
 
   const selectedRewards = rewardsArray
     ?.filter((rewardObject) =>
-      selectedValidator?.includes(rewardObject.validator_address)
+      stakeState?.selectedValidators?.includes(rewardObject.validator_address)
     )
     .reduce(
       (accumulator, currentValue) =>
@@ -54,7 +46,7 @@ const Rewards = ({ selectedValidator, setShowClaimError }) => {
     ? placeholderRewards
     : fromDenom(allRewards);
 
-  const rewardsDisplay = selectedValidator.length
+  const rewardsDisplay = stakeState?.selectedValidators.length
     ? fromDenom(selectedRewards)
     : cumulativeRewards;
 
@@ -68,10 +60,10 @@ const Rewards = ({ selectedValidator, setShowClaimError }) => {
           .toString();
 
   const handleClaim = async () => {
-    const { response, error } = await sendRewards(
+    const { response, error } = await sendRewardsBatched(
       address,
-      selectedValidator,
-      dataObject?.memo,
+      stakeState?.selectedValidators,
+      stakeState?.memo,
       { getSigningStargateClient }
     );
     console.log("response: ", response, " error: ", error);
@@ -79,7 +71,7 @@ const Rewards = ({ selectedValidator, setShowClaimError }) => {
   return (
     <div className="nav-bg p-3 rounded-4 gap-3">
       <div className="d-flex flex-column gap-2">
-        {selectedValidator.length ? (
+        {stakeState?.selectedValidators.length ? (
           <p className="caption d-flex gap-2 align-items-center">
             Cumulative Rewards
           </p>
@@ -94,19 +86,19 @@ const Rewards = ({ selectedValidator, setShowClaimError }) => {
           {rewardsInUSDDisplay}&nbsp;{"$USD"}
         </p>
         <div className="d-flex justify-content-end">
-          {selectedValidator?.length > 5 ? null : (
+          {stakeState?.selectedValidators?.length > 5 ? null : (
             <button
               className="am-link text-start"
               data-bs-toggle={
                 delegatedValidators?.length > 5 &&
-                selectedValidator.length === 0
+                stakeState?.selectedValidators.length === 0
                   ? ""
                   : "modal"
               }
               data-bs-target="#claimRewardsModal"
               onClick={() =>
                 delegatedValidators?.length > 5 &&
-                selectedValidator.length === 0 &&
+                stakeState?.selectedValidators.length === 0 &&
                 setShowClaimError(true)
               }
             >
@@ -136,10 +128,12 @@ const Rewards = ({ selectedValidator, setShowClaimError }) => {
             <div className="modal-body p-4 d-flex flex-column text-white">
               <h6>Total Available $MNTL rewards:</h6>
               <p>
-                {selectedValidator.length
+                {stakeState?.selectedValidators.length
                   ? rewardsArray
                       ?.filter((item) =>
-                        selectedValidator?.includes(item?.validator_address)
+                        stakeState?.selectedValidators?.includes(
+                          item?.validator_address
+                        )
                       )
                       .reduce(
                         (accumulator, currentValue) =>
@@ -173,13 +167,17 @@ const Rewards = ({ selectedValidator, setShowClaimError }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {selectedValidator.length ? (
+                  {stakeState?.selectedValidators.length ? (
                     delegatedValidators?.filter((item) =>
-                      selectedValidator.includes(item?.operator_address)
+                      stakeState?.selectedValidators.includes(
+                        item?.operator_address
+                      )
                     ).length ? (
                       delegatedValidators
                         ?.filter((item) =>
-                          selectedValidator.includes(item?.operator_address)
+                          stakeState?.selectedValidators.includes(
+                            item?.operator_address
+                          )
                         )
                         .map((item, index) => (
                           <tr key={index}>

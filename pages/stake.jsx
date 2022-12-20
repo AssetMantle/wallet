@@ -1,23 +1,15 @@
-import React, { useState, useEffect } from "react";
-import {
-  useDelegatedValidators,
-  useAllValidators,
-  useAllProposals,
-} from "../data/swrStore";
+import React, { useState, useReducer } from "react";
+import AllValidators from "../components/AllValidators";
+import DelegatedValidators from "../components/DelegatedValidators";
+import { useDelegatedValidators, useAllValidators } from "../data/swrStore";
+import useStakeReducer from "../data/useStakeReducer";
 import StakedToken from "../views/StakedToken";
-import { useWallet } from "@cosmos-kit/react";
 
 const Stake = () => {
+  const { stakeDispatch, stakeState } = useStakeReducer();
   const [showClaimError, setShowClaimError] = useState(false);
   const [activeValidators, setActiveValidators] = useState(true);
   const [delegated, setDelegated] = useState(false);
-  const [selectedValidator, setSelectedValidator] = useState([]);
-  const {
-    delegatedValidators,
-    totalDelegatedAmount,
-    isLoadingDelegatedAmount,
-    errorDelegatedAmount,
-  } = useDelegatedValidators();
   const { allValidators, isLoadingValidators, errorValidators } =
     useAllValidators();
   let validatorsArray = allValidators.sort((a, b) => b.tokens - a.tokens);
@@ -77,7 +69,7 @@ const Stake = () => {
                 className="d-flex align-items-center"
                 onClick={() => {
                   setDelegated((prev) => !prev);
-                  setSelectedValidator([]);
+                  stakeDispatch({ type: "EMPTY_SELECTED_VALIDATORS" });
                 }}
               >
                 Delegated
@@ -114,218 +106,23 @@ const Stake = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {delegated
-                    ? activeValidators
-                      ? delegatedValidators
-                          ?.filter(
-                            (item) => item?.status === "BOND_STATUS_BONDED"
-                          )
-                          ?.map((item, index) => (
-                            <tr key={index}>
-                              <td>
-                                <input
-                                  type="checkbox"
-                                  onChange={() => {
-                                    setShowClaimError(false);
-                                    selectedValidator.includes(
-                                      item?.operator_address
-                                    )
-                                      ? setSelectedValidator((prev) =>
-                                          prev.filter(
-                                            (element) =>
-                                              element !== item?.operator_address
-                                          )
-                                        )
-                                      : setSelectedValidator((prev) => [
-                                          ...prev,
-                                          item?.operator_address,
-                                        ]);
-                                  }}
-                                ></input>
-                              </td>
-                              <td className="text-white">{index + 1}</td>
-                              <td className="text-white">
-                                <img
-                                  style={{ height: "25px" }}
-                                  src={`validatoravatars/${item?.operator_address}.png`}
-                                  onerror="this.src='favicon.png';"
-                                />
-                              </td>
-                              <td className="text-white">
-                                {item?.description?.moniker}
-                              </td>
-                              <td className="text-white">
-                                {" "}
-                                {((item?.tokens * 100) / totalTokens).toFixed(
-                                  4
-                                )}
-                                %
-                              </td>
-                              <td className="text-white">
-                                {item?.commission?.commission_rates?.rate * 100}
-                                %
-                              </td>
-                              <td className="text-white">
-                                {item?.tokens / 1000000}
-                              </td>
-                            </tr>
-                          ))
-                      : delegatedValidators
-                          ?.filter(
-                            (item) => item?.status === "BOND_STATUS_UNBONDED"
-                          )
-                          ?.map((item, index) => (
-                            <tr key={index}>
-                              <td>
-                                <input
-                                  type="checkbox"
-                                  onChange={() => {
-                                    selectedValidator.includes(
-                                      item?.operator_address
-                                    )
-                                      ? setSelectedValidator((prev) =>
-                                          prev.filter(
-                                            (element) =>
-                                              element !== item?.operator_address
-                                          )
-                                        )
-                                      : setSelectedValidator((prev) => [
-                                          ...prev,
-                                          item?.operator_address,
-                                        ]);
-                                  }}
-                                ></input>
-                              </td>
-                              <td className="text-white">{index + 1}</td>
-                              <td className="text-white">
-                                <img
-                                  style={{ height: "25px" }}
-                                  src={`validatoravatars/${item?.operator_address}.png`}
-                                  onerror="this.src='favicon.png';"
-                                />
-                              </td>
-                              <td className="text-white">
-                                {item?.description?.moniker}
-                              </td>
-                              <td className="text-white">
-                                {" "}
-                                {((item?.tokens * 100) / totalTokens).toFixed(
-                                  4
-                                )}
-                                %
-                              </td>
-                              <td className="text-white">
-                                {item?.commission?.commission_rates?.rate * 100}
-                                %
-                              </td>
-                              <td className="text-white">
-                                {item?.tokens / 1000000}
-                              </td>
-                            </tr>
-                          ))
-                    : allValidators.length !== 1 &&
-                      allValidators &&
-                      activeValidators
-                    ? validatorsArray
-                        ?.filter(
-                          (item) => item?.status === "BOND_STATUS_BONDED"
-                        )
-                        ?.map((item, index) => (
-                          <tr key={index}>
-                            <td>
-                              <input
-                                type="checkbox"
-                                checked={selectedValidator.includes(
-                                  item?.operator_address
-                                )}
-                                onChange={() => {
-                                  selectedValidator.includes(
-                                    item?.operator_address
-                                  )
-                                    ? setSelectedValidator((prev) =>
-                                        prev.filter(
-                                          (element) =>
-                                            element !== item?.operator_address
-                                        )
-                                      )
-                                    : setSelectedValidator((prev) => [
-                                        ...prev,
-                                        item?.operator_address,
-                                      ]);
-                                }}
-                              ></input>
-                            </td>
-                            <td className="text-white">{index + 1}</td>
-                            <td className="text-white">
-                              <img
-                                style={{ height: "25px" }}
-                                src={`validatoravatars/${item?.operator_address}.png`}
-                              />
-                            </td>
-                            <td className="text-white">
-                              {item?.description?.moniker}
-                            </td>
-                            <td className="text-white">
-                              {((item?.tokens * 100) / totalTokens).toFixed(4)}%
-                            </td>
-                            <td className="text-white">
-                              {item?.commission?.commission_rates?.rate * 100}%
-                            </td>
-                            <td className="text-white">
-                              {item?.tokens / 1000000}
-                            </td>
-                          </tr>
-                        ))
-                    : validatorsArray
-                        ?.filter(
-                          (item) => item?.status === "BOND_STATUS_UNBONDED"
-                        )
-                        ?.map((item, index) => (
-                          <tr key={index}>
-                            <td>
-                              <input
-                                type="checkbox"
-                                checked={selectedValidator.includes(
-                                  item?.operator_address
-                                )}
-                                onChange={() => {
-                                  selectedValidator.includes(
-                                    item?.operator_address
-                                  )
-                                    ? setSelectedValidator((prev) =>
-                                        prev.filter(
-                                          (element) =>
-                                            element !== item?.operator_address
-                                        )
-                                      )
-                                    : setSelectedValidator((prev) => [
-                                        ...prev,
-                                        item?.operator_address,
-                                      ]);
-                                }}
-                              ></input>
-                            </td>
-                            <td className="text-white">{index + 1}</td>
-                            <td className="text-white">
-                              <img
-                                style={{ height: "25px" }}
-                                src={`validatoravatars/${item?.operator_address}.png`}
-                              />
-                            </td>
-                            <td className="text-white">
-                              {item?.description?.moniker}
-                            </td>
-                            <td className="text-white">
-                              {((item?.tokens * 100) / totalTokens).toFixed(4)}%
-                            </td>
-                            <td className="text-white">
-                              {item?.commission?.commission_rates?.rate * 100}%
-                            </td>
-                            <td className="text-white">
-                              {item?.tokens / 1000000}
-                            </td>
-                          </tr>
-                        ))}
+                  {delegated ? (
+                    <DelegatedValidators
+                      stakeState={stakeState}
+                      activeValidators={activeValidators}
+                      totalTokens={totalTokens}
+                    />
+                  ) : (
+                    allValidators.length !== 1 &&
+                    allValidators && (
+                      <AllValidators
+                        stakeState={stakeState}
+                        validatorsArray={validatorsArray}
+                        activeValidators={activeValidators}
+                        totalTokens={totalTokens}
+                      />
+                    )
+                  )}
                 </tbody>
               </table>
             </div>
@@ -333,10 +130,12 @@ const Stake = () => {
         </div>
 
         <StakedToken
+          stakeState={stakeState}
+          stakeDispatch={stakeDispatch}
           showClaimError={showClaimError}
           setShowClaimError={setShowClaimError}
           totalTokens={totalTokens}
-          selectedValidator={selectedValidator}
+          selectedValidators={stakeState?.selectedValidators}
         />
         <div className="modal " tabIndex="-1" role="dialog" id="manifestModal">
           <div className="modal-dialog modal-dialog-centered" role="document">

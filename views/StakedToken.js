@@ -9,112 +9,22 @@ import { useAvailableBalance } from "../data";
 import { defaultChainGasFee } from "../config";
 
 export default function StakedToken({
-  selectedValidator,
   totalTokens,
   setShowClaimError,
   showClaimError,
+  stakeState,
+  stakeDispatch,
 }) {
-  const [selectedUndelegation, setSelectedUndelegation] = useState("");
   const { availableBalance } = useAvailableBalance();
   const walletManager = useWallet();
   const { getSigningStargateClient, address, status } = walletManager;
 
-  const initialState = {
-    recipientAddress: "",
-    transferAmount: "",
-    memo: "",
-    // all error values -> errorMessages: {recipientAddressErrorMsg: "", transferAmountErrorMsg: "" }
-    errorMessages: {},
-  };
-
-  const formReducer = (state = initialState, action) => {
-    switch (action.type) {
-      case "SET_MAX_AMOUNT": {
-        if (
-          isNaN(parseFloat(availableBalance)) ||
-          parseFloat(availableBalance) < parseFloat(defaultChainGasFee)
-        ) {
-          console.log(
-            "available balance: ",
-            parseFloat(availableBalance),
-            " gas: ",
-            parseFloat(defaultChainGasFee)
-          );
-          return {
-            ...state,
-            transferAmount: 0,
-            errorMessages: {
-              ...state.errorMessages,
-              transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
-            },
-          };
-        }
-        // if valid available balance then set half value
-        else {
-          // delete the error message key if already exists
-          delete state.errorMessages?.transferAmountErrorMsg;
-          console.log(
-            "state error message: ",
-            state.errorMessages?.transferAmountErrorMsg
-          );
-          return {
-            ...state,
-            transferAmount: fromDenom(
-              parseFloat(availableBalance) - parseFloat(defaultChainGasFee)
-            ).toString(),
-          };
-        }
-      }
-      case "CHANGE_AMOUNT": {
-        console.log(
-          "inside CHANGE_AMOUNT, action.payload: ",
-          toDenom(action.payload) + parseFloat(defaultChainGasFee)
-        );
-        // if amount is greater than current balance, populate error message and update amount
-        if (isNaN(toDenom(action.payload))) {
-          return {
-            ...state,
-            transferAmount: action.payload,
-            errorMessages: {
-              ...state.errorMessages,
-              transferAmountErrorMsg: formConstants.requiredErrorMsg,
-            },
-          };
-        } else if (
-          isNaN(parseFloat(availableBalance)) ||
-          toDenom(action.payload) + parseFloat(defaultChainGasFee) >
-            parseFloat(availableBalance)
-        ) {
-          return {
-            ...state,
-            transferAmount: action.payload,
-            errorMessages: {
-              ...state.errorMessages,
-              transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
-            },
-          };
-        }
-        // if valid amount, remove any previous error message set and return updated amount
-        else {
-          // delete the error message key if already exists
-          delete state.errorMessages.transferAmountErrorMsg;
-          return {
-            ...state,
-            transferAmount: action.payload,
-          };
-        }
-      }
-    }
-  };
-
-  const [formState, formDispatch] = useReducer(formReducer, initialState);
-
   const handleStake = async (validator) => {
     const { response, error } = await sendDelegation(
       address,
-      validator,
-      formState.transferAmount,
-      formState?.memo,
+      stakeState?.delegationAddress,
+      stakeState?.delegationAmount,
+      stakeState?.memo,
       { getSigningStargateClient }
     );
     console.log("response: ", response, " error: ", error);
@@ -122,7 +32,7 @@ export default function StakedToken({
 
   return (
     <section className="col-12 gap-3 pt-3 pt-lg-0 col-lg-4">
-      {!selectedValidator?.length ? (
+      {!stakeState?.selectedValidators?.length ? (
         <div className="rounded-5 p-3 my-2 bg-gray-800 width-100 d-flex flex-column ">
           <p>Please select the Validators you wish to take actions on.</p>
         </div>
@@ -131,35 +41,36 @@ export default function StakedToken({
         <h4 className="body1 text-primary">Staked Tokens</h4>
         <Suspense>
           <Delegations
-            selectedUndelegation={selectedUndelegation}
+            stakeState={stakeState}
+            stakeDispatch={stakeDispatch}
             totalTokens={totalTokens}
-            selectedValidator={selectedValidator || []}
           />
         </Suspense>
         <Suspense>
           <Rewards
+            stakeState={stakeState}
             setShowClaimError={setShowClaimError}
-            selectedValidator={selectedValidator || []}
           />
         </Suspense>
-        {!selectedValidator?.length ? (
-          <Suspense>
-            <Unbonded
-              setSelectedUndelegation={setSelectedUndelegation}
-              selectedValidator={selectedValidator || []}
-            />
-          </Suspense>
-        ) : null}
-        {selectedValidator?.length === 1 ? (
+        <Suspense>
+          <Unbonded stakeState={stakeState} stakeDispatch={stakeDispatch} />
+        </Suspense>
+        {stakeState?.selectedValidators?.length === 1 ? (
           <button
             className="btn btn-primary w-100 rounded-5"
+            onClick={() =>
+              stakeDispatch({
+                type: "SET_DELEGATION_ADDRESS",
+                payload: stakeState?.selectedValidators[0],
+              })
+            }
             data-bs-toggle="modal"
             data-bs-target="#delegateModal"
           >
             Delegate
           </button>
         ) : null}
-        {selectedValidator?.length > 5 || showClaimError ? (
+        {stakeState?.selectedValidators?.length > 5 || showClaimError ? (
           <div className="d-flex justify-content-between">
             <i className="bi bi-exclamation-circle text-error"></i>
             <p className="text-error ">
@@ -193,19 +104,19 @@ export default function StakedToken({
                     id="delegationAmount"
                     style={{ flex: "1", border: "none", outline: "none" }}
                     type="text"
-                    value={formState?.transferAmount}
+                    value={stakeState?.delegationAmount}
                     placeholder="Enter Amount"
                     onChange={(e) =>
-                      formDispatch({
-                        type: "CHANGE_AMOUNT",
+                      stakeDispatch({
+                        type: "CHANGE_DELEGATION_AMOUNT",
                         payload: e.target.value,
                       })
                     }
                   ></input>
                   <button
                     onClick={() =>
-                      formDispatch({
-                        type: "SET_MAX_AMOUNT",
+                      stakeDispatch({
+                        type: "SET_MAX_DELEGATION_AMOUNT",
                       })
                     }
                     className="text-primary"
@@ -217,7 +128,7 @@ export default function StakedToken({
               <div className="modal-footer ">
                 <button
                   onClick={() => {
-                    handleStake(selectedValidator[0]);
+                    handleStake();
                   }}
                   type="button"
                   className="btn btn-primary"
