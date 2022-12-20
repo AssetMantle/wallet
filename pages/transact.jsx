@@ -5,6 +5,7 @@ import { AiOutlineInfoCircle } from "react-icons/ai";
 import { BsChevronDown } from "react-icons/bs";
 import { MdOutlineContentCopy } from "react-icons/md";
 import Tooltip from "../components/Tooltip";
+import { QRCodeSVG } from "qrcode.react";
 import {
   defaultChainGasFee,
   defaultChainMemoSize,
@@ -456,7 +457,7 @@ export default function Transact() {
                 position: "relative",
               }}
             >
-              <Image layout="fill" src={WalletQrCode} alt="address QR code" />
+              <QRCodeSVG value={address} />
             </div>
             <h4 className="body2 text-primary">Wallet Address</h4>
             <button

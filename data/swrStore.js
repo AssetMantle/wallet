@@ -555,18 +555,6 @@ export const useAllProposals = () => {
   // get the connected wallet parameters from useWallet hook
   const walletManager = useWallet();
   const { walletStatus, address, currentWalletInfo } = walletManager;
-  // const multifetch = (urlsArray) => {
-  //   const fetchEach = (url) => fetch(url).then((response) => response.json());
-
-  //   if (urlsArray?.length >= 0) {
-  //     return Promise.all(urlsArray.map(fetchEach));
-  //   }
-
-  //   return null;
-  // };
-
-  // let address = null;
-  // console.log("address: ", address, " currentWalletInfo: ", currentWalletInfo);
 
   // fetcher function for useSwr of useAvailableBalance()
   const fetchAllProposals = async () => {
