@@ -551,6 +551,60 @@ export const useAllValidators = () => {
   };
 };
 
+export const useProposal = (proposalId) => {
+  // get the connected wallet parameters from useWallet hook
+  const walletManager = useWallet();
+  const { walletStatus, address, currentWalletInfo } = walletManager;
+
+  // fetcher function for useSwr of useAvailableBalance()
+  const fetchProposal = async (url, address) => {
+    let proposalInfo;
+
+    // use a try catch block for creating rich Error object
+    try {
+      // get the data from cosmos queryClient
+      const { proposal } = await client.cosmos.gov.v1beta1.proposal({
+        proposalId,
+      });
+      proposalInfo = proposal;
+      // const iconUrlsArray = validators.map((validator, index) => {
+      //   return `https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/${validator.operator_address}.png`;
+      // });
+      // const data = await fetch(iconUrlsArray);
+      // console.log("data: ", data);
+    } catch (error) {
+      console.error(`swr fetcher error: ${url}`);
+      throw error;
+    }
+    // return the data
+    return proposalInfo;
+  };
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: proposalObject, error } = useSwr(
+    proposalId ? ["validators", proposalId] : null,
+    fetchProposal,
+    {
+      fallbackData: [
+        {
+          balance: { denom: "umntl", amount: 0 },
+          delegation: {
+            delegator_address: "delegator_address",
+            validator_address: "validator_address",
+            shares: "298317289",
+          },
+        },
+      ],
+      suspense: true,
+      refreshInterval: 1000,
+    }
+  );
+  return {
+    proposalInfo: proposalObject,
+    isLoadingProposal: !error && !proposalObject,
+    errorProposal: error,
+  };
+};
+
 export const useAllProposals = () => {
   // get the connected wallet parameters from useWallet hook
   const walletManager = useWallet();

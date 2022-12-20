@@ -3,6 +3,7 @@ import { GiServerRack } from "react-icons/gi";
 import { IoSwapHorizontal } from "react-icons/io5";
 import { BsArrowUpRight } from "react-icons/bs";
 import { BiBookOpen } from "react-icons/bi";
+import { BsCurrencyDollar } from "react-icons/bs";
 
 export const BasicData = {
   logo: "/logo.svg",
@@ -18,6 +19,12 @@ export const BasicData = {
       href: "/transact",
       variant: "am-link",
       icon: <IoSwapHorizontal />,
+    },
+    {
+      title: "Stake",
+      href: "/stake",
+      variant: "am-link",
+      icon: <BsCurrencyDollar />,
     },
     {
       title: "Vote",
