@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 const AllValidators = ({
@@ -36,10 +37,18 @@ const AllValidators = ({
                 </td>
                 <td className="text-white">{index + 1}</td>
                 <td className="text-white">
-                  <img
-                    style={{ height: "25px" }}
-                    src={`validatoravatars/${item?.operator_address}.png`}
-                  />
+                  <div
+                    className="d-flex position-relative rounded-circle"
+                    style={{ width: "25px", aspectRatio: "1/1" }}
+                  >
+                    <Image
+                      layout="fill"
+                      alt={item?.description?.moniker}
+                      className="rounded-circle"
+                      src={`/validatoravatars/${item?.operator_address}.png`}
+                      // onError={()=>this.src='favicon.png'}
+                    />
+                  </div>
                 </td>
                 <td className="text-white">{item?.description?.moniker}</td>
                 <td className="text-white">
@@ -78,10 +87,18 @@ const AllValidators = ({
                 </td>
                 <td className="text-white">{index + 1}</td>
                 <td className="text-white">
-                  <img
-                    style={{ height: "25px" }}
-                    src={`validatoravatars/${item?.operator_address}.png`}
-                  />
+                  <div
+                    className="d-flex position-relative rounded-circle"
+                    style={{ width: "25px", aspectRatio: "1/1" }}
+                  >
+                    <Image
+                      layout="fill"
+                      alt={item?.description?.moniker}
+                      className="rounded-circle"
+                      src={`/validatoravatars/${item?.operator_address}.png`}
+                      // onError={()=>this.src='favicon.png'}
+                    />
+                  </div>
                 </td>
                 <td className="text-white">{item?.description?.moniker}</td>
                 <td className="text-white">
