@@ -451,6 +451,28 @@ hr,
     }
   }
 }
+.table {
+  & > thead {
+    border-top: 2px solid;
+    border-bottom: 2px solid;
+    &.bt-0 {
+      border-top: none;
+    }
+    &.bb-0 {
+      border-bottom: none;
+    }
+  }
+  & > :not(caption) > * > * {
+    border: none;
+    text-align: center;
+    vertical-align: middle;
+  }
+}
+input[type="checkbox"] {
+  accent-color: $primary-main;
+  width: 18px;
+  aspect-ratio: 1/1;
+}
 
 // specific styles
 .dropdown-toggle {
