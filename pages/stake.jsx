@@ -32,7 +32,7 @@ const Stake = () => {
   return (
     <>
       <section className="row">
-        <div className="card bg-gray-800 col-12 col-lg-8 py-3">
+        <div className="card bg-gray-800 col-12 col-lg-8 py-3 rounded-5">
           <div className="d-flex align-items-center justify-content-between my-2 w-100">
             <div className="card-title body2 text-primary my-auto">
               Validators
@@ -56,7 +56,7 @@ const Stake = () => {
               </button>
             </div>
           </div>
-          <div className="nav-bg p-2 mt-4 rounded-4">
+          <div className="nav-bg p-2 mt-2 rounded-4">
             <div className="input-group d-flex w-100 p-2">
               <div className="d-flex align-items-center gap-3 w-100">
                 <div
@@ -101,7 +101,7 @@ const Stake = () => {
                   Sort
                 </button> */}
               </div>
-              <div className="d-flex w-100 my-2" style={{ overflowX: "auto" }}>
+              <div className="d-flex w-100 mt-3" style={{ overflowX: "auto" }}>
                 <table className="table" style={{ width: "max-content" }}>
                   <thead>
                     <tr>
