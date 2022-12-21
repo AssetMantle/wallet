@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 import { useDelegatedValidators } from "../data";
 
@@ -36,11 +37,18 @@ const DelegatedValidators = ({ activeValidators, stakeState, totalTokens }) => {
                 </td>
                 <td className="text-white">{index + 1}</td>
                 <td className="text-white">
-                  <img
-                    style={{ height: "25px" }}
-                    src={`validatoravatars/${item?.operator_address}.png`}
-                    // onError={()=>this.src='favicon.png'}
-                  />
+                  <div
+                    className="d-flex position-relative rounded-circle"
+                    style={{ width: "25px", aspectRatio: "1/1" }}
+                  >
+                    <Image
+                      alt={item?.description?.moniker}
+                      className="rounded-circle"
+                      layout="fill"
+                      src={`/validatoravatars/${item?.operator_address}.png`}
+                      // onError={()=>this.src='favicon.png'}
+                    />
+                  </div>
                 </td>
                 <td className="text-white">{item?.description?.moniker}</td>
                 <td className="text-white">
@@ -77,11 +85,18 @@ const DelegatedValidators = ({ activeValidators, stakeState, totalTokens }) => {
                 </td>
                 <td className="text-white">{index + 1}</td>
                 <td className="text-white">
-                  <img
-                    style={{ height: "25px" }}
-                    src={`validatoravatars/${item?.operator_address}.png`}
-                    // onError={()=>this.src='favicon.png'}
-                  />
+                  <div
+                    className="d-flex position-relative rounded-circle"
+                    style={{ width: "25px", aspectRatio: "1/1" }}
+                  >
+                    <Image
+                      alt={item?.description?.moniker}
+                      className="rounded-circle"
+                      layout="fill"
+                      src={`/validatoravatars/${item?.operator_address}.png`}
+                      // onError={()=>this.src='favicon.png'}
+                    />
+                  </div>
                 </td>
                 <td className="text-white">{item?.description?.moniker}</td>
                 <td className="text-white">
