@@ -33,11 +33,6 @@ export const BasicData = {
       icon: <GiServerRack />,
     },
     {
-      title: "Delegate",
-      href: "/stake",
-      variant: "am-link",
-    },
-    {
       title: "IBC Transaction",
       href: "/ibc",
       variant: "am-link",
