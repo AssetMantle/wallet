@@ -211,7 +211,9 @@ a:hover {
     left: 50%;
     width: 115%;
     height: 2.5px;
-    border: 0;
+    margin: 0 !important;
+    vertical-align: unset !important;
+    border: 0 !important;
     background-color: $primary-main;
     transform: translateX(-50%) translateY(510%) scaleX(0);
     border-radius: 3px;
@@ -373,11 +375,13 @@ $text-muted: $white-400;
     }
   }
 }
-hr {
+hr,
+.divider {
   border: none;
   height: 2px !important;
   background-color: $white-400 !important;
   border-radius: 4px !important;
+  width: 100%;
 }
 .am-input {
   border: 1px solid $gray-200;
@@ -459,6 +463,9 @@ hr {
       transform: rotate(180deg);
     }
   }
+}
+.dropdown-menu {
+  background-color: $nav-bg !important;
 }
 .box-nav {
   border: 2px solid $gray-500;

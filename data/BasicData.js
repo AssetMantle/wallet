@@ -58,7 +58,7 @@ export const BasicData = {
   ],
   rightNav: [
     {
-      title: "Help",
+      title: "",
       href: "",
       variant: "am-link",
       icon: <AiOutlineQuestionCircle />,

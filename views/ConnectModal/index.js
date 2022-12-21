@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ChooseOption from "./ChooseOption";
 import Error from "./Error";
 import GenerateKeystore from "./GenerateKeystore";
+import GenerateOnlyMode from "./GenerateOnlyMode";
 import KeystorePassword from "./KeystorePassword";
 import Mnemonic from "./Mnemonic";
 import MnemonicPassword from "./MnemonicPassword";
@@ -24,6 +25,7 @@ export default function ConnectModal({
   setByWallet,
   close,
 }) {
+  const [WalletAddress, setWalletAddress] = useState();
   const [KeystoreFile, setKeystoreFile] = useState();
   const [MnemonicSeed, setMnemonicSeed] = useState();
   const [Password, setPassword] = useState();
@@ -63,6 +65,8 @@ export default function ConnectModal({
               Keystore={Keystore}
               Ledger={Ledger}
               connect={isConnected}
+              WalletAddress={WalletAddress}
+              setWalletAddress={setWalletAddress}
             />
           ),
           2: (
@@ -113,6 +117,14 @@ export default function ConnectModal({
               setPassword={setPassword}
               setStep={setStep}
               Mnemonic={MnemonicSeed}
+            />
+          ),
+          11: (
+            <GenerateOnlyMode
+              close={close}
+              setStep={setStep}
+              WalletAddress={WalletAddress}
+              setWalletAddress={setWalletAddress}
             />
           ),
         }[step]
