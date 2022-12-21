@@ -1,6 +1,11 @@
 import React from "react";
+import { GoInfo } from "react-icons/go";
 
-export default function Tooltip({ title, description, ...others }) {
+export default function Tooltip({
+  title = <GoInfo />,
+  description,
+  ...others
+}) {
   return (
     <div className="position-relative am-tooltip">
       {title}
