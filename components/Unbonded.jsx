@@ -77,14 +77,14 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
         <p className="caption">
           {unbondingDisplay}&nbsp;{denomDisplay}
         </p>
-        <p className="caption">
+        <p className="caption2">
           {unbondingInUSDDisplay}&nbsp;{"$USD"}
         </p>
         <div className="d-flex justify-content-end">
           <button
             data-bs-toggle="modal"
             data-bs-target="#viewUnbondingModal"
-            className="am-link text-start"
+            className="am-link text-start caption2"
           >
             <i className="text-primary bi bi-eye"></i>View
           </button>
