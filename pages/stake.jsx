@@ -1,9 +1,11 @@
 import React, { useState, useReducer } from "react";
 import AllValidators from "../components/AllValidators";
 import DelegatedValidators from "../components/DelegatedValidators";
+import Tooltip from "../components/Tooltip";
 import { useDelegatedValidators, useAllValidators } from "../data/swrStore";
 import useStakeReducer from "../data/useStakeReducer";
 import StakedToken from "../views/StakedToken";
+import { HiArrowsUpDown } from "react-icons/hi2";
 
 const Stake = () => {
   const { stakeDispatch, stakeState } = useStakeReducer();
@@ -30,101 +32,147 @@ const Stake = () => {
   return (
     <>
       <section className="row">
-        <div className="card bg-gray-800 col-12 col-lg-8">
-          <div className="card-body">
-            <div className="d-flex justify-content-between">
-              <div className="card-title">Validators</div>
-              <div className="btn-group">
-                <button
-                  className={
-                    activeValidators ? "btn btn-primary" : "btn btn-inactive"
-                  }
-                  onClick={() => setActiveValidators(true)}
-                >
-                  Active
-                </button>
-                <button
-                  className={
-                    !activeValidators ? "btn btn-primary" : "btn btn-inactive"
-                  }
-                  onClick={() => setActiveValidators(false)}
-                >
-                  Inactive
-                </button>
-              </div>
+        <div className="card bg-gray-800 col-12 col-lg-8 py-3">
+          <div className="d-flex align-items-center justify-content-between my-2 w-100">
+            <div className="card-title body2 text-primary my-auto">
+              Validators
+            </div>
+            <div className="btn-group">
+              <button
+                className={
+                  activeValidators ? "btn btn-primary" : "btn btn-inactive"
+                }
+                onClick={() => setActiveValidators(true)}
+              >
+                Active
+              </button>
+              <button
+                className={
+                  !activeValidators ? "btn btn-primary" : "btn btn-inactive"
+                }
+                onClick={() => setActiveValidators(false)}
+              >
+                Inactive
+              </button>
             </div>
           </div>
-          <div className="nav-bg">
-            <div className="input-group d-flex">
-              <span className="input-group-text" id="basic-addon1">
-                <i className="bi bi-search text-primary"></i>
-              </span>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Search"
-                aria-label="Search"
-              ></input>
-              <div
-                className="d-flex align-items-center"
-                onClick={() => {
-                  setDelegated((prev) => !prev);
-                  stakeDispatch({ type: "EMPTY_SELECTED_VALIDATORS" });
-                }}
-              >
-                Delegated
-                {delegated ? (
-                  <i className="bi bi-toggle-on fs-1 text-primary"></i>
-                ) : (
-                  <i className="bi bi-toggle-off fs-1 text-primary"></i>
-                )}
+          <div className="nav-bg p-2 mt-4 rounded-4">
+            <div className="input-group d-flex w-100 p-2">
+              <div className="d-flex align-items-center gap-3 w-100">
+                <div
+                  className="d-flex gap-2 am-input border-color-white rounded-3 py-1 px-3 align-items-center"
+                  style={{ flex: "1" }}
+                >
+                  <span
+                    className="input-group-text bg-t p-0 h-100"
+                    id="basic-addon1"
+                    style={{ border: "none" }}
+                  >
+                    <i className="bi bi-search text-primary"></i>
+                  </span>
+                  <input
+                    type="text"
+                    className="am-input bg-t p-1 w-100 h-100"
+                    placeholder="Search"
+                    aria-label="Search"
+                    style={{ border: "none" }}
+                  />
+                </div>
+                <div
+                  className="d-flex gap-2 align-items-center"
+                  onClick={() => {
+                    setDelegated((prev) => !prev);
+                    stakeDispatch({ type: "EMPTY_SELECTED_VALIDATORS" });
+                  }}
+                >
+                  Delegated
+                  <Tooltip description="Showcase a list of all validators that you have ever delegated tokens with." />
+                  <button
+                    className={`d-flex rounded-4 bg-theme-white align-items-center transitionAll justify-content-${
+                      delegated ? "end" : "start"
+                    }`}
+                    style={{ width: "40px", padding: "2px" }}
+                  >
+                    <div className="p-2 rounded-4 nav-bg"></div>
+                  </button>
+                </div>
+                {/* <button className="d-flex align-items-center gap-2">
+                  <HiArrowsUpDown />
+                  Sort
+                </button> */}
               </div>
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>
-                      <input type="checkbox"></input>
-                    </th>
-                    <th className="text-white" scope="col">
-                      Rank
-                    </th>
-                    <th className="text-white" scope="col">
-                      Avatar
-                    </th>
-                    <th className="text-white" scope="col">
-                      Validator Name
-                    </th>
-                    <th className="text-white" scope="col">
-                      Voting Power
-                    </th>
-                    <th className="text-white" scope="col">
-                      Commission
-                    </th>
-                    <th className="text-white" scope="col">
-                      Delegated Amount
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {delegated ? (
-                    <DelegatedValidators
-                      stakeState={stakeState}
-                      activeValidators={activeValidators}
-                      totalTokens={totalTokens}
-                    />
-                  ) : (
-                    allValidators.length !== 1 &&
-                    allValidators && (
-                      <AllValidators
+              <div className="d-flex w-100 my-2" style={{ overflowX: "auto" }}>
+                <table className="table" style={{ width: "max-content" }}>
+                  <thead>
+                    <tr>
+                      <th>
+                        <input type="checkbox"></input>
+                      </th>
+                      <th
+                        className="text-white"
+                        scope="col"
+                        style={{ whiteSpace: "nowrap" }}
+                      >
+                        Rank
+                      </th>
+                      <th
+                        className="text-white"
+                        scope="col"
+                        style={{ whiteSpace: "nowrap" }}
+                      >
+                        Avatar
+                      </th>
+                      <th
+                        className="text-white"
+                        scope="col"
+                        style={{ whiteSpace: "nowrap" }}
+                      >
+                        Validator Name
+                      </th>
+                      <th
+                        className="text-white"
+                        scope="col"
+                        style={{ whiteSpace: "nowrap" }}
+                      >
+                        Voting Power
+                      </th>
+                      <th
+                        className="text-white"
+                        scope="col"
+                        style={{ whiteSpace: "nowrap" }}
+                      >
+                        Commission
+                      </th>
+                      <th
+                        className="text-white"
+                        scope="col"
+                        style={{ whiteSpace: "nowrap" }}
+                      >
+                        Delegated Amount
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {delegated ? (
+                      <DelegatedValidators
                         stakeState={stakeState}
-                        validatorsArray={validatorsArray}
                         activeValidators={activeValidators}
                         totalTokens={totalTokens}
                       />
-                    )
-                  )}
-                </tbody>
-              </table>
+                    ) : (
+                      allValidators.length !== 1 &&
+                      allValidators && (
+                        <AllValidators
+                          stakeState={stakeState}
+                          validatorsArray={validatorsArray}
+                          activeValidators={activeValidators}
+                          totalTokens={totalTokens}
+                        />
+                      )
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
@@ -141,7 +189,7 @@ const Stake = () => {
           <div className="modal-dialog modal-dialog-centered" role="document">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Trsnaction Manifest</h5>
+                <h5 className="modal-title">Transaction Manifest</h5>
                 <button
                   type="button"
                   className="btn-close primary"
