@@ -132,7 +132,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
           <p className="caption">
             {delegationsDisplay}&nbsp;{denomDisplay}
           </p>
-          <p className="caption">
+          <p className="caption2">
             {delegationsInUSDDisplay}&nbsp;{"$USD"}
           </p>
           {showRedelegateUndelegateAndClaim &&
@@ -142,7 +142,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                 <button
                   data-bs-toggle="modal"
                   data-bs-target="#viewRedelegatingModal"
-                  className="am-link text-start"
+                  className="am-link text-start caption2"
                   onClick={() => {
                     {
                       stakeDispatch({
