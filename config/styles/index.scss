@@ -453,8 +453,8 @@ hr,
 }
 .table {
   & > thead {
-    border-top: 2px solid;
-    border-bottom: 2px solid;
+    border-top: 2px solid $gray-100;
+    border-bottom: 2px solid $gray-100;
     &.bt-0 {
       border-top: none;
     }
@@ -472,6 +472,9 @@ input[type="checkbox"] {
   accent-color: $primary-main;
   width: 18px;
   aspect-ratio: 1/1;
+}
+.btn-close {
+  opacity: 1;
 }
 
 // specific styles
@@ -719,6 +722,9 @@ summary::marker {
   box-shadow: none !important;
 }
 
+.no-text-wrap {
+  white-space: nowrap !important;
+}
 tbody {
   & > tr {
     &:last-child td,
