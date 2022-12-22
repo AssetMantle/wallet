@@ -17,6 +17,9 @@ import {
 } from "../data/swrStore";
 import { useWallet } from "@cosmos-kit/react";
 
+import { MdOutlineClose } from "react-icons/md";
+import { BsChevronLeft } from "react-icons/bs";
+
 const denomDisplay = chainSymbol;
 
 const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
@@ -138,11 +141,11 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
           {showRedelegateUndelegateAndClaim &&
           stakeState?.selectedValidators?.length === 1 ? (
             <div className="d-flex justify-content-end">
-              <div className="d-flex flex-row w-75 justify-content-around">
+              <div className="d-flex gap-1 flex-wrap flex-row justify-content-end">
                 <button
                   data-bs-toggle="modal"
                   data-bs-target="#viewRedelegatingModal"
-                  className="am-link text-start caption2"
+                  className="d-flex align-items-center gap-1 am-link text-start caption2"
                   onClick={() => {
                     {
                       stakeDispatch({
@@ -158,7 +161,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                 <button
                   data-bs-toggle="modal"
                   data-bs-target="#viewUndelegatingModal"
-                  className="am-link text-start"
+                  className="d-flex align-items-center gap-1 am-link text-start caption2"
                   onClick={() =>
                     stakeDispatch({
                       type: "SET_UNDELEGATION_SRC_ADDRESS",
@@ -180,21 +183,45 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
           role="dialog"
           id="viewUndelegatingModal"
         >
-          <div className="modal-dialog modal-dialog-centered" role="document">
+          <div
+            className="modal-dialog modal-dialog-centered"
+            role="document"
+            style={{ width: "min(100%,650px)", maxWidth: "min(100%,650px)" }}
+          >
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Undelegate</h5>
+                <h5 className="modal-title body2 text-primary d-flex align-items-center gap-2">
+                  <button
+                    type="button"
+                    className="btn-close primary"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                    style={{ background: "none" }}
+                  >
+                    <span className="text-primary">
+                      <BsChevronLeft />
+                    </span>
+                  </button>
+                  Undelegate
+                </h5>
                 <button
                   type="button"
                   className="btn-close primary"
                   data-bs-dismiss="modal"
                   aria-label="Close"
-                ></button>
+                  style={{ background: "none" }}
+                >
+                  <span className="text-primary">
+                    <MdOutlineClose />
+                  </span>
+                </button>
               </div>
               <div className="modal-body p-4 text-center d-flex flex-column">
                 <div className="d-flex justify-content-between">
-                  <label htmlFor="delegationAmount">Undelegate amount</label>
-                  <small>
+                  <label htmlFor="delegationAmount caption2 mb-1">
+                    Undelegate amount
+                  </label>
+                  <small className="caption2 text-gray">
                     Delegated Amount:
                     {fromDenom(
                       delegatedValidators?.find(
@@ -211,6 +238,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                     style={{ flex: "1", border: "none", outline: "none" }}
                     value={stakeState?.undelegationAmount}
                     type="text"
+                    placeholder="Enter Undelegate Amount"
                     onChange={(e) =>
                       stakeDispatch({
                         type: "CHANGE_UNDELEGATION_AMOUNT",
@@ -234,7 +262,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                 <button
                   onClick={() => handleUndelegate()}
                   type="button"
-                  className="btn btn-primary"
+                  className="button-primary px-5 py-2"
                 >
                   Submit
                 </button>
@@ -249,20 +277,44 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
           role="dialog"
           id="viewRedelegatingModal"
         >
-          <div className="modal-dialog modal-dialog-centered" role="document">
+          <div
+            className="modal-dialog modal-dialog-centered"
+            role="document"
+            style={{ width: "min(100%,650px)", maxWidth: "min(100%,650px)" }}
+          >
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Redelegate</h5>
+                <h5 className="modal-title body2 text-primary d-flex align-items-center gap-2">
+                  <button
+                    type="button"
+                    className="btn-close primary"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                    style={{ background: "none" }}
+                  >
+                    <span className="text-primary">
+                      <BsChevronLeft />
+                    </span>
+                  </button>
+                  Redelegate
+                </h5>
                 <button
                   type="button"
                   className="btn-close primary"
                   data-bs-dismiss="modal"
                   aria-label="Close"
-                ></button>
+                  style={{ background: "none" }}
+                >
+                  <span className="text-primary">
+                    <MdOutlineClose />
+                  </span>
+                </button>
               </div>
               <div className="modal-body p-4 text-center d-flex flex-column align-items-start">
-                <p className="text-muted">Delegate From</p>
-                <p>
+                <p className="text-muted caption2 text-gray my-2">
+                  Delegate From
+                </p>
+                <p className="ps-3 my-2 caption2">
                   Validator Name :
                   {
                     delegatedValidators?.find(
@@ -272,7 +324,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                     )?.description?.moniker
                   }
                 </p>
-                <p>
+                <p className="ps-3 my-2 caption2">
                   Delegated Amount:
                   {
                     delegatedValidators?.find(
@@ -282,139 +334,169 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                     )?.delegatedAmount
                   }
                 </p>
-                <p className="text-muted">Delegate to</p>
-                <div className="input-group d-flex">
-                  <span className="input-group-text" id="basic-addon1">
-                    <i className="bi bi-search text-primary"></i>
-                  </span>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Search"
-                    aria-label="Search"
-                  ></input>
-                  <div className="btn-group">
-                    <button
-                      className={
-                        activeValidators
-                          ? "btn btn-primary"
-                          : "btn btn-inactive"
-                      }
-                      onClick={() => setActiveValidators(true)}
+                <p className="text-muted caption2 text-gray my-2">
+                  Delegate to
+                </p>
+                <div className="nav-bg d-flex flex-column p-2 rounded-3 w-100">
+                  <div className="d-flex align-items-center justify-content-between my-2 w-100 gap-3">
+                    <div
+                      className="d-flex gap-2 am-input border-color-white rounded-3 py-1 px-3 align-items-center"
+                      style={{ flex: "1" }}
                     >
-                      Active
-                    </button>
-                    <button
-                      className={
-                        !activeValidators
-                          ? "btn btn-primary"
-                          : "btn btn-inactive"
-                      }
-                      onClick={() => setActiveValidators(false)}
-                    >
-                      Inactive
-                    </button>
+                      <span
+                        className="input-group-text bg-t p-0 h-100"
+                        id="basic-addon1"
+                        style={{ border: "none" }}
+                      >
+                        <i className="bi bi-search text-primary"></i>
+                      </span>
+                      <input
+                        type="text"
+                        className="am-input bg-t p-1 w-100 h-100"
+                        placeholder="Search"
+                        aria-label="Search"
+                        style={{ border: "none" }}
+                      />
+                    </div>
+                    <div className="btn-group">
+                      <button
+                        className={`${
+                          activeValidators
+                            ? "btn btn-primary"
+                            : "btn btn-inactive"
+                        } caption`}
+                        onClick={() => setActiveValidators(true)}
+                      >
+                        Active
+                      </button>
+                      <button
+                        className={`${
+                          !activeValidators
+                            ? "btn btn-primary"
+                            : "btn btn-inactive"
+                        } caption`}
+                        onClick={() => setActiveValidators(false)}
+                      >
+                        Inactive
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    className="d-flex w-100 mt-3"
+                    style={{ overflow: "auto", maxHeight: "300px" }}
+                  >
+                    <table className="table ">
+                      <thead className="bt-0">
+                        <tr>
+                          <th></th>
+                          <th className="text-white no-text-wrap" scope="col">
+                            Rank
+                          </th>
+                          <th className="text-white no-text-wrap" scope="col">
+                            Validator Name
+                          </th>
+                          <th className="text-white no-text-wrap" scope="col">
+                            Voting Power
+                          </th>
+                          <th className="text-white no-text-wrap" scope="col">
+                            Commission
+                          </th>
+                          <th className="text-white no-text-wrap" scope="col">
+                            Delegations
+                          </th>
+                          <th className="text-white no-text-wrap" scope="col">
+                            Delegated Amt
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {activeValidators
+                          ? validatorsArray
+                              ?.filter(
+                                (item) => item?.status === "BOND_STATUS_BONDED"
+                              )
+                              ?.map((item, index) => (
+                                <tr key={index} className="text-white">
+                                  <td>
+                                    <input
+                                      type="radio"
+                                      name="radio"
+                                      onChange={() =>
+                                        stakeDispatch({
+                                          type: "SET_REDELEGATION_DESTINATION_ADDRESS",
+                                          payload: item?.operator_address,
+                                        })
+                                      }
+                                    />
+                                  </td>
+                                  <td>{index + 1}</td>
+                                  <td>{item?.description?.moniker}</td>
+                                  <td>
+                                    {(
+                                      (item?.tokens * 100) /
+                                      totalTokens
+                                    ).toFixed(4)}
+                                    %
+                                  </td>
+                                  <td>
+                                    {item?.commission?.commission_rates?.rate *
+                                      100}
+                                    %
+                                  </td>
+                                  <td>{item?.tokens / 1000000}</td>
+                                  <td>{item.delegatedAmount}</td>
+                                </tr>
+                              ))
+                          : validatorsArray
+                              ?.filter(
+                                (item) =>
+                                  item?.status === "BOND_STATUS_UNBONDED"
+                              )
+                              ?.map((item, index) => (
+                                <tr key={index} className="text-white">
+                                  <td>
+                                    <input
+                                      type="radio"
+                                      name="radio"
+                                      onChange={() =>
+                                        stakeDispatch({
+                                          type: "SET_REDELEGATION_DESTINATION_ADDRESS",
+                                          payload: item?.operator_address,
+                                        })
+                                      }
+                                    />
+                                  </td>
+                                  <td>{index + 1}</td>
+                                  <td>{item?.description?.moniker}</td>
+                                  <td>
+                                    {(
+                                      (item?.tokens * 100) /
+                                      totalTokens
+                                    ).toFixed(4)}
+                                    %
+                                  </td>
+                                  <td>
+                                    {item?.commission?.commission_rates?.rate *
+                                      100}
+                                    %
+                                  </td>
+                                  <td>{item?.tokens / 1000000}</td>
+                                  <td>
+                                    {item.delegatedAmount
+                                      ? item.delegatedAmount
+                                      : "-"}
+                                  </td>
+                                </tr>
+                              ))}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
-                <table className="table nav-bg">
-                  <thead>
-                    <tr>
-                      <th></th>
-                      <th className="text-white" scope="col">
-                        Rank
-                      </th>
-                      <th className="text-white" scope="col">
-                        Validator Name
-                      </th>
-                      <th className="text-white" scope="col">
-                        Voting Power
-                      </th>
-                      <th className="text-white" scope="col">
-                        Commission
-                      </th>
-                      <th className="text-white" scope="col">
-                        Delegations
-                      </th>
-                      <th className="text-white" scope="col">
-                        Delegated Amt
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {activeValidators
-                      ? validatorsArray
-                          ?.filter(
-                            (item) => item?.status === "BOND_STATUS_BONDED"
-                          )
-                          ?.map((item, index) => (
-                            <tr key={index} className="text-white">
-                              <td>
-                                <input
-                                  type="radio"
-                                  name="radio"
-                                  onChange={() =>
-                                    stakeDispatch({
-                                      type: "SET_REDELEGATION_DESTINATION_ADDRESS",
-                                      payload: item?.operator_address,
-                                    })
-                                  }
-                                />
-                              </td>
-                              <td>{index + 1}</td>
-                              <td>{item?.description?.moniker}</td>
-                              <td>
-                                {((item?.tokens * 100) / totalTokens).toFixed(
-                                  4
-                                )}
-                                %
-                              </td>
-                              <td>
-                                {item?.commission?.commission_rates?.rate * 100}
-                                %
-                              </td>
-                              <td>{item?.tokens / 1000000}</td>
-                              <td>{item.delegatedAmount}</td>
-                            </tr>
-                          ))
-                      : validatorsArray
-                          ?.filter(
-                            (item) => item?.status === "BOND_STATUS_UNBONDED"
-                          )
-                          ?.map((item, index) => (
-                            <tr key={index} className="text-white">
-                              <td>
-                                <input
-                                  type="radio"
-                                  name="radio"
-                                  onChange={() =>
-                                    stakeDispatch({
-                                      type: "SET_REDELEGATION_DESTINATION_ADDRESS",
-                                      payload: item?.operator_address,
-                                    })
-                                  }
-                                />
-                              </td>
-                              <td>{index + 1}</td>
-                              <td>{item?.description?.moniker}</td>
-                              <td>
-                                {((item?.tokens * 100) / totalTokens).toFixed(
-                                  4
-                                )}
-                                %
-                              </td>
-                              <td>
-                                {item?.commission?.commission_rates?.rate * 100}
-                                %
-                              </td>
-                              <td>{item?.tokens / 1000000}</td>
-                              <td>{item.delegatedAmount}</td>
-                            </tr>
-                          ))}
-                  </tbody>
-                </table>
-                <div className="d-flex justify-content-between">
-                  <label htmlFor="delegationAmount">Delegation amount</label>{" "}
-                  <small>
+                <div className="d-flex justify-content-between w-100 mt-4">
+                  <label htmlFor="delegationAmount caption text-gray my-2">
+                    Delegation amount
+                  </label>{" "}
+                  <small className="caption2 text-gray my-2">
                     Delegated Amount :{" "}
                     {fromDenom(
                       delegatedValidators?.find((item) =>
@@ -427,7 +509,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                     {defaultChainSymbol}
                   </small>
                 </div>
-                <div className="p-3 border-white py-2 d-flex rounded-2 gap-2 am-input">
+                <div className="p-3 border-white py-2 d-flex rounded-2 gap-2 am-input w-100">
                   <input
                     className="bg-t"
                     id="delegationAmount"
@@ -455,7 +537,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                 <button
                   onClick={() => handleRedelegate()}
                   type="button"
-                  className="btn btn-primary"
+                  className="button-primary px-5 py-2"
                 >
                   Submit
                 </button>
