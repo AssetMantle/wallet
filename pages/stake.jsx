@@ -39,17 +39,17 @@ const Stake = () => {
             </div>
             <div className="btn-group">
               <button
-                className={
+                className={`${
                   activeValidators ? "btn btn-primary" : "btn btn-inactive"
-                }
+                } caption`}
                 onClick={() => setActiveValidators(true)}
               >
                 Active
               </button>
               <button
-                className={
+                className={`${
                   !activeValidators ? "btn btn-primary" : "btn btn-inactive"
-                }
+                } caption`}
                 onClick={() => setActiveValidators(false)}
               >
                 Inactive
