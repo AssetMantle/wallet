@@ -1,45 +1,22 @@
-import React, { useState } from "react";
-import Sunburst from "sunburst-chart";
+import React, { useState, useReducer } from "react";
 import {
   BsArrowUpRight,
   BsFillCheckCircleFill,
   BsDashCircleFill,
   BsFillXCircleFill,
 } from "react-icons/bs";
-import { useAllProposals } from "../data/swrStore";
-import { useProposal } from "../data/swrStore";
-const myChart = Sunburst();
-myChart
-  .data({
-    name: "root",
-    children: [
-      {
-        name: "leafA",
-        value: 3,
-      },
-      {
-        name: "nodeB",
-        children: [
-          {
-            name: "leafBA",
-            value: 5,
-          },
-          {
-            name: "leafBB",
-            value: 1,
-          },
-        ],
-      },
-    ],
-  })
-  .excludeRoot(true)(document.getElementById("chart"));
+import { useAllProposals, useProposal } from "../data/swrStore";
+import VoteInfo from "../views/VoteInfo";
+import UseVoteReducer from "../data/useVoteReducer";
 
 export default function Vote() {
+  const { voteState, voteDispatch } = UseVoteReducer();
   const [ActiveNav, setActiveNav] = useState(0);
+  const [onVoteHover, setOnVoteHover] = useState(null);
   const { allProposals, isLoadingProposals, errorProposals } =
     useAllProposals();
   const { proposalInfo, isLoadingProposal, errorProposal } = useProposal("1");
-  console.log("singleProposal:", proposalInfo, "allProposals:", allProposals);
+
   const votingPower = 1 === 1 ? "0.4%" : "--%";
   const currentVotingPower =
     1 === 2 ? { display: "6/10", value: 60 } : { display: "X/X", value: "" };
@@ -49,7 +26,6 @@ export default function Vote() {
   return (
     <section className="row">
       <div className="col-12 col-lg-8 px-1">
-        <div className="chart"></div>
         <div className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-2 transitionAll">
           <nav className="d-flex align-items-center justify-content-between gap-3">
             <h1 className="body2 text-primary">Proposals</h1>
@@ -78,7 +54,17 @@ export default function Vote() {
           <div className="nav-bg rounded-4 d-flex flex-column px-3 py-2 gap-3">
             <div className="row">
               {allProposals?.map((proposal) => (
-                <div className={`col-12 col-md-6 p-2`}>
+                <div
+                  onMouseEnter={() => setOnVoteHover(proposal?.proposal_id)}
+                  onMouseLeave={() => setOnVoteHover(null)}
+                  className={`col-12 col-md-6 p-2`}
+                  onClick={() =>
+                    voteDispatch({
+                      type: "SET_PROPOSAL_ID",
+                      payload: proposal?.proposal_id,
+                    })
+                  }
+                >
                   <div
                     className={`bg-translucent rounded-3`}
                     style={{ opacity: proposal.idIcon ? "1" : "0.6" }}
@@ -127,7 +113,7 @@ export default function Vote() {
                         Voting End : {proposal?.voting_end_time}
                       </p>
                     </div>
-                    <div className="py-2">
+                    <div className="py-2 d-flex">
                       <p
                         className="small bg-blue-100 p-2 pe-4 text-dark text-uppercase"
                         style={{
@@ -139,6 +125,13 @@ export default function Vote() {
                       >
                         {proposal?.status}
                       </p>
+                      {onVoteHover === proposal?.proposal_id &&
+                      voteState.proposalID !== proposal?.proposal_id ? (
+                        <i className="bi bi-circle text-primary"></i>
+                      ) : null}
+                      {voteState.proposalID === proposal?.proposal_id ? (
+                        <i className="bi bi-record-circle text-primary"></i>
+                      ) : null}
                     </div>
                   </div>
                 </div>
@@ -147,7 +140,7 @@ export default function Vote() {
           </div>
         </div>
       </div>
-      <div className="col-12 pt-3 pt-lg-0 col-lg-4">
+      {/* <div className="col-12 pt-3 pt-lg-0 col-lg-4">
         <div className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-2 transitionAll">
           <nav className="d-flex align-items-center justify-content-between gap-3">
             <div className="d-flex gap-3 align-items-center">
@@ -158,7 +151,7 @@ export default function Vote() {
             <p className="caption">
               Your Voting Power is{" "}
               <span className="text-primary">{votingPower}</span>
-            </p>
+            </p>`
             <br />
             <p className="caption">Votes made for categories:</p>
             <p className="caption">
@@ -183,7 +176,8 @@ export default function Vote() {
             )}
           </div>
         </div>
-      </div>
+      </div> */}
+      <VoteInfo voteDispatch={voteDispatch} voteState={voteState} />
     </section>
   );
 }

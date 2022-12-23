@@ -5,6 +5,7 @@ const AllValidators = ({
   activeValidators,
   validatorsArray,
   stakeState,
+  stakeDispatch,
   totalTokens,
 }) => {
   return (

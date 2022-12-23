@@ -155,6 +155,8 @@ const Stake = () => {
                   <tbody>
                     {delegated ? (
                       <DelegatedValidators
+                        setShowClaimError={setShowClaimError}
+                        stakeDispatch={stakeDispatch}
                         stakeState={stakeState}
                         activeValidators={activeValidators}
                         totalTokens={totalTokens}
@@ -163,6 +165,7 @@ const Stake = () => {
                       allValidators.length !== 1 &&
                       allValidators && (
                         <AllValidators
+                          stakeDispatch={stakeDispatch}
                           stakeState={stakeState}
                           validatorsArray={validatorsArray}
                           activeValidators={activeValidators}

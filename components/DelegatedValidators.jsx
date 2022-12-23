@@ -1,8 +1,15 @@
 import Image from "next/image";
 import React from "react";
+import { GiConsoleController } from "react-icons/gi";
 import { useDelegatedValidators } from "../data";
 
-const DelegatedValidators = ({ activeValidators, stakeState, totalTokens }) => {
+const DelegatedValidators = ({
+  activeValidators,
+  stakeState,
+  totalTokens,
+  stakeDispatch,
+  setShowClaimError,
+}) => {
   const {
     delegatedValidators,
     totalDelegatedAmount,
@@ -20,7 +27,7 @@ const DelegatedValidators = ({ activeValidators, stakeState, totalTokens }) => {
                   <input
                     type="checkbox"
                     onChange={() => {
-                      setShowClaimError(false);
+                      // setShowClaimError(false);
                       stakeState?.selectedValidators?.includes(
                         item?.operator_address
                       )

@@ -313,7 +313,6 @@ const UseStakeReducer = () => {
   };
 
   const [stakeState, stakeDispatch] = useReducer(stakeReducer, initialState);
-  console.log("global stake", stakeState);
   return { stakeState, stakeDispatch };
 };
 
