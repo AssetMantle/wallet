@@ -8,6 +8,9 @@ import { fromDenom, defaultChainSymbol } from "../data";
 import { useAvailableBalance } from "../data";
 import { defaultChainGasFee } from "../config";
 
+import { MdOutlineClose } from "react-icons/md";
+import { BsChevronLeft } from "react-icons/bs";
+
 export default function StakedToken({
   totalTokens,
   setShowClaimError,
@@ -57,7 +60,8 @@ export default function StakedToken({
         </Suspense>
         {stakeState?.selectedValidators?.length === 1 ? (
           <button
-            className="btn btn-primary w-100 rounded-5"
+            className="button-primary text-center px-3 py-2"
+            style={{ maxWidth: "100%" }}
             onClick={() =>
               stakeDispatch({
                 type: "SET_DELEGATION_ADDRESS",
@@ -72,8 +76,8 @@ export default function StakedToken({
         ) : null}
         {stakeState?.selectedValidators?.length > 5 || showClaimError ? (
           <div className="d-flex justify-content-between">
-            <i className="bi bi-exclamation-circle text-error"></i>
-            <p className="text-error ">
+            <p className="text-error">
+              <i className="bi bi-exclamation-circle text-error"></i>{" "}
               Culmulative Rewards can be claimed only for 5 or less validators
             </p>
           </div>
@@ -82,18 +86,38 @@ export default function StakedToken({
           <div className="modal-dialog modal-dialog-centered" role="document">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Delegate</h5>
+                <h5 className="modal-title body2 text-primary d-flex align-items-center gap-2">
+                  <button
+                    type="button"
+                    className="btn-close primary"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                    style={{ background: "none" }}
+                  >
+                    <span className="text-primary">
+                      <BsChevronLeft />
+                    </span>
+                  </button>
+                  Delegate
+                </h5>
                 <button
                   type="button"
                   className="btn-close primary"
                   data-bs-dismiss="modal"
                   aria-label="Close"
-                ></button>
+                  style={{ background: "none" }}
+                >
+                  <span className="text-primary">
+                    <MdOutlineClose />
+                  </span>
+                </button>
               </div>
               <div className="modal-body p-4 text-center d-flex flex-column">
-                <div className="d-flex justify-content-between">
-                  <label htmlFor="delegationAmount">Delegation amount</label>{" "}
-                  <small>
+                <div className="d-flex my-2 justify-content-between">
+                  <label htmlFor="delegationAmount caption text-gray">
+                    Delegation Amount
+                  </label>{" "}
+                  <small className="text-gray caption2">
                     Balance : {fromDenom(availableBalance).toString()}&nbsp;
                     {defaultChainSymbol}
                   </small>
@@ -105,7 +129,7 @@ export default function StakedToken({
                     style={{ flex: "1", border: "none", outline: "none" }}
                     type="text"
                     value={stakeState?.delegationAmount}
-                    placeholder="Enter Amount"
+                    placeholder="Enter Delegation Amount"
                     onChange={(e) =>
                       stakeDispatch({
                         type: "CHANGE_DELEGATION_AMOUNT",
@@ -131,7 +155,7 @@ export default function StakedToken({
                     handleStake();
                   }}
                   type="button"
-                  className="btn btn-primary"
+                  className="button-primary px-5 py-2"
                 >
                   Submit
                 </button>

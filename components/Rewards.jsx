@@ -100,7 +100,7 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
         <div className="d-flex justify-content-end">
           {stakeState?.selectedValidators?.length > 5 ? null : (
             <button
-              className="am-link text-start"
+              className="am-link text-start d-flex align-items-center gap-1"
               data-bs-toggle={
                 delegatedValidators?.length > 5 &&
                 stakeState?.selectedValidators.length === 0

@@ -11,6 +11,9 @@ import {
   useDelegatedValidators,
 } from "../data/swrStore";
 
+import { MdOutlineClose } from "react-icons/md";
+import { BsChevronLeft } from "react-icons/bs";
+
 const denomDisplay = chainSymbol;
 
 const Unbonded = ({ stakeState, stakeDispatch }) => {
@@ -84,7 +87,7 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
           <button
             data-bs-toggle="modal"
             data-bs-target="#viewUnbondingModal"
-            className="am-link text-start caption2"
+            className="d-flex align-items-center gap-1 am-link text-start caption2"
           >
             <i className="text-primary bi bi-eye"></i>View
           </button>
@@ -96,97 +99,136 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
         role="dialog"
         id="viewUnbondingModal"
       >
-        <div className="modal-dialog modal-dialog-centered" role="document">
+        <div
+          className="modal-dialog modal-dialog-centered"
+          role="document"
+          style={{ width: "min(100%,650px)", maxWidth: "min(100%,650px)" }}
+        >
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Undelegating List</h5>
+              <h5 className="modal-title body2 text-primary d-flex align-items-center gap-2">
+                <button
+                  type="button"
+                  className="btn-close primary"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                  style={{ background: "none" }}
+                >
+                  <span className="text-primary">
+                    <BsChevronLeft />
+                  </span>
+                </button>
+                Undelegating List
+              </h5>
               <button
                 type="button"
                 className="btn-close primary"
                 data-bs-dismiss="modal"
                 aria-label="Close"
-              ></button>
+                style={{ background: "none" }}
+              >
+                <span className="text-primary">
+                  <MdOutlineClose />
+                </span>
+              </button>
             </div>
             <div className="modal-body p-4 text-center d-flex flex-column">
-              <div className="d-flex justify-content-between nav-bg">
-                <div className="d-flex flex-column">
-                  <div className="input-group d-flex">
-                    <span className="input-group-text" id="basic-addon1">
-                      <i className="bi bi-search text-primary"></i>
-                    </span>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Search"
-                      aria-label="Search"
-                    ></input>
+              <div className="d-flex justify-content-between">
+                <div className="d-flex flex-column nav-bg w-100 rounded-3 px-3 py-1">
+                  <div className="d-flex align-items-center justify-content-between my-2 w-100 gap-3">
+                    <div
+                      className="d-flex gap-2 am-input border-color-white rounded-3 py-1 px-3 align-items-center"
+                      style={{ flex: "1" }}
+                    >
+                      <span
+                        className="input-group-text bg-t p-0 h-100"
+                        id="basic-addon1"
+                        style={{ border: "none" }}
+                      >
+                        <i className="bi bi-search text-primary"></i>
+                      </span>
+                      <input
+                        type="text"
+                        className="am-input bg-t p-1 w-100 h-100"
+                        placeholder="Search"
+                        aria-label="Search"
+                        style={{ border: "none" }}
+                      />
+                    </div>
                     <div className="btn-group">
                       <button
-                        className={
+                        className={`${
                           activeValidators
                             ? "btn btn-primary"
                             : "btn btn-inactive"
-                        }
+                        } caption`}
                         onClick={() => setActiveValidators(true)}
                       >
                         Active
                       </button>
                       <button
-                        className={
+                        className={`${
                           !activeValidators
                             ? "btn btn-primary"
                             : "btn btn-inactive"
-                        }
+                        } caption`}
                         onClick={() => setActiveValidators(false)}
                       >
                         Inactive
                       </button>
                     </div>
                   </div>
-                  <table className="table nav-bg">
-                    <thead>
-                      <tr>
-                        <th className="text-white" scope="col">
-                          Validator Name
-                        </th>
-                        <th className="text-white" scope="col">
-                          Unelegating Amount
-                        </th>
-                        <th className="text-white" scope="col">
-                          Duration Left
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {allUnbonding?.map((item, index) => (
-                        <tr key={index}>
-                          <td
-                            data-bs-toggle="modal"
-                            data-bs-target="#viewUndelegatingModal"
-                            className="text-white"
-                            onClick={() =>
-                              stakeDispatch({
-                                type: "SET_UNDELEGATION_SRC_ADDRESS",
-                                payload: item?.address,
-                              })
-                            }
-                          >
-                            {
-                              delegatedValidators?.find(
-                                (ele) => ele?.operator_address === item?.address
-                              )?.description?.moniker
-                            }
-                          </td>
-                          <td className="text-white">{item?.balance}</td>
-                          <td className="text-white">
-                            {getTimeRemaining(item?.completion_time).days} days,{" "}
-                            {getTimeRemaining(item?.completion_time).hours}{" "}
-                            hours
-                          </td>
+                  <div
+                    className="d-flex w-100 mt-3"
+                    style={{ overflow: "auto", maxHeight: "400px" }}
+                  >
+                    <table className="table">
+                      <thead className="bt-0">
+                        <tr>
+                          <th className="no-text-break text-white" scope="col">
+                            Validator Name
+                          </th>
+                          <th className="no-text-break text-white" scope="col">
+                            Unelegating Amount
+                          </th>
+                          <th className="no-text-break text-white" scope="col">
+                            Duration Left
+                          </th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {allUnbonding?.map((item, index) => (
+                          <tr key={index}>
+                            <td
+                              data-bs-toggle="modal"
+                              data-bs-target="#viewUndelegatingModal"
+                              className="text-white"
+                              onClick={() =>
+                                stakeDispatch({
+                                  type: "SET_UNDELEGATION_SRC_ADDRESS",
+                                  payload: item?.address,
+                                })
+                              }
+                            >
+                              {
+                                delegatedValidators?.find(
+                                  (ele) =>
+                                    ele?.operator_address === item?.address
+                                )?.description?.moniker
+                              }
+                            </td>
+                            <td className="text-white">{item?.balance}</td>
+                            <td className="text-white">
+                              {getTimeRemaining(item?.completion_time).days}{" "}
+                              days,{" "}
+                              {getTimeRemaining(item?.completion_time).hours}{" "}
+                              hours
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
