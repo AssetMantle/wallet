@@ -6,8 +6,11 @@ import { useDelegatedValidators, useAllValidators } from "../data/swrStore";
 import useStakeReducer from "../data/useStakeReducer";
 import StakedToken from "../views/StakedToken";
 import { HiArrowsUpDown } from "react-icons/hi2";
+import { MdOutlineClose } from "react-icons/md";
+import { BsChevronLeft, BsChevronDown } from "react-icons/bs";
+import { transform } from "typescript";
 
-const Stake = () => {
+export default function Stake() {
   const { stakeDispatch, stakeState } = useStakeReducer();
   const [showClaimError, setShowClaimError] = useState(false);
   const [activeValidators, setActiveValidators] = useState(true);
@@ -29,10 +32,36 @@ const Stake = () => {
     0
   );
 
+  // transaction manifest modal states and functions
+  const GasOptions = [
+    {
+      name: "Zero",
+      usd: "0.0000",
+      mntl: "0.0000",
+    },
+    {
+      name: "Low",
+      usd: "0.0000",
+      mntl: "0.0000",
+    },
+    {
+      name: "Heigh",
+      usd: "0.0000",
+      mntl: "0.0000",
+    },
+  ];
+  const [SelectedGasFee, setSelectedGasFee] = useState(GasOptions[0].name);
+  const [ManifestShowAdvanced, setManifestShowAdvanced] = useState(false);
+  const [ManifestKeystorePassword, setManifestKeystorePassword] = useState();
+  const [ManifestCustomGas, setManifestCustomGas] = useState();
+  const handleManifestConfirm = () => {
+    console.log("Confirming transaction manifest");
+  };
+
   return (
     <>
       <section className="row">
-        <div className="card bg-gray-800 col-12 col-lg-8 py-3 rounded-5">
+        <div className="card bg-gray-800 col-12 col-lg-8 p-3 rounded-5">
           <div className="d-flex align-items-center justify-content-between my-2 w-100">
             <div className="card-title body2 text-primary my-auto">
               Validators
@@ -179,7 +208,6 @@ const Stake = () => {
             </div>
           </div>
         </div>
-
         <StakedToken
           stakeState={stakeState}
           stakeDispatch={stakeDispatch}
@@ -188,46 +216,138 @@ const Stake = () => {
           totalTokens={totalTokens}
           selectedValidators={stakeState?.selectedValidators}
         />
-        <div className="modal " tabIndex="-1" role="dialog" id="manifestModal">
-          <div className="modal-dialog modal-dialog-centered" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Transaction Manifest</h5>
+      </section>
+      <div className="modal " tabIndex="-1" role="dialog" id="manifestModal">
+        <div className="modal-dialog modal-dialog-centered" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title body2 text-primary d-flex align-items-center gap-2">
                 <button
                   type="button"
                   className="btn-close primary"
                   data-bs-dismiss="modal"
                   aria-label="Close"
-                ></button>
+                  style={{ background: "none" }}
+                >
+                  <span className="text-primary">
+                    <BsChevronLeft />
+                  </span>
+                </button>
+                Transaction Manifest
+              </h5>
+              <button
+                type="button"
+                className="btn-close primary"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+                style={{ background: "none" }}
+              >
+                <span className="text-primary">
+                  <MdOutlineClose />
+                </span>
+              </button>
+            </div>
+            <div className="modal-body p-4  d-flex flex-column">
+              <p className="caption mb-2">Transaction Details:</p>
+              <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-1">
+                <p className="caption mt-3">From:</p>
+                <p className="caption2 text-gray">
+                  mantle10x0k7tfhd4hm4hgasfuyg689khb34w4a6kbd6v2v
+                </p>
+                <p className="caption mt-3">To:</p>
+                <p className="caption2 text-gray">
+                  mantle10x0k7tfhd4hm4hgasfuyg689khb34w4a6kbd6v2v
+                </p>
+                <p className="caption mt-3">Amount:</p>
+                <p className="caption2 text-gray">12345 $MNTL</p>
+                <p className="caption mt-3">Transaction Type:</p>
+                <p className="caption2 text-gray">Send</p>
+                <p className="caption mt-3">Transaction Wallet Type:</p>
+                <p className="caption2 text-gray">Keplr</p>
               </div>
-              <div className="modal-body p-4  d-flex flex-column">
-                Transaction Details:
-                <div className="nav-bg ">
-                  <p>From:</p>
-                  <p>mantle10x0k7tfhd4hm4hgasfuyg689khb34w4a6kbd6v2v</p>
-                  <p>To:</p>
-                  <p>mantle10x0k7tfhd4hm4hgasfuyg689khb34w4a6kbd6v2v</p>
-                  <p>Amount</p>
-                  <p>12345 $MNTL</p>
-                  <p>Transaction Type:</p>
-                  <p>Send</p>
-                  <p>Transaction Wallet Type:</p>
-                  <p>Keplr</p>
-                </div>
-                <div className="d-flex">
-                  <i className="bi bi-exclamation-circle text-error"></i>
-                  <p>
-                    Upon confirmation, Keplr extension will open. Approve
-                    transaction in Keplr.
-                  </p>
-                </div>
+              <div className="d-flex my-2">
+                <p className="caption2">
+                  <i className="bi bi-exclamation-circle text-primary"></i> Upon
+                  confirmation, Keplr extension will open. Approve transaction
+                  in Keplr.
+                </p>
+              </div>
+              <h6 className="body2 my-3">Gas Fees:</h6>
+              <div className="d-flex align-items-center justify-content-center my-2">
+                {React.Children.toArray(
+                  GasOptions.map((el) => (
+                    <button
+                      className={`bg-gray-800 p-2 py-3 d-flex flex-column gap-1 select-gas ${
+                        SelectedGasFee === el.name ? "active" : ""
+                      }`}
+                      onClick={() => setSelectedGasFee(el.name)}
+                    >
+                      <p className="caption">{el.name}</p>
+                      <p className="caption2">{el.usd} $</p>
+                      <p className="caption2">{el.mntl} $MNTL</p>
+                    </button>
+                  ))
+                )}
+              </div>
+              <div className="my-2 d-flex flex-column gap-1">
+                <label htmlFor="KeystorePassword" className="text-gray">
+                  KeyStore Password
+                </label>
+                <input
+                  type="password"
+                  name="KeystorePassword"
+                  className="am-input border-color-white px-2 py-1 rounded-2 bg-transparent"
+                  placeholder="Enter Password"
+                  value={ManifestKeystorePassword}
+                  onChange={(e) => setManifestKeystorePassword(e.target.value)}
+                />
+              </div>
+              <div className="my-2 d-flex flex-column gap-1">
+                <button
+                  className="am-link caption d-flex align-items-center justify-content-start gap-1"
+                  onClick={() => setManifestShowAdvanced(!ManifestShowAdvanced)}
+                >
+                  Advanced Details
+                  <span
+                    className="transitionAll"
+                    style={{
+                      transformOrigin: "center",
+                      transform: ManifestShowAdvanced
+                        ? "rotate(180deg)"
+                        : "rotate(0deg)",
+                    }}
+                  >
+                    <BsChevronDown />
+                  </span>
+                </button>
+                {ManifestShowAdvanced && (
+                  <div className="my-2 d-flex flex-column gap-1">
+                    <label htmlFor="customGas" className="text-gray">
+                      Gas
+                    </label>
+                    <input
+                      type="number"
+                      name="customGas"
+                      className="am-input border-color-white px-2 py-1 rounded-2 bg-transparent"
+                      placeholder="Enter Gas Amount"
+                      value={ManifestCustomGas}
+                      onChange={(e) => setManifestCustomGas(e.target.value)}
+                    />
+                  </div>
+                )}
+              </div>
+              <div className="my-2 d-flex">
+                <button
+                  className="button-primary px-5 py-2 ms-auto"
+                  onClick={handleManifestConfirm}
+                >
+                  Confirm
+                </button>
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </>
   );
-};
-
-export default Stake;
+}
