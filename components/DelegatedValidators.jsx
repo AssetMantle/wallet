@@ -4,6 +4,7 @@ import { GiConsoleController } from "react-icons/gi";
 import { useDelegatedValidators } from "../data";
 
 const DelegatedValidators = ({
+  searchValue,
   activeValidators,
   stakeState,
   totalTokens,
@@ -20,7 +21,11 @@ const DelegatedValidators = ({
     <>
       {activeValidators
         ? delegatedValidators
-            ?.filter((item) => item?.status === "BOND_STATUS_BONDED")
+            ?.filter(
+              (item) =>
+                item?.status === "BOND_STATUS_BONDED" &&
+                item?.description?.moniker?.toLowerCase()?.includes(searchValue)
+            )
             ?.map((item, index) => (
               <tr key={index}>
                 <td>
@@ -53,17 +58,17 @@ const DelegatedValidators = ({
                       className="rounded-circle"
                       layout="fill"
                       src={`/validatoravatars/${item?.operator_address}.png`}
-                      // onError={()=>this.src='favicon.png'}
+                      // onError={(e) => console.log(e)}
                     />
                   </div>
                 </td>
                 <td className="text-white">{item?.description?.moniker}</td>
                 <td className="text-white">
                   {" "}
-                  {((item?.tokens * 100) / totalTokens).toFixed(4)}%
+                  {((item?.tokens * 100) / totalTokens).toFixed(2)}
                 </td>
                 <td className="text-white">
-                  {item?.commission?.commission_rates?.rate * 100}%
+                  {(item?.commission?.commission_rates?.rate * 100).toFixed(0)}
                 </td>
                 <td className="text-white">{item?.tokens / 1000000}</td>
               </tr>
@@ -101,17 +106,17 @@ const DelegatedValidators = ({
                       className="rounded-circle"
                       layout="fill"
                       src={`/validatoravatars/${item?.operator_address}.png`}
-                      // onError={()=>this.src='favicon.png'}
+                      // onError={(e) => console.log(e)}
                     />
                   </div>
                 </td>
                 <td className="text-white">{item?.description?.moniker}</td>
                 <td className="text-white">
                   {" "}
-                  {((item?.tokens * 100) / totalTokens).toFixed(4)}%
+                  {((item?.tokens * 100) / totalTokens).toFixed(2)}
                 </td>
                 <td className="text-white">
-                  {item?.commission?.commission_rates?.rate * 100}%
+                  {(item?.commission?.commission_rates?.rate * 100).toFixed(0)}
                 </td>
                 <td className="text-white">{item?.tokens / 1000000}</td>
               </tr>

@@ -8,6 +8,7 @@ import StakedToken from "../views/StakedToken";
 import { HiArrowsUpDown } from "react-icons/hi2";
 
 const Stake = () => {
+  const [searchValue, setSearchValue] = useState("");
   const { stakeDispatch, stakeState } = useStakeReducer();
   const [showClaimError, setShowClaimError] = useState(false);
   const [activeValidators, setActiveValidators] = useState(true);
@@ -22,6 +23,8 @@ const Stake = () => {
       validatorsArray.push(validatorsArray.splice(index, 1)[0]);
     }
   });
+
+  console.log(allValidators);
 
   //Calculate total tokens to calculate voting power
   const totalTokens = validatorsArray.reduce(
@@ -75,6 +78,8 @@ const Stake = () => {
                     className="am-input bg-t p-1 w-100 h-100"
                     placeholder="Search"
                     aria-label="Search"
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
                     style={{ border: "none" }}
                   />
                 </div>
@@ -120,13 +125,6 @@ const Stake = () => {
                         scope="col"
                         style={{ whiteSpace: "nowrap" }}
                       >
-                        Avatar
-                      </th>
-                      <th
-                        className="text-white"
-                        scope="col"
-                        style={{ whiteSpace: "nowrap" }}
-                      >
                         Validator Name
                       </th>
                       <th
@@ -134,14 +132,14 @@ const Stake = () => {
                         scope="col"
                         style={{ whiteSpace: "nowrap" }}
                       >
-                        Voting Power
+                        Voting Power(in %)
                       </th>
                       <th
                         className="text-white"
                         scope="col"
                         style={{ whiteSpace: "nowrap" }}
                       >
-                        Commission
+                        Commission(%)
                       </th>
                       <th
                         className="text-white"
@@ -155,6 +153,7 @@ const Stake = () => {
                   <tbody>
                     {delegated ? (
                       <DelegatedValidators
+                        searchValue={searchValue}
                         setShowClaimError={setShowClaimError}
                         stakeDispatch={stakeDispatch}
                         stakeState={stakeState}
@@ -165,6 +164,7 @@ const Stake = () => {
                       allValidators.length !== 1 &&
                       allValidators && (
                         <AllValidators
+                          searchValue={searchValue}
                           stakeDispatch={stakeDispatch}
                           stakeState={stakeState}
                           validatorsArray={validatorsArray}
