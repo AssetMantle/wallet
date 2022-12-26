@@ -1,11 +1,20 @@
-import React, { useState } from "react";
+import { useWallet } from "@cosmos-kit/react";
+import React, { useEffect, useState } from "react";
 import Balance from "../views/Balance";
 import Header from "../views/Header";
 import Portfolio from "../views/Portfolio";
 import StakedToken from "../views/StakedToken";
 
 export default function Layout({ children }) {
-  const [Connected, setConnected] = useState(false);
+  const walletManager = useWallet();
+  const { walletStatus } = walletManager;
+  const [Connected, setConnected] = useState(
+    walletStatus === "Connected" ? true : false
+  );
+
+  useEffect(() => {
+    walletStatus === "Connected" ? setConnected(true) : setConnected(false);
+  }, [walletStatus]);
 
   return (
     <>
