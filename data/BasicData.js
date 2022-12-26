@@ -4,6 +4,10 @@ import { IoSwapHorizontal } from "react-icons/io5";
 import { BsArrowUpRight } from "react-icons/bs";
 import { BiBookOpen } from "react-icons/bi";
 import { BsCurrencyDollar } from "react-icons/bs";
+import { CgListTree } from "react-icons/cg";
+
+export const placeholderAddress =
+  "000000000000000000000000000000000000000000000";
 
 export const BasicData = {
   logo: "/logo.svg",
@@ -33,14 +37,10 @@ export const BasicData = {
       icon: <GiServerRack />,
     },
     {
-      title: "IBC Transaction",
-      href: "/ibc",
+      title: "Bridge",
+      href: "/bridge",
       variant: "am-link",
-    },
-    {
-      title: "Interchain",
-      href: "/interchain",
-      variant: "am-link",
+      icon: <CgListTree />,
     },
     {
       title: "Explorer",
@@ -54,8 +54,9 @@ export const BasicData = {
   rightNav: [
     {
       title: "",
-      href: "",
+      href: "https://docs.assetmantle.one/",
       variant: "am-link",
+      target: "_blank",
       icon: <AiOutlineQuestionCircle />,
     },
   ],
