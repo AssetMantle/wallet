@@ -1,3 +1,6 @@
+<!-- make [ ] to [x] to mark as complete -->
+
 # Balance Card
 
-- [] Available balance in $usd unit.
+- [ ] Current balance in $mntl unit.
+- [ ] Current balance in $usd unit.
