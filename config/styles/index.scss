@@ -157,7 +157,7 @@ a:hover {
 }
 // buttons
 @mixin buttonRoot($bg, $disBG, $color, $discolor) {
-  @include fontRoot(600, 1rem);
+  @include fontRoot(600, 1rem, $fontSecondary);
   font-feature-settings: "liga" off;
   text-align: center;
   text-transform: capitalize;
@@ -216,7 +216,7 @@ a:hover {
     position: absolute;
     top: 100%;
     left: 50%;
-    width: 115%;
+    width: 110%;
     height: 2.5px;
     margin: 0 !important;
     vertical-align: unset !important;
@@ -228,6 +228,7 @@ a:hover {
     transform-origin: left;
   }
   &:hover {
+    color: $primary-main;
     & > span {
       color: $primary-main;
     }
@@ -340,9 +341,16 @@ a:hover {
 .border-color-white {
   border-color: $primary-light !important;
 }
+.border-color-white-400 {
+  border-color: $white-400 !important;
+}
 .overflow-y {
   overflow: hidden;
   overflow-x: auto;
+}
+.icon {
+  line-height: 100%;
+  margin: auto;
 }
 .after-none {
   &::after {
