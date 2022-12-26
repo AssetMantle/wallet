@@ -1,6 +1,6 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css");
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css");
-@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Roboto:wght@200;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 // variables
 $yellow-100: #ffc640;
@@ -74,6 +74,7 @@ body {
   background-color: $dark-200 !important;
   color: $primary-light;
   font-size: 14px;
+  font-family: "Work Sans", sans-serif;
 }
 
 .my-16 {
@@ -85,8 +86,8 @@ body {
   padding-top: 68px;
 }
 // text sizes
-@mixin fontRoot($family, $weight, $size) {
-  font-family: $family;
+@mixin fontRoot($weight, $size) {
+  font-family: "Work Sans", sans-serif;
   font-weight: $weight;
   font-size: $size;
   font-style: normal;
@@ -102,44 +103,44 @@ body {
 }
 
 .h1 {
-  @include fontRoot("Roboto", 700, 4rem);
+  @include fontRoot(700, 4rem);
 }
 .h2 {
-  @include fontRoot("Roboto", 700, 3.5rem);
+  @include fontRoot(700, 3.5rem);
   line-height: 1;
 }
 .h3 {
-  @include fontRoot("Roboto", 700, 2rem);
+  @include fontRoot(700, 2rem);
 }
 .h4 {
-  @include fontRoot("Roboto", 700, 1.8rem);
+  @include fontRoot(700, 1.8rem);
 }
 .subtitle1 {
-  @include fontRoot("Roboto", 200, 2rem);
+  @include fontRoot(200, 2rem);
   line-height: 120%;
 }
 .subtitle2 {
-  @include fontRoot("Roboto", 200, 1.7rem);
+  @include fontRoot(200, 1.7rem);
   line-height: 120%;
 }
 .body1 {
-  @include fontRoot("Roboto", 300, 1.4rem);
+  @include fontRoot(300, 1.4rem);
   line-height: 150%;
 }
 .body2 {
-  @include fontRoot("Roboto", 300, 1.2rem);
+  @include fontRoot(300, 1.2rem);
   line-height: 150%;
 }
 .caption {
-  @include fontRoot("Roboto", 400, 1rem);
+  @include fontRoot(400, 1rem);
   line-height: 100%;
 }
 .caption2 {
-  @include fontRoot("Roboto", 400, 0.9rem);
+  @include fontRoot(400, 0.9rem);
   line-height: 100%;
 }
 .small {
-  @include fontRoot("Roboto", 400, 0.8rem);
+  @include fontRoot(400, 0.8rem);
   line-height: 100%;
 }
 
@@ -156,7 +157,7 @@ a:hover {
 }
 // buttons
 @mixin buttonRoot($bg, $disBG, $color, $discolor) {
-  @include fontRoot("Lato", 600, 16px);
+  @include fontRoot(600, 16px);
   font-feature-settings: "liga" off;
   text-align: center;
   text-transform: capitalize;
@@ -178,7 +179,7 @@ a:hover {
   }
 }
 @mixin LinkRoot {
-  @include fontRoot("Roboto", 700, 14px);
+  @include fontRoot(700, 14px);
   text-align: center;
   text-transform: capitalize;
   font-feature-settings: "liga" off;
