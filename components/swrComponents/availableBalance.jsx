@@ -13,9 +13,10 @@ export const AvailableBalance = () => {
 
   const { availableBalance, errorAvailableBalance } = useAvailableBalance();
 
-  const balanceDisplay = errorAvailableBalance
-    ? placeholderAvailableBalance
-    : fromDenom(availableBalance);
+  const balanceDisplay =
+    errorAvailableBalance || isNaN(fromDenom(availableBalance))
+      ? placeholderAvailableBalance
+      : fromDenom(availableBalance);
 
   return (
     <p className="caption">
@@ -41,9 +42,5 @@ export const AvailableBalanceUsd = () => {
           .toFixed(6)
           .toString();
 
-  return (
-    <p className="caption">
-      {balanceInUSDDisplay}&nbsp;{"$USD"}
-    </p>
-  );
+  return <p className="caption2 text-gray">${balanceInUSDDisplay}</p>;
 };

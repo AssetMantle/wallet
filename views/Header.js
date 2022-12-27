@@ -4,15 +4,18 @@ import React, { useEffect, useRef, useState } from "react";
 import { MdOutlineContentCopy } from "react-icons/md";
 import { RiKey2Fill } from "react-icons/ri";
 import { TbUnlink } from "react-icons/tb";
+import { BsWallet2, BsCheckCircle, BsChevronDown } from "react-icons/bs";
 import {
-  BsWallet2,
-  BsLink45Deg,
-  BsCheckCircle,
-  BsChevronDown,
-} from "react-icons/bs";
-import { BasicData } from "../data";
+  BasicData,
+  fromDenom,
+  placeholderAddress,
+  useAvailableBalance,
+} from "../data";
 import ModalContainer from "../components/ModalContainer";
 import ConnectModal from "./ConnectModal";
+import { useWallet } from "@cosmos-kit/react";
+import { QRCodeSVG } from "qrcode.react";
+import { defaultChainSymbol } from "../config";
 
 export default function Header({ Connected, setConnected }) {
   const [ConnectFlow, setConnectFlow] = useState();
@@ -42,14 +45,6 @@ export default function Header({ Connected, setConnected }) {
 
   const profileRef = useRef();
 
-  const dataSet = {
-    profileImage: "/profile.avif",
-    name: "User1234",
-    balance: "0.34847",
-    qrCode: "/qr-code.svg",
-    address: "thequickbrownfoxjumpsoverthelazydogfIfthedogr",
-  };
-
   const [Location, setLocation] = useState();
   const path = Location && Location.pathname;
   useEffect(() => {
@@ -57,6 +52,16 @@ export default function Header({ Connected, setConnected }) {
       setLocation(window.location);
     }
   }, [Location]);
+
+  const { availableBalance } = useAvailableBalance();
+  const walletManager = useWallet();
+  const { username, address } = walletManager;
+
+  const displayAddress = address ? address : placeholderAddress;
+  const displayBalance = availableBalance
+    ? fromDenom(availableBalance)
+    : "0.000";
+  const displayUserName = username ? username : "Default User";
 
   return (
     <>
@@ -67,29 +72,27 @@ export default function Header({ Connected, setConnected }) {
         <div className="container-xxl d-flex align-items-center gap-3 p-3 px-4">
           <div
             className="d-flex position-relative"
-            style={{ width: "min(196px,30%)", aspectRatio: "196/34" }}
+            style={{ width: "min(195.05px,30%)", aspectRatio: "195.05/33" }}
           >
             <Image layout="fill" src={BasicData.logo} alt={BasicData.title} />
           </div>
           <nav className="navbar-nav d-flex align-items-center gap-3 flex-row gap-3 flex-grow-1 justify-content-between">
-            <div className="d-flex gap-3 flex-row align-items-center">
+            <div className="d-flex gap-4 flex-row align-items-center">
               {React.Children.toArray(
                 BasicData.navs.map((navItem) => (
                   <Link href={navItem.href}>
                     <a
                       className={`d-flex gap-1 align-items-center ${
-                        navItem.variant
-                      } text-white ${
                         path && path === navItem.href ? "active" : ""
-                      } am-nav-item`}
+                      } am-nav-item h3 `}
                       target={navItem.target ? navItem.target : "_self"}
                     >
                       {navItem.icon && (
-                        <span className="caption">{navItem.icon}</span>
+                        <span className="h3 icon">{navItem.icon}</span>
                       )}
                       {navItem.title}
                       {navItem.endIcon && (
-                        <span className="caption">{navItem.endIcon}</span>
+                        <span className="h3 icon">{navItem.endIcon}</span>
                       )}
                     </a>
                   </Link>
@@ -101,19 +104,17 @@ export default function Header({ Connected, setConnected }) {
                 BasicData.rightNav.map((navItem) => (
                   <Link href={navItem.href}>
                     <a
-                      className={`d-flex gap-1 align-items-center ${
-                        navItem.variant
-                      } text-white ${
+                      className={`d-flex gap-1 align-items-center h3 text-white ${
                         path && path === navItem.href ? "active" : ""
                       }`}
                       target={navItem.target ? navItem.target : "_self"}
                     >
                       {navItem.icon && (
-                        <span className="body2">{navItem.icon}</span>
+                        <span className="h3 icon">{navItem.icon}</span>
                       )}
                       {navItem.title}
                       {navItem.endIcon && (
-                        <span className="body2">{navItem.endIcon}</span>
+                        <span className="h3 icon">{navItem.endIcon}</span>
                       )}
                     </a>
                   </Link>
@@ -142,38 +143,35 @@ export default function Header({ Connected, setConnected }) {
                         }
                       />
                     </div>
-                    {dataSet.address &&
-                      `${dataSet.address.substring(
-                        0,
-                        5
-                      )}...${dataSet.address.substring(
-                        dataSet.address.length - 5,
-                        dataSet.address.length
-                      )}`}
+                    <span
+                      style={{
+                        textTransform: "lowercase",
+                      }}
+                    >
+                      {displayAddress &&
+                        `${displayAddress.substring(
+                          0,
+                          5
+                        )}...${displayAddress.substring(
+                          displayAddress.length - 5,
+                          displayAddress.length
+                        )}`}
+                    </span>
                     <span className="rotatableIcon">
                       <BsChevronDown />
                     </span>
                   </button>
-                  <div className="dropdown-menu nav-bg p-3 rounded-4 text-white">
-                    <>
+                  <div className="dropdown-menu pt-3">
+                    <div
+                      className="nav-bg p-3 rounded-4 text-white border-color-white-400"
+                      style={{ border: "2px solid" }}
+                    >
                       <div className="d-flex gap-3 py-3">
-                        <div
-                          className="rounded-circle position-relative"
-                          style={{
-                            width: "45px",
-                            height: "45px",
-                            overflow: "hidden",
-                          }}
-                        >
-                          <Image
-                            src={dataSet.profileImage}
-                            alt={dataSet.name}
-                            layout="fill"
-                          />
-                        </div>
                         <div className="d-flex flex-column gap-0">
-                          <h4 className="body2">{dataSet.name}</h4>
-                          <p className="caption">{dataSet.balance} $MNTL</p>
+                          <h4 className="body2">{displayUserName}</h4>
+                          <p className="caption">
+                            {displayBalance} {defaultChainSymbol}
+                          </p>
                         </div>
                       </div>
                       <hr className="my-3" />
@@ -185,22 +183,18 @@ export default function Header({ Connected, setConnected }) {
                             aspectRatio: "1/1",
                           }}
                         >
-                          <Image
-                            layout="fill"
-                            src={dataSet.qrCode}
-                            alt="QR code"
-                          />
+                          <QRCodeSVG value={displayAddress} />
                         </div>
                         <button
                           className="d-flex align-items-center justify-content-center gap-2 text-center body2"
                           onClick={() =>
-                            navigator.clipboard.writeText(dataSet.address)
+                            navigator.clipboard.writeText(displayAddress)
                           }
                         >
-                          {dataSet.address.substring(0, 9)}...
-                          {dataSet.address.substring(
-                            dataSet.address.length - 9,
-                            dataSet.address.length
+                          {displayAddress.substring(0, 9)}...
+                          {displayAddress.substring(
+                            displayAddress.length - 9,
+                            displayAddress.length
                           )}
                           <span className="text-primary">
                             <MdOutlineContentCopy />
@@ -241,19 +235,20 @@ export default function Header({ Connected, setConnected }) {
                       <hr className="my-3" />
                       <button
                         className="d-flex align-items-center justify-content-center gap-2 text-center body2"
-                        onClick={() => setConnected(false)}
+                        onClick={walletManager.disconnect}
                       >
                         <span className="text-primary">
                           <TbUnlink />
                         </span>
                         Disconnect
                       </button>
-                    </>
+                    </div>
                   </div>
                 </div>
               ) : (
                 <button
                   className="button-secondary d-flex gap-1 align-items-center am-nav-item py-1 px-3"
+                  // onClick={walletManager.connect}
                   onClick={() => setConnectFlow(1)}
                 >
                   <span className="text-primary">
