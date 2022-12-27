@@ -28,6 +28,11 @@ function CreateCosmosApp({ Component, pageProps }) {
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
         <link rel="icon" href="/favicon.ico" />
+        <meta
+          name="description"
+          content="AssetMantle is a community-first platform for NFT creators and collectors. Use AssetMantle to create your own NFT store or to expand your collection of NFTs."
+        />
+        <title>MantleWallet</title>
         {/* PWA primary color */}
         <meta name="theme-color" content="#111111" />
         {/* open graphs start */}
