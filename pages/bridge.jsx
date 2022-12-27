@@ -4,7 +4,7 @@ import ICFormETH from "../components/ICFormETH";
 import ICForm from "../components/ICFormETH";
 import ICFormPolygon from "../components/ICFormPolygon";
 
-export default function Interchain() {
+export default function Bridge() {
   const tabs = [
     { name: "Eth", href: "#eth" },
     { name: "Polygon", href: "#polygon" },
