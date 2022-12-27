@@ -551,38 +551,34 @@ export const useAllValidators = () => {
   };
 };
 
-export const useProposal = (proposalId) => {
+export const useVote = (proposalId) => {
   // get the connected wallet parameters from useWallet hook
   const walletManager = useWallet();
   const { walletStatus, address, currentWalletInfo } = walletManager;
-
   // fetcher function for useSwr of useAvailableBalance()
-  const fetchProposal = async (url, address) => {
-    let proposalInfo;
+  const fetchVote = async (url) => {
+    let voteInfo;
 
     // use a try catch block for creating rich Error object
     try {
       // get the data from cosmos queryClient
-      const { proposal } = await client.cosmos.gov.v1beta1.proposal({
+      const { vote } = await client.cosmos.gov.v1beta1.vote({
         proposalId,
+        address,
       });
-      proposalInfo = proposal;
-      // const iconUrlsArray = validators.map((validator, index) => {
-      //   return `https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/${validator.operator_address}.png`;
-      // });
-      // const data = await fetch(iconUrlsArray);
-      // console.log("data: ", data);
+      voteInfo = vote;
+      console.log(voteInfo);
     } catch (error) {
       console.error(`swr fetcher error: ${url}`);
       throw error;
     }
     // return the data
-    return proposalInfo;
+    return voteInfo;
   };
   // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: proposalObject, error } = useSwr(
-    proposalId ? ["validators", proposalId] : null,
-    fetchProposal,
+  const { data: voteObject, error } = useSwr(
+    proposalId ? ["vote", proposalId] : null,
+    fetchVote,
     {
       fallbackData: [
         {
@@ -599,9 +595,9 @@ export const useProposal = (proposalId) => {
     }
   );
   return {
-    proposalInfo: proposalObject,
-    isLoadingProposal: !error && !proposalObject,
-    errorProposal: error,
+    voteInfo: voteObject,
+    isLoadingVote: !error && !voteObject,
+    errorVote: error,
   };
 };
 

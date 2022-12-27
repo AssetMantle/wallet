@@ -2,6 +2,7 @@ import Image from "next/image";
 import React from "react";
 
 const AllValidators = ({
+  setShowClaimError,
   searchValue,
   activeValidators,
   validatorsArray,
@@ -47,6 +48,7 @@ const AllValidators = ({
                       item?.operator_address
                     )}
                     onChange={() => {
+                      setShowClaimError(false);
                       stakeState?.selectedValidators.includes(
                         item?.operator_address
                       )
@@ -99,6 +101,7 @@ const AllValidators = ({
                       item?.operator_address
                     )}
                     onChange={() => {
+                      setShowClaimError(false);
                       stakeState?.selectedValidators.includes(
                         item?.operator_address
                       )

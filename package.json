@@ -37,6 +37,8 @@
     "@cosmos-kit/react": "0.23.0",
     "@emotion/react": "11.10.5",
     "@emotion/styled": "11.10.5",
+    "@nivo/core": "^0.80.0",
+    "@nivo/sunburst": "^0.80.0",
     "@osmonauts/lcd": "^0.8.0",
     "bignumber.js": "^9.1.1",
     "bootstrap": "^5.2.2",

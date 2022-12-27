@@ -5,23 +5,61 @@ import {
   BsDashCircleFill,
   BsFillXCircleFill,
 } from "react-icons/bs";
-import { useAllProposals, useProposal } from "../data/swrStore";
+import { useAllProposals, useVote } from "../data/swrStore";
 import VoteInfo from "../views/VoteInfo";
 import UseVoteReducer from "../data/useVoteReducer";
+import { ResponsiveSunburst } from "@nivo/sunburst";
 
 export default function Vote() {
+  const { voteInfo, isLoadingVote, errorVote } = useVote(1);
   const { voteState, voteDispatch } = UseVoteReducer();
   const [ActiveNav, setActiveNav] = useState(0);
   const [onVoteHover, setOnVoteHover] = useState(null);
   const { allProposals, isLoadingProposals, errorProposals } =
     useAllProposals();
-  const { proposalInfo, isLoadingProposal, errorProposal } = useProposal("1");
 
-  const votingPower = 1 === 1 ? "0.4%" : "--%";
-  const currentVotingPower =
-    1 === 2 ? { display: "6/10", value: 60 } : { display: "X/X", value: "" };
-  const pastVotingPower =
-    1 === 2 ? { display: "4/10", value: 40 } : { display: "X/X", value: "" };
+  // const chartData = {
+  //   name: "validator",
+  //   color: "hsl(173, 70%, 50%)",
+  //   children:
+  //   [
+  //     {
+  //       name: "Yes",
+  //       color: "hsl(11, 70%, 50%)",
+  //       children: [
+  //         {
+  //           name: "Validator 1",
+  //           color: "hsl(62, 70%, 50%)",
+  //           power: 5,
+  //         },
+  //         {
+  //           name: "Validator 2",
+  //           color: "hsl(35, 70%, 50%)",
+  //           power: 5,
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       name: "No",
+  //       color: "hsl(11, 70%, 50%)",
+  //       power: 25,
+  //     },
+  //     {
+  //       name: "Abstain",
+  //       color: "hsl(11, 70%, 50%)",
+  //       power: 45,
+  //     },
+  //     {
+  //       name: "No with Veto",
+  //       color: "hsl(11, 70%, 50%)",
+  //       power: 20,
+  //     },
+  //   ],
+  // };
+
+  for (item in allProposals?.final_tally_result) {
+    console.log(item);
+  }
 
   return (
     <section className="row">
@@ -53,8 +91,9 @@ export default function Vote() {
           </nav>
           <div className="nav-bg rounded-4 d-flex flex-column px-3 py-2 gap-3">
             <div className="row">
-              {allProposals?.map((proposal) => (
+              {allProposals?.map((proposal, index) => (
                 <div
+                  key={index}
                   onMouseEnter={() => setOnVoteHover(proposal?.proposal_id)}
                   onMouseLeave={() => setOnVoteHover(null)}
                   className={`col-12 col-md-6 p-2`}
@@ -113,7 +152,7 @@ export default function Vote() {
                         Voting End : {proposal?.voting_end_time}
                       </p>
                     </div>
-                    <div className="py-2 d-flex">
+                    <div className="py-2 d-flex justify-content-between align-items-center">
                       <p
                         className="small bg-blue-100 p-2 pe-4 text-dark text-uppercase"
                         style={{
@@ -140,44 +179,31 @@ export default function Vote() {
           </div>
         </div>
       </div>
-      {/* <div className="col-12 pt-3 pt-lg-0 col-lg-4">
-        <div className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-2 transitionAll">
-          <nav className="d-flex align-items-center justify-content-between gap-3">
-            <div className="d-flex gap-3 align-items-center">
-              <button className={`body2 text-primary`}>Your Statistics</button>
-            </div>
-          </nav>
-          <div className="nav-bg rounded-4 d-flex flex-column p-3 gap-2 align-items-start">
-            <p className="caption">
-              Your Voting Power is{" "}
-              <span className="text-primary">{votingPower}</span>
-            </p>`
-            <br />
-            <p className="caption">Votes made for categories:</p>
-            <p className="caption">
-              Current Voting : {currentVotingPower.display}
-            </p>
-            {currentVotingPower.value && (
-              <div className="am-progress bg-gray-800 rounded-2">
-                <div
-                  className="am-progress-bar bg-yellow-100 rounded-2"
-                  style={{ width: `${currentVotingPower.value}%` }}
-                ></div>
-              </div>
-            )}
-            <p className="caption">Past Voting : {pastVotingPower.display}</p>
-            {pastVotingPower.value && (
-              <div className="am-progress bg-gray-800 rounded-2">
-                <div
-                  className="am-progress-bar bg-yellow-100 rounded-2"
-                  style={{ width: `${pastVotingPower.value}%` }}
-                ></div>
-              </div>
-            )}
-          </div>
+      {voteState?.proposalID.length ? (
+        <div style={{ height: "400px" }}>
+          <ResponsiveSunburst
+            data={chartData}
+            margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
+            id="name"
+            value="power"
+            cornerRadius={2}
+            borderColor={{ theme: "background" }}
+            colors={{ scheme: "set2" }}
+            childColor={{
+              from: "color",
+              modifiers: [["brighter", 0.1]],
+            }}
+            enableArcLabels={true}
+            arcLabelsSkipAngle={10}
+            arcLabelsTextColor={{
+              from: "color",
+              modifiers: [["darker", 1.4]],
+            }}
+          />
         </div>
-      </div> */}
-      <VoteInfo voteDispatch={voteDispatch} voteState={voteState} />
+      ) : (
+        <VoteInfo voteDispatch={voteDispatch} voteState={voteState} />
+      )}
     </section>
   );
 }

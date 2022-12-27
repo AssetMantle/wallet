@@ -20,7 +20,7 @@ const UseVoteReducer = () => {
   };
 
   const [voteState, voteDispatch] = useReducer(stakeReducer, initialState);
-  console.log("State:", voteState);
+  console.log(voteState);
   return { voteState, voteDispatch };
 };
 

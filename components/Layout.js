@@ -11,8 +11,14 @@ export default function Layout({ children }) {
     <>
       <Header Connected={Connected} setConnected={setConnected} />
       <main className="container-xxl pt-5">
-        <div className="row px-2">
-          <div className="col-3 d-flex flex-column gap-4 position-sticky top-0 start-0">
+        <div className="row px-2 position-relative">
+          <div
+            className="col-3 d-flex flex-column gap-4 position-sticky start-0"
+            style={{
+              height: "max-content",
+              top: "66px",
+            }}
+          >
             <Balance />
             {/* <Portfolio /> */}
           </div>

@@ -54,7 +54,7 @@ $primary: $yellow-100;
 $card-bg: $gray-800;
 $modal-content-bg: $gray-400;
 $text-muted: $white-400;
-@import "../../node_modules/bootstrap/scss/bootstrap";
+@import "bootstrap/scss/bootstrap";
 
 * {
   scroll-behavior: smooth;
@@ -131,15 +131,15 @@ body {
   line-height: 150%;
 }
 .caption {
-  @include fontRoot("Roboto", 300, 1rem);
+  @include fontRoot("Roboto", 400, 1rem);
   line-height: 100%;
 }
 .caption2 {
-  @include fontRoot("Roboto", 300, 0.9rem);
+  @include fontRoot("Roboto", 400, 0.9rem);
   line-height: 100%;
 }
 .small {
-  @include fontRoot("Roboto", 300, 0.8rem);
+  @include fontRoot("Roboto", 400, 0.8rem);
   line-height: 100%;
 }
 
@@ -304,7 +304,12 @@ a:hover {
   color: $gray-100;
 }
 .text-dark {
-  color: $dark-400;
+  color: $dark-400 !important;
+}
+.text-dark-hover {
+  &:hover {
+    color: $dark-400 !important;
+  }
 }
 .text-primary {
   color: $primary-main !important;
@@ -519,6 +524,31 @@ input[type="checkbox"] {
     }
     &:not(:last-child) {
       border-right: 2px solid $gray-500;
+    }
+  }
+}
+.select-gas {
+  background: $gray-800;
+  color: $primary-light;
+  border: 1px solid $gray-400;
+  & > p {
+    font-weight: 500;
+  }
+  &:not(:last-child) {
+    border-left: none;
+  }
+  &:first-child {
+    border-radius: 8px 0 0 8px;
+  }
+  &:last-child {
+    border-radius: 0 8px 8px 0;
+  }
+  &:hover,
+  &.active {
+    background-color: $primary-main;
+    color: $dark-400;
+    & > p {
+      color: $dark-400;
     }
   }
 }

@@ -32,7 +32,7 @@ const DelegatedValidators = ({
                   <input
                     type="checkbox"
                     onChange={() => {
-                      // setShowClaimError(false);
+                      setShowClaimError(false);
                       stakeState?.selectedValidators?.includes(
                         item?.operator_address
                       )
