@@ -20,8 +20,15 @@
 - [ ] Current balance in $mntl unit.
 - [ ] Current balance in $usd unit.
 
+# Vesting Card
+
+- [ ] Vesting usd mntl
+- [ ] Transferable usd mntl
+- [ ] Delegatable usd mntl
+
 # Transact page
 
 ## Receive Card
 
 - [x] Correct address implementation
+- [x] Modal qrcode and address implementation
