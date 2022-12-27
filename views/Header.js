@@ -183,7 +183,11 @@ export default function Header({ Connected, setConnected }) {
                             aspectRatio: "1/1",
                           }}
                         >
-                          <QRCodeSVG value={displayAddress} />
+                          <QRCodeSVG
+                            width="100%"
+                            height="100%"
+                            value={displayAddress}
+                          />
                         </div>
                         <button
                           className="d-flex align-items-center justify-content-center gap-2 text-center body2"
