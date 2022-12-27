@@ -1,5 +1,4 @@
 import { useWallet } from "@cosmos-kit/react";
-import Image from "next/image";
 import React, { useReducer, useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { BsChevronDown } from "react-icons/bs";
@@ -16,17 +15,22 @@ import {
   formConstants,
   fromDenom,
   isInvalidAddress,
+  placeholderAddress,
   sendTokensTxn,
   toDenom,
   useAvailableBalance,
 } from "../data";
 import { isObjEmpty } from "../lib";
+import ModalContainer from "../components/ModalContainer";
+import Head from "next/head";
 
 export default function Transact() {
   const [advanced, setAdvanced] = useState(false);
   const { availableBalance } = useAvailableBalance();
   const walletManager = useWallet();
   const { getSigningStargateClient, address, status } = walletManager;
+
+  const displayAddress = address ? address : placeholderAddress;
 
   const initialState = {
     recipientAddress: "",
@@ -253,232 +257,273 @@ export default function Transact() {
   const [Tab, setTab] = useState(0);
   const tabs = [{ name: "Send", href: "#send" }];
 
-  const WalletQrCode = "/qr-code.svg";
-  const WalletAddress = "ThequickbrownfoxjumpsoverthelazydogfIfthedogr";
-
   return (
-    <section className="row">
-      <div className="col-12 col-lg-8">
-        <div className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-2 transitionAll">
-          <nav className="d-flex align-items-center justify-content-between gap-3">
-            <div className="d-flex gap-3 align-items-center">
-              {tabs.map((tab, index) => (
-                <button
-                  key={index}
-                  className={`am-link ${
-                    Tab === index ? "" : "text-white"
-                  } body2`}
-                  onClick={() => setTab(index)}
-                >
-                  {tab.name}
-                </button>
-              ))}
-            </div>
-          </nav>
-          <div className="nav-bg rounded-4 d-flex flex-column p-3 gap-3">
-            <label
-              className="caption d-flex gap-2 align-items-center"
-              htmlFor="recipientAddress"
-            >
-              Recipient Address{" "}
-              <Tooltip
-                title={<AiOutlineInfoCircle />}
-                description="Recipient’s address starts with mantle; eg: mantle10x0k7tfhd.....hb34w4a6kbd6v2v"
-              />
-            </label>
-            <div>
-              <input
-                className="bg-t p-3 py-2 rounded-2 am-input w-100"
-                type="text"
-                name="recipientAddress"
-                id="recipientAddress"
-                value={formState?.recipientAddress}
-                placeholder="Enter Recipient’s Address"
-                onChange={(e) =>
-                  formDispatch({
-                    type: "CHANGE_RECIPIENT_ADDRESS",
-                    payload: e.target.value,
-                  })
-                }
-              />
-              <small
-                id="addressInputErrorMsg"
-                className="form-text text-danger d-flex align-items-center gap-1"
+    <>
+      <Head>
+        <title>Transact | MantleWallet</title>
+      </Head>
+      <section className="row">
+        <div className="col-12 col-lg-8">
+          <div className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-2 transitionAll">
+            <nav className="d-flex align-items-center justify-content-between gap-3">
+              <div className="d-flex gap-3 align-items-center">
+                {tabs.map((tab, index) => (
+                  <button
+                    key={index}
+                    className={`body1 ${
+                      Tab === index ? "text-primary" : "text-white"
+                    }`}
+                    onClick={() => setTab(index)}
+                  >
+                    {tab.name}
+                  </button>
+                ))}
+              </div>
+            </nav>
+            <div className="nav-bg rounded-4 d-flex flex-column p-3 gap-3">
+              <label
+                className="caption d-flex gap-2 align-items-center"
+                htmlFor="recipientAddress"
               >
-                {formState?.errorMessages?.recipientAddressErrorMsg && (
-                  <AiOutlineInfoCircle />
-                )}{" "}
-                {formState?.errorMessages?.recipientAddressErrorMsg}
-              </small>
-            </div>
-
-            <label
-              className="caption d-flex gap-2 align-items-center"
-              htmlFor="token"
-            >
-              Token
-            </label>
-            <input
-              className="bg-t p-3 py-2 rounded-2 am-input"
-              type="text"
-              name="token"
-              id="token"
-              readOnly
-              value={defaultChainSymbol}
-              placeholder="Enter Recipient’s Token"
-            />
-
-            <label
-              className="caption d-flex gap-2 align-items-end justify-content-between"
-              htmlFor="amount"
-            >
-              Amount{" "}
-              <small>
-                Balance : {fromDenom(availableBalance).toString()}&nbsp;
-                {defaultChainSymbol}
-              </small>
-            </label>
-
-            <div>
-              <div className="p-3 py-2 d-flex rounded-2 gap-2 am-input">
+                Recipient Address{" "}
+                <Tooltip
+                  title={<AiOutlineInfoCircle />}
+                  description="Recipient’s address starts with mantle; eg: mantle10x0k7t.....hb34w4a6kbd6"
+                />
+              </label>
+              <div>
                 <input
-                  className="bg-t"
-                  type="number"
-                  name="amount"
-                  id="amount"
-                  value={formState?.transferAmount}
-                  placeholder="Enter Amount"
-                  style={{ flex: "1", border: "none", outline: "none" }}
+                  className="bg-t p-3 py-2 rounded-2 am-input w-100"
+                  type="text"
+                  name="recipientAddress"
+                  id="recipientAddress"
+                  value={formState?.recipientAddress}
+                  placeholder="Enter Recipient’s Address"
                   onChange={(e) =>
                     formDispatch({
-                      type: "CHANGE_AMOUNT",
+                      type: "CHANGE_RECIPIENT_ADDRESS",
                       payload: e.target.value,
                     })
                   }
                 />
-                <button
-                  className="bg-gray-800 p-1 px-2 text-primary"
-                  onClick={() =>
-                    formDispatch({
-                      type: "SET_HALF_AMOUNT",
-                    })
-                  }
+                <small
+                  id="addressInputErrorMsg"
+                  className="form-text text-danger d-flex align-items-center gap-1"
                 >
-                  half
-                </button>
-                <button
-                  className="bg-gray-800 p-1 px-2 text-primary"
-                  onClick={() =>
-                    formDispatch({
-                      type: "SET_MAX_AMOUNT",
-                    })
-                  }
-                >
-                  max
-                </button>
+                  {formState?.errorMessages?.recipientAddressErrorMsg && (
+                    <AiOutlineInfoCircle />
+                  )}{" "}
+                  {formState?.errorMessages?.recipientAddressErrorMsg}
+                </small>
               </div>
-              <small
-                id="amountInputErrorMsg"
-                className="form-text text-danger d-flex align-items-center gap-1"
-              >
-                {formState?.errorMessages?.transferAmountErrorMsg && (
-                  <AiOutlineInfoCircle />
-                )}{" "}
-                {formState?.errorMessages?.transferAmountErrorMsg}
-              </small>
-            </div>
 
-            <button
-              className="text-primary d-flex gap-2 align-items-center caption"
-              onClick={() => setAdvanced(!advanced)}
-            >
-              Advanced Details{" "}
-              <span
-                className="transitionAll d-flex align-items-center justify-content-center"
+              <label
+                className="caption d-flex gap-2 align-items-center"
+                htmlFor="token"
+              >
+                Token
+              </label>
+              <input
+                className="bg-t p-3 py-2 rounded-2 am-input"
+                type="text"
+                name="token"
+                id="token"
+                readOnly
+                value={defaultChainSymbol}
+                placeholder="Enter Recipient’s Token"
+              />
+
+              <label
+                className="caption d-flex gap-2 align-items-end justify-content-between"
+                htmlFor="amount"
+              >
+                Amount{" "}
+                <small>
+                  Balance : {fromDenom(availableBalance).toString()}&nbsp;
+                  {defaultChainSymbol}
+                </small>
+              </label>
+
+              <div>
+                <div className="p-3 py-2 d-flex rounded-2 gap-2 am-input">
+                  <input
+                    className="bg-t"
+                    type="number"
+                    name="amount"
+                    id="amount"
+                    value={formState?.transferAmount}
+                    placeholder="Enter Amount"
+                    style={{ flex: "1", border: "none", outline: "none" }}
+                    onChange={(e) =>
+                      formDispatch({
+                        type: "CHANGE_AMOUNT",
+                        payload: e.target.value,
+                      })
+                    }
+                  />
+                  <button
+                    className="bg-gray-800 p-1 px-2 text-primary"
+                    onClick={() =>
+                      formDispatch({
+                        type: "SET_HALF_AMOUNT",
+                      })
+                    }
+                  >
+                    half
+                  </button>
+                  <button
+                    className="bg-gray-800 p-1 px-2 text-primary"
+                    onClick={() =>
+                      formDispatch({
+                        type: "SET_MAX_AMOUNT",
+                      })
+                    }
+                  >
+                    max
+                  </button>
+                </div>
+                <small
+                  id="amountInputErrorMsg"
+                  className="form-text text-danger d-flex align-items-center gap-1"
+                >
+                  {formState?.errorMessages?.transferAmountErrorMsg && (
+                    <AiOutlineInfoCircle />
+                  )}{" "}
+                  {formState?.errorMessages?.transferAmountErrorMsg}
+                </small>
+              </div>
+
+              <button
+                className="text-primary d-flex gap-2 align-items-center caption"
+                onClick={() => setAdvanced(!advanced)}
+              >
+                Advanced Details{" "}
+                <span
+                  className="transitionAll d-flex align-items-center justify-content-center"
+                  style={{
+                    transform: advanced ? "rotate(180deg)" : "rotate(0deg)",
+                    transformOrigin: "center",
+                  }}
+                >
+                  <BsChevronDown />
+                </span>
+              </button>
+              {advanced && (
+                <>
+                  <label
+                    className="caption d-flex gap-2 align-items-center pt-2"
+                    htmlFor="memo"
+                  >
+                    Memo
+                    <Tooltip
+                      // title={<AiOutlineInfoCircle />}
+                      description="Memo is an optional field & is not the place to insert mnemonic"
+                    />
+                  </label>
+                  <input
+                    className="bg-t p-3 py-2 rounded-2 am-input"
+                    type="text"
+                    name="memo"
+                    id="memo"
+                    placeholder="Enter Memo"
+                    value={formState.memo}
+                    onChange={(e) =>
+                      formDispatch({
+                        type: "CHANGE_MEMO",
+                        payload: e.target.value,
+                      })
+                    }
+                  />
+                </>
+              )}
+              <button
+                className="btn button-primary px-5 ms-auto"
+                type="submit"
+                disabled={!isObjEmpty(formState?.errorMessages)}
+                onClick={handleSubmit}
+              >
+                Send
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="col-12 pt-3 pt-lg-0 col-lg-4">
+          <div
+            className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-2 transitionAll"
+            role="button"
+            data-bs-toggle="modal"
+            data-bs-target="#receiveModal"
+          >
+            <nav className="d-flex align-items-center justify-content-between gap-3">
+              <div className="d-flex gap-3 align-items-center">
+                <button className={`body1 text-primary`}>Receive</button>
+              </div>
+            </nav>
+            <div className="nav-bg rounded-4 d-flex flex-column p-3 gap-2 align-items-center justify-content-center">
+              <div
                 style={{
-                  transform: advanced ? "rotate(180deg)" : "rotate(0deg)",
-                  transformOrigin: "center",
+                  width: "min(140px, 100%)",
+                  aspectRatio: "1/1",
+                  position: "relative",
                 }}
               >
-                <BsChevronDown />
-              </span>
-            </button>
-            {advanced && (
-              <>
-                <label
-                  className="caption d-flex gap-2 align-items-center pt-2"
-                  htmlFor="memo"
+                <QRCodeSVG width="100%" height="100%" value={displayAddress} />
+              </div>
+              <h4 className="body2 text-primary">Wallet Address</h4>
+              <button
+                className="d-flex align-items-center justify-content-center gap-2 text-center caption2 pt-1"
+                onClick={() => navigator.clipboard.writeText(displayAddress)}
+                style={{ wordBreak: "break-all" }}
+              >
+                {`${displayAddress.substring(
+                  0,
+                  12
+                )}.......${displayAddress.substring(
+                  displayAddress.length - 9,
+                  displayAddress.length
+                )}`}
+                <span className="text-primary">
+                  <MdOutlineContentCopy />
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div className="modal " tabIndex="-1" role="dialog" id="receiveModal">
+        <div className="modal-dialog modal-dialog-centered" role="document">
+          <div className="modal-content">
+            <div className="modal-body p-3  d-flex flex-column">
+              <div className="nav-bg rounded-4 d-flex flex-column p-4 px-2 gap-2 align-items-center justify-content-center">
+                <div
+                  style={{
+                    width: "min(350px, 100%)",
+                    aspectRatio: "1/1",
+                    position: "relative",
+                  }}
                 >
-                  Memo
-                  <Tooltip
-                    // title={<AiOutlineInfoCircle />}
-                    description="Memo is an optional field & is not the place to insert mnemonic"
+                  <QRCodeSVG
+                    width="100%"
+                    height="100%"
+                    value={displayAddress}
                   />
-                </label>
-                <input
-                  className="bg-t p-3 py-2 rounded-2 am-input"
-                  type="text"
-                  name="memo"
-                  id="memo"
-                  placeholder="Enter Memo"
-                  value={formState.memo}
-                  onChange={(e) =>
-                    formDispatch({
-                      type: "CHANGE_MEMO",
-                      payload: e.target.value,
-                    })
-                  }
-                />
-              </>
-            )}
-            <button
-              className="btn button-primary px-5 ms-auto"
-              type="submit"
-              disabled={!isObjEmpty(formState?.errorMessages)}
-              onClick={handleSubmit}
-            >
-              Send
-            </button>
+                </div>
+                <h4 className="body2 text-primary pt-1">Wallet Address</h4>
+                <button
+                  className="d-flex align-items-center justify-content-center gap-2 text-center caption2"
+                  onClick={() => navigator.clipboard.writeText(displayAddress)}
+                  style={{ wordBreak: "break-all" }}
+                >
+                  {displayAddress}
+                  <span className="text-primary">
+                    <MdOutlineContentCopy />
+                  </span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div className="col-12 pt-3 pt-lg-0 col-lg-4">
-        <div className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-2 transitionAll">
-          <nav className="d-flex align-items-center justify-content-between gap-3">
-            <div className="d-flex gap-3 align-items-center">
-              <button className={`am-link body2`}>Receive</button>
-            </div>
-          </nav>
-          <div className="nav-bg rounded-4 d-flex flex-column p-3 gap-2 align-items-center justify-content-center">
-            <div
-              style={{
-                width: "min(140px, 100%)",
-                aspectRatio: "1/1",
-                position: "relative",
-              }}
-            >
-              <QRCodeSVG value={address} />
-            </div>
-            <h4 className="body2 text-primary">Wallet Address</h4>
-            <button
-              className="d-flex align-items-center justify-content-center gap-2 text-center caption"
-              onClick={() => navigator.clipboard.writeText(WalletAddress)}
-              style={{ wordBreak: "break-all" }}
-            >
-              {`${WalletAddress.substring(
-                0,
-                12
-              )}.......${WalletAddress.substring(
-                WalletAddress.length - 9,
-                WalletAddress.length
-              )}`}
-              <span className="text-primary">
-                <MdOutlineContentCopy />
-              </span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
+    </>
   );
 }
