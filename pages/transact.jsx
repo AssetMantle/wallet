@@ -1,5 +1,5 @@
 import { useWallet } from "@cosmos-kit/react";
-import React, { useReducer, useState } from "react";
+import React, { Suspense, useReducer, useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { BsChevronDown } from "react-icons/bs";
 import { MdOutlineContentCopy } from "react-icons/md";
@@ -23,6 +23,7 @@ import {
 import { isObjEmpty } from "../lib";
 import ModalContainer from "../components/ModalContainer";
 import Head from "next/head";
+import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 
 export default function Transact() {
   const [advanced, setAdvanced] = useState(false);
@@ -263,7 +264,7 @@ export default function Transact() {
         <title>Transact | MantleWallet</title>
       </Head>
       <section className="row">
-        <div className="col-12 col-lg-8">
+        <ScrollableSectionContainer className="col-12 col-lg-8">
           <div className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-2 transitionAll">
             <nav className="d-flex align-items-center justify-content-between gap-3">
               <div className="d-flex gap-3 align-items-center">
@@ -446,7 +447,7 @@ export default function Transact() {
               </button>
             </div>
           </div>
-        </div>
+        </ScrollableSectionContainer>
         <div className="col-12 pt-3 pt-lg-0 col-lg-4">
           <div
             className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-2 transitionAll"
@@ -467,7 +468,13 @@ export default function Transact() {
                   position: "relative",
                 }}
               >
-                <QRCodeSVG width="100%" height="100%" value={displayAddress} />
+                <Suspense fallback={"Loading..."}>
+                  <QRCodeSVG
+                    width="100%"
+                    height="100%"
+                    value={displayAddress}
+                  />
+                </Suspense>
               </div>
               <h4 className="body2 text-primary">Wallet Address</h4>
               <button
@@ -475,13 +482,15 @@ export default function Transact() {
                 onClick={() => navigator.clipboard.writeText(displayAddress)}
                 style={{ wordBreak: "break-all" }}
               >
-                {`${displayAddress.substring(
-                  0,
-                  12
-                )}.......${displayAddress.substring(
-                  displayAddress.length - 9,
-                  displayAddress.length
-                )}`}
+                <Suspense fallback="Loading...">
+                  {`${displayAddress.substring(
+                    0,
+                    12
+                  )}.......${displayAddress.substring(
+                    displayAddress.length - 9,
+                    displayAddress.length
+                  )}`}
+                </Suspense>
                 <span className="text-primary">
                   <MdOutlineContentCopy />
                 </span>
@@ -502,11 +511,13 @@ export default function Transact() {
                     position: "relative",
                   }}
                 >
-                  <QRCodeSVG
-                    width="100%"
-                    height="100%"
-                    value={displayAddress}
-                  />
+                  <Suspense fallback="Loading...">
+                    <QRCodeSVG
+                      width="100%"
+                      height="100%"
+                      value={displayAddress}
+                    />
+                  </Suspense>
                 </div>
                 <h4 className="body2 text-primary pt-1">Wallet Address</h4>
                 <button
@@ -514,7 +525,7 @@ export default function Transact() {
                   onClick={() => navigator.clipboard.writeText(displayAddress)}
                   style={{ wordBreak: "break-all" }}
                 >
-                  {displayAddress}
+                  <Suspense fallback="Loading...">{displayAddress}</Suspense>
                   <span className="text-primary">
                     <MdOutlineContentCopy />
                   </span>
