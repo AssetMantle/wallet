@@ -2,8 +2,8 @@ import { useWallet } from "@cosmos-kit/react";
 import React, { useEffect, useState } from "react";
 import Balance from "../views/Balance";
 import Header from "../views/Header";
-import Portfolio from "../views/Portfolio";
-import StakedToken from "../views/StakedToken";
+import Vesting from "../views/Vesting";
+import ScrollableSectionContainer from "./ScrollableSectionContainer";
 
 export default function Layout({ children }) {
   const walletManager = useWallet();
@@ -17,23 +17,17 @@ export default function Layout({ children }) {
   }, [walletStatus]);
 
   return (
-    <>
+    <div className="am_app_container">
       <Header Connected={Connected} setConnected={setConnected} />
-      <main className="container-xxl pt-5">
-        <div className="row px-2 position-relative">
-          <div
-            className="col-3 d-flex flex-column gap-4 position-sticky start-0"
-            style={{
-              height: "max-content",
-              top: "66px",
-            }}
-          >
+      <main className="container-xxl pt-4 h-100">
+        <div className="row px-2 position-relative h-100">
+          <ScrollableSectionContainer className="col-3 d-flex flex-column gap-4">
             <Balance />
-            {/* <Portfolio /> */}
-          </div>
-          <div className="col-9">{children}</div>
+            <Vesting />
+          </ScrollableSectionContainer>
+          <div className="col-9 h-100">{children}</div>
         </div>
       </main>
-    </>
+    </div>
   );
 }
