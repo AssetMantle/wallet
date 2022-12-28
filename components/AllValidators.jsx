@@ -40,7 +40,7 @@ const AllValidators = ({
                   .includes(searchValue.toLowerCase())
             )
             ?.map((item, index) => (
-              <tr key={index}>
+              <tr key={index} className="caption2 text-white-300">
                 <td>
                   <input
                     type="checkbox"
@@ -63,37 +63,33 @@ const AllValidators = ({
                     }}
                   ></input>
                 </td>
-                <td className="text-white">{index + 1}</td>
-                <td className="text-white">
-                  <div className="d-flex flex-row align-items-center justify-content-between">
-                    <div
-                      className="d-flex position-relative rounded-circle"
-                      style={{ width: "25px", aspectRatio: "1/1" }}
-                    >
-                      <Image
-                        layout="fill"
-                        alt={item?.description?.moniker}
-                        className="rounded-circle"
-                        src={`/validatoravatars/${item?.operator_address}.png`}
-                        // onError={(e) => (e.target.src = "/favicon.png")}
-                      />
-                    </div>
-                    {item?.description?.moniker}
+                <td>{index + 1}</td>
+                <td className=" d-flex align-items-center justify-content-center gap-1">
+                  <div
+                    className="d-flex position-relative rounded-circle"
+                    style={{ width: "25px", aspectRatio: "1/1" }}
+                  >
+                    <Image
+                      layout="fill"
+                      alt={item?.description?.moniker}
+                      className="rounded-circle"
+                      src={`/validatoravatars/${item?.operator_address}.png`}
+                      // onError={(e) => (e.target.src = "/favicon.png")}
+                    />
                   </div>
+                  {item?.description?.moniker}
                 </td>
-                <td className="text-white">
-                  {((item?.tokens * 100) / totalTokens).toFixed(2)}
+                <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
+                <td>
+                  {Math.floor(item?.commission?.commission_rates?.rate * 100)}%
                 </td>
-                <td className="text-white">
-                  {item?.commission?.commission_rates?.rate * 100}
-                </td>
-                <td className="text-white">{item?.tokens / 1000000}</td>
+                <td>{(item?.tokens / 1000000).toFixed(2)}</td>
               </tr>
             ))
         : validatorsArray
             ?.filter((item) => item?.status === "BOND_STATUS_UNBONDED")
             ?.map((item, index) => (
-              <tr key={index}>
+              <tr key={index} className="caption2 text-white-300">
                 <td>
                   <input
                     type="checkbox"
@@ -116,31 +112,27 @@ const AllValidators = ({
                     }}
                   ></input>
                 </td>
-                <td className="text-white">{index + 1}</td>
-                <td className="text-white">
-                  <div className="d-flex flex-row align-items-center justify-content-between">
-                    <div
-                      className="d-flex position-relative rounded-circle"
-                      style={{ width: "25px", aspectRatio: "1/1" }}
-                    >
-                      <Image
-                        layout="fill"
-                        alt={item?.description?.moniker}
-                        className="rounded-circle"
-                        src={`/validatoravatars/${item?.operator_address}.png`}
-                        // onError={(e) => (e.target.src = "/favicon.png")}
-                      />
-                    </div>
-                    {item?.description?.moniker}
+                <td>{index + 1}</td>
+                <td className=" d-flex align-items-center justify-content-center gap-1">
+                  <div
+                    className="d-flex position-relative rounded-circle"
+                    style={{ width: "25px", aspectRatio: "1/1" }}
+                  >
+                    <Image
+                      layout="fill"
+                      alt={item?.description?.moniker}
+                      className="rounded-circle"
+                      src={`/validatoravatars/${item?.operator_address}.png`}
+                      // onError={(e) => (e.target.src = "/favicon.png")}
+                    />
                   </div>
+                  {item?.description?.moniker}
                 </td>
-                <td className="text-white">
-                  {((item?.tokens * 100) / totalTokens).toFixed(2)}
+                <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
+                <td>
+                  {Math.floor(item?.commission?.commission_rates?.rate * 100)}%
                 </td>
-                <td className="text-white">
-                  {(item?.commission?.commission_rates?.rate * 100).toFixed(0)}
-                </td>
-                <td className="text-white">{item?.tokens / 1000000}</td>
+                <td>{(item?.tokens / 1000000).toFixed(2)}</td>
               </tr>
             ))}
     </>
