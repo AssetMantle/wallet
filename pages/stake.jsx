@@ -9,6 +9,7 @@ import { HiArrowsUpDown } from "react-icons/hi2";
 import { MdOutlineClose } from "react-icons/md";
 import { BsChevronLeft, BsChevronDown } from "react-icons/bs";
 import { transform } from "typescript";
+import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 
 export default function Stake() {
   const [searchValue, setSearchValue] = useState("");
@@ -63,33 +64,34 @@ export default function Stake() {
 
   return (
     <>
-      <section className="row">
-        <div className="card bg-gray-800 col-12 col-lg-8 p-3 rounded-5">
-          <div className="d-flex align-items-center justify-content-between my-2 w-100">
-            <div className="card-title body2 text-primary my-auto">
-              Validators
+      <section className="row h-100">
+        <div className="col-12 col-lg-8 h-100">
+          <div className="bg-gray-800 p-3 rounded-5 d-flex flex-column gap-2 h-100">
+            <div className="d-flex align-items-center justify-content-between w-100">
+              <div className="card-title body1 text-primary my-auto">
+                Validators
+              </div>
+              <div className="btn-group">
+                <button
+                  className={`${
+                    activeValidators ? "btn btn-primary" : "btn btn-inactive"
+                  } caption`}
+                  onClick={() => setActiveValidators(true)}
+                >
+                  Active
+                </button>
+                <button
+                  className={`${
+                    !activeValidators ? "btn btn-primary" : "btn btn-inactive"
+                  } caption`}
+                  onClick={() => setActiveValidators(false)}
+                >
+                  Inactive
+                </button>
+              </div>
             </div>
-            <div className="btn-group">
-              <button
-                className={`${
-                  activeValidators ? "btn btn-primary" : "btn btn-inactive"
-                } caption`}
-                onClick={() => setActiveValidators(true)}
-              >
-                Active
-              </button>
-              <button
-                className={`${
-                  !activeValidators ? "btn btn-primary" : "btn btn-inactive"
-                } caption`}
-                onClick={() => setActiveValidators(false)}
-              >
-                Inactive
-              </button>
-            </div>
-          </div>
-          <div className="nav-bg p-2 mt-2 rounded-4">
-            <div className="input-group d-flex w-100 p-2">
+            {/* <div className=""> */}
+            <div className="d-flex flex-column w-100 nav-bg p-2 rounded-4 h-100">
               <div className="d-flex align-items-center gap-3 w-100">
                 <div
                   className="d-flex gap-2 am-input border-color-white rounded-3 py-1 px-3 align-items-center"
@@ -135,46 +137,34 @@ export default function Stake() {
                   Sort
                 </button> */}
               </div>
-              <div className="d-flex w-100 mt-3" style={{ overflowX: "auto" }}>
+              <div
+                className="d-flex w-100 mt-3 h-75"
+                style={{ overflow: "auto" }}
+              >
                 <table className="table" style={{ width: "max-content" }}>
-                  <thead>
-                    <tr>
+                  <thead
+                    className="position-sticky top-0 nav-bg"
+                    style={{
+                      zIndex: "200",
+                    }}
+                  >
+                    <tr className="caption2 text-white">
                       <th>
                         <input type="checkbox"></input>
                       </th>
-                      <th
-                        className="text-white"
-                        scope="col"
-                        style={{ whiteSpace: "nowrap" }}
-                      >
+                      <th scope="col" style={{ whiteSpace: "nowrap" }}>
                         Rank
                       </th>
-                      <th
-                        className="text-white"
-                        scope="col"
-                        style={{ whiteSpace: "nowrap" }}
-                      >
+                      <th scope="col" style={{ whiteSpace: "nowrap" }}>
                         Validator Name
                       </th>
-                      <th
-                        className="text-white"
-                        scope="col"
-                        style={{ whiteSpace: "nowrap" }}
-                      >
-                        Voting Power(in %)
+                      <th scope="col" style={{ whiteSpace: "nowrap" }}>
+                        Voting Power
                       </th>
-                      <th
-                        className="text-white"
-                        scope="col"
-                        style={{ whiteSpace: "nowrap" }}
-                      >
-                        Commission(%)
+                      <th scope="col" style={{ whiteSpace: "nowrap" }}>
+                        Commission
                       </th>
-                      <th
-                        className="text-white"
-                        scope="col"
-                        style={{ whiteSpace: "nowrap" }}
-                      >
+                      <th scope="col" style={{ whiteSpace: "nowrap" }}>
                         Delegated Amount
                       </th>
                     </tr>
@@ -207,16 +197,19 @@ export default function Stake() {
                 </table>
               </div>
             </div>
+            {/* </div> */}
           </div>
         </div>
-        <StakedToken
-          stakeState={stakeState}
-          stakeDispatch={stakeDispatch}
-          showClaimError={showClaimError}
-          setShowClaimError={setShowClaimError}
-          totalTokens={totalTokens}
-          selectedValidators={stakeState?.selectedValidators}
-        />
+        <ScrollableSectionContainer className="col-12 col-lg-4">
+          <StakedToken
+            stakeState={stakeState}
+            stakeDispatch={stakeDispatch}
+            showClaimError={showClaimError}
+            setShowClaimError={setShowClaimError}
+            totalTokens={totalTokens}
+            selectedValidators={stakeState?.selectedValidators}
+          />
+        </ScrollableSectionContainer>
       </section>
       <div className="modal " tabIndex="-1" role="dialog" id="manifestModal">
         <div className="modal-dialog modal-dialog-centered" role="document">

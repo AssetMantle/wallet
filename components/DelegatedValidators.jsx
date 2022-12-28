@@ -27,7 +27,7 @@ const DelegatedValidators = ({
                 item?.description?.moniker?.toLowerCase()?.includes(searchValue)
             )
             ?.map((item, index) => (
-              <tr key={index}>
+              <tr key={index} className="caption2 text-white-300">
                 <td>
                   <input
                     type="checkbox"
@@ -47,10 +47,11 @@ const DelegatedValidators = ({
                     }}
                   ></input>
                 </td>
-                <td className="text-white">{index + 1}</td>
-                <td className="text-white">
+                <td>{index + 1}</td>
+
+                <td className=" d-flex align-items-center justify-content-center">
                   <div
-                    className="d-flex position-relative rounded-circle"
+                    className="d-flex position-relative rounded-circle gap-1"
                     style={{ width: "25px", aspectRatio: "1/1" }}
                   >
                     <Image
@@ -61,22 +62,19 @@ const DelegatedValidators = ({
                       // onError={(e) => console.log(e)}
                     />
                   </div>
+                  {item?.description?.moniker}
                 </td>
-                <td className="text-white">{item?.description?.moniker}</td>
-                <td className="text-white">
-                  {" "}
-                  {((item?.tokens * 100) / totalTokens).toFixed(2)}
+                <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
+                <td>
+                  {Math.floor(item?.commission?.commission_rates?.rate * 100)}%
                 </td>
-                <td className="text-white">
-                  {(item?.commission?.commission_rates?.rate * 100).toFixed(0)}
-                </td>
-                <td className="text-white">{item?.tokens / 1000000}</td>
+                <td>{(item?.tokens / 1000000).toFixed(2)}</td>
               </tr>
             ))
         : delegatedValidators
             ?.filter((item) => item?.status === "BOND_STATUS_UNBONDED")
             ?.map((item, index) => (
-              <tr key={index}>
+              <tr key={index} className="caption2 text-white-300">
                 <td>
                   <input
                     type="checkbox"
@@ -95,8 +93,8 @@ const DelegatedValidators = ({
                     }}
                   ></input>
                 </td>
-                <td className="text-white">{index + 1}</td>
-                <td className="text-white">
+                <td>{index + 1}</td>
+                <td className=" d-flex align-items-center justify-content-center gap-1">
                   <div
                     className="d-flex position-relative rounded-circle"
                     style={{ width: "25px", aspectRatio: "1/1" }}
@@ -108,17 +106,14 @@ const DelegatedValidators = ({
                       src={`/validatoravatars/${item?.operator_address}.png`}
                       // onError={(e) => console.log(e)}
                     />
-                  </div>
+                  </div>{" "}
+                  {item?.description?.moniker}
                 </td>
-                <td className="text-white">{item?.description?.moniker}</td>
-                <td className="text-white">
-                  {" "}
-                  {((item?.tokens * 100) / totalTokens).toFixed(2)}
+                <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
+                <td>
+                  {Math.floor(item?.commission?.commission_rates?.rate * 100)}%
                 </td>
-                <td className="text-white">
-                  {(item?.commission?.commission_rates?.rate * 100).toFixed(0)}
-                </td>
-                <td className="text-white">{item?.tokens / 1000000}</td>
+                <td>{(item?.tokens / 1000000).toFixed(2)}</td>
               </tr>
             ))}
     </>
