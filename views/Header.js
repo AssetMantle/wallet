@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import { MdOutlineContentCopy } from "react-icons/md";
 import { RiKey2Fill } from "react-icons/ri";
 import { TbUnlink } from "react-icons/tb";
@@ -148,14 +148,16 @@ export default function Header({ Connected, setConnected }) {
                         textTransform: "lowercase",
                       }}
                     >
-                      {displayAddress &&
-                        `${displayAddress.substring(
-                          0,
-                          5
-                        )}...${displayAddress.substring(
-                          displayAddress.length - 5,
-                          displayAddress.length
-                        )}`}
+                      <Suspense fallback="Loading...">
+                        {displayAddress &&
+                          `${displayAddress.substring(
+                            0,
+                            5
+                          )}...${displayAddress.substring(
+                            displayAddress.length - 5,
+                            displayAddress.length
+                          )}`}
+                      </Suspense>
                     </span>
                     <span className="rotatableIcon">
                       <BsChevronDown />
@@ -166,11 +168,17 @@ export default function Header({ Connected, setConnected }) {
                       className="nav-bg p-3 rounded-4 text-white border-color-white-400"
                       style={{ border: "2px solid" }}
                     >
-                      <div className="d-flex gap-3 py-3">
+                      <div className="d-flex gap-3">
                         <div className="d-flex flex-column gap-0">
-                          <h4 className="body2">{displayUserName}</h4>
+                          <h4 className="body2">
+                            <Suspense fallback="Loading...">
+                              {displayUserName}
+                            </Suspense>
+                          </h4>
                           <p className="caption">
-                            {displayBalance} {defaultChainSymbol}
+                            <Suspense fallback="Loading...">
+                              {displayBalance} {defaultChainSymbol}
+                            </Suspense>
                           </p>
                         </div>
                       </div>
@@ -183,23 +191,27 @@ export default function Header({ Connected, setConnected }) {
                             aspectRatio: "1/1",
                           }}
                         >
-                          <QRCodeSVG
-                            width="100%"
-                            height="100%"
-                            value={displayAddress}
-                          />
+                          <Suspense fallback="Loading...">
+                            <QRCodeSVG
+                              width="100%"
+                              height="100%"
+                              value={displayAddress}
+                            />
+                          </Suspense>
                         </div>
                         <button
-                          className="d-flex align-items-center justify-content-center gap-2 text-center body2"
+                          className="d-flex align-items-center justify-content-center gap-2 text-center body2 pt-2"
                           onClick={() =>
                             navigator.clipboard.writeText(displayAddress)
                           }
                         >
-                          {displayAddress.substring(0, 9)}...
-                          {displayAddress.substring(
-                            displayAddress.length - 9,
-                            displayAddress.length
-                          )}
+                          <Suspense fallback="Loading...">
+                            {displayAddress.substring(0, 9)}...
+                            {displayAddress.substring(
+                              displayAddress.length - 9,
+                              displayAddress.length
+                            )}
+                          </Suspense>
                           <span className="text-primary">
                             <MdOutlineContentCopy />
                           </span>
