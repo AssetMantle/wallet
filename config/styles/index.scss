@@ -87,6 +87,10 @@ body {
   padding-top: 68px;
   padding-top: 68px;
 }
+.am_app_container {
+  overflow: hidden;
+  height: 100dvh;
+}
 // text sizes
 @mixin fontRoot($weight, $size, $fontFamily: $fontPrimary) {
   font-family: $fontFamily;
@@ -471,7 +475,7 @@ hr,
 .table {
   & > thead {
     border-top: 2px solid $gray-100;
-    border-bottom: 2px solid $gray-100;
+    border-bottom: 1px solid $gray-100;
     &.bt-0 {
       border-top: none;
     }
@@ -483,6 +487,7 @@ hr,
     border: none;
     text-align: center;
     vertical-align: middle;
+    height: max-content;
   }
 }
 input[type="checkbox"] {
