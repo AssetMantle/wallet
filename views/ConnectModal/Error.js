@@ -14,7 +14,10 @@ export default function Error({ close, setStep }) {
         </button>
       </div>
       <div className="d-flex flex-column align-items-center justify-content-center text-center gap-3">
-        <span className="h1 text-error">
+        <span
+          className="text-error"
+          style={{ fontSize: "calc(10px + 10vmin)" }}
+        >
           <BiErrorCircle />
         </span>
         <h1 className="body2 text-error">Error in creating Wallet</h1>
