@@ -348,6 +348,10 @@ a:hover {
 .border-color-white-400 {
   border-color: $white-400 !important;
 }
+.border-color-primary {
+  border: 1px solid;
+  border-color: $primary-main;
+}
 .overflow-y {
   overflow: hidden;
   overflow-x: auto;
@@ -498,7 +502,9 @@ input[type="checkbox"] {
 .btn-close {
   opacity: 1;
 }
-
+.accent-primary {
+  accent-color: $primary-main;
+}
 // specific styles
 .dropdown-toggle {
   & > .rotatableIcon {
