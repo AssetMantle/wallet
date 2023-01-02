@@ -24,7 +24,10 @@ export default function Success({ close, connect }) {
         </button>
       </div>
       <div className="d-flex flex-column align-items-center justify-content-center text-center gap-3">
-        <span className="h1 text-success">
+        <span
+          className="text-success"
+          style={{ fontSize: "calc(10px + 10vmin)" }}
+        >
           <BsCheckCircle />
         </span>
         <h1 className="body2 text-primary">Wallet created successfully</h1>
