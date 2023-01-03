@@ -1,0 +1,11 @@
+# Ignore artifacts:
+build
+coverage
+.next
+.husky
+.github
+README.md
+
+# Ignore all HTML files:
+*.html
+
