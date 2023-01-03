@@ -18,9 +18,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint --fix",
+    "lint": "next lint --fix --cache",
     "prepare": "husky install",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "pre-commit": "yarn lint && yarn format"
   },
   "dependencies": {
     "@chakra-ui/icons": "2.0.11",

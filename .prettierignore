@@ -5,6 +5,10 @@ coverage
 .husky
 .github
 README.md
+modules
+node_modules
+dist
+out
 
 # Ignore all HTML files:
 *.html

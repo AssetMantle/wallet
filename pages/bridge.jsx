@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-import { SlReload } from "react-icons/sl";
-import ICFormETH from "../components/ICFormETH";
-import ICForm from "../components/ICFormETH";
 import ICFormPolygon from "../components/ICFormPolygon";
 
 export default function Bridge() {

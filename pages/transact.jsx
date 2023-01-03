@@ -8,7 +8,6 @@ import { QRCodeSVG } from "qrcode.react";
 import {
   defaultChainGasFee,
   defaultChainMemoSize,
-  defaultChainName,
   defaultChainSymbol,
 } from "../config";
 import {
@@ -21,7 +20,6 @@ import {
   useAvailableBalance,
 } from "../data";
 import { isObjEmpty } from "../lib";
-import ModalContainer from "../components/ModalContainer";
 import Head from "next/head";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 

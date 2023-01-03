@@ -1,14 +1,12 @@
-import React, { useState, useReducer } from "react";
+import React, { useState } from "react";
 import AllValidators from "../components/AllValidators";
 import DelegatedValidators from "../components/DelegatedValidators";
 import Tooltip from "../components/Tooltip";
-import { useDelegatedValidators, useAllValidators } from "../data/swrStore";
+import { useAllValidators } from "../data/swrStore";
 import useStakeReducer from "../data/useStakeReducer";
 import StakedToken from "../views/StakedToken";
-import { HiArrowsUpDown } from "react-icons/hi2";
 import { MdOutlineClose } from "react-icons/md";
 import { BsChevronLeft, BsChevronDown } from "react-icons/bs";
-import { transform } from "typescript";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 
 export default function Stake() {
