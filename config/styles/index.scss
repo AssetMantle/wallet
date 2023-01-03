@@ -142,6 +142,10 @@ body {
 .small {
   @include fontRoot(400, 0.75rem);
 }
+.lato {
+  font-family: $fontSecondary;
+  line-height: 120%;
+}
 .label-primary {
   @include fontRoot(500, 0.75rem);
 }
@@ -447,14 +451,14 @@ hr,
 }
 .am-tooltip {
   cursor: pointer;
-  & > p {
+  & > .am-tooltip-d {
     display: none;
     transition: all 200ms ease-in;
     max-width: max-content;
     width: 0px;
   }
   &:hover {
-    & > p {
+    & > .am-tooltip-d {
       display: flex;
       bottom: 100%;
       right: 50%;
