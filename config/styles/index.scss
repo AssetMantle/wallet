@@ -142,6 +142,10 @@ body {
 .small {
   @include fontRoot(400, 0.75rem);
 }
+.lato {
+  font-family: $fontSecondary;
+  line-height: 120%;
+}
 .label-primary {
   @include fontRoot(500, 0.75rem);
 }
@@ -348,6 +352,10 @@ a:hover {
 .border-color-white-400 {
   border-color: $white-400 !important;
 }
+.border-color-primary {
+  border: 1px solid;
+  border-color: $primary-main;
+}
 .overflow-y {
   overflow: hidden;
   overflow-x: auto;
@@ -443,14 +451,14 @@ hr,
 }
 .am-tooltip {
   cursor: pointer;
-  & > p {
+  & > .am-tooltip-d {
     display: none;
     transition: all 200ms ease-in;
     max-width: max-content;
     width: 0px;
   }
   &:hover {
-    & > p {
+    & > .am-tooltip-d {
       display: flex;
       bottom: 100%;
       right: 50%;
@@ -498,7 +506,9 @@ input[type="checkbox"] {
 .btn-close {
   opacity: 1;
 }
-
+.accent-primary {
+  accent-color: $primary-main;
+}
 // specific styles
 .dropdown-toggle {
   & > .rotatableIcon {

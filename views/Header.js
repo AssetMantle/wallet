@@ -200,7 +200,7 @@ export default function Header({ Connected, setConnected }) {
                           </Suspense>
                         </div>
                         <button
-                          className="d-flex align-items-center justify-content-center gap-2 text-center body2 pt-2"
+                          className="d-flex align-items-center justify-content-center gap-2 text-center caption2 pt-3"
                           onClick={() =>
                             navigator.clipboard.writeText(displayAddress)
                           }
