@@ -1,19 +1,16 @@
-import React, { useReducer, useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   chainSymbol,
   placeholderTotalDelegations,
   placeholderMntlUsdValue,
   defaultChainSymbol,
-  defaultChainGasFee,
 } from "../config";
-import { formConstants, sendRedelegation, sendUndelegation } from "../data";
+import { sendRedelegation, sendUndelegation } from "../data";
 import {
   useDelegatedValidators,
   useMntlUsd,
   fromDenom,
   useAllValidators,
-  useAvailableBalance,
-  toDenom,
 } from "../data/swrStore";
 import { useWallet } from "@cosmos-kit/react";
 

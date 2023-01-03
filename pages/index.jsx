@@ -2,21 +2,15 @@ import {
   Box,
   Button,
   Container,
-  Divider,
   Flex,
-  Grid,
   Heading,
   Icon,
-  Link,
-  Stack,
-  Text,
   useColorMode,
 } from "@chakra-ui/react";
 import Head from "next/head";
 import { BsFillMoonStarsFill, BsFillSunFill } from "react-icons/bs";
-import { Dependency, Product, WalletSection } from "../components";
+import { WalletSection } from "../components";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
-import { dependencies, products } from "../config";
 import StakedToken from "../views/StakedToken";
 
 export default function Home() {

@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { SlReload } from "react-icons/sl";
-import { MdOutlineContentCopy } from "react-icons/md";
-import Image from "next/image";
 
 export default function Ibc() {
   const [Chain, setChain] = useState("");

@@ -1,14 +1,6 @@
-import React, { useState, useReducer } from "react";
-import {
-  BsArrowUpRight,
-  BsFillCheckCircleFill,
-  BsDashCircleFill,
-  BsFillXCircleFill,
-  BsChevronLeft,
-  BsChevronDown,
-} from "react-icons/bs";
+import React, { useState } from "react";
+import { BsArrowUpRight } from "react-icons/bs";
 import { IoRadioButtonOn } from "react-icons/io5";
-import { MdOutlineClose } from "react-icons/md";
 import { useAllProposals, useVote } from "../data/swrStore";
 import VoteInfo from "../views/VoteInfo";
 import UseVoteReducer from "../data/useVoteReducer";

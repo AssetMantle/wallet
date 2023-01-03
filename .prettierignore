@@ -1,0 +1,15 @@
+# Ignore artifacts:
+build
+coverage
+.next
+.husky
+.github
+README.md
+modules
+node_modules
+dist
+out
+
+# Ignore all HTML files:
+*.html
+
