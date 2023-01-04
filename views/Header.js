@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import { MdOutlineContentCopy } from "react-icons/md";
-import { RiKey2Fill } from "react-icons/ri";
 import { TbUnlink } from "react-icons/tb";
 import { BsWallet2, BsCheckCircle, BsChevronDown } from "react-icons/bs";
 import {
@@ -77,22 +76,24 @@ export default function Header({ Connected, setConnected }) {
             <Image layout="fill" src={BasicData.logo} alt={BasicData.title} />
           </div>
           <nav className="navbar-nav d-flex align-items-center gap-3 flex-row gap-3 flex-grow-1 justify-content-between">
-            <div className="d-flex gap-4 flex-row align-items-center">
+            <div className="d-flex gap-3 flex-row align-items-center">
               {React.Children.toArray(
                 BasicData.navs.map((navItem) => (
                   <Link href={navItem.href}>
                     <a
                       className={`d-flex gap-1 align-items-center ${
                         path && path === navItem.href ? "active" : ""
-                      } am-nav-item h3 `}
+                      } am-nav-item subtitle1 `}
                       target={navItem.target ? navItem.target : "_self"}
                     >
                       {navItem.icon && (
-                        <span className="h3 icon">{navItem.icon}</span>
+                        <span className="subtitle1 icon">{navItem.icon}</span>
                       )}
                       {navItem.title}
                       {navItem.endIcon && (
-                        <span className="h3 icon">{navItem.endIcon}</span>
+                        <span className="subtitle1 icon">
+                          {navItem.endIcon}
+                        </span>
                       )}
                     </a>
                   </Link>
