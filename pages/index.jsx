@@ -11,7 +11,6 @@ import Head from "next/head";
 import { BsFillMoonStarsFill, BsFillSunFill } from "react-icons/bs";
 import { WalletSection } from "../components";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
-import StakedToken from "../views/StakedToken";
 
 export default function Home() {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -55,7 +54,6 @@ export default function Home() {
           </Heading>
         </Box>
         <WalletSection />
-        <StakedToken />
       </Container>
     </ScrollableSectionContainer>
   );
