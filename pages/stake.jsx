@@ -26,8 +26,6 @@ export default function Stake() {
     }
   });
 
-  console.log(allValidators);
-
   //Calculate total tokens to calculate voting power
   const totalTokens = validatorsArray.reduce(
     (accumulator, currentValue) => accumulator + parseInt(currentValue.tokens),
@@ -64,7 +62,10 @@ export default function Stake() {
     <>
       <section className="row h-100">
         <div className="col-12 col-lg-8 h-100">
-          <div className="bg-gray-800 p-3 rounded-5 d-flex flex-column gap-2 h-100">
+          <div
+            className="bg-gray-800 p-3 rounded-5 d-flex flex-column gap-2"
+            style={{ height: "90%" }}
+          >
             <div className="d-flex align-items-center justify-content-between w-100">
               <div className="card-title body1 text-primary my-auto">
                 Validators
@@ -88,8 +89,10 @@ export default function Stake() {
                 </button>
               </div>
             </div>
-            {/* <div className=""> */}
-            <div className="d-flex flex-column w-100 nav-bg p-2 rounded-4 h-100">
+            <div
+              className="d-flex flex-column w-100 nav-bg p-2 rounded-4 flex-grow-1"
+              style={{ height: "88%" }}
+            >
               <div className="d-flex align-items-center gap-3 w-100">
                 <div
                   className="d-flex gap-2 am-input border-color-white rounded-3 py-1 px-3 align-items-center"
@@ -136,7 +139,7 @@ export default function Stake() {
                 </button> */}
               </div>
               <div
-                className="d-flex w-100 mt-3 h-75"
+                className="d-flex w-100 mt-3 h-100"
                 style={{ overflow: "auto" }}
               >
                 <table className="table" style={{ width: "max-content" }}>
@@ -195,7 +198,6 @@ export default function Stake() {
                 </table>
               </div>
             </div>
-            {/* </div> */}
           </div>
         </div>
         <ScrollableSectionContainer className="col-12 col-lg-4">
