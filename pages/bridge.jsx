@@ -8,7 +8,6 @@ import { HiArrowNarrowDown, HiOutlineArrowNarrowUp } from "react-icons/hi";
 import { BsCheckCircle, BsLink45Deg } from "react-icons/bs";
 import { MdContentCopy } from "react-icons/md";
 import { MdOutlineClose } from "react-icons/md";
-import Link from "next/link";
 
 export default function Bridge() {
   // commons
@@ -45,7 +44,7 @@ export default function Bridge() {
   const [EthBalance, setEthBalance] = useState(40);
   const [PolygonBalance, setPolygonBalance] = useState(50);
 
-  const handleMNTLAmountChange = (e, item, error) => {
+  const handleMNTLAmountChange = (e) => {
     setMNTLAmount(e.target.value);
     e.target.value < 0.001 || e.target.value > MNtlBalance
       ? setMNTLAmountError("Insufficient Balance.")
