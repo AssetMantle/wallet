@@ -1,10 +1,7 @@
-import React, { Suspense } from "react";
+import React from "react";
 import Tooltip from "../components/Tooltip";
-import { defaultChainSymbol } from "../config";
 
 export default function Vesting() {
-  const denomDisplay = defaultChainSymbol;
-
   return (
     <section className="rounded-5 p-4 bg-gray-800 width-100 d-flex flex-column gap-3">
       <h4 className="body1 text-primary">Vesting</h4>
@@ -16,14 +13,14 @@ export default function Vesting() {
         <p className="caption">0.0000 $MNTL</p>
         <p className="small text-gray">$0.0000</p>
       </div>
-      <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-1">
+      {/* <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-1">
         <p className="caption d-flex gap-2 align-items-center text-white-300">
           Transferable
           <Tooltip titlePrimary={true} description={""} />
         </p>
         <p className="caption">0.0000 $MNTL</p>
         <p className="small text-gray">$0.0000</p>
-      </div>
+      </div> */}
       <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-1">
         <p className="caption d-flex gap-2 align-items-center text-white-300">
           Delegatable

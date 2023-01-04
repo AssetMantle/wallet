@@ -21,7 +21,7 @@ export default function Layout({ children }) {
       <Header Connected={Connected} setConnected={setConnected} />
       <main className="container-xxl pt-4 h-100">
         <div className="row px-2 position-relative h-100">
-          <ScrollableSectionContainer className="col-3 d-flex flex-column gap-4">
+          <ScrollableSectionContainer className="col-3 d-flex flex-column gap-3">
             <Balance />
             <Vesting />
           </ScrollableSectionContainer>

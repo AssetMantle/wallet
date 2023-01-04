@@ -33,13 +33,13 @@ export default function Balance() {
         </p>
         <MntlUsdPrice />
       </div>
-      <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-1">
+      {/* <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-1">
         <p className="caption d-flex gap-2 align-items-center text-white-300">
           Current Value
         </p>
         <p className="caption">0.0000 $MNTL</p>
         <p className="small text-gray">$0.0000</p>
-      </div>
+      </div> */}
     </section>
   );
 }
