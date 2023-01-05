@@ -15,6 +15,7 @@ import "../config/styles/index.scss";
 import { assets, chains } from "chain-registry";
 import Head from "next/head";
 import Layout from "../components/Layout";
+import ConnectModal from "../views/ConnectModal/ConnectModal";
 
 function CreateCosmosApp({ Component, pageProps }) {
   // useEffect for bootstrap js hydration
@@ -58,6 +59,7 @@ function CreateCosmosApp({ Component, pageProps }) {
               rest: [defaultChainRESTProxy],
             },
           }}
+          walletModal={ConnectModal} // Provide walletModal
         >
           <Layout>
             <Component {...pageProps} />

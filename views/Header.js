@@ -1,8 +1,9 @@
 import { useChain } from "@cosmos-kit/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { QRCodeSVG } from "qrcode.react";
-import React, { Suspense, useEffect, useRef, useState } from "react";
+import React, { Suspense, useState } from "react";
 import { BsCheckCircle } from "react-icons/bs";
 import { MdOutlineContentCopy } from "react-icons/md";
 import { TbUnlink } from "react-icons/tb";
@@ -39,11 +40,15 @@ export default function Header() {
     connect,
     disconnect,
   } = useChain(defaultChainName);
+  const [showModal, setShowModal] = useState(false);
+
+  const router = useRouter();
 
   console.log({
     chain,
     openView,
     username,
+    address,
     wallet,
     status,
     connect,
@@ -84,8 +89,15 @@ export default function Header() {
     await disconnect();
   };
 
-  const handleOpenConnectedModal = (e) => {
+  const handleOnClick = (e) => {
     e.preventDefault();
+
+    /* if (status === "Connected") {
+      setShowModal(true);
+    } else {
+      openView();
+    } */
+
     openView();
   };
 
@@ -112,7 +124,9 @@ export default function Header() {
           icon={
             ConnectOptionObject?.[wallet?.prettyName.toLocaleLowerCase()]?.icon
           }
-          onClick={handleOpenConnectedModal}
+          onClick={handleOnClick}
+          dataBsToggle="modal"
+          dataBsTarget="#connectedModal"
         />
       }
       rejected={<Rejected buttonText="Reconnect" onClick={onClickConnect} />}
@@ -126,18 +140,7 @@ export default function Header() {
     />
   );
 
-  const profileRef = useRef();
-
-  const [Location, setLocation] = useState();
-  const path = Location && Location.pathname;
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setLocation(window.location);
-    }
-  }, [Location]);
-
   const { availableBalance } = useAvailableBalance();
-
   const displayAddress = address || placeholderAddress;
   const displayBalance =
     availableBalance == placeholderAvailableBalance
@@ -149,7 +152,7 @@ export default function Header() {
     <Link href={navItem.href} key={index}>
       <a
         className={`d-flex gap-1 align-items-center h3 text-white ${
-          path && path === navItem.href ? "active" : ""
+          router.asPath === navItem.href ? "active" : ""
         }`}
         target={navItem.target ? navItem.target : "_self"}
       >
@@ -164,7 +167,7 @@ export default function Header() {
     <Link href={navItem.href} key={index}>
       <a
         className={`d-flex gap-1 align-items-center ${
-          path && path === navItem.href ? "active" : ""
+          router.asPath === navItem.href ? "active" : ""
         } am-nav-item h3 `}
         target={navItem.target ? navItem.target : "_self"}
       >
@@ -232,11 +235,7 @@ export default function Header() {
                   onClick={() => navigator.clipboard.writeText(displayAddress)}
                 >
                   <Suspense fallback="Loading...">
-                    {displayAddress.substring(0, 9)}...
-                    {displayAddress.substring(
-                      displayAddress.length - 9,
-                      displayAddress.length
-                    )}
+                    {shortenAddress(displayAddress)}
                   </Suspense>
                   <span className="text-primary">
                     <MdOutlineContentCopy />
@@ -250,7 +249,19 @@ export default function Header() {
                     className="position-relative"
                     style={{ width: "25px", aspectRatio: "1/1" }}
                   >
-                    <Image layout="fill" src={"#"} alt={"#"} />
+                    <Image
+                      layout="fill"
+                      src={
+                        ConnectOptionObject[
+                          wallet?.prettyName.toLocaleLowerCase()
+                        ]?.icon
+                      }
+                      alt={
+                        ConnectOptionObject[
+                          wallet?.prettyName.toLocaleLowerCase()
+                        ]?.name
+                      }
+                    />
                   </div>
                   {"name"}
                 </div>

@@ -11,7 +11,7 @@ export default function Vesting() {
           <Tooltip titlePrimary={true} description={""} />
         </p>
         <p className="caption">0.0000 $MNTL</p>
-        <p className="small text-gray">$0.0000</p>
+        <p className="small text-gray">$0.0000&nbsp;$USD</p>
       </div>
       {/* <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-1">
         <p className="caption d-flex gap-2 align-items-center text-white-300">
@@ -27,7 +27,7 @@ export default function Vesting() {
           <Tooltip titlePrimary={true} description={""} />
         </p>
         <p className="caption">0.0000 $MNTL</p>
-        <p className="small text-gray">$0.0000</p>
+        <p className="small text-gray">$0.0000&nbsp;$USD</p>
       </div>
     </section>
   );
