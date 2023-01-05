@@ -496,6 +496,9 @@ hr,
     text-align: center;
     vertical-align: middle;
     height: max-content;
+    &:nth-child(3) {
+      max-width: 135px;
+    }
   }
 }
 input[type="checkbox"] {
