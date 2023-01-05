@@ -47,8 +47,7 @@ const DelegatedValidators = ({
                   ></input>
                 </td>
                 <td>{index + 1}</td>
-
-                <td className=" d-flex align-items-center justify-content-center">
+                <td>
                   <div
                     className="d-flex position-relative rounded-circle gap-1"
                     style={{ width: "25px", aspectRatio: "1/1" }}
@@ -61,6 +60,8 @@ const DelegatedValidators = ({
                       // onError={(e) => console.log(e)}
                     />
                   </div>
+                </td>
+                <td className=" d-flex align-items-center justify-content-center">
                   {item?.description?.moniker}
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
@@ -93,7 +94,7 @@ const DelegatedValidators = ({
                   ></input>
                 </td>
                 <td>{index + 1}</td>
-                <td className=" d-flex align-items-center justify-content-center gap-1">
+                <td>
                   <div
                     className="d-flex position-relative rounded-circle"
                     style={{ width: "25px", aspectRatio: "1/1" }}
@@ -105,7 +106,9 @@ const DelegatedValidators = ({
                       src={`/validatoravatars/${item?.operator_address}.png`}
                       // onError={(e) => console.log(e)}
                     />
-                  </div>{" "}
+                  </div>
+                </td>
+                <td className=" d-flex align-items-center justify-content-around gap-1">
                   {item?.description?.moniker}
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>

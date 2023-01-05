@@ -2,61 +2,17 @@ import React, { useState } from "react";
 import { BsArrowUpRight } from "react-icons/bs";
 import { IoRadioButtonOn } from "react-icons/io5";
 import { useAllProposals, useVote } from "../data/swrStore";
+import DonutChart from "../views/DonutChart";
 import VoteInfo from "../views/VoteInfo";
 import UseVoteReducer from "../data/useVoteReducer";
-import { ResponsiveSunburst } from "@nivo/sunburst";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 
 export default function Vote() {
-  const { voteInfo, isLoadingVote, errorVote } = useVote(1);
   const { voteState, voteDispatch } = UseVoteReducer();
   const [ActiveNav, setActiveNav] = useState(0);
   const [onVoteHover, setOnVoteHover] = useState(null);
   const { allProposals, isLoadingProposals, errorProposals } =
     useAllProposals();
-
-  // const chartData = {
-  //   name: "validator",
-  //   color: "hsl(173, 70%, 50%)",
-  //   children:
-  //   [
-  //     {
-  //       name: "Yes",
-  //       color: "hsl(11, 70%, 50%)",
-  //       children: [
-  //         {
-  //           name: "Validator 1",
-  //           color: "hsl(62, 70%, 50%)",
-  //           power: 5,
-  //         },
-  //         {
-  //           name: "Validator 2",
-  //           color: "hsl(35, 70%, 50%)",
-  //           power: 5,
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       name: "No",
-  //       color: "hsl(11, 70%, 50%)",
-  //       power: 25,
-  //     },
-  //     {
-  //       name: "Abstain",
-  //       color: "hsl(11, 70%, 50%)",
-  //       power: 45,
-  //     },
-  //     {
-  //       name: "No with Veto",
-  //       color: "hsl(11, 70%, 50%)",
-  //       power: 20,
-  //     },
-  //   ],
-  // };
-
-  for (item in allProposals?.final_tally_result) {
-    console.log(item);
-  }
 
   return (
     <>
@@ -95,12 +51,12 @@ export default function Vote() {
                     onMouseEnter={() => setOnVoteHover(proposal?.proposal_id)}
                     onMouseLeave={() => setOnVoteHover(null)}
                     className={`col-12 col-md-6 p-2`}
-                    onClick={() =>
+                    onClick={() => {
                       voteDispatch({
                         type: "SET_PROPOSAL_ID",
                         payload: proposal?.proposal_id,
-                      })
-                    }
+                      });
+                    }}
                   >
                     <div
                       className={`bg-translucent rounded-3`}
@@ -188,30 +144,7 @@ export default function Vote() {
           </div>
         </ScrollableSectionContainer>
         {voteState?.proposalID.length ? (
-          <div
-            className="col-12 pt-3 pt-lg-0 col-lg-4"
-            style={{ height: "400px" }}
-          >
-            <ResponsiveSunburst
-              data={chartData}
-              margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
-              id="name"
-              value="power"
-              cornerRadius={2}
-              borderColor={{ theme: "background" }}
-              colors={{ scheme: "set2" }}
-              childColor={{
-                from: "color",
-                modifiers: [["brighter", 0.1]],
-              }}
-              enableArcLabels={true}
-              arcLabelsSkipAngle={10}
-              arcLabelsTextColor={{
-                from: "color",
-                modifiers: [["darker", 1.4]],
-              }}
-            />
-          </div>
+          <DonutChart proposalID={voteState?.proposalID} />
         ) : (
           <VoteInfo voteDispatch={voteDispatch} voteState={voteState} />
         )}

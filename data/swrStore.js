@@ -551,34 +551,32 @@ export const useAllValidators = () => {
   };
 };
 
-export const useVote = (proposalId) => {
+export const useVotes = (proposalId) => {
   // get the connected wallet parameters from useWallet hook
   const walletManager = useWallet();
   const { walletStatus, address, currentWalletInfo } = walletManager;
   // fetcher function for useSwr of useAvailableBalance()
-  const fetchVote = async (url) => {
-    let voteInfo;
+  const fetchVotes = async (url) => {
+    let votesInfo;
 
     // use a try catch block for creating rich Error object
     try {
       // get the data from cosmos queryClient
-      const { vote } = await client.cosmos.gov.v1beta1.vote({
+      const { votes } = await client.cosmos.gov.v1beta1.votes({
         proposalId,
-        address,
       });
-      voteInfo = vote;
-      console.log(voteInfo);
+      votesInfo = votes;
     } catch (error) {
       console.error(`swr fetcher error: ${url}`);
       throw error;
     }
     // return the data
-    return voteInfo;
+    return votesInfo;
   };
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: voteObject, error } = useSwr(
-    proposalId ? ["vote", proposalId] : null,
-    fetchVote,
+    proposalId ? ["votes", proposalId] : null,
+    fetchVotes,
     {
       fallbackData: [
         {
@@ -595,7 +593,7 @@ export const useVote = (proposalId) => {
     }
   );
   return {
-    voteInfo: voteObject,
+    votesInfo: voteObject,
     isLoadingVote: !error && !voteObject,
     errorVote: error,
   };
