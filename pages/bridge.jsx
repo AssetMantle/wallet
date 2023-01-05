@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import { useChain } from "@cosmos-kit/react";
 import Image from "next/image";
-import { placeholderAddress } from "../data/BasicData";
-import { useWallet } from "@cosmos-kit/react";
-import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
-import ICTransactionInfo from "../components/ICTransactionInfo";
-import { HiArrowNarrowDown, HiOutlineArrowNarrowUp } from "react-icons/hi";
+import React, { useState } from "react";
 import { BsCheckCircle, BsLink45Deg } from "react-icons/bs";
-import { MdContentCopy } from "react-icons/md";
-import { MdOutlineClose } from "react-icons/md";
+import { HiArrowNarrowDown, HiOutlineArrowNarrowUp } from "react-icons/hi";
+import { MdContentCopy, MdOutlineClose } from "react-icons/md";
+import ICTransactionInfo from "../components/ICTransactionInfo";
+import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
+import { defaultChainName } from "../config";
+import { placeholderAddress } from "../data";
 
 export default function Bridge() {
   // commons
@@ -16,7 +16,7 @@ export default function Bridge() {
   };
 
   // transactions start
-  const walletManager = useWallet();
+  const walletManager = useChain(defaultChainName);
   const { address } = walletManager;
 
   const [EthConnectionStat, setEthConnectionStat] = useState(false);

@@ -1,27 +1,26 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { wallets as cosmostationWallets } from "@cosmos-kit/cosmostation";
 import { wallets as leapwallets } from "@cosmos-kit/leap";
-import { WalletProvider } from "@cosmos-kit/react";
+import { ChainProvider } from "@cosmos-kit/react";
 import { useEffect } from "react";
-import { defaultTheme, wallets as keplrWallets } from "../config";
+import {
+  defaultChainRESTProxy,
+  defaultChainRPCProxy,
+  defaultTheme,
+  wallets as keplrWallets,
+} from "../config";
 
 import "../config/styles/index.scss";
 
 import { assets, chains } from "chain-registry";
-import Layout from "../components/Layout";
 import Head from "next/head";
+import Layout from "../components/Layout";
 
 function CreateCosmosApp({ Component, pageProps }) {
+  // useEffect for bootstrap js hydration
   useEffect(() => {
     require("bootstrap/dist/js/bootstrap.bundle.js");
   }, []);
-  const signerOptions = {
-    // stargate: (_chain: Chain) => {
-    //   return getSigningCosmosClientOptions();
-    // }
-  };
-
-  // console.log("keplr info: ", keplrExtensionInfo);
 
   return (
     <>
@@ -47,17 +46,23 @@ function CreateCosmosApp({ Component, pageProps }) {
         />
         {/* open graphs end */}
       </Head>
+
       <ChakraProvider theme={defaultTheme}>
-        <WalletProvider
+        <ChainProvider
           chains={chains}
           assetLists={assets}
           wallets={[...keplrWallets, ...leapwallets, ...cosmostationWallets]}
-          signerOptions={signerOptions}
+          endpointOptions={{
+            assetmantle: {
+              rpc: [defaultChainRPCProxy],
+              rest: [defaultChainRESTProxy],
+            },
+          }}
         >
           <Layout>
             <Component {...pageProps} />
           </Layout>
-        </WalletProvider>
+        </ChainProvider>
       </ChakraProvider>
     </>
   );

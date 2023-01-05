@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { BsArrowUpRight } from "react-icons/bs";
 import { IoRadioButtonOn } from "react-icons/io5";
-import { useAllProposals, useVote } from "../data/swrStore";
+import { useAllProposals, useVote } from "../data";
 import VoteInfo from "../views/VoteInfo";
 import UseVoteReducer from "../data/useVoteReducer";
 import { ResponsiveSunburst } from "@nivo/sunburst";

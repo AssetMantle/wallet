@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import AllValidators from "../components/AllValidators";
 import DelegatedValidators from "../components/DelegatedValidators";
 import Tooltip from "../components/Tooltip";
-import { useAllValidators } from "../data/swrStore";
+import { useAllValidators } from "../data";
 import useStakeReducer from "../data/useStakeReducer";
 import StakedToken from "../views/StakedToken";
 import { MdOutlineClose } from "react-icons/md";

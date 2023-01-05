@@ -1,24 +1,55 @@
+import { useChain } from "@cosmos-kit/react";
 import Image from "next/image";
 import Link from "next/link";
+import { QRCodeSVG } from "qrcode.react";
 import React, { Suspense, useEffect, useRef, useState } from "react";
+import { BsCheckCircle } from "react-icons/bs";
 import { MdOutlineContentCopy } from "react-icons/md";
 import { TbUnlink } from "react-icons/tb";
-import { BsWallet2, BsCheckCircle, BsChevronDown } from "react-icons/bs";
 import {
-  BasicData,
+  Connected,
+  Connecting,
+  Disconnected,
+  Error,
+  NotExist,
+  Rejected,
+  WalletConnectComponent,
+} from "../components";
+import {
+  defaultChainName,
+  defaultChainSymbol,
+  placeholderAvailableBalance,
+} from "../config";
+import {
   fromDenom,
+  NavBarData,
   placeholderAddress,
   useAvailableBalance,
 } from "../data";
-import ModalContainer from "../components/ModalContainer";
-import ConnectModal from "./ConnectModal";
-import { useWallet } from "@cosmos-kit/react";
-import { QRCodeSVG } from "qrcode.react";
-import { defaultChainSymbol } from "../config";
+import { shortenAddress } from "../lib";
 
-export default function Header({ Connected, setConnected }) {
-  const [ConnectFlow, setConnectFlow] = useState();
-  const [ConnectOption, setConnectOption] = useState("keplr");
+export default function Header() {
+  const {
+    chain,
+    openView,
+    username,
+    address,
+    wallet,
+    status,
+    connect,
+    disconnect,
+  } = useChain(defaultChainName);
+
+  console.log({
+    chain,
+    openView,
+    username,
+    wallet,
+    status,
+    connect,
+    disconnect,
+  });
+
   const ConnectOptionObject = {
     cosmostation: {
       icon: "/WalletIcons/cosmostation.png",
@@ -42,6 +73,59 @@ export default function Header({ Connected, setConnected }) {
     },
   };
 
+  // Events
+  const onClickConnect = async (e) => {
+    e.preventDefault();
+    await connect();
+  };
+
+  const onClickDisconnect = async (e) => {
+    e.preventDefault();
+    await disconnect();
+  };
+
+  const handleOpenConnectedModal = (e) => {
+    e.preventDefault();
+    openView();
+  };
+
+  console.log(
+    "ICONN: ",
+    ConnectOptionObject[wallet?.prettyName.toLocaleLowerCase()]?.icon
+  );
+
+  // Component
+  const connectWalletButton = (
+    <WalletConnectComponent
+      walletStatus={status}
+      disconnect={
+        <Disconnected
+          buttonText="Connect"
+          buttonIcon="bi-wallet2"
+          onClick={onClickConnect}
+        />
+      }
+      connecting={<Connecting />}
+      connected={
+        <Connected
+          buttonText={address ? shortenAddress(address) : "Connected"}
+          icon={
+            ConnectOptionObject?.[wallet?.prettyName.toLocaleLowerCase()]?.icon
+          }
+          onClick={handleOpenConnectedModal}
+        />
+      }
+      rejected={<Rejected buttonText="Reconnect" onClick={onClickConnect} />}
+      error={<Error buttonText="Change Wallet" onClick={onClickDisconnect} />}
+      notExist={
+        <NotExist
+          buttonText="Install Wallet"
+          onClick={() => window.open("https://www.keplr.app/", "_blank")}
+        />
+      }
+    />
+  );
+
   const profileRef = useRef();
 
   const [Location, setLocation] = useState();
@@ -53,241 +137,164 @@ export default function Header({ Connected, setConnected }) {
   }, [Location]);
 
   const { availableBalance } = useAvailableBalance();
-  const walletManager = useWallet();
-  const { username, address } = walletManager;
 
-  const displayAddress = address ? address : placeholderAddress;
-  const displayBalance = availableBalance
-    ? fromDenom(availableBalance)
-    : "0.000";
-  const displayUserName = username ? username : "Default User";
+  const displayAddress = address || placeholderAddress;
+  const displayBalance =
+    availableBalance == placeholderAvailableBalance
+      ? availableBalance
+      : fromDenom(availableBalance);
+  const displayUserName = username || "Default User";
+
+  const navigationMenusRightJSX = NavBarData.rightNav.map((navItem, index) => (
+    <Link href={navItem.href} key={index}>
+      <a
+        className={`d-flex gap-1 align-items-center h3 text-white ${
+          path && path === navItem.href ? "active" : ""
+        }`}
+        target={navItem.target ? navItem.target : "_self"}
+      >
+        {navItem.icon && <span className="h3 icon">{navItem.icon}</span>}
+        {navItem.title}
+        {navItem.endIcon && <span className="h3 icon">{navItem.endIcon}</span>}
+      </a>
+    </Link>
+  ));
+
+  const navigationMenusLeftJSX = NavBarData.navs.map((navItem, index) => (
+    <Link href={navItem.href} key={index}>
+      <a
+        className={`d-flex gap-1 align-items-center ${
+          path && path === navItem.href ? "active" : ""
+        } am-nav-item h3 `}
+        target={navItem.target ? navItem.target : "_self"}
+      >
+        {navItem.icon && <span className="h3 icon">{navItem.icon}</span>}
+        {navItem.title}
+        {navItem.endIcon && <span className="h3 icon">{navItem.endIcon}</span>}
+      </a>
+    </Link>
+  ));
+
+  const appLogoJSX = (
+    <div
+      className="d-flex position-relative"
+      style={{ width: "min(195.05px,30%)", aspectRatio: "195.05/33" }}
+    >
+      <Image layout="fill" src={NavBarData.logo} alt={NavBarData.title} />
+    </div>
+  );
+
+  const connectedModalJSX = (
+    <div
+      className="modal"
+      id="connectedModal"
+      aria-labelledby="connectedModalLabel"
+      aria-hidden="true"
+    >
+      <div className="modal-dialog">
+        <div className="modal-content">
+          <div className="dropdown-menu pt-3">
+            <div
+              className="nav-bg p-3 rounded-4 text-white border-color-white-400"
+              style={{ border: "2px solid" }}
+            >
+              <div className="d-flex gap-3">
+                <div className="d-flex flex-column gap-0">
+                  <h4 className="body2">
+                    <Suspense fallback="Loading...">{displayUserName}</Suspense>
+                  </h4>
+                  <p className="caption">
+                    <Suspense fallback="Loading...">
+                      {displayBalance} {defaultChainSymbol}
+                    </Suspense>
+                  </p>
+                </div>
+              </div>
+              <hr className="my-3" />
+              <div className="d-flex flex-column">
+                <div
+                  className="position-relative mx-auto"
+                  style={{
+                    width: "min(140px, 100%)",
+                    aspectRatio: "1/1",
+                  }}
+                >
+                  <Suspense fallback="Loading...">
+                    <QRCodeSVG
+                      width="100%"
+                      height="100%"
+                      value={displayAddress}
+                    />
+                  </Suspense>
+                </div>
+                <button
+                  className="d-flex align-items-center justify-content-center gap-2 text-center caption2 pt-3"
+                  onClick={() => navigator.clipboard.writeText(displayAddress)}
+                >
+                  <Suspense fallback="Loading...">
+                    {displayAddress.substring(0, 9)}...
+                    {displayAddress.substring(
+                      displayAddress.length - 9,
+                      displayAddress.length
+                    )}
+                  </Suspense>
+                  <span className="text-primary">
+                    <MdOutlineContentCopy />
+                  </span>
+                </button>
+              </div>
+              <hr className="my-3" />
+              <div className="d-flex align-items-center justify-content-between gap-2 text-center caption">
+                <div className="d-flex align-items-center gap-1">
+                  <div
+                    className="position-relative"
+                    style={{ width: "25px", aspectRatio: "1/1" }}
+                  >
+                    <Image layout="fill" src={"#"} alt={"#"} />
+                  </div>
+                  {"name"}
+                </div>
+                <div className="d-flex align-items-center gap-1">
+                  <span className="text-success">
+                    <BsCheckCircle />
+                  </span>
+                  Connected
+                </div>
+              </div>
+              <hr className="my-3" />
+              <button
+                className="d-flex align-items-center justify-content-center gap-2 text-center body2"
+                onClick={disconnect}
+              >
+                <span className="text-primary">
+                  <TbUnlink />
+                </span>
+                Disconnect
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
-    <>
-      <header
-        className="nav-bg position-sticky top-0 start-0 end-0"
-        style={{ zIndex: "1000" }}
-      >
-        <div className="container-xxl d-flex align-items-center gap-3 p-3 px-4">
-          <div
-            className="d-flex position-relative"
-            style={{ width: "min(195.05px,30%)", aspectRatio: "195.05/33" }}
-          >
-            <Image layout="fill" src={BasicData.logo} alt={BasicData.title} />
+    <header
+      className="nav-bg position-sticky top-0 start-0 end-0"
+      style={{ zIndex: "1000" }}
+    >
+      <div className="container-xxl d-flex align-items-center gap-3 p-3 px-4">
+        {appLogoJSX}
+        <nav className="navbar-nav d-flex align-items-center gap-3 flex-row gap-3 flex-grow-1 justify-content-between">
+          <div className="d-flex gap-4 flex-row align-items-center">
+            {navigationMenusLeftJSX}
           </div>
-          <nav className="navbar-nav d-flex align-items-center gap-3 flex-row gap-3 flex-grow-1 justify-content-between">
-            <div className="d-flex gap-3 flex-row align-items-center">
-              {React.Children.toArray(
-                BasicData.navs.map((navItem) => (
-                  <Link href={navItem.href}>
-                    <a
-                      className={`d-flex gap-1 align-items-center ${
-                        path && path === navItem.href ? "active" : ""
-                      } am-nav-item subtitle1 `}
-                      target={navItem.target ? navItem.target : "_self"}
-                    >
-                      {navItem.icon && (
-                        <span className="subtitle1 icon">{navItem.icon}</span>
-                      )}
-                      {navItem.title}
-                      {navItem.endIcon && (
-                        <span className="subtitle1 icon">
-                          {navItem.endIcon}
-                        </span>
-                      )}
-                    </a>
-                  </Link>
-                ))
-              )}
-            </div>
-            <div className="d-flex gap-3 flex-row align-items-center">
-              {React.Children.toArray(
-                BasicData.rightNav.map((navItem) => (
-                  <Link href={navItem.href}>
-                    <a
-                      className={`d-flex gap-1 align-items-center h3 text-white ${
-                        path && path === navItem.href ? "active" : ""
-                      }`}
-                      target={navItem.target ? navItem.target : "_self"}
-                    >
-                      {navItem.icon && (
-                        <span className="h3 icon">{navItem.icon}</span>
-                      )}
-                      {navItem.title}
-                      {navItem.endIcon && (
-                        <span className="h3 icon">{navItem.endIcon}</span>
-                      )}
-                    </a>
-                  </Link>
-                ))
-              )}
-              {Connected ? (
-                <div className="nav-item dropdown">
-                  <button
-                    className="button-secondary nav-link d-flex gap-2 align-items-center dropdown-toggle am-nav-item py-1 px-3"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                    ref={profileRef}
-                  >
-                    <div
-                      className="position-relative rounded-circle"
-                      style={{ width: "23px", aspectRatio: "1/1" }}
-                    >
-                      <Image
-                        layout="fill"
-                        className="rounded-circle"
-                        src={
-                          ConnectOptionObject[ConnectOption.toLowerCase()].icon
-                        }
-                        alt={
-                          ConnectOptionObject[ConnectOption.toLowerCase()].name
-                        }
-                      />
-                    </div>
-                    <span
-                      style={{
-                        textTransform: "lowercase",
-                      }}
-                    >
-                      <Suspense fallback="Loading...">
-                        {displayAddress &&
-                          `${displayAddress.substring(
-                            0,
-                            5
-                          )}...${displayAddress.substring(
-                            displayAddress.length - 5,
-                            displayAddress.length
-                          )}`}
-                      </Suspense>
-                    </span>
-                    <span className="rotatableIcon">
-                      <BsChevronDown />
-                    </span>
-                  </button>
-                  <div className="dropdown-menu pt-3">
-                    <div
-                      className="nav-bg p-3 rounded-4 text-white border-color-white-400"
-                      style={{ border: "2px solid" }}
-                    >
-                      <div className="d-flex gap-3">
-                        <div className="d-flex flex-column gap-0">
-                          <h4 className="body2">
-                            <Suspense fallback="Loading...">
-                              {displayUserName}
-                            </Suspense>
-                          </h4>
-                          <p className="caption">
-                            <Suspense fallback="Loading...">
-                              {displayBalance} {defaultChainSymbol}
-                            </Suspense>
-                          </p>
-                        </div>
-                      </div>
-                      <hr className="my-3" />
-                      <div className="d-flex flex-column">
-                        <div
-                          className="position-relative mx-auto"
-                          style={{
-                            width: "min(140px, 100%)",
-                            aspectRatio: "1/1",
-                          }}
-                        >
-                          <Suspense fallback="Loading...">
-                            <QRCodeSVG
-                              width="100%"
-                              height="100%"
-                              value={displayAddress}
-                            />
-                          </Suspense>
-                        </div>
-                        <button
-                          className="d-flex align-items-center justify-content-center gap-2 text-center caption2 pt-3"
-                          onClick={() =>
-                            navigator.clipboard.writeText(displayAddress)
-                          }
-                        >
-                          <Suspense fallback="Loading...">
-                            {displayAddress.substring(0, 9)}...
-                            {displayAddress.substring(
-                              displayAddress.length - 9,
-                              displayAddress.length
-                            )}
-                          </Suspense>
-                          <span className="text-primary">
-                            <MdOutlineContentCopy />
-                          </span>
-                        </button>
-                      </div>
-                      <hr className="my-3" />
-                      <div className="d-flex align-items-center justify-content-between gap-2 text-center caption">
-                        <div className="d-flex align-items-center gap-1">
-                          <div
-                            className="position-relative"
-                            style={{ width: "25px", aspectRatio: "1/1" }}
-                          >
-                            <Image
-                              layout="fill"
-                              src={
-                                ConnectOptionObject[ConnectOption.toLowerCase()]
-                                  .icon
-                              }
-                              alt={
-                                ConnectOptionObject[ConnectOption.toLowerCase()]
-                                  .name
-                              }
-                            />
-                          </div>
-                          {
-                            ConnectOptionObject[ConnectOption.toLowerCase()]
-                              .name
-                          }
-                        </div>
-                        <div className="d-flex align-items-center gap-1">
-                          <span className="text-success">
-                            <BsCheckCircle />
-                          </span>
-                          Connected
-                        </div>
-                      </div>
-                      <hr className="my-3" />
-                      <button
-                        className="d-flex align-items-center justify-content-center gap-2 text-center body2"
-                        onClick={walletManager.disconnect}
-                      >
-                        <span className="text-primary">
-                          <TbUnlink />
-                        </span>
-                        Disconnect
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <button
-                  className="button-secondary d-flex gap-1 align-items-center am-nav-item py-1 px-3"
-                  // onClick={walletManager.connect}
-                  onClick={() => setConnectFlow(1)}
-                >
-                  <span className="text-primary">
-                    <BsWallet2 />
-                  </span>
-                  Connect
-                </button>
-              )}
-            </div>
-          </nav>
-        </div>
-      </header>
-      <ModalContainer active={ConnectFlow && true}>
-        <ConnectModal
-          isConnected={setConnected}
-          step={ConnectFlow}
-          setStep={setConnectFlow}
-          byWallet={ConnectOption}
-          setByWallet={setConnectOption}
-          close={setConnectFlow}
-        />
-      </ModalContainer>
-    </>
+          <div className="d-flex gap-3 flex-row align-items-center">
+            {navigationMenusRightJSX}
+            {connectWalletButton}
+          </div>
+        </nav>
+      </div>
+    </header>
   );
 }

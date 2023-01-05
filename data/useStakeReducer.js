@@ -7,7 +7,7 @@ import {
   useAvailableBalance,
   fromDenom,
   toDenom,
-} from "../data/swrStore";
+} from "../data";
 import { formConstants } from "./constants";
 
 const UseStakeReducer = () => {

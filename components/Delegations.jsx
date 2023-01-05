@@ -4,6 +4,7 @@ import {
   placeholderTotalDelegations,
   placeholderMntlUsdValue,
   defaultChainSymbol,
+  defaultChainName,
 } from "../config";
 import { sendRedelegation, sendUndelegation } from "../data";
 import {
@@ -11,8 +12,8 @@ import {
   useMntlUsd,
   fromDenom,
   useAllValidators,
-} from "../data/swrStore";
-import { useWallet } from "@cosmos-kit/react";
+} from "../data";
+import { useChain } from "@cosmos-kit/react";
 
 import { MdOutlineClose } from "react-icons/md";
 import { BsChevronLeft } from "react-icons/bs";
@@ -24,7 +25,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
     useAllValidators();
 
   const [activeValidators, setActiveValidators] = useState(true);
-  const walletManager = useWallet();
+  const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status } = walletManager;
   const {
     delegatedValidators,
