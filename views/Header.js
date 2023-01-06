@@ -93,7 +93,7 @@ export default function Header() {
     e.preventDefault();
 
     if (status === "Connected") {
-      setShowModal(!showModal);
+      setShowModal(false);
     } else {
       openView();
     }
@@ -162,92 +162,92 @@ export default function Header() {
     // >
     //   <div className="modal-dialog">
     //     <div className="modal-content">
+    // <div
+    //   className="
+    //   dropdown-menu
+    // pt-3"
+    // >
     <div
-      className="position-absolute top-100 right-0
-    pt-3"
+      className="nav-bg p-3 rounded-4 text-white border-color-white-400"
+      style={{ border: "2px solid" }}
     >
-      {/* dropdown-menu */}
-      <div
-        className="nav-bg p-3 rounded-4 text-white border-color-white-400"
-        style={{ border: "2px solid" }}
-      >
-        <div className="d-flex gap-3">
-          <div className="d-flex flex-column gap-0">
-            <h4 className="body2">
-              <Suspense fallback="Loading...">{displayUserName}</Suspense>
-            </h4>
-            <p className="caption">
-              <Suspense fallback="Loading...">
-                {displayBalance} {defaultChainSymbol}
-              </Suspense>
-            </p>
-          </div>
-        </div>
-        <hr className="my-3" />
-        <div className="d-flex flex-column">
-          <div
-            className="position-relative mx-auto"
-            style={{
-              width: "min(140px, 100%)",
-              aspectRatio: "1/1",
-            }}
-          >
+      <div className="d-flex gap-3">
+        <div className="d-flex flex-column gap-0">
+          <h4 className="body2">
+            <Suspense fallback="Loading...">{displayUserName}</Suspense>
+          </h4>
+          <p className="caption">
             <Suspense fallback="Loading...">
-              <QRCodeSVG width="100%" height="100%" value={displayAddress} />
+              {displayBalance} {defaultChainSymbol}
             </Suspense>
-          </div>
-          <button
-            className="d-flex align-items-center justify-content-center gap-2 text-center caption2 pt-3"
-            onClick={() => navigator.clipboard.writeText(displayAddress)}
-          >
-            <Suspense fallback="Loading...">
-              {shortenAddress(displayAddress)}
-            </Suspense>
-            <span className="text-primary">
-              <MdOutlineContentCopy />
-            </span>
-          </button>
+          </p>
         </div>
-        <hr className="my-3" />
-        <div className="d-flex align-items-center justify-content-between gap-2 text-center caption">
-          <div className="d-flex align-items-center gap-1">
-            <div
-              className="position-relative"
-              style={{ width: "25px", aspectRatio: "1/1" }}
-            >
-              <Image
-                layout="fill"
-                src={
-                  ConnectOptionObject[wallet?.prettyName.toLocaleLowerCase()]
-                    ?.icon
-                }
-                alt={
-                  ConnectOptionObject[wallet?.prettyName.toLocaleLowerCase()]
-                    ?.name
-                }
-              />
-            </div>
-            {ConnectOptionObject[wallet?.prettyName.toLocaleLowerCase()]?.name}
-          </div>
-          <div className="d-flex align-items-center gap-1">
-            <span className="text-success">
-              <BsCheckCircle />
-            </span>
-            Connected
-          </div>
-        </div>
-        <hr className="my-3" />
-        <button
-          className="d-flex align-items-center justify-content-center gap-2 text-center body2"
-          onClick={onClickDisconnect}
+      </div>
+      <hr className="my-3" />
+      <div className="d-flex flex-column">
+        <div
+          className="position-relative mx-auto"
+          style={{
+            width: "min(140px, 100%)",
+            aspectRatio: "1/1",
+          }}
         >
+          <Suspense fallback="Loading...">
+            <QRCodeSVG width="100%" height="100%" value={displayAddress} />
+          </Suspense>
+        </div>
+        <button
+          className="d-flex align-items-center justify-content-center gap-2 text-center caption2 pt-3"
+          onClick={() => navigator.clipboard.writeText(displayAddress)}
+        >
+          <Suspense fallback="Loading...">
+            {shortenAddress(displayAddress)}
+          </Suspense>
           <span className="text-primary">
-            <TbUnlink />
+            <MdOutlineContentCopy />
           </span>
-          Disconnect
         </button>
       </div>
+      <hr className="my-3" />
+      <div className="d-flex align-items-center justify-content-between gap-2 text-center caption">
+        <div className="d-flex align-items-center gap-1">
+          <div
+            className="position-relative"
+            style={{ width: "25px", aspectRatio: "1/1" }}
+          >
+            <Image
+              layout="fill"
+              src={
+                ConnectOptionObject[wallet?.prettyName.toLocaleLowerCase()]
+                  ?.icon
+              }
+              alt={
+                ConnectOptionObject[wallet?.prettyName.toLocaleLowerCase()]
+                  ?.name
+              }
+            />
+          </div>
+          {ConnectOptionObject[wallet?.prettyName.toLocaleLowerCase()]?.name}
+        </div>
+        <div className="d-flex align-items-center gap-1">
+          <span className="text-success">
+            <BsCheckCircle />
+          </span>
+          Connected
+        </div>
+      </div>
+      <hr className="my-3" />
+      <button
+        className="d-flex align-items-center justify-content-center gap-2 text-center body2"
+        onClick={onClickDisconnect}
+      >
+        <span className="text-primary">
+          <TbUnlink />
+        </span>
+        Disconnect
+      </button>
     </div>
+    // </div>
     //     </div>
     //   </div>
     // </div>
@@ -275,7 +275,7 @@ export default function Header() {
           // dataBsToggle="modal"
           // dataBsTarget="#connectedModal"
         >
-          {showModal && connectedModalJSX}
+          {connectedModalJSX}
         </Connected>
       }
       rejected={<Rejected buttonText="Reconnect" onClick={onClickConnect} />}
