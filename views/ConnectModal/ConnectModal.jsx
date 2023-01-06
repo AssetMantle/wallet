@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React, { useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
 import ModalContainer from "../../components/ModalContainer";
@@ -27,6 +28,33 @@ const ConnectModal = ({ isOpen, setOpen, walletRepo, theme }) => {
     setGeneratedAddress(e.target.value);
   }
 
+  const ConnectOptionObject = {
+    cosmostation: {
+      icon: "/WalletIcons/cosmostation.png",
+      name: "Cosmostation",
+    },
+    cosmostationmobile: {
+      icon: "/WalletIcons/cosmostation.png",
+      name: "Cosmostation",
+    },
+    keplr: {
+      icon: "/WalletIcons/keplr.png",
+      name: "Keplr",
+    },
+    keystore: {
+      icon: "/WalletIcons/keystore.png",
+      name: "Keystore",
+    },
+    leap: {
+      icon: "/WalletIcons/leap.png",
+      name: "Leap",
+    },
+    ledger: {
+      icon: "/WalletIcons/ledger.png",
+      name: "Ledger",
+    },
+  };
+
   return (
     // isOpen && (
     <>
@@ -52,14 +80,31 @@ const ConnectModal = ({ isOpen, setOpen, walletRepo, theme }) => {
             <div className="d-flex gap-2 flex-wrap">
               {walletRepo?.wallets.map(({ _walletInfo, connect }, index) => (
                 <button
-                  className="d-flex align-items-center gap-1 button-secondary py-2 px-4 rounded-2"
+                  className="d-flex align-items-center gap-2 button-secondary py-2 px-3 rounded-2"
                   key={index}
                   onClick={async () => {
                     await connect();
                     setOpen(false);
                   }}
                 >
+                  <div
+                    className="position-relative"
+                    style={{ width: "25px", aspectRatio: "1/1" }}
+                  >
+                    <Image
+                      layout="fill"
+                      src={
+                        ConnectOptionObject[
+                          _walletInfo?.prettyName.toLowerCase().replace(" ", "")
+                        ]?.icon
+                      }
+                      alt={_walletInfo?.prettyName}
+                    />
+                  </div>
                   {_walletInfo?.prettyName}
+                  {console.log(
+                    ConnectOptionObject[_walletInfo?.prettyName]?.icon
+                  )}
                 </button>
               ))}
             </div>
@@ -67,25 +112,39 @@ const ConnectModal = ({ isOpen, setOpen, walletRepo, theme }) => {
             <h2 className="caption text-white">Connect with Ledger</h2>
             <div className="d-flex">
               <button
-                className="d-flex align-items-center gap-1 button-secondary py-2 px-4 rounded-2"
+                className="d-flex align-items-center gap-2 button-secondary py-2 px-3 rounded-2"
                 onClick={handleLedger}
               >
-                <span className="btn-label">
-                  <i className="bi bi-hdd-fill"></i>
-                </span>
-                Disconnect
+                <div
+                  className="position-relative"
+                  style={{ width: "25px", aspectRatio: "1/1" }}
+                >
+                  <Image
+                    layout="fill"
+                    src={ConnectOptionObject?.ledger?.icon}
+                    alt={ConnectOptionObject?.ledger?.name}
+                  />
+                </div>
+                Ledger
               </button>
             </div>
             <hr className="my-2" />
             <h2 className="caption text-white">Connect with Keystore</h2>
             <div className="d-flex">
               <button
-                className="d-flex align-items-center gap-1 button-secondary py-2 px-4 rounded-2"
+                className="d-flex align-items-center gap-2 button-secondary py-2 px-3 rounded-2"
                 onClick={handleKeystore}
               >
-                <span className="btn-label">
-                  <i className="bi bi-hdd-fill"></i>
-                </span>
+                <div
+                  className="position-relative"
+                  style={{ width: "25px", aspectRatio: "1/1" }}
+                >
+                  <Image
+                    layout="fill"
+                    src={ConnectOptionObject?.keystore?.icon}
+                    alt={ConnectOptionObject?.keystore?.name}
+                  />
+                </div>
                 Keystore
               </button>
             </div>
