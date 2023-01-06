@@ -80,14 +80,15 @@ export const ConnectWalletButton = ({
         {buttonText ? buttonText : "Connect Wallet"}
       </button>
     ) : (
-      <div className="position-relative">
+      <div className="nav-item dropdown">
         <button
           type="button"
-          className="dropdown-toggle button-secondary d-flex gap-1 align-items-center am-nav-item py-1 px-3 text-lowercase"
-          disabled={isDisabled}
+          className="button-secondary d-flex gap-2 align-items-center nav-link dropdown-toggle am-nav-item py-1 px-3 text-lowercase"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+          // disabled={isDisabled}
           onClick={onClickConnectBtn}
-          // data-bs-toggle="dropdown"
-          // aria-expanded="false"
+          id="navbarDropdown"
         >
           {icon && (
             <div
@@ -105,7 +106,7 @@ export const ConnectWalletButton = ({
           {buttonIcon && <i className={`bi ${buttonIcon}`}></i>}
           {buttonText ? buttonText : "Connect Wallet"}
         </button>
-        {children}
+        <div className="dropdown-menu">{children}</div>
       </div>
     )
   ) : (
