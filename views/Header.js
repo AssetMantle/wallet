@@ -275,7 +275,7 @@ export default function Header() {
           // dataBsToggle="modal"
           // dataBsTarget="#connectedModal"
         >
-          {connectedModalJSX}
+          {showModal && connectedModalJSX}
         </Connected>
       }
       rejected={<Rejected buttonText="Reconnect" onClick={onClickConnect} />}
