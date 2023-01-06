@@ -83,7 +83,7 @@ export const ConnectWalletButton = ({
       <div className="position-relative">
         <button
           type="button"
-          className="dropdown-toggle button-secondary d-flex gap-1 align-items-center am-nav-item py-1 px-3"
+          className="dropdown-toggle button-secondary d-flex gap-1 align-items-center am-nav-item py-1 px-3 text-lowercase"
           disabled={isDisabled}
           onClick={onClickConnectBtn}
           // data-bs-toggle="dropdown"
