@@ -1,6 +1,5 @@
 import React from "react";
 import { ResponsiveSunburst } from "@nivo/sunburst";
-import { useVotes } from "../data/swrStore";
 
 const chartData = {
   name: "validator",
@@ -42,8 +41,6 @@ const chartData = {
 };
 
 const DonutChart = ({ proposalID }) => {
-  const { votesInfo, isLoadingVote, errorVote } = useVotes(proposalID);
-
   return (
     <div className="col-12 pt-3 pt-lg-0 col-lg-4" style={{ height: "400px" }}>
       <ResponsiveSunburst

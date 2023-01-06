@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   chainSymbol,
+  defaultChainName,
   placeholderMntlUsdValue,
   placeholderRewards,
 } from "../config";
@@ -11,8 +12,8 @@ import {
   useMntlUsd,
   useDelegatedValidators,
   useAllValidators,
-} from "../data/swrStore";
-import { useWallet } from "@cosmos-kit/react";
+} from "../data";
+import { useChain } from "@cosmos-kit/react";
 
 import { MdOutlineClose } from "react-icons/md";
 import { BsChevronLeft } from "react-icons/bs";
@@ -20,7 +21,7 @@ import { BsChevronLeft } from "react-icons/bs";
 const denomDisplay = chainSymbol;
 
 const Rewards = ({ setShowClaimError, stakeState }) => {
-  const walletManager = useWallet();
+  const walletManager = useChain(defaultChainName);
   const {
     delegatedValidators,
     totalDelegatedAmount,

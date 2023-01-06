@@ -1,18 +1,12 @@
+import { useChain } from "@cosmos-kit/react";
 import React, { useState } from "react";
-import { sendVote } from "../data/txApi";
-import { useWallet } from "@cosmos-kit/react";
-import {
-  BsArrowUpRight,
-  BsFillCheckCircleFill,
-  BsDashCircleFill,
-  BsFillXCircleFill,
-  BsChevronLeft,
-  BsChevronDown,
-} from "react-icons/bs";
+import { BsChevronDown, BsChevronLeft } from "react-icons/bs";
 import { MdOutlineClose } from "react-icons/md";
+import { defaultChainName } from "../config";
+import { sendVote } from "../data/txApi";
 
 const VoteInfo = ({ voteState, voteDispatch }) => {
-  const walletManager = useWallet();
+  const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status } = walletManager;
   const handleVote = async () => {
     const { response, error } = await sendVote(

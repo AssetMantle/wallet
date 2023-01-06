@@ -3,11 +3,12 @@ import Image from "next/image";
 import { BsLink45Deg } from "react-icons/bs";
 import { HiArrowNarrowDown, HiOutlineArrowNarrowUp } from "react-icons/hi";
 import { MdContentCopy } from "react-icons/md";
-import { placeholderAddress } from "../data/BasicData";
-import { useWallet } from "@cosmos-kit/react";
+import { useChain } from "@cosmos-kit/react";
+import { defaultChainName } from "../config";
+import { placeholderAddress } from "../data";
 
 export default function ICFormPolygon() {
-  const walletManager = useWallet();
+  const walletManager = useChain(defaultChainName);
   const { username, address } = walletManager;
 
   const [EthConnectionStat, setEthConnectionStat] = useState(false);

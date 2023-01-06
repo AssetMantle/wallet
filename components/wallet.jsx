@@ -7,8 +7,7 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useWallet } from "@cosmos-kit/react";
-import { useEffect } from "react";
+import { useChain } from "@cosmos-kit/react";
 import { FiAlertTriangle } from "react-icons/fi";
 import {
   Astronaut,
@@ -29,7 +28,7 @@ import {
 import { defaultChainName } from "../config";
 
 export const WalletSection = () => {
-  const walletManager = useWallet();
+  const walletManager = useChain(defaultChainName);
   const {
     connect,
     openView,
@@ -40,19 +39,14 @@ export const WalletSection = () => {
     currentChainName,
     currentWallet,
     currentChainRecord,
-    getChainLogo,
-    setCurrentChain,
+    logoUrl,
   } = walletManager;
-
-  useEffect(() => {
-    setCurrentChain(defaultChainName);
-  }, [setCurrentChain]);
 
   const chain = {
     chainName: currentChainName,
     label: currentChainRecord?.chain.pretty_name,
     value: currentChainName,
-    icon: getChainLogo(currentChainName),
+    icon: logoUrl,
   };
 
   // Events

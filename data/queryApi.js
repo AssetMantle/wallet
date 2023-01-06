@@ -1,4 +1,5 @@
-import { useWallet } from "@cosmos-kit/react";
+import { useChain } from "@cosmos-kit/react";
+import BigNumber from "bignumber.js";
 import { assets, chains } from "chain-registry";
 import useSwr from "swr";
 import {
@@ -10,7 +11,6 @@ import {
   placeholderMntlUsdValue,
 } from "../config";
 import { cosmos } from "../modules";
-import BigNumber from "bignumber.js";
 
 // get the rest endpoint from the chain registry inside the Cosmos Kit
 const restEndpoint = chains.find(
@@ -97,12 +97,12 @@ export const isInvalidAddress = (address, chain = defaultChainName) => {
   return false;
 };
 
-// custom hook to implement multiple revalidation points to useWallet of cosmosKit
-export const useWalletSwr = () => {
-  // get the connected wallet parameters from useWallet hook
-  const walletManager = useWallet();
+// custom hook to implement multiple revalidation points to useChain of cosmosKit
+export const useChainSwr = () => {
+  // get the connected wallet parameters from useChain hook
+  const walletManager = useChain(defaultChainName);
 
-  // fetcher function for useSwr of useWalletSwr()
+  // fetcher function for useSwr of useChainSwr()
   const fetchWalletManager = async (url) => {
     // console.log("inside fetchWalletManager, url: ", url);
 
@@ -165,8 +165,8 @@ export const useExample = () => {
 
 //Get total value being unbonded
 export const useTotalUnbonding = () => {
-  // get the connected wallet parameters from useWallet hook
-  const walletManager = useWallet();
+  // get the connected wallet parameters from useChain hook
+  const walletManager = useChain(defaultChainName);
   const { walletStatus, address, currentWalletInfo } = walletManager;
 
   const fetchTotalUnbonding = async (url, address) => {
@@ -229,8 +229,8 @@ export const useTotalUnbonding = () => {
 
 //Get total claimable rewards
 export const useTotalRewards = () => {
-  // get the connected wallet parameters from useWallet hook
-  const walletManager = useWallet();
+  // get the connected wallet parameters from useChain hook
+  const walletManager = useChain(defaultChainName);
   const { walletStatus, address, currentWalletInfo } = walletManager;
   const fetchTotalRewards = async (url) => {
     let totalRewards;
@@ -278,8 +278,8 @@ export const useTotalRewards = () => {
 
 //Get total amount delegated and everyone delegated to
 export const useDelegatedValidators = () => {
-  // get the connected wallet parameters from useWallet hook
-  const walletManager = useWallet();
+  // get the connected wallet parameters from useChain hook
+  const walletManager = useChain(defaultChainName);
   const { walletStatus, address, currentWalletInfo } = walletManager;
 
   // let address = null;
@@ -352,8 +352,8 @@ export const useDelegatedValidators = () => {
 
 //Get all current delegations of a particular address
 export const useTotalDelegations = () => {
-  // get the connected wallet parameters from useWallet hook
-  const walletManager = useWallet();
+  // get the connected wallet parameters from useChain hook
+  const walletManager = useChain(defaultChainName);
   const { walletStatus, address, currentWalletInfo } = walletManager;
 
   // let address = null;
@@ -440,9 +440,9 @@ export const useMntlUsd = () => {
 };
 
 export const useAvailableBalance = () => {
-  // get the connected wallet parameters from useWallet hook
-  const walletManager = useWallet();
-  const { walletStatus, address, currentWalletInfo } = walletManager;
+  // get the connected wallet parameters from useChain hook
+  const walletManager = useChain(defaultChainName);
+  const { address } = walletManager;
 
   // fetcher function for useSwr of useAvailableBalance()
   const fetchAvailableBalance = async (url, address) => {
@@ -488,8 +488,8 @@ export const useAvailableBalance = () => {
 
 //Get a list of all validators that can be delegated
 export const useAllValidators = () => {
-  // get the connected wallet parameters from useWallet hook
-  const walletManager = useWallet();
+  // get the connected wallet parameters from useChain hook
+  const walletManager = useChain(defaultChainName);
   const { walletStatus, address, currentWalletInfo } = walletManager;
   // const multifetch = (urlsArray) => {
   //   const fetchEach = (url) => fetch(url).then((response) => response.json());
@@ -551,32 +551,34 @@ export const useAllValidators = () => {
   };
 };
 
-export const useVotes = (proposalId) => {
-  // get the connected wallet parameters from useWallet hook
-  const walletManager = useWallet();
+export const useVote = (proposalId) => {
+  // get the connected wallet parameters from useChain hook
+  const walletManager = useChain(defaultChainName);
   const { walletStatus, address, currentWalletInfo } = walletManager;
   // fetcher function for useSwr of useAvailableBalance()
-  const fetchVotes = async (url) => {
-    let votesInfo;
+  const fetchVote = async (url) => {
+    let voteInfo;
 
     // use a try catch block for creating rich Error object
     try {
       // get the data from cosmos queryClient
-      const { votes } = await client.cosmos.gov.v1beta1.votes({
+      const { vote } = await client.cosmos.gov.v1beta1.vote({
         proposalId,
+        address,
       });
-      votesInfo = votes;
+      voteInfo = vote;
+      console.log(voteInfo);
     } catch (error) {
       console.error(`swr fetcher error: ${url}`);
       throw error;
     }
     // return the data
-    return votesInfo;
+    return voteInfo;
   };
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: voteObject, error } = useSwr(
-    proposalId ? ["votes", proposalId] : null,
-    fetchVotes,
+    proposalId ? ["vote", proposalId] : null,
+    fetchVote,
     {
       fallbackData: [
         {
@@ -593,15 +595,15 @@ export const useVotes = (proposalId) => {
     }
   );
   return {
-    votesInfo: voteObject,
+    voteInfo: voteObject,
     isLoadingVote: !error && !voteObject,
     errorVote: error,
   };
 };
 
 export const useAllProposals = () => {
-  // get the connected wallet parameters from useWallet hook
-  const walletManager = useWallet();
+  // get the connected wallet parameters from useChain hook
+  const walletManager = useChain(defaultChainName);
   const { walletStatus, address, currentWalletInfo } = walletManager;
 
   // fetcher function for useSwr of useAvailableBalance()

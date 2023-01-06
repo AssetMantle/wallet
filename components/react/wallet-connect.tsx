@@ -1,11 +1,11 @@
-import { Button, Icon, Stack, Text, useColorModeValue } from "@chakra-ui/react";
+import { Icon, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import { WalletStatus } from "@cosmos-kit/core";
+import Image from "next/image";
 import { MouseEventHandler, ReactNode } from "react";
 import { FiAlertTriangle } from "react-icons/fi";
-import { IoWallet } from "react-icons/io5";
 import { ConnectWalletType } from "../types";
 
-export const ConnectWalletButton = ({
+/* export const ConnectWalletButton = ({
   buttonText,
   isLoading,
   isDisabled,
@@ -39,26 +39,74 @@ export const ConnectWalletButton = ({
       {buttonText ? buttonText : "Connect Wallet"}
     </Button>
   );
-};
+}; */
 
-/* export const ConnectWalletButton = ({
+export const ConnectWalletButton = ({
   buttonText,
+  buttonIcon,
   isLoading,
   isDisabled,
-  icon,
   onClickConnectBtn,
+  icon,
+  dataBsToggle,
+  dataBsTarget,
 }: ConnectWalletType) => {
   return !isLoading ? (
-    <button
-      className={`btn button-primary px-3`}
-      disabled={isDisabled}
-      onClick={onClickConnectBtn}
-    >
-      {icon ? icon : <i className="bi bi-person-fill"></i>}
-      {buttonText ? buttonText : "Connect Wallet"}{" "}
-    </button>
+    dataBsToggle || dataBsTarget ? (
+      <button
+        type="button"
+        className="button-secondary d-flex gap-1 align-items-center am-nav-item py-1 px-3"
+        data-bs-toggle={dataBsToggle}
+        data-bs-target={dataBsTarget}
+        disabled={isDisabled}
+        onClick={onClickConnectBtn}
+      >
+        {icon && (
+          <div
+            className="position-relative rounded-circle"
+            style={{ width: "23px", aspectRatio: "1/1" }}
+          >
+            <Image
+              layout="fill"
+              className="rounded-circle"
+              src={icon}
+              alt="#"
+            />
+          </div>
+        )}
+        {buttonIcon && <i className={`bi ${buttonIcon}`}></i>}
+        {buttonText ? buttonText : "Connect Wallet"}
+      </button>
+    ) : (
+      <button
+        type="button"
+        className="button-secondary d-flex gap-1 align-items-center am-nav-item py-1 px-3"
+        disabled={isDisabled}
+        onClick={onClickConnectBtn}
+      >
+        {icon && (
+          <div
+            className="position-relative rounded-circle"
+            style={{ width: "23px", aspectRatio: "1/1" }}
+          >
+            <Image
+              layout="fill"
+              className="rounded-circle"
+              src={icon}
+              alt="#"
+            />
+          </div>
+        )}
+        {buttonIcon && <i className={`bi ${buttonIcon}`}></i>}
+        {buttonText ? buttonText : "Connect Wallet"}
+      </button>
+    )
   ) : (
-    <button className="btn btn-primary" type="button" disabled>
+    <button
+      type="button"
+      className="button-secondary d-flex gap-1 align-items-center am-nav-item py-1 px-3"
+      disabled
+    >
       <span
         className="spinner-grow spinner-grow-sm"
         role="status"
@@ -67,29 +115,50 @@ export const ConnectWalletButton = ({
       Loading...
     </button>
   );
-}; */
+};
 
 export const Disconnected = ({
   buttonText,
+  buttonIcon,
   onClick,
 }: {
   buttonText: string;
+  buttonIcon: string;
   onClick: MouseEventHandler<HTMLButtonElement>;
 }) => {
   return (
-    <ConnectWalletButton buttonText={buttonText} onClickConnectBtn={onClick} />
+    <ConnectWalletButton
+      buttonText={buttonText}
+      buttonIcon={buttonIcon}
+      onClickConnectBtn={onClick}
+    />
   );
 };
 
 export const Connected = ({
   buttonText,
+  buttonIcon,
+  icon,
+  dataBsToggle,
+  dataBsTarget,
   onClick,
 }: {
   buttonText: string;
+  buttonIcon: string;
+  icon: string;
+  dataBsToggle: string;
+  dataBsTarget: string;
   onClick: MouseEventHandler<HTMLButtonElement>;
 }) => {
   return (
-    <ConnectWalletButton buttonText={buttonText} onClickConnectBtn={onClick} />
+    <ConnectWalletButton
+      buttonText={buttonText}
+      buttonIcon={buttonIcon}
+      icon={icon}
+      dataBsToggle={dataBsToggle}
+      dataBsTarget={dataBsTarget}
+      onClickConnectBtn={onClick}
+    />
   );
 };
 

@@ -42,5 +42,5 @@ export const AvailableBalanceUsd = () => {
           .toFixed(6)
           .toString();
 
-  return <p className="caption2 text-gray">${balanceInUSDDisplay}</p>;
+  return <p className="caption2 text-gray">${balanceInUSDDisplay}&nbsp;$USD</p>;
 };

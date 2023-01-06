@@ -6,21 +6,13 @@ import { BiBookOpen } from "react-icons/bi";
 import { BsCurrencyDollar } from "react-icons/bs";
 import { CgListTree } from "react-icons/cg";
 
-export const placeholderAddress =
-  "000000000000000000000000000000000000000000000";
-
-export const BasicData = {
+export const NavBarData = {
   logo: "/logo.svg",
   title: "Mantle Wallet",
   navs: [
     {
-      title: "Connect",
-      href: "/",
-      variant: "am-link",
-    },
-    {
       title: "Transact",
-      href: "/transact",
+      href: "/",
       variant: "am-link",
       icon: <IoSwapHorizontal />,
     },

@@ -1,15 +1,18 @@
-import React, { Suspense, useReducer, useState } from "react";
+import { useChain } from "@cosmos-kit/react";
+import React, { Suspense } from "react";
 import Delegations from "../components/Delegations";
 import Rewards from "../components/Rewards";
 import Unbonded from "../components/Unbonded";
-import { formConstants, sendDelegation, toDenom } from "../data";
-import { useWallet } from "@cosmos-kit/react";
-import { fromDenom, defaultChainSymbol } from "../data";
-import { useAvailableBalance } from "../data";
-import { defaultChainGasFee } from "../config";
+import { defaultChainName } from "../config";
+import {
+  defaultChainSymbol,
+  fromDenom,
+  sendDelegation,
+  useAvailableBalance,
+} from "../data";
 
-import { MdOutlineClose } from "react-icons/md";
 import { BsChevronLeft } from "react-icons/bs";
+import { MdOutlineClose } from "react-icons/md";
 
 export default function StakedToken({
   totalTokens,
@@ -19,7 +22,7 @@ export default function StakedToken({
   stakeDispatch,
 }) {
   const { availableBalance } = useAvailableBalance();
-  const walletManager = useWallet();
+  const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status } = walletManager;
 
   const handleStake = async (validator) => {

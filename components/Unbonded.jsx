@@ -9,7 +9,7 @@ import {
   useTotalUnbonding,
   useMntlUsd,
   useDelegatedValidators,
-} from "../data/swrStore";
+} from "../data";
 
 import { MdOutlineClose } from "react-icons/md";
 import { BsChevronLeft } from "react-icons/bs";
