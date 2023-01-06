@@ -1,5 +1,6 @@
 import { Icon, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import { WalletStatus } from "@cosmos-kit/core";
+import { HtmlProps } from "next/dist/shared/lib/html-context";
 import Image from "next/image";
 import { MouseEventHandler, ReactNode } from "react";
 import { FiAlertTriangle } from "react-icons/fi";
@@ -50,6 +51,7 @@ export const ConnectWalletButton = ({
   icon,
   dataBsToggle,
   dataBsTarget,
+  children,
 }: ConnectWalletType) => {
   return !isLoading ? (
     dataBsToggle || dataBsTarget ? (
@@ -78,28 +80,33 @@ export const ConnectWalletButton = ({
         {buttonText ? buttonText : "Connect Wallet"}
       </button>
     ) : (
-      <button
-        type="button"
-        className="button-secondary d-flex gap-1 align-items-center am-nav-item py-1 px-3"
-        disabled={isDisabled}
-        onClick={onClickConnectBtn}
-      >
-        {icon && (
-          <div
-            className="position-relative rounded-circle"
-            style={{ width: "23px", aspectRatio: "1/1" }}
-          >
-            <Image
-              layout="fill"
-              className="rounded-circle"
-              src={icon}
-              alt="#"
-            />
-          </div>
-        )}
-        {buttonIcon && <i className={`bi ${buttonIcon}`}></i>}
-        {buttonText ? buttonText : "Connect Wallet"}
-      </button>
+      <div className="position-relative">
+        <button
+          type="button"
+          className="dropdown-toggle button-secondary d-flex gap-1 align-items-center am-nav-item py-1 px-3"
+          disabled={isDisabled}
+          onClick={onClickConnectBtn}
+          // data-bs-toggle="dropdown"
+          // aria-expanded="false"
+        >
+          {icon && (
+            <div
+              className="position-relative rounded-circle"
+              style={{ width: "23px", aspectRatio: "1/1" }}
+            >
+              <Image
+                layout="fill"
+                className="rounded-circle"
+                src={icon}
+                alt="#"
+              />
+            </div>
+          )}
+          {buttonIcon && <i className={`bi ${buttonIcon}`}></i>}
+          {buttonText ? buttonText : "Connect Wallet"}
+        </button>
+        {children}
+      </div>
     )
   ) : (
     <button
@@ -142,6 +149,7 @@ export const Connected = ({
   dataBsToggle,
   dataBsTarget,
   onClick,
+  children,
 }: {
   buttonText: string;
   buttonIcon: string;
@@ -149,6 +157,7 @@ export const Connected = ({
   dataBsToggle: string;
   dataBsTarget: string;
   onClick: MouseEventHandler<HTMLButtonElement>;
+  children: HtmlProps;
 }) => {
   return (
     <ConnectWalletButton
@@ -158,7 +167,9 @@ export const Connected = ({
       dataBsToggle={dataBsToggle}
       dataBsTarget={dataBsTarget}
       onClickConnectBtn={onClick}
-    />
+    >
+      {children}
+    </ConnectWalletButton>
   );
 };
 
