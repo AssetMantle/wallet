@@ -16,6 +16,7 @@ import {
   Rejected,
   WalletConnectComponent,
 } from "../components";
+import ModalContainer from "../components/ModalContainer";
 import {
   defaultChainName,
   defaultChainSymbol,
@@ -92,13 +93,13 @@ export default function Header() {
   const handleOnClick = (e) => {
     e.preventDefault();
 
-    /* if (status === "Connected") {
+    if (status === "Connected") {
       setShowModal(true);
     } else {
       openView();
-    } */
+    }
 
-    openView();
+    // openView();
   };
 
   console.log(
@@ -125,8 +126,8 @@ export default function Header() {
             ConnectOptionObject?.[wallet?.prettyName.toLocaleLowerCase()]?.icon
           }
           onClick={handleOnClick}
-          dataBsToggle="modal"
-          dataBsTarget="#connectedModal"
+          // dataBsToggle="modal"
+          // dataBsTarget="#connectedModal"
         />
       }
       rejected={<Rejected buttonText="Reconnect" onClick={onClickConnect} />}
@@ -303,6 +304,7 @@ export default function Header() {
           <div className="d-flex gap-3 flex-row align-items-center">
             {navigationMenusRightJSX}
             {connectWalletButton}
+            {showModal && connectedModalJSX}
           </div>
         </nav>
       </div>
