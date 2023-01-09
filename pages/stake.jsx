@@ -159,8 +159,11 @@ export default function Stake() {
                       <th scope="col" style={{ whiteSpace: "nowrap" }}>
                         Rank
                       </th>
-                      <th scope="col" style={{ whiteSpace: "nowrap" }}></th>
-                      <th scope="col" style={{ whiteSpace: "nowrap" }}>
+                      <th
+                        colSpan="2"
+                        scope="col"
+                        style={{ whiteSpace: "nowrap" }}
+                      >
                         Validator Name
                       </th>
                       <th scope="col" style={{ whiteSpace: "nowrap" }}>
