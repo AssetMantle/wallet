@@ -63,7 +63,7 @@ export default function Stake() {
       <section className="row h-100">
         <div className="col-12 col-lg-8 h-100">
           <div
-            className="bg-gray-800 p-3 rounded-5 d-flex flex-column gap-2"
+            className="bg-gray-800 p-3 rounded-4 d-flex flex-column gap-2"
             style={{ height: "90%" }}
           >
             <div className="d-flex align-items-center justify-content-between w-100">
@@ -219,7 +219,11 @@ export default function Stake() {
         </ScrollableSectionContainer>
       </section>
       <div className="modal " tabIndex="-1" role="dialog" id="manifestModal">
-        <div className="modal-dialog modal-dialog-centered" role="document">
+        <div
+          className="modal-dialog modal-dialog-centered"
+          role="document"
+          style={{ maxWidth: "650px" }}
+        >
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title body2 text-primary d-flex align-items-center gap-2">
@@ -248,22 +252,22 @@ export default function Stake() {
                 </span>
               </button>
             </div>
-            <div className="modal-body p-4  d-flex flex-column">
-              <p className="caption mb-2">Transaction Details:</p>
+            <div className="modal-body p-4 pt-2 pb-3 d-flex flex-column">
+              <p className="caption mb-1">Transaction Details:</p>
               <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-1">
-                <p className="caption mt-3">From:</p>
+                <p className="caption2">From:</p>
                 <p className="caption2 text-gray">
                   mantle10x0k7tfhd4hm4hgasfuyg689khb34w4a6kbd6v2v
                 </p>
-                <p className="caption mt-3">To:</p>
+                <p className="caption2 mt-2">To:</p>
                 <p className="caption2 text-gray">
                   mantle10x0k7tfhd4hm4hgasfuyg689khb34w4a6kbd6v2v
                 </p>
-                <p className="caption mt-3">Amount:</p>
+                <p className="caption2 mt-2">Amount:</p>
                 <p className="caption2 text-gray">12345 $MNTL</p>
-                <p className="caption mt-3">Transaction Type:</p>
+                <p className="caption2 mt-2">Transaction Type:</p>
                 <p className="caption2 text-gray">Send</p>
-                <p className="caption mt-3">Transaction Wallet Type:</p>
+                <p className="caption2 mt-2">Transaction Wallet Type:</p>
                 <p className="caption2 text-gray">Keplr</p>
               </div>
               <div className="d-flex my-2">
@@ -273,7 +277,7 @@ export default function Stake() {
                   in Keplr.
                 </p>
               </div>
-              <h6 className="body2 my-3">Gas Fees:</h6>
+              <h6 className="caption my-2">Gas Fees:</h6>
               <div className="d-flex align-items-center justify-content-center my-2">
                 {React.Children.toArray(
                   GasOptions.map((el) => (
@@ -291,13 +295,16 @@ export default function Stake() {
                 )}
               </div>
               <div className="my-2 d-flex flex-column gap-1">
-                <label htmlFor="KeystorePassword" className="text-gray">
+                <label
+                  htmlFor="KeystorePassword"
+                  className="caption2 text-gray"
+                >
                   KeyStore Password
                 </label>
                 <input
                   type="password"
                   name="KeystorePassword"
-                  className="am-input border-color-white px-2 py-1 rounded-2 bg-transparent"
+                  className="am-input border-color-white px-3 py-1 rounded-3 bg-transparent"
                   placeholder="Enter Password"
                   value={ManifestKeystorePassword}
                   onChange={(e) => setManifestKeystorePassword(e.target.value)}
@@ -305,7 +312,7 @@ export default function Stake() {
               </div>
               <div className="my-2 d-flex flex-column gap-1">
                 <button
-                  className="am-link caption d-flex align-items-center justify-content-start gap-1"
+                  className="am-link caption2 d-flex align-items-center justify-content-start gap-1"
                   onClick={() => setManifestShowAdvanced(!ManifestShowAdvanced)}
                 >
                   Advanced Details
@@ -322,14 +329,14 @@ export default function Stake() {
                   </span>
                 </button>
                 {ManifestShowAdvanced && (
-                  <div className="my-2 d-flex flex-column gap-1">
+                  <div className="my-2 caption2 d-flex flex-column gap-1">
                     <label htmlFor="customGas" className="text-gray">
                       Gas
                     </label>
                     <input
                       type="number"
                       name="customGas"
-                      className="am-input border-color-white px-2 py-1 rounded-2 bg-transparent"
+                      className="am-input border-color-white px-3 py-1 rounded-3 bg-transparent"
                       placeholder="Enter Gas Amount"
                       value={ManifestCustomGas}
                       onChange={(e) => setManifestCustomGas(e.target.value)}
