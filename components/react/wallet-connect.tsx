@@ -93,7 +93,7 @@ export const ConnectWalletButton = ({
           {icon && (
             <div
               className="position-relative rounded-circle"
-              style={{ width: "23px", aspectRatio: "1/1" }}
+              style={{ width: "20px", aspectRatio: "1/1" }}
             >
               <Image
                 layout="fill"
@@ -104,7 +104,9 @@ export const ConnectWalletButton = ({
             </div>
           )}
           {buttonIcon && <i className={`bi ${buttonIcon}`}></i>}
-          {buttonText ? buttonText : "Connect Wallet"}
+          <span className="caption2 text-primary">
+            {buttonText ? buttonText : "Connect Wallet"}
+          </span>
         </button>
         <div className="dropdown-menu">{children}</div>
       </div>
