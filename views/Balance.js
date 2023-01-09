@@ -9,7 +9,7 @@ export default function Balance() {
   const denomDisplay = defaultChainSymbol;
 
   return (
-    <section className="rounded-5 p-4 bg-gray-800 width-100 d-flex flex-column gap-3">
+    <section className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-3">
       <h4 className="body1 text-primary">Wallet balances</h4>
       <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-1">
         <p className="caption d-flex gap-2 align-items-center text-white-300">
