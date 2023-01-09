@@ -57,7 +57,7 @@ export const ConnectWalletButton = ({
     dataBsToggle || dataBsTarget ? (
       <button
         type="button"
-        className="button-secondary d-flex gap-1 align-items-center am-nav-item py-1 px-3"
+        className="button-secondary d-flex gap-1 align-items-center am-nav-item py-1 px-3 text-primary"
         data-bs-toggle={dataBsToggle}
         data-bs-target={dataBsTarget}
         disabled={isDisabled}
@@ -83,7 +83,7 @@ export const ConnectWalletButton = ({
       <div className="nav-item dropdown">
         <button
           type="button"
-          className="button-secondary d-flex gap-2 align-items-center nav-link dropdown-toggle am-nav-item py-1 px-3 text-lowercase"
+          className="button-secondary d-flex gap-2 align-items-center nav-link dropdown-toggle am-nav-item py-1 px-3 text-lowercase text-primary"
           data-bs-toggle="dropdown"
           aria-expanded="false"
           // disabled={isDisabled}
