@@ -1,5 +1,4 @@
 import React, { Suspense } from "react";
-import { BsInfoCircle } from "react-icons/bs";
 import { MntlUsdPrice } from "../components";
 import { AvailableBalance, AvailableBalanceUsd } from "../components";
 import Tooltip from "../components/Tooltip";
@@ -15,9 +14,9 @@ export default function Balance() {
         <p className="caption d-flex gap-2 align-items-center text-white-300">
           Available Balance
           <Tooltip
-            title={<BsInfoCircle />}
             titlePrimary={true}
             description={"Amount that can be transferred."}
+            style={{ right: "330%" }}
           />
         </p>
         <Suspense fallback={<div>loading...</div>}>
