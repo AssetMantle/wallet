@@ -1,46 +1,78 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ResponsiveSunburst } from "@nivo/sunburst";
 
-const chartData = {
-  name: "validator",
-  color: "hsl(173, 70%, 50%)",
-  children: [
-    {
-      name: "Yes",
-      color: "hsl(11, 70%, 50%)",
-      power: null,
-      children: [
-        {
-          name: "Validator 1",
-          color: "hsl(62, 70%, 50%)",
-          power: 5,
-        },
-        {
-          name: "Validator 2",
-          color: "hsl(35, 70%, 50%)",
-          power: 5,
-        },
-      ],
-    },
-    {
-      name: "No",
-      color: "hsl(11, 70%, 50%)",
-      power: null,
-    },
-    {
-      name: "Abstain",
-      color: "hsl(11, 70%, 50%)",
-      power: null,
-    },
-    {
-      name: "No with Veto",
-      color: "hsl(11, 70%, 50%)",
-      power: null,
-    },
-  ],
-};
+const DonutChart = () => {
+  const [chartData, setChartData] = useState({
+    name: "validator",
+    color: "hsl(173, 70%, 50%)",
+  });
 
-const DonutChart = ({ proposalID }) => {
+  useEffect(() => {
+    fetch(
+      "https://rest.cosmos.directory/cosmoshub/cosmos/gov/v1beta1/proposals/93/votes"
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        const yesVotes = data?.votes?.filter(
+          (item) => item?.option === "VOTE_OPTION_YES"
+        );
+        const noVotes = data?.votes?.filter(
+          (item) => item?.option === "VOTE_OPTION_NO"
+        );
+        const abstainVotes = data?.votes?.filter(
+          (item) => item?.option === "VOTE_OPTION_ABSTAIN"
+        );
+        setChartData({
+          name: "validator",
+          color: "hsl(173, 70%, 50%)",
+          children: [
+            {
+              name: "Yes",
+              color: "hsl(11, 70%, 50%)",
+              power: yesVotes.length,
+              children: yesVotes.map((item) => {
+                return {
+                  name: item?.voter,
+                  color: "hsl(62, 70%, 50%)",
+                  power: 1,
+                };
+              }),
+            },
+            {
+              name: "No",
+              color: "hsl(11, 70%, 50%)",
+              power: noVotes.length,
+              children: noVotes.map((item) => {
+                return {
+                  name: item?.voter,
+                  color: "hsl(62, 70%, 50%)",
+                  power: 1,
+                };
+              }),
+            },
+            {
+              name: "Abstain",
+              color: "hsl(11, 70%, 50%)",
+              power: abstainVotes.length,
+              children: abstainVotes.map((item) => {
+                return {
+                  name: item?.voter,
+                  color: "hsl(62, 70%, 50%)",
+                  power: 1,
+                };
+              }),
+            },
+            // {
+            //   name: "No with Veto",
+            //   color: "hsl(11, 70%, 50%)",
+            //   power: 30,
+            // },
+          ],
+        });
+      });
+  }, []);
+
   return (
     <div className="col-12 pt-3 pt-lg-0 col-lg-4" style={{ height: "400px" }}>
       <ResponsiveSunburst
