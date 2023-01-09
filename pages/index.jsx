@@ -286,10 +286,7 @@ export default function Transact() {
                 htmlFor="recipientAddress"
               >
                 Recipient Address{" "}
-                <Tooltip
-                  title={<AiOutlineInfoCircle />}
-                  description="Recipient’s address starts with mantle; eg: mantle10x0k7t.....hb34w4a6kbd6"
-                />
+                <Tooltip description="Recipient’s address starts with mantle; eg: mantle10x0k7t.....hb34w4a6kbd6" />
               </label>
               <div>
                 <input
@@ -416,8 +413,8 @@ export default function Transact() {
                   >
                     Memo
                     <Tooltip
-                      // title={<AiOutlineInfoCircle />}
                       description="Memo is an optional field & is not the place to insert mnemonic"
+                      style={{ right: "-190%" }}
                     />
                   </label>
                   <input
