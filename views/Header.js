@@ -98,7 +98,7 @@ export default function Header() {
   const navigationMenusRightJSX = NavBarData.rightNav.map((navItem, index) => (
     <Link href={navItem.href} key={index}>
       <a
-        className={`d-flex gap-1 align-items-center h3 text-white ${
+        className={`d-flex gap-1 justify-content-center m-0 align-items-center h3 text-white ${
           router.asPath === navItem.href ? "active" : ""
         }`}
         target={navItem.target ? navItem.target : "_self"}
