@@ -47,7 +47,7 @@ const DelegatedValidators = ({
                   ></input>
                 </td>
                 <td>{index + 1}</td>
-                <td>
+                <td className=" d-flex align-items-center justify-content-center">
                   <div
                     className="d-flex position-relative rounded-circle gap-1"
                     style={{ width: "25px", aspectRatio: "1/1" }}

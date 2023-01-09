@@ -142,7 +142,10 @@ export default function Stake() {
                 className="d-flex w-100 mt-3 h-100"
                 style={{ overflow: "auto" }}
               >
-                <table className="table" style={{ width: "max-content" }}>
+                <table
+                  className="table"
+                  style={{ width: "max-content", minWidth: "100%" }}
+                >
                   <thead
                     className="position-sticky top-0 nav-bg"
                     style={{

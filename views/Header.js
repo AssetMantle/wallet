@@ -92,52 +92,18 @@ export default function Header() {
   const handleOnClick = (e) => {
     e.preventDefault();
 
-    /* if (status === "Connected") {
-      setShowModal(true);
+    if (status === "Connected") {
+      setShowModal(false);
     } else {
       openView();
-    } */
+    }
 
-    openView();
+    // openView();
   };
 
   console.log(
     "ICONN: ",
     ConnectOptionObject[wallet?.prettyName.toLocaleLowerCase()]?.icon
-  );
-
-  // Component
-  const connectWalletButton = (
-    <WalletConnectComponent
-      walletStatus={status}
-      disconnect={
-        <Disconnected
-          buttonText="Connect"
-          buttonIcon="bi-wallet2"
-          onClick={onClickConnect}
-        />
-      }
-      connecting={<Connecting />}
-      connected={
-        <Connected
-          buttonText={address ? shortenAddress(address) : "Connected"}
-          icon={
-            ConnectOptionObject?.[wallet?.prettyName.toLocaleLowerCase()]?.icon
-          }
-          onClick={handleOnClick}
-          dataBsToggle="modal"
-          dataBsTarget="#connectedModal"
-        />
-      }
-      rejected={<Rejected buttonText="Reconnect" onClick={onClickConnect} />}
-      error={<Error buttonText="Change Wallet" onClick={onClickDisconnect} />}
-      notExist={
-        <NotExist
-          buttonText="Install Wallet"
-          onClick={() => window.open("https://www.keplr.app/", "_blank")}
-        />
-      }
-    />
   );
 
   const { availableBalance } = useAvailableBalance();
@@ -188,105 +154,139 @@ export default function Header() {
   );
 
   const connectedModalJSX = (
+    // <div
+    //   className="modal"
+    //   id="connectedModal"
+    //   aria-labelledby="connectedModalLabel"
+    //   aria-hidden="true"
+    // >
+    //   <div className="modal-dialog">
+    //     <div className="modal-content">
+    // <div
+    //   className="
+    //   dropdown-menu
+    // pt-3"
+    // >
     <div
-      className="modal"
-      id="connectedModal"
-      aria-labelledby="connectedModalLabel"
-      aria-hidden="true"
+      className="nav-bg p-3 rounded-4 text-white border-color-white-400"
+      style={{ border: "2px solid" }}
     >
-      <div className="modal-dialog">
-        <div className="modal-content">
-          <div className="dropdown-menu pt-3">
-            <div
-              className="nav-bg p-3 rounded-4 text-white border-color-white-400"
-              style={{ border: "2px solid" }}
-            >
-              <div className="d-flex gap-3">
-                <div className="d-flex flex-column gap-0">
-                  <h4 className="body2">
-                    <Suspense fallback="Loading...">{displayUserName}</Suspense>
-                  </h4>
-                  <p className="caption">
-                    <Suspense fallback="Loading...">
-                      {displayBalance} {defaultChainSymbol}
-                    </Suspense>
-                  </p>
-                </div>
-              </div>
-              <hr className="my-3" />
-              <div className="d-flex flex-column">
-                <div
-                  className="position-relative mx-auto"
-                  style={{
-                    width: "min(140px, 100%)",
-                    aspectRatio: "1/1",
-                  }}
-                >
-                  <Suspense fallback="Loading...">
-                    <QRCodeSVG
-                      width="100%"
-                      height="100%"
-                      value={displayAddress}
-                    />
-                  </Suspense>
-                </div>
-                <button
-                  className="d-flex align-items-center justify-content-center gap-2 text-center caption2 pt-3"
-                  onClick={() => navigator.clipboard.writeText(displayAddress)}
-                >
-                  <Suspense fallback="Loading...">
-                    {shortenAddress(displayAddress)}
-                  </Suspense>
-                  <span className="text-primary">
-                    <MdOutlineContentCopy />
-                  </span>
-                </button>
-              </div>
-              <hr className="my-3" />
-              <div className="d-flex align-items-center justify-content-between gap-2 text-center caption">
-                <div className="d-flex align-items-center gap-1">
-                  <div
-                    className="position-relative"
-                    style={{ width: "25px", aspectRatio: "1/1" }}
-                  >
-                    <Image
-                      layout="fill"
-                      src={
-                        ConnectOptionObject[
-                          wallet?.prettyName.toLocaleLowerCase()
-                        ]?.icon
-                      }
-                      alt={
-                        ConnectOptionObject[
-                          wallet?.prettyName.toLocaleLowerCase()
-                        ]?.name
-                      }
-                    />
-                  </div>
-                  {"name"}
-                </div>
-                <div className="d-flex align-items-center gap-1">
-                  <span className="text-success">
-                    <BsCheckCircle />
-                  </span>
-                  Connected
-                </div>
-              </div>
-              <hr className="my-3" />
-              <button
-                className="d-flex align-items-center justify-content-center gap-2 text-center body2"
-                onClick={disconnect}
-              >
-                <span className="text-primary">
-                  <TbUnlink />
-                </span>
-                Disconnect
-              </button>
-            </div>
-          </div>
+      <div className="d-flex gap-3">
+        <div className="d-flex flex-column gap-0">
+          <h4 className="body2">
+            <Suspense fallback="Loading...">{displayUserName}</Suspense>
+          </h4>
+          <p className="caption">
+            <Suspense fallback="Loading...">
+              {displayBalance} {defaultChainSymbol}
+            </Suspense>
+          </p>
         </div>
       </div>
+      <hr className="my-3" />
+      <div className="d-flex flex-column">
+        <div
+          className="position-relative mx-auto"
+          style={{
+            width: "min(140px, 100%)",
+            aspectRatio: "1/1",
+          }}
+        >
+          <Suspense fallback="Loading...">
+            <QRCodeSVG width="100%" height="100%" value={displayAddress} />
+          </Suspense>
+        </div>
+        <button
+          className="d-flex align-items-center justify-content-center gap-2 text-center caption2 pt-3"
+          onClick={() => navigator.clipboard.writeText(displayAddress)}
+        >
+          <Suspense fallback="Loading...">
+            {shortenAddress(displayAddress)}
+          </Suspense>
+          <span className="text-primary">
+            <MdOutlineContentCopy />
+          </span>
+        </button>
+      </div>
+      <hr className="my-3" />
+      <div className="d-flex align-items-center justify-content-between gap-2 text-center caption">
+        <div className="d-flex align-items-center gap-1">
+          <div
+            className="position-relative"
+            style={{ width: "25px", aspectRatio: "1/1" }}
+          >
+            <Image
+              layout="fill"
+              src={
+                ConnectOptionObject[wallet?.prettyName.toLocaleLowerCase()]
+                  ?.icon
+              }
+              alt={
+                ConnectOptionObject[wallet?.prettyName.toLocaleLowerCase()]
+                  ?.name
+              }
+            />
+          </div>
+          {ConnectOptionObject[wallet?.prettyName.toLocaleLowerCase()]?.name}
+        </div>
+        <div className="d-flex align-items-center gap-1">
+          <span className="text-success">
+            <BsCheckCircle />
+          </span>
+          Connected
+        </div>
+      </div>
+      <hr className="my-3" />
+      <button
+        className="d-flex align-items-center justify-content-center gap-2 text-center body2"
+        onClick={onClickDisconnect}
+      >
+        <span className="text-primary">
+          <TbUnlink />
+        </span>
+        Disconnect
+      </button>
     </div>
+    // </div>
+    //     </div>
+    //   </div>
+    // </div>
+  );
+
+  // Component
+  const connectWalletButton = (
+    <WalletConnectComponent
+      walletStatus={status}
+      disconnect={
+        <Disconnected
+          buttonText="Connect"
+          buttonIcon="bi-wallet2"
+          onClick={onClickConnect}
+        />
+      }
+      connecting={<Connecting />}
+      connected={
+        <Connected
+          buttonText={address ? shortenAddress(address) : "Connected"}
+          icon={
+            ConnectOptionObject?.[wallet?.prettyName.toLocaleLowerCase()]?.icon
+          }
+          onClick={handleOnClick}
+          // dataBsToggle="modal"
+          // dataBsTarget="#connectedModal"
+        >
+          {connectedModalJSX}
+        </Connected>
+      }
+      rejected={<Rejected buttonText="Reconnect" onClick={onClickConnect} />}
+      error={<Error buttonText="Change Wallet" onClick={onClickDisconnect} />}
+      notExist={
+        <NotExist
+          buttonText="Install Wallet"
+          onClick={() => window.open("https://www.keplr.app/", "_blank")}
+        />
+      }
+    />
   );
 
   return (
@@ -303,6 +303,7 @@ export default function Header() {
           <div className="d-flex gap-3 flex-row align-items-center">
             {navigationMenusRightJSX}
             {connectWalletButton}
+            {/* {showModal && connectedModalJSX} */}
           </div>
         </nav>
       </div>
