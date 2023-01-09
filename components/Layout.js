@@ -1,7 +1,7 @@
 import React from "react";
 import Balance from "../views/Balance";
 import Header from "../views/Header";
-import Vesting from "../views/Vesting";
+// import Vesting from "../views/Vesting";
 import ScrollableSectionContainer from "./ScrollableSectionContainer";
 
 export default function Layout({ children }) {
@@ -12,7 +12,7 @@ export default function Layout({ children }) {
         <div className="row px-2 position-relative h-100">
           <ScrollableSectionContainer className="col-3 d-flex flex-column gap-3">
             <Balance />
-            <Vesting />
+            {/* <Vesting /> */}
           </ScrollableSectionContainer>
           <div className="col-9 h-100">{children}</div>
         </div>
