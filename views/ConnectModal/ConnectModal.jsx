@@ -108,7 +108,7 @@ const ConnectModal = ({ isOpen, setOpen, walletRepo, theme }) => {
                 </button>
               ))}
             </div>
-            <hr className="my-2" />
+            {/* <hr className="my-2" />
             <h2 className="caption text-white">Connect with Ledger</h2>
             <div className="d-flex">
               <button
@@ -167,7 +167,7 @@ const ConnectModal = ({ isOpen, setOpen, walletRepo, theme }) => {
               placeholder="Input your wallet address"
               value={generatedAddress}
               onChange={handleChangeGenAddress}
-            />
+            /> */}
           </div>
         </div>
       </ModalContainer>
