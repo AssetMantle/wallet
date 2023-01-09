@@ -1,5 +1,5 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import { wallets as cosmostationWallets } from "@cosmos-kit/cosmostation";
+// import { wallets as cosmostationWallets } from "@cosmos-kit/cosmostation";
 import { wallets as leapwallets } from "@cosmos-kit/leap";
 import { ChainProvider } from "@cosmos-kit/react";
 import { useEffect } from "react";
@@ -7,7 +7,8 @@ import {
   defaultChainRESTProxy,
   defaultChainRPCProxy,
   defaultTheme,
-  wallets as keplrWallets,
+  keplrWallets,
+  cosmostationWallets,
 } from "../config";
 
 import "../config/styles/index.scss";

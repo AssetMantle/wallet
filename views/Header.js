@@ -16,17 +16,8 @@ import {
   Rejected,
   WalletConnectComponent,
 } from "../components";
-import {
-  defaultChainName,
-  defaultChainSymbol,
-  placeholderAvailableBalance,
-} from "../config";
-import {
-  fromDenom,
-  NavBarData,
-  placeholderAddress,
-  useAvailableBalance,
-} from "../data";
+import { defaultChainName } from "../config";
+import { NavBarData, placeholderAddress } from "../data";
 import { shortenAddress } from "../lib";
 
 export default function Header() {
@@ -79,14 +70,14 @@ export default function Header() {
   };
 
   // Events
-  const onClickConnect = async (e) => {
+  const onClickConnect = (e) => {
     e.preventDefault();
-    await connect();
+    connect();
   };
 
-  const onClickDisconnect = async (e) => {
+  const onClickDisconnect = (e) => {
     e.preventDefault();
-    await disconnect();
+    disconnect(wallet?.name);
   };
 
   const handleOnClick = (e) => {
@@ -101,17 +92,7 @@ export default function Header() {
     // openView();
   };
 
-  console.log(
-    "ICONN: ",
-    ConnectOptionObject[wallet?.prettyName.toLocaleLowerCase()]?.icon
-  );
-
-  const { availableBalance } = useAvailableBalance();
   const displayAddress = address || placeholderAddress;
-  const displayBalance =
-    availableBalance == placeholderAvailableBalance
-      ? availableBalance
-      : fromDenom(availableBalance);
   const displayUserName = username || "Default User";
 
   const navigationMenusRightJSX = NavBarData.rightNav.map((navItem, index) => (
@@ -154,19 +135,6 @@ export default function Header() {
   );
 
   const connectedModalJSX = (
-    // <div
-    //   className="modal"
-    //   id="connectedModal"
-    //   aria-labelledby="connectedModalLabel"
-    //   aria-hidden="true"
-    // >
-    //   <div className="modal-dialog">
-    //     <div className="modal-content">
-    // <div
-    //   className="
-    //   dropdown-menu
-    // pt-3"
-    // >
     <div
       className="nav-bg p-3 rounded-4 text-white border-color-white-400"
       style={{ border: "2px solid" }}
@@ -176,11 +144,6 @@ export default function Header() {
           <h4 className="body2">
             <Suspense fallback="Loading...">{displayUserName}</Suspense>
           </h4>
-          <p className="caption">
-            <Suspense fallback="Loading...">
-              {displayBalance} {defaultChainSymbol}
-            </Suspense>
-          </p>
         </div>
       </div>
       <hr className="my-3" />
@@ -247,10 +210,6 @@ export default function Header() {
         Disconnect
       </button>
     </div>
-    // </div>
-    //     </div>
-    //   </div>
-    // </div>
   );
 
   // Component
@@ -272,8 +231,6 @@ export default function Header() {
             ConnectOptionObject?.[wallet?.prettyName.toLocaleLowerCase()]?.icon
           }
           onClick={handleOnClick}
-          // dataBsToggle="modal"
-          // dataBsTarget="#connectedModal"
         >
           {connectedModalJSX}
         </Connected>
@@ -303,7 +260,6 @@ export default function Header() {
           <div className="d-flex gap-3 flex-row align-items-center">
             {navigationMenusRightJSX}
             {connectWalletButton}
-            {/* {showModal && connectedModalJSX} */}
           </div>
         </nav>
       </div>

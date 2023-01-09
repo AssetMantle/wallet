@@ -1,5 +1,5 @@
 export * from "./theme";
 export * from "./features";
 export * from "./defaults";
-export * from "./keplr";
+export * from "./wallets";
 export * from "./swrData";
