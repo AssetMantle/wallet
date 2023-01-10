@@ -1,9 +1,8 @@
-import { Icon, Stack, Text, useColorModeValue } from "@chakra-ui/react";
+import { Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import { WalletStatus } from "@cosmos-kit/core";
 import { HtmlProps } from "next/dist/shared/lib/html-context";
 import Image from "next/image";
 import { MouseEventHandler, ReactNode } from "react";
-import { FiAlertTriangle } from "react-icons/fi";
 import { ConnectWalletType } from "../types";
 
 /* export const ConnectWalletButton = ({
@@ -207,7 +206,7 @@ export const Rejected = ({
           p={4}
           spacing={1}
         >
-          <Icon as={FiAlertTriangle} mt={1} />
+          <i className="bi bi-exclamation-triangle" />
           <Text>
             <Text fontWeight="semibold" as="span">
               Warning:&ensp;
@@ -247,7 +246,7 @@ export const Error = ({
           p={4}
           spacing={1}
         >
-          <Icon as={FiAlertTriangle} mt={1} />
+          <i className="bi bi-exclamation-triangle" />
           <Text>
             <Text fontWeight="semibold" as="span">
               Warning:&ensp;
