@@ -1017,8 +1017,95 @@
     align-items: center;
     margin: 10px 0 20px 0;
   }
-  .footer .contact-us .mail-chimp-section input {
-    width: 100%;
+}
+/*--------------------------------------------------------------
+# header mediaqueries styles
+--------------------------------------------------------------*/
+.header .navbar .header-logo {
+  width: 180px;
+  height: 30px;
+  display: block;
+}
+
+.dark-mode .header .navbar .header-logo {
+  background: url(../../../src/assets/images/footer_logo.svg) no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+.light-mode .header .navbar .header-logo {
+  background: url(../../../src/assets/images/footer_logo.svg) no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+.dashboard .navbar-expand-lg .navbar-nav,
+.dashboard .navbar-nav {
+  flex-direction: row !important;
+}
+
+.sidebar-section {
+  height: 100%;
+}
+.sidebar-section .mobile-sidebar-container .nav-item .nav-link {
+  width: 100%;
+  display: flex;
+  display: -webkit-flex;
+  position: relative;
+  box-sizing: border-box;
+  text-align: left;
+  align-items: center;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  justify-content: flex-start;
+  text-decoration: none;
+  font-family: "Lato", sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: 0.1em;
+  color: #5f646c;
+}
+.sidebar-section .mobile-sidebar-container .nav-item .nav-link .icon {
+  fill: #5f646c;
+}
+.sidebar-section .mobile-sidebar-container .nav-item a:hover,
+.sidebar-section .mobile-sidebar-container .nav-item a.active,
+.sidebar-section .mobile-sidebar-container .nav-item a:focus {
+  color: #ffc942 !important;
+}
+.sidebar-section .mobile-sidebar-container .nav-item a:hover .icon,
+.sidebar-section .mobile-sidebar-container .nav-item a.active .icon,
+.sidebar-section .mobile-sidebar-container .nav-item a:focus .icon {
+  fill: #ffc942;
+}
+.sidebar-section .mobile-sidebar-container .icon-container {
+  color: rgba(0, 0, 0, 0.54);
+  display: inline-flex;
+  min-width: 56px;
+  flex-shrink: 0;
+}
+
+.dark-mode .navbar .nav-menu-icon {
+  outline: none !important;
+}
+.dark-mode .navbar .nav-menu-icon svg {
+  fill: #c2c2c2;
+}
+
+.light-mode .navbar .nav-menu-icon {
+  outline: none !important;
+}
+.light-mode .navbar .nav-menu-icon svg {
+  fill: #2e3239;
+}
+
+/*--------------------------------------------------------------
+# header styles
+--------------------------------------------------------------*/
+@media (max-width: 991.98px) {
+  .mobile-nav-item {
+    display: none !important;
   }
   
   .show-message {
