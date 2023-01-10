@@ -106,7 +106,7 @@ export default function Bridge() {
                   >
                     {MNtlAddress}{" "}
                     <span className="text-primary">
-                      <i className="bi bi-subtract" />
+                      <i className="bi bi-clipboard" />
                     </span>
                   </button>
                 </div>
@@ -163,7 +163,7 @@ export default function Bridge() {
                   >
                     {GravityAddress}{" "}
                     <span className="text-primary">
-                      <i className="bi bi-subtract" />
+                      <i className="bi bi-clipboard" />
                     </span>
                   </button>
                 </div>
@@ -226,7 +226,7 @@ export default function Bridge() {
                     >
                       {EthereumAddress}{" "}
                       <span className="text-primary">
-                        <i className="bi bi-subtract" />
+                        <i className="bi bi-clipboard" />
                       </span>
                     </button>
                   ) : (
@@ -295,7 +295,7 @@ export default function Bridge() {
                     >
                       {EthereumAddress}{" "}
                       <span className="text-primary">
-                        <i className="bi bi-subtract" />
+                        <i className="bi bi-clipboard" />
                       </span>
                     </button>
                   ) : (
@@ -459,7 +459,7 @@ export default function Bridge() {
                   >
                     assetmantle.one/vie...RWG_vtTixYd88=
                     <span className="text-primary">
-                      <i className="bi bi-subtract" />
+                      <i className="bi bi-clipboard" />
                     </span>
                   </button>
                 </div>

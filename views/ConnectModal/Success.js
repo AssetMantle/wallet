@@ -38,7 +38,7 @@ export default function Success({ close, connect }) {
             address.length
           )}`}
           <button className="text-primary" onClick={handleCopy}>
-            <i className="bi bi-subtract" />
+            <i className="bi bi-clipboard" />
           </button>
         </div>
         <p className="d-flex align-items-start gap-1">

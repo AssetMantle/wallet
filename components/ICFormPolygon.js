@@ -90,7 +90,7 @@ export default function ICFormPolygon() {
           >
             {MNtlAddress}{" "}
             <span className="text-primary">
-              <i className="bi bi-subtract" />
+              <i className="bi bi-clipboard" />
             </span>
           </button>
         </div>
@@ -145,7 +145,7 @@ export default function ICFormPolygon() {
           >
             {GravityAddress}{" "}
             <span className="text-primary">
-              <i className="bi bi-subtract" />
+              <i className="bi bi-clipboard" />
             </span>
           </button>
         </div>
@@ -204,7 +204,7 @@ export default function ICFormPolygon() {
             >
               {EthereumAddress}{" "}
               <span className="text-primary">
-                <i className="bi bi-subtract" />
+                <i className="bi bi-clipboard" />
               </span>
             </button>
           ) : (
@@ -271,7 +271,7 @@ export default function ICFormPolygon() {
             >
               {EthereumAddress}{" "}
               <span className="text-primary">
-                <i className="bi bi-subtract" />
+                <i className="bi bi-clipboard" />
               </span>
             </button>
           ) : (

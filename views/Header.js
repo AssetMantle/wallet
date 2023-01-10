@@ -164,7 +164,7 @@ export default function Header() {
             {shortenAddress(displayAddress)}
           </Suspense>
           <span className="text-primary">
-            <i className="bi bi-subtract" />
+            <i className="bi bi-clipboard" />
           </span>
         </button>
       </div>

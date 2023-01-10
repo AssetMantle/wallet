@@ -485,7 +485,7 @@ export default function Transact() {
                   )}`}
                 </Suspense>
                 <span className="text-primary">
-                  <i className="bi bi-subtract" />
+                  <i className="bi bi-clipboard" />
                 </span>
               </button>
             </div>
@@ -520,7 +520,7 @@ export default function Transact() {
                 >
                   <Suspense fallback="Loading...">{displayAddress}</Suspense>
                   <span className="text-primary">
-                    <i className="bi bi-subtract" />
+                    <i className="bi bi-clipboard" />
                   </span>
                 </button>
               </div>

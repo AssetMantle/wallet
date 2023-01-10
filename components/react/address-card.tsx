@@ -28,7 +28,7 @@ export const ConnectedShowAddress = ({
       onClick={() => onCopy()}
       isLoading={isLoading}
       isDisabled={address ? hasCopied : true}
-      rightIcon={<i className="bi bi-subtract" />}
+      rightIcon={<i className="bi bi-clipboard" />}
     >
       <Text
         maxW={{ base: 40, md: 48 }}
