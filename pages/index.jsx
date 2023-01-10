@@ -2,9 +2,6 @@ import { useChain } from "@cosmos-kit/react";
 import Head from "next/head";
 import { QRCodeSVG } from "qrcode.react";
 import React, { Suspense, useReducer, useState } from "react";
-import { AiOutlineInfoCircle } from "react-icons/ai";
-import { BsChevronDown } from "react-icons/bs";
-import { MdOutlineContentCopy } from "react-icons/md";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import Tooltip from "../components/Tooltip";
 import {
@@ -308,7 +305,7 @@ export default function Transact() {
                   className="form-text text-danger d-flex align-items-center gap-1"
                 >
                   {formState?.errorMessages?.recipientAddressErrorMsg && (
-                    <AiOutlineInfoCircle />
+                    <i className="bi bi-info-circle" />
                   )}{" "}
                   {formState?.errorMessages?.recipientAddressErrorMsg}
                 </small>
@@ -384,7 +381,7 @@ export default function Transact() {
                   className="form-text text-danger d-flex align-items-center gap-1"
                 >
                   {formState?.errorMessages?.transferAmountErrorMsg && (
-                    <AiOutlineInfoCircle />
+                    <i className="bi bi-info-circle" />
                   )}{" "}
                   {formState?.errorMessages?.transferAmountErrorMsg}
                 </small>
@@ -402,7 +399,7 @@ export default function Transact() {
                     transformOrigin: "center",
                   }}
                 >
-                  <BsChevronDown />
+                  <i className="bi bi-chevron-down" />
                 </span>
               </button>
               {advanced && (
@@ -488,7 +485,7 @@ export default function Transact() {
                   )}`}
                 </Suspense>
                 <span className="text-primary">
-                  <MdOutlineContentCopy />
+                  <i className="bi bi-subtract" />
                 </span>
               </button>
             </div>
@@ -523,7 +520,7 @@ export default function Transact() {
                 >
                   <Suspense fallback="Loading...">{displayAddress}</Suspense>
                   <span className="text-primary">
-                    <MdOutlineContentCopy />
+                    <i className="bi bi-subtract" />
                   </span>
                 </button>
               </div>
