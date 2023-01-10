@@ -3,10 +3,8 @@ import {
   Text,
   useColorModeValue,
   Button,
-  Icon,
   useClipboard,
 } from "@chakra-ui/react";
-import { FaRegCopy } from "react-icons/fa";
 import { WalletStatus } from "@cosmos-kit/core";
 
 export const ConnectedShowAddress = ({
@@ -30,7 +28,7 @@ export const ConnectedShowAddress = ({
       onClick={() => onCopy()}
       isLoading={isLoading}
       isDisabled={address ? hasCopied : true}
-      rightIcon={<Icon as={FaRegCopy} w={3} h={3} />}
+      rightIcon={<i className="bi bi-subtract" />}
     >
       <Text
         maxW={{ base: 40, md: 48 }}
