@@ -112,7 +112,7 @@ export default function Header() {
       <a
         className={`d-flex gap-1 align-items-center ${
           router.asPath === navItem.href ? "active" : ""
-        } am-nav-item h3`}
+        } am-nav-item body2 `}
         target={navItem.target ? navItem.target : "_self"}
       >
         {navItem.icon && <span className="h3 icon">{navItem.icon}</span>}
