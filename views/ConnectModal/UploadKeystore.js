@@ -1,6 +1,4 @@
 import React from "react";
-import { IoCloseSharp } from "react-icons/io5";
-import { BsChevronLeft, BsUpload, BsSearch } from "react-icons/bs";
 
 export default function UploadKeystore({ close, setStep, setFile }) {
   const handleChange = (e) => {
@@ -12,13 +10,13 @@ export default function UploadKeystore({ close, setStep, setFile }) {
       <div className="d-flex align-items-center justify-content-between ">
         <h1 className="body1 text-primary d-flex align-items-center gap-2">
           <button className="" onClick={() => setStep(1)}>
-            <BsChevronLeft />
+            <i className="bi bi-chevron-left" />
           </button>
           Connect with Keystore
         </h1>
         <button className="btn text-primary body1" onClick={() => close()}>
           <span className="text-primary">
-            <IoCloseSharp />
+            <i className="bi bi-x-lg" />
           </span>
         </button>
       </div>
@@ -31,12 +29,12 @@ export default function UploadKeystore({ close, setStep, setFile }) {
       >
         <div className="d-flex flex-column text-primary p-3 text-center gap-3">
           <span className="h4 text-primary mx-auto">
-            <BsUpload />
+            <i className="bi bi-upload" />
           </span>
           <p className="caption text-white">Drop file here</p>
           <p className="caption text-white-200">or</p>
           <div className="button-secondary py-2 px-5 d-flex align-items-center gap-2">
-            Browse <BsSearch />
+            Browse <i className="bi bi-search" />
           </div>
         </div>
         <input
