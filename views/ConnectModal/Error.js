@@ -1,6 +1,4 @@
 import React from "react";
-import { IoCloseSharp } from "react-icons/io5";
-import { BiErrorCircle } from "react-icons/bi";
 
 export default function Error({ close, setStep }) {
   return (
@@ -9,7 +7,7 @@ export default function Error({ close, setStep }) {
         <h1 className="body1 text-primary d-flex align-items-center gap-2"></h1>
         <button className="btn text-primary body1" onClick={() => close()}>
           <span className="text-primary">
-            <IoCloseSharp />
+            <i className="bi bi-x-lg" />
           </span>
         </button>
       </div>
@@ -18,7 +16,7 @@ export default function Error({ close, setStep }) {
           className="text-error"
           style={{ fontSize: "calc(10px + 10vmin)" }}
         >
-          <BiErrorCircle />
+          <i className="bi bi-x-circle" />
         </span>
         <h1 className="body2 text-error">Error in creating Wallet</h1>
         <p className="caption">
