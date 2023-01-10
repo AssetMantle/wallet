@@ -1,9 +1,6 @@
 import { useChain } from "@cosmos-kit/react";
 import Image from "next/image";
 import React, { useState } from "react";
-import { BsCheckCircle, BsLink45Deg } from "react-icons/bs";
-import { HiArrowNarrowDown, HiOutlineArrowNarrowUp } from "react-icons/hi";
-import { MdContentCopy, MdOutlineClose } from "react-icons/md";
 import ICTransactionInfo from "../components/ICTransactionInfo";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import { defaultChainName } from "../config";
@@ -109,7 +106,7 @@ export default function Bridge() {
                   >
                     {MNtlAddress}{" "}
                     <span className="text-primary">
-                      <MdContentCopy />
+                      <i className="bi bi-subtract" />
                     </span>
                   </button>
                 </div>
@@ -138,7 +135,7 @@ export default function Bridge() {
                 )}
                 <div className="d-flex align-items-center justify-content-end gap-2">
                   <button className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2">
-                    Send to Gravity Bridge <HiArrowNarrowDown />
+                    Send to Gravity Bridge <i className="bi bi-arrow-down" />
                   </button>
                 </div>
               </div>
@@ -166,7 +163,7 @@ export default function Bridge() {
                   >
                     {GravityAddress}{" "}
                     <span className="text-primary">
-                      <MdContentCopy />
+                      <i className="bi bi-subtract" />
                     </span>
                   </button>
                 </div>
@@ -197,10 +194,10 @@ export default function Bridge() {
                 )}
                 <div className="d-flex align-items-center justify-content-end gap-3">
                   <button className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2">
-                    Send to Mantle Chain <HiOutlineArrowNarrowUp />
+                    Send to Mantle Chain <i className="bi bi-arrow-up" />
                   </button>
                   <button className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2">
-                    Send to Ethereum Chain <HiArrowNarrowDown />
+                    Send to Ethereum Chain <i className="bi bi-arrow-down" />
                   </button>
                 </div>
               </div>
@@ -229,7 +226,7 @@ export default function Bridge() {
                     >
                       {EthereumAddress}{" "}
                       <span className="text-primary">
-                        <MdContentCopy />
+                        <i className="bi bi-subtract" />
                       </span>
                     </button>
                   ) : (
@@ -237,7 +234,7 @@ export default function Bridge() {
                       className="caption2 d-flex gap-1 text-primary"
                       onClick={handleEthConnect}
                     >
-                      <BsLink45Deg /> Connect Wallet
+                      <i className="bi bi-link-45deg" /> Connect Wallet
                     </button>
                   )}
                 </div>
@@ -266,10 +263,10 @@ export default function Bridge() {
                 )}
                 <div className="d-flex align-items-center justify-content-end gap-3">
                   <button className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2">
-                    Send to Gravity bridge <HiOutlineArrowNarrowUp />
+                    Send to Gravity bridge <i className="bi bi-arrow-up" />
                   </button>
                   <button className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2">
-                    Send to Polygon Chain <HiArrowNarrowDown />
+                    Send to Polygon Chain <i className="bi bi-arrow-down" />
                   </button>
                 </div>
               </div>
@@ -298,7 +295,7 @@ export default function Bridge() {
                     >
                       {EthereumAddress}{" "}
                       <span className="text-primary">
-                        <MdContentCopy />
+                        <i className="bi bi-subtract" />
                       </span>
                     </button>
                   ) : (
@@ -332,7 +329,7 @@ export default function Bridge() {
                 )}
                 <div className="d-flex align-items-center justify-content-end gap-3">
                   <button className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2">
-                    Send to ethereum Chain <HiOutlineArrowNarrowUp />
+                    Send to ethereum Chain <i className="bi bi-arrow-up" />
                   </button>
                 </div>
               </div>
@@ -394,7 +391,7 @@ export default function Bridge() {
                 style={{ background: "none" }}
               >
                 <span className="text-primary">
-                  <MdOutlineClose />
+                  <i className="bi bi-x-lg" />
                 </span>
               </button>
             </div>
@@ -403,7 +400,7 @@ export default function Bridge() {
                 className="mb-4 mx-auto text-success text-center h1"
                 style={{ fontSize: "calc(10px + 10vmin)" }}
               >
-                <BsCheckCircle />
+                <i className="bi bi-check-circle" />
               </span>
               <h3 className="text-center h3 text-primary my-2">
                 Transaction made successfully
@@ -462,7 +459,7 @@ export default function Bridge() {
                   >
                     assetmantle.one/vie...RWG_vtTixYd88=
                     <span className="text-primary">
-                      <MdContentCopy />
+                      <i className="bi bi-subtract" />
                     </span>
                   </button>
                 </div>
