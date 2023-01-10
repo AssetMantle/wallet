@@ -18,4 +18,4 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: git config --global url."https://github.com/".insteadOf ssh://git@github.com/
     - run: yarn install --immutable --immutable-cache --check-cache
-    - run: yarn run build --if-present
+    - run: yarn run build
