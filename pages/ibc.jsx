@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { SlReload } from "react-icons/sl";
 
 export default function Ibc() {
   const [Chain, setChain] = useState("");
@@ -30,9 +29,10 @@ export default function Ibc() {
         <div className="d-flex gap-3 align-items-center">
           <button className={`am-link  body2`}>IBC Transaction</button>
         </div>
-        <button className="body2 text-primary" onClick={() => handleReload()}>
-          <SlReload />
-        </button>
+        <button
+          className="body2 text-primary"
+          onClick={() => handleReload()}
+        ></button>
       </nav>
       <form
         className="nav-bg p-3 rounded-4 d-flex flex-column gap-3"
