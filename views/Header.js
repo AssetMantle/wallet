@@ -4,9 +4,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { QRCodeSVG } from "qrcode.react";
 import React, { Suspense, useState } from "react";
-import { BsCheckCircle } from "react-icons/bs";
-import { MdOutlineContentCopy } from "react-icons/md";
-import { TbUnlink } from "react-icons/tb";
 import {
   Connected,
   Connecting,
@@ -115,7 +112,7 @@ export default function Header() {
       <a
         className={`d-flex gap-1 align-items-center ${
           router.asPath === navItem.href ? "active" : ""
-        } am-nav-item h3 `}
+        } am-nav-item h3`}
         target={navItem.target ? navItem.target : "_self"}
       >
         {navItem.icon && <span className="h3 icon">{navItem.icon}</span>}
@@ -167,7 +164,7 @@ export default function Header() {
             {shortenAddress(displayAddress)}
           </Suspense>
           <span className="text-primary">
-            <MdOutlineContentCopy />
+            <i className="bi bi-subtract" />
           </span>
         </button>
       </div>
@@ -194,7 +191,7 @@ export default function Header() {
         </div>
         <div className="d-flex align-items-center gap-1">
           <span className="text-success">
-            <BsCheckCircle />
+            <i className="bi bi-check-circle" />
           </span>
           Connected
         </div>
@@ -205,7 +202,7 @@ export default function Header() {
         onClick={onClickDisconnect}
       >
         <span className="text-primary">
-          <TbUnlink />
+          <i className="bi bi-box-arrow-left" />
         </span>
         Disconnect
       </button>
