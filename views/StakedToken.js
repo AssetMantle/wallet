@@ -11,9 +11,6 @@ import {
   useAvailableBalance,
 } from "../data";
 
-import { BsChevronLeft } from "react-icons/bs";
-import { MdOutlineClose } from "react-icons/md";
-
 export default function StakedToken({
   totalTokens,
   setShowClaimError,
@@ -98,7 +95,7 @@ export default function StakedToken({
                     style={{ background: "none" }}
                   >
                     <span className="text-primary">
-                      <BsChevronLeft />
+                      <i className="bi bi-chevron-left" />
                     </span>
                   </button>
                   Delegate
@@ -111,7 +108,7 @@ export default function StakedToken({
                   style={{ background: "none" }}
                 >
                   <span className="text-primary">
-                    <MdOutlineClose />
+                    <i className="bi bi-x-lg" />
                   </span>
                 </button>
               </div>
