@@ -4,11 +4,9 @@ import {
   Container,
   Flex,
   Heading,
-  Icon,
   useColorMode,
 } from "@chakra-ui/react";
 import Head from "next/head";
-import { BsFillMoonStarsFill, BsFillSunFill } from "react-icons/bs";
 import { WalletSection } from "../components";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import StakedToken from "../views/StakedToken";
@@ -26,9 +24,11 @@ export default function Home() {
         </Head>
         <Flex justifyContent="end" mb={4}>
           <Button variant="outline" px={0} onClick={toggleColorMode}>
-            <Icon
-              as={colorMode === "light" ? BsFillMoonStarsFill : BsFillSunFill}
-            />
+            {colorMode === "light" ? (
+              <i className="bi bi-moon-stars-fill" />
+            ) : (
+              <i className="bi bi-sun-fill" />
+            )}
           </Button>
         </Flex>
         <Box textAlign="center">
