@@ -1,6 +1,5 @@
 import Image from "next/image";
 import React, { useState } from "react";
-import { IoCloseSharp } from "react-icons/io5";
 import ModalContainer from "../../components/ModalContainer";
 
 const ConnectModal = ({ isOpen, setOpen, walletRepo, theme }) => {
@@ -67,7 +66,7 @@ const ConnectModal = ({ isOpen, setOpen, walletRepo, theme }) => {
               onClick={handleCloseModal}
             >
               <span className="text-primary">
-                <IoCloseSharp />
+                <i className="bi bi-x-lg" />
               </span>
             </button>
           </div>
