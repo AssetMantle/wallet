@@ -1,6 +1,5 @@
 import Image from "next/image";
 import React from "react";
-import { HiArrowNarrowDown } from "react-icons/hi";
 
 export default function ICTransactionInfo({
   title,
@@ -60,7 +59,7 @@ export default function ICTransactionInfo({
           )}`}</span>
         </div>
         <div className="body2 mx-auto text-primary">
-          <HiArrowNarrowDown />
+          <i className="bi bi-arrow-down" />
         </div>
         <div className="d-flex align-items-center justify-content-between gap-2 w-100">
           <div className="d-flex gap-1 align-items-center">
