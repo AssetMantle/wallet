@@ -1,0 +1,20 @@
+name = "mantle-wallet"
+type = "webpack"
+zone_id = '4d52f36b396dad8cddd83b3d5e0fbda4'
+usage_model = ''
+compatibility_flags = []
+workers_dev = true
+site = {bucket = "./build",entry-point = "workers-site"}
+compatibility_date = "2021-10-08"
+
+[env.staging-wallet]
+routes = ["https://staging.wallet.assetmantle.one/*"]
+
+#[env.staging-testnet-wallet]
+#routes =  ["https://staging-testnet-wallet.assetmantle.one/*"]
+
+[env.mainnet-wallet]
+routes = ["https://wallet.assetmantle.one/*"]
+
+[env.beta-wallet]
+routes = ["https://beta.wallet.assetmantle.one/*"]
