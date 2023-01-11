@@ -22,8 +22,6 @@ export const sendTokensTxn = async (
     const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
     // get the amount in denom terms
     const amountInDenom = toChainDenom(amount, chainName, chainDenom);
-    // populate the optional argument fromAddress
-    fromAddress = fromAddress || address;
     // initialize stargate client and create txn
     const stargateClient = await getSigningStargateClient();
     if (!stargateClient || !fromAddress) {
@@ -328,6 +326,7 @@ export const sendRewardsBatched = async (
     chainDenom = defaultChainDenom,
   }
 ) => {
+  let response = null;
   try {
     // get the chain assets for the specified chain
     const chainassets = assets.find((chain) => chain.chain_name === chainName);
@@ -369,7 +368,7 @@ export const sendRewardsBatched = async (
     };
 
     // use the stargate client to dispatch the transaction
-    const response = await stargateClient.signAndBroadcast(
+    response = await stargateClient.signAndBroadcast(
       fromAddress,
       msgArray,
       fee,
@@ -377,6 +376,72 @@ export const sendRewardsBatched = async (
     );
 
     console.log("msg: ", msg, " amount: ", amountInDenom);
+    return { response, error: null };
+  } catch (error) {
+    console.error("Error during transaction: ", error?.message);
+    return { response: null, error };
+  }
+};
+
+export const sendIbcTokenToGravity = async (
+  fromAddress,
+  toGravityAddress,
+  amount,
+  memo,
+  {
+    getSigningStargateClient,
+    chainName = defaultChainName,
+    chainDenom = defaultChainDenom,
+  }
+) => {
+  let response = null;
+  try {
+    // get the chain assets for the specified chain
+    const chainassets = assets.find((chain) => chain.chain_name === chainName);
+    // get the coin data from the chain assets data
+    const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
+    // get the amount in denom terms
+    const amountInDenom = toChainDenom(amount, chainName, chainDenom);
+    // initialize stargate client and create txn
+    const stargateClient = await getSigningStargateClient();
+    if (!stargateClient || !fromAddress) {
+      throw new error("stargateClient or from address undefined");
+    }
+
+    // get the sourcePort and sourceChannel values pertaining to IBC transaction from AssetMantle to Gravity Chain
+    const sourcePort = "";
+    const sourceChannel = "";
+
+    // get the amount object
+    const transferAmount = {
+      denom: coin.base,
+      amount: amountInDenom,
+    };
+
+    // populate the fee data
+    const fee = {
+      amount: [
+        {
+          denom: "umntl",
+          amount: "2000",
+        },
+      ],
+      gas: "86364",
+    };
+
+    // directly call sendIbcTokens from the stargateclient
+    response = await stargateClient.sendIbcTokens(
+      fromAddress,
+      toGravityAddress,
+      transferAmount,
+      sourcePort,
+      sourceChannel,
+      undefined,
+      undefined,
+      fee,
+      memo
+    );
+
     return { response, error: null };
   } catch (error) {
     console.error("Error during transaction: ", error?.message);
