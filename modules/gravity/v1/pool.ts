@@ -1,5 +1,5 @@
 import * as _m0 from "protobufjs/minimal";
-import { Long, isSet } from "../../helpers";
+import { Long, DeepPartial } from "../../helpers";
 /** IDSet represents a set of IDs */
 
 export interface IDSet {
@@ -96,25 +96,7 @@ export const IDSet = {
     return message;
   },
 
-  fromJSON(object: any): IDSet {
-    return {
-      ids: Array.isArray(object?.ids) ? object.ids.map((e: any) => Long.fromValue(e)) : []
-    };
-  },
-
-  toJSON(message: IDSet): unknown {
-    const obj: any = {};
-
-    if (message.ids) {
-      obj.ids = message.ids.map(e => (e || Long.UZERO).toString());
-    } else {
-      obj.ids = [];
-    }
-
-    return obj;
-  },
-
-  fromPartial(object: Partial<IDSet>): IDSet {
+  fromPartial(object: DeepPartial<IDSet>): IDSet {
     const message = createBaseIDSet();
     message.ids = object.ids?.map(e => Long.fromValue(e)) || [];
     return message;
@@ -177,23 +159,7 @@ export const BatchFees = {
     return message;
   },
 
-  fromJSON(object: any): BatchFees {
-    return {
-      token: isSet(object.token) ? String(object.token) : "",
-      totalFees: isSet(object.totalFees) ? String(object.totalFees) : "",
-      txCount: isSet(object.txCount) ? Long.fromValue(object.txCount) : Long.UZERO
-    };
-  },
-
-  toJSON(message: BatchFees): unknown {
-    const obj: any = {};
-    message.token !== undefined && (obj.token = message.token);
-    message.totalFees !== undefined && (obj.totalFees = message.totalFees);
-    message.txCount !== undefined && (obj.txCount = (message.txCount || Long.UZERO).toString());
-    return obj;
-  },
-
-  fromPartial(object: Partial<BatchFees>): BatchFees {
+  fromPartial(object: DeepPartial<BatchFees>): BatchFees {
     const message = createBaseBatchFees();
     message.token = object.token ?? "";
     message.totalFees = object.totalFees ?? "";
@@ -267,25 +233,7 @@ export const EventWithdrawalReceived = {
     return message;
   },
 
-  fromJSON(object: any): EventWithdrawalReceived {
-    return {
-      bridgeContract: isSet(object.bridgeContract) ? String(object.bridgeContract) : "",
-      bridgeChainId: isSet(object.bridgeChainId) ? String(object.bridgeChainId) : "",
-      outgoingTxId: isSet(object.outgoingTxId) ? String(object.outgoingTxId) : "",
-      nonce: isSet(object.nonce) ? String(object.nonce) : ""
-    };
-  },
-
-  toJSON(message: EventWithdrawalReceived): unknown {
-    const obj: any = {};
-    message.bridgeContract !== undefined && (obj.bridgeContract = message.bridgeContract);
-    message.bridgeChainId !== undefined && (obj.bridgeChainId = message.bridgeChainId);
-    message.outgoingTxId !== undefined && (obj.outgoingTxId = message.outgoingTxId);
-    message.nonce !== undefined && (obj.nonce = message.nonce);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventWithdrawalReceived>): EventWithdrawalReceived {
+  fromPartial(object: DeepPartial<EventWithdrawalReceived>): EventWithdrawalReceived {
     const message = createBaseEventWithdrawalReceived();
     message.bridgeContract = object.bridgeContract ?? "";
     message.bridgeChainId = object.bridgeChainId ?? "";
@@ -360,25 +308,7 @@ export const EventWithdrawCanceled = {
     return message;
   },
 
-  fromJSON(object: any): EventWithdrawCanceled {
-    return {
-      sender: isSet(object.sender) ? String(object.sender) : "",
-      txId: isSet(object.txId) ? String(object.txId) : "",
-      bridgeContract: isSet(object.bridgeContract) ? String(object.bridgeContract) : "",
-      bridgeChainId: isSet(object.bridgeChainId) ? String(object.bridgeChainId) : ""
-    };
-  },
-
-  toJSON(message: EventWithdrawCanceled): unknown {
-    const obj: any = {};
-    message.sender !== undefined && (obj.sender = message.sender);
-    message.txId !== undefined && (obj.txId = message.txId);
-    message.bridgeContract !== undefined && (obj.bridgeContract = message.bridgeContract);
-    message.bridgeChainId !== undefined && (obj.bridgeChainId = message.bridgeChainId);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventWithdrawCanceled>): EventWithdrawCanceled {
+  fromPartial(object: DeepPartial<EventWithdrawCanceled>): EventWithdrawCanceled {
     const message = createBaseEventWithdrawCanceled();
     message.sender = object.sender ?? "";
     message.txId = object.txId ?? "";

@@ -5,7 +5,7 @@ import { BatchFees, BatchFeesSDKType } from "./pool";
 import { OutgoingTxBatch, OutgoingTxBatchSDKType, OutgoingLogicCall, OutgoingLogicCallSDKType, OutgoingTransferTx, OutgoingTransferTxSDKType } from "./batch";
 import { Attestation, AttestationSDKType } from "./attestation";
 import * as _m0 from "protobufjs/minimal";
-import { isSet, Long, bytesFromBase64, base64FromBytes } from "../../helpers";
+import { DeepPartial, Long } from "../../helpers";
 export interface QueryParamsRequest {}
 export interface QueryParamsRequestSDKType {}
 export interface QueryParamsResponse {
@@ -470,16 +470,7 @@ export const QueryParamsRequest = {
     return message;
   },
 
-  fromJSON(_: any): QueryParamsRequest {
-    return {};
-  },
-
-  toJSON(_: QueryParamsRequest): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial(_: Partial<QueryParamsRequest>): QueryParamsRequest {
+  fromPartial(_: DeepPartial<QueryParamsRequest>): QueryParamsRequest {
     const message = createBaseQueryParamsRequest();
     return message;
   }
@@ -523,19 +514,7 @@ export const QueryParamsResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryParamsResponse {
-    return {
-      params: isSet(object.params) ? Params.fromJSON(object.params) : undefined
-    };
-  },
-
-  toJSON(message: QueryParamsResponse): unknown {
-    const obj: any = {};
-    message.params !== undefined && (obj.params = message.params ? Params.toJSON(message.params) : undefined);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryParamsResponse>): QueryParamsResponse {
+  fromPartial(object: DeepPartial<QueryParamsResponse>): QueryParamsResponse {
     const message = createBaseQueryParamsResponse();
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
     return message;
@@ -570,16 +549,7 @@ export const QueryCurrentValsetRequest = {
     return message;
   },
 
-  fromJSON(_: any): QueryCurrentValsetRequest {
-    return {};
-  },
-
-  toJSON(_: QueryCurrentValsetRequest): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial(_: Partial<QueryCurrentValsetRequest>): QueryCurrentValsetRequest {
+  fromPartial(_: DeepPartial<QueryCurrentValsetRequest>): QueryCurrentValsetRequest {
     const message = createBaseQueryCurrentValsetRequest();
     return message;
   }
@@ -623,19 +593,7 @@ export const QueryCurrentValsetResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryCurrentValsetResponse {
-    return {
-      valset: isSet(object.valset) ? Valset.fromJSON(object.valset) : undefined
-    };
-  },
-
-  toJSON(message: QueryCurrentValsetResponse): unknown {
-    const obj: any = {};
-    message.valset !== undefined && (obj.valset = message.valset ? Valset.toJSON(message.valset) : undefined);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryCurrentValsetResponse>): QueryCurrentValsetResponse {
+  fromPartial(object: DeepPartial<QueryCurrentValsetResponse>): QueryCurrentValsetResponse {
     const message = createBaseQueryCurrentValsetResponse();
     message.valset = object.valset !== undefined && object.valset !== null ? Valset.fromPartial(object.valset) : undefined;
     return message;
@@ -680,19 +638,7 @@ export const QueryValsetRequestRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryValsetRequestRequest {
-    return {
-      nonce: isSet(object.nonce) ? Long.fromValue(object.nonce) : Long.UZERO
-    };
-  },
-
-  toJSON(message: QueryValsetRequestRequest): unknown {
-    const obj: any = {};
-    message.nonce !== undefined && (obj.nonce = (message.nonce || Long.UZERO).toString());
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryValsetRequestRequest>): QueryValsetRequestRequest {
+  fromPartial(object: DeepPartial<QueryValsetRequestRequest>): QueryValsetRequestRequest {
     const message = createBaseQueryValsetRequestRequest();
     message.nonce = object.nonce !== undefined && object.nonce !== null ? Long.fromValue(object.nonce) : Long.UZERO;
     return message;
@@ -737,19 +683,7 @@ export const QueryValsetRequestResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryValsetRequestResponse {
-    return {
-      valset: isSet(object.valset) ? Valset.fromJSON(object.valset) : undefined
-    };
-  },
-
-  toJSON(message: QueryValsetRequestResponse): unknown {
-    const obj: any = {};
-    message.valset !== undefined && (obj.valset = message.valset ? Valset.toJSON(message.valset) : undefined);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryValsetRequestResponse>): QueryValsetRequestResponse {
+  fromPartial(object: DeepPartial<QueryValsetRequestResponse>): QueryValsetRequestResponse {
     const message = createBaseQueryValsetRequestResponse();
     message.valset = object.valset !== undefined && object.valset !== null ? Valset.fromPartial(object.valset) : undefined;
     return message;
@@ -803,21 +737,7 @@ export const QueryValsetConfirmRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryValsetConfirmRequest {
-    return {
-      nonce: isSet(object.nonce) ? Long.fromValue(object.nonce) : Long.UZERO,
-      address: isSet(object.address) ? String(object.address) : ""
-    };
-  },
-
-  toJSON(message: QueryValsetConfirmRequest): unknown {
-    const obj: any = {};
-    message.nonce !== undefined && (obj.nonce = (message.nonce || Long.UZERO).toString());
-    message.address !== undefined && (obj.address = message.address);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryValsetConfirmRequest>): QueryValsetConfirmRequest {
+  fromPartial(object: DeepPartial<QueryValsetConfirmRequest>): QueryValsetConfirmRequest {
     const message = createBaseQueryValsetConfirmRequest();
     message.nonce = object.nonce !== undefined && object.nonce !== null ? Long.fromValue(object.nonce) : Long.UZERO;
     message.address = object.address ?? "";
@@ -863,19 +783,7 @@ export const QueryValsetConfirmResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryValsetConfirmResponse {
-    return {
-      confirm: isSet(object.confirm) ? MsgValsetConfirm.fromJSON(object.confirm) : undefined
-    };
-  },
-
-  toJSON(message: QueryValsetConfirmResponse): unknown {
-    const obj: any = {};
-    message.confirm !== undefined && (obj.confirm = message.confirm ? MsgValsetConfirm.toJSON(message.confirm) : undefined);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryValsetConfirmResponse>): QueryValsetConfirmResponse {
+  fromPartial(object: DeepPartial<QueryValsetConfirmResponse>): QueryValsetConfirmResponse {
     const message = createBaseQueryValsetConfirmResponse();
     message.confirm = object.confirm !== undefined && object.confirm !== null ? MsgValsetConfirm.fromPartial(object.confirm) : undefined;
     return message;
@@ -920,19 +828,7 @@ export const QueryValsetConfirmsByNonceRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryValsetConfirmsByNonceRequest {
-    return {
-      nonce: isSet(object.nonce) ? Long.fromValue(object.nonce) : Long.UZERO
-    };
-  },
-
-  toJSON(message: QueryValsetConfirmsByNonceRequest): unknown {
-    const obj: any = {};
-    message.nonce !== undefined && (obj.nonce = (message.nonce || Long.UZERO).toString());
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryValsetConfirmsByNonceRequest>): QueryValsetConfirmsByNonceRequest {
+  fromPartial(object: DeepPartial<QueryValsetConfirmsByNonceRequest>): QueryValsetConfirmsByNonceRequest {
     const message = createBaseQueryValsetConfirmsByNonceRequest();
     message.nonce = object.nonce !== undefined && object.nonce !== null ? Long.fromValue(object.nonce) : Long.UZERO;
     return message;
@@ -977,25 +873,7 @@ export const QueryValsetConfirmsByNonceResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryValsetConfirmsByNonceResponse {
-    return {
-      confirms: Array.isArray(object?.confirms) ? object.confirms.map((e: any) => MsgValsetConfirm.fromJSON(e)) : []
-    };
-  },
-
-  toJSON(message: QueryValsetConfirmsByNonceResponse): unknown {
-    const obj: any = {};
-
-    if (message.confirms) {
-      obj.confirms = message.confirms.map(e => e ? MsgValsetConfirm.toJSON(e) : undefined);
-    } else {
-      obj.confirms = [];
-    }
-
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryValsetConfirmsByNonceResponse>): QueryValsetConfirmsByNonceResponse {
+  fromPartial(object: DeepPartial<QueryValsetConfirmsByNonceResponse>): QueryValsetConfirmsByNonceResponse {
     const message = createBaseQueryValsetConfirmsByNonceResponse();
     message.confirms = object.confirms?.map(e => MsgValsetConfirm.fromPartial(e)) || [];
     return message;
@@ -1030,16 +908,7 @@ export const QueryLastValsetRequestsRequest = {
     return message;
   },
 
-  fromJSON(_: any): QueryLastValsetRequestsRequest {
-    return {};
-  },
-
-  toJSON(_: QueryLastValsetRequestsRequest): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial(_: Partial<QueryLastValsetRequestsRequest>): QueryLastValsetRequestsRequest {
+  fromPartial(_: DeepPartial<QueryLastValsetRequestsRequest>): QueryLastValsetRequestsRequest {
     const message = createBaseQueryLastValsetRequestsRequest();
     return message;
   }
@@ -1083,25 +952,7 @@ export const QueryLastValsetRequestsResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryLastValsetRequestsResponse {
-    return {
-      valsets: Array.isArray(object?.valsets) ? object.valsets.map((e: any) => Valset.fromJSON(e)) : []
-    };
-  },
-
-  toJSON(message: QueryLastValsetRequestsResponse): unknown {
-    const obj: any = {};
-
-    if (message.valsets) {
-      obj.valsets = message.valsets.map(e => e ? Valset.toJSON(e) : undefined);
-    } else {
-      obj.valsets = [];
-    }
-
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryLastValsetRequestsResponse>): QueryLastValsetRequestsResponse {
+  fromPartial(object: DeepPartial<QueryLastValsetRequestsResponse>): QueryLastValsetRequestsResponse {
     const message = createBaseQueryLastValsetRequestsResponse();
     message.valsets = object.valsets?.map(e => Valset.fromPartial(e)) || [];
     return message;
@@ -1146,19 +997,7 @@ export const QueryLastPendingValsetRequestByAddrRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryLastPendingValsetRequestByAddrRequest {
-    return {
-      address: isSet(object.address) ? String(object.address) : ""
-    };
-  },
-
-  toJSON(message: QueryLastPendingValsetRequestByAddrRequest): unknown {
-    const obj: any = {};
-    message.address !== undefined && (obj.address = message.address);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryLastPendingValsetRequestByAddrRequest>): QueryLastPendingValsetRequestByAddrRequest {
+  fromPartial(object: DeepPartial<QueryLastPendingValsetRequestByAddrRequest>): QueryLastPendingValsetRequestByAddrRequest {
     const message = createBaseQueryLastPendingValsetRequestByAddrRequest();
     message.address = object.address ?? "";
     return message;
@@ -1203,25 +1042,7 @@ export const QueryLastPendingValsetRequestByAddrResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryLastPendingValsetRequestByAddrResponse {
-    return {
-      valsets: Array.isArray(object?.valsets) ? object.valsets.map((e: any) => Valset.fromJSON(e)) : []
-    };
-  },
-
-  toJSON(message: QueryLastPendingValsetRequestByAddrResponse): unknown {
-    const obj: any = {};
-
-    if (message.valsets) {
-      obj.valsets = message.valsets.map(e => e ? Valset.toJSON(e) : undefined);
-    } else {
-      obj.valsets = [];
-    }
-
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryLastPendingValsetRequestByAddrResponse>): QueryLastPendingValsetRequestByAddrResponse {
+  fromPartial(object: DeepPartial<QueryLastPendingValsetRequestByAddrResponse>): QueryLastPendingValsetRequestByAddrResponse {
     const message = createBaseQueryLastPendingValsetRequestByAddrResponse();
     message.valsets = object.valsets?.map(e => Valset.fromPartial(e)) || [];
     return message;
@@ -1256,16 +1077,7 @@ export const QueryBatchFeeRequest = {
     return message;
   },
 
-  fromJSON(_: any): QueryBatchFeeRequest {
-    return {};
-  },
-
-  toJSON(_: QueryBatchFeeRequest): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial(_: Partial<QueryBatchFeeRequest>): QueryBatchFeeRequest {
+  fromPartial(_: DeepPartial<QueryBatchFeeRequest>): QueryBatchFeeRequest {
     const message = createBaseQueryBatchFeeRequest();
     return message;
   }
@@ -1309,25 +1121,7 @@ export const QueryBatchFeeResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryBatchFeeResponse {
-    return {
-      batchFees: Array.isArray(object?.batchFees) ? object.batchFees.map((e: any) => BatchFees.fromJSON(e)) : []
-    };
-  },
-
-  toJSON(message: QueryBatchFeeResponse): unknown {
-    const obj: any = {};
-
-    if (message.batchFees) {
-      obj.batchFees = message.batchFees.map(e => e ? BatchFees.toJSON(e) : undefined);
-    } else {
-      obj.batchFees = [];
-    }
-
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryBatchFeeResponse>): QueryBatchFeeResponse {
+  fromPartial(object: DeepPartial<QueryBatchFeeResponse>): QueryBatchFeeResponse {
     const message = createBaseQueryBatchFeeResponse();
     message.batchFees = object.batchFees?.map(e => BatchFees.fromPartial(e)) || [];
     return message;
@@ -1372,19 +1166,7 @@ export const QueryLastPendingBatchRequestByAddrRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryLastPendingBatchRequestByAddrRequest {
-    return {
-      address: isSet(object.address) ? String(object.address) : ""
-    };
-  },
-
-  toJSON(message: QueryLastPendingBatchRequestByAddrRequest): unknown {
-    const obj: any = {};
-    message.address !== undefined && (obj.address = message.address);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryLastPendingBatchRequestByAddrRequest>): QueryLastPendingBatchRequestByAddrRequest {
+  fromPartial(object: DeepPartial<QueryLastPendingBatchRequestByAddrRequest>): QueryLastPendingBatchRequestByAddrRequest {
     const message = createBaseQueryLastPendingBatchRequestByAddrRequest();
     message.address = object.address ?? "";
     return message;
@@ -1429,25 +1211,7 @@ export const QueryLastPendingBatchRequestByAddrResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryLastPendingBatchRequestByAddrResponse {
-    return {
-      batch: Array.isArray(object?.batch) ? object.batch.map((e: any) => OutgoingTxBatch.fromJSON(e)) : []
-    };
-  },
-
-  toJSON(message: QueryLastPendingBatchRequestByAddrResponse): unknown {
-    const obj: any = {};
-
-    if (message.batch) {
-      obj.batch = message.batch.map(e => e ? OutgoingTxBatch.toJSON(e) : undefined);
-    } else {
-      obj.batch = [];
-    }
-
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryLastPendingBatchRequestByAddrResponse>): QueryLastPendingBatchRequestByAddrResponse {
+  fromPartial(object: DeepPartial<QueryLastPendingBatchRequestByAddrResponse>): QueryLastPendingBatchRequestByAddrResponse {
     const message = createBaseQueryLastPendingBatchRequestByAddrResponse();
     message.batch = object.batch?.map(e => OutgoingTxBatch.fromPartial(e)) || [];
     return message;
@@ -1492,19 +1256,7 @@ export const QueryLastPendingLogicCallByAddrRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryLastPendingLogicCallByAddrRequest {
-    return {
-      address: isSet(object.address) ? String(object.address) : ""
-    };
-  },
-
-  toJSON(message: QueryLastPendingLogicCallByAddrRequest): unknown {
-    const obj: any = {};
-    message.address !== undefined && (obj.address = message.address);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryLastPendingLogicCallByAddrRequest>): QueryLastPendingLogicCallByAddrRequest {
+  fromPartial(object: DeepPartial<QueryLastPendingLogicCallByAddrRequest>): QueryLastPendingLogicCallByAddrRequest {
     const message = createBaseQueryLastPendingLogicCallByAddrRequest();
     message.address = object.address ?? "";
     return message;
@@ -1549,25 +1301,7 @@ export const QueryLastPendingLogicCallByAddrResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryLastPendingLogicCallByAddrResponse {
-    return {
-      call: Array.isArray(object?.call) ? object.call.map((e: any) => OutgoingLogicCall.fromJSON(e)) : []
-    };
-  },
-
-  toJSON(message: QueryLastPendingLogicCallByAddrResponse): unknown {
-    const obj: any = {};
-
-    if (message.call) {
-      obj.call = message.call.map(e => e ? OutgoingLogicCall.toJSON(e) : undefined);
-    } else {
-      obj.call = [];
-    }
-
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryLastPendingLogicCallByAddrResponse>): QueryLastPendingLogicCallByAddrResponse {
+  fromPartial(object: DeepPartial<QueryLastPendingLogicCallByAddrResponse>): QueryLastPendingLogicCallByAddrResponse {
     const message = createBaseQueryLastPendingLogicCallByAddrResponse();
     message.call = object.call?.map(e => OutgoingLogicCall.fromPartial(e)) || [];
     return message;
@@ -1602,16 +1336,7 @@ export const QueryOutgoingTxBatchesRequest = {
     return message;
   },
 
-  fromJSON(_: any): QueryOutgoingTxBatchesRequest {
-    return {};
-  },
-
-  toJSON(_: QueryOutgoingTxBatchesRequest): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial(_: Partial<QueryOutgoingTxBatchesRequest>): QueryOutgoingTxBatchesRequest {
+  fromPartial(_: DeepPartial<QueryOutgoingTxBatchesRequest>): QueryOutgoingTxBatchesRequest {
     const message = createBaseQueryOutgoingTxBatchesRequest();
     return message;
   }
@@ -1655,25 +1380,7 @@ export const QueryOutgoingTxBatchesResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryOutgoingTxBatchesResponse {
-    return {
-      batches: Array.isArray(object?.batches) ? object.batches.map((e: any) => OutgoingTxBatch.fromJSON(e)) : []
-    };
-  },
-
-  toJSON(message: QueryOutgoingTxBatchesResponse): unknown {
-    const obj: any = {};
-
-    if (message.batches) {
-      obj.batches = message.batches.map(e => e ? OutgoingTxBatch.toJSON(e) : undefined);
-    } else {
-      obj.batches = [];
-    }
-
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryOutgoingTxBatchesResponse>): QueryOutgoingTxBatchesResponse {
+  fromPartial(object: DeepPartial<QueryOutgoingTxBatchesResponse>): QueryOutgoingTxBatchesResponse {
     const message = createBaseQueryOutgoingTxBatchesResponse();
     message.batches = object.batches?.map(e => OutgoingTxBatch.fromPartial(e)) || [];
     return message;
@@ -1708,16 +1415,7 @@ export const QueryOutgoingLogicCallsRequest = {
     return message;
   },
 
-  fromJSON(_: any): QueryOutgoingLogicCallsRequest {
-    return {};
-  },
-
-  toJSON(_: QueryOutgoingLogicCallsRequest): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial(_: Partial<QueryOutgoingLogicCallsRequest>): QueryOutgoingLogicCallsRequest {
+  fromPartial(_: DeepPartial<QueryOutgoingLogicCallsRequest>): QueryOutgoingLogicCallsRequest {
     const message = createBaseQueryOutgoingLogicCallsRequest();
     return message;
   }
@@ -1761,25 +1459,7 @@ export const QueryOutgoingLogicCallsResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryOutgoingLogicCallsResponse {
-    return {
-      calls: Array.isArray(object?.calls) ? object.calls.map((e: any) => OutgoingLogicCall.fromJSON(e)) : []
-    };
-  },
-
-  toJSON(message: QueryOutgoingLogicCallsResponse): unknown {
-    const obj: any = {};
-
-    if (message.calls) {
-      obj.calls = message.calls.map(e => e ? OutgoingLogicCall.toJSON(e) : undefined);
-    } else {
-      obj.calls = [];
-    }
-
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryOutgoingLogicCallsResponse>): QueryOutgoingLogicCallsResponse {
+  fromPartial(object: DeepPartial<QueryOutgoingLogicCallsResponse>): QueryOutgoingLogicCallsResponse {
     const message = createBaseQueryOutgoingLogicCallsResponse();
     message.calls = object.calls?.map(e => OutgoingLogicCall.fromPartial(e)) || [];
     return message;
@@ -1833,21 +1513,7 @@ export const QueryBatchRequestByNonceRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryBatchRequestByNonceRequest {
-    return {
-      nonce: isSet(object.nonce) ? Long.fromValue(object.nonce) : Long.UZERO,
-      contractAddress: isSet(object.contractAddress) ? String(object.contractAddress) : ""
-    };
-  },
-
-  toJSON(message: QueryBatchRequestByNonceRequest): unknown {
-    const obj: any = {};
-    message.nonce !== undefined && (obj.nonce = (message.nonce || Long.UZERO).toString());
-    message.contractAddress !== undefined && (obj.contractAddress = message.contractAddress);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryBatchRequestByNonceRequest>): QueryBatchRequestByNonceRequest {
+  fromPartial(object: DeepPartial<QueryBatchRequestByNonceRequest>): QueryBatchRequestByNonceRequest {
     const message = createBaseQueryBatchRequestByNonceRequest();
     message.nonce = object.nonce !== undefined && object.nonce !== null ? Long.fromValue(object.nonce) : Long.UZERO;
     message.contractAddress = object.contractAddress ?? "";
@@ -1893,19 +1559,7 @@ export const QueryBatchRequestByNonceResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryBatchRequestByNonceResponse {
-    return {
-      batch: isSet(object.batch) ? OutgoingTxBatch.fromJSON(object.batch) : undefined
-    };
-  },
-
-  toJSON(message: QueryBatchRequestByNonceResponse): unknown {
-    const obj: any = {};
-    message.batch !== undefined && (obj.batch = message.batch ? OutgoingTxBatch.toJSON(message.batch) : undefined);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryBatchRequestByNonceResponse>): QueryBatchRequestByNonceResponse {
+  fromPartial(object: DeepPartial<QueryBatchRequestByNonceResponse>): QueryBatchRequestByNonceResponse {
     const message = createBaseQueryBatchRequestByNonceResponse();
     message.batch = object.batch !== undefined && object.batch !== null ? OutgoingTxBatch.fromPartial(object.batch) : undefined;
     return message;
@@ -1959,21 +1613,7 @@ export const QueryBatchConfirmsRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryBatchConfirmsRequest {
-    return {
-      nonce: isSet(object.nonce) ? Long.fromValue(object.nonce) : Long.UZERO,
-      contractAddress: isSet(object.contractAddress) ? String(object.contractAddress) : ""
-    };
-  },
-
-  toJSON(message: QueryBatchConfirmsRequest): unknown {
-    const obj: any = {};
-    message.nonce !== undefined && (obj.nonce = (message.nonce || Long.UZERO).toString());
-    message.contractAddress !== undefined && (obj.contractAddress = message.contractAddress);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryBatchConfirmsRequest>): QueryBatchConfirmsRequest {
+  fromPartial(object: DeepPartial<QueryBatchConfirmsRequest>): QueryBatchConfirmsRequest {
     const message = createBaseQueryBatchConfirmsRequest();
     message.nonce = object.nonce !== undefined && object.nonce !== null ? Long.fromValue(object.nonce) : Long.UZERO;
     message.contractAddress = object.contractAddress ?? "";
@@ -2019,25 +1659,7 @@ export const QueryBatchConfirmsResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryBatchConfirmsResponse {
-    return {
-      confirms: Array.isArray(object?.confirms) ? object.confirms.map((e: any) => MsgConfirmBatch.fromJSON(e)) : []
-    };
-  },
-
-  toJSON(message: QueryBatchConfirmsResponse): unknown {
-    const obj: any = {};
-
-    if (message.confirms) {
-      obj.confirms = message.confirms.map(e => e ? MsgConfirmBatch.toJSON(e) : undefined);
-    } else {
-      obj.confirms = [];
-    }
-
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryBatchConfirmsResponse>): QueryBatchConfirmsResponse {
+  fromPartial(object: DeepPartial<QueryBatchConfirmsResponse>): QueryBatchConfirmsResponse {
     const message = createBaseQueryBatchConfirmsResponse();
     message.confirms = object.confirms?.map(e => MsgConfirmBatch.fromPartial(e)) || [];
     return message;
@@ -2091,21 +1713,7 @@ export const QueryLogicConfirmsRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryLogicConfirmsRequest {
-    return {
-      invalidationId: isSet(object.invalidationId) ? bytesFromBase64(object.invalidationId) : new Uint8Array(),
-      invalidationNonce: isSet(object.invalidationNonce) ? Long.fromValue(object.invalidationNonce) : Long.UZERO
-    };
-  },
-
-  toJSON(message: QueryLogicConfirmsRequest): unknown {
-    const obj: any = {};
-    message.invalidationId !== undefined && (obj.invalidationId = base64FromBytes(message.invalidationId !== undefined ? message.invalidationId : new Uint8Array()));
-    message.invalidationNonce !== undefined && (obj.invalidationNonce = (message.invalidationNonce || Long.UZERO).toString());
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryLogicConfirmsRequest>): QueryLogicConfirmsRequest {
+  fromPartial(object: DeepPartial<QueryLogicConfirmsRequest>): QueryLogicConfirmsRequest {
     const message = createBaseQueryLogicConfirmsRequest();
     message.invalidationId = object.invalidationId ?? new Uint8Array();
     message.invalidationNonce = object.invalidationNonce !== undefined && object.invalidationNonce !== null ? Long.fromValue(object.invalidationNonce) : Long.UZERO;
@@ -2151,25 +1759,7 @@ export const QueryLogicConfirmsResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryLogicConfirmsResponse {
-    return {
-      confirms: Array.isArray(object?.confirms) ? object.confirms.map((e: any) => MsgConfirmLogicCall.fromJSON(e)) : []
-    };
-  },
-
-  toJSON(message: QueryLogicConfirmsResponse): unknown {
-    const obj: any = {};
-
-    if (message.confirms) {
-      obj.confirms = message.confirms.map(e => e ? MsgConfirmLogicCall.toJSON(e) : undefined);
-    } else {
-      obj.confirms = [];
-    }
-
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryLogicConfirmsResponse>): QueryLogicConfirmsResponse {
+  fromPartial(object: DeepPartial<QueryLogicConfirmsResponse>): QueryLogicConfirmsResponse {
     const message = createBaseQueryLogicConfirmsResponse();
     message.confirms = object.confirms?.map(e => MsgConfirmLogicCall.fromPartial(e)) || [];
     return message;
@@ -2214,19 +1804,7 @@ export const QueryLastEventNonceByAddrRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryLastEventNonceByAddrRequest {
-    return {
-      address: isSet(object.address) ? String(object.address) : ""
-    };
-  },
-
-  toJSON(message: QueryLastEventNonceByAddrRequest): unknown {
-    const obj: any = {};
-    message.address !== undefined && (obj.address = message.address);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryLastEventNonceByAddrRequest>): QueryLastEventNonceByAddrRequest {
+  fromPartial(object: DeepPartial<QueryLastEventNonceByAddrRequest>): QueryLastEventNonceByAddrRequest {
     const message = createBaseQueryLastEventNonceByAddrRequest();
     message.address = object.address ?? "";
     return message;
@@ -2271,19 +1849,7 @@ export const QueryLastEventNonceByAddrResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryLastEventNonceByAddrResponse {
-    return {
-      eventNonce: isSet(object.eventNonce) ? Long.fromValue(object.eventNonce) : Long.UZERO
-    };
-  },
-
-  toJSON(message: QueryLastEventNonceByAddrResponse): unknown {
-    const obj: any = {};
-    message.eventNonce !== undefined && (obj.eventNonce = (message.eventNonce || Long.UZERO).toString());
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryLastEventNonceByAddrResponse>): QueryLastEventNonceByAddrResponse {
+  fromPartial(object: DeepPartial<QueryLastEventNonceByAddrResponse>): QueryLastEventNonceByAddrResponse {
     const message = createBaseQueryLastEventNonceByAddrResponse();
     message.eventNonce = object.eventNonce !== undefined && object.eventNonce !== null ? Long.fromValue(object.eventNonce) : Long.UZERO;
     return message;
@@ -2328,19 +1894,7 @@ export const QueryERC20ToDenomRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryERC20ToDenomRequest {
-    return {
-      erc20: isSet(object.erc20) ? String(object.erc20) : ""
-    };
-  },
-
-  toJSON(message: QueryERC20ToDenomRequest): unknown {
-    const obj: any = {};
-    message.erc20 !== undefined && (obj.erc20 = message.erc20);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryERC20ToDenomRequest>): QueryERC20ToDenomRequest {
+  fromPartial(object: DeepPartial<QueryERC20ToDenomRequest>): QueryERC20ToDenomRequest {
     const message = createBaseQueryERC20ToDenomRequest();
     message.erc20 = object.erc20 ?? "";
     return message;
@@ -2394,21 +1948,7 @@ export const QueryERC20ToDenomResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryERC20ToDenomResponse {
-    return {
-      denom: isSet(object.denom) ? String(object.denom) : "",
-      cosmosOriginated: isSet(object.cosmosOriginated) ? Boolean(object.cosmosOriginated) : false
-    };
-  },
-
-  toJSON(message: QueryERC20ToDenomResponse): unknown {
-    const obj: any = {};
-    message.denom !== undefined && (obj.denom = message.denom);
-    message.cosmosOriginated !== undefined && (obj.cosmosOriginated = message.cosmosOriginated);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryERC20ToDenomResponse>): QueryERC20ToDenomResponse {
+  fromPartial(object: DeepPartial<QueryERC20ToDenomResponse>): QueryERC20ToDenomResponse {
     const message = createBaseQueryERC20ToDenomResponse();
     message.denom = object.denom ?? "";
     message.cosmosOriginated = object.cosmosOriginated ?? false;
@@ -2454,19 +1994,7 @@ export const QueryDenomToERC20Request = {
     return message;
   },
 
-  fromJSON(object: any): QueryDenomToERC20Request {
-    return {
-      denom: isSet(object.denom) ? String(object.denom) : ""
-    };
-  },
-
-  toJSON(message: QueryDenomToERC20Request): unknown {
-    const obj: any = {};
-    message.denom !== undefined && (obj.denom = message.denom);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryDenomToERC20Request>): QueryDenomToERC20Request {
+  fromPartial(object: DeepPartial<QueryDenomToERC20Request>): QueryDenomToERC20Request {
     const message = createBaseQueryDenomToERC20Request();
     message.denom = object.denom ?? "";
     return message;
@@ -2520,21 +2048,7 @@ export const QueryDenomToERC20Response = {
     return message;
   },
 
-  fromJSON(object: any): QueryDenomToERC20Response {
-    return {
-      erc20: isSet(object.erc20) ? String(object.erc20) : "",
-      cosmosOriginated: isSet(object.cosmosOriginated) ? Boolean(object.cosmosOriginated) : false
-    };
-  },
-
-  toJSON(message: QueryDenomToERC20Response): unknown {
-    const obj: any = {};
-    message.erc20 !== undefined && (obj.erc20 = message.erc20);
-    message.cosmosOriginated !== undefined && (obj.cosmosOriginated = message.cosmosOriginated);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryDenomToERC20Response>): QueryDenomToERC20Response {
+  fromPartial(object: DeepPartial<QueryDenomToERC20Response>): QueryDenomToERC20Response {
     const message = createBaseQueryDenomToERC20Response();
     message.erc20 = object.erc20 ?? "";
     message.cosmosOriginated = object.cosmosOriginated ?? false;
@@ -2580,19 +2094,7 @@ export const QueryLastObservedEthBlockRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryLastObservedEthBlockRequest {
-    return {
-      useV1Key: isSet(object.useV1Key) ? Boolean(object.useV1Key) : false
-    };
-  },
-
-  toJSON(message: QueryLastObservedEthBlockRequest): unknown {
-    const obj: any = {};
-    message.useV1Key !== undefined && (obj.useV1Key = message.useV1Key);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryLastObservedEthBlockRequest>): QueryLastObservedEthBlockRequest {
+  fromPartial(object: DeepPartial<QueryLastObservedEthBlockRequest>): QueryLastObservedEthBlockRequest {
     const message = createBaseQueryLastObservedEthBlockRequest();
     message.useV1Key = object.useV1Key ?? false;
     return message;
@@ -2637,19 +2139,7 @@ export const QueryLastObservedEthBlockResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryLastObservedEthBlockResponse {
-    return {
-      block: isSet(object.block) ? Long.fromValue(object.block) : Long.UZERO
-    };
-  },
-
-  toJSON(message: QueryLastObservedEthBlockResponse): unknown {
-    const obj: any = {};
-    message.block !== undefined && (obj.block = (message.block || Long.UZERO).toString());
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryLastObservedEthBlockResponse>): QueryLastObservedEthBlockResponse {
+  fromPartial(object: DeepPartial<QueryLastObservedEthBlockResponse>): QueryLastObservedEthBlockResponse {
     const message = createBaseQueryLastObservedEthBlockResponse();
     message.block = object.block !== undefined && object.block !== null ? Long.fromValue(object.block) : Long.UZERO;
     return message;
@@ -2694,19 +2184,7 @@ export const QueryLastObservedEthNonceRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryLastObservedEthNonceRequest {
-    return {
-      useV1Key: isSet(object.useV1Key) ? Boolean(object.useV1Key) : false
-    };
-  },
-
-  toJSON(message: QueryLastObservedEthNonceRequest): unknown {
-    const obj: any = {};
-    message.useV1Key !== undefined && (obj.useV1Key = message.useV1Key);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryLastObservedEthNonceRequest>): QueryLastObservedEthNonceRequest {
+  fromPartial(object: DeepPartial<QueryLastObservedEthNonceRequest>): QueryLastObservedEthNonceRequest {
     const message = createBaseQueryLastObservedEthNonceRequest();
     message.useV1Key = object.useV1Key ?? false;
     return message;
@@ -2751,19 +2229,7 @@ export const QueryLastObservedEthNonceResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryLastObservedEthNonceResponse {
-    return {
-      nonce: isSet(object.nonce) ? Long.fromValue(object.nonce) : Long.UZERO
-    };
-  },
-
-  toJSON(message: QueryLastObservedEthNonceResponse): unknown {
-    const obj: any = {};
-    message.nonce !== undefined && (obj.nonce = (message.nonce || Long.UZERO).toString());
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryLastObservedEthNonceResponse>): QueryLastObservedEthNonceResponse {
+  fromPartial(object: DeepPartial<QueryLastObservedEthNonceResponse>): QueryLastObservedEthNonceResponse {
     const message = createBaseQueryLastObservedEthNonceResponse();
     message.nonce = object.nonce !== undefined && object.nonce !== null ? Long.fromValue(object.nonce) : Long.UZERO;
     return message;
@@ -2853,29 +2319,7 @@ export const QueryAttestationsRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryAttestationsRequest {
-    return {
-      limit: isSet(object.limit) ? Long.fromValue(object.limit) : Long.UZERO,
-      orderBy: isSet(object.orderBy) ? String(object.orderBy) : "",
-      claimType: isSet(object.claimType) ? String(object.claimType) : "",
-      nonce: isSet(object.nonce) ? Long.fromValue(object.nonce) : Long.UZERO,
-      height: isSet(object.height) ? Long.fromValue(object.height) : Long.UZERO,
-      useV1Key: isSet(object.useV1Key) ? Boolean(object.useV1Key) : false
-    };
-  },
-
-  toJSON(message: QueryAttestationsRequest): unknown {
-    const obj: any = {};
-    message.limit !== undefined && (obj.limit = (message.limit || Long.UZERO).toString());
-    message.orderBy !== undefined && (obj.orderBy = message.orderBy);
-    message.claimType !== undefined && (obj.claimType = message.claimType);
-    message.nonce !== undefined && (obj.nonce = (message.nonce || Long.UZERO).toString());
-    message.height !== undefined && (obj.height = (message.height || Long.UZERO).toString());
-    message.useV1Key !== undefined && (obj.useV1Key = message.useV1Key);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryAttestationsRequest>): QueryAttestationsRequest {
+  fromPartial(object: DeepPartial<QueryAttestationsRequest>): QueryAttestationsRequest {
     const message = createBaseQueryAttestationsRequest();
     message.limit = object.limit !== undefined && object.limit !== null ? Long.fromValue(object.limit) : Long.UZERO;
     message.orderBy = object.orderBy ?? "";
@@ -2925,25 +2369,7 @@ export const QueryAttestationsResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryAttestationsResponse {
-    return {
-      attestations: Array.isArray(object?.attestations) ? object.attestations.map((e: any) => Attestation.fromJSON(e)) : []
-    };
-  },
-
-  toJSON(message: QueryAttestationsResponse): unknown {
-    const obj: any = {};
-
-    if (message.attestations) {
-      obj.attestations = message.attestations.map(e => e ? Attestation.toJSON(e) : undefined);
-    } else {
-      obj.attestations = [];
-    }
-
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryAttestationsResponse>): QueryAttestationsResponse {
+  fromPartial(object: DeepPartial<QueryAttestationsResponse>): QueryAttestationsResponse {
     const message = createBaseQueryAttestationsResponse();
     message.attestations = object.attestations?.map(e => Attestation.fromPartial(e)) || [];
     return message;
@@ -2988,19 +2414,7 @@ export const QueryDelegateKeysByValidatorAddress = {
     return message;
   },
 
-  fromJSON(object: any): QueryDelegateKeysByValidatorAddress {
-    return {
-      validatorAddress: isSet(object.validatorAddress) ? String(object.validatorAddress) : ""
-    };
-  },
-
-  toJSON(message: QueryDelegateKeysByValidatorAddress): unknown {
-    const obj: any = {};
-    message.validatorAddress !== undefined && (obj.validatorAddress = message.validatorAddress);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryDelegateKeysByValidatorAddress>): QueryDelegateKeysByValidatorAddress {
+  fromPartial(object: DeepPartial<QueryDelegateKeysByValidatorAddress>): QueryDelegateKeysByValidatorAddress {
     const message = createBaseQueryDelegateKeysByValidatorAddress();
     message.validatorAddress = object.validatorAddress ?? "";
     return message;
@@ -3054,21 +2468,7 @@ export const QueryDelegateKeysByValidatorAddressResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryDelegateKeysByValidatorAddressResponse {
-    return {
-      ethAddress: isSet(object.ethAddress) ? String(object.ethAddress) : "",
-      orchestratorAddress: isSet(object.orchestratorAddress) ? String(object.orchestratorAddress) : ""
-    };
-  },
-
-  toJSON(message: QueryDelegateKeysByValidatorAddressResponse): unknown {
-    const obj: any = {};
-    message.ethAddress !== undefined && (obj.ethAddress = message.ethAddress);
-    message.orchestratorAddress !== undefined && (obj.orchestratorAddress = message.orchestratorAddress);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryDelegateKeysByValidatorAddressResponse>): QueryDelegateKeysByValidatorAddressResponse {
+  fromPartial(object: DeepPartial<QueryDelegateKeysByValidatorAddressResponse>): QueryDelegateKeysByValidatorAddressResponse {
     const message = createBaseQueryDelegateKeysByValidatorAddressResponse();
     message.ethAddress = object.ethAddress ?? "";
     message.orchestratorAddress = object.orchestratorAddress ?? "";
@@ -3114,19 +2514,7 @@ export const QueryDelegateKeysByEthAddress = {
     return message;
   },
 
-  fromJSON(object: any): QueryDelegateKeysByEthAddress {
-    return {
-      ethAddress: isSet(object.ethAddress) ? String(object.ethAddress) : ""
-    };
-  },
-
-  toJSON(message: QueryDelegateKeysByEthAddress): unknown {
-    const obj: any = {};
-    message.ethAddress !== undefined && (obj.ethAddress = message.ethAddress);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryDelegateKeysByEthAddress>): QueryDelegateKeysByEthAddress {
+  fromPartial(object: DeepPartial<QueryDelegateKeysByEthAddress>): QueryDelegateKeysByEthAddress {
     const message = createBaseQueryDelegateKeysByEthAddress();
     message.ethAddress = object.ethAddress ?? "";
     return message;
@@ -3180,21 +2568,7 @@ export const QueryDelegateKeysByEthAddressResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryDelegateKeysByEthAddressResponse {
-    return {
-      validatorAddress: isSet(object.validatorAddress) ? String(object.validatorAddress) : "",
-      orchestratorAddress: isSet(object.orchestratorAddress) ? String(object.orchestratorAddress) : ""
-    };
-  },
-
-  toJSON(message: QueryDelegateKeysByEthAddressResponse): unknown {
-    const obj: any = {};
-    message.validatorAddress !== undefined && (obj.validatorAddress = message.validatorAddress);
-    message.orchestratorAddress !== undefined && (obj.orchestratorAddress = message.orchestratorAddress);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryDelegateKeysByEthAddressResponse>): QueryDelegateKeysByEthAddressResponse {
+  fromPartial(object: DeepPartial<QueryDelegateKeysByEthAddressResponse>): QueryDelegateKeysByEthAddressResponse {
     const message = createBaseQueryDelegateKeysByEthAddressResponse();
     message.validatorAddress = object.validatorAddress ?? "";
     message.orchestratorAddress = object.orchestratorAddress ?? "";
@@ -3240,19 +2614,7 @@ export const QueryDelegateKeysByOrchestratorAddress = {
     return message;
   },
 
-  fromJSON(object: any): QueryDelegateKeysByOrchestratorAddress {
-    return {
-      orchestratorAddress: isSet(object.orchestratorAddress) ? String(object.orchestratorAddress) : ""
-    };
-  },
-
-  toJSON(message: QueryDelegateKeysByOrchestratorAddress): unknown {
-    const obj: any = {};
-    message.orchestratorAddress !== undefined && (obj.orchestratorAddress = message.orchestratorAddress);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryDelegateKeysByOrchestratorAddress>): QueryDelegateKeysByOrchestratorAddress {
+  fromPartial(object: DeepPartial<QueryDelegateKeysByOrchestratorAddress>): QueryDelegateKeysByOrchestratorAddress {
     const message = createBaseQueryDelegateKeysByOrchestratorAddress();
     message.orchestratorAddress = object.orchestratorAddress ?? "";
     return message;
@@ -3306,21 +2668,7 @@ export const QueryDelegateKeysByOrchestratorAddressResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryDelegateKeysByOrchestratorAddressResponse {
-    return {
-      validatorAddress: isSet(object.validatorAddress) ? String(object.validatorAddress) : "",
-      ethAddress: isSet(object.ethAddress) ? String(object.ethAddress) : ""
-    };
-  },
-
-  toJSON(message: QueryDelegateKeysByOrchestratorAddressResponse): unknown {
-    const obj: any = {};
-    message.validatorAddress !== undefined && (obj.validatorAddress = message.validatorAddress);
-    message.ethAddress !== undefined && (obj.ethAddress = message.ethAddress);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryDelegateKeysByOrchestratorAddressResponse>): QueryDelegateKeysByOrchestratorAddressResponse {
+  fromPartial(object: DeepPartial<QueryDelegateKeysByOrchestratorAddressResponse>): QueryDelegateKeysByOrchestratorAddressResponse {
     const message = createBaseQueryDelegateKeysByOrchestratorAddressResponse();
     message.validatorAddress = object.validatorAddress ?? "";
     message.ethAddress = object.ethAddress ?? "";
@@ -3366,19 +2714,7 @@ export const QueryPendingSendToEth = {
     return message;
   },
 
-  fromJSON(object: any): QueryPendingSendToEth {
-    return {
-      senderAddress: isSet(object.senderAddress) ? String(object.senderAddress) : ""
-    };
-  },
-
-  toJSON(message: QueryPendingSendToEth): unknown {
-    const obj: any = {};
-    message.senderAddress !== undefined && (obj.senderAddress = message.senderAddress);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryPendingSendToEth>): QueryPendingSendToEth {
+  fromPartial(object: DeepPartial<QueryPendingSendToEth>): QueryPendingSendToEth {
     const message = createBaseQueryPendingSendToEth();
     message.senderAddress = object.senderAddress ?? "";
     return message;
@@ -3432,32 +2768,7 @@ export const QueryPendingSendToEthResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryPendingSendToEthResponse {
-    return {
-      transfersInBatches: Array.isArray(object?.transfersInBatches) ? object.transfersInBatches.map((e: any) => OutgoingTransferTx.fromJSON(e)) : [],
-      unbatchedTransfers: Array.isArray(object?.unbatchedTransfers) ? object.unbatchedTransfers.map((e: any) => OutgoingTransferTx.fromJSON(e)) : []
-    };
-  },
-
-  toJSON(message: QueryPendingSendToEthResponse): unknown {
-    const obj: any = {};
-
-    if (message.transfersInBatches) {
-      obj.transfersInBatches = message.transfersInBatches.map(e => e ? OutgoingTransferTx.toJSON(e) : undefined);
-    } else {
-      obj.transfersInBatches = [];
-    }
-
-    if (message.unbatchedTransfers) {
-      obj.unbatchedTransfers = message.unbatchedTransfers.map(e => e ? OutgoingTransferTx.toJSON(e) : undefined);
-    } else {
-      obj.unbatchedTransfers = [];
-    }
-
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryPendingSendToEthResponse>): QueryPendingSendToEthResponse {
+  fromPartial(object: DeepPartial<QueryPendingSendToEthResponse>): QueryPendingSendToEthResponse {
     const message = createBaseQueryPendingSendToEthResponse();
     message.transfersInBatches = object.transfersInBatches?.map(e => OutgoingTransferTx.fromPartial(e)) || [];
     message.unbatchedTransfers = object.unbatchedTransfers?.map(e => OutgoingTransferTx.fromPartial(e)) || [];
@@ -3503,19 +2814,7 @@ export const QueryPendingIbcAutoForwards = {
     return message;
   },
 
-  fromJSON(object: any): QueryPendingIbcAutoForwards {
-    return {
-      limit: isSet(object.limit) ? Long.fromValue(object.limit) : Long.UZERO
-    };
-  },
-
-  toJSON(message: QueryPendingIbcAutoForwards): unknown {
-    const obj: any = {};
-    message.limit !== undefined && (obj.limit = (message.limit || Long.UZERO).toString());
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryPendingIbcAutoForwards>): QueryPendingIbcAutoForwards {
+  fromPartial(object: DeepPartial<QueryPendingIbcAutoForwards>): QueryPendingIbcAutoForwards {
     const message = createBaseQueryPendingIbcAutoForwards();
     message.limit = object.limit !== undefined && object.limit !== null ? Long.fromValue(object.limit) : Long.UZERO;
     return message;
@@ -3560,25 +2859,7 @@ export const QueryPendingIbcAutoForwardsResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryPendingIbcAutoForwardsResponse {
-    return {
-      pendingIbcAutoForwards: Array.isArray(object?.pendingIbcAutoForwards) ? object.pendingIbcAutoForwards.map((e: any) => PendingIbcAutoForward.fromJSON(e)) : []
-    };
-  },
-
-  toJSON(message: QueryPendingIbcAutoForwardsResponse): unknown {
-    const obj: any = {};
-
-    if (message.pendingIbcAutoForwards) {
-      obj.pendingIbcAutoForwards = message.pendingIbcAutoForwards.map(e => e ? PendingIbcAutoForward.toJSON(e) : undefined);
-    } else {
-      obj.pendingIbcAutoForwards = [];
-    }
-
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryPendingIbcAutoForwardsResponse>): QueryPendingIbcAutoForwardsResponse {
+  fromPartial(object: DeepPartial<QueryPendingIbcAutoForwardsResponse>): QueryPendingIbcAutoForwardsResponse {
     const message = createBaseQueryPendingIbcAutoForwardsResponse();
     message.pendingIbcAutoForwards = object.pendingIbcAutoForwards?.map(e => PendingIbcAutoForward.fromPartial(e)) || [];
     return message;

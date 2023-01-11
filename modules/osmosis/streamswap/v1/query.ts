@@ -1,7 +1,7 @@
 import { PageRequest, PageRequestSDKType, PageResponse, PageResponseSDKType } from "../../../cosmos/base/query/v1beta1/pagination";
 import { Sale, SaleSDKType, UserPosition, UserPositionSDKType } from "./state";
 import * as _m0 from "protobufjs/minimal";
-import { isSet, Long } from "../../../helpers";
+import { DeepPartial, Long } from "../../../helpers";
 export interface QuerySales {
   /** pagination defines an pagination for the request. */
   pagination?: PageRequest;
@@ -98,19 +98,7 @@ export const QuerySales = {
     return message;
   },
 
-  fromJSON(object: any): QuerySales {
-    return {
-      pagination: isSet(object.pagination) ? PageRequest.fromJSON(object.pagination) : undefined
-    };
-  },
-
-  toJSON(message: QuerySales): unknown {
-    const obj: any = {};
-    message.pagination !== undefined && (obj.pagination = message.pagination ? PageRequest.toJSON(message.pagination) : undefined);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QuerySales>): QuerySales {
+  fromPartial(object: DeepPartial<QuerySales>): QuerySales {
     const message = createBaseQuerySales();
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
     return message;
@@ -164,27 +152,7 @@ export const QuerySalesResponse = {
     return message;
   },
 
-  fromJSON(object: any): QuerySalesResponse {
-    return {
-      sales: Array.isArray(object?.sales) ? object.sales.map((e: any) => Sale.fromJSON(e)) : [],
-      pagination: isSet(object.pagination) ? PageResponse.fromJSON(object.pagination) : undefined
-    };
-  },
-
-  toJSON(message: QuerySalesResponse): unknown {
-    const obj: any = {};
-
-    if (message.sales) {
-      obj.sales = message.sales.map(e => e ? Sale.toJSON(e) : undefined);
-    } else {
-      obj.sales = [];
-    }
-
-    message.pagination !== undefined && (obj.pagination = message.pagination ? PageResponse.toJSON(message.pagination) : undefined);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QuerySalesResponse>): QuerySalesResponse {
+  fromPartial(object: DeepPartial<QuerySalesResponse>): QuerySalesResponse {
     const message = createBaseQuerySalesResponse();
     message.sales = object.sales?.map(e => Sale.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -230,19 +198,7 @@ export const QuerySale = {
     return message;
   },
 
-  fromJSON(object: any): QuerySale {
-    return {
-      saleId: isSet(object.saleId) ? Long.fromValue(object.saleId) : Long.UZERO
-    };
-  },
-
-  toJSON(message: QuerySale): unknown {
-    const obj: any = {};
-    message.saleId !== undefined && (obj.saleId = (message.saleId || Long.UZERO).toString());
-    return obj;
-  },
-
-  fromPartial(object: Partial<QuerySale>): QuerySale {
+  fromPartial(object: DeepPartial<QuerySale>): QuerySale {
     const message = createBaseQuerySale();
     message.saleId = object.saleId !== undefined && object.saleId !== null ? Long.fromValue(object.saleId) : Long.UZERO;
     return message;
@@ -287,19 +243,7 @@ export const QuerySaleResponse = {
     return message;
   },
 
-  fromJSON(object: any): QuerySaleResponse {
-    return {
-      sale: isSet(object.sale) ? Sale.fromJSON(object.sale) : undefined
-    };
-  },
-
-  toJSON(message: QuerySaleResponse): unknown {
-    const obj: any = {};
-    message.sale !== undefined && (obj.sale = message.sale ? Sale.toJSON(message.sale) : undefined);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QuerySaleResponse>): QuerySaleResponse {
+  fromPartial(object: DeepPartial<QuerySaleResponse>): QuerySaleResponse {
     const message = createBaseQuerySaleResponse();
     message.sale = object.sale !== undefined && object.sale !== null ? Sale.fromPartial(object.sale) : undefined;
     return message;
@@ -353,21 +297,7 @@ export const QueryUserPosition = {
     return message;
   },
 
-  fromJSON(object: any): QueryUserPosition {
-    return {
-      saleId: isSet(object.saleId) ? Long.fromValue(object.saleId) : Long.UZERO,
-      user: isSet(object.user) ? String(object.user) : ""
-    };
-  },
-
-  toJSON(message: QueryUserPosition): unknown {
-    const obj: any = {};
-    message.saleId !== undefined && (obj.saleId = (message.saleId || Long.UZERO).toString());
-    message.user !== undefined && (obj.user = message.user);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryUserPosition>): QueryUserPosition {
+  fromPartial(object: DeepPartial<QueryUserPosition>): QueryUserPosition {
     const message = createBaseQueryUserPosition();
     message.saleId = object.saleId !== undefined && object.saleId !== null ? Long.fromValue(object.saleId) : Long.UZERO;
     message.user = object.user ?? "";
@@ -413,19 +343,7 @@ export const QueryUserPositionResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryUserPositionResponse {
-    return {
-      userPosition: isSet(object.userPosition) ? UserPosition.fromJSON(object.userPosition) : undefined
-    };
-  },
-
-  toJSON(message: QueryUserPositionResponse): unknown {
-    const obj: any = {};
-    message.userPosition !== undefined && (obj.userPosition = message.userPosition ? UserPosition.toJSON(message.userPosition) : undefined);
-    return obj;
-  },
-
-  fromPartial(object: Partial<QueryUserPositionResponse>): QueryUserPositionResponse {
+  fromPartial(object: DeepPartial<QueryUserPositionResponse>): QueryUserPositionResponse {
     const message = createBaseQueryUserPositionResponse();
     message.userPosition = object.userPosition !== undefined && object.userPosition !== null ? UserPosition.fromPartial(object.userPosition) : undefined;
     return message;

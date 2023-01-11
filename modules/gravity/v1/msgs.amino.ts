@@ -188,11 +188,11 @@ export const AminoConverter = {
         eth_dest: ethDest,
         amount: {
           denom: amount.denom,
-          amount: Long.fromValue(amount.amount).toString()
+          amount: Long.fromNumber(amount.amount).toString()
         },
         bridge_fee: {
           denom: bridgeFee.denom,
-          amount: Long.fromValue(bridgeFee.amount).toString()
+          amount: Long.fromNumber(bridgeFee.amount).toString()
         }
       };
     },

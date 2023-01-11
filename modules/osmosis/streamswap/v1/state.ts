@@ -1,6 +1,6 @@
-import { Timestamp, TimestampSDKType } from "../../../google/protobuf/timestamp";
+import { Timestamp } from "../../../google/protobuf/timestamp";
 import * as _m0 from "protobufjs/minimal";
-import { Long, isSet, fromJsonTimestamp, fromTimestamp } from "../../../helpers";
+import { toTimestamp, Long, fromTimestamp, DeepPartial } from "../../../helpers";
 export interface Sale {
   /** Destination for the earned token_in */
   treasury: string;
@@ -22,13 +22,13 @@ export interface Sale {
   tokenOutSupply: string;
   /** start time when the token emission starts. */
 
-  startTime?: Timestamp;
+  startTime?: Date;
   /**
    * end time when the token emission ends. Can't be bigger than start +
    * 139years (to avoid round overflow)
    */
 
-  endTime?: Timestamp;
+  endTime?: Date;
   /** Round number when the sale was last time updated. */
 
   round: Long;
@@ -81,13 +81,13 @@ export interface SaleSDKType {
   token_out_supply: string;
   /** start time when the token emission starts. */
 
-  start_time?: TimestampSDKType;
+  start_time?: Date;
   /**
    * end time when the token emission ends. Can't be bigger than start +
    * 139years (to avoid round overflow)
    */
 
-  end_time?: TimestampSDKType;
+  end_time?: Date;
   /** Round number when the sale was last time updated. */
 
   round: Long;
@@ -199,11 +199,11 @@ export const Sale = {
     }
 
     if (message.startTime !== undefined) {
-      Timestamp.encode(message.startTime, writer.uint32(50).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.startTime), writer.uint32(50).fork()).ldelim();
     }
 
     if (message.endTime !== undefined) {
-      Timestamp.encode(message.endTime, writer.uint32(58).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.endTime), writer.uint32(58).fork()).ldelim();
     }
 
     if (!message.round.isZero()) {
@@ -279,11 +279,11 @@ export const Sale = {
           break;
 
         case 6:
-          message.startTime = Timestamp.decode(reader, reader.uint32());
+          message.startTime = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
 
         case 7:
-          message.endTime = Timestamp.decode(reader, reader.uint32());
+          message.endTime = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
 
         case 8:
@@ -335,59 +335,15 @@ export const Sale = {
     return message;
   },
 
-  fromJSON(object: any): Sale {
-    return {
-      treasury: isSet(object.treasury) ? String(object.treasury) : "",
-      id: isSet(object.id) ? Long.fromValue(object.id) : Long.UZERO,
-      tokenOut: isSet(object.tokenOut) ? String(object.tokenOut) : "",
-      tokenIn: isSet(object.tokenIn) ? String(object.tokenIn) : "",
-      tokenOutSupply: isSet(object.tokenOutSupply) ? String(object.tokenOutSupply) : "",
-      startTime: isSet(object.startTime) ? fromJsonTimestamp(object.startTime) : undefined,
-      endTime: isSet(object.endTime) ? fromJsonTimestamp(object.endTime) : undefined,
-      round: isSet(object.round) ? Long.fromValue(object.round) : Long.ZERO,
-      endRound: isSet(object.endRound) ? Long.fromValue(object.endRound) : Long.ZERO,
-      outRemaining: isSet(object.outRemaining) ? String(object.outRemaining) : "",
-      outSold: isSet(object.outSold) ? String(object.outSold) : "",
-      outPerShare: isSet(object.outPerShare) ? String(object.outPerShare) : "",
-      staked: isSet(object.staked) ? String(object.staked) : "",
-      income: isSet(object.income) ? String(object.income) : "",
-      shares: isSet(object.shares) ? String(object.shares) : "",
-      name: isSet(object.name) ? String(object.name) : "",
-      url: isSet(object.url) ? String(object.url) : ""
-    };
-  },
-
-  toJSON(message: Sale): unknown {
-    const obj: any = {};
-    message.treasury !== undefined && (obj.treasury = message.treasury);
-    message.id !== undefined && (obj.id = (message.id || Long.UZERO).toString());
-    message.tokenOut !== undefined && (obj.tokenOut = message.tokenOut);
-    message.tokenIn !== undefined && (obj.tokenIn = message.tokenIn);
-    message.tokenOutSupply !== undefined && (obj.tokenOutSupply = message.tokenOutSupply);
-    message.startTime !== undefined && (obj.startTime = fromTimestamp(message.startTime).toISOString());
-    message.endTime !== undefined && (obj.endTime = fromTimestamp(message.endTime).toISOString());
-    message.round !== undefined && (obj.round = (message.round || Long.ZERO).toString());
-    message.endRound !== undefined && (obj.endRound = (message.endRound || Long.ZERO).toString());
-    message.outRemaining !== undefined && (obj.outRemaining = message.outRemaining);
-    message.outSold !== undefined && (obj.outSold = message.outSold);
-    message.outPerShare !== undefined && (obj.outPerShare = message.outPerShare);
-    message.staked !== undefined && (obj.staked = message.staked);
-    message.income !== undefined && (obj.income = message.income);
-    message.shares !== undefined && (obj.shares = message.shares);
-    message.name !== undefined && (obj.name = message.name);
-    message.url !== undefined && (obj.url = message.url);
-    return obj;
-  },
-
-  fromPartial(object: Partial<Sale>): Sale {
+  fromPartial(object: DeepPartial<Sale>): Sale {
     const message = createBaseSale();
     message.treasury = object.treasury ?? "";
     message.id = object.id !== undefined && object.id !== null ? Long.fromValue(object.id) : Long.UZERO;
     message.tokenOut = object.tokenOut ?? "";
     message.tokenIn = object.tokenIn ?? "";
     message.tokenOutSupply = object.tokenOutSupply ?? "";
-    message.startTime = object.startTime !== undefined && object.startTime !== null ? Timestamp.fromPartial(object.startTime) : undefined;
-    message.endTime = object.endTime !== undefined && object.endTime !== null ? Timestamp.fromPartial(object.endTime) : undefined;
+    message.startTime = object.startTime ?? undefined;
+    message.endTime = object.endTime ?? undefined;
     message.round = object.round !== undefined && object.round !== null ? Long.fromValue(object.round) : Long.ZERO;
     message.endRound = object.endRound !== undefined && object.endRound !== null ? Long.fromValue(object.endRound) : Long.ZERO;
     message.outRemaining = object.outRemaining ?? "";
@@ -476,27 +432,7 @@ export const UserPosition = {
     return message;
   },
 
-  fromJSON(object: any): UserPosition {
-    return {
-      shares: isSet(object.shares) ? String(object.shares) : "",
-      staked: isSet(object.staked) ? String(object.staked) : "",
-      outPerShare: isSet(object.outPerShare) ? String(object.outPerShare) : "",
-      spent: isSet(object.spent) ? String(object.spent) : "",
-      purchased: isSet(object.purchased) ? String(object.purchased) : ""
-    };
-  },
-
-  toJSON(message: UserPosition): unknown {
-    const obj: any = {};
-    message.shares !== undefined && (obj.shares = message.shares);
-    message.staked !== undefined && (obj.staked = message.staked);
-    message.outPerShare !== undefined && (obj.outPerShare = message.outPerShare);
-    message.spent !== undefined && (obj.spent = message.spent);
-    message.purchased !== undefined && (obj.purchased = message.purchased);
-    return obj;
-  },
-
-  fromPartial(object: Partial<UserPosition>): UserPosition {
+  fromPartial(object: DeepPartial<UserPosition>): UserPosition {
     const message = createBaseUserPosition();
     message.shares = object.shares ?? "";
     message.staked = object.staked ?? "";

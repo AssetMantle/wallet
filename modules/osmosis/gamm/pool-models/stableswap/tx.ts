@@ -1,7 +1,7 @@
 import { PoolParams, PoolParamsSDKType } from "./stableswap_pool";
 import { Coin, CoinSDKType } from "../../../../cosmos/base/v1beta1/coin";
 import * as _m0 from "protobufjs/minimal";
-import { Long, isSet } from "../../../../helpers";
+import { Long, DeepPartial } from "../../../../helpers";
 /** ===================== MsgCreatePool */
 
 export interface MsgCreateStableswapPool {
@@ -139,38 +139,7 @@ export const MsgCreateStableswapPool = {
     return message;
   },
 
-  fromJSON(object: any): MsgCreateStableswapPool {
-    return {
-      sender: isSet(object.sender) ? String(object.sender) : "",
-      poolParams: isSet(object.poolParams) ? PoolParams.fromJSON(object.poolParams) : undefined,
-      initialPoolLiquidity: Array.isArray(object?.initialPoolLiquidity) ? object.initialPoolLiquidity.map((e: any) => Coin.fromJSON(e)) : [],
-      scalingFactors: Array.isArray(object?.scalingFactors) ? object.scalingFactors.map((e: any) => Long.fromValue(e)) : [],
-      futurePoolGovernor: isSet(object.futurePoolGovernor) ? String(object.futurePoolGovernor) : ""
-    };
-  },
-
-  toJSON(message: MsgCreateStableswapPool): unknown {
-    const obj: any = {};
-    message.sender !== undefined && (obj.sender = message.sender);
-    message.poolParams !== undefined && (obj.poolParams = message.poolParams ? PoolParams.toJSON(message.poolParams) : undefined);
-
-    if (message.initialPoolLiquidity) {
-      obj.initialPoolLiquidity = message.initialPoolLiquidity.map(e => e ? Coin.toJSON(e) : undefined);
-    } else {
-      obj.initialPoolLiquidity = [];
-    }
-
-    if (message.scalingFactors) {
-      obj.scalingFactors = message.scalingFactors.map(e => (e || Long.UZERO).toString());
-    } else {
-      obj.scalingFactors = [];
-    }
-
-    message.futurePoolGovernor !== undefined && (obj.futurePoolGovernor = message.futurePoolGovernor);
-    return obj;
-  },
-
-  fromPartial(object: Partial<MsgCreateStableswapPool>): MsgCreateStableswapPool {
+  fromPartial(object: DeepPartial<MsgCreateStableswapPool>): MsgCreateStableswapPool {
     const message = createBaseMsgCreateStableswapPool();
     message.sender = object.sender ?? "";
     message.poolParams = object.poolParams !== undefined && object.poolParams !== null ? PoolParams.fromPartial(object.poolParams) : undefined;
@@ -219,19 +188,7 @@ export const MsgCreateStableswapPoolResponse = {
     return message;
   },
 
-  fromJSON(object: any): MsgCreateStableswapPoolResponse {
-    return {
-      poolId: isSet(object.poolId) ? Long.fromValue(object.poolId) : Long.UZERO
-    };
-  },
-
-  toJSON(message: MsgCreateStableswapPoolResponse): unknown {
-    const obj: any = {};
-    message.poolId !== undefined && (obj.poolId = (message.poolId || Long.UZERO).toString());
-    return obj;
-  },
-
-  fromPartial(object: Partial<MsgCreateStableswapPoolResponse>): MsgCreateStableswapPoolResponse {
+  fromPartial(object: DeepPartial<MsgCreateStableswapPoolResponse>): MsgCreateStableswapPoolResponse {
     const message = createBaseMsgCreateStableswapPoolResponse();
     message.poolId = object.poolId !== undefined && object.poolId !== null ? Long.fromValue(object.poolId) : Long.UZERO;
     return message;
@@ -306,29 +263,7 @@ export const MsgStableSwapAdjustScalingFactors = {
     return message;
   },
 
-  fromJSON(object: any): MsgStableSwapAdjustScalingFactors {
-    return {
-      sender: isSet(object.sender) ? String(object.sender) : "",
-      poolId: isSet(object.poolId) ? Long.fromValue(object.poolId) : Long.UZERO,
-      scalingFactors: Array.isArray(object?.scalingFactors) ? object.scalingFactors.map((e: any) => Long.fromValue(e)) : []
-    };
-  },
-
-  toJSON(message: MsgStableSwapAdjustScalingFactors): unknown {
-    const obj: any = {};
-    message.sender !== undefined && (obj.sender = message.sender);
-    message.poolId !== undefined && (obj.poolId = (message.poolId || Long.UZERO).toString());
-
-    if (message.scalingFactors) {
-      obj.scalingFactors = message.scalingFactors.map(e => (e || Long.UZERO).toString());
-    } else {
-      obj.scalingFactors = [];
-    }
-
-    return obj;
-  },
-
-  fromPartial(object: Partial<MsgStableSwapAdjustScalingFactors>): MsgStableSwapAdjustScalingFactors {
+  fromPartial(object: DeepPartial<MsgStableSwapAdjustScalingFactors>): MsgStableSwapAdjustScalingFactors {
     const message = createBaseMsgStableSwapAdjustScalingFactors();
     message.sender = object.sender ?? "";
     message.poolId = object.poolId !== undefined && object.poolId !== null ? Long.fromValue(object.poolId) : Long.UZERO;
@@ -365,16 +300,7 @@ export const MsgStableSwapAdjustScalingFactorsResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgStableSwapAdjustScalingFactorsResponse {
-    return {};
-  },
-
-  toJSON(_: MsgStableSwapAdjustScalingFactorsResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial(_: Partial<MsgStableSwapAdjustScalingFactorsResponse>): MsgStableSwapAdjustScalingFactorsResponse {
+  fromPartial(_: DeepPartial<MsgStableSwapAdjustScalingFactorsResponse>): MsgStableSwapAdjustScalingFactorsResponse {
     const message = createBaseMsgStableSwapAdjustScalingFactorsResponse();
     return message;
   }

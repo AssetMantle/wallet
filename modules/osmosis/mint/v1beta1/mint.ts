@@ -1,5 +1,5 @@
 import * as _m0 from "protobufjs/minimal";
-import { isSet, Long } from "../../../helpers";
+import { DeepPartial, Long } from "../../../helpers";
 /** Minter represents the minting state. */
 
 export interface Minter {
@@ -222,19 +222,7 @@ export const Minter = {
     return message;
   },
 
-  fromJSON(object: any): Minter {
-    return {
-      epochProvisions: isSet(object.epochProvisions) ? String(object.epochProvisions) : ""
-    };
-  },
-
-  toJSON(message: Minter): unknown {
-    const obj: any = {};
-    message.epochProvisions !== undefined && (obj.epochProvisions = message.epochProvisions);
-    return obj;
-  },
-
-  fromPartial(object: Partial<Minter>): Minter {
+  fromPartial(object: DeepPartial<Minter>): Minter {
     const message = createBaseMinter();
     message.epochProvisions = object.epochProvisions ?? "";
     return message;
@@ -288,21 +276,7 @@ export const WeightedAddress = {
     return message;
   },
 
-  fromJSON(object: any): WeightedAddress {
-    return {
-      address: isSet(object.address) ? String(object.address) : "",
-      weight: isSet(object.weight) ? String(object.weight) : ""
-    };
-  },
-
-  toJSON(message: WeightedAddress): unknown {
-    const obj: any = {};
-    message.address !== undefined && (obj.address = message.address);
-    message.weight !== undefined && (obj.weight = message.weight);
-    return obj;
-  },
-
-  fromPartial(object: Partial<WeightedAddress>): WeightedAddress {
+  fromPartial(object: DeepPartial<WeightedAddress>): WeightedAddress {
     const message = createBaseWeightedAddress();
     message.address = object.address ?? "";
     message.weight = object.weight ?? "";
@@ -375,25 +349,7 @@ export const DistributionProportions = {
     return message;
   },
 
-  fromJSON(object: any): DistributionProportions {
-    return {
-      staking: isSet(object.staking) ? String(object.staking) : "",
-      poolIncentives: isSet(object.poolIncentives) ? String(object.poolIncentives) : "",
-      developerRewards: isSet(object.developerRewards) ? String(object.developerRewards) : "",
-      communityPool: isSet(object.communityPool) ? String(object.communityPool) : ""
-    };
-  },
-
-  toJSON(message: DistributionProportions): unknown {
-    const obj: any = {};
-    message.staking !== undefined && (obj.staking = message.staking);
-    message.poolIncentives !== undefined && (obj.poolIncentives = message.poolIncentives);
-    message.developerRewards !== undefined && (obj.developerRewards = message.developerRewards);
-    message.communityPool !== undefined && (obj.communityPool = message.communityPool);
-    return obj;
-  },
-
-  fromPartial(object: Partial<DistributionProportions>): DistributionProportions {
+  fromPartial(object: DeepPartial<DistributionProportions>): DistributionProportions {
     const message = createBaseDistributionProportions();
     message.staking = object.staking ?? "";
     message.poolIncentives = object.poolIncentives ?? "";
@@ -504,39 +460,7 @@ export const Params = {
     return message;
   },
 
-  fromJSON(object: any): Params {
-    return {
-      mintDenom: isSet(object.mintDenom) ? String(object.mintDenom) : "",
-      genesisEpochProvisions: isSet(object.genesisEpochProvisions) ? String(object.genesisEpochProvisions) : "",
-      epochIdentifier: isSet(object.epochIdentifier) ? String(object.epochIdentifier) : "",
-      reductionPeriodInEpochs: isSet(object.reductionPeriodInEpochs) ? Long.fromValue(object.reductionPeriodInEpochs) : Long.ZERO,
-      reductionFactor: isSet(object.reductionFactor) ? String(object.reductionFactor) : "",
-      distributionProportions: isSet(object.distributionProportions) ? DistributionProportions.fromJSON(object.distributionProportions) : undefined,
-      weightedDeveloperRewardsReceivers: Array.isArray(object?.weightedDeveloperRewardsReceivers) ? object.weightedDeveloperRewardsReceivers.map((e: any) => WeightedAddress.fromJSON(e)) : [],
-      mintingRewardsDistributionStartEpoch: isSet(object.mintingRewardsDistributionStartEpoch) ? Long.fromValue(object.mintingRewardsDistributionStartEpoch) : Long.ZERO
-    };
-  },
-
-  toJSON(message: Params): unknown {
-    const obj: any = {};
-    message.mintDenom !== undefined && (obj.mintDenom = message.mintDenom);
-    message.genesisEpochProvisions !== undefined && (obj.genesisEpochProvisions = message.genesisEpochProvisions);
-    message.epochIdentifier !== undefined && (obj.epochIdentifier = message.epochIdentifier);
-    message.reductionPeriodInEpochs !== undefined && (obj.reductionPeriodInEpochs = (message.reductionPeriodInEpochs || Long.ZERO).toString());
-    message.reductionFactor !== undefined && (obj.reductionFactor = message.reductionFactor);
-    message.distributionProportions !== undefined && (obj.distributionProportions = message.distributionProportions ? DistributionProportions.toJSON(message.distributionProportions) : undefined);
-
-    if (message.weightedDeveloperRewardsReceivers) {
-      obj.weightedDeveloperRewardsReceivers = message.weightedDeveloperRewardsReceivers.map(e => e ? WeightedAddress.toJSON(e) : undefined);
-    } else {
-      obj.weightedDeveloperRewardsReceivers = [];
-    }
-
-    message.mintingRewardsDistributionStartEpoch !== undefined && (obj.mintingRewardsDistributionStartEpoch = (message.mintingRewardsDistributionStartEpoch || Long.ZERO).toString());
-    return obj;
-  },
-
-  fromPartial(object: Partial<Params>): Params {
+  fromPartial(object: DeepPartial<Params>): Params {
     const message = createBaseParams();
     message.mintDenom = object.mintDenom ?? "";
     message.genesisEpochProvisions = object.genesisEpochProvisions ?? "";

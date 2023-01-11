@@ -1,6 +1,6 @@
 import { FeeToken, FeeTokenSDKType } from "./feetoken";
 import * as _m0 from "protobufjs/minimal";
-import { isSet } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * UpdateFeeTokenProposal is a gov Content type for adding a new whitelisted fee
  * token. It must specify a denom along with gamm pool ID to use as a spot price
@@ -83,23 +83,7 @@ export const UpdateFeeTokenProposal = {
     return message;
   },
 
-  fromJSON(object: any): UpdateFeeTokenProposal {
-    return {
-      title: isSet(object.title) ? String(object.title) : "",
-      description: isSet(object.description) ? String(object.description) : "",
-      feetoken: isSet(object.feetoken) ? FeeToken.fromJSON(object.feetoken) : undefined
-    };
-  },
-
-  toJSON(message: UpdateFeeTokenProposal): unknown {
-    const obj: any = {};
-    message.title !== undefined && (obj.title = message.title);
-    message.description !== undefined && (obj.description = message.description);
-    message.feetoken !== undefined && (obj.feetoken = message.feetoken ? FeeToken.toJSON(message.feetoken) : undefined);
-    return obj;
-  },
-
-  fromPartial(object: Partial<UpdateFeeTokenProposal>): UpdateFeeTokenProposal {
+  fromPartial(object: DeepPartial<UpdateFeeTokenProposal>): UpdateFeeTokenProposal {
     const message = createBaseUpdateFeeTokenProposal();
     message.title = object.title ?? "";
     message.description = object.description ?? "";

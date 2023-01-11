@@ -1,5 +1,6 @@
 import { Coin, CoinSDKType } from "../../base/v1beta1/coin";
 import * as _m0 from "protobufjs/minimal";
+import { DeepPartial } from "../../../helpers";
 /**
  * SendAuthorization allows the grantee to spend up to spend_limit coins from
  * the granter's account.
@@ -58,25 +59,7 @@ export const SendAuthorization = {
     return message;
   },
 
-  fromJSON(object: any): SendAuthorization {
-    return {
-      spendLimit: Array.isArray(object?.spendLimit) ? object.spendLimit.map((e: any) => Coin.fromJSON(e)) : []
-    };
-  },
-
-  toJSON(message: SendAuthorization): unknown {
-    const obj: any = {};
-
-    if (message.spendLimit) {
-      obj.spendLimit = message.spendLimit.map(e => e ? Coin.toJSON(e) : undefined);
-    } else {
-      obj.spendLimit = [];
-    }
-
-    return obj;
-  },
-
-  fromPartial(object: Partial<SendAuthorization>): SendAuthorization {
+  fromPartial(object: DeepPartial<SendAuthorization>): SendAuthorization {
     const message = createBaseSendAuthorization();
     message.spendLimit = object.spendLimit?.map(e => Coin.fromPartial(e)) || [];
     return message;

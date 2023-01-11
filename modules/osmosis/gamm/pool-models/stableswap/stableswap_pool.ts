@@ -1,6 +1,6 @@
 import { Coin, CoinSDKType } from "../../../../cosmos/base/v1beta1/coin";
 import * as _m0 from "protobufjs/minimal";
-import { isSet, Long } from "../../../../helpers";
+import { DeepPartial, Long } from "../../../../helpers";
 /**
  * PoolParams defined the parameters that will be managed by the pool
  * governance in the future. This params are not managed by the chain
@@ -132,21 +132,7 @@ export const PoolParams = {
     return message;
   },
 
-  fromJSON(object: any): PoolParams {
-    return {
-      swapFee: isSet(object.swapFee) ? String(object.swapFee) : "",
-      exitFee: isSet(object.exitFee) ? String(object.exitFee) : ""
-    };
-  },
-
-  toJSON(message: PoolParams): unknown {
-    const obj: any = {};
-    message.swapFee !== undefined && (obj.swapFee = message.swapFee);
-    message.exitFee !== undefined && (obj.exitFee = message.exitFee);
-    return obj;
-  },
-
-  fromPartial(object: Partial<PoolParams>): PoolParams {
+  fromPartial(object: DeepPartial<PoolParams>): PoolParams {
     const message = createBasePoolParams();
     message.swapFee = object.swapFee ?? "";
     message.exitFee = object.exitFee ?? "";
@@ -268,44 +254,7 @@ export const Pool = {
     return message;
   },
 
-  fromJSON(object: any): Pool {
-    return {
-      address: isSet(object.address) ? String(object.address) : "",
-      id: isSet(object.id) ? Long.fromValue(object.id) : Long.UZERO,
-      poolParams: isSet(object.poolParams) ? PoolParams.fromJSON(object.poolParams) : undefined,
-      futurePoolGovernor: isSet(object.futurePoolGovernor) ? String(object.futurePoolGovernor) : "",
-      totalShares: isSet(object.totalShares) ? Coin.fromJSON(object.totalShares) : undefined,
-      poolLiquidity: Array.isArray(object?.poolLiquidity) ? object.poolLiquidity.map((e: any) => Coin.fromJSON(e)) : [],
-      scalingFactor: Array.isArray(object?.scalingFactor) ? object.scalingFactor.map((e: any) => Long.fromValue(e)) : [],
-      scalingFactorGovernor: isSet(object.scalingFactorGovernor) ? String(object.scalingFactorGovernor) : ""
-    };
-  },
-
-  toJSON(message: Pool): unknown {
-    const obj: any = {};
-    message.address !== undefined && (obj.address = message.address);
-    message.id !== undefined && (obj.id = (message.id || Long.UZERO).toString());
-    message.poolParams !== undefined && (obj.poolParams = message.poolParams ? PoolParams.toJSON(message.poolParams) : undefined);
-    message.futurePoolGovernor !== undefined && (obj.futurePoolGovernor = message.futurePoolGovernor);
-    message.totalShares !== undefined && (obj.totalShares = message.totalShares ? Coin.toJSON(message.totalShares) : undefined);
-
-    if (message.poolLiquidity) {
-      obj.poolLiquidity = message.poolLiquidity.map(e => e ? Coin.toJSON(e) : undefined);
-    } else {
-      obj.poolLiquidity = [];
-    }
-
-    if (message.scalingFactor) {
-      obj.scalingFactor = message.scalingFactor.map(e => (e || Long.UZERO).toString());
-    } else {
-      obj.scalingFactor = [];
-    }
-
-    message.scalingFactorGovernor !== undefined && (obj.scalingFactorGovernor = message.scalingFactorGovernor);
-    return obj;
-  },
-
-  fromPartial(object: Partial<Pool>): Pool {
+  fromPartial(object: DeepPartial<Pool>): Pool {
     const message = createBasePool();
     message.address = object.address ?? "";
     message.id = object.id !== undefined && object.id !== null ? Long.fromValue(object.id) : Long.UZERO;

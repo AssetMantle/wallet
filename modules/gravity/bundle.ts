@@ -1,36 +1,36 @@
-import * as _101 from "./v1/attestation";
-import * as _102 from "./v1/batch";
-import * as _103 from "./v1/ethereum_signer";
-import * as _104 from "./v1/genesis";
-import * as _105 from "./v1/msgs";
-import * as _106 from "./v1/pool";
-import * as _107 from "./v1/query";
-import * as _108 from "./v1/types";
-import * as _246 from "./v1/msgs.amino";
-import * as _247 from "./v1/msgs.registry";
-import * as _248 from "./v1/query.lcd";
-import * as _249 from "./v1/query.rpc.Query";
-import * as _250 from "./v1/msgs.rpc.msg";
-import * as _300 from "./lcd";
-import * as _301 from "./rpc.query";
-import * as _302 from "./rpc.tx";
+import * as _103 from "./v1/attestation";
+import * as _104 from "./v1/batch";
+import * as _105 from "./v1/ethereum_signer";
+import * as _106 from "./v1/genesis";
+import * as _107 from "./v1/msgs";
+import * as _108 from "./v1/pool";
+import * as _109 from "./v1/query";
+import * as _110 from "./v1/types";
+import * as _272 from "./v1/msgs.amino";
+import * as _273 from "./v1/msgs.registry";
+import * as _274 from "./v1/query.lcd";
+import * as _275 from "./v1/query.rpc.query";
+import * as _276 from "./v1/msgs.rpc.msg";
+import * as _347 from "./lcd";
+import * as _348 from "./rpc.query";
+import * as _349 from "./rpc.tx";
 export namespace gravity {
-  export const v1 = { ..._101,
-    ..._102,
-    ..._103,
+  export const v1 = { ..._103,
     ..._104,
     ..._105,
     ..._106,
     ..._107,
     ..._108,
-    ..._246,
-    ..._247,
-    ..._248,
-    ..._249,
-    ..._250
+    ..._109,
+    ..._110,
+    ..._272,
+    ..._273,
+    ..._274,
+    ..._275,
+    ..._276
   };
-  export const ClientFactory = { ..._300,
-    ..._301,
-    ..._302
+  export const ClientFactory = { ..._347,
+    ..._348,
+    ..._349
   };
 }

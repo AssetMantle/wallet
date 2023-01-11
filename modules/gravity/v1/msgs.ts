@@ -2,7 +2,7 @@ import { Coin, CoinSDKType } from "../../cosmos/base/v1beta1/coin";
 import { BridgeValidator, BridgeValidatorSDKType } from "./types";
 import { Any, AnySDKType } from "../../google/protobuf/any";
 import * as _m0 from "protobufjs/minimal";
-import { isSet, Long, bytesFromBase64, base64FromBytes } from "../../helpers";
+import { DeepPartial, Long } from "../../helpers";
 /**
  * MsgSetOrchestratorAddress
  * this message allows validators to delegate their voting responsibilities
@@ -645,23 +645,7 @@ export const MsgSetOrchestratorAddress = {
     return message;
   },
 
-  fromJSON(object: any): MsgSetOrchestratorAddress {
-    return {
-      validator: isSet(object.validator) ? String(object.validator) : "",
-      orchestrator: isSet(object.orchestrator) ? String(object.orchestrator) : "",
-      ethAddress: isSet(object.ethAddress) ? String(object.ethAddress) : ""
-    };
-  },
-
-  toJSON(message: MsgSetOrchestratorAddress): unknown {
-    const obj: any = {};
-    message.validator !== undefined && (obj.validator = message.validator);
-    message.orchestrator !== undefined && (obj.orchestrator = message.orchestrator);
-    message.ethAddress !== undefined && (obj.ethAddress = message.ethAddress);
-    return obj;
-  },
-
-  fromPartial(object: Partial<MsgSetOrchestratorAddress>): MsgSetOrchestratorAddress {
+  fromPartial(object: DeepPartial<MsgSetOrchestratorAddress>): MsgSetOrchestratorAddress {
     const message = createBaseMsgSetOrchestratorAddress();
     message.validator = object.validator ?? "";
     message.orchestrator = object.orchestrator ?? "";
@@ -698,16 +682,7 @@ export const MsgSetOrchestratorAddressResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgSetOrchestratorAddressResponse {
-    return {};
-  },
-
-  toJSON(_: MsgSetOrchestratorAddressResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial(_: Partial<MsgSetOrchestratorAddressResponse>): MsgSetOrchestratorAddressResponse {
+  fromPartial(_: DeepPartial<MsgSetOrchestratorAddressResponse>): MsgSetOrchestratorAddressResponse {
     const message = createBaseMsgSetOrchestratorAddressResponse();
     return message;
   }
@@ -778,25 +753,7 @@ export const MsgValsetConfirm = {
     return message;
   },
 
-  fromJSON(object: any): MsgValsetConfirm {
-    return {
-      nonce: isSet(object.nonce) ? Long.fromValue(object.nonce) : Long.UZERO,
-      orchestrator: isSet(object.orchestrator) ? String(object.orchestrator) : "",
-      ethAddress: isSet(object.ethAddress) ? String(object.ethAddress) : "",
-      signature: isSet(object.signature) ? String(object.signature) : ""
-    };
-  },
-
-  toJSON(message: MsgValsetConfirm): unknown {
-    const obj: any = {};
-    message.nonce !== undefined && (obj.nonce = (message.nonce || Long.UZERO).toString());
-    message.orchestrator !== undefined && (obj.orchestrator = message.orchestrator);
-    message.ethAddress !== undefined && (obj.ethAddress = message.ethAddress);
-    message.signature !== undefined && (obj.signature = message.signature);
-    return obj;
-  },
-
-  fromPartial(object: Partial<MsgValsetConfirm>): MsgValsetConfirm {
+  fromPartial(object: DeepPartial<MsgValsetConfirm>): MsgValsetConfirm {
     const message = createBaseMsgValsetConfirm();
     message.nonce = object.nonce !== undefined && object.nonce !== null ? Long.fromValue(object.nonce) : Long.UZERO;
     message.orchestrator = object.orchestrator ?? "";
@@ -834,16 +791,7 @@ export const MsgValsetConfirmResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgValsetConfirmResponse {
-    return {};
-  },
-
-  toJSON(_: MsgValsetConfirmResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial(_: Partial<MsgValsetConfirmResponse>): MsgValsetConfirmResponse {
+  fromPartial(_: DeepPartial<MsgValsetConfirmResponse>): MsgValsetConfirmResponse {
     const message = createBaseMsgValsetConfirmResponse();
     return message;
   }
@@ -914,25 +862,7 @@ export const MsgSendToEth = {
     return message;
   },
 
-  fromJSON(object: any): MsgSendToEth {
-    return {
-      sender: isSet(object.sender) ? String(object.sender) : "",
-      ethDest: isSet(object.ethDest) ? String(object.ethDest) : "",
-      amount: isSet(object.amount) ? Coin.fromJSON(object.amount) : undefined,
-      bridgeFee: isSet(object.bridgeFee) ? Coin.fromJSON(object.bridgeFee) : undefined
-    };
-  },
-
-  toJSON(message: MsgSendToEth): unknown {
-    const obj: any = {};
-    message.sender !== undefined && (obj.sender = message.sender);
-    message.ethDest !== undefined && (obj.ethDest = message.ethDest);
-    message.amount !== undefined && (obj.amount = message.amount ? Coin.toJSON(message.amount) : undefined);
-    message.bridgeFee !== undefined && (obj.bridgeFee = message.bridgeFee ? Coin.toJSON(message.bridgeFee) : undefined);
-    return obj;
-  },
-
-  fromPartial(object: Partial<MsgSendToEth>): MsgSendToEth {
+  fromPartial(object: DeepPartial<MsgSendToEth>): MsgSendToEth {
     const message = createBaseMsgSendToEth();
     message.sender = object.sender ?? "";
     message.ethDest = object.ethDest ?? "";
@@ -970,16 +900,7 @@ export const MsgSendToEthResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgSendToEthResponse {
-    return {};
-  },
-
-  toJSON(_: MsgSendToEthResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial(_: Partial<MsgSendToEthResponse>): MsgSendToEthResponse {
+  fromPartial(_: DeepPartial<MsgSendToEthResponse>): MsgSendToEthResponse {
     const message = createBaseMsgSendToEthResponse();
     return message;
   }
@@ -1032,21 +953,7 @@ export const MsgRequestBatch = {
     return message;
   },
 
-  fromJSON(object: any): MsgRequestBatch {
-    return {
-      sender: isSet(object.sender) ? String(object.sender) : "",
-      denom: isSet(object.denom) ? String(object.denom) : ""
-    };
-  },
-
-  toJSON(message: MsgRequestBatch): unknown {
-    const obj: any = {};
-    message.sender !== undefined && (obj.sender = message.sender);
-    message.denom !== undefined && (obj.denom = message.denom);
-    return obj;
-  },
-
-  fromPartial(object: Partial<MsgRequestBatch>): MsgRequestBatch {
+  fromPartial(object: DeepPartial<MsgRequestBatch>): MsgRequestBatch {
     const message = createBaseMsgRequestBatch();
     message.sender = object.sender ?? "";
     message.denom = object.denom ?? "";
@@ -1082,16 +989,7 @@ export const MsgRequestBatchResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgRequestBatchResponse {
-    return {};
-  },
-
-  toJSON(_: MsgRequestBatchResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial(_: Partial<MsgRequestBatchResponse>): MsgRequestBatchResponse {
+  fromPartial(_: DeepPartial<MsgRequestBatchResponse>): MsgRequestBatchResponse {
     const message = createBaseMsgRequestBatchResponse();
     return message;
   }
@@ -1171,27 +1069,7 @@ export const MsgConfirmBatch = {
     return message;
   },
 
-  fromJSON(object: any): MsgConfirmBatch {
-    return {
-      nonce: isSet(object.nonce) ? Long.fromValue(object.nonce) : Long.UZERO,
-      tokenContract: isSet(object.tokenContract) ? String(object.tokenContract) : "",
-      ethSigner: isSet(object.ethSigner) ? String(object.ethSigner) : "",
-      orchestrator: isSet(object.orchestrator) ? String(object.orchestrator) : "",
-      signature: isSet(object.signature) ? String(object.signature) : ""
-    };
-  },
-
-  toJSON(message: MsgConfirmBatch): unknown {
-    const obj: any = {};
-    message.nonce !== undefined && (obj.nonce = (message.nonce || Long.UZERO).toString());
-    message.tokenContract !== undefined && (obj.tokenContract = message.tokenContract);
-    message.ethSigner !== undefined && (obj.ethSigner = message.ethSigner);
-    message.orchestrator !== undefined && (obj.orchestrator = message.orchestrator);
-    message.signature !== undefined && (obj.signature = message.signature);
-    return obj;
-  },
-
-  fromPartial(object: Partial<MsgConfirmBatch>): MsgConfirmBatch {
+  fromPartial(object: DeepPartial<MsgConfirmBatch>): MsgConfirmBatch {
     const message = createBaseMsgConfirmBatch();
     message.nonce = object.nonce !== undefined && object.nonce !== null ? Long.fromValue(object.nonce) : Long.UZERO;
     message.tokenContract = object.tokenContract ?? "";
@@ -1230,16 +1108,7 @@ export const MsgConfirmBatchResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgConfirmBatchResponse {
-    return {};
-  },
-
-  toJSON(_: MsgConfirmBatchResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial(_: Partial<MsgConfirmBatchResponse>): MsgConfirmBatchResponse {
+  fromPartial(_: DeepPartial<MsgConfirmBatchResponse>): MsgConfirmBatchResponse {
     const message = createBaseMsgConfirmBatchResponse();
     return message;
   }
@@ -1319,27 +1188,7 @@ export const MsgConfirmLogicCall = {
     return message;
   },
 
-  fromJSON(object: any): MsgConfirmLogicCall {
-    return {
-      invalidationId: isSet(object.invalidationId) ? String(object.invalidationId) : "",
-      invalidationNonce: isSet(object.invalidationNonce) ? Long.fromValue(object.invalidationNonce) : Long.UZERO,
-      ethSigner: isSet(object.ethSigner) ? String(object.ethSigner) : "",
-      orchestrator: isSet(object.orchestrator) ? String(object.orchestrator) : "",
-      signature: isSet(object.signature) ? String(object.signature) : ""
-    };
-  },
-
-  toJSON(message: MsgConfirmLogicCall): unknown {
-    const obj: any = {};
-    message.invalidationId !== undefined && (obj.invalidationId = message.invalidationId);
-    message.invalidationNonce !== undefined && (obj.invalidationNonce = (message.invalidationNonce || Long.UZERO).toString());
-    message.ethSigner !== undefined && (obj.ethSigner = message.ethSigner);
-    message.orchestrator !== undefined && (obj.orchestrator = message.orchestrator);
-    message.signature !== undefined && (obj.signature = message.signature);
-    return obj;
-  },
-
-  fromPartial(object: Partial<MsgConfirmLogicCall>): MsgConfirmLogicCall {
+  fromPartial(object: DeepPartial<MsgConfirmLogicCall>): MsgConfirmLogicCall {
     const message = createBaseMsgConfirmLogicCall();
     message.invalidationId = object.invalidationId ?? "";
     message.invalidationNonce = object.invalidationNonce !== undefined && object.invalidationNonce !== null ? Long.fromValue(object.invalidationNonce) : Long.UZERO;
@@ -1378,16 +1227,7 @@ export const MsgConfirmLogicCallResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgConfirmLogicCallResponse {
-    return {};
-  },
-
-  toJSON(_: MsgConfirmLogicCallResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial(_: Partial<MsgConfirmLogicCallResponse>): MsgConfirmLogicCallResponse {
+  fromPartial(_: DeepPartial<MsgConfirmLogicCallResponse>): MsgConfirmLogicCallResponse {
     const message = createBaseMsgConfirmLogicCallResponse();
     return message;
   }
@@ -1485,31 +1325,7 @@ export const MsgSendToCosmosClaim = {
     return message;
   },
 
-  fromJSON(object: any): MsgSendToCosmosClaim {
-    return {
-      eventNonce: isSet(object.eventNonce) ? Long.fromValue(object.eventNonce) : Long.UZERO,
-      ethBlockHeight: isSet(object.ethBlockHeight) ? Long.fromValue(object.ethBlockHeight) : Long.UZERO,
-      tokenContract: isSet(object.tokenContract) ? String(object.tokenContract) : "",
-      amount: isSet(object.amount) ? String(object.amount) : "",
-      ethereumSender: isSet(object.ethereumSender) ? String(object.ethereumSender) : "",
-      cosmosReceiver: isSet(object.cosmosReceiver) ? String(object.cosmosReceiver) : "",
-      orchestrator: isSet(object.orchestrator) ? String(object.orchestrator) : ""
-    };
-  },
-
-  toJSON(message: MsgSendToCosmosClaim): unknown {
-    const obj: any = {};
-    message.eventNonce !== undefined && (obj.eventNonce = (message.eventNonce || Long.UZERO).toString());
-    message.ethBlockHeight !== undefined && (obj.ethBlockHeight = (message.ethBlockHeight || Long.UZERO).toString());
-    message.tokenContract !== undefined && (obj.tokenContract = message.tokenContract);
-    message.amount !== undefined && (obj.amount = message.amount);
-    message.ethereumSender !== undefined && (obj.ethereumSender = message.ethereumSender);
-    message.cosmosReceiver !== undefined && (obj.cosmosReceiver = message.cosmosReceiver);
-    message.orchestrator !== undefined && (obj.orchestrator = message.orchestrator);
-    return obj;
-  },
-
-  fromPartial(object: Partial<MsgSendToCosmosClaim>): MsgSendToCosmosClaim {
+  fromPartial(object: DeepPartial<MsgSendToCosmosClaim>): MsgSendToCosmosClaim {
     const message = createBaseMsgSendToCosmosClaim();
     message.eventNonce = object.eventNonce !== undefined && object.eventNonce !== null ? Long.fromValue(object.eventNonce) : Long.UZERO;
     message.ethBlockHeight = object.ethBlockHeight !== undefined && object.ethBlockHeight !== null ? Long.fromValue(object.ethBlockHeight) : Long.UZERO;
@@ -1550,16 +1366,7 @@ export const MsgSendToCosmosClaimResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgSendToCosmosClaimResponse {
-    return {};
-  },
-
-  toJSON(_: MsgSendToCosmosClaimResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial(_: Partial<MsgSendToCosmosClaimResponse>): MsgSendToCosmosClaimResponse {
+  fromPartial(_: DeepPartial<MsgSendToCosmosClaimResponse>): MsgSendToCosmosClaimResponse {
     const message = createBaseMsgSendToCosmosClaimResponse();
     return message;
   }
@@ -1612,21 +1419,7 @@ export const MsgExecuteIbcAutoForwards = {
     return message;
   },
 
-  fromJSON(object: any): MsgExecuteIbcAutoForwards {
-    return {
-      forwardsToClear: isSet(object.forwardsToClear) ? Long.fromValue(object.forwardsToClear) : Long.UZERO,
-      executor: isSet(object.executor) ? String(object.executor) : ""
-    };
-  },
-
-  toJSON(message: MsgExecuteIbcAutoForwards): unknown {
-    const obj: any = {};
-    message.forwardsToClear !== undefined && (obj.forwardsToClear = (message.forwardsToClear || Long.UZERO).toString());
-    message.executor !== undefined && (obj.executor = message.executor);
-    return obj;
-  },
-
-  fromPartial(object: Partial<MsgExecuteIbcAutoForwards>): MsgExecuteIbcAutoForwards {
+  fromPartial(object: DeepPartial<MsgExecuteIbcAutoForwards>): MsgExecuteIbcAutoForwards {
     const message = createBaseMsgExecuteIbcAutoForwards();
     message.forwardsToClear = object.forwardsToClear !== undefined && object.forwardsToClear !== null ? Long.fromValue(object.forwardsToClear) : Long.UZERO;
     message.executor = object.executor ?? "";
@@ -1662,16 +1455,7 @@ export const MsgExecuteIbcAutoForwardsResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgExecuteIbcAutoForwardsResponse {
-    return {};
-  },
-
-  toJSON(_: MsgExecuteIbcAutoForwardsResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial(_: Partial<MsgExecuteIbcAutoForwardsResponse>): MsgExecuteIbcAutoForwardsResponse {
+  fromPartial(_: DeepPartial<MsgExecuteIbcAutoForwardsResponse>): MsgExecuteIbcAutoForwardsResponse {
     const message = createBaseMsgExecuteIbcAutoForwardsResponse();
     return message;
   }
@@ -1751,27 +1535,7 @@ export const MsgBatchSendToEthClaim = {
     return message;
   },
 
-  fromJSON(object: any): MsgBatchSendToEthClaim {
-    return {
-      eventNonce: isSet(object.eventNonce) ? Long.fromValue(object.eventNonce) : Long.UZERO,
-      ethBlockHeight: isSet(object.ethBlockHeight) ? Long.fromValue(object.ethBlockHeight) : Long.UZERO,
-      batchNonce: isSet(object.batchNonce) ? Long.fromValue(object.batchNonce) : Long.UZERO,
-      tokenContract: isSet(object.tokenContract) ? String(object.tokenContract) : "",
-      orchestrator: isSet(object.orchestrator) ? String(object.orchestrator) : ""
-    };
-  },
-
-  toJSON(message: MsgBatchSendToEthClaim): unknown {
-    const obj: any = {};
-    message.eventNonce !== undefined && (obj.eventNonce = (message.eventNonce || Long.UZERO).toString());
-    message.ethBlockHeight !== undefined && (obj.ethBlockHeight = (message.ethBlockHeight || Long.UZERO).toString());
-    message.batchNonce !== undefined && (obj.batchNonce = (message.batchNonce || Long.UZERO).toString());
-    message.tokenContract !== undefined && (obj.tokenContract = message.tokenContract);
-    message.orchestrator !== undefined && (obj.orchestrator = message.orchestrator);
-    return obj;
-  },
-
-  fromPartial(object: Partial<MsgBatchSendToEthClaim>): MsgBatchSendToEthClaim {
+  fromPartial(object: DeepPartial<MsgBatchSendToEthClaim>): MsgBatchSendToEthClaim {
     const message = createBaseMsgBatchSendToEthClaim();
     message.eventNonce = object.eventNonce !== undefined && object.eventNonce !== null ? Long.fromValue(object.eventNonce) : Long.UZERO;
     message.ethBlockHeight = object.ethBlockHeight !== undefined && object.ethBlockHeight !== null ? Long.fromValue(object.ethBlockHeight) : Long.UZERO;
@@ -1810,16 +1574,7 @@ export const MsgBatchSendToEthClaimResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgBatchSendToEthClaimResponse {
-    return {};
-  },
-
-  toJSON(_: MsgBatchSendToEthClaimResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial(_: Partial<MsgBatchSendToEthClaimResponse>): MsgBatchSendToEthClaimResponse {
+  fromPartial(_: DeepPartial<MsgBatchSendToEthClaimResponse>): MsgBatchSendToEthClaimResponse {
     const message = createBaseMsgBatchSendToEthClaimResponse();
     return message;
   }
@@ -1926,33 +1681,7 @@ export const MsgERC20DeployedClaim = {
     return message;
   },
 
-  fromJSON(object: any): MsgERC20DeployedClaim {
-    return {
-      eventNonce: isSet(object.eventNonce) ? Long.fromValue(object.eventNonce) : Long.UZERO,
-      ethBlockHeight: isSet(object.ethBlockHeight) ? Long.fromValue(object.ethBlockHeight) : Long.UZERO,
-      cosmosDenom: isSet(object.cosmosDenom) ? String(object.cosmosDenom) : "",
-      tokenContract: isSet(object.tokenContract) ? String(object.tokenContract) : "",
-      name: isSet(object.name) ? String(object.name) : "",
-      symbol: isSet(object.symbol) ? String(object.symbol) : "",
-      decimals: isSet(object.decimals) ? Long.fromValue(object.decimals) : Long.UZERO,
-      orchestrator: isSet(object.orchestrator) ? String(object.orchestrator) : ""
-    };
-  },
-
-  toJSON(message: MsgERC20DeployedClaim): unknown {
-    const obj: any = {};
-    message.eventNonce !== undefined && (obj.eventNonce = (message.eventNonce || Long.UZERO).toString());
-    message.ethBlockHeight !== undefined && (obj.ethBlockHeight = (message.ethBlockHeight || Long.UZERO).toString());
-    message.cosmosDenom !== undefined && (obj.cosmosDenom = message.cosmosDenom);
-    message.tokenContract !== undefined && (obj.tokenContract = message.tokenContract);
-    message.name !== undefined && (obj.name = message.name);
-    message.symbol !== undefined && (obj.symbol = message.symbol);
-    message.decimals !== undefined && (obj.decimals = (message.decimals || Long.UZERO).toString());
-    message.orchestrator !== undefined && (obj.orchestrator = message.orchestrator);
-    return obj;
-  },
-
-  fromPartial(object: Partial<MsgERC20DeployedClaim>): MsgERC20DeployedClaim {
+  fromPartial(object: DeepPartial<MsgERC20DeployedClaim>): MsgERC20DeployedClaim {
     const message = createBaseMsgERC20DeployedClaim();
     message.eventNonce = object.eventNonce !== undefined && object.eventNonce !== null ? Long.fromValue(object.eventNonce) : Long.UZERO;
     message.ethBlockHeight = object.ethBlockHeight !== undefined && object.ethBlockHeight !== null ? Long.fromValue(object.ethBlockHeight) : Long.UZERO;
@@ -1994,16 +1723,7 @@ export const MsgERC20DeployedClaimResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgERC20DeployedClaimResponse {
-    return {};
-  },
-
-  toJSON(_: MsgERC20DeployedClaimResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial(_: Partial<MsgERC20DeployedClaimResponse>): MsgERC20DeployedClaimResponse {
+  fromPartial(_: DeepPartial<MsgERC20DeployedClaimResponse>): MsgERC20DeployedClaimResponse {
     const message = createBaseMsgERC20DeployedClaimResponse();
     return message;
   }
@@ -2083,27 +1803,7 @@ export const MsgLogicCallExecutedClaim = {
     return message;
   },
 
-  fromJSON(object: any): MsgLogicCallExecutedClaim {
-    return {
-      eventNonce: isSet(object.eventNonce) ? Long.fromValue(object.eventNonce) : Long.UZERO,
-      ethBlockHeight: isSet(object.ethBlockHeight) ? Long.fromValue(object.ethBlockHeight) : Long.UZERO,
-      invalidationId: isSet(object.invalidationId) ? bytesFromBase64(object.invalidationId) : new Uint8Array(),
-      invalidationNonce: isSet(object.invalidationNonce) ? Long.fromValue(object.invalidationNonce) : Long.UZERO,
-      orchestrator: isSet(object.orchestrator) ? String(object.orchestrator) : ""
-    };
-  },
-
-  toJSON(message: MsgLogicCallExecutedClaim): unknown {
-    const obj: any = {};
-    message.eventNonce !== undefined && (obj.eventNonce = (message.eventNonce || Long.UZERO).toString());
-    message.ethBlockHeight !== undefined && (obj.ethBlockHeight = (message.ethBlockHeight || Long.UZERO).toString());
-    message.invalidationId !== undefined && (obj.invalidationId = base64FromBytes(message.invalidationId !== undefined ? message.invalidationId : new Uint8Array()));
-    message.invalidationNonce !== undefined && (obj.invalidationNonce = (message.invalidationNonce || Long.UZERO).toString());
-    message.orchestrator !== undefined && (obj.orchestrator = message.orchestrator);
-    return obj;
-  },
-
-  fromPartial(object: Partial<MsgLogicCallExecutedClaim>): MsgLogicCallExecutedClaim {
+  fromPartial(object: DeepPartial<MsgLogicCallExecutedClaim>): MsgLogicCallExecutedClaim {
     const message = createBaseMsgLogicCallExecutedClaim();
     message.eventNonce = object.eventNonce !== undefined && object.eventNonce !== null ? Long.fromValue(object.eventNonce) : Long.UZERO;
     message.ethBlockHeight = object.ethBlockHeight !== undefined && object.ethBlockHeight !== null ? Long.fromValue(object.ethBlockHeight) : Long.UZERO;
@@ -2142,16 +1842,7 @@ export const MsgLogicCallExecutedClaimResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgLogicCallExecutedClaimResponse {
-    return {};
-  },
-
-  toJSON(_: MsgLogicCallExecutedClaimResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial(_: Partial<MsgLogicCallExecutedClaimResponse>): MsgLogicCallExecutedClaimResponse {
+  fromPartial(_: DeepPartial<MsgLogicCallExecutedClaimResponse>): MsgLogicCallExecutedClaimResponse {
     const message = createBaseMsgLogicCallExecutedClaimResponse();
     return message;
   }
@@ -2249,37 +1940,7 @@ export const MsgValsetUpdatedClaim = {
     return message;
   },
 
-  fromJSON(object: any): MsgValsetUpdatedClaim {
-    return {
-      eventNonce: isSet(object.eventNonce) ? Long.fromValue(object.eventNonce) : Long.UZERO,
-      valsetNonce: isSet(object.valsetNonce) ? Long.fromValue(object.valsetNonce) : Long.UZERO,
-      ethBlockHeight: isSet(object.ethBlockHeight) ? Long.fromValue(object.ethBlockHeight) : Long.UZERO,
-      members: Array.isArray(object?.members) ? object.members.map((e: any) => BridgeValidator.fromJSON(e)) : [],
-      rewardAmount: isSet(object.rewardAmount) ? String(object.rewardAmount) : "",
-      rewardToken: isSet(object.rewardToken) ? String(object.rewardToken) : "",
-      orchestrator: isSet(object.orchestrator) ? String(object.orchestrator) : ""
-    };
-  },
-
-  toJSON(message: MsgValsetUpdatedClaim): unknown {
-    const obj: any = {};
-    message.eventNonce !== undefined && (obj.eventNonce = (message.eventNonce || Long.UZERO).toString());
-    message.valsetNonce !== undefined && (obj.valsetNonce = (message.valsetNonce || Long.UZERO).toString());
-    message.ethBlockHeight !== undefined && (obj.ethBlockHeight = (message.ethBlockHeight || Long.UZERO).toString());
-
-    if (message.members) {
-      obj.members = message.members.map(e => e ? BridgeValidator.toJSON(e) : undefined);
-    } else {
-      obj.members = [];
-    }
-
-    message.rewardAmount !== undefined && (obj.rewardAmount = message.rewardAmount);
-    message.rewardToken !== undefined && (obj.rewardToken = message.rewardToken);
-    message.orchestrator !== undefined && (obj.orchestrator = message.orchestrator);
-    return obj;
-  },
-
-  fromPartial(object: Partial<MsgValsetUpdatedClaim>): MsgValsetUpdatedClaim {
+  fromPartial(object: DeepPartial<MsgValsetUpdatedClaim>): MsgValsetUpdatedClaim {
     const message = createBaseMsgValsetUpdatedClaim();
     message.eventNonce = object.eventNonce !== undefined && object.eventNonce !== null ? Long.fromValue(object.eventNonce) : Long.UZERO;
     message.valsetNonce = object.valsetNonce !== undefined && object.valsetNonce !== null ? Long.fromValue(object.valsetNonce) : Long.UZERO;
@@ -2320,16 +1981,7 @@ export const MsgValsetUpdatedClaimResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgValsetUpdatedClaimResponse {
-    return {};
-  },
-
-  toJSON(_: MsgValsetUpdatedClaimResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial(_: Partial<MsgValsetUpdatedClaimResponse>): MsgValsetUpdatedClaimResponse {
+  fromPartial(_: DeepPartial<MsgValsetUpdatedClaimResponse>): MsgValsetUpdatedClaimResponse {
     const message = createBaseMsgValsetUpdatedClaimResponse();
     return message;
   }
@@ -2382,21 +2034,7 @@ export const MsgCancelSendToEth = {
     return message;
   },
 
-  fromJSON(object: any): MsgCancelSendToEth {
-    return {
-      transactionId: isSet(object.transactionId) ? Long.fromValue(object.transactionId) : Long.UZERO,
-      sender: isSet(object.sender) ? String(object.sender) : ""
-    };
-  },
-
-  toJSON(message: MsgCancelSendToEth): unknown {
-    const obj: any = {};
-    message.transactionId !== undefined && (obj.transactionId = (message.transactionId || Long.UZERO).toString());
-    message.sender !== undefined && (obj.sender = message.sender);
-    return obj;
-  },
-
-  fromPartial(object: Partial<MsgCancelSendToEth>): MsgCancelSendToEth {
+  fromPartial(object: DeepPartial<MsgCancelSendToEth>): MsgCancelSendToEth {
     const message = createBaseMsgCancelSendToEth();
     message.transactionId = object.transactionId !== undefined && object.transactionId !== null ? Long.fromValue(object.transactionId) : Long.UZERO;
     message.sender = object.sender ?? "";
@@ -2432,16 +2070,7 @@ export const MsgCancelSendToEthResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgCancelSendToEthResponse {
-    return {};
-  },
-
-  toJSON(_: MsgCancelSendToEthResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial(_: Partial<MsgCancelSendToEthResponse>): MsgCancelSendToEthResponse {
+  fromPartial(_: DeepPartial<MsgCancelSendToEthResponse>): MsgCancelSendToEthResponse {
     const message = createBaseMsgCancelSendToEthResponse();
     return message;
   }
@@ -2503,23 +2132,7 @@ export const MsgSubmitBadSignatureEvidence = {
     return message;
   },
 
-  fromJSON(object: any): MsgSubmitBadSignatureEvidence {
-    return {
-      subject: isSet(object.subject) ? Any.fromJSON(object.subject) : undefined,
-      signature: isSet(object.signature) ? String(object.signature) : "",
-      sender: isSet(object.sender) ? String(object.sender) : ""
-    };
-  },
-
-  toJSON(message: MsgSubmitBadSignatureEvidence): unknown {
-    const obj: any = {};
-    message.subject !== undefined && (obj.subject = message.subject ? Any.toJSON(message.subject) : undefined);
-    message.signature !== undefined && (obj.signature = message.signature);
-    message.sender !== undefined && (obj.sender = message.sender);
-    return obj;
-  },
-
-  fromPartial(object: Partial<MsgSubmitBadSignatureEvidence>): MsgSubmitBadSignatureEvidence {
+  fromPartial(object: DeepPartial<MsgSubmitBadSignatureEvidence>): MsgSubmitBadSignatureEvidence {
     const message = createBaseMsgSubmitBadSignatureEvidence();
     message.subject = object.subject !== undefined && object.subject !== null ? Any.fromPartial(object.subject) : undefined;
     message.signature = object.signature ?? "";
@@ -2556,16 +2169,7 @@ export const MsgSubmitBadSignatureEvidenceResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgSubmitBadSignatureEvidenceResponse {
-    return {};
-  },
-
-  toJSON(_: MsgSubmitBadSignatureEvidenceResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial(_: Partial<MsgSubmitBadSignatureEvidenceResponse>): MsgSubmitBadSignatureEvidenceResponse {
+  fromPartial(_: DeepPartial<MsgSubmitBadSignatureEvidenceResponse>): MsgSubmitBadSignatureEvidenceResponse {
     const message = createBaseMsgSubmitBadSignatureEvidenceResponse();
     return message;
   }
@@ -2618,21 +2222,7 @@ export const EventSetOperatorAddress = {
     return message;
   },
 
-  fromJSON(object: any): EventSetOperatorAddress {
-    return {
-      message: isSet(object.message) ? String(object.message) : "",
-      address: isSet(object.address) ? String(object.address) : ""
-    };
-  },
-
-  toJSON(message: EventSetOperatorAddress): unknown {
-    const obj: any = {};
-    message.message !== undefined && (obj.message = message.message);
-    message.address !== undefined && (obj.address = message.address);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventSetOperatorAddress>): EventSetOperatorAddress {
+  fromPartial(object: DeepPartial<EventSetOperatorAddress>): EventSetOperatorAddress {
     const message = createBaseEventSetOperatorAddress();
     message.message = object.message ?? "";
     message.address = object.address ?? "";
@@ -2687,21 +2277,7 @@ export const EventValsetConfirmKey = {
     return message;
   },
 
-  fromJSON(object: any): EventValsetConfirmKey {
-    return {
-      message: isSet(object.message) ? String(object.message) : "",
-      key: isSet(object.key) ? String(object.key) : ""
-    };
-  },
-
-  toJSON(message: EventValsetConfirmKey): unknown {
-    const obj: any = {};
-    message.message !== undefined && (obj.message = message.message);
-    message.key !== undefined && (obj.key = message.key);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventValsetConfirmKey>): EventValsetConfirmKey {
+  fromPartial(object: DeepPartial<EventValsetConfirmKey>): EventValsetConfirmKey {
     const message = createBaseEventValsetConfirmKey();
     message.message = object.message ?? "";
     message.key = object.key ?? "";
@@ -2756,21 +2332,7 @@ export const EventBatchCreated = {
     return message;
   },
 
-  fromJSON(object: any): EventBatchCreated {
-    return {
-      message: isSet(object.message) ? String(object.message) : "",
-      batchNonce: isSet(object.batchNonce) ? String(object.batchNonce) : ""
-    };
-  },
-
-  toJSON(message: EventBatchCreated): unknown {
-    const obj: any = {};
-    message.message !== undefined && (obj.message = message.message);
-    message.batchNonce !== undefined && (obj.batchNonce = message.batchNonce);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventBatchCreated>): EventBatchCreated {
+  fromPartial(object: DeepPartial<EventBatchCreated>): EventBatchCreated {
     const message = createBaseEventBatchCreated();
     message.message = object.message ?? "";
     message.batchNonce = object.batchNonce ?? "";
@@ -2825,21 +2387,7 @@ export const EventBatchConfirmKey = {
     return message;
   },
 
-  fromJSON(object: any): EventBatchConfirmKey {
-    return {
-      message: isSet(object.message) ? String(object.message) : "",
-      batchConfirmKey: isSet(object.batchConfirmKey) ? String(object.batchConfirmKey) : ""
-    };
-  },
-
-  toJSON(message: EventBatchConfirmKey): unknown {
-    const obj: any = {};
-    message.message !== undefined && (obj.message = message.message);
-    message.batchConfirmKey !== undefined && (obj.batchConfirmKey = message.batchConfirmKey);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventBatchConfirmKey>): EventBatchConfirmKey {
+  fromPartial(object: DeepPartial<EventBatchConfirmKey>): EventBatchConfirmKey {
     const message = createBaseEventBatchConfirmKey();
     message.message = object.message ?? "";
     message.batchConfirmKey = object.batchConfirmKey ?? "";
@@ -2885,19 +2433,7 @@ export const EventBatchSendToEthClaim = {
     return message;
   },
 
-  fromJSON(object: any): EventBatchSendToEthClaim {
-    return {
-      nonce: isSet(object.nonce) ? String(object.nonce) : ""
-    };
-  },
-
-  toJSON(message: EventBatchSendToEthClaim): unknown {
-    const obj: any = {};
-    message.nonce !== undefined && (obj.nonce = message.nonce);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventBatchSendToEthClaim>): EventBatchSendToEthClaim {
+  fromPartial(object: DeepPartial<EventBatchSendToEthClaim>): EventBatchSendToEthClaim {
     const message = createBaseEventBatchSendToEthClaim();
     message.nonce = object.nonce ?? "";
     return message;
@@ -2960,23 +2496,7 @@ export const EventClaim = {
     return message;
   },
 
-  fromJSON(object: any): EventClaim {
-    return {
-      message: isSet(object.message) ? String(object.message) : "",
-      claimHash: isSet(object.claimHash) ? String(object.claimHash) : "",
-      attestationId: isSet(object.attestationId) ? String(object.attestationId) : ""
-    };
-  },
-
-  toJSON(message: EventClaim): unknown {
-    const obj: any = {};
-    message.message !== undefined && (obj.message = message.message);
-    message.claimHash !== undefined && (obj.claimHash = message.claimHash);
-    message.attestationId !== undefined && (obj.attestationId = message.attestationId);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventClaim>): EventClaim {
+  fromPartial(object: DeepPartial<EventClaim>): EventClaim {
     const message = createBaseEventClaim();
     message.message = object.message ?? "";
     message.claimHash = object.claimHash ?? "";
@@ -3041,23 +2561,7 @@ export const EventBadSignatureEvidence = {
     return message;
   },
 
-  fromJSON(object: any): EventBadSignatureEvidence {
-    return {
-      message: isSet(object.message) ? String(object.message) : "",
-      badEthSignature: isSet(object.badEthSignature) ? String(object.badEthSignature) : "",
-      badEthSignatureSubject: isSet(object.badEthSignatureSubject) ? String(object.badEthSignatureSubject) : ""
-    };
-  },
-
-  toJSON(message: EventBadSignatureEvidence): unknown {
-    const obj: any = {};
-    message.message !== undefined && (obj.message = message.message);
-    message.badEthSignature !== undefined && (obj.badEthSignature = message.badEthSignature);
-    message.badEthSignatureSubject !== undefined && (obj.badEthSignatureSubject = message.badEthSignatureSubject);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventBadSignatureEvidence>): EventBadSignatureEvidence {
+  fromPartial(object: DeepPartial<EventBadSignatureEvidence>): EventBadSignatureEvidence {
     const message = createBaseEventBadSignatureEvidence();
     message.message = object.message ?? "";
     message.badEthSignature = object.badEthSignature ?? "";
@@ -3113,21 +2617,7 @@ export const EventERC20DeployedClaim = {
     return message;
   },
 
-  fromJSON(object: any): EventERC20DeployedClaim {
-    return {
-      token: isSet(object.token) ? String(object.token) : "",
-      nonce: isSet(object.nonce) ? String(object.nonce) : ""
-    };
-  },
-
-  toJSON(message: EventERC20DeployedClaim): unknown {
-    const obj: any = {};
-    message.token !== undefined && (obj.token = message.token);
-    message.nonce !== undefined && (obj.nonce = message.nonce);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventERC20DeployedClaim>): EventERC20DeployedClaim {
+  fromPartial(object: DeepPartial<EventERC20DeployedClaim>): EventERC20DeployedClaim {
     const message = createBaseEventERC20DeployedClaim();
     message.token = object.token ?? "";
     message.nonce = object.nonce ?? "";
@@ -3173,19 +2663,7 @@ export const EventValsetUpdatedClaim = {
     return message;
   },
 
-  fromJSON(object: any): EventValsetUpdatedClaim {
-    return {
-      nonce: isSet(object.nonce) ? String(object.nonce) : ""
-    };
-  },
-
-  toJSON(message: EventValsetUpdatedClaim): unknown {
-    const obj: any = {};
-    message.nonce !== undefined && (obj.nonce = message.nonce);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventValsetUpdatedClaim>): EventValsetUpdatedClaim {
+  fromPartial(object: DeepPartial<EventValsetUpdatedClaim>): EventValsetUpdatedClaim {
     const message = createBaseEventValsetUpdatedClaim();
     message.nonce = object.nonce ?? "";
     return message;
@@ -3257,25 +2735,7 @@ export const EventMultisigUpdateRequest = {
     return message;
   },
 
-  fromJSON(object: any): EventMultisigUpdateRequest {
-    return {
-      bridgeContract: isSet(object.bridgeContract) ? String(object.bridgeContract) : "",
-      bridgeChainId: isSet(object.bridgeChainId) ? String(object.bridgeChainId) : "",
-      multisigId: isSet(object.multisigId) ? String(object.multisigId) : "",
-      nonce: isSet(object.nonce) ? String(object.nonce) : ""
-    };
-  },
-
-  toJSON(message: EventMultisigUpdateRequest): unknown {
-    const obj: any = {};
-    message.bridgeContract !== undefined && (obj.bridgeContract = message.bridgeContract);
-    message.bridgeChainId !== undefined && (obj.bridgeChainId = message.bridgeChainId);
-    message.multisigId !== undefined && (obj.multisigId = message.multisigId);
-    message.nonce !== undefined && (obj.nonce = message.nonce);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventMultisigUpdateRequest>): EventMultisigUpdateRequest {
+  fromPartial(object: DeepPartial<EventMultisigUpdateRequest>): EventMultisigUpdateRequest {
     const message = createBaseEventMultisigUpdateRequest();
     message.bridgeContract = object.bridgeContract ?? "";
     message.bridgeChainId = object.bridgeChainId ?? "";
@@ -3332,21 +2792,7 @@ export const EventOutgoingLogicCallCanceled = {
     return message;
   },
 
-  fromJSON(object: any): EventOutgoingLogicCallCanceled {
-    return {
-      logicCallInvalidationId: isSet(object.logicCallInvalidationId) ? String(object.logicCallInvalidationId) : "",
-      logicCallInvalidationNonce: isSet(object.logicCallInvalidationNonce) ? String(object.logicCallInvalidationNonce) : ""
-    };
-  },
-
-  toJSON(message: EventOutgoingLogicCallCanceled): unknown {
-    const obj: any = {};
-    message.logicCallInvalidationId !== undefined && (obj.logicCallInvalidationId = message.logicCallInvalidationId);
-    message.logicCallInvalidationNonce !== undefined && (obj.logicCallInvalidationNonce = message.logicCallInvalidationNonce);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventOutgoingLogicCallCanceled>): EventOutgoingLogicCallCanceled {
+  fromPartial(object: DeepPartial<EventOutgoingLogicCallCanceled>): EventOutgoingLogicCallCanceled {
     const message = createBaseEventOutgoingLogicCallCanceled();
     message.logicCallInvalidationId = object.logicCallInvalidationId ?? "";
     message.logicCallInvalidationNonce = object.logicCallInvalidationNonce ?? "";
@@ -3401,21 +2847,7 @@ export const EventSignatureSlashing = {
     return message;
   },
 
-  fromJSON(object: any): EventSignatureSlashing {
-    return {
-      type: isSet(object.type) ? String(object.type) : "",
-      address: isSet(object.address) ? String(object.address) : ""
-    };
-  },
-
-  toJSON(message: EventSignatureSlashing): unknown {
-    const obj: any = {};
-    message.type !== undefined && (obj.type = message.type);
-    message.address !== undefined && (obj.address = message.address);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventSignatureSlashing>): EventSignatureSlashing {
+  fromPartial(object: DeepPartial<EventSignatureSlashing>): EventSignatureSlashing {
     const message = createBaseEventSignatureSlashing();
     message.type = object.type ?? "";
     message.address = object.address ?? "";
@@ -3470,21 +2902,7 @@ export const EventOutgoingTxId = {
     return message;
   },
 
-  fromJSON(object: any): EventOutgoingTxId {
-    return {
-      message: isSet(object.message) ? String(object.message) : "",
-      txId: isSet(object.txId) ? String(object.txId) : ""
-    };
-  },
-
-  toJSON(message: EventOutgoingTxId): unknown {
-    const obj: any = {};
-    message.message !== undefined && (obj.message = message.message);
-    message.txId !== undefined && (obj.txId = message.txId);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventOutgoingTxId>): EventOutgoingTxId {
+  fromPartial(object: DeepPartial<EventOutgoingTxId>): EventOutgoingTxId {
     const message = createBaseEventOutgoingTxId();
     message.message = object.message ?? "";
     message.txId = object.txId ?? "";
