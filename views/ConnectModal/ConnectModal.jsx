@@ -68,14 +68,10 @@ const ConnectModal = ({ isOpen, setOpen, walletRepo, theme }) => {
               <button
                 className="btn text-primary body1"
                 onClick={handleCloseModal}
+                data-bs-dismiss="modal"
+                aria-label="Close"
               >
-                <button
-                  className="text-primary"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                >
-                  <i className="bi bi-x-lg" />
-                </button>
+                <i className="bi bi-x-lg" />
               </button>
             </div>
             <div className="text-white body2 my-1 text-center">
