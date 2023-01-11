@@ -1,5 +1,4 @@
 import React from "react";
-import { IoCloseSharp } from "react-icons/io5";
 
 export default function KeystorePassword({
   Password,
@@ -25,7 +24,7 @@ export default function KeystorePassword({
         </h1>
         <button className="btn text-primary body1" onClick={() => close()}>
           <span className="text-primary">
-            <IoCloseSharp />
+            <i className="bi bi-x-lg" />
           </span>
         </button>
       </div>

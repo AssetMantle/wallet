@@ -1,8 +1,7 @@
 import React from "react";
-import { BsInfoCircle } from "react-icons/bs";
 
 export default function Tooltip({
-  title = <BsInfoCircle />,
+  title = <i className="bi bi-info-circle" />,
   description,
   titlePrimary,
   ...others

@@ -1,6 +1,4 @@
 import React from "react";
-import { IoCloseSharp } from "react-icons/io5";
-import { BsChevronLeft } from "react-icons/bs";
 
 export default function GenerateOnlyMode({
   close,
@@ -16,13 +14,13 @@ export default function GenerateOnlyMode({
       <div className="d-flex align-items-center justify-content-between ">
         <h1 className="body1 text-primary d-flex align-items-center gap-2">
           <button className="" onClick={() => setStep(1)}>
-            <BsChevronLeft />
+            <i className="bi bi-chevron-left" />
           </button>
           Generate Only Mode
         </h1>
         <button className="btn text-primary body1" onClick={() => close(0)}>
           <span className="text-primary">
-            <IoCloseSharp />
+            <i className="bi bi-x-lg" />
           </span>
         </button>
       </div>

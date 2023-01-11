@@ -1,7 +1,4 @@
 import React from "react";
-import { IoCloseSharp } from "react-icons/io5";
-import { BsCheckCircle, BsInfoCircle } from "react-icons/bs";
-import { MdOutlineContentCopy } from "react-icons/md";
 
 export default function Success({ close, connect }) {
   const address = "dwafegrtefdvfhresv -39i539w0rej";
@@ -19,7 +16,7 @@ export default function Success({ close, connect }) {
         <h1 className="body1 text-primary d-flex align-items-center gap-2"></h1>
         <button className="btn text-primary body1" onClick={() => close()}>
           <span className="text-primary">
-            <IoCloseSharp />
+            <i className="bi bi-x-lg" />
           </span>
         </button>
       </div>
@@ -28,7 +25,7 @@ export default function Success({ close, connect }) {
           className="text-success"
           style={{ fontSize: "calc(10px + 10vmin)" }}
         >
-          <BsCheckCircle />
+          <i className="bi bi-check-circle" />
         </span>
         <h1 className="body2 text-primary">Wallet created successfully</h1>
         <p className="caption">
@@ -41,12 +38,12 @@ export default function Success({ close, connect }) {
             address.length
           )}`}
           <button className="text-primary" onClick={handleCopy}>
-            <MdOutlineContentCopy />
+            <i className="bi bi-clipboard" />
           </button>
         </div>
         <p className="d-flex align-items-start gap-1">
           <span className="mt-1">
-            <BsInfoCircle />
+            <i className="bi bi-info-circle" />
           </span>
           Please securely store the above to store and transfer your assets and
           funds in the future

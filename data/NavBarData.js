@@ -1,11 +1,3 @@
-import { AiOutlineQuestionCircle } from "react-icons/ai";
-import { GiServerRack } from "react-icons/gi";
-import { IoSwapHorizontal } from "react-icons/io5";
-import { BsArrowUpRight } from "react-icons/bs";
-import { BiBookOpen } from "react-icons/bi";
-import { BsCurrencyDollar } from "react-icons/bs";
-import { CgListTree } from "react-icons/cg";
-
 export const NavBarData = {
   logo: "/logo.svg",
   title: "Mantle Wallet",
@@ -14,33 +6,33 @@ export const NavBarData = {
       title: "Transact",
       href: "/",
       variant: "am-link",
-      icon: <IoSwapHorizontal />,
+      icon: <i className="bi bi-arrow-left-right" />,
     },
     {
       title: "Stake",
       href: "/stake",
       variant: "am-link",
-      icon: <BsCurrencyDollar />,
+      icon: <i className="bi bi-currency-dollar" />,
     },
     {
       title: "Vote",
       href: "/vote",
       variant: "am-link",
-      icon: <GiServerRack />,
+      icon: <i className="bi bi-building-fill" />,
     },
     {
       title: "Bridge",
       href: "/bridge",
       variant: "am-link",
-      icon: <CgListTree />,
+      icon: <i className="bi bi-diagram-2" />,
     },
     {
       title: "Explorer",
       href: "https://explorer.assetmantle.one/",
       variant: "am-link",
       target: "_blank",
-      icon: <BiBookOpen />,
-      endIcon: <BsArrowUpRight />,
+      icon: <i className="bi bi-book" />,
+      endIcon: <i className="bi bi-arrow-up-right" />,
     },
   ],
   rightNav: [
@@ -49,7 +41,7 @@ export const NavBarData = {
       href: "https://docs.assetmantle.one/",
       variant: "am-link",
       target: "_blank",
-      icon: <AiOutlineQuestionCircle />,
+      icon: <i className="bi bi-question-circle" />,
     },
   ],
 };

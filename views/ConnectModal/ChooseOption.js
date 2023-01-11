@@ -1,5 +1,4 @@
 import React from "react";
-import { IoCloseSharp } from "react-icons/io5";
 import Image from "next/image";
 
 export default function ChooseOption({
@@ -38,7 +37,7 @@ export default function ChooseOption({
         <h1 className="body1 text-primary">Connect Wallet</h1>
         <button className="btn text-primary body1" onClick={() => close()}>
           <span className="text-primary">
-            <IoCloseSharp />
+            <i className="bi bi-x-lg" />
           </span>
         </button>
       </div>

@@ -5,8 +5,6 @@ import Tooltip from "../components/Tooltip";
 import { useAllValidators } from "../data";
 import useStakeReducer from "../data/useStakeReducer";
 import StakedToken from "../views/StakedToken";
-import { MdOutlineClose } from "react-icons/md";
-import { BsChevronLeft, BsChevronDown } from "react-icons/bs";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 
 export default function Stake() {
@@ -235,7 +233,7 @@ export default function Stake() {
                   style={{ background: "none" }}
                 >
                   <span className="text-primary">
-                    <BsChevronLeft />
+                    <i className="bi bi-chevron-left" />
                   </span>
                 </button>
                 Transaction Manifest
@@ -248,7 +246,7 @@ export default function Stake() {
                 style={{ background: "none" }}
               >
                 <span className="text-primary">
-                  <MdOutlineClose />
+                  <i className="bi bi-x-lg" />
                 </span>
               </button>
             </div>
@@ -325,7 +323,7 @@ export default function Stake() {
                         : "rotate(0deg)",
                     }}
                   >
-                    <BsChevronDown />
+                    <i className="bi bi-chevron-down" />
                   </span>
                 </button>
                 {ManifestShowAdvanced && (

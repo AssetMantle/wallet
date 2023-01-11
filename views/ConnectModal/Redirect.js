@@ -1,6 +1,5 @@
 import React from "react";
 import { useEffect } from "react";
-import { IoCloseSharp } from "react-icons/io5";
 
 export default function Redirect({ byWallet, close, connected }) {
   const WalletConnectFunctions = {
@@ -45,7 +44,7 @@ export default function Redirect({ byWallet, close, connected }) {
         </h1>
         <button className="btn text-primary body1" onClick={() => close()}>
           <span className="text-primary">
-            <IoCloseSharp />
+            <i className="bi bi-x-lg" />
           </span>
         </button>
       </div>

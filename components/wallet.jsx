@@ -3,12 +3,10 @@ import {
   Center,
   Grid,
   GridItem,
-  Icon,
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useChain } from "@cosmos-kit/react";
-import { FiAlertTriangle } from "react-icons/fi";
 import {
   Astronaut,
   ChainCard,
@@ -84,13 +82,13 @@ export const WalletSection = () => {
       walletStatus={walletStatus}
       rejected={
         <RejectedWarn
-          icon={<Icon as={FiAlertTriangle} mt={1} />}
+          icon={<i className="bi bi-exclamation-triangle mt-1" />}
           wordOfWarning={`${currentWallet?.walletInfo.prettyName}: ${message}`}
         />
       }
       error={
         <RejectedWarn
-          icon={<Icon as={FiAlertTriangle} mt={1} />}
+          icon={<i className="bi bi-exclamation-triangle mt-1" />}
           wordOfWarning={`${currentWallet?.walletInfo.prettyName}: ${message}`}
         />
       }

@@ -1,6 +1,5 @@
 import Image from "next/image";
 import React from "react";
-import { IoCloseSharp } from "react-icons/io5";
 
 export default function WalletConnect({
   ExistingWallet,
@@ -34,7 +33,7 @@ export default function WalletConnect({
         </h1>
         <button className="btn text-primary body1" onClick={() => close()}>
           <span className="text-primary">
-            <IoCloseSharp />
+            <i className="bi bi-x-lg" />
           </span>
         </button>
       </div>

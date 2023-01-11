@@ -11,9 +11,6 @@ import {
   useDelegatedValidators,
 } from "../data";
 
-import { MdOutlineClose } from "react-icons/md";
-import { BsChevronLeft } from "react-icons/bs";
-
 const denomDisplay = chainSymbol;
 
 const Unbonded = ({ stakeState, stakeDispatch }) => {
@@ -115,7 +112,7 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
                   style={{ background: "none" }}
                 >
                   <span className="text-primary">
-                    <BsChevronLeft />
+                    <i className="bi bi-chevron-left" />
                   </span>
                 </button>
                 Undelegating List
@@ -128,7 +125,7 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
                 style={{ background: "none" }}
               >
                 <span className="text-primary">
-                  <MdOutlineClose />
+                  <i className="bi bi-x-lg" />
                 </span>
               </button>
             </div>

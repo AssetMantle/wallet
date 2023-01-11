@@ -15,9 +15,6 @@ import {
 } from "../data";
 import { useChain } from "@cosmos-kit/react";
 
-import { MdOutlineClose } from "react-icons/md";
-import { BsChevronLeft } from "react-icons/bs";
-
 const denomDisplay = chainSymbol;
 
 const Rewards = ({ setShowClaimError, stakeState }) => {
@@ -143,7 +140,7 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                     style={{ background: "none" }}
                   >
                     <span className="text-primary">
-                      <BsChevronLeft />
+                      <i className="bi bi-chevron-left" />
                     </span>
                   </button>
                   Claim Rewards
@@ -156,7 +153,7 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                   style={{ background: "none" }}
                 >
                   <span className="text-primary">
-                    <MdOutlineClose />
+                    <i className="bi bi-x-lg" />
                   </span>
                 </button>
               </div>
@@ -330,7 +327,7 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
               <div className="modal-header">
                 <h5 className="modal-title body2 text-primary d-flex align-items-center gap-2">
                   <button onClick={() => setSetupAddress(false)}>
-                    <BsChevronLeft />
+                    <i className="bi bi-chevron-left" />
                   </button>
                   Setup Rewards Withdrawal Address
                 </h5>
@@ -342,7 +339,7 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                   style={{ background: "none" }}
                 >
                   <span className="text-primary">
-                    <MdOutlineClose />
+                    <i className="bi bi-x-lg" />
                   </span>
                 </button>
               </div>

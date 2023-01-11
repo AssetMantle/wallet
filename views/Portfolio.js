@@ -1,5 +1,4 @@
 import React from "react";
-import { BsInfoCircle } from "react-icons/bs";
 
 export default function Portfolio() {
   const dataSet = {
@@ -15,7 +14,7 @@ export default function Portfolio() {
           <p className="caption d-flex gap-2 align-items-center">
             Vesting{" "}
             <span>
-              <BsInfoCircle />
+              <i className="bi bi-info-circle" />
             </span>
           </p>
           <p className="caption">{dataSet.vesting} $MNTL</p>
@@ -29,7 +28,7 @@ export default function Portfolio() {
           <p className="caption d-flex gap-2 align-items-center">
             Delegatable{" "}
             <span>
-              <BsInfoCircle />
+              <i className="bi bi-info-circle" />
             </span>
           </p>
           <p className="caption">{dataSet.delegable} $MNTL</p>

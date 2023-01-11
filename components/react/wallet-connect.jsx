@@ -1,9 +1,7 @@
-import { Stack, Text, useColorModeValue } from "@chakra-ui/react";
+import { Icon, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import { WalletStatus } from "@cosmos-kit/core";
-import { HtmlProps } from "next/dist/shared/lib/html-context";
 import Image from "next/image";
-import { MouseEventHandler, ReactNode } from "react";
-import { ConnectWalletType } from "../types";
+import { FiAlertTriangle } from "react-icons/fi";
 
 /* export const ConnectWalletButton = ({
   buttonText,
@@ -51,7 +49,7 @@ export const ConnectWalletButton = ({
   dataBsToggle,
   dataBsTarget,
   children,
-}: ConnectWalletType) => {
+}) => {
   return !isLoading ? (
     dataBsToggle || dataBsTarget ? (
       <button
@@ -126,21 +124,11 @@ export const ConnectWalletButton = ({
   );
 };
 
-export const Disconnected = ({
-  buttonText,
-  buttonIcon,
-  onClick,
-}: {
-  buttonText: string;
-  buttonIcon: string;
-  onClick: MouseEventHandler<HTMLButtonElement>;
-}) => {
+export const Disconnected = ({ buttonText, buttonIcon, onClick }) => {
   return (
     <ConnectWalletButton
       buttonText={buttonText}
       buttonIcon={buttonIcon}
-      dataBsToggle={"modal"}
-      dataBsTarget={"#WalletConnectModal"}
       onClickConnectBtn={onClick}
     />
   );
@@ -154,14 +142,6 @@ export const Connected = ({
   dataBsTarget,
   onClick,
   children,
-}: {
-  buttonText: string;
-  buttonIcon: string;
-  icon: string;
-  dataBsToggle: string;
-  dataBsTarget: string;
-  onClick: MouseEventHandler<HTMLButtonElement>;
-  children: HtmlProps;
 }) => {
   return (
     <ConnectWalletButton
@@ -181,15 +161,7 @@ export const Connecting = () => {
   return <ConnectWalletButton isLoading={true} />;
 };
 
-export const Rejected = ({
-  buttonText,
-  wordOfWarning,
-  onClick,
-}: {
-  buttonText: string;
-  wordOfWarning?: string;
-  onClick: MouseEventHandler<HTMLButtonElement>;
-}) => {
+export const Rejected = ({ buttonText, wordOfWarning, onClick }) => {
   const bg = useColorModeValue("orange.200", "orange.300");
 
   return (
@@ -208,7 +180,7 @@ export const Rejected = ({
           p={4}
           spacing={1}
         >
-          <i className="bi bi-exclamation-triangle" />
+          <Icon as={FiAlertTriangle} mt={1} />
           <Text>
             <Text fontWeight="semibold" as="span">
               Warning:&ensp;
@@ -221,15 +193,7 @@ export const Rejected = ({
   );
 };
 
-export const Error = ({
-  buttonText,
-  wordOfWarning,
-  onClick,
-}: {
-  buttonText: string;
-  wordOfWarning?: string;
-  onClick: MouseEventHandler<HTMLButtonElement>;
-}) => {
+export const Error = ({ buttonText, wordOfWarning, onClick }) => {
   const bg = useColorModeValue("orange.200", "orange.300");
 
   return (
@@ -248,7 +212,7 @@ export const Error = ({
           p={4}
           spacing={1}
         >
-          <i className="bi bi-exclamation-triangle" />
+          <Icon as={FiAlertTriangle} mt={1} />
           <Text>
             <Text fontWeight="semibold" as="span">
               Warning:&ensp;
@@ -261,13 +225,7 @@ export const Error = ({
   );
 };
 
-export const NotExist = ({
-  buttonText,
-  onClick,
-}: {
-  buttonText: string;
-  onClick: MouseEventHandler<HTMLButtonElement>;
-}) => {
+export const NotExist = ({ buttonText, onClick }) => {
   return (
     <ConnectWalletButton
       buttonText={buttonText}
@@ -285,14 +243,6 @@ export const WalletConnectComponent = ({
   rejected,
   error,
   notExist,
-}: {
-  walletStatus: WalletStatus;
-  disconnect: ReactNode;
-  connecting: ReactNode;
-  connected: ReactNode;
-  rejected: ReactNode;
-  error: ReactNode;
-  notExist: ReactNode;
 }) => {
   console.log("walletStatus: ", walletStatus);
   switch (walletStatus) {
