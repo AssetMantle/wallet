@@ -1,6 +1,4 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import { wallets as cosmostationwallets } from "@cosmos-kit/cosmostation";
-import { wallets as keplrwallets } from "@cosmos-kit/keplr";
 import { wallets as leapwallets } from "@cosmos-kit/leap";
 import { ChainProvider } from "@cosmos-kit/react";
 import { assets, chains } from "chain-registry";
@@ -8,9 +6,11 @@ import Head from "next/head";
 import { useEffect } from "react";
 import Layout from "../components/Layout";
 import {
+  cosmostationWallets,
   defaultChainRESTProxy,
   defaultChainRPCProxy,
   defaultTheme,
+  keplrWallets,
 } from "../config";
 import "../config/styles/index.scss";
 import ConnectModal from "../views/ConnectModal/ConnectModal";
@@ -51,7 +51,7 @@ function CreateCosmosApp({ Component, pageProps }) {
         <ChainProvider
           chains={chains}
           assetLists={assets}
-          wallets={[...keplrwallets, ...leapwallets, ...cosmostationwallets]}
+          wallets={[...keplrWallets, ...leapwallets, ...cosmostationWallets]}
           endpointOptions={{
             assetmantle: {
               rpc: [defaultChainRPCProxy],
