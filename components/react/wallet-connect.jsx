@@ -130,6 +130,8 @@ export const Disconnected = ({ buttonText, buttonIcon, onClick }) => {
       buttonText={buttonText}
       buttonIcon={buttonIcon}
       onClickConnectBtn={onClick}
+      dataBsTarget="#WalletConnectModal"
+      dataBsToggle="modal"
     />
   );
 };
