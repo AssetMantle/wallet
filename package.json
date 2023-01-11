@@ -4,7 +4,7 @@
   "private": false,
   "description": "Default wallet app for AssetMantle",
   "homepage": "https://wallet.assetmantle.one/",
-  "main": "app/index.jsx",
+  "main": "pages/index.jsx",
   "author": "KOMBOS <kamlesh@assetmantle.one>",
   "license": "MIT",
   "repository": {

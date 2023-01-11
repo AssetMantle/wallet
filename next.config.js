@@ -5,14 +5,14 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "raw.githubusercontent.com",
-        port: "",
+        port: " ",
         pathname:
           "/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/**",
       },
       {
         protocol: "https",
         hostname: "pbs.twimg.com",
-        port: "",
+        port: " ",
         pathname: "/profile_images/1498228570862219266/**",
       },
     ],

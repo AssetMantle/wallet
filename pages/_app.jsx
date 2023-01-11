@@ -1,27 +1,25 @@
 import { ChakraProvider } from "@chakra-ui/react";
-// import { wallets as cosmostationWallets } from "@cosmos-kit/cosmostation";
+import { wallets as cosmostationwallets } from "@cosmos-kit/cosmostation";
+import { wallets as keplrwallets } from "@cosmos-kit/keplr";
 import { wallets as leapwallets } from "@cosmos-kit/leap";
 import { ChainProvider } from "@cosmos-kit/react";
+import { assets, chains } from "chain-registry";
+import Head from "next/head";
 import { useEffect } from "react";
+import Layout from "../components/Layout";
 import {
   defaultChainRESTProxy,
   defaultChainRPCProxy,
   defaultTheme,
-  keplrWallets,
-  cosmostationWallets,
 } from "../config";
-
 import "../config/styles/index.scss";
-
-import { assets, chains } from "chain-registry";
-import Head from "next/head";
-import Layout from "../components/Layout";
 import ConnectModal from "../views/ConnectModal/ConnectModal";
 
 function CreateCosmosApp({ Component, pageProps }) {
   // useEffect for bootstrap js hydration
   useEffect(() => {
     require("bootstrap/dist/js/bootstrap.bundle.js");
+    console.log("leapwallets: ", leapwallets);
   }, []);
 
   return (
@@ -53,7 +51,7 @@ function CreateCosmosApp({ Component, pageProps }) {
         <ChainProvider
           chains={chains}
           assetLists={assets}
-          wallets={[...keplrWallets, ...leapwallets, ...cosmostationWallets]}
+          wallets={[...keplrwallets, ...leapwallets, ...cosmostationwallets]}
           endpointOptions={{
             assetmantle: {
               rpc: [defaultChainRPCProxy],
