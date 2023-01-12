@@ -4,7 +4,7 @@ zone_id = '4d52f36b396dad8cddd83b3d5e0fbda4'
 usage_model = ''
 compatibility_flags = []
 workers_dev = true
-site = {bucket = "./build",entry-point = "workers-site"}
+site = {bucket = "./.next",entry-point = "workers-site"}
 compatibility_date = "2021-10-08"
 
 [env.staging-wallet]
