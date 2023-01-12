@@ -32,7 +32,7 @@ export default function Header() {
 
   const router = useRouter();
 
-  console.log({
+  console.log("useChain results:", {
     chain,
     openView,
     username,
