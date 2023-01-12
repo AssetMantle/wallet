@@ -1,6 +1,5 @@
 node_modules/
 dist/
-main/
-module/
-coverage/
-modules/
+.next/
+.husky/
+.github/

@@ -43,7 +43,8 @@ export default function Vote() {
                 </button>
                 <a
                   target="_blank"
-                  href="https://www.mintscan.io/asset-mantle/proposals" rel="noreferrer"
+                  href="https://www.mintscan.io/asset-mantle/proposals"
+                  rel="noreferrer"
                 >
                   <button
                     className={

@@ -18,7 +18,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint --fix --cache",
+    "lint": "next lint --fix --dir .",
     "prepare": "husky install",
     "format": "prettier --write .",
     "pre-commit": "yarn lint && yarn format"

@@ -1,21 +1,22 @@
+import { useChain } from "@cosmos-kit/react";
+import Image from "next/image";
 import React, { useState } from "react";
 import {
-  chainSymbol,
-  placeholderTotalDelegations,
-  placeholderMntlUsdValue,
-  defaultChainSymbol,
   defaultChainName,
+  defaultChainSymbol,
+  placeholderMntlUsdValue,
+  placeholderTotalDelegations,
 } from "../config";
-import { sendRedelegation, sendUndelegation } from "../data";
 import {
+  fromDenom,
+  sendRedelegation,
+  sendUndelegation,
+  useAllValidators,
   useDelegatedValidators,
   useMntlUsd,
-  fromDenom,
-  useAllValidators,
 } from "../data";
-import { useChain } from "@cosmos-kit/react";
 
-const denomDisplay = chainSymbol;
+const denomDisplay = defaultChainSymbol;
 
 const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
   const { allValidators, isLoadingValidators, errorValidators } =

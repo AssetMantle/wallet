@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import {
-  chainSymbol,
+  defaultChainSymbol,
   placeholderMntlUsdValue,
   placeholderTotalUnbonding,
 } from "../config";
 import {
   fromDenom,
-  useTotalUnbonding,
-  useMntlUsd,
   useDelegatedValidators,
+  useMntlUsd,
+  useTotalUnbonding,
 } from "../data";
 
-const denomDisplay = chainSymbol;
+const denomDisplay = defaultChainSymbol;
 
 const Unbonded = ({ stakeState, stakeDispatch }) => {
   const [activeValidators, setActiveValidators] = useState(true);

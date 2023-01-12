@@ -12,32 +12,21 @@ import {
   placeholderMntlUsdValue,
 } from "../config";
 
-// get the rest endpoint from the chain registry
-const restEndpoint = chains.find(
-  (_chain) => _chain?.chain_name === defaultChainName
-)?.apis?.rest[0]?.address;
-
 // get the rpc endpoint from the chain registry
 const rpcEndpoint = chains.find(
   (_chain) => _chain?.chain_name === defaultChainName
 )?.apis?.rpc[0]?.address;
 
+console.log(JSON.stringify({ rpcEndpoint }));
+
 const denom = assets.find(
   (assetObj) => assetObj?.chain_name === defaultChainName
 )?.assets[0]?.base;
-
-// console.log("assets: ", assets);
-// console.log("AssetMantle Endpoint: ", restEndpoint);
 
 // get the RPC Query Client using Modules & Endpoint
 const client = await cosmos.ClientFactory.createRPCQueryClient({
   rpcEndpoint,
 });
-
-// get the REST Query Client using Modules & Endpoint
-/* const client2 = await cosmos.ClientFactory.createLCDClient({
-  restEndpoint,
-}); */
 
 export const fromDenom = (value, exponent = defaultChainDenomExponent) => {
   return parseFloat(

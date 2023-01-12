@@ -1,21 +1,21 @@
+import { useChain } from "@cosmos-kit/react";
 import React, { useState } from "react";
 import {
-  chainSymbol,
   defaultChainName,
+  defaultChainSymbol,
   placeholderMntlUsdValue,
   placeholderRewards,
 } from "../config";
-import { sendRewardsBatched } from "../data";
 import {
   fromDenom,
-  useTotalRewards,
-  useMntlUsd,
-  useDelegatedValidators,
+  sendRewardsBatched,
   useAllValidators,
+  useDelegatedValidators,
+  useMntlUsd,
+  useTotalRewards,
 } from "../data";
-import { useChain } from "@cosmos-kit/react";
 
-const denomDisplay = chainSymbol;
+const denomDisplay = defaultChainSymbol;
 
 const Rewards = ({ setShowClaimError, stakeState }) => {
   const walletManager = useChain(defaultChainName);

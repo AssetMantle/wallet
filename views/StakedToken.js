@@ -3,13 +3,8 @@ import React, { Suspense } from "react";
 import Delegations from "../components/Delegations";
 import Rewards from "../components/Rewards";
 import Unbonded from "../components/Unbonded";
-import { defaultChainName } from "../config";
-import {
-  defaultChainSymbol,
-  fromDenom,
-  sendDelegation,
-  useAvailableBalance,
-} from "../data";
+import { defaultChainName, defaultChainSymbol } from "../config";
+import { fromDenom, sendDelegation, useAvailableBalance } from "../data";
 
 export default function StakedToken({
   totalTokens,
