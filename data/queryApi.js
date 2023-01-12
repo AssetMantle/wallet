@@ -566,6 +566,7 @@ export const useVote = (proposalId) => {
   // get the connected wallet parameters from useChain hook
   const walletManager = useChain(defaultChainName);
   const { walletStatus, address, currentWalletInfo } = walletManager;
+  const voter = address;
   // fetcher function for useSwr of useAvailableBalance()
   const fetchVote = async (url) => {
     let voteInfo;
@@ -575,7 +576,7 @@ export const useVote = (proposalId) => {
       // get the data from cosmos queryClient
       const { vote } = await client.cosmos.gov.v1beta1.vote({
         proposalId,
-        address,
+        voter,
       });
       voteInfo = vote;
     } catch (error) {
@@ -623,7 +624,11 @@ export const useAllProposals = () => {
     // use a try catch block for creating rich Error object
     try {
       // get the data from cosmos queryClient
-      const { proposals } = await client.cosmos.gov.v1beta1.proposals();
+      const { proposals } = await client.cosmos.gov.v1beta1.proposals({
+        depositor: "",
+        proposalStatus: "",
+        voter: "",
+      });
       allProposals = proposals;
       // const iconUrlsArray = validators.map((validator, index) => {
       //   return `https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/${validator.operator_address}.png`;
