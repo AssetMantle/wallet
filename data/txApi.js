@@ -1,7 +1,7 @@
 import { assets } from "chain-registry";
 import { defaultChainDenom, defaultChainName } from "../config";
 import { toChainDenom } from "../data";
-import { cosmos } from "../modules";
+import { cosmos } from "osmojs";
 
 // get the wallet properties and functions for that specific chain
 export const sendTokensTxn = async (
@@ -31,14 +31,14 @@ export const sendTokensTxn = async (
     const { send } = cosmos.bank.v1beta1.MessageComposer.withTypeUrl;
     // populate the message with transaction arguments
     const msg = send({
+      fromAddress,
+      toAddress,
       amount: [
         {
           denom: coin.base,
           amount: amountInDenom,
         },
       ],
-      toAddress,
-      fromAddress,
     });
     // populate the fee data
     const fee = {

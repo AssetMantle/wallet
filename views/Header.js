@@ -32,17 +32,6 @@ export default function Header() {
 
   const router = useRouter();
 
-  console.log({
-    chain,
-    openView,
-    username,
-    address,
-    wallet,
-    status,
-    connect,
-    disconnect,
-  });
-
   const ConnectOptionObject = {
     cosmostation: {
       icon: "/WalletIcons/cosmostation.png",

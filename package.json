@@ -18,10 +18,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint --fix --cache",
+    "lint": "next lint --fix --dir .",
     "prepare": "husky install",
     "format": "prettier --write .",
-    "pre-commit": "yarn lint && yarn format"
+    "pre-commit": "yarn lint && yarn format && git add -A ."
   },
   "dependencies": {
     "@chakra-ui/icons": "2.0.11",
@@ -49,6 +49,7 @@
     "chain-registry": "1.4.0",
     "framer-motion": "7.6.5",
     "next": "12.3.1",
+    "osmojs": "^13.0.0-rc.7-i-alpha",
     "qrcode": "^1.5.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -65,6 +66,7 @@
     "eslint": "8.27.0",
     "eslint-config-next": "12.2.5",
     "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-unused-imports": "^2.0.0",
     "husky": "^8.0.3",
     "typescript": "4.8.4"

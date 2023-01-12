@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import { useReducer } from "react";
 
 const UseVoteReducer = () => {
   const initialState = {
@@ -20,7 +20,6 @@ const UseVoteReducer = () => {
   };
 
   const [voteState, voteDispatch] = useReducer(stakeReducer, initialState);
-  console.log(voteState);
   return { voteState, voteDispatch };
 };
 

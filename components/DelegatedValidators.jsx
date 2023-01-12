@@ -47,7 +47,7 @@ const DelegatedValidators = ({
                   ></input>
                 </td>
                 <td>{index + 1}</td>
-                <td className=" d-flex align-items-center justify-content-center">
+                <td>
                   <div
                     className="d-flex position-relative rounded-circle gap-1"
                     style={{ width: "25px", aspectRatio: "1/1" }}
@@ -57,11 +57,11 @@ const DelegatedValidators = ({
                       className="rounded-circle"
                       layout="fill"
                       src={`/validatoravatars/${item?.operator_address}.png`}
-                      // onError={(e) => console.log(e)}
+                      onError={(e) => console.log(e)}
                     />
                   </div>
                 </td>
-                <td className=" d-flex align-items-center justify-content-center">
+                <td className=" d-flex align-items-center justify-content-start">
                   {item?.description?.moniker}
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
@@ -72,7 +72,11 @@ const DelegatedValidators = ({
               </tr>
             ))
         : delegatedValidators
-            ?.filter((item) => item?.status === "BOND_STATUS_UNBONDED")
+            ?.filter(
+              (item) =>
+                item?.status === "BOND_STATUS_UNBONDED" &&
+                item?.description?.moniker?.toLowerCase()?.includes(searchValue)
+            )
             ?.map((item, index) => (
               <tr key={index} className="caption2 text-white-300">
                 <td>
@@ -104,11 +108,11 @@ const DelegatedValidators = ({
                       className="rounded-circle"
                       layout="fill"
                       src={`/validatoravatars/${item?.operator_address}.png`}
-                      // onError={(e) => console.log(e)}
+                      onError={(e) => console.log(e)}
                     />
                   </div>
                 </td>
-                <td className=" d-flex align-items-center justify-content-around gap-1">
+                <td className=" d-flex align-items-center justify-content-start gap-1">
                   {item?.description?.moniker}
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>

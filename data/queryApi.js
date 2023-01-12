@@ -1,6 +1,7 @@
 import { useChain } from "@cosmos-kit/react";
 import BigNumber from "bignumber.js";
 import { assets, chains } from "chain-registry";
+import { cosmos } from "osmojs";
 import useSwr from "swr";
 import {
   defaultChainDenom,
@@ -10,23 +11,21 @@ import {
   placeholderAvailableBalance,
   placeholderMntlUsdValue,
 } from "../config";
-import { cosmos } from "../modules";
 
-// get the rest endpoint from the chain registry inside the Cosmos Kit
-const restEndpoint = chains.find(
+// get the rpc endpoint from the chain registry
+const rpcEndpoint = chains.find(
   (_chain) => _chain?.chain_name === defaultChainName
-)?.apis?.rest[0]?.address;
+)?.apis?.rpc[0]?.address;
+
+console.log(JSON.stringify({ rpcEndpoint }));
 
 const denom = assets.find(
   (assetObj) => assetObj?.chain_name === defaultChainName
 )?.assets[0]?.base;
 
-// console.log("assets: ", assets);
-// console.log("AssetMantle Endpoint: ", restEndpoint);
-
-// get the REST Query Client using Modules & Endpoint
-const client = await cosmos.ClientFactory.createLCDClient({
-  restEndpoint,
+// get the RPC Query Client using Modules & Endpoint
+const client = await cosmos.ClientFactory.createRPCQueryClient({
+  rpcEndpoint,
 });
 
 export const fromDenom = (value, exponent = defaultChainDenomExponent) => {
@@ -178,20 +177,25 @@ export const useTotalUnbonding = () => {
         await client.cosmos.staking.v1beta1.delegatorUnbondingDelegations({
           delegatorAddr: address,
         });
-      unbonding_responses?.map((item) => {
-        item?.entries.map((ele) =>
-          allUnbonding.push({
-            address: item.validator_address,
-            balance: ele.balance,
-            completion_time: ele.completion_time,
-          })
-        );
-        totalUnbondingAmount = allUnbonding?.reduce(
-          (total, currentValue) =>
-            parseFloat(total) + parseFloat(currentValue?.balance),
-          parseFloat("0")
-        );
-      });
+
+      if (!unbonding_responses.length) {
+        totalUnbondingAmount = 0;
+      } else {
+        unbonding_responses?.map((item) => {
+          item?.entries.map((ele) =>
+            allUnbonding.push({
+              address: item.validator_address,
+              balance: ele.balance,
+              completion_time: ele.completion_time,
+            })
+          );
+          totalUnbondingAmount = allUnbonding?.reduce(
+            (total, currentValue) =>
+              parseFloat(total) + parseFloat(currentValue?.balance),
+            parseFloat("0")
+          );
+        });
+      }
     } catch (error) {
       console.error(`swr fetcher error: ${url}`);
       throw error;
@@ -301,6 +305,7 @@ export const useDelegatedValidators = () => {
         await client.cosmos.staking.v1beta1.delegatorDelegations({
           delegatorAddr: address,
         });
+
       //Create an array of delegated validators with all additional information about them
       delegation_responses.map((item) => {
         let match = validators.find(
@@ -323,6 +328,7 @@ export const useDelegatedValidators = () => {
     // return the data
     return { totalDelegatedAmount, delegatedValidators };
   };
+
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: delegatedObject, error } = useSwr(
     address ? ["delegated", address] : null,
@@ -527,7 +533,7 @@ export const useAllValidators = () => {
   };
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: validatorsArray, error } = useSwr(
-    address ? ["validators", address] : null,
+    "validators",
     fetchAllValidators,
     {
       fallbackData: [

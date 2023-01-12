@@ -2,8 +2,6 @@ import { useReducer } from "react";
 import { defaultChainGasFee } from "../config";
 import {
   useDelegatedValidators,
-  useAllValidators,
-  useAllProposals,
   useAvailableBalance,
   fromDenom,
   toDenom,
