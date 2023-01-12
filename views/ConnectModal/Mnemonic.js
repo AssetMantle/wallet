@@ -1,8 +1,5 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { IoCloseSharp } from "react-icons/io5";
-import { BsChevronLeft, BsDownload, BsPlusCircle } from "react-icons/bs";
-import { BiHide, BiShow } from "react-icons/bi";
 
 export default function Mnemonic({ MnemonicSeed, close, setStep }) {
   const [hidden, setHidden] = useState(true);
@@ -71,13 +68,13 @@ export default function Mnemonic({ MnemonicSeed, close, setStep }) {
       <div className="d-flex align-items-center justify-content-between ">
         <h1 className="body1 text-primary d-flex align-items-center gap-2">
           <button className="" onClick={() => setStep(8)}>
-            <BsChevronLeft />
+            <i className="bi bi-chevron-left" />
           </button>
           Mnemonic
         </h1>
         <button className="btn text-primary body1" onClick={() => close()}>
           <span className="text-primary">
-            <IoCloseSharp />
+            <i className="bi bi-x-lg" />
           </span>
         </button>
       </div>
@@ -91,7 +88,11 @@ export default function Mnemonic({ MnemonicSeed, close, setStep }) {
             className="body2 text-primary"
             onClick={() => setHidden(!hidden)}
           >
-            {!hidden ? <BiHide /> : <BiShow />}
+            {!hidden ? (
+              <i className="bi bi-eye-hide" />
+            ) : (
+              <i className="bi bi-eye" />
+            )}
           </button>
         </div>
         <div className="d-flex align-items-center box-nav">

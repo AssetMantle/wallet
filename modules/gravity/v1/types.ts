@@ -1,7 +1,7 @@
 import { Metadata, MetadataSDKType } from "../../cosmos/bank/v1beta1/bank";
 import { Coin, CoinSDKType } from "../../cosmos/base/v1beta1/coin";
 import * as _m0 from "protobufjs/minimal";
-import { Long, isSet, bytesFromBase64, base64FromBytes } from "../../helpers";
+import { Long, DeepPartial } from "../../helpers";
 /** BridgeValidator represents a validator's ETH address and its power */
 
 export interface BridgeValidator {
@@ -261,21 +261,7 @@ export const BridgeValidator = {
     return message;
   },
 
-  fromJSON(object: any): BridgeValidator {
-    return {
-      power: isSet(object.power) ? Long.fromValue(object.power) : Long.UZERO,
-      ethereumAddress: isSet(object.ethereumAddress) ? String(object.ethereumAddress) : ""
-    };
-  },
-
-  toJSON(message: BridgeValidator): unknown {
-    const obj: any = {};
-    message.power !== undefined && (obj.power = (message.power || Long.UZERO).toString());
-    message.ethereumAddress !== undefined && (obj.ethereumAddress = message.ethereumAddress);
-    return obj;
-  },
-
-  fromPartial(object: Partial<BridgeValidator>): BridgeValidator {
+  fromPartial(object: DeepPartial<BridgeValidator>): BridgeValidator {
     const message = createBaseBridgeValidator();
     message.power = object.power !== undefined && object.power !== null ? Long.fromValue(object.power) : Long.UZERO;
     message.ethereumAddress = object.ethereumAddress ?? "";
@@ -357,33 +343,7 @@ export const Valset = {
     return message;
   },
 
-  fromJSON(object: any): Valset {
-    return {
-      nonce: isSet(object.nonce) ? Long.fromValue(object.nonce) : Long.UZERO,
-      members: Array.isArray(object?.members) ? object.members.map((e: any) => BridgeValidator.fromJSON(e)) : [],
-      height: isSet(object.height) ? Long.fromValue(object.height) : Long.UZERO,
-      rewardAmount: isSet(object.rewardAmount) ? String(object.rewardAmount) : "",
-      rewardToken: isSet(object.rewardToken) ? String(object.rewardToken) : ""
-    };
-  },
-
-  toJSON(message: Valset): unknown {
-    const obj: any = {};
-    message.nonce !== undefined && (obj.nonce = (message.nonce || Long.UZERO).toString());
-
-    if (message.members) {
-      obj.members = message.members.map(e => e ? BridgeValidator.toJSON(e) : undefined);
-    } else {
-      obj.members = [];
-    }
-
-    message.height !== undefined && (obj.height = (message.height || Long.UZERO).toString());
-    message.rewardAmount !== undefined && (obj.rewardAmount = message.rewardAmount);
-    message.rewardToken !== undefined && (obj.rewardToken = message.rewardToken);
-    return obj;
-  },
-
-  fromPartial(object: Partial<Valset>): Valset {
+  fromPartial(object: DeepPartial<Valset>): Valset {
     const message = createBaseValset();
     message.nonce = object.nonce !== undefined && object.nonce !== null ? Long.fromValue(object.nonce) : Long.UZERO;
     message.members = object.members?.map(e => BridgeValidator.fromPartial(e)) || [];
@@ -441,21 +401,7 @@ export const LastObservedEthereumBlockHeight = {
     return message;
   },
 
-  fromJSON(object: any): LastObservedEthereumBlockHeight {
-    return {
-      cosmosBlockHeight: isSet(object.cosmosBlockHeight) ? Long.fromValue(object.cosmosBlockHeight) : Long.UZERO,
-      ethereumBlockHeight: isSet(object.ethereumBlockHeight) ? Long.fromValue(object.ethereumBlockHeight) : Long.UZERO
-    };
-  },
-
-  toJSON(message: LastObservedEthereumBlockHeight): unknown {
-    const obj: any = {};
-    message.cosmosBlockHeight !== undefined && (obj.cosmosBlockHeight = (message.cosmosBlockHeight || Long.UZERO).toString());
-    message.ethereumBlockHeight !== undefined && (obj.ethereumBlockHeight = (message.ethereumBlockHeight || Long.UZERO).toString());
-    return obj;
-  },
-
-  fromPartial(object: Partial<LastObservedEthereumBlockHeight>): LastObservedEthereumBlockHeight {
+  fromPartial(object: DeepPartial<LastObservedEthereumBlockHeight>): LastObservedEthereumBlockHeight {
     const message = createBaseLastObservedEthereumBlockHeight();
     message.cosmosBlockHeight = object.cosmosBlockHeight !== undefined && object.cosmosBlockHeight !== null ? Long.fromValue(object.cosmosBlockHeight) : Long.UZERO;
     message.ethereumBlockHeight = object.ethereumBlockHeight !== undefined && object.ethereumBlockHeight !== null ? Long.fromValue(object.ethereumBlockHeight) : Long.UZERO;
@@ -510,21 +456,7 @@ export const ERC20ToDenom = {
     return message;
   },
 
-  fromJSON(object: any): ERC20ToDenom {
-    return {
-      erc20: isSet(object.erc20) ? String(object.erc20) : "",
-      denom: isSet(object.denom) ? String(object.denom) : ""
-    };
-  },
-
-  toJSON(message: ERC20ToDenom): unknown {
-    const obj: any = {};
-    message.erc20 !== undefined && (obj.erc20 = message.erc20);
-    message.denom !== undefined && (obj.denom = message.denom);
-    return obj;
-  },
-
-  fromPartial(object: Partial<ERC20ToDenom>): ERC20ToDenom {
+  fromPartial(object: DeepPartial<ERC20ToDenom>): ERC20ToDenom {
     const message = createBaseERC20ToDenom();
     message.erc20 = object.erc20 ?? "";
     message.denom = object.denom ?? "";
@@ -588,23 +520,7 @@ export const UnhaltBridgeProposal = {
     return message;
   },
 
-  fromJSON(object: any): UnhaltBridgeProposal {
-    return {
-      title: isSet(object.title) ? String(object.title) : "",
-      description: isSet(object.description) ? String(object.description) : "",
-      targetNonce: isSet(object.targetNonce) ? Long.fromValue(object.targetNonce) : Long.UZERO
-    };
-  },
-
-  toJSON(message: UnhaltBridgeProposal): unknown {
-    const obj: any = {};
-    message.title !== undefined && (obj.title = message.title);
-    message.description !== undefined && (obj.description = message.description);
-    message.targetNonce !== undefined && (obj.targetNonce = (message.targetNonce || Long.UZERO).toString());
-    return obj;
-  },
-
-  fromPartial(object: Partial<UnhaltBridgeProposal>): UnhaltBridgeProposal {
+  fromPartial(object: DeepPartial<UnhaltBridgeProposal>): UnhaltBridgeProposal {
     const message = createBaseUnhaltBridgeProposal();
     message.title = object.title ?? "";
     message.description = object.description ?? "";
@@ -699,33 +615,7 @@ export const AirdropProposal = {
     return message;
   },
 
-  fromJSON(object: any): AirdropProposal {
-    return {
-      title: isSet(object.title) ? String(object.title) : "",
-      description: isSet(object.description) ? String(object.description) : "",
-      denom: isSet(object.denom) ? String(object.denom) : "",
-      recipients: isSet(object.recipients) ? bytesFromBase64(object.recipients) : new Uint8Array(),
-      amounts: Array.isArray(object?.amounts) ? object.amounts.map((e: any) => Long.fromValue(e)) : []
-    };
-  },
-
-  toJSON(message: AirdropProposal): unknown {
-    const obj: any = {};
-    message.title !== undefined && (obj.title = message.title);
-    message.description !== undefined && (obj.description = message.description);
-    message.denom !== undefined && (obj.denom = message.denom);
-    message.recipients !== undefined && (obj.recipients = base64FromBytes(message.recipients !== undefined ? message.recipients : new Uint8Array()));
-
-    if (message.amounts) {
-      obj.amounts = message.amounts.map(e => (e || Long.UZERO).toString());
-    } else {
-      obj.amounts = [];
-    }
-
-    return obj;
-  },
-
-  fromPartial(object: Partial<AirdropProposal>): AirdropProposal {
+  fromPartial(object: DeepPartial<AirdropProposal>): AirdropProposal {
     const message = createBaseAirdropProposal();
     message.title = object.title ?? "";
     message.description = object.description ?? "";
@@ -801,25 +691,7 @@ export const IBCMetadataProposal = {
     return message;
   },
 
-  fromJSON(object: any): IBCMetadataProposal {
-    return {
-      title: isSet(object.title) ? String(object.title) : "",
-      description: isSet(object.description) ? String(object.description) : "",
-      metadata: isSet(object.metadata) ? Metadata.fromJSON(object.metadata) : undefined,
-      ibcDenom: isSet(object.ibcDenom) ? String(object.ibcDenom) : ""
-    };
-  },
-
-  toJSON(message: IBCMetadataProposal): unknown {
-    const obj: any = {};
-    message.title !== undefined && (obj.title = message.title);
-    message.description !== undefined && (obj.description = message.description);
-    message.metadata !== undefined && (obj.metadata = message.metadata ? Metadata.toJSON(message.metadata) : undefined);
-    message.ibcDenom !== undefined && (obj.ibcDenom = message.ibcDenom);
-    return obj;
-  },
-
-  fromPartial(object: Partial<IBCMetadataProposal>): IBCMetadataProposal {
+  fromPartial(object: DeepPartial<IBCMetadataProposal>): IBCMetadataProposal {
     const message = createBaseIBCMetadataProposal();
     message.title = object.title ?? "";
     message.description = object.description ?? "";
@@ -894,25 +766,7 @@ export const PendingIbcAutoForward = {
     return message;
   },
 
-  fromJSON(object: any): PendingIbcAutoForward {
-    return {
-      foreignReceiver: isSet(object.foreignReceiver) ? String(object.foreignReceiver) : "",
-      token: isSet(object.token) ? Coin.fromJSON(object.token) : undefined,
-      ibcChannel: isSet(object.ibcChannel) ? String(object.ibcChannel) : "",
-      eventNonce: isSet(object.eventNonce) ? Long.fromValue(object.eventNonce) : Long.UZERO
-    };
-  },
-
-  toJSON(message: PendingIbcAutoForward): unknown {
-    const obj: any = {};
-    message.foreignReceiver !== undefined && (obj.foreignReceiver = message.foreignReceiver);
-    message.token !== undefined && (obj.token = message.token ? Coin.toJSON(message.token) : undefined);
-    message.ibcChannel !== undefined && (obj.ibcChannel = message.ibcChannel);
-    message.eventNonce !== undefined && (obj.eventNonce = (message.eventNonce || Long.UZERO).toString());
-    return obj;
-  },
-
-  fromPartial(object: Partial<PendingIbcAutoForward>): PendingIbcAutoForward {
+  fromPartial(object: DeepPartial<PendingIbcAutoForward>): PendingIbcAutoForward {
     const message = createBasePendingIbcAutoForward();
     message.foreignReceiver = object.foreignReceiver ?? "";
     message.token = object.token !== undefined && object.token !== null ? Coin.fromPartial(object.token) : undefined;

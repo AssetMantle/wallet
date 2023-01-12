@@ -1,6 +1,6 @@
 import { Any, AnySDKType } from "../../google/protobuf/any";
 import * as _m0 from "protobufjs/minimal";
-import { Long, isSet } from "../../helpers";
+import { Long, DeepPartial } from "../../helpers";
 /**
  * ClaimType is the cosmos type of an event from the counterpart chain that can
  * be handled
@@ -325,31 +325,7 @@ export const Attestation = {
     return message;
   },
 
-  fromJSON(object: any): Attestation {
-    return {
-      observed: isSet(object.observed) ? Boolean(object.observed) : false,
-      votes: Array.isArray(object?.votes) ? object.votes.map((e: any) => String(e)) : [],
-      height: isSet(object.height) ? Long.fromValue(object.height) : Long.UZERO,
-      claim: isSet(object.claim) ? Any.fromJSON(object.claim) : undefined
-    };
-  },
-
-  toJSON(message: Attestation): unknown {
-    const obj: any = {};
-    message.observed !== undefined && (obj.observed = message.observed);
-
-    if (message.votes) {
-      obj.votes = message.votes.map(e => e);
-    } else {
-      obj.votes = [];
-    }
-
-    message.height !== undefined && (obj.height = (message.height || Long.UZERO).toString());
-    message.claim !== undefined && (obj.claim = message.claim ? Any.toJSON(message.claim) : undefined);
-    return obj;
-  },
-
-  fromPartial(object: Partial<Attestation>): Attestation {
+  fromPartial(object: DeepPartial<Attestation>): Attestation {
     const message = createBaseAttestation();
     message.observed = object.observed ?? false;
     message.votes = object.votes?.map(e => e) || [];
@@ -406,21 +382,7 @@ export const ERC20Token = {
     return message;
   },
 
-  fromJSON(object: any): ERC20Token {
-    return {
-      contract: isSet(object.contract) ? String(object.contract) : "",
-      amount: isSet(object.amount) ? String(object.amount) : ""
-    };
-  },
-
-  toJSON(message: ERC20Token): unknown {
-    const obj: any = {};
-    message.contract !== undefined && (obj.contract = message.contract);
-    message.amount !== undefined && (obj.amount = message.amount);
-    return obj;
-  },
-
-  fromPartial(object: Partial<ERC20Token>): ERC20Token {
+  fromPartial(object: DeepPartial<ERC20Token>): ERC20Token {
     const message = createBaseERC20Token();
     message.contract = object.contract ?? "";
     message.amount = object.amount ?? "";
@@ -502,27 +464,7 @@ export const EventObservation = {
     return message;
   },
 
-  fromJSON(object: any): EventObservation {
-    return {
-      attestationType: isSet(object.attestationType) ? String(object.attestationType) : "",
-      bridgeContract: isSet(object.bridgeContract) ? String(object.bridgeContract) : "",
-      bridgeChainId: isSet(object.bridgeChainId) ? String(object.bridgeChainId) : "",
-      attestationId: isSet(object.attestationId) ? String(object.attestationId) : "",
-      nonce: isSet(object.nonce) ? String(object.nonce) : ""
-    };
-  },
-
-  toJSON(message: EventObservation): unknown {
-    const obj: any = {};
-    message.attestationType !== undefined && (obj.attestationType = message.attestationType);
-    message.bridgeContract !== undefined && (obj.bridgeContract = message.bridgeContract);
-    message.bridgeChainId !== undefined && (obj.bridgeChainId = message.bridgeChainId);
-    message.attestationId !== undefined && (obj.attestationId = message.attestationId);
-    message.nonce !== undefined && (obj.nonce = message.nonce);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventObservation>): EventObservation {
+  fromPartial(object: DeepPartial<EventObservation>): EventObservation {
     const message = createBaseEventObservation();
     message.attestationType = object.attestationType ?? "";
     message.bridgeContract = object.bridgeContract ?? "";
@@ -598,25 +540,7 @@ export const EventInvalidSendToCosmosReceiver = {
     return message;
   },
 
-  fromJSON(object: any): EventInvalidSendToCosmosReceiver {
-    return {
-      amount: isSet(object.amount) ? String(object.amount) : "",
-      nonce: isSet(object.nonce) ? String(object.nonce) : "",
-      token: isSet(object.token) ? String(object.token) : "",
-      sender: isSet(object.sender) ? String(object.sender) : ""
-    };
-  },
-
-  toJSON(message: EventInvalidSendToCosmosReceiver): unknown {
-    const obj: any = {};
-    message.amount !== undefined && (obj.amount = message.amount);
-    message.nonce !== undefined && (obj.nonce = message.nonce);
-    message.token !== undefined && (obj.token = message.token);
-    message.sender !== undefined && (obj.sender = message.sender);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventInvalidSendToCosmosReceiver>): EventInvalidSendToCosmosReceiver {
+  fromPartial(object: DeepPartial<EventInvalidSendToCosmosReceiver>): EventInvalidSendToCosmosReceiver {
     const message = createBaseEventInvalidSendToCosmosReceiver();
     message.amount = object.amount ?? "";
     message.nonce = object.nonce ?? "";
@@ -682,23 +606,7 @@ export const EventSendToCosmos = {
     return message;
   },
 
-  fromJSON(object: any): EventSendToCosmos {
-    return {
-      amount: isSet(object.amount) ? String(object.amount) : "",
-      nonce: isSet(object.nonce) ? String(object.nonce) : "",
-      token: isSet(object.token) ? String(object.token) : ""
-    };
-  },
-
-  toJSON(message: EventSendToCosmos): unknown {
-    const obj: any = {};
-    message.amount !== undefined && (obj.amount = message.amount);
-    message.nonce !== undefined && (obj.nonce = message.nonce);
-    message.token !== undefined && (obj.token = message.token);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventSendToCosmos>): EventSendToCosmos {
+  fromPartial(object: DeepPartial<EventSendToCosmos>): EventSendToCosmos {
     const message = createBaseEventSendToCosmos();
     message.amount = object.amount ?? "";
     message.nonce = object.nonce ?? "";
@@ -772,25 +680,7 @@ export const EventSendToCosmosLocal = {
     return message;
   },
 
-  fromJSON(object: any): EventSendToCosmosLocal {
-    return {
-      nonce: isSet(object.nonce) ? String(object.nonce) : "",
-      receiver: isSet(object.receiver) ? String(object.receiver) : "",
-      token: isSet(object.token) ? String(object.token) : "",
-      amount: isSet(object.amount) ? String(object.amount) : ""
-    };
-  },
-
-  toJSON(message: EventSendToCosmosLocal): unknown {
-    const obj: any = {};
-    message.nonce !== undefined && (obj.nonce = message.nonce);
-    message.receiver !== undefined && (obj.receiver = message.receiver);
-    message.token !== undefined && (obj.token = message.token);
-    message.amount !== undefined && (obj.amount = message.amount);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventSendToCosmosLocal>): EventSendToCosmosLocal {
+  fromPartial(object: DeepPartial<EventSendToCosmosLocal>): EventSendToCosmosLocal {
     const message = createBaseEventSendToCosmosLocal();
     message.nonce = object.nonce ?? "";
     message.receiver = object.receiver ?? "";
@@ -874,27 +764,7 @@ export const EventSendToCosmosPendingIbcAutoForward = {
     return message;
   },
 
-  fromJSON(object: any): EventSendToCosmosPendingIbcAutoForward {
-    return {
-      nonce: isSet(object.nonce) ? String(object.nonce) : "",
-      receiver: isSet(object.receiver) ? String(object.receiver) : "",
-      token: isSet(object.token) ? String(object.token) : "",
-      amount: isSet(object.amount) ? String(object.amount) : "",
-      channel: isSet(object.channel) ? String(object.channel) : ""
-    };
-  },
-
-  toJSON(message: EventSendToCosmosPendingIbcAutoForward): unknown {
-    const obj: any = {};
-    message.nonce !== undefined && (obj.nonce = message.nonce);
-    message.receiver !== undefined && (obj.receiver = message.receiver);
-    message.token !== undefined && (obj.token = message.token);
-    message.amount !== undefined && (obj.amount = message.amount);
-    message.channel !== undefined && (obj.channel = message.channel);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventSendToCosmosPendingIbcAutoForward>): EventSendToCosmosPendingIbcAutoForward {
+  fromPartial(object: DeepPartial<EventSendToCosmosPendingIbcAutoForward>): EventSendToCosmosPendingIbcAutoForward {
     const message = createBaseEventSendToCosmosPendingIbcAutoForward();
     message.nonce = object.nonce ?? "";
     message.receiver = object.receiver ?? "";
@@ -997,31 +867,7 @@ export const EventSendToCosmosExecutedIbcAutoForward = {
     return message;
   },
 
-  fromJSON(object: any): EventSendToCosmosExecutedIbcAutoForward {
-    return {
-      nonce: isSet(object.nonce) ? String(object.nonce) : "",
-      receiver: isSet(object.receiver) ? String(object.receiver) : "",
-      token: isSet(object.token) ? String(object.token) : "",
-      amount: isSet(object.amount) ? String(object.amount) : "",
-      channel: isSet(object.channel) ? String(object.channel) : "",
-      timeoutTime: isSet(object.timeoutTime) ? String(object.timeoutTime) : "",
-      timeoutHeight: isSet(object.timeoutHeight) ? String(object.timeoutHeight) : ""
-    };
-  },
-
-  toJSON(message: EventSendToCosmosExecutedIbcAutoForward): unknown {
-    const obj: any = {};
-    message.nonce !== undefined && (obj.nonce = message.nonce);
-    message.receiver !== undefined && (obj.receiver = message.receiver);
-    message.token !== undefined && (obj.token = message.token);
-    message.amount !== undefined && (obj.amount = message.amount);
-    message.channel !== undefined && (obj.channel = message.channel);
-    message.timeoutTime !== undefined && (obj.timeoutTime = message.timeoutTime);
-    message.timeoutHeight !== undefined && (obj.timeoutHeight = message.timeoutHeight);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventSendToCosmosExecutedIbcAutoForward>): EventSendToCosmosExecutedIbcAutoForward {
+  fromPartial(object: DeepPartial<EventSendToCosmosExecutedIbcAutoForward>): EventSendToCosmosExecutedIbcAutoForward {
     const message = createBaseEventSendToCosmosExecutedIbcAutoForward();
     message.nonce = object.nonce ?? "";
     message.receiver = object.receiver ?? "";

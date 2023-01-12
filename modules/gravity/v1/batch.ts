@@ -1,6 +1,6 @@
 import { ERC20Token, ERC20TokenSDKType } from "./attestation";
 import * as _m0 from "protobufjs/minimal";
-import { Long, isSet, bytesFromBase64, base64FromBytes } from "../../helpers";
+import { Long, DeepPartial } from "../../helpers";
 /** OutgoingTxBatch represents a batch of transactions going from gravity to ETH */
 
 export interface OutgoingTxBatch {
@@ -159,33 +159,7 @@ export const OutgoingTxBatch = {
     return message;
   },
 
-  fromJSON(object: any): OutgoingTxBatch {
-    return {
-      batchNonce: isSet(object.batchNonce) ? Long.fromValue(object.batchNonce) : Long.UZERO,
-      batchTimeout: isSet(object.batchTimeout) ? Long.fromValue(object.batchTimeout) : Long.UZERO,
-      transactions: Array.isArray(object?.transactions) ? object.transactions.map((e: any) => OutgoingTransferTx.fromJSON(e)) : [],
-      tokenContract: isSet(object.tokenContract) ? String(object.tokenContract) : "",
-      ethBlock: isSet(object.ethBlock) ? Long.fromValue(object.ethBlock) : Long.UZERO
-    };
-  },
-
-  toJSON(message: OutgoingTxBatch): unknown {
-    const obj: any = {};
-    message.batchNonce !== undefined && (obj.batchNonce = (message.batchNonce || Long.UZERO).toString());
-    message.batchTimeout !== undefined && (obj.batchTimeout = (message.batchTimeout || Long.UZERO).toString());
-
-    if (message.transactions) {
-      obj.transactions = message.transactions.map(e => e ? OutgoingTransferTx.toJSON(e) : undefined);
-    } else {
-      obj.transactions = [];
-    }
-
-    message.tokenContract !== undefined && (obj.tokenContract = message.tokenContract);
-    message.ethBlock !== undefined && (obj.ethBlock = (message.ethBlock || Long.UZERO).toString());
-    return obj;
-  },
-
-  fromPartial(object: Partial<OutgoingTxBatch>): OutgoingTxBatch {
+  fromPartial(object: DeepPartial<OutgoingTxBatch>): OutgoingTxBatch {
     const message = createBaseOutgoingTxBatch();
     message.batchNonce = object.batchNonce !== undefined && object.batchNonce !== null ? Long.fromValue(object.batchNonce) : Long.UZERO;
     message.batchTimeout = object.batchTimeout !== undefined && object.batchTimeout !== null ? Long.fromValue(object.batchTimeout) : Long.UZERO;
@@ -270,27 +244,7 @@ export const OutgoingTransferTx = {
     return message;
   },
 
-  fromJSON(object: any): OutgoingTransferTx {
-    return {
-      id: isSet(object.id) ? Long.fromValue(object.id) : Long.UZERO,
-      sender: isSet(object.sender) ? String(object.sender) : "",
-      destAddress: isSet(object.destAddress) ? String(object.destAddress) : "",
-      erc20Token: isSet(object.erc20Token) ? ERC20Token.fromJSON(object.erc20Token) : undefined,
-      erc20Fee: isSet(object.erc20Fee) ? ERC20Token.fromJSON(object.erc20Fee) : undefined
-    };
-  },
-
-  toJSON(message: OutgoingTransferTx): unknown {
-    const obj: any = {};
-    message.id !== undefined && (obj.id = (message.id || Long.UZERO).toString());
-    message.sender !== undefined && (obj.sender = message.sender);
-    message.destAddress !== undefined && (obj.destAddress = message.destAddress);
-    message.erc20Token !== undefined && (obj.erc20Token = message.erc20Token ? ERC20Token.toJSON(message.erc20Token) : undefined);
-    message.erc20Fee !== undefined && (obj.erc20Fee = message.erc20Fee ? ERC20Token.toJSON(message.erc20Fee) : undefined);
-    return obj;
-  },
-
-  fromPartial(object: Partial<OutgoingTransferTx>): OutgoingTransferTx {
+  fromPartial(object: DeepPartial<OutgoingTransferTx>): OutgoingTransferTx {
     const message = createBaseOutgoingTransferTx();
     message.id = object.id !== undefined && object.id !== null ? Long.fromValue(object.id) : Long.UZERO;
     message.sender = object.sender ?? "";
@@ -402,44 +356,7 @@ export const OutgoingLogicCall = {
     return message;
   },
 
-  fromJSON(object: any): OutgoingLogicCall {
-    return {
-      transfers: Array.isArray(object?.transfers) ? object.transfers.map((e: any) => ERC20Token.fromJSON(e)) : [],
-      fees: Array.isArray(object?.fees) ? object.fees.map((e: any) => ERC20Token.fromJSON(e)) : [],
-      logicContractAddress: isSet(object.logicContractAddress) ? String(object.logicContractAddress) : "",
-      payload: isSet(object.payload) ? bytesFromBase64(object.payload) : new Uint8Array(),
-      timeout: isSet(object.timeout) ? Long.fromValue(object.timeout) : Long.UZERO,
-      invalidationId: isSet(object.invalidationId) ? bytesFromBase64(object.invalidationId) : new Uint8Array(),
-      invalidationNonce: isSet(object.invalidationNonce) ? Long.fromValue(object.invalidationNonce) : Long.UZERO,
-      ethBlock: isSet(object.ethBlock) ? Long.fromValue(object.ethBlock) : Long.UZERO
-    };
-  },
-
-  toJSON(message: OutgoingLogicCall): unknown {
-    const obj: any = {};
-
-    if (message.transfers) {
-      obj.transfers = message.transfers.map(e => e ? ERC20Token.toJSON(e) : undefined);
-    } else {
-      obj.transfers = [];
-    }
-
-    if (message.fees) {
-      obj.fees = message.fees.map(e => e ? ERC20Token.toJSON(e) : undefined);
-    } else {
-      obj.fees = [];
-    }
-
-    message.logicContractAddress !== undefined && (obj.logicContractAddress = message.logicContractAddress);
-    message.payload !== undefined && (obj.payload = base64FromBytes(message.payload !== undefined ? message.payload : new Uint8Array()));
-    message.timeout !== undefined && (obj.timeout = (message.timeout || Long.UZERO).toString());
-    message.invalidationId !== undefined && (obj.invalidationId = base64FromBytes(message.invalidationId !== undefined ? message.invalidationId : new Uint8Array()));
-    message.invalidationNonce !== undefined && (obj.invalidationNonce = (message.invalidationNonce || Long.UZERO).toString());
-    message.ethBlock !== undefined && (obj.ethBlock = (message.ethBlock || Long.UZERO).toString());
-    return obj;
-  },
-
-  fromPartial(object: Partial<OutgoingLogicCall>): OutgoingLogicCall {
+  fromPartial(object: DeepPartial<OutgoingLogicCall>): OutgoingLogicCall {
     const message = createBaseOutgoingLogicCall();
     message.transfers = object.transfers?.map(e => ERC20Token.fromPartial(e)) || [];
     message.fees = object.fees?.map(e => ERC20Token.fromPartial(e)) || [];
@@ -518,25 +435,7 @@ export const EventOutgoingBatchCanceled = {
     return message;
   },
 
-  fromJSON(object: any): EventOutgoingBatchCanceled {
-    return {
-      bridgeContract: isSet(object.bridgeContract) ? String(object.bridgeContract) : "",
-      bridgeChainId: isSet(object.bridgeChainId) ? String(object.bridgeChainId) : "",
-      batchId: isSet(object.batchId) ? String(object.batchId) : "",
-      nonce: isSet(object.nonce) ? String(object.nonce) : ""
-    };
-  },
-
-  toJSON(message: EventOutgoingBatchCanceled): unknown {
-    const obj: any = {};
-    message.bridgeContract !== undefined && (obj.bridgeContract = message.bridgeContract);
-    message.bridgeChainId !== undefined && (obj.bridgeChainId = message.bridgeChainId);
-    message.batchId !== undefined && (obj.batchId = message.batchId);
-    message.nonce !== undefined && (obj.nonce = message.nonce);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventOutgoingBatchCanceled>): EventOutgoingBatchCanceled {
+  fromPartial(object: DeepPartial<EventOutgoingBatchCanceled>): EventOutgoingBatchCanceled {
     const message = createBaseEventOutgoingBatchCanceled();
     message.bridgeContract = object.bridgeContract ?? "";
     message.bridgeChainId = object.bridgeChainId ?? "";
@@ -611,25 +510,7 @@ export const EventOutgoingBatch = {
     return message;
   },
 
-  fromJSON(object: any): EventOutgoingBatch {
-    return {
-      bridgeContract: isSet(object.bridgeContract) ? String(object.bridgeContract) : "",
-      bridgeChainId: isSet(object.bridgeChainId) ? String(object.bridgeChainId) : "",
-      batchId: isSet(object.batchId) ? String(object.batchId) : "",
-      nonce: isSet(object.nonce) ? String(object.nonce) : ""
-    };
-  },
-
-  toJSON(message: EventOutgoingBatch): unknown {
-    const obj: any = {};
-    message.bridgeContract !== undefined && (obj.bridgeContract = message.bridgeContract);
-    message.bridgeChainId !== undefined && (obj.bridgeChainId = message.bridgeChainId);
-    message.batchId !== undefined && (obj.batchId = message.batchId);
-    message.nonce !== undefined && (obj.nonce = message.nonce);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventOutgoingBatch>): EventOutgoingBatch {
+  fromPartial(object: DeepPartial<EventOutgoingBatch>): EventOutgoingBatch {
     const message = createBaseEventOutgoingBatch();
     message.bridgeContract = object.bridgeContract ?? "";
     message.bridgeChainId = object.bridgeChainId ?? "";

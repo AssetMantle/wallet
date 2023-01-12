@@ -1,15 +1,12 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import { BsLink45Deg } from "react-icons/bs";
-import { HiArrowNarrowDown, HiOutlineArrowNarrowUp } from "react-icons/hi";
-import { MdContentCopy } from "react-icons/md";
 import { useChain } from "@cosmos-kit/react";
 import { defaultChainName } from "../config";
 import { placeholderAddress } from "../data";
 
 export default function ICFormPolygon() {
   const walletManager = useChain(defaultChainName);
-  const { username, address } = walletManager;
+  const { address } = walletManager;
 
   const [EthConnectionStat, setEthConnectionStat] = useState(false);
 
@@ -93,7 +90,7 @@ export default function ICFormPolygon() {
           >
             {MNtlAddress}{" "}
             <span className="text-primary">
-              <MdContentCopy />
+              <i className="bi bi-clipboard" />
             </span>
           </button>
         </div>
@@ -122,7 +119,7 @@ export default function ICFormPolygon() {
         )}
         <div className="d-flex align-items-center justify-content-end gap-2">
           <button className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2">
-            Send to Gravity Bridge <HiArrowNarrowDown />
+            Send to Gravity Bridge <i className="bi bi-arrow-down" />
           </button>
         </div>
       </div>
@@ -148,7 +145,7 @@ export default function ICFormPolygon() {
           >
             {GravityAddress}{" "}
             <span className="text-primary">
-              <MdContentCopy />
+              <i className="bi bi-clipboard" />
             </span>
           </button>
         </div>
@@ -177,10 +174,10 @@ export default function ICFormPolygon() {
         )}
         <div className="d-flex align-items-center justify-content-end gap-3">
           <button className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2">
-            Send to Mantle Chain <HiOutlineArrowNarrowUp />
+            Send to Mantle Chain <i className="bi bi-arrow-up" />
           </button>
           <button className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2">
-            Send to Ethereum Chain <HiArrowNarrowDown />
+            Send to Ethereum Chain <i className="bi bi-arrow-down" />
           </button>
         </div>
       </div>
@@ -207,7 +204,7 @@ export default function ICFormPolygon() {
             >
               {EthereumAddress}{" "}
               <span className="text-primary">
-                <MdContentCopy />
+                <i className="bi bi-clipboard" />
               </span>
             </button>
           ) : (
@@ -215,7 +212,7 @@ export default function ICFormPolygon() {
               className="caption2 d-flex gap-1 text-primary"
               onClick={handleEthConnect}
             >
-              <BsLink45Deg /> Connect Wallet
+              <i className="bi bi-link-45deg" /> Connect Wallet
             </button>
           )}
         </div>
@@ -244,10 +241,10 @@ export default function ICFormPolygon() {
         )}
         <div className="d-flex align-items-center justify-content-end gap-3">
           <button className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2">
-            Send to Gravity bridge <HiOutlineArrowNarrowUp />
+            Send to Gravity bridge <i className="bi bi-arrow-up" />
           </button>
           <button className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2">
-            Send to Polygon Chain <HiArrowNarrowDown />
+            Send to Polygon Chain <i className="bi bi-arrow-down" />
           </button>
         </div>
       </div>
@@ -274,7 +271,7 @@ export default function ICFormPolygon() {
             >
               {EthereumAddress}{" "}
               <span className="text-primary">
-                <MdContentCopy />
+                <i className="bi bi-clipboard" />
               </span>
             </button>
           ) : (
@@ -306,7 +303,7 @@ export default function ICFormPolygon() {
         )}
         <div className="d-flex align-items-center justify-content-end gap-3">
           <button className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2">
-            Send to ethereum Chain <HiOutlineArrowNarrowUp />
+            Send to ethereum Chain <i className="bi bi-arrow-up" />
           </button>
         </div>
       </div>

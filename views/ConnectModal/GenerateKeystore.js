@@ -1,6 +1,4 @@
 import React from "react";
-import { IoCloseSharp } from "react-icons/io5";
-import { BsChevronLeft, BsDownload, BsPlusCircle } from "react-icons/bs";
 
 export default function GenerateKeystore({ close, setStep }) {
   const handleImportExistingMnemonic = () => {
@@ -11,13 +9,13 @@ export default function GenerateKeystore({ close, setStep }) {
       <div className="d-flex align-items-center justify-content-between ">
         <h1 className="body1 text-primary d-flex align-items-center gap-2">
           <button className="" onClick={() => setStep(4)}>
-            <BsChevronLeft />
+            <i className="bi bi-chevron-left" />
           </button>
           Create Keystore
         </h1>
         <button className="btn text-primary body1" onClick={() => close()}>
           <span className="text-primary">
-            <IoCloseSharp />
+            <i className="bi bi-x-lg" />
           </span>
         </button>
       </div>
@@ -29,7 +27,7 @@ export default function GenerateKeystore({ close, setStep }) {
           className="button-secondary px-3 py-2 d-flex align-items-center gap-2"
           onClick={handleImportExistingMnemonic}
         >
-          Import Existing Mnemonic <BsDownload />
+          Import Existing Mnemonic <i className="bi bi-download" />
         </button>
         <div
           className="d-flex align-items-center gap-2 body2"
@@ -43,7 +41,7 @@ export default function GenerateKeystore({ close, setStep }) {
           className="button-secondary px-3 py-2 d-flex align-items-center gap-2"
           onClick={() => setStep(9)}
         >
-          Generate New mnemonic <BsPlusCircle />
+          Generate New mnemonic <i className="bi bi-plus-circle" />
         </button>
       </div>
     </div>

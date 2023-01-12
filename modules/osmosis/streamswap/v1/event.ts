@@ -1,6 +1,6 @@
 import { Coin, CoinSDKType } from "../../../cosmos/base/v1beta1/coin";
 import * as _m0 from "protobufjs/minimal";
-import { Long, isSet } from "../../../helpers";
+import { Long, DeepPartial } from "../../../helpers";
 export interface EventCreateSale {
   id: Long;
   creator: string;
@@ -128,25 +128,7 @@ export const EventCreateSale = {
     return message;
   },
 
-  fromJSON(object: any): EventCreateSale {
-    return {
-      id: isSet(object.id) ? Long.fromValue(object.id) : Long.UZERO,
-      creator: isSet(object.creator) ? String(object.creator) : "",
-      tokenIn: isSet(object.tokenIn) ? String(object.tokenIn) : "",
-      tokenOut: isSet(object.tokenOut) ? Coin.fromJSON(object.tokenOut) : undefined
-    };
-  },
-
-  toJSON(message: EventCreateSale): unknown {
-    const obj: any = {};
-    message.id !== undefined && (obj.id = (message.id || Long.UZERO).toString());
-    message.creator !== undefined && (obj.creator = message.creator);
-    message.tokenIn !== undefined && (obj.tokenIn = message.tokenIn);
-    message.tokenOut !== undefined && (obj.tokenOut = message.tokenOut ? Coin.toJSON(message.tokenOut) : undefined);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventCreateSale>): EventCreateSale {
+  fromPartial(object: DeepPartial<EventCreateSale>): EventCreateSale {
     const message = createBaseEventCreateSale();
     message.id = object.id !== undefined && object.id !== null ? Long.fromValue(object.id) : Long.UZERO;
     message.creator = object.creator ?? "";
@@ -212,23 +194,7 @@ export const EventSubscribe = {
     return message;
   },
 
-  fromJSON(object: any): EventSubscribe {
-    return {
-      sender: isSet(object.sender) ? String(object.sender) : "",
-      saleId: isSet(object.saleId) ? Long.fromValue(object.saleId) : Long.UZERO,
-      amount: isSet(object.amount) ? String(object.amount) : ""
-    };
-  },
-
-  toJSON(message: EventSubscribe): unknown {
-    const obj: any = {};
-    message.sender !== undefined && (obj.sender = message.sender);
-    message.saleId !== undefined && (obj.saleId = (message.saleId || Long.UZERO).toString());
-    message.amount !== undefined && (obj.amount = message.amount);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventSubscribe>): EventSubscribe {
+  fromPartial(object: DeepPartial<EventSubscribe>): EventSubscribe {
     const message = createBaseEventSubscribe();
     message.sender = object.sender ?? "";
     message.saleId = object.saleId !== undefined && object.saleId !== null ? Long.fromValue(object.saleId) : Long.UZERO;
@@ -293,23 +259,7 @@ export const EventWithdraw = {
     return message;
   },
 
-  fromJSON(object: any): EventWithdraw {
-    return {
-      sender: isSet(object.sender) ? String(object.sender) : "",
-      saleId: isSet(object.saleId) ? Long.fromValue(object.saleId) : Long.UZERO,
-      amount: isSet(object.amount) ? String(object.amount) : ""
-    };
-  },
-
-  toJSON(message: EventWithdraw): unknown {
-    const obj: any = {};
-    message.sender !== undefined && (obj.sender = message.sender);
-    message.saleId !== undefined && (obj.saleId = (message.saleId || Long.UZERO).toString());
-    message.amount !== undefined && (obj.amount = message.amount);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventWithdraw>): EventWithdraw {
+  fromPartial(object: DeepPartial<EventWithdraw>): EventWithdraw {
     const message = createBaseEventWithdraw();
     message.sender = object.sender ?? "";
     message.saleId = object.saleId !== undefined && object.saleId !== null ? Long.fromValue(object.saleId) : Long.UZERO;
@@ -374,23 +324,7 @@ export const EventExit = {
     return message;
   },
 
-  fromJSON(object: any): EventExit {
-    return {
-      sender: isSet(object.sender) ? String(object.sender) : "",
-      saleId: isSet(object.saleId) ? Long.fromValue(object.saleId) : Long.UZERO,
-      purchased: isSet(object.purchased) ? String(object.purchased) : ""
-    };
-  },
-
-  toJSON(message: EventExit): unknown {
-    const obj: any = {};
-    message.sender !== undefined && (obj.sender = message.sender);
-    message.saleId !== undefined && (obj.saleId = (message.saleId || Long.UZERO).toString());
-    message.purchased !== undefined && (obj.purchased = message.purchased);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventExit>): EventExit {
+  fromPartial(object: DeepPartial<EventExit>): EventExit {
     const message = createBaseEventExit();
     message.sender = object.sender ?? "";
     message.saleId = object.saleId !== undefined && object.saleId !== null ? Long.fromValue(object.saleId) : Long.UZERO;
@@ -446,21 +380,7 @@ export const EventFinalizeSale = {
     return message;
   },
 
-  fromJSON(object: any): EventFinalizeSale {
-    return {
-      saleId: isSet(object.saleId) ? Long.fromValue(object.saleId) : Long.UZERO,
-      income: isSet(object.income) ? String(object.income) : ""
-    };
-  },
-
-  toJSON(message: EventFinalizeSale): unknown {
-    const obj: any = {};
-    message.saleId !== undefined && (obj.saleId = (message.saleId || Long.UZERO).toString());
-    message.income !== undefined && (obj.income = message.income);
-    return obj;
-  },
-
-  fromPartial(object: Partial<EventFinalizeSale>): EventFinalizeSale {
+  fromPartial(object: DeepPartial<EventFinalizeSale>): EventFinalizeSale {
     const message = createBaseEventFinalizeSale();
     message.saleId = object.saleId !== undefined && object.saleId !== null ? Long.fromValue(object.saleId) : Long.UZERO;
     message.income = object.income ?? "";

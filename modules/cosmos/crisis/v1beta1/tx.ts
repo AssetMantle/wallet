@@ -1,5 +1,5 @@
 import * as _m0 from "protobufjs/minimal";
-import { isSet } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /** MsgVerifyInvariant represents a message to verify a particular invariance. */
 
 export interface MsgVerifyInvariant {
@@ -76,23 +76,7 @@ export const MsgVerifyInvariant = {
     return message;
   },
 
-  fromJSON(object: any): MsgVerifyInvariant {
-    return {
-      sender: isSet(object.sender) ? String(object.sender) : "",
-      invariantModuleName: isSet(object.invariantModuleName) ? String(object.invariantModuleName) : "",
-      invariantRoute: isSet(object.invariantRoute) ? String(object.invariantRoute) : ""
-    };
-  },
-
-  toJSON(message: MsgVerifyInvariant): unknown {
-    const obj: any = {};
-    message.sender !== undefined && (obj.sender = message.sender);
-    message.invariantModuleName !== undefined && (obj.invariantModuleName = message.invariantModuleName);
-    message.invariantRoute !== undefined && (obj.invariantRoute = message.invariantRoute);
-    return obj;
-  },
-
-  fromPartial(object: Partial<MsgVerifyInvariant>): MsgVerifyInvariant {
+  fromPartial(object: DeepPartial<MsgVerifyInvariant>): MsgVerifyInvariant {
     const message = createBaseMsgVerifyInvariant();
     message.sender = object.sender ?? "";
     message.invariantModuleName = object.invariantModuleName ?? "";
@@ -129,16 +113,7 @@ export const MsgVerifyInvariantResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgVerifyInvariantResponse {
-    return {};
-  },
-
-  toJSON(_: MsgVerifyInvariantResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial(_: Partial<MsgVerifyInvariantResponse>): MsgVerifyInvariantResponse {
+  fromPartial(_: DeepPartial<MsgVerifyInvariantResponse>): MsgVerifyInvariantResponse {
     const message = createBaseMsgVerifyInvariantResponse();
     return message;
   }

@@ -1,15 +1,11 @@
 import React, { useState } from "react";
-import { BsArrowUpRight } from "react-icons/bs";
-import { IoRadioButtonOn } from "react-icons/io5";
 import { useAllProposals } from "../data/queryApi";
 import DonutChart from "../views/DonutChart";
 import VoteInfo from "../views/VoteInfo";
 import UseVoteReducer from "../data/useVoteReducer";
-import { BsChevronDown, BsChevronLeft } from "react-icons/bs";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import { sendVote } from "../data/txApi";
 import { useChain } from "@cosmos-kit/react";
-import { MdOutlineClose } from "react-icons/md";
 import { defaultChainName } from "../config";
 
 export default function Vote() {
@@ -56,7 +52,7 @@ export default function Vote() {
                 >
                   Concluded
                   <span className="text-primary">
-                    <BsArrowUpRight />
+                    <i className="bi bi-arrow-up-right" />
                   </span>
                 </button>
               </div>
@@ -144,10 +140,10 @@ export default function Vote() {
                             className="text-primary position-absolute bottom-0"
                             style={{
                               right: "5px",
-                              transform: "translateY(-95%)",
+                              transform: "translateY(-50%)",
                             }}
                           >
-                            <IoRadioButtonOn />
+                            <i className="bi bi-record-circle" />
                           </span>
                         ) : null}
                         {voteState.proposalID === proposal?.proposal_id ? (
@@ -194,7 +190,7 @@ export default function Vote() {
                     style={{ background: "none" }}
                   >
                     <span className="text-primary">
-                      <BsChevronLeft />
+                      <i className="bi bi-chevron-left" />
                     </span>
                   </button>
                   Vote
@@ -207,7 +203,7 @@ export default function Vote() {
                   style={{ background: "none" }}
                 >
                   <span className="text-primary">
-                    <MdOutlineClose />
+                    <i className="bi bi-x-lg" />
                   </span>
                 </button>
               </div>
@@ -314,7 +310,7 @@ export default function Vote() {
                           : "rotate(0deg)",
                       }}
                     >
-                      <BsChevronDown />
+                      <i className="bi bi-chevron-down" />
                     </span>
                   </button>
                   {ShowAdvanced && (

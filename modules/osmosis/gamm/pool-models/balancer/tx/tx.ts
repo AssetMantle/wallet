@@ -1,6 +1,6 @@
 import { PoolParams, PoolParamsSDKType, PoolAsset, PoolAssetSDKType } from "../balancerPool";
 import * as _m0 from "protobufjs/minimal";
-import { isSet, Long } from "../../../../../helpers";
+import { DeepPartial, Long } from "../../../../../helpers";
 /** ===================== MsgCreatePool */
 
 export interface MsgCreateBalancerPool {
@@ -92,31 +92,7 @@ export const MsgCreateBalancerPool = {
     return message;
   },
 
-  fromJSON(object: any): MsgCreateBalancerPool {
-    return {
-      sender: isSet(object.sender) ? String(object.sender) : "",
-      poolParams: isSet(object.poolParams) ? PoolParams.fromJSON(object.poolParams) : undefined,
-      poolAssets: Array.isArray(object?.poolAssets) ? object.poolAssets.map((e: any) => PoolAsset.fromJSON(e)) : [],
-      futurePoolGovernor: isSet(object.futurePoolGovernor) ? String(object.futurePoolGovernor) : ""
-    };
-  },
-
-  toJSON(message: MsgCreateBalancerPool): unknown {
-    const obj: any = {};
-    message.sender !== undefined && (obj.sender = message.sender);
-    message.poolParams !== undefined && (obj.poolParams = message.poolParams ? PoolParams.toJSON(message.poolParams) : undefined);
-
-    if (message.poolAssets) {
-      obj.poolAssets = message.poolAssets.map(e => e ? PoolAsset.toJSON(e) : undefined);
-    } else {
-      obj.poolAssets = [];
-    }
-
-    message.futurePoolGovernor !== undefined && (obj.futurePoolGovernor = message.futurePoolGovernor);
-    return obj;
-  },
-
-  fromPartial(object: Partial<MsgCreateBalancerPool>): MsgCreateBalancerPool {
+  fromPartial(object: DeepPartial<MsgCreateBalancerPool>): MsgCreateBalancerPool {
     const message = createBaseMsgCreateBalancerPool();
     message.sender = object.sender ?? "";
     message.poolParams = object.poolParams !== undefined && object.poolParams !== null ? PoolParams.fromPartial(object.poolParams) : undefined;
@@ -164,19 +140,7 @@ export const MsgCreateBalancerPoolResponse = {
     return message;
   },
 
-  fromJSON(object: any): MsgCreateBalancerPoolResponse {
-    return {
-      poolId: isSet(object.poolId) ? Long.fromValue(object.poolId) : Long.UZERO
-    };
-  },
-
-  toJSON(message: MsgCreateBalancerPoolResponse): unknown {
-    const obj: any = {};
-    message.poolId !== undefined && (obj.poolId = (message.poolId || Long.UZERO).toString());
-    return obj;
-  },
-
-  fromPartial(object: Partial<MsgCreateBalancerPoolResponse>): MsgCreateBalancerPoolResponse {
+  fromPartial(object: DeepPartial<MsgCreateBalancerPoolResponse>): MsgCreateBalancerPoolResponse {
     const message = createBaseMsgCreateBalancerPoolResponse();
     message.poolId = object.poolId !== undefined && object.poolId !== null ? Long.fromValue(object.poolId) : Long.UZERO;
     return message;

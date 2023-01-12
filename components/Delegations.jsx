@@ -15,9 +15,6 @@ import {
 } from "../data";
 import { useChain } from "@cosmos-kit/react";
 
-import { MdOutlineClose } from "react-icons/md";
-import { BsChevronLeft } from "react-icons/bs";
-
 const denomDisplay = chainSymbol;
 
 const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
@@ -197,7 +194,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                     style={{ background: "none" }}
                   >
                     <span className="text-primary">
-                      <BsChevronLeft />
+                      <i className="bi bi-chevron-left" />
                     </span>
                   </button>
                   Undelegate
@@ -210,7 +207,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                   style={{ background: "none" }}
                 >
                   <span className="text-primary">
-                    <MdOutlineClose />
+                    <i className="bi bi-x-lg" />
                   </span>
                 </button>
               </div>
@@ -291,7 +288,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                     style={{ background: "none" }}
                   >
                     <span className="text-primary">
-                      <BsChevronLeft />
+                      <i className="bi bi-chevron-left" />
                     </span>
                   </button>
                   Redelegate
@@ -304,7 +301,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                   style={{ background: "none" }}
                 >
                   <span className="text-primary">
-                    <MdOutlineClose />
+                    <i className="bi bi-x-lg" />
                   </span>
                 </button>
               </div>

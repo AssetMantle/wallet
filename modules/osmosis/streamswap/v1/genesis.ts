@@ -1,7 +1,7 @@
 import { Sale, SaleSDKType, UserPosition, UserPositionSDKType } from "./state";
 import { Params, ParamsSDKType } from "./params";
 import * as _m0 from "protobufjs/minimal";
-import { Long, isSet } from "../../../helpers";
+import { Long, DeepPartial } from "../../../helpers";
 /** GenesisState defines the streamswap module's genesis state. */
 
 export interface GenesisState {
@@ -105,36 +105,7 @@ export const GenesisState = {
     return message;
   },
 
-  fromJSON(object: any): GenesisState {
-    return {
-      sales: Array.isArray(object?.sales) ? object.sales.map((e: any) => Sale.fromJSON(e)) : [],
-      userPositions: Array.isArray(object?.userPositions) ? object.userPositions.map((e: any) => UserPositionKV.fromJSON(e)) : [],
-      nextSaleId: isSet(object.nextSaleId) ? Long.fromValue(object.nextSaleId) : Long.UZERO,
-      params: isSet(object.params) ? Params.fromJSON(object.params) : undefined
-    };
-  },
-
-  toJSON(message: GenesisState): unknown {
-    const obj: any = {};
-
-    if (message.sales) {
-      obj.sales = message.sales.map(e => e ? Sale.toJSON(e) : undefined);
-    } else {
-      obj.sales = [];
-    }
-
-    if (message.userPositions) {
-      obj.userPositions = message.userPositions.map(e => e ? UserPositionKV.toJSON(e) : undefined);
-    } else {
-      obj.userPositions = [];
-    }
-
-    message.nextSaleId !== undefined && (obj.nextSaleId = (message.nextSaleId || Long.UZERO).toString());
-    message.params !== undefined && (obj.params = message.params ? Params.toJSON(message.params) : undefined);
-    return obj;
-  },
-
-  fromPartial(object: Partial<GenesisState>): GenesisState {
+  fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = createBaseGenesisState();
     message.sales = object.sales?.map(e => Sale.fromPartial(e)) || [];
     message.userPositions = object.userPositions?.map(e => UserPositionKV.fromPartial(e)) || [];
@@ -200,23 +171,7 @@ export const UserPositionKV = {
     return message;
   },
 
-  fromJSON(object: any): UserPositionKV {
-    return {
-      accAddress: isSet(object.accAddress) ? String(object.accAddress) : "",
-      saleId: isSet(object.saleId) ? Long.fromValue(object.saleId) : Long.UZERO,
-      userPosition: isSet(object.userPosition) ? UserPosition.fromJSON(object.userPosition) : undefined
-    };
-  },
-
-  toJSON(message: UserPositionKV): unknown {
-    const obj: any = {};
-    message.accAddress !== undefined && (obj.accAddress = message.accAddress);
-    message.saleId !== undefined && (obj.saleId = (message.saleId || Long.UZERO).toString());
-    message.userPosition !== undefined && (obj.userPosition = message.userPosition ? UserPosition.toJSON(message.userPosition) : undefined);
-    return obj;
-  },
-
-  fromPartial(object: Partial<UserPositionKV>): UserPositionKV {
+  fromPartial(object: DeepPartial<UserPositionKV>): UserPositionKV {
     const message = createBaseUserPositionKV();
     message.accAddress = object.accAddress ?? "";
     message.saleId = object.saleId !== undefined && object.saleId !== null ? Long.fromValue(object.saleId) : Long.UZERO;

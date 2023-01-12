@@ -63,14 +63,14 @@ export const AminoConverter = {
             initial_pool_weights: poolParams.smoothWeightChangeParams.initialPoolWeights.map(el0 => ({
               token: {
                 denom: el0.token.denom,
-                amount: Long.fromValue(el0.token.amount).toString()
+                amount: Long.fromNumber(el0.token.amount).toString()
               },
               weight: el0.weight
             })),
             target_pool_weights: poolParams.smoothWeightChangeParams.targetPoolWeights.map(el0 => ({
               token: {
                 denom: el0.token.denom,
-                amount: Long.fromValue(el0.token.amount).toString()
+                amount: Long.fromNumber(el0.token.amount).toString()
               },
               weight: el0.weight
             }))
@@ -79,7 +79,7 @@ export const AminoConverter = {
         pool_assets: poolAssets.map(el0 => ({
           token: {
             denom: el0.token.denom,
-            amount: Long.fromValue(el0.token.amount).toString()
+            amount: Long.fromNumber(el0.token.amount).toString()
           },
           weight: el0.weight
         })),

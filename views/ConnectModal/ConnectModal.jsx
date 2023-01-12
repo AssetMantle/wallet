@@ -1,7 +1,6 @@
 import Image from "next/image";
 import React, { useState } from "react";
-import { IoCloseSharp } from "react-icons/io5";
-import ModalContainer from "../../components/ModalContainer";
+// import ModalContainer from "../../components/ModalContainer";
 
 const ConnectModal = ({ isOpen, setOpen, walletRepo, theme }) => {
   console.log({ isOpen, setOpen, walletRepo, theme });
@@ -56,59 +55,71 @@ const ConnectModal = ({ isOpen, setOpen, walletRepo, theme }) => {
   };
 
   return (
-    // isOpen && (
-    <>
-      <ModalContainer active={isOpen}>
-        <div className="bg-gray-800 p-4 rounded-4 w-100 my-auto">
-          <div className="d-flex align-items-center justify-content-between ">
-            <h1 className="body1 text-primary">Connect Wallet</h1>
-            <button
-              className="btn text-primary body1"
-              onClick={handleCloseModal}
-            >
-              <span className="text-primary">
-                <IoCloseSharp />
-              </span>
-            </button>
-          </div>
-          <div className="text-white body2 my-1 text-center">Connect With</div>
-          <p className="text-white-200 caption my-1 text-center">
-            Connect your wallet using any of the options below
-          </p>
-          <div className="d-flex flex-column gap-3 mt-5">
-            <h2 className="caption text-white">Connect with existing Wallet</h2>
-            <div className="d-flex gap-2 flex-wrap">
-              {walletRepo?.wallets.map(({ _walletInfo, connect }, index) => (
-                <button
-                  className="d-flex align-items-center gap-2 button-secondary py-2 px-3 rounded-2"
-                  key={index}
-                  onClick={async () => {
-                    await connect();
-                    setOpen(false);
-                  }}
-                >
-                  <div
-                    className="position-relative"
-                    style={{ width: "25px", aspectRatio: "1/1" }}
-                  >
-                    <Image
-                      layout="fill"
-                      src={
-                        ConnectOptionObject[
-                          _walletInfo?.prettyName.toLowerCase().replace(" ", "")
-                        ]?.icon
-                      }
-                      alt={_walletInfo?.prettyName}
-                    />
-                  </div>
-                  {_walletInfo?.prettyName}
-                  {console.log(
-                    ConnectOptionObject[_walletInfo?.prettyName]?.icon
-                  )}
-                </button>
-              ))}
+    <div className="modal " tabIndex="-1" role="dialog" id="WalletConnectModal">
+      <div
+        className="modal-dialog modal-dialog-centered"
+        role="document"
+        style={{ maxWidth: "min(100%, 600px)" }}
+      >
+        <div className="modal-content">
+          <div className="bg-gray-800 p-4 rounded-4 w-100 my-auto">
+            <div className="d-flex align-items-center justify-content-between ">
+              <h1 className="body1 text-primary">Connect Wallet</h1>
+              <button
+                className="btn text-primary body1"
+                onClick={handleCloseModal}
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              >
+                <i className="bi bi-x-lg" />
+              </button>
             </div>
-            {/* <hr className="my-2" />
+            <div className="text-white body2 my-1 text-center">
+              Connect With
+            </div>
+            <p className="text-white-200 caption my-1 text-center">
+              Connect your wallet using any of the options below
+            </p>
+            <div className="d-flex flex-column gap-3 mt-5">
+              <h2 className="caption text-white">
+                Connect with existing Wallet
+              </h2>
+              <div className="d-flex gap-2 flex-wrap">
+                {walletRepo?.wallets.map(({ _walletInfo, connect }, index) => (
+                  <button
+                    className="d-flex align-items-center gap-2 button-secondary py-2 px-3 rounded-2"
+                    key={index}
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                    onClick={async () => {
+                      await connect();
+                      setOpen(false);
+                    }}
+                  >
+                    <div
+                      className="position-relative"
+                      style={{ width: "25px", aspectRatio: "1/1" }}
+                    >
+                      <Image
+                        layout="fill"
+                        src={
+                          ConnectOptionObject[
+                            _walletInfo?.prettyName
+                              .toLowerCase()
+                              .replace(" ", "")
+                          ]?.icon
+                        }
+                        alt={_walletInfo?.prettyName}
+                      />
+                    </div>
+                    {_walletInfo?.prettyName}
+                    {console.log(
+                      ConnectOptionObject[_walletInfo?.prettyName]?.icon
+                    )}
+                  </button>
+                ))}
+              </div>
+              {/* <hr className="my-2" />
             <h2 className="caption text-white">Connect with Ledger</h2>
             <div className="d-flex">
               <button
@@ -168,11 +179,11 @@ const ConnectModal = ({ isOpen, setOpen, walletRepo, theme }) => {
               value={generatedAddress}
               onChange={handleChangeGenAddress}
             /> */}
+            </div>
           </div>
         </div>
-      </ModalContainer>
-    </>
-    // )
+      </div>
+    </div>
   );
 };
 

@@ -1,5 +1,5 @@
 import * as _m0 from "protobufjs/minimal";
-import { isSet } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /** Params holds parameters for the superfluid module */
 
 export interface Params {
@@ -60,19 +60,7 @@ export const Params = {
     return message;
   },
 
-  fromJSON(object: any): Params {
-    return {
-      minimumRiskFactor: isSet(object.minimumRiskFactor) ? String(object.minimumRiskFactor) : ""
-    };
-  },
-
-  toJSON(message: Params): unknown {
-    const obj: any = {};
-    message.minimumRiskFactor !== undefined && (obj.minimumRiskFactor = message.minimumRiskFactor);
-    return obj;
-  },
-
-  fromPartial(object: Partial<Params>): Params {
+  fromPartial(object: DeepPartial<Params>): Params {
     const message = createBaseParams();
     message.minimumRiskFactor = object.minimumRiskFactor ?? "";
     return message;

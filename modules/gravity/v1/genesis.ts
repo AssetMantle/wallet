@@ -4,7 +4,7 @@ import { MsgValsetConfirm, MsgValsetConfirmSDKType, MsgConfirmBatch, MsgConfirmB
 import { OutgoingTxBatch, OutgoingTxBatchSDKType, OutgoingLogicCall, OutgoingLogicCallSDKType, OutgoingTransferTx, OutgoingTransferTxSDKType } from "./batch";
 import { Attestation, AttestationSDKType } from "./attestation";
 import * as _m0 from "protobufjs/minimal";
-import { Long, isSet, bytesFromBase64, base64FromBytes } from "../../helpers";
+import { Long, DeepPartial } from "../../helpers";
 /**
  * The slashing fractions for the various gravity related slashing conditions. The first three
  * refer to not submitting a particular message, the third for submitting a different claim
@@ -414,59 +414,7 @@ export const Params = {
     return message;
   },
 
-  fromJSON(object: any): Params {
-    return {
-      gravityId: isSet(object.gravityId) ? String(object.gravityId) : "",
-      contractSourceHash: isSet(object.contractSourceHash) ? String(object.contractSourceHash) : "",
-      bridgeEthereumAddress: isSet(object.bridgeEthereumAddress) ? String(object.bridgeEthereumAddress) : "",
-      bridgeChainId: isSet(object.bridgeChainId) ? Long.fromValue(object.bridgeChainId) : Long.UZERO,
-      signedValsetsWindow: isSet(object.signedValsetsWindow) ? Long.fromValue(object.signedValsetsWindow) : Long.UZERO,
-      signedBatchesWindow: isSet(object.signedBatchesWindow) ? Long.fromValue(object.signedBatchesWindow) : Long.UZERO,
-      signedLogicCallsWindow: isSet(object.signedLogicCallsWindow) ? Long.fromValue(object.signedLogicCallsWindow) : Long.UZERO,
-      targetBatchTimeout: isSet(object.targetBatchTimeout) ? Long.fromValue(object.targetBatchTimeout) : Long.UZERO,
-      averageBlockTime: isSet(object.averageBlockTime) ? Long.fromValue(object.averageBlockTime) : Long.UZERO,
-      averageEthereumBlockTime: isSet(object.averageEthereumBlockTime) ? Long.fromValue(object.averageEthereumBlockTime) : Long.UZERO,
-      slashFractionValset: isSet(object.slashFractionValset) ? bytesFromBase64(object.slashFractionValset) : new Uint8Array(),
-      slashFractionBatch: isSet(object.slashFractionBatch) ? bytesFromBase64(object.slashFractionBatch) : new Uint8Array(),
-      slashFractionLogicCall: isSet(object.slashFractionLogicCall) ? bytesFromBase64(object.slashFractionLogicCall) : new Uint8Array(),
-      unbondSlashingValsetsWindow: isSet(object.unbondSlashingValsetsWindow) ? Long.fromValue(object.unbondSlashingValsetsWindow) : Long.UZERO,
-      slashFractionBadEthSignature: isSet(object.slashFractionBadEthSignature) ? bytesFromBase64(object.slashFractionBadEthSignature) : new Uint8Array(),
-      valsetReward: isSet(object.valsetReward) ? Coin.fromJSON(object.valsetReward) : undefined,
-      bridgeActive: isSet(object.bridgeActive) ? Boolean(object.bridgeActive) : false,
-      ethereumBlacklist: Array.isArray(object?.ethereumBlacklist) ? object.ethereumBlacklist.map((e: any) => String(e)) : []
-    };
-  },
-
-  toJSON(message: Params): unknown {
-    const obj: any = {};
-    message.gravityId !== undefined && (obj.gravityId = message.gravityId);
-    message.contractSourceHash !== undefined && (obj.contractSourceHash = message.contractSourceHash);
-    message.bridgeEthereumAddress !== undefined && (obj.bridgeEthereumAddress = message.bridgeEthereumAddress);
-    message.bridgeChainId !== undefined && (obj.bridgeChainId = (message.bridgeChainId || Long.UZERO).toString());
-    message.signedValsetsWindow !== undefined && (obj.signedValsetsWindow = (message.signedValsetsWindow || Long.UZERO).toString());
-    message.signedBatchesWindow !== undefined && (obj.signedBatchesWindow = (message.signedBatchesWindow || Long.UZERO).toString());
-    message.signedLogicCallsWindow !== undefined && (obj.signedLogicCallsWindow = (message.signedLogicCallsWindow || Long.UZERO).toString());
-    message.targetBatchTimeout !== undefined && (obj.targetBatchTimeout = (message.targetBatchTimeout || Long.UZERO).toString());
-    message.averageBlockTime !== undefined && (obj.averageBlockTime = (message.averageBlockTime || Long.UZERO).toString());
-    message.averageEthereumBlockTime !== undefined && (obj.averageEthereumBlockTime = (message.averageEthereumBlockTime || Long.UZERO).toString());
-    message.slashFractionValset !== undefined && (obj.slashFractionValset = base64FromBytes(message.slashFractionValset !== undefined ? message.slashFractionValset : new Uint8Array()));
-    message.slashFractionBatch !== undefined && (obj.slashFractionBatch = base64FromBytes(message.slashFractionBatch !== undefined ? message.slashFractionBatch : new Uint8Array()));
-    message.slashFractionLogicCall !== undefined && (obj.slashFractionLogicCall = base64FromBytes(message.slashFractionLogicCall !== undefined ? message.slashFractionLogicCall : new Uint8Array()));
-    message.unbondSlashingValsetsWindow !== undefined && (obj.unbondSlashingValsetsWindow = (message.unbondSlashingValsetsWindow || Long.UZERO).toString());
-    message.slashFractionBadEthSignature !== undefined && (obj.slashFractionBadEthSignature = base64FromBytes(message.slashFractionBadEthSignature !== undefined ? message.slashFractionBadEthSignature : new Uint8Array()));
-    message.valsetReward !== undefined && (obj.valsetReward = message.valsetReward ? Coin.toJSON(message.valsetReward) : undefined);
-    message.bridgeActive !== undefined && (obj.bridgeActive = message.bridgeActive);
-
-    if (message.ethereumBlacklist) {
-      obj.ethereumBlacklist = message.ethereumBlacklist.map(e => e);
-    } else {
-      obj.ethereumBlacklist = [];
-    }
-
-    return obj;
-  },
-
-  fromPartial(object: Partial<Params>): Params {
+  fromPartial(object: DeepPartial<Params>): Params {
     const message = createBaseParams();
     message.gravityId = object.gravityId ?? "";
     message.contractSourceHash = object.contractSourceHash ?? "";
@@ -627,92 +575,7 @@ export const GenesisState = {
     return message;
   },
 
-  fromJSON(object: any): GenesisState {
-    return {
-      params: isSet(object.params) ? Params.fromJSON(object.params) : undefined,
-      gravityNonces: isSet(object.gravityNonces) ? GravityNonces.fromJSON(object.gravityNonces) : undefined,
-      valsets: Array.isArray(object?.valsets) ? object.valsets.map((e: any) => Valset.fromJSON(e)) : [],
-      valsetConfirms: Array.isArray(object?.valsetConfirms) ? object.valsetConfirms.map((e: any) => MsgValsetConfirm.fromJSON(e)) : [],
-      batches: Array.isArray(object?.batches) ? object.batches.map((e: any) => OutgoingTxBatch.fromJSON(e)) : [],
-      batchConfirms: Array.isArray(object?.batchConfirms) ? object.batchConfirms.map((e: any) => MsgConfirmBatch.fromJSON(e)) : [],
-      logicCalls: Array.isArray(object?.logicCalls) ? object.logicCalls.map((e: any) => OutgoingLogicCall.fromJSON(e)) : [],
-      logicCallConfirms: Array.isArray(object?.logicCallConfirms) ? object.logicCallConfirms.map((e: any) => MsgConfirmLogicCall.fromJSON(e)) : [],
-      attestations: Array.isArray(object?.attestations) ? object.attestations.map((e: any) => Attestation.fromJSON(e)) : [],
-      delegateKeys: Array.isArray(object?.delegateKeys) ? object.delegateKeys.map((e: any) => MsgSetOrchestratorAddress.fromJSON(e)) : [],
-      erc20ToDenoms: Array.isArray(object?.erc20ToDenoms) ? object.erc20ToDenoms.map((e: any) => ERC20ToDenom.fromJSON(e)) : [],
-      unbatchedTransfers: Array.isArray(object?.unbatchedTransfers) ? object.unbatchedTransfers.map((e: any) => OutgoingTransferTx.fromJSON(e)) : []
-    };
-  },
-
-  toJSON(message: GenesisState): unknown {
-    const obj: any = {};
-    message.params !== undefined && (obj.params = message.params ? Params.toJSON(message.params) : undefined);
-    message.gravityNonces !== undefined && (obj.gravityNonces = message.gravityNonces ? GravityNonces.toJSON(message.gravityNonces) : undefined);
-
-    if (message.valsets) {
-      obj.valsets = message.valsets.map(e => e ? Valset.toJSON(e) : undefined);
-    } else {
-      obj.valsets = [];
-    }
-
-    if (message.valsetConfirms) {
-      obj.valsetConfirms = message.valsetConfirms.map(e => e ? MsgValsetConfirm.toJSON(e) : undefined);
-    } else {
-      obj.valsetConfirms = [];
-    }
-
-    if (message.batches) {
-      obj.batches = message.batches.map(e => e ? OutgoingTxBatch.toJSON(e) : undefined);
-    } else {
-      obj.batches = [];
-    }
-
-    if (message.batchConfirms) {
-      obj.batchConfirms = message.batchConfirms.map(e => e ? MsgConfirmBatch.toJSON(e) : undefined);
-    } else {
-      obj.batchConfirms = [];
-    }
-
-    if (message.logicCalls) {
-      obj.logicCalls = message.logicCalls.map(e => e ? OutgoingLogicCall.toJSON(e) : undefined);
-    } else {
-      obj.logicCalls = [];
-    }
-
-    if (message.logicCallConfirms) {
-      obj.logicCallConfirms = message.logicCallConfirms.map(e => e ? MsgConfirmLogicCall.toJSON(e) : undefined);
-    } else {
-      obj.logicCallConfirms = [];
-    }
-
-    if (message.attestations) {
-      obj.attestations = message.attestations.map(e => e ? Attestation.toJSON(e) : undefined);
-    } else {
-      obj.attestations = [];
-    }
-
-    if (message.delegateKeys) {
-      obj.delegateKeys = message.delegateKeys.map(e => e ? MsgSetOrchestratorAddress.toJSON(e) : undefined);
-    } else {
-      obj.delegateKeys = [];
-    }
-
-    if (message.erc20ToDenoms) {
-      obj.erc20ToDenoms = message.erc20ToDenoms.map(e => e ? ERC20ToDenom.toJSON(e) : undefined);
-    } else {
-      obj.erc20ToDenoms = [];
-    }
-
-    if (message.unbatchedTransfers) {
-      obj.unbatchedTransfers = message.unbatchedTransfers.map(e => e ? OutgoingTransferTx.toJSON(e) : undefined);
-    } else {
-      obj.unbatchedTransfers = [];
-    }
-
-    return obj;
-  },
-
-  fromPartial(object: Partial<GenesisState>): GenesisState {
+  fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = createBaseGenesisState();
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
     message.gravityNonces = object.gravityNonces !== undefined && object.gravityNonces !== null ? GravityNonces.fromPartial(object.gravityNonces) : undefined;
@@ -822,31 +685,7 @@ export const GravityNonces = {
     return message;
   },
 
-  fromJSON(object: any): GravityNonces {
-    return {
-      latestValsetNonce: isSet(object.latestValsetNonce) ? Long.fromValue(object.latestValsetNonce) : Long.UZERO,
-      lastObservedNonce: isSet(object.lastObservedNonce) ? Long.fromValue(object.lastObservedNonce) : Long.UZERO,
-      lastSlashedValsetNonce: isSet(object.lastSlashedValsetNonce) ? Long.fromValue(object.lastSlashedValsetNonce) : Long.UZERO,
-      lastSlashedBatchBlock: isSet(object.lastSlashedBatchBlock) ? Long.fromValue(object.lastSlashedBatchBlock) : Long.UZERO,
-      lastSlashedLogicCallBlock: isSet(object.lastSlashedLogicCallBlock) ? Long.fromValue(object.lastSlashedLogicCallBlock) : Long.UZERO,
-      lastTxPoolId: isSet(object.lastTxPoolId) ? Long.fromValue(object.lastTxPoolId) : Long.UZERO,
-      lastBatchId: isSet(object.lastBatchId) ? Long.fromValue(object.lastBatchId) : Long.UZERO
-    };
-  },
-
-  toJSON(message: GravityNonces): unknown {
-    const obj: any = {};
-    message.latestValsetNonce !== undefined && (obj.latestValsetNonce = (message.latestValsetNonce || Long.UZERO).toString());
-    message.lastObservedNonce !== undefined && (obj.lastObservedNonce = (message.lastObservedNonce || Long.UZERO).toString());
-    message.lastSlashedValsetNonce !== undefined && (obj.lastSlashedValsetNonce = (message.lastSlashedValsetNonce || Long.UZERO).toString());
-    message.lastSlashedBatchBlock !== undefined && (obj.lastSlashedBatchBlock = (message.lastSlashedBatchBlock || Long.UZERO).toString());
-    message.lastSlashedLogicCallBlock !== undefined && (obj.lastSlashedLogicCallBlock = (message.lastSlashedLogicCallBlock || Long.UZERO).toString());
-    message.lastTxPoolId !== undefined && (obj.lastTxPoolId = (message.lastTxPoolId || Long.UZERO).toString());
-    message.lastBatchId !== undefined && (obj.lastBatchId = (message.lastBatchId || Long.UZERO).toString());
-    return obj;
-  },
-
-  fromPartial(object: Partial<GravityNonces>): GravityNonces {
+  fromPartial(object: DeepPartial<GravityNonces>): GravityNonces {
     const message = createBaseGravityNonces();
     message.latestValsetNonce = object.latestValsetNonce !== undefined && object.latestValsetNonce !== null ? Long.fromValue(object.latestValsetNonce) : Long.UZERO;
     message.lastObservedNonce = object.lastObservedNonce !== undefined && object.lastObservedNonce !== null ? Long.fromValue(object.lastObservedNonce) : Long.UZERO;

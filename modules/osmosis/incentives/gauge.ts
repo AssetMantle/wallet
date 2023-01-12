@@ -1,9 +1,9 @@
 import { QueryCondition, QueryConditionSDKType } from "../lockup/lock";
 import { Coin, CoinSDKType } from "../../cosmos/base/v1beta1/coin";
-import { Timestamp, TimestampSDKType } from "../../google/protobuf/timestamp";
+import { Timestamp } from "../../google/protobuf/timestamp";
 import { Duration, DurationSDKType } from "../../google/protobuf/duration";
 import * as _m0 from "protobufjs/minimal";
-import { Long, isSet, fromJsonTimestamp, fromTimestamp } from "../../helpers";
+import { toTimestamp, Long, fromTimestamp, DeepPartial } from "../../helpers";
 /**
  * Gauge is an object that stores and distributes yields to recipients who
  * satisfy certain conditions. Currently gauges support conditions around the
@@ -36,7 +36,7 @@ export interface Gauge {
   coins: Coin[];
   /** start_time is the distribution start time */
 
-  startTime?: Timestamp;
+  startTime?: Date;
   /**
    * num_epochs_paid_over is the number of total epochs distribution will be
    * completed over
@@ -85,7 +85,7 @@ export interface GaugeSDKType {
   coins: CoinSDKType[];
   /** start_time is the distribution start time */
 
-  start_time?: TimestampSDKType;
+  start_time?: Date;
   /**
    * num_epochs_paid_over is the number of total epochs distribution will be
    * completed over
@@ -143,7 +143,7 @@ export const Gauge = {
     }
 
     if (message.startTime !== undefined) {
-      Timestamp.encode(message.startTime, writer.uint32(42).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.startTime), writer.uint32(42).fork()).ldelim();
     }
 
     if (!message.numEpochsPaidOver.isZero()) {
@@ -187,7 +187,7 @@ export const Gauge = {
           break;
 
         case 5:
-          message.startTime = Timestamp.decode(reader, reader.uint32());
+          message.startTime = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
 
         case 6:
@@ -211,51 +211,13 @@ export const Gauge = {
     return message;
   },
 
-  fromJSON(object: any): Gauge {
-    return {
-      id: isSet(object.id) ? Long.fromValue(object.id) : Long.UZERO,
-      isPerpetual: isSet(object.isPerpetual) ? Boolean(object.isPerpetual) : false,
-      distributeTo: isSet(object.distributeTo) ? QueryCondition.fromJSON(object.distributeTo) : undefined,
-      coins: Array.isArray(object?.coins) ? object.coins.map((e: any) => Coin.fromJSON(e)) : [],
-      startTime: isSet(object.startTime) ? fromJsonTimestamp(object.startTime) : undefined,
-      numEpochsPaidOver: isSet(object.numEpochsPaidOver) ? Long.fromValue(object.numEpochsPaidOver) : Long.UZERO,
-      filledEpochs: isSet(object.filledEpochs) ? Long.fromValue(object.filledEpochs) : Long.UZERO,
-      distributedCoins: Array.isArray(object?.distributedCoins) ? object.distributedCoins.map((e: any) => Coin.fromJSON(e)) : []
-    };
-  },
-
-  toJSON(message: Gauge): unknown {
-    const obj: any = {};
-    message.id !== undefined && (obj.id = (message.id || Long.UZERO).toString());
-    message.isPerpetual !== undefined && (obj.isPerpetual = message.isPerpetual);
-    message.distributeTo !== undefined && (obj.distributeTo = message.distributeTo ? QueryCondition.toJSON(message.distributeTo) : undefined);
-
-    if (message.coins) {
-      obj.coins = message.coins.map(e => e ? Coin.toJSON(e) : undefined);
-    } else {
-      obj.coins = [];
-    }
-
-    message.startTime !== undefined && (obj.startTime = fromTimestamp(message.startTime).toISOString());
-    message.numEpochsPaidOver !== undefined && (obj.numEpochsPaidOver = (message.numEpochsPaidOver || Long.UZERO).toString());
-    message.filledEpochs !== undefined && (obj.filledEpochs = (message.filledEpochs || Long.UZERO).toString());
-
-    if (message.distributedCoins) {
-      obj.distributedCoins = message.distributedCoins.map(e => e ? Coin.toJSON(e) : undefined);
-    } else {
-      obj.distributedCoins = [];
-    }
-
-    return obj;
-  },
-
-  fromPartial(object: Partial<Gauge>): Gauge {
+  fromPartial(object: DeepPartial<Gauge>): Gauge {
     const message = createBaseGauge();
     message.id = object.id !== undefined && object.id !== null ? Long.fromValue(object.id) : Long.UZERO;
     message.isPerpetual = object.isPerpetual ?? false;
     message.distributeTo = object.distributeTo !== undefined && object.distributeTo !== null ? QueryCondition.fromPartial(object.distributeTo) : undefined;
     message.coins = object.coins?.map(e => Coin.fromPartial(e)) || [];
-    message.startTime = object.startTime !== undefined && object.startTime !== null ? Timestamp.fromPartial(object.startTime) : undefined;
+    message.startTime = object.startTime ?? undefined;
     message.numEpochsPaidOver = object.numEpochsPaidOver !== undefined && object.numEpochsPaidOver !== null ? Long.fromValue(object.numEpochsPaidOver) : Long.UZERO;
     message.filledEpochs = object.filledEpochs !== undefined && object.filledEpochs !== null ? Long.fromValue(object.filledEpochs) : Long.UZERO;
     message.distributedCoins = object.distributedCoins?.map(e => Coin.fromPartial(e)) || [];
@@ -301,25 +263,7 @@ export const LockableDurationsInfo = {
     return message;
   },
 
-  fromJSON(object: any): LockableDurationsInfo {
-    return {
-      lockableDurations: Array.isArray(object?.lockableDurations) ? object.lockableDurations.map((e: any) => Duration.fromJSON(e)) : []
-    };
-  },
-
-  toJSON(message: LockableDurationsInfo): unknown {
-    const obj: any = {};
-
-    if (message.lockableDurations) {
-      obj.lockableDurations = message.lockableDurations.map(e => e ? Duration.toJSON(e) : undefined);
-    } else {
-      obj.lockableDurations = [];
-    }
-
-    return obj;
-  },
-
-  fromPartial(object: Partial<LockableDurationsInfo>): LockableDurationsInfo {
+  fromPartial(object: DeepPartial<LockableDurationsInfo>): LockableDurationsInfo {
     const message = createBaseLockableDurationsInfo();
     message.lockableDurations = object.lockableDurations?.map(e => Duration.fromPartial(e)) || [];
     return message;
