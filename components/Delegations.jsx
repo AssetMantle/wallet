@@ -24,6 +24,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
   const { allValidators, isLoadingValidators, errorValidators } =
     useAllValidators();
 
+  const [searchValue, setSearchValue] = useState("");
   const [activeValidators, setActiveValidators] = useState(true);
   const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status } = walletManager;
@@ -59,7 +60,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
   //Get total delegation amount of all validators selected
   const cumulativeDelegations = errorDelegatedAmount
     ? placeholderTotalDelegations
-    : fromDenom(totalDelegatedAmount);
+    : totalDelegatedAmount;
 
   //Show total delegated amount if no validators selected or show cumulative delegated amount of selected validators
   const delegationsDisplay = stakeState?.selectedValidators?.length
@@ -68,12 +69,10 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
 
   const delegationsInUSDDisplay =
     errorDelegatedAmount ||
-    errorMntlUsdValue | isNaN(fromDenom(totalDelegatedAmount)) ||
+    errorMntlUsdValue | isNaN(totalDelegatedAmount) ||
     isNaN(parseFloat(mntlUsdValue))
       ? placeholderMntlUsdValue
-      : (fromDenom(totalDelegatedAmount) * parseFloat(mntlUsdValue))
-          .toFixed(6)
-          .toString();
+      : (totalDelegatedAmount * parseFloat(mntlUsdValue)).toFixed(6).toString();
 
   //Get number of validators delegated to out of selected validators
   const delegatedOutOfSelectedValidators = delegatedValidators?.filter((item) =>
@@ -354,6 +353,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                         placeholder="Search"
                         aria-label="Search"
                         style={{ border: "none" }}
+                        onChange={(e) => setSearchValue(e.target.value)}
                       />
                     </div>
                     <div className="btn-group">
@@ -390,6 +390,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                           <th className="text-white no-text-wrap" scope="col">
                             Rank
                           </th>
+                          <th scope="col" style={{ whiteSpace: "nowrap" }}></th>
                           <th className="text-white no-text-wrap" scope="col">
                             Validator Name
                           </th>
@@ -411,7 +412,11 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                         {activeValidators
                           ? validatorsArray
                               ?.filter(
-                                (item) => item?.status === "BOND_STATUS_BONDED"
+                                (item) =>
+                                  item?.status === "BOND_STATUS_BONDED" &&
+                                  item?.description?.moniker
+                                    .toLowerCase()
+                                    .includes(searchValue.toLowerCase())
                               )
                               ?.map((item, index) => (
                                 <tr key={index} className="text-white">
@@ -448,7 +453,10 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                           : validatorsArray
                               ?.filter(
                                 (item) =>
-                                  item?.status === "BOND_STATUS_UNBONDED"
+                                  item?.status === "BOND_STATUS_UNBONDED" &&
+                                  item?.description?.moniker
+                                    .toLowerCase()
+                                    .includes(searchValue.toLowerCase())
                               )
                               ?.map((item, index) => (
                                 <tr key={index} className="text-white">
@@ -465,6 +473,23 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                     />
                                   </td>
                                   <td>{index + 1}</td>
+                                  <td>
+                                    <div
+                                      className="d-flex position-relative rounded-circle"
+                                      style={{
+                                        width: "25px",
+                                        aspectRatio: "1/1",
+                                      }}
+                                    >
+                                      <Image
+                                        layout="fill"
+                                        alt={item?.description?.moniker}
+                                        className="rounded-circle"
+                                        src={`/validatoravatars/${item?.operator_address}.png`}
+                                        // onError={(e) => (e.target.src = "/favicon.png")}
+                                      />
+                                    </div>
+                                  </td>
                                   <td>{item?.description?.moniker}</td>
                                   <td>
                                     {(

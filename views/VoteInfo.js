@@ -1,4 +1,24 @@
+import { useDelegatedValidators } from "../data";
+import { useAllValidators } from "../data";
+
 const VoteInfo = () => {
+  const {
+    delegatedValidators,
+    totalDelegatedAmount,
+    isLoadingDelegatedAmount,
+    errorDelegatedAmount,
+  } = useDelegatedValidators();
+
+  const { allValidators, isLoadingValidators, errorValidators } =
+    useAllValidators();
+
+  const totalTokens = allValidators?.reduce(
+    (accumulator, currentValue) => accumulator + parseInt(currentValue.tokens),
+    0
+  );
+
+  console.log(totalDelegatedAmount, totalTokens);
+
   return (
     <div className="col-12 pt-3 pt-lg-0 col-lg-4">
       <div className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-2 transitionAll">
@@ -9,9 +29,10 @@ const VoteInfo = () => {
         </nav>
         <div className="nav-bg rounded-4 d-flex flex-column p-3 gap-2 align-items-start">
           <p className="caption">Your Voting Power is </p>
+          {totalDelegatedAmount && allValidators ? (
+            <p>{(totalDelegatedAmount * 100) / totalTokens}%</p>
+          ) : null}
           <br />
-          <p className="caption">Votes made for categories:</p>
-          <p className="caption"></p>
         </div>
       </div>
     </div>

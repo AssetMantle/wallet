@@ -45,7 +45,7 @@ export default function Stake() {
       mntl: "0.0000",
     },
     {
-      name: "Heigh",
+      name: "High",
       usd: "0.0000",
       mntl: "0.0000",
     },
@@ -133,15 +133,8 @@ export default function Stake() {
                     <div className="p-2 rounded-4 nav-bg"></div>
                   </button>
                 </div>
-                {/* <button className="d-flex align-items-center gap-2">
-                  <HiArrowsUpDown />
-                  Sort
-                </button> */}
               </div>
-              <div
-                className="d-flex w-100 mt-3 h-100"
-                style={{ overflow: "auto" }}
-              >
+              <div className="w-100 mt-3 h-100" style={{ overflow: "auto" }}>
                 <table
                   className="table"
                   style={{ width: "max-content", minWidth: "100%" }}
@@ -153,9 +146,7 @@ export default function Stake() {
                     }}
                   >
                     <tr className="caption2 text-white">
-                      <th>
-                        <input type="checkbox"></input>
-                      </th>
+                      <th></th>
                       <th scope="col" style={{ whiteSpace: "nowrap" }}>
                         Rank
                       </th>

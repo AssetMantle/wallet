@@ -34,14 +34,14 @@ export const sendTokensTxn = async (
     const { send } = cosmos.bank.v1beta1.MessageComposer.withTypeUrl;
     // populate the message with transaction arguments
     const msg = send({
+      fromAddress,
+      toAddress,
       amount: [
         {
           denom: coin.base,
           amount: amountInDenom,
         },
       ],
-      toAddress,
-      fromAddress,
     });
     // populate the fee data
     const fee = {
