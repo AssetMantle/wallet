@@ -1,7 +1,7 @@
 import { assets } from "chain-registry";
 import { defaultChainDenom, defaultChainName } from "../config";
 import { toChainDenom } from "../data";
-import { cosmos } from "../modules";
+import { cosmos } from "osmojs";
 
 // get the wallet properties and functions for that specific chain
 export const sendTokensTxn = async (

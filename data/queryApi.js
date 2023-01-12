@@ -1,6 +1,7 @@
 import { useChain } from "@cosmos-kit/react";
 import BigNumber from "bignumber.js";
 import { assets, chains } from "chain-registry";
+import { cosmos } from "osmojs";
 import useSwr from "swr";
 import {
   defaultChainDenom,
@@ -10,12 +11,16 @@ import {
   placeholderAvailableBalance,
   placeholderMntlUsdValue,
 } from "../config";
-import { cosmos } from "../modules";
 
-// get the rest endpoint from the chain registry inside the Cosmos Kit
+// get the rest endpoint from the chain registry
 const restEndpoint = chains.find(
   (_chain) => _chain?.chain_name === defaultChainName
 )?.apis?.rest[0]?.address;
+
+// get the rpc endpoint from the chain registry
+const rpcEndpoint = chains.find(
+  (_chain) => _chain?.chain_name === defaultChainName
+)?.apis?.rpc[0]?.address;
 
 const denom = assets.find(
   (assetObj) => assetObj?.chain_name === defaultChainName
@@ -24,10 +29,15 @@ const denom = assets.find(
 // console.log("assets: ", assets);
 // console.log("AssetMantle Endpoint: ", restEndpoint);
 
-// get the REST Query Client using Modules & Endpoint
-const client = await cosmos.ClientFactory.createLCDClient({
-  restEndpoint,
+// get the RPC Query Client using Modules & Endpoint
+const client = await cosmos.ClientFactory.createRPCQueryClient({
+  rpcEndpoint,
 });
+
+// get the REST Query Client using Modules & Endpoint
+/* const client2 = await cosmos.ClientFactory.createLCDClient({
+  restEndpoint,
+}); */
 
 export const fromDenom = (value, exponent = defaultChainDenomExponent) => {
   return parseFloat(
@@ -178,6 +188,7 @@ export const useTotalUnbonding = () => {
         await client.cosmos.staking.v1beta1.delegatorUnbondingDelegations({
           delegatorAddr: address,
         });
+
       if (!unbonding_responses.length) {
         totalUnbondingAmount = 0;
       } else {
