@@ -22,7 +22,7 @@ const DelegatedValidators = ({
         ? delegatedValidators
             ?.filter(
               (item) =>
-                item?.status === "BOND_STATUS_BONDED" &&
+                item?.status === 3 &&
                 item?.description?.moniker?.toLowerCase()?.includes(searchValue)
             )
             ?.map((item, index) => (
@@ -56,7 +56,7 @@ const DelegatedValidators = ({
                       alt={item?.description?.moniker}
                       className="rounded-circle"
                       layout="fill"
-                      src={`/validatoravatars/${item?.operator_address}.png`}
+                      src={`/validatoravatars/${item?.operatorAddress}.png`}
                       onError={(e) => console.log(e)}
                     />
                   </div>
@@ -74,7 +74,7 @@ const DelegatedValidators = ({
         : delegatedValidators
             ?.filter(
               (item) =>
-                item?.status === "BOND_STATUS_UNBONDED" &&
+                item?.status === 1 &&
                 item?.description?.moniker?.toLowerCase()?.includes(searchValue)
             )
             ?.map((item, index) => (
@@ -107,7 +107,7 @@ const DelegatedValidators = ({
                       alt={item?.description?.moniker}
                       className="rounded-circle"
                       layout="fill"
-                      src={`/validatoravatars/${item?.operator_address}.png`}
+                      src={`/validatoravatars/${item?.operatorAddress}.png`}
                       onError={(e) => console.log(e)}
                     />
                   </div>

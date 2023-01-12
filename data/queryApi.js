@@ -173,20 +173,20 @@ export const useTotalUnbonding = () => {
     let allUnbonding = [];
 
     try {
-      const { unbonding_responses } =
+      const { unbondingResponses } =
         await client.cosmos.staking.v1beta1.delegatorUnbondingDelegations({
           delegatorAddr: address,
         });
 
-      if (!unbonding_responses.length) {
+      if (!unbondingResponses.length) {
         totalUnbondingAmount = 0;
       } else {
-        unbonding_responses?.map((item) => {
+        unbondingResponses?.map((item) => {
           item?.entries.map((ele) =>
             allUnbonding.push({
-              address: item.validator_address,
+              address: item.validatorAddress,
               balance: ele.balance,
-              completion_time: ele.completion_time,
+              completion_time: ele.completionTime,
             })
           );
           totalUnbondingAmount = allUnbonding?.reduce(
@@ -250,6 +250,7 @@ export const useTotalRewards = () => {
           parseFloat(total) + parseFloat(currentValue?.reward[0]?.amount) || 0,
         0
       );
+      console.log(rewardsArray);
     } catch (error) {
       console.error(`swr fetcher error: ${url}`);
       console.log(error);
@@ -299,24 +300,26 @@ export const useDelegatedValidators = () => {
       // get the data from cosmos queryClient
 
       //Fetch a list of all validators
-      const { validators } = await client.cosmos.staking.v1beta1.validators();
+      const { validators } = await client.cosmos.staking.v1beta1.validators({
+        status: "",
+      });
       //Fetch a list of all validators that have been delegated by the delegator
-      const { delegation_responses } =
+      const { delegationResponses } =
         await client.cosmos.staking.v1beta1.delegatorDelegations({
           delegatorAddr: address,
         });
 
       //Create an array of delegated validators with all additional information about them
-      delegation_responses.map((item) => {
+      delegationResponses.map((item) => {
         let match = validators.find(
           (element) =>
-            element.operator_address === item.delegation.validator_address
+            element?.operatorAddress === item?.delegation?.validatorAddress
         );
-        match.delegatedAmount = item.balance.amount;
+        match.delegatedAmount = item?.balance?.amount;
         delegatedValidators.push(match);
       });
       //Get total delegated amount
-      totalDelegatedAmount = delegation_responses.reduce(
+      totalDelegatedAmount = delegationResponses.reduce(
         (total, currentValue) =>
           parseFloat(total) + parseFloat(currentValue?.balance?.amount),
         parseFloat("0")
@@ -517,7 +520,9 @@ export const useAllValidators = () => {
     // use a try catch block for creating rich Error object
     try {
       // get the data from cosmos queryClient
-      const { validators } = await client.cosmos.staking.v1beta1.validators();
+      const { validators } = await client.cosmos.staking.v1beta1.validators({
+        status: "",
+      });
       allValidators = validators;
       // const iconUrlsArray = validators.map((validator, index) => {
       //   return `https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/${validator.operator_address}.png`;
@@ -573,7 +578,6 @@ export const useVote = (proposalId) => {
         address,
       });
       voteInfo = vote;
-      console.log(voteInfo);
     } catch (error) {
       console.error(`swr fetcher error: ${url}`);
       throw error;

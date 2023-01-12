@@ -396,6 +396,7 @@ export const sendIbcTokenToGravity = async (
 ) => {
   let response = null;
   try {
+    console.log(fromAddress, toGravityAddress, amount);
     // get the chain assets for the specified chain
     const chainassets = assets.find((chain) => chain.chain_name === chainName);
     // get the coin data from the chain assets data

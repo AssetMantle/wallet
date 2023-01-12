@@ -5,6 +5,7 @@ import ICTransactionInfo from "../components/ICTransactionInfo";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import { defaultChainName } from "../config";
 import { placeholderAddress } from "../data";
+import { sendIbcTokenToGravity } from "../data";
 
 export default function Bridge() {
   // commons
@@ -14,7 +15,7 @@ export default function Bridge() {
 
   // transactions start
   const walletManager = useChain(defaultChainName);
-  const { address } = walletManager;
+  const { address, getSigningStargateClient } = walletManager;
 
   const [EthConnectionStat, setEthConnectionStat] = useState(false);
 
@@ -40,8 +41,10 @@ export default function Bridge() {
   const [GravityBalance, setGravityBalance] = useState(30);
   const [EthBalance, setEthBalance] = useState(40);
   const [PolygonBalance, setPolygonBalance] = useState(50);
+  const [memo, setMemo] = useState("");
 
   const handleMNTLAmountChange = (e) => {
+    console.log(e.target.value);
     setMNTLAmount(e.target.value);
     e.target.value < 0.001 || e.target.value > MNtlBalance
       ? setMNTLAmountError("Insufficient Balance.")
@@ -70,6 +73,18 @@ export default function Bridge() {
     setEthConnectionStat(true);
   };
   // transactions start
+
+  const handleMantleToGravity = async () => {
+    const { response, error } = await sendIbcTokenToGravity(
+      address,
+      GravityAddress,
+      MNTLAmount,
+      memo,
+
+      { getSigningStargateClient }
+    );
+    console.log("response: ", response, " error: ", error);
+  };
 
   return (
     <>
@@ -126,7 +141,9 @@ export default function Bridge() {
                     name="mntlAmount"
                     className="am-input-secondary caption2 flex-grow-1 bg-t"
                     value={MNTLAmount}
-                    onChange={(e) => handleMNTLAmountChange(e)}
+                    onChange={(e) => {
+                      handleMNTLAmountChange(e);
+                    }}
                   />
                   <button className="text-primary caption2">Max</button>
                 </div>
@@ -134,7 +151,10 @@ export default function Bridge() {
                   <small className="small text-error">{MNTLAmountError}</small>
                 )}
                 <div className="d-flex align-items-center justify-content-end gap-2">
-                  <button className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2">
+                  <button
+                    onClick={handleMantleToGravity}
+                    className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
+                  >
                     Send to Gravity Bridge <i className="bi bi-arrow-down" />
                   </button>
                 </div>

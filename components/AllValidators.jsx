@@ -16,7 +16,7 @@ const AllValidators = ({
         ? validatorsArray
             ?.filter(
               (item) =>
-                item?.status === "BOND_STATUS_BONDED" &&
+                item?.status === 3 &&
                 item?.description?.moniker
                   .toLowerCase()
                   .includes(searchValue.toLowerCase())
@@ -55,7 +55,7 @@ const AllValidators = ({
                       layout="fill"
                       alt={item?.description?.moniker}
                       className="rounded-circle"
-                      src={`/validatoravatars/${item?.operator_address}.png`}
+                      src={`/validatoravatars/${item?.operatorAddress}.png`}
                       // onError={() => setSrc("/favicon.png")}
                     />
                   </div>
@@ -65,7 +65,10 @@ const AllValidators = ({
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
                 <td>
-                  {Math.floor(item?.commission?.commission_rates?.rate * 100)}%
+                  {Math.floor(
+                    item?.commission?.commissionRates?.rate.slice(-6)
+                  )}
+                  %
                 </td>
                 <td>{(item?.tokens / 1000000).toFixed(2)}</td>
               </tr>
@@ -73,7 +76,7 @@ const AllValidators = ({
         : validatorsArray
             ?.filter(
               (item) =>
-                item?.status === "BOND_STATUS_UNBONDED" &&
+                item?.status === 1 &&
                 item?.description?.moniker
                   .toLowerCase()
                   .includes(searchValue.toLowerCase())
@@ -112,7 +115,7 @@ const AllValidators = ({
                       layout="fill"
                       alt={item?.description?.moniker}
                       className="rounded-circle"
-                      src={`/validatoravatars/${item?.operator_address}.png`}
+                      src={`/validatoravatars/${item?.operatorAddress}.png`}
                       // onError={() => setSrc("/favicon.png")}
                     />
                   </div>
@@ -121,9 +124,7 @@ const AllValidators = ({
                   {item?.description?.moniker}
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
-                <td>
-                  {Math.floor(item?.commission?.commission_rates?.rate * 100)}%
-                </td>
+                <td>{item?.commission?.commission_rates?.rate.slice(-6)}%</td>
                 <td>{(item?.tokens / 1000000).toFixed(2)}</td>
               </tr>
             ))}
