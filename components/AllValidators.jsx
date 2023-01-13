@@ -1,4 +1,3 @@
-import Image from "next/image";
 import React from "react";
 
 const AllValidators = ({
@@ -51,7 +50,7 @@ const AllValidators = ({
                     className="d-flex position-relative rounded-circle"
                     style={{ width: "25px", aspectRatio: "1/1" }}
                   >
-                    <Image
+                    <img
                       layout="fill"
                       alt={item?.description?.moniker}
                       className="rounded-circle"
@@ -111,7 +110,7 @@ const AllValidators = ({
                     className="d-flex position-relative rounded-circle"
                     style={{ width: "25px", aspectRatio: "1/1" }}
                   >
-                    <Image
+                    <img
                       layout="fill"
                       alt={item?.description?.moniker}
                       className="rounded-circle"

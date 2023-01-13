@@ -75,7 +75,7 @@ export default function ICFormPolygon() {
               className="position-relative"
               style={{ width: "21px", aspectRatio: "1/1" }}
             >
-              <Image
+              <img
                 src="/chainLogos/mntl.webp"
                 alt="AssetMantle"
                 layout="fill"

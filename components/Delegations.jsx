@@ -1,5 +1,4 @@
 import { useChain } from "@cosmos-kit/react";
-import Image from "next/image";
 import React, { useState } from "react";
 import {
   defaultChainName,
@@ -479,7 +478,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                         aspectRatio: "1/1",
                                       }}
                                     >
-                                      <Image
+                                      <img
                                         layout="fill"
                                         alt={item?.description?.moniker}
                                         className="rounded-circle"

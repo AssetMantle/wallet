@@ -6,6 +6,12 @@
     "no-console": "warn",
     "no-unused-vars": "off",
     "no-undef": "warn",
+    "react/no-unknown-property": [
+      "error",
+      {
+        "ignore": ["layout"]
+      }
+    ], // for conversion of <Image/> to <img/>
     "unused-imports/no-unused-imports": "error",
     "unused-imports/no-unused-vars": [
       "warn",
