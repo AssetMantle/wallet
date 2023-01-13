@@ -9,6 +9,7 @@ import { sendVote } from "../data/txApi";
 import { useChain } from "@cosmos-kit/react";
 import { defaultChainName } from "../config";
 import ActiveProposals from "../components/ActiveProposals";
+import Head from "next/head";
 
 export default function Vote() {
   const { voteState, voteDispatch } = UseVoteReducer();
@@ -30,6 +31,9 @@ export default function Vote() {
 
   return (
     <>
+      <Head>
+        <title>Vote | MantleWallet</title>
+      </Head>
       <section className="row h-100">
         <ScrollableSectionContainer className="col-12 col-lg-8 px-1">
           <div className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-2 transitionAll">
