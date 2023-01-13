@@ -427,7 +427,7 @@ export const sendIbcTokenToGravity = async (
           amount: "2000",
         },
       ],
-      gas: "86364",
+      gas: "100000",
     };
 
     // directly call sendIbcTokens from the stargateclient
@@ -438,7 +438,7 @@ export const sendIbcTokenToGravity = async (
       sourcePort,
       sourceChannel,
       undefined,
-      undefined,
+      1773583353,
       fee,
       memo
     );
