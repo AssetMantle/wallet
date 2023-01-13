@@ -247,10 +247,11 @@ export const useTotalRewards = () => {
       rewardsArray = rewards;
       totalRewards = rewards.reduce(
         (total, currentValue) =>
-          parseFloat(total) + parseFloat(currentValue?.reward[0]?.amount) || 0,
+          parseFloat(total) +
+            parseFloat(currentValue?.reward[0]?.amount.slice(0, -23)) || 0,
         0
       );
-      console.log(rewardsArray);
+      console.log(rewards);
     } catch (error) {
       console.error(`swr fetcher error: ${url}`);
       console.log(error);
@@ -525,7 +526,7 @@ export const useAllValidators = () => {
       });
       allValidators = validators;
       // const iconUrlsArray = validators.map((validator, index) => {
-      //   return `https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/${validator.operator_address}.png`;
+      //   return `https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/${validator.operatorAddress}.png`;
       // });
       // const data = await fetch(iconUrlsArray);
       // console.log("data: ", data);
@@ -631,7 +632,7 @@ export const useAllProposals = () => {
       });
       allProposals = proposals;
       // const iconUrlsArray = validators.map((validator, index) => {
-      //   return `https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/${validator.operator_address}.png`;
+      //   return `https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/${validator.operatorAddress}.png`;
       // });
       // const data = await fetch(iconUrlsArray);
       // console.log("data: ", data);

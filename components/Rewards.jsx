@@ -225,13 +225,13 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                       {stakeState?.selectedValidators.length ? (
                         delegatedValidators?.filter((item) =>
                           stakeState?.selectedValidators.includes(
-                            item?.operator_address
+                            item?.operatorAddress
                           )
                         ).length ? (
                           delegatedValidators
                             ?.filter((item) =>
                               stakeState?.selectedValidators.includes(
-                                item?.operator_address
+                                item?.operatorAddress
                               )
                             )
                             .map((item, index) => (
@@ -251,7 +251,7 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                                   {rewardsArray?.find(
                                     (element) =>
                                       element?.validator_address ===
-                                      item?.operator_address
+                                      item?.operatorAddress
                                   )?.reward[0]?.amount / 1000000}
                                 </td>
                               </tr>
@@ -280,7 +280,7 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                               {rewardsArray?.find(
                                 (element) =>
                                   element?.validator_address ===
-                                  item?.operator_address
+                                  item?.operatorAddress
                               )?.reward[0]?.amount / 1000000}
                             </td>
                           </tr>

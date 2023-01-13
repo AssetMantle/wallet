@@ -45,9 +45,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
   //Create array of validators selected from list
   const selectedDelegations = delegatedValidators
     ?.filter((delegatedObject) =>
-      stakeState?.selectedValidators?.includes(
-        delegatedObject?.operator_address
-      )
+      stakeState?.selectedValidators?.includes(delegatedObject?.operatorAddress)
     )
     .reduce(
       (accumulator, currentValue) =>
@@ -74,7 +72,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
 
   //Get number of validators delegated to out of selected validators
   const delegatedOutOfSelectedValidators = delegatedValidators?.filter((item) =>
-    stakeState?.selectedValidators?.includes(item?.operator_address)
+    stakeState?.selectedValidators?.includes(item?.operatorAddress)
   );
 
   //Flag to see if the redelegate, undelegate and claim buttons will show up
@@ -221,7 +219,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                     {fromDenom(
                       delegatedValidators?.find(
                         (item) =>
-                          item?.operator_address === stakeState?.undelegationSrc
+                          item?.operatorAddress === stakeState?.undelegationSrc
                       )?.delegatedAmount
                     )}
                   </small>
@@ -314,7 +312,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                   {
                     delegatedValidators?.find(
                       (item) =>
-                        item?.operator_address ===
+                        item?.operatorAddress ===
                         stakeState?.selectedValidators[0]
                     )?.description?.moniker
                   }
@@ -324,7 +322,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                   {
                     delegatedValidators?.find(
                       (item) =>
-                        item?.operator_address ===
+                        item?.operatorAddress ===
                         stakeState?.selectedValidators[0]
                     )?.delegatedAmount
                   }
@@ -425,7 +423,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                       onChange={() =>
                                         stakeDispatch({
                                           type: "SET_REDELEGATION_DESTINATION_ADDRESS",
-                                          payload: item?.operator_address,
+                                          payload: item?.operatorAddress,
                                         })
                                       }
                                     />
@@ -465,7 +463,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                       onChange={() =>
                                         stakeDispatch({
                                           type: "SET_REDELEGATION_DESTINATION_ADDRESS",
-                                          payload: item?.operator_address,
+                                          payload: item?.operatorAddress,
                                         })
                                       }
                                     />
@@ -483,7 +481,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                         layout="fill"
                                         alt={item?.description?.moniker}
                                         className="rounded-circle"
-                                        src={`/validatoravatars/${item?.operator_address}.png`}
+                                        src={`/validatoravatars/${item?.operatorAddress}.png`}
                                         // onError={(e) => (e.target.src = "/favicon.png")}
                                       />
                                     </div>
@@ -521,7 +519,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                     Delegated Amount :{" "}
                     {fromDenom(
                       delegatedValidators?.find((item) =>
-                        item?.operator_address?.includes(
+                        item?.operatorAddress?.includes(
                           stakeState?.selectedValidators
                         )
                       )?.delegatedAmount

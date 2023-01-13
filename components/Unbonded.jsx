@@ -210,7 +210,7 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
                               {
                                 delegatedValidators?.find(
                                   (ele) =>
-                                    ele?.operator_address === item?.address
+                                    ele?.operatorAddress === item?.address
                                 )?.description?.moniker
                               }
                             </td>

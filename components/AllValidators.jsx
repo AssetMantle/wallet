@@ -27,20 +27,20 @@ const AllValidators = ({
                   <input
                     type="checkbox"
                     checked={stakeState?.selectedValidators.includes(
-                      item?.operator_address
+                      item?.operatorAddress
                     )}
                     onChange={() => {
                       setShowClaimError(false);
                       stakeState?.selectedValidators.includes(
-                        item?.operator_address
+                        item?.operatorAddress
                       )
                         ? stakeDispatch({
                             type: "REMOVE_FROM_SELECTED_VALIDATORS",
-                            payload: item?.operator_address,
+                            payload: item?.operatorAddress,
                           })
                         : stakeDispatch({
                             type: "SET_SELECTED_VALIDATORS",
-                            payload: item?.operator_address,
+                            payload: item?.operatorAddress,
                           });
                     }}
                   ></input>
@@ -66,7 +66,7 @@ const AllValidators = ({
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
                 <td>
                   {Math.floor(
-                    item?.commission?.commissionRates?.rate.slice(-6)
+                    item?.commission?.commissionRates?.rate.slice(0, -6)
                   )}
                   %
                 </td>
@@ -87,20 +87,20 @@ const AllValidators = ({
                   <input
                     type="checkbox"
                     checked={stakeState?.selectedValidators.includes(
-                      item?.operator_address
+                      item?.operatorAddress
                     )}
                     onChange={() => {
                       setShowClaimError(false);
                       stakeState?.selectedValidators.includes(
-                        item?.operator_address
+                        item?.operatorAddress
                       )
                         ? stakeDispatch({
                             type: "REMOVE_FROM_SELECTED_VALIDATORS",
-                            payload: item?.operator_address,
+                            payload: item?.operatorAddress,
                           })
                         : stakeDispatch({
                             type: "SET_SELECTED_VALIDATORS",
-                            payload: item?.operator_address,
+                            payload: item?.operatorAddress,
                           });
                     }}
                   ></input>
@@ -124,7 +124,9 @@ const AllValidators = ({
                   {item?.description?.moniker}
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
-                <td>{item?.commission?.commission_rates?.rate.slice(-6)}%</td>
+                <td>
+                  {item?.commission?.commission_rates?.rate.slice(0, -6)}%
+                </td>
                 <td>{(item?.tokens / 1000000).toFixed(2)}</td>
               </tr>
             ))}

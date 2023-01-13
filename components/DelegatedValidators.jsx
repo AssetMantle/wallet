@@ -33,15 +33,15 @@ const DelegatedValidators = ({
                     onChange={() => {
                       setShowClaimError(false);
                       stakeState?.selectedValidators?.includes(
-                        item?.operator_address
+                        item?.operatorAddress
                       )
                         ? stakeDispatch({
                             type: "REMOVE_FROM_SELECTED_VALIDATORS",
-                            payload: item?.operator_address,
+                            payload: item?.operatorAddress,
                           })
                         : stakeDispatch({
                             type: "SET_SELECTED_VALIDATORS",
-                            payload: item?.operator_address,
+                            payload: item?.operatorAddress,
                           });
                     }}
                   ></input>
@@ -84,15 +84,15 @@ const DelegatedValidators = ({
                     type="checkbox"
                     onChange={() => {
                       stakeState?.selectedValidators.includes(
-                        item?.operator_address
+                        item?.operatorAddress
                       )
                         ? stakeDispatch({
                             type: "REMOVE_FROM_SELECTED_VALIDATORS",
-                            payload: item?.operator_address,
+                            payload: item?.operatorAddress,
                           })
                         : stakeDispatch({
                             type: "SET_SELECTED_VALIDATORS",
-                            payload: item?.operator_address,
+                            payload: item?.operatorAddress,
                           });
                     }}
                   ></input>

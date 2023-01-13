@@ -130,7 +130,7 @@ const UseStakeReducer = () => {
       }
       case "SET_MAX_UNDELEGATION_AMOUNT": {
         const delegatedAmount = delegatedValidators?.find(
-          (item) => item?.operator_address === state?.selectedValidators[0]
+          (item) => item?.operatorAddress === state?.selectedValidators[0]
         )?.delegatedAmount;
         if (
           isNaN(parseFloat(delegatedAmount)) ||
@@ -171,7 +171,7 @@ const UseStakeReducer = () => {
 
       case "SET_MAX_REDELEGATION_AMOUNT": {
         const delegatedAmount = delegatedValidators?.find(
-          (item) => item?.operator_address === state?.selectedValidators[0]
+          (item) => item?.operatorAddress === state?.selectedValidators[0]
         )?.delegatedAmount;
         if (
           isNaN(parseFloat(delegatedAmount)) ||
@@ -309,8 +309,8 @@ const UseStakeReducer = () => {
       }
     }
   };
-
   const [stakeState, stakeDispatch] = useReducer(stakeReducer, initialState);
+  console.log(stakeState);
   return { stakeState, stakeDispatch };
 };
 
