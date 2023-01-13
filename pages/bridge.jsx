@@ -1,6 +1,14 @@
 import { useChain } from "@cosmos-kit/react";
+import {
+  EthereumClient,
+  modalConnectors,
+  walletConnectProvider,
+} from "@web3modal/ethereum";
+import { Web3Modal } from "@web3modal/react";
 import Image from "next/image";
 import React, { useState } from "react";
+import { configureChains, createClient } from "wagmi";
+import { mainnet, polygon } from "wagmi/chains";
 import ICTransactionInfo from "../components/ICTransactionInfo";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import { defaultChainName, defaultChainSymbol } from "../config";
@@ -11,6 +19,7 @@ import {
   useAvailableBalance,
 } from "../data";
 import { shortenAddress } from "../lib/basicBlockchain";
+import { useWeb3Modal } from "@web3modal/react";
 
 export default function Bridge() {
   // commons
@@ -25,6 +34,23 @@ export default function Bridge() {
   const gravityAddress = walletManager2.address;
   const { availableBalance } = useAvailableBalance();
 
+  // web3modal and wagmi
+  const chains = [mainnet, polygon];
+
+  // Wagmi client
+  const { provider } = configureChains(chains, [
+    walletConnectProvider({ projectId: "95284efe95ac1c5b14c4c3d5f0c5c60e" }),
+  ]);
+  const wagmiClient = createClient({
+    autoConnect: true,
+    connectors: modalConnectors({ appName: "web3Modal", chains }),
+    provider,
+  });
+
+  const ethereumClient = new EthereumClient(wagmiClient, chains);
+  const { isOpen, open, close } = useWeb3Modal();
+
+  // other use states
   const [EthConnectionStat, setEthConnectionStat] = useState(false);
 
   const [MNTLAmountError, setMNTLAmountError] = useState(false);
@@ -81,6 +107,11 @@ export default function Bridge() {
     setEthConnectionStat(true);
   };
   // transactions start
+
+  const handleOpenWeb3Modal = async (e) => {
+    e.preventDefault();
+    await open();
+  };
 
   const handleMantleToGravity = async () => {
     const { response, error } = await sendIbcTokenToGravity(
@@ -252,7 +283,7 @@ export default function Bridge() {
         ) : (
           <button
             className="caption2 d-flex gap-1 text-primary"
-            onClick={handleEthConnect}
+            onClick={handleOpenWeb3Modal}
           >
             <i className="bi bi-link-45deg" /> Connect Wallet
           </button>
@@ -308,20 +339,16 @@ export default function Bridge() {
           </div>
           <h5 className="caption2 text-primary">Polygon Chain</h5>
         </div>
-        {EthConnectionStat ? (
-          <button
-            className="caption2 d-flex gap-1"
-            onClick={() => handleCopy(EthereumAddress)}
-            style={{ wordBreak: "break-all" }}
-          >
-            {EthereumAddress}{" "}
-            <span className="text-primary">
-              <i className="bi bi-clipboard" />
-            </span>
-          </button>
-        ) : (
-          <span className="text-gray caption2">Connect metamask</span>
-        )}
+        <button
+          className="caption2 d-flex gap-1"
+          onClick={handleOpenWeb3Modal}
+          style={{ wordBreak: "break-all" }}
+        >
+          Connect Wallet
+          <span className="text-primary">
+            <i className="bi bi-clipboard" />
+          </span>
+        </button>
       </div>
       <label
         htmlFor="mntlAmount"
@@ -369,6 +396,10 @@ export default function Bridge() {
               {gravityToEthJSX}
               {ethToPolygonJSX}
               {polytonToEthJSX}
+              <Web3Modal
+                projectId="95284efe95ac1c5b14c4c3d5f0c5c60e"
+                ethereumClient={ethereumClient}
+              />
             </div>
           </section>
         </ScrollableSectionContainer>
