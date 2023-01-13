@@ -7,7 +7,7 @@ import {
   placeholderRewards,
 } from "../config";
 import {
-  fromDenom,
+  fromChainDenom,
   sendRewardsBatched,
   useAllValidators,
   useDelegatedValidators,
@@ -19,19 +19,15 @@ const denomDisplay = defaultChainSymbol;
 
 const Rewards = ({ setShowClaimError, stakeState }) => {
   const walletManager = useChain(defaultChainName);
-  const {
-    delegatedValidators,
-    totalDelegatedAmount,
-    isLoadingDelegatedAmount,
-    errorDelegatedAmount,
-  } = useDelegatedValidators();
-  const { getSigningStargateClient, address, status } = walletManager;
+  const { delegatedValidators } = useDelegatedValidators();
+  const { getSigningStargateClient, address } = walletManager;
 
-  const { allRewards, rewardsArray, isLoadingRewards, errorRewards } =
-    useTotalRewards();
+  const { allRewards, rewardsArray, errorRewards } = useTotalRewards();
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
   const { allValidators, isLoadingValidators, errorValidators } =
     useAllValidators();
+
+  console.log({ allRewards, rewardsArray });
 
   const selectedRewards = rewardsArray
     ?.filter((rewardObject) =>
@@ -39,23 +35,26 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
     )
     .reduce(
       (accumulator, currentValue) =>
-        accumulator + parseFloat(currentValue?.reward[0]?.amount),
-      0
+        accumulator + parseFloat(currentValue?.reward?.[0]?.amount),
+      parseFloat(0)
     );
+
   const cumulativeRewards = errorRewards
     ? placeholderRewards
-    : fromDenom(allRewards);
+    : fromChainDenom(allRewards);
 
   const rewardsDisplay = stakeState?.selectedValidators.length
-    ? fromDenom(selectedRewards)
+    ? fromChainDenom(selectedRewards)
     : cumulativeRewards;
+
+  console.log("rewardsDisplay: ", rewardsDisplay);
 
   const rewardsInUSDDisplay =
     errorRewards ||
-    errorMntlUsdValue | isNaN(fromDenom(allRewards)) ||
+    errorMntlUsdValue | isNaN(fromChainDenom(allRewards)) ||
     isNaN(parseFloat(mntlUsdValue))
       ? placeholderMntlUsdValue
-      : (fromDenom(allRewards) * parseFloat(mntlUsdValue))
+      : (fromChainDenom(allRewards) * parseFloat(mntlUsdValue))
           .toFixed(6)
           .toString();
 
