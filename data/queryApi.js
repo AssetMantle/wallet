@@ -251,7 +251,6 @@ export const useTotalRewards = () => {
             parseFloat(currentValue?.reward[0]?.amount.slice(0, -23)) || 0,
         0
       );
-      console.log(rewards);
     } catch (error) {
       console.error(`swr fetcher error: ${url}`);
       console.log(error);

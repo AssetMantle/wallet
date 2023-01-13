@@ -17,8 +17,6 @@ const VoteInfo = () => {
     0
   );
 
-  console.log(totalDelegatedAmount, totalTokens);
-
   return (
     <div className="col-12 pt-3 pt-lg-0 col-lg-4">
       <div className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-2 transitionAll">
