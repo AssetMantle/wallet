@@ -396,6 +396,7 @@ export const sendIbcTokenToGravity = async (
 ) => {
   let response = null;
   try {
+    console.log(fromAddress, toGravityAddress, amount);
     // get the chain assets for the specified chain
     const chainassets = assets.find((chain) => chain.chain_name === chainName);
     // get the coin data from the chain assets data
@@ -409,8 +410,8 @@ export const sendIbcTokenToGravity = async (
     }
 
     // get the sourcePort and sourceChannel values pertaining to IBC transaction from AssetMantle to Gravity Chain
-    const sourcePort = "";
-    const sourceChannel = "";
+    const sourcePort = "transfer";
+    const sourceChannel = "channel-8";
 
     // get the amount object
     const transferAmount = {
@@ -426,7 +427,7 @@ export const sendIbcTokenToGravity = async (
           amount: "2000",
         },
       ],
-      gas: "86364",
+      gas: "100000",
     };
 
     // directly call sendIbcTokens from the stargateclient
@@ -437,7 +438,7 @@ export const sendIbcTokenToGravity = async (
       sourcePort,
       sourceChannel,
       undefined,
-      undefined,
+      1773583353,
       fee,
       memo
     );

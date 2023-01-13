@@ -521,7 +521,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                     Delegated Amount :{" "}
                     {fromDenom(
                       delegatedValidators?.find((item) =>
-                        item?.operator_address.includes(
+                        item?.operator_address?.includes(
                           stakeState?.selectedValidators
                         )
                       )?.delegatedAmount
