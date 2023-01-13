@@ -164,7 +164,7 @@ export default function Header() {
             className="position-relative"
             style={{ width: "25px", aspectRatio: "1/1" }}
           >
-            <Image
+            <img
               layout="fill"
               src={
                 ConnectOptionObject[wallet?.prettyName.toLocaleLowerCase()]

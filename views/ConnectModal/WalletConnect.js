@@ -1,4 +1,3 @@
-import Image from "next/image";
 import React from "react";
 
 export default function WalletConnect({
@@ -15,7 +14,7 @@ export default function WalletConnect({
             className="position-relative"
             style={{ width: "28px", aspectRatio: "1/1" }}
           >
-            <Image
+            <img
               layout="fill"
               src={
                 ExistingWallet.filter(
