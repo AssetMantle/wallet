@@ -35,7 +35,7 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
 
   const selectedRewards = rewardsArray
     ?.filter((rewardObject) =>
-      stakeState?.selectedValidators?.includes(rewardObject.validator_address)
+      stakeState?.selectedValidators?.includes(rewardObject.validatorAddress)
     )
     .reduce(
       (accumulator, currentValue) =>

@@ -64,12 +64,13 @@ const AllValidators = ({
                   {item?.description?.moniker}
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
-                <td>
-                  {Math.floor(
-                    item?.commission?.commissionRates?.rate.slice(0, -6)
-                  )}
-                  %
-                </td>
+                {item?.commission?.commissionRates?.rate == 0 ? (
+                  <td>0 %</td>
+                ) : (
+                  <td>
+                    {item?.commission?.commissionRates?.rate.slice(0, -16)} %
+                  </td>
+                )}
                 <td>{(item?.tokens / 1000000).toFixed(2)}</td>
               </tr>
             ))
@@ -124,9 +125,13 @@ const AllValidators = ({
                   {item?.description?.moniker}
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
-                <td>
-                  {item?.commission?.commission_rates?.rate.slice(0, -6)}%
-                </td>
+                {item?.commission?.commissionRates?.rate == 0 ? (
+                  <td>0 %</td>
+                ) : (
+                  <td>
+                    {item?.commission?.commissionRates?.rate.slice(0, -16)} %
+                  </td>
+                )}
                 <td>{(item?.tokens / 1000000).toFixed(2)}</td>
               </tr>
             ))}

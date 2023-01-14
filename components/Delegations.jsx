@@ -1,5 +1,4 @@
 import { useChain } from "@cosmos-kit/react";
-import Image from "next/image";
 import React, { useState } from "react";
 import {
   defaultChainName,
@@ -386,7 +385,6 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                           <th className="text-white no-text-wrap" scope="col">
                             Rank
                           </th>
-                          <th scope="col" style={{ whiteSpace: "nowrap" }}></th>
                           <th className="text-white no-text-wrap" scope="col">
                             Validator Name
                           </th>
@@ -409,7 +407,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                           ? validatorsArray
                               ?.filter(
                                 (item) =>
-                                  item?.status === "BOND_STATUS_BONDED" &&
+                                  item?.status === 3 &&
                                   item?.description?.moniker
                                     .toLowerCase()
                                     .includes(searchValue.toLowerCase())
@@ -449,7 +447,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                           : validatorsArray
                               ?.filter(
                                 (item) =>
-                                  item?.status === "BOND_STATUS_UNBONDED" &&
+                                  item?.status === 1 &&
                                   item?.description?.moniker
                                     .toLowerCase()
                                     .includes(searchValue.toLowerCase())
@@ -469,23 +467,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                     />
                                   </td>
                                   <td>{index + 1}</td>
-                                  <td>
-                                    <div
-                                      className="d-flex position-relative rounded-circle"
-                                      style={{
-                                        width: "25px",
-                                        aspectRatio: "1/1",
-                                      }}
-                                    >
-                                      <Image
-                                        layout="fill"
-                                        alt={item?.description?.moniker}
-                                        className="rounded-circle"
-                                        src={`/validatoravatars/${item?.operatorAddress}.png`}
-                                        // onError={(e) => (e.target.src = "/favicon.png")}
-                                      />
-                                    </div>
-                                  </td>
+
                                   <td>{item?.description?.moniker}</td>
                                   <td>
                                     {(

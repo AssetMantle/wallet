@@ -245,10 +245,10 @@ export const useTotalRewards = () => {
           delegatorAddress: address,
         });
       rewardsArray = rewards;
+      console.log(rewards);
       totalRewards = rewards.reduce(
         (total, currentValue) =>
-          parseFloat(total) +
-            parseFloat(currentValue?.reward[0]?.amount.slice(0, -23)) || 0,
+          parseFloat(total) + parseFloat(currentValue?.reward[0]?.amount) || 0,
         0
       );
     } catch (error) {
