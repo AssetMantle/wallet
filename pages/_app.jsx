@@ -68,8 +68,8 @@ function CreateCosmosApp({ Component, pageProps }) {
     chain_name: defaultChainName,
   };
 
-  console.log("assetmantletestnetAssets: ", assetmantletestnetAssets);
-  console.log("assetmantletestnet: ", assetmantletestnet);
+  // console.log("assetmantletestnetAssets: ", assetmantletestnetAssets);
+  // console.log("assetmantletestnet: ", assetmantletestnet);
 
   return (
     <>

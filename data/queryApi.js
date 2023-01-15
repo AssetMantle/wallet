@@ -44,12 +44,14 @@ export const fromChainDenom = (
 ) => {
   let amount;
   // get the chain assets for the specified chain
-  const chainassets = assets.find((chain) => chain.chain_name === chainName);
+  const chainassets = assets?.find?.((chain) => chain.chain_name === chainName);
   // get the coin data from the chain assets data
-  const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
+  const coin = chainassets?.assets?.find?.(
+    (asset) => asset.base === chainDenom
+  );
   // Get the display exponent
   // we can get the exponent from chain registry asset denom_units
-  const exp = coin.denom_units.find(
+  const exp = coin?.denom_units?.find?.(
     (unit) => unit.denom === coin.display
   )?.exponent;
   // show balance in display values by exponentiating it
@@ -70,12 +72,14 @@ export const toChainDenom = (
   console.log("inside tochaindenom, value: ", value);
   let amount;
   // get the chain assets for the specified chain
-  const chainassets = assets.find((chain) => chain.chain_name === chainName);
+  const chainassets = assets?.find?.((chain) => chain.chain_name === chainName);
   // get the coin data from the chain assets data
-  const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
+  const coin = chainassets?.assets?.find?.(
+    (asset) => asset.base === chainDenom
+  );
   // Get the display exponent
   // we can get the exponent from chain registry asset denom_units
-  const exp = coin.denom_units.find(
+  const exp = coin?.denom_units?.find?.(
     (unit) => unit.denom === coin.display
   )?.exponent;
   // show balance in display values by exponentiating it
