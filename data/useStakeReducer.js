@@ -188,18 +188,17 @@ const UseStakeReducer = () => {
             redelegationAmount: 0,
             errorMessages: {
               ...state.errorMessages,
-              undelegationAmountErrorMsg:
-                formConstants.undelegationAmountErrorMsg,
+              undelegationAmountErrorMsg: formConstants.transferAmountErrorMsg,
             },
           };
         }
         // if valid available balance then set half value
         else {
           // delete the error message key if already exists
-          delete state.errorMessages?.undelegationAmountErrorMsg;
+          delete state.errorMessages?.redelegationAmountErrorMsg;
           console.log(
             "state error message: ",
-            state.errorMessages?.undelegationAmountErrorMsg
+            state.errorMessages?.redelegationAmountErrorMsg
           );
           return {
             ...state,
@@ -211,10 +210,10 @@ const UseStakeReducer = () => {
       }
 
       case "CHANGE_UNDELEGATION_AMOUNT": {
-        console.log(
-          "inside CHANGE_AMOUNT, action.payload: ",
-          toDenom(action.payload) + parseFloat(defaultChainGasFee)
-        );
+        const delegatedAmount = delegatedValidators?.find(
+          (item) => item?.operatorAddress === state?.selectedValidators[0]
+        )?.delegatedAmount;
+
         // if amount is greater than current balance, populate error message and update amount
         if (isNaN(toDenom(action.payload))) {
           return {
@@ -226,17 +225,16 @@ const UseStakeReducer = () => {
             },
           };
         } else if (
-          isNaN(parseFloat(availableBalance)) ||
+          isNaN(parseFloat(delegatedAmount)) ||
           toDenom(action.payload) + parseFloat(defaultChainGasFee) >
-            parseFloat(availableBalance)
+            parseFloat(delegatedAmount)
         ) {
           return {
             ...state,
             undelegationAmount: action.payload,
             errorMessages: {
               ...state.errorMessages,
-              undelegationAmountErrorMsg:
-                formConstants.undelegationAmountErrorMsg,
+              undelegationAmountErrorMsg: formConstants.transferAmountErrorMsg,
             },
           };
         }
@@ -277,23 +275,35 @@ const UseStakeReducer = () => {
         };
       }
       case "CHANGE_REDELEGATION_AMOUNT": {
+        const delegatedAmount = delegatedValidators?.find(
+          (item) => item?.operatorAddress === state?.selectedValidators[0]
+        )?.delegatedAmount;
         console.log(
           "inside CHANGE_REDELEGATION_AMOUNT, action.payload: ",
           toDenom(action.payload) + parseFloat(defaultChainGasFee)
         );
+        if (isNaN(toDenom(action.payload))) {
+          return {
+            ...state,
+            redelegationAmount: action.payload,
+            errorMessages: {
+              ...state.errorMessages,
+              redelegationAmountErrorMsg: formConstants.requiredErrorMsg,
+            },
+          };
+        }
         // if amount is greater than current balance, populate error message and update amount
-        if (
+        else if (
           isNaN(parseFloat(availableBalance)) ||
           toDenom(action.payload) + parseFloat(defaultChainGasFee) >
-            parseFloat(availableBalance)
+            parseFloat(delegatedAmount)
         ) {
           return {
             ...state,
-            undelegationAmount: action.payload,
+            redelegationAmount: action.payload,
             errorMessages: {
               ...state.errorMessages,
-              undelegationAmountErrorMsg:
-                formConstants.undelegationAmountErrorMsg,
+              redelegationAmountErrorMsg: formConstants.transferAmountErrorMsg,
             },
           };
         }
@@ -304,6 +314,18 @@ const UseStakeReducer = () => {
           return {
             ...state,
             redelegationAmount: action.payload,
+          };
+        }
+      }
+      case "SUBMIT_REDELEGATE": {
+        if (!state.redelegationDestination) {
+          return {
+            ...state,
+            errorMessages: {
+              ...state.errorMessages,
+              redelegationAmountErrorMsg:
+                "Please select a validator to redelegate to",
+            },
           };
         }
       }

@@ -117,31 +117,42 @@ export default function StakedToken({
                     {defaultChainSymbol}
                   </small>
                 </div>
-                <div className="p-3 border-white py-2 d-flex rounded-2 gap-2 am-input">
-                  <input
-                    className="bg-t"
-                    id="delegationAmount"
-                    style={{ flex: "1", border: "none", outline: "none" }}
-                    type="text"
-                    value={stakeState?.delegationAmount}
-                    placeholder="Enter Delegation Amount"
-                    onChange={(e) =>
-                      stakeDispatch({
-                        type: "CHANGE_DELEGATION_AMOUNT",
-                        payload: e.target.value,
-                      })
-                    }
-                  ></input>
-                  <button
-                    onClick={() =>
-                      stakeDispatch({
-                        type: "SET_MAX_DELEGATION_AMOUNT",
-                      })
-                    }
-                    className="text-primary"
+                <div>
+                  <div className="p-3 border-white py-2 d-flex rounded-2 gap-2 am-input">
+                    <input
+                      className="bg-t"
+                      id="delegationAmount"
+                      style={{ flex: "1", border: "none", outline: "none" }}
+                      type="text"
+                      value={stakeState?.delegationAmount}
+                      placeholder="Enter Delegation Amount"
+                      onChange={(e) =>
+                        stakeDispatch({
+                          type: "CHANGE_DELEGATION_AMOUNT",
+                          payload: e.target.value,
+                        })
+                      }
+                    ></input>
+                    <button
+                      onClick={() =>
+                        stakeDispatch({
+                          type: "SET_MAX_DELEGATION_AMOUNT",
+                        })
+                      }
+                      className="text-primary"
+                    >
+                      Max
+                    </button>
+                  </div>
+                  <small
+                    id="amountInputErrorMsg"
+                    className="form-text text-danger d-flex align-items-center gap-1"
                   >
-                    Max
-                  </button>
+                    {stakeState?.errorMessages?.transferAmountErrorMsg && (
+                      <i className="bi bi-info-circle" />
+                    )}{" "}
+                    {stakeState?.errorMessages?.transferAmountErrorMsg}
+                  </small>
                 </div>
               </div>
               <div className="modal-footer ">

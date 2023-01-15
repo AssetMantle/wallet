@@ -41,7 +41,7 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
 
   const cumulativeUnbonding = errorUnbonding
     ? placeholderTotalUnbonding
-    : fromDenom(totalUnbondingAmount);
+    : totalUnbondingAmount;
   const unbondingDisplay = stakeState?.selectedValidators.length
     ? fromDenom(selectedUnbonding)
     : fromDenom(cumulativeUnbonding);
