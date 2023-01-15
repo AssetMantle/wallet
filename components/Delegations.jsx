@@ -9,6 +9,7 @@ import {
 import {
   fromDenom,
   sendUndelegation,
+  sendRedelegation,
   useAllValidators,
   useDelegatedValidators,
   useMntlUsd,
@@ -81,20 +82,18 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
   const handleRedelegate = async (e) => {
     // final form validation before txn is
     e.preventDefault();
-    stakeDispatch({
-      type: "SUBMIT_REDELEGATE",
-    });
-    // if (!stakeState.errorMessages) {
-    //   const { response, error } = await sendRedelegation(
-    //     address,
-    //     stakeState?.redelegationSrc,
-    //     stakeState?.redelegationDestination,
-    //     stakeState?.redelegationAmount,
-    //     stakeState?.memo,
-    //     { getSigningStargateClient }
-    //   );
-    //   console.log("response: ", response, " error: ", error);
-    // }
+    stakeDispatch({ type: "SUBMIT_REDELEGATE" });
+    if (!stakeState.redelegationDestination.length == 0) {
+      const { response, error } = await sendRedelegation(
+        address,
+        stakeState?.redelegationSrc,
+        stakeState?.redelegationDestination,
+        stakeState?.redelegationAmount,
+        stakeState?.memo,
+        { getSigningStargateClient }
+      );
+      console.log("response: ", response, " error: ", error);
+    }
   };
   const handleUndelegate = async () => {
     const { response, error } = await sendUndelegation(

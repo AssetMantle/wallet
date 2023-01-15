@@ -327,12 +327,17 @@ const UseStakeReducer = () => {
                 "Please select a validator to redelegate to",
             },
           };
+        } else {
+          return {
+            ...state,
+            errorMessages: {},
+          };
         }
       }
     }
   };
   const [stakeState, stakeDispatch] = useReducer(stakeReducer, initialState);
-  console.log(stakeState);
+  // console.log(stakeState);
   return { stakeState, stakeDispatch };
 };
 
