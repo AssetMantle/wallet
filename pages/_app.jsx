@@ -24,9 +24,6 @@ function CreateCosmosApp({ Component, pageProps }) {
     console.log("leapwallets: ", leapwallets);
   }, []);
 
-  console.log("chains: ", chains);
-  console.log("assets: ", assets);
-
   const assetmantleChain = chains.find(
     (_chain) => _chain?.chain_name === "assetmantle"
   );
