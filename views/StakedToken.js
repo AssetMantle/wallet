@@ -5,6 +5,7 @@ import Rewards from "../components/Rewards";
 import Unbonded from "../components/Unbonded";
 import { defaultChainName, defaultChainSymbol } from "../config";
 import { fromDenom, sendDelegation, useAvailableBalance } from "../data";
+import { isObjEmpty } from "../lib";
 
 export default function StakedToken({
   totalTokens,
@@ -17,15 +18,19 @@ export default function StakedToken({
   const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status } = walletManager;
 
-  const handleStake = async (validator) => {
-    const { response, error } = await sendDelegation(
-      address,
-      stakeState?.delegationAddress,
-      stakeState?.delegationAmount,
-      stakeState?.memo,
-      { getSigningStargateClient }
-    );
-    console.log("response: ", response, " error: ", error);
+  const handleStakeSubmit = async (e) => {
+    e.preventDefault();
+    stakeDispatch({ type: "SUBMIT_DELEGATE" });
+    if (stakeState.delegationAmount.length != 0) {
+      const { response, error } = await sendDelegation(
+        address,
+        stakeState?.delegationAddress,
+        stakeState?.delegationAmount,
+        stakeState?.memo,
+        { getSigningStargateClient }
+      );
+      console.log("response: ", response, " error: ", error);
+    }
   };
 
   return (
@@ -157,9 +162,10 @@ export default function StakedToken({
               </div>
               <div className="modal-footer ">
                 <button
-                  onClick={() => {
-                    handleStake();
+                  onClick={(e) => {
+                    handleStakeSubmit(e);
                   }}
+                  disabled={!isObjEmpty(stakeState?.errorMessages)}
                   type="button"
                   className="button-primary px-5 py-2"
                 >

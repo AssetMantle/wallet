@@ -213,8 +213,11 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
                                     ele?.operatorAddress === item?.address
                                 )?.description?.moniker
                               }
+                              <i className="bi bi-arrow-up-right" />
                             </td>
-                            <td className="text-white">{item?.balance}</td>
+                            <td className="text-white">
+                              {fromDenom(item?.balance)}
+                            </td>
                             <td className="text-white">
                               {getTimeRemaining(item?.completion_time).days}{" "}
                               days,{" "}

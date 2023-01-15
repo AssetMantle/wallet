@@ -13,7 +13,9 @@ import {
   useAllValidators,
   useDelegatedValidators,
   useMntlUsd,
+  fromChainDenom,
 } from "../data";
+import { isObjEmpty } from "../lib";
 
 const denomDisplay = defaultChainSymbol;
 
@@ -67,7 +69,9 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
     errorMntlUsdValue | isNaN(totalDelegatedAmount) ||
     isNaN(parseFloat(mntlUsdValue))
       ? placeholderMntlUsdValue
-      : (totalDelegatedAmount * parseFloat(mntlUsdValue)).toFixed(6).toString();
+      : (fromChainDenom(totalDelegatedAmount) * parseFloat(mntlUsdValue))
+          .toFixed(6)
+          .toString();
 
   //Get number of validators delegated to out of selected validators
   const delegatedOutOfSelectedValidators = delegatedValidators?.filter((item) =>
@@ -95,15 +99,19 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
       console.log("response: ", response, " error: ", error);
     }
   };
-  const handleUndelegate = async () => {
-    const { response, error } = await sendUndelegation(
-      address,
-      stakeState?.undelegationSrc,
-      stakeState.undelegationAmount.toString(),
-      stakeState?.memo,
-      { getSigningStargateClient }
-    );
-    console.log("response:", response, "error:", error);
+  const handleUndelegate = async (e) => {
+    e.preventDefault();
+    stakeDispatch({ type: "SUBMIT_UNDELEGATE" });
+    if (stakeState.undelegationAmount != 0) {
+      const { response, error } = await sendUndelegation(
+        address,
+        stakeState?.undelegationSrc,
+        stakeState.undelegationAmount.toString(),
+        stakeState?.memo,
+        { getSigningStargateClient }
+      );
+      console.log("response:", response, "error:", error);
+    }
   };
 
   return (
@@ -266,8 +274,9 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
               </div>
               <div className="modal-footer ">
                 <button
-                  onClick={() => handleUndelegate()}
+                  onClick={(e) => handleUndelegate(e)}
                   type="button"
+                  disabled={!isObjEmpty(stakeState?.errorMessages)}
                   className="button-primary px-5 py-2"
                 >
                   Submit
@@ -583,6 +592,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                 <button
                   onClick={(e) => handleRedelegate(e)}
                   type="button"
+                  disabled={!isObjEmpty(stakeState?.errorMessages)}
                   className="button-primary px-5 py-2"
                 >
                   Submit

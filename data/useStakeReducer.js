@@ -129,9 +129,16 @@ const UseStakeReducer = () => {
         }
       }
       case "SET_MAX_UNDELEGATION_AMOUNT": {
-        const delegatedAmount = delegatedValidators?.find(
-          (item) => item?.operatorAddress === state?.selectedValidators[0]
-        )?.delegatedAmount;
+        let delegatedAmount;
+        if (state?.selectedValidators == 0) {
+          delegatedAmount = delegatedValidators?.find(
+            (item) => item?.operatorAddress === state?.undelegationSrc
+          )?.delegatedAmount;
+        } else {
+          delegatedAmount = delegatedValidators?.find(
+            (item) => item?.operatorAddress === state?.selectedValidators[0]
+          )?.delegatedAmount;
+        }
         if (
           isNaN(parseFloat(delegatedAmount)) ||
           parseFloat(delegatedAmount) < parseFloat(defaultChainGasFee)
@@ -256,6 +263,7 @@ const UseStakeReducer = () => {
         return {
           ...state,
           redelegationDestination: action.payload,
+          errorMessages: {},
         };
       }
       case "SET_REDELEGATION_SRC_ADDRESS": {
@@ -314,6 +322,7 @@ const UseStakeReducer = () => {
           return {
             ...state,
             redelegationAmount: action.payload,
+            errorMessages: {},
           };
         }
       }
@@ -325,6 +334,38 @@ const UseStakeReducer = () => {
               ...state.errorMessages,
               redelegationAmountErrorMsg:
                 "Please select a validator to redelegate to",
+            },
+          };
+        } else {
+          return {
+            ...state,
+            errorMessages: {},
+          };
+        }
+      }
+      case "SUBMIT_DELEGATE": {
+        if (!state.delegationAmount) {
+          return {
+            ...state,
+            errorMessages: {
+              ...state.errorMessages,
+              transferAmountErrorMsg: formConstants.requiredErrorMsg,
+            },
+          };
+        } else {
+          return {
+            ...state,
+            errorMessages: {},
+          };
+        }
+      }
+      case "SUBMIT_UNDELEGATE": {
+        if (!state.undelegationAmount) {
+          return {
+            ...state,
+            errorMessages: {
+              ...state.errorMessages,
+              undelegationAmountErrorMsg: formConstants.requiredErrorMsg,
             },
           };
         } else {
