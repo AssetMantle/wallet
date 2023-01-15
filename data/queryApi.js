@@ -1,21 +1,20 @@
 import { useChain } from "@cosmos-kit/react";
 import BigNumber from "bignumber.js";
-import { assets, chains } from "chain-registry";
+import { assets } from "chain-registry";
 import { cosmos } from "osmojs";
 import useSwr from "swr";
 import {
   defaultChainDenom,
   defaultChainDenomExponent,
   defaultChainName,
+  defaultChainRPCProxy,
   mntlUsdApi,
   placeholderAvailableBalance,
   placeholderMntlUsdValue,
 } from "../config";
 
 // get the rpc endpoint from the chain registry
-const rpcEndpoint = chains.find(
-  (_chain) => _chain?.chain_name === defaultChainName
-)?.apis?.rpc[0]?.address;
+const rpcEndpoint = defaultChainRPCProxy;
 
 console.log(JSON.stringify({ rpcEndpoint }));
 
