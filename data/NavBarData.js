@@ -28,7 +28,7 @@ export const NavBarData = {
     },
     {
       title: "Explorer",
-      href: "https://explorer.assetmantle.one/",
+      href: "https://explorer.testnet.assetmantle.one/",
       variant: "am-link",
       target: "_blank",
       icon: <i className="bi bi-book" />,

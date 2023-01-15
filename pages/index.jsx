@@ -19,7 +19,7 @@ import {
   toDenom,
   useAvailableBalance,
 } from "../data";
-import { isObjEmpty } from "../lib";
+import { isObjEmpty, shortenAddress } from "../lib";
 
 export default function Transact() {
   const [advanced, setAdvanced] = useState(false);
@@ -27,7 +27,7 @@ export default function Transact() {
   const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status } = walletManager;
 
-  const displayAddress = address ? address : placeholderAddress;
+  const displayAddress = address || placeholderAddress;
 
   const initialState = {
     recipientAddress: "",
@@ -475,15 +475,7 @@ export default function Transact() {
                 onClick={() => navigator.clipboard.writeText(displayAddress)}
                 style={{ wordBreak: "break-all" }}
               >
-                <Suspense fallback="Loading...">
-                  {`${displayAddress.substring(
-                    0,
-                    12
-                  )}.......${displayAddress.substring(
-                    displayAddress.length - 9,
-                    displayAddress.length
-                  )}`}
-                </Suspense>
+                {shortenAddress(displayAddress)}
                 <span className="text-primary">
                   <i className="bi bi-clipboard" />
                 </span>

@@ -16,8 +16,6 @@ import {
 // get the rpc endpoint from the chain registry
 const rpcEndpoint = defaultChainRPCProxy;
 
-console.log(JSON.stringify({ rpcEndpoint }));
-
 const denom = assets.find(
   (assetObj) => assetObj?.chain_name === defaultChainName
 )?.assets[0]?.base;

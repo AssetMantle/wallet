@@ -7,6 +7,8 @@ import { useEffect } from "react";
 import Layout from "../components/Layout";
 import {
   cosmostationWallets,
+  defaultChainGRPCProxy,
+  defaultChainName,
   defaultChainRESTProxy,
   defaultChainRPCProxy,
   defaultTheme,
@@ -21,6 +23,56 @@ function CreateCosmosApp({ Component, pageProps }) {
     require("bootstrap/dist/js/bootstrap.bundle.js");
     console.log("leapwallets: ", leapwallets);
   }, []);
+
+  console.log("chains: ", chains);
+  console.log("assets: ", assets);
+
+  const assetmantleChain = chains.find(
+    (_chain) => _chain?.chain_name === "assetmantle"
+  );
+
+  const assetmantleTestnetProps = {
+    apis: {
+      grpc: [{ address: defaultChainGRPCProxy, provider: "AssetMantle" }],
+      rest: [{ address: defaultChainRESTProxy, provider: "AssetMantle" }],
+      rpc: [{ address: defaultChainRPCProxy, provider: "AssetMantle" }],
+    },
+    bech32_prefix: "mantle",
+    chain_id: "test-mantle-2",
+    chain_name: "assetmantletestnet",
+    daemon_name: "mantelNode",
+    explorers: [
+      {
+        kind: "other",
+        tx_page:
+          "https://explorer.testnet.assetmantle.one/transactions/${txHash}",
+        url: "https://explorer.testnet.assetmantle.one",
+      },
+    ],
+    network_type: "testnet",
+    pretty_name: "AssetMantle Testnet",
+    slip44: 118,
+    status: "live",
+  };
+
+  const assetmantletestnet = {
+    ...assetmantleChain,
+    ...assetmantleTestnetProps,
+  };
+
+  // get the exact asset configuration of the default chain
+  let assetmantleAssets = assets.find(
+    (_asset) => _asset?.chain_name === "assetmantle"
+  );
+
+  // make changes pertaining to testnet
+  let assetmantletestnetAssets = {
+    ...assetmantleAssets,
+    chain_name: defaultChainName,
+  };
+
+  console.log("assetmantletestnetAssets: ", assetmantletestnetAssets);
+  console.log("assetmantletestnet: ", assetmantletestnet);
 
   return (
     <>
@@ -49,11 +101,11 @@ function CreateCosmosApp({ Component, pageProps }) {
 
       <ChakraProvider theme={defaultTheme}>
         <ChainProvider
-          chains={chains}
-          assetLists={assets}
+          chains={[...chains, assetmantletestnet]}
+          assetLists={[...assets, assetmantletestnetAssets]}
           wallets={[...keplrWallets, ...leapwallets, ...cosmostationWallets]}
           endpointOptions={{
-            assetmantle: {
+            assetmantletestnet: {
               rpc: [defaultChainRPCProxy],
               rest: [defaultChainRESTProxy],
             },

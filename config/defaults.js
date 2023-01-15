@@ -1,4 +1,4 @@
-export const defaultChainName = "assetmantle";
+export const defaultChainName = "assetmantletestnet";
 export const defaultChainSymbol = "$MNTL";
 export const defaultChainDenom = "umntl";
 export const defaultChainDenomExponent = 6;
@@ -8,3 +8,4 @@ export const defaultFeeAmount = "2000";
 export const defaultFeeGas = "86364";
 export const defaultChainRPCProxy = "https://rpc.testnet.assetmantle.one";
 export const defaultChainRESTProxy = "https://rest.testnet.assetmantle.one";
+export const defaultChainGRPCProxy = "https://grpc.testnet.assetmantle.one";
