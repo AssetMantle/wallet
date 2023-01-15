@@ -247,17 +247,17 @@ export const useTotalRewards = () => {
           delegatorAddress: address,
         });
       rewardsArray = rewards;
-      // let zeroBigNumber = new BigNumber("0");
+      let zeroBigNumber = new BigNumber("0");
 
       // reduce function to add up the BigNumber formats of individual reward values
       totalRewardsInWei = rewards.reduce(
         (accumulator, currentValue) =>
-          accumulator.plus(
-            new BigNumber(currentValue?.reward?.[0]?.amount) || 0
-          ),
-        new BigNumber("0")
+          currentValue?.reward?.[0]?.amount
+            ? accumulator.plus(new BigNumber(currentValue?.reward?.[0]?.amount))
+            : accumulator.plus(new BigNumber("0")),
+        zeroBigNumber
       );
-      console.log(totalRewardsInWei);
+
       // remove additional 18 decimal places to get the rewards in denom
       totalRewards = totalRewardsInWei
         .dividedToIntegerBy(BigNumber(10).exponentiatedBy(18))
