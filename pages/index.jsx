@@ -43,7 +43,10 @@ export default function Transact() {
       type: "SUBMIT",
     });
     console.log("inside handleSubmit()");
-    if (formState.errorMessages) {
+    if (
+      formState.recipientAddress.length != 0 ||
+      formState.transferAmount.length != 0
+    ) {
       const { response, error } = await sendTokensTxn(
         address,
         formState.recipientAddress,

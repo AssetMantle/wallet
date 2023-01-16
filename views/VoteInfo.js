@@ -28,7 +28,7 @@ const VoteInfo = () => {
         <div className="nav-bg rounded-4 d-flex flex-column p-3 gap-2 align-items-start">
           <p className="caption">Your Voting Power is </p>
           {totalDelegatedAmount && allValidators ? (
-            <p>{(totalDelegatedAmount * 100) / totalTokens}%</p>
+            <p>{((totalDelegatedAmount * 100) / totalTokens).toFixed(10)}%</p>
           ) : null}
           <br />
         </div>

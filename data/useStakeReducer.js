@@ -217,9 +217,16 @@ const UseStakeReducer = () => {
       }
 
       case "CHANGE_UNDELEGATION_AMOUNT": {
-        const delegatedAmount = delegatedValidators?.find(
-          (item) => item?.operatorAddress === state?.selectedValidators[0]
-        )?.delegatedAmount;
+        let delegatedAmount;
+        if (state?.selectedValidators == 0) {
+          delegatedAmount = delegatedValidators?.find(
+            (item) => item?.operatorAddress === state?.undelegationSrc
+          )?.delegatedAmount;
+        } else {
+          delegatedAmount = delegatedValidators?.find(
+            (item) => item?.operatorAddress === state?.selectedValidators[0]
+          )?.delegatedAmount;
+        }
 
         // if amount is greater than current balance, populate error message and update amount
         if (isNaN(toDenom(action.payload))) {

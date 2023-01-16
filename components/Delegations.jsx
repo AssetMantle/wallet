@@ -7,6 +7,7 @@ import {
   placeholderTotalDelegations,
 } from "../config";
 import {
+  fromChainDenom,
   fromDenom,
   sendUndelegation,
   sendRedelegation,
@@ -61,8 +62,8 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
 
   //Show total delegated amount if no validators selected or show cumulative delegated amount of selected validators
   const delegationsDisplay = stakeState?.selectedValidators?.length
-    ? fromDenom(selectedDelegations)
-    : fromDenom(cumulativeDelegations);
+    ? fromChainDenom(selectedDelegations)
+    : fromChainDenom(cumulativeDelegations);
 
   const delegationsInUSDDisplay =
     errorDelegatedAmount ||
@@ -563,16 +564,15 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                     {defaultChainSymbol}
                   </small>
                 </div>
-                <div>
-                  <div className="p-3 border-white py-2 d-flex rounded-2 gap-2 am-input ">
+                <div className="w-100">
+                  <div className="p-3 border-white py-2 d-flex rounded-2 gap-2 am-input">
                     <input
-                      className="bg-t"
+                      className="bg-t "
                       id="redelegationAmount"
                       style={{
                         flex: "1",
                         border: "none",
                         outline: "none",
-                        width: "100%",
                       }}
                       type="text"
                       value={stakeState?.redelegationAmount}

@@ -1,21 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import UseVoteReducer from "../data/useVoteReducer";
 import { IoRadioButtonOn } from "react-icons/io5";
 
 const ActiveProposals = ({ allProposals }) => {
   const [onVoteHover, setOnVoteHover] = useState(null);
   const { voteState, voteDispatch } = UseVoteReducer();
-  const [anyActiveProposals, setAnyActiveProposals] = useState(false);
-
-  useEffect(() => {
-    allProposals?.filter((item) => item?.status !== 3)?.length
-      ? setAnyActiveProposals(true)
-      : setAnyActiveProposals(false);
-  }, []);
+  console.log(allProposals?.filter((item) => item?.status !== 3)?.length);
 
   return (
     <>
-      {!anyActiveProposals ? (
+      {allProposals?.filter((item) => item?.status !== 3)?.length ? (
         allProposals
           ?.filter((item) => item?.status !== 3)
           ?.map((proposal, index) => (
@@ -39,27 +33,6 @@ const ActiveProposals = ({ allProposals }) => {
                   <div className="d-flex justify-content-between gap-3 pb-2">
                     <h4 className="d-flex gap-1 align-items-center body2 text-primary">
                       {proposal?.proposal_id}{" "}
-                      {/* {proposal.idIcon ? (
-              <span
-                className={
-                  {
-                    1: "text-success",
-                    2: "text-error",
-                    3: "text-gray",
-                  }[proposal.idIcon]
-                }
-              >
-                {
-                  {
-                    1: <BsFillCheckCircleFill />,
-                    2: <BsFillXCircleFill />,
-                    3: <BsDashCircleFill />,
-                  }[proposal.idIcon]
-                }
-              </span>
-            ) : (
-              ""
-            )} */}
                     </h4>
                     {proposal?.content?.type && (
                       <div

@@ -1,4 +1,5 @@
 export const defaultChainName = "assetmantle";
+export const gravityChainName = "gravitybridge";
 export const defaultChainSymbol = "$MNTL";
 export const defaultChainDenom = "umntl";
 export const defaultChainDenomExponent = 6;
