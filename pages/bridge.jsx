@@ -20,6 +20,7 @@ import {
 } from "../data";
 import { shortenAddress } from "../lib/basicBlockchain";
 import { useWeb3Modal } from "@web3modal/react";
+import Head from "next/head";
 
 export default function Bridge() {
   // commons
