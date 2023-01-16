@@ -5,6 +5,7 @@ import {
   placeholderTotalUnbonding,
 } from "../config";
 import {
+  fromChainDenom,
   fromDenom,
   useDelegatedValidators,
   useMntlUsd,
@@ -43,8 +44,8 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
     ? placeholderTotalUnbonding
     : totalUnbondingAmount;
   const unbondingDisplay = stakeState?.selectedValidators.length
-    ? fromDenom(selectedUnbonding)
-    : fromDenom(cumulativeUnbonding);
+    ? fromChainDenom(selectedUnbonding)
+    : fromChainDenom(cumulativeUnbonding);
 
   const unbondingInUSDDisplay =
     errorUnbonding ||

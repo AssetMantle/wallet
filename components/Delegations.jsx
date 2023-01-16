@@ -7,13 +7,13 @@ import {
   placeholderTotalDelegations,
 } from "../config";
 import {
+  fromChainDenom,
   fromDenom,
-  sendUndelegation,
   sendRedelegation,
+  sendUndelegation,
   useAllValidators,
   useDelegatedValidators,
   useMntlUsd,
-  fromChainDenom,
 } from "../data";
 import { isObjEmpty } from "../lib";
 
@@ -62,7 +62,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
   //Show total delegated amount if no validators selected or show cumulative delegated amount of selected validators
   const delegationsDisplay = stakeState?.selectedValidators?.length
     ? fromChainDenom(selectedDelegations)
-    : fromDenom(cumulativeDelegations);
+    : fromChainDenom(cumulativeDelegations);
 
   const delegationsInUSDDisplay =
     errorDelegatedAmount ||
@@ -497,7 +497,23 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                     />
                                   </td>
                                   <td>{index + 1}</td>
-
+                                  <td>
+                                    <div
+                                      className="d-flex position-relative rounded-circle"
+                                      style={{
+                                        width: "25px",
+                                        aspectRatio: "1/1",
+                                      }}
+                                    >
+                                      <img
+                                        layout="fill"
+                                        alt={item?.description?.moniker}
+                                        className="rounded-circle"
+                                        src={`/validatoravatars/${item?.operator_address}.png`}
+                                        // onError={(e) => (e.target.src = "/favicon.png")}
+                                      />
+                                    </div>
+                                  </td>
                                   <td>{item?.description?.moniker}</td>
                                   <td>
                                     {(

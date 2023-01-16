@@ -1,4 +1,3 @@
-import Image from "next/image";
 import React from "react";
 
 export default function ICTransactionInfo({
@@ -42,11 +41,7 @@ export default function ICTransactionInfo({
               className="position-relative"
               style={{ width: "20px", aspectRatio: "1/1" }}
             >
-              <Image
-                layout="fill"
-                src={ChainImage(chainForm)}
-                alt={chainForm}
-              />
+              <img layout="fill" src={ChainImage(chainForm)} alt={chainForm} />
             </div>
             <p className="caption2 text-primary">{chainForm}</p>
           </div>
@@ -67,7 +62,7 @@ export default function ICTransactionInfo({
               className="position-relative"
               style={{ width: "20px", aspectRatio: "1/1" }}
             >
-              <Image layout="fill" src={ChainImage(chainTo)} alt={chainTo} />
+              <img layout="fill" src={ChainImage(chainTo)} alt={chainTo} />
             </div>
             <p className="caption2 text-primary">{chainTo}</p>
           </div>

@@ -4,7 +4,8 @@ import {
   modalConnectors,
   walletConnectProvider,
 } from "@web3modal/ethereum";
-import { Web3Modal } from "@web3modal/react";
+import { useWeb3Modal, Web3Modal } from "@web3modal/react";
+import Head from "next/head";
 import Image from "next/image";
 import React, { useState } from "react";
 import { configureChains, createClient } from "wagmi";
@@ -19,7 +20,7 @@ import {
   useAvailableBalance,
 } from "../data";
 import { shortenAddress } from "../lib/basicBlockchain";
-import { useWeb3Modal } from "@web3modal/react";
+import MntlToGravityBridge from "../views/MntlToGravityBridge";
 
 export default function Bridge() {
   // commons
@@ -135,11 +136,7 @@ export default function Bridge() {
             className="position-relative"
             style={{ width: "21px", aspectRatio: "1/1" }}
           >
-            <Image
-              src="/chainLogos/mntl.webp"
-              alt="AssetMantle"
-              layout="fill"
-            />
+            <img src="/chainLogos/mntl.webp" alt="AssetMantle" layout="fill" />
           </div>
           <h5 className="caption2 text-primary">MNTL</h5>
         </div>
@@ -383,6 +380,9 @@ export default function Bridge() {
 
   return (
     <>
+      <Head>
+        <title>Bridge | MantleWallet</title>
+      </Head>
       <main className="row h-100">
         <ScrollableSectionContainer className="col-12 col-lg-8">
           <section className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-3 transitionAll">
@@ -392,7 +392,7 @@ export default function Bridge() {
               </div>
             </nav>
             <div className="nav-bg d-flex flex-column gap-3 rounded-4 p-3">
-              {mntlToGravityJSX}
+              <MntlToGravityBridge />
               {gravityToEthJSX}
               {ethToPolygonJSX}
               {polytonToEthJSX}
