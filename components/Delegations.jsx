@@ -87,7 +87,10 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
     // final form validation before txn is
     e.preventDefault();
     stakeDispatch({ type: "SUBMIT_REDELEGATE" });
-    if (!stakeState.redelegationDestination.length == 0) {
+    if (
+      stakeState.redelegationDestination.length != 0 &&
+      stakeState.redelegationAmount.length != 0
+    ) {
       const { response, error } = await sendRedelegation(
         address,
         stakeState?.redelegationSrc,
@@ -120,7 +123,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
     // console.log("e: ", e);
     e.target.src = "/validatorAvatars/alt.png";
   };
-  console.log(validatorsArray);
+
   return (
     <>
       {stakeState?.selectedValidators?.length ? (
