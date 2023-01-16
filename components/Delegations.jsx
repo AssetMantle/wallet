@@ -509,7 +509,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                         layout="fill"
                                         alt={item?.description?.moniker}
                                         className="rounded-circle"
-                                        src={`/validatoravatars/${item?.operator_address}.png`}
+                                        src={`/validatorAvatars/${item?.operator_address}.png`}
                                         // onError={(e) => (e.target.src = "/favicon.png")}
                                       />
                                     </div>
