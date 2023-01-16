@@ -4,7 +4,8 @@ import {
   modalConnectors,
   walletConnectProvider,
 } from "@web3modal/ethereum";
-import { Web3Modal } from "@web3modal/react";
+import { useWeb3Modal, Web3Modal } from "@web3modal/react";
+import Head from "next/head";
 import Image from "next/image";
 import React, { useState } from "react";
 import { configureChains, createClient } from "wagmi";
@@ -19,7 +20,7 @@ import {
   useAvailableBalance,
 } from "../data";
 import { shortenAddress } from "../lib/basicBlockchain";
-import { useWeb3Modal } from "@web3modal/react";
+import MntlToGravityBridge from "../views/MntlToGravityBridge";
 
 export default function Bridge() {
   // commons
@@ -391,7 +392,7 @@ export default function Bridge() {
               </div>
             </nav>
             <div className="nav-bg d-flex flex-column gap-3 rounded-4 p-3">
-              {mntlToGravityJSX}
+              <MntlToGravityBridge />
               {gravityToEthJSX}
               {ethToPolygonJSX}
               {polytonToEthJSX}

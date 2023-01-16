@@ -7,13 +7,13 @@ import {
   placeholderTotalDelegations,
 } from "../config";
 import {
+  fromChainDenom,
   fromDenom,
-  sendUndelegation,
   sendRedelegation,
+  sendUndelegation,
   useAllValidators,
   useDelegatedValidators,
   useMntlUsd,
-  fromChainDenom,
 } from "../data";
 import { isObjEmpty } from "../lib";
 
@@ -61,8 +61,8 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
 
   //Show total delegated amount if no validators selected or show cumulative delegated amount of selected validators
   const delegationsDisplay = stakeState?.selectedValidators?.length
-    ? fromDenom(selectedDelegations)
-    : fromDenom(cumulativeDelegations);
+    ? fromChainDenom(selectedDelegations)
+    : fromChainDenom(cumulativeDelegations);
 
   const delegationsInUSDDisplay =
     errorDelegatedAmount ||

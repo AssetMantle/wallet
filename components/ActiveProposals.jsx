@@ -39,27 +39,6 @@ const ActiveProposals = ({ allProposals }) => {
                   <div className="d-flex justify-content-between gap-3 pb-2">
                     <h4 className="d-flex gap-1 align-items-center body2 text-primary">
                       {proposal?.proposal_id}{" "}
-                      {/* {proposal.idIcon ? (
-              <span
-                className={
-                  {
-                    1: "text-success",
-                    2: "text-error",
-                    3: "text-gray",
-                  }[proposal.idIcon]
-                }
-              >
-                {
-                  {
-                    1: <BsFillCheckCircleFill />,
-                    2: <BsFillXCircleFill />,
-                    3: <BsDashCircleFill />,
-                  }[proposal.idIcon]
-                }
-              </span>
-            ) : (
-              ""
-            )} */}
                     </h4>
                     {proposal?.content?.type && (
                       <div

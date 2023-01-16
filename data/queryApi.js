@@ -58,7 +58,10 @@ export const fromChainDenom = (
   // show balance in display values by exponentiating it
   const valueBigNumber = new BigNumber(value?.toString() || 0);
   if (BigNumber.isBigNumber(valueBigNumber)) {
-    amount = valueBigNumber.multipliedBy(10 ** -exp).toString();
+    amount = valueBigNumber
+      .multipliedBy(10 ** -exp)
+      .toFixed(exp)
+      .toString();
   } else {
     return "-1";
   }
@@ -84,7 +87,10 @@ export const toChainDenom = (
   // show balance in display values by exponentiating it
   const valueBigNumber = new BigNumber(value.toString() || 0);
   if (BigNumber.isBigNumber(valueBigNumber)) {
-    amount = valueBigNumber.multipliedBy(10 ** exp).toString();
+    amount = valueBigNumber
+      .multipliedBy(10 ** exp)
+      .toFixed(0)
+      .toString();
   } else {
     return "-1";
   }
