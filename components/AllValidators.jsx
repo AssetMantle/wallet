@@ -54,7 +54,11 @@ const AllValidators = ({
                       layout="fill"
                       alt={item?.description?.moniker}
                       className="rounded-circle"
-                      src={`/validatoravatars/${item?.operatorAddress}.png`}
+                      src={
+                        item?.description?.moniker.includes("Strata")
+                          ? `/validatorAvatars/${item?.operatorAddress}.jpg`
+                          : `/validatorAvatars/${item?.operatorAddress}.png`
+                      }
                       // onError={() => setSrc("/favicon.png")}
                     />
                   </div>
@@ -115,7 +119,11 @@ const AllValidators = ({
                       layout="fill"
                       alt={item?.description?.moniker}
                       className="rounded-circle"
-                      src={`/validatoravatars/${item?.operatorAddress}.png`}
+                      src={
+                        item?.description?.moniker.includes("Strata")
+                          ? `/validatorAvatars/${item?.operatorAddress}.jpg`
+                          : `/validatorAvatars/${item?.operatorAddress}.png`
+                      }
                       // onError={() => setSrc("/favicon.png")}
                     />
                   </div>
