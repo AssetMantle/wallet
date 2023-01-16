@@ -1,21 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import UseVoteReducer from "../data/useVoteReducer";
 import { IoRadioButtonOn } from "react-icons/io5";
 
 const ActiveProposals = ({ allProposals }) => {
   const [onVoteHover, setOnVoteHover] = useState(null);
   const { voteState, voteDispatch } = UseVoteReducer();
-  const [anyActiveProposals, setAnyActiveProposals] = useState(false);
-
-  useEffect(() => {
-    allProposals?.filter((item) => item?.status !== 3)?.length
-      ? setAnyActiveProposals(true)
-      : setAnyActiveProposals(false);
-  }, []);
+  console.log(allProposals?.filter((item) => item?.status !== 3)?.length);
 
   return (
     <>
-      {!anyActiveProposals ? (
+      {allProposals?.filter((item) => item?.status !== 3)?.length ? (
         allProposals
           ?.filter((item) => item?.status !== 3)
           ?.map((proposal, index) => (

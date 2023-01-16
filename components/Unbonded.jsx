@@ -55,20 +55,7 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
           .toFixed(6)
           .toString();
 
-  function getTimeRemaining(endtime) {
-    const total = Date.parse(endtime) - Date.parse(new Date());
-    const seconds = Math.floor((total / 1000) % 60);
-    const minutes = Math.floor((total / 1000 / 60) % 60);
-    const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
-    const days = Math.floor(total / (1000 * 60 * 60 * 24));
-    return {
-      total,
-      days,
-      hours,
-      minutes,
-      seconds,
-    };
-  }
+  const secondsInADay = 86400;
 
   return (
     <div className="nav-bg p-3 rounded-4 gap-3">
@@ -219,9 +206,25 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
                               {fromDenom(item?.balance)}
                             </td>
                             <td className="text-white">
-                              {getTimeRemaining(item?.completion_time).days}{" "}
+                              {/* Calculate and display number of days left */}
+                              {Math.floor(
+                                ((item?.completion_time?.seconds?.low +
+                                  item?.completion_time?.seconds?.high) *
+                                  1000 -
+                                  new Date().getTime()) /
+                                  1000 /
+                                  60 /
+                                  60 /
+                                  24
+                              )}{" "}
                               days,{" "}
-                              {getTimeRemaining(item?.completion_time).hours}{" "}
+                              {/* Calculate and display number of hours left */}
+                              {(
+                                ((item?.completion_time?.seconds?.low +
+                                  item?.completion_time?.seconds?.high) %
+                                  86400) /
+                                3600
+                              ).toFixed(2)}{" "}
                               hours
                             </td>
                           </tr>
