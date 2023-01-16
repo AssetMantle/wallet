@@ -1,6 +1,6 @@
 import { Icon, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import { WalletStatus } from "@cosmos-kit/core";
-import Image from "next/image";
+// import Image from "next/image";
 import { FiAlertTriangle } from "react-icons/fi";
 
 /* export const ConnectWalletButton = ({
@@ -87,7 +87,7 @@ export const ConnectWalletButton = ({
               className="position-relative rounded-circle"
               style={{ width: "20px", aspectRatio: "1/1" }}
             >
-              <Image
+              <img
                 layout="fill"
                 className="rounded-circle"
                 src={icon}
