@@ -135,7 +135,11 @@ export default function Bridge() {
             className="position-relative"
             style={{ width: "21px", aspectRatio: "1/1" }}
           >
-            <img src="/chainLogos/mntl.webp" alt="AssetMantle" layout="fill" />
+            <img
+              src="/chainLogos/mntl.webp"
+              alt="AssetMantle logo"
+              layout="fill"
+            />
           </div>
           <h5 className="caption2 text-primary">MNTL</h5>
         </div>
