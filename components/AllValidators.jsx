@@ -9,6 +9,12 @@ const AllValidators = ({
   stakeDispatch,
   totalTokens,
 }) => {
+  // controller for onError
+  const handleOnError = (e) => {
+    e.preventDefault();
+    // console.log("e: ", e);
+    e.target.src = "/validatorAvatars/alt.png";
+  };
   return (
     <>
       {activeValidators
@@ -54,12 +60,8 @@ const AllValidators = ({
                       layout="fill"
                       alt={item?.description?.moniker}
                       className="rounded-circle"
-                      src={
-                        item?.description?.moniker.includes("Strata")
-                          ? `/validatorAvatars/${item?.operatorAddress}.jpg`
-                          : `/validatorAvatars/${item?.operatorAddress}.png`
-                      }
-                      // onError={() => setSrc("/favicon.png")}
+                      src={`/validatorAvatars/${item?.operatorAddress}.png`}
+                      onError={handleOnError}
                     />
                   </div>
                 </td>
@@ -119,12 +121,8 @@ const AllValidators = ({
                       layout="fill"
                       alt={item?.description?.moniker}
                       className="rounded-circle"
-                      src={
-                        item?.description?.moniker.includes("Strata")
-                          ? `/validatorAvatars/${item?.operatorAddress}.jpg`
-                          : `/validatorAvatars/${item?.operatorAddress}.png`
-                      }
-                      // onError={() => setSrc("/favicon.png")}
+                      src={`/validatorAvatars/${item?.operatorAddress}.png`}
+                      onError={handleOnError}
                     />
                   </div>
                 </td>

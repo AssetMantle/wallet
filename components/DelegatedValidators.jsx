@@ -15,6 +15,13 @@ const DelegatedValidators = ({
     isLoadingDelegatedAmount,
     errorDelegatedAmount,
   } = useDelegatedValidators();
+
+  // controller for onError
+  const handleOnError = (e) => {
+    e.preventDefault();
+    // console.log("e: ", e);
+    e.target.src = "/validatorAvatars/alt.png";
+  };
   return (
     <>
       {activeValidators
@@ -55,12 +62,8 @@ const DelegatedValidators = ({
                       alt={item?.description?.moniker}
                       className="rounded-circle"
                       layout="fill"
-                      src={
-                        item?.description?.moniker.includes("Strata")
-                          ? `/validatorAvatars/${item?.operatorAddress}.jpg`
-                          : `/validatorAvatars/${item?.operatorAddress}.png`
-                      }
-                      onError={(e) => console.log(e)}
+                      src={`/validatorAvatars/${item?.operatorAddress}.png`}
+                      onError={handleOnError}
                     />
                   </div>
                 </td>
@@ -114,12 +117,8 @@ const DelegatedValidators = ({
                       alt={item?.description?.moniker}
                       className="rounded-circle"
                       layout="fill"
-                      src={
-                        item?.description?.moniker.includes("Strata")
-                          ? `/validatorAvatars/${item?.operatorAddress}.jpg`
-                          : `/validatorAvatars/${item?.operatorAddress}.png`
-                      }
-                      onError={(e) => console.log(e)}
+                      src={`/validatorAvatars/${item?.operatorAddress}.png`}
+                      onError={handleOnError}
                     />
                   </div>
                 </td>
