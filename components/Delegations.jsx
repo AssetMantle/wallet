@@ -114,6 +114,13 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
     }
   };
 
+  // controller for onError
+  const handleOnError = (e) => {
+    e.preventDefault();
+    // console.log("e: ", e);
+    e.target.src = "/validatorAvatars/alt.png";
+  };
+  console.log(validatorsArray);
   return (
     <>
       {stakeState?.selectedValidators?.length ? (
@@ -405,23 +412,21 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                       <thead className="bt-0">
                         <tr>
                           <th></th>
-                          <th className="text-white no-text-wrap" scope="col">
+                          <th className="text-white text-wrap " scope="col">
                             Rank
                           </th>
-                          <th className="text-white no-text-wrap" scope="col">
+                          <th></th>
+                          <th className="text-white text-wrap " scope="col">
                             Validator Name
                           </th>
-                          <th className="text-white no-text-wrap" scope="col">
+                          <th className="text-white text-wrap " scope="col">
                             Voting Power
                           </th>
-                          <th className="text-white no-text-wrap" scope="col">
+                          <th className="text-white text-wrap " scope="col">
                             Commission
                           </th>
-                          <th className="text-white no-text-wrap" scope="col">
+                          <th className="text-white text-wrap " scope="col">
                             Delegations
-                          </th>
-                          <th className="text-white no-text-wrap" scope="col">
-                            Delegated Amt
                           </th>
                         </tr>
                       </thead>
@@ -450,6 +455,24 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                     />
                                   </td>
                                   <td>{index + 1}</td>
+                                  <td>
+                                    {" "}
+                                    <div
+                                      className="d-flex position-relative rounded-circle"
+                                      style={{
+                                        width: "25px",
+                                        aspectRatio: "1/1",
+                                      }}
+                                    >
+                                      <img
+                                        layout="fill"
+                                        alt={item?.description?.moniker}
+                                        className="rounded-circle"
+                                        src={`/validatorAvatars/${item?.operatorAddress}.png`}
+                                        onError={handleOnError}
+                                      />
+                                    </div>
+                                  </td>
                                   <td>{item?.description?.moniker}</td>
                                   <td>
                                     {(
@@ -509,8 +532,8 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                         layout="fill"
                                         alt={item?.description?.moniker}
                                         className="rounded-circle"
-                                        src={`/validatorAvatars/${item?.operator_address}.png`}
-                                        // onError={(e) => (e.target.src = "/favicon.png")}
+                                        src={`/validatorAvatars/${item?.operatorAddress}.png`}
+                                        onError={handleOnError}
                                       />
                                     </div>
                                   </td>
