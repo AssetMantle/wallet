@@ -350,6 +350,14 @@ const useStakeReducer = () => {
                 "Please select a validator to redelegate to",
             },
           };
+        } else if (!state.redelegationAmount) {
+          return {
+            ...state,
+            errorMessages: {
+              ...state.errorMessages,
+              redelegationAmountErrorMsg: formConstants.requiredErrorMsg,
+            },
+          };
         } else {
           return {
             ...state,
