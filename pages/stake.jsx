@@ -6,6 +6,7 @@ import { useAllValidators } from "../data";
 import useStakeReducer from "../data/useStakeReducer";
 import StakedToken from "../views/StakedToken";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
+import Head from "next/head";
 
 export default function Stake() {
   const [searchValue, setSearchValue] = useState("");
@@ -58,6 +59,9 @@ export default function Stake() {
 
   return (
     <>
+      <Head>
+        <title>Stake | MantleWallet</title>
+      </Head>
       <section className="row h-100">
         <div className="col-12 col-lg-8 h-100">
           <div

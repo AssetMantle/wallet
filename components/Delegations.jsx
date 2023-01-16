@@ -497,7 +497,23 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                     />
                                   </td>
                                   <td>{index + 1}</td>
-
+                                  <td>
+                                    <div
+                                      className="d-flex position-relative rounded-circle"
+                                      style={{
+                                        width: "25px",
+                                        aspectRatio: "1/1",
+                                      }}
+                                    >
+                                      <img
+                                        layout="fill"
+                                        alt={item?.description?.moniker}
+                                        className="rounded-circle"
+                                        src={`/validatoravatars/${item?.operator_address}.png`}
+                                        // onError={(e) => (e.target.src = "/favicon.png")}
+                                      />
+                                    </div>
+                                  </td>
                                   <td>{item?.description?.moniker}</td>
                                   <td>
                                     {(

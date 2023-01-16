@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 
 export default function ChooseOption({
   ExistingWallet,
@@ -62,7 +61,7 @@ export default function ChooseOption({
                     className="position-relative"
                     style={{ width: "28px", aspectRatio: "1/1" }}
                   >
-                    <Image layout="fill" src={wallet.icon} alt={wallet.name} />
+                    <img layout="fill" src={wallet.icon} alt={wallet.name} />
                   </div>
                 </button>
               ))
@@ -80,7 +79,7 @@ export default function ChooseOption({
               className="position-relative"
               style={{ width: "28px", aspectRatio: "1/1" }}
             >
-              <Image layout="fill" src={Ledger.icon} alt={Ledger.name} />
+              <img layout="fill" src={Ledger.icon} alt={Ledger.name} />
             </div>
           </button>
         </div>
@@ -96,7 +95,7 @@ export default function ChooseOption({
               className="position-relative"
               style={{ width: "28px", aspectRatio: "1/1" }}
             >
-              <Image layout="fill" src={Keystore.icon} alt={Keystore.name} />
+              <img layout="fill" src={Keystore.icon} alt={Keystore.name} />
             </div>
           </button>
         </div>

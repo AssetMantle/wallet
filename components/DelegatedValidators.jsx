@@ -1,4 +1,3 @@
-import Image from "next/image";
 import React from "react";
 import { useDelegatedValidators } from "../data";
 
@@ -52,7 +51,7 @@ const DelegatedValidators = ({
                     className="d-flex position-relative rounded-circle gap-1"
                     style={{ width: "25px", aspectRatio: "1/1" }}
                   >
-                    <Image
+                    <img
                       alt={item?.description?.moniker}
                       className="rounded-circle"
                       layout="fill"
@@ -107,7 +106,7 @@ const DelegatedValidators = ({
                     className="d-flex position-relative rounded-circle"
                     style={{ width: "25px", aspectRatio: "1/1" }}
                   >
-                    <Image
+                    <img
                       alt={item?.description?.moniker}
                       className="rounded-circle"
                       layout="fill"

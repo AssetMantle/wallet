@@ -1,4 +1,3 @@
-import Image from "next/image";
 import React, { useState } from "react";
 // import ModalContainer from "../../components/ModalContainer";
 
@@ -100,7 +99,7 @@ const ConnectModal = ({ isOpen, setOpen, walletRepo, theme }) => {
                       className="position-relative"
                       style={{ width: "25px", aspectRatio: "1/1" }}
                     >
-                      <Image
+                      <img
                         layout="fill"
                         src={
                           ConnectOptionObject[

@@ -135,11 +135,7 @@ export default function Bridge() {
             className="position-relative"
             style={{ width: "21px", aspectRatio: "1/1" }}
           >
-            <Image
-              src="/chainLogos/mntl.webp"
-              alt="AssetMantle"
-              layout="fill"
-            />
+            <img src="/chainLogos/mntl.webp" alt="AssetMantle" layout="fill" />
           </div>
           <h5 className="caption2 text-primary">MNTL</h5>
         </div>
@@ -383,6 +379,9 @@ export default function Bridge() {
 
   return (
     <>
+      <Head>
+        <title>Bridge | MantleWallet</title>
+      </Head>
       <main className="row h-100">
         <ScrollableSectionContainer className="col-12 col-lg-8">
           <section className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-3 transitionAll">
