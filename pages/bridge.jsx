@@ -5,7 +5,6 @@ import {
   walletConnectProvider,
 } from "@web3modal/ethereum";
 import { useWeb3Modal, Web3Modal } from "@web3modal/react";
-import Head from "next/head";
 import Image from "next/image";
 import React, { useState } from "react";
 import { configureChains, createClient } from "wagmi";
@@ -380,9 +379,6 @@ export default function Bridge() {
 
   return (
     <>
-      <Head>
-        <title>Bridge | MantleWallet</title>
-      </Head>
       <main className="row h-100">
         <ScrollableSectionContainer className="col-12 col-lg-8">
           <section className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-3 transitionAll">
