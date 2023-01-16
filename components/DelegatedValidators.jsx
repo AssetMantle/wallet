@@ -55,7 +55,11 @@ const DelegatedValidators = ({
                       alt={item?.description?.moniker}
                       className="rounded-circle"
                       layout="fill"
-                      src={`/validatoravatars/${item?.operatorAddress}.png`}
+                      src={
+                        item?.description?.moniker.includes("Strata")
+                          ? `/validatorAvatars/${item?.operatorAddress}.jpg`
+                          : `/validatorAvatars/${item?.operatorAddress}.png`
+                      }
                       onError={(e) => console.log(e)}
                     />
                   </div>
@@ -110,7 +114,11 @@ const DelegatedValidators = ({
                       alt={item?.description?.moniker}
                       className="rounded-circle"
                       layout="fill"
-                      src={`/validatoravatars/${item?.operatorAddress}.png`}
+                      src={
+                        item?.description?.moniker.includes("Strata")
+                          ? `/validatorAvatars/${item?.operatorAddress}.jpg`
+                          : `/validatorAvatars/${item?.operatorAddress}.png`
+                      }
                       onError={(e) => console.log(e)}
                     />
                   </div>
