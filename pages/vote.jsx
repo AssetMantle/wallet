@@ -28,6 +28,7 @@ export default function Vote() {
     console.log("response: ", response, " error: ", error);
   };
   const [ShowAdvanced, setShowAdvanced] = useState(false);
+  console.log(allProposals);
 
   return (
     <>

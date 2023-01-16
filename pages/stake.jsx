@@ -152,6 +152,7 @@ export default function Stake() {
                       <th scope="col" style={{ whiteSpace: "nowrap" }}>
                         Rank
                       </th>
+                      <th></th>
                       <th
                         colSpan="2"
                         scope="col"

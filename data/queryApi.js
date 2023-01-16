@@ -183,6 +183,7 @@ export const useTotalUnbonding = () => {
         await client.cosmos.staking.v1beta1.delegatorUnbondingDelegations({
           delegatorAddr: address,
         });
+      console.log(unbondingResponses);
 
       if (!unbondingResponses.length) {
         totalUnbondingAmount = 0;
