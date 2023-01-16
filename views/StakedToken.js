@@ -5,6 +5,7 @@ import Rewards from "../components/Rewards";
 import Unbonded from "../components/Unbonded";
 import { defaultChainName, defaultChainSymbol } from "../config";
 import { fromDenom, sendDelegation, useAvailableBalance } from "../data";
+import { isObjEmpty } from "../lib";
 
 export default function StakedToken({
   totalTokens,
@@ -17,15 +18,19 @@ export default function StakedToken({
   const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status } = walletManager;
 
-  const handleStake = async (validator) => {
-    const { response, error } = await sendDelegation(
-      address,
-      stakeState?.delegationAddress,
-      stakeState?.delegationAmount,
-      stakeState?.memo,
-      { getSigningStargateClient }
-    );
-    console.log("response: ", response, " error: ", error);
+  const handleStakeSubmit = async (e) => {
+    e.preventDefault();
+    stakeDispatch({ type: "SUBMIT_DELEGATE" });
+    if (stakeState.delegationAmount.length != 0) {
+      const { response, error } = await sendDelegation(
+        address,
+        stakeState?.delegationAddress,
+        stakeState?.delegationAmount,
+        stakeState?.memo,
+        { getSigningStargateClient }
+      );
+      console.log("response: ", response, " error: ", error);
+    }
   };
 
   return (
@@ -117,38 +122,50 @@ export default function StakedToken({
                     {defaultChainSymbol}
                   </small>
                 </div>
-                <div className="p-3 border-white py-2 d-flex rounded-2 gap-2 am-input">
-                  <input
-                    className="bg-t"
-                    id="delegationAmount"
-                    style={{ flex: "1", border: "none", outline: "none" }}
-                    type="text"
-                    value={stakeState?.delegationAmount}
-                    placeholder="Enter Delegation Amount"
-                    onChange={(e) =>
-                      stakeDispatch({
-                        type: "CHANGE_DELEGATION_AMOUNT",
-                        payload: e.target.value,
-                      })
-                    }
-                  ></input>
-                  <button
-                    onClick={() =>
-                      stakeDispatch({
-                        type: "SET_MAX_DELEGATION_AMOUNT",
-                      })
-                    }
-                    className="text-primary"
+                <div>
+                  <div className="p-3 border-white py-2 d-flex rounded-2 gap-2 am-input">
+                    <input
+                      className="bg-t"
+                      id="delegationAmount"
+                      style={{ flex: "1", border: "none", outline: "none" }}
+                      type="text"
+                      value={stakeState?.delegationAmount}
+                      placeholder="Enter Delegation Amount"
+                      onChange={(e) =>
+                        stakeDispatch({
+                          type: "CHANGE_DELEGATION_AMOUNT",
+                          payload: e.target.value,
+                        })
+                      }
+                    ></input>
+                    <button
+                      onClick={() =>
+                        stakeDispatch({
+                          type: "SET_MAX_DELEGATION_AMOUNT",
+                        })
+                      }
+                      className="text-primary"
+                    >
+                      Max
+                    </button>
+                  </div>
+                  <small
+                    id="amountInputErrorMsg"
+                    className="form-text text-danger d-flex align-items-center gap-1"
                   >
-                    Max
-                  </button>
+                    {stakeState?.errorMessages?.transferAmountErrorMsg && (
+                      <i className="bi bi-info-circle" />
+                    )}{" "}
+                    {stakeState?.errorMessages?.transferAmountErrorMsg}
+                  </small>
                 </div>
               </div>
               <div className="modal-footer ">
                 <button
-                  onClick={() => {
-                    handleStake();
+                  onClick={(e) => {
+                    handleStakeSubmit(e);
                   }}
+                  disabled={!isObjEmpty(stakeState?.errorMessages)}
                   type="button"
                   className="button-primary px-5 py-2"
                 >

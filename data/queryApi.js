@@ -56,7 +56,7 @@ export const fromChainDenom = (
     (unit) => unit.denom === coin.display
   )?.exponent;
   // show balance in display values by exponentiating it
-  const valueBigNumber = new BigNumber(value.toString() || 0);
+  const valueBigNumber = new BigNumber(value?.toString() || 0);
   if (BigNumber.isBigNumber(valueBigNumber)) {
     amount = valueBigNumber.multipliedBy(10 ** -exp).toString();
   } else {
@@ -177,6 +177,7 @@ export const useTotalUnbonding = () => {
         await client.cosmos.staking.v1beta1.delegatorUnbondingDelegations({
           delegatorAddr: address,
         });
+      console.log(unbondingResponses);
 
       if (!unbondingResponses.length) {
         totalUnbondingAmount = 0;
@@ -235,22 +236,32 @@ export const useTotalUnbonding = () => {
 export const useTotalRewards = () => {
   // get the connected wallet parameters from useChain hook
   const walletManager = useChain(defaultChainName);
-  const { walletStatus, address, currentWalletInfo } = walletManager;
+  const { address } = walletManager;
   const fetchTotalRewards = async (url) => {
     let totalRewards;
     let rewardsArray;
+    let totalRewardsInWei;
     try {
       const { rewards } =
         await client.cosmos.distribution.v1beta1.delegationTotalRewards({
           delegatorAddress: address,
         });
       rewardsArray = rewards;
-      totalRewards = rewards.reduce(
-        (total, currentValue) =>
-          parseFloat(total) + parseFloat(currentValue?.reward[0]?.amount) || 0,
-        0
+      let zeroBigNumber = new BigNumber("0");
+
+      // reduce function to add up the BigNumber formats of individual reward values
+      totalRewardsInWei = rewards.reduce(
+        (accumulator, currentValue) =>
+          currentValue?.reward?.[0]?.amount
+            ? accumulator.plus(new BigNumber(currentValue?.reward?.[0]?.amount))
+            : accumulator.plus(new BigNumber("0")),
+        zeroBigNumber
       );
-      console.log(rewardsArray);
+
+      // remove additional 18 decimal places to get the rewards in denom
+      totalRewards = totalRewardsInWei
+        .dividedToIntegerBy(BigNumber(10).exponentiatedBy(18))
+        .toString();
     } catch (error) {
       console.error(`swr fetcher error: ${url}`);
       console.log(error);
@@ -258,14 +269,15 @@ export const useTotalRewards = () => {
     }
     return { totalRewards, rewardsArray };
   };
+
   const { data: rewardsObject, error } = useSwr(
     address ? ["rewards", address] : null,
     fetchTotalRewards,
     {
       fallbackData: [
         {
-          validator_address: "validator",
-          reward: [{ denom: "umntl", amount: "amount" }],
+          totalRewards: "0",
+          rewardsArray: [{ denom: "umntl", amount: "0" }],
         },
       ],
 
@@ -273,6 +285,7 @@ export const useTotalRewards = () => {
       suspense: true,
     }
   );
+
   return {
     allRewards: rewardsObject.totalRewards,
     rewardsArray: rewardsObject.rewardsArray,
@@ -525,7 +538,7 @@ export const useAllValidators = () => {
       });
       allValidators = validators;
       // const iconUrlsArray = validators.map((validator, index) => {
-      //   return `https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/${validator.operator_address}.png`;
+      //   return `https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/${validator.operatorAddress}.png`;
       // });
       // const data = await fetch(iconUrlsArray);
       // console.log("data: ", data);
@@ -631,7 +644,7 @@ export const useAllProposals = () => {
       });
       allProposals = proposals;
       // const iconUrlsArray = validators.map((validator, index) => {
-      //   return `https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/${validator.operator_address}.png`;
+      //   return `https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/${validator.operatorAddress}.png`;
       // });
       // const data = await fetch(iconUrlsArray);
       // console.log("data: ", data);

@@ -1,5 +1,6 @@
 import { useChain } from "@cosmos-kit/react";
 import React, { useState } from "react";
+import BigNumber from "bignumber.js";
 import {
   defaultChainName,
   defaultChainSymbol,
@@ -7,7 +8,7 @@ import {
   placeholderRewards,
 } from "../config";
 import {
-  fromDenom,
+  fromChainDenom,
   sendRewardsBatched,
   useAllValidators,
   useDelegatedValidators,
@@ -19,43 +20,46 @@ const denomDisplay = defaultChainSymbol;
 
 const Rewards = ({ setShowClaimError, stakeState }) => {
   const walletManager = useChain(defaultChainName);
-  const {
-    delegatedValidators,
-    totalDelegatedAmount,
-    isLoadingDelegatedAmount,
-    errorDelegatedAmount,
-  } = useDelegatedValidators();
-  const { getSigningStargateClient, address, status } = walletManager;
+  const { delegatedValidators } = useDelegatedValidators();
+  const { getSigningStargateClient, address } = walletManager;
 
-  const { allRewards, rewardsArray, isLoadingRewards, errorRewards } =
-    useTotalRewards();
+  const { allRewards, rewardsArray, errorRewards } = useTotalRewards();
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
   const { allValidators, isLoadingValidators, errorValidators } =
     useAllValidators();
 
-  const selectedRewards = rewardsArray
+  // console.log({ allRewards, rewardsArray });
+
+  const selectedRewardsInWei = rewardsArray
     ?.filter((rewardObject) =>
-      stakeState?.selectedValidators?.includes(rewardObject.validator_address)
+      stakeState?.selectedValidators?.includes(rewardObject.validatorAddress)
     )
     .reduce(
       (accumulator, currentValue) =>
-        accumulator + parseFloat(currentValue?.reward[0]?.amount),
-      0
+        accumulator.plus(new BigNumber(currentValue?.reward?.[0]?.amount) || 0),
+      new BigNumber("0")
     );
+
+  const selectedRewards = selectedRewardsInWei
+    ?.dividedToIntegerBy(BigNumber(10).exponentiatedBy(18))
+    .toString();
+
   const cumulativeRewards = errorRewards
     ? placeholderRewards
-    : fromDenom(allRewards);
+    : fromChainDenom(allRewards);
 
   const rewardsDisplay = stakeState?.selectedValidators.length
-    ? fromDenom(selectedRewards)
+    ? fromChainDenom(selectedRewards)
     : cumulativeRewards;
+
+  // console.log("rewardsDisplay: ", rewardsDisplay);
 
   const rewardsInUSDDisplay =
     errorRewards ||
-    errorMntlUsdValue | isNaN(fromDenom(allRewards)) ||
+    errorMntlUsdValue | isNaN(fromChainDenom(allRewards)) ||
     isNaN(parseFloat(mntlUsdValue))
       ? placeholderMntlUsdValue
-      : (fromDenom(allRewards) * parseFloat(mntlUsdValue))
+      : (fromChainDenom(allRewards) * parseFloat(mntlUsdValue))
           .toFixed(6)
           .toString();
 
@@ -163,10 +167,11 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                 </h6>
                 <p className="body2 my-1">
                   {stakeState?.selectedValidators.length
-                    ? rewardsArray
+                    ? fromChainDenom(selectedRewards)
+                    : rewardsArray
                         ?.filter((item) =>
                           stakeState?.selectedValidators?.includes(
-                            item?.validator_address
+                            item?.validatorAddress
                           )
                         )
                         .reduce(
@@ -174,13 +179,7 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                             parseFloat(accumulator) +
                               parseFloat(currentValue?.reward[0]?.amount) || 0,
                           parseFloat(0)
-                        )
-                    : rewardsArray?.reduce(
-                        (accumulator, currentValue) =>
-                          parseFloat(accumulator) +
-                            parseFloat(currentValue?.reward[0]?.amount) || 0,
-                        parseFloat(0)
-                      )}{" "}
+                        )}{" "}
                   $MNTL
                 </p>
                 <p className="caption2 my-2 text-gray">Selected Validator</p>
@@ -225,13 +224,13 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                       {stakeState?.selectedValidators.length ? (
                         delegatedValidators?.filter((item) =>
                           stakeState?.selectedValidators.includes(
-                            item?.operator_address
+                            item?.operatorAddress
                           )
                         ).length ? (
                           delegatedValidators
                             ?.filter((item) =>
                               stakeState?.selectedValidators.includes(
-                                item?.operator_address
+                                item?.operatorAddress
                               )
                             )
                             .map((item, index) => (
@@ -239,20 +238,35 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                                 <td className="text-white">
                                   {item?.description?.moniker}
                                 </td>
-                                <td className="text-white">
-                                  {item?.commission?.commission_rates?.rate *
-                                    100}
-                                  %
-                                </td>
+                                {item?.commission?.commissionRates?.rate ==
+                                0 ? (
+                                  <td className="text-white">0 %</td>
+                                ) : (
+                                  <td className="text-white">
+                                    {item?.commission?.commissionRates?.rate.slice(
+                                      0,
+                                      -16
+                                    )}{" "}
+                                    %
+                                  </td>
+                                )}
                                 <td className="text-white">
                                   {item?.tokens / 1000000}
                                 </td>
                                 <td className="text-white">
-                                  {rewardsArray?.find(
-                                    (element) =>
-                                      element?.validator_address ===
-                                      item?.operator_address
-                                  )?.reward[0]?.amount / 1000000}
+                                  {fromChainDenom(
+                                    new BigNumber(
+                                      rewardsArray?.find(
+                                        (element) =>
+                                          element?.validatorAddress ===
+                                          item?.operatorAddress
+                                      )?.reward[0]?.amount
+                                    )
+                                      .dividedToIntegerBy(
+                                        BigNumber(10).exponentiatedBy(18)
+                                      )
+                                      .toString()
+                                  )}
                                 </td>
                               </tr>
                             ))
@@ -277,11 +291,19 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                               {item?.tokens / 1000000}
                             </td>
                             <td className="text-white">
-                              {rewardsArray?.find(
-                                (element) =>
-                                  element?.validator_address ===
-                                  item?.operator_address
-                              )?.reward[0]?.amount / 1000000}
+                              {fromChainDenom(
+                                new BigNumber(
+                                  rewardsArray?.find(
+                                    (element) =>
+                                      element?.validatorAddress ===
+                                      item?.operatorAddress
+                                  )?.reward[0]?.amount
+                                )
+                                  .dividedToIntegerBy(
+                                    BigNumber(10).exponentiatedBy(18)
+                                  )
+                                  .toString()
+                              )}
                             </td>
                           </tr>
                         ))

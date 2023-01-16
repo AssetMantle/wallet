@@ -41,7 +41,7 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
 
   const cumulativeUnbonding = errorUnbonding
     ? placeholderTotalUnbonding
-    : fromDenom(totalUnbondingAmount);
+    : totalUnbondingAmount;
   const unbondingDisplay = stakeState?.selectedValidators.length
     ? fromDenom(selectedUnbonding)
     : fromDenom(cumulativeUnbonding);
@@ -210,11 +210,14 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
                               {
                                 delegatedValidators?.find(
                                   (ele) =>
-                                    ele?.operator_address === item?.address
+                                    ele?.operatorAddress === item?.address
                                 )?.description?.moniker
                               }
+                              <i className="bi bi-arrow-up-right" />
                             </td>
-                            <td className="text-white">{item?.balance}</td>
+                            <td className="text-white">
+                              {fromDenom(item?.balance)}
+                            </td>
                             <td className="text-white">
                               {getTimeRemaining(item?.completion_time).days}{" "}
                               days,{" "}

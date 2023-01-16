@@ -8,17 +8,16 @@ const ActiveProposals = ({ allProposals }) => {
   const [anyActiveProposals, setAnyActiveProposals] = useState(false);
 
   useEffect(() => {
-    allProposals?.filter((item) => item?.status !== "PROPOSAL_STATUS_PASSED")
-      ?.length
+    allProposals?.filter((item) => item?.status !== 3)?.length
       ? setAnyActiveProposals(true)
       : setAnyActiveProposals(false);
   }, []);
 
   return (
     <>
-      {anyActiveProposals ? (
+      {!anyActiveProposals ? (
         allProposals
-          ?.filter((item) => item?.status !== "PROPOSAL_STATUS_PASSED")
+          ?.filter((item) => item?.status !== 3)
           ?.map((proposal, index) => (
             <div
               key={index}

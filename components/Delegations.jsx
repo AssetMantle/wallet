@@ -8,12 +8,14 @@ import {
 } from "../config";
 import {
   fromDenom,
-  sendRedelegation,
   sendUndelegation,
+  sendRedelegation,
   useAllValidators,
   useDelegatedValidators,
   useMntlUsd,
+  fromChainDenom,
 } from "../data";
+import { isObjEmpty } from "../lib";
 
 const denomDisplay = defaultChainSymbol;
 
@@ -44,9 +46,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
   //Create array of validators selected from list
   const selectedDelegations = delegatedValidators
     ?.filter((delegatedObject) =>
-      stakeState?.selectedValidators?.includes(
-        delegatedObject?.operator_address
-      )
+      stakeState?.selectedValidators?.includes(delegatedObject?.operatorAddress)
     )
     .reduce(
       (accumulator, currentValue) =>
@@ -69,11 +69,13 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
     errorMntlUsdValue | isNaN(totalDelegatedAmount) ||
     isNaN(parseFloat(mntlUsdValue))
       ? placeholderMntlUsdValue
-      : (totalDelegatedAmount * parseFloat(mntlUsdValue)).toFixed(6).toString();
+      : (fromChainDenom(totalDelegatedAmount) * parseFloat(mntlUsdValue))
+          .toFixed(6)
+          .toString();
 
   //Get number of validators delegated to out of selected validators
   const delegatedOutOfSelectedValidators = delegatedValidators?.filter((item) =>
-    stakeState?.selectedValidators?.includes(item?.operator_address)
+    stakeState?.selectedValidators?.includes(item?.operatorAddress)
   );
 
   //Flag to see if the redelegate, undelegate and claim buttons will show up
@@ -81,28 +83,35 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
     stakeState?.selectedValidators?.length &&
     delegatedOutOfSelectedValidators?.length > 0;
 
-  const handleRedelegate = async () => {
+  const handleRedelegate = async (e) => {
     // final form validation before txn is
-
-    const { response, error } = await sendRedelegation(
-      address,
-      stakeState?.redelegationSrc,
-      stakeState?.redelegationDestination,
-      stakeState?.redelegationAmount,
-      stakeState?.memo,
-      { getSigningStargateClient }
-    );
-    console.log("response: ", response, " error: ", error);
+    e.preventDefault();
+    stakeDispatch({ type: "SUBMIT_REDELEGATE" });
+    if (!stakeState.redelegationDestination.length == 0) {
+      const { response, error } = await sendRedelegation(
+        address,
+        stakeState?.redelegationSrc,
+        stakeState?.redelegationDestination,
+        stakeState?.redelegationAmount,
+        stakeState?.memo,
+        { getSigningStargateClient }
+      );
+      console.log("response: ", response, " error: ", error);
+    }
   };
-  const handleUndelegate = async () => {
-    const { response, error } = await sendUndelegation(
-      address,
-      stakeState?.undelegationSrc,
-      stakeState.undelegationAmount.toString(),
-      stakeState?.memo,
-      { getSigningStargateClient }
-    );
-    console.log("response:", response, "error:", error);
+  const handleUndelegate = async (e) => {
+    e.preventDefault();
+    stakeDispatch({ type: "SUBMIT_UNDELEGATE" });
+    if (stakeState.undelegationAmount != 0) {
+      const { response, error } = await sendUndelegation(
+        address,
+        stakeState?.undelegationSrc,
+        stakeState.undelegationAmount.toString(),
+        stakeState?.memo,
+        { getSigningStargateClient }
+      );
+      console.log("response:", response, "error:", error);
+    }
   };
 
   return (
@@ -156,12 +165,12 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                   data-bs-toggle="modal"
                   data-bs-target="#viewUndelegatingModal"
                   className="d-flex align-items-center gap-1 am-link text-start caption2"
-                  onClick={() =>
+                  onClick={() => {
                     stakeDispatch({
                       type: "SET_UNDELEGATION_SRC_ADDRESS",
                       payload: stakeState?.selectedValidators[0],
-                    })
-                  }
+                    });
+                  }}
                 >
                   <i className="text-primary bi bi-arrow-counterclockwise"></i>
                   Undelegate
@@ -220,42 +229,54 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                     {fromDenom(
                       delegatedValidators?.find(
                         (item) =>
-                          item?.operator_address === stakeState?.undelegationSrc
+                          item?.operatorAddress === stakeState?.undelegationSrc
                       )?.delegatedAmount
                     )}
                   </small>
                 </div>
-                <div className="p-3 border-white py-2 d-flex rounded-2 gap-2 am-input">
-                  <input
-                    className="bg-t"
-                    id="delegationAmount"
-                    style={{ flex: "1", border: "none", outline: "none" }}
-                    value={stakeState?.undelegationAmount}
-                    type="text"
-                    placeholder="Enter Undelegate Amount"
-                    onChange={(e) =>
-                      stakeDispatch({
-                        type: "CHANGE_UNDELEGATION_AMOUNT",
-                        payload: e.target.value,
-                      })
-                    }
-                  ></input>
-                  <button
-                    onClick={() =>
-                      stakeDispatch({
-                        type: "SET_MAX_UNDELEGATION_AMOUNT",
-                      })
-                    }
-                    className="text-primary"
+                <div>
+                  <div className="p-3 border-white py-2 d-flex rounded-2 gap-2 am-input">
+                    <input
+                      className="bg-t"
+                      id="delegationAmount"
+                      style={{ flex: "1", border: "none", outline: "none" }}
+                      value={stakeState?.undelegationAmount}
+                      type="text"
+                      placeholder="Enter Undelegate Amount"
+                      onChange={(e) =>
+                        stakeDispatch({
+                          type: "CHANGE_UNDELEGATION_AMOUNT",
+                          payload: e.target.value,
+                        })
+                      }
+                    ></input>
+                    <button
+                      onClick={() =>
+                        stakeDispatch({
+                          type: "SET_MAX_UNDELEGATION_AMOUNT",
+                        })
+                      }
+                      className="text-primary"
+                    >
+                      Max
+                    </button>
+                  </div>
+                  <small
+                    id="amountInputErrorMsg"
+                    className="form-text text-danger d-flex align-items-center gap-1"
                   >
-                    Max
-                  </button>
+                    {stakeState?.errorMessages?.undelegationAmountErrorMsg && (
+                      <i className="bi bi-info-circle" />
+                    )}{" "}
+                    {stakeState?.errorMessages?.undelegationAmountErrorMsg}
+                  </small>
                 </div>
               </div>
               <div className="modal-footer ">
                 <button
-                  onClick={() => handleUndelegate()}
+                  onClick={(e) => handleUndelegate(e)}
                   type="button"
+                  disabled={!isObjEmpty(stakeState?.errorMessages)}
                   className="button-primary px-5 py-2"
                 >
                   Submit
@@ -309,24 +330,24 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                   Delegate From
                 </p>
                 <p className="ps-3 my-2 caption2">
-                  Validator Name :
+                  Validator Name :{" "}
                   {
                     delegatedValidators?.find(
                       (item) =>
-                        item?.operator_address ===
+                        item?.operatorAddress ===
                         stakeState?.selectedValidators[0]
                     )?.description?.moniker
                   }
                 </p>
                 <p className="ps-3 my-2 caption2">
-                  Delegated Amount:
-                  {
+                  Delegated Amount:{" "}
+                  {fromDenom(
                     delegatedValidators?.find(
                       (item) =>
-                        item?.operator_address ===
+                        item?.operatorAddress ===
                         stakeState?.selectedValidators[0]
                     )?.delegatedAmount
-                  }
+                  )}
                 </p>
                 <p className="text-muted caption2 text-gray my-2">
                   Delegate to
@@ -387,7 +408,6 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                           <th className="text-white no-text-wrap" scope="col">
                             Rank
                           </th>
-                          <th scope="col" style={{ whiteSpace: "nowrap" }}></th>
                           <th className="text-white no-text-wrap" scope="col">
                             Validator Name
                           </th>
@@ -410,7 +430,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                           ? validatorsArray
                               ?.filter(
                                 (item) =>
-                                  item?.status === "BOND_STATUS_BONDED" &&
+                                  item?.status === 3 &&
                                   item?.description?.moniker
                                     .toLowerCase()
                                     .includes(searchValue.toLowerCase())
@@ -424,7 +444,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                       onChange={() =>
                                         stakeDispatch({
                                           type: "SET_REDELEGATION_DESTINATION_ADDRESS",
-                                          payload: item?.operator_address,
+                                          payload: item?.operatorAddress,
                                         })
                                       }
                                     />
@@ -438,11 +458,18 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                     ).toFixed(4)}
                                     %
                                   </td>
-                                  <td>
-                                    {item?.commission?.commission_rates?.rate *
-                                      100}
-                                    %
-                                  </td>
+                                  {item?.commission?.commissionRates?.rate ==
+                                  0 ? (
+                                    <td>0 %</td>
+                                  ) : (
+                                    <td>
+                                      {item?.commission?.commissionRates?.rate.slice(
+                                        0,
+                                        -16
+                                      )}{" "}
+                                      %
+                                    </td>
+                                  )}
                                   <td>{item?.tokens / 1000000}</td>
                                   <td>{item.delegatedAmount}</td>
                                 </tr>
@@ -450,7 +477,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                           : validatorsArray
                               ?.filter(
                                 (item) =>
-                                  item?.status === "BOND_STATUS_UNBONDED" &&
+                                  item?.status === 1 &&
                                   item?.description?.moniker
                                     .toLowerCase()
                                     .includes(searchValue.toLowerCase())
@@ -464,7 +491,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                       onChange={() =>
                                         stakeDispatch({
                                           type: "SET_REDELEGATION_DESTINATION_ADDRESS",
-                                          payload: item?.operator_address,
+                                          payload: item?.operatorAddress,
                                         })
                                       }
                                     />
@@ -495,11 +522,18 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                     ).toFixed(4)}
                                     %
                                   </td>
-                                  <td>
-                                    {item?.commission?.commission_rates?.rate *
-                                      100}
-                                    %
-                                  </td>
+                                  {item?.commission?.commissionRates?.rate ==
+                                  0 ? (
+                                    <td>0 %</td>
+                                  ) : (
+                                    <td>
+                                      {item?.commission?.commissionRates?.rate.slice(
+                                        0,
+                                        -16
+                                      )}{" "}
+                                      %
+                                    </td>
+                                  )}
                                   <td>{item?.tokens / 1000000}</td>
                                   <td>
                                     {item.delegatedAmount
@@ -513,14 +547,14 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                   </div>
                 </div>
                 <div className="d-flex justify-content-between w-100 mt-4">
-                  <label htmlFor="delegationAmount caption text-gray my-2">
+                  <label htmlFor="redelegationAmount caption text-gray my-2">
                     Delegation amount
                   </label>{" "}
                   <small className="caption2 text-gray my-2">
                     Delegated Amount :{" "}
                     {fromDenom(
                       delegatedValidators?.find((item) =>
-                        item?.operator_address?.includes(
+                        item?.operatorAddress?.includes(
                           stakeState?.selectedValidators
                         )
                       )?.delegatedAmount
@@ -529,34 +563,52 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                     {defaultChainSymbol}
                   </small>
                 </div>
-                <div className="p-3 border-white py-2 d-flex rounded-2 gap-2 am-input w-100">
-                  <input
-                    className="bg-t"
-                    id="delegationAmount"
-                    style={{ flex: "1", border: "none", outline: "none" }}
-                    type="text"
-                    value={stakeState?.redelegationAmount}
-                    onChange={(e) =>
-                      stakeDispatch({
-                        type: "CHANGE_REDELEGATION_AMOUNT",
-                        payload: e.target.value,
-                      })
-                    }
-                  ></input>
-                  <button
-                    onClick={() =>
-                      stakeDispatch({ type: "SET_MAX_REDELEGATION_AMOUNT" })
-                    }
-                    className="text-primary"
+                <div>
+                  <div className="p-3 border-white py-2 d-flex rounded-2 gap-2 am-input ">
+                    <input
+                      className="bg-t"
+                      id="redelegationAmount"
+                      style={{
+                        flex: "1",
+                        border: "none",
+                        outline: "none",
+                        width: "100%",
+                      }}
+                      type="text"
+                      value={stakeState?.redelegationAmount}
+                      placeholder="Enter Redelegation Amount"
+                      onChange={(e) =>
+                        stakeDispatch({
+                          type: "CHANGE_REDELEGATION_AMOUNT",
+                          payload: e.target.value,
+                        })
+                      }
+                    ></input>
+                    <button
+                      onClick={() =>
+                        stakeDispatch({ type: "SET_MAX_REDELEGATION_AMOUNT" })
+                      }
+                      className="text-primary"
+                    >
+                      Max
+                    </button>
+                  </div>
+                  <small
+                    id="amountInputErrorMsg"
+                    className="form-text text-danger d-flex align-items-center gap-1"
                   >
-                    Max
-                  </button>
+                    {stakeState?.errorMessages?.redelegationAmountErrorMsg && (
+                      <i className="bi bi-info-circle" />
+                    )}{" "}
+                    {stakeState?.errorMessages?.redelegationAmountErrorMsg}
+                  </small>
                 </div>
               </div>
               <div className="modal-footer ">
                 <button
-                  onClick={() => handleRedelegate()}
+                  onClick={(e) => handleRedelegate(e)}
                   type="button"
+                  disabled={!isObjEmpty(stakeState?.errorMessages)}
                   className="button-primary px-5 py-2"
                 >
                   Submit
