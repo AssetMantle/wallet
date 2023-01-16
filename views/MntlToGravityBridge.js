@@ -1,5 +1,5 @@
 import { useChain } from "@cosmos-kit/react";
-import Image from "next/image";
+// import Image from "next/image";
 import { useReducer } from "react";
 import {
   defaultChainGasFee,
@@ -195,11 +195,7 @@ const MntlToGravityBridge = () => {
             className="position-relative"
             style={{ width: "21px", aspectRatio: "1/1" }}
           >
-            <Image
-              src="/chainLogos/mntl.webp"
-              alt="AssetMantle"
-              layout="fill"
-            />
+            <img src="/chainLogos/mntl.webp" alt="AssetMantle" layout="fill" />
           </div>
           <h5 className="caption2 text-primary">AssetMantle</h5>
         </div>
