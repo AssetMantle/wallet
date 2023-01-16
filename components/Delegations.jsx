@@ -9,12 +9,11 @@ import {
 import {
   fromChainDenom,
   fromDenom,
-  sendUndelegation,
   sendRedelegation,
+  sendUndelegation,
   useAllValidators,
   useDelegatedValidators,
   useMntlUsd,
-  fromChainDenom,
 } from "../data";
 import { isObjEmpty } from "../lib";
 
