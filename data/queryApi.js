@@ -1,3 +1,4 @@
+import { normalizeBech32 } from "@cosmjs/encoding";
 import { useChain } from "@cosmos-kit/react";
 import BigNumber from "bignumber.js";
 import { assets, chains } from "chain-registry";
@@ -11,6 +12,7 @@ import {
   placeholderAvailableBalance,
   placeholderMntlUsdValue,
 } from "../config";
+import { bech32AddressSeperator, placeholderAddress } from "./constants";
 
 // get the rpc endpoint from the chain registry
 const rpcEndpoint = chains.find(
@@ -98,8 +100,34 @@ export const toChainDenom = (
 };
 
 // function to check whether an address is invalid
-export const isInvalidAddress = (address, chain = defaultChainName) => {
-  return false;
+export const isInvalidAddress = (address, chainName = defaultChainName) => {
+  console.log("inside isInvalidAddress, address: ", address);
+  if (address && address != placeholderAddress) {
+    try {
+      let splitArrays = address
+        ?.toString()
+        .trim()
+        .split(bech32AddressSeperator);
+      let hrpAddress = splitArrays?.[0];
+      // check if the hrp is valid
+      // get the hrp of the chain
+      const hrpChain = chains.find(
+        (_chain) => _chain?.chain_name === chainName
+      )?.bech32_prefix;
+
+      console.log("hrpAddress: ", hrpAddress, " hrpChain: ", hrpChain);
+
+      if (hrpAddress !== hrpChain) return true;
+      const normalizedAddress = normalizeBech32(address);
+      console.log("normalizedAddress: ", normalizedAddress);
+
+      return false;
+    } catch (error) {
+      console.error(error.message);
+      return true;
+    }
+  }
+  return true;
 };
 
 // custom hook to implement multiple revalidation points to useChain of cosmosKit
