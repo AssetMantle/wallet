@@ -73,6 +73,7 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
             data-bs-toggle="modal"
             data-bs-target="#viewUnbondingModal"
             className="d-flex align-items-center gap-1 am-link text-start caption2"
+            onClick={() => stakeDispatch({ type: "EMPTY_SELECTED_VALIDATORS" })}
           >
             <i className="text-primary bi bi-eye"></i>View
           </button>

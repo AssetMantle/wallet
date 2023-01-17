@@ -87,7 +87,10 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
     // final form validation before txn is
     e.preventDefault();
     stakeDispatch({ type: "SUBMIT_REDELEGATE" });
-    if (!stakeState.redelegationDestination.length == 0) {
+    if (
+      stakeState.redelegationDestination.length != 0 &&
+      stakeState.redelegationAmount.length != 0
+    ) {
       const { response, error } = await sendRedelegation(
         address,
         stakeState?.redelegationSrc,
@@ -112,6 +115,13 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
       );
       console.log("response:", response, "error:", error);
     }
+  };
+
+  // controller for onError
+  const handleOnError = (e) => {
+    e.preventDefault();
+    // console.log("e: ", e);
+    e.target.src = "/validatorAvatars/alt.png";
   };
 
   return (
@@ -405,23 +415,21 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                       <thead className="bt-0">
                         <tr>
                           <th></th>
-                          <th className="text-white no-text-wrap" scope="col">
+                          <th className="text-white text-wrap " scope="col">
                             Rank
                           </th>
-                          <th className="text-white no-text-wrap" scope="col">
+                          <th></th>
+                          <th className="text-white text-wrap " scope="col">
                             Validator Name
                           </th>
-                          <th className="text-white no-text-wrap" scope="col">
+                          <th className="text-white text-wrap " scope="col">
                             Voting Power
                           </th>
-                          <th className="text-white no-text-wrap" scope="col">
+                          <th className="text-white text-wrap " scope="col">
                             Commission
                           </th>
-                          <th className="text-white no-text-wrap" scope="col">
+                          <th className="text-white text-wrap " scope="col">
                             Delegations
-                          </th>
-                          <th className="text-white no-text-wrap" scope="col">
-                            Delegated Amt
                           </th>
                         </tr>
                       </thead>
@@ -450,6 +458,24 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                     />
                                   </td>
                                   <td>{index + 1}</td>
+                                  <td>
+                                    {" "}
+                                    <div
+                                      className="d-flex position-relative rounded-circle"
+                                      style={{
+                                        width: "25px",
+                                        aspectRatio: "1/1",
+                                      }}
+                                    >
+                                      <img
+                                        layout="fill"
+                                        alt={item?.description?.moniker}
+                                        className="rounded-circle"
+                                        src={`/validatorAvatars/${item?.operatorAddress}.png`}
+                                        onError={handleOnError}
+                                      />
+                                    </div>
+                                  </td>
                                   <td>{item?.description?.moniker}</td>
                                   <td>
                                     {(
@@ -509,8 +535,8 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                         layout="fill"
                                         alt={item?.description?.moniker}
                                         className="rounded-circle"
-                                        src={`/validatoravatars/${item?.operator_address}.png`}
-                                        // onError={(e) => (e.target.src = "/favicon.png")}
+                                        src={`/validatorAvatars/${item?.operatorAddress}.png`}
+                                        onError={handleOnError}
                                       />
                                     </div>
                                   </td>

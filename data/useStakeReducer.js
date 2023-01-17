@@ -8,7 +8,7 @@ import {
 } from "../data";
 import { formConstants } from "./constants";
 
-const UseStakeReducer = () => {
+const useStakeReducer = () => {
   const { availableBalance, denom, errorAvailableBalance } =
     useAvailableBalance();
 
@@ -42,6 +42,13 @@ const UseStakeReducer = () => {
         return {
           ...state,
           selectedValidators: [...state?.selectedValidators, action.payload],
+        };
+      }
+
+      case "EMPTY_SELECTED_VALIDATORS": {
+        return {
+          ...state,
+          selectedValidators: [],
         };
       }
 
@@ -343,6 +350,14 @@ const UseStakeReducer = () => {
                 "Please select a validator to redelegate to",
             },
           };
+        } else if (!state.redelegationAmount) {
+          return {
+            ...state,
+            errorMessages: {
+              ...state.errorMessages,
+              redelegationAmountErrorMsg: formConstants.requiredErrorMsg,
+            },
+          };
         } else {
           return {
             ...state,
@@ -385,8 +400,8 @@ const UseStakeReducer = () => {
     }
   };
   const [stakeState, stakeDispatch] = useReducer(stakeReducer, initialState);
-  // console.log(stakeState);
+  console.log(stakeState);
   return { stakeState, stakeDispatch };
 };
 
-export default UseStakeReducer;
+export default useStakeReducer;

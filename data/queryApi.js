@@ -1,3 +1,4 @@
+import { normalizeBech32 } from "@cosmjs/encoding";
 import { useChain } from "@cosmos-kit/react";
 import BigNumber from "bignumber.js";
 import { assets, chains } from "chain-registry";
@@ -11,6 +12,7 @@ import {
   placeholderAvailableBalance,
   placeholderMntlUsdValue,
 } from "../config";
+import { bech32AddressSeperator, placeholderAddress } from "./constants";
 
 // get the rpc endpoint from the chain registry
 const rpcEndpoint = chains.find(
@@ -98,8 +100,38 @@ export const toChainDenom = (
 };
 
 // function to check whether an address is invalid
-export const isInvalidAddress = (address, chain = defaultChainName) => {
-  return false;
+export const isInvalidAddress = (address, chainName = defaultChainName) => {
+  console.log("inside isInvalidAddress, address: ", address);
+  // check if the address is not null or placeholder address
+  if (address && address != placeholderAddress) {
+    try {
+      // check if the hrp of address matches of chain
+      // get the hrp of address
+      let splitArrays = address
+        ?.toString()
+        .trim()
+        .split(bech32AddressSeperator);
+      let hrpAddress = splitArrays?.[0];
+
+      // get the hrp of the chain
+      const hrpChain = chains.find(
+        (_chain) => _chain?.chain_name === chainName
+      )?.bech32_prefix;
+
+      // compare hrp of address and chain
+      if (hrpAddress !== hrpChain) return true;
+
+      // check if the hex value of the address is validated
+      const normalizedAddress = normalizeBech32(address);
+      console.log("Validated Address: ", normalizedAddress);
+
+      return false;
+    } catch (error) {
+      console.error(error.message);
+      return true;
+    }
+  }
+  return true;
 };
 
 // custom hook to implement multiple revalidation points to useChain of cosmosKit
@@ -685,4 +717,31 @@ export const useAllProposals = () => {
     isLoadingProposals: !error && !proposalsArray,
     errorProposals: error,
   };
+};
+
+// function for getting balance
+export const getAvailableBalance = async (
+  address,
+  denom = defaultChainDenom
+) => {
+  // console.log("inside fetchAvailableBalance, url: ", url);
+  let balanceValue = 0;
+
+  if (address) {
+    // use a try catch block for creating rich Error object
+    try {
+      // get the data from cosmos queryClient
+      const { balance } = await client.cosmos.bank.v1beta1.balance({
+        address,
+        denom,
+      });
+      balanceValue = balance;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  // return the data
+  return balanceValue.toString();
 };

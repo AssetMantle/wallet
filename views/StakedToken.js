@@ -77,8 +77,8 @@ export default function StakedToken({
         {stakeState?.selectedValidators?.length > 5 || showClaimError ? (
           <div className="d-flex justify-content-between">
             <p className="text-error">
-              <i className="bi bi-exclamation-circle text-error"></i>{" "}
-              Culmulative Rewards can be claimed only for 5 or less validators
+              <i className="bi bi-exclamation-circle text-error"></i> Cumulative
+              Rewards can be claimed only for 5 or less validators
             </p>
           </div>
         ) : null}
