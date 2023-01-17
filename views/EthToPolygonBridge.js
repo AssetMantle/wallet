@@ -1,28 +1,53 @@
-import { useChain } from "@cosmos-kit/react";
+import {
+  EthereumClient,
+  modalConnectors,
+  walletConnectProvider,
+} from "@web3modal/ethereum";
+import { useWeb3Modal, Web3Modal } from "@web3modal/react";
 import { useReducer } from "react";
+import { configureChains, createClient } from "wagmi";
+import { mainnet, polygon } from "wagmi/chains";
 import {
   defaultChainGasFee,
-  defaultChainName,
-  defaultChainSymbol,
   gravityChainName,
+  gravityChainSymbol,
 } from "../config";
 import {
   formConstants,
   fromChainDenom,
+  placeholderAddressEth,
   sendIbcTokenToGravity,
   toDenom,
-  useAvailableBalance,
 } from "../data";
-import { convertBech32Address, shortenAddress } from "../lib";
+import { convertBech32Address, shortenEthAddress } from "../lib";
 import { handleCopy, isObjEmpty } from "../lib/basicJavascript";
 
-const MntlToGravityBridge = () => {
-  // WALLET HOOKS
-  const walletManager = useChain(defaultChainName);
-  const { address, getSigningStargateClient, status } = walletManager;
+const EthToPolygonBridge = () => {
+  // WEB3MODAL & WAGMI
+  const chains = [mainnet, polygon];
 
-  // SWR HOOKS
-  const { availableBalance } = useAvailableBalance();
+  // create the provider & wagmi client & ethereum client
+  const { provider } = configureChains(chains, [
+    walletConnectProvider({ projectId: "95284efe95ac1c5b14c4c3d5f0c5c60e" }),
+  ]);
+
+  const wagmiClient = createClient({
+    autoConnect: true,
+    connectors: modalConnectors({ appName: "web3Modal", chains }),
+    provider,
+  });
+
+  const ethereumClient = new EthereumClient(wagmiClient, chains);
+
+  // WALLET HOOKS
+  // hooks to work the multi-modal for ethereum
+  const { isOpen, open, close } = useWeb3Modal();
+  // hooks to get the status of wallet connection
+  const status = false;
+  // books to get the address of the connected wallet
+  const address = placeholderAddressEth || placeholderAddressEth;
+  // hooks to get the available balance of the desired token
+  const availableBalance = 0;
 
   // FORM REDUCER
   const initialState = {
@@ -154,6 +179,11 @@ const MntlToGravityBridge = () => {
   const [formState, formDispatch] = useReducer(formReducer, initialState);
 
   // CONTROLLER FUNCTIONS
+  const handleOpenWeb3Modal = async (e) => {
+    e.preventDefault();
+    await open();
+  };
+
   const handleAmountOnChange = (e) => {
     e.preventDefault();
     formDispatch({
@@ -211,83 +241,99 @@ const MntlToGravityBridge = () => {
   };
 
   // DISPLAY VARIABLES
-  const displayShortenedAddress = shortenAddress(address);
+  const displayShortenedAddress = shortenEthAddress(address);
   const displayAvailableBalance = fromChainDenom(availableBalance).toString();
-  const displayAvailableBalanceDenom = defaultChainSymbol;
-  const isSubmitDisabled =
-    status != "Connected" || !isObjEmpty(formState?.errorMessages);
+  const displayAvailableBalanceDenom = gravityChainSymbol;
   const displayInputAmountValue = formState?.transferAmount;
   const isFormAmountError = formState?.errorMessages?.transferAmountErrorMsg;
   const displayFormAmountErrorMsg =
     formState?.errorMessages?.transferAmountErrorMsg;
+  const isWalletEthConnected = false;
+  const isSubmitDisabled =
+    isWalletEthConnected || !isObjEmpty(formState?.errorMessages);
+  const connectButtonJSX = isWalletEthConnected ? (
+    <button
+      className="caption2 d-flex gap-1"
+      onClick={handleCopyOnClick}
+      style={{ wordBreak: "break-all" }}
+    >
+      {displayShortenedAddress}{" "}
+      <span className="text-primary">
+        <i className="bi bi-clipboard" />
+      </span>
+    </button>
+  ) : (
+    <button
+      className="caption2 d-flex gap-1 text-primary"
+      onClick={handleOpenWeb3Modal}
+    >
+      <i className="bi bi-link-45deg" /> Connect Wallet
+    </button>
+  );
 
   return (
-    <div
-      className={`bg-gray-800 p-3 rounded-4 d-flex flex-column gap-3 ${"border-color-primary"}`}
-    >
-      <div className="caption d-flex gap-2 align-items-center justify-content-between">
-        <div className="d-flex gap-2 align-items-center position-relative">
-          <div
-            className="position-relative"
-            style={{ width: "21px", aspectRatio: "1/1" }}
-          >
-            <img src="/chainLogos/mntl.webp" alt="AssetMantle" layout="fill" />
+    <>
+      <div
+        className={`bg-gray-800 p-3 rounded-4 d-flex flex-column gap-3 ${""}`}
+      >
+        <div className="caption d-flex gap-2 align-items-center justify-content-between">
+          <div className="d-flex gap-2 align-items-center position-relative">
+            <div
+              className="position-relative"
+              style={{ width: "21px", aspectRatio: "1/1" }}
+            >
+              <img src="/chainLogos/eth.svg" alt="Ethereum Chain" />
+            </div>
+            <h5 className="caption2 text-primary">Ethereum Chain</h5>
           </div>
-          <h5 className="caption2 text-primary">AssetMantle</h5>
+          {connectButtonJSX}
         </div>
-        <button
-          className="caption2 d-flex gap-1"
-          onClick={handleCopyOnClick}
-          style={{ wordBreak: "break-all" }}
+        <label
+          htmlFor="ethAmount"
+          className="caption2 text-gray d-flex align-items-center justify-content-between gap-2"
         >
-          {displayShortenedAddress}
-          <span className="text-primary">
-            <i className="bi bi-clipboard" />
-          </span>
-        </button>
-      </div>
-      <label
-        htmlFor="mntlAmount"
-        className="caption2 text-gray d-flex align-items-center justify-content-between gap-2"
-      >
-        Amount{" "}
-        <small className="small text-gray">
-          Available Balance : {displayAvailableBalance}
-          &nbsp;
-          {displayAvailableBalanceDenom}
+          Amount{" "}
+          <small className="small text-gray">
+            Available Balance : {displayAvailableBalance}{" "}
+            {displayAvailableBalanceDenom}
+          </small>
+        </label>
+        <div className="input-white d-flex py-2 px-3 rounded-2">
+          <input
+            type="number"
+            placeholder="Enter Amount"
+            name="ethAmount"
+            className="am-input-secondary caption2 flex-grow-1 bg-t"
+            value={displayInputAmountValue}
+            onChange={handleAmountOnChange}
+          />
+          <button className="text-primary caption2" onClick={handleOnClickMax}>
+            Max
+          </button>
+        </div>
+        <small className="small text-error">
+          {isFormAmountError && <i className="bi bi-info-circle" />}{" "}
+          {displayFormAmountErrorMsg}
         </small>
-      </label>
-      <div className="input-white d-flex py-2 px-3 rounded-2">
-        <input
-          type="number"
-          placeholder="Enter Amount"
-          name="mntlAmount"
-          className="am-input-secondary caption2 flex-grow-1 bg-t"
-          value={displayInputAmountValue}
-          onChange={handleAmountOnChange}
-        />
-        <button className="text-primary caption2" onClick={handleOnClickMax}>
-          Max
-        </button>
+        <div className="d-flex align-items-center justify-content-end gap-3">
+          {/* <button className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2">
+          Send to Gravity bridge <i className="bi bi-arrow-up" />
+        </button> */}
+          <button
+            className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
+            disabled={isSubmitDisabled}
+            onClick={handleSubmit}
+          >
+            Send to Polygon Chain <i className="bi bi-arrow-down" />
+          </button>
+        </div>
       </div>
-      <small
-        id="addressInputErrorMsg"
-        className="form-text text-danger d-flex align-items-center gap-1"
-      >
-        {isFormAmountError && <i className="bi bi-info-circle" />}{" "}
-        {displayFormAmountErrorMsg}
-      </small>
-      <div className="d-flex align-items-center justify-content-end gap-2">
-        <button
-          onClick={handleSubmit}
-          disabled={isSubmitDisabled}
-          className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
-        >
-          Send to Gravity Bridge <i className="bi bi-arrow-down" />
-        </button>
-      </div>
-    </div>
+      <Web3Modal
+        projectId="95284efe95ac1c5b14c4c3d5f0c5c60e"
+        ethereumClient={ethereumClient}
+      />
+    </>
   );
 };
 
-export default MntlToGravityBridge;
+export default EthToPolygonBridge;

@@ -38,23 +38,35 @@ export default function Transact() {
   };
 
   const handleSubmit = async (e) => {
+    console.log("inside handleSubmit()");
     e.preventDefault();
+
+    // execute the dispatch operations pertaining to submit
     formDispatch({
       type: "SUBMIT",
     });
-    console.log("inside handleSubmit()");
+
+    // if no validation errors, proceed to transaction processing
     if (
-      formState.recipientAddress.length != 0 ||
+      formState.recipientAddress.length != 0 &&
       formState.transferAmount.length != 0
     ) {
+      // copy form states to local variables
+      const localRecipientAddress = formState.recipientAddress;
+      const localTransferAmount = formState.transferAmount;
+      const localMemo = formState.memo;
+
       const { response, error } = await sendTokensTxn(
         address,
-        formState.recipientAddress,
-        formState.transferAmount,
-        formState.memo,
+        localRecipientAddress,
+        localTransferAmount,
+        localMemo,
         { getSigningStargateClient }
       );
       console.log("response: ", response, " error: ", error);
+
+      // reset the form values
+      formDispatch({ type: "RESET" });
     }
   };
 
@@ -221,14 +233,14 @@ export default function Transact() {
         if (!state.recipientAddress) {
           localErrorMessages = {
             ...localErrorMessages,
-            recipientAddressErrorMsg: formConstants.requiredErrorMsg,
+            recipientAddressErrorMsg: formConstants.invalidValueErrorMsg,
           };
         }
 
         if (!state.transferAmount) {
           localErrorMessages = {
             ...localErrorMessages,
-            transferAmountErrorMsg: formConstants.requiredErrorMsg,
+            transferAmountErrorMsg: formConstants.invalidValueErrorMsg,
           };
         }
 
@@ -245,6 +257,10 @@ export default function Transact() {
             ...state,
           };
         }
+      }
+
+      case "RESET": {
+        return { ...initialState };
       }
 
       default:

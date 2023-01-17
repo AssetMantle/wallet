@@ -1,24 +1,13 @@
 import { useChain } from "@cosmos-kit/react";
-import {
-  EthereumClient,
-  modalConnectors,
-  walletConnectProvider,
-} from "@web3modal/ethereum";
-import { useWeb3Modal, Web3Modal } from "@web3modal/react";
 import Image from "next/image";
 import React, { useState } from "react";
-import { configureChains, createClient } from "wagmi";
-import { mainnet, polygon } from "wagmi/chains";
 import ICTransactionInfo from "../components/ICTransactionInfo";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
-import { defaultChainName, defaultChainSymbol } from "../config";
-import {
-  fromChainDenom,
-  placeholderAddress,
-  sendIbcTokenToGravity,
-  useAvailableBalance,
-} from "../data";
-import { shortenAddress } from "../lib/basicBlockchain";
+import Tooltip from "../components/Tooltip";
+import { defaultChainName } from "../config";
+import { placeholderAddress } from "../data";
+import EthToPolygonBridge from "../views/EthToPolygonBridge";
+import GravityToEthBridge from "../views/GravityToEthBridge";
 import MntlToGravityBridge from "../views/MntlToGravityBridge";
 
 export default function Bridge() {
@@ -30,25 +19,6 @@ export default function Bridge() {
   // transactions start
   const walletManager = useChain(defaultChainName);
   const { address, getSigningStargateClient } = walletManager;
-  const walletManager2 = useChain("gravitybridge");
-  const gravityAddress = walletManager2.address;
-  const { availableBalance } = useAvailableBalance();
-
-  // web3modal and wagmi
-  const chains = [mainnet, polygon];
-
-  // Wagmi client
-  const { provider } = configureChains(chains, [
-    walletConnectProvider({ projectId: "95284efe95ac1c5b14c4c3d5f0c5c60e" }),
-  ]);
-  const wagmiClient = createClient({
-    autoConnect: true,
-    connectors: modalConnectors({ appName: "web3Modal", chains }),
-    provider,
-  });
-
-  const ethereumClient = new EthereumClient(wagmiClient, chains);
-  const { isOpen, open, close } = useWeb3Modal();
 
   // other use states
   const [EthConnectionStat, setEthConnectionStat] = useState(false);
@@ -77,25 +47,6 @@ export default function Bridge() {
   const [PolygonBalance, setPolygonBalance] = useState(50);
   const [memo, setMemo] = useState("");
 
-  const handleMNTLAmountChange = (e) => {
-    console.log(e.target.value);
-    setMNTLAmount(e.target.value);
-    e.target.value < 0.001 || e.target.value > MNtlBalance
-      ? setMNTLAmountError("Insufficient Balance.")
-      : setMNTLAmountError();
-  };
-  const handleGravityAmountChange = (e) => {
-    setGravityAmount(e.target.value);
-    e.target.value < 0.001 || e.target.value > GravityBalance
-      ? setGravityAmountError("Insufficient Balance.")
-      : setGravityAmountError();
-  };
-  const handleEthAmountChange = (e) => {
-    setEthAmount(e.target.value);
-    e.target.value < 0.001 || e.target.value > EthBalance
-      ? setEthAmountError("Insufficient Balance.")
-      : setEthAmountError();
-  };
   const handlePolygonAmountChange = (e) => {
     setPolygonAmount(e.target.value);
     e.target.value < 0.001 || e.target.value > PolygonBalance
@@ -103,225 +54,10 @@ export default function Bridge() {
       : setPolygonAmountError();
   };
 
-  const handleEthConnect = () => {
-    setEthConnectionStat(true);
-  };
-  // transactions start
-
   const handleOpenWeb3Modal = async (e) => {
     e.preventDefault();
     await open();
   };
-
-  const handleMantleToGravity = async () => {
-    const { response, error } = await sendIbcTokenToGravity(
-      address,
-      GravityAddress,
-      MNTLAmount,
-      memo,
-
-      { getSigningStargateClient }
-    );
-    console.log("response: ", response, " error: ", error);
-  };
-
-  const mntlToGravityJSX = (
-    <div
-      className={`bg-gray-800 p-3 rounded-4 d-flex flex-column gap-3 ${"border-color-primary"}`}
-    >
-      <div className="caption d-flex gap-2 align-items-center justify-content-between">
-        <div className="d-flex gap-2 align-items-center position-relative">
-          <div
-            className="position-relative"
-            style={{ width: "21px", aspectRatio: "1/1" }}
-          >
-            <Image
-              src="/chainLogos/mntl.svg"
-              alt="AssetMantle logo"
-              layout="fill"
-            />
-          </div>
-          <h5 className="caption2 text-primary">MNTL</h5>
-        </div>
-        <button
-          className="caption2 d-flex gap-1"
-          onClick={() => handleCopy(address)}
-          style={{ wordBreak: "break-all" }}
-        >
-          {shortenAddress(address)}
-          <span className="text-primary">
-            <i className="bi bi-clipboard" />
-          </span>
-        </button>
-      </div>
-      <label
-        htmlFor="mntlAmount"
-        className="caption2 text-gray d-flex align-items-center justify-content-between gap-2"
-      >
-        Amount{" "}
-        <small className="small text-gray">
-          Transferable Balance : {fromChainDenom(availableBalance).toString()}
-          &nbsp;
-          {defaultChainSymbol}
-        </small>
-      </label>
-      <div className="input-white d-flex py-2 px-3 rounded-2">
-        <input
-          type="number"
-          placeholder="Enter Amount"
-          name="mntlAmount"
-          className="am-input-secondary caption2 flex-grow-1 bg-t"
-          value={MNTLAmount}
-          onChange={(e) => {
-            handleMNTLAmountChange(e);
-          }}
-        />
-        <button className="text-primary caption2">Max</button>
-      </div>
-      {MNTLAmountError && (
-        <small className="small text-error">{MNTLAmountError}</small>
-      )}
-      <div className="d-flex align-items-center justify-content-end gap-2">
-        <button
-          onClick={handleMantleToGravity}
-          className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
-        >
-          Send to Gravity Bridge <i className="bi bi-arrow-down" />
-        </button>
-      </div>
-    </div>
-  );
-
-  const gravityToEthJSX = (
-    <div className={`bg-gray-800 p-3 rounded-4 d-flex flex-column gap-3 ${""}`}>
-      <div className="caption d-flex gap-2 align-items-center justify-content-between">
-        <div className="d-flex gap-2 align-items-center position-relative">
-          <div
-            className="position-relative"
-            style={{ width: "21px", aspectRatio: "1/1" }}
-          >
-            <Image
-              src="/chainLogos/grav.svg"
-              alt="Gravity Bridge"
-              layout="fill"
-            />
-          </div>
-          <h5 className="caption2 text-primary">Gravity Bridge</h5>
-        </div>
-        <button
-          className="caption2 d-flex gap-1"
-          onClick={() => handleCopy(gravityAddress)}
-          style={{ wordBreak: "break-all" }}
-        >
-          {shortenAddress(gravityAddress)}{" "}
-          <span className="text-primary">
-            <i className="bi bi-clipboard" />
-          </span>
-        </button>
-      </div>
-      <label
-        htmlFor="GravityAmount"
-        className="caption2 text-gray d-flex align-items-center justify-content-between gap-2"
-      >
-        Amount{" "}
-        <small className="small text-gray">
-          Transferable Balance : {GravityBalance.toFixed(4)} $MNTL
-        </small>
-      </label>
-      <div className="input-white d-flex py-2 px-3 rounded-2">
-        <input
-          type="number"
-          placeholder="Enter Amount"
-          name="GravityAmount"
-          className="am-input-secondary caption2 flex-grow-1 bg-t"
-          value={GravityAmount}
-          onChange={(e) => handleGravityAmountChange(e)}
-        />
-        <button className="text-primary caption2">Max</button>
-      </div>
-      {GravityAmountError && (
-        <small className="small text-error">{GravityAmountError}</small>
-      )}
-      <div className="d-flex align-items-center justify-content-end gap-3">
-        <button className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2">
-          Send to Mantle Chain <i className="bi bi-arrow-up" />
-        </button>
-        <button className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2">
-          Send to Ethereum Chain <i className="bi bi-arrow-down" />
-        </button>
-      </div>
-    </div>
-  );
-
-  const ethToPolygonJSX = (
-    <div className={`bg-gray-800 p-3 rounded-4 d-flex flex-column gap-3 ${""}`}>
-      <div className="caption d-flex gap-2 align-items-center justify-content-between">
-        <div className="d-flex gap-2 align-items-center position-relative">
-          <div
-            className="position-relative"
-            style={{ width: "21px", aspectRatio: "1/1" }}
-          >
-            <Image
-              src="/chainLogos/eth.svg"
-              alt="Ethereum Chain"
-              layout="fill"
-            />
-          </div>
-          <h5 className="caption2 text-primary">Ethereum Chain</h5>
-        </div>
-        {EthConnectionStat ? (
-          <button
-            className="caption2 d-flex gap-1"
-            onClick={() => handleCopy(EthereumAddress)}
-            style={{ wordBreak: "break-all" }}
-          >
-            {EthereumAddress}{" "}
-            <span className="text-primary">
-              <i className="bi bi-clipboard" />
-            </span>
-          </button>
-        ) : (
-          <button
-            className="caption2 d-flex gap-1 text-primary"
-            onClick={handleOpenWeb3Modal}
-          >
-            <i className="bi bi-link-45deg" /> Connect Wallet
-          </button>
-        )}
-      </div>
-      <label
-        htmlFor="ethAmount"
-        className="caption2 text-gray d-flex align-items-center justify-content-between gap-2"
-      >
-        Amount{" "}
-        <small className="small text-gray">
-          Transferable Balance : {EthBalance.toFixed(4)} $MNTL
-        </small>
-      </label>
-      <div className="input-white d-flex py-2 px-3 rounded-2">
-        <input
-          type="number"
-          placeholder="Enter Amount"
-          name="ethAmount"
-          className="am-input-secondary caption2 flex-grow-1 bg-t"
-          value={EthAmount}
-          onChange={(e) => handleEthAmountChange(e)}
-        />
-        <button className="text-primary caption2">Max</button>
-      </div>
-      {EthAmountError && (
-        <small className="small text-error">{EthAmountError}</small>
-      )}
-      <div className="d-flex align-items-center justify-content-end gap-3">
-        <button className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2">
-          Send to Gravity bridge <i className="bi bi-arrow-up" />
-        </button>
-        <button className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2">
-          Send to Polygon Chain <i className="bi bi-arrow-down" />
-        </button>
-      </div>
-    </div>
-  );
 
   const polytonToEthJSX = (
     <div className={`bg-gray-800 p-3 rounded-4 d-flex flex-column gap-3 ${""}`}>
@@ -393,47 +129,35 @@ export default function Bridge() {
             </nav>
             <div className="nav-bg d-flex flex-column gap-3 rounded-4 p-3">
               <MntlToGravityBridge />
-              {gravityToEthJSX}
-              {ethToPolygonJSX}
+              <GravityToEthBridge />
+              <EthToPolygonBridge />
               {polytonToEthJSX}
-              <Web3Modal
-                projectId="95284efe95ac1c5b14c4c3d5f0c5c60e"
-                ethereumClient={ethereumClient}
-              />
             </div>
           </section>
         </ScrollableSectionContainer>
         <ScrollableSectionContainer className="col-12 pt-3 pt-lg-0 col-lg-4 d-flex flex-column gap-3">
           <div className="rounded-4 p-3 bg-gray-800 width-100 text-white-300">
-            Please enter amount in the chain you want to make a transaction from
+            <Tooltip
+              titlePrimary={true}
+              description={""}
+              style={{ right: "330%" }}
+            />
+            &nbsp;The Order in which you need to complete the transactions:
           </div>
-          <button
-            className="button-primary text-center px-3 py-2"
-            style={{ maxWidth: "100%" }}
-            data-bs-toggle="modal"
-            data-bs-target="#BridgeModalTransact"
-          >
-            BridgeModalTransact
-          </button>
           <ICTransactionInfo
-            title="Send to Ethereum Chain"
-            chainForm="Gravity Bridge"
-            chainTo="Ethereum Chain"
-            addressForm={GravityAddress}
-            addressTo={EthereumAddress}
-            amount="0000.00"
-            gas="0000.00"
-            time={90} //in minute
+            title="1. Send to Gravity Chain"
+            chainFrom="assetmantle"
+            chainTo="gravitybridge"
           />
           <ICTransactionInfo
-            title="Send to Polygon Chain"
-            chainForm="$MNTL Chain"
-            chainTo="Polygon Chain"
-            addressForm={MNtlAddress}
-            addressTo={EthereumAddress}
-            amount="0000.00"
-            gas="0000.00"
-            time={90} //in minute
+            title="2. Send to Ethereum Chain"
+            chainFrom="gravitybridge"
+            chainTo="ethereum"
+          />
+          <ICTransactionInfo
+            title="3. Send to Polygon Chain"
+            chainFrom="ethereum"
+            chainTo="polygon"
           />
         </ScrollableSectionContainer>
       </main>
