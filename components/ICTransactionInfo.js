@@ -1,31 +1,22 @@
 import React from "react";
 
-export default function ICTransactionInfo({
-  title,
-  chainForm,
-  chainTo,
-  addressForm,
-  addressTo,
-  amount,
-  gas,
-  time,
-}) {
+export default function ICTransactionInfo({ title, chainFrom, chainTo }) {
   const ChainImage = (name) => {
     let res = "";
     switch (name) {
-      case "Polygon Chain":
+      case "polygon":
         res = "/chainLogos/polygon.svg";
         break;
-      case "Ethereum Chain":
+      case "ethereum":
         res = "/chainLogos/eth.svg";
         break;
-      case "Gravity Bridge":
+      case "gravitybridge":
         res = "/chainLogos/grav.svg";
         break;
-      case "Mantle Chain":
+      case "assetmantle":
         res = "/chainLogos/mntl.webp";
         break;
-      case "$MNTL Chain":
+      default:
         res = "/chainLogos/mntl.webp";
         break;
     }
@@ -41,17 +32,10 @@ export default function ICTransactionInfo({
               className="position-relative"
               style={{ width: "20px", aspectRatio: "1/1" }}
             >
-              <img layout="fill" src={ChainImage(chainForm)} alt={chainForm} />
+              <img layout="fill" src={ChainImage(chainFrom)} alt={chainFrom} />
             </div>
-            <p className="caption2 text-primary">{chainForm}</p>
+            <p className="caption2 text-primary">{chainFrom}</p>
           </div>
-          <span className="caption2">{`${addressForm.substring(
-            0,
-            5
-          )}...${addressForm.substring(
-            addressForm.length - 5,
-            addressForm.length
-          )}`}</span>
         </div>
         <div className="body2 mx-auto text-primary">
           <i className="bi bi-arrow-down" />
@@ -66,30 +50,7 @@ export default function ICTransactionInfo({
             </div>
             <p className="caption2 text-primary">{chainTo}</p>
           </div>
-          <span className="caption2">{`${addressTo.substring(
-            0,
-            5
-          )}...${addressTo.substring(
-            addressTo.length - 5,
-            addressTo.length
-          )}`}</span>
         </div>
-      </div>
-      <div className="d-flex align-items-center justify-content-between gap-2 w-100">
-        <span className="caption2 text-white">Amount</span>
-        <span className="caption2 text-primary">{amount} $MNTL</span>
-      </div>
-      <div className="d-flex align-items-center justify-content-between gap-2 w-100">
-        <span className="caption2 text-white">Gas</span>
-        <span className="caption2 text-white-300">{gas}</span>
-      </div>
-      <div className="d-flex align-items-center justify-content-between gap-2 w-100">
-        <span className="caption2 text-white">Average time</span>
-        <span className="caption2 text-white-300">
-          {Math.floor(Number(time) / 60)}Hour
-          {Math.floor(Number(time) / 60) > 1 && "s"},{Number(time) % 60}Minute
-          {Number(time) % 60 > 1 && "s"}
-        </span>
       </div>
     </section>
   );

@@ -2,27 +2,26 @@ import { useChain } from "@cosmos-kit/react";
 import { useReducer } from "react";
 import {
   defaultChainGasFee,
-  defaultChainName,
-  defaultChainSymbol,
   gravityChainName,
+  gravityChainSymbol,
 } from "../config";
 import {
   formConstants,
   fromChainDenom,
   sendIbcTokenToGravity,
   toDenom,
-  useAvailableBalance,
 } from "../data";
 import { convertBech32Address, shortenAddress } from "../lib";
 import { handleCopy, isObjEmpty } from "../lib/basicJavascript";
 
-const MntlToGravityBridge = () => {
+const GravityToEthBridge = () => {
   // WALLET HOOKS
-  const walletManager = useChain(defaultChainName);
+  const walletManager = useChain(gravityChainName);
   const { address, getSigningStargateClient, status } = walletManager;
 
-  // SWR HOOKS
-  const { availableBalance } = useAvailableBalance();
+  // HOOKS or GETTERS
+  // const { availableBalance } = getAvailableBalance(address);
+  const availableBalance = "0";
 
   // FORM REDUCER
   const initialState = {
@@ -213,7 +212,7 @@ const MntlToGravityBridge = () => {
   // DISPLAY VARIABLES
   const displayShortenedAddress = shortenAddress(address);
   const displayAvailableBalance = fromChainDenom(availableBalance).toString();
-  const displayAvailableBalanceDenom = defaultChainSymbol;
+  const displayAvailableBalanceDenom = gravityChainSymbol;
   const isSubmitDisabled =
     status != "Connected" || !isObjEmpty(formState?.errorMessages);
   const displayInputAmountValue = formState?.transferAmount;
@@ -222,38 +221,35 @@ const MntlToGravityBridge = () => {
     formState?.errorMessages?.transferAmountErrorMsg;
 
   return (
-    <div
-      className={`bg-gray-800 p-3 rounded-4 d-flex flex-column gap-3 ${"border-color-primary"}`}
-    >
+    <div className={`bg-gray-800 p-3 rounded-4 d-flex flex-column gap-3 ${""}`}>
       <div className="caption d-flex gap-2 align-items-center justify-content-between">
         <div className="d-flex gap-2 align-items-center position-relative">
           <div
             className="position-relative"
             style={{ width: "21px", aspectRatio: "1/1" }}
           >
-            <img src="/chainLogos/mntl.webp" alt="AssetMantle" layout="fill" />
+            <img src="/chainLogos/grav.svg" alt="Gravity Bridge" />
           </div>
-          <h5 className="caption2 text-primary">AssetMantle</h5>
+          <h5 className="caption2 text-primary">Gravity Bridge</h5>
         </div>
         <button
           className="caption2 d-flex gap-1"
           onClick={handleCopyOnClick}
           style={{ wordBreak: "break-all" }}
         >
-          {displayShortenedAddress}
+          {displayShortenedAddress}{" "}
           <span className="text-primary">
             <i className="bi bi-clipboard" />
           </span>
         </button>
       </div>
       <label
-        htmlFor="mntlAmount"
+        htmlFor="GravityAmount"
         className="caption2 text-gray d-flex align-items-center justify-content-between gap-2"
       >
         Amount{" "}
         <small className="small text-gray">
-          Available Balance : {displayAvailableBalance}
-          &nbsp;
+          Available Balance : {displayAvailableBalance}{" "}
           {displayAvailableBalanceDenom}
         </small>
       </label>
@@ -261,7 +257,7 @@ const MntlToGravityBridge = () => {
         <input
           type="number"
           placeholder="Enter Amount"
-          name="mntlAmount"
+          name="GravityAmount"
           className="am-input-secondary caption2 flex-grow-1 bg-t"
           value={displayInputAmountValue}
           onChange={handleAmountOnChange}
@@ -270,24 +266,23 @@ const MntlToGravityBridge = () => {
           Max
         </button>
       </div>
-      <small
-        id="addressInputErrorMsg"
-        className="form-text text-danger d-flex align-items-center gap-1"
-      >
-        {isFormAmountError && <i className="bi bi-info-circle" />}{" "}
-        {displayFormAmountErrorMsg}
-      </small>
-      <div className="d-flex align-items-center justify-content-end gap-2">
+      {isFormAmountError && (
+        <small className="small text-error">{displayFormAmountErrorMsg}</small>
+      )}
+      <div className="d-flex align-items-center justify-content-end gap-3">
+        {/*  <button className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2">
+          Send to Mantle Chain <i className="bi bi-arrow-up" />
+        </button> */}
         <button
-          onClick={handleSubmit}
-          disabled={isSubmitDisabled}
           className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
+          disabled={isSubmitDisabled}
+          onClick={handleSubmit}
         >
-          Send to Gravity Bridge <i className="bi bi-arrow-down" />
+          Send to Ethereum Chain <i className="bi bi-arrow-down" />
         </button>
       </div>
     </div>
   );
 };
 
-export default MntlToGravityBridge;
+export default GravityToEthBridge;
