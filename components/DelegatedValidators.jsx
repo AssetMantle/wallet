@@ -22,6 +22,7 @@ const DelegatedValidators = ({
     // console.log("e: ", e);
     e.target.src = "/validatorAvatars/alt.png";
   };
+
   return (
     <>
       {activeValidators
@@ -36,6 +37,9 @@ const DelegatedValidators = ({
                 <td>
                   <input
                     type="checkbox"
+                    checked={stakeState?.selectedValidators?.includes(
+                      item?.operatorAddress
+                    )}
                     onChange={() => {
                       setShowClaimError(false);
                       stakeState?.selectedValidators?.includes(
@@ -92,7 +96,11 @@ const DelegatedValidators = ({
                 <td>
                   <input
                     type="checkbox"
+                    checked={stakeState?.selectedValidators?.includes(
+                      item?.operatorAddress
+                    )}
                     onChange={() => {
+                      setShowClaimError(false);
                       stakeState?.selectedValidators.includes(
                         item?.operatorAddress
                       )
