@@ -49,6 +49,7 @@ const useStakeReducer = () => {
         return {
           ...state,
           selectedValidators: [],
+          undelegationAmount: "",
         };
       }
 
