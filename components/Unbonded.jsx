@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { useChain } from "@cosmos-kit/react";
 import {
   defaultChainSymbol,
   placeholderMntlUsdValue,
   placeholderTotalUnbonding,
+  defaultChainName,
 } from "../config";
 import {
   fromChainDenom,
@@ -15,6 +17,8 @@ import {
 const denomDisplay = defaultChainSymbol;
 
 const Unbonded = ({ stakeState, stakeDispatch }) => {
+  const walletManager = useChain(defaultChainName);
+  const { getSigningStargateClient, address, status } = walletManager;
   const [activeValidators, setActiveValidators] = useState(true);
   const {
     totalUnbondingAmount,
@@ -61,11 +65,16 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
   return (
     <div className="nav-bg p-3 rounded-4 gap-3">
       <div className="d-flex flex-column gap-2">
-        <p className="caption d-flex gap-2 align-items-center">Unbonding</p>
-        <p className="caption">
+        <p
+          className={`caption d-flex gap-2 align-items-center
+          ${status === "Connected" ? "null" : "text-gray"}`}
+        >
+          Unbonding
+        </p>
+        <p className={status === "Connected" ? "caption" : "caption text-gray"}>
           {unbondingDisplay}&nbsp;{denomDisplay}
         </p>
-        <p className="caption2">
+        <p className={status === "Connected" ? "caption" : "caption text-gray"}>
           {unbondingInUSDDisplay}&nbsp;{"$USD"}
         </p>
         <div className="d-flex justify-content-end">

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import AllValidators from "../components/AllValidators";
 import DelegatedValidators from "../components/DelegatedValidators";
 import Tooltip from "../components/Tooltip";
-import { useAllValidators } from "../data";
+import { useAllValidators, useDelegatedValidators } from "../data";
 import useStakeReducer from "../data/useStakeReducer";
 import StakedToken from "../views/StakedToken";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
@@ -16,7 +16,14 @@ export default function Stake() {
   const [delegated, setDelegated] = useState(false);
   const { allValidators, isLoadingValidators, errorValidators } =
     useAllValidators();
+  const {
+    delegatedValidators,
+    totalDelegatedAmount,
+    isLoadingDelegatedAmount,
+    errorDelegatedAmount,
+  } = useDelegatedValidators();
   let validatorsArray = allValidators.sort((a, b) => b.tokens - a.tokens);
+  console.log(allValidators, delegatedValidators);
 
   //Put all foundation nodes at the end of the array
   validatorsArray.forEach((item, index) => {
@@ -105,7 +112,7 @@ export default function Stake() {
                     id="basic-addon1"
                     style={{ border: "none" }}
                   >
-                    <i className="bi bi-search text-primary"></i>
+                    <i className="bi bi-search text-white"></i>
                   </span>
                   <input
                     type="text"
@@ -168,11 +175,17 @@ export default function Stake() {
                       <th scope="col" style={{ whiteSpace: "nowrap" }}>
                         Delegated Amount
                       </th>
+                      {delegated ? null : (
+                        <th scope="col" style={{ whiteSpace: "nowrap" }}>
+                          Delegations
+                        </th>
+                      )}
                     </tr>
                   </thead>
                   <tbody>
                     {delegated ? (
                       <DelegatedValidators
+                        delegatedValidators={delegatedValidators}
                         searchValue={searchValue}
                         setShowClaimError={setShowClaimError}
                         stakeDispatch={stakeDispatch}
@@ -184,6 +197,7 @@ export default function Stake() {
                       allValidators.length !== 1 &&
                       allValidators && (
                         <AllValidators
+                          delegatedValidators={delegatedValidators}
                           setShowClaimError={setShowClaimError}
                           searchValue={searchValue}
                           stakeDispatch={stakeDispatch}

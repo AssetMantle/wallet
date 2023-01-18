@@ -66,7 +66,14 @@ const AllValidators = ({
                   </div>
                 </td>
                 <td className=" d-flex align-items-center justify-content-start gap-1">
-                  {item?.description?.moniker}
+                  <a
+                    href={`https://explorer.assetmantle.one/validators/${item.operatorAddress}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {item?.description?.moniker}
+                    <i className="bi bi-arrow-up-right" />
+                  </a>
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
                 {item?.commission?.commissionRates?.rate == 0 ? (
@@ -77,6 +84,7 @@ const AllValidators = ({
                   </td>
                 )}
                 <td>{(item?.tokens / 1000000).toFixed(2)}</td>
+                {/* <td>{item?.}</td> */}
               </tr>
             ))
         : validatorsArray
@@ -127,7 +135,15 @@ const AllValidators = ({
                   </div>
                 </td>
                 <td className=" d-flex align-items-center justify-content-start gap-1">
-                  {item?.description?.moniker}
+                  <a
+                    href={`https://explorer.assetmantle.one/validators/${item.operatorAddress}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {" "}
+                    {item?.description?.moniker}
+                    <i className="bi bi-arrow-up-right" />
+                  </a>
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
                 {item?.commission?.commissionRates?.rate == 0 ? (
@@ -138,6 +154,7 @@ const AllValidators = ({
                   </td>
                 )}
                 <td>{(item?.tokens / 1000000).toFixed(2)}</td>
+                <td></td>
               </tr>
             ))}
     </>

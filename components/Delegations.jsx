@@ -140,15 +140,25 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
               Cumulative Delegated
             </p>
           ) : (
-            <p className="caption d-flex gap-2 align-items-center">
+            <p
+              className={`caption d-flex gap-2 align-items-center ${
+                status === "Connected" ? null : "text-gray"
+              }`}
+            >
               {" "}
               Delegated
             </p>
           )}
-          <p className="caption">
+          <p
+            className={status === "Connected" ? "caption" : "caption text-gray"}
+          >
             {delegationsDisplay}&nbsp;{denomDisplay}
           </p>
-          <p className="caption2">
+          <p
+            className={
+              status === "Connected" ? "caption2" : "caption2 text-gray"
+            }
+          >
             {delegationsInUSDDisplay}&nbsp;{"$USD"}
           </p>
           {showRedelegateUndelegateAndClaim &&

@@ -313,6 +313,7 @@ export default function Transact() {
                 <input
                   className="bg-t p-3 py-2 rounded-2 am-input w-100"
                   type="text"
+                  disabled={status === "Disconnected"}
                   name="recipientAddress"
                   id="recipientAddress"
                   value={formState?.recipientAddress}
@@ -346,6 +347,7 @@ export default function Transact() {
                 Token
               </label>
               <input
+                disabled={status === "Disconnected"}
                 className={
                   status === "Connected"
                     ? "bg-t p-3 py-2 rounded-2 am-input"
@@ -377,6 +379,7 @@ export default function Transact() {
               <div>
                 <div className="p-3 py-2 d-flex rounded-2 gap-2 am-input">
                   <input
+                    disabled={status === "Disconnected"}
                     className="bg-t"
                     type="number"
                     name="amount"
@@ -452,6 +455,7 @@ export default function Transact() {
                   </label>
                   <input
                     className="bg-t p-3 py-2 rounded-2 am-input"
+                    disabled={status === "Disconnected"}
                     type="text"
                     name="memo"
                     id="memo"

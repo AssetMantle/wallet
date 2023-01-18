@@ -1,5 +1,4 @@
 import React from "react";
-import { useDelegatedValidators } from "../data";
 
 const DelegatedValidators = ({
   searchValue,
@@ -8,14 +7,8 @@ const DelegatedValidators = ({
   totalTokens,
   stakeDispatch,
   setShowClaimError,
+  delegatedValidators,
 }) => {
-  const {
-    delegatedValidators,
-    totalDelegatedAmount,
-    isLoadingDelegatedAmount,
-    errorDelegatedAmount,
-  } = useDelegatedValidators();
-
   // controller for onError
   const handleOnError = (e) => {
     e.preventDefault();
@@ -68,7 +61,15 @@ const DelegatedValidators = ({
                   </div>
                 </td>
                 <td className=" d-flex align-items-center justify-content-start">
-                  {item?.description?.moniker}
+                  <a
+                    href={`https://explorer.assetmantle.one/validators/${item.operatorAddress}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {" "}
+                    {item?.description?.moniker}
+                    <i className="bi bi-arrow-up-right" />
+                  </a>
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
                 {item?.commission?.commissionRates?.rate == 0 ? (
@@ -123,7 +124,15 @@ const DelegatedValidators = ({
                   </div>
                 </td>
                 <td className=" d-flex align-items-center justify-content-start gap-1">
-                  {item?.description?.moniker}
+                  <a
+                    href={`https://explorer.assetmantle.one/validators/${item.operatorAddress}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {" "}
+                    {item?.description?.moniker}
+                    <i className="bi bi-arrow-up-right" />
+                  </a>
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
                 {item?.commission?.commissionRates?.rate == 0 ? (
