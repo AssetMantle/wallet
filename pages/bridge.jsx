@@ -82,7 +82,7 @@ export default function Bridge() {
         >
           Connect Wallet
           <span className="text-primary">
-            <i className="bi bi-clipboard" />
+            <i className="bi bi-files" />
           </span>
         </button>
       </div>
@@ -250,7 +250,7 @@ export default function Bridge() {
                   >
                     assetmantle.one/vie...RWG_vtTixYd88=
                     <span className="text-primary">
-                      <i className="bi bi-clipboard" />
+                      <i className="bi bi-files" />
                     </span>
                   </button>
                 </div>
