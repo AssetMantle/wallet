@@ -25,7 +25,7 @@ export default function Transact() {
   const [advanced, setAdvanced] = useState(false);
   const { availableBalance } = useAvailableBalance();
   const walletManager = useChain(defaultChainName);
-  const { getSigningStargateClient, address, status } = walletManager;
+  const { getSigningStargateClient, address, connect, status } = walletManager;
 
   const displayAddress = address ? address : placeholderAddress;
 
@@ -37,6 +37,10 @@ export default function Transact() {
     errorMessages: {},
   };
 
+  const onClickConnect = (e) => {
+    e.preventDefault();
+    connect();
+  };
   const handleSubmit = async (e) => {
     console.log("inside handleSubmit()");
     e.preventDefault();
@@ -449,14 +453,26 @@ export default function Transact() {
                   />
                 </>
               )}
-              <button
-                className="btn button-primary px-5 ms-auto"
-                type="submit"
-                disabled={!isObjEmpty(formState?.errorMessages)}
-                onClick={handleSubmit}
-              >
-                Send
-              </button>
+              {status && status === "Connected" ? (
+                <button
+                  className="btn button-primary px-5 ms-auto"
+                  type="submit"
+                  disabled={!isObjEmpty(formState?.errorMessages)}
+                  onClick={handleSubmit}
+                >
+                  Send
+                </button>
+              ) : (
+                <button
+                  className="btn button-primary px-5 ms-auto"
+                  type="submit"
+                  data-bs-target="#WalletConnectModal"
+                  data-bs-toggle="modal"
+                  onClick={onClickConnect}
+                >
+                  Connect
+                </button>
+              )}
             </div>
           </div>
         </ScrollableSectionContainer>
