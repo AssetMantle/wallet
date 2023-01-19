@@ -210,7 +210,7 @@ const GravityToEthBridge = () => {
   };
 
   // DISPLAY VARIABLES
-  const displayShortenedAddress = shortenAddress(address);
+  const displayShortenedAddress = shortenAddress(address, gravityChainName);
   const displayAvailableBalance = fromChainDenom(availableBalance).toString();
   const displayAvailableBalanceDenom = gravityChainSymbol;
   const isSubmitDisabled =

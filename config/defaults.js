@@ -1,5 +1,7 @@
 export const defaultChainName = "assetmantle";
 export const gravityChainName = "gravitybridge";
+export const gravityIBCToken =
+  "ibc/00F2B62EB069321A454B708876476AFCD9C23C8C9C4A5A206DDF1CD96B645057";
 export const defaultChainSymbol = "$MNTL";
 export const gravityChainSymbol = "$GRAV";
 export const defaultChainDenom = "umntl";
