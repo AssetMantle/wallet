@@ -17,7 +17,7 @@ export default function StakedToken({
   const { availableBalance } = useAvailableBalance();
   const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status } = walletManager;
-  console.log(status);
+
   const handleStakeSubmit = async (e) => {
     e.preventDefault();
     stakeDispatch({ type: "SUBMIT_DELEGATE" });

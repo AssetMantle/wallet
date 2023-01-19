@@ -45,7 +45,7 @@ const DelegatedValidators = ({
                     }}
                   ></input>
                 </td>
-                <td>{index + 1}</td>
+                {activeValidators ? <td>{index + 1}</td> : null}
                 <td>
                   <div
                     className="d-flex position-relative rounded-circle gap-1"
@@ -73,7 +73,7 @@ const DelegatedValidators = ({
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
                 {item?.commission?.commissionRates?.rate == 0 ? (
-                  <td>0 %</td>
+                  <td>0%</td>
                 ) : (
                   <td>
                     {item?.commission?.commissionRates?.rate.slice(0, -16)} %
@@ -108,7 +108,7 @@ const DelegatedValidators = ({
                     }}
                   ></input>
                 </td>
-                <td>{index + 1}</td>
+                {activeValidators ? <td>{index + 1}</td> : null}
                 <td>
                   <div
                     className="d-flex position-relative rounded-circle"
@@ -136,11 +136,20 @@ const DelegatedValidators = ({
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
                 {item?.commission?.commissionRates?.rate == 0 ? (
-                  <td>0</td>
+                  <td>0%</td>
                 ) : (
-                  <td>item?.commission?.commissionRates?.rate.slice(0, -16)</td>
-                )}
-                %<td>{(item?.tokens / 1000000).toFixed(2)}</td>
+                  <td>
+                    item?.commission?.commissionRates?.rate.slice(0, -16)%
+                  </td>
+                )}{" "}
+                <td>{(item?.tokens / 1000000).toFixed(2)}</td>
+                <td>
+                  {item?.jailed ? (
+                    <i className="bi bi-exclamation-octagon text-danger"></i>
+                  ) : (
+                    "-"
+                  )}
+                </td>
               </tr>
             ))}
     </>

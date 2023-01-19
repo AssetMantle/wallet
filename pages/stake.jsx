@@ -156,9 +156,11 @@ export default function Stake() {
                   >
                     <tr className="caption2 text-white">
                       <th></th>
-                      <th scope="col" style={{ whiteSpace: "nowrap" }}>
-                        Rank
-                      </th>
+                      {activeValidators ? (
+                        <th scope="col" style={{ whiteSpace: "nowrap" }}>
+                          Rank
+                        </th>
+                      ) : null}
                       <th
                         colSpan="2"
                         scope="col"
@@ -172,12 +174,17 @@ export default function Stake() {
                       <th scope="col" style={{ whiteSpace: "nowrap" }}>
                         Commission
                       </th>
-                      <th scope="col" style={{ whiteSpace: "nowrap" }}>
-                        Delegated Amount
-                      </th>
                       {delegated ? null : (
                         <th scope="col" style={{ whiteSpace: "nowrap" }}>
                           Delegations
+                        </th>
+                      )}
+                      <th scope="col" style={{ whiteSpace: "nowrap" }}>
+                        Delegated Amount
+                      </th>
+                      {activeValidators ? null : (
+                        <th scope="col" style={{ whiteSpace: "nowrap" }}>
+                          Jailed
                         </th>
                       )}
                     </tr>

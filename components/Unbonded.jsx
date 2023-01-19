@@ -69,7 +69,7 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
           className={`caption d-flex gap-2 align-items-center
           ${status === "Connected" ? "null" : "text-gray"}`}
         >
-          Unbonding
+          Undelegating
         </p>
         <p className={status === "Connected" ? "caption" : "caption text-gray"}>
           {unbondingDisplay}&nbsp;{denomDisplay}
@@ -78,14 +78,18 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
           {unbondingInUSDDisplay}&nbsp;{"$USD"}
         </p>
         <div className="d-flex justify-content-end">
-          <button
-            data-bs-toggle="modal"
-            data-bs-target="#viewUnbondingModal"
-            className="d-flex align-items-center gap-1 am-link text-start caption2"
-            onClick={() => stakeDispatch({ type: "EMPTY_SELECTED_VALIDATORS" })}
-          >
-            <i className="text-primary bi bi-eye"></i>View
-          </button>
+          {allUnbonding?.length != 0 ? (
+            <button
+              data-bs-toggle="modal"
+              data-bs-target="#viewUnbondingModal"
+              className="d-flex align-items-center gap-1 am-link text-start caption2"
+              onClick={() =>
+                stakeDispatch({ type: "EMPTY_SELECTED_VALIDATORS" })
+              }
+            >
+              <i className="text-primary bi bi-eye"></i>View
+            </button>
+          ) : null}
         </div>
       </div>
       <div

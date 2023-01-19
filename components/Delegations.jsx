@@ -35,6 +35,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
   } = useDelegatedValidators();
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
   let validatorsArray = allValidators.sort((a, b) => b.tokens - a.tokens);
+  console.log(allValidators);
 
   //Put all foundation nodes at the end of the array
   validatorsArray.forEach((item, index) => {
@@ -348,17 +349,46 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
               <div className="modal-body p-4 text-center d-flex flex-column align-items-start">
                 <p className="text-muted caption2 text-gray my-2">
                   Delegate From
-                </p>
-                <p className="ps-3 my-2 caption2">
-                  Validator Name :{" "}
-                  {
-                    delegatedValidators?.find(
-                      (item) =>
-                        item?.operatorAddress ===
-                        stakeState?.selectedValidators[0]
-                    )?.description?.moniker
-                  }
-                </p>
+                </p>{" "}
+                <div className="d-flex ">
+                  <div
+                    className="d-flex position-relative rounded-circle"
+                    style={{ width: "20px", aspectRatio: "1/1" }}
+                  >
+                    <img
+                      layout="fill"
+                      alt={
+                        delegatedValidators?.find(
+                          (item) =>
+                            item?.operatorAddress ===
+                            stakeState?.selectedValidators[0]
+                        )?.description?.moniker
+                      }
+                      className="rounded-circle"
+                      src={`/validatorAvatars/${
+                        delegatedValidators?.find(
+                          (item) =>
+                            item?.operatorAddress ===
+                            stakeState?.selectedValidators[0]
+                        )?.operatorAddress
+                      }.png`}
+                      onError={handleOnError}
+                    />
+                  </div>
+                  <a
+                    href={`https://explorer.assetmantle.one/validators/${
+                      delegatedValidators?.find(
+                        (item) =>
+                          item?.operatorAddress ===
+                          stakeState?.selectedValidators[0]
+                      )?.operatorAddress
+                    }`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <p className="ps-3 my-2 caption2">Validator Name : </p>
+                  </a>
+                </div>
                 <p className="ps-3 my-2 caption2">
                   Delegated Amount:{" "}
                   {fromDenom(
@@ -370,7 +400,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                   )}
                 </p>
                 <p className="text-muted caption2 text-gray my-2">
-                  Delegate to
+                  Delegate To
                 </p>
                 <div className="nav-bg d-flex flex-column p-2 rounded-3 w-100">
                   <div className="d-flex align-items-center justify-content-between my-2 w-100 gap-3">
@@ -421,8 +451,16 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                     className="d-flex w-100 mt-3"
                     style={{ overflow: "auto", maxHeight: "300px" }}
                   >
-                    <table className="table ">
-                      <thead className="bt-0">
+                    <table
+                      className="table "
+                      style={{ width: "max-content", minWidth: "100%" }}
+                    >
+                      <thead
+                        className="bt-0 top-0 nav-bg"
+                        style={{
+                          zIndex: "200",
+                        }}
+                      >
                         <tr>
                           <th></th>
                           <th className="text-white text-wrap " scope="col">
@@ -441,6 +479,14 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                           <th className="text-white text-wrap " scope="col">
                             Delegations
                           </th>
+                          <th className="text-white text-wrap " scope="col">
+                            Delegated Amount
+                          </th>
+                          {activeValidators ? null : (
+                            <th className="text-white text-wrap " scope="col">
+                              Jailed
+                            </th>
+                          )}
                         </tr>
                       </thead>
                       <tbody>
@@ -459,6 +505,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                     <input
                                       type="radio"
                                       name="radio"
+                                      className="radio-btn"
                                       onChange={() =>
                                         stakeDispatch({
                                           type: "SET_REDELEGATION_DESTINATION_ADDRESS",
@@ -486,7 +533,17 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                       />
                                     </div>
                                   </td>
-                                  <td>{item?.description?.moniker}</td>
+                                  <td>
+                                    {" "}
+                                    <a
+                                      href={`https://explorer.assetmantle.one/validators/${item.operatorAddress}`}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                    >
+                                      {item?.description?.moniker}
+                                      <i className="bi bi-arrow-up-right" />
+                                    </a>
+                                  </td>
                                   <td>
                                     {(
                                       (item?.tokens * 100) /
@@ -507,7 +564,14 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                     </td>
                                   )}
                                   <td>{item?.tokens / 1000000}</td>
-                                  <td>{item.delegatedAmount}</td>
+                                  <td>
+                                    {" "}
+                                    {delegatedValidators?.find(
+                                      (element) =>
+                                        element?.operatorAddress ==
+                                        item?.operatorAddress
+                                    )?.delegatedAmount || "-"}
+                                  </td>
                                 </tr>
                               ))
                           : validatorsArray
@@ -550,7 +614,17 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                       />
                                     </div>
                                   </td>
-                                  <td>{item?.description?.moniker}</td>
+                                  <td>
+                                    {" "}
+                                    <a
+                                      href={`https://explorer.assetmantle.one/validators/${item.operatorAddress}`}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                    >
+                                      {item?.description?.moniker}
+                                      <i className="bi bi-arrow-up-right" />
+                                    </a>
+                                  </td>
                                   <td>
                                     {(
                                       (item?.tokens * 100) /
@@ -575,6 +649,13 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                     {item.delegatedAmount
                                       ? item.delegatedAmount
                                       : "-"}
+                                  </td>
+                                  <td>
+                                    {item?.jailed ? (
+                                      <i className="bi bi-exclamation-octagon text-danger"></i>
+                                    ) : (
+                                      "-"
+                                    )}
                                   </td>
                                 </tr>
                               ))}

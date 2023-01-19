@@ -400,7 +400,6 @@ const useStakeReducer = () => {
     }
   };
   const [stakeState, stakeDispatch] = useReducer(stakeReducer, initialState);
-  console.log(stakeState);
   return { stakeState, stakeDispatch };
 };
 

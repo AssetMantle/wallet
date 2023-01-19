@@ -1,4 +1,5 @@
 import React from "react";
+import { fromChainDenom } from "../data";
 
 const AllValidators = ({
   setShowClaimError,
@@ -8,6 +9,7 @@ const AllValidators = ({
   stakeState,
   stakeDispatch,
   totalTokens,
+  delegatedValidators,
 }) => {
   // controller for onError
   const handleOnError = (e) => {
@@ -50,7 +52,7 @@ const AllValidators = ({
                     }}
                   ></input>
                 </td>
-                <td>{index + 1}</td>
+                {activeValidators ? <td>{index + 1}</td> : null}
                 <td>
                   <div
                     className="d-flex position-relative rounded-circle"
@@ -84,7 +86,14 @@ const AllValidators = ({
                   </td>
                 )}
                 <td>{(item?.tokens / 1000000).toFixed(2)}</td>
-                {/* <td>{item?.}</td> */}
+                <td>
+                  {fromChainDenom(
+                    delegatedValidators?.find(
+                      (element) =>
+                        element?.operatorAddress == item?.operatorAddress
+                    )?.delegatedAmount
+                  ) || "-"}
+                </td>
               </tr>
             ))
         : validatorsArray
@@ -119,7 +128,7 @@ const AllValidators = ({
                     }}
                   ></input>
                 </td>
-                <td>{index + 1}</td>
+                {activeValidators ? <td>{index + 1}</td> : null}
                 <td>
                   <div
                     className="d-flex position-relative rounded-circle"
@@ -154,7 +163,22 @@ const AllValidators = ({
                   </td>
                 )}
                 <td>{(item?.tokens / 1000000).toFixed(2)}</td>
-                <td></td>
+                <td>
+                  {" "}
+                  {fromChainDenom(
+                    delegatedValidators?.find(
+                      (element) =>
+                        element?.operatorAddress == item?.operatorAddress
+                    )?.delegatedAmount
+                  ) || "-"}
+                </td>
+                <td>
+                  {item?.jailed ? (
+                    <i className="bi bi-exclamation-octagon text-danger"></i>
+                  ) : (
+                    "-"
+                  )}
+                </td>
               </tr>
             ))}
     </>
