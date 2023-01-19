@@ -18,7 +18,7 @@ export const NavBarData = {
       title: "Vote",
       href: "/vote",
       variant: "am-link",
-      icon: <i className="bi bi-building-fill" />,
+      icon: <i className="bi bi-receipt-cutoff" />,
     },
     {
       title: "Bridge",
