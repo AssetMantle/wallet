@@ -54,7 +54,7 @@ export const ConnectWalletButton = ({
     dataBsToggle || dataBsTarget ? (
       <button
         type="button"
-        className="button-secondary d-flex gap-1 align-items-center am-nav-item py-1 px-3 text-primary"
+        className="button-secondary d-flex gap-1 align-items-center am-connect py-1 px-3"
         data-bs-toggle={dataBsToggle}
         data-bs-target={dataBsTarget}
         disabled={isDisabled}
