@@ -254,6 +254,14 @@ a:hover {
     }
   }
 }
+.am-connect {
+  border-color: $primary-light;
+  color: $primary-light;
+  &:hover {
+    border-color: $primary-main;
+    color: $primary-main;
+  }
+}
 
 .am-progress {
   width: 100%;
