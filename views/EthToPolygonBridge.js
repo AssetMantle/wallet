@@ -259,7 +259,7 @@ const EthToPolygonBridge = () => {
     >
       {displayShortenedAddress}{" "}
       <span className="text-primary">
-        <i className="bi bi-clipboard" />
+        <i className="bi bi-files" />
       </span>
     </button>
   ) : (
