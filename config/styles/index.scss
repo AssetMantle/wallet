@@ -517,6 +517,9 @@ input[type="checkbox"] {
   width: 18px;
   aspect-ratio: 1/1;
 }
+input[type="radio"] {
+  accent-color: $primary-main;
+}
 .btn-close {
   opacity: 1;
 }
