@@ -4,18 +4,18 @@ import { QRCodeSVG } from "qrcode.react";
 const ConnectedRecieve = ({ displayAddress }) => {
   return (
     <>
-      <div
-        className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-2 transitionAll"
-        role="button"
-        data-bs-toggle="modal"
-        data-bs-target="#receiveModal"
-      >
+      <div className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-2 transitionAll">
         <nav className="d-flex align-items-center justify-content-between gap-3">
           <div className="d-flex gap-3 align-items-center">
             <button className={`body1 text-primary`}>Receive</button>
           </div>
         </nav>
-        <div className="nav-bg rounded-4 d-flex flex-column p-3 gap-2 align-items-center justify-content-center">
+        <div
+          className="nav-bg rounded-4 d-flex flex-column p-3 gap-2 align-items-center justify-content-center border-color-primary-hover"
+          role="button"
+          data-bs-toggle="modal"
+          data-bs-target="#receiveModal"
+        >
           <div
             style={{
               width: "min(140px, 100%)",
