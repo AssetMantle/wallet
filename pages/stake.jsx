@@ -127,12 +127,14 @@ export default function Stake() {
                   Delegated
                   <Tooltip description="Showcase a list of all validators that you have ever delegated tokens with." />
                   <button
-                    className={`d-flex rounded-4 bg-theme-white align-items-center transitionAll justify-content-${
-                      delegated ? "end" : "start"
+                    className={`d-flex rounded-4 align-items-center transitionAll ${
+                      delegated
+                        ? "bg-yellow-100 justify-content-end"
+                        : "bg-theme-white justify-content-start"
                     }`}
                     style={{ width: "40px", padding: "2px" }}
                   >
-                    <div className="p-2 rounded-4 nav-bg"></div>
+                    <div className="p-2 rounded-4 bg-dark-200"></div>
                   </button>
                 </div>
               </div>
