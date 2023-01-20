@@ -21,7 +21,7 @@ const denomDisplay = defaultChainSymbol;
 const Rewards = ({ setShowClaimError, stakeState }) => {
   const walletManager = useChain(defaultChainName);
   const { delegatedValidators } = useDelegatedValidators();
-  const { getSigningStargateClient, address } = walletManager;
+  const { getSigningStargateClient, address, status } = walletManager;
 
   const { allRewards, rewardsArray, errorRewards } = useTotalRewards();
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
@@ -89,13 +89,22 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
             Cumulative Rewards
           </p>
         ) : (
-          <p className="caption d-flex gap-2 align-items-center"> Rewards</p>
+          <p
+            className={`caption d-flex gap-2 align-items-center ${
+              status === "Connected" ? null : "text-gray"
+            }`}
+          >
+            {" "}
+            Rewards
+          </p>
         )}
-        <p className="caption">
+        <p className={status === "Connected" ? "caption" : "caption text-gray"}>
           {rewardsDisplay}&nbsp;
           {denomDisplay}
         </p>
-        <p className="caption2">
+        <p
+          className={status === "Connected" ? "caption2" : "caption2 text-gray"}
+        >
           {rewardsInUSDDisplay}&nbsp;{"$USD"}
         </p>
         <div className="d-flex justify-content-end">

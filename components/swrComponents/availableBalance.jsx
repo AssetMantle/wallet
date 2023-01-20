@@ -1,8 +1,10 @@
 import React from "react";
+import { useChain } from "@cosmos-kit/react";
 import {
   defaultChainSymbol,
   placeholderAvailableBalance,
   placeholderMntlUsdValue,
+  defaultChainName,
 } from "../../config";
 import { fromDenom, useAvailableBalance, useMntlUsd } from "../../data";
 
@@ -10,6 +12,8 @@ const denomDisplay = defaultChainSymbol;
 
 export const AvailableBalance = () => {
   console.log("inside AvailableBalance");
+  const walletManager = useChain(defaultChainName);
+  const { getSigningStargateClient, address, status } = walletManager;
 
   const { availableBalance, errorAvailableBalance } = useAvailableBalance();
 
@@ -19,7 +23,7 @@ export const AvailableBalance = () => {
       : fromDenom(availableBalance);
 
   return (
-    <p className="caption">
+    <p className={status === "Connected" ? "caption" : "caption text-gray"}>
       {balanceDisplay}&nbsp;{denomDisplay}
     </p>
   );
@@ -27,6 +31,8 @@ export const AvailableBalance = () => {
 
 export const AvailableBalanceUsd = () => {
   console.log("inside AvailableBalanceUsd");
+  const walletManager = useChain(defaultChainName);
+  const { getSigningStargateClient, address, status } = walletManager;
 
   const { availableBalance, errorAvailableBalance } = useAvailableBalance();
 
