@@ -356,6 +356,13 @@ a:hover {
   border: 1px solid;
   border-color: $primary-main;
 }
+.border-color-primary-hover {
+  border: 2px solid;
+  border-color: transparent;
+  &:hover {
+    border-color: $primary-main;
+  }
+}
 .overflow-y {
   overflow: hidden;
   overflow-x: auto;
