@@ -350,7 +350,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                 <p className="text-muted caption2 text-gray my-2">
                   Delegate From
                 </p>{" "}
-                <div className="d-flex ">
+                <div className="d-flex align-items-center">
                   <div
                     className="d-flex position-relative rounded-circle"
                     style={{ width: "20px", aspectRatio: "1/1" }}
@@ -364,7 +364,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                             stakeState?.selectedValidators[0]
                         )?.description?.moniker
                       }
-                      className="rounded-circle"
+                      className="rounded-circle w-100 h-auto"
                       src={`/validatorAvatars/${
                         delegatedValidators?.find(
                           (item) =>
@@ -386,7 +386,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                     target="_blank"
                     rel="noreferrer"
                   >
-                    <p className="ps-3 my-2 caption2">Validator Name : </p>
+                    <p className="ps-3 caption2">Validator Name : </p>
                   </a>
                 </div>
                 <p className="ps-3 my-2 caption2">
@@ -466,8 +466,12 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                           <th className="text-white text-wrap " scope="col">
                             Rank
                           </th>
-                          <th></th>
-                          <th className="text-white text-wrap " scope="col">
+                          {/* <th></th> */}
+                          <th
+                            className="text-white text-wrap "
+                            scope="col"
+                            colSpan={2}
+                          >
                             Validator Name
                           </th>
                           <th className="text-white text-wrap " scope="col">
