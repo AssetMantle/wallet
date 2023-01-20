@@ -5,8 +5,7 @@ import { IoRadioButtonOn } from "react-icons/io5";
 const ActiveProposals = ({ allProposals }) => {
   const [onVoteHover, setOnVoteHover] = useState(null);
   const { voteState, voteDispatch } = UseVoteReducer();
-  console.log(allProposals?.filter((item) => item?.status !== 3)?.length);
-
+  console.log(allProposals);
   return (
     <>
       {allProposals?.filter((item) => item?.status !== 3)?.length ? (
@@ -27,31 +26,39 @@ const ActiveProposals = ({ allProposals }) => {
             >
               <div
                 className={`bg-translucent rounded-3`}
-                style={{ opacity: proposal.idIcon ? "1" : "0.6" }}
+                // style={{ opacity: proposal.idIcon ? "1" : "0.6" }}
               >
                 <div className="d-flex flex-column gap-2 p-2">
                   <div className="d-flex justify-content-between gap-3 pb-2">
                     <h4 className="d-flex gap-1 align-items-center body2 text-primary">
-                      {proposal?.proposal_id}{" "}
+                      #{proposal?.proposalId?.high + proposal?.proposalId?.low}{" "}
                     </h4>
-                    {proposal?.content?.type && (
-                      <div
-                        className="button-secondary caption bg-translucent px-2 pb-0 pt-1"
-                        style={{ fontWeight: "400" }}
-                      >
-                        {proposal?.content?.type}
-                      </div>
-                    )}
+                    <div
+                      className="button-secondary caption bg-translucent px-2 pb-0 pt-1"
+                      style={{ fontWeight: "400" }}
+                    >
+                      {proposal?.content?.$typeUrl?.slice(23)}
+                    </div>
                   </div>
                   <h5 className="caption2 text-primary">
                     {proposal?.content?.title}
                   </h5>
 
                   <p className="caption2">
-                    Voting Start : {proposal?.voting_start_time}
+                    Voting Start :{" "}
+                    {new Date(
+                      (proposal?.votingStartTime?.seconds?.low +
+                        proposal?.votingStartTime?.seconds?.high) *
+                        1000
+                    ).toLocaleDateString()}
                   </p>
                   <p className="caption2">
-                    Voting End : {proposal?.voting_end_time}
+                    Voting End :{" "}
+                    {new Date(
+                      (proposal?.votingEndTime?.seconds?.low +
+                        proposal?.votingEndTime?.seconds?.high) *
+                        1000
+                    ).toLocaleDateString()}
                   </p>
                 </div>
                 <div className="py-2 d-flex justify-content-between align-items-center position-relative">
@@ -64,7 +71,7 @@ const ActiveProposals = ({ allProposals }) => {
                       fontWeight: "700",
                     }}
                   >
-                    {proposal?.status}
+                    Voting Period
                   </p>
                   {onVoteHover === proposal?.proposal_id &&
                   voteState.proposalID !== proposal?.proposal_id ? (
