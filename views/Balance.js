@@ -2,16 +2,23 @@ import React, { Suspense } from "react";
 import { MntlUsdPrice } from "../components";
 import { AvailableBalance, AvailableBalanceUsd } from "../components";
 import Tooltip from "../components/Tooltip";
-import { defaultChainSymbol } from "../config";
+import { defaultChainSymbol, defaultChainName } from "../config";
+import { useChain } from "@cosmos-kit/react";
 
 export default function Balance() {
   const denomDisplay = defaultChainSymbol;
+  const walletManager = useChain(defaultChainName);
+  const { getSigningStargateClient, address, status } = walletManager;
 
   return (
     <section className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-3">
       <h4 className="body1 text-primary">Wallet balances</h4>
       <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-1">
-        <p className="caption d-flex gap-2 align-items-center text-white-300">
+        <p
+          className={`caption d-flex gap-2 align-items-center text-${
+            status === "Connected" ? "white-300" : "gray"
+          }`}
+        >
           Available Balance
           <Tooltip
             titlePrimary={true}
@@ -27,7 +34,11 @@ export default function Balance() {
         </Suspense>
       </div>
       <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-1">
-        <p className="caption d-flex gap-2 align-items-center text-white-300">
+        <p
+          className={`caption d-flex gap-2 align-items-center text-${
+            status === "Connected" ? "white-300" : "gray"
+          }`}
+        >
           Current Price of {denomDisplay}
         </p>
         <MntlUsdPrice />
