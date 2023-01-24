@@ -187,32 +187,32 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                   className="nav-bg p-2 rounded-4 w-100"
                   style={{ overflowX: "auto" }}
                 >
-                  <table className="table">
+                  <table className="table claim-table">
                     <thead className="bt-0">
                       <tr>
                         <th
-                          className="text-white"
+                          className="text-white caption2"
                           scope="col"
                           style={{ whiteSpace: "nowrap" }}
                         >
                           Validator Name
                         </th>
                         <th
-                          className="text-white"
+                          className="text-white caption2"
                           scope="col"
                           style={{ whiteSpace: "nowrap" }}
                         >
                           Commission
                         </th>
                         <th
-                          className="text-white"
+                          className="text-white caption2"
                           scope="col"
                           style={{ whiteSpace: "nowrap" }}
                         >
                           Delegated Amount
                         </th>
                         <th
-                          className="text-white"
+                          className="text-white caption2"
                           scope="col"
                           style={{ whiteSpace: "nowrap" }}
                         >
@@ -235,14 +235,14 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                             )
                             .map((item, index) => (
                               <tr key={index}>
-                                <td className="text-white">
+                                <td className="caption2">
                                   {item?.description?.moniker}
                                 </td>
                                 {item?.commission?.commissionRates?.rate ==
                                 0 ? (
-                                  <td className="text-white">0 %</td>
+                                  <td className="caption2">0 %</td>
                                 ) : (
-                                  <td className="text-white">
+                                  <td className="caption2">
                                     {item?.commission?.commissionRates?.rate.slice(
                                       0,
                                       -16
@@ -250,10 +250,10 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                                     %
                                   </td>
                                 )}
-                                <td className="text-white">
+                                <td className="caption2">
                                   {item?.tokens / 1000000}
                                 </td>
-                                <td className="text-white">
+                                <td className="caption2">
                                   {fromChainDenom(
                                     new BigNumber(
                                       rewardsArray?.find(
@@ -281,16 +281,16 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                       ) : delegatedValidators?.length ? (
                         delegatedValidators?.map((item, index) => (
                           <tr key={index}>
-                            <td className="text-white">
+                            <td className="caption2">
                               {item?.description?.moniker}
                             </td>
-                            <td className="text-white">
+                            <td className="caption2">
                               {item?.commission?.commission_rates?.rate * 100}%
                             </td>
-                            <td className="text-white">
+                            <td className="caption2">
                               {item?.tokens / 1000000}
                             </td>
-                            <td className="text-white">
+                            <td className="caption2">
                               {fromChainDenom(
                                 new BigNumber(
                                   rewardsArray?.find(
@@ -336,7 +336,7 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                 </p>
                 <div className="d-flex justify-content-end">
                   <button
-                    className="btn btn-primary px-5 mt-3 text-right rounded-5"
+                    className="button-primary py-2 px-5 mt-3 caption text-center"
                     onClick={handleClaim}
                   >
                     Submit
@@ -382,7 +382,7 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                 )}
                 <div className="d-flex justify-content-end">
                   <button
-                    className="btn btn-primary px-5 mt-3 text-right rounded-5"
+                    className="button-primary py-2 px-5 mt-3 caption text-center"
                     onClick={handleAddressChange}
                     disabled={
                       NewAddress &&
