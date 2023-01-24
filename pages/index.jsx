@@ -1,7 +1,6 @@
 import { useChain } from "@cosmos-kit/react";
 import Head from "next/head";
-import { QRCodeSVG } from "qrcode.react";
-import React, { Suspense, useReducer, useState } from "react";
+import React, { useReducer, useState } from "react";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import Tooltip from "../components/Tooltip";
 import {
@@ -20,6 +19,9 @@ import {
   useAvailableBalance,
 } from "../data";
 import { isObjEmpty } from "../lib";
+import ConnectedRecieve from "../components/ConnectedRecieve";
+import DisconnecedRecieve from "../components/DisconnecedRecieve";
+import TransactionManifestModal from "../components/TransactionManifestModal";
 
 export default function Transact() {
   const [advanced, setAdvanced] = useState(false);
@@ -42,36 +44,22 @@ export default function Transact() {
     connect();
   };
   const handleSubmit = async (e) => {
-    console.log("inside handleSubmit()");
-    e.preventDefault();
+    // copy form states to local variables
+    const localRecipientAddress = formState.recipientAddress;
+    const localTransferAmount = formState.transferAmount;
+    const localMemo = formState.memo;
 
-    // execute the dispatch operations pertaining to submit
-    formDispatch({
-      type: "SUBMIT",
-    });
+    const { response, error } = await sendTokensTxn(
+      address,
+      localRecipientAddress,
+      localTransferAmount,
+      localMemo,
+      { getSigningStargateClient }
+    );
+    console.log("response: ", response, " error: ", error);
 
-    // if no validation errors, proceed to transaction processing
-    if (
-      formState.recipientAddress.length != 0 &&
-      formState.transferAmount.length != 0
-    ) {
-      // copy form states to local variables
-      const localRecipientAddress = formState.recipientAddress;
-      const localTransferAmount = formState.transferAmount;
-      const localMemo = formState.memo;
-
-      const { response, error } = await sendTokensTxn(
-        address,
-        localRecipientAddress,
-        localTransferAmount,
-        localMemo,
-        { getSigningStargateClient }
-      );
-      console.log("response: ", response, " error: ", error);
-
-      // reset the form values
-      formDispatch({ type: "RESET" });
-    }
+    // reset the form values
+    formDispatch({ type: "RESET" });
   };
 
   const formReducer = (state = initialState, action) => {
@@ -302,7 +290,11 @@ export default function Transact() {
             </nav>
             <div className="nav-bg rounded-4 d-flex flex-column p-3 gap-3">
               <label
-                className="caption d-flex gap-2 align-items-center"
+                className={
+                  status === "Connected"
+                    ? "caption d-flex gap-2 align-items-center"
+                    : "caption d-flex gap-2 align-items-center text-gray"
+                }
                 htmlFor="recipientAddress"
               >
                 Recipient Address{" "}
@@ -312,6 +304,7 @@ export default function Transact() {
                 <input
                   className="bg-t p-3 py-2 rounded-2 am-input w-100"
                   type="text"
+                  disabled={status === "Disconnected"}
                   name="recipientAddress"
                   id="recipientAddress"
                   value={formState?.recipientAddress}
@@ -335,13 +328,22 @@ export default function Transact() {
               </div>
 
               <label
-                className="caption d-flex gap-2 align-items-center"
+                className={
+                  status === "Connected"
+                    ? "caption d-flex gap-2 align-items-center"
+                    : "caption d-flex gap-2 align-items-center text-gray"
+                }
                 htmlFor="token"
               >
                 Token
               </label>
               <input
-                className="bg-t p-3 py-2 rounded-2 am-input"
+                disabled={status === "Disconnected"}
+                className={
+                  status === "Connected"
+                    ? "bg-t p-3 py-2 rounded-2 am-input"
+                    : "bg-t p-3 py-2 rounded-2 am-input text-gray"
+                }
                 type="text"
                 name="token"
                 id="token"
@@ -351,7 +353,11 @@ export default function Transact() {
               />
 
               <label
-                className="caption d-flex gap-2 align-items-end justify-content-between"
+                className={
+                  status === "Connected"
+                    ? "caption d-flex gap-2 align-items-end justify-content-between"
+                    : "caption d-flex gap-2 align-items-end justify-content-between text-gray"
+                }
                 htmlFor="amount"
               >
                 Amount{" "}
@@ -364,6 +370,7 @@ export default function Transact() {
               <div>
                 <div className="p-3 py-2 d-flex rounded-2 gap-2 am-input">
                   <input
+                    disabled={status === "Disconnected"}
                     className="bg-t"
                     type="number"
                     name="amount"
@@ -439,6 +446,7 @@ export default function Transact() {
                   </label>
                   <input
                     className="bg-t p-3 py-2 rounded-2 am-input"
+                    disabled={status === "Disconnected"}
                     type="text"
                     name="memo"
                     id="memo"
@@ -453,115 +461,52 @@ export default function Transact() {
                   />
                 </>
               )}
-              {status && status === "Connected" ? (
-                <button
-                  className="btn button-primary px-5 ms-auto"
-                  type="submit"
-                  disabled={!isObjEmpty(formState?.errorMessages)}
-                  onClick={handleSubmit}
-                >
-                  Send
-                </button>
-              ) : (
-                <button
-                  className="btn button-primary px-5 ms-auto"
-                  type="submit"
-                  data-bs-target="#WalletConnectModal"
-                  data-bs-toggle="modal"
-                  onClick={onClickConnect}
-                >
-                  Connect
-                </button>
-              )}
+              <button
+                className="btn button-primary px-5 ms-auto"
+                type="submit"
+                disabled={!isObjEmpty(formState?.errorMessages)}
+                data-bs-toggle={
+                  formState.recipientAddress.length != 0 &&
+                  formState.transferAmount.length != 0
+                    ? "modal"
+                    : ""
+                }
+                data-bs-target="#transactionManifestModal"
+                onClick={() => {
+                  formDispatch({
+                    type: "SUBMIT",
+                  });
+                }}
+              >
+                Send
+              </button>
             </div>
           </div>
         </ScrollableSectionContainer>
         <div className="col-12 pt-3 pt-lg-0 col-lg-4">
-          <div
-            className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-2 transitionAll"
-            role="button"
-            data-bs-toggle="modal"
-            data-bs-target="#receiveModal"
-          >
-            <nav className="d-flex align-items-center justify-content-between gap-3">
-              <div className="d-flex gap-3 align-items-center">
-                <button className={`body1 text-primary`}>Receive</button>
-              </div>
-            </nav>
-            <div className="nav-bg rounded-4 d-flex flex-column p-3 gap-2 align-items-center justify-content-center">
-              <div
-                style={{
-                  width: "min(140px, 100%)",
-                  aspectRatio: "1/1",
-                  position: "relative",
-                }}
-              >
-                <Suspense fallback={"Loading..."}>
-                  <QRCodeSVG
-                    width="100%"
-                    height="100%"
-                    value={displayAddress}
-                  />
-                </Suspense>
-              </div>
-              <h4 className="body2 text-primary">Wallet Address</h4>
-              <button
-                className="d-flex align-items-center justify-content-center gap-2 text-center caption2 pt-1"
-                onClick={() => navigator.clipboard.writeText(displayAddress)}
-                style={{ wordBreak: "break-all" }}
-              >
-                <Suspense fallback="Loading...">
-                  {`${displayAddress.substring(
-                    0,
-                    12
-                  )}.......${displayAddress.substring(
-                    displayAddress.length - 9,
-                    displayAddress.length
-                  )}`}
-                </Suspense>
-                <span className="text-primary">
-                  <i className="bi bi-files" />
-                </span>
-              </button>
-            </div>
-          </div>
+          {status === "Connected" ? (
+            <ConnectedRecieve displayAddress={displayAddress} />
+          ) : (
+            <DisconnecedRecieve />
+          )}
         </div>
       </section>
-      <div className="modal " tabIndex="-1" role="dialog" id="receiveModal">
-        <div className="modal-dialog modal-dialog-centered" role="document">
-          <div className="modal-content">
-            <div className="modal-body p-3  d-flex flex-column">
-              <div className="nav-bg rounded-4 d-flex flex-column p-4 px-2 gap-2 align-items-center justify-content-center">
-                <div
-                  style={{
-                    width: "min(350px, 100%)",
-                    aspectRatio: "1/1",
-                    position: "relative",
-                  }}
-                >
-                  <Suspense fallback="Loading...">
-                    <QRCodeSVG
-                      width="100%"
-                      height="100%"
-                      value={displayAddress}
-                    />
-                  </Suspense>
-                </div>
-                <h4 className="body2 text-primary pt-1">Wallet Address</h4>
-                <button
-                  className="d-flex align-items-center justify-content-center gap-2 text-center caption2"
-                  onClick={() => navigator.clipboard.writeText(displayAddress)}
-                  style={{ wordBreak: "break-all" }}
-                >
-                  <Suspense fallback="Loading...">{displayAddress}</Suspense>
-                  <span className="text-primary">
-                    <i className="bi bi-files" />
-                  </span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div
+        className="modal "
+        tabIndex="-1"
+        role="dialog"
+        id="transactionManifestModal"
+      >
+        <TransactionManifestModal
+          displayData={[
+            { title: "From:", value: address },
+            { title: "To:", value: formState.recipientAddress },
+            { title: "Amount:", value: formState.transferAmount },
+            { title: "Transaction Type", value: "Send" },
+            { title: "Wallet Type", value: wallet?.prettyName },
+          ]}
+          handleSubmit={handleSubmit}
+        />
       </div>
     </>
   );

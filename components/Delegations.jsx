@@ -16,6 +16,7 @@ import {
   useMntlUsd,
 } from "../data";
 import { isObjEmpty } from "../lib";
+import TransactionManifestModal from "./TransactionManifestModal";
 
 const denomDisplay = defaultChainSymbol;
 
@@ -26,7 +27,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
   const [searchValue, setSearchValue] = useState("");
   const [activeValidators, setActiveValidators] = useState(true);
   const walletManager = useChain(defaultChainName);
-  const { getSigningStargateClient, address, status } = walletManager;
+  const { getSigningStargateClient, address, status, wallet } = walletManager;
   const {
     delegatedValidators,
     totalDelegatedAmount,
@@ -35,6 +36,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
   } = useDelegatedValidators();
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
   let validatorsArray = allValidators.sort((a, b) => b.tokens - a.tokens);
+  console.log(allValidators);
 
   //Put all foundation nodes at the end of the array
   validatorsArray.forEach((item, index) => {
@@ -86,35 +88,27 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
   const handleRedelegate = async (e) => {
     // final form validation before txn is
     e.preventDefault();
-    stakeDispatch({ type: "SUBMIT_REDELEGATE" });
-    if (
-      stakeState.redelegationDestination.length != 0 &&
-      stakeState.redelegationAmount.length != 0
-    ) {
-      const { response, error } = await sendRedelegation(
-        address,
-        stakeState?.redelegationSrc,
-        stakeState?.redelegationDestination,
-        stakeState?.redelegationAmount,
-        stakeState?.memo,
-        { getSigningStargateClient }
-      );
-      console.log("response: ", response, " error: ", error);
-    }
+
+    const { response, error } = await sendRedelegation(
+      address,
+      stakeState?.redelegationSrc,
+      stakeState?.redelegationDestination,
+      stakeState?.redelegationAmount,
+      stakeState?.memo,
+      { getSigningStargateClient }
+    );
+    console.log("response: ", response, " error: ", error);
   };
   const handleUndelegate = async (e) => {
     e.preventDefault();
-    stakeDispatch({ type: "SUBMIT_UNDELEGATE" });
-    if (stakeState.undelegationAmount != 0) {
-      const { response, error } = await sendUndelegation(
-        address,
-        stakeState?.undelegationSrc,
-        stakeState.undelegationAmount.toString(),
-        stakeState?.memo,
-        { getSigningStargateClient }
-      );
-      console.log("response:", response, "error:", error);
-    }
+    const { response, error } = await sendUndelegation(
+      address,
+      stakeState?.undelegationSrc,
+      stakeState.undelegationAmount.toString(),
+      stakeState?.memo,
+      { getSigningStargateClient }
+    );
+    console.log("response:", response, "error:", error);
   };
 
   // controller for onError
@@ -140,15 +134,25 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
               Cumulative Delegated
             </p>
           ) : (
-            <p className="caption d-flex gap-2 align-items-center">
+            <p
+              className={`caption d-flex gap-2 align-items-center ${
+                status === "Connected" ? null : "text-gray"
+              }`}
+            >
               {" "}
               Delegated
             </p>
           )}
-          <p className="caption">
+          <p
+            className={status === "Connected" ? "caption" : "caption text-gray"}
+          >
             {delegationsDisplay}&nbsp;{denomDisplay}
           </p>
-          <p className="caption2">
+          <p
+            className={
+              status === "Connected" ? "caption2" : "caption2 text-gray"
+            }
+          >
             {delegationsInUSDDisplay}&nbsp;{"$USD"}
           </p>
           {showRedelegateUndelegateAndClaim &&
@@ -284,10 +288,14 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
               </div>
               <div className="modal-footer ">
                 <button
-                  onClick={(e) => handleUndelegate(e)}
+                  data-bs-toggle={
+                    stakeState.undelegationAmount != 0 ? "modal" : ""
+                  }
+                  data-bs-target="#undelegateTransactionManifestModal"
                   type="button"
                   disabled={!isObjEmpty(stakeState?.errorMessages)}
                   className="button-primary px-5 py-2"
+                  onClick={() => stakeDispatch({ type: "SUBMIT_UNDELEGATE" })}
                 >
                   Submit
                 </button>
@@ -338,17 +346,46 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
               <div className="modal-body p-4 text-center d-flex flex-column align-items-start">
                 <p className="text-muted caption2 text-gray my-2">
                   Delegate From
-                </p>
-                <p className="ps-3 my-2 caption2">
-                  Validator Name :{" "}
-                  {
-                    delegatedValidators?.find(
-                      (item) =>
-                        item?.operatorAddress ===
-                        stakeState?.selectedValidators[0]
-                    )?.description?.moniker
-                  }
-                </p>
+                </p>{" "}
+                <div className="d-flex align-items-center">
+                  <div
+                    className="d-flex position-relative rounded-circle"
+                    style={{ width: "20px", aspectRatio: "1/1" }}
+                  >
+                    <img
+                      layout="fill"
+                      alt={
+                        delegatedValidators?.find(
+                          (item) =>
+                            item?.operatorAddress ===
+                            stakeState?.selectedValidators[0]
+                        )?.description?.moniker
+                      }
+                      className="rounded-circle w-100 h-auto"
+                      src={`/validatorAvatars/${
+                        delegatedValidators?.find(
+                          (item) =>
+                            item?.operatorAddress ===
+                            stakeState?.selectedValidators[0]
+                        )?.operatorAddress
+                      }.png`}
+                      onError={handleOnError}
+                    />
+                  </div>
+                  <a
+                    href={`https://explorer.assetmantle.one/validators/${
+                      delegatedValidators?.find(
+                        (item) =>
+                          item?.operatorAddress ===
+                          stakeState?.selectedValidators[0]
+                      )?.operatorAddress
+                    }`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <p className="ps-3 caption2">Validator Name : </p>
+                  </a>
+                </div>
                 <p className="ps-3 my-2 caption2">
                   Delegated Amount:{" "}
                   {fromDenom(
@@ -360,7 +397,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                   )}
                 </p>
                 <p className="text-muted caption2 text-gray my-2">
-                  Delegate to
+                  Delegate To
                 </p>
                 <div className="nav-bg d-flex flex-column p-2 rounded-3 w-100">
                   <div className="d-flex align-items-center justify-content-between my-2 w-100 gap-3">
@@ -411,15 +448,27 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                     className="d-flex w-100 mt-3"
                     style={{ overflow: "auto", maxHeight: "300px" }}
                   >
-                    <table className="table ">
-                      <thead className="bt-0">
+                    <table
+                      className="table "
+                      style={{ width: "max-content", minWidth: "100%" }}
+                    >
+                      <thead
+                        className="bt-0 top-0 nav-bg"
+                        style={{
+                          zIndex: "200",
+                        }}
+                      >
                         <tr>
                           <th></th>
                           <th className="text-white text-wrap " scope="col">
                             Rank
                           </th>
-                          <th></th>
-                          <th className="text-white text-wrap " scope="col">
+                          {/* <th></th> */}
+                          <th
+                            className="text-white text-wrap "
+                            scope="col"
+                            colSpan={2}
+                          >
                             Validator Name
                           </th>
                           <th className="text-white text-wrap " scope="col">
@@ -431,6 +480,14 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                           <th className="text-white text-wrap " scope="col">
                             Delegations
                           </th>
+                          <th className="text-white text-wrap " scope="col">
+                            Delegated Amount
+                          </th>
+                          {activeValidators ? null : (
+                            <th className="text-white text-wrap " scope="col">
+                              Jailed
+                            </th>
+                          )}
                         </tr>
                       </thead>
                       <tbody>
@@ -449,6 +506,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                     <input
                                       type="radio"
                                       name="radio"
+                                      className="radio-btn"
                                       onChange={() =>
                                         stakeDispatch({
                                           type: "SET_REDELEGATION_DESTINATION_ADDRESS",
@@ -476,7 +534,17 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                       />
                                     </div>
                                   </td>
-                                  <td>{item?.description?.moniker}</td>
+                                  <td>
+                                    {" "}
+                                    <a
+                                      href={`https://explorer.assetmantle.one/validators/${item.operatorAddress}`}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                    >
+                                      {item?.description?.moniker}
+                                      <i className="bi bi-arrow-up-right" />
+                                    </a>
+                                  </td>
                                   <td>
                                     {(
                                       (item?.tokens * 100) /
@@ -497,7 +565,14 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                     </td>
                                   )}
                                   <td>{item?.tokens / 1000000}</td>
-                                  <td>{item.delegatedAmount}</td>
+                                  <td>
+                                    {" "}
+                                    {delegatedValidators?.find(
+                                      (element) =>
+                                        element?.operatorAddress ==
+                                        item?.operatorAddress
+                                    )?.delegatedAmount || "-"}
+                                  </td>
                                 </tr>
                               ))
                           : validatorsArray
@@ -540,7 +615,17 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                       />
                                     </div>
                                   </td>
-                                  <td>{item?.description?.moniker}</td>
+                                  <td>
+                                    {" "}
+                                    <a
+                                      href={`https://explorer.assetmantle.one/validators/${item.operatorAddress}`}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                    >
+                                      {item?.description?.moniker}
+                                      <i className="bi bi-arrow-up-right" />
+                                    </a>
+                                  </td>
                                   <td>
                                     {(
                                       (item?.tokens * 100) /
@@ -565,6 +650,13 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                                     {item.delegatedAmount
                                       ? item.delegatedAmount
                                       : "-"}
+                                  </td>
+                                  <td>
+                                    {item?.jailed ? (
+                                      <i className="bi bi-exclamation-octagon text-danger"></i>
+                                    ) : (
+                                      "-"
+                                    )}
                                   </td>
                                 </tr>
                               ))}
@@ -631,10 +723,19 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
               </div>
               <div className="modal-footer ">
                 <button
-                  onClick={(e) => handleRedelegate(e)}
+                  data-bs-toggle={
+                    stakeState.redelegationDestination.length != 0 &&
+                    stakeState.redelegationAmount.length != 0
+                      ? "modal"
+                      : ""
+                  }
+                  data-bs-target="#redelegateTransactionManifestModal"
                   type="button"
                   disabled={!isObjEmpty(stakeState?.errorMessages)}
                   className="button-primary px-5 py-2"
+                  onClick={() => {
+                    stakeDispatch({ type: "SUBMIT_REDELEGATE" });
+                  }}
                 >
                   Submit
                 </button>
@@ -642,6 +743,42 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
             </div>
           </div>
         </div>
+      </div>
+      <div
+        className="modal "
+        tabIndex="-1"
+        role="dialog"
+        id="redelegateTransactionManifestModal"
+      >
+        <TransactionManifestModal
+          displayData={[
+            { title: "Redelegating From:", value: stakeState.redelegationSrc },
+            {
+              title: "Redelegating To:",
+              value: stakeState.redelegationDestination,
+            },
+            { title: "Amount:", value: stakeState.redelegationAmount },
+            { title: "Transaction Type", value: "Redelegate" },
+            { title: "Wallet Type", value: "Keplr" },
+          ]}
+          handleSubmit={handleRedelegate}
+        />
+      </div>
+      <div
+        className="modal "
+        tabIndex="-1"
+        role="dialog"
+        id="undelegateTransactionManifestModal"
+      >
+        <TransactionManifestModal
+          displayData={[
+            { title: "Undelegating From:", value: stakeState.undelegationSrc },
+            { title: "Amount:", value: stakeState.undelegationAmount },
+            { title: "Transaction Type", value: "Undelegate" },
+            { title: "Wallet Type", value: wallet?.prettyName },
+          ]}
+          handleSubmit={handleUndelegate}
+        />
       </div>
     </>
   );
