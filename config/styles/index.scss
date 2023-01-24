@@ -511,6 +511,17 @@ hr,
       max-width: 100px;
     }
   }
+  &.claim-table {
+    & > :not(caption) > * > * {
+      border: none;
+      text-align: center;
+      vertical-align: middle;
+      height: max-content;
+      &:nth-child(4) {
+        max-width: unset;
+      }
+    }
+  }
 }
 input[type="checkbox"] {
   accent-color: $primary-main;
