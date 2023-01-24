@@ -15,13 +15,14 @@ import {
   useMntlUsd,
   useTotalRewards,
 } from "../data";
+import TransactionManifestModal from "./TransactionManifestModal";
 
 const denomDisplay = defaultChainSymbol;
 
 const Rewards = ({ setShowClaimError, stakeState }) => {
   const walletManager = useChain(defaultChainName);
   const { delegatedValidators } = useDelegatedValidators();
-  const { getSigningStargateClient, address } = walletManager;
+  const { getSigningStargateClient, address, status, wallet } = walletManager;
 
   const { allRewards, rewardsArray, errorRewards } = useTotalRewards();
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
@@ -89,13 +90,22 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
             Cumulative Rewards
           </p>
         ) : (
-          <p className="caption d-flex gap-2 align-items-center"> Rewards</p>
+          <p
+            className={`caption d-flex gap-2 align-items-center ${
+              status === "Connected" ? null : "text-gray"
+            }`}
+          >
+            {" "}
+            Rewards
+          </p>
         )}
-        <p className="caption">
+        <p className={status === "Connected" ? "caption" : "caption text-gray"}>
           {rewardsDisplay}&nbsp;
           {denomDisplay}
         </p>
-        <p className="caption2">
+        <p
+          className={status === "Connected" ? "caption2" : "caption2 text-gray"}
+        >
           {rewardsInUSDDisplay}&nbsp;{"$USD"}
         </p>
         <div className="d-flex justify-content-end">
@@ -336,8 +346,9 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                 </p>
                 <div className="d-flex justify-content-end">
                   <button
-                    className="button-primary py-2 px-5 mt-3 caption text-center"
-                    onClick={handleClaim}
+                    className="btn btn-primary px-5 mt-3 text-right rounded-5"
+                    data-bs-toggle="modal"
+                    data-bs-target="#transactionManifestModal"
                   >
                     Submit
                   </button>
@@ -399,6 +410,42 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
             </div>
           )}
         </div>
+      </div>
+      <div
+        className="modal "
+        tabIndex="-1"
+        role="dialog"
+        id="transactionManifestModal"
+      >
+        <TransactionManifestModal
+          displayData={[
+            { title: "Claiming rewards to", value: address },
+            {
+              title: "Claiming rewards from",
+              value: stakeState.selectedValidators.map((item) => item),
+            },
+            {
+              title: "amount",
+              value: stakeState?.selectedValidators.length
+                ? fromChainDenom(selectedRewards)
+                : rewardsArray
+                    ?.filter((item) =>
+                      stakeState?.selectedValidators?.includes(
+                        item?.validatorAddress
+                      )
+                    )
+                    .reduce(
+                      (accumulator, currentValue) =>
+                        parseFloat(accumulator) +
+                          parseFloat(currentValue?.reward[0]?.amount) || 0,
+                      parseFloat(0)
+                    ),
+            },
+            { title: "Transaction Type", value: "Claim" },
+            { title: "Wallet Type", value: wallet?.prettyName },
+          ]}
+          handleSubmit={handleClaim}
+        />
       </div>
     </div>
   );

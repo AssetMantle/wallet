@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { useChain } from "@cosmos-kit/react";
 import {
   defaultChainSymbol,
   placeholderMntlUsdValue,
   placeholderTotalUnbonding,
+  defaultChainName,
 } from "../config";
 import {
   fromChainDenom,
@@ -15,6 +17,9 @@ import {
 const denomDisplay = defaultChainSymbol;
 
 const Unbonded = ({ stakeState, stakeDispatch }) => {
+  const walletManager = useChain(defaultChainName);
+  const { getSigningStargateClient, address, status, wallet } = walletManager;
+  console.log(wallet);
   const [activeValidators, setActiveValidators] = useState(true);
   const {
     totalUnbondingAmount,
@@ -61,22 +66,31 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
   return (
     <div className="nav-bg p-3 rounded-4 gap-3">
       <div className="d-flex flex-column gap-2">
-        <p className="caption d-flex gap-2 align-items-center">Unbonding</p>
-        <p className="caption">
+        <p
+          className={`caption d-flex gap-2 align-items-center
+          ${status === "Connected" ? "null" : "text-gray"}`}
+        >
+          Undelegating
+        </p>
+        <p className={status === "Connected" ? "caption" : "caption text-gray"}>
           {unbondingDisplay}&nbsp;{denomDisplay}
         </p>
-        <p className="caption2">
+        <p className={status === "Connected" ? "caption" : "caption text-gray"}>
           {unbondingInUSDDisplay}&nbsp;{"$USD"}
         </p>
         <div className="d-flex justify-content-end">
-          <button
-            data-bs-toggle="modal"
-            data-bs-target="#viewUnbondingModal"
-            className="d-flex align-items-center gap-1 am-link text-start caption2"
-            onClick={() => stakeDispatch({ type: "EMPTY_SELECTED_VALIDATORS" })}
-          >
-            <i className="text-primary bi bi-eye"></i>View
-          </button>
+          {allUnbonding?.length != 0 ? (
+            <button
+              data-bs-toggle="modal"
+              data-bs-target="#viewUnbondingModal"
+              className="d-flex align-items-center gap-1 am-link text-start caption2"
+              onClick={() =>
+                stakeDispatch({ type: "EMPTY_SELECTED_VALIDATORS" })
+              }
+            >
+              <i className="text-primary bi bi-eye"></i>View
+            </button>
+          ) : null}
         </div>
       </div>
       <div
@@ -175,7 +189,7 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
                             Validator Name
                           </th>
                           <th className="no-text-break text-white" scope="col">
-                            Unelegating Amount
+                            Undelegating Amount
                           </th>
                           <th className="no-text-break text-white" scope="col">
                             Duration Left
