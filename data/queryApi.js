@@ -215,7 +215,6 @@ export const useTotalUnbonding = () => {
         await client.cosmos.staking.v1beta1.delegatorUnbondingDelegations({
           delegatorAddr: address,
         });
-      console.log(unbondingResponses);
 
       if (!unbondingResponses.length) {
         totalUnbondingAmount = 0;
@@ -616,18 +615,22 @@ export const useAllValidators = () => {
 export const useVote = (proposalId) => {
   // get the connected wallet parameters from useChain hook
   const walletManager = useChain(defaultChainName);
-  const { walletStatus, address, currentWalletInfo } = walletManager;
-  const voter = address;
+  const { address } = walletManager;
   // fetcher function for useSwr of useAvailableBalance()
-  const fetchVote = async (url) => {
+  const fetchVote = async (url, address) => {
     let voteInfo;
-
+    console.log("id here:", proposalId);
+    const longProposalId = Long.fromNumber(3);
+    console.log("after:", longProposalId);
     // use a try catch block for creating rich Error object
     try {
+      // const longProposalId = {
+      //   low: toHex(toUtf8(proposalId.toString())),
+      // };
       // get the data from cosmos queryClient
       const { vote } = await client.cosmos.gov.v1beta1.vote({
-        proposalId,
-        voter,
+        proposalId: longProposalId,
+        voter: address,
       });
       voteInfo = vote;
     } catch (error) {
@@ -639,7 +642,7 @@ export const useVote = (proposalId) => {
   };
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: voteObject, error } = useSwr(
-    proposalId ? ["vote", proposalId] : null,
+    proposalId && address ? ["vote", proposalId, address] : null,
     fetchVote,
     {
       fallbackData: [
@@ -677,7 +680,7 @@ export const useAllProposals = () => {
       // get the data from cosmos queryClient
       const { proposals } = await client.cosmos.gov.v1beta1.proposals({
         depositor: "",
-        proposalStatus: "",
+        proposalStatus: "2",
         voter: "",
       });
       allProposals = proposals;
@@ -716,6 +719,52 @@ export const useAllProposals = () => {
     allProposals: proposalsArray,
     isLoadingProposals: !error && !proposalsArray,
     errorProposals: error,
+  };
+};
+
+export const useWithdrawAddress = () => {
+  // get the connected wallet parameters from useChain hook
+  const walletManager = useChain(defaultChainName);
+  const { walletStatus, address, currentWalletInfo } = walletManager;
+
+  // fetcher function for useSwr of useAvailableBalance()
+  const fetchWithdrawAddress = async () => {
+    let claimAddress;
+
+    // use a try catch block for creating rich Error object
+    try {
+      // get the data from cosmos queryClient
+      const { withdrawAddress } =
+        await client.cosmos.distribution.v1beta1.delegatorWithdrawAddress({
+          delegatorAddress: address,
+        });
+      claimAddress = withdrawAddress;
+      // const iconUrlsArray = validators.map((validator, index) => {
+      //   return `https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/${validator.operatorAddress}.png`;
+      // });
+      // const data = await fetch(iconUrlsArray);
+      // console.log("data: ", data);
+    } catch (error) {
+      console.error(`swr fetcher error: ${url}`);
+      throw error;
+    }
+    // return the data
+    return claimAddress;
+  };
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: withdrawAddress, error } = useSwr(
+    address ? ["validators", address] : null,
+    fetchWithdrawAddress,
+    {
+      fallbackData: placeholderAddress,
+      suspense: true,
+      refreshInterval: 1000,
+    }
+  );
+  return {
+    withdrawAddress: withdrawAddress,
+    isLoadingWithdrawAddress: !error && !withdrawAddress,
+    errorWithdrawAddress: error,
   };
 };
 
