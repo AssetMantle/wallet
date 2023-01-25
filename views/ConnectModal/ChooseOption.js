@@ -51,8 +51,9 @@ export default function ChooseOption({
             Array.isArray(ExistingWallet) &&
             ExistingWallet.length > 0 &&
             React.Children.toArray(
-              ExistingWallet.map((wallet) => (
+              ExistingWallet.map((wallet, index) => (
                 <button
+                  key={index}
                   className="d-flex align-items-center gap-1 button-secondary py-2 px-4 rounded-2"
                   onClick={() => handleSelect(wallet.name.toLowerCase(), 2)}
                 >

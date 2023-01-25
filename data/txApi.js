@@ -316,8 +316,66 @@ export const sendVote = async (
   }
 };
 
+export const sendWithdrawAddress = async (
+  address,
+  withdrawAddress,
+  memo,
+  {
+    getSigningStargateClient,
+    chainName = defaultChainName,
+    chainDenom = defaultChainDenom,
+  }
+) => {
+  try {
+    // get the chain assets for the specified chain
+    const chainassets = assets.find((chain) => chain.chain_name === chainName);
+    // get the coin data from the chain assets data
+    const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
+    // // get the amount in denom terms
+    // const amountInDenom = toChainDenom(amount, chainName, chainDenom);
+    // // initialize stargate client and create txn
+    const stargateClient = await getSigningStargateClient();
+    if (!stargateClient || !address) {
+      throw new error("stargateClient or from address undefined");
+    }
+
+    // create a message template from the composer
+    const { setWithdrawAddress } =
+      cosmos.distribution.v1beta1.MessageComposer.withTypeUrl;
+
+    const msg = setWithdrawAddress({
+      delegatorAddress: address,
+      withdrawAddress,
+    });
+    console.log(msg);
+    // populate the fee data
+    const fee = {
+      amount: [
+        {
+          denom: "umntl",
+          amount: "2000",
+        },
+      ],
+      gas: "86364",
+    };
+    // use the stargate client to dispatch the transaction
+    const response = await stargateClient.signAndBroadcast(
+      address,
+      [msg],
+      fee,
+      memo
+    );
+    console.log("msg: ", msg);
+    return { response, error: null };
+  } catch (error) {
+    console.error("Error during transaction: ", error?.message);
+    return { response: null, error };
+  }
+};
+
 export const sendRewardsBatched = async (
-  delegatorAddress,
+  address,
+  withdrawAddress,
   validatorAddresses,
   memo,
   {
@@ -335,7 +393,7 @@ export const sendRewardsBatched = async (
     // get the amount in denom terms
     // const amountInDenom = toChainDenom(amount, chainName, chainDenom);
     // populate the optional argument fromAddress
-    const fromAddress = delegatorAddress;
+    const fromAddress = address;
     // initialize stargate client and create txn
     const stargateClient = await getSigningStargateClient();
 
@@ -349,12 +407,10 @@ export const sendRewardsBatched = async (
 
     const msgArray = validatorAddresses.map((validatorAddress) =>
       withdrawDelegatorReward({
-        delegatorAddress,
+        delegatorAddress: withdrawAddress,
         validatorAddress,
       })
     );
-
-    console.log("msgArray: ", msgArray);
 
     // populate the fee data
     const fee = {

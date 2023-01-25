@@ -10,10 +10,12 @@ import {
 import {
   fromChainDenom,
   sendRewardsBatched,
-  useAllValidators,
   useDelegatedValidators,
   useMntlUsd,
   useTotalRewards,
+  useWithdrawAddress,
+  sendWithdrawAddress,
+  isInvalidAddress,
 } from "../data";
 import TransactionManifestModal from "./TransactionManifestModal";
 
@@ -21,16 +23,12 @@ const denomDisplay = defaultChainSymbol;
 
 const Rewards = ({ setShowClaimError, stakeState }) => {
   const walletManager = useChain(defaultChainName);
+  const { withdrawAddress, isLoadingWithdrawAddress, errorWithdrawAddress } =
+    useWithdrawAddress();
   const { delegatedValidators } = useDelegatedValidators();
   const { getSigningStargateClient, address, status, wallet } = walletManager;
-
   const { allRewards, rewardsArray, errorRewards } = useTotalRewards();
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
-  const { allValidators, isLoadingValidators, errorValidators } =
-    useAllValidators();
-
-  // console.log({ allRewards, rewardsArray });
-
   const selectedRewardsInWei = rewardsArray
     ?.filter((rewardObject) =>
       stakeState?.selectedValidators?.includes(rewardObject.validatorAddress)
@@ -53,8 +51,6 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
     ? fromChainDenom(selectedRewards)
     : cumulativeRewards;
 
-  // console.log("rewardsDisplay: ", rewardsDisplay);
-
   const rewardsInUSDDisplay =
     errorRewards ||
     errorMntlUsdValue | isNaN(fromChainDenom(allRewards)) ||
@@ -67,6 +63,7 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
   const handleClaim = async () => {
     const { response, error } = await sendRewardsBatched(
       address,
+      withdrawAddress,
       stakeState?.selectedValidators,
       stakeState?.memo,
       { getSigningStargateClient }
@@ -75,11 +72,20 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
   };
 
   const [setupAddress, setSetupAddress] = useState(false);
-  const [NewAddress, setNewAddress] = useState();
+  const [newAddress, setNewAddress] = useState();
 
-  const handleAddressChange = () => {
+  const handleAddressChangeSubmit = async (e) => {
+    e.preventDefault();
     // do something to change the address
-    setSetupAddress(false);
+    const { response, error } = await sendWithdrawAddress(
+      address,
+      newAddress,
+      stakeState?.memo,
+      {
+        getSigningStargateClient,
+      }
+    );
+    console.log("response: ", response, " error: ", error);
   };
 
   return (
@@ -330,7 +336,7 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                 <h6 className="caption my-2 mt-5">
                   Current wallet adress for claiming staking rewards:
                 </h6>
-                <p className="caption2 my-2 text-gray">{address}</p>
+                <p className="caption2 my-2 text-gray">{withdrawAddress}</p>
                 <p className="caption2 my-2 text-gray">
                   Want to claim your staking rewards to another wallet address?{" "}
                   <a
@@ -348,7 +354,7 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                   <button
                     className="btn btn-primary px-5 mt-3 text-right rounded-5"
                     data-bs-toggle="modal"
-                    data-bs-target="#transactionManifestModal"
+                    data-bs-target="#claimTransactionManifestModal"
                   >
                     Submit
                   </button>
@@ -378,7 +384,7 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
               </div>
               <div className="modal-body p-4 d-flex flex-column text-white">
                 <h6 className="caption2 my-1">Current Address</h6>
-                <p className="caption2 my-1">{address}</p>
+                <p className="caption2 my-1">{withdrawAddress}</p>
                 <p className="caption2 my-2 text-gray">Revised Address</p>
                 <input
                   type="text"
@@ -386,21 +392,21 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                   placeholder="Enter Withdraw Address"
                   onChange={(e) => setNewAddress(e.target.value)}
                 />
-                {NewAddress && NewAddress === address && (
+                {newAddress && newAddress === withdrawAddress && (
                   <p className="caption2 text-error pt-1">
                     Revised Address can&apos;t be same as current address.
                   </p>
                 )}
+                {isInvalidAddress(newAddress) && (
+                  <p className="caption2 text-error pt-1">Invalid Address</p>
+                )}
                 <div className="d-flex justify-content-end">
                   <button
                     className="button-primary py-2 px-5 mt-3 caption text-center"
-                    onClick={handleAddressChange}
+                    onClick={handleAddressChangeSubmit}
                     disabled={
-                      NewAddress &&
-                      NewAddress !== address &&
-                      NewAddress.length == 45
-                        ? false
-                        : true
+                      newAddress == withdrawAddress ||
+                      isInvalidAddress(newAddress)
                     }
                   >
                     Submit
@@ -415,7 +421,7 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
         className="modal "
         tabIndex="-1"
         role="dialog"
-        id="transactionManifestModal"
+        id="claimTransactionManifestModal"
       >
         <TransactionManifestModal
           displayData={[

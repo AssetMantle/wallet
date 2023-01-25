@@ -27,7 +27,8 @@ export default function Transact() {
   const [advanced, setAdvanced] = useState(false);
   const { availableBalance } = useAvailableBalance();
   const walletManager = useChain(defaultChainName);
-  const { getSigningStargateClient, address, connect, status } = walletManager;
+  const { getSigningStargateClient, address, connect, status, wallet } =
+    walletManager;
 
   const displayAddress = address ? address : placeholderAddress;
 

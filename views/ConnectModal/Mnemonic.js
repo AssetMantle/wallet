@@ -117,7 +117,7 @@ export default function Mnemonic({ MnemonicSeed, close, setStep }) {
       <div className="row mt-4">
         {React.Children.toArray(
           [...Array(SeedLength)].map((a, index) => (
-            <div className={`col-3 d-flex flex-column gap-1 my-1`}>
+            <div key={index} className={`col-3 d-flex flex-column gap-1 my-1`}>
               {index + 1 < 10 ? `0${index + 1}` : index + 1}
               <input
                 className="am-input border-color-white bg-t mnemonic rounded-2 p-1 px-2"

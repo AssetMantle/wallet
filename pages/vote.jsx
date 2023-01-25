@@ -28,7 +28,6 @@ export default function Vote() {
     console.log("response: ", response, " error: ", error);
   };
   const [ShowAdvanced, setShowAdvanced] = useState(false);
-  console.log(allProposals);
 
   return (
     <>
@@ -66,14 +65,18 @@ export default function Vote() {
             </nav>
             <div className="nav-bg rounded-4 d-flex flex-column px-3 py-2 gap-3">
               <div className="row">
-                <ActiveProposals allProposals={allProposals} />
+                <ActiveProposals
+                  voteDispatch={voteDispatch}
+                  voteState={voteState}
+                  allProposals={allProposals}
+                />
               </div>
             </div>
           </div>
         </ScrollableSectionContainer>
         {/* <div className="d-flex flex-column"> */}
         {voteState?.proposalID ? (
-          <DonutChart proposalID={voteState?.proposalID} />
+          <DonutChart proposalId={voteState?.proposalID} />
         ) : (
           <VoteInfo voteDispatch={voteDispatch} voteState={voteState} />
         )}
