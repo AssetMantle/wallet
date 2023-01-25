@@ -169,7 +169,7 @@ export default function StakedToken({
                 data-bs-toggle={
                   stakeState.delegationAmount.length != 0 ? "modal" : ""
                 }
-                data-bs-target="#transactionManifestModal"
+                data-bs-target="#stakeTransactionManifestModal"
                 onClick={() => {
                   formDispatch({
                     type: "SUBMIT_DELEGATE",
@@ -186,7 +186,7 @@ export default function StakedToken({
         className="modal "
         tabIndex="-1"
         role="dialog"
-        id="transactionManifestModal"
+        id="stakeTransactionManifestModal"
       >
         <TransactionManifestModal
           displayData={[

@@ -54,8 +54,10 @@ export default function Ibc() {
             Select Chain
           </option>
           {React.Children.toArray(
-            chains.map((chainOp) => (
-              <option value={chainOp.value}>{chainOp.name}</option>
+            chains.map((chainOp, index) => (
+              <option key={index} value={chainOp.value}>
+                {chainOp.name}
+              </option>
             ))
           )}
         </select>

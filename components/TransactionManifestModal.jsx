@@ -2,7 +2,6 @@ import React, { useState } from "react";
 
 const TransactionManifestModal = ({ displayData, handleSubmit }) => {
   const [advanced, setAdvanced] = useState(false);
-  console.log(displayData?.map((item) => item));
 
   return (
     <div
@@ -41,14 +40,15 @@ const TransactionManifestModal = ({ displayData, handleSubmit }) => {
         <div className="modal-body p-4 pt-0 d-flex flex-column">
           <span>Transaction Details:</span>
           <div className="nav-bg rounded-4 p-2 mt-4 mb-1 d-flex flex-column gap-2">
-            {displayData?.map((item) => (
+            {displayData?.map((item, index) => (
               <>
-                <div className=" px-1 text-white-300 caption2 ">
+                <div key={index} className=" px-1 text-white-300 caption2 ">
                   {item?.title}
                 </div>
                 {Array.isArray(item?.value) ? (
-                  item?.value?.map((element) => (
+                  item?.value?.map((element, index) => (
                     <div
+                      key={index}
                       className=" px-1 text-white caption lato"
                       style={{ fontWeight: "400" }}
                     >
