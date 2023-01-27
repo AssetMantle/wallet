@@ -3,20 +3,23 @@ import { BsArrowUpRight } from "react-icons/bs";
 import { useAllProposals } from "../data/queryApi";
 import DonutChart from "../views/DonutChart";
 import VoteInfo from "../views/VoteInfo";
-import UseVoteReducer from "../data/useVoteReducer";
+import useVoteReducer from "../data/useVoteReducer";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import { sendVote } from "../data/txApi";
 import { useChain } from "@cosmos-kit/react";
 import { defaultChainName } from "../config";
 import ActiveProposals from "../components/ActiveProposals";
 import Head from "next/head";
+import { isObjEmpty } from "../lib";
+import TransactionManifestModal from "../components/TransactionManifestModal";
 
 export default function Vote() {
-  const { voteState, voteDispatch } = UseVoteReducer();
+  const { voteState, voteDispatch } = useVoteReducer();
   const { allProposals, isLoadingProposals, errorProposals } =
     useAllProposals();
   const walletManager = useChain(defaultChainName);
-  const { getSigningStargateClient, address, status } = walletManager;
+  const { getSigningStargateClient, address, status, wallet } = walletManager;
+
   const handleVote = async () => {
     const { response, error } = await sendVote(
       voteState?.proposalID,
@@ -86,14 +89,14 @@ export default function Vote() {
                 )}
                 proposalId={voteState?.proposalID}
               />
-              <button
+              {/* <button
                 className="button-primary py-2 text-center"
                 style={{ maxWidth: "100%" }}
                 data-bs-toggle="modal"
                 data-bs-target="#voteModal"
               >
                 Vote
-              </button>
+              </button> */}
             </>
           ) : (
             <VoteInfo
@@ -151,12 +154,15 @@ export default function Vote() {
                       type="radio"
                       name="voteRadio"
                       id="voteRadio1"
-                      onChange={() =>
+                      onChange={() => {
                         voteDispatch({
                           type: "SET_VOTE_OPTION",
                           payload: 1,
-                        })
-                      }
+                        });
+                        voteDispatch({
+                          type: "RESET_ERRORS",
+                        });
+                      }}
                     />
                     <label className="form-check-label" htmlFor="voteRadio1">
                       Yes
@@ -171,12 +177,15 @@ export default function Vote() {
                       type="radio"
                       name="voteRadio"
                       id="voteRadio2"
-                      onChange={() =>
+                      onChange={() => {
                         voteDispatch({
                           type: "SET_VOTE_OPTION",
                           payload: 3,
-                        })
-                      }
+                        });
+                        voteDispatch({
+                          type: "RESET_ERRORS",
+                        });
+                      }}
                     />
                     <label className="form-check-label" htmlFor="voteRadio2">
                       No
@@ -191,12 +200,15 @@ export default function Vote() {
                       type="radio"
                       name="voteRadio"
                       id="voteRadio3"
-                      onChange={() =>
+                      onChange={() => {
                         voteDispatch({
                           type: "SET_VOTE_OPTION",
                           payload: 4,
-                        })
-                      }
+                        });
+                        voteDispatch({
+                          type: "RESET_ERRORS",
+                        });
+                      }}
                     />
                     <label className="form-check-label" htmlFor="voteRadio3">
                       No with veto
@@ -211,12 +223,15 @@ export default function Vote() {
                       type="radio"
                       name="voteRadio"
                       id="voteRadio4"
-                      onChange={() =>
+                      onChange={() => {
                         voteDispatch({
                           type: "SET_VOTE_OPTION",
                           payload: 2,
-                        })
-                      }
+                        });
+                        voteDispatch({
+                          type: "RESET_ERRORS",
+                        });
+                      }}
                     />
                     <label className="form-check-label" htmlFor="voteRadio4">
                       Abstain
@@ -275,8 +290,18 @@ export default function Vote() {
                     </div>
                   )}
                 </div>
+                <small
+                  id="amountInputErrorMsg"
+                  className="form-text text-danger d-flex align-items-center gap-1"
+                >
+                  {" "}
+                  {voteState?.errorMessages?.voteErrorMsg && (
+                    <i className="bi bi-info-circle" />
+                  )}{" "}
+                  {voteState?.errorMessages?.voteErrorMsg}
+                </small>
                 <div className="d-flex pt-3">
-                  {voteState.voteOption !== "VOTE_OPTION_UNSPECIFIED" ? (
+                  {/* {voteState.voteOption !== "VOTE_OPTION_UNSPECIFIED" ? (
                     <button
                       type="button"
                       className="button-primary px-5 py-2 ms-auto"
@@ -284,36 +309,33 @@ export default function Vote() {
                     >
                       Confirm
                     </button>
-                  ) : (
-                    <button
-                      disabled={!isObjEmpty(voteState?.errorMessages)}
-                      type="button"
-                      data-bs-toggle="modal"
-                      data-bs-target="#voteTransactionManifestModal"
-                      className="button-primary px-5 py-2 ms-auto"
-                      onClick={() => {
-                        voteDispatch({ type: "SUBMIT_VOTE" });
-                      }}
-                    >
-                      Confirm
-                    </button>
-                  )}
+                  ) : ( */}
+                  <button
+                    disabled={!isObjEmpty(voteState?.errorMessages)}
+                    type="button"
+                    data-bs-toggle={voteState.voteOption !== 0 ? "modal" : ""}
+                    data-bs-target="#voteTransactionManifestModal"
+                    className="button-primary px-5 py-2 ms-auto"
+                    onClick={() => {
+                      voteDispatch({ type: "SUBMIT_VOTE" });
+                    }}
+                  >
+                    Confirm
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
-      {/* <TransactionManifestModal
+      <TransactionManifestModal
         displayData={[
-          { title: "Delegating From:", value: address },
-          { title: "Delegating To:", value: stakeState.delegationAddress },
-          { title: "Amount:", value: stakeState.delegationAmount },
-          { title: "Transaction Type", value: "Delegate" },
+          { title: "Transaction Type", value: "Vote" },
           { title: "Wallet Type", value: wallet?.prettyName },
         ]}
         id="voteTransactionManifestModal"
-      /> */}
+        handleSubmit={handleVote}
+      />
     </>
   );
 }

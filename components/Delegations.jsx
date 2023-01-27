@@ -36,7 +36,6 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
   } = useDelegatedValidators();
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
   let validatorsArray = allValidators.sort((a, b) => b.tokens - a.tokens);
-  console.log(allValidators);
 
   //Put all foundation nodes at the end of the array
   validatorsArray.forEach((item, index) => {

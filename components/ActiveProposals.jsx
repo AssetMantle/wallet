@@ -1,15 +1,8 @@
 import React, { useState } from "react";
-import { useAllVotes } from "../data";
 
 const ActiveProposals = ({ voteState, voteDispatch, allProposals }) => {
   const [OnVoteSelect, setOnVoteSelect] = useState(null);
   const [onVoteHover, setOnVoteHover] = useState(null);
-  const { allVotes, isLoadingVotes, errorVotes } = useAllVotes(
-    voteState?.proposalID
-  );
-  // const { voteInfo, isLoadingVote, errorVote } = useVote(3);
-  // console.log(voteInfo);
-  console.log(allVotes);
 
   return (
     <>

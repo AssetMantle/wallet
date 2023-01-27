@@ -674,8 +674,7 @@ export const useAllProposals = () => {
       // get the data from cosmos queryClient
       const { proposals } = await client.cosmos.gov.v1beta1.proposals({
         depositor: "",
-        // proposalStatus: "2",
-        proposalStatus: "",
+        proposalStatus: "2",
         voter: "",
       });
       allProposals = proposals;
@@ -727,17 +726,17 @@ export const useAllVotes = (proposalId) => {
 
     // use a try catch block for creating rich Error object
     try {
-      const comdexRpcEndpoint = "https://rpc.cosmos.directory/comdex";
-      const tempCLient = await cosmos.ClientFactory.createRPCQueryClient({
-        comdexRpcEndpoint,
-      });
+      // const comdexRpcEndpoint = "https://rpc.cosmos.directory/comdex";
+      // const tempCLient = await cosmos.ClientFactory.createRPCQueryClient({
+      //   comdexRpcEndpoint,
+      // });
       // get the data from cosmos queryClient
       console.log("before");
-      const { votes } = await tempCLient.cosmos.gov.v1beta1.votes({
-        proposalId: 72n,
+      const { votes } = await client.cosmos.gov.v1beta1.votes({
+        proposalId,
       });
       allVotes = votes;
-      console.log(allVotes);
+      console.log("after");
     } catch (error) {
       console.error(`swr fetcher error: ${error}`);
       throw error;
