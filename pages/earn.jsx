@@ -1,22 +1,24 @@
 import React, { useState } from "react";
 import Head from "next/head";
+import Image from "next/image";
 
-export default function Trade() {
+export default function Earn() {
   const [searchValue, setSearchValue] = useState();
 
   const contentObg = {
     img: "/profile.avif",
     name: "Lorem ipsum",
     href: "?sal",
-    pair: "MNTL/OSMO",
-    price: 14809.61,
-    vol: 17414809.61,
+    catagory: "Liquid Staking",
+    chains: ["eth", "cosmos", "polygon"],
+    apy: 1.56,
+    tvl: 50,
   };
 
   return (
     <>
       <Head>
-        <title>Trade | MantleWallet</title>
+        <title>Earn | MantleWallet</title>
       </Head>
       <section className="row h-100">
         <div className="col-12 col-lg-8 h-100">
@@ -25,9 +27,7 @@ export default function Trade() {
             style={{ height: "90%" }}
           >
             <div className="d-flex align-items-center justify-content-between w-100">
-              <h1 className="card-title body1 text-primary my-auto">
-                Exchanges
-              </h1>
+              <h1 className="card-title body1 text-primary my-auto">Earn</h1>
             </div>
             <div
               className="d-flex flex-column w-100 nav-bg p-2 rounded-4 flex-grow-1"
@@ -73,16 +73,19 @@ export default function Trade() {
                         style={{ whiteSpace: "nowrap" }}
                         colSpan="2"
                       >
-                        Exchange Name
+                        Name
                       </th>
                       <th scope="col" style={{ whiteSpace: "nowrap" }}>
-                        Trade Pair
+                        Category
                       </th>
                       <th scope="col" style={{ whiteSpace: "nowrap" }}>
-                        Price
+                        Chains
                       </th>
                       <th scope="col" style={{ whiteSpace: "nowrap" }}>
-                        Volume <small className="text-gray">(24Hour)</small>
+                        APY
+                      </th>
+                      <th scope="col" style={{ whiteSpace: "nowrap" }}>
+                        TVL
                       </th>
                     </tr>
                   </thead>
@@ -114,9 +117,31 @@ export default function Trade() {
                               <i className="bi bi-arrow-up-right"></i>
                             </a>
                           </td>
-                          <td>{contentObg.pair}</td>
-                          <td>{contentObg.price.toFixed(6)}</td>
-                          <td>$ {contentObg.vol.toFixed(2)}</td>
+                          <td>{contentObg.catagory}</td>
+                          <td>
+                            <div className="d-flex align-items-center justify-content-end gap-1">
+                              {React.Children.toArray(
+                                contentObg.chains.map((e) => (
+                                  <div
+                                    className="d-flex position-relative rounded-circle gap-1"
+                                    style={{
+                                      width: "20px",
+                                      aspectRatio: "1/1",
+                                    }}
+                                  >
+                                    <Image
+                                      alt={e}
+                                      className="rounded-circle"
+                                      layout="fill"
+                                      src={`/earn/${e}.svg`}
+                                    />
+                                  </div>
+                                ))
+                              )}
+                            </div>
+                          </td>
+                          <td>{contentObg.apy}%</td>
+                          <td>$ {contentObg.tvl}b</td>
                         </tr>
                       ))
                     )}
