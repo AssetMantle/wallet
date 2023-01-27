@@ -619,19 +619,16 @@ export const useVote = (proposalId) => {
   // fetcher function for useSwr of useAvailableBalance()
   const fetchVote = async (url, address) => {
     let voteInfo;
-    console.log("id here:", proposalId);
-    const longProposalId = BigInt("3");
-    console.log("after:", longProposalId);
     // use a try catch block for creating rich Error object
     try {
       // get the data from cosmos queryClient
       const { vote } = await client.cosmos.gov.v1beta1.vote({
-        proposalId: longProposalId,
+        proposalId,
         voter: address,
       });
       voteInfo = vote;
     } catch (error) {
-      console.error(`swr fetcher error: ${url}`);
+      console.error(`swr fetcher error: ${error}`);
       throw error;
     }
     // return the data
@@ -735,19 +732,14 @@ export const useAllVotes = (proposalId) => {
         comdexRpcEndpoint,
       });
       // get the data from cosmos queryClient
+      console.log("before");
       const { votes } = await tempCLient.cosmos.gov.v1beta1.votes({
-        proposalId,
+        proposalId: 72n,
       });
       allVotes = votes;
-      console.log(votes);
-      // const iconUrlsArray = validators.map((validator, index) => {
-      //   return `https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/${validator.operatorAddress}.png`;
-      // });
-      // const data = await fetch(iconUrlsArray);
-      // console.log("data: ", data);
       console.log(allVotes);
     } catch (error) {
-      console.error(`swr fetcher error: ${url}`);
+      console.error(`swr fetcher error: ${error}`);
       throw error;
     }
     // return the data

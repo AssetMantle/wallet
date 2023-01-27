@@ -15,8 +15,6 @@ export default function Vote() {
   const { voteState, voteDispatch } = UseVoteReducer();
   const { allProposals, isLoadingProposals, errorProposals } =
     useAllProposals();
-  // const { voteInfo, isLoadingVote, errorVote } = useVote(3);
-  // console.log(voteInfo);
   const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status } = walletManager;
   const handleVote = async () => {
@@ -287,9 +285,14 @@ export default function Vote() {
                     </button>
                   ) : (
                     <button
-                      disabled
+                      disabled={!isObjEmpty(voteState?.errorMessages)}
                       type="button"
+                      data-bs-toggle="modal"
+                      data-bs-target="#voteTransactionManifestModal"
                       className="button-primary px-5 py-2 ms-auto"
+                      onClick={() => {
+                        voteDispatch({ type: "SUBMIT_VOTE" });
+                      }}
                     >
                       Confirm
                     </button>
@@ -300,6 +303,16 @@ export default function Vote() {
           </div>
         </div>
       </section>
+      {/* <TransactionManifestModal
+        displayData={[
+          { title: "Delegating From:", value: address },
+          { title: "Delegating To:", value: stakeState.delegationAddress },
+          { title: "Amount:", value: stakeState.delegationAmount },
+          { title: "Transaction Type", value: "Delegate" },
+          { title: "Wallet Type", value: wallet?.prettyName },
+        ]}
+        id="voteTransactionManifestModal"
+      /> */}
     </>
   );
 }

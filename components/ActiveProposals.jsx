@@ -7,6 +7,8 @@ const ActiveProposals = ({ voteState, voteDispatch, allProposals }) => {
   const { allVotes, isLoadingVotes, errorVotes } = useAllVotes(
     voteState?.proposalID
   );
+  // const { voteInfo, isLoadingVote, errorVote } = useVote(3);
+  // console.log(voteInfo);
   console.log(allVotes);
 
   return (
