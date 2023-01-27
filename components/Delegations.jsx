@@ -744,42 +744,32 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
           </div>
         </div>
       </div>
-      <div
-        className="modal "
-        tabIndex="-1"
-        role="dialog"
+
+      <TransactionManifestModal
         id="redelegateTransactionManifestModal"
-      >
-        <TransactionManifestModal
-          displayData={[
-            { title: "Redelegating From:", value: stakeState.redelegationSrc },
-            {
-              title: "Redelegating To:",
-              value: stakeState.redelegationDestination,
-            },
-            { title: "Amount:", value: stakeState.redelegationAmount },
-            { title: "Transaction Type", value: "Redelegate" },
-            { title: "Wallet Type", value: "Keplr" },
-          ]}
-          handleSubmit={handleRedelegate}
-        />
-      </div>
-      <div
-        className="modal "
-        tabIndex="-1"
-        role="dialog"
+        displayData={[
+          { title: "Redelegating From:", value: stakeState.redelegationSrc },
+          {
+            title: "Redelegating To:",
+            value: stakeState.redelegationDestination,
+          },
+          { title: "Amount:", value: stakeState.redelegationAmount },
+          { title: "Transaction Type", value: "Redelegate" },
+          { title: "Wallet Type", value: "Keplr" },
+        ]}
+        handleSubmit={handleRedelegate}
+      />
+
+      <TransactionManifestModal
         id="undelegateTransactionManifestModal"
-      >
-        <TransactionManifestModal
-          displayData={[
-            { title: "Undelegating From:", value: stakeState.undelegationSrc },
-            { title: "Amount:", value: stakeState.undelegationAmount },
-            { title: "Transaction Type", value: "Undelegate" },
-            { title: "Wallet Type", value: wallet?.prettyName },
-          ]}
-          handleSubmit={handleUndelegate}
-        />
-      </div>
+        displayData={[
+          { title: "Undelegating From:", value: stakeState.undelegationSrc },
+          { title: "Amount:", value: stakeState.undelegationAmount },
+          { title: "Transaction Type", value: "Undelegate" },
+          { title: "Wallet Type", value: wallet?.prettyName },
+        ]}
+        handleSubmit={handleUndelegate}
+      />
     </>
   );
 };

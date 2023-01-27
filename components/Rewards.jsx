@@ -417,42 +417,37 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
           )}
         </div>
       </div>
-      <div
-        className="modal "
-        tabIndex="-1"
-        role="dialog"
+
+      <TransactionManifestModal
         id="claimTransactionManifestModal"
-      >
-        <TransactionManifestModal
-          displayData={[
-            { title: "Claiming rewards to", value: address },
-            {
-              title: "Claiming rewards from",
-              value: stakeState.selectedValidators.map((item) => item),
-            },
-            {
-              title: "amount",
-              value: stakeState?.selectedValidators.length
-                ? fromChainDenom(selectedRewards)
-                : rewardsArray
-                    ?.filter((item) =>
-                      stakeState?.selectedValidators?.includes(
-                        item?.validatorAddress
-                      )
+        displayData={[
+          { title: "Claiming rewards to", value: address },
+          {
+            title: "Claiming rewards from",
+            value: stakeState.selectedValidators.map((item) => item),
+          },
+          {
+            title: "amount",
+            value: stakeState?.selectedValidators.length
+              ? fromChainDenom(selectedRewards)
+              : rewardsArray
+                  ?.filter((item) =>
+                    stakeState?.selectedValidators?.includes(
+                      item?.validatorAddress
                     )
-                    .reduce(
-                      (accumulator, currentValue) =>
-                        parseFloat(accumulator) +
-                          parseFloat(currentValue?.reward[0]?.amount) || 0,
-                      parseFloat(0)
-                    ),
-            },
-            { title: "Transaction Type", value: "Claim" },
-            { title: "Wallet Type", value: wallet?.prettyName },
-          ]}
-          handleSubmit={handleClaim}
-        />
-      </div>
+                  )
+                  .reduce(
+                    (accumulator, currentValue) =>
+                      parseFloat(accumulator) +
+                        parseFloat(currentValue?.reward[0]?.amount) || 0,
+                    parseFloat(0)
+                  ),
+          },
+          { title: "Transaction Type", value: "Claim" },
+          { title: "Wallet Type", value: wallet?.prettyName },
+        ]}
+        handleSubmit={handleClaim}
+      />
     </div>
   );
 };

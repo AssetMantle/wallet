@@ -492,23 +492,18 @@ export default function Transact() {
           )}
         </div>
       </section>
-      <div
-        className="modal "
-        tabIndex="-1"
-        role="dialog"
+
+      <TransactionManifestModal
         id="transactionManifestModal"
-      >
-        <TransactionManifestModal
-          displayData={[
-            { title: "From:", value: address },
-            { title: "To:", value: formState.recipientAddress },
-            { title: "Amount:", value: formState.transferAmount },
-            { title: "Transaction Type", value: "Send" },
-            { title: "Wallet Type", value: wallet?.prettyName },
-          ]}
-          handleSubmit={handleSubmit}
-        />
-      </div>
+        displayData={[
+          { title: "From:", value: address },
+          { title: "To:", value: formState.recipientAddress },
+          { title: "Amount:", value: formState.transferAmount },
+          { title: "Transaction Type", value: "Send" },
+          { title: "Wallet Type", value: wallet?.prettyName },
+        ]}
+        handleSubmit={handleSubmit}
+      />
     </>
   );
 }

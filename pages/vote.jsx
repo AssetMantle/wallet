@@ -15,6 +15,8 @@ export default function Vote() {
   const { voteState, voteDispatch } = UseVoteReducer();
   const { allProposals, isLoadingProposals, errorProposals } =
     useAllProposals();
+  // const { voteInfo, isLoadingVote, errorVote } = useVote(3);
+  // console.log(voteInfo);
   const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status } = walletManager;
   const handleVote = async () => {
@@ -28,6 +30,7 @@ export default function Vote() {
     console.log("response: ", response, " error: ", error);
   };
   const [ShowAdvanced, setShowAdvanced] = useState(false);
+  const isConnected = status == "Connected";
 
   return (
     <>
@@ -74,22 +77,33 @@ export default function Vote() {
             </div>
           </div>
         </ScrollableSectionContainer>
-        {/* <div className="d-flex flex-column"> */}
-        {voteState?.proposalID ? (
-          <DonutChart proposalId={voteState?.proposalID} />
-        ) : (
-          <VoteInfo voteDispatch={voteDispatch} voteState={voteState} />
-        )}
-        {voteState?.proposalID ? (
-          <button
-            className="btn btn-primary w-100 rounded-5"
-            data-bs-toggle="modal"
-            data-bs-target="#voteModal"
-          >
-            Vote
-          </button>
-        ) : null}
-        {/* </div> */}
+        <div className="d-flex flex-column col-lg-4">
+          {voteState?.proposalID ? (
+            <>
+              <DonutChart
+                selectedProposal={allProposals.find(
+                  (item) =>
+                    item?.proposalId?.high + item?.proposalId?.low ==
+                    voteState.proposalID
+                )}
+                proposalId={voteState?.proposalID}
+              />
+              <button
+                className="btn btn-primary w-100 rounded-5"
+                data-bs-toggle="modal"
+                data-bs-target="#voteModal"
+              >
+                Vote
+              </button>
+            </>
+          ) : (
+            <VoteInfo
+              isConnected={isConnected}
+              voteDispatch={voteDispatch}
+              voteState={voteState}
+            />
+          )}
+        </div>
         <div className="modal " tabIndex="-1" role="dialog" id="voteModal">
           <div
             className="modal-dialog modal-dialog-centered"

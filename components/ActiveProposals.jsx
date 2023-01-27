@@ -8,7 +8,7 @@ const ActiveProposals = ({ voteState, voteDispatch, allProposals }) => {
     <>
       {allProposals?.filter((item) => item?.status !== 3)?.length ? (
         allProposals
-          ?.filter((item) => item?.status !== 3)
+          // ?.filter((item) => item?.status !== 3)
           ?.map((proposal, index) => (
             <div
               key={index}
