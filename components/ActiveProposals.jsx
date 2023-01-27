@@ -15,14 +15,15 @@ const ActiveProposals = ({ voteState, voteDispatch, allProposals }) => {
         allProposals?.map((proposal, index) => (
           <div
             key={index}
-            onMouseEnter={() =>
+            onMouseOver={() =>
               setOnVoteHover(
                 proposal?.proposalId?.high + proposal?.proposalId?.low
               )
             }
-            onMouseLeave={() => setOnVoteHover(null)}
+            onMouseOut={() => setOnVoteHover(null)}
             className={`col-12 col-md-6 p-2`}
             onClick={() => {
+              setOnVoteSelect(index);
               voteDispatch({
                 type: "SET_PROPOSAL_ID",
                 payload: proposal?.proposalId?.high + proposal?.proposalId?.low,
@@ -30,44 +31,24 @@ const ActiveProposals = ({ voteState, voteDispatch, allProposals }) => {
             }}
           >
             <div
-              key={index}
-              onMouseOver={() =>
-                setOnVoteHover(
-                  proposal?.proposalId?.high + proposal?.proposalId?.low
-                )
-              }
-              onMouseOut={() => setOnVoteHover(null)}
-              className={`col-12 col-md-6 p-2`}
-              onClick={() => {
-                setOnVoteSelect(index);
-                voteDispatch({
-                  type: "SET_PROPOSAL_ID",
-                  payload:
-                    proposal?.proposalId?.high + proposal?.proposalId?.low,
-                });
-              }}
+              className={`bg-translucent rounded-3`}
+              // style={{ opacity: proposal.idIcon ? "1" : "0.6" }}
             >
-              <div
-                className={`bg-translucent rounded-3`}
-                // style={{ opacity: proposal.idIcon ? "1" : "0.6" }}
-              >
-                <div className="d-flex flex-column gap-2 p-2">
-                  <div className="d-flex justify-content-between gap-3 pb-2">
-                    <h4 className="d-flex gap-1 align-items-center body2 text-primary">
-                      #{proposal?.proposalId?.high + proposal?.proposalId?.low}{" "}
-                    </h4>
-                    <div
-                      className="button-secondary caption bg-translucent px-2 py-1"
-                      style={{ fontWeight: "400" }}
-                    >
-                      {proposal?.content?.$typeUrl?.slice(23)}
-                    </div>
+              <div className="d-flex flex-column gap-2 p-2">
+                <div className="d-flex justify-content-between gap-2 pb-2">
+                  <h4 className="d-flex gap-1 align-items-center body2 text-primary">
+                    #{proposal?.proposalId?.high + proposal?.proposalId?.low}{" "}
+                  </h4>
+                  <div
+                    className="button-secondary caption bg-translucent px-2 py-1"
+                    style={{ fontWeight: "400" }}
+                  >
+                    {proposal?.content?.$typeUrl?.slice(23)}
                   </div>
                 </div>
                 <h5 className="caption2 text-primary">
                   {proposal?.content?.title}
                 </h5>
-
                 <p className="caption2">
                   Voting Start :{" "}
                   {new Date(
@@ -97,20 +78,6 @@ const ActiveProposals = ({ voteState, voteDispatch, allProposals }) => {
                 >
                   Voting Period
                 </p>
-                {onVoteHover ===
-                  proposal?.proposalId?.high + proposal?.proposalId?.low &&
-                voteState.proposalId !==
-                  proposal?.proposalId?.high + proposal?.proposalId?.low ? (
-                  <span
-                    className="text-primary position-absolute bottom-0"
-                    style={{
-                      right: "5px",
-                      transform: "translateY(-95%)",
-                    }}
-                  >
-                    Voting Period
-                  </span>
-                ) : null}
                 {OnVoteSelect !== index &&
                 onVoteHover ===
                   proposal?.proposalId?.high + proposal?.proposalId?.low &&
