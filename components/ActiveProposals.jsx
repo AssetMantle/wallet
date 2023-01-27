@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { IoRadioButtonOff } from "react-icons/io5";
 
 const ActiveProposals = ({ voteState, voteDispatch, allProposals }) => {
   const [onVoteHover, setOnVoteHover] = useState(null);
+  const [OnVoteSelect, setOnVoteSelect] = useState(null);
 
   return (
     <>
@@ -12,14 +12,15 @@ const ActiveProposals = ({ voteState, voteDispatch, allProposals }) => {
           ?.map((proposal, index) => (
             <div
               key={index}
-              onMouseEnter={() =>
+              onMouseOver={() =>
                 setOnVoteHover(
                   proposal?.proposalId?.high + proposal?.proposalId?.low
                 )
               }
-              onMouseLeave={() => setOnVoteHover(null)}
+              onMouseOut={() => setOnVoteHover(null)}
               className={`col-12 col-md-6 p-2`}
               onClick={() => {
+                setOnVoteSelect(index);
                 voteDispatch({
                   type: "SET_PROPOSAL_ID",
                   payload:
@@ -37,7 +38,7 @@ const ActiveProposals = ({ voteState, voteDispatch, allProposals }) => {
                       #{proposal?.proposalId?.high + proposal?.proposalId?.low}{" "}
                     </h4>
                     <div
-                      className="button-secondary caption bg-translucent px-2 pb-0 pt-1"
+                      className="button-secondary caption bg-translucent px-2 py-1"
                       style={{ fontWeight: "400" }}
                     >
                       {proposal?.content?.$typeUrl?.slice(23)}
@@ -76,7 +77,8 @@ const ActiveProposals = ({ voteState, voteDispatch, allProposals }) => {
                   >
                     Voting Period
                   </p>
-                  {onVoteHover ===
+                  {OnVoteSelect !== index &&
+                  onVoteHover ===
                     proposal?.proposalId?.high + proposal?.proposalId?.low &&
                   voteState.proposalId !==
                     proposal?.proposalId?.high + proposal?.proposalId?.low ? (
@@ -84,15 +86,23 @@ const ActiveProposals = ({ voteState, voteDispatch, allProposals }) => {
                       className="text-primary position-absolute bottom-0"
                       style={{
                         right: "5px",
-                        transform: "translateY(-95%)",
+                        transform: "translateY(-50%)",
                       }}
                     >
-                      <IoRadioButtonOff />
+                      <i className="bi bi-circle text-primary"></i>
                     </span>
                   ) : null}
                   {voteState.proposalID ===
                   proposal?.proposalId?.high + proposal?.proposalId?.low ? (
-                    <i className="bi bi-record-circle text-primary"></i>
+                    <span
+                      className="text-primary position-absolute bottom-0"
+                      style={{
+                        right: "5px",
+                        transform: "translateY(-50%)",
+                      }}
+                    >
+                      <i className="bi bi-record-circle text-primary"></i>
+                    </span>
                   ) : null}
                 </div>
               </div>
