@@ -8,6 +8,10 @@ import {
   defaultChainDenom,
   defaultChainDenomExponent,
   defaultChainName,
+  defaultChainRPCProxy,
+  gravityChainDenom,
+  gravityChainName,
+  gravityChainRPCProxy,
   mntlUsdApi,
   placeholderAvailableBalance,
   placeholderMntlUsdValue,
@@ -15,19 +19,28 @@ import {
 import { bech32AddressSeperator, placeholderAddress } from "./constants";
 
 // get the rpc endpoint from the chain registry
-const rpcEndpoint = chains.find(
+/* const rpcEndpoint = chains.find(
   (_chain) => _chain?.chain_name === defaultChainName
-)?.apis?.rpc[0]?.address;
+)?.apis?.rpc[0]?.address; */
+const rpcEndpoint = defaultChainRPCProxy;
+const rpcEndpointGravity = gravityChainRPCProxy;
 
-console.log(JSON.stringify({ rpcEndpoint }));
+const gravityIBCToken =
+  "ibc/00F2B62EB069321A454B708876476AFCD9C23C8C9C4A5A206DDF1CD96B645057";
 
-const denom = assets.find(
+/* const denom = assets.find(
   (assetObj) => assetObj?.chain_name === defaultChainName
-)?.assets[0]?.base;
+)?.assets[0]?.base; */
+const denom = defaultChainDenom;
 
 // get the RPC Query Client using Modules & Endpoint
 const client = await cosmos.ClientFactory.createRPCQueryClient({
-  rpcEndpoint,
+  rpcEndpoint: rpcEndpoint,
+});
+
+// get the RPC Query Client of Gravity Bridge using Modules & Endpoint
+let gravityClient = await cosmos.ClientFactory.createRPCQueryClient({
+  rpcEndpoint: rpcEndpointGravity,
 });
 
 export const fromDenom = (value, exponent = defaultChainDenomExponent) => {
@@ -59,7 +72,7 @@ export const fromChainDenom = (
   )?.exponent;
   // show balance in display values by exponentiating it
   const valueBigNumber = new BigNumber(value?.toString() || 0);
-  if (BigNumber.isBigNumber(valueBigNumber)) {
+  if (!valueBigNumber.isNaN()) {
     amount = valueBigNumber
       .multipliedBy(10 ** -exp)
       .toFixed(exp)
@@ -87,8 +100,8 @@ export const toChainDenom = (
     (unit) => unit.denom === coin.display
   )?.exponent;
   // show balance in display values by exponentiating it
-  const valueBigNumber = new BigNumber(value.toString() || 0);
-  if (BigNumber.isBigNumber(valueBigNumber)) {
+  const valueBigNumber = new BigNumber(value?.toString() || 0);
+  if (!valueBigNumber.isNaN()) {
     amount = valueBigNumber
       .multipliedBy(10 ** exp)
       .toFixed(0)
@@ -546,6 +559,85 @@ export const useAvailableBalance = () => {
   };
 };
 
+export const useAvailableBalanceGravity = () => {
+  // get the connected wallet parameters from useChain hook
+  const { address } = useChain(gravityChainName);
+  // const address = "gravity1yyduggdnk5kgszamt7s9f0ep2n6hylxr6kjz7u";
+
+  let denomGravity = gravityChainDenom;
+  let placeholderGravityCoin = {
+    amount: placeholderAvailableBalance,
+    denom: denomGravity,
+  };
+  let denomGravityIBCToken = gravityIBCToken;
+  let placeholderGravityIBCCoin = {
+    amount: placeholderAvailableBalance,
+    denom: denomGravityIBCToken,
+  };
+
+  // fetcher function for useSwr of useAvailableBalance()
+  const fetchAllBalances = async (url, address) => {
+    let balanceValues;
+
+    // use a try catch block for creating rich Error object
+    try {
+      // get the data from cosmos queryClient
+      const { balances } = await gravityClient.cosmos.bank.v1beta1.allBalances({
+        address: address,
+      });
+
+      balanceValues = balances;
+      // console.log("swr fetcher success: ", balances);
+    } catch (error) {
+      console.error(`swr fetcher error: ${url}`);
+      throw error;
+    }
+
+    // return the data
+    return balanceValues;
+  };
+
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: balanceObjects } = useSwr(
+    address ? ["gravitybalance", address] : null,
+    fetchAllBalances,
+    {
+      fallbackData: [placeholderGravityCoin, placeholderGravityIBCCoin],
+      refreshInterval: 1000,
+      suspense: true,
+    }
+  );
+
+  console.log("balanceObject: ", balanceObjects);
+
+  let availableBalanceGravityArray = balanceObjects.filter(
+    (value) => value?.denom == denomGravity
+  );
+
+  let availableBalanceGravityObject =
+    availableBalanceGravityArray?.length != 0
+      ? availableBalanceGravityArray[0]
+      : placeholderGravityCoin;
+
+  let availableBalanceIBCTokenArray = balanceObjects.filter(
+    (value) => value?.denom == denomGravityIBCToken
+  );
+
+  let availableBalanceIBCTokenObject =
+    availableBalanceIBCTokenArray?.length != 0
+      ? availableBalanceIBCTokenArray[0]
+      : placeholderGravityIBCCoin;
+
+  return {
+    availableBalanceGravity: availableBalanceGravityObject?.amount,
+    availableBalanceIBCToken: availableBalanceIBCTokenObject?.amount,
+    denomGravity: availableBalanceGravityObject?.denom,
+    denomGravityIBCToken: availableBalanceIBCTokenObject?.denom,
+    // isLoadingAvailableBalance: !error && !balanceValues,
+    // errorAvailableBalance: error,
+  };
+};
+
 //Get a list of all validators that can be delegated
 export const useAllValidators = () => {
   // get the connected wallet parameters from useChain hook
@@ -717,31 +809,4 @@ export const useAllProposals = () => {
     isLoadingProposals: !error && !proposalsArray,
     errorProposals: error,
   };
-};
-
-// function for getting balance
-export const getAvailableBalance = async (
-  address,
-  denom = defaultChainDenom
-) => {
-  // console.log("inside fetchAvailableBalance, url: ", url);
-  let balanceValue = 0;
-
-  if (address) {
-    // use a try catch block for creating rich Error object
-    try {
-      // get the data from cosmos queryClient
-      const { balance } = await client.cosmos.bank.v1beta1.balance({
-        address,
-        denom,
-      });
-      balanceValue = balance;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  }
-
-  // return the data
-  return balanceValue.toString();
 };

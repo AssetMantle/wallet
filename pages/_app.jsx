@@ -10,6 +10,8 @@ import {
   defaultChainRESTProxy,
   defaultChainRPCProxy,
   defaultTheme,
+  gravityChainRESTProxy,
+  gravityChainRPCProxy,
   keplrWallets,
 } from "../config";
 import "../config/styles/index.scss";
@@ -56,6 +58,10 @@ function CreateCosmosApp({ Component, pageProps }) {
             assetmantle: {
               rpc: [defaultChainRPCProxy],
               rest: [defaultChainRESTProxy],
+            },
+            gravitybridge: {
+              rpc: [gravityChainRPCProxy],
+              rest: [gravityChainRESTProxy],
             },
           }}
           walletModal={ConnectModal} // Provide walletModal

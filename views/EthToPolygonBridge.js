@@ -4,7 +4,7 @@ import {
   walletConnectProvider,
 } from "@web3modal/ethereum";
 import { useWeb3Modal, Web3Modal } from "@web3modal/react";
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { configureChains, createClient } from "wagmi";
 import { mainnet, polygon } from "wagmi/chains";
 import {
@@ -21,6 +21,8 @@ import {
 } from "../data";
 import { convertBech32Address, shortenEthAddress } from "../lib";
 import { handleCopy, isObjEmpty } from "../lib/basicJavascript";
+import { use, POSClient } from "@maticnetwork/maticjs";
+import { Web3ClientPlugin } from "@maticnetwork/maticjs-web3";
 
 const EthToPolygonBridge = () => {
   // WEB3MODAL & WAGMI
@@ -39,6 +41,12 @@ const EthToPolygonBridge = () => {
 
   const ethereumClient = new EthereumClient(wagmiClient, chains);
 
+  // MATICJS INTEGRATION
+  // get a POSClient by injecting the wagmi provider
+  use(Web3ClientPlugin);
+
+  const posClient = new POSClient();
+
   // WALLET HOOKS
   // hooks to work the multi-modal for ethereum
   const { isOpen, open, close } = useWeb3Modal();
@@ -48,6 +56,13 @@ const EthToPolygonBridge = () => {
   const address = placeholderAddressEth || placeholderAddressEth;
   // hooks to get the available balance of the desired token
   const availableBalance = 0;
+
+  // CSR Side Effects
+  useEffect(() => {
+    initializePosClient();
+
+    return () => {};
+  }, []);
 
   // FORM REDUCER
   const initialState = {
@@ -179,6 +194,20 @@ const EthToPolygonBridge = () => {
   const [formState, formDispatch] = useReducer(formReducer, initialState);
 
   // CONTROLLER FUNCTIONS
+  // async function to initialize Polygon POS client
+  const initializePosClient = async () => {
+    await posClient.init({
+      network: "mainnet", // 'testnet' or 'mainnet'
+      version: "v1", // 'mumbai' or 'v1'
+      parent: {
+        provider: provider,
+      },
+      child: {
+        provider: provider,
+      },
+    });
+  };
+
   const handleOpenWeb3Modal = async (e) => {
     e.preventDefault();
     await open();

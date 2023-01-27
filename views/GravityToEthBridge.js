@@ -2,27 +2,40 @@ import { useChain } from "@cosmos-kit/react";
 import { useReducer } from "react";
 import {
   defaultChainGasFee,
+  defaultChainSymbol,
   gravityChainName,
   gravityChainSymbol,
 } from "../config";
 import {
   formConstants,
   fromChainDenom,
-  sendIbcTokenToGravity,
+  sendIbcTokenToEth,
   toDenom,
+  useAvailableBalanceGravity,
 } from "../data";
-import { convertBech32Address, shortenAddress } from "../lib";
+import { shortenAddress } from "../lib";
 import { handleCopy, isObjEmpty } from "../lib/basicJavascript";
+import { getSigningOsmosisClient } from "osmojs";
 
 const GravityToEthBridge = () => {
   // WALLET HOOKS
   const walletManager = useChain(gravityChainName);
-  const { address, getSigningStargateClient, status } = walletManager;
+  const { address, getSigningStargateClient, status, getRpcEndpoint } =
+    walletManager;
 
   // HOOKS or GETTERS
-  // const { availableBalance } = getAvailableBalance(address);
-  const availableBalance = "0";
+  const { availableBalanceGravity, availableBalanceIBCToken } =
+    useAvailableBalanceGravity();
 
+  console.log(
+    "gravity balance: ",
+    {
+      availableBalanceGravity,
+      availableBalanceIBCToken,
+    },
+    " endpoint: ",
+    getRpcEndpoint()
+  );
   // FORM REDUCER
   const initialState = {
     transferAmount: "",
@@ -57,9 +70,9 @@ const GravityToEthBridge = () => {
             },
           };
         } else if (
-          isNaN(parseFloat(availableBalance)) ||
+          isNaN(parseFloat(availableBalanceIBCToken)) ||
           toDenom(action.payload) + parseFloat(defaultChainGasFee) >
-            parseFloat(availableBalance)
+            parseFloat(availableBalanceIBCToken)
         ) {
           return {
             ...state,
@@ -84,8 +97,8 @@ const GravityToEthBridge = () => {
       case "SET_MAX_AMOUNT": {
         // if available balance is invalid, set error message
         if (
-          isNaN(parseFloat(availableBalance)) ||
-          parseFloat(availableBalance) < parseFloat(defaultChainGasFee)
+          isNaN(parseFloat(availableBalanceIBCToken)) ||
+          parseFloat(availableBalanceIBCToken) < parseFloat(defaultChainGasFee)
         ) {
           return {
             ...state,
@@ -107,7 +120,8 @@ const GravityToEthBridge = () => {
           return {
             ...state,
             transferAmount: fromChainDenom(
-              parseFloat(availableBalance) - parseFloat(defaultChainGasFee)
+              parseFloat(availableBalanceIBCToken) -
+                parseFloat(defaultChainGasFee)
             ).toString(),
           };
         }
@@ -153,6 +167,7 @@ const GravityToEthBridge = () => {
   const [formState, formDispatch] = useReducer(formReducer, initialState);
 
   // CONTROLLER FUNCTIONS
+
   const handleAmountOnChange = (e) => {
     e.preventDefault();
     formDispatch({
@@ -170,6 +185,9 @@ const GravityToEthBridge = () => {
       type: "SUBMIT",
     });
 
+    const stargateClient = await getSigningOsmosisClient();
+    console.log("registry: ", stargateClient.registry);
+
     // if no validation errors, proceed to transaction processing
     if (
       formState?.transferAmount &&
@@ -179,12 +197,12 @@ const GravityToEthBridge = () => {
       // define local variables
       const localTransferAmount = formState?.transferAmount;
       let memo;
-      const gravityAddress = convertBech32Address(address, gravityChainName);
+      const ethDestAddress = "0xae6094170ABC0601b4bbe933D04368cD407C186a";
 
       // create transaction
-      const { response, error } = await sendIbcTokenToGravity(
+      const { response, error } = await sendIbcTokenToEth(
         address,
-        gravityAddress,
+        ethDestAddress,
         localTransferAmount,
         memo,
 
@@ -211,8 +229,14 @@ const GravityToEthBridge = () => {
 
   // DISPLAY VARIABLES
   const displayShortenedAddress = shortenAddress(address, gravityChainName);
-  const displayAvailableBalance = fromChainDenom(availableBalance).toString();
-  const displayAvailableBalanceDenom = gravityChainSymbol;
+  const displayAvailableBalanceIBCToken = fromChainDenom(
+    availableBalanceIBCToken
+  );
+  const displayAvailableBalanceGravity = fromChainDenom(
+    availableBalanceGravity
+  );
+  const displayBalanceUnitGravity = gravityChainSymbol;
+  const displayBalanceUnitGravityIBCToken = defaultChainSymbol;
   const isSubmitDisabled =
     status != "Connected" || !isObjEmpty(formState?.errorMessages);
   const displayInputAmountValue = formState?.transferAmount;
@@ -249,8 +273,12 @@ const GravityToEthBridge = () => {
       >
         Amount{" "}
         <small className="small text-gray">
-          Available Balance : {displayAvailableBalance}{" "}
-          {displayAvailableBalanceDenom}
+          Available Balance : {displayAvailableBalanceGravity}{" "}
+          {displayBalanceUnitGravity}
+        </small>
+        <small className="small text-gray">
+          IBC Balance : {displayAvailableBalanceIBCToken}{" "}
+          {displayBalanceUnitGravityIBCToken}
         </small>
       </label>
       <div className="input-white d-flex py-2 px-3 rounded-2">
