@@ -719,6 +719,61 @@ export const useAllProposals = () => {
     errorProposals: error,
   };
 };
+export const useAllVotes = (proposalId) => {
+  // get the connected wallet parameters from useChain hook
+  const walletManager = useChain(defaultChainName);
+  const { walletStatus, address, currentWalletInfo } = walletManager;
+
+  // fetcher function for useSwr of useAvailableBalance()
+  const fetchAllVotes = async (url) => {
+    let allVotes;
+
+    // use a try catch block for creating rich Error object
+    try {
+      const comdexRpcEndpoint = "https://rpc.cosmos.directory/comdex";
+      const tempCLient = await cosmos.ClientFactory.createRPCQueryClient({
+        comdexRpcEndpoint,
+      });
+      // get the data from cosmos queryClient
+      const { votes } = await tempCLient.cosmos.gov.v1beta1.votes({
+        proposalId,
+      });
+      allVotes = votes;
+      console.log(votes);
+      // const iconUrlsArray = validators.map((validator, index) => {
+      //   return `https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/${validator.operatorAddress}.png`;
+      // });
+      // const data = await fetch(iconUrlsArray);
+      // console.log("data: ", data);
+      console.log(allVotes);
+    } catch (error) {
+      console.error(`swr fetcher error: ${url}`);
+      throw error;
+    }
+    // return the data
+    return allVotes;
+  };
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: votesArray, error } = useSwr("allVotes", fetchAllVotes, {
+    fallbackData: [
+      {
+        balance: { denom: "umntl", amount: 0 },
+        delegation: {
+          delegator_address: "delegator_address",
+          validator_address: "validator_address",
+          shares: "298317289",
+        },
+      },
+    ],
+    suspense: true,
+    refreshInterval: 1000,
+  });
+  return {
+    allVotes: votesArray,
+    isLoadingVotes: !error && !votesArray,
+    errorVotes: error,
+  };
+};
 
 export const useWithdrawAddress = () => {
   // get the connected wallet parameters from useChain hook

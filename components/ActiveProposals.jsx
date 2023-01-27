@@ -1,15 +1,34 @@
 import React, { useState } from "react";
+import { useAllVotes } from "../data";
 
 const ActiveProposals = ({ voteState, voteDispatch, allProposals }) => {
-  const [onVoteHover, setOnVoteHover] = useState(null);
   const [OnVoteSelect, setOnVoteSelect] = useState(null);
+  const [onVoteHover, setOnVoteHover] = useState(null);
+  const { allVotes, isLoadingVotes, errorVotes } = useAllVotes(
+    voteState?.proposalID
+  );
+  console.log(allVotes);
 
   return (
     <>
-      {allProposals?.filter((item) => item?.status !== 3)?.length ? (
-        allProposals
-          // ?.filter((item) => item?.status !== 3)
-          ?.map((proposal, index) => (
+      {allProposals?.length ? (
+        allProposals?.map((proposal, index) => (
+          <div
+            key={index}
+            onMouseEnter={() =>
+              setOnVoteHover(
+                proposal?.proposalId?.high + proposal?.proposalId?.low
+              )
+            }
+            onMouseLeave={() => setOnVoteHover(null)}
+            className={`col-12 col-md-6 p-2`}
+            onClick={() => {
+              voteDispatch({
+                type: "SET_PROPOSAL_ID",
+                payload: proposal?.proposalId?.high + proposal?.proposalId?.low,
+              });
+            }}
+          >
             <div
               key={index}
               onMouseOver={() =>
@@ -44,70 +63,85 @@ const ActiveProposals = ({ voteState, voteDispatch, allProposals }) => {
                       {proposal?.content?.$typeUrl?.slice(23)}
                     </div>
                   </div>
-                  <h5 className="caption2 text-primary">
-                    {proposal?.content?.title}
-                  </h5>
-
-                  <p className="caption2">
-                    Voting Start :{" "}
-                    {new Date(
-                      (proposal?.votingStartTime?.seconds?.low +
-                        proposal?.votingStartTime?.seconds?.high) *
-                        1000
-                    ).toLocaleDateString()}
-                  </p>
-                  <p className="caption2">
-                    Voting End :{" "}
-                    {new Date(
-                      (proposal?.votingEndTime?.seconds?.low +
-                        proposal?.votingEndTime?.seconds?.high) *
-                        1000
-                    ).toLocaleDateString()}
-                  </p>
                 </div>
-                <div className="py-2 d-flex justify-content-between align-items-center position-relative">
-                  <p
-                    className="small bg-blue-100 p-2 pe-5 text-dark text-uppercase"
+                <h5 className="caption2 text-primary">
+                  {proposal?.content?.title}
+                </h5>
+
+                <p className="caption2">
+                  Voting Start :{" "}
+                  {new Date(
+                    (proposal?.votingStartTime?.seconds?.low +
+                      proposal?.votingStartTime?.seconds?.high) *
+                      1000
+                  ).toLocaleDateString()}
+                </p>
+                <p className="caption2">
+                  Voting End :{" "}
+                  {new Date(
+                    (proposal?.votingEndTime?.seconds?.low +
+                      proposal?.votingEndTime?.seconds?.high) *
+                      1000
+                  ).toLocaleDateString()}
+                </p>
+              </div>
+              <div className="py-2 d-flex justify-content-between align-items-center position-relative">
+                <p
+                  className="small bg-blue-100 p-2 pe-5 text-dark text-uppercase"
+                  style={{
+                    clipPath:
+                      "polygon(0% 0%, 80% 0%, 100% 50%, 80% 100%, 0% 100%)",
+                    width: "max-content",
+                    fontWeight: "700",
+                  }}
+                >
+                  Voting Period
+                </p>
+                {onVoteHover ===
+                  proposal?.proposalId?.high + proposal?.proposalId?.low &&
+                voteState.proposalId !==
+                  proposal?.proposalId?.high + proposal?.proposalId?.low ? (
+                  <span
+                    className="text-primary position-absolute bottom-0"
                     style={{
-                      clipPath:
-                        "polygon(0% 0%, 80% 0%, 100% 50%, 80% 100%, 0% 100%)",
-                      width: "max-content",
-                      fontWeight: "700",
+                      right: "5px",
+                      transform: "translateY(-95%)",
                     }}
                   >
                     Voting Period
-                  </p>
-                  {OnVoteSelect !== index &&
-                  onVoteHover ===
-                    proposal?.proposalId?.high + proposal?.proposalId?.low &&
-                  voteState.proposalId !==
-                    proposal?.proposalId?.high + proposal?.proposalId?.low ? (
-                    <span
-                      className="text-primary position-absolute bottom-0"
-                      style={{
-                        right: "5px",
-                        transform: "translateY(-50%)",
-                      }}
-                    >
-                      <i className="bi bi-circle text-primary"></i>
-                    </span>
-                  ) : null}
-                  {voteState.proposalID ===
+                  </span>
+                ) : null}
+                {OnVoteSelect !== index &&
+                onVoteHover ===
+                  proposal?.proposalId?.high + proposal?.proposalId?.low &&
+                voteState.proposalId !==
                   proposal?.proposalId?.high + proposal?.proposalId?.low ? (
-                    <span
-                      className="text-primary position-absolute bottom-0"
-                      style={{
-                        right: "5px",
-                        transform: "translateY(-50%)",
-                      }}
-                    >
-                      <i className="bi bi-record-circle text-primary"></i>
-                    </span>
-                  ) : null}
-                </div>
+                  <span
+                    className="text-primary position-absolute bottom-0"
+                    style={{
+                      right: "5px",
+                      transform: "translateY(-50%)",
+                    }}
+                  >
+                    <i className="bi bi-circle text-primary"></i>
+                  </span>
+                ) : null}
+                {voteState.proposalID ===
+                proposal?.proposalId?.high + proposal?.proposalId?.low ? (
+                  <span
+                    className="text-primary position-absolute bottom-0"
+                    style={{
+                      right: "5px",
+                      transform: "translateY(-50%)",
+                    }}
+                  >
+                    <i className="bi bi-record-circle text-primary"></i>
+                  </span>
+                ) : null}
               </div>
             </div>
-          ))
+          </div>
+        ))
       ) : (
         <div>There are no active proposals at the moment</div>
       )}
