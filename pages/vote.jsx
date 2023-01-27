@@ -87,7 +87,8 @@ export default function Vote() {
                 proposalId={voteState?.proposalID}
               />
               <button
-                className="btn btn-primary w-100 rounded-5"
+                className="button-primary py-2 text-center"
+                style={{ maxWidth: "100%" }}
                 data-bs-toggle="modal"
                 data-bs-target="#voteModal"
               >
