@@ -41,20 +41,20 @@ export default function StakedToken({
         ) : null}
         <div className="rounded-4 gap-3 p-3 bg-gray-800 width-100 d-flex flex-column">
           <h4 className="body1 text-primary">Staked Tokens</h4>
-          <Suspense>
+          <Suspense fallback={<p>Loading</p>}>
             <Delegations
               stakeState={stakeState}
               stakeDispatch={stakeDispatch}
               totalTokens={totalTokens}
             />
           </Suspense>
-          <Suspense>
+          <Suspense fallback={<p>Loading</p>}>
             <Rewards
               stakeState={stakeState}
               setShowClaimError={setShowClaimError}
             />
           </Suspense>
-          <Suspense>
+          <Suspense fallback={<p>Loading</p>}>
             <Unbonded stakeState={stakeState} stakeDispatch={stakeDispatch} />
           </Suspense>
           {stakeState?.selectedValidators?.length === 1 ? (
@@ -171,7 +171,7 @@ export default function StakedToken({
                 }
                 data-bs-target="#stakeTransactionManifestModal"
                 onClick={() => {
-                  formDispatch({
+                  stakeDispatch({
                     type: "SUBMIT_DELEGATE",
                   });
                 }}
@@ -182,23 +182,18 @@ export default function StakedToken({
           </div>
         </div>
       </div>
-      <div
-        className="modal "
-        tabIndex="-1"
-        role="dialog"
+
+      <TransactionManifestModal
         id="stakeTransactionManifestModal"
-      >
-        <TransactionManifestModal
-          displayData={[
-            { title: "Delegating From:", value: address },
-            { title: "Delegating To:", value: stakeState.delegationAddress },
-            { title: "Amount:", value: stakeState.delegationAmount },
-            { title: "Transaction Type", value: "Delegate" },
-            { title: "Wallet Type", value: wallet?.prettyName },
-          ]}
-          handleSubmit={handleStakeSubmit}
-        />
-      </div>
+        displayData={[
+          { title: "Delegating From:", value: address },
+          { title: "Delegating To:", value: stakeState.delegationAddress },
+          { title: "Amount:", value: stakeState.delegationAmount },
+          { title: "Transaction Type", value: "Delegate" },
+          { title: "Wallet Type", value: wallet?.prettyName },
+        ]}
+        handleSubmit={handleStakeSubmit}
+      />
     </>
   );
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { useChain } from "@cosmos-kit/react";
 import {
   defaultChainSymbol,
@@ -15,17 +15,23 @@ export const AvailableBalance = () => {
   const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status } = walletManager;
 
-  const { availableBalance, errorAvailableBalance } = useAvailableBalance();
-
+  const { availableBalance, errorAvailableBalance, isLoadingAvailableBalance } =
+    useAvailableBalance();
   const balanceDisplay =
     errorAvailableBalance || isNaN(fromDenom(availableBalance))
       ? placeholderAvailableBalance
       : fromDenom(availableBalance);
 
   return (
-    <p className={status === "Connected" ? "caption" : "caption text-gray"}>
-      {balanceDisplay}&nbsp;{denomDisplay}
-    </p>
+    <>
+      {isLoadingAvailableBalance ? (
+        <p>Loading...</p>
+      ) : (
+        <p className={status === "Connected" ? "caption" : "caption text-gray"}>
+          {balanceDisplay}&nbsp;{denomDisplay}
+        </p>
+      )}
+    </>
   );
 };
 
@@ -48,5 +54,10 @@ export const AvailableBalanceUsd = () => {
           .toFixed(6)
           .toString();
 
-  return <p className="caption2 text-gray">${balanceInUSDDisplay}&nbsp;$USD</p>;
+  return (
+    <Suspense fallback={<span className="placeholder col-7"></span>}>
+      {" "}
+      <p className="caption2 text-gray">${balanceInUSDDisplay}&nbsp;$USD</p>
+    </Suspense>
+  );
 };

@@ -540,7 +540,7 @@ export const useAvailableBalance = () => {
   return {
     availableBalance: balanceObject?.amount,
     denom: balanceObject?.denom,
-    // isLoadingAvailableBalance: !error && !balanceObject,
+    isLoadingAvailableBalance: !error && !balanceObject,
     errorAvailableBalance: error,
   };
 };
@@ -620,13 +620,10 @@ export const useVote = (proposalId) => {
   const fetchVote = async (url, address) => {
     let voteInfo;
     console.log("id here:", proposalId);
-    const longProposalId = Long.fromNumber(3);
+    const longProposalId = BigInt("3");
     console.log("after:", longProposalId);
     // use a try catch block for creating rich Error object
     try {
-      // const longProposalId = {
-      //   low: toHex(toUtf8(proposalId.toString())),
-      // };
       // get the data from cosmos queryClient
       const { vote } = await client.cosmos.gov.v1beta1.vote({
         proposalId: longProposalId,
@@ -672,7 +669,7 @@ export const useAllProposals = () => {
   const { walletStatus, address, currentWalletInfo } = walletManager;
 
   // fetcher function for useSwr of useAvailableBalance()
-  const fetchAllProposals = async () => {
+  const fetchAllProposals = async (url) => {
     let allProposals;
 
     // use a try catch block for creating rich Error object
@@ -680,7 +677,8 @@ export const useAllProposals = () => {
       // get the data from cosmos queryClient
       const { proposals } = await client.cosmos.gov.v1beta1.proposals({
         depositor: "",
-        proposalStatus: "2",
+        // proposalStatus: "2",
+        proposalStatus: "",
         voter: "",
       });
       allProposals = proposals;
@@ -698,7 +696,7 @@ export const useAllProposals = () => {
   };
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: proposalsArray, error } = useSwr(
-    address ? ["validators", address] : null,
+    "proposals",
     fetchAllProposals,
     {
       fallbackData: [

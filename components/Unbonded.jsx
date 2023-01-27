@@ -19,7 +19,6 @@ const denomDisplay = defaultChainSymbol;
 const Unbonded = ({ stakeState, stakeDispatch }) => {
   const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status, wallet } = walletManager;
-  console.log(wallet);
   const [activeValidators, setActiveValidators] = useState(true);
   const {
     totalUnbondingAmount,
