@@ -17,7 +17,6 @@ import {
   sendWithdrawAddress,
   isInvalidAddress,
 } from "../data";
-import TransactionManifestModal from "./TransactionManifestModal";
 
 const denomDisplay = defaultChainSymbol;
 
@@ -60,7 +59,8 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
           .toFixed(6)
           .toString();
 
-  const handleClaim = async () => {
+  const handleClaim = async (e) => {
+    e.preventDefault();
     const { response, error } = await sendRewardsBatched(
       address,
       withdrawAddress,
@@ -353,8 +353,9 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                 <div className="d-flex justify-content-end">
                   <button
                     className="btn btn-primary px-5 mt-3 text-right rounded-5"
-                    data-bs-toggle="modal"
-                    data-bs-target="#claimTransactionManifestModal"
+                    // data-bs-toggle="modal"
+                    // data-bs-target="#claimTransactionManifestModal"
+                    onClick={handleClaim}
                   >
                     Submit
                   </button>
@@ -418,14 +419,12 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
         </div>
       </div>
 
-      <TransactionManifestModal
+      {/* <TransactionManifestModal
         id="claimTransactionManifestModal"
+        claimArray={stakeState.selectedValidators.map((item) => item)}
         displayData={[
           { title: "Claiming rewards to", value: address },
-          {
-            title: "Claiming rewards from",
-            value: stakeState.selectedValidators.map((item) => item),
-          },
+
           {
             title: "amount",
             value: stakeState?.selectedValidators.length
@@ -447,7 +446,7 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
           { title: "Wallet Type", value: wallet?.prettyName },
         ]}
         handleSubmit={handleClaim}
-      />
+      /> */}
     </div>
   );
 };

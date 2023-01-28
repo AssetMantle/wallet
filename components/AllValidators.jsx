@@ -17,6 +17,7 @@ const AllValidators = ({
     // console.log("e: ", e);
     e.target.src = "/validatorAvatars/alt.png";
   };
+  console.log(delegatedValidators, validatorsArray);
   return (
     <>
       {activeValidators
@@ -87,12 +88,17 @@ const AllValidators = ({
                 )}
                 <td>{(item?.tokens / 1000000).toFixed(2)}</td>
                 <td>
-                  {fromChainDenom(
-                    delegatedValidators?.find(
-                      (element) =>
-                        element?.operatorAddress == item?.operatorAddress
-                    )?.delegatedAmount
-                  ) || "-"}
+                  {delegatedValidators?.find(
+                    (element) =>
+                      element?.operatorAddress == item?.operatorAddress
+                  )
+                    ? fromChainDenom(
+                        delegatedValidators?.find(
+                          (element) =>
+                            element?.operatorAddress == item?.operatorAddress
+                        )?.delegatedAmount
+                      )
+                    : "-"}
                 </td>
               </tr>
             ))
@@ -165,12 +171,17 @@ const AllValidators = ({
                 <td>{(item?.tokens / 1000000).toFixed(2)}</td>
                 <td>
                   {" "}
-                  {fromChainDenom(
-                    delegatedValidators?.find(
-                      (element) =>
-                        element?.operatorAddress == item?.operatorAddress
-                    )?.delegatedAmount
-                  ) || "-"}
+                  {delegatedValidators?.find(
+                    (element) =>
+                      element?.operatorAddress == item?.operatorAddress
+                  )
+                    ? fromChainDenom(
+                        delegatedValidators?.find(
+                          (element) =>
+                            element?.operatorAddress == item?.operatorAddress
+                        )?.delegatedAmount
+                      )
+                    : "-"}
                 </td>
                 <td>
                   {item?.jailed ? (

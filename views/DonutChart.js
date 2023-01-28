@@ -9,6 +9,13 @@ const DonutChart = ({ selectedProposal, proposalID }) => {
     selectedProposal?.finalTallyResult?.noWithVeto == 0 &&
     selectedProposal?.finalTallyResult?.no == 0;
 
+  const legend = [
+    { title: "Yes", color: "#67C3A5" },
+    { title: "No", color: "#8C9ECA" },
+    { title: "Abstain", color: "#FC8D62" },
+    { title: "No with Veto", color: "#E689C2" },
+  ];
+
   const { allVotes, isLoadingVotes, errorVotes } = useAllVotes(proposalID);
   console.log(allVotes);
 
@@ -76,12 +83,12 @@ const DonutChart = ({ selectedProposal, proposalID }) => {
     votes: [
       {
         proposal_id: "6",
-        voter: "mantle1q7mtgqx4k9xr7z89dgsgd456tg0g7tgs5nm3ey",
+        voter: "mantle1qz3zj0j3546xywfe8qwcve5flne9w98qarhr6y",
         option: "VOTE_OPTION_YES",
         options: [
           {
             option: "VOTE_OPTION_YES",
-            weight: "1.000000000000000000",
+            weight: "1.500000000000000000",
           },
         ],
       },
@@ -91,59 +98,26 @@ const DonutChart = ({ selectedProposal, proposalID }) => {
         option: "VOTE_OPTION_NO",
         options: [
           {
-            option: "VOTE_OPTION_NO",
-            weight: "1.000000000000000000",
-          },
-        ],
-      },
-      {
-        proposal_id: "6",
-        voter: "mantle1q7mtgqx4k9xr7z89dgsgd456tg0g7tgs5nmey",
-        option: "VOTE_OPTION_NO",
-        options: [
-          {
-            option: "VOTE_OPTION_NO",
-            weight: "1.000000000000000000",
-          },
-        ],
-      },
-      {
-        proposal_id: "6",
-        voter: "mantle1q7mtgqx4k9xr7z89dgsgd456tg07tgs5nm3ey",
-        option: "VOTE_OPTION_ABSTAIN",
-        options: [
-          {
-            option: "VOTE_OPTION_ABSTAIN",
-            weight: "1.000000000000000000",
-          },
-        ],
-      },
-      {
-        proposal_id: "6",
-        voter: "mantle1q7mtgqx4k9xr7z89dgsgd45g0g7tgs5nm3ey",
-        option: "VOTE_OPTION_ABSTAIN",
-        options: [
-          {
-            option: "VOTE_OPTION_ABSTAIN",
-            weight: "1.000000000000000000",
+            option: "VOTE_OPTION_YES",
+            weight: "0.750000000000000000",
           },
         ],
       },
       {
         proposal_id: "6",
         voter: "mantle1p224qamtqhqmg2k3cguwtml2ygk72spk7fxve6",
-        option: "VOTE_OPTION_YES",
+        option: "VOTE_OPTION_ABSTAIN",
         options: [
           {
             option: "VOTE_OPTION_YES",
-            weight: "1.000000000000000000",
+            weight: "0.750000000000000000",
           },
         ],
       },
       {
         proposal_id: "6",
         voter: "mantle1zcv66fuznlfjsaehfhllacdj5uvf6naul7njzd",
-        option: "VOTE_OPTION_YES",
+        option: "VOTE_OPTION_NO_WITH_VETO",
         options: [
           {
             option: "VOTE_OPTION_YES",
@@ -198,6 +172,39 @@ const DonutChart = ({ selectedProposal, proposalID }) => {
       {
         proposal_id: "6",
         voter: "mantle1x2ay39z5fz8yt3nxymz4gmacwnwyup24qw5xg8",
+        option: "VOTE_OPTION_YES",
+        options: [
+          {
+            option: "VOTE_OPTION_YES",
+            weight: "1.000000000000000000",
+          },
+        ],
+      },
+      {
+        proposal_id: "6",
+        voter: "mantle18zzddr4cqpz56z2hqvdczqvwwy4ez29z0u2p80",
+        option: "VOTE_OPTION_YES",
+        options: [
+          {
+            option: "VOTE_OPTION_YES",
+            weight: "1.000000000000000000",
+          },
+        ],
+      },
+      {
+        proposal_id: "6",
+        voter: "mantle1gp957czryfgyvxwn3tfnyy2f0t9g2p4pmfkt47",
+        option: "VOTE_OPTION_YES",
+        options: [
+          {
+            option: "VOTE_OPTION_YES",
+            weight: "1.000000000000000000",
+          },
+        ],
+      },
+      {
+        proposal_id: "6",
+        voter: "mantle1g09pl3j043uqpw7zqkrdsxw3ve7u63efj4ymn3",
         option: "VOTE_OPTION_YES",
         options: [
           {
@@ -329,6 +336,17 @@ const DonutChart = ({ selectedProposal, proposalID }) => {
       },
       {
         proposal_id: "6",
+        voter: "mantle13mnllldgrj809q6cmlwvnux6pgeep0mukx0f0u",
+        option: "VOTE_OPTION_YES",
+        options: [
+          {
+            option: "VOTE_OPTION_YES",
+            weight: "1.000000000000000000",
+          },
+        ],
+      },
+      {
+        proposal_id: "6",
         voter: "mantle1jjwf2052uy7fvl8tl65lgxnyr7mggc7v5etaru",
         option: "VOTE_OPTION_YES",
         options: [
@@ -340,7 +358,40 @@ const DonutChart = ({ selectedProposal, proposalID }) => {
       },
       {
         proposal_id: "6",
+        voter: "mantle1ndp6mspfs89uvyc38evtegelueh00cy24sjjuw",
+        option: "VOTE_OPTION_YES",
+        options: [
+          {
+            option: "VOTE_OPTION_YES",
+            weight: "1.000000000000000000",
+          },
+        ],
+      },
+      {
+        proposal_id: "6",
+        voter: "mantle15gcxvpeq4jhh7s647fmpm82v9qf9uymh72u5ja",
+        option: "VOTE_OPTION_YES",
+        options: [
+          {
+            option: "VOTE_OPTION_YES",
+            weight: "1.000000000000000000",
+          },
+        ],
+      },
+      {
+        proposal_id: "6",
         voter: "mantle1cqwtg4zu3fx0vask9gx6xxecy29mrmtwfm5vag",
+        option: "VOTE_OPTION_YES",
+        options: [
+          {
+            option: "VOTE_OPTION_YES",
+            weight: "1.000000000000000000",
+          },
+        ],
+      },
+      {
+        proposal_id: "6",
+        voter: "mantle1ceyprzn4y8n4lmm5zs3m9pgeejfmt72gdf8j32",
         option: "VOTE_OPTION_YES",
         options: [
           {
@@ -418,7 +469,7 @@ const DonutChart = ({ selectedProposal, proposalID }) => {
     ],
     pagination: {
       next_key: null,
-      total: "27",
+      total: "35",
     },
   };
   const yesVotes = data.votes.filter(
@@ -429,9 +480,9 @@ const DonutChart = ({ selectedProposal, proposalID }) => {
     (item) => item?.option == "VOTE_OPTION_ABSTAIN"
   );
   const noWithVetoVotes = data.votes.filter(
-    (item) => item?.option == "VOTE_OPTION_NO_WITH_VETO "
+    (item) => item?.option == "VOTE_OPTION_NO_WITH_VETO"
   );
-  console.log(yesVotes, noVotes);
+  console.log(yesVotes, noVotes, abstainVotes, noWithVetoVotes);
   const chartAltData = {
     name: "validator",
     color: "hsl(173, 70%, 50%)",
@@ -496,7 +547,7 @@ const DonutChart = ({ selectedProposal, proposalID }) => {
   };
 
   return (
-    <div style={{ height: "400px" }}>
+    <div style={{ height: "400px" }} className="my-5">
       {/* {isDataZero ? (
         <div className="rounded-4 p-3 my-2 bg-gray-800 width-100 d-flex flex-column ">
           <p>No votes yet</p>
@@ -521,11 +572,20 @@ const DonutChart = ({ selectedProposal, proposalID }) => {
           modifiers: [["darker", 5]],
         }}
       />
-      <div className="d-flex flex-row">
-        <div style={{ backgroundColor: "hsl(11, 70%, 50%)" }}></div>
-        <div style={{ backGroundColor: "hsl(11, 70%, 50%)" }}></div>{" "}
-        <div style={{ backGroundColor: "hsl(11, 70%, 50%)" }}></div>{" "}
-        <div style={{ backGroundColor: "hsl(11, 70%, 50%)" }}></div>
+      <div className="d-flex flex-row justify-content-between mb-5">
+        {legend.map((item) => (
+          <>
+            <div
+              className="col-6"
+              style={{
+                backgroundColor: item.color,
+                height: "12px",
+                width: "30px",
+              }}
+            ></div>
+            <p>{item.title}</p>
+          </>
+        ))}
       </div>
       {/* )} */}
     </div>

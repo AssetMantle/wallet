@@ -1,18 +1,25 @@
 import React, { useState } from "react";
 
-const ActiveProposals = ({ voteState, voteDispatch, allProposals }) => {
+const ActiveProposals = ({
+  voteState,
+  voteDispatch,
+  allProposals,
+  isLoadingProposals,
+}) => {
   const [OnVoteSelect, setOnVoteSelect] = useState(null);
   const [onVoteHover, setOnVoteHover] = useState(null);
 
   const getTypeProposal = (typeUrl) => {
     const typeProposalArray = typeUrl?.split?.(".");
     const typeProposal = typeProposalArray?.slice?.(-1)?.[0];
-    return typeProposal;
+    return typeProposal + typeProposal;
   };
 
   return (
     <>
-      {allProposals?.length ? (
+      {isLoadingProposals ? (
+        <div>Loading ...</div>
+      ) : allProposals?.length ? (
         allProposals?.map((proposal, index) => (
           <div
             key={index}

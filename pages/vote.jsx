@@ -11,7 +11,6 @@ import { defaultChainName } from "../config";
 import ActiveProposals from "../components/ActiveProposals";
 import Head from "next/head";
 import { isObjEmpty } from "../lib";
-import TransactionManifestModal from "../components/TransactionManifestModal";
 
 export default function Vote() {
   const { voteState, voteDispatch } = useVoteReducer();
@@ -20,15 +19,19 @@ export default function Vote() {
   const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status, wallet } = walletManager;
 
-  const handleVote = async () => {
-    const { response, error } = await sendVote(
-      voteState?.proposalID,
-      address,
-      voteState?.voteOption,
-      voteState?.memo,
-      { getSigningStargateClient }
-    );
-    console.log("response: ", response, " error: ", error);
+  const handleVote = async (e) => {
+    e.preventDefault();
+    voteDispatch({ type: "SUBMIT_VOTE" });
+    if (isObjEmpty(voteState.errorMessages)) {
+      const { response, error } = await sendVote(
+        voteState?.proposalID,
+        address,
+        voteState?.voteOption,
+        voteState?.memo,
+        { getSigningStargateClient }
+      );
+      console.log("response: ", response, " error: ", error);
+    }
   };
   const [ShowAdvanced, setShowAdvanced] = useState(false);
   const isConnected = status == "Connected";
@@ -73,6 +76,7 @@ export default function Vote() {
                   voteDispatch={voteDispatch}
                   voteState={voteState}
                   allProposals={allProposals}
+                  isLoadingProposals={isLoadingProposals}
                 />
               </div>
             </div>
@@ -89,14 +93,14 @@ export default function Vote() {
                 )}
                 proposalId={voteState?.proposalID}
               />
-              {/* <button
+              <button
                 className="button-primary py-2 text-center"
                 style={{ maxWidth: "100%" }}
                 data-bs-toggle="modal"
                 data-bs-target="#voteModal"
               >
                 Vote
-              </button> */}
+              </button>
             </>
           ) : (
             <VoteInfo
@@ -313,12 +317,10 @@ export default function Vote() {
                   <button
                     disabled={!isObjEmpty(voteState?.errorMessages)}
                     type="button"
-                    data-bs-toggle={voteState.voteOption !== 0 ? "modal" : ""}
-                    data-bs-target="#voteTransactionManifestModal"
+                    // data-bs-toggle={voteState.voteOption !== 0 ? "modal" : ""}
+                    // data-bs-target="#voteTransactionManifestModal"
                     className="button-primary px-5 py-2 ms-auto"
-                    onClick={() => {
-                      voteDispatch({ type: "SUBMIT_VOTE" });
-                    }}
+                    onClick={handleVote}
                   >
                     Confirm
                   </button>
@@ -328,14 +330,14 @@ export default function Vote() {
           </div>
         </div>
       </section>
-      <TransactionManifestModal
+      {/* <TransactionManifestModal
         displayData={[
           { title: "Transaction Type", value: "Vote" },
           { title: "Wallet Type", value: wallet?.prettyName },
         ]}
         id="voteTransactionManifestModal"
         handleSubmit={handleVote}
-      />
+      /> */}
     </>
   );
 }

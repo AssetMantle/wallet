@@ -695,16 +695,6 @@ export const useAllProposals = () => {
     "proposals",
     fetchAllProposals,
     {
-      fallbackData: [
-        {
-          balance: { denom: "umntl", amount: 0 },
-          delegation: {
-            delegator_address: "delegator_address",
-            validator_address: "validator_address",
-            shares: "298317289",
-          },
-        },
-      ],
       suspense: true,
       refreshInterval: 1000,
     }

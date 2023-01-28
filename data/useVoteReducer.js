@@ -41,7 +41,7 @@ const useVoteReducer = () => {
   };
 
   const [voteState, voteDispatch] = useReducer(stakeReducer, initialState);
-  // console.log(voteState.errorMessages);
+  console.log(voteState);
   return { voteState, voteDispatch };
 };
 

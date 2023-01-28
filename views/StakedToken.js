@@ -6,7 +6,6 @@ import Unbonded from "../components/Unbonded";
 import { defaultChainName, defaultChainSymbol } from "../config";
 import { fromDenom, sendDelegation, useAvailableBalance } from "../data";
 import { isObjEmpty } from "../lib";
-import TransactionManifestModal from "../components/TransactionManifestModal";
 
 export default function StakedToken({
   totalTokens,
@@ -21,14 +20,19 @@ export default function StakedToken({
 
   const handleStakeSubmit = async (e) => {
     e.preventDefault();
-    const { response, error } = await sendDelegation(
-      address,
-      stakeState?.delegationAddress,
-      stakeState?.delegationAmount,
-      stakeState?.memo,
-      { getSigningStargateClient }
-    );
-    console.log("response: ", response, " error: ", error);
+    stakeDispatch({
+      type: "SUBMIT_DELEGATE",
+    });
+    if (isObjEmpty(stakeState.errorMessages)) {
+      const { response, error } = await sendDelegation(
+        address,
+        stakeState?.delegationAddress,
+        stakeState?.delegationAmount,
+        stakeState?.memo,
+        { getSigningStargateClient }
+      );
+      console.log("response: ", response, " error: ", error);
+    }
   };
 
   return (
@@ -166,15 +170,11 @@ export default function StakedToken({
                 disabled={!isObjEmpty(stakeState?.errorMessages)}
                 type="button"
                 className="button-primary px-5 py-2"
-                data-bs-toggle={
-                  stakeState.delegationAmount.length != 0 ? "modal" : ""
-                }
-                data-bs-target="#stakeTransactionManifestModal"
-                onClick={() => {
-                  stakeDispatch({
-                    type: "SUBMIT_DELEGATE",
-                  });
-                }}
+                // data-bs-toggle={
+                //   stakeState.delegationAmount.length != 0 ? "modal" : ""
+                // }
+                // data-bs-target="#stakeTransactionManifestModal"
+                onClick={handleStakeSubmit}
               >
                 Submit
               </button>
@@ -183,7 +183,7 @@ export default function StakedToken({
         </div>
       </div>
 
-      <TransactionManifestModal
+      {/* <TransactionManifestModal
         id="stakeTransactionManifestModal"
         displayData={[
           { title: "Delegating From:", value: address },
@@ -193,7 +193,7 @@ export default function StakedToken({
           { title: "Wallet Type", value: wallet?.prettyName },
         ]}
         handleSubmit={handleStakeSubmit}
-      />
+      /> */}
     </>
   );
 }

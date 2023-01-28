@@ -47,9 +47,9 @@ const TransactionManifestModal = ({ displayData, handleSubmit, id }) => {
                     {item?.title}
                   </div>
                   {Array.isArray(item?.value) ? (
-                    item?.value?.map((element, index) => (
+                    item?.value?.map((element, ind) => (
                       <div
-                        key={index}
+                        key={ind}
                         className=" px-1 text-white caption lato"
                         style={{ fontWeight: "400" }}
                       >
