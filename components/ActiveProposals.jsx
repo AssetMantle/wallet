@@ -4,6 +4,12 @@ const ActiveProposals = ({ voteState, voteDispatch, allProposals }) => {
   const [OnVoteSelect, setOnVoteSelect] = useState(null);
   const [onVoteHover, setOnVoteHover] = useState(null);
 
+  const getTypeProposal = (typeUrl) => {
+    const typeProposalArray = typeUrl?.split?.(".");
+    const typeProposal = typeProposalArray?.slice?.(-1)?.[0];
+    return typeProposal;
+  };
+
   return (
     <>
       {allProposals?.length ? (
@@ -35,10 +41,10 @@ const ActiveProposals = ({ voteState, voteDispatch, allProposals }) => {
                     #{proposal?.proposalId?.high + proposal?.proposalId?.low}{" "}
                   </h4>
                   <div
-                    className="button-secondary caption bg-translucent px-2 py-1"
+                    className="button-secondary caption bg-translucent px-2 py-1 text-truncate"
                     style={{ fontWeight: "400" }}
                   >
-                    {proposal?.content?.$typeUrl?.slice(23)}
+                    {getTypeProposal(proposal?.content?.$typeUrl)}
                   </div>
                 </div>
                 <h5 className="caption2 text-primary">
