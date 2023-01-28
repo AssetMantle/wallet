@@ -694,10 +694,7 @@ export const useAllProposals = () => {
   const { data: proposalsArray, error } = useSwr(
     "proposals",
     fetchAllProposals,
-    {
-      suspense: true,
-      refreshInterval: 1000,
-    }
+    { fallbackData: ["fallback"], suspense: true, refreshInterval: 1000 }
   );
   return {
     allProposals: proposalsArray,
