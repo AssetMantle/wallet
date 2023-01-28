@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { useChain } from "@cosmos-kit/react";
 import {
   defaultChainSymbol,
@@ -54,10 +54,5 @@ export const AvailableBalanceUsd = () => {
           .toFixed(6)
           .toString();
 
-  return (
-    <Suspense fallback={<span className="placeholder col-7"></span>}>
-      {" "}
-      <p className="caption2 text-gray">${balanceInUSDDisplay}&nbsp;$USD</p>
-    </Suspense>
-  );
+  return <p className="caption2 text-gray">${balanceInUSDDisplay}&nbsp;$USD</p>;
 };

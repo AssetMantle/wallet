@@ -22,7 +22,7 @@ const VoteInfo = ({ isConnected }) => {
     <div className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-2 transitionAll">
       <nav className="d-flex align-items-center justify-content-between gap-3">
         <div className="d-flex gap-3 align-items-center">
-          <button className={`body2 text-primary`}>Your Statistics</button>
+          <button className={`body2 text-primary`}>Voting Statistics</button>
         </div>
       </nav>
       <div className="nav-bg rounded-4 d-flex flex-column p-3 gap-2 align-items-start">
