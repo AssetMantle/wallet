@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useAllVotes } from "../data";
 
 const ActiveProposals = ({
   voteState,
@@ -6,13 +7,17 @@ const ActiveProposals = ({
   allProposals,
   isLoadingProposals,
 }) => {
+  console.log("inside ActiveProposals, allProposals: ", allProposals);
   const [OnVoteSelect, setOnVoteSelect] = useState(null);
   const [onVoteHover, setOnVoteHover] = useState(null);
+
+  const { allVotes } = useAllVotes("6");
+  console.log("allVotes: ", allVotes);
 
   const getTypeProposal = (typeUrl) => {
     const typeProposalArray = typeUrl?.split?.(".");
     const typeProposal = typeProposalArray?.slice?.(-1)?.[0];
-    return typeProposal + typeProposal;
+    return typeProposal;
   };
 
   return (
@@ -51,7 +56,7 @@ const ActiveProposals = ({
                     className="button-secondary caption bg-translucent px-2 py-1 text-truncate"
                     style={{ fontWeight: "400" }}
                   >
-                    {getTypeProposal(proposal?.content?.$typeUrl)}
+                    {getTypeProposal(proposal?.content?.["@type"])}
                   </div>
                 </div>
                 <h5 className="caption2 text-primary">

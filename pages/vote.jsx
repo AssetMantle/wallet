@@ -14,10 +14,9 @@ import { isObjEmpty } from "../lib";
 
 export default function Vote() {
   const { voteState, voteDispatch } = useVoteReducer();
-  const { allProposals, isLoadingProposals, errorProposals } =
-    useAllProposals();
+  const { allProposals, isLoadingProposals } = useAllProposals();
   const walletManager = useChain(defaultChainName);
-  const { getSigningStargateClient, address, status, wallet } = walletManager;
+  const { getSigningStargateClient, address, status } = walletManager;
 
   const handleVote = async (e) => {
     e.preventDefault();

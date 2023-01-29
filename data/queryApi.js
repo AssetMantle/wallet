@@ -8,11 +8,13 @@ import {
   defaultChainDenom,
   defaultChainDenomExponent,
   defaultChainName,
+  defaultChainRESTProxy,
   mntlUsdApi,
   placeholderAvailableBalance,
   placeholderMntlUsdValue,
 } from "../config";
 import { bech32AddressSeperator, placeholderAddress } from "./constants";
+import { cosmos as cosmosModule } from "../modules";
 
 // get the rpc endpoint from the chain registry
 const rpcEndpoint = chains.find(
@@ -28,6 +30,10 @@ const denom = assets.find(
 // get the RPC Query Client using Modules & Endpoint
 const client = await cosmos.ClientFactory.createRPCQueryClient({
   rpcEndpoint,
+});
+
+const queryClient = await cosmosModule.ClientFactory.createLCDClient({
+  restEndpoint: defaultChainRESTProxy,
 });
 
 export const fromDenom = (value, exponent = defaultChainDenomExponent) => {
@@ -165,7 +171,7 @@ export const useChainSwr = () => {
       };
       // console.log("swr fetcher success: ", url);
     } catch (error) {
-      console.error(`swr fetcher error: ${url}`);
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
     }
 
@@ -235,7 +241,7 @@ export const useTotalUnbonding = () => {
         });
       }
     } catch (error) {
-      console.error(`swr fetcher error: ${url}`);
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
     }
     // console.log(totalUnbondingAmount, allUnbonding);
@@ -300,7 +306,7 @@ export const useTotalRewards = () => {
         .dividedToIntegerBy(BigNumber(10).exponentiatedBy(18))
         .toString();
     } catch (error) {
-      console.error(`swr fetcher error: ${url}`);
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
       console.log(error);
       throw error;
     }
@@ -375,7 +381,7 @@ export const useDelegatedValidators = () => {
         parseFloat("0")
       );
     } catch (error) {
-      console.error(`swr fetcher error: ${url}`);
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
     }
     // return the data
@@ -431,7 +437,7 @@ export const useTotalDelegations = () => {
         });
       totalDelegations = validators;
     } catch (error) {
-      console.error(`swr fetcher error: ${url}`);
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
     }
     // return the data
@@ -476,7 +482,7 @@ export const useMntlUsd = () => {
       const resJson = await res.json();
       mntlUsdValue = resJson?.assetmantle?.usd;
     } catch (error) {
-      console.error(`swr fetcher error: ${url}`);
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
     }
 
@@ -518,7 +524,7 @@ export const useAvailableBalance = () => {
       balanceValue = balance;
       // console.log("swr fetcher success: ", url);
     } catch (error) {
-      console.error(`swr fetcher error: ${url}`);
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
     }
 
@@ -580,7 +586,7 @@ export const useAllValidators = () => {
       // const data = await fetch(iconUrlsArray);
       // console.log("data: ", data);
     } catch (error) {
-      console.error(`swr fetcher error: ${url}`);
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
     }
     // return the data
@@ -628,7 +634,7 @@ export const useVote = (proposalId) => {
       });
       voteInfo = vote;
     } catch (error) {
-      console.error(`swr fetcher error: ${error}`);
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
     }
     // return the data
@@ -672,19 +678,21 @@ export const useAllProposals = () => {
     // use a try catch block for creating rich Error object
     try {
       // get the data from cosmos queryClient
-      const { proposals } = await client.cosmos.gov.v1beta1.proposals({
+      /* const { proposals } = await client.cosmos.gov.v1beta1.proposals({
         depositor: "",
         proposalStatus: "2",
         voter: "",
+      }); */
+
+      const { proposals } = await queryClient.cosmos.gov.v1beta1.proposals({
+        depositor: "",
+        proposalStatus: 2,
+        voter: "",
       });
+
       allProposals = proposals;
-      // const iconUrlsArray = validators.map((validator, index) => {
-      //   return `https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/${validator.operatorAddress}.png`;
-      // });
-      // const data = await fetch(iconUrlsArray);
-      // console.log("data: ", data);
     } catch (error) {
-      console.error(`swr fetcher error: ${url}`);
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
     }
     // return the data
@@ -692,14 +700,14 @@ export const useAllProposals = () => {
   };
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: proposalsArray, error } = useSwr(
-    "proposals",
+    "useAllProposals",
     fetchAllProposals,
     { fallbackData: ["fallback"], suspense: true, refreshInterval: 1000 }
   );
   return {
     allProposals: proposalsArray,
     isLoadingProposals: !error && !proposalsArray,
-    errorProposals: error,
+    // errorProposals: error,
   };
 };
 export const useAllVotes = (proposalId) => {
@@ -710,29 +718,30 @@ export const useAllVotes = (proposalId) => {
   // fetcher function for useSwr of useAvailableBalance()
   const fetchAllVotes = async (url) => {
     let allVotes;
+    let proposalIdSample = "6";
 
     // use a try catch block for creating rich Error object
     try {
-      // const comdexRpcEndpoint = "https://rpc.cosmos.directory/comdex";
-      // const tempCLient = await cosmos.ClientFactory.createRPCQueryClient({
-      //   comdexRpcEndpoint,
-      // });
-      // get the data from cosmos queryClient
       console.log("before");
-      const { votes } = await client.cosmos.gov.v1beta1.votes({
+      /* const { votes } = await client.cosmos.gov.v1beta1.votes({
         proposalId,
+      }); */
+
+      const { votes } = await queryClient.cosmos.gov.v1beta1.votes({
+        proposalId: proposalIdSample,
       });
+
       allVotes = votes;
       console.log("after");
     } catch (error) {
-      console.error(`swr fetcher error: ${error}`);
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
     }
     // return the data
     return allVotes;
   };
   // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: votesArray, error } = useSwr("allVotes", fetchAllVotes, {
+  const { data: votesArray, error } = useSwr("useAllVotes", fetchAllVotes, {
     fallbackData: [
       {
         balance: { denom: "umntl", amount: 0 },
@@ -770,13 +779,8 @@ export const useWithdrawAddress = () => {
           delegatorAddress: address,
         });
       claimAddress = withdrawAddress;
-      // const iconUrlsArray = validators.map((validator, index) => {
-      //   return `https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/${validator.operatorAddress}.png`;
-      // });
-      // const data = await fetch(iconUrlsArray);
-      // console.log("data: ", data);
     } catch (error) {
-      console.error(`swr fetcher error: ${url}`);
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
     }
     // return the data
