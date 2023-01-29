@@ -21,6 +21,7 @@ export default function Vote() {
   const handleVote = async (e) => {
     e.preventDefault();
     voteDispatch({ type: "SUBMIT_VOTE" });
+    console.log(isObjEmpty(voteState.errorMessages));
     if (isObjEmpty(voteState.errorMessages)) {
       const { response, error } = await sendVote(
         voteState?.proposalID,
@@ -85,10 +86,9 @@ export default function Vote() {
           {voteState?.proposalID ? (
             <>
               <DonutChart
+                isLoadingProposals={isLoadingProposals}
                 selectedProposal={allProposals.find(
-                  (item) =>
-                    item?.proposalId?.high + item?.proposalId?.low ==
-                    voteState.proposalID
+                  (item) => item?.proposal_id == voteState.proposalID
                 )}
                 proposalId={voteState?.proposalID}
               />

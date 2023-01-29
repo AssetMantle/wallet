@@ -22,24 +22,20 @@ const ActiveProposals = ({
 
   return (
     <>
-      {isLoadingProposals ? (
+      {isLoadingProposals || allProposals?.[0]?.proposal_id == "fallback" ? (
         <div>Loading ...</div>
       ) : allProposals?.length ? (
         allProposals?.map((proposal, index) => (
           <div
             key={index}
-            onMouseOver={() =>
-              setOnVoteHover(
-                proposal?.proposalId?.high + proposal?.proposalId?.low
-              )
-            }
+            onMouseOver={() => setOnVoteHover(proposal?.proposal_id)}
             onMouseOut={() => setOnVoteHover(null)}
             className={`col-12 col-md-6 p-2`}
             onClick={() => {
               setOnVoteSelect(index);
               voteDispatch({
                 type: "SET_PROPOSAL_ID",
-                payload: proposal?.proposalId?.high + proposal?.proposalId?.low,
+                payload: proposal?.proposal_id,
               });
             }}
           >
@@ -50,7 +46,7 @@ const ActiveProposals = ({
               <div className="d-flex flex-column gap-2 p-2">
                 <div className="d-flex justify-content-between gap-2 pb-2">
                   <h4 className="d-flex gap-1 align-items-center body2 text-primary">
-                    #{proposal?.proposalId?.high + proposal?.proposalId?.low}{" "}
+                    #{proposal?.proposal_id}{" "}
                   </h4>
                   <div
                     className="button-secondary caption bg-translucent px-2 py-1 text-truncate"
@@ -64,19 +60,11 @@ const ActiveProposals = ({
                 </h5>
                 <p className="caption2">
                   Voting Start :{" "}
-                  {new Date(
-                    (proposal?.votingStartTime?.seconds?.low +
-                      proposal?.votingStartTime?.seconds?.high) *
-                      1000
-                  ).toLocaleDateString()}
+                  {new Date(proposal?.voting_start_time).toLocaleDateString()}
                 </p>
                 <p className="caption2">
                   Voting End :{" "}
-                  {new Date(
-                    (proposal?.votingEndTime?.seconds?.low +
-                      proposal?.votingEndTime?.seconds?.high) *
-                      1000
-                  ).toLocaleDateString()}
+                  {new Date(proposal?.voting_end_time).toLocaleDateString()}
                 </p>
               </div>
               <div className="py-2 d-flex justify-content-between align-items-center position-relative">
@@ -92,10 +80,8 @@ const ActiveProposals = ({
                   Voting Period
                 </p>
                 {OnVoteSelect !== index &&
-                onVoteHover ===
-                  proposal?.proposalId?.high + proposal?.proposalId?.low &&
-                voteState.proposalId !==
-                  proposal?.proposalId?.high + proposal?.proposalId?.low ? (
+                onVoteHover === proposal?.proposal_id &&
+                voteState.proposalId !== proposal?.proposal_id ? (
                   <span
                     className="text-primary position-absolute bottom-0"
                     style={{
@@ -106,8 +92,7 @@ const ActiveProposals = ({
                     <i className="bi bi-circle text-primary"></i>
                   </span>
                 ) : null}
-                {voteState.proposalID ===
-                proposal?.proposalId?.high + proposal?.proposalId?.low ? (
+                {voteState.proposalID === proposal?.proposal_id ? (
                   <span
                     className="text-primary position-absolute bottom-0"
                     style={{

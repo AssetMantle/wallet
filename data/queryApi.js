@@ -554,8 +554,6 @@ export const useAvailableBalance = () => {
 //Get a list of all validators that can be delegated
 export const useAllValidators = () => {
   // get the connected wallet parameters from useChain hook
-  const walletManager = useChain(defaultChainName);
-  const { walletStatus, address, currentWalletInfo } = walletManager;
   // const multifetch = (urlsArray) => {
   //   const fetchEach = (url) => fetch(url).then((response) => response.json());
 
@@ -702,7 +700,16 @@ export const useAllProposals = () => {
   const { data: proposalsArray, error } = useSwr(
     "useAllProposals",
     fetchAllProposals,
-    { fallbackData: ["fallback"], suspense: true, refreshInterval: 1000 }
+    {
+      fallbackData: [
+        {
+          proposal_id: "fallback",
+          content: {},
+        },
+      ],
+      suspense: true,
+      refreshInterval: 1000,
+    }
   );
   return {
     allProposals: proposalsArray,
