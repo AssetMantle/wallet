@@ -729,7 +729,6 @@ export const useAllVotes = (proposalId) => {
 
     // use a try catch block for creating rich Error object
     try {
-      console.log("before");
       /* const { votes } = await client.cosmos.gov.v1beta1.votes({
         proposalId,
       }); */
@@ -739,7 +738,6 @@ export const useAllVotes = (proposalId) => {
       });
 
       allVotes = votes;
-      console.log("after");
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;

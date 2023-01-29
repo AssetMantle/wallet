@@ -12,7 +12,6 @@ const ActiveProposals = ({
   const [onVoteHover, setOnVoteHover] = useState(null);
 
   const { allVotes } = useAllVotes("6");
-  console.log("allVotes: ", allVotes);
 
   const getTypeProposal = (typeUrl) => {
     const typeProposalArray = typeUrl?.split?.(".");

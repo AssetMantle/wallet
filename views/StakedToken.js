@@ -23,7 +23,7 @@ export default function StakedToken({
     stakeDispatch({
       type: "SUBMIT_DELEGATE",
     });
-    if (isObjEmpty(stakeState.errorMessages)) {
+    if (stakeState.delegationAmount) {
       const { response, error } = await sendDelegation(
         address,
         stakeState?.delegationAddress,

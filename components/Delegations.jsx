@@ -86,8 +86,8 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
   const handleRedelegate = async (e) => {
     // final form validation before txn is
     e.preventDefault();
-    if (isObjEmpty(stakeState?.errorMessages)) {
-      stakeDispatch({ type: "SUBMIT_REDELEGATE" });
+    stakeDispatch({ type: "SUBMIT_REDELEGATE" });
+    if (stakeState?.redelegationAmount && stakeState?.redelegationDestination) {
       const { response, error } = await sendRedelegation(
         address,
         stakeState?.redelegationSrc,
@@ -102,7 +102,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
   const handleUndelegate = async (e) => {
     e.preventDefault();
     stakeDispatch({ type: "SUBMIT_UNDELEGATE" });
-    if (isObjEmpty(stakeState?.errorMessages)) {
+    if (stakeState?.undelegationAmount) {
       const { response, error } = await sendUndelegation(
         address,
         stakeState?.undelegationSrc,

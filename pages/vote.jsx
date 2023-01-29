@@ -21,8 +21,7 @@ export default function Vote() {
   const handleVote = async (e) => {
     e.preventDefault();
     voteDispatch({ type: "SUBMIT_VOTE" });
-    console.log(isObjEmpty(voteState.errorMessages));
-    if (isObjEmpty(voteState.errorMessages)) {
+    if (voteState.voteOption) {
       const { response, error } = await sendVote(
         voteState?.proposalID,
         address,

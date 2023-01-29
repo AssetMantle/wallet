@@ -17,7 +17,6 @@ const AllValidators = ({
     // console.log("e: ", e);
     e.target.src = "/validatorAvatars/alt.png";
   };
-  console.log(delegatedValidators, validatorsArray);
   return (
     <>
       {activeValidators

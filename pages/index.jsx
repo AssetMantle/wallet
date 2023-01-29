@@ -49,15 +49,19 @@ export default function Transact() {
     const localRecipientAddress = formState.recipientAddress;
     const localTransferAmount = formState.transferAmount;
     const localMemo = formState.memo;
-
-    const { response, error } = await sendTokensTxn(
-      address,
-      localRecipientAddress,
-      localTransferAmount,
-      localMemo,
-      { getSigningStargateClient }
-    );
-    console.log("response: ", response, " error: ", error);
+    formDispatch({
+      type: "SUBMIT",
+    });
+    if (formState?.transferAmount && formState?.recipientAddress) {
+      const { response, error } = await sendTokensTxn(
+        address,
+        localRecipientAddress,
+        localTransferAmount,
+        localMemo,
+        { getSigningStargateClient }
+      );
+      console.log("response: ", response, " error: ", error);
+    }
 
     // reset the form values
     formDispatch({ type: "RESET" });
@@ -221,12 +225,11 @@ export default function Transact() {
 
       case "SUBMIT": {
         // if any required field is blank, set error message
-
         let localErrorMessages = state?.errorMessages;
         if (!state.recipientAddress) {
           localErrorMessages = {
             ...localErrorMessages,
-            recipientAddressErrorMsg: formConstants.invalidValueErrorMsg,
+            recipientAddressErrorMsg: formConstants.requiredErrorMsg,
           };
         }
 
@@ -466,18 +469,14 @@ export default function Transact() {
                 className="btn button-primary px-5 ms-auto"
                 type="submit"
                 disabled={!isObjEmpty(formState?.errorMessages)}
-                data-bs-toggle={
-                  formState.recipientAddress.length != 0 &&
-                  formState.transferAmount.length != 0
-                    ? "modal"
-                    : ""
-                }
-                data-bs-target="#transactionManifestModal"
-                onClick={() => {
-                  formDispatch({
-                    type: "SUBMIT",
-                  });
-                }}
+                // data-bs-toggle={
+                //   formState.recipientAddress.length != 0 &&
+                //   formState.transferAmount.length != 0
+                //     ? "modal"
+                //     : ""
+                // }
+                // data-bs-target="#transactionManifestModal"
+                onClick={handleSubmit}
               >
                 Send
               </button>
@@ -493,7 +492,7 @@ export default function Transact() {
         </div>
       </section>
 
-      <TransactionManifestModal
+      {/* <TransactionManifestModal
         id="transactionManifestModal"
         displayData={[
           { title: "From:", value: address },
@@ -503,7 +502,7 @@ export default function Transact() {
           { title: "Wallet Type", value: wallet?.prettyName },
         ]}
         handleSubmit={handleSubmit}
-      />
+      /> */}
     </>
   );
 }

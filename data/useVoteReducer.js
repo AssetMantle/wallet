@@ -21,7 +21,6 @@ const useVoteReducer = () => {
         return { ...state, errorMessages: {} };
       }
       case "SUBMIT_VOTE": {
-        console.log("works");
         if (state.voteOption == 0) {
           return {
             ...state,
