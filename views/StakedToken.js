@@ -35,6 +35,8 @@ export default function StakedToken({
     }
   };
 
+  const isSubmitDisabled = status != "Connected";
+
   return (
     <>
       <section className="gap-3 pt-3 pt-lg-0">
@@ -65,6 +67,7 @@ export default function StakedToken({
             <button
               className="button-primary text-center px-3 py-2"
               style={{ maxWidth: "100%" }}
+              disabled={isSubmitDisabled}
               onClick={() =>
                 stakeDispatch({
                   type: "SET_DELEGATION_ADDRESS",

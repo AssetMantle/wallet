@@ -9,6 +9,7 @@ import {
   defaultChainDenomExponent,
   defaultChainName,
   defaultChainRESTProxy,
+  defaultChainRPCProxy,
   mntlUsdApi,
   placeholderAvailableBalance,
   placeholderMntlUsdValue,
@@ -17,11 +18,11 @@ import { bech32AddressSeperator, placeholderAddress } from "./constants";
 import { cosmos as cosmosModule } from "../modules";
 
 // get the rpc endpoint from the chain registry
-const rpcEndpoint = chains.find(
+/* const rpcEndpoint = chains.find(
   (_chain) => _chain?.chain_name === defaultChainName
-)?.apis?.rpc[0]?.address;
+)?.apis?.rpc[0]?.address; */
 
-console.log(JSON.stringify({ rpcEndpoint }));
+const rpcEndpoint = defaultChainRPCProxy;
 
 const denom = assets.find(
   (assetObj) => assetObj?.chain_name === defaultChainName
@@ -521,6 +522,7 @@ export const useAvailableBalance = () => {
         address,
         denom,
       });
+
       balanceValue = balance;
       // console.log("swr fetcher success: ", url);
     } catch (error) {
@@ -539,7 +541,7 @@ export const useAvailableBalance = () => {
     {
       fallbackData: { amount: placeholderAvailableBalance, denom },
       refreshInterval: 1000,
-      suspense: true,
+      // suspense: true,
     }
   );
 

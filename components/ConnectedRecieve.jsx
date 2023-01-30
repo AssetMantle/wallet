@@ -1,5 +1,6 @@
 import React, { Suspense } from "react";
 import { QRCodeSVG } from "qrcode.react";
+import { shortenAddress } from "../lib";
 
 const ConnectedRecieve = ({ displayAddress }) => {
   return (
@@ -35,13 +36,7 @@ const ConnectedRecieve = ({ displayAddress }) => {
             style={{ wordBreak: "break-all" }}
           >
             <Suspense fallback="Loading...">
-              {`${displayAddress.substring(
-                0,
-                12
-              )}.......${displayAddress.substring(
-                displayAddress.length - 9,
-                displayAddress.length
-              )}`}
+              {shortenAddress(displayAddress)}
             </Suspense>
             <span className="text-primary">
               <i className="bi bi-clipboard" />

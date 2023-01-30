@@ -25,9 +25,8 @@ import DisconnecedRecieve from "../components/DisconnecedRecieve";
 export default function Transact() {
   const [advanced, setAdvanced] = useState(false);
   const { availableBalance } = useAvailableBalance();
-  const walletManager = useChain(defaultChainName);
-  const { getSigningStargateClient, address, connect, status, wallet } =
-    walletManager;
+  const chainContext = useChain(defaultChainName);
+  const { getSigningStargateClient, address, status } = chainContext;
 
   const displayAddress = address ? address : placeholderAddress;
 
@@ -39,10 +38,6 @@ export default function Transact() {
     errorMessages: {},
   };
 
-  const onClickConnect = (e) => {
-    e.preventDefault();
-    connect();
-  };
   const handleSubmit = async (e) => {
     // copy form states to local variables
     const localRecipientAddress = formState.recipientAddress;
@@ -51,6 +46,7 @@ export default function Transact() {
     formDispatch({
       type: "SUBMIT",
     });
+
     if (formState?.transferAmount && formState?.recipientAddress) {
       const { response, error } = await sendTokensTxn(
         address,
@@ -59,11 +55,11 @@ export default function Transact() {
         localMemo,
         { getSigningStargateClient }
       );
+
+      // reset the form values
+      formDispatch({ type: "RESET" });
       console.log("response: ", response, " error: ", error);
     }
-
-    // reset the form values
-    formDispatch({ type: "RESET" });
   };
 
   const formReducer = (state = initialState, action) => {
@@ -268,6 +264,10 @@ export default function Transact() {
   const [Tab, setTab] = useState(0);
   const tabs = [{ name: "Send", href: "#send" }];
 
+  // DISPLAY VARIABLES
+  const isSubmitDisabled =
+    !isObjEmpty(formState?.errorMessages) || status != "Connected";
+
   return (
     <>
       <Head>
@@ -467,14 +467,7 @@ export default function Transact() {
               <button
                 className="btn button-primary px-5 ms-auto"
                 type="submit"
-                disabled={!isObjEmpty(formState?.errorMessages)}
-                // data-bs-toggle={
-                //   formState.recipientAddress.length != 0 &&
-                //   formState.transferAmount.length != 0
-                //     ? "modal"
-                //     : ""
-                // }
-                // data-bs-target="#transactionManifestModal"
+                disabled={isSubmitDisabled}
                 onClick={handleSubmit}
               >
                 Send
