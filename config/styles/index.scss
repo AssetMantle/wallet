@@ -174,16 +174,17 @@ a:hover {
   background-color: $bg;
   border-color: $primary-main;
   color: $color;
-  &:disabled {
-    color: $discolor;
-    background-color: $disBG;
-    border-color: $primary-disabled;
-  }
   &:hover {
     color: $color !important;
     background-color: $bg !important;
     border: 1px solid $primary-main !important;
     box-shadow: 0px 0px 10px $yellow-800 !important;
+  }
+  &:disabled {
+    color: $discolor !important;
+    background-color: $disBG !important;
+    border-color: $primary-disabled !important;
+    box-shadow: none !important;
   }
 }
 @mixin LinkRoot {
@@ -192,11 +193,11 @@ a:hover {
   text-transform: capitalize;
   font-feature-settings: "liga" off;
   color: $primary-main;
-  &:disabled {
-    color: $primary-disabled;
-  }
   &:hover {
     color: $primary-main !important;
+  }
+  &:disabled {
+    color: $primary-disabled !important;
   }
 }
 

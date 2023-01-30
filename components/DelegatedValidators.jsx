@@ -1,4 +1,5 @@
 import React from "react";
+import { fromChainDenom } from "../data";
 
 const DelegatedValidators = ({
   searchValue,
@@ -83,7 +84,15 @@ const DelegatedValidators = ({
                     {item?.commission?.commissionRates?.rate.slice(0, -16)} %
                   </td>
                 )}
-                <td>{(item?.tokens / 1000000).toFixed(2)}</td>
+                <td>
+                  {" "}
+                  {fromChainDenom(
+                    delegatedValidators?.find(
+                      (element) =>
+                        element?.operatorAddress == item?.operatorAddress
+                    )?.delegatedAmount
+                  ) || "-"}
+                </td>
               </tr>
             ))
         : delegatedValidators
@@ -150,7 +159,15 @@ const DelegatedValidators = ({
                     item?.commission?.commissionRates?.rate.slice(0, -16)%
                   </td>
                 )}{" "}
-                <td>{(item?.tokens / 1000000).toFixed(2)}</td>
+                <td>
+                  {" "}
+                  {fromChainDenom(
+                    delegatedValidators?.find(
+                      (element) =>
+                        element?.operatorAddress == item?.operatorAddress
+                    )?.delegatedAmount
+                  ) || "-"}
+                </td>
                 <td>
                   {item?.jailed ? (
                     <i className="bi bi-exclamation-octagon text-danger"></i>

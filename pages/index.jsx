@@ -21,14 +21,12 @@ import {
 import { isObjEmpty } from "../lib";
 import ConnectedRecieve from "../components/ConnectedRecieve";
 import DisconnecedRecieve from "../components/DisconnecedRecieve";
-import TransactionManifestModal from "../components/TransactionManifestModal";
 
 export default function Transact() {
   const [advanced, setAdvanced] = useState(false);
   const { availableBalance } = useAvailableBalance();
-  const walletManager = useChain(defaultChainName);
-  const { getSigningStargateClient, address, connect, status, wallet } =
-    walletManager;
+  const chainContext = useChain(defaultChainName);
+  const { getSigningStargateClient, address, status } = chainContext;
 
   const displayAddress = address ? address : placeholderAddress;
 
@@ -40,27 +38,28 @@ export default function Transact() {
     errorMessages: {},
   };
 
-  const onClickConnect = (e) => {
-    e.preventDefault();
-    connect();
-  };
   const handleSubmit = async (e) => {
     // copy form states to local variables
     const localRecipientAddress = formState.recipientAddress;
     const localTransferAmount = formState.transferAmount;
     const localMemo = formState.memo;
+    formDispatch({
+      type: "SUBMIT",
+    });
 
-    const { response, error } = await sendTokensTxn(
-      address,
-      localRecipientAddress,
-      localTransferAmount,
-      localMemo,
-      { getSigningStargateClient }
-    );
-    console.log("response: ", response, " error: ", error);
+    if (formState?.transferAmount && formState?.recipientAddress) {
+      const { response, error } = await sendTokensTxn(
+        address,
+        localRecipientAddress,
+        localTransferAmount,
+        localMemo,
+        { getSigningStargateClient }
+      );
 
-    // reset the form values
-    formDispatch({ type: "RESET" });
+      // reset the form values
+      formDispatch({ type: "RESET" });
+      console.log("response: ", response, " error: ", error);
+    }
   };
 
   const formReducer = (state = initialState, action) => {
@@ -221,12 +220,11 @@ export default function Transact() {
 
       case "SUBMIT": {
         // if any required field is blank, set error message
-
         let localErrorMessages = state?.errorMessages;
         if (!state.recipientAddress) {
           localErrorMessages = {
             ...localErrorMessages,
-            recipientAddressErrorMsg: formConstants.invalidValueErrorMsg,
+            recipientAddressErrorMsg: formConstants.requiredErrorMsg,
           };
         }
 
@@ -265,6 +263,10 @@ export default function Transact() {
 
   const [Tab, setTab] = useState(0);
   const tabs = [{ name: "Send", href: "#send" }];
+
+  // DISPLAY VARIABLES
+  const isSubmitDisabled =
+    !isObjEmpty(formState?.errorMessages) || status != "Connected";
 
   return (
     <>
@@ -465,19 +467,8 @@ export default function Transact() {
               <button
                 className="btn button-primary px-5 ms-auto"
                 type="submit"
-                disabled={!isObjEmpty(formState?.errorMessages)}
-                data-bs-toggle={
-                  formState.recipientAddress.length != 0 &&
-                  formState.transferAmount.length != 0
-                    ? "modal"
-                    : ""
-                }
-                data-bs-target="#transactionManifestModal"
-                onClick={() => {
-                  formDispatch({
-                    type: "SUBMIT",
-                  });
-                }}
+                disabled={isSubmitDisabled}
+                onClick={handleSubmit}
               >
                 Send
               </button>
@@ -492,23 +483,18 @@ export default function Transact() {
           )}
         </div>
       </section>
-      <div
-        className="modal "
-        tabIndex="-1"
-        role="dialog"
+
+      {/* <TransactionManifestModal
         id="transactionManifestModal"
-      >
-        <TransactionManifestModal
-          displayData={[
-            { title: "From:", value: address },
-            { title: "To:", value: formState.recipientAddress },
-            { title: "Amount:", value: formState.transferAmount },
-            { title: "Transaction Type", value: "Send" },
-            { title: "Wallet Type", value: wallet?.prettyName },
-          ]}
-          handleSubmit={handleSubmit}
-        />
-      </div>
+        displayData={[
+          { title: "From:", value: address },
+          { title: "To:", value: formState.recipientAddress },
+          { title: "Amount:", value: formState.transferAmount },
+          { title: "Transaction Type", value: "Send" },
+          { title: "Wallet Type", value: wallet?.prettyName },
+        ]}
+        handleSubmit={handleSubmit}
+      /> */}
     </>
   );
 }

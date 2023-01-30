@@ -19,7 +19,6 @@ const denomDisplay = defaultChainSymbol;
 const Unbonded = ({ stakeState, stakeDispatch }) => {
   const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status, wallet } = walletManager;
-  console.log(wallet);
   const [activeValidators, setActiveValidators] = useState(true);
   const {
     totalUnbondingAmount,
@@ -63,6 +62,8 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
 
   const secondsInADay = 86400;
 
+  const isSubmitDisabled = status != "Connected";
+
   return (
     <div className="nav-bg p-3 rounded-4 gap-3">
       <div className="d-flex flex-column gap-2">
@@ -79,7 +80,7 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
           {unbondingInUSDDisplay}&nbsp;{"$USD"}
         </p>
         <div className="d-flex justify-content-end">
-          {allUnbonding?.length != 0 ? (
+          {allUnbonding?.length != 0 && !isSubmitDisabled ? (
             <button
               data-bs-toggle="modal"
               data-bs-target="#viewUnbondingModal"

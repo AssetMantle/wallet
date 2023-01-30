@@ -17,7 +17,6 @@ import {
   sendWithdrawAddress,
   isInvalidAddress,
 } from "../data";
-import TransactionManifestModal from "./TransactionManifestModal";
 
 const denomDisplay = defaultChainSymbol;
 
@@ -60,7 +59,8 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
           .toFixed(6)
           .toString();
 
-  const handleClaim = async () => {
+  const handleClaim = async (e) => {
+    e.preventDefault();
     const { response, error } = await sendRewardsBatched(
       address,
       withdrawAddress,
@@ -87,6 +87,8 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
     );
     console.log("response: ", response, " error: ", error);
   };
+
+  const isSubmitDisabled = status != "Connected";
 
   return (
     <div className="nav-bg p-3 rounded-4 gap-3">
@@ -115,7 +117,8 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
           {rewardsInUSDDisplay}&nbsp;{"$USD"}
         </p>
         <div className="d-flex justify-content-end">
-          {stakeState?.selectedValidators?.length > 5 ? null : (
+          {stakeState?.selectedValidators?.length > 5 ||
+          isSubmitDisabled ? null : (
             <button
               className="am-link text-start d-flex align-items-center gap-1"
               data-bs-toggle={
@@ -353,8 +356,9 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                 <div className="d-flex justify-content-end">
                   <button
                     className="btn btn-primary px-5 mt-3 text-right rounded-5"
-                    data-bs-toggle="modal"
-                    data-bs-target="#claimTransactionManifestModal"
+                    // data-bs-toggle="modal"
+                    // data-bs-target="#claimTransactionManifestModal"
+                    onClick={handleClaim}
                   >
                     Submit
                   </button>
@@ -417,42 +421,35 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
           )}
         </div>
       </div>
-      <div
-        className="modal "
-        tabIndex="-1"
-        role="dialog"
+
+      {/* <TransactionManifestModal
         id="claimTransactionManifestModal"
-      >
-        <TransactionManifestModal
-          displayData={[
-            { title: "Claiming rewards to", value: address },
-            {
-              title: "Claiming rewards from",
-              value: stakeState.selectedValidators.map((item) => item),
-            },
-            {
-              title: "amount",
-              value: stakeState?.selectedValidators.length
-                ? fromChainDenom(selectedRewards)
-                : rewardsArray
-                    ?.filter((item) =>
-                      stakeState?.selectedValidators?.includes(
-                        item?.validatorAddress
-                      )
+        claimArray={stakeState.selectedValidators.map((item) => item)}
+        displayData={[
+          { title: "Claiming rewards to", value: address },
+
+          {
+            title: "amount",
+            value: stakeState?.selectedValidators.length
+              ? fromChainDenom(selectedRewards)
+              : rewardsArray
+                  ?.filter((item) =>
+                    stakeState?.selectedValidators?.includes(
+                      item?.validatorAddress
                     )
-                    .reduce(
-                      (accumulator, currentValue) =>
-                        parseFloat(accumulator) +
-                          parseFloat(currentValue?.reward[0]?.amount) || 0,
-                      parseFloat(0)
-                    ),
-            },
-            { title: "Transaction Type", value: "Claim" },
-            { title: "Wallet Type", value: wallet?.prettyName },
-          ]}
-          handleSubmit={handleClaim}
-        />
-      </div>
+                  )
+                  .reduce(
+                    (accumulator, currentValue) =>
+                      parseFloat(accumulator) +
+                        parseFloat(currentValue?.reward[0]?.amount) || 0,
+                    parseFloat(0)
+                  ),
+          },
+          { title: "Transaction Type", value: "Claim" },
+          { title: "Wallet Type", value: wallet?.prettyName },
+        ]}
+        handleSubmit={handleClaim}
+      /> */}
     </div>
   );
 };
