@@ -10,7 +10,7 @@ export default function Layout({ children }) {
     <div className="am_app_container">
       <Banner />
       <Header />
-      <main className="container-xxl pt-4 h-100">
+      <main className="container-xxl pt-4 h-100" style={{ maxWidth: "1920px" }}>
         <div className="row px-2 position-relative h-100">
           <ScrollableSectionContainer className="col-3 d-flex flex-column gap-3">
             <Balance />
