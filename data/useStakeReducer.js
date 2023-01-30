@@ -178,7 +178,7 @@ const useStakeReducer = () => {
           return {
             ...state,
             undelegationAmount: fromDenom(
-              parseFloat(delegatedAmount) - parseFloat(defaultChainGasFee)
+              parseFloat(delegatedAmount)
             ).toString(),
           };
         }
@@ -218,7 +218,7 @@ const useStakeReducer = () => {
           return {
             ...state,
             redelegationAmount: fromDenom(
-              parseFloat(delegatedAmount) - parseFloat(defaultChainGasFee)
+              parseFloat(delegatedAmount)
             ).toString(),
           };
         }

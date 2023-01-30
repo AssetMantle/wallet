@@ -352,9 +352,10 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                 </p>{" "}
                 <div className="d-flex align-items-center">
                   <div
-                    className="d-flex position-relative rounded-circle"
+                    className="d-flex justify-content-around position-relative rounded-circle"
                     style={{ width: "20px", aspectRatio: "1/1" }}
                   >
+                    <p className="ps-3 caption2">Validator Name : </p>
                     <img
                       layout="fill"
                       alt={
@@ -386,12 +387,18 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                     target="_blank"
                     rel="noreferrer"
                   >
-                    <p className="ps-3 caption2">Validator Name : </p>
+                    {
+                      delegatedValidators?.find(
+                        (item) =>
+                          item?.operatorAddress ===
+                          stakeState?.selectedValidators[0]
+                      )?.description?.moniker
+                    }
                   </a>
                 </div>
                 <p className="ps-3 my-2 caption2">
                   Delegated Amount:{" "}
-                  {fromDenom(
+                  {fromChainDenom(
                     delegatedValidators?.find(
                       (item) =>
                         item?.operatorAddress ===

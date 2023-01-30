@@ -90,6 +90,9 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
 
   const isSubmitDisabled = status != "Connected";
 
+  const getCommission = (rate) =>
+    BigNumber(rate).isZero() ? 0 : BigNumber(rate).toString().slice(0, -16);
+
   return (
     <div className="nav-bg p-3 rounded-4 gap-3">
       <div className="d-flex flex-column gap-2">
@@ -121,12 +124,13 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
           isSubmitDisabled ? null : (
             <button
               className="am-link text-start d-flex align-items-center gap-1"
-              data-bs-toggle={
-                delegatedValidators?.length > 5 &&
-                stakeState?.selectedValidators.length === 0
-                  ? ""
-                  : "modal"
-              }
+              // data-bs-toggle={
+              //   delegatedValidators?.length > 5 &&
+              //   stakeState?.selectedValidators.length === 0
+              //     ? ""
+              //     : "modal"
+              // }
+              data-bs-toggle="modal"
               data-bs-target="#claimRewardsModal"
               onClick={() =>
                 delegatedValidators?.length > 5 &&
@@ -257,18 +261,13 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                                 <td className="caption2">
                                   {item?.description?.moniker}
                                 </td>
-                                {item?.commission?.commissionRates?.rate ==
-                                0 ? (
-                                  <td className="caption2">0 %</td>
-                                ) : (
-                                  <td className="caption2">
-                                    {item?.commission?.commissionRates?.rate.slice(
-                                      0,
-                                      -16
-                                    )}{" "}
-                                    %
-                                  </td>
-                                )}
+                                <td className="caption2">
+                                  {getCommission(
+                                    item?.commission?.commissionRates?.rate
+                                  )}{" "}
+                                  %
+                                </td>
+
                                 <td className="caption2">
                                   {item?.tokens / 1000000}
                                 </td>
@@ -304,7 +303,10 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                               {item?.description?.moniker}
                             </td>
                             <td className="caption2">
-                              {item?.commission?.commission_rates?.rate * 100}%
+                              {getCommission(
+                                item?.commission?.commissionRates?.rate
+                              )}{" "}
+                              %
                             </td>
                             <td className="caption2">
                               {item?.tokens / 1000000}
