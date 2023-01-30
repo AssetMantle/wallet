@@ -21,7 +21,6 @@ import {
 import { isObjEmpty } from "../lib";
 import ConnectedRecieve from "../components/ConnectedRecieve";
 import DisconnecedRecieve from "../components/DisconnecedRecieve";
-import TransactionManifestModal from "../components/TransactionManifestModal";
 
 export default function Transact() {
   const [advanced, setAdvanced] = useState(false);
