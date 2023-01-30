@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { QRCodeSVG } from "qrcode.react";
-import React, { Suspense, useState } from "react";
+import React, { useState } from "react";
 import {
   Connected,
   Connecting,
@@ -127,9 +127,7 @@ export default function Header() {
     >
       <div className="d-flex gap-3">
         <div className="d-flex flex-column gap-0">
-          <h4 className="body2">
-            <Suspense fallback="Loading...">{displayUserName}</Suspense>
-          </h4>
+          <h4 className="body2">{displayUserName}</h4>
         </div>
       </div>
       <hr className="my-3" />
@@ -141,17 +139,14 @@ export default function Header() {
             aspectRatio: "1/1",
           }}
         >
-          <Suspense fallback="Loading...">
-            <QRCodeSVG width="100%" height="100%" value={displayAddress} />
-          </Suspense>
+          <QRCodeSVG width="100%" height="100%" value={displayAddress} />
         </div>
         <button
           className="d-flex align-items-center justify-content-center gap-2 text-center caption2 pt-3"
           onClick={() => navigator.clipboard.writeText(displayAddress)}
         >
-          <Suspense fallback="Loading...">
-            {shortenAddress(displayAddress)}
-          </Suspense>
+          {shortenAddress(displayAddress)}
+
           <span className="text-primary">
             <i className="bi bi-files" />
           </span>

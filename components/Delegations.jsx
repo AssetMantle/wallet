@@ -16,7 +16,6 @@ import {
   useMntlUsd,
 } from "../data";
 import { isObjEmpty } from "../lib";
-import TransactionManifestModal from "./TransactionManifestModal";
 
 const denomDisplay = defaultChainSymbol;
 
@@ -36,7 +35,6 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
   } = useDelegatedValidators();
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
   let validatorsArray = allValidators.sort((a, b) => b.tokens - a.tokens);
-  console.log(allValidators);
 
   //Put all foundation nodes at the end of the array
   validatorsArray.forEach((item, index) => {
@@ -88,27 +86,32 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
   const handleRedelegate = async (e) => {
     // final form validation before txn is
     e.preventDefault();
-
-    const { response, error } = await sendRedelegation(
-      address,
-      stakeState?.redelegationSrc,
-      stakeState?.redelegationDestination,
-      stakeState?.redelegationAmount,
-      stakeState?.memo,
-      { getSigningStargateClient }
-    );
-    console.log("response: ", response, " error: ", error);
+    stakeDispatch({ type: "SUBMIT_REDELEGATE" });
+    if (stakeState?.redelegationAmount && stakeState?.redelegationDestination) {
+      const { response, error } = await sendRedelegation(
+        address,
+        stakeState?.redelegationSrc,
+        stakeState?.redelegationDestination,
+        stakeState?.redelegationAmount,
+        stakeState?.memo,
+        { getSigningStargateClient }
+      );
+      console.log("response: ", response, " error: ", error);
+    }
   };
   const handleUndelegate = async (e) => {
     e.preventDefault();
-    const { response, error } = await sendUndelegation(
-      address,
-      stakeState?.undelegationSrc,
-      stakeState.undelegationAmount.toString(),
-      stakeState?.memo,
-      { getSigningStargateClient }
-    );
-    console.log("response:", response, "error:", error);
+    stakeDispatch({ type: "SUBMIT_UNDELEGATE" });
+    if (stakeState?.undelegationAmount) {
+      const { response, error } = await sendUndelegation(
+        address,
+        stakeState?.undelegationSrc,
+        stakeState.undelegationAmount.toString(),
+        stakeState?.memo,
+        { getSigningStargateClient }
+      );
+      console.log("response:", response, "error:", error);
+    }
   };
 
   // controller for onError
@@ -288,14 +291,14 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
               </div>
               <div className="modal-footer ">
                 <button
-                  data-bs-toggle={
-                    stakeState.undelegationAmount != 0 ? "modal" : ""
-                  }
-                  data-bs-target="#undelegateTransactionManifestModal"
+                  // data-bs-toggle={
+                  //   stakeState.undelegationAmount != 0 ? "modal" : ""
+                  // }
+                  // data-bs-target="#undelegateTransactionManifestModal"
                   type="button"
                   disabled={!isObjEmpty(stakeState?.errorMessages)}
                   className="button-primary px-5 py-2"
-                  onClick={() => stakeDispatch({ type: "SUBMIT_UNDELEGATE" })}
+                  onClick={handleUndelegate}
                 >
                   Submit
                 </button>
@@ -723,19 +726,17 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
               </div>
               <div className="modal-footer ">
                 <button
-                  data-bs-toggle={
-                    stakeState.redelegationDestination.length != 0 &&
-                    stakeState.redelegationAmount.length != 0
-                      ? "modal"
-                      : ""
-                  }
-                  data-bs-target="#redelegateTransactionManifestModal"
+                  // data-bs-toggle={
+                  //   stakeState.redelegationDestination.length != 0 &&
+                  //   stakeState.redelegationAmount.length != 0
+                  //     ? "modal"
+                  //     : ""
+                  // }
+                  // data-bs-target="#redelegateTransactionManifestModal"
                   type="button"
                   disabled={!isObjEmpty(stakeState?.errorMessages)}
                   className="button-primary px-5 py-2"
-                  onClick={() => {
-                    stakeDispatch({ type: "SUBMIT_REDELEGATE" });
-                  }}
+                  onClick={handleRedelegate}
                 >
                   Submit
                 </button>
@@ -744,42 +745,32 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
           </div>
         </div>
       </div>
-      <div
-        className="modal "
-        tabIndex="-1"
-        role="dialog"
+
+      {/* <TransactionManifestModal
         id="redelegateTransactionManifestModal"
-      >
-        <TransactionManifestModal
-          displayData={[
-            { title: "Redelegating From:", value: stakeState.redelegationSrc },
-            {
-              title: "Redelegating To:",
-              value: stakeState.redelegationDestination,
-            },
-            { title: "Amount:", value: stakeState.redelegationAmount },
-            { title: "Transaction Type", value: "Redelegate" },
-            { title: "Wallet Type", value: "Keplr" },
-          ]}
-          handleSubmit={handleRedelegate}
-        />
-      </div>
-      <div
-        className="modal "
-        tabIndex="-1"
-        role="dialog"
+        displayData={[
+          { title: "Redelegating From:", value: stakeState.redelegationSrc },
+          {
+            title: "Redelegating To:",
+            value: stakeState.redelegationDestination,
+          },
+          { title: "Amount:", value: stakeState.redelegationAmount },
+          { title: "Transaction Type", value: "Redelegate" },
+          { title: "Wallet Type", value: wallet?.prettyName },
+        ]}
+        handleSubmit={handleRedelegate}
+      />
+
+      <TransactionManifestModal
         id="undelegateTransactionManifestModal"
-      >
-        <TransactionManifestModal
-          displayData={[
-            { title: "Undelegating From:", value: stakeState.undelegationSrc },
-            { title: "Amount:", value: stakeState.undelegationAmount },
-            { title: "Transaction Type", value: "Undelegate" },
-            { title: "Wallet Type", value: wallet?.prettyName },
-          ]}
-          handleSubmit={handleUndelegate}
-        />
-      </div>
+        displayData={[
+          { title: "Undelegating From:", value: stakeState.undelegationSrc },
+          { title: "Amount:", value: stakeState.undelegationAmount },
+          { title: "Transaction Type", value: "Undelegate" },
+          { title: "Wallet Type", value: wallet?.prettyName },
+        ]}
+        handleSubmit={handleUndelegate}
+      /> */}
     </>
   );
 };

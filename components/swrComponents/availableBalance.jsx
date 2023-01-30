@@ -15,17 +15,23 @@ export const AvailableBalance = () => {
   const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status } = walletManager;
 
-  const { availableBalance, errorAvailableBalance } = useAvailableBalance();
-
+  const { availableBalance, errorAvailableBalance, isLoadingAvailableBalance } =
+    useAvailableBalance();
   const balanceDisplay =
     errorAvailableBalance || isNaN(fromDenom(availableBalance))
       ? placeholderAvailableBalance
       : fromDenom(availableBalance);
 
   return (
-    <p className={status === "Connected" ? "caption" : "caption text-gray"}>
-      {balanceDisplay}&nbsp;{denomDisplay}
-    </p>
+    <>
+      {isLoadingAvailableBalance ? (
+        <p>Loading...</p>
+      ) : (
+        <p className={status === "Connected" ? "caption" : "caption text-gray"}>
+          {balanceDisplay}&nbsp;{denomDisplay}
+        </p>
+      )}
+    </>
   );
 };
 

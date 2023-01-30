@@ -6,7 +6,6 @@ import Unbonded from "../components/Unbonded";
 import { defaultChainName, defaultChainSymbol } from "../config";
 import { fromDenom, sendDelegation, useAvailableBalance } from "../data";
 import { isObjEmpty } from "../lib";
-import TransactionManifestModal from "../components/TransactionManifestModal";
 
 export default function StakedToken({
   totalTokens,
@@ -21,14 +20,19 @@ export default function StakedToken({
 
   const handleStakeSubmit = async (e) => {
     e.preventDefault();
-    const { response, error } = await sendDelegation(
-      address,
-      stakeState?.delegationAddress,
-      stakeState?.delegationAmount,
-      stakeState?.memo,
-      { getSigningStargateClient }
-    );
-    console.log("response: ", response, " error: ", error);
+    stakeDispatch({
+      type: "SUBMIT_DELEGATE",
+    });
+    if (stakeState.delegationAmount) {
+      const { response, error } = await sendDelegation(
+        address,
+        stakeState?.delegationAddress,
+        stakeState?.delegationAmount,
+        stakeState?.memo,
+        { getSigningStargateClient }
+      );
+      console.log("response: ", response, " error: ", error);
+    }
   };
 
   return (
@@ -41,20 +45,20 @@ export default function StakedToken({
         ) : null}
         <div className="rounded-4 gap-3 p-3 bg-gray-800 width-100 d-flex flex-column">
           <h4 className="body1 text-primary">Staked Tokens</h4>
-          <Suspense>
+          <Suspense fallback={<p>Loading</p>}>
             <Delegations
               stakeState={stakeState}
               stakeDispatch={stakeDispatch}
               totalTokens={totalTokens}
             />
           </Suspense>
-          <Suspense>
+          <Suspense fallback={<p>Loading</p>}>
             <Rewards
               stakeState={stakeState}
               setShowClaimError={setShowClaimError}
             />
           </Suspense>
-          <Suspense>
+          <Suspense fallback={<p>Loading</p>}>
             <Unbonded stakeState={stakeState} stakeDispatch={stakeDispatch} />
           </Suspense>
           {stakeState?.selectedValidators?.length === 1 ? (
@@ -166,15 +170,11 @@ export default function StakedToken({
                 disabled={!isObjEmpty(stakeState?.errorMessages)}
                 type="button"
                 className="button-primary px-5 py-2"
-                data-bs-toggle={
-                  stakeState.delegationAmount.length != 0 ? "modal" : ""
-                }
-                data-bs-target="#stakeTransactionManifestModal"
-                onClick={() => {
-                  formDispatch({
-                    type: "SUBMIT_DELEGATE",
-                  });
-                }}
+                // data-bs-toggle={
+                //   stakeState.delegationAmount.length != 0 ? "modal" : ""
+                // }
+                // data-bs-target="#stakeTransactionManifestModal"
+                onClick={handleStakeSubmit}
               >
                 Submit
               </button>
@@ -182,23 +182,18 @@ export default function StakedToken({
           </div>
         </div>
       </div>
-      <div
-        className="modal "
-        tabIndex="-1"
-        role="dialog"
+
+      {/* <TransactionManifestModal
         id="stakeTransactionManifestModal"
-      >
-        <TransactionManifestModal
-          displayData={[
-            { title: "Delegating From:", value: address },
-            { title: "Delegating To:", value: stakeState.delegationAddress },
-            { title: "Amount:", value: stakeState.delegationAmount },
-            { title: "Transaction Type", value: "Delegate" },
-            { title: "Wallet Type", value: wallet?.prettyName },
-          ]}
-          handleSubmit={handleStakeSubmit}
-        />
-      </div>
+        displayData={[
+          { title: "Delegating From:", value: address },
+          { title: "Delegating To:", value: stakeState.delegationAddress },
+          { title: "Amount:", value: stakeState.delegationAmount },
+          { title: "Transaction Type", value: "Delegate" },
+          { title: "Wallet Type", value: wallet?.prettyName },
+        ]}
+        handleSubmit={handleStakeSubmit}
+      /> */}
     </>
   );
 }

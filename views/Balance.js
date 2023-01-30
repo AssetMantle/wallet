@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { MntlUsdPrice } from "../components";
 import { AvailableBalance, AvailableBalanceUsd } from "../components";
 import Tooltip from "../components/Tooltip";
@@ -26,12 +26,10 @@ export default function Balance() {
             style={{ right: "330%" }}
           />
         </p>
-        <Suspense fallback={<div>loading...</div>}>
-          <AvailableBalance />
-        </Suspense>
-        <Suspense fallback={<div>loading...</div>}>
-          <AvailableBalanceUsd />
-        </Suspense>
+        {/* <Suspense fallback={<p>Loading...</p>}> */}
+        <AvailableBalance />
+        {/* </Suspense> */}
+        <AvailableBalanceUsd />
       </div>
       <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-1">
         <p

@@ -23,7 +23,6 @@ export default function Stake() {
     errorDelegatedAmount,
   } = useDelegatedValidators();
   let validatorsArray = allValidators.sort((a, b) => b.tokens - a.tokens);
-  console.log(allValidators, delegatedValidators);
 
   //Put all foundation nodes at the end of the array
   validatorsArray.forEach((item, index) => {

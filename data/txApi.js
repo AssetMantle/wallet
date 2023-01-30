@@ -282,7 +282,6 @@ export const sendVote = async (
     if (!stargateClient || !fromAddress) {
       throw new error("stargateClient or from address undefined");
     }
-
     // create a message template from the composer
     const { vote } = cosmos.gov.v1beta1.MessageComposer.withTypeUrl;
 
