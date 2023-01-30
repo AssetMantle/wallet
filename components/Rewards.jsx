@@ -88,6 +88,8 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
     console.log("response: ", response, " error: ", error);
   };
 
+  const isSubmitDisabled = status != "Connected";
+
   return (
     <div className="nav-bg p-3 rounded-4 gap-3">
       <div className="d-flex flex-column gap-2">
@@ -115,7 +117,8 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
           {rewardsInUSDDisplay}&nbsp;{"$USD"}
         </p>
         <div className="d-flex justify-content-end">
-          {stakeState?.selectedValidators?.length > 5 ? null : (
+          {stakeState?.selectedValidators?.length > 5 ||
+          isSubmitDisabled ? null : (
             <button
               className="am-link text-start d-flex align-items-center gap-1"
               data-bs-toggle={

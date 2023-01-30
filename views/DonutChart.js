@@ -109,6 +109,7 @@ const DonutChart = ({ selectedProposal, proposalID, isLoadingProposals }) => {
               </button>
             </div>
           </nav>
+
           <ResponsiveSunburst
             data={chartData}
             margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
@@ -121,12 +122,16 @@ const DonutChart = ({ selectedProposal, proposalID, isLoadingProposals }) => {
               from: "color",
               modifiers: [["brighter", 0.1]],
             }}
+            theme={{
+              tooltip: {
+                container: {
+                  background: "#333",
+                },
+              },
+            }}
             enableArcLabels={true}
             arcLabelsSkipAngle={10}
-            arcLabelsTextColor={{
-              from: "color",
-              modifiers: [["darker", 5]],
-            }}
+            arcLabelsTextColor="black"
           />
           <div className="justify-content-around mb-5 row">
             {legend.map((item, index) => (

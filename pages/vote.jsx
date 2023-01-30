@@ -34,6 +34,7 @@ export default function Vote() {
   };
   const [ShowAdvanced, setShowAdvanced] = useState(false);
   const isConnected = status == "Connected";
+  const isSubmitDisabled = status != "Connected";
 
   return (
     <>
@@ -95,6 +96,7 @@ export default function Vote() {
                 className="button-primary py-2 text-center"
                 style={{ maxWidth: "100%" }}
                 data-bs-toggle="modal"
+                disabled={isSubmitDisabled}
                 data-bs-target="#voteModal"
               >
                 Vote
