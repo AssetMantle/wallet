@@ -42,12 +42,11 @@ export default function Stake() {
   const CustomToastWithLink = ({ txHash }) => (
     <p>
       Transaction Submitted. Check
-      <Link
-        target="_blank"
-        href={`https://explorer.assetmantle.one/transactions/${txHash}`}
-      >
-        {" "}
-        Here
+      <Link href={`https://explorer.assetmantle.one/transactions/${txHash}`}>
+        <a style={{ color: "#ffc640" }} target="_blank">
+          {" "}
+          Here
+        </a>
       </Link>
     </p>
   );
@@ -68,17 +67,6 @@ export default function Stake() {
         theme: "dark",
         toastId: txHash,
       });
-      // toast.success("🦄 Wow so easy!", {
-      //   position: "bottom-center",
-      //   autoClose: 8000,
-      //   hideProgressBar: false,
-      //   closeOnClick: true,
-      //   pauseOnHover: true,
-      //   draggable: true,
-      //   progress: undefined,
-      //   theme: "dark",
-      //   toastId: txHash,
-      // });
     } else {
       toast.update(id, {
         render: "Transaction failed.Try Again",
@@ -93,16 +81,6 @@ export default function Stake() {
         progress: undefined,
         theme: "dark",
       });
-      // toast.error("🦄 Wow so easy!", {
-      //   position: "bottom-center",
-      //   autoClose: 8000,
-      //   hideProgressBar: false,
-      //   closeOnClick: true,
-      //   pauseOnHover: true,
-      //   draggable: true,
-      //   progress: undefined,
-      //   theme: "dark",
-      // });
     }
   };
 

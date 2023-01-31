@@ -23,7 +23,7 @@ export default function ModalContainer({ active, children }) {
       <div
         className="d-flex m-auto p-2 align-items-start justify-content-center position-relative"
         style={{
-          width: "min(600px,100%)",
+          width: "min(650px,100%)",
           height: "100%",
           overflowX: "hidden",
           overflowY: "auto",

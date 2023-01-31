@@ -21,12 +21,59 @@ import {
 import { isObjEmpty } from "../lib";
 import ConnectedRecieve from "../components/ConnectedRecieve";
 import DisconnecedRecieve from "../components/DisconnecedRecieve";
+import { toast } from "react-toastify";
+import Link from "next/link";
 
 export default function Transact() {
   const [advanced, setAdvanced] = useState(false);
   const { availableBalance } = useAvailableBalance();
   const chainContext = useChain(defaultChainName);
   const { getSigningStargateClient, address, status } = chainContext;
+
+  const CustomToastWithLink = ({ txHash }) => (
+    <p>
+      Transaction Submitted. Check
+      <Link href={`https://explorer.assetmantle.one/transactions/${txHash}`}>
+        <a style={{ color: "#ffc640" }} target="_blank">
+          {" "}
+          Here
+        </a>
+      </Link>
+    </p>
+  );
+
+  const notify = (txHash, id) => {
+    if (txHash) {
+      toast.update(id, {
+        render: <CustomToastWithLink txHash={txHash} />,
+        type: "success",
+        isLoading: false,
+        position: "bottom-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: txHash,
+      });
+    } else {
+      toast.update(id, {
+        render: "Transaction failed.Try Again",
+        type: "error",
+        isLoading: false,
+        position: "bottom-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  };
 
   const displayAddress = address ? address : placeholderAddress;
 
@@ -48,6 +95,16 @@ export default function Transact() {
     });
 
     if (formState?.transferAmount && formState?.recipientAddress) {
+      const id = toast.loading("Transaction initiated ...", {
+        position: "bottom-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
       const { response, error } = await sendTokensTxn(
         address,
         localRecipientAddress,
@@ -59,6 +116,11 @@ export default function Transact() {
 
       // reset the form values
       console.log("response: ", response, " error: ", error);
+      if (response) {
+        notify(response?.transactionHash, id);
+      } else {
+        notify(null, id);
+      }
     }
   };
 

@@ -1,5 +1,5 @@
 import { assets } from "chain-registry";
-import { defaultChainDenom, defaultChainName } from "../config";
+import { defaultChainDenom, defaultChainName, defaultFeeGas } from "../config";
 import { toChainDenom } from "../data";
 import { cosmos } from "osmojs";
 
@@ -48,7 +48,7 @@ export const sendTokensTxn = async (
           amount: "2000",
         },
       ],
-      gas: "86364",
+      gas: defaultFeeGas,
     };
     // use the stargate client to dispatch the transaction
     const response = await stargateClient.signAndBroadcast(
@@ -114,7 +114,7 @@ export const sendRedelegation = async (
           amount: "2000",
         },
       ],
-      gas: "86364",
+      gas: defaultFeeGas,
     };
     // use the stargate client to dispatch the transaction
     const response = await stargateClient.signAndBroadcast(
@@ -177,7 +177,7 @@ export const sendDelegation = async (
           amount: "2000",
         },
       ],
-      gas: "86364",
+      gas: defaultFeeGas,
     };
     // use the stargate client to dispatch the transaction
     const response = await stargateClient.signAndBroadcast(
@@ -241,7 +241,7 @@ export const sendUndelegation = async (
           amount: "2000",
         },
       ],
-      gas: "86364",
+      gas: defaultFeeGas,
     };
     // use the stargate client to dispatch the transaction
     const response = await stargateClient.signAndBroadcast(
@@ -274,7 +274,6 @@ export const sendVote = async (
     // get the coin data from the chain assets data
     const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
     // // get the amount in denom terms
-    // const amountInDenom = toChainDenom(amount, chainName, chainDenom);
     // // populate the optional argument fromAddress
     const fromAddress = voter;
     // // initialize stargate client and create txn
@@ -298,7 +297,7 @@ export const sendVote = async (
           amount: "2000",
         },
       ],
-      gas: "86364",
+      gas: defaultFeeGas,
     };
     // use the stargate client to dispatch the transaction
     const response = await stargateClient.signAndBroadcast(
@@ -307,7 +306,6 @@ export const sendVote = async (
       fee,
       memo
     );
-    console.log("msg: ", msg, " amount: ", amountInDenom);
     return { response, error: null };
   } catch (error) {
     console.error("Error during transaction: ", error?.message);
@@ -346,7 +344,6 @@ export const sendWithdrawAddress = async (
       delegatorAddress: address,
       withdrawAddress,
     });
-    console.log(msg);
     // populate the fee data
     const fee = {
       amount: [
@@ -355,7 +352,7 @@ export const sendWithdrawAddress = async (
           amount: "2000",
         },
       ],
-      gas: "86364",
+      gas: defaultFeeGas,
     };
     // use the stargate client to dispatch the transaction
     const response = await stargateClient.signAndBroadcast(
@@ -390,7 +387,6 @@ export const sendRewardsBatched = async (
     // get the coin data from the chain assets data
     const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
     // get the amount in denom terms
-    // const amountInDenom = toChainDenom(amount, chainName, chainDenom);
     // populate the optional argument fromAddress
     const fromAddress = address;
     // initialize stargate client and create txn
@@ -419,7 +415,7 @@ export const sendRewardsBatched = async (
           amount: "2000",
         },
       ],
-      gas: "863640",
+      gas: defaultFeeGas,
     };
 
     // use the stargate client to dispatch the transaction
@@ -430,7 +426,7 @@ export const sendRewardsBatched = async (
       memo
     );
 
-    console.log("msg: ", msg, " amount: ", amountInDenom);
+    console.log("msgArray: ", msgArray);
     return { response, error: null };
   } catch (error) {
     console.error("Error during transaction: ", error?.message);
@@ -482,7 +478,7 @@ export const sendIbcTokenToGravity = async (
           amount: "2000",
         },
       ],
-      gas: "100000",
+      gas: defaultFeeGas,
     };
 
     // directly call sendIbcTokens from the stargateclient
