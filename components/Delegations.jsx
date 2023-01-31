@@ -21,7 +21,14 @@ import ModalContainer from "./ModalContainer";
 
 const denomDisplay = defaultChainSymbol;
 
-const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
+const Delegations = ({
+  totalTokens,
+  stakeState,
+  stakeDispatch,
+  notify,
+  UnDelegateModal,
+  setUnDelegateModal,
+}) => {
   const { allValidators, isLoadingValidators, errorValidators } =
     useAllValidators();
 
@@ -39,7 +46,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
   let validatorsArray = allValidators.sort((a, b) => b.tokens - a.tokens);
 
   // modal handler
-  const [UnDelegateModal, setUnDelegateModal] = useState(false);
+
   const [ReDelegateModal, setReDelegateModal] = useState(false);
 
   //Put all foundation nodes at the end of the array
@@ -358,7 +365,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
               <p className="text-muted caption2 text-gray my-2">
                 Delegate From
               </p>{" "}
-              <div className="d-flex align-items-center">
+              <div className="d-flex align-items-center gap-2">
                 <p className="ps-3 caption2">Validator Name: </p>
                 <div
                   className="d-flex justify-content-around position-relative rounded-circle"

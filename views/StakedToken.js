@@ -20,6 +20,7 @@ export default function StakedToken({
 }) {
   const { availableBalance } = useAvailableBalance();
   const [openModal, setOpenModal] = useState(false);
+  const [unDelegateModal, setUnDelegateModal] = useState(false);
   const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status, wallet } = walletManager;
 
@@ -74,6 +75,8 @@ export default function StakedToken({
           <h4 className="body1 text-primary">Staked Tokens</h4>
           <Suspense fallback={<p>Loading</p>}>
             <Delegations
+              unDelegateModal={unDelegateModal}
+              setUnDelegateModal={setUnDelegateModal}
               notify={notify}
               stakeState={stakeState}
               stakeDispatch={stakeDispatch}
@@ -88,7 +91,13 @@ export default function StakedToken({
             />
           </Suspense>
           <Suspense fallback={<p>Loading</p>}>
-            <Unbonded stakeState={stakeState} stakeDispatch={stakeDispatch} />
+            <Unbonded
+              notify={notify}
+              unDelegateModal={unDelegateModal}
+              setUnDelegateModal={setUnDelegateModal}
+              stakeState={stakeState}
+              stakeDispatch={stakeDispatch}
+            />
           </Suspense>
           {stakeState?.selectedValidators?.length === 1 ? (
             <button

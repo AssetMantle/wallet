@@ -9,16 +9,25 @@ import {
 import {
   fromChainDenom,
   fromDenom,
+  sendUndelegation,
   useDelegatedValidators,
   useMntlUsd,
   useTotalUnbonding,
 } from "../data";
 import ModalContainer from "./ModalContainer";
+import { isObjEmpty } from "../lib";
+import { toast } from "react-toastify";
 
 const denomDisplay = defaultChainSymbol;
 
-const Unbonded = ({ stakeState, stakeDispatch }) => {
-  const [UndelegateModal, setUndelegateModal] = useState(false);
+const Unbonded = ({
+  stakeState,
+  stakeDispatch,
+  unDelegateModal,
+  setUnDelegateModal,
+  notify,
+}) => {
+  const [unBondingModal, setUnBondingModal] = useState(false);
 
   const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status, wallet } = walletManager;
@@ -67,6 +76,38 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
 
   const isSubmitDisabled = status != "Connected";
 
+  const handleUndelegate = async (e) => {
+    e.preventDefault();
+    stakeDispatch({ type: "SUBMIT_UNDELEGATE" });
+    if (stakeState?.undelegationAmount) {
+      setUnDelegateModal(false);
+      const id = toast.loading("Transaction initiated ...", {
+        position: "bottom-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      const { response, error } = await sendUndelegation(
+        address,
+        stakeState?.undelegationSrc,
+        stakeState.undelegationAmount.toString(),
+        stakeState?.memo,
+        { getSigningStargateClient }
+      );
+      stakeDispatch({ type: "RESET_UNDELEGATE" });
+      console.log("response:", response, "error:", error);
+      if (response) {
+        notify(response?.transactionHash, id);
+      } else {
+        notify(null, id);
+      }
+    }
+  };
+
   return (
     <div className="nav-bg p-3 rounded-4 gap-3">
       <div className="d-flex flex-column gap-2">
@@ -88,7 +129,7 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
               className="d-flex align-items-center gap-1 am-link text-start caption2"
               onClick={() => {
                 stakeDispatch({ type: "EMPTY_SELECTED_VALIDATORS" });
-                setUndelegateModal(true);
+                setUnBondingModal(true);
               }}
             >
               <i className="text-primary bi bi-eye"></i>View
@@ -96,15 +137,15 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
           ) : null}
         </div>
       </div>
-
-      <ModalContainer active={UndelegateModal}>
+      {/* Unbonding Modal */}
+      <ModalContainer active={unBondingModal}>
         <div className="d-flex flex-column bg-gray-700 m-auto p-4 rounded-3 w-100">
           <div className="d-flex align-items-center justify-content-between">
             <h5 className="body2 text-primary d-flex align-items-center gap-2">
               <button
                 type="button"
                 className="btn-close primary"
-                onClick={() => setUndelegateModal(false)}
+                onClick={() => setUnDelegateModal(false)}
                 style={{ background: "none" }}
               >
                 <span className="text-primary">
@@ -116,7 +157,7 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
             <button
               type="button"
               className="btn-close primary"
-              onClick={() => setUndelegateModal(false)}
+              onClick={() => setUnBondingModal(false)}
               style={{ background: "none" }}
             >
               <span className="text-primary">
@@ -192,15 +233,15 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
                       {allUnbonding?.map((item, index) => (
                         <tr key={index}>
                           <td
-                            data-bs-toggle="modal"
-                            data-bs-target="#viewUndelegatingModal"
                             className="text-white"
-                            onClick={() =>
+                            onClick={() => {
                               stakeDispatch({
                                 type: "SET_UNDELEGATION_SRC_ADDRESS",
                                 payload: item?.address,
-                              })
-                            }
+                              });
+                              setUnBondingModal(false);
+                              setUnDelegateModal(true);
+                            }}
                           >
                             {
                               delegatedValidators?.find(
@@ -244,6 +285,99 @@ const Unbonded = ({ stakeState, stakeDispatch }) => {
           </div>
         </div>
       </ModalContainer>
+      {/* Undelegation Modal */}
+      {
+        <ModalContainer active={unDelegateModal}>
+          <div className="d-flex flex-column bg-gray-700 m-auto p-4 rounded-3 w-100">
+            <div className="d-flex align-items-center justify-content-between">
+              <h5 className="body2 text-primary d-flex align-items-center gap-2">
+                <button
+                  className="btn-close primary bg-t"
+                  onClick={() => setUnDelegateModal(false)}
+                  style={{ background: "none" }}
+                >
+                  <span className="text-primary">
+                    <i className="bi bi-chevron-left" />
+                  </span>
+                </button>
+                Undelegate
+              </h5>
+              <button
+                className="btn-close primary bg-t"
+                onClick={() => setUnDelegateModal(false)}
+                style={{ background: "none" }}
+              >
+                <span className="text-primary">
+                  <i className="bi bi-x-lg" />
+                </span>
+              </button>
+            </div>
+            <div className="py-4 text-center d-flex flex-column gap-1">
+              <div className="d-flex justify-content-between">
+                <label htmlFor="delegationAmount caption2 mb-1">
+                  Undelegate amount
+                </label>
+                <small className="caption2 text-gray">
+                  Delegated Amount:
+                  {fromDenom(
+                    delegatedValidators?.find(
+                      (item) =>
+                        item?.operatorAddress === stakeState?.undelegationSrc
+                    )?.delegatedAmount
+                  )}
+                </small>
+              </div>
+              <div>
+                <div className="p-3 border-white py-2 d-flex rounded-2 gap-2 am-input">
+                  <input
+                    className="bg-t"
+                    id="delegationAmount"
+                    style={{ flex: "1", border: "none", outline: "none" }}
+                    value={stakeState?.undelegationAmount}
+                    type="text"
+                    placeholder="Enter Undelegate Amount"
+                    onChange={(e) =>
+                      stakeDispatch({
+                        type: "CHANGE_UNDELEGATION_AMOUNT",
+                        payload: e.target.value,
+                      })
+                    }
+                  ></input>
+                  <button
+                    onClick={() =>
+                      stakeDispatch({
+                        type: "SET_MAX_UNDELEGATION_AMOUNT",
+                      })
+                    }
+                    className="text-primary"
+                  >
+                    Max
+                  </button>
+                </div>
+                <small
+                  id="amountInputErrorMsg"
+                  className="form-text text-danger d-flex align-items-center gap-1"
+                >
+                  {stakeState?.errorMessages?.undelegationAmountErrorMsg && (
+                    <i className="bi bi-info-circle" />
+                  )}{" "}
+                  {stakeState?.errorMessages?.undelegationAmountErrorMsg}
+                </small>
+              </div>
+            </div>
+            <div className="d-flex align-items-center gap-2 justify-content-end">
+              <button
+                type="button"
+                disabled={!isObjEmpty(stakeState?.errorMessages)}
+                className="button-primary px-5 py-2"
+                onClick={handleUndelegate}
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </ModalContainer>
+      }
     </div>
   );
 };
