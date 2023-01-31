@@ -44,7 +44,7 @@ export default function Bridge() {
   const [MNtlBalance, setMNtlBalance] = useState(20);
   const [GravityBalance, setGravityBalance] = useState(30);
   const [EthBalance, setEthBalance] = useState(40);
-  const [PolygonBalance, setPolygonBalance] = useState(50);
+  const [PolygonBalance, setPolygonBalance] = useState(2);
   const [memo, setMemo] = useState("");
 
   const handlePolygonAmountChange = (e) => {
@@ -75,16 +75,6 @@ export default function Bridge() {
           </div>
           <h5 className="caption2 text-primary">Polygon Chain</h5>
         </div>
-        <button
-          className="caption2 d-flex gap-1"
-          onClick={handleOpenWeb3Modal}
-          style={{ wordBreak: "break-all" }}
-        >
-          Connect Wallet
-          <span className="text-primary">
-            <i className="bi bi-files" />
-          </span>
-        </button>
       </div>
       <label
         htmlFor="mntlAmount"
@@ -103,6 +93,7 @@ export default function Bridge() {
           className="am-input-secondary caption2 flex-grow-1 bg-t"
           value={PolygonAmount}
           onChange={(e) => handlePolygonAmountChange(e)}
+          disabled={true}
         />
         <button className="text-primary caption2">Max</button>
       </div>
@@ -110,9 +101,9 @@ export default function Bridge() {
         <small className="small text-error">{PolygonAmountError}</small>
       )}
       <div className="d-flex align-items-center justify-content-end gap-3">
-        <button className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2">
+        {/* <button className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2">
           Send to ethereum Chain <i className="bi bi-arrow-up" />
-        </button>
+        </button> */}
       </div>
     </div>
   );
@@ -145,17 +136,17 @@ export default function Bridge() {
             &nbsp;The Order in which you need to complete the transactions:
           </div>
           <ICTransactionInfo
-            title="1. Send to Gravity Chain"
+            title="1. Send to Gravity (5s)"
             chainFrom="assetmantle"
             chainTo="gravitybridge"
           />
           <ICTransactionInfo
-            title="2. Send to Ethereum Chain"
+            title="2. Send to Ethereum (30m)"
             chainFrom="gravitybridge"
             chainTo="ethereum"
           />
           <ICTransactionInfo
-            title="3. Send to Polygon Chain"
+            title="3. Send to Polygon (30m)"
             chainFrom="ethereum"
             chainTo="polygon"
           />
@@ -250,7 +241,7 @@ export default function Bridge() {
                   >
                     assetmantle.one/vie...RWG_vtTixYd88=
                     <span className="text-primary">
-                      <i className="bi bi-files" />
+                      <i className="bi bi-clipboard" />
                     </span>
                   </button>
                 </div>

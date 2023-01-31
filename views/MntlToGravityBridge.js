@@ -242,7 +242,7 @@ const MntlToGravityBridge = () => {
         >
           {displayShortenedAddress}
           <span className="text-primary">
-            <i className="bi bi-files" />
+            <i className="bi bi-clipboard" />
           </span>
         </button>
       </div>
