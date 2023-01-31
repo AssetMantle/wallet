@@ -116,7 +116,10 @@ export default function Header() {
       className="d-flex position-relative"
       style={{ width: "min(195.05px,30%)", aspectRatio: "195.05/33" }}
     >
-      <Image layout="fill" src={NavBarData.logo} alt={NavBarData.title} />
+      <a href="/">
+        {" "}
+        <Image layout="fill" src={NavBarData.logo} alt={NavBarData.title} />
+      </a>
     </div>
   );
 
@@ -232,7 +235,10 @@ export default function Header() {
       className="nav-bg position-sticky top-0 start-0 end-0"
       style={{ zIndex: "1000" }}
     >
-      <div className="container-xxl d-flex align-items-center gap-3 p-3 px-4">
+      <div
+        className="container-xxl d-flex align-items-center gap-3 p-3 px-4"
+        style={{ maxWidth: "1920px" }}
+      >
         {appLogoJSX}
         <nav className="navbar-nav d-flex align-items-center gap-3 flex-row gap-3 flex-grow-1 justify-content-between">
           <div className="d-flex gap-4 flex-row align-items-center">

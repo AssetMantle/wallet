@@ -290,25 +290,29 @@ export const useTotalRewards = () => {
         await client.cosmos.distribution.v1beta1.delegationTotalRewards({
           delegatorAddress: address,
         });
-      rewardsArray = rewards;
+      rewardsArray = rewards?.map?.((item) => {
+        let amount = BigNumber(item?.reward?.[0]?.amount || 0)
+          .dividedToIntegerBy(BigNumber(10).exponentiatedBy(18))
+          .toString();
+
+        return {
+          ...item,
+          reward: [{ amount: amount, denom: item?.reward?.[0]?.denom }],
+        };
+      });
       let zeroBigNumber = new BigNumber("0");
 
       // reduce function to add up the BigNumber formats of individual reward values
-      totalRewardsInWei = rewards.reduce(
+      totalRewardsInWei = rewardsArray.reduce(
         (accumulator, currentValue) =>
           currentValue?.reward?.[0]?.amount
             ? accumulator.plus(new BigNumber(currentValue?.reward?.[0]?.amount))
             : accumulator.plus(new BigNumber("0")),
         zeroBigNumber
       );
-
-      // remove additional 18 decimal places to get the rewards in denom
-      totalRewards = totalRewardsInWei
-        .dividedToIntegerBy(BigNumber(10).exponentiatedBy(18))
-        .toString();
+      totalRewards = totalRewardsInWei.toString();
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
-      console.log(error);
       throw error;
     }
     return { totalRewards, rewardsArray };
@@ -329,7 +333,6 @@ export const useTotalRewards = () => {
       suspense: true,
     }
   );
-
   return {
     allRewards: rewardsObject.totalRewards,
     rewardsArray: rewardsObject.rewardsArray,

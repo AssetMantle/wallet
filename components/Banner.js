@@ -12,9 +12,9 @@ export default function Banner() {
         target="_blank"
         rel="noopener noreferrer"
       >
-        🎉Click here for limited early access to{" "}
+        🎉{"  "}Click here for limited early access to{" "}
         <strong>MantlePlace NFTs</strong>
-        🎉
+        {"  "}🎉
       </a>
       <button
         type="button"

@@ -5,6 +5,7 @@ import { assets, chains } from "chain-registry";
 import Head from "next/head";
 import { useEffect } from "react";
 import Layout from "../components/Layout";
+import "react-toastify/dist/ReactToastify.css";
 import {
   cosmostationWallets,
   defaultChainRESTProxy,
@@ -14,6 +15,7 @@ import {
 } from "../config";
 import "../config/styles/index.scss";
 import ConnectModal from "../views/ConnectModal/ConnectModal";
+import { ToastContainer } from "react-toastify";
 
 function CreateCosmosApp({ Component, pageProps }) {
   // useEffect for bootstrap js hydration
@@ -62,6 +64,19 @@ function CreateCosmosApp({ Component, pageProps }) {
         >
           <Layout>
             <Component {...pageProps} />
+            <ToastContainer
+              position="bottom-center"
+              autoClose={500}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="dark"
+            />
+            <ToastContainer />{" "}
           </Layout>
         </ChainProvider>
       </ChakraProvider>

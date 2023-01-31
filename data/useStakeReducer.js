@@ -178,7 +178,7 @@ const useStakeReducer = () => {
           return {
             ...state,
             undelegationAmount: fromDenom(
-              parseFloat(delegatedAmount) - parseFloat(defaultChainGasFee)
+              parseFloat(delegatedAmount)
             ).toString(),
           };
         }
@@ -218,7 +218,7 @@ const useStakeReducer = () => {
           return {
             ...state,
             redelegationAmount: fromDenom(
-              parseFloat(delegatedAmount) - parseFloat(defaultChainGasFee)
+              parseFloat(delegatedAmount)
             ).toString(),
           };
         }
@@ -398,6 +398,27 @@ const useStakeReducer = () => {
           };
         }
       }
+      case "RESET_UNDELEGATE": {
+        return {
+          ...state,
+          undelegationAmount: "",
+        };
+      }
+      case "RESET_REDELEGATE": {
+        return {
+          ...state,
+          redelegationAmount: "",
+        };
+      }
+      case "RESET_DELEGATE": {
+        return {
+          ...state,
+          delegationAmount: "",
+          delegationAddress: "",
+        };
+      }
+      default:
+        console.log("default case");
     }
   };
   const [stakeState, stakeDispatch] = useReducer(stakeReducer, initialState);
