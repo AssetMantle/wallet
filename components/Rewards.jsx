@@ -16,6 +16,7 @@ import {
   useWithdrawAddress,
   sendWithdrawAddress,
   isInvalidAddress,
+  fromDenom,
 } from "../data";
 
 const denomDisplay = defaultChainSymbol;
@@ -28,7 +29,8 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
   const { getSigningStargateClient, address, status, wallet } = walletManager;
   const { allRewards, rewardsArray, errorRewards } = useTotalRewards();
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
-  const selectedRewardsInWei = rewardsArray
+  // console.log("allRewards", allRewards, "rewards", rewardsArray);
+  const selectedRewards = rewardsArray
     ?.filter((rewardObject) =>
       stakeState?.selectedValidators?.includes(rewardObject.validatorAddress)
     )
@@ -37,10 +39,6 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
         accumulator.plus(new BigNumber(currentValue?.reward?.[0]?.amount) || 0),
       new BigNumber("0")
     );
-
-  const selectedRewards = selectedRewardsInWei
-    ?.dividedToIntegerBy(BigNumber(10).exponentiatedBy(18))
-    .toString();
 
   const cumulativeRewards = errorRewards
     ? placeholderRewards
@@ -124,13 +122,12 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
           isSubmitDisabled ? null : (
             <button
               className="am-link text-start d-flex align-items-center gap-1"
-              // data-bs-toggle={
-              //   delegatedValidators?.length > 5 &&
-              //   stakeState?.selectedValidators.length === 0
-              //     ? ""
-              //     : "modal"
-              // }
-              data-bs-toggle="modal"
+              data-bs-toggle={
+                delegatedValidators?.length > 5 &&
+                stakeState?.selectedValidators.length === 0
+                  ? ""
+                  : "modal"
+              }
               data-bs-target="#claimRewardsModal"
               onClick={() =>
                 delegatedValidators?.length > 5 &&
@@ -191,18 +188,7 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                 <p className="body2 my-1">
                   {stakeState?.selectedValidators.length
                     ? fromChainDenom(selectedRewards)
-                    : rewardsArray
-                        ?.filter((item) =>
-                          stakeState?.selectedValidators?.includes(
-                            item?.validatorAddress
-                          )
-                        )
-                        .reduce(
-                          (accumulator, currentValue) =>
-                            parseFloat(accumulator) +
-                              parseFloat(currentValue?.reward[0]?.amount) || 0,
-                          parseFloat(0)
-                        )}{" "}
+                    : fromChainDenom(allRewards)}{" "}
                   $MNTL
                 </p>
                 <p className="caption2 my-2 text-gray">Selected Validator</p>
@@ -273,17 +259,11 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                                 </td>
                                 <td className="caption2">
                                   {fromChainDenom(
-                                    new BigNumber(
-                                      rewardsArray?.find(
-                                        (element) =>
-                                          element?.validatorAddress ===
-                                          item?.operatorAddress
-                                      )?.reward[0]?.amount
-                                    )
-                                      .dividedToIntegerBy(
-                                        BigNumber(10).exponentiatedBy(18)
-                                      )
-                                      .toString()
+                                    rewardsArray?.find(
+                                      (element) =>
+                                        element?.validatorAddress ===
+                                        item?.operatorAddress
+                                    )?.reward[0]?.amount
                                   )}
                                 </td>
                               </tr>
@@ -313,17 +293,11 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
                             </td>
                             <td className="caption2">
                               {fromChainDenom(
-                                new BigNumber(
-                                  rewardsArray?.find(
-                                    (element) =>
-                                      element?.validatorAddress ===
-                                      item?.operatorAddress
-                                  )?.reward[0]?.amount
-                                )
-                                  .dividedToIntegerBy(
-                                    BigNumber(10).exponentiatedBy(18)
-                                  )
-                                  .toString()
+                                rewardsArray?.find(
+                                  (element) =>
+                                    element?.validatorAddress ===
+                                    item?.operatorAddress
+                                )?.reward[0]?.amount
                               )}
                             </td>
                           </tr>

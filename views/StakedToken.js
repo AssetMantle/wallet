@@ -18,7 +18,7 @@ export default function StakedToken({
   const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status, wallet } = walletManager;
 
-  const handleStakeSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     stakeDispatch({
       type: "SUBMIT_DELEGATE",
@@ -31,6 +31,7 @@ export default function StakedToken({
         stakeState?.memo,
         { getSigningStargateClient }
       );
+      stakeDispatch({ type: "RESET_DELEGATE" });
       console.log("response: ", response, " error: ", error);
     }
   };
@@ -177,7 +178,7 @@ export default function StakedToken({
                 //   stakeState.delegationAmount.length != 0 ? "modal" : ""
                 // }
                 // data-bs-target="#stakeTransactionManifestModal"
-                onClick={handleStakeSubmit}
+                onClick={handleSubmit}
               >
                 Submit
               </button>

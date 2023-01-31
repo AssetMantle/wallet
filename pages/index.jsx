@@ -55,9 +55,9 @@ export default function Transact() {
         localMemo,
         { getSigningStargateClient }
       );
+      formDispatch({ type: "RESET" });
 
       // reset the form values
-      formDispatch({ type: "RESET" });
       console.log("response: ", response, " error: ", error);
     }
   };

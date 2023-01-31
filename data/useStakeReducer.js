@@ -398,9 +398,31 @@ const useStakeReducer = () => {
           };
         }
       }
+      case "RESET_UNDELEGATE": {
+        return {
+          ...state,
+          undelegationAmount: "",
+        };
+      }
+      case "RESET_REDELEGATE": {
+        return {
+          ...state,
+          redelegationAmount: "",
+        };
+      }
+      case "RESET_DELEGATE": {
+        return {
+          ...state,
+          delegationAmount: "",
+          delegationAddress: "",
+        };
+      }
+      default:
+        console.log("default case");
     }
   };
   const [stakeState, stakeDispatch] = useReducer(stakeReducer, initialState);
+  console.log(stakeState);
   return { stakeState, stakeDispatch };
 };
 

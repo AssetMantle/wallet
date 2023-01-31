@@ -96,6 +96,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
         stakeState?.memo,
         { getSigningStargateClient }
       );
+      stakeDispatch({ type: "RESET_REDELEGATE" });
       console.log("response: ", response, " error: ", error);
     }
   };
@@ -110,6 +111,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
         stakeState?.memo,
         { getSigningStargateClient }
       );
+      stakeDispatch({ type: "RESET_UNDELEGATE" });
       console.log("response:", response, "error:", error);
     }
   };
