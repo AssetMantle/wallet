@@ -18,7 +18,7 @@ export default function Vote() {
   const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status } = walletManager;
 
-  const handleVote = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     voteDispatch({ type: "SUBMIT_VOTE" });
     if (voteState.voteOption) {
@@ -309,7 +309,7 @@ export default function Vote() {
                     <button
                       type="button"
                       className="button-primary px-5 py-2 ms-auto"
-                      onClick={handleVote}
+                      onClick={handleSubmit}
                     >
                       Confirm
                     </button>
@@ -320,7 +320,7 @@ export default function Vote() {
                     // data-bs-toggle={voteState.voteOption !== 0 ? "modal" : ""}
                     // data-bs-target="#voteTransactionManifestModal"
                     className="button-primary px-5 py-2 ms-auto"
-                    onClick={handleVote}
+                    onClick={handleSubmit}
                   >
                     Confirm
                   </button>
@@ -336,7 +336,7 @@ export default function Vote() {
           { title: "Wallet Type", value: wallet?.prettyName },
         ]}
         id="voteTransactionManifestModal"
-        handleSubmit={handleVote}
+        handleSubmit={handleSubmit}
       /> */}
     </>
   );

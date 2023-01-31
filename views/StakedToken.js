@@ -4,8 +4,10 @@ import Delegations from "../components/Delegations";
 import ModalContainer from "../components/ModalContainer";
 import Rewards from "../components/Rewards";
 import Unbonded from "../components/Unbonded";
-import { defaultChainName, defaultChainSymbol } from "../config";
-import { fromDenom, sendDelegation, useAvailableBalance } from "../data";
+import { defaultChainName } from "../config";
+import { sendDelegation, useAvailableBalance, fromDenom } from "../data";
+import { toast } from "react-toastify";
+import { defaultChainSymbol } from "../config";
 import { isObjEmpty } from "../lib";
 
 export default function StakedToken({
@@ -14,8 +16,10 @@ export default function StakedToken({
   showClaimError,
   stakeState,
   stakeDispatch,
+  notify,
 }) {
   const { availableBalance } = useAvailableBalance();
+  const [openModal, setOpenModal] = useState(false);
   const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status, wallet } = walletManager;
 
@@ -27,6 +31,17 @@ export default function StakedToken({
       type: "SUBMIT_DELEGATE",
     });
     if (stakeState.delegationAmount) {
+      setDelegateModal(false);
+      const id = toast.loading("Transaction initiated ...", {
+        position: "bottom-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
       const { response, error } = await sendDelegation(
         address,
         stakeState?.delegationAddress,
@@ -34,8 +49,14 @@ export default function StakedToken({
         stakeState?.memo,
         { getSigningStargateClient }
       );
+
       stakeDispatch({ type: "RESET_DELEGATE" });
       console.log("response: ", response, " error: ", error);
+      if (response) {
+        notify(response?.transactionHash, id);
+      } else {
+        notify(null, id);
+      }
     }
   };
 
@@ -53,6 +74,7 @@ export default function StakedToken({
           <h4 className="body1 text-primary">Staked Tokens</h4>
           <Suspense fallback={<p>Loading</p>}>
             <Delegations
+              notify={notify}
               stakeState={stakeState}
               stakeDispatch={stakeDispatch}
               totalTokens={totalTokens}
@@ -60,6 +82,7 @@ export default function StakedToken({
           </Suspense>
           <Suspense fallback={<p>Loading</p>}>
             <Rewards
+              notify={notify}
               stakeState={stakeState}
               setShowClaimError={setShowClaimError}
             />

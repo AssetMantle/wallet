@@ -16,7 +16,6 @@ import {
   useWithdrawAddress,
   sendWithdrawAddress,
   isInvalidAddress,
-  fromDenom,
 } from "../data";
 
 const denomDisplay = defaultChainSymbol;
@@ -59,6 +58,17 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
 
   const handleClaim = async (e) => {
     e.preventDefault();
+    // setDelegateModal(false);
+    const id = toast.loading("Transaction initiated ...", {
+      position: "bottom-center",
+      autoClose: 8000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
     const { response, error } = await sendRewardsBatched(
       address,
       withdrawAddress,
@@ -67,6 +77,11 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
       { getSigningStargateClient }
     );
     console.log("response: ", response, " error: ", error);
+    if (response) {
+      notify(response?.transactionHash, id);
+    } else {
+      notify(null, id);
+    }
   };
 
   const [setupAddress, setSetupAddress] = useState(false);

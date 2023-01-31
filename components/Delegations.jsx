@@ -1,5 +1,6 @@
 import { useChain } from "@cosmos-kit/react";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import {
   defaultChainName,
   defaultChainSymbol,
@@ -19,7 +20,7 @@ import { isObjEmpty } from "../lib";
 
 const denomDisplay = defaultChainSymbol;
 
-const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
+const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
   const { allValidators, isLoadingValidators, errorValidators } =
     useAllValidators();
 
@@ -88,6 +89,17 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
     e.preventDefault();
     stakeDispatch({ type: "SUBMIT_REDELEGATE" });
     if (stakeState?.redelegationAmount && stakeState?.redelegationDestination) {
+      // setDelegateModal(false);
+      const id = toast.loading("Transaction initiated ...", {
+        position: "bottom-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
       const { response, error } = await sendRedelegation(
         address,
         stakeState?.redelegationSrc,
@@ -98,12 +110,29 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
       );
       stakeDispatch({ type: "RESET_REDELEGATE" });
       console.log("response: ", response, " error: ", error);
+      if (response) {
+        notify(response?.transactionHash, id);
+      } else {
+        notify(null, id);
+      }
     }
   };
+
   const handleUndelegate = async (e) => {
     e.preventDefault();
     stakeDispatch({ type: "SUBMIT_UNDELEGATE" });
     if (stakeState?.undelegationAmount) {
+      // setDelegateModal(false);
+      const id = toast.loading("Transaction initiated ...", {
+        position: "bottom-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
       const { response, error } = await sendUndelegation(
         address,
         stakeState?.undelegationSrc,
@@ -353,11 +382,11 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                   Delegate From
                 </p>{" "}
                 <div className="d-flex align-items-center">
+                  <p className="ps-3 caption2">Validator Name : </p>
                   <div
                     className="d-flex justify-content-around position-relative rounded-circle"
                     style={{ width: "20px", aspectRatio: "1/1" }}
                   >
-                    <p className="ps-3 caption2">Validator Name : </p>
                     <img
                       layout="fill"
                       alt={
@@ -742,6 +771,13 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch }) => {
                   //     : ""
                   // }
                   // data-bs-target="#redelegateTransactionManifestModal"
+                  // data-bs-dismiss={
+                  //   stakeState?.redelegationAmount &&
+                  //   stakeState?.redelegationDestination
+                  //     ? "modal"
+                  //     : ""
+                  // }
+                  aria-label="Close"
                   type="button"
                   disabled={!isObjEmpty(stakeState?.errorMessages)}
                   className="button-primary px-5 py-2"
