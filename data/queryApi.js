@@ -17,12 +17,12 @@ import {
 import { bech32AddressSeperator, placeholderAddress } from "./constants";
 import { cosmos as cosmosModule } from "../modules";
 
-// get the rpc endpoint from the chain registry
-/* const rpcEndpoint = chains.find(
-  (_chain) => _chain?.chain_name === defaultChainName
-)?.apis?.rpc[0]?.address; */
-
 const rpcEndpoint = defaultChainRPCProxy;
+
+const rpcEndpointGravity = gravityChainRPCProxy;
+
+const gravityIBCToken =
+  "ibc/00F2B62EB069321A454B708876476AFCD9C23C8C9C4A5A206DDF1CD96B645057";
 
 const denom = assets.find(
   (assetObj) => assetObj?.chain_name === defaultChainName
@@ -550,6 +550,85 @@ export const useAvailableBalance = () => {
     denom: balanceObject?.denom,
     isLoadingAvailableBalance: !error && !balanceObject,
     errorAvailableBalance: error,
+  };
+};
+
+export const useAvailableBalanceGravity = () => {
+  // get the connected wallet parameters from useChain hook
+  const { address } = useChain(gravityChainName);
+  // const address = "gravity1yyduggdnk5kgszamt7s9f0ep2n6hylxr6kjz7u";
+
+  let denomGravity = gravityChainDenom;
+  let placeholderGravityCoin = {
+    amount: placeholderAvailableBalance,
+    denom: denomGravity,
+  };
+  let denomGravityIBCToken = gravityIBCToken;
+  let placeholderGravityIBCCoin = {
+    amount: placeholderAvailableBalance,
+    denom: denomGravityIBCToken,
+  };
+
+  // fetcher function for useSwr of useAvailableBalance()
+  const fetchAllBalances = async (url, address) => {
+    let balanceValues;
+
+    // use a try catch block for creating rich Error object
+    try {
+      // get the data from cosmos queryClient
+      const { balances } = await gravityClient.cosmos.bank.v1beta1.allBalances({
+        address: address,
+      });
+
+      balanceValues = balances;
+      // console.log("swr fetcher success: ", balances);
+    } catch (error) {
+      console.error(`swr fetcher error: ${url}`);
+      throw error;
+    }
+
+    // return the data
+    return balanceValues;
+  };
+
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: balanceObjects } = useSwr(
+    address ? ["gravitybalance", address] : null,
+    fetchAllBalances,
+    {
+      fallbackData: [placeholderGravityCoin, placeholderGravityIBCCoin],
+      refreshInterval: 1000,
+      suspense: true,
+    }
+  );
+
+  console.log("balanceObject: ", balanceObjects);
+
+  let availableBalanceGravityArray = balanceObjects.filter(
+    (value) => value?.denom == denomGravity
+  );
+
+  let availableBalanceGravityObject =
+    availableBalanceGravityArray?.length != 0
+      ? availableBalanceGravityArray[0]
+      : placeholderGravityCoin;
+
+  let availableBalanceIBCTokenArray = balanceObjects.filter(
+    (value) => value?.denom == denomGravityIBCToken
+  );
+
+  let availableBalanceIBCTokenObject =
+    availableBalanceIBCTokenArray?.length != 0
+      ? availableBalanceIBCTokenArray[0]
+      : placeholderGravityIBCCoin;
+
+  return {
+    availableBalanceGravity: availableBalanceGravityObject?.amount,
+    availableBalanceIBCToken: availableBalanceIBCTokenObject?.amount,
+    denomGravity: availableBalanceGravityObject?.denom,
+    denomGravityIBCToken: availableBalanceIBCTokenObject?.denom,
+    // isLoadingAvailableBalance: !error && !balanceValues,
+    // errorAvailableBalance: error,
   };
 };
 
