@@ -5,7 +5,7 @@ import { assets, chains } from "chain-registry";
 import Head from "next/head";
 import { useEffect } from "react";
 import Layout from "../components/Layout";
-import "react-toastify/dist/ReactToastify.css";
+// import "react-toastify/dist/ReactToastify.css";
 import {
   cosmostationWallets,
   defaultChainRESTProxy,
