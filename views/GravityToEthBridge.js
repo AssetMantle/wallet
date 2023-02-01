@@ -27,11 +27,6 @@ const GravityToEthBridge = () => {
   const { availableBalanceGravity, availableBalanceIBCToken } =
     useAvailableBalanceGravity();
 
-  console.log("gravity balance: ", {
-    availableBalanceGravity,
-    availableBalanceIBCToken,
-  });
-
   // FORM REDUCER
   const initialState = {
     transferAmount: "",

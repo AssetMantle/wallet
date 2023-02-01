@@ -13,6 +13,7 @@ import { placeholderAvailableBalance } from "../config";
 
 // CONFIG PARAMETERS FOR ETH AND POLYGON
 export const selectedEthNetwork = "mainnet";
+export const web3ModalProjectID = "f068c2aa18a3ec82f5eafdc8abe7ae23";
 
 export const ethConfig = {
   mainnet: {
@@ -103,8 +104,10 @@ export const ethConfig = {
 const chains = [mainnet, polygon];
 // create the provider & wagmi client & ethereum client
 const { provider } = configureChains(chains, [
-  walletConnectProvider({ projectId: "95284efe95ac1c5b14c4c3d5f0c5c60e" }),
+  walletConnectProvider({ projectId: web3ModalProjectID }),
 ]);
+
+console.log("walletconnect provider: ", provider);
 // create the wagmiClient
 export const wagmiClient = createClient({
   autoConnect: true,
@@ -113,6 +116,7 @@ export const wagmiClient = createClient({
 });
 // now create ethereum client using wagmi client
 export const ethereumClient = new EthereumClient(wagmiClient, chains);
+console.log("ethereumClient: ", ethereumClient);
 
 // MATICJS INTEGRATION
 // get a POSClient by injecting the wagmi provider
@@ -148,9 +152,9 @@ export const getPOSClientTestnet = async (provider) => {
   return await getPOSClient(provider, "testnet", "mumbai");
 };
 
-const parentERC20TokenAddress =
+export const parentERC20TokenAddress =
   ethConfig[selectedEthNetwork]?.token?.parent.erc20;
-const childERC20TokenAddress =
+export const childERC20TokenAddress =
   ethConfig[selectedEthNetwork]?.token?.child.erc20;
 
 // QUERY API
@@ -188,7 +192,8 @@ export const useMntlEthBalance = () => {
       const parentERC20Token = posClient.erc20(parentERC20TokenAddress, true);
 
       // get balance of user
-      const balance = "123";
+      // const balance = "123";
+      // const balance = await parentERC20Token.getBalance(address);
 
       balanceValue = balance;
       // console.log("swr fetcher success: ", url);
@@ -214,7 +219,7 @@ export const useMntlEthBalance = () => {
   return {
     mntlEthBalance: balanceValue,
     isLoadingMntlEthBalance: !error && !balanceValue,
-    // errorAvailableBalance: error,
+    errorMntlEthBalance: error,
   };
 };
 

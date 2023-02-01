@@ -610,7 +610,7 @@ export const useAvailableBalanceGravity = () => {
     }
   );
 
-  console.log("balanceObject: ", balanceObjects);
+  // console.log("balanceObject: ", balanceObjects);
 
   let availableBalanceGravityArray = balanceObjects.filter(
     (value) => value?.denom == denomGravity

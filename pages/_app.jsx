@@ -4,6 +4,7 @@ import { ChainProvider } from "@cosmos-kit/react";
 import { Web3Modal } from "@web3modal/react";
 import { assets, chains } from "chain-registry";
 import Head from "next/head";
+import { getSigningCosmosClientOptions } from "osmojs";
 import { useEffect } from "react";
 import { WagmiConfig } from "wagmi";
 import Layout from "../components/Layout";
@@ -15,7 +16,7 @@ import {
   keplrWallets,
 } from "../config";
 import "../config/styles/index.scss";
-import { ethereumClient, wagmiClient } from "../data";
+import { ethereumClient, wagmiClient, web3ModalProjectID } from "../data";
 import ConnectModal from "../views/ConnectModal/ConnectModal";
 
 function CreateCosmosApp({ Component, pageProps }) {
@@ -23,6 +24,12 @@ function CreateCosmosApp({ Component, pageProps }) {
   useEffect(() => {
     require("bootstrap/dist/js/bootstrap.bundle.js");
   }, []);
+
+  const signerOptions = {
+    signingStargate: (_chain) => {
+      return getSigningCosmosClientOptions();
+    },
+  };
 
   return (
     <>
@@ -54,6 +61,7 @@ function CreateCosmosApp({ Component, pageProps }) {
           chains={chains}
           assetLists={assets}
           wallets={[...keplrWallets, ...leapwallets, ...cosmostationWallets]}
+          signerOptions={signerOptions}
           endpointOptions={{
             assetmantle: {
               rpc: [defaultChainRPCProxy],
@@ -66,7 +74,7 @@ function CreateCosmosApp({ Component, pageProps }) {
             <Layout>
               <Component {...pageProps} />
               <Web3Modal
-                projectId="95284efe95ac1c5b14c4c3d5f0c5c60e"
+                projectId={web3ModalProjectID}
                 ethereumClient={ethereumClient}
               />
             </Layout>
