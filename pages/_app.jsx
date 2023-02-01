@@ -12,8 +12,8 @@ import {
   defaultTheme,
   keplrWallets,
 } from "../config";
-import "react-toastify/dist/ReactToastify.css";
 import "../config/styles/index.scss";
+import "react-toastify/dist/ReactToastify.min.css";
 import ConnectModal from "../views/ConnectModal/ConnectModal";
 import { ToastContainer } from "react-toastify";
 
