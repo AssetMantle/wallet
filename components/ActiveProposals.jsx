@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useAllVotes } from "../data";
+import { useVote } from "../data";
 
 const ActiveProposals = ({
   voteState,
@@ -7,11 +7,10 @@ const ActiveProposals = ({
   allProposals,
   isLoadingProposals,
 }) => {
-  console.log("inside ActiveProposals, allProposals: ", allProposals);
   const [OnVoteSelect, setOnVoteSelect] = useState(null);
   const [onVoteHover, setOnVoteHover] = useState(null);
-
-  const { allVotes } = useAllVotes("6");
+  const { voteInfo, isLoadingVote, errorVote } = useVote(voteState?.proposalID);
+  console.log(voteInfo);
 
   const getTypeProposal = (typeUrl) => {
     const typeProposalArray = typeUrl?.split?.(".");

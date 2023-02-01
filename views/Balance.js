@@ -1,6 +1,7 @@
 import React from "react";
 import { MntlUsdPrice } from "../components";
 import { AvailableBalance, AvailableBalanceUsd } from "../components";
+import { TotalBalance, TotalBalanceInUSD } from "../components/totalBalance";
 import Tooltip from "../components/Tooltip";
 import { defaultChainSymbol, defaultChainName } from "../config";
 import { useChain } from "@cosmos-kit/react";
@@ -13,6 +14,24 @@ export default function Balance() {
   return (
     <section className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-3">
       <h4 className="body1 text-primary">Wallet balances</h4>
+      <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-1">
+        <p
+          className={`caption d-flex gap-2 align-items-center text-${
+            status === "Connected" ? "white-300" : "gray"
+          }`}
+        >
+          Total Balance
+          <Tooltip
+            titlePrimary={true}
+            description={
+              "Sum total of Available, Delegated, Rewards Claimable, and Undelegating balances"
+            }
+            style={{ right: "330%" }}
+          />
+        </p>
+        <TotalBalance />
+        <TotalBalanceInUSD />
+      </div>
       <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-1">
         <p
           className={`caption d-flex gap-2 align-items-center text-${

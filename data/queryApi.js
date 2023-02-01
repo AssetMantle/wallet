@@ -628,13 +628,15 @@ export const useVote = (proposalId) => {
   // fetcher function for useSwr of useAvailableBalance()
   const fetchVote = async (url, address) => {
     let voteInfo;
+    const id = 6;
     // use a try catch block for creating rich Error object
     try {
       // get the data from cosmos queryClient
       const { vote } = await client.cosmos.gov.v1beta1.vote({
-        proposalId,
+        proposalId: proposalId,
         voter: address,
       });
+      console.log(vote);
       voteInfo = vote;
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
@@ -741,7 +743,7 @@ export const useAllVotes = (proposalId) => {
       const { votes } = await queryClient.cosmos.gov.v1beta1.votes({
         proposalId: proposalIdSample,
       });
-
+      console.log(votes);
       allVotes = votes;
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
