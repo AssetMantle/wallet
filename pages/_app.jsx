@@ -5,7 +5,6 @@ import { assets, chains } from "chain-registry";
 import Head from "next/head";
 import { useEffect } from "react";
 import Layout from "../components/Layout";
-// import "react-toastify/dist/ReactToastify.css";
 import {
   cosmostationWallets,
   defaultChainRESTProxy,
@@ -13,6 +12,7 @@ import {
   defaultTheme,
   keplrWallets,
 } from "../config";
+import "react-toastify/dist/ReactToastify.css";
 import "../config/styles/index.scss";
 import ConnectModal from "../views/ConnectModal/ConnectModal";
 import { ToastContainer } from "react-toastify";
