@@ -244,7 +244,10 @@ const Delegations = ({
         </div>
         {/* Undelegation Modal */}
         {
-          <ModalContainer active={UnDelegateModal}>
+          <ModalContainer
+            active={UnDelegateModal}
+            setActive={setUnDelegateModal}
+          >
             <div className="d-flex flex-column bg-gray-700 m-auto p-4 rounded-3 w-100">
               <div className="d-flex align-items-center justify-content-between">
                 <h5 className="body2 text-primary d-flex align-items-center gap-2">
@@ -336,7 +339,7 @@ const Delegations = ({
           </ModalContainer>
         }
         {/* {Redelegation Modal} */}
-        <ModalContainer active={ReDelegateModal}>
+        <ModalContainer active={ReDelegateModal} setActive={setReDelegateModal}>
           <div className="d-flex flex-column bg-gray-700 m-auto p-4 rounded-3 w-100">
             <div className="d-flex align-items-center justify-content-between">
               <h5 className="body2 text-primary d-flex align-items-center gap-2">

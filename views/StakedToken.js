@@ -127,7 +127,7 @@ export default function StakedToken({
           ) : null}
         </div>
       </section>
-      <ModalContainer active={DelegateModal}>
+      <ModalContainer active={DelegateModal} setActive={setDelegateModal}>
         <div className="d-flex flex-column bg-gray-700 m-auto p-4 rounded-3 w-100">
           <div className="d-flex align-items-center justify-content-between">
             <h5 className="body2 text-primary d-flex align-items-center gap-2">
