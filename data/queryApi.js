@@ -113,6 +113,27 @@ export const toChainDenom = (
   return amount;
 };
 
+export const decimalize = (
+  value,
+  exponent = null,
+  chainName = defaultChainName,
+  chainDenom = defaultChainDenom
+) => {
+  // get the chain assets for the specified chain
+  const chainassets = assets.find((chain) => chain.chain_name === chainName);
+  // get the coin data from the chain assets data
+  const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
+  // Get the display exponent
+  // we can get the exponent from chain registry asset denom_units
+  const exp =
+    exponent ||
+    coin.denom_units.find((unit) => unit.denom === coin.display)?.exponent;
+  const bnValue = BigNumber(value || placeholderAvailableBalance);
+  if (bnValue.isNaN()) bnValue = BigNumber(0);
+
+  return bnValue.toFixed(exp).toString();
+};
+
 // function to check whether an address is invalid
 export const isInvalidAddress = (address, chainName = defaultChainName) => {
   console.log("inside isInvalidAddress, address: ", address);

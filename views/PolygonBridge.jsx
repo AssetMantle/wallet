@@ -9,6 +9,7 @@ import {
 } from "../config";
 import {
   childERC20TokenAddress,
+  decimalize,
   formConstants,
   fromChainDenom,
   placeholderAddressEth,
@@ -185,14 +186,14 @@ const PolygonBridge = () => {
     mntlEthBalanceObject?.isLoading ||
     mntlEthBalanceObject?.isError
       ? placeholderAvailableBalance
-      : mntlEthBalanceObject?.data?.formatted;
+      : decimalize(mntlEthBalanceObject?.data?.formatted);
   const displayAvailableBalanceDenom = defaultChainSymbol;
   const displayEthBalance =
     !polygonBalanceObject?.data ||
     polygonBalanceObject?.isLoading ||
     polygonBalanceObject?.isError
       ? placeholderAvailableBalance
-      : polygonBalanceObject?.data?.formatted;
+      : decimalize(polygonBalanceObject?.data?.formatted, 2);
   const displayEthBalanceDenom = polygonChainSymbol;
 
   const isFormAmountError = formState?.errorMessages?.transferAmountErrorMsg;

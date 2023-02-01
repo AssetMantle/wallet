@@ -10,6 +10,7 @@ import {
   placeholderAvailableBalance,
 } from "../config";
 import {
+  decimalize,
   formConstants,
   fromChainDenom,
   parentERC20TokenAddress,
@@ -250,14 +251,14 @@ const EthToPolygonBridge = () => {
     mntlEthBalanceObject?.isLoading ||
     mntlEthBalanceObject?.isError
       ? placeholderAvailableBalance
-      : mntlEthBalanceObject?.data?.formatted;
+      : decimalize(mntlEthBalanceObject?.data?.formatted);
   const displayAvailableBalanceDenom = defaultChainSymbol;
   const displayEthBalance =
     !ethBalanceObject?.data ||
     ethBalanceObject?.isLoading ||
     ethBalanceObject?.isError
       ? placeholderAvailableBalance
-      : ethBalanceObject?.data?.formatted;
+      : decimalize(ethBalanceObject?.data?.formatted, 2);
   const displayEthBalanceDenom = ethereumChainSymbol;
 
   const displayInputAmountValue = formState?.transferAmount;

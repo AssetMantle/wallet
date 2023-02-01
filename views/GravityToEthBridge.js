@@ -2,6 +2,7 @@ import { useChain } from "@cosmos-kit/react";
 import { useReducer } from "react";
 import {
   defaultChainGasFee,
+  defaultChainName,
   defaultChainSymbol,
   gravityChainName,
   gravityChainSymbol,
@@ -13,15 +14,16 @@ import {
   toDenom,
   useAvailableBalanceGravity,
 } from "../data";
-import { shortenAddress } from "../lib";
+import { convertBech32Address, shortenAddress } from "../lib";
 import { handleCopy, isObjEmpty } from "../lib/basicJavascript";
 import { getSigningOsmosisClient } from "osmojs";
 
 const GravityToEthBridge = () => {
   // WALLET HOOKS
-  const walletManager = useChain(gravityChainName);
-  const { address, getSigningStargateClient, status, getRpcEndpoint } =
-    walletManager;
+  const walletManager = useChain(defaultChainName);
+  const { address, getSigningStargateClient, status } = walletManager;
+
+  const gravityAddress = convertBech32Address(address, gravityChainName);
 
   // HOOKS or GETTERS
   const { availableBalanceGravity, availableBalanceIBCToken } =
@@ -192,7 +194,7 @@ const GravityToEthBridge = () => {
 
       // create transaction
       const { response, error } = await sendIbcTokenToEth(
-        address,
+        gravityAddress,
         ethDestAddress,
         localTransferAmount,
         memo,
@@ -215,11 +217,14 @@ const GravityToEthBridge = () => {
 
   const handleCopyOnClick = (e) => {
     e.preventDefault();
-    handleCopy(address);
+    handleCopy(gravityAddress);
   };
 
   // DISPLAY VARIABLES
-  const displayShortenedAddress = shortenAddress(address, gravityChainName);
+  const displayShortenedAddress = shortenAddress(
+    gravityAddress,
+    gravityChainName
+  );
   const displayAvailableBalanceIBCToken = fromChainDenom(
     availableBalanceIBCToken
   );
