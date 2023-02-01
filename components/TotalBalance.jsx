@@ -1,5 +1,4 @@
 import { useChain } from "@cosmos-kit/react";
-import { BigNumber } from "ethers";
 import React from "react";
 import {
   defaultChainName,
