@@ -29,23 +29,7 @@ export const ethereumClient = new EthereumClient(wagmiClient, chains);
 // get a POSClient by injecting the wagmi provider
 use(Web3ClientPlugin);
 
-export const depositEthToken = async (depositAmount, fromAddress) => {
-  const client = await getPOSClientMainnet();
-  const erc20Token = client.erc20(pos.parent.erc20, true);
-
-  const result = await erc20Token.deposit(depositAmount, fromAddress, {
-    fromAddress,
-    gasLimit: 300000,
-    gasPrice: 50000000000,
-    // maxPriorityFeePerGas: 6000000000,
-  });
-
-  const txHash = await result.getTransactionHash();
-  console.log("txHash", txHash);
-  const receipt = await result.getReceipt();
-  console.log("receipt", receipt);
-};
-
+// function to get the client for creating txns for Polygon POS
 export const getPOSClient = (network = "mainnet", version = "v1") => {
   // declare a new POS client
   const posClient = new POSClient();
@@ -61,4 +45,21 @@ export const getPOSClient = (network = "mainnet", version = "v1") => {
       provider: provider,
     },
   });
+};
+
+export const depositEthToken = async (depositAmount, fromAddress) => {
+  const client = await getPOSClientMainnet();
+  const erc20Token = client.erc20(pos.parent.erc20, true);
+
+  const result = await erc20Token.deposit(depositAmount, fromAddress, {
+    fromAddress,
+    gasLimit: 300000,
+    gasPrice: 50000000000,
+    // maxPriorityFeePerGas: 6000000000,
+  });
+
+  const txHash = await result.getTransactionHash();
+  console.log("txHash", txHash);
+  const receipt = await result.getReceipt();
+  console.log("receipt", receipt);
 };

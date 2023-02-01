@@ -10,19 +10,21 @@ import {
   defaultChainName,
   defaultChainRESTProxy,
   defaultChainRPCProxy,
+  gravityChainDenom,
+  gravityChainName,
+  gravityChainRPCProxy,
+  gravityIBCToken,
   mntlUsdApi,
   placeholderAvailableBalance,
   placeholderMntlUsdValue,
 } from "../config";
-import { bech32AddressSeperator, placeholderAddress } from "./constants";
 import { cosmos as cosmosModule } from "../modules";
+import { bech32AddressSeperator, placeholderAddress } from "./constants";
 
 const rpcEndpoint = defaultChainRPCProxy;
+const restEndpoint = defaultChainRESTProxy;
 
 const rpcEndpointGravity = gravityChainRPCProxy;
-
-const gravityIBCToken =
-  "ibc/00F2B62EB069321A454B708876476AFCD9C23C8C9C4A5A206DDF1CD96B645057";
 
 const denom = assets.find(
   (assetObj) => assetObj?.chain_name === defaultChainName
@@ -34,7 +36,12 @@ const client = await cosmos.ClientFactory.createRPCQueryClient({
 });
 
 const queryClient = await cosmosModule.ClientFactory.createLCDClient({
-  restEndpoint: defaultChainRESTProxy,
+  restEndpoint: restEndpoint,
+});
+
+// get the REST Query Client for Gravity Bridge Chain
+const queryClientGravity = await cosmos.ClientFactory.createRPCQueryClient({
+  rpcEndpoint: rpcEndpointGravity,
 });
 
 export const fromDenom = (value, exponent = defaultChainDenomExponent) => {
@@ -576,9 +583,10 @@ export const useAvailableBalanceGravity = () => {
     // use a try catch block for creating rich Error object
     try {
       // get the data from cosmos queryClient
-      const { balances } = await gravityClient.cosmos.bank.v1beta1.allBalances({
-        address: address,
-      });
+      const { balances } =
+        await queryClientGravity.cosmos.bank.v1beta1.allBalances({
+          address: address,
+        });
 
       balanceValues = balances;
       // console.log("swr fetcher success: ", balances);
@@ -634,21 +642,6 @@ export const useAvailableBalanceGravity = () => {
 
 //Get a list of all validators that can be delegated
 export const useAllValidators = () => {
-  // get the connected wallet parameters from useChain hook
-  // const multifetch = (urlsArray) => {
-  //   const fetchEach = (url) => fetch(url).then((response) => response.json());
-
-  //   if (urlsArray?.length >= 0) {
-  //     return Promise.all(urlsArray.map(fetchEach));
-  //   }
-
-  //   return null;
-  // };
-
-  // let address = null;
-  // console.log("address: ", address, " currentWalletInfo: ", currentWalletInfo);
-
-  // fetcher function for useSwr of useAvailableBalance()
   const fetchAllValidators = async (url) => {
     let allValidators;
 
@@ -659,11 +652,6 @@ export const useAllValidators = () => {
         status: "",
       });
       allValidators = validators;
-      // const iconUrlsArray = validators.map((validator, index) => {
-      //   return `https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/${validator.operatorAddress}.png`;
-      // });
-      // const data = await fetch(iconUrlsArray);
-      // console.log("data: ", data);
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
@@ -756,13 +744,6 @@ export const useAllProposals = () => {
 
     // use a try catch block for creating rich Error object
     try {
-      // get the data from cosmos queryClient
-      /* const { proposals } = await client.cosmos.gov.v1beta1.proposals({
-        depositor: "",
-        proposalStatus: "2",
-        voter: "",
-      }); */
-
       const { proposals } = await queryClient.cosmos.gov.v1beta1.proposals({
         depositor: "",
         proposalStatus: 2,
@@ -810,10 +791,6 @@ export const useAllVotes = (proposalId) => {
 
     // use a try catch block for creating rich Error object
     try {
-      /* const { votes } = await client.cosmos.gov.v1beta1.votes({
-        proposalId,
-      }); */
-
       const { votes } = await queryClient.cosmos.gov.v1beta1.votes({
         proposalId: proposalIdSample,
       });
@@ -887,31 +864,4 @@ export const useWithdrawAddress = () => {
     isLoadingWithdrawAddress: !error && !withdrawAddress,
     errorWithdrawAddress: error,
   };
-};
-
-// function for getting balance
-export const getAvailableBalance = async (
-  address,
-  denom = defaultChainDenom
-) => {
-  // console.log("inside fetchAvailableBalance, url: ", url);
-  let balanceValue = 0;
-
-  if (address) {
-    // use a try catch block for creating rich Error object
-    try {
-      // get the data from cosmos queryClient
-      const { balance } = await client.cosmos.bank.v1beta1.balance({
-        address,
-        denom,
-      });
-      balanceValue = balance;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  }
-
-  // return the data
-  return balanceValue.toString();
 };
