@@ -103,11 +103,3 @@ const getPOSClient = async (network = "testnet", version = "mumbai") => {
     },
   });
 };
-
-export const getPOSClientMainnet = async () => {
-  return await getPOSClient("mainnet", "v1");
-};
-
-export const getPOSClientTestnet = async () => {
-  return await getPOSClient("testnet", "mumbai");
-};

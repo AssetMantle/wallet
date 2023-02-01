@@ -1,9 +1,11 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { wallets as leapwallets } from "@cosmos-kit/leap";
 import { ChainProvider } from "@cosmos-kit/react";
+import { Web3Modal } from "@web3modal/react";
 import { assets, chains } from "chain-registry";
 import Head from "next/head";
 import { useEffect } from "react";
+import { WagmiConfig } from "wagmi";
 import Layout from "../components/Layout";
 import {
   cosmostationWallets,
@@ -13,13 +15,13 @@ import {
   keplrWallets,
 } from "../config";
 import "../config/styles/index.scss";
+import { ethereumClient, wagmiClient } from "../data";
 import ConnectModal from "../views/ConnectModal/ConnectModal";
 
 function CreateCosmosApp({ Component, pageProps }) {
   // useEffect for bootstrap js hydration
   useEffect(() => {
     require("bootstrap/dist/js/bootstrap.bundle.js");
-    console.log("leapwallets: ", leapwallets);
   }, []);
 
   return (
@@ -60,9 +62,15 @@ function CreateCosmosApp({ Component, pageProps }) {
           }}
           walletModal={ConnectModal} // Provide walletModal
         >
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <WagmiConfig client={wagmiClient}>
+            <Layout>
+              <Component {...pageProps} />
+              <Web3Modal
+                projectId="95284efe95ac1c5b14c4c3d5f0c5c60e"
+                ethereumClient={ethereumClient}
+              />
+            </Layout>
+          </WagmiConfig>
         </ChainProvider>
       </ChakraProvider>
     </>

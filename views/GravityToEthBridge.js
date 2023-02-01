@@ -269,11 +269,11 @@ const GravityToEthBridge = () => {
       >
         Amount{" "}
         <small className="small text-gray">
-          Available Balance : {displayAvailableBalanceGravity}{" "}
+          Gravity Balance : {displayAvailableBalanceGravity}{" "}
           {displayBalanceUnitGravity}
         </small>
         <small className="small text-gray">
-          IBC Balance : {displayAvailableBalanceIBCToken}{" "}
+          MNTL Balance : {displayAvailableBalanceIBCToken}{" "}
           {displayBalanceUnitGravityIBCToken}
         </small>
       </label>

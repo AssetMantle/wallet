@@ -1,16 +1,12 @@
-import {
-  EthereumClient,
-  modalConnectors,
-  walletConnectProvider,
-} from "@web3modal/ethereum";
-import { useWeb3Modal, Web3Modal } from "@web3modal/react";
-import { useEffect, useReducer } from "react";
-import { configureChains, createClient } from "wagmi";
-import { mainnet, polygon } from "wagmi/chains";
+import { disconnect } from "@wagmi/core";
+import { useWeb3Modal, useWeb3ModalNetwork } from "@web3modal/react";
+import { useReducer } from "react";
+import { useAccount } from "wagmi";
 import {
   defaultChainGasFee,
+  defaultChainSymbol,
   gravityChainName,
-  gravityChainSymbol,
+  placeholderAvailableBalance,
 } from "../config";
 import {
   formConstants,
@@ -18,51 +14,44 @@ import {
   placeholderAddressEth,
   sendIbcTokenToGravity,
   toDenom,
+  useMntlEthBalance,
 } from "../data";
-import { convertBech32Address, shortenEthAddress } from "../lib";
-import { handleCopy, isObjEmpty } from "../lib/basicJavascript";
-import { use, POSClient } from "@maticnetwork/maticjs";
-import { Web3ClientPlugin } from "@maticnetwork/maticjs-web3";
+import {
+  convertBech32Address,
+  handleCopy,
+  isObjEmpty,
+  shortenEthAddress,
+  useIsMounted,
+} from "../lib";
 
 const EthToPolygonBridge = () => {
-  // WEB3MODAL & WAGMI
-  const chains = [mainnet, polygon];
-
-  // create the provider & wagmi client & ethereum client
-  const { provider } = configureChains(chains, [
-    walletConnectProvider({ projectId: "95284efe95ac1c5b14c4c3d5f0c5c60e" }),
-  ]);
-
-  const wagmiClient = createClient({
-    autoConnect: true,
-    connectors: modalConnectors({ appName: "web3Modal", chains }),
-    provider,
-  });
-
-  const ethereumClient = new EthereumClient(wagmiClient, chains);
-
-  // MATICJS INTEGRATION
-  // get a POSClient by injecting the wagmi provider
-  use(Web3ClientPlugin);
-
-  const posClient = new POSClient();
-
   // WALLET HOOKS
   // hooks to work the multi-modal for ethereum
-  const { isOpen, open, close } = useWeb3Modal();
-  // hooks to get the status of wallet connection
-  const status = false;
+  const { open } = useWeb3Modal();
+  // hook to get and set selected chain
+  const { selectedChain, setSelectedChain } = useWeb3ModalNetwork();
+  // before useAccount, define the isMounted() hook to deal with SSR issues
+  const isMounted = useIsMounted();
+
   // books to get the address of the connected wallet
-  const address = placeholderAddressEth || placeholderAddressEth;
+  const { address, isConnected } = useAccount();
   // hooks to get the available balance of the desired token
-  const availableBalance = 0;
+  const { mntlEthBalance, isLoadingMntlEthBalance } = useMntlEthBalance();
 
-  // CSR Side Effects
-  useEffect(() => {
-    initializePosClient();
-
-    return () => {};
-  }, []);
+  console.log(
+    "mntlEthBalance: ",
+    mntlEthBalance,
+    " isLoadingMNTLethbalance: ",
+    isLoadingMntlEthBalance,
+    " isConnected: ",
+    isMounted() && isConnected,
+    " address: ",
+    isMounted() && address,
+    " selectedChain: ",
+    selectedChain,
+    " isMounted(): ",
+    isMounted()
+  );
 
   // FORM REDUCER
   const initialState = {
@@ -194,23 +183,14 @@ const EthToPolygonBridge = () => {
   const [formState, formDispatch] = useReducer(formReducer, initialState);
 
   // CONTROLLER FUNCTIONS
-  // async function to initialize Polygon POS client
-  const initializePosClient = async () => {
-    await posClient.init({
-      network: "mainnet", // 'testnet' or 'mainnet'
-      version: "v1", // 'mumbai' or 'v1'
-      parent: {
-        provider: provider,
-      },
-      child: {
-        provider: provider,
-      },
-    });
-  };
-
   const handleOpenWeb3Modal = async (e) => {
     e.preventDefault();
     await open();
+  };
+
+  const handleDisconnectWeb3Modal = async (e) => {
+    e.preventDefault();
+    await disconnect();
   };
 
   const handleAmountOnChange = (e) => {
@@ -246,9 +226,7 @@ const EthToPolygonBridge = () => {
         address,
         gravityAddress,
         localTransferAmount,
-        memo,
-
-        { getSigningStargateClient }
+        memo
       );
       console.log("response: ", response, " error: ", error);
 
@@ -270,27 +248,39 @@ const EthToPolygonBridge = () => {
   };
 
   // DISPLAY VARIABLES
-  const displayShortenedAddress = shortenEthAddress(address);
-  const displayAvailableBalance = fromChainDenom(availableBalance).toString();
-  const displayAvailableBalanceDenom = gravityChainSymbol;
+  const displayShortenedAddress = shortenEthAddress(
+    address || placeholderAddressEth
+  );
+  // const displayShortenedAddress = placeholderAddressEth;
+  const displayAvailableBalance = isLoadingMntlEthBalance
+    ? placeholderAvailableBalance
+    : mntlEthBalance;
+  const displayAvailableBalanceDenom = defaultChainSymbol;
+  const displayEthBalance = "10000";
+  const displayEthBalanceDenom = "$ETH";
   const displayInputAmountValue = formState?.transferAmount;
   const isFormAmountError = formState?.errorMessages?.transferAmountErrorMsg;
   const displayFormAmountErrorMsg =
     formState?.errorMessages?.transferAmountErrorMsg;
-  const isWalletEthConnected = false;
+  const isWalletEthConnected = isMounted() && isConnected;
   const isSubmitDisabled =
     isWalletEthConnected || !isObjEmpty(formState?.errorMessages);
   const connectButtonJSX = isWalletEthConnected ? (
-    <button
-      className="caption2 d-flex gap-1"
-      onClick={handleCopyOnClick}
-      style={{ wordBreak: "break-all" }}
-    >
-      {displayShortenedAddress}{" "}
-      <span className="text-primary">
-        <i className="bi bi-clipboard" />
-      </span>
-    </button>
+    <>
+      <button
+        className="caption2 d-flex gap-1"
+        onClick={handleCopyOnClick}
+        style={{ wordBreak: "break-all" }}
+      >
+        {displayShortenedAddress}{" "}
+        <span className="text-primary">
+          <i className="bi bi-clipboard" />
+        </span>
+        <span className="text-primary" onClick={handleDisconnectWeb3Modal}>
+          <i className="bi bi-power" />
+        </span>
+      </button>
+    </>
   ) : (
     <button
       className="caption2 d-flex gap-1 text-primary"
@@ -315,15 +305,18 @@ const EthToPolygonBridge = () => {
             </div>
             <h5 className="caption2 text-primary">Ethereum Chain</h5>
           </div>
-          {connectButtonJSX}
+          {isMounted() && connectButtonJSX}
         </div>
         <label
-          htmlFor="ethAmount"
+          htmlFor="GravityAmount"
           className="caption2 text-gray d-flex align-items-center justify-content-between gap-2"
         >
           Amount{" "}
           <small className="small text-gray">
-            Available Balance : {displayAvailableBalance}{" "}
+            ETH Balance : {displayEthBalance} {displayEthBalanceDenom}
+          </small>
+          <small className="small text-gray">
+            MNTL Balance : {displayAvailableBalance}{" "}
             {displayAvailableBalanceDenom}
           </small>
         </label>
@@ -357,10 +350,6 @@ const EthToPolygonBridge = () => {
           </button>
         </div>
       </div>
-      <Web3Modal
-        projectId="95284efe95ac1c5b14c4c3d5f0c5c60e"
-        ethereumClient={ethereumClient}
-      />
     </>
   );
 };

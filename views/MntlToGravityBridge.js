@@ -252,7 +252,7 @@ const MntlToGravityBridge = () => {
       >
         Amount{" "}
         <small className="small text-gray">
-          Available Balance : {displayAvailableBalance}
+          MNTL Balance : {displayAvailableBalance}
           &nbsp;
           {displayAvailableBalanceDenom}
         </small>
