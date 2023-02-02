@@ -18,6 +18,7 @@ import {
   placeholderAvailableBalance,
   placeholderMntlUsdValue,
 } from "../config";
+import { convertBech32Address } from "../lib";
 import { cosmos as cosmosModule } from "../modules";
 import { bech32AddressSeperator, placeholderAddress } from "./constants";
 
@@ -583,8 +584,10 @@ export const useAvailableBalance = () => {
 
 export const useAvailableBalanceGravity = () => {
   // get the connected wallet parameters from useChain hook
-  const { address } = useChain(gravityChainName);
+  const { address } = useChain(defaultChainName);
   // const address = "gravity1yyduggdnk5kgszamt7s9f0ep2n6hylxr6kjz7u";
+
+  const gravityAddress = convertBech32Address(address, gravityChainName);
 
   let denomGravity = gravityChainDenom;
   let placeholderGravityCoin = {
@@ -622,7 +625,7 @@ export const useAvailableBalanceGravity = () => {
 
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: balanceObjects } = useSwr(
-    address ? ["gravitybalance", address] : null,
+    gravityAddress ? ["gravitybalance", gravityAddress] : null,
     fetchAllBalances,
     {
       fallbackData: [placeholderGravityCoin, placeholderGravityIBCCoin],
