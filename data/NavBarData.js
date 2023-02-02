@@ -20,12 +20,13 @@ export const NavBarData = {
       variant: "am-link",
       icon: <i className="bi bi-receipt-cutoff" />,
     },
-    /* {
+    {
       title: "Bridge",
       href: "/bridge",
       variant: "am-link",
       icon: <i className="bi bi-diagram-2" />,
     },
+    /*
     {
       title: "Trade",
       href: "/trade",

@@ -188,13 +188,13 @@ const PolygonBridge = () => {
       ? placeholderAvailableBalance
       : decimalize(mntlEthBalanceObject?.data?.formatted);
   const displayAvailableBalanceDenom = defaultChainSymbol;
-  const displayEthBalance =
+  const displayMaticBalance =
     !polygonBalanceObject?.data ||
     polygonBalanceObject?.isLoading ||
     polygonBalanceObject?.isError
       ? placeholderAvailableBalance
       : decimalize(polygonBalanceObject?.data?.formatted);
-  const displayEthBalanceDenom = polygonChainSymbol;
+  const displayMaticBalanceDenom = polygonChainSymbol;
 
   const isFormAmountError = formState?.errorMessages?.transferAmountErrorMsg;
   const displayFormAmountErrorMsg =
@@ -212,7 +212,7 @@ const PolygonBridge = () => {
     "mntl balance: ",
     displayAvailableBalance,
     " eth balance: ",
-    displayEthBalance,
+    displayMaticBalance,
     " mntlEthBalanceObject: ",
     mntlEthBalanceObject
   );
@@ -250,7 +250,7 @@ const PolygonBridge = () => {
             >
               <img src="/chainLogos/polygon.svg" alt="Polygon Chain" />
             </div>
-            <h5 className="caption2 text-primary">Ethereum Chain</h5>
+            <h5 className="caption2 text-primary">Polygon Chain</h5>
           </div>
           {isMounted() && connectButtonJSX}
         </div>
@@ -261,8 +261,8 @@ const PolygonBridge = () => {
         >
           Amount{" "}
           <small className="small text-gray">
-            MATIC Balance : {isMounted() && displayEthBalance}{" "}
-            {displayEthBalanceDenom}
+            MATIC Balance : {isMounted() && displayMaticBalance}{" "}
+            {displayMaticBalanceDenom}
           </small>
           <small className="small text-gray">
             MNTL Balance : {isMounted() && displayAvailableBalance}{" "}

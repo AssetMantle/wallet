@@ -1,13 +1,12 @@
 import { POSClient, use } from "@maticnetwork/maticjs";
 import { Web3ClientPlugin } from "@maticnetwork/maticjs-web3";
-import { getProvider } from "@wagmi/core";
 import {
   EthereumClient,
   modalConnectors,
   walletConnectProvider,
 } from "@web3modal/ethereum";
 import useSWR from "swr";
-import { configureChains, createClient, useAccount } from "wagmi";
+import { configureChains, createClient, useAccount, useProvider } from "wagmi";
 import { mainnet, polygon } from "wagmi/chains";
 import { placeholderAvailableBalance } from "../config";
 
@@ -162,13 +161,13 @@ export const useMntlEthBalance = () => {
   // get the address from connected web3Modal
   const { address } = useAccount();
   // const ethAddress = isConnected ? address : placeholderAddressEth;
+  const wagmiProvider = useProvider();
+  console.log("wagmiProvider: ", wagmiProvider);
 
   // fetcher function for useSwr of useMntlEthBalance()
   const fetchMntlEthBalance = async (url, address) => {
     console.log("inside fetchMntlEthBalance, address: ", address);
     let balanceValue;
-    const wagmiProvider = getProvider();
-    // console.log("wagmiProvider: ", wagmiProvider);
 
     // use a try catch block for creating rich Error object
     try {

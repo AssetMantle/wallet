@@ -17,6 +17,7 @@ import {
   placeholderAddressEth,
   sendIbcTokenToGravity,
   toDenom,
+  useMntlEthBalance,
 } from "../data";
 import {
   convertBech32Address,
@@ -34,6 +35,7 @@ const EthToPolygonBridge = () => {
   const { selectedChain, setSelectedChain } = useWeb3ModalNetwork();
   // before useAccount, define the isMounted() hook to deal with SSR issues
   const isMounted = useIsMounted();
+  const { mntlEthBalance } = useMntlEthBalance();
 
   // books to get the address of the connected wallet
   const { address, isConnected } = useAccount();
@@ -328,6 +330,14 @@ const EthToPolygonBridge = () => {
             <h5 className="caption2 text-primary">Ethereum Chain</h5>
           </div>
           {isMounted() && connectButtonJSX}
+          {!isMounted() && (
+            <button
+              className="caption2 d-flex gap-1 text-primary"
+              onClick={handleOpenWeb3Modal}
+            >
+              <i className="bi bi-link-45deg" /> Connect Wallet
+            </button>
+          )}
         </div>
         <label
           htmlFor="GravityAmount"
