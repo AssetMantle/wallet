@@ -16,12 +16,11 @@ import {
 } from "../data";
 import { convertBech32Address, shortenAddress } from "../lib";
 import { handleCopy, isObjEmpty } from "../lib/basicJavascript";
-import { getSigningOsmosisClient } from "osmojs";
 
 const GravityToEthBridge = () => {
   // WALLET HOOKS
-  const walletManager = useChain(defaultChainName);
-  const { address, getSigningStargateClient, status } = walletManager;
+  const chainContext = useChain(defaultChainName);
+  const { address, status, getOfflineSignerAmino } = chainContext;
 
   const gravityAddress = convertBech32Address(address, gravityChainName);
 
@@ -178,11 +177,12 @@ const GravityToEthBridge = () => {
       type: "SUBMIT",
     });
 
-    const stargateClient = await getSigningOsmosisClient();
-    console.log("registry: ", stargateClient.registry);
+    const signer = getOfflineSignerAmino();
+    console.log("signer: ", signer);
 
     // if no validation errors, proceed to transaction processing
     if (
+      false &&
       formState?.transferAmount &&
       !isNaN(parseFloat(formState?.transferAmount)) &&
       isObjEmpty(formState?.errorMessages)
@@ -199,7 +199,7 @@ const GravityToEthBridge = () => {
         localTransferAmount,
         memo,
 
-        { getSigningStargateClient }
+        { getOfflineSigner }
       );
       console.log("response: ", response, " error: ", error);
 

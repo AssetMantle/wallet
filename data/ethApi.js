@@ -116,7 +116,6 @@ export const wagmiClient = createClient({
 });
 // now create ethereum client using wagmi client
 export const ethereumClient = new EthereumClient(wagmiClient, chains);
-console.log("ethereumClient: ", ethereumClient);
 
 // MATICJS INTEGRATION
 // get a POSClient by injecting the wagmi provider

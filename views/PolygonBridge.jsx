@@ -193,7 +193,7 @@ const PolygonBridge = () => {
     polygonBalanceObject?.isLoading ||
     polygonBalanceObject?.isError
       ? placeholderAvailableBalance
-      : decimalize(polygonBalanceObject?.data?.formatted, 2);
+      : decimalize(polygonBalanceObject?.data?.formatted);
   const displayEthBalanceDenom = polygonChainSymbol;
 
   const isFormAmountError = formState?.errorMessages?.transferAmountErrorMsg;

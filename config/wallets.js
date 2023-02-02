@@ -1,13 +1,12 @@
-import { keplrExtensionInfo, KeplrExtensionWallet } from "@cosmos-kit/keplr";
-import {
-  cosmostationExtensionInfo,
-  CosmostationExtensionWallet,
-} from "@cosmos-kit/cosmostation";
+import { wallets } from "@cosmos-kit/keplr";
 
-const keplrExtension = new KeplrExtensionWallet(keplrExtensionInfo);
-export const keplrWallets = [keplrExtension];
+console.log("wallets; ", wallets);
+// const keplrExtension = new KeplrExtensionWallet(keplrExtensionInfo);
+let kwallet = [];
+kwallet.push(wallets[0]);
+export const keplrWallets = kwallet;
 
-const cosmostationExtenstion = new CosmostationExtensionWallet(
-  cosmostationExtensionInfo
-);
-export const cosmostationWallets = [cosmostationExtenstion];
+// const cosmostationExtenstion = new CosmostationExtensionWallet(
+//   cosmostationExtensionInfo
+// );
+// export const cosmostationWallets = [cosmostationExtenstion];

@@ -1,4 +1,6 @@
 import { ChakraProvider } from "@chakra-ui/react";
+import { wallets as cWallets } from "@cosmos-kit/cosmostation";
+import { wallets as kWallets } from "@cosmos-kit/keplr";
 import { wallets as leapwallets } from "@cosmos-kit/leap";
 import { ChainProvider } from "@cosmos-kit/react";
 import { Web3Modal } from "@web3modal/react";
@@ -9,11 +11,9 @@ import { useEffect } from "react";
 import { WagmiConfig } from "wagmi";
 import Layout from "../components/Layout";
 import {
-  cosmostationWallets,
   defaultChainRESTProxy,
   defaultChainRPCProxy,
   defaultTheme,
-  keplrWallets,
 } from "../config";
 import "../config/styles/index.scss";
 import { ethereumClient, wagmiClient, web3ModalProjectID } from "../data";
@@ -30,6 +30,8 @@ function CreateCosmosApp({ Component, pageProps }) {
       return getSigningCosmosClientOptions();
     },
   };
+
+  // console.table(assets);
 
   return (
     <>
@@ -60,7 +62,7 @@ function CreateCosmosApp({ Component, pageProps }) {
         <ChainProvider
           chains={chains}
           assetLists={assets}
-          wallets={[...keplrWallets, ...leapwallets, ...cosmostationWallets]}
+          wallets={[kWallets[0], ...leapwallets, cWallets[0]]}
           signerOptions={signerOptions}
           endpointOptions={{
             assetmantle: {

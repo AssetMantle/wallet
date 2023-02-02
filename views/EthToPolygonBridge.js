@@ -258,7 +258,7 @@ const EthToPolygonBridge = () => {
     ethBalanceObject?.isLoading ||
     ethBalanceObject?.isError
       ? placeholderAvailableBalance
-      : decimalize(ethBalanceObject?.data?.formatted, 2);
+      : decimalize(ethBalanceObject?.data?.formatted);
   const displayEthBalanceDenom = ethereumChainSymbol;
 
   const displayInputAmountValue = formState?.transferAmount;

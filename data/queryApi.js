@@ -719,10 +719,16 @@ export const useVote = (proposalId) => {
     // use a try catch block for creating rich Error object
     try {
       // get the data from cosmos queryClient
-      const { vote } = await client.cosmos.gov.v1beta1.vote({
+      /* const { vote } = await client.cosmos.gov.v1beta1.vote({
         proposalId,
         voter: address,
+      }); */
+
+      const { vote } = await queryClient.cosmos.gov.v1beta1.vote({
+        proposalId: proposalId.toString(),
+        voter: address,
       });
+
       voteInfo = vote;
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
