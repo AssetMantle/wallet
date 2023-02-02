@@ -652,3 +652,11 @@ tbody {
     content: "";
   }
 }
+
+.farm-data-container {
+  & > * {
+    &:not(:last-child) {
+      border-right: 2px solid $gray-100;
+    }
+  }
+}
