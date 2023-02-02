@@ -198,10 +198,28 @@ export default function Stake() {
                     <tr className="caption2 text-white">
                       <th></th>
                       {activeValidators ? (
+                        delegated ? (
+                          <th scope="col" style={{ whiteSpace: "nowrap" }}>
+                            Rank
+                          </th>
+                        ) : (
+                          <>
+                            <th
+                              scope="col"
+                              style={{ whiteSpace: "nowrap" }}
+                            ></th>
+                            <th scope="col" style={{ whiteSpace: "nowrap" }}>
+                              Rank
+                            </th>
+                          </>
+                        )
+                      ) : delegated ? (
                         <th scope="col" style={{ whiteSpace: "nowrap" }}>
                           Rank
                         </th>
-                      ) : null}
+                      ) : (
+                        <th></th>
+                      )}
                       <th
                         colSpan="2"
                         scope="col"

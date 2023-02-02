@@ -1,5 +1,6 @@
 import React from "react";
 import { fromChainDenom } from "../data";
+import Tooltip from "./Tooltip";
 
 const AllValidators = ({
   setShowClaimError,
@@ -55,6 +56,17 @@ const AllValidators = ({
                     }}
                   ></input>
                 </td>
+                {index < 10 ? (
+                  <td>
+                    <Tooltip
+                      titlePrimary={"text-warning"}
+                      title={<i className="bi bi-patch-exclamation-fill"></i>}
+                      description="It is preferable to not stake to the top 10 validators"
+                    />
+                  </td>
+                ) : (
+                  <td></td>
+                )}
                 {activeValidators ? <td>{index + 1}</td> : null}
                 <td>
                   <div
@@ -77,7 +89,6 @@ const AllValidators = ({
                     rel="noreferrer"
                   >
                     {item?.description?.moniker}
-                    <i className="bi bi-arrow-up-right" />
                   </a>
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
@@ -115,6 +126,7 @@ const AllValidators = ({
 
             ?.map((item, index) => (
               <tr key={index} className="caption2 text-white-300">
+                <td> </td>
                 <td>
                   <input
                     type="checkbox"
@@ -160,7 +172,6 @@ const AllValidators = ({
                   >
                     {" "}
                     {item?.description?.moniker}
-                    <i className="bi bi-arrow-up-right" />
                   </a>
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
