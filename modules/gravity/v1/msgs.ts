@@ -319,10 +319,7 @@ export interface MsgExecuteIbcAutoForwards {
  */
 
 export interface MsgExecuteIbcAutoForwardsSDKType {
-  /** How many queued forwards to clear, be careful about gas limits */
   forwards_to_clear: Long;
-  /** This message's sender */
-
   executor: string;
 }
 export interface MsgExecuteIbcAutoForwardsResponse {}

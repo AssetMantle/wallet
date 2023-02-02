@@ -1,10 +1,14 @@
-import React from "react";
-import { MntlUsdPrice } from "../components";
-import { AvailableBalance, AvailableBalanceUsd } from "../components";
-import { TotalBalance, TotalBalanceInUSD } from "../components/totalBalance";
-import Tooltip from "../components/Tooltip";
-import { defaultChainSymbol, defaultChainName } from "../config";
 import { useChain } from "@cosmos-kit/react";
+import React from "react";
+import {
+  AvailableBalance,
+  AvailableBalanceUsd,
+  MntlUsdPrice,
+  TotalBalance,
+  TotalBalanceInUSD,
+} from "../components";
+import Tooltip from "../components/Tooltip";
+import { defaultChainName, defaultChainSymbol } from "../config";
 
 export default function Balance() {
   const denomDisplay = defaultChainSymbol;

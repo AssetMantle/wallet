@@ -1,7 +1,7 @@
 import { AminoMsg } from "@cosmjs/amino";
 import { Long } from "../../helpers";
 import { MsgValsetConfirm, MsgSendToEth, MsgRequestBatch, MsgConfirmBatch, MsgConfirmLogicCall, MsgSendToCosmosClaim, MsgExecuteIbcAutoForwards, MsgBatchSendToEthClaim, MsgValsetUpdatedClaim, MsgERC20DeployedClaim, MsgLogicCallExecutedClaim, MsgSetOrchestratorAddress, MsgCancelSendToEth, MsgSubmitBadSignatureEvidence } from "./msgs";
-export interface AminoMsgValsetConfirm extends AminoMsg {
+export interface MsgValsetConfirmAminoType extends AminoMsg {
   type: "/gravity.v1.MsgValsetConfirm";
   value: {
     nonce: string;
@@ -10,7 +10,7 @@ export interface AminoMsgValsetConfirm extends AminoMsg {
     signature: string;
   };
 }
-export interface AminoMsgSendToEth extends AminoMsg {
+export interface MsgSendToEthAminoType extends AminoMsg {
   type: "/gravity.v1.MsgSendToEth";
   value: {
     sender: string;
@@ -29,14 +29,14 @@ export interface AminoMsgSendToEth extends AminoMsg {
     };
   };
 }
-export interface AminoMsgRequestBatch extends AminoMsg {
+export interface MsgRequestBatchAminoType extends AminoMsg {
   type: "/gravity.v1.MsgRequestBatch";
   value: {
     sender: string;
     denom: string;
   };
 }
-export interface AminoMsgConfirmBatch extends AminoMsg {
+export interface MsgConfirmBatchAminoType extends AminoMsg {
   type: "/gravity.v1.MsgConfirmBatch";
   value: {
     nonce: string;
@@ -46,7 +46,7 @@ export interface AminoMsgConfirmBatch extends AminoMsg {
     signature: string;
   };
 }
-export interface AminoMsgConfirmLogicCall extends AminoMsg {
+export interface MsgConfirmLogicCallAminoType extends AminoMsg {
   type: "/gravity.v1.MsgConfirmLogicCall";
   value: {
     invalidation_id: string;
@@ -56,7 +56,7 @@ export interface AminoMsgConfirmLogicCall extends AminoMsg {
     signature: string;
   };
 }
-export interface AminoMsgSendToCosmosClaim extends AminoMsg {
+export interface MsgSendToCosmosClaimAminoType extends AminoMsg {
   type: "/gravity.v1.MsgSendToCosmosClaim";
   value: {
     event_nonce: string;
@@ -68,14 +68,14 @@ export interface AminoMsgSendToCosmosClaim extends AminoMsg {
     orchestrator: string;
   };
 }
-export interface AminoMsgExecuteIbcAutoForwards extends AminoMsg {
+export interface MsgExecuteIbcAutoForwardsAminoType extends AminoMsg {
   type: "/gravity.v1.MsgExecuteIbcAutoForwards";
   value: {
     forwards_to_clear: string;
     executor: string;
   };
 }
-export interface AminoMsgBatchSendToEthClaim extends AminoMsg {
+export interface MsgBatchSendToEthClaimAminoType extends AminoMsg {
   type: "/gravity.v1.MsgBatchSendToEthClaim";
   value: {
     event_nonce: string;
@@ -85,7 +85,7 @@ export interface AminoMsgBatchSendToEthClaim extends AminoMsg {
     orchestrator: string;
   };
 }
-export interface AminoMsgValsetUpdatedClaim extends AminoMsg {
+export interface MsgValsetUpdatedClaimAminoType extends AminoMsg {
   type: "/gravity.v1.MsgValsetUpdatedClaim";
   value: {
     event_nonce: string;
@@ -100,7 +100,7 @@ export interface AminoMsgValsetUpdatedClaim extends AminoMsg {
     orchestrator: string;
   };
 }
-export interface AminoMsgERC20DeployedClaim extends AminoMsg {
+export interface MsgERC20DeployedClaimAminoType extends AminoMsg {
   type: "/gravity.v1.MsgERC20DeployedClaim";
   value: {
     event_nonce: string;
@@ -113,7 +113,7 @@ export interface AminoMsgERC20DeployedClaim extends AminoMsg {
     orchestrator: string;
   };
 }
-export interface AminoMsgLogicCallExecutedClaim extends AminoMsg {
+export interface MsgLogicCallExecutedClaimAminoType extends AminoMsg {
   type: "/gravity.v1.MsgLogicCallExecutedClaim";
   value: {
     event_nonce: string;
@@ -123,7 +123,7 @@ export interface AminoMsgLogicCallExecutedClaim extends AminoMsg {
     orchestrator: string;
   };
 }
-export interface AminoMsgSetOrchestratorAddress extends AminoMsg {
+export interface MsgSetOrchestratorAddressAminoType extends AminoMsg {
   type: "/gravity.v1.MsgSetOrchestratorAddress";
   value: {
     validator: string;
@@ -131,14 +131,14 @@ export interface AminoMsgSetOrchestratorAddress extends AminoMsg {
     eth_address: string;
   };
 }
-export interface AminoMsgCancelSendToEth extends AminoMsg {
+export interface MsgCancelSendToEthAminoType extends AminoMsg {
   type: "/gravity.v1.MsgCancelSendToEth";
   value: {
     transaction_id: string;
     sender: string;
   };
 }
-export interface AminoMsgSubmitBadSignatureEvidence extends AminoMsg {
+export interface MsgSubmitBadSignatureEvidenceAminoType extends AminoMsg {
   type: "/gravity.v1.MsgSubmitBadSignatureEvidence";
   value: {
     subject: {
@@ -157,7 +157,7 @@ export const AminoConverter = {
       orchestrator,
       ethAddress,
       signature
-    }: MsgValsetConfirm): AminoMsgValsetConfirm["value"] => {
+    }: MsgValsetConfirm): MsgValsetConfirmAminoType["value"] => {
       return {
         nonce: nonce.toString(),
         orchestrator,
@@ -170,7 +170,7 @@ export const AminoConverter = {
       orchestrator,
       eth_address,
       signature
-    }: AminoMsgValsetConfirm["value"]): MsgValsetConfirm => {
+    }: MsgValsetConfirmAminoType["value"]): MsgValsetConfirm => {
       return {
         nonce: Long.fromString(nonce),
         orchestrator,
@@ -187,21 +187,21 @@ export const AminoConverter = {
       amount,
       bridgeFee,
       chainFee
-    }: MsgSendToEth): AminoMsgSendToEth["value"] => {
+    }: MsgSendToEth): MsgSendToEthAminoType["value"] => {
       return {
         sender,
         eth_dest: ethDest,
         amount: {
           denom: amount.denom,
-          amount: Long.fromNumber(amount.amount).toString()
+          amount: Long.fromValue(amount.amount).toString()
         },
         bridge_fee: {
           denom: bridgeFee.denom,
-          amount: Long.fromNumber(bridgeFee.amount).toString()
+          amount: Long.fromValue(bridgeFee.amount).toString()
         },
         chain_fee: {
           denom: chainFee.denom,
-          amount: Long.fromNumber(chainFee.amount).toString()
+          amount: Long.fromValue(chainFee.amount).toString()
         }
       };
     },
@@ -211,7 +211,7 @@ export const AminoConverter = {
       amount,
       bridge_fee,
       chain_fee
-    }: AminoMsgSendToEth["value"]): MsgSendToEth => {
+    }: MsgSendToEthAminoType["value"]): MsgSendToEth => {
       return {
         sender,
         ethDest: eth_dest,
@@ -235,7 +235,7 @@ export const AminoConverter = {
     toAmino: ({
       sender,
       denom
-    }: MsgRequestBatch): AminoMsgRequestBatch["value"] => {
+    }: MsgRequestBatch): MsgRequestBatchAminoType["value"] => {
       return {
         sender,
         denom
@@ -244,7 +244,7 @@ export const AminoConverter = {
     fromAmino: ({
       sender,
       denom
-    }: AminoMsgRequestBatch["value"]): MsgRequestBatch => {
+    }: MsgRequestBatchAminoType["value"]): MsgRequestBatch => {
       return {
         sender,
         denom
@@ -259,7 +259,7 @@ export const AminoConverter = {
       ethSigner,
       orchestrator,
       signature
-    }: MsgConfirmBatch): AminoMsgConfirmBatch["value"] => {
+    }: MsgConfirmBatch): MsgConfirmBatchAminoType["value"] => {
       return {
         nonce: nonce.toString(),
         token_contract: tokenContract,
@@ -274,7 +274,7 @@ export const AminoConverter = {
       eth_signer,
       orchestrator,
       signature
-    }: AminoMsgConfirmBatch["value"]): MsgConfirmBatch => {
+    }: MsgConfirmBatchAminoType["value"]): MsgConfirmBatch => {
       return {
         nonce: Long.fromString(nonce),
         tokenContract: token_contract,
@@ -292,7 +292,7 @@ export const AminoConverter = {
       ethSigner,
       orchestrator,
       signature
-    }: MsgConfirmLogicCall): AminoMsgConfirmLogicCall["value"] => {
+    }: MsgConfirmLogicCall): MsgConfirmLogicCallAminoType["value"] => {
       return {
         invalidation_id: invalidationId,
         invalidation_nonce: invalidationNonce.toString(),
@@ -307,7 +307,7 @@ export const AminoConverter = {
       eth_signer,
       orchestrator,
       signature
-    }: AminoMsgConfirmLogicCall["value"]): MsgConfirmLogicCall => {
+    }: MsgConfirmLogicCallAminoType["value"]): MsgConfirmLogicCall => {
       return {
         invalidationId: invalidation_id,
         invalidationNonce: Long.fromString(invalidation_nonce),
@@ -327,7 +327,7 @@ export const AminoConverter = {
       ethereumSender,
       cosmosReceiver,
       orchestrator
-    }: MsgSendToCosmosClaim): AminoMsgSendToCosmosClaim["value"] => {
+    }: MsgSendToCosmosClaim): MsgSendToCosmosClaimAminoType["value"] => {
       return {
         event_nonce: eventNonce.toString(),
         eth_block_height: ethBlockHeight.toString(),
@@ -346,7 +346,7 @@ export const AminoConverter = {
       ethereum_sender,
       cosmos_receiver,
       orchestrator
-    }: AminoMsgSendToCosmosClaim["value"]): MsgSendToCosmosClaim => {
+    }: MsgSendToCosmosClaimAminoType["value"]): MsgSendToCosmosClaim => {
       return {
         eventNonce: Long.fromString(event_nonce),
         ethBlockHeight: Long.fromString(eth_block_height),
@@ -363,7 +363,7 @@ export const AminoConverter = {
     toAmino: ({
       forwardsToClear,
       executor
-    }: MsgExecuteIbcAutoForwards): AminoMsgExecuteIbcAutoForwards["value"] => {
+    }: MsgExecuteIbcAutoForwards): MsgExecuteIbcAutoForwardsAminoType["value"] => {
       return {
         forwards_to_clear: forwardsToClear.toString(),
         executor
@@ -372,7 +372,7 @@ export const AminoConverter = {
     fromAmino: ({
       forwards_to_clear,
       executor
-    }: AminoMsgExecuteIbcAutoForwards["value"]): MsgExecuteIbcAutoForwards => {
+    }: MsgExecuteIbcAutoForwardsAminoType["value"]): MsgExecuteIbcAutoForwards => {
       return {
         forwardsToClear: Long.fromString(forwards_to_clear),
         executor
@@ -387,7 +387,7 @@ export const AminoConverter = {
       batchNonce,
       tokenContract,
       orchestrator
-    }: MsgBatchSendToEthClaim): AminoMsgBatchSendToEthClaim["value"] => {
+    }: MsgBatchSendToEthClaim): MsgBatchSendToEthClaimAminoType["value"] => {
       return {
         event_nonce: eventNonce.toString(),
         eth_block_height: ethBlockHeight.toString(),
@@ -402,7 +402,7 @@ export const AminoConverter = {
       batch_nonce,
       token_contract,
       orchestrator
-    }: AminoMsgBatchSendToEthClaim["value"]): MsgBatchSendToEthClaim => {
+    }: MsgBatchSendToEthClaimAminoType["value"]): MsgBatchSendToEthClaim => {
       return {
         eventNonce: Long.fromString(event_nonce),
         ethBlockHeight: Long.fromString(eth_block_height),
@@ -422,7 +422,7 @@ export const AminoConverter = {
       rewardAmount,
       rewardToken,
       orchestrator
-    }: MsgValsetUpdatedClaim): AminoMsgValsetUpdatedClaim["value"] => {
+    }: MsgValsetUpdatedClaim): MsgValsetUpdatedClaimAminoType["value"] => {
       return {
         event_nonce: eventNonce.toString(),
         valset_nonce: valsetNonce.toString(),
@@ -444,7 +444,7 @@ export const AminoConverter = {
       reward_amount,
       reward_token,
       orchestrator
-    }: AminoMsgValsetUpdatedClaim["value"]): MsgValsetUpdatedClaim => {
+    }: MsgValsetUpdatedClaimAminoType["value"]): MsgValsetUpdatedClaim => {
       return {
         eventNonce: Long.fromString(event_nonce),
         valsetNonce: Long.fromString(valset_nonce),
@@ -470,7 +470,7 @@ export const AminoConverter = {
       symbol,
       decimals,
       orchestrator
-    }: MsgERC20DeployedClaim): AminoMsgERC20DeployedClaim["value"] => {
+    }: MsgERC20DeployedClaim): MsgERC20DeployedClaimAminoType["value"] => {
       return {
         event_nonce: eventNonce.toString(),
         eth_block_height: ethBlockHeight.toString(),
@@ -491,7 +491,7 @@ export const AminoConverter = {
       symbol,
       decimals,
       orchestrator
-    }: AminoMsgERC20DeployedClaim["value"]): MsgERC20DeployedClaim => {
+    }: MsgERC20DeployedClaimAminoType["value"]): MsgERC20DeployedClaim => {
       return {
         eventNonce: Long.fromString(event_nonce),
         ethBlockHeight: Long.fromString(eth_block_height),
@@ -512,7 +512,7 @@ export const AminoConverter = {
       invalidationId,
       invalidationNonce,
       orchestrator
-    }: MsgLogicCallExecutedClaim): AminoMsgLogicCallExecutedClaim["value"] => {
+    }: MsgLogicCallExecutedClaim): MsgLogicCallExecutedClaimAminoType["value"] => {
       return {
         event_nonce: eventNonce.toString(),
         eth_block_height: ethBlockHeight.toString(),
@@ -527,7 +527,7 @@ export const AminoConverter = {
       invalidation_id,
       invalidation_nonce,
       orchestrator
-    }: AminoMsgLogicCallExecutedClaim["value"]): MsgLogicCallExecutedClaim => {
+    }: MsgLogicCallExecutedClaimAminoType["value"]): MsgLogicCallExecutedClaim => {
       return {
         eventNonce: Long.fromString(event_nonce),
         ethBlockHeight: Long.fromString(eth_block_height),
@@ -543,7 +543,7 @@ export const AminoConverter = {
       validator,
       orchestrator,
       ethAddress
-    }: MsgSetOrchestratorAddress): AminoMsgSetOrchestratorAddress["value"] => {
+    }: MsgSetOrchestratorAddress): MsgSetOrchestratorAddressAminoType["value"] => {
       return {
         validator,
         orchestrator,
@@ -554,7 +554,7 @@ export const AminoConverter = {
       validator,
       orchestrator,
       eth_address
-    }: AminoMsgSetOrchestratorAddress["value"]): MsgSetOrchestratorAddress => {
+    }: MsgSetOrchestratorAddressAminoType["value"]): MsgSetOrchestratorAddress => {
       return {
         validator,
         orchestrator,
@@ -567,7 +567,7 @@ export const AminoConverter = {
     toAmino: ({
       transactionId,
       sender
-    }: MsgCancelSendToEth): AminoMsgCancelSendToEth["value"] => {
+    }: MsgCancelSendToEth): MsgCancelSendToEthAminoType["value"] => {
       return {
         transaction_id: transactionId.toString(),
         sender
@@ -576,7 +576,7 @@ export const AminoConverter = {
     fromAmino: ({
       transaction_id,
       sender
-    }: AminoMsgCancelSendToEth["value"]): MsgCancelSendToEth => {
+    }: MsgCancelSendToEthAminoType["value"]): MsgCancelSendToEth => {
       return {
         transactionId: Long.fromString(transaction_id),
         sender
@@ -589,7 +589,7 @@ export const AminoConverter = {
       subject,
       signature,
       sender
-    }: MsgSubmitBadSignatureEvidence): AminoMsgSubmitBadSignatureEvidence["value"] => {
+    }: MsgSubmitBadSignatureEvidence): MsgSubmitBadSignatureEvidenceAminoType["value"] => {
       return {
         subject: {
           type_url: subject.typeUrl,
@@ -603,7 +603,7 @@ export const AminoConverter = {
       subject,
       signature,
       sender
-    }: AminoMsgSubmitBadSignatureEvidence["value"]): MsgSubmitBadSignatureEvidence => {
+    }: MsgSubmitBadSignatureEvidenceAminoType["value"]): MsgSubmitBadSignatureEvidence => {
       return {
         subject: {
           typeUrl: subject.type_url,

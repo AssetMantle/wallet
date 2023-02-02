@@ -9,7 +9,6 @@ export interface IDSet {
 /** IDSet represents a set of IDs */
 
 export interface IDSetSDKType {
-  /** IDSet represents a set of IDs */
   ids: Long[];
 }
 export interface BatchFees {

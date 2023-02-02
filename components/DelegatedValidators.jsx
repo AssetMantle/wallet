@@ -17,6 +17,8 @@ const DelegatedValidators = ({
     e.target.src = "/validatorAvatars/alt.png";
   };
 
+  const statusArray = [0, 1, 2, -1];
+
   return (
     <>
       {activeValidators
@@ -98,9 +100,10 @@ const DelegatedValidators = ({
         : delegatedValidators
             ?.filter(
               (item) =>
-                item?.status === 1 &&
+                statusArray.includes(item?.status) &&
                 item?.description?.moniker?.toLowerCase()?.includes(searchValue)
             )
+
             ?.map((item, index) => (
               <tr key={index} className="caption2 text-white-300">
                 <td>

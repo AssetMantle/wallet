@@ -4,15 +4,15 @@ import {
   defaultChainName,
   defaultChainSymbol,
   placeholderAvailableBalance,
-} from "../config";
+} from "../../config";
 import {
   useAvailableBalance,
   useDelegatedValidators,
   useTotalRewards,
   useTotalUnbonding,
-  fromDenom,
+  fromChainDenom,
   useMntlUsd,
-} from "../data";
+} from "../../data";
 
 export const TotalBalance = () => {
   const walletManager = useChain(defaultChainName);
@@ -43,18 +43,16 @@ export const TotalBalance = () => {
     errorRewards ||
     errorUnbonding ||
     isNaN(
-      fromDenom(availableBalance) +
-        fromDenom(allRewards) +
-        fromDenom(totalUnbondingAmount) +
-        fromDenom(totalDelegatedAmount)
+      parseFloat(fromChainDenom(availableBalance)) +
+        parseFloat(fromChainDenom(allRewards)) +
+        parseFloat(fromChainDenom(totalUnbondingAmount)) +
+        parseFloat(fromChainDenom(totalDelegatedAmount))
     )
       ? placeholderAvailableBalance
-      : (
-          fromDenom(availableBalance) +
-          fromDenom(allRewards) +
-          fromDenom(totalUnbondingAmount) +
-          fromDenom(totalDelegatedAmount)
-        ).toFixed(6);
+      : parseFloat(fromChainDenom(availableBalance)) +
+        parseFloat(fromChainDenom(allRewards)) +
+        parseFloat(fromChainDenom(totalUnbondingAmount)) +
+        parseFloat(fromChainDenom(totalDelegatedAmount));
 
   return (
     <>
@@ -98,21 +96,19 @@ export const TotalBalanceInUSD = () => {
     errorRewards ||
     errorUnbonding ||
     isNaN(
-      fromDenom(availableBalance) +
-        fromDenom(allRewards) +
-        fromDenom(totalUnbondingAmount) +
-        fromDenom(totalDelegatedAmount)
+      fromChainDenom(availableBalance) +
+        fromChainDenom(allRewards) +
+        fromChainDenom(totalUnbondingAmount) +
+        fromChainDenom(totalDelegatedAmount)
     )
       ? placeholderAvailableBalance
       : (
-          (fromDenom(availableBalance) +
-            fromDenom(allRewards) +
-            fromDenom(totalUnbondingAmount) +
-            fromDenom(totalDelegatedAmount)) *
+          (fromChainDenom(availableBalance) +
+            fromChainDenom(allRewards) +
+            fromChainDenom(totalUnbondingAmount) +
+            fromChainDenom(totalDelegatedAmount)) *
           parseFloat(mntlUsdValue)
-        )
-          .toFixed(6)
-          .toString();
+        ).toString();
 
   return (
     <p className="caption2 text-gray">${totalBalanceInUSDDisplay}&nbsp;$USD</p>
