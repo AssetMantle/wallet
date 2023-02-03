@@ -1,26 +1,26 @@
 import { disconnect } from "@wagmi/core";
-import { useWeb3Modal, useWeb3ModalNetwork } from "@web3modal/react";
+import { useWeb3Modal } from "@web3modal/react";
+import BigNumber from "bignumber.js";
 import { useReducer } from "react";
 import { useAccount, useBalance } from "wagmi";
 import {
   defaultChainGasFee,
   defaultChainSymbol,
   ethereumChainSymbol,
-  gravityChainName,
   placeholderAvailableBalance,
 } from "../config";
 import {
+  approveMaxDeposit,
   decimalize,
+  depositMntlToken,
   formConstants,
   fromChainDenom,
   parentERC20TokenAddress,
   placeholderAddressEth,
-  sendIbcTokenToGravity,
   toDenom,
-  useMntlEthBalance,
+  useAllowance,
 } from "../data";
 import {
-  convertBech32Address,
   handleCopy,
   isObjEmpty,
   shortenEthAddress,
@@ -31,20 +31,20 @@ const EthToPolygonBridge = () => {
   // WALLET HOOKS
   // hooks to work the multi-modal for ethereum
   const { open } = useWeb3Modal();
-  // hook to get and set selected chain
-  const { selectedChain, setSelectedChain } = useWeb3ModalNetwork();
   // before useAccount, define the isMounted() hook to deal with SSR issues
   const isMounted = useIsMounted();
-  const { mntlEthBalance } = useMntlEthBalance();
+  const { allowance } = useAllowance();
 
   // books to get the address of the connected wallet
   const { address, isConnected } = useAccount();
 
+  // get the MNTL token balance using wagmi hook
   const mntlEthBalanceObject = useBalance({
     address: address,
     token: parentERC20TokenAddress,
   });
 
+  // get the ETH balance using wagmi hook
   const ethBalanceObject = useBalance({
     address: address,
   });
@@ -145,7 +145,7 @@ const EthToPolygonBridge = () => {
 
         let localErrorMessages = state?.errorMessages;
 
-        if (!state?.transferAmount) {
+        if (!state?.transferAmount || !parseFloat(state?.transferAmount) > 0) {
           localErrorMessages = {
             ...localErrorMessages,
             transferAmountErrorMsg: formConstants.invalidValueErrorMsg,
@@ -210,24 +210,34 @@ const EthToPolygonBridge = () => {
     if (
       formState?.transferAmount &&
       !isNaN(parseFloat(formState?.transferAmount)) &&
+      parseFloat(formState?.transferAmount) > 0 &&
       isObjEmpty(formState?.errorMessages)
     ) {
       // define local variables
       const localTransferAmount = formState?.transferAmount;
-      let memo;
-      const gravityAddress = convertBech32Address(address, gravityChainName);
 
       // create transaction
-      const { response, error } = await sendIbcTokenToGravity(
+      const { response, error } = await depositMntlToken(
         address,
-        gravityAddress,
-        localTransferAmount,
-        memo
+        localTransferAmount
       );
       console.log("response: ", response, " error: ", error);
 
       // reset the form values
       formDispatch({ type: "RESET" });
+    }
+  };
+
+  const handleApproveSubmit = async (e) => {
+    console.log("inside handleApproveSubmit()");
+    e.preventDefault();
+
+    try {
+      // create transaction
+      const { response, error } = await approveMaxDeposit(address);
+      console.log("response: ", response, " error: ", error);
+    } catch (error) {
+      console.error("Runtime Error: ", error);
     }
   };
 
@@ -270,8 +280,14 @@ const EthToPolygonBridge = () => {
   const isWalletEthConnected = isMounted() && isConnected;
   const isSubmitDisabled =
     !isWalletEthConnected || !isObjEmpty(formState?.errorMessages);
+  const isApproveRequired =
+    isWalletEthConnected &&
+    (BigNumber(allowance).isZero() ||
+      BigNumber(allowance).isLessThan(
+        BigNumber(formState?.transferAmount || 0)
+      ));
 
-  console.log(
+  /*  console.log(
     " isConnected: ",
     isMounted() && isConnected,
     " address: ",
@@ -285,8 +301,10 @@ const EthToPolygonBridge = () => {
     " eth balance: ",
     displayEthBalance,
     " mntlEthBalanceObject: ",
-    mntlEthBalanceObject
-  );
+    mntlEthBalanceObject,
+    " isApproveRequired: ",
+    isApproveRequired
+  ); */
 
   // connect button with logic
   const connectButtonJSX = isWalletEthConnected ? (
@@ -311,6 +329,23 @@ const EthToPolygonBridge = () => {
       onClick={handleOpenWeb3Modal}
     >
       <i className="bi bi-link-45deg" /> Connect Wallet
+    </button>
+  );
+
+  const submitButtonJSX = isApproveRequired ? (
+    <button
+      className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
+      onClick={handleApproveSubmit}
+    >
+      Approve Deposit <i className="bi bi-hand-thumbs-up-fill" />
+    </button>
+  ) : (
+    <button
+      className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
+      disabled={isSubmitDisabled}
+      onClick={handleSubmit}
+    >
+      Send to Polygon Chain <i className="bi bi-arrow-down" />
     </button>
   );
 
@@ -374,13 +409,7 @@ const EthToPolygonBridge = () => {
           {/* <button className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2">
           Send to Gravity bridge <i className="bi bi-arrow-up" />
         </button> */}
-          <button
-            className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
-            disabled={isSubmitDisabled}
-            onClick={handleSubmit}
-          >
-            Send to Polygon Chain <i className="bi bi-arrow-down" />
-          </button>
+          {submitButtonJSX}
         </div>
       </div>
     </>

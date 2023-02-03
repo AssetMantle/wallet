@@ -1,14 +1,16 @@
 import { POSClient, use } from "@maticnetwork/maticjs";
 import { Web3ClientPlugin } from "@maticnetwork/maticjs-web3";
+import detectEthereumProvider from "@metamask/detect-provider";
 import {
   EthereumClient,
   modalConnectors,
   walletConnectProvider,
 } from "@web3modal/ethereum";
 import useSWR from "swr";
-import { configureChains, createClient, useAccount, useProvider } from "wagmi";
+import { configureChains, createClient, useAccount } from "wagmi";
 import { mainnet, polygon } from "wagmi/chains";
 import { placeholderAvailableBalance } from "../config";
+import { toChainDenom } from "./queryApi";
 
 // CONFIG PARAMETERS FOR ETH AND POLYGON
 export const selectedEthNetwork = "mainnet";
@@ -32,6 +34,7 @@ export const ethConfig = {
     token: {
       parent: {
         erc20: "0x2C4F1DF9c7DE0C59778936C9b145fF56813F3295",
+        matic: "0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0",
         //   erc721: "0x16F7EF3774c59264C46E5063b1111bCFd6e7A72f",
         //   erc1155: "0x2e3Ef7931F2d0e4a7da3dea950FF3F19269d9063",
         //   chainManagerAddress: "0xBbD7cBFA79faee899Eaf900F13C9065bF03B1A74", // Address of RootChainManager for POS Portal
@@ -42,6 +45,12 @@ export const ethConfig = {
         //   weth: "0x714550C2C1Ea08688607D86ed8EeF4f5E4F22323",
         //   erc1155: "0xA07e45A987F19E25176c877d98388878622623FA",
       },
+    },
+    erc20PredicateProxy: {
+      parent: "0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf",
+    },
+    rootChainManagerProxy: {
+      parent: "0xA0c68C638235ee32657e8f720a23ceC1bFc77C77",
     },
     SYNCER_URL: "https://testnetv3-syncer.api.matic.network/api/v1", // Backend service which syncs the Matic sidechain state to a MySQL database which we use for faster querying. This comes in handy especially for constructing withdrawal proofs while exiting assets from Plasma.
     WATCHER_URL: "https://testnetv3-watcher.api.matic.network/api/v1", // Backend service which syncs the Matic Plasma contract events on Ethereum mainchain to a MySQL database which we use for faster querying. This comes in handy especially for listening to asset deposits on the Plasma contract.
@@ -120,40 +129,12 @@ export const ethereumClient = new EthereumClient(wagmiClient, chains);
 // get a POSClient by injecting the wagmi provider
 use(Web3ClientPlugin);
 
-// function to get the client for creating txns for Polygon POS
-export const getPOSClient = async (
-  provider,
-  network = "mainnet",
-  version = "v1"
-) => {
-  // declare a new POS client
-  const posClient = new POSClient();
-
-  // initialize POS client
-  return await posClient.init({
-    network, // 'testnet' or 'mainnet'
-    version, // 'mumbai' or 'v1'
-    parent: {
-      provider: provider,
-    },
-    child: {
-      provider: provider,
-    },
-  });
-};
-
-export const getPOSClientMainnet = async (provider) => {
-  return await getPOSClient(provider, "mainnet", "v1");
-};
-
-export const getPOSClientTestnet = async (provider) => {
-  return await getPOSClient(provider, "testnet", "mumbai");
-};
-
 export const parentERC20TokenAddress =
   ethConfig[selectedEthNetwork]?.token?.parent.erc20;
 export const childERC20TokenAddress =
   ethConfig[selectedEthNetwork]?.token?.child.erc20;
+export const maticTokenAddress =
+  ethConfig[selectedEthNetwork]?.token?.parent.matic;
 
 // QUERY API
 // swr hook to query the MNTL Token Balance in Eth Chain
@@ -161,28 +142,28 @@ export const useMntlEthBalance = () => {
   // get the address from connected web3Modal
   const { address } = useAccount();
   // const ethAddress = isConnected ? address : placeholderAddressEth;
-  const wagmiProvider = useProvider();
-  console.log("wagmiProvider: ", wagmiProvider);
+
+  // declare a new POS client
+  const posClient = new POSClient();
 
   // fetcher function for useSwr of useMntlEthBalance()
   const fetchMntlEthBalance = async (url, address) => {
-    console.log("inside fetchMntlEthBalance, address: ", address);
     let balanceValue;
 
     // use a try catch block for creating rich Error object
     try {
-      // declare a new POS client
-      const posClient = new POSClient();
+      // get the Ethereum Provider
+      const ethereumProvider = await detectEthereumProvider();
 
       // initialize POS client
       await posClient.init({
         network: ethConfig[selectedEthNetwork]?.network, // 'testnet' or 'mainnet'
         version: ethConfig[selectedEthNetwork]?.version, // 'mumbai' or 'v1'
         parent: {
-          provider: wagmiProvider,
+          provider: ethereumProvider,
         },
         child: {
-          provider: wagmiProvider,
+          provider: ethereumProvider,
         },
       });
 
@@ -191,7 +172,7 @@ export const useMntlEthBalance = () => {
 
       // get balance of user
       // const balance = "123";
-      // const balance = await parentERC20Token.getBalance(address);
+      const balance = await parentERC20Token.getBalance(address);
 
       balanceValue = balance;
       // console.log("swr fetcher success: ", url);
@@ -221,20 +202,228 @@ export const useMntlEthBalance = () => {
   };
 };
 
+export const useMaticBalance = () => {
+  // get the address from connected web3Modal
+  const { address } = useAccount();
+  // const ethAddress = isConnected ? address : placeholderAddressEth;
+
+  // declare a new POS client
+  const posClient = new POSClient();
+
+  // fetcher function for useSwr of useMaticBalance()
+  const fetchMaticBalance = async (url, address) => {
+    let balanceValue;
+
+    // use a try catch block for creating rich Error object
+    try {
+      // get the Ethereum Provider
+      const ethereumProvider = await detectEthereumProvider();
+
+      // initialize POS client
+      await posClient.init({
+        network: ethConfig[selectedEthNetwork]?.network, // 'testnet' or 'mainnet'
+        version: ethConfig[selectedEthNetwork]?.version, // 'mumbai' or 'v1'
+        parent: {
+          provider: ethereumProvider,
+        },
+        child: {
+          provider: ethereumProvider,
+        },
+      });
+
+      // get the child ERC20 token
+      const maticToken = posClient.erc20(maticTokenAddress);
+
+      // get balance of user
+      // const balance = "123";
+      const balance = await maticToken.getBalance(address);
+
+      balanceValue = balance;
+      // console.log("swr fetcher success: ", url);
+    } catch (error) {
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
+      throw error;
+    }
+
+    // return the data
+    return balanceValue;
+  };
+
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: balanceValue, error } = useSWR(
+    address ? ["useMaticBalance", address] : null,
+    fetchMaticBalance,
+    {
+      fallbackData: placeholderAvailableBalance,
+      refreshInterval: 1000,
+    }
+  );
+
+  return {
+    maticBalance: balanceValue,
+    isLoadingMaticBalance: !error && !balanceValue,
+    errorMaticBalance: error,
+  };
+};
+
+// swr hook to query the MNTL Token Balance in Eth Chain
+export const useAllowance = () => {
+  // get the address from connected web3Modal
+  const { address } = useAccount();
+  // const ethAddress = isConnected ? address : placeholderAddressEth;
+
+  // declare a new POS client
+  const posClient = new POSClient();
+
+  // fetcher function for useSwr of useMntlEthBalance()
+  const fetchAllowance = async (url, address) => {
+    let allowanceValue;
+
+    // use a try catch block for creating rich Error object
+    try {
+      // get the Ethereum Provider
+      const ethereumProvider = await detectEthereumProvider();
+
+      // initialize POS client
+      await posClient.init({
+        network: ethConfig[selectedEthNetwork]?.network, // 'testnet' or 'mainnet'
+        version: ethConfig[selectedEthNetwork]?.version, // 'mumbai' or 'v1'
+        parent: {
+          provider: ethereumProvider,
+        },
+        child: {
+          provider: ethereumProvider,
+        },
+      });
+
+      // get the parent ERC20 token
+      const parentERC20Token = posClient.erc20(parentERC20TokenAddress, true);
+
+      // get balance of user
+      // const balance = "123";
+      const balance = await parentERC20Token.getAllowance(address);
+
+      allowanceValue = balance;
+      // console.log("swr fetcher success: ", url);
+    } catch (error) {
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
+      throw error;
+    }
+
+    // return the data
+    return allowanceValue;
+  };
+
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: allowanceValue, error } = useSWR(
+    address ? ["useAllowance", address] : null,
+    fetchAllowance,
+    {
+      fallbackData: placeholderAvailableBalance,
+      refreshInterval: 1000,
+    }
+  );
+
+  return {
+    allowance: allowanceValue,
+    isLoadingAllowance: !error && !allowanceValue,
+    errorAllowance: error,
+  };
+};
+
 // TRANSACTION API
 // txn to deposit eth token to polygon POS
-export const depositEthToken = async (depositAmount, fromAddress) => {
-  const erc20Token = posClient.erc20(parentERC20TokenAddress, true);
+export const depositMntlToken = async (address, amount) => {
+  console.log(
+    "inside depositMntlToken, address: ",
+    address,
+    " amount: ",
+    amount
+  );
+  let response;
 
-  const result = await erc20Token.deposit(depositAmount, fromAddress, {
-    fromAddress,
-    gasLimit: 300000,
-    gasPrice: 50000000000,
-    // maxPriorityFeePerGas: 6000000000,
-  });
+  // convert amount to denom amount
+  let denomAmount = toChainDenom(amount);
 
-  const txHash = await result.getTransactionHash();
-  console.log("txHash", txHash);
-  const receipt = await result.getReceipt();
-  console.log("receipt", receipt);
+  // use a try catch block for creating rich Error object
+  try {
+    // declare a new POS client
+    const posClient = new POSClient();
+    // get the Ethereum Provider
+    const ethereumProvider = await detectEthereumProvider();
+
+    // initialize POS client
+    await posClient.init({
+      network: ethConfig[selectedEthNetwork]?.network, // 'testnet' or 'mainnet'
+      version: ethConfig[selectedEthNetwork]?.version, // 'mumbai' or 'v1'
+      parent: {
+        provider: ethereumProvider,
+      },
+      child: {
+        provider: ethereumProvider,
+      },
+    });
+
+    // get the parent ERC20 token
+    const parentERC20Token = posClient.erc20(parentERC20TokenAddress, true);
+
+    // Function: depositFor(address user, address rootToken, bytes depositData) in rootChainManagerProxy
+    const depositResult = await parentERC20Token.deposit(denomAmount, address, {
+      from: address,
+    });
+
+    const txHash = await depositResult.getTransactionHash();
+
+    response = txHash;
+    // console.log("swr fetcher success: ", url);
+  } catch (error) {
+    console.error(`error: ${error}`);
+    return { response: null, error: error };
+  }
+
+  // return the data
+  return { response: response, error: null };
+};
+
+export const approveMaxDeposit = async (address) => {
+  console.log("inside approveMaxDeposit, address: ", address);
+  let response;
+
+  // use a try catch block for creating rich Error object
+  try {
+    // declare a new POS client
+    const posClient = new POSClient();
+    // get the Ethereum Provider
+    const ethereumProvider = await detectEthereumProvider();
+
+    // initialize POS client
+    await posClient.init({
+      network: ethConfig[selectedEthNetwork]?.network, // 'testnet' or 'mainnet'
+      version: ethConfig[selectedEthNetwork]?.version, // 'mumbai' or 'v1'
+      parent: {
+        provider: ethereumProvider,
+      },
+      child: {
+        provider: ethereumProvider,
+      },
+    });
+
+    // get the parent ERC20 token
+    const parentERC20Token = posClient.erc20(parentERC20TokenAddress, true);
+
+    const approveResult = await parentERC20Token.approveMax({
+      from: address,
+    });
+
+    const txHash = await approveResult.getTransactionHash();
+
+    response = txHash;
+    // console.log("swr fetcher success: ", url);
+  } catch (error) {
+    console.error(`error: ${error}`);
+    return { response: null, error: error };
+  }
+
+  // return the data
+  return { response: response, error: null };
 };

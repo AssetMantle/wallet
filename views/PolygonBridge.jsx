@@ -14,6 +14,7 @@ import {
   fromChainDenom,
   placeholderAddressEth,
   toDenom,
+  useMaticBalance,
 } from "../data";
 import {
   handleCopy,
@@ -26,6 +27,8 @@ const PolygonBridge = () => {
   // WALLET HOOKS
   // before useAccount, define the isMounted() hook to deal with SSR issues
   const isMounted = useIsMounted();
+  const { maticBalance, errorMaticBalance, isLoadingMaticBalance } =
+    useMaticBalance();
 
   // books to get the address of the connected wallet
   const { address, isConnected } = useAccount();
@@ -189,11 +192,9 @@ const PolygonBridge = () => {
       : decimalize(mntlEthBalanceObject?.data?.formatted);
   const displayAvailableBalanceDenom = defaultChainSymbol;
   const displayMaticBalance =
-    !polygonBalanceObject?.data ||
-    polygonBalanceObject?.isLoading ||
-    polygonBalanceObject?.isError
+    !maticBalance || isLoadingMaticBalance || errorMaticBalance
       ? placeholderAvailableBalance
-      : decimalize(polygonBalanceObject?.data?.formatted);
+      : decimalize(maticBalance);
   const displayMaticBalanceDenom = polygonChainSymbol;
 
   const isFormAmountError = formState?.errorMessages?.transferAmountErrorMsg;
@@ -201,21 +202,6 @@ const PolygonBridge = () => {
     formState?.errorMessages?.transferAmountErrorMsg;
   const isWalletEthConnected = isMounted() && isConnected;
   const isSubmitDisabled = true;
-
-  console.log(
-    " isConnected: ",
-    isMounted() && isConnected,
-    " address: ",
-    isMounted() && address,
-    " isMounted(): ",
-    isMounted(),
-    "mntl balance: ",
-    displayAvailableBalance,
-    " eth balance: ",
-    displayMaticBalance,
-    " mntlEthBalanceObject: ",
-    mntlEthBalanceObject
-  );
 
   // connect button with logic
   const connectButtonJSX = isWalletEthConnected ? (
@@ -233,8 +219,23 @@ const PolygonBridge = () => {
     </>
   ) : (
     <span className="text-primary">
-      <i className="bi bi-link-45deg" /> Not Connected
+      <i className="bi bi-patch-exclamation-fill" /> Not Connected
     </span>
+  );
+
+  console.log(
+    " isConnected: ",
+    isMounted() && isConnected,
+    " address: ",
+    isMounted() && address,
+    " isMounted(): ",
+    isMounted(),
+    "mntl balance: ",
+    displayAvailableBalance,
+    " eth balance: ",
+    displayMaticBalance,
+    " maticBalance: ",
+    maticBalance
   );
 
   return (
