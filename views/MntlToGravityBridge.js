@@ -1,5 +1,6 @@
 import { useChain } from "@cosmos-kit/react";
 import { useReducer } from "react";
+import { toast } from "react-toastify";
 import {
   defaultChainGasFee,
   defaultChainName,
@@ -16,7 +17,7 @@ import {
 import { convertBech32Address, shortenAddress } from "../lib";
 import { handleCopy, isObjEmpty } from "../lib/basicJavascript";
 
-const MntlToGravityBridge = () => {
+const MntlToGravityBridge = ({ notify }) => {
   // WALLET HOOKS
   const walletManager = useChain(defaultChainName);
   const { address, getSigningStargateClient, status } = walletManager;
@@ -183,6 +184,16 @@ const MntlToGravityBridge = () => {
       const gravityAddress = convertBech32Address(address, gravityChainName);
 
       // create transaction
+      const id = toast.loading("Transaction initiated ...", {
+        position: "bottom-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
       const { response, error } = await sendIbcTokenToGravity(
         address,
         gravityAddress,
@@ -192,6 +203,11 @@ const MntlToGravityBridge = () => {
         { getSigningStargateClient }
       );
       console.log("response: ", response, " error: ", error);
+      if (response) {
+        notify(response?.transactionHash, id);
+      } else {
+        notify(null, id);
+      }
 
       // reset the form values
       formDispatch({ type: "RESET" });
