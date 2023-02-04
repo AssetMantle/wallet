@@ -20,7 +20,7 @@ import { handleCopy, isObjEmpty } from "../lib/basicJavascript";
 const GravityToEthBridge = () => {
   // WALLET HOOKS
   const chainContext = useChain(defaultChainName);
-  const { address, status, getOfflineSignerAmino } = chainContext;
+  const { address, status, getOfflineSigner } = chainContext;
 
   const gravityAddress = convertBech32Address(address, gravityChainName);
 
@@ -177,7 +177,7 @@ const GravityToEthBridge = () => {
       type: "SUBMIT",
     });
 
-    const signer = getOfflineSignerAmino();
+    const signer = await getOfflineSigner();
     console.log("signer: ", signer);
 
     // if no validation errors, proceed to transaction processing

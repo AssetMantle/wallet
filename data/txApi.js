@@ -11,7 +11,7 @@ import {
   gravityIBCToken,
 } from "../config";
 import { toChainDenom } from "../data";
-import { getSigningGravityClient } from "../modules";
+import { getSigningGravityClient, gravity } from "../modules";
 
 // get the wallet properties and functions for that specific chain
 export const sendTokensTxn = async (
@@ -573,10 +573,10 @@ export const sendIbcTokenToEth = async (
       signer: signer,
     });
 
-    console.log("isGravitychainID: ", stargateClient.registry);
+    console.log("registry: ", client.registry);
 
     // get the msg object
-    const msg = {
+    const msg2 = {
       typeUrl: "/gravity.v1.MsgSendToEth",
       value: {
         sender: senderAddress,
@@ -586,6 +586,13 @@ export const sendIbcTokenToEth = async (
         chainFee,
       },
     };
+
+    const { sendToEth } = gravity.v1.MessageComposer.withTypeUrl;
+    const msg = sendToEth({
+      ethDest: ethDestAddress,
+      sender: senderAddress,
+      amount: transferAmount,
+    });
 
     console.log("msg: ", msg);
 
@@ -597,11 +604,11 @@ export const sendIbcTokenToEth = async (
           amount: "2000",
         },
       ],
-      gas: "86364",
+      gas: "250000",
     };
 
     // use the stargate client to dispatch the transaction
-    const response = await stargateClient.signAndBroadcast(
+    const response = await client.signAndBroadcast(
       senderAddress,
       [msg],
       fee,

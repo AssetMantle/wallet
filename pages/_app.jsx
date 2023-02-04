@@ -6,6 +6,8 @@ import { assets, chains } from "chain-registry";
 import Head from "next/head";
 import { getSigningCosmosClientOptions } from "osmojs";
 import { useEffect } from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { WagmiConfig } from "wagmi";
 import Layout from "../components/Layout";
 import {
@@ -77,8 +79,24 @@ function CreateCosmosApp({ Component, pageProps }) {
               <Component {...pageProps} />
               <Web3Modal
                 projectId={web3ModalProjectID}
+                themeColor="orange"
+                themeBackground="themeColor"
+                themeZIndex="99999"
                 ethereumClient={ethereumClient}
               />
+              <ToastContainer
+                position="bottom-center"
+                autoClose={500}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+              />
+              <ToastContainer />{" "}
             </Layout>
           </WagmiConfig>
         </ChainProvider>

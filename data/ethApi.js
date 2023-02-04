@@ -1,6 +1,5 @@
 import { POSClient, use } from "@maticnetwork/maticjs";
 import { Web3ClientPlugin } from "@maticnetwork/maticjs-web3";
-import detectEthereumProvider from "@metamask/detect-provider";
 import {
   EthereumClient,
   modalConnectors,
@@ -34,7 +33,7 @@ export const ethConfig = {
     token: {
       parent: {
         erc20: "0x2C4F1DF9c7DE0C59778936C9b145fF56813F3295",
-        matic: "0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0",
+        // matic: "0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0",
         //   erc721: "0x16F7EF3774c59264C46E5063b1111bCFd6e7A72f",
         //   erc1155: "0x2e3Ef7931F2d0e4a7da3dea950FF3F19269d9063",
         //   chainManagerAddress: "0xBbD7cBFA79faee899Eaf900F13C9065bF03B1A74", // Address of RootChainManager for POS Portal
@@ -42,6 +41,7 @@ export const ethConfig = {
       child: {
         //   erc721: "0xbD88C3A7c0e242156a46Fbdf87141Aa6D0c0c649",
         erc20: "0x38a536a31ba4d8c1bcca016abbf786ecd25877e8",
+        matic: "0x0000000000000000000000000000000000001010",
         //   weth: "0x714550C2C1Ea08688607D86ed8EeF4f5E4F22323",
         //   erc1155: "0xA07e45A987F19E25176c877d98388878622623FA",
       },
@@ -112,10 +112,11 @@ export const ethConfig = {
 const chains = [mainnet, polygon];
 // create the provider & wagmi client & ethereum client
 const { provider } = configureChains(chains, [
-  walletConnectProvider({ projectId: web3ModalProjectID }),
+  walletConnectProvider({
+    projectId: web3ModalProjectID,
+  }),
 ]);
 
-console.log("walletconnect provider: ", provider);
 // create the wagmiClient
 export const wagmiClient = createClient({
   autoConnect: true,
@@ -133,14 +134,14 @@ export const parentERC20TokenAddress =
   ethConfig[selectedEthNetwork]?.token?.parent.erc20;
 export const childERC20TokenAddress =
   ethConfig[selectedEthNetwork]?.token?.child.erc20;
-export const maticTokenAddress =
-  ethConfig[selectedEthNetwork]?.token?.parent.matic;
+export const childMaticTokenAddress =
+  ethConfig[selectedEthNetwork]?.token?.child.matic;
 
 // QUERY API
 // swr hook to query the MNTL Token Balance in Eth Chain
 export const useMntlEthBalance = () => {
   // get the address from connected web3Modal
-  const { address } = useAccount();
+  const { address, connector } = useAccount();
   // const ethAddress = isConnected ? address : placeholderAddressEth;
 
   // declare a new POS client
@@ -153,17 +154,18 @@ export const useMntlEthBalance = () => {
     // use a try catch block for creating rich Error object
     try {
       // get the Ethereum Provider
-      const ethereumProvider = await detectEthereumProvider();
+      // const ethereumProvider = await detectEthereumProvider();
+      const newProvider = await connector.getProvider();
 
       // initialize POS client
       await posClient.init({
         network: ethConfig[selectedEthNetwork]?.network, // 'testnet' or 'mainnet'
         version: ethConfig[selectedEthNetwork]?.version, // 'mumbai' or 'v1'
         parent: {
-          provider: ethereumProvider,
+          provider: newProvider,
         },
         child: {
-          provider: ethereumProvider,
+          provider: newProvider,
         },
       });
 
@@ -204,39 +206,40 @@ export const useMntlEthBalance = () => {
 
 export const useMaticBalance = () => {
   // get the address from connected web3Modal
-  const { address } = useAccount();
+  const { address, connector } = useAccount();
   // const ethAddress = isConnected ? address : placeholderAddressEth;
 
   // declare a new POS client
   const posClient = new POSClient();
 
   // fetcher function for useSwr of useMaticBalance()
-  const fetchMaticBalance = async (url, address) => {
+  const fetchMaticBalance = async (url, address, connector) => {
     let balanceValue;
 
     // use a try catch block for creating rich Error object
     try {
       // get the Ethereum Provider
-      const ethereumProvider = await detectEthereumProvider();
+      // const ethereumProvider = await detectEthereumProvider();
+      const newProvider = await connector.getProvider();
 
       // initialize POS client
       await posClient.init({
         network: ethConfig[selectedEthNetwork]?.network, // 'testnet' or 'mainnet'
         version: ethConfig[selectedEthNetwork]?.version, // 'mumbai' or 'v1'
         parent: {
-          provider: ethereumProvider,
+          provider: newProvider,
         },
         child: {
-          provider: ethereumProvider,
+          provider: newProvider,
         },
       });
 
       // get the child ERC20 token
-      const maticToken = posClient.erc20(maticTokenAddress);
+      const childMaticToken = posClient.erc20(childMaticTokenAddress, false);
 
       // get balance of user
       // const balance = "123";
-      const balance = await maticToken.getBalance(address);
+      const balance = await childMaticToken.getBalance(address);
 
       balanceValue = balance;
       // console.log("swr fetcher success: ", url);
@@ -251,7 +254,7 @@ export const useMaticBalance = () => {
 
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: balanceValue, error } = useSWR(
-    address ? ["useMaticBalance", address] : null,
+    address ? ["useMaticBalance", address, connector] : null,
     fetchMaticBalance,
     {
       fallbackData: placeholderAvailableBalance,
@@ -268,42 +271,51 @@ export const useMaticBalance = () => {
 
 // swr hook to query the MNTL Token Balance in Eth Chain
 export const useAllowance = () => {
+  console.log("inside useAllowance");
+
   // get the address from connected web3Modal
-  const { address } = useAccount();
+  const { address, connector } = useAccount();
   // const ethAddress = isConnected ? address : placeholderAddressEth;
+  console.log("connector: ", connector);
 
   // declare a new POS client
   const posClient = new POSClient();
 
   // fetcher function for useSwr of useMntlEthBalance()
-  const fetchAllowance = async (url, address) => {
+  const fetchAllowance = async (url, address, connector) => {
+    console.log("inside fetchAllowance, address: ", address);
     let allowanceValue;
 
     // use a try catch block for creating rich Error object
     try {
       // get the Ethereum Provider
-      const ethereumProvider = await detectEthereumProvider();
+      // const ethereumProvider = await detectEthereumProvider();
+      const newProvider = await connector?.getProvider();
+      console.log("newProvider: ", newProvider);
 
-      // initialize POS client
-      await posClient.init({
-        network: ethConfig[selectedEthNetwork]?.network, // 'testnet' or 'mainnet'
-        version: ethConfig[selectedEthNetwork]?.version, // 'mumbai' or 'v1'
-        parent: {
-          provider: ethereumProvider,
-        },
-        child: {
-          provider: ethereumProvider,
-        },
-      });
+      if (newProvider) {
+        // initialize POS client
+        await posClient.init({
+          network: ethConfig[selectedEthNetwork]?.network, // 'testnet' or 'mainnet'
+          version: ethConfig[selectedEthNetwork]?.version, // 'mumbai' or 'v1'
+          parent: {
+            provider: newProvider,
+          },
+          child: {
+            provider: newProvider,
+          },
+        });
 
-      // get the parent ERC20 token
-      const parentERC20Token = posClient.erc20(parentERC20TokenAddress, true);
+        // get the parent ERC20 token
+        const parentERC20Token = posClient.erc20(parentERC20TokenAddress, true);
 
-      // get balance of user
-      // const balance = "123";
-      const balance = await parentERC20Token.getAllowance(address);
+        // get balance of user
+        // const balance = "123";
+        const balance = await parentERC20Token.getAllowance(address);
 
-      allowanceValue = balance;
+        allowanceValue = balance;
+      }
+
       // console.log("swr fetcher success: ", url);
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
@@ -316,7 +328,7 @@ export const useAllowance = () => {
 
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: allowanceValue, error } = useSWR(
-    address ? ["useAllowance", address] : null,
+    address ? ["useAllowance", address, connector] : null,
     fetchAllowance,
     {
       fallbackData: placeholderAvailableBalance,
@@ -333,7 +345,7 @@ export const useAllowance = () => {
 
 // TRANSACTION API
 // txn to deposit eth token to polygon POS
-export const depositMntlToken = async (address, amount) => {
+export const depositMntlToken = async (address, amount, connector) => {
   console.log(
     "inside depositMntlToken, address: ",
     address,
@@ -350,17 +362,19 @@ export const depositMntlToken = async (address, amount) => {
     // declare a new POS client
     const posClient = new POSClient();
     // get the Ethereum Provider
-    const ethereumProvider = await detectEthereumProvider();
+    // const ethereumProvider = await detectEthereumProvider();
+    const newProvider = await connector.getProvider();
+    console.log("newProvider: ", newProvider);
 
     // initialize POS client
     await posClient.init({
       network: ethConfig[selectedEthNetwork]?.network, // 'testnet' or 'mainnet'
       version: ethConfig[selectedEthNetwork]?.version, // 'mumbai' or 'v1'
       parent: {
-        provider: ethereumProvider,
+        provider: newProvider,
       },
       child: {
-        provider: ethereumProvider,
+        provider: newProvider,
       },
     });
 
@@ -377,7 +391,7 @@ export const depositMntlToken = async (address, amount) => {
     response = txHash;
     // console.log("swr fetcher success: ", url);
   } catch (error) {
-    console.error(`error: ${error}`);
+    console.error(`error: ${error.message}`);
     return { response: null, error: error };
   }
 
@@ -385,7 +399,7 @@ export const depositMntlToken = async (address, amount) => {
   return { response: response, error: null };
 };
 
-export const approveMaxDeposit = async (address) => {
+export const approveMaxDeposit = async (address, connector) => {
   console.log("inside approveMaxDeposit, address: ", address);
   let response;
 
@@ -394,17 +408,18 @@ export const approveMaxDeposit = async (address) => {
     // declare a new POS client
     const posClient = new POSClient();
     // get the Ethereum Provider
-    const ethereumProvider = await detectEthereumProvider();
+    // const ethereumProvider = await detectEthereumProvider();
+    const newProvider = await connector.getProvider();
 
     // initialize POS client
     await posClient.init({
       network: ethConfig[selectedEthNetwork]?.network, // 'testnet' or 'mainnet'
       version: ethConfig[selectedEthNetwork]?.version, // 'mumbai' or 'v1'
       parent: {
-        provider: ethereumProvider,
+        provider: newProvider,
       },
       child: {
-        provider: ethereumProvider,
+        provider: newProvider,
       },
     });
 

@@ -1,7 +1,9 @@
 import { disconnect } from "@wagmi/core";
 import { useWeb3Modal } from "@web3modal/react";
 import BigNumber from "bignumber.js";
+import Link from "next/link";
 import { useReducer } from "react";
+import { toast } from "react-toastify";
 import { useAccount, useBalance } from "wagmi";
 import {
   defaultChainGasFee,
@@ -17,6 +19,7 @@ import {
   fromChainDenom,
   parentERC20TokenAddress,
   placeholderAddressEth,
+  toChainDenom,
   toDenom,
   useAllowance,
 } from "../data";
@@ -36,13 +39,15 @@ const EthToPolygonBridge = () => {
   const { allowance } = useAllowance();
 
   // books to get the address of the connected wallet
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, connector } = useAccount();
 
   // get the MNTL token balance using wagmi hook
   const mntlEthBalanceObject = useBalance({
     address: address,
     token: parentERC20TokenAddress,
   });
+
+  const mntlEthBalance = toChainDenom(mntlEthBalanceObject?.data?.formatted);
 
   // get the ETH balance using wagmi hook
   const ethBalanceObject = useBalance({
@@ -126,10 +131,6 @@ const EthToPolygonBridge = () => {
         else {
           // delete the error message key if already exists
           delete state.errorMessages?.transferAmountErrorMsg;
-          console.log(
-            "state error message: ",
-            state.errorMessages?.transferAmountErrorMsg
-          );
           return {
             ...state,
             transferAmount: fromChainDenom(
@@ -141,7 +142,6 @@ const EthToPolygonBridge = () => {
 
       case "SUBMIT": {
         // if any required field is blank, set error message
-        console.log("action.payload: ", state?.transferAmount);
 
         let localErrorMessages = state?.errorMessages;
 
@@ -178,6 +178,51 @@ const EthToPolygonBridge = () => {
 
   const [formState, formDispatch] = useReducer(formReducer, initialState);
 
+  const CustomToastWithLink = ({ txHash, message }) => (
+    <p>
+      {message}
+      <Link href={`https://etherscan.io/tx/${txHash}`}>
+        <a style={{ color: "#ffc640" }} target="_blank">
+          {" "}
+          Here
+        </a>
+      </Link>
+    </p>
+  );
+
+  const notify = (txHash, id, message) => {
+    if (txHash) {
+      toast.update(id, {
+        render: <CustomToastWithLink txHash={txHash} message={message} />,
+        type: "success",
+        isLoading: false,
+        position: "bottom-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: txHash,
+      });
+    } else {
+      toast.update(id, {
+        render: message,
+        type: "error",
+        isLoading: false,
+        position: "bottom-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  };
+
   // CONTROLLER FUNCTIONS
   const handleOpenWeb3Modal = async (e) => {
     e.preventDefault();
@@ -213,18 +258,34 @@ const EthToPolygonBridge = () => {
       parseFloat(formState?.transferAmount) > 0 &&
       isObjEmpty(formState?.errorMessages)
     ) {
+      const id = toast.loading("Transaction initiated ...", {
+        position: "bottom-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
       // define local variables
       const localTransferAmount = formState?.transferAmount;
 
       // create transaction
       const { response, error } = await depositMntlToken(
         address,
-        localTransferAmount
+        localTransferAmount,
+        connector
       );
       console.log("response: ", response, " error: ", error);
 
       // reset the form values
       formDispatch({ type: "RESET" });
+      if (response) {
+        notify(response, id, "Transaction might take upto 22 mins. Check ");
+      } else {
+        notify(null, id, "Transaction Aborted. Try again.");
+      }
     }
   };
 
@@ -233,9 +294,26 @@ const EthToPolygonBridge = () => {
     e.preventDefault();
 
     try {
+      // initiate the toast
+      const id2 = toast.loading("Transaction initiated ...", {
+        position: "bottom-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+
       // create transaction
-      const { response, error } = await approveMaxDeposit(address);
+      const { response, error } = await approveMaxDeposit(address, connector);
       console.log("response: ", response, " error: ", error);
+      if (response) {
+        notify(response, id2, "Transaction Submitted. Check ");
+      } else {
+        notify(null, id2, "Transaction Aborted. Try again.");
+      }
     } catch (error) {
       console.error("Runtime Error: ", error);
     }
@@ -287,25 +365,6 @@ const EthToPolygonBridge = () => {
         BigNumber(formState?.transferAmount || 0)
       ));
 
-  /*  console.log(
-    " isConnected: ",
-    isMounted() && isConnected,
-    " address: ",
-    isMounted() && address,
-    " selectedChain: ",
-    selectedChain,
-    " isMounted(): ",
-    isMounted(),
-    "mntl balance: ",
-    displayAvailableBalance,
-    " eth balance: ",
-    displayEthBalance,
-    " mntlEthBalanceObject: ",
-    mntlEthBalanceObject,
-    " isApproveRequired: ",
-    isApproveRequired
-  ); */
-
   // connect button with logic
   const connectButtonJSX = isWalletEthConnected ? (
     <>
@@ -348,6 +407,25 @@ const EthToPolygonBridge = () => {
       Send to Polygon Chain <i className="bi bi-arrow-down" />
     </button>
   );
+
+  /*  console.log(
+    " isConnected: ",
+    isMounted() && isConnected,
+    " address: ",
+    isMounted() && address,
+    " selectedChain: ",
+    selectedChain,
+    " isMounted(): ",
+    isMounted(),
+    "mntl balance: ",
+    displayAvailableBalance,
+    " eth balance: ",
+    displayEthBalance,
+    " mntlEthBalanceObject: ",
+    mntlEthBalanceObject,
+    " isApproveRequired: ",
+    isApproveRequired
+  ); */
 
   return (
     <>

@@ -1,29 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 // import ModalContainer from "../../components/ModalContainer";
 
-const ConnectModal = ({ isOpen, setOpen, walletRepo, theme }) => {
-  console.log({ isOpen, setOpen, walletRepo, theme });
-  const [generatedAddress, setGeneratedAddress] = useState("");
-
-  const handleLedger = async (e) => {
-    e.preventDefault();
-    console.log("Ledger Option Selected");
-    await walletRepo?.disconnect();
-  };
-
-  const handleKeystore = (e) => {
-    e.preventDefault();
-    console.log("Keystore Option Selected");
-  };
-
+const ConnectModal = ({ setOpen, walletRepo }) => {
   function handleCloseModal(e) {
     e.preventDefault();
     setOpen(false);
-  }
-
-  function handleChangeGenAddress(e) {
-    e.preventDefault();
-    setGeneratedAddress(e.target.value);
   }
 
   const ConnectOptionObject = {

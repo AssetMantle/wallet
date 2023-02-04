@@ -10,11 +10,11 @@ import {
 import {
   childERC20TokenAddress,
   decimalize,
+  ethConfig,
   formConstants,
   fromChainDenom,
   placeholderAddressEth,
   toDenom,
-  useMaticBalance,
 } from "../data";
 import {
   handleCopy,
@@ -27,20 +27,22 @@ const PolygonBridge = () => {
   // WALLET HOOKS
   // before useAccount, define the isMounted() hook to deal with SSR issues
   const isMounted = useIsMounted();
-  const { maticBalance, errorMaticBalance, isLoadingMaticBalance } =
-    useMaticBalance();
 
   // books to get the address of the connected wallet
   const { address, isConnected } = useAccount();
 
+  // get the mntl token balance in polygon chain using wagmi hook
   const mntlEthBalanceObject = useBalance({
     address: address,
     token: childERC20TokenAddress,
     chainId: polygonChainId,
   });
 
+  // get the matic balance in polygon chain using wagmi hook
   const polygonBalanceObject = useBalance({
     address: address,
+    token: ethConfig?.mainnet?.token?.child?.matic,
+    chainId: polygonChainId,
   });
 
   // FORM REDUCER
@@ -192,9 +194,11 @@ const PolygonBridge = () => {
       : decimalize(mntlEthBalanceObject?.data?.formatted);
   const displayAvailableBalanceDenom = defaultChainSymbol;
   const displayMaticBalance =
-    !maticBalance || isLoadingMaticBalance || errorMaticBalance
+    !polygonBalanceObject?.data ||
+    polygonBalanceObject?.isLoading ||
+    polygonBalanceObject?.isError
       ? placeholderAvailableBalance
-      : decimalize(maticBalance);
+      : decimalize(polygonBalanceObject?.data?.formatted);
   const displayMaticBalanceDenom = polygonChainSymbol;
 
   const isFormAmountError = formState?.errorMessages?.transferAmountErrorMsg;
@@ -223,7 +227,7 @@ const PolygonBridge = () => {
     </span>
   );
 
-  console.log(
+  /* console.log(
     " isConnected: ",
     isMounted() && isConnected,
     " address: ",
@@ -233,10 +237,8 @@ const PolygonBridge = () => {
     "mntl balance: ",
     displayAvailableBalance,
     " eth balance: ",
-    displayMaticBalance,
-    " maticBalance: ",
-    maticBalance
-  );
+    displayMaticBalance
+  ); */
 
   return (
     <>

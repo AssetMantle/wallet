@@ -90,7 +90,6 @@ export const toChainDenom = (
   chainName = defaultChainName,
   chainDenom = defaultChainDenom
 ) => {
-  console.log("inside tochaindenom, value: ", value);
   let amount;
   // get the chain assets for the specified chain
   const chainassets = assets.find((chain) => chain.chain_name === chainName);
@@ -102,7 +101,7 @@ export const toChainDenom = (
     (unit) => unit.denom === coin.display
   )?.exponent;
   // show balance in display values by exponentiating it
-  const valueBigNumber = new BigNumber(value.toString() || 0);
+  const valueBigNumber = new BigNumber(value?.toString() || 0);
   if (BigNumber.isBigNumber(valueBigNumber)) {
     amount = valueBigNumber
       .multipliedBy(10 ** exp)
