@@ -1,6 +1,6 @@
 import { ERC20Token, ERC20TokenSDKType } from "./attestation";
-import * as _m0 from "protobufjs/minimal";
 import { Long, DeepPartial } from "../../helpers";
+import * as _m0 from "protobufjs/minimal";
 /** OutgoingTxBatch represents a batch of transactions going from gravity to ETH */
 
 export interface OutgoingTxBatch {

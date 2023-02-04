@@ -1,7 +1,7 @@
 import { Metadata, MetadataSDKType } from "../../cosmos/bank/v1beta1/bank";
 import { Coin, CoinSDKType } from "../../cosmos/base/v1beta1/coin";
-import * as _m0 from "protobufjs/minimal";
 import { Long, DeepPartial } from "../../helpers";
+import * as _m0 from "protobufjs/minimal";
 /** BridgeValidator represents a validator's ETH address and its power */
 
 export interface BridgeValidator {
@@ -40,8 +40,6 @@ export interface ValsetSDKType {
   members: BridgeValidatorSDKType[];
   height: Long;
   reward_amount: string;
-  /** the reward token in it's Ethereum hex address representation */
-
   reward_token: string;
 }
 /**
@@ -202,16 +200,9 @@ export interface PendingIbcAutoForward {
  */
 
 export interface PendingIbcAutoForwardSDKType {
-  /** the destination address. sdk.AccAddress does not preserve foreign prefixes */
   foreign_receiver: string;
-  /** the token sent from ethereum to the ibc-enabled chain over `IbcChannel` */
-
   token?: CoinSDKType;
-  /** the IBC channel to send `Amount` over via ibc-transfer module */
-
   ibc_channel: string;
-  /** the EventNonce from the MsgSendToCosmosClaim, used for ordering the queue */
-
   event_nonce: Long;
 }
 

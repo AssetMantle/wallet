@@ -232,10 +232,6 @@ export interface QueryLastObservedEthBlockRequest {
  */
 
 export interface QueryLastObservedEthBlockRequestSDKType {
-  /**
-   * indicates whether to search for store data using the old Gravity v1 key "LastObservedEthereumBlockHeightKey"
-   * Note that queries before the Mercury upgrade at height 1282013 must set this to true
-   */
   use_v1_key: boolean;
 }
 export interface QueryLastObservedEthBlockResponse {
@@ -246,10 +242,6 @@ export interface QueryLastObservedEthBlockResponse {
   block: Long;
 }
 export interface QueryLastObservedEthBlockResponseSDKType {
-  /**
-   * a response of 0 indicates that no Ethereum events have been observed, and thus
-   * the bridge is inactive
-   */
   block: Long;
 }
 /**
@@ -274,10 +266,6 @@ export interface QueryLastObservedEthNonceRequest {
  */
 
 export interface QueryLastObservedEthNonceRequestSDKType {
-  /**
-   * indicates whether to search for store data using the old Gravity v1 key "LastObservedEventNonceKey"
-   * Note that queries before the Mercury upgrade at height 1282013 must set this to true
-   */
   use_v1_key: boolean;
 }
 export interface QueryLastObservedEthNonceResponse {
@@ -288,10 +276,6 @@ export interface QueryLastObservedEthNonceResponse {
   nonce: Long;
 }
 export interface QueryLastObservedEthNonceResponseSDKType {
-  /**
-   * a response of 0 indicates that no Ethereum events have been observed, and thus
-   * the bridge is inactive
-   */
   nonce: Long;
 }
 /**
@@ -341,29 +325,11 @@ export interface QueryAttestationsRequest {
  */
 
 export interface QueryAttestationsRequestSDKType {
-  /** limit defines how many attestations to limit in the response. */
   limit: Long;
-  /**
-   * order_by provides ordering of atteststions by nonce in the response. Either
-   * 'asc' or 'desc' can be provided. If no value is provided, it defaults to
-   * 'asc'.
-   */
-
   order_by: string;
-  /** claim_type allows filtering attestations by Ethereum claim type. */
-
   claim_type: string;
-  /** nonce allows filtering attestations by Ethereum claim nonce. */
-
   nonce: Long;
-  /** height allows filtering attestations by Ethereum claim height. */
-
   height: Long;
-  /**
-   * indicates whether to search for store data using the old Gravity v1 key "OracleAttestationKey"
-   * Note that queries before the Mercury upgrade at height 1282013 must set this to true
-   */
-
   use_v1_key: boolean;
 }
 export interface QueryAttestationsResponse {
@@ -433,7 +399,6 @@ export interface QueryPendingIbcAutoForwards {
   limit: Long;
 }
 export interface QueryPendingIbcAutoForwardsSDKType {
-  /** limit defines the number of pending forwards to return, in order of their SendToCosmos.EventNonce */
   limit: Long;
 }
 export interface QueryPendingIbcAutoForwardsResponse {

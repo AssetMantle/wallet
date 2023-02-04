@@ -626,19 +626,18 @@ export const useVote = (proposalId) => {
   const walletManager = useChain(defaultChainName);
   const { address } = walletManager;
   // fetcher function for useSwr of useAvailableBalance()
-  const fetchVote = async (url, address) => {
+  const fetchVote = async (url, proposalId, address) => {
     let voteInfo;
     // use a try catch block for creating rich Error object
     try {
       // get the data from cosmos queryClient
-      const { vote } = await client.cosmos.gov.v1beta1.vote({
-        proposalId,
+      const { vote } = await queryClient.cosmos.gov.v1beta1.vote({
+        proposalId: proposalId,
         voter: address,
       });
       voteInfo = vote;
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
-      throw error;
     }
     // return the data
     return voteInfo;
@@ -648,16 +647,7 @@ export const useVote = (proposalId) => {
     proposalId && address ? ["vote", proposalId, address] : null,
     fetchVote,
     {
-      fallbackData: [
-        {
-          balance: { denom: "umntl", amount: 0 },
-          delegation: {
-            delegator_address: "delegator_address",
-            validator_address: "validator_address",
-            shares: "298317289",
-          },
-        },
-      ],
+      fallbackData: {},
       suspense: true,
       refreshInterval: 1000,
     }
@@ -737,11 +727,9 @@ export const useAllVotes = (proposalId) => {
       /* const { votes } = await client.cosmos.gov.v1beta1.votes({
         proposalId,
       }); */
-
       const { votes } = await queryClient.cosmos.gov.v1beta1.votes({
         proposalId: proposalIdSample,
       });
-
       allVotes = votes;
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);

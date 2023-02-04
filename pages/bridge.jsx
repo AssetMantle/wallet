@@ -1,14 +1,60 @@
 import { useChain } from "@cosmos-kit/react";
 import Image from "next/image";
+import Link from "next/link";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import ICTransactionInfo from "../components/ICTransactionInfo";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import Tooltip from "../components/Tooltip";
 import { defaultChainName } from "../config";
 import { placeholderAddress } from "../data";
-import EthToPolygonBridge from "../views/EthToPolygonBridge";
 import GravityToEthBridge from "../views/GravityToEthBridge";
 import MntlToGravityBridge from "../views/MntlToGravityBridge";
+
+const CustomToastWithLink = ({ txHash }) => (
+  <p>
+    Transaction Submitted. Check
+    <Link href={`https://explorer.assetmantle.one/transactions/${txHash}`}>
+      <a style={{ color: "#ffc640" }} target="_blank">
+        {" "}
+        Here
+      </a>
+    </Link>
+  </p>
+);
+
+const notify = (txHash, id) => {
+  if (txHash) {
+    toast.update(id, {
+      render: <CustomToastWithLink txHash={txHash} />,
+      type: "success",
+      isLoading: false,
+      position: "bottom-center",
+      autoClose: 8000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      toastId: txHash,
+    });
+  } else {
+    toast.update(id, {
+      render: "Transaction failed.Try Again",
+      type: "error",
+      isLoading: false,
+      position: "bottom-center",
+      autoClose: 8000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
+  }
+};
 
 export default function Bridge() {
   // commons
@@ -128,9 +174,9 @@ export default function Bridge() {
               </div>
             </nav>
             <div className="nav-bg d-flex flex-column gap-3 rounded-4 p-3">
-              <MntlToGravityBridge />
+              <MntlToGravityBridge notify={notify} />
               <GravityToEthBridge />
-              <EthToPolygonBridge />
+              {/* <EthToPolygonBridge /> */}
               {polytonToEthJSX}
             </div>
           </section>

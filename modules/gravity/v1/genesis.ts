@@ -3,8 +3,8 @@ import { Valset, ValsetSDKType, ERC20ToDenom, ERC20ToDenomSDKType, PendingIbcAut
 import { MsgValsetConfirm, MsgValsetConfirmSDKType, MsgConfirmBatch, MsgConfirmBatchSDKType, MsgConfirmLogicCall, MsgConfirmLogicCallSDKType, MsgSetOrchestratorAddress, MsgSetOrchestratorAddressSDKType } from "./msgs";
 import { OutgoingTxBatch, OutgoingTxBatchSDKType, OutgoingLogicCall, OutgoingLogicCallSDKType, OutgoingTransferTx, OutgoingTransferTxSDKType } from "./batch";
 import { Attestation, AttestationSDKType } from "./attestation";
-import * as _m0 from "protobufjs/minimal";
 import { Long, DeepPartial } from "../../helpers";
+import * as _m0 from "protobufjs/minimal";
 /**
  * The slashing fractions for the various gravity related slashing conditions. The first three
  * refer to not submitting a particular message, the third for submitting a different claim
@@ -125,11 +125,6 @@ export interface ParamsSDKType {
   slash_fraction_bad_eth_signature: Uint8Array;
   valset_reward?: CoinSDKType;
   bridge_active: boolean;
-  /**
-   * addresses on this blacklist are forbidden from depositing or withdrawing
-   * from Ethereum to the bridge
-   */
-
   ethereum_blacklist: string[];
   min_chain_fee_basis_points: Long;
 }
@@ -204,35 +199,12 @@ export interface GravityNonces {
 /** GravityCounters contains the many noces and counters required to maintain the bridge state in the genesis */
 
 export interface GravityNoncesSDKType {
-  /** the nonce of the last generated validator set */
   latest_valset_nonce: Long;
-  /** the last observed Gravity.sol contract event nonce */
-
   last_observed_nonce: Long;
-  /** the last valset nonce we have slashed, to prevent double slashing */
-
   last_slashed_valset_nonce: Long;
-  /**
-   * the last batch Cosmos chain block that batch slashing has completed for
-   * there is an individual batch nonce for each token type so this removes
-   * the need to store them all
-   */
-
   last_slashed_batch_block: Long;
-  /** the last cosmos block that logic call slashing has completed for */
-
   last_slashed_logic_call_block: Long;
-  /**
-   * the last transaction id from the Gravity TX pool, this prevents ID
-   * duplication during chain upgrades
-   */
-
   last_tx_pool_id: Long;
-  /**
-   * the last batch id from the Gravity batch pool, this prevents ID duplication
-   * during chain upgrades
-   */
-
   last_batch_id: Long;
 }
 

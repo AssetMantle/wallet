@@ -12,7 +12,9 @@ export default function Tooltip({
       className="position-relative am-tooltip"
       onClick={(e) => e.preventDefault()}
     >
-      <span className={titlePrimary ? "text-primary" : ""}>{title}</span>
+      <span className={titlePrimary ? "text-primary" : titlePrimary}>
+        {title}
+      </span>
       {description && (
         <span
           className="position-absolute am-tooltip-d caption2 bg-gray-800 p-2 rounded-2"

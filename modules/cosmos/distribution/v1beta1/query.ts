@@ -18,7 +18,6 @@ export interface QueryParamsResponse {
 /** QueryParamsResponse is the response type for the Query/Params RPC method. */
 
 export interface QueryParamsResponseSDKType {
-  /** params defines the parameters of the module. */
   params?: ParamsSDKType;
 }
 /**
@@ -36,7 +35,6 @@ export interface QueryValidatorOutstandingRewardsRequest {
  */
 
 export interface QueryValidatorOutstandingRewardsRequestSDKType {
-  /** validator_address defines the validator address to query for. */
   validator_address: string;
 }
 /**
@@ -70,7 +68,6 @@ export interface QueryValidatorCommissionRequest {
  */
 
 export interface QueryValidatorCommissionRequestSDKType {
-  /** validator_address defines the validator address to query for. */
   validator_address: string;
 }
 /**
@@ -88,7 +85,6 @@ export interface QueryValidatorCommissionResponse {
  */
 
 export interface QueryValidatorCommissionResponseSDKType {
-  /** commission defines the commision the validator received. */
   commission?: ValidatorAccumulatedCommissionSDKType;
 }
 /**
@@ -115,16 +111,9 @@ export interface QueryValidatorSlashesRequest {
  */
 
 export interface QueryValidatorSlashesRequestSDKType {
-  /** validator_address defines the validator address to query for. */
   validator_address: string;
-  /** starting_height defines the optional starting height to query the slashes. */
-
   starting_height: Long;
-  /** starting_height defines the optional ending height to query the slashes. */
-
   ending_height: Long;
-  /** pagination defines an optional pagination for the request. */
-
   pagination?: PageRequestSDKType;
 }
 /**
@@ -145,10 +134,7 @@ export interface QueryValidatorSlashesResponse {
  */
 
 export interface QueryValidatorSlashesResponseSDKType {
-  /** slashes defines the slashes the validator received. */
   slashes: ValidatorSlashEventSDKType[];
-  /** pagination defines the pagination in the response. */
-
   pagination?: PageResponseSDKType;
 }
 /**
@@ -169,10 +155,7 @@ export interface QueryDelegationRewardsRequest {
  */
 
 export interface QueryDelegationRewardsRequestSDKType {
-  /** delegator_address defines the delegator address to query for. */
   delegator_address: string;
-  /** validator_address defines the validator address to query for. */
-
   validator_address: string;
 }
 /**
@@ -190,7 +173,6 @@ export interface QueryDelegationRewardsResponse {
  */
 
 export interface QueryDelegationRewardsResponseSDKType {
-  /** rewards defines the rewards accrued by a delegation. */
   rewards: DecCoinSDKType[];
 }
 /**
@@ -208,7 +190,6 @@ export interface QueryDelegationTotalRewardsRequest {
  */
 
 export interface QueryDelegationTotalRewardsRequestSDKType {
-  /** delegator_address defines the delegator address to query for. */
   delegator_address: string;
 }
 /**
@@ -229,10 +210,7 @@ export interface QueryDelegationTotalRewardsResponse {
  */
 
 export interface QueryDelegationTotalRewardsResponseSDKType {
-  /** rewards defines all the rewards accrued by a delegator. */
   rewards: DelegationDelegatorRewardSDKType[];
-  /** total defines the sum of all the rewards. */
-
   total: DecCoinSDKType[];
 }
 /**
@@ -250,7 +228,6 @@ export interface QueryDelegatorValidatorsRequest {
  */
 
 export interface QueryDelegatorValidatorsRequestSDKType {
-  /** delegator_address defines the delegator address to query for. */
   delegator_address: string;
 }
 /**
@@ -268,7 +245,6 @@ export interface QueryDelegatorValidatorsResponse {
  */
 
 export interface QueryDelegatorValidatorsResponseSDKType {
-  /** validators defines the validators a delegator is delegating for. */
   validators: string[];
 }
 /**
@@ -286,7 +262,6 @@ export interface QueryDelegatorWithdrawAddressRequest {
  */
 
 export interface QueryDelegatorWithdrawAddressRequestSDKType {
-  /** delegator_address defines the delegator address to query for. */
   delegator_address: string;
 }
 /**
@@ -304,7 +279,6 @@ export interface QueryDelegatorWithdrawAddressResponse {
  */
 
 export interface QueryDelegatorWithdrawAddressResponseSDKType {
-  /** withdraw_address defines the delegator address to query for. */
   withdraw_address: string;
 }
 /**
@@ -334,7 +308,6 @@ export interface QueryCommunityPoolResponse {
  */
 
 export interface QueryCommunityPoolResponseSDKType {
-  /** pool defines community pool's coins. */
   pool: DecCoinSDKType[];
 }
 
