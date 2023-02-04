@@ -173,7 +173,7 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
         </div>
       </div>
 
-      <ModalContainer active={ClaimModal}>
+      <ModalContainer active={ClaimModal} setActive={setClaimModal}>
         {!setupAddress ? (
           <div className="d-flex flex-column bg-gray-700 m-auto p-4 rounded-3 w-100">
             <div className="d-flex align-items-center justify-content-between">

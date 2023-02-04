@@ -208,7 +208,7 @@ export default function Vote() {
           )}
         </div>
 
-        <ModalContainer active={VoteModal}>
+        <ModalContainer active={VoteModal} setActive={setVoteModal}>
           <div className="d-flex flex-column bg-gray-700 m-auto p-4 rounded-3 w-100">
             <div className="d-flex align-items-center justify-content-between">
               <h5 className="body2 text-primary d-flex align-items-center gap-2">
