@@ -35,6 +35,7 @@ const ActiveProposals = ({
       color: "#FF9133",
     },
   ];
+  console.log(voteInfo);
 
   const hasVoted = !!voteInfo.option;
 
@@ -49,7 +50,7 @@ const ActiveProposals = ({
             <h4 className="d-flex gap-1 align-items-center body2 text-primary">
               #{proposal?.proposal_id}{" "}
             </h4>
-            {hasVoted ? (
+            {/* {hasVoted ? (
               voteInfo?.option == "VOTE_OPTION_NO_WITH_VETO" ? (
                 <>
                   <i
@@ -80,20 +81,20 @@ const ActiveProposals = ({
                     }}
                   ></i>
                 </>
-              ) : (
-                <i
-                  className={
-                    voteOptions.find((item) => item?.option == voteInfo?.option)
-                      .icon
-                  }
-                  style={{
-                    color: voteOptions.find(
-                      (item) => item?.option == voteInfo?.option
-                    ).color,
-                  }}
-                ></i>
-              )
-            ) : null}
+              ) : ( */}
+            <i
+              className={
+                voteOptions.find((item) => item?.option == voteInfo?.option)
+                  .icon
+              }
+              style={{
+                color: voteOptions.find(
+                  (item) => item?.option == voteInfo?.option
+                ).color,
+              }}
+            ></i>
+            {/* )
+            ) : null} */}
             <div
               className="button-secondary caption bg-translucent px-2 py-1 text-truncate"
               style={{ fontWeight: "400" }}
@@ -101,7 +102,9 @@ const ActiveProposals = ({
               {getTypeProposal(proposal?.content?.["@type"])}
             </div>
           </div>
-          <h5 className="caption2 text-primary">{proposal?.content?.title}</h5>
+          <h5 className="caption2 text-primary text-truncate">
+            {proposal?.content?.title}
+          </h5>
           <p className="caption2">
             Voting Start :{" "}
             {new Date(proposal?.voting_start_time).toLocaleDateString()}
