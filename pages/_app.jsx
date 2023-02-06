@@ -1,9 +1,13 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { wallets as leapwallets } from "@cosmos-kit/leap";
 import { ChainProvider } from "@cosmos-kit/react";
+import { Web3Modal } from "@web3modal/react";
 import { assets, chains } from "chain-registry";
 import Head from "next/head";
 import { useEffect } from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
+import { WagmiConfig } from "wagmi";
 import Layout from "../components/Layout";
 import {
   cosmostationWallets,
@@ -13,9 +17,8 @@ import {
   keplrWallets,
 } from "../config";
 import "../config/styles/index.scss";
-import "react-toastify/dist/ReactToastify.min.css";
+import { ethereumClient, wagmiClient, web3ModalProjectID } from "../data";
 import ConnectModal from "../views/ConnectModal/ConnectModal";
-import { ToastContainer } from "react-toastify";
 
 function CreateCosmosApp({ Component, pageProps }) {
   // useEffect for bootstrap js hydration
@@ -62,22 +65,31 @@ function CreateCosmosApp({ Component, pageProps }) {
           }}
           walletModal={ConnectModal} // Provide walletModal
         >
-          <Layout>
-            <Component {...pageProps} />
-            <ToastContainer
-              position="bottom-center"
-              autoClose={500}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="dark"
-            />
-            <ToastContainer />{" "}
-          </Layout>
+          <WagmiConfig client={wagmiClient}>
+            <Layout>
+              <Component {...pageProps} />
+              <Web3Modal
+                projectId={web3ModalProjectID}
+                themeColor="orange"
+                themeBackground="themeColor"
+                themeZIndex="99999"
+                ethereumClient={ethereumClient}
+              />
+              <ToastContainer
+                position="bottom-center"
+                autoClose={500}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+              />
+              <ToastContainer />{" "}
+            </Layout>
+          </WagmiConfig>
         </ChainProvider>
       </ChakraProvider>
     </>
