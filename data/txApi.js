@@ -1,7 +1,18 @@
 import { assets } from "chain-registry";
-import { defaultChainDenom, defaultChainName, defaultFeeGas } from "../config";
-import { toChainDenom } from "../data";
 import { cosmos } from "osmojs";
+import {
+  defaultChainDenom,
+  defaultChainName,
+  defaultFeeAmount,
+  defaultFeeGas,
+  defaultIBCSourceChannel,
+  defaultIBCSourcePort,
+  gravityChainDenom,
+  gravityFeeAmount,
+  gravityIBCSourceChannel,
+  gravityIBCSourcePort,
+} from "../config";
+import { toChainDenom } from "../data";
 
 // get the wallet properties and functions for that specific chain
 export const sendTokensTxn = async (
@@ -25,7 +36,7 @@ export const sendTokensTxn = async (
     // initialize stargate client and create txn
     const stargateClient = await getSigningStargateClient();
     if (!stargateClient || !fromAddress) {
-      throw new error("stargateClient or from address undefined");
+      throw new Error("stargateClient or from address undefined");
     }
     // create a message template from the composer
     const { send } = cosmos.bank.v1beta1.MessageComposer.withTypeUrl;
@@ -45,7 +56,7 @@ export const sendTokensTxn = async (
       amount: [
         {
           denom: coin.base,
-          amount: "2000",
+          amount: defaultFeeAmount,
         },
       ],
       gas: defaultFeeGas,
@@ -90,7 +101,7 @@ export const sendRedelegation = async (
     const stargateClient = await getSigningStargateClient();
     console.log(amountInDenom);
     if (!stargateClient || !fromAddress) {
-      throw new error("stargateClient or from address undefined");
+      throw new Error("stargateClient or from address undefined");
     }
 
     // create a message template from the composer
@@ -111,7 +122,7 @@ export const sendRedelegation = async (
       amount: [
         {
           denom: "umntl",
-          amount: "2000",
+          amount: defaultFeeAmount,
         },
       ],
       gas: defaultFeeGas,
@@ -154,7 +165,7 @@ export const sendDelegation = async (
     // // initialize stargate client and create txn
     const stargateClient = await getSigningStargateClient();
     if (!stargateClient || !fromAddress) {
-      throw new error("stargateClient or from address undefined");
+      throw new Error("stargateClient or from address undefined");
     }
 
     // create a message template from the composer
@@ -174,7 +185,7 @@ export const sendDelegation = async (
       amount: [
         {
           denom: "umntl",
-          amount: "2000",
+          amount: defaultFeeAmount,
         },
       ],
       gas: defaultFeeGas,
@@ -217,7 +228,7 @@ export const sendUndelegation = async (
     // // initialize stargate client and create txn
     const stargateClient = await getSigningStargateClient();
     if (!stargateClient || !fromAddress) {
-      throw new error("stargateClient or from address undefined");
+      throw new Error("stargateClient or from address undefined");
     }
 
     // create a message template from the composer
@@ -238,7 +249,7 @@ export const sendUndelegation = async (
       amount: [
         {
           denom: "umntl",
-          amount: "2000",
+          amount: defaultFeeAmount,
         },
       ],
       gas: defaultFeeGas,
@@ -279,7 +290,7 @@ export const sendVote = async (
     // // initialize stargate client and create txn
     const stargateClient = await getSigningStargateClient();
     if (!stargateClient || !fromAddress) {
-      throw new error("stargateClient or from address undefined");
+      throw new Error("stargateClient or from address undefined");
     }
     // create a message template from the composer
     const { vote } = cosmos.gov.v1beta1.MessageComposer.withTypeUrl;
@@ -294,7 +305,7 @@ export const sendVote = async (
       amount: [
         {
           denom: "umntl",
-          amount: "2000",
+          amount: defaultFeeAmount,
         },
       ],
       gas: defaultFeeGas,
@@ -333,7 +344,7 @@ export const sendWithdrawAddress = async (
     // // initialize stargate client and create txn
     const stargateClient = await getSigningStargateClient();
     if (!stargateClient || !address) {
-      throw new error("stargateClient or from address undefined");
+      throw new Error("stargateClient or from address undefined");
     }
 
     // create a message template from the composer
@@ -349,7 +360,7 @@ export const sendWithdrawAddress = async (
       amount: [
         {
           denom: "umntl",
-          amount: "2000",
+          amount: defaultFeeAmount,
         },
       ],
       gas: defaultFeeGas,
@@ -382,10 +393,6 @@ export const sendRewardsBatched = async (
 ) => {
   let response = null;
   try {
-    // get the chain assets for the specified chain
-    const chainassets = assets.find((chain) => chain.chain_name === chainName);
-    // get the coin data from the chain assets data
-    const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
     // get the amount in denom terms
     // populate the optional argument fromAddress
     const fromAddress = address;
@@ -393,7 +400,7 @@ export const sendRewardsBatched = async (
     const stargateClient = await getSigningStargateClient();
 
     if (!stargateClient || !fromAddress) {
-      throw new error("stargateClient or from address undefined");
+      throw new Error("stargateClient or from address undefined");
     }
 
     // create a message template from the composer
@@ -412,7 +419,7 @@ export const sendRewardsBatched = async (
       amount: [
         {
           denom: "umntl",
-          amount: "2000",
+          amount: defaultFeeAmount,
         },
       ],
       gas: defaultFeeGas,
@@ -457,12 +464,12 @@ export const sendIbcTokenToGravity = async (
     // initialize stargate client and create txn
     const stargateClient = await getSigningStargateClient();
     if (!stargateClient || !fromAddress) {
-      throw new error("stargateClient or from address undefined");
+      throw new Error("stargateClient or from address undefined");
     }
 
     // get the sourcePort and sourceChannel values pertaining to IBC transaction from AssetMantle to Gravity Chain
-    const sourcePort = "transfer";
-    const sourceChannel = "channel-8";
+    const sourcePort = defaultIBCSourcePort;
+    const sourceChannel = defaultIBCSourceChannel;
 
     // get the amount object
     const transferAmount = {
@@ -475,7 +482,7 @@ export const sendIbcTokenToGravity = async (
       amount: [
         {
           denom: "umntl",
-          amount: "2000",
+          amount: defaultFeeAmount,
         },
       ],
       gas: defaultFeeGas,
@@ -485,6 +492,79 @@ export const sendIbcTokenToGravity = async (
     response = await stargateClient.sendIbcTokens(
       fromAddress,
       toGravityAddress,
+      transferAmount,
+      sourcePort,
+      sourceChannel,
+      undefined,
+      1773583353,
+      fee,
+      memo
+    );
+
+    return { response, error: null };
+  } catch (error) {
+    console.error("Error during transaction: ", error?.message);
+    return { response: null, error };
+  }
+};
+
+export const sendIbcTokenToMantle = async (
+  fromGravityAddress,
+  toMantleAddress,
+  amount,
+  memo,
+  {
+    getSigningStargateClient,
+    chainName = defaultChainName,
+    chainDenom = defaultChainDenom,
+  }
+) => {
+  let response = null;
+  try {
+    console.log(
+      "inside sendIbcTokenToMantle: ",
+      fromGravityAddress,
+      toMantleAddress,
+      amount
+    );
+    // get the chain assets for the specified chain
+    const chainassets = assets.find((chain) => chain.chain_name === chainName);
+    // get the coin data from the chain assets data
+    const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
+    // get the amount in denom terms
+    const amountInDenom = toChainDenom(amount, chainName, chainDenom);
+    // initialize stargate client and create txn
+    const stargateClient = await getSigningStargateClient();
+    const signer = stargateClient;
+    if (!stargateClient || !fromGravityAddress) {
+      throw new Error("stargateClient or from address undefined");
+    }
+
+    // get the sourcePort and sourceChannel values pertaining to IBC transaction from AssetMantle to Gravity Chain
+    const sourcePort = gravityIBCSourcePort;
+    const sourceChannel = gravityIBCSourceChannel;
+
+    // get the amount object
+    const transferAmount = {
+      denom: coin.base,
+      amount: amountInDenom,
+    };
+
+    // populate the fee data
+    const fee = {
+      amount: [
+        {
+          denom: gravityChainDenom,
+          amount: gravityFeeAmount,
+        },
+      ],
+      gas: defaultFeeGas,
+    };
+
+    // directly call sendIbcTokens from the stargateclient
+    response = await stargateClient.sendIbcTokens(
+      fromGravityAddress,
+      toMantleAddress,
       transferAmount,
       sourcePort,
       sourceChannel,

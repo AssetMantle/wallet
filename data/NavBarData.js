@@ -26,24 +26,24 @@ export const NavBarData = {
       variant: "am-link",
       icon: <i className="bi bi-diagram-2" />,
     },
-    // {
-    //   title: "Trade",
-    //   href: "/trade",
-    //   variant: "am-link",
-    //   icon: <i className="bi bi-bag" />,
-    // },
-    // {
-    //   title: "Earn",
-    //   href: "/earn",
-    //   variant: "am-link",
-    //   icon: <i className="bi bi-cash-coin" />,
-    // },
+    /*  {
+      title: "Trade",
+      href: "/trade",
+      variant: "am-link",
+      icon: <i className="bi bi-bag" />,
+    },
+    {
+      title: "Earn",
+      href: "/earn",
+      variant: "am-link",
+      icon: <i className="bi bi-cash-coin" />,
+    },
     {
       title: "Farm",
       href: "/farm",
       variant: "am-link",
       icon: <i className="bi bi-sign-turn-right-fill" />,
-    },
+    }, */
     {
       title: "Explorer",
       href: "https://explorer.assetmantle.one/",

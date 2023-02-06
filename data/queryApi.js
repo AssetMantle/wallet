@@ -10,6 +10,7 @@ import {
   defaultChainName,
   defaultChainRESTProxy,
   defaultChainRPCProxy,
+  defaultChainSymbol,
   gravityChainDenom,
   gravityChainName,
   gravityChainRPCProxy,
@@ -18,9 +19,9 @@ import {
   placeholderAvailableBalance,
   placeholderMntlUsdValue,
 } from "../config";
-import { bech32AddressSeperator, placeholderAddress } from "./constants";
-import { cosmos as cosmosModule } from "../modules";
 import { convertBech32Address } from "../lib";
+import { cosmos as cosmosModule } from "../modules";
+import { bech32AddressSeperator, placeholderAddress } from "./constants";
 
 const rpcEndpoint = defaultChainRPCProxy;
 const restEndpoint = defaultChainRESTProxy;
@@ -352,7 +353,7 @@ export const useTotalRewards = () => {
     {
       fallbackData: [
         {
-          totalRewards: "0",
+          totalRewards: placeholderAvailableBalance,
           rewardsArray: [{ denom: "umntl", amount: "0" }],
         },
       ],
@@ -661,6 +662,52 @@ export const useAvailableBalanceGravity = () => {
     denomGravityIBCToken: availableBalanceIBCTokenObject?.denom,
     isLoadingAvailableBalance: !error && !balanceObjects,
     errorAvailableBalance: error,
+  };
+};
+
+export const useTotalBalance = () => {
+  // fetcher function for useSwr of useAvailableBalance()
+  const { availableBalance, errorAvailableBalance, isLoadingAvailableBalance } =
+    useAvailableBalance();
+
+  const {
+    totalDelegatedAmount,
+    isLoadingDelegatedAmount,
+    errorDelegatedAmount,
+  } = useDelegatedValidators();
+
+  const { allRewards, errorRewards, isLoadingRewards } = useTotalRewards();
+
+  const { totalUnbondingAmount, isLoadingUnbonding, errorUnbonding } =
+    useTotalUnbonding();
+
+  const isLoading =
+    isLoadingAvailableBalance ||
+    isLoadingDelegatedAmount ||
+    isLoadingRewards ||
+    isLoadingUnbonding;
+
+  const isError =
+    errorAvailableBalance ||
+    errorDelegatedAmount ||
+    errorRewards ||
+    errorUnbonding;
+
+  const summation =
+    isLoading || isError
+      ? placeholderAvailableBalance
+      : BigNumber(availableBalance || 0).plus(
+          BigNumber(totalDelegatedAmount || 0)
+            .plus(BigNumber(allRewards || 0))
+            .plus(BigNumber(totalUnbondingAmount || 0))
+            .toString()
+        );
+
+  return {
+    totalBalance: summation,
+    denomTotalBalance: defaultChainSymbol,
+    isLoadingTotalBalance: isLoading,
+    isErrorTotalBalance: isError,
   };
 };
 

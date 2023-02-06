@@ -1,4 +1,5 @@
 import { useChain } from "@cosmos-kit/react";
+import Link from "next/link";
 import { useReducer } from "react";
 import { toast } from "react-toastify";
 import {
@@ -17,7 +18,7 @@ import {
 import { convertBech32Address, shortenAddress } from "../lib";
 import { handleCopy, isObjEmpty } from "../lib/basicJavascript";
 
-const MntlToGravityBridge = ({ notify }) => {
+const MntlToGravityBridge = () => {
   // WALLET HOOKS
   const walletManager = useChain(defaultChainName);
   const { address, getSigningStargateClient, status } = walletManager;
@@ -152,6 +153,52 @@ const MntlToGravityBridge = ({ notify }) => {
   };
 
   const [formState, formDispatch] = useReducer(formReducer, initialState);
+
+  // CONFIG FUNCTIONS
+  const CustomToastWithLink = ({ txHash }) => (
+    <p>
+      Transaction Submitted. Check
+      <Link href={`https://explorer.assetmantle.one/transactions/${txHash}`}>
+        <a style={{ color: "#ffc640" }} target="_blank">
+          {" "}
+          Here
+        </a>
+      </Link>
+    </p>
+  );
+
+  const notify = (txHash, id) => {
+    if (txHash) {
+      toast.update(id, {
+        render: <CustomToastWithLink txHash={txHash} />,
+        type: "success",
+        isLoading: false,
+        position: "bottom-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: txHash,
+      });
+    } else {
+      toast.update(id, {
+        render: "Transaction failed.Try Again",
+        type: "error",
+        isLoading: false,
+        position: "bottom-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  };
 
   // CONTROLLER FUNCTIONS
   const handleAmountOnChange = (e) => {

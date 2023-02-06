@@ -1,116 +1,67 @@
 import { useChain } from "@cosmos-kit/react";
+import BigNumber from "bignumber.js";
 import React from "react";
 import {
+  defaultChainDenomExponent,
   defaultChainName,
-  defaultChainSymbol,
-  placeholderAvailableBalance,
+  usdSymbol,
 } from "../../config";
-import {
-  useAvailableBalance,
-  useDelegatedValidators,
-  useTotalRewards,
-  useTotalUnbonding,
-  fromChainDenom,
-  useMntlUsd,
-} from "../../data";
+import { fromChainDenom, useMntlUsd, useTotalBalance } from "../../data";
 
 export const TotalBalance = () => {
-  const walletManager = useChain(defaultChainName);
-  const { getSigningStargateClient, address, status } = walletManager;
-
-  const { availableBalance, errorAvailableBalance, isLoadingAvailableBalance } =
-    useAvailableBalance();
   const {
-    delegatedValidators,
-    totalDelegatedAmount,
-    isLoadingDelegatedAmount,
-    errorDelegatedAmount,
-  } = useDelegatedValidators();
-  const { allRewards, rewardsArray, errorRewards, isLoadingRewards } =
-    useTotalRewards();
-  const {
-    totalUnbondingAmount,
-    allUnbonding,
-    isLoadingUnbonding,
-    errorUnbonding,
-  } = useTotalUnbonding();
+    denomTotalBalance,
+    totalBalance,
+    isErrorTotalBalance,
+    isLoadingTotalBalance,
+  } = useTotalBalance();
 
-  const denomDisplay = defaultChainSymbol;
+  const chainContext = useChain(defaultChainName);
+  const { status } = chainContext;
 
-  const totalBalanceDisplay =
-    errorAvailableBalance ||
-    errorDelegatedAmount ||
-    errorRewards ||
-    errorUnbonding ||
-    isNaN(
-      parseFloat(fromChainDenom(availableBalance)) +
-        parseFloat(fromChainDenom(allRewards)) +
-        parseFloat(fromChainDenom(totalUnbondingAmount)) +
-        parseFloat(fromChainDenom(totalDelegatedAmount))
-    )
-      ? placeholderAvailableBalance
-      : parseFloat(fromChainDenom(availableBalance)) +
-        parseFloat(fromChainDenom(allRewards)) +
-        parseFloat(fromChainDenom(totalUnbondingAmount)) +
-        parseFloat(fromChainDenom(totalDelegatedAmount));
+  const totalBalanceDisplay = fromChainDenom(totalBalance);
+
+  const isConnected = !(
+    isLoadingTotalBalance ||
+    isErrorTotalBalance ||
+    status != "Connected"
+  );
 
   return (
     <>
-      {isLoadingAvailableBalance ||
-      isLoadingUnbonding ||
-      isLoadingDelegatedAmount ||
-      isLoadingRewards ? (
-        <p>Loading...</p>
-      ) : (
-        <p className={status === "Connected" ? "caption" : "caption text-gray"}>
-          {totalBalanceDisplay}&nbsp;{denomDisplay}
-        </p>
-      )}
+      <p className={isConnected ? "caption" : "caption text-gray"}>
+        {totalBalanceDisplay}&nbsp;{denomTotalBalance}
+      </p>
     </>
   );
 };
 
 export const TotalBalanceInUSD = () => {
-  const { availableBalance, errorAvailableBalance, isLoadingAvailableBalance } =
-    useAvailableBalance();
-  const {
-    delegatedValidators,
-    totalDelegatedAmount,
-    isLoadingDelegatedAmount,
-    errorDelegatedAmount,
-  } = useDelegatedValidators();
-  const { allRewards, rewardsArray, errorRewards, isLoadingRewards } =
-    useTotalRewards();
-  const {
-    totalUnbondingAmount,
-    allUnbonding,
-    isLoadingUnbonding,
-    errorUnbonding,
-  } = useTotalUnbonding();
+  const { totalBalance, isErrorTotalBalance, isLoadingTotalBalance } =
+    useTotalBalance();
+
+  const chainContext = useChain(defaultChainName);
+  const { status } = chainContext;
 
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
 
-  const totalBalanceInUSDDisplay =
-    errorAvailableBalance ||
-    errorDelegatedAmount ||
-    errorRewards ||
-    errorUnbonding ||
-    isNaN(
-      fromChainDenom(availableBalance) +
-        fromChainDenom(allRewards) +
-        fromChainDenom(totalUnbondingAmount) +
-        fromChainDenom(totalDelegatedAmount)
-    )
-      ? placeholderAvailableBalance
-      : (
-          (fromChainDenom(availableBalance) +
-            fromChainDenom(allRewards) +
-            fromChainDenom(totalUnbondingAmount) +
-            fromChainDenom(totalDelegatedAmount)) *
-          parseFloat(mntlUsdValue)
-        ).toString();
+  const isConnected = !(
+    isLoadingTotalBalance ||
+    isErrorTotalBalance ||
+    status != "Connected" ||
+    errorMntlUsdValue
+  );
+
+  const totalBalanceDisplay = fromChainDenom(totalBalance);
+
+  const totalBalanceInUSDDisplay = BigNumber(totalBalanceDisplay)
+    .multipliedBy(BigNumber(mntlUsdValue))
+    .toFixed(defaultChainDenomExponent)
+    .toString();
 
   return (
-    <p className="caption2 text-gray">${totalBalanceInUSDDisplay}&nbsp;$USD</p>
+    <p className="caption2 text-gray">
+      ${totalBalanceInUSDDisplay}&nbsp;{usdSymbol}
+    </p>
   );
 };
