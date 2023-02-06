@@ -193,7 +193,7 @@ const EthToPolygonBridge = () => {
   const notify = (txHash, id, message) => {
     if (txHash) {
       toast.update(id, {
-        render: <CustomToastWithLink txHash={txHash} message={message} />,
+        render: <CustomToastWithLink message={message} txHash={txHash} />,
         type: "success",
         isLoading: false,
         position: "bottom-center",
