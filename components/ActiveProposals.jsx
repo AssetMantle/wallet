@@ -1,5 +1,6 @@
 import React from "react";
 import { useVote } from "../data";
+import Tooltip from "./Tooltip";
 
 const ActiveProposals = ({
   status,
@@ -46,43 +47,13 @@ const ActiveProposals = ({
       >
         <div className="d-flex flex-column gap-2 p-2">
           <div className="d-flex justify-content-between gap-2 pb-2">
-            <h4 className="d-flex gap-1 align-items-center body2 text-primary">
+            <h4 className="d-flex gap-2 align-items-center body2 text-primary">
               #{proposal?.proposal_id}{" "}
-            </h4>
-            {/* {hasVoted ? (
+              {/* {hasVoted ? (
               voteInfo?.option == "VOTE_OPTION_NO_WITH_VETO" ? (
-                <>
-                  <i
-                    className={
-                      voteOptions.find(
-                        (item) => item?.option == voteInfo?.option
-                      ).icon
-                    }
-                    style={{
-                      zI: "1",
-                      color: voteOptions.find(
-                        (item) => item?.option == voteInfo?.option
-                      ).color,
-                    }}
-                  ></i>{" "}
-                  <i
-                    className={
-                      voteOptions.find(
-                        (item) => item?.option == voteInfo?.option
-                      ).icon
-                    }
-                    style={{
-                      marginLeft: "-15px",
-                      zIndex: "3000",
-                      color: voteOptions.find(
-                        (item) => item?.option == voteInfo?.option
-                      ).color,
-                    }}
-                  ></i>
-                </>
-              ) : ( */}
-            {/* no with veto icon set */}
-            {/* <span className="position-relative body1">
+              <Tooltip
+                title={
+                <span className="position-relative body1">
               <i
                 className={`position-absolute top-0 bottom-0 left-0 vote_no_with_veto ${
                   voteOptions.find((item) => item?.option == voteInfo?.option)
@@ -104,20 +75,31 @@ const ActiveProposals = ({
                   color: "red",
                 }}
               ></i>
-            </span> */}
-            <i
-              className={
-                voteOptions.find((item) => item?.option == proposal?.option)
-                  .icon
-              }
-              style={{
-                color: voteOptions.find(
-                  (item) => item?.option == proposal?.option
-                ).color,
-              }}
-            ></i>
-            {/* )
+            </span>
+                }
+                description="No with Veto"
+              />
+              ) : ( */}
+              <Tooltip
+                title={
+                  <i
+                    className={
+                      voteOptions.find(
+                        (item) => item?.option == proposal?.option
+                      ).icon
+                    }
+                    style={{
+                      color: voteOptions.find(
+                        (item) => item?.option == proposal?.option
+                      ).color,
+                    }}
+                  ></i>
+                }
+                description={"yes"}
+              />
+              {/* )
             ) : null} */}
+            </h4>
             <div
               className="button-secondary caption bg-translucent px-2 py-1 text-truncate"
               style={{ fontWeight: "400" }}
