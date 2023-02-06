@@ -6,7 +6,6 @@ import { assets, chains } from "chain-registry";
 import Head from "next/head";
 import { useEffect } from "react";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.min.css";
 import { WagmiConfig } from "wagmi";
 import Layout from "../components/Layout";
 import {
@@ -17,6 +16,7 @@ import {
   keplrWallets,
 } from "../config";
 import "../config/styles/index.scss";
+import "react-toastify/dist/ReactToastify.min.css";
 import { ethereumClient, wagmiClient, web3ModalProjectID } from "../data";
 import ConnectModal from "../views/ConnectModal/ConnectModal";
 
