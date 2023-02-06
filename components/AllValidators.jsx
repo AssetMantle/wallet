@@ -62,6 +62,9 @@ const AllValidators = ({
                       titlePrimary={"text-warning"}
                       title={<i className="bi bi-patch-exclamation-fill"></i>}
                       description="It is preferable to not stake to the top 10 validators"
+                      style={{
+                        transform: "translateX(83%) translateY(-1%)",
+                      }}
                     />
                   </td>
                 ) : (
