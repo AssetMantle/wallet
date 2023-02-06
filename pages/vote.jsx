@@ -37,14 +37,6 @@ export default function Vote() {
     </p>
   );
 
-  const dummyProposal = {
-    option: "VOTE_OPTION_NO_WITH_VETO",
-    proposal_id: 1,
-    content: { title: "title", type: "type" },
-    voting_start_time: "start_time",
-    voting_end_time: "end_time",
-  };
-
   const notify = (txHash, id) => {
     if (txHash) {
       toast.update(id, {
@@ -148,7 +140,7 @@ export default function Vote() {
             </nav>
             <div className="nav-bg rounded-4 d-flex flex-column px-3 py-2 gap-3">
               <div className="row">
-                {/* {isLoadingProposals ||
+                {isLoadingProposals ||
                 allProposals?.[0]?.proposal_id == "fallback" ? (
                   <div>Loading ...</div>
                 ) : allProposals?.length ? (
@@ -165,24 +157,23 @@ export default function Vote() {
                           payload: proposal?.proposal_id,
                         });
                       }}
-                    > */}
-                <ActiveProposals
-                  OnVoteSelect={OnVoteSelect}
-                  onVoteHover={onVoteHover}
-                  // proposal={proposal}
-                  proposal={dummyProposal}
-                  index={1}
-                  status={status}
-                  voteDispatch={voteDispatch}
-                  voteState={voteState}
-                  allProposals={allProposals}
-                  isLoadingProposals={isLoadingProposals}
-                />
-                {/* </div>
+                    >
+                      <ActiveProposals
+                        OnVoteSelect={OnVoteSelect}
+                        onVoteHover={onVoteHover}
+                        proposal={proposal}
+                        index={index}
+                        status={status}
+                        voteDispatch={voteDispatch}
+                        voteState={voteState}
+                        allProposals={allProposals}
+                        isLoadingProposals={isLoadingProposals}
+                      />
+                    </div>
                   ))
                 ) : (
                   <div>There are no active proposals at the moment</div>
-                )} */}
+                )}
               </div>
             </div>
           </div>
