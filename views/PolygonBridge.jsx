@@ -1,27 +1,20 @@
-import { disconnect } from "@wagmi/core";
-import { useWeb3Modal } from "@web3modal/react";
-import BigNumber from "bignumber.js";
-import Link from "next/link";
 import { useReducer } from "react";
-import { toast } from "react-toastify";
 import { useAccount, useBalance } from "wagmi";
 import {
   defaultChainGasFee,
   defaultChainSymbol,
-  ethereumChainSymbol,
   placeholderAvailableBalance,
+  polygonChainId,
+  polygonChainSymbol,
 } from "../config";
 import {
-  approveMaxDeposit,
+  childERC20TokenAddress,
   decimalize,
-  depositMntlToken,
+  ethConfig,
   formConstants,
   fromChainDenom,
-  parentERC20TokenAddress,
   placeholderAddressEth,
-  toChainDenom,
   toDenom,
-  useAllowance,
 } from "../data";
 import {
   handleCopy,
@@ -30,28 +23,26 @@ import {
   useIsMounted,
 } from "../lib";
 
-const EthToPolygonBridge = () => {
+const PolygonBridge = () => {
   // WALLET HOOKS
-  // hooks to work the multi-modal for ethereum
-  const { open } = useWeb3Modal();
   // before useAccount, define the isMounted() hook to deal with SSR issues
   const isMounted = useIsMounted();
-  const { allowance } = useAllowance();
 
   // books to get the address of the connected wallet
-  const { address, isConnected, connector } = useAccount();
+  const { address, isConnected } = useAccount();
 
-  // get the MNTL token balance using wagmi hook
+  // get the mntl token balance in polygon chain using wagmi hook
   const mntlEthBalanceObject = useBalance({
     address: address,
-    token: parentERC20TokenAddress,
+    token: childERC20TokenAddress,
+    chainId: polygonChainId,
   });
 
-  const mntlEthBalance = toChainDenom(mntlEthBalanceObject?.data?.formatted);
-
-  // get the ETH balance using wagmi hook
-  const ethBalanceObject = useBalance({
+  // get the matic balance in polygon chain using wagmi hook
+  const polygonBalanceObject = useBalance({
     address: address,
+    token: ethConfig?.mainnet?.token?.child?.matic,
+    chainId: polygonChainId,
   });
 
   // FORM REDUCER
@@ -131,6 +122,10 @@ const EthToPolygonBridge = () => {
         else {
           // delete the error message key if already exists
           delete state.errorMessages?.transferAmountErrorMsg;
+          console.log(
+            "state error message: ",
+            state.errorMessages?.transferAmountErrorMsg
+          );
           return {
             ...state,
             transferAmount: fromChainDenom(
@@ -142,10 +137,11 @@ const EthToPolygonBridge = () => {
 
       case "SUBMIT": {
         // if any required field is blank, set error message
+        console.log("action.payload: ", state?.transferAmount);
 
         let localErrorMessages = state?.errorMessages;
 
-        if (!state?.transferAmount || !parseFloat(state?.transferAmount) > 0) {
+        if (!state?.transferAmount) {
           localErrorMessages = {
             ...localErrorMessages,
             transferAmountErrorMsg: formConstants.invalidValueErrorMsg,
@@ -178,153 +174,7 @@ const EthToPolygonBridge = () => {
 
   const [formState, formDispatch] = useReducer(formReducer, initialState);
 
-  const CustomToastWithLink = ({ txHash, message }) => (
-    <p>
-      {message}
-      <Link href={`https://etherscan.io/tx/${txHash}`}>
-        <a style={{ color: "#ffc640" }} target="_blank">
-          {" "}
-          Here
-        </a>
-      </Link>
-    </p>
-  );
-
-  const notify = (txHash, id, message) => {
-    if (txHash) {
-      toast.update(id, {
-        render: <CustomToastWithLink txHash={txHash} message={message} />,
-        type: "success",
-        isLoading: false,
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        toastId: txHash,
-      });
-    } else {
-      toast.update(id, {
-        render: message,
-        type: "error",
-        isLoading: false,
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-    }
-  };
-
   // CONTROLLER FUNCTIONS
-  const handleOpenWeb3Modal = async (e) => {
-    e.preventDefault();
-    await open();
-  };
-
-  const handleDisconnectWeb3Modal = async (e) => {
-    e.preventDefault();
-    await disconnect();
-  };
-
-  const handleAmountOnChange = (e) => {
-    e.preventDefault();
-    formDispatch({
-      type: "CHANGE_AMOUNT",
-      payload: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    console.log("inside handleSubmit()");
-    e.preventDefault();
-
-    // execute the dispatch operations pertaining to submit
-    formDispatch({
-      type: "SUBMIT",
-    });
-
-    // if no validation errors, proceed to transaction processing
-    if (
-      formState?.transferAmount &&
-      !isNaN(parseFloat(formState?.transferAmount)) &&
-      parseFloat(formState?.transferAmount) > 0 &&
-      isObjEmpty(formState?.errorMessages)
-    ) {
-      const id = toast.loading("Transaction initiated ...", {
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-      // define local variables
-      const localTransferAmount = formState?.transferAmount;
-
-      // create transaction
-      const { response, error } = await depositMntlToken(
-        address,
-        localTransferAmount,
-        connector
-      );
-      console.log("response: ", response, " error: ", error);
-
-      // reset the form values
-      formDispatch({ type: "RESET" });
-      if (response) {
-        notify(response, id, "Transaction might take upto 22 mins. Check ");
-      } else {
-        notify(null, id, "Transaction Aborted. Try again.");
-      }
-    }
-  };
-
-  const handleApproveSubmit = async (e) => {
-    console.log("inside handleApproveSubmit()");
-    e.preventDefault();
-
-    try {
-      // initiate the toast
-      const id2 = toast.loading("Transaction initiated ...", {
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-
-      // create transaction
-      const { response, error } = await approveMaxDeposit(address, connector);
-      console.log("response: ", response, " error: ", error);
-      if (response) {
-        notify(response, id2, "Transaction Submitted. Check ");
-      } else {
-        notify(null, id2, "Transaction Aborted. Try again.");
-      }
-    } catch (error) {
-      console.error("Runtime Error: ", error);
-    }
-  };
-
-  const handleOnClickMax = (e) => {
-    e.preventDefault();
-    formDispatch({
-      type: "SET_MAX_AMOUNT",
-    });
-  };
 
   const handleCopyOnClick = (e) => {
     e.preventDefault();
@@ -343,27 +193,19 @@ const EthToPolygonBridge = () => {
       ? placeholderAvailableBalance
       : decimalize(mntlEthBalanceObject?.data?.formatted);
   const displayAvailableBalanceDenom = defaultChainSymbol;
-  const displayEthBalance =
-    !ethBalanceObject?.data ||
-    ethBalanceObject?.isLoading ||
-    ethBalanceObject?.isError
+  const displayMaticBalance =
+    !polygonBalanceObject?.data ||
+    polygonBalanceObject?.isLoading ||
+    polygonBalanceObject?.isError
       ? placeholderAvailableBalance
-      : decimalize(ethBalanceObject?.data?.formatted);
-  const displayEthBalanceDenom = ethereumChainSymbol;
+      : decimalize(polygonBalanceObject?.data?.formatted);
+  const displayMaticBalanceDenom = polygonChainSymbol;
 
-  const displayInputAmountValue = formState?.transferAmount;
   const isFormAmountError = formState?.errorMessages?.transferAmountErrorMsg;
   const displayFormAmountErrorMsg =
     formState?.errorMessages?.transferAmountErrorMsg;
   const isWalletEthConnected = isMounted() && isConnected;
-  const isSubmitDisabled =
-    !isWalletEthConnected || !isObjEmpty(formState?.errorMessages);
-  const isApproveRequired =
-    isWalletEthConnected &&
-    (BigNumber(allowance).isZero() ||
-      BigNumber(allowance).isLessThan(
-        BigNumber(formState?.transferAmount || 0)
-      ));
+  const isSubmitDisabled = true;
 
   // connect button with logic
   const connectButtonJSX = isWalletEthConnected ? (
@@ -377,54 +219,25 @@ const EthToPolygonBridge = () => {
         <span className="text-primary">
           <i className="bi bi-clipboard" />
         </span>
-        <span className="text-primary" onClick={handleDisconnectWeb3Modal}>
-          <i className="bi bi-power" />
-        </span>
       </button>
     </>
   ) : (
-    <button
-      className="caption2 d-flex gap-1 text-primary"
-      onClick={handleOpenWeb3Modal}
-    >
-      <i className="bi bi-link-45deg" /> Connect Wallet
-    </button>
+    <span className="text-primary">
+      <i className="bi bi-patch-exclamation-fill" /> Not Connected
+    </span>
   );
 
-  const submitButtonJSX = isApproveRequired ? (
-    <button
-      className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
-      onClick={handleApproveSubmit}
-    >
-      Approve Deposit <i className="bi bi-hand-thumbs-up-fill" />
-    </button>
-  ) : (
-    <button
-      className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
-      disabled={isSubmitDisabled}
-      onClick={handleSubmit}
-    >
-      Send to Polygon Chain <i className="bi bi-arrow-down" />
-    </button>
-  );
-
-  /*  console.log(
+  /* console.log(
     " isConnected: ",
     isMounted() && isConnected,
     " address: ",
     isMounted() && address,
-    " selectedChain: ",
-    selectedChain,
     " isMounted(): ",
     isMounted(),
     "mntl balance: ",
     displayAvailableBalance,
     " eth balance: ",
-    displayEthBalance,
-    " mntlEthBalanceObject: ",
-    mntlEthBalanceObject,
-    " isApproveRequired: ",
-    isApproveRequired
+    displayMaticBalance
   ); */
 
   return (
@@ -438,35 +251,28 @@ const EthToPolygonBridge = () => {
               className="position-relative"
               style={{ width: "21px", aspectRatio: "1/1" }}
             >
-              <img src="/chainLogos/eth.svg" alt="Ethereum Chain" />
+              <img src="/chainLogos/polygon.svg" alt="Polygon Chain" />
             </div>
-            <h5 className="caption2 text-primary">Ethereum Chain</h5>
+            <h5 className="caption2 text-primary">Polygon Chain</h5>
           </div>
           {isMounted() && connectButtonJSX}
-          {!isMounted() && (
-            <button
-              className="caption2 d-flex gap-1 text-primary"
-              onClick={handleOpenWeb3Modal}
-            >
-              <i className="bi bi-link-45deg" /> Connect Wallet
-            </button>
-          )}
         </div>
+
         <label
           htmlFor="GravityAmount"
           className="caption2 text-gray d-flex align-items-center justify-content-between gap-2"
         >
           Amount{" "}
           <small className="small text-gray">
-            ETH Balance : {isMounted() && displayEthBalance}{" "}
-            {displayEthBalanceDenom}
+            MATIC Balance : {isMounted() && displayMaticBalance}{" "}
+            {displayMaticBalanceDenom}
           </small>
           <small className="small text-gray">
             MNTL Balance : {isMounted() && displayAvailableBalance}{" "}
             {displayAvailableBalanceDenom}
           </small>
         </label>
-        <div className="input-white d-flex py-2 px-3 rounded-2">
+        {/*  <div className="input-white d-flex py-2 px-3 rounded-2">
           <input
             type="number"
             placeholder="Enter Amount"
@@ -474,11 +280,16 @@ const EthToPolygonBridge = () => {
             className="am-input-secondary caption2 flex-grow-1 bg-t"
             value={displayInputAmountValue}
             onChange={handleAmountOnChange}
+            disabled={isSubmitDisabled}
           />
-          <button className="text-primary caption2" onClick={handleOnClickMax}>
+          <button
+            className="text-primary caption2"
+            onClick={handleOnClickMax}
+            disabled={isSubmitDisabled}
+          >
             Max
           </button>
-        </div>
+        </div> */}
         <small className="small text-error">
           {isFormAmountError && <i className="bi bi-info-circle" />}{" "}
           {displayFormAmountErrorMsg}
@@ -487,11 +298,16 @@ const EthToPolygonBridge = () => {
           {/* <button className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2">
           Send to Gravity bridge <i className="bi bi-arrow-up" />
         </button> */}
-          {submitButtonJSX}
+          <button
+            className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
+            disabled={isSubmitDisabled}
+          >
+            Send to Ethereum Chain <i className="bi bi-arrow-down" />
+          </button>
         </div>
       </div>
     </>
   );
 };
 
-export default EthToPolygonBridge;
+export default PolygonBridge;

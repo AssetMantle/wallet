@@ -2,26 +2,31 @@ import { useChain } from "@cosmos-kit/react";
 import { useReducer } from "react";
 import {
   defaultChainGasFee,
+  defaultChainName,
+  defaultChainSymbol,
   gravityChainName,
   gravityChainSymbol,
 } from "../config";
 import {
   formConstants,
   fromChainDenom,
-  sendIbcTokenToGravity,
+  sendIbcTokenToEth,
   toDenom,
+  useAvailableBalanceGravity,
 } from "../data";
 import { convertBech32Address, shortenAddress } from "../lib";
 import { handleCopy, isObjEmpty } from "../lib/basicJavascript";
 
 const GravityToEthBridge = () => {
   // WALLET HOOKS
-  const walletManager = useChain(gravityChainName);
-  const { address, getSigningStargateClient, status } = walletManager;
+  const chainContext = useChain(defaultChainName);
+  const { address, status, getOfflineSigner } = chainContext;
+
+  const gravityAddress = convertBech32Address(address, gravityChainName);
 
   // HOOKS or GETTERS
-  // const { availableBalance } = getAvailableBalance(address);
-  const availableBalance = "0";
+  const { availableBalanceGravity, availableBalanceIBCToken } =
+    useAvailableBalanceGravity();
 
   // FORM REDUCER
   const initialState = {
@@ -57,9 +62,9 @@ const GravityToEthBridge = () => {
             },
           };
         } else if (
-          isNaN(parseFloat(availableBalance)) ||
+          isNaN(parseFloat(availableBalanceIBCToken)) ||
           toDenom(action.payload) + parseFloat(defaultChainGasFee) >
-            parseFloat(availableBalance)
+            parseFloat(availableBalanceIBCToken)
         ) {
           return {
             ...state,
@@ -84,8 +89,8 @@ const GravityToEthBridge = () => {
       case "SET_MAX_AMOUNT": {
         // if available balance is invalid, set error message
         if (
-          isNaN(parseFloat(availableBalance)) ||
-          parseFloat(availableBalance) < parseFloat(defaultChainGasFee)
+          isNaN(parseFloat(availableBalanceIBCToken)) ||
+          parseFloat(availableBalanceIBCToken) < parseFloat(defaultChainGasFee)
         ) {
           return {
             ...state,
@@ -107,7 +112,8 @@ const GravityToEthBridge = () => {
           return {
             ...state,
             transferAmount: fromChainDenom(
-              parseFloat(availableBalance) - parseFloat(defaultChainGasFee)
+              parseFloat(availableBalanceIBCToken) -
+                parseFloat(defaultChainGasFee)
             ).toString(),
           };
         }
@@ -153,6 +159,7 @@ const GravityToEthBridge = () => {
   const [formState, formDispatch] = useReducer(formReducer, initialState);
 
   // CONTROLLER FUNCTIONS
+
   const handleAmountOnChange = (e) => {
     e.preventDefault();
     formDispatch({
@@ -170,8 +177,12 @@ const GravityToEthBridge = () => {
       type: "SUBMIT",
     });
 
+    const signer = await getOfflineSigner();
+    console.log("signer: ", signer);
+
     // if no validation errors, proceed to transaction processing
     if (
+      false &&
       formState?.transferAmount &&
       !isNaN(parseFloat(formState?.transferAmount)) &&
       isObjEmpty(formState?.errorMessages)
@@ -179,16 +190,16 @@ const GravityToEthBridge = () => {
       // define local variables
       const localTransferAmount = formState?.transferAmount;
       let memo;
-      const gravityAddress = convertBech32Address(address, gravityChainName);
+      const ethDestAddress = "0xae6094170ABC0601b4bbe933D04368cD407C186a";
 
       // create transaction
-      const { response, error } = await sendIbcTokenToGravity(
-        address,
+      const { response, error } = await sendIbcTokenToEth(
         gravityAddress,
+        ethDestAddress,
         localTransferAmount,
         memo,
 
-        { getSigningStargateClient }
+        { getOfflineSigner }
       );
       console.log("response: ", response, " error: ", error);
 
@@ -206,13 +217,22 @@ const GravityToEthBridge = () => {
 
   const handleCopyOnClick = (e) => {
     e.preventDefault();
-    handleCopy(address);
+    handleCopy(gravityAddress);
   };
 
   // DISPLAY VARIABLES
-  const displayShortenedAddress = shortenAddress(address);
-  const displayAvailableBalance = fromChainDenom(availableBalance).toString();
-  const displayAvailableBalanceDenom = gravityChainSymbol;
+  const displayShortenedAddress = shortenAddress(
+    gravityAddress,
+    gravityChainName
+  );
+  const displayAvailableBalanceIBCToken = fromChainDenom(
+    availableBalanceIBCToken
+  );
+  const displayAvailableBalanceGravity = fromChainDenom(
+    availableBalanceGravity
+  );
+  const displayBalanceUnitGravity = gravityChainSymbol;
+  const displayBalanceUnitGravityIBCToken = defaultChainSymbol;
   const isSubmitDisabled =
     status != "Connected" || !isObjEmpty(formState?.errorMessages);
   const displayInputAmountValue = formState?.transferAmount;
@@ -239,7 +259,7 @@ const GravityToEthBridge = () => {
         >
           {displayShortenedAddress}{" "}
           <span className="text-primary">
-            <i className="bi bi-files" />
+            <i className="bi bi-clipboard" />
           </span>
         </button>
       </div>
@@ -249,8 +269,12 @@ const GravityToEthBridge = () => {
       >
         Amount{" "}
         <small className="small text-gray">
-          Available Balance : {displayAvailableBalance}{" "}
-          {displayAvailableBalanceDenom}
+          Gravity Balance : {displayAvailableBalanceGravity}{" "}
+          {displayBalanceUnitGravity}
+        </small>
+        <small className="small text-gray">
+          MNTL Balance : {displayAvailableBalanceIBCToken}{" "}
+          {displayBalanceUnitGravityIBCToken}
         </small>
       </label>
       <div className="input-white d-flex py-2 px-3 rounded-2">
@@ -278,7 +302,7 @@ const GravityToEthBridge = () => {
           disabled={isSubmitDisabled}
           onClick={handleSubmit}
         >
-          Send to Ethereum Chain <i className="bi bi-arrow-down" />
+          Bridge Link to Ethereum Chain <i className="bi bi-arrow-down" />
         </button>
       </div>
     </div>

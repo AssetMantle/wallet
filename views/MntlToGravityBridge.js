@@ -29,7 +29,6 @@ const MntlToGravityBridge = ({ notify }) => {
   const initialState = {
     transferAmount: "",
     // memo: "",
-    // all error values -> errorMessages: {recipientAddressErrorMsg: "", transferAmountErrorMsg: "" }
     errorMessages: {},
   };
 
