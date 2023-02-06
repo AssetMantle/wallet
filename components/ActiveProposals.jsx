@@ -35,7 +35,6 @@ const ActiveProposals = ({
       color: "#FF9133",
     },
   ];
-  console.log(voteInfo);
 
   const hasVoted = !!voteInfo.option;
 
@@ -84,12 +83,12 @@ const ActiveProposals = ({
               ) : ( */}
             <i
               className={
-                voteOptions.find((item) => item?.option == voteInfo?.option)
+                voteOptions.find((item) => item?.option == proposal?.option)
                   .icon
               }
               style={{
                 color: voteOptions.find(
-                  (item) => item?.option == voteInfo?.option
+                  (item) => item?.option == proposal?.option
                 ).color,
               }}
             ></i>
