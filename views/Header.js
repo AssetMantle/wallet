@@ -116,10 +116,11 @@ export default function Header() {
       className="d-flex position-relative"
       style={{ width: "min(195.05px,30%)", aspectRatio: "195.05/33" }}
     >
-      <a href="/">
-        {" "}
-        <Image layout="fill" src={NavBarData.logo} alt={NavBarData.title} />
-      </a>
+      <Link href="/">
+        <a>
+          <Image layout="fill" src={NavBarData.logo} alt={NavBarData.title} />
+        </a>
+      </Link>
     </div>
   );
 

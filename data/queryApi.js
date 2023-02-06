@@ -10,19 +10,23 @@ import {
   defaultChainName,
   defaultChainRESTProxy,
   defaultChainRPCProxy,
+  defaultChainSymbol,
+  gravityChainDenom,
+  gravityChainName,
+  gravityChainRPCProxy,
+  gravityIBCToken,
   mntlUsdApi,
   placeholderAvailableBalance,
   placeholderMntlUsdValue,
 } from "../config";
-import { bech32AddressSeperator, placeholderAddress } from "./constants";
+import { convertBech32Address } from "../lib";
 import { cosmos as cosmosModule } from "../modules";
-
-// get the rpc endpoint from the chain registry
-/* const rpcEndpoint = chains.find(
-  (_chain) => _chain?.chain_name === defaultChainName
-)?.apis?.rpc[0]?.address; */
+import { bech32AddressSeperator, placeholderAddress } from "./constants";
 
 const rpcEndpoint = defaultChainRPCProxy;
+const restEndpoint = defaultChainRESTProxy;
+
+const rpcEndpointGravity = gravityChainRPCProxy;
 
 const denom = assets.find(
   (assetObj) => assetObj?.chain_name === defaultChainName
@@ -34,7 +38,12 @@ const client = await cosmos.ClientFactory.createRPCQueryClient({
 });
 
 const queryClient = await cosmosModule.ClientFactory.createLCDClient({
-  restEndpoint: defaultChainRESTProxy,
+  restEndpoint: restEndpoint,
+});
+
+// get the REST Query Client for Gravity Bridge Chain
+const queryClientGravity = await cosmos.ClientFactory.createRPCQueryClient({
+  rpcEndpoint: rpcEndpointGravity,
 });
 
 export const fromDenom = (value, exponent = defaultChainDenomExponent) => {
@@ -82,7 +91,6 @@ export const toChainDenom = (
   chainName = defaultChainName,
   chainDenom = defaultChainDenom
 ) => {
-  console.log("inside tochaindenom, value: ", value);
   let amount;
   // get the chain assets for the specified chain
   const chainassets = assets.find((chain) => chain.chain_name === chainName);
@@ -94,7 +102,7 @@ export const toChainDenom = (
     (unit) => unit.denom === coin.display
   )?.exponent;
   // show balance in display values by exponentiating it
-  const valueBigNumber = new BigNumber(value.toString() || 0);
+  const valueBigNumber = new BigNumber(value?.toString() || 0);
   if (BigNumber.isBigNumber(valueBigNumber)) {
     amount = valueBigNumber
       .multipliedBy(10 ** exp)
@@ -104,6 +112,27 @@ export const toChainDenom = (
     return "-1";
   }
   return amount;
+};
+
+export const decimalize = (
+  value,
+  exponent = null,
+  chainName = defaultChainName,
+  chainDenom = defaultChainDenom
+) => {
+  // get the chain assets for the specified chain
+  const chainassets = assets.find((chain) => chain.chain_name === chainName);
+  // get the coin data from the chain assets data
+  const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
+  // Get the display exponent
+  // we can get the exponent from chain registry asset denom_units
+  const exp =
+    exponent ||
+    coin.denom_units.find((unit) => unit.denom === coin.display)?.exponent;
+  const bnValue = BigNumber(value || placeholderAvailableBalance);
+  if (bnValue.isNaN()) bnValue = BigNumber(0);
+
+  return bnValue.toFixed(exp).toString();
 };
 
 // function to check whether an address is invalid
@@ -211,7 +240,7 @@ export const useExample = () => {
 export const useTotalUnbonding = () => {
   // get the connected wallet parameters from useChain hook
   const walletManager = useChain(defaultChainName);
-  const { walletStatus, address, currentWalletInfo } = walletManager;
+  const { address } = walletManager;
 
   const fetchTotalUnbonding = async (url, address) => {
     let totalUnbondingAmount;
@@ -324,7 +353,7 @@ export const useTotalRewards = () => {
     {
       fallbackData: [
         {
-          totalRewards: "0",
+          totalRewards: placeholderAvailableBalance,
           rewardsArray: [{ denom: "umntl", amount: "0" }],
         },
       ],
@@ -345,7 +374,7 @@ export const useTotalRewards = () => {
 export const useDelegatedValidators = () => {
   // get the connected wallet parameters from useChain hook
   const walletManager = useChain(defaultChainName);
-  const { walletStatus, address, currentWalletInfo } = walletManager;
+  const { address } = walletManager;
 
   // let address = null;
   // console.log("address: ", address, " currentWalletInfo: ", currentWalletInfo);
@@ -423,7 +452,7 @@ export const useDelegatedValidators = () => {
 export const useTotalDelegations = () => {
   // get the connected wallet parameters from useChain hook
   const walletManager = useChain(defaultChainName);
-  const { walletStatus, address, currentWalletInfo } = walletManager;
+  const { address } = walletManager;
 
   // let address = null;
   // console.log("address: ", address, " currentWalletInfo: ", currentWalletInfo);
@@ -556,23 +585,134 @@ export const useAvailableBalance = () => {
   };
 };
 
-//Get a list of all validators that can be delegated
-export const useAllValidators = () => {
+export const useAvailableBalanceGravity = () => {
   // get the connected wallet parameters from useChain hook
-  // const multifetch = (urlsArray) => {
-  //   const fetchEach = (url) => fetch(url).then((response) => response.json());
+  const { address } = useChain(defaultChainName);
+  // const address = "gravity1yyduggdnk5kgszamt7s9f0ep2n6hylxr6kjz7u";
 
-  //   if (urlsArray?.length >= 0) {
-  //     return Promise.all(urlsArray.map(fetchEach));
-  //   }
+  const gravityAddress = convertBech32Address(address, gravityChainName);
 
-  //   return null;
-  // };
-
-  // let address = null;
-  // console.log("address: ", address, " currentWalletInfo: ", currentWalletInfo);
+  let denomGravity = gravityChainDenom;
+  let placeholderGravityCoin = {
+    amount: placeholderAvailableBalance,
+    denom: denomGravity,
+  };
+  let denomGravityIBCToken = gravityIBCToken;
+  let placeholderGravityIBCCoin = {
+    amount: placeholderAvailableBalance,
+    denom: denomGravityIBCToken,
+  };
 
   // fetcher function for useSwr of useAvailableBalance()
+  const fetchAllBalances = async (url, address) => {
+    let balanceValues;
+
+    // use a try catch block for creating rich Error object
+    try {
+      // get the data from cosmos queryClient
+      const { balances } =
+        await queryClientGravity.cosmos.bank.v1beta1.allBalances({
+          address: address,
+        });
+
+      balanceValues = balances;
+      // console.log("swr fetcher success: ", balances);
+    } catch (error) {
+      console.error(`swr fetcher error: ${url}`);
+      throw error;
+    }
+
+    // return the data
+    return balanceValues;
+  };
+
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: balanceObjects, error } = useSwr(
+    gravityAddress ? ["gravitybalance", gravityAddress] : null,
+    fetchAllBalances,
+    {
+      fallbackData: [placeholderGravityCoin, placeholderGravityIBCCoin],
+      refreshInterval: 1000,
+      suspense: true,
+    }
+  );
+
+  let availableBalanceGravityArray = balanceObjects.filter(
+    (value) => value?.denom == denomGravity
+  );
+
+  let availableBalanceGravityObject =
+    availableBalanceGravityArray?.length != 0
+      ? availableBalanceGravityArray[0]
+      : placeholderGravityCoin;
+
+  let availableBalanceIBCTokenArray = balanceObjects.filter(
+    (value) => value?.denom == denomGravityIBCToken
+  );
+
+  let availableBalanceIBCTokenObject =
+    availableBalanceIBCTokenArray?.length != 0
+      ? availableBalanceIBCTokenArray[0]
+      : placeholderGravityIBCCoin;
+
+  return {
+    availableBalanceGravity: availableBalanceGravityObject?.amount,
+    availableBalanceIBCToken: availableBalanceIBCTokenObject?.amount,
+    denomGravity: availableBalanceGravityObject?.denom,
+    denomGravityIBCToken: availableBalanceIBCTokenObject?.denom,
+    isLoadingAvailableBalance: !error && !balanceObjects,
+    errorAvailableBalance: error,
+  };
+};
+
+export const useTotalBalance = () => {
+  // fetcher function for useSwr of useAvailableBalance()
+  const { availableBalance, errorAvailableBalance, isLoadingAvailableBalance } =
+    useAvailableBalance();
+
+  const {
+    totalDelegatedAmount,
+    isLoadingDelegatedAmount,
+    errorDelegatedAmount,
+  } = useDelegatedValidators();
+
+  const { allRewards, errorRewards, isLoadingRewards } = useTotalRewards();
+
+  const { totalUnbondingAmount, isLoadingUnbonding, errorUnbonding } =
+    useTotalUnbonding();
+
+  const isLoading =
+    isLoadingAvailableBalance ||
+    isLoadingDelegatedAmount ||
+    isLoadingRewards ||
+    isLoadingUnbonding;
+
+  const isError =
+    errorAvailableBalance ||
+    errorDelegatedAmount ||
+    errorRewards ||
+    errorUnbonding;
+
+  const summation =
+    isLoading || isError
+      ? placeholderAvailableBalance
+      : BigNumber(availableBalance || 0).plus(
+          BigNumber(totalDelegatedAmount || 0)
+            .plus(BigNumber(allRewards || 0))
+            .plus(BigNumber(totalUnbondingAmount || 0))
+            .toString()
+        );
+
+  return {
+    totalBalance: summation,
+    denomTotalBalance: defaultChainSymbol,
+    isLoadingTotalBalance: isLoading,
+    isErrorTotalBalance: isError,
+  };
+};
+
+//Get a list of all validators that can be delegated
+export const useAllValidators = () => {
   const fetchAllValidators = async (url) => {
     let allValidators;
 
@@ -583,11 +723,6 @@ export const useAllValidators = () => {
         status: "",
       });
       allValidators = validators;
-      // const iconUrlsArray = validators.map((validator, index) => {
-      //   return `https://raw.githubusercontent.com/cosmostation/cosmostation_token_resource/master/moniker/asset-mantle/${validator.operatorAddress}.png`;
-      // });
-      // const data = await fetch(iconUrlsArray);
-      // console.log("data: ", data);
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
@@ -626,19 +761,18 @@ export const useVote = (proposalId) => {
   const walletManager = useChain(defaultChainName);
   const { address } = walletManager;
   // fetcher function for useSwr of useAvailableBalance()
-  const fetchVote = async (url, address) => {
+  const fetchVote = async (url, proposalId, address) => {
     let voteInfo;
     // use a try catch block for creating rich Error object
     try {
       // get the data from cosmos queryClient
-      const { vote } = await client.cosmos.gov.v1beta1.vote({
-        proposalId,
+      const { vote } = await queryClient.cosmos.gov.v1beta1.vote({
+        proposalId: proposalId,
         voter: address,
       });
       voteInfo = vote;
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
-      throw error;
     }
     // return the data
     return voteInfo;
@@ -648,16 +782,7 @@ export const useVote = (proposalId) => {
     proposalId && address ? ["vote", proposalId, address] : null,
     fetchVote,
     {
-      fallbackData: [
-        {
-          balance: { denom: "umntl", amount: 0 },
-          delegation: {
-            delegator_address: "delegator_address",
-            validator_address: "validator_address",
-            shares: "298317289",
-          },
-        },
-      ],
+      fallbackData: {},
       suspense: true,
       refreshInterval: 1000,
     }
@@ -681,12 +806,6 @@ export const useAllProposals = () => {
     // use a try catch block for creating rich Error object
     try {
       // get the data from cosmos queryClient
-      /* const { proposals } = await client.cosmos.gov.v1beta1.proposals({
-        depositor: "",
-        proposalStatus: "2",
-        voter: "",
-      }); */
-
       const { proposals } = await queryClient.cosmos.gov.v1beta1.proposals({
         depositor: "",
         proposalStatus: 2,
@@ -723,25 +842,16 @@ export const useAllProposals = () => {
   };
 };
 export const useAllVotes = (proposalId) => {
-  // get the connected wallet parameters from useChain hook
-  const walletManager = useChain(defaultChainName);
-  const { walletStatus, address, currentWalletInfo } = walletManager;
-
   // fetcher function for useSwr of useAvailableBalance()
   const fetchAllVotes = async (url) => {
+    // let proposalIdSample = "6";
     let allVotes;
-    let proposalIdSample = "6";
 
     // use a try catch block for creating rich Error object
     try {
-      /* const { votes } = await client.cosmos.gov.v1beta1.votes({
-        proposalId,
-      }); */
-
       const { votes } = await queryClient.cosmos.gov.v1beta1.votes({
-        proposalId: proposalIdSample,
+        proposalId: proposalId?.toString(),
       });
-
       allVotes = votes;
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
@@ -775,7 +885,7 @@ export const useAllVotes = (proposalId) => {
 export const useWithdrawAddress = () => {
   // get the connected wallet parameters from useChain hook
   const walletManager = useChain(defaultChainName);
-  const { walletStatus, address, currentWalletInfo } = walletManager;
+  const { address } = walletManager;
 
   // fetcher function for useSwr of useAvailableBalance()
   const fetchWithdrawAddress = async () => {
@@ -811,31 +921,4 @@ export const useWithdrawAddress = () => {
     isLoadingWithdrawAddress: !error && !withdrawAddress,
     errorWithdrawAddress: error,
   };
-};
-
-// function for getting balance
-export const getAvailableBalance = async (
-  address,
-  denom = defaultChainDenom
-) => {
-  // console.log("inside fetchAvailableBalance, url: ", url);
-  let balanceValue = 0;
-
-  if (address) {
-    // use a try catch block for creating rich Error object
-    try {
-      // get the data from cosmos queryClient
-      const { balance } = await client.cosmos.bank.v1beta1.balance({
-        address,
-        denom,
-      });
-      balanceValue = balance;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  }
-
-  // return the data
-  return balanceValue.toString();
 };

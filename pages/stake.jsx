@@ -26,13 +26,6 @@ export default function Stake() {
   } = useDelegatedValidators();
   let validatorsArray = allValidators.sort((a, b) => b.tokens - a.tokens);
 
-  //Put all foundation nodes at the end of the array
-  validatorsArray.forEach((item, index) => {
-    if (item?.description?.moniker?.includes("Foundation Node")) {
-      validatorsArray.push(validatorsArray.splice(index, 1)[0]);
-    }
-  });
-
   //Calculate total tokens to calculate voting power
   const totalTokens = validatorsArray.reduce(
     (accumulator, currentValue) => accumulator + parseInt(currentValue.tokens),
@@ -205,10 +198,28 @@ export default function Stake() {
                     <tr className="caption2 text-white">
                       <th></th>
                       {activeValidators ? (
+                        delegated ? (
+                          <th scope="col" style={{ whiteSpace: "nowrap" }}>
+                            Rank
+                          </th>
+                        ) : (
+                          <>
+                            <th
+                              scope="col"
+                              style={{ whiteSpace: "nowrap" }}
+                            ></th>
+                            <th scope="col" style={{ whiteSpace: "nowrap" }}>
+                              Rank
+                            </th>
+                          </>
+                        )
+                      ) : delegated ? (
                         <th scope="col" style={{ whiteSpace: "nowrap" }}>
                           Rank
                         </th>
-                      ) : null}
+                      ) : (
+                        <th></th>
+                      )}
                       <th
                         colSpan="2"
                         scope="col"

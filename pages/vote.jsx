@@ -17,6 +17,8 @@ import Link from "next/link";
 
 export default function Vote() {
   const [VoteModal, setVoteModal] = useState(false);
+  const [OnVoteSelect, setOnVoteSelect] = useState(null);
+  const [onVoteHover, setOnVoteHover] = useState(null);
 
   const { voteState, voteDispatch } = useVoteReducer();
   const { allProposals, isLoadingProposals } = useAllProposals();
@@ -138,12 +140,40 @@ export default function Vote() {
             </nav>
             <div className="nav-bg rounded-4 d-flex flex-column px-3 py-2 gap-3">
               <div className="row">
-                <ActiveProposals
-                  voteDispatch={voteDispatch}
-                  voteState={voteState}
-                  allProposals={allProposals}
-                  isLoadingProposals={isLoadingProposals}
-                />
+                {isLoadingProposals ||
+                allProposals?.[0]?.proposal_id == "fallback" ? (
+                  <div>Loading ...</div>
+                ) : allProposals?.length ? (
+                  allProposals?.map((proposal, index) => (
+                    <div
+                      key={index}
+                      onMouseOver={() => setOnVoteHover(proposal?.proposal_id)}
+                      onMouseOut={() => setOnVoteHover(null)}
+                      className={`col-12 col-md-6 p-2`}
+                      onClick={() => {
+                        setOnVoteSelect(index);
+                        voteDispatch({
+                          type: "SET_PROPOSAL_ID",
+                          payload: proposal?.proposal_id,
+                        });
+                      }}
+                    >
+                      <ActiveProposals
+                        OnVoteSelect={OnVoteSelect}
+                        onVoteHover={onVoteHover}
+                        proposal={proposal}
+                        index={index}
+                        status={status}
+                        voteDispatch={voteDispatch}
+                        voteState={voteState}
+                        allProposals={allProposals}
+                        isLoadingProposals={isLoadingProposals}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <div>There are no active proposals at the moment</div>
+                )}
               </div>
             </div>
           </div>
@@ -178,7 +208,7 @@ export default function Vote() {
           )}
         </div>
 
-        <ModalContainer active={VoteModal}>
+        <ModalContainer active={VoteModal} setActive={setVoteModal}>
           <div className="d-flex flex-column bg-gray-700 m-auto p-4 rounded-3 w-100">
             <div className="d-flex align-items-center justify-content-between">
               <h5 className="body2 text-primary d-flex align-items-center gap-2">

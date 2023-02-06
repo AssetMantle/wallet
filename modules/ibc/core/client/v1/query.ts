@@ -18,7 +18,6 @@ export interface QueryClientStateRequest {
  */
 
 export interface QueryClientStateRequestSDKType {
-  /** client state unique identifier */
   client_id: string;
 }
 /**
@@ -44,13 +43,8 @@ export interface QueryClientStateResponse {
  */
 
 export interface QueryClientStateResponseSDKType {
-  /** client state associated with the request identifier */
   client_state?: AnySDKType;
-  /** merkle proof of existence */
-
   proof: Uint8Array;
-  /** height at which the proof was retrieved */
-
   proof_height?: HeightSDKType;
 }
 /**
@@ -68,7 +62,6 @@ export interface QueryClientStatesRequest {
  */
 
 export interface QueryClientStatesRequestSDKType {
-  /** pagination request */
   pagination?: PageRequestSDKType;
 }
 /**
@@ -89,10 +82,7 @@ export interface QueryClientStatesResponse {
  */
 
 export interface QueryClientStatesResponseSDKType {
-  /** list of stored ClientStates of the chain. */
   client_states: IdentifiedClientStateSDKType[];
-  /** pagination response */
-
   pagination?: PageResponseSDKType;
 }
 /**
@@ -124,19 +114,9 @@ export interface QueryConsensusStateRequest {
  */
 
 export interface QueryConsensusStateRequestSDKType {
-  /** client identifier */
   client_id: string;
-  /** consensus state revision number */
-
   revision_number: Long;
-  /** consensus state revision height */
-
   revision_height: Long;
-  /**
-   * latest_height overrrides the height field and queries the latest stored
-   * ConsensusState
-   */
-
   latest_height: boolean;
 }
 /**
@@ -160,13 +140,8 @@ export interface QueryConsensusStateResponse {
  */
 
 export interface QueryConsensusStateResponseSDKType {
-  /** consensus state associated with the client identifier at the given height */
   consensus_state?: AnySDKType;
-  /** merkle proof of existence */
-
   proof: Uint8Array;
-  /** height at which the proof was retrieved */
-
   proof_height?: HeightSDKType;
 }
 /**
@@ -187,10 +162,7 @@ export interface QueryConsensusStatesRequest {
  */
 
 export interface QueryConsensusStatesRequestSDKType {
-  /** client identifier */
   client_id: string;
-  /** pagination request */
-
   pagination?: PageRequestSDKType;
 }
 /**
@@ -211,10 +183,7 @@ export interface QueryConsensusStatesResponse {
  */
 
 export interface QueryConsensusStatesResponseSDKType {
-  /** consensus states associated with the identifier */
   consensus_states: ConsensusStateWithHeightSDKType[];
-  /** pagination response */
-
   pagination?: PageResponseSDKType;
 }
 /**
@@ -232,7 +201,6 @@ export interface QueryClientStatusRequest {
  */
 
 export interface QueryClientStatusRequestSDKType {
-  /** client unique identifier */
   client_id: string;
 }
 /**
@@ -278,7 +246,6 @@ export interface QueryClientParamsResponse {
  */
 
 export interface QueryClientParamsResponseSDKType {
-  /** params defines the parameters of the module. */
   params?: ParamsSDKType;
 }
 /**
@@ -308,7 +275,6 @@ export interface QueryUpgradedClientStateResponse {
  */
 
 export interface QueryUpgradedClientStateResponseSDKType {
-  /** client state associated with the request identifier */
   upgraded_client_state?: AnySDKType;
 }
 /**
@@ -338,7 +304,6 @@ export interface QueryUpgradedConsensusStateResponse {
  */
 
 export interface QueryUpgradedConsensusStateResponseSDKType {
-  /** Consensus state associated with the request identifier */
   upgraded_consensus_state?: AnySDKType;
 }
 

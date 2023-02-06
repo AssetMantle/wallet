@@ -1,5 +1,7 @@
 import { useChain } from "@cosmos-kit/react";
+import Link from "next/link";
 import { useReducer } from "react";
+import { toast } from "react-toastify";
 import {
   defaultChainGasFee,
   defaultChainName,
@@ -28,7 +30,6 @@ const MntlToGravityBridge = () => {
   const initialState = {
     transferAmount: "",
     // memo: "",
-    // all error values -> errorMessages: {recipientAddressErrorMsg: "", transferAmountErrorMsg: "" }
     errorMessages: {},
   };
 
@@ -153,6 +154,52 @@ const MntlToGravityBridge = () => {
 
   const [formState, formDispatch] = useReducer(formReducer, initialState);
 
+  // CONFIG FUNCTIONS
+  const CustomToastWithLink = ({ txHash }) => (
+    <p>
+      Transaction Submitted. Check
+      <Link href={`https://explorer.assetmantle.one/transactions/${txHash}`}>
+        <a style={{ color: "#ffc640" }} target="_blank">
+          {" "}
+          Here
+        </a>
+      </Link>
+    </p>
+  );
+
+  const notify = (txHash, id) => {
+    if (txHash) {
+      toast.update(id, {
+        render: <CustomToastWithLink txHash={txHash} />,
+        type: "success",
+        isLoading: false,
+        position: "bottom-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: txHash,
+      });
+    } else {
+      toast.update(id, {
+        render: "Transaction failed.Try Again",
+        type: "error",
+        isLoading: false,
+        position: "bottom-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  };
+
   // CONTROLLER FUNCTIONS
   const handleAmountOnChange = (e) => {
     e.preventDefault();
@@ -183,6 +230,16 @@ const MntlToGravityBridge = () => {
       const gravityAddress = convertBech32Address(address, gravityChainName);
 
       // create transaction
+      const id = toast.loading("Transaction initiated ...", {
+        position: "bottom-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
       const { response, error } = await sendIbcTokenToGravity(
         address,
         gravityAddress,
@@ -192,6 +249,11 @@ const MntlToGravityBridge = () => {
         { getSigningStargateClient }
       );
       console.log("response: ", response, " error: ", error);
+      if (response) {
+        notify(response?.transactionHash, id);
+      } else {
+        notify(null, id);
+      }
 
       // reset the form values
       formDispatch({ type: "RESET" });

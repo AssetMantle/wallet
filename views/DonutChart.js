@@ -26,6 +26,8 @@ const DonutChart = ({ selectedProposal, proposalID, isLoadingProposals }) => {
   const noWithVetoVotes = allVotes.filter(
     (item) => item?.option == "VOTE_OPTION_NO_WITH_VETO"
   );
+
+  //Order of the children in children array determines the color of each child, not the designated color in the arrat
   const chartData = {
     name: "validator",
     color: "hsl(173, 70%, 50%)",
@@ -45,9 +47,9 @@ const DonutChart = ({ selectedProposal, proposalID, isLoadingProposals }) => {
         }),
       },
       {
-        name: "No",
+        name: "Abstain",
         color: "hsl(11, 70%, 50%)",
-        children: noVotes.map((item) => {
+        children: abstainVotes.map((item) => {
           return {
             name: item?.voter,
             color: "hsl(62, 70%, 50%)",
@@ -59,9 +61,9 @@ const DonutChart = ({ selectedProposal, proposalID, isLoadingProposals }) => {
         }),
       },
       {
-        name: "Abstain",
+        name: "No",
         color: "hsl(11, 70%, 50%)",
-        children: abstainVotes.map((item) => {
+        children: noVotes.map((item) => {
           return {
             name: item?.voter,
             color: "hsl(62, 70%, 50%)",

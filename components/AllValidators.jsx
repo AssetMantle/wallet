@@ -1,5 +1,6 @@
 import React from "react";
 import { fromChainDenom } from "../data";
+import Tooltip from "./Tooltip";
 
 const AllValidators = ({
   setShowClaimError,
@@ -17,6 +18,9 @@ const AllValidators = ({
     // console.log("e: ", e);
     e.target.src = "/validatorAvatars/alt.png";
   };
+
+  const statusArray = [0, 1, 2, -1];
+
   return (
     <>
       {activeValidators
@@ -52,6 +56,17 @@ const AllValidators = ({
                     }}
                   ></input>
                 </td>
+                {index < 10 ? (
+                  <td>
+                    <Tooltip
+                      titlePrimary={"text-warning"}
+                      title={<i className="bi bi-patch-exclamation-fill"></i>}
+                      description="It is preferable to not stake to the top 10 validators"
+                    />
+                  </td>
+                ) : (
+                  <td></td>
+                )}
                 {activeValidators ? <td>{index + 1}</td> : null}
                 <td>
                   <div
@@ -74,7 +89,6 @@ const AllValidators = ({
                     rel="noreferrer"
                   >
                     {item?.description?.moniker}
-                    <i className="bi bi-arrow-up-right" />
                   </a>
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
@@ -104,13 +118,15 @@ const AllValidators = ({
         : validatorsArray
             ?.filter(
               (item) =>
-                item?.status === 1 &&
+                statusArray.includes(item?.status) &&
                 item?.description?.moniker
                   .toLowerCase()
                   .includes(searchValue.toLowerCase())
             )
+
             ?.map((item, index) => (
               <tr key={index} className="caption2 text-white-300">
+                <td> </td>
                 <td>
                   <input
                     type="checkbox"
@@ -156,7 +172,6 @@ const AllValidators = ({
                   >
                     {" "}
                     {item?.description?.moniker}
-                    <i className="bi bi-arrow-up-right" />
                   </a>
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>

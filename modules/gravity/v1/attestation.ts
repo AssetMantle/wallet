@@ -1,6 +1,6 @@
 import { Any, AnySDKType } from "../../google/protobuf/any";
-import * as _m0 from "protobufjs/minimal";
 import { Long, DeepPartial } from "../../helpers";
+import * as _m0 from "protobufjs/minimal";
 /**
  * ClaimType is the cosmos type of an event from the counterpart chain that can
  * be handled
@@ -26,31 +26,7 @@ export enum ClaimType {
   CLAIM_TYPE_VALSET_UPDATED = 5,
   UNRECOGNIZED = -1,
 }
-/**
- * ClaimType is the cosmos type of an event from the counterpart chain that can
- * be handled
- */
-
-export enum ClaimTypeSDKType {
-  /** CLAIM_TYPE_UNSPECIFIED - An unspecified claim type */
-  CLAIM_TYPE_UNSPECIFIED = 0,
-
-  /** CLAIM_TYPE_SEND_TO_COSMOS - A claim for a SendToCosmos transaction */
-  CLAIM_TYPE_SEND_TO_COSMOS = 1,
-
-  /** CLAIM_TYPE_BATCH_SEND_TO_ETH - A claim for when batches are relayed */
-  CLAIM_TYPE_BATCH_SEND_TO_ETH = 2,
-
-  /** CLAIM_TYPE_ERC20_DEPLOYED - A claim for when an erc20 contract has been deployed */
-  CLAIM_TYPE_ERC20_DEPLOYED = 3,
-
-  /** CLAIM_TYPE_LOGIC_CALL_EXECUTED - A claim for when a logic call has been executed */
-  CLAIM_TYPE_LOGIC_CALL_EXECUTED = 4,
-
-  /** CLAIM_TYPE_VALSET_UPDATED - A claim for when a valset update has happened */
-  CLAIM_TYPE_VALSET_UPDATED = 5,
-  UNRECOGNIZED = -1,
-}
+export const ClaimTypeSDKType = ClaimType;
 export function claimTypeFromJSON(object: any): ClaimType {
   switch (object) {
     case 0:
