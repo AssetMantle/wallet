@@ -485,6 +485,7 @@ hr,
       width: min(95vw, 260px);
       transform: translateX(50%) translateY(-10%);
       box-shadow: 1px 1px 5px $dark-100;
+      z-index: 1000;
     }
   }
 }
