@@ -653,7 +653,15 @@ tbody {
   }
 }
 .bg-voted {
-  background: #21211e;
+  background: $gray-700;
+}
+.vote_no_with_veto {
+  &::before {
+    border-radius: 50%;
+    border: 2px solid $gray-700;
+    background-color: $gray-700;
+    vertical-align: 0;
+  }
 }
 
 .farm-data-container {
