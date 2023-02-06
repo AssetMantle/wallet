@@ -81,6 +81,30 @@ const ActiveProposals = ({
                   ></i>
                 </>
               ) : ( */}
+            {/* no with veto icon set */}
+            {/* <span className="position-relative body1">
+              <i
+                className={`position-absolute top-0 bottom-0 left-0 vote_no_with_veto ${
+                  voteOptions.find((item) => item?.option == voteInfo?.option)
+                    .icon
+                }`}
+                style={{
+                  zIndex: "1",
+                  color: "red",
+                }}
+              ></i>{" "}
+              <i
+                className={`position-absolute top-0 bottom-0 vote_no_with_veto ${
+                  voteOptions.find((item) => item?.option == voteInfo?.option)
+                    .icon
+                }`}
+                style={{
+                  left: "12px",
+                  zIndex: "2",
+                  color: "red",
+                }}
+              ></i>
+            </span> */}
             <i
               className={
                 voteOptions.find((item) => item?.option == proposal?.option)

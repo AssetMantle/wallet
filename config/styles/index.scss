@@ -655,3 +655,11 @@ tbody {
 .bg-voted {
   background: #21211e;
 }
+.vote_no_with_veto {
+  &::before {
+    border-radius: 50%;
+    border: 2px solid #21211e;
+    background-color: #21211e;
+    vertical-align: 0;
+  }
+}
