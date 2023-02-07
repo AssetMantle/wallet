@@ -3,6 +3,8 @@ import Head from "next/head";
 
 export default function Trade() {
   const [searchValue, setSearchValue] = useState();
+  // const { allTrades, isLoadingTrades, errorTrades } = useTrade();
+  // console.log("in trade", allTrades);
 
   const contentObg = {
     img: "/profile.avif",

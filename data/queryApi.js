@@ -284,12 +284,9 @@ export const useTotalUnbonding = () => {
     {
       fallbackData: [
         {
-          entries: [
-            {
-              initial_balance: "0",
-              balance: "0",
-            },
-          ],
+          delegatorAddress: placeholderAddress,
+          entries: [],
+          validatorAddress: placeholderAddress,
         },
       ],
       refreshInterval: 1000,
@@ -353,8 +350,8 @@ export const useTotalRewards = () => {
     {
       fallbackData: [
         {
-          totalRewards: placeholderAvailableBalance,
-          rewardsArray: [{ denom: "umntl", amount: "0" }],
+          validatorAddress: placeholderAddress,
+          reward: [],
         },
       ],
 
@@ -737,12 +734,17 @@ export const useAllValidators = () => {
     {
       fallbackData: [
         {
-          balance: { denom: "umntl", amount: 0 },
-          delegation: {
-            delegator_address: "delegator_address",
-            validator_address: "validator_address",
-            shares: "298317289",
-          },
+          commission: {},
+          consensusPubkey: {},
+          delegatorShares: "",
+          description: {},
+          jailed: "",
+          minSelfDelegation: "",
+          operatorAddress: placeholderAddress,
+          status: "",
+          tokens: "",
+          unbondingHeight: {},
+          unbondingTime: {},
         },
       ],
       suspense: true,
@@ -827,8 +829,15 @@ export const useAllProposals = () => {
     {
       fallbackData: [
         {
-          proposal_id: "fallback",
+          proposal_id: "",
           content: {},
+          status: "",
+          deposit_end_time: "",
+          final_tally_result: {},
+          submit_time: "",
+          total_deposit: [],
+          voting_end_time: "",
+          voting_start_time: "",
         },
       ],
       suspense: true,
@@ -922,3 +931,44 @@ export const useWithdrawAddress = () => {
     errorWithdrawAddress: error,
   };
 };
+
+// export const useTrade = () => {
+//   // fetcher function for useSwr of useAvailableBalance()
+//   const fetchAllTrades = async (url) => {
+//     let tradeData;
+
+//     try {
+//       const data = await fetch(
+//         "https://api.coingecko.com/api/v3/coins/assetmantle?localization=false&tickers=true&market_data=true&community_data=false&developer_data=false&sparkline=false"
+//       ).then((res) => res.json());
+//       tradeData = data;
+//     } catch (error) {
+//       console.error(`swr fetcher : url: ${url},  error: ${error}`);
+//       throw error;
+//     }
+//     // return the data
+//     // console.log("inside SWR:", tradesArray);
+//     return tradeData;
+//   };
+//   // implement useSwr for cached and revalidation enabled data retrieval
+//   const { data: tradesArray, error } = useSwr("useAllTrades", fetchAllTrades, {
+//     fallbackData: [
+//       {
+//         balance: { denom: "umntl", amount: 0 },
+//         delegation: {
+//           delegator_address: "delegator_address",
+//           validator_address: "validator_address",
+//           shares: "298317289",
+//         },
+//       },
+//     ],
+//     suspense: true,
+//     refreshInterval: 1000,
+//   });
+//   // console.log("Outside SWR:", tradesArray);
+//   return {
+//     allTrades: tradesArray,
+//     isLoadingTrades: !error && !tradesArray,
+//     errorTrades: error,
+//   };
+// };

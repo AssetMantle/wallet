@@ -11,7 +11,7 @@ const ActiveProposals = ({
   onVoteHover,
 }) => {
   const { voteInfo, isLoadingVote, errorVote } = useVote(proposal?.proposal_id);
-  console.log(voteInfo);
+
   const getTypeProposal = (typeUrl) => {
     const typeProposalArray = typeUrl?.split?.(".");
     const typeProposal = typeProposalArray?.slice?.(-1)?.[0];

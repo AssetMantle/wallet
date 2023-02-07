@@ -82,8 +82,10 @@ const AllValidators = ({
                     />
                   </div>
                 </td>
-                <td className=" d-flex align-items-center justify-content-start gap-1">
+                <td className="d-flex align-items-center justify-content-start gap-1">
                   <a
+                    className="text-truncate"
+                    style={{ maxWidth: "200px" }}
                     href={`https://explorer.assetmantle.one/validators/${item.operatorAddress}`}
                     target="_blank"
                     rel="noreferrer"
@@ -164,8 +166,10 @@ const AllValidators = ({
                     />
                   </div>
                 </td>
-                <td className=" d-flex align-items-center justify-content-start gap-1">
+                <td className="d-flex align-items-center justify-content-start gap-1">
                   <a
+                    className="text-truncate"
+                    style={{ maxWidth: "200px" }}
                     href={`https://explorer.assetmantle.one/validators/${item.operatorAddress}`}
                     target="_blank"
                     rel="noreferrer"
