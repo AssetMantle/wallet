@@ -1,6 +1,11 @@
 import { useChain } from "@cosmos-kit/react";
 import Head from "next/head";
-import React, { useReducer, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import React, { useEffect, useReducer, useState } from "react";
+import { toast } from "react-toastify";
+import ConnectedRecieve from "../components/ConnectedRecieve";
+import DisconnecedRecieve from "../components/DisconnecedRecieve";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import Tooltip from "../components/Tooltip";
 import {
@@ -19,109 +24,60 @@ import {
   useAvailableBalance,
 } from "../data";
 import { isObjEmpty } from "../lib";
-import ConnectedRecieve from "../components/ConnectedRecieve";
-import DisconnecedRecieve from "../components/DisconnecedRecieve";
-import { toast } from "react-toastify";
-import Link from "next/link";
 
 export default function Transact() {
+  // HOOKS
   const [advanced, setAdvanced] = useState(false);
   const { availableBalance } = useAvailableBalance();
   const chainContext = useChain(defaultChainName);
   const { getSigningStargateClient, address, status } = chainContext;
+  const router = useRouter();
+  const { toAddress, toAmount } = router.query;
+  console.log("toAddress: ", toAddress, " toAmount: ", toAmount);
 
-  const CustomToastWithLink = ({ txHash }) => (
-    <p>
-      Transaction Submitted. Check
-      <Link href={`https://explorer.assetmantle.one/transactions/${txHash}`}>
-        <a style={{ color: "#ffc640" }} target="_blank">
-          {" "}
-          Here
-        </a>
-      </Link>
-    </p>
-  );
-
-  const notify = (txHash, id) => {
-    if (txHash) {
-      toast.update(id, {
-        render: <CustomToastWithLink txHash={txHash} />,
-        type: "success",
-        isLoading: false,
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        toastId: txHash,
-      });
-    } else {
-      toast.update(id, {
-        render: "Transaction failed.Try Again",
-        type: "error",
-        isLoading: false,
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
+  useEffect(() => {
+    if (toAddress) {
+      formDispatch({
+        type: "CHANGE_RECIPIENT_ADDRESS",
+        payload: toAddress,
       });
     }
-  };
 
-  const displayAddress = address ? address : placeholderAddress;
+    if (toAmount) {
+      formDispatch({
+        type: "CHANGE_AMOUNT",
+        payload: toAmount,
+      });
+    }
 
+    return () => {};
+  }, [toAddress, toAmount]);
+
+  useEffect(() => {
+    if (toAddress && formState?.recipientAddress == toAddress) {
+      formDispatch({
+        type: "CHANGE_RECIPIENT_ADDRESS",
+        payload: toAddress,
+      });
+    }
+
+    if (toAmount && formState?.transferAmount == toAmount) {
+      formDispatch({
+        type: "CHANGE_AMOUNT",
+        payload: toAmount,
+      });
+    }
+
+    return () => {};
+  }, [availableBalance]);
+
+  // FORM REDUCER
   const initialState = {
-    recipientAddress: "",
-    transferAmount: "",
+    recipientAddress: toAddress || "",
+    transferAmount: toAmount || "",
     memo: "",
     // all error values -> errorMessages: {recipientAddressErrorMsg: "", transferAmountErrorMsg: "" }
     errorMessages: {},
-  };
-
-  const handleSubmit = async (e) => {
-    // copy form states to local variables
-    const localRecipientAddress = formState.recipientAddress;
-    const localTransferAmount = formState.transferAmount;
-    const localMemo = formState.memo;
-    formDispatch({
-      type: "SUBMIT",
-    });
-
-    if (formState?.transferAmount && formState?.recipientAddress) {
-      const id = toast.loading("Transaction initiated ...", {
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-      const { response, error } = await sendTokensTxn(
-        address,
-        localRecipientAddress,
-        localTransferAmount,
-        localMemo,
-        { getSigningStargateClient }
-      );
-      formDispatch({ type: "RESET" });
-
-      // reset the form values
-      console.log("response: ", response, " error: ", error);
-      if (response) {
-        notify(response?.transactionHash, id);
-      } else {
-        notify(null, id);
-      }
-    }
   };
 
   const formReducer = (state = initialState, action) => {
@@ -166,13 +122,13 @@ export default function Transact() {
           toDenom(action.payload) + parseFloat(defaultChainGasFee)
         );
         // if amount is greater than current balance, populate error message and update amount
-        if (isNaN(toDenom(action.payload))) {
+        if (isNaN(toDenom(action.payload)) || parseFloat(action.payload) <= 0) {
           return {
             ...state,
             transferAmount: action.payload,
             errorMessages: {
               ...state.errorMessages,
-              transferAmountErrorMsg: formConstants.requiredErrorMsg,
+              transferAmountErrorMsg: formConstants.invalidValueErrorMsg,
             },
           };
         } else if (
@@ -290,10 +246,33 @@ export default function Transact() {
           };
         }
 
+        if (isInvalidAddress(state.recipientAddress)) {
+          localErrorMessages = {
+            ...localErrorMessages,
+            recipientAddressErrorMsg: formConstants.recipientAddressErrorMsg,
+          };
+        }
+
         if (!state.transferAmount) {
           localErrorMessages = {
             ...localErrorMessages,
             transferAmountErrorMsg: formConstants.invalidValueErrorMsg,
+          };
+        }
+
+        if (isNaN(toDenom(state.transferAmount))) {
+          localErrorMessages = {
+            ...localErrorMessages,
+            transferAmountErrorMsg: formConstants.requiredErrorMsg,
+          };
+        } else if (
+          isNaN(parseFloat(availableBalance)) ||
+          toDenom(state.transferAmount) + parseFloat(defaultChainGasFee) >
+            parseFloat(availableBalance)
+        ) {
+          localErrorMessages = {
+            ...localErrorMessages,
+            transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
           };
         }
 
@@ -326,9 +305,129 @@ export default function Transact() {
   const [Tab, setTab] = useState(0);
   const tabs = [{ name: "Send", href: "#send" }];
 
+  // CONFIG FUNCTIONS
+  const CustomToastWithLink = ({ txHash }) => (
+    <p>
+      Transaction Submitted. Check
+      <Link href={`https://explorer.assetmantle.one/transactions/${txHash}`}>
+        <a style={{ color: "#ffc640" }} target="_blank">
+          {" "}
+          Here
+        </a>
+      </Link>
+    </p>
+  );
+
+  const notify = (txHash, id) => {
+    if (txHash) {
+      toast.update(id, {
+        render: <CustomToastWithLink txHash={txHash} />,
+        type: "success",
+        isLoading: false,
+        position: "bottom-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: txHash,
+      });
+    } else {
+      toast.update(id, {
+        render: "Transaction failed.Try Again",
+        type: "error",
+        isLoading: false,
+        position: "bottom-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  };
+
+  // CONTROLLER FUNCTIONS
+  const handleSubmit = async (e) => {
+    // copy form states to local variables
+    const localRecipientAddress = formState.recipientAddress;
+    const localTransferAmount = formState.transferAmount;
+    const localMemo = formState.memo;
+    formDispatch({
+      type: "CHANGE_RECIPIENT_ADDRESS",
+      payload: localRecipientAddress,
+    });
+
+    formDispatch({
+      type: "CHANGE_AMOUNT",
+      payload: localTransferAmount,
+    });
+
+    const isFormValid =
+      formState?.transferAmount &&
+      !isNaN(parseFloat(toDenom(formState.transferAmount))) &&
+      !isNaN(parseFloat(availableBalance)) &&
+      parseFloat(availableBalance) > 0 &&
+      toDenom(formState.transferAmount) + parseFloat(defaultChainGasFee) <=
+        parseFloat(availableBalance) &&
+      formState?.recipientAddress &&
+      !isInvalidAddress(formState?.recipientAddress);
+
+    if (isFormValid) {
+      const id = toast.loading("Transaction initiated ...", {
+        position: "bottom-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+
+      const { response, error } = await sendTokensTxn(
+        address,
+        localRecipientAddress,
+        localTransferAmount,
+        localMemo,
+        { getSigningStargateClient }
+      );
+      formDispatch({ type: "RESET" });
+
+      // reset the form values
+      console.log("response: ", response, " error: ", error);
+      if (response) {
+        notify(response?.transactionHash, id);
+      } else {
+        notify(null, id);
+      }
+    }
+  };
+
   // DISPLAY VARIABLES
   const isSubmitDisabled =
     !isObjEmpty(formState?.errorMessages) || status != "Connected";
+  const displayAmountValue = formState?.transferAmount;
+  const displayAddress = address || placeholderAddress;
+  const isAmountError = !!formState?.errorMessages?.transferAmountErrorMsg;
+  const displayAmountErrorMsg =
+    formState?.errorMessages?.transferAmountErrorMsg ==
+    formConstants.transferAmountErrorMsg ? (
+      <span>
+        Insufficient Balance. To get more tokens go to{" "}
+        <Link href="/trade">
+          <a style={{ textDecoration: "underline" }}>Trade</a>
+        </Link>
+      </span>
+    ) : (
+      formState?.errorMessages?.transferAmountErrorMsg
+    );
+
+  console.log("formState: ", formState);
 
   return (
     <>
@@ -440,7 +539,7 @@ export default function Transact() {
                     type="number"
                     name="amount"
                     id="amount"
-                    value={formState?.transferAmount}
+                    value={displayAmountValue}
                     placeholder="Enter Amount"
                     style={{ flex: "1", border: "none", outline: "none" }}
                     onChange={(e) =>
@@ -475,10 +574,8 @@ export default function Transact() {
                   id="amountInputErrorMsg"
                   className="form-text text-danger d-flex align-items-center gap-1"
                 >
-                  {formState?.errorMessages?.transferAmountErrorMsg && (
-                    <i className="bi bi-info-circle" />
-                  )}{" "}
-                  {formState?.errorMessages?.transferAmountErrorMsg}
+                  {isAmountError && <i className="bi bi-info-circle" />}{" "}
+                  {displayAmountErrorMsg}
                 </small>
               </div>
 
