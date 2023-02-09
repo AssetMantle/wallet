@@ -15,3 +15,5 @@ export const getPlaceholderAddress = (hrpValue) =>
 export const bech32AddressSeperator = "1";
 export const shortenAddressSize = 6;
 export const shortenAddressSizeEth = 4;
+
+export const mantleWalletV1URL = "https://v1.wallet.assetmantle.one/";
