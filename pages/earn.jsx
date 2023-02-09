@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import Head from "next/head";
-import Image from "next/image";
-import { useEarn } from "../data";
+import { useQuickswap } from "../data";
 
 export default function Earn() {
   const [searchValue, setSearchValue] = useState();
-  const { allEarn, isLoadingEarn, errorEarn } = useEarn();
-  const earnInfo = [...Earn, osmosisInfo];
-  // earnInfo = [
+  // const { allOsmosis, isLoadingOsmosis, errorOsmosis } = useOsmosis();
+  const { allQuickswap, isLoadingQuickswap, errorQuickswap } = useQuickswap();
+  let earnInfo = [...allQuickswap];
+  console.log(earnInfo);
+  // const earnInfo = [
   //   {
   //     logo: "/osmosis.png",
   //     name: "Osmosis",
@@ -169,83 +170,9 @@ export default function Earn() {
                     </tr>
                   </thead>
                   <tbody>
-                    {earnInfo
-                      ?.filter((ele) =>
-                        allEarn?.find(
-                          (earnItem) =>
-                            ele.name == earnItem?.name &&
-                            earnItem?.pair == ele.pair
-                        )
-                      )
-                      ?.map((e, index) => (
-                        <tr key={index} className="caption2 text-white-300 ">
-                          <td className="d-flex justify-content-start ps-4">
-                            <a
-                              className="d-flex gap-1 align-items-center justify-content-center"
-                              href={e.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {e.pair.itemLeft}/{e.pair.itemRight}{" "}
-                              <i className="bi bi-arrow-up-right"></i>
-                            </a>
-                          </td>
-
-                          <td>
-                            <div
-                              className="d-flex align-items-center justify-content-between position-relative rounded-circle gap-1"
-                              style={{ width: "32px", aspectRatio: "1/1" }}
-                            >
-                              <img
-                                alt={e.name}
-                                className="rounded-circle"
-                                layout="fill"
-                                src={e.logo}
-                              />
-                              {e.name}
-                            </div>
-                          </td>
-                          <td>
-                            <div className="d-flex align-items-center justify-content-center gap-1">
-                              {e.chains.map((ele, index) => (
-                                <div
-                                  key={index}
-                                  className="d-flex position-relative rounded-circle gap-1"
-                                  style={{
-                                    width: "20px",
-                                    aspectRatio: "1/1",
-                                  }}
-                                >
-                                  <Image
-                                    alt={ele}
-                                    className="rounded-circle"
-                                    layout="fill"
-                                    src={`/earn/${ele}.svg`}
-                                  />
-                                </div>
-                              ))}
-                            </div>
-                          </td>
-                          <td>
-                            {
-                              allEarn?.find(
-                                (ele) =>
-                                  ele.name == e?.name && e?.pair == ele.pair
-                              )?.apy
-                            }
-                            %
-                          </td>
-                          <td>
-                            ${" "}
-                            {
-                              allEarn?.find(
-                                (ele) =>
-                                  ele.name == e?.name && e?.pair == ele.pair
-                              )?.tvl
-                            }
-                          </td>
-                        </tr>
-                      ))}
+                    {earnInfo?.map?.((e, index) => (
+                      <tr key={index} className="caption2 text-white-300 "></tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
