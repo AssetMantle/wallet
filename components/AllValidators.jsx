@@ -90,7 +90,8 @@ const AllValidators = ({
                     target="_blank"
                     rel="noreferrer"
                   >
-                    {item?.description?.moniker}
+                    {item?.description?.moniker}{" "}
+                    <i className="bi bi-arrow-up-right" />
                   </a>
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
@@ -175,7 +176,8 @@ const AllValidators = ({
                     rel="noreferrer"
                   >
                     {" "}
-                    {item?.description?.moniker}
+                    {item?.description?.moniker}{" "}
+                    <i className="bi bi-arrow-up-right" />{" "}
                   </a>
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>

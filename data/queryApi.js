@@ -932,43 +932,136 @@ export const useWithdrawAddress = () => {
   };
 };
 
-// export const useTrade = () => {
-//   // fetcher function for useSwr of useAvailableBalance()
-//   const fetchAllTrades = async (url) => {
-//     let tradeData;
+export const useTrade = () => {
+  // fetcher function for useSwr of useAvailableBalance()
+  const fetchAllTrades = async (url) => {
+    let tradeData = [];
 
-//     try {
-//       const data = await fetch(
-//         "https://api.coingecko.com/api/v3/coins/assetmantle?localization=false&tickers=true&market_data=true&community_data=false&developer_data=false&sparkline=false"
-//       ).then((res) => res.json());
-//       tradeData = data;
-//     } catch (error) {
-//       console.error(`swr fetcher : url: ${url},  error: ${error}`);
-//       throw error;
-//     }
-//     // return the data
-//     // console.log("inside SWR:", tradesArray);
-//     return tradeData;
-//   };
-//   // implement useSwr for cached and revalidation enabled data retrieval
-//   const { data: tradesArray, error } = useSwr("useAllTrades", fetchAllTrades, {
-//     fallbackData: [
-//       {
-//         balance: { denom: "umntl", amount: 0 },
-//         delegation: {
-//           delegator_address: "delegator_address",
-//           validator_address: "validator_address",
-//           shares: "298317289",
-//         },
-//       },
-//     ],
-//     suspense: true,
-//     refreshInterval: 1000,
-//   });
-//   // console.log("Outside SWR:", tradesArray);
-//   return {
-//     allTrades: tradesArray,
-//     isLoadingTrades: !error && !tradesArray,
-//     errorTrades: error,
-//   };
-// };
+    try {
+      const data = await fetch(
+        "https://api.coingecko.com/api/v3/coins/assetmantle?localization=false&tickers=true&market_data=true&community_data=false&developer_data=false&sparkline=false"
+      ).then((res) => res.json());
+      tradeData = data;
+    } catch (error) {
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
+      throw error;
+    }
+    // return the data
+    // console.log("inside SWR:", tradesArray);
+    return tradeData;
+  };
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: tradesArray, error } = useSwr("useAllTrades", fetchAllTrades, {
+    fallbackData: [],
+    suspense: true,
+  });
+  // console.log("Outside SWR:", tradesArray);
+  return {
+    allTrades: tradesArray,
+    isLoadingTrades: !error && !tradesArray,
+    errorTrades: error,
+  };
+};
+
+export const useOsmosis = () => {
+  // fetcher function for useSwr of useAvailableBalance()
+  const fetchAllOsmosis = async (url) => {
+    let osmosisData = [];
+    try {
+      const osmoMntlUsdcData = await fetch(
+        "https://api.osmosis.zone/pools/v2/738"
+      ).then((res) => res.json());
+      const osmoMntlUsdcAprData = await fetch(
+        "https://api.osmosis.zone/apr/v2/738"
+      ).then((res) => res.json());
+      const osmoMntlOsmoData = await fetch(
+        "https://api.osmosis.zone/pools/v2/690"
+      ).then((res) => res.json());
+      const osmoMntlOsmoAprData = await fetch(
+        "https://api.osmosis.zone/apr/v2/690"
+      ).then((res) => res.json());
+      const osmoAtomMntlData = await fetch(
+        "https://api.osmosis.zone/pools/v2/690"
+      ).then((res) => res.json());
+      const osmoAtomMntlAprData = await fetch(
+        "https://api.osmosis.zone/apr/v2/690"
+      ).then((res) => res.json());
+      const llamaData = await fetch("https://yields.llama.fi/pools").then(
+        (res) => res.json()
+      );
+      const filteredLlamaData = llamaData?.data?.filter(
+        (item) =>
+          item?.symbol.includes("MNTL") &&
+          (item?.project == "quickswap-dex" || item?.project == "uniswap-v3")
+      );
+      osmosisData = [
+        {
+          name: "Osmosis",
+          pair: osmoMntlUsdcData[0]?.symbol + "-" + osmoMntlUsdcData[1]?.symbol,
+          apy: Number(
+            Math.max(
+              osmoMntlUsdcAprData[0]?.apr_list[0]?.apr_1d,
+              osmoMntlUsdcAprData[0]?.apr_list[0]?.apr_7d,
+              osmoMntlUsdcAprData[0]?.apr_list[0]?.apr_14d
+            )
+          ).toFixed(2),
+          tvl: osmoMntlUsdcData[0]?.liquidity,
+        },
+        {
+          name: "Osmosis",
+          pair: osmoMntlOsmoData[0]?.symbol + "-" + osmoMntlOsmoData[1]?.symbol,
+          apy: Number(
+            Math.max(
+              osmoMntlOsmoAprData[0]?.apr_list[0]?.apr_1d,
+              osmoMntlOsmoAprData[0]?.apr_list[0]?.apr_7d,
+              osmoMntlOsmoAprData[0]?.apr_list[0]?.apr_14d
+            )
+          ).toFixed(2),
+          tvl: osmoMntlOsmoData[0]?.liquidity,
+        },
+        {
+          name: "Osmosis",
+          pair: osmoAtomMntlData[0]?.symbol + "-" + osmoAtomMntlData[1]?.symbol,
+          apy: Number(
+            Math.max(
+              osmoAtomMntlAprData[0]?.apr_list[0]?.apr_1d,
+              osmoAtomMntlAprData[0]?.apr_list[0]?.apr_7d,
+              osmoAtomMntlAprData[0]?.apr_list[0]?.apr_14d
+            )
+          ).toFixed(2),
+          tvl: osmoAtomMntlData[0]?.liquidity,
+        },
+        // {
+        //   name: "Quickswap",
+        //   pair: { itemLeft: "MNTL", itemRight: "USDC" },
+        //   apy: Number(quickSwapUsdcMntlData?.apy).toFixed(2),
+        //   tvl: quickSwapUsdcMntlData?.tvlUsd,
+        // },
+        // {
+        //   name: "Quickswap",
+        //   pair: { itemLeft: "MNTL", itemRight: "VERSA" },
+        //   apy: Number(quickSwapMntlVersaData?.apy).toFixed(2),
+        //   tvl: quickSwapMntlVersaData?.tvlUsd,
+        // },
+      ];
+    } catch (error) {
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
+      throw error;
+    }
+    // return the data
+    console.log(
+      osmoAtomMntlData[0]?.symbol + "-" + osmoAtomMntlData[1]?.symbol
+    );
+    return osmosisData;
+  };
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: earnArray, error } = useSwr("useEarn", fetchAllEarn, {
+    fallbackData: [],
+    suspense: true,
+  });
+  return {
+    allEarn: earnArray,
+    isLoadingEarn: !error && !earnArray,
+    errorEarn: error,
+  };
+};

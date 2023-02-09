@@ -75,7 +75,7 @@ const DelegatedValidators = ({
                     rel="noreferrer"
                   >
                     {" "}
-                    {item?.description?.moniker}
+                    {item?.description?.moniker}{" "}
                     <i className="bi bi-arrow-up-right" />
                   </a>
                 </td>
@@ -152,7 +152,7 @@ const DelegatedValidators = ({
                     rel="noreferrer"
                   >
                     {" "}
-                    {item?.description?.moniker}
+                    {item?.description?.moniker}{" "}
                     <i className="bi bi-arrow-up-right" />
                   </a>
                 </td>

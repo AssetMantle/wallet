@@ -1,19 +1,102 @@
 import React, { useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
+import { useEarn } from "../data";
 
 export default function Earn() {
   const [searchValue, setSearchValue] = useState();
+  const { allEarn, isLoadingEarn, errorEarn } = useEarn();
+  const earnInfo = [...Earn, osmosisInfo];
+  earnInfo = [
+    {
+      logo: "/osmosis.png",
+      name: "Osmosis",
+      target_coin_id: "osmosis",
+      pair: "MNTL-OSMO",
+      subTitle: "",
+      category: "Liquid Staking",
+      url: "https://app.osmosis.zone/?from=OSMO&to=MNTL",
+      target: "_blank",
+      chains: ["cosmos"],
+    },
+    {
+      logo: "/osmosis.png",
+      name: "Osmosis",
+      target_coin_id: "axlusdc",
+      pair: "MNTL-AXLUSDC",
+      subTitle: "",
+      category: "Liquid Staking",
+      url: "https://app.osmosis.zone/?from=USDC&to=MNTL",
+      target: "_blank",
+      chains: ["cosmos"],
+    },
+    {
+      logo: "/osmosis.png",
+      name: "Osmosis",
+      target_coin_id: "assetmantle",
+      pair: "ATOM-MNTL",
+      subTitle: "",
+      category: "Liquid Staking",
+      url: "https://app.osmosis.zone/?from=ATOM&to=MNTL",
+      target: "_blank",
+      chains: ["cosmos"],
+    },
+    {
+      logo: "/Uniswap.png",
+      name: "Uniswap",
+      pair: "MNTL-ERC20",
+      subTitle: "(ETH Pool)",
+      url: "https://app.uniswap.org/#/swap?theme=dark&inputCurrency=ETH&outputCurrency=0x2c4f1df9c7de0c59778936c9b145ff56813f3295",
+      target: "_blank",
+      chains: ["eth"],
+      row: 4,
+      col: 5,
+    },
+    {
+      logo: "/quickswap.webp",
+      name: "Quickswap",
+      pait: "MNTL-USDC",
+      target_coin_id: "usd-coin",
+      subTitle: "",
+      category: "Liquid Staking",
+      url: "https://quickswap.exchange/#/swap?swapIndex=0&currency0=0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174&currency1=0x38A536A31bA4d8C1Bcca016AbBf786ecD25877E8",
+      target: "_blank",
+      chains: ["polygon"],
+    },
+    {
+      logo: "/quickswap.webp",
+      name: "Quickswap",
+      pair: "MNTL-VERSA",
+      target_coin_id: "versagames",
+      subTitle: "",
+      category: "Liquid Staking",
+      url: "https://quickswap.exchange/#/swap?inputCurrency=0x8497842420cfdbc97896c2353d75d89fc8d5be5d&outputCurrency=0x38a536a31ba4d8c1bcca016abbf786ecd25877e8&swapIndex=0",
+      target: "_blank",
+      chains: ["polygon"],
+    },
+    // {
+    //   logo: "/osmosis.png",
+    //   name: "P2B",
+    //   pair: "MNTL/USDT",
 
-  const contentObg = {
-    img: "/profile.avif",
-    name: "Lorem ipsum",
-    href: "?sal",
-    catagory: "Liquid Staking",
-    chains: ["eth", "cosmos", "polygon"],
-    apy: 1.56,
-    tvl: 50,
-  };
+    //   subTitle: "(USDC Pool)",
+    //   url: "https://p2pb2b.com/trade/MNTL_USDT/",
+    //   target: "_blank", chains:[],
+    //   row: 1,
+    //   col: 3,
+    // },
+    // {
+    //   logo: "/osmosis.png",
+    //   name: "Coinsbit",
+    //   pair: "MNTL/USDT",
+
+    //   subTitle: "(USDC Pool)",
+    //   url: "https://coinsbit.io/trade/MNTL_USDT",
+    //   target: "_blank", chains:[],
+    //   row: 1,
+    //   col: 3,
+    // },
+  ];
 
   return (
     <>
@@ -68,11 +151,7 @@ export default function Earn() {
                     }}
                   >
                     <tr className="caption2 text-white">
-                      <th
-                        scope="col"
-                        style={{ whiteSpace: "nowrap" }}
-                        colSpan="2"
-                      >
+                      <th scope="col" style={{ whiteSpace: "nowrap" }}>
                         Name
                       </th>
                       <th scope="col" style={{ whiteSpace: "nowrap" }}>
@@ -90,61 +169,83 @@ export default function Earn() {
                     </tr>
                   </thead>
                   <tbody>
-                    {React.Children.toArray(
-                      [...new Array(20)].map((e) => (
-                        <tr className="caption2 text-white-300">
-                          <td>
-                            <div
-                              className="d-flex position-relative rounded-circle gap-1"
-                              style={{ width: "32px", aspectRatio: "1/1" }}
-                            >
-                              <img
-                                alt={contentObg.name}
-                                className="rounded-circle"
-                                layout="fill"
-                                src={contentObg.img}
-                              />
-                            </div>
-                          </td>
-                          <td>
+                    {earnInfo
+                      ?.filter((ele) =>
+                        allEarn?.find(
+                          (earnItem) =>
+                            ele.name == earnItem?.name &&
+                            earnItem?.pair == ele.pair
+                        )
+                      )
+                      ?.map((e, index) => (
+                        <tr key={index} className="caption2 text-white-300 ">
+                          <td className="d-flex justify-content-start ps-4">
                             <a
                               className="d-flex gap-1 align-items-center justify-content-center"
-                              href={contentObg.href}
+                              href={e.href}
                               target="_blank"
                               rel="noopener noreferrer"
                             >
-                              {contentObg.name}
+                              {e.pair.itemLeft}/{e.pair.itemRight}{" "}
                               <i className="bi bi-arrow-up-right"></i>
                             </a>
                           </td>
-                          <td>{contentObg.catagory}</td>
+
                           <td>
-                            <div className="d-flex align-items-center justify-content-end gap-1">
-                              {React.Children.toArray(
-                                contentObg.chains.map((e) => (
-                                  <div
-                                    className="d-flex position-relative rounded-circle gap-1"
-                                    style={{
-                                      width: "20px",
-                                      aspectRatio: "1/1",
-                                    }}
-                                  >
-                                    <Image
-                                      alt={e}
-                                      className="rounded-circle"
-                                      layout="fill"
-                                      src={`/earn/${e}.svg`}
-                                    />
-                                  </div>
-                                ))
-                              )}
+                            <div
+                              className="d-flex align-items-center justify-content-between position-relative rounded-circle gap-1"
+                              style={{ width: "32px", aspectRatio: "1/1" }}
+                            >
+                              <img
+                                alt={e.name}
+                                className="rounded-circle"
+                                layout="fill"
+                                src={e.logo}
+                              />
+                              {e.name}
                             </div>
                           </td>
-                          <td>{contentObg.apy}%</td>
-                          <td>$ {contentObg.tvl}b</td>
+                          <td>
+                            <div className="d-flex align-items-center justify-content-center gap-1">
+                              {e.chains.map((ele, index) => (
+                                <div
+                                  key={index}
+                                  className="d-flex position-relative rounded-circle gap-1"
+                                  style={{
+                                    width: "20px",
+                                    aspectRatio: "1/1",
+                                  }}
+                                >
+                                  <Image
+                                    alt={ele}
+                                    className="rounded-circle"
+                                    layout="fill"
+                                    src={`/earn/${ele}.svg`}
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          </td>
+                          <td>
+                            {
+                              allEarn?.find(
+                                (ele) =>
+                                  ele.name == e?.name && e?.pair == ele.pair
+                              )?.apy
+                            }
+                            %
+                          </td>
+                          <td>
+                            ${" "}
+                            {
+                              allEarn?.find(
+                                (ele) =>
+                                  ele.name == e?.name && e?.pair == ele.pair
+                              )?.tvl
+                            }
+                          </td>
                         </tr>
-                      ))
-                    )}
+                      ))}
                   </tbody>
                 </table>
               </div>
