@@ -1,4 +1,6 @@
+import Link from "next/link";
 import React, { useState } from "react";
+import { mantleWalletV1URL } from "../../data";
 // import ModalContainer from "../../components/ModalContainer";
 
 const ConnectModal = ({ isOpen, setOpen, walletRepo, theme }) => {
@@ -118,66 +120,31 @@ const ConnectModal = ({ isOpen, setOpen, walletRepo, theme }) => {
                   </button>
                 ))}
               </div>
-              {/* <hr className="my-2" />
-            <h2 className="caption text-white">Connect with Ledger</h2>
-            <div className="d-flex">
-              <button
-                className="d-flex align-items-center gap-2 button-secondary py-2 px-3 rounded-2"
-                onClick={handleLedger}
-              >
-                <div
-                  className="position-relative"
-                  style={{ width: "25px", aspectRatio: "1/1" }}
-                >
-                  <Image
-                    layout="fill"
-                    src={ConnectOptionObject?.ledger?.icon}
-                    alt={ConnectOptionObject?.ledger?.name}
-                  />
-                </div>
-                Ledger
-              </button>
             </div>
-            <hr className="my-2" />
-            <h2 className="caption text-white">Connect with Keystore</h2>
-            <div className="d-flex">
-              <button
-                className="d-flex align-items-center gap-2 button-secondary py-2 px-3 rounded-2"
-                onClick={handleKeystore}
-              >
-                <div
-                  className="position-relative"
-                  style={{ width: "25px", aspectRatio: "1/1" }}
-                >
-                  <Image
-                    layout="fill"
-                    src={ConnectOptionObject?.keystore?.icon}
-                    alt={ConnectOptionObject?.keystore?.name}
-                  />
-                </div>
-                Keystore
-              </button>
-            </div>
-            <div className="d-flex align-items-center gap-2 body2">
-              <hr className="divider" />
-              Or
-              <hr className="divider" />
-            </div>
-            <div className="d-flex flex-column">
-              <div className="text-white body2 text-center">
-                Generate Only Mode
+
+            <div className="d-flex flex-column gap-3 mt-5">
+              <h2 className="caption text-white">
+                Goto Old Wallet for Keystore & Ledger
+              </h2>
+              <div className="d-flex gap-2 flex-wrap">
+                <Link href={mantleWalletV1URL}>
+                  <a>
+                    <button className="d-flex align-items-center gap-2 button-secondary py-2 px-3 rounded-2">
+                      <div
+                        className="position-relative"
+                        style={{ width: "25px", aspectRatio: "1/1" }}
+                      >
+                        <img
+                          layout="fill"
+                          src={"/favicon.png"}
+                          alt={"v1_wallet"}
+                        />
+                      </div>
+                      MantleWallet V1 (Old)
+                    </button>
+                  </a>
+                </Link>
               </div>
-              <p className="text-white-200 caption text-center">
-                Use this option to view only and generate .json for transactions
-              </p>
-            </div>
-            <input
-              type="text"
-              className="am-input border-color-white bg-transparent px-4 py-1 rounded-2 mt-3"
-              placeholder="Input your wallet address"
-              value={generatedAddress}
-              onChange={handleChangeGenAddress}
-            /> */}
             </div>
           </div>
         </div>
