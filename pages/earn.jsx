@@ -171,7 +171,10 @@ export default function Earn() {
                   </thead>
                   <tbody>
                     {earnInfo?.map?.((e, index) => (
-                      <tr key={index} className="caption2 text-white-300 "></tr>
+                      <tr key={index} className="caption2 text-white-300 ">
+                        <td>{e?.symbol}</td>
+                        <td>{e?.project}</td>
+                      </tr>
                     ))}
                   </tbody>
                 </table>

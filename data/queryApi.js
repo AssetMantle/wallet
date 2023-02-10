@@ -936,12 +936,112 @@ export const useTrade = () => {
   // fetcher function for useSwr of useAvailableBalance()
   const fetchAllTrades = async (url) => {
     let tradeData = [];
+    const staticData = [
+      {
+        logo: "/LBank.webp",
+        name: "LBank",
+        pair: "MNTL/USDT",
+        target_coin_id: "tether",
+
+        url: "https://www.lbank.info/exchange/mntl/usdt",
+      },
+      {
+        logo: "/osmosis.png",
+        name: "Osmosis",
+        target_coin_id: "osmosis",
+        pair: "MNTL/OSMO",
+
+        url: "https://app.osmosis.zone/?from=OSMO&to=MNTL",
+      },
+      {
+        logo: "/osmosis.png",
+        name: "Osmosis",
+        target_coin_id: "axlusdc",
+        pair: "MNTL/AXLUSDC",
+
+        url: "https://app.osmosis.zone/?from=USDC&to=MNTL",
+      },
+      {
+        logo: "/Uniswap.png",
+        name: "Uniswap (v3)",
+        pair: "MNTL/ETH",
+        target_coin_id: "weth",
+        subTitle: "(ETH Pool)",
+        url: "https://app.uniswap.org/#/swap?theme=dark&inputCurrency=ETH&outputCurrency=0x2c4f1df9c7de0c59778936c9b145ff56813f3295",
+      },
+      {
+        logo: "/MEXC.webp",
+        name: "MEXC Global",
+        pair: "MNTL/USDT",
+        target_coin_id: "tether",
+
+        url: "https://www.mexc.com/exchange/MNTL_USDT?inviteCode=1498J",
+      },
+      {
+        logo: "/osmosis.png",
+        name: "Osmosis",
+        target_coin_id: "assetmantle",
+        pair: "ATOM/MNTL",
+
+        url: "https://app.osmosis.zone/?from=ATOM&to=MNTL",
+      },
+      {
+        logo: "/quickswap.webp",
+        name: "Quickswap",
+        pair: "MNTL/USDC",
+        target_coin_id: "usd-coin",
+
+        url: "https://quickswap.exchange/#/swap?swapIndex=0&currency0=0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174&currency1=0x38A536A31bA4d8C1Bcca016AbBf786ecD25877E8",
+      },
+      {
+        logo: "/quickswap.webp",
+        name: "Quickswap",
+        pair: "MNTL/VERSA",
+        target_coin_id: "versagames",
+
+        url: "https://quickswap.exchange/#/swap?inputCurrency=0x8497842420cfdbc97896c2353d75d89fc8d5be5d&outputCurrency=0x38a536a31ba4d8c1bcca016abbf786ecd25877e8&swapIndex=0",
+      },
+
+      // {
+      //   logo: "/osmosis.png",
+      //   name: "P2B",
+      //   pair: "MNTL/USDT",
+
+      //   subTitle: "(USDC Pool)",
+      //   url: "https://p2pb2b.com/trade/MNTL_USDT/",
+      //
+
+      // },
+      // {
+      //   logo: "/osmosis.png",
+      //   name: "Coinsbit",
+      //   pair: "MNTL/USDT",
+
+      //   subTitle: "(USDC Pool)",
+      //   url: "https://coinsbit.io/trade/MNTL_USDT",
+      //
+
+      // },
+    ];
 
     try {
       const data = await fetch(
         "https://api.coingecko.com/api/v3/coins/assetmantle?localization=false&tickers=true&market_data=true&community_data=false&developer_data=false&sparkline=false"
       ).then((res) => res.json());
-      tradeData = data;
+      tradeData = data?.tickers?.map((item) => {
+        const match = staticData.find(
+          (element) =>
+            element.name == item?.market?.name &&
+            element.target_coin_id == item?.target_coin_id
+        );
+        return {
+          exchangeName: item?.market?.name,
+          tradePair: match?.pair,
+          volume: item?.converted_volume?.usd,
+          price: item?.converted_last?.usd,
+          logo: match?.logo,
+        };
+      });
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
