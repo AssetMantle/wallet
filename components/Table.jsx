@@ -40,6 +40,7 @@ const Table = ({ columns, data }) => {
         </thead>
         <tbody {...getTableBodyProps()}>
           {rows.map((row, i) => {
+            prepareRow(row);
             return (
               <tr key={i} {...row.getRowProps()}>
                 {row.cells.map((cell, index) => {
