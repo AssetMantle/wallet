@@ -13,7 +13,7 @@ const Table = ({ columns, data }) => {
 
   return (
     <>
-      <table {...getTableProps()}>
+      <table className="table caption2 text-white-300" {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup, index) => (
             <tr key={index} {...headerGroup.getHeaderGroupProps()}>
