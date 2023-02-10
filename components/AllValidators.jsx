@@ -85,13 +85,16 @@ const AllValidators = ({
                     />
                   </div>
                 </td>
-                <td className=" d-flex align-items-center justify-content-start gap-1">
+                <td className="d-flex align-items-center justify-content-start gap-1">
                   <a
+                    className="text-truncate"
+                    style={{ maxWidth: "200px" }}
                     href={`https://explorer.assetmantle.one/validators/${item.operatorAddress}`}
                     target="_blank"
                     rel="noreferrer"
                   >
-                    {item?.description?.moniker}
+                    {item?.description?.moniker}{" "}
+                    <i className="bi bi-arrow-up-right" />
                   </a>
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
@@ -167,14 +170,17 @@ const AllValidators = ({
                     />
                   </div>
                 </td>
-                <td className=" d-flex align-items-center justify-content-start gap-1">
+                <td className="d-flex align-items-center justify-content-start gap-1">
                   <a
+                    className="text-truncate"
+                    style={{ maxWidth: "200px" }}
                     href={`https://explorer.assetmantle.one/validators/${item.operatorAddress}`}
                     target="_blank"
                     rel="noreferrer"
                   >
                     {" "}
-                    {item?.description?.moniker}
+                    {item?.description?.moniker}{" "}
+                    <i className="bi bi-arrow-up-right" />{" "}
                   </a>
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>

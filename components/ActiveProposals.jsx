@@ -1,5 +1,6 @@
 import React from "react";
 import { useVote } from "../data";
+import Tooltip from "./Tooltip";
 
 const ActiveProposals = ({
   status,
@@ -10,7 +11,7 @@ const ActiveProposals = ({
   onVoteHover,
 }) => {
   const { voteInfo, isLoadingVote, errorVote } = useVote(proposal?.proposal_id);
-  console.log(voteInfo);
+
   const getTypeProposal = (typeUrl) => {
     const typeProposalArray = typeUrl?.split?.(".");
     const typeProposal = typeProposalArray?.slice?.(-1)?.[0];
@@ -21,17 +22,25 @@ const ActiveProposals = ({
     {
       option: "VOTE_OPTION_YES",
       icon: "bi bi-check-circle-fill",
+      description: "Yes",
       color: "#148919",
     },
-    { option: "VOTE_OPTION_NO", icon: "bi bi-x-circle-fill", color: "#E44651" },
+    {
+      option: "VOTE_OPTION_NO",
+      icon: "bi bi-x-circle-fill",
+      description: "No",
+      color: "#E44651",
+    },
     {
       option: "VOTE_OPTION_ABSTAIN",
       icon: "bi bi-dash-circle-fill",
+      description: "Abstain",
       color: "#FFFDFA80",
     },
     {
       option: "VOTE_OPTION_NO_WITH_VETO",
       icon: "bi bi-x-circle-fill",
+      description: "No With Veto",
       color: "#FF9133",
     },
   ];
@@ -46,54 +55,65 @@ const ActiveProposals = ({
       >
         <div className="d-flex flex-column gap-2 p-2">
           <div className="d-flex justify-content-between gap-2 pb-2">
-            <h4 className="d-flex gap-1 align-items-center body2 text-primary">
+            <h4 className="d-flex gap-2 align-items-center body2 text-primary">
               #{proposal?.proposal_id}{" "}
+              {hasVoted ? (
+                proposal?.option == "VOTE_OPTION_NO_WITH_VETO" ? (
+                  <Tooltip
+                    title={
+                      <span className="position-relative body1">
+                        <i
+                          className={`position-absolute top-0 bottom-0 left-0 vote_no_with_veto ${
+                            voteOptions.find(
+                              (item) => item?.option == proposal?.option
+                            ).icon
+                          }`}
+                          style={{
+                            zIndex: "1",
+                            color: "red",
+                          }}
+                        ></i>{" "}
+                        <i
+                          className={`position-absolute top-0 bottom-0 vote_no_with_veto ${
+                            voteOptions.find(
+                              (item) => item?.option == proposal?.option
+                            ).icon
+                          }`}
+                          style={{
+                            left: "12px",
+                            zIndex: "2",
+                            color: "red",
+                          }}
+                        ></i>
+                      </span>
+                    }
+                    description="No with Veto"
+                  />
+                ) : (
+                  <Tooltip
+                    title={
+                      <i
+                        className={
+                          voteOptions.find(
+                            (item) => item?.option == proposal?.option
+                          ).icon
+                        }
+                        style={{
+                          color: voteOptions.find(
+                            (item) => item?.option == proposal?.option
+                          ).color,
+                        }}
+                      ></i>
+                    }
+                    description={
+                      voteOptions.find(
+                        (item) => item?.option == proposal?.option
+                      ).description
+                    }
+                  />
+                )
+              ) : null}
             </h4>
-            {hasVoted ? (
-              voteInfo?.option == "VOTE_OPTION_NO_WITH_VETO" ? (
-                <>
-                  <i
-                    className={
-                      voteOptions.find(
-                        (item) => item?.option == voteInfo?.option
-                      ).icon
-                    }
-                    style={{
-                      zI: "1",
-                      color: voteOptions.find(
-                        (item) => item?.option == voteInfo?.option
-                      ).color,
-                    }}
-                  ></i>{" "}
-                  <i
-                    className={
-                      voteOptions.find(
-                        (item) => item?.option == voteInfo?.option
-                      ).icon
-                    }
-                    style={{
-                      marginLeft: "-15px",
-                      zIndex: "3000",
-                      color: voteOptions.find(
-                        (item) => item?.option == voteInfo?.option
-                      ).color,
-                    }}
-                  ></i>
-                </>
-              ) : (
-                <i
-                  className={
-                    voteOptions.find((item) => item?.option == voteInfo?.option)
-                      .icon
-                  }
-                  style={{
-                    color: voteOptions.find(
-                      (item) => item?.option == voteInfo?.option
-                    ).color,
-                  }}
-                ></i>
-              )
-            ) : null}
             <div
               className="button-secondary caption bg-translucent px-2 py-1 text-truncate"
               style={{ fontWeight: "400" }}
@@ -101,7 +121,9 @@ const ActiveProposals = ({
               {getTypeProposal(proposal?.content?.["@type"])}
             </div>
           </div>
-          <h5 className="caption2 text-primary">{proposal?.content?.title}</h5>
+          <h5 className="caption2 text-primary text-truncate">
+            {proposal?.content?.title}
+          </h5>
           <p className="caption2">
             Voting Start :{" "}
             {new Date(proposal?.voting_start_time).toLocaleDateString()}

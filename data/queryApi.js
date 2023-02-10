@@ -284,12 +284,9 @@ export const useTotalUnbonding = () => {
     {
       fallbackData: [
         {
-          entries: [
-            {
-              initial_balance: "0",
-              balance: "0",
-            },
-          ],
+          delegatorAddress: placeholderAddress,
+          entries: [],
+          validatorAddress: placeholderAddress,
         },
       ],
       refreshInterval: 1000,
@@ -353,8 +350,8 @@ export const useTotalRewards = () => {
     {
       fallbackData: [
         {
-          totalRewards: placeholderAvailableBalance,
-          rewardsArray: [{ denom: "umntl", amount: "0" }],
+          validatorAddress: placeholderAddress,
+          reward: [],
         },
       ],
 
@@ -737,12 +734,17 @@ export const useAllValidators = () => {
     {
       fallbackData: [
         {
-          balance: { denom: "umntl", amount: 0 },
-          delegation: {
-            delegator_address: "delegator_address",
-            validator_address: "validator_address",
-            shares: "298317289",
-          },
+          commission: {},
+          consensusPubkey: {},
+          delegatorShares: "",
+          description: {},
+          jailed: "",
+          minSelfDelegation: "",
+          operatorAddress: placeholderAddress,
+          status: "",
+          tokens: "",
+          unbondingHeight: {},
+          unbondingTime: {},
         },
       ],
       suspense: true,
@@ -827,8 +829,15 @@ export const useAllProposals = () => {
     {
       fallbackData: [
         {
-          proposal_id: "fallback",
+          proposal_id: "",
           content: {},
+          status: "",
+          deposit_end_time: "",
+          final_tally_result: {},
+          submit_time: "",
+          total_deposit: [],
+          voting_end_time: "",
+          voting_start_time: "",
         },
       ],
       suspense: true,
@@ -920,5 +929,151 @@ export const useWithdrawAddress = () => {
     withdrawAddress: withdrawAddress,
     isLoadingWithdrawAddress: !error && !withdrawAddress,
     errorWithdrawAddress: error,
+  };
+};
+
+export const useTrade = () => {
+  // fetcher function for useSwr of useAvailableBalance()
+  const fetchAllTrades = async (url) => {
+    let tradeData = [];
+
+    try {
+      const data = await fetch(
+        "https://api.coingecko.com/api/v3/coins/assetmantle?localization=false&tickers=true&market_data=true&community_data=false&developer_data=false&sparkline=false"
+      ).then((res) => res.json());
+      tradeData = data;
+    } catch (error) {
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
+      throw error;
+    }
+    // return the data
+    // console.log("inside SWR:", tradesArray);
+    return tradeData;
+  };
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: tradesArray, error } = useSwr("useAllTrades", fetchAllTrades, {
+    fallbackData: [],
+    suspense: true,
+  });
+  // console.log("Outside SWR:", tradesArray);
+  return {
+    allTrades: tradesArray,
+    isLoadingTrades: !error && !tradesArray,
+    errorTrades: error,
+  };
+};
+
+// export const useOsmosis = () => {
+//   // fetcher function for useSwr of useAvailableBalance()
+//   const fetchAllOsmosis = async (url) => {
+//     let osmosisData = [];
+//     try {
+//       const osmoMntlUsdcData = await fetch(
+//         "https://api.osmosis.zone/pools/v2/738"
+//       ).then((res) => res.json());
+//       const osmoMntlUsdcAprData = await fetch(
+//         "https://api.osmosis.zone/apr/v2/738"
+//       ).then((res) => res.json());
+//       const osmoMntlOsmoData = await fetch(
+//         "https://api.osmosis.zone/pools/v2/690"
+//       ).then((res) => res.json());
+//       const osmoMntlOsmoAprData = await fetch(
+//         "https://api.osmosis.zone/apr/v2/690"
+//       ).then((res) => res.json());
+//       const osmoAtomMntlData = await fetch(
+//         "https://api.osmosis.zone/pools/v2/690"
+//       ).then((res) => res.json());
+//       const osmoAtomMntlAprData = await fetch(
+//         "https://api.osmosis.zone/apr/v2/690"
+//       ).then((res) => res.json());
+//       osmosisData = [
+//         {
+//           name: "Osmosis",
+//           chain: "Cosmos",
+//           pair: osmoMntlUsdcData[0]?.symbol + "-" + osmoMntlUsdcData[1]?.symbol,
+//           apy: Number(
+//             Math.max(
+//               osmoMntlUsdcAprData[0]?.apr_list[0]?.apr_1d,
+//               osmoMntlUsdcAprData[0]?.apr_list[0]?.apr_7d,
+//               osmoMntlUsdcAprData[0]?.apr_list[0]?.apr_14d
+//             )
+//           ).toFixed(2),
+//           tvl: osmoMntlUsdcData[0]?.liquidity,
+//         },
+//         {
+//           name: "Osmosis",
+//           chain: "Cosmos",
+//           pair: osmoMntlOsmoData[0]?.symbol + "-" + osmoMntlOsmoData[1]?.symbol,
+//           apy: Number(
+//             Math.max(
+//               osmoMntlOsmoAprData[0]?.apr_list[0]?.apr_1d,
+//               osmoMntlOsmoAprData[0]?.apr_list[0]?.apr_7d,
+//               osmoMntlOsmoAprData[0]?.apr_list[0]?.apr_14d
+//             )
+//           ).toFixed(2),
+//           tvl: osmoMntlOsmoData[0]?.liquidity,
+//         },
+//         {
+//           name: "Osmosis",
+//           chain: "Cosmos",
+//           pair: osmoAtomMntlData[0]?.symbol + "-" + osmoAtomMntlData[1]?.symbol,
+//           apy: Number(
+//             Math.max(
+//               osmoAtomMntlAprData[0]?.apr_list[0]?.apr_1d,
+//               osmoAtomMntlAprData[0]?.apr_list[0]?.apr_7d,
+//               osmoAtomMntlAprData[0]?.apr_list[0]?.apr_14d
+//             )
+//           ).toFixed(2),
+//           tvl: osmoAtomMntlData[0]?.liquidity,
+//         },
+//       ];
+//     } catch (error) {
+//       console.error(`swr fetcher : url: ${url},  error: ${error}`);
+//       throw error;
+//     }
+//     // return the data
+//     return osmosisData;
+//   };
+//   // implement useSwr for cached and revalidation enabled data retrieval
+//   const { data: osmosisArray, error } = useSwr("useEarn", fetchAllOsmosis, {
+//     suspense: true,
+//   });
+//   return {
+//     allOsmosis: osmosisArray,
+//     isLoadingOsmosis: !error && !osmosisArray,
+//     errorOsmosis: error,
+//   };
+// };
+
+export const useQuickswap = () => {
+  // fetcher function for useSwr of useAvailableBalance()
+  const fetchAllQuickswap = async (url) => {
+    let quickswapData = [];
+    try {
+      const llamaData = await fetch("https://yields.llama.fi/pools").then(
+        (res) => res.json()
+      );
+      const filteredLlamaData = llamaData?.data?.filter(
+        (item) =>
+          item?.symbol.includes("MNTL") &&
+          (item?.project == "quickswap-dex" || item?.project == "uniswap-v3")
+      );
+      quickswapData = filteredLlamaData;
+    } catch (error) {
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
+      throw error;
+    }
+    // return the data
+    return quickswapData;
+  };
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: quickswapArray, error } = useSwr("useEarn", fetchAllQuickswap, {
+    fallbackData: [],
+    suspense: true,
+  });
+  return {
+    allQuickswap: quickswapArray,
+    isLoadingQuickswap: !error && !quickswapArray,
+    errorQuickswap: error,
   };
 };
