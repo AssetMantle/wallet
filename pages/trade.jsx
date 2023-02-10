@@ -259,9 +259,13 @@ export default function Trade() {
         <div className="col-12 col-lg-4">
           <div className="rounded-4 p-3 my-2 bg-gray-800 width-100 d-flex flex-column ">
             <p>
-              Instructional Copy. Lorem Ipsum Dolor Sit ametLorem ipsum dolor
-              sit amet, consectetur adipiscing elit. Aliquam pulvinar vitae
-              massa in egestas. Vivamus tincidunt leo nulla.
+              Use this page visit exchanges (CEX & DEX) to purchase MNTL by
+              swapping with available tokens.
+            </p>
+            <br></br>
+            <p>
+              Options to directly on-ramp to MNTL using fiat currencies will be
+              coming soon.
             </p>
           </div>
         </div>
