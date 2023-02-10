@@ -1040,6 +1040,7 @@ export const useTrade = () => {
           volume: item?.converted_volume?.usd,
           price: item?.converted_last?.usd,
           logo: match?.logo,
+          url: match?.url,
         };
       });
     } catch (error) {

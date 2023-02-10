@@ -14,7 +14,23 @@ export default function Trade() {
         <img src={tableProps.row.original.logo} width={20} alt="logo" />
       ),
     },
-    { Header: "Exchange Name", accessor: "exchangeName" },
+    {
+      Header: "Exchange Name",
+      accessor: "exchangeName",
+      Cell: (tableProps) => (
+        <>
+          <a
+            href={tableProps.row.original.url}
+            target="_blank"
+            width={20}
+            rel="noreferrer"
+          >
+            {tableProps.row.original.exchangeName}
+          </a>{" "}
+          <i className="bi bi-arrow-up-right"></i>
+        </>
+      ),
+    },
     { Header: "Trade Pair", accessor: "tradePair" },
     { Header: "Price", accessor: "price" },
     { Header: "Volume", accessor: "volume" },
