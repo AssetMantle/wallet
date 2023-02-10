@@ -22,6 +22,7 @@ const Table = ({ columns, data }) => {
                 // we can add them into the header props
                 <th
                   key={i}
+                  className="text-white"
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                 >
                   {column.render("Header")}
