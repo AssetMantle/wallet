@@ -41,6 +41,8 @@ export const sendTokensTxn = async (
     }
     // create a message template from the composer
     const { send } = cosmos.bank.v1beta1.MessageComposer.withTypeUrl;
+    // const gasResponse = await stargateClient.simulate(fromAddress, [msg], memo);
+    // console.log("response:", gasResponse);
     // populate the message with transaction arguments
     const msg = send({
       fromAddress,
@@ -60,10 +62,11 @@ export const sendTokensTxn = async (
           amount: defaultFeeAmount,
         },
       ],
+      // gas: BigNumber(gasRespons).plus(BigNumber(100000)).toString(),
       gas: defaultFeeGas,
     };
-    const gasResponse = await stargateClient.simulate(fromAddress, [msg], memo);
-    console.log("gas:", gasResponse);
+
+    // console.log("gas:", gasResponse, "fee", fee);
     // use the stargate client to dispatch the transaction
     const response = await stargateClient.signAndBroadcast(
       fromAddress,
