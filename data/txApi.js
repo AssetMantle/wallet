@@ -52,7 +52,6 @@ export const sendTokensTxn = async (
         },
       ],
     });
-    console.log("Message:", [msg]);
     // populate the fee data
     const fee = {
       amount: [
@@ -63,16 +62,12 @@ export const sendTokensTxn = async (
       ],
       gas: defaultFeeGas,
     };
-    const gasResponse = await stargateClient.simulate(
-      fromAddress,
-      [msg, msg],
-      memo
-    );
+    const gasResponse = await stargateClient.simulate(fromAddress, [msg], memo);
     console.log("gas:", gasResponse);
     // use the stargate client to dispatch the transaction
     const response = await stargateClient.signAndBroadcast(
       fromAddress,
-      [msg, msg],
+      [msg],
       fee,
       memo
     );
