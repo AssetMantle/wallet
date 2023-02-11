@@ -16,8 +16,6 @@ import {
   keplrWallets,
 } from "../config";
 import "../config/styles/index.scss";
-import "react-toastify/dist/ReactToastify.min.css";
-import "@splidejs/react-splide/css";
 
 import { ethereumClient, wagmiClient, web3ModalProjectID } from "../data";
 import ConnectModal from "../views/ConnectModal/ConnectModal";
