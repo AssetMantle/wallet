@@ -192,9 +192,12 @@ export default function Trade() {
                     {tradeInfo
                       ?.filter(
                         (item) =>
-                          item?.name
+                          (item?.name
                             .toLowerCase()
-                            .includes(searchValue.toLowerCase()) &&
+                            .includes(searchValue.toLowerCase()) ||
+                            item?.pair
+                              .toLowerCase()
+                              .includes(searchValue.toLowerCase())) &&
                           allTrades?.tickers?.find(
                             (element) =>
                               element?.market?.name == item?.name &&
