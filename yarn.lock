@@ -7044,13 +7044,13 @@ caseless@~0.12.0:
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha512-4tYFyifaFfGacoiObjJegolkwSU4xQNGbVgUiNYVUxbQ2x2lUsFvY4hVgVzGiIe6WLOPqycWXA40l+PWsxthUw==
 
-chain-registry@1.4.0:
-  version "1.4.0"
-  resolved "https://registry.npmjs.org/chain-registry/-/chain-registry-1.4.0.tgz"
-  integrity sha512-kBQ2OOUdgDZnQNLEGO6Kp6dvM7YfZJfE+KQkGWqw2OBOuz+d+M7XyucU9q9Wj3n06xDTCQShximl/3wAA72pYQ==
+chain-registry@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-1.7.0.tgz#cad6d47cddad92a631b89147e12a75fb6b66f109"
+  integrity sha512-mPV/fT8GECUaP+uKCJPrDup+Lgp0mMZlfC/yL3+eJiDraAroGsDp3493G3V03/Pw0uhGGgAbBrMKtwMouv2AqA==
   dependencies:
     "@babel/runtime" "^7.19.4"
-    "@chain-registry/types" "^0.13.1"
+    "@chain-registry/types" "^0.14.0"
 
 chalk@^1.0.0, chalk@^1.1.3:
   version "1.1.3"
