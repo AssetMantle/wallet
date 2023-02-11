@@ -1,17 +1,123 @@
 import React, { useState } from "react";
 import Head from "next/head";
+import { useTrade } from "../data";
 
 export default function Trade() {
-  const [searchValue, setSearchValue] = useState();
+  const [searchValue, setSearchValue] = useState("");
+  const { allTrades, isLoadingTrades, errorTrades } = useTrade();
+  console.log(allTrades?.tickers);
+  const tradeInfo = [
+    {
+      logo: "/osmosis.png",
+      name: "Osmosis",
+      target_coin_id: "osmosis",
+      pair: "MNTL/OSMO",
+      subTitle: "",
+      url: "https://app.osmosis.zone/?from=OSMO&to=MNTL",
+      target: "_blank",
+      row: 2,
+      col: 1,
+    },
+    {
+      logo: "/osmosis.png",
+      name: "Osmosis",
+      target_coin_id: "axlusdc",
+      pair: "MNTL/AXLUSDC",
+      subTitle: "",
+      url: "https://app.osmosis.zone/?from=USDC&to=MNTL",
+      target: "_blank",
+      row: 2,
+      col: 1,
+    },
+    {
+      logo: "/osmosis.png",
+      name: "Osmosis",
+      target_coin_id: "assetmantle",
+      pair: "ATOM/MNTL",
+      subTitle: "",
+      url: "https://app.osmosis.zone/?from=ATOM&to=MNTL",
+      target: "_blank",
+      row: 2,
+      col: 1,
+    },
+    {
+      logo: "/Uniswap.png",
+      name: "Uniswap",
+      pair: "MNTL/ERC20",
 
-  const contentObg = {
-    img: "/profile.avif",
-    name: "Lorem ipsum",
-    href: "?sal",
-    pair: "MNTL/OSMO",
-    price: 14809.61,
-    vol: 17414809.61,
-  };
+      subTitle: "(ETH Pool)",
+      url: "https://app.uniswap.org/#/swap?theme=dark&inputCurrency=ETH&outputCurrency=0x2c4f1df9c7de0c59778936c9b145ff56813f3295",
+      target: "_blank",
+      row: 4,
+      col: 5,
+    },
+    {
+      logo: "/quickswap.webp",
+      name: "Quickswap",
+      pair: "MNTL/USDC",
+      target_coin_id: "usd-coin",
+      subTitle: "",
+      url: "https://quickswap.exchange/#/swap?swapIndex=0&currency0=0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174&currency1=0x38A536A31bA4d8C1Bcca016AbBf786ecD25877E8",
+      target: "_blank",
+      row: 2,
+      col: 1,
+    },
+    {
+      logo: "/LBank.webp",
+      name: "LBank",
+      pair: "MNTL/USDT",
+      target_coin_id: "tether",
+      subTitle: "",
+      url: "https://www.lbank.info/exchange/mntl/usdt",
+      target: "_blank",
+      row: 2,
+      col: 1,
+    },
+    {
+      logo: "/MEXC.webp",
+      name: "MEXC Global",
+      pair: "MNTL/USDT",
+      target_coin_id: "tether",
+      subTitle: "",
+      url: "https://www.mexc.com/exchange/MNTL_USDT?inviteCode=1498J",
+      target: "_blank",
+      row: 2,
+      col: 1,
+    },
+    {
+      logo: "/quickswap.webp",
+      name: "Quickswap",
+      pair: "MNTL/VERSA",
+      target_coin_id: "versagames",
+      subTitle: "",
+      url: "https://quickswap.exchange/#/swap?inputCurrency=0x8497842420cfdbc97896c2353d75d89fc8d5be5d&outputCurrency=0x38a536a31ba4d8c1bcca016abbf786ecd25877e8&swapIndex=0",
+      target: "_blank",
+      row: 2,
+      col: 1,
+    },
+    // {
+    //   logo: "/osmosis.png",
+    //   name: "P2B",
+    //   pair: "MNTL/USDT",
+
+    //   subTitle: "(USDC Pool)",
+    //   url: "https://p2pb2b.com/trade/MNTL_USDT/",
+    //   target: "_blank",
+    //   row: 1,
+    //   col: 3,
+    // },
+    // {
+    //   logo: "/osmosis.png",
+    //   name: "Coinsbit",
+    //   pair: "MNTL/USDT",
+
+    //   subTitle: "(USDC Pool)",
+    //   url: "https://coinsbit.io/trade/MNTL_USDT",
+    //   target: "_blank",
+    //   row: 1,
+    //   col: 3,
+    // },
+  ];
 
   return (
     <>
@@ -46,7 +152,7 @@ export default function Trade() {
                     <i className="bi bi-search text-white"></i>
                   </span>
                   <input
-                    type="text"
+                    type="search"
                     className="am-input bg-t p-1 w-100 h-100"
                     placeholder="Search"
                     aria-label="Search"
@@ -68,11 +174,7 @@ export default function Trade() {
                     }}
                   >
                     <tr className="caption2 text-white">
-                      <th
-                        scope="col"
-                        style={{ whiteSpace: "nowrap" }}
-                        colSpan="2"
-                      >
+                      <th scope="col" style={{ whiteSpace: "nowrap" }}>
                         Exchange Name
                       </th>
                       <th scope="col" style={{ whiteSpace: "nowrap" }}>
@@ -87,39 +189,70 @@ export default function Trade() {
                     </tr>
                   </thead>
                   <tbody>
-                    {React.Children.toArray(
-                      [...new Array(20)].map((e) => (
-                        <tr className="caption2 text-white-300">
+                    {tradeInfo
+                      ?.filter(
+                        (item) =>
+                          (item?.name
+                            .toLowerCase()
+                            .includes(searchValue.toLowerCase()) ||
+                            item?.pair
+                              .toLowerCase()
+                              .includes(searchValue.toLowerCase())) &&
+                          allTrades?.tickers?.find(
+                            (element) =>
+                              element?.market?.name == item?.name &&
+                              element?.target_coin_id == item?.target_coin_id
+                          )
+                      )
+                      ?.map((item, index) => (
+                        <tr key={index} className="caption2 text-white-300">
                           <td>
-                            <div
-                              className="d-flex position-relative rounded-circle gap-1"
-                              style={{ width: "32px", aspectRatio: "1/1" }}
-                            >
-                              <img
-                                alt={contentObg.name}
-                                className="rounded-circle"
-                                layout="fill"
-                                src={contentObg.img}
-                              />
+                            <div className="d-flex justify-content-start ps-3 gap-2">
+                              <div
+                                className="d-flex position-relative rounded-circle gap-1"
+                                style={{ width: "32px", aspectRatio: "1/1" }}
+                              >
+                                <img
+                                  alt={item.name}
+                                  className="rounded-circle"
+                                  layout="fill"
+                                  src={item.logo}
+                                />
+                              </div>
+                              <a
+                                className="d-flex gap-1 align-items-center justify-content-start"
+                                href={item.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {item.name}
+                                <i className="bi bi-arrow-up-right"></i>
+                              </a>
                             </div>
                           </td>
+                          <td>{item.pair}</td>
                           <td>
-                            <a
-                              className="d-flex gap-1 align-items-center justify-content-center"
-                              href={contentObg.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {contentObg.name}
-                              <i className="bi bi-arrow-up-right"></i>
-                            </a>
+                            $
+                            {
+                              allTrades?.tickers?.find(
+                                (ele) =>
+                                  ele?.market?.name == item.name &&
+                                  ele?.target_coin_id == item?.target_coin_id
+                              )?.converted_last?.usd
+                            }
                           </td>
-                          <td>{contentObg.pair}</td>
-                          <td>{contentObg.price.toFixed(6)}</td>
-                          <td>$ {contentObg.vol.toFixed(2)}</td>
+                          <td>
+                            $
+                            {
+                              allTrades?.tickers?.find(
+                                (ele) =>
+                                  ele?.market?.name == item.name &&
+                                  ele?.target_coin_id == item?.target_coin_id
+                              )?.converted_volume?.usd
+                            }
+                          </td>
                         </tr>
-                      ))
-                    )}
+                      ))}
                   </tbody>
                 </table>
               </div>
@@ -129,9 +262,13 @@ export default function Trade() {
         <div className="col-12 col-lg-4">
           <div className="rounded-4 p-3 my-2 bg-gray-800 width-100 d-flex flex-column ">
             <p>
-              Instructional Copy. Lorem Ipsum Dolor Sit ametLorem ipsum dolor
-              sit amet, consectetur adipiscing elit. Aliquam pulvinar vitae
-              massa in egestas. Vivamus tincidunt leo nulla.
+              To purchase MNTL, visit the exchanges (CEX & DEX) shown to swap
+              with your available tokens.
+            </p>
+            <br></br>
+            <p>
+              Options to directly on-ramp to MNTL using fiat currencies will be
+              coming soon.
             </p>
           </div>
         </div>

@@ -209,7 +209,7 @@ const MntlToGravityBridge = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleGravitySubmit = async (e) => {
     console.log("inside handleSubmit()");
     e.preventDefault();
 
@@ -340,8 +340,15 @@ const MntlToGravityBridge = () => {
         {displayFormAmountErrorMsg}
       </small>
       <div className="d-flex align-items-center justify-content-end gap-2">
+        {/* <button
+          onClick={handleGravitySubmit}
+          disabled={isSubmitDisabled}
+          className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
+        >
+          Send to AssetMantle <i className="bi bi-arrow-up" />
+        </button> */}
         <button
-          onClick={handleSubmit}
+          onClick={handleGravitySubmit}
           disabled={isSubmitDisabled}
           className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
         >

@@ -69,12 +69,13 @@ const DelegatedValidators = ({
                 </td>
                 <td className=" d-flex align-items-center justify-content-start">
                   <a
+                    className="text-truncate"
                     href={`https://explorer.assetmantle.one/validators/${item.operatorAddress}`}
                     target="_blank"
                     rel="noreferrer"
                   >
                     {" "}
-                    {item?.description?.moniker}
+                    {item?.description?.moniker}{" "}
                     <i className="bi bi-arrow-up-right" />
                   </a>
                 </td>
@@ -145,12 +146,13 @@ const DelegatedValidators = ({
                 </td>
                 <td className=" d-flex align-items-center justify-content-start gap-1">
                   <a
+                    className="text-truncate"
                     href={`https://explorer.assetmantle.one/validators/${item.operatorAddress}`}
                     target="_blank"
                     rel="noreferrer"
                   >
                     {" "}
-                    {item?.description?.moniker}
+                    {item?.description?.moniker}{" "}
                     <i className="bi bi-arrow-up-right" />
                   </a>
                 </td>

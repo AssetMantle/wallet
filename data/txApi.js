@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js";
 import { assets } from "chain-registry";
 import { cosmos } from "osmojs";
 import {
@@ -40,6 +41,8 @@ export const sendTokensTxn = async (
     }
     // create a message template from the composer
     const { send } = cosmos.bank.v1beta1.MessageComposer.withTypeUrl;
+    // const gasResponse = await stargateClient.simulate(fromAddress, [msg], memo);
+    // console.log("response:", gasResponse);
     // populate the message with transaction arguments
     const msg = send({
       fromAddress,
@@ -59,8 +62,11 @@ export const sendTokensTxn = async (
           amount: defaultFeeAmount,
         },
       ],
+      // gas: BigNumber(gasRespons).plus(BigNumber(100000)).toString(),
       gas: defaultFeeGas,
     };
+
+    // console.log("gas:", gasResponse, "fee", fee);
     // use the stargate client to dispatch the transaction
     const response = await stargateClient.signAndBroadcast(
       fromAddress,
@@ -396,9 +402,9 @@ export const sendRewardsBatched = async (
     // get the amount in denom terms
     // populate the optional argument fromAddress
     const fromAddress = address;
+    console.log(address, withdrawAddress);
     // initialize stargate client and create txn
     const stargateClient = await getSigningStargateClient();
-
     if (!stargateClient || !fromAddress) {
       throw new Error("stargateClient or from address undefined");
     }
@@ -409,9 +415,15 @@ export const sendRewardsBatched = async (
 
     const msgArray = validatorAddresses.map((validatorAddress) =>
       withdrawDelegatorReward({
-        delegatorAddress: withdrawAddress,
+        delegatorAddress: fromAddress,
         validatorAddress,
       })
+    );
+    // get gas fees using simulate
+    const gasResponse = await stargateClient.simulate(
+      fromAddress,
+      msgArray,
+      memo
     );
 
     // populate the fee data
@@ -422,7 +434,7 @@ export const sendRewardsBatched = async (
           amount: defaultFeeAmount,
         },
       ],
-      gas: defaultFeeGas,
+      gas: BigNumber(gasResponse).plus(BigNumber(100000)).toString(),
     };
 
     // use the stargate client to dispatch the transaction
