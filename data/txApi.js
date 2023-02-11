@@ -9,11 +9,13 @@ import {
   defaultIBCSourceChannel,
   defaultIBCSourcePort,
   gravityChainDenom,
+  gravityChainRPCProxy,
   gravityFeeAmount,
   gravityIBCSourceChannel,
   gravityIBCSourcePort,
 } from "../config";
 import { toChainDenom } from "../data";
+import { getSigningGravityClient } from "../modules";
 
 // get the wallet properties and functions for that specific chain
 export const sendTokensTxn = async (
@@ -526,7 +528,7 @@ export const sendIbcTokenToMantle = async (
   amount,
   memo,
   {
-    getSigningStargateClient,
+    getOfflineSigner,
     chainName = defaultChainName,
     chainDenom = defaultChainDenom,
   }
@@ -545,9 +547,16 @@ export const sendIbcTokenToMantle = async (
     const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
     // get the amount in denom terms
     const amountInDenom = toChainDenom(amount, chainName, chainDenom);
-    // initialize stargate client and create txn
-    const stargateClient = await getSigningStargateClient();
-    const signer = stargateClient;
+
+    // get the signer from cosmos-kit
+    const signer = await getOfflineSigner();
+
+    // initialize signing client of gravitybridge chain
+    const stargateClient = await getSigningGravityClient({
+      rpcEndpoint: gravityChainRPCProxy,
+      signer, // OfflineSigner
+    });
+
     if (!stargateClient || !fromGravityAddress) {
       throw new Error("stargateClient or from address undefined");
     }

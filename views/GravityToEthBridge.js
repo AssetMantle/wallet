@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useReducer } from "react";
 import { toast } from "react-toastify";
 import {
-  defaultChainGasFee,
   defaultChainName,
   defaultChainSymbol,
   gravityChainName,
@@ -22,7 +21,8 @@ import { handleCopy, isObjEmpty } from "../lib/basicJavascript";
 const GravityToEthBridge = () => {
   // WALLET HOOKS
   const chainContext = useChain(defaultChainName);
-  const { address, status, getSigningStargateClient } = chainContext;
+  const { address, status, getSigningStargateClient, getOfflineSigner } =
+    chainContext;
 
   const gravityAddress = convertBech32Address(address, gravityChainName);
 
@@ -65,8 +65,7 @@ const GravityToEthBridge = () => {
           };
         } else if (
           isNaN(parseFloat(availableBalanceIBCToken)) ||
-          toDenom(action.payload) + parseFloat(defaultChainGasFee) >
-            parseFloat(availableBalanceIBCToken)
+          toDenom(action.payload) > parseFloat(availableBalanceIBCToken)
         ) {
           return {
             ...state,
@@ -90,10 +89,7 @@ const GravityToEthBridge = () => {
 
       case "SET_MAX_AMOUNT": {
         // if available balance is invalid, set error message
-        if (
-          isNaN(parseFloat(availableBalanceIBCToken)) ||
-          parseFloat(availableBalanceIBCToken) < parseFloat(defaultChainGasFee)
-        ) {
+        if (isNaN(parseFloat(availableBalanceIBCToken))) {
           return {
             ...state,
             transferAmount: 0,
@@ -114,8 +110,7 @@ const GravityToEthBridge = () => {
           return {
             ...state,
             transferAmount: fromChainDenom(
-              parseFloat(availableBalanceIBCToken) -
-                parseFloat(defaultChainGasFee)
+              parseFloat(availableBalanceIBCToken)
             ).toString(),
           };
         }
@@ -216,7 +211,7 @@ const GravityToEthBridge = () => {
     });
   };
 
-  /* const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     console.log("inside handleSubmit()");
     e.preventDefault();
 
@@ -253,9 +248,9 @@ const GravityToEthBridge = () => {
       // reset the form values
       formDispatch({ type: "RESET" });
     }
-  }; */
+  };
 
-  const handleSubmitReverse = async (e) => {
+  const handleSubmit2 = async (e) => {
     console.log("inside handleSubmit()");
     e.preventDefault();
 
@@ -292,7 +287,7 @@ const GravityToEthBridge = () => {
         localTransferAmount,
         memo,
 
-        { getSigningStargateClient }
+        { getOfflineSigner }
       );
       console.log("response: ", response, " error: ", error);
       if (response) {
@@ -337,6 +332,8 @@ const GravityToEthBridge = () => {
   const isFormAmountError = formState?.errorMessages?.transferAmountErrorMsg;
   const displayFormAmountErrorMsg =
     formState?.errorMessages?.transferAmountErrorMsg;
+
+  console.log("availableBalanceIBCToken: ", availableBalanceIBCToken);
 
   return (
     <div className={`bg-gray-800 p-3 rounded-4 d-flex flex-column gap-3 ${""}`}>
@@ -392,14 +389,14 @@ const GravityToEthBridge = () => {
         <small className="small text-error">{displayFormAmountErrorMsg}</small>
       )}
       <div className="d-flex align-items-center justify-content-end gap-3">
-        {/* <button
+        <button
           className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2"
           disabled={isSubmitDisabled}
-          onClick={handleSubmitReverse}
+          onClick={handleSubmit2}
         >
           Send to Mantle Chain <i className="bi bi-arrow-up" />
-        </button> */}
-        <Link href={"https://bridge.blockscape.network/"}>
+        </button>
+        {/*  <Link href={"https://bridge.blockscape.network/"}>
           <a target="_blank" rel="noreferrer">
             <button
               className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
@@ -410,7 +407,7 @@ const GravityToEthBridge = () => {
               <i className="bi bi-box-arrow-up-right" />
             </button>
           </a>
-        </Link>
+        </Link> */}
       </div>
     </div>
   );
