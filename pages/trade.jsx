@@ -152,7 +152,7 @@ export default function Trade() {
                     <i className="bi bi-search text-white"></i>
                   </span>
                   <input
-                    type="text"
+                    type="search"
                     className="am-input bg-t p-1 w-100 h-100"
                     placeholder="Search"
                     aria-label="Search"
