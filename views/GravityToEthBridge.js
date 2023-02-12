@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useReducer } from "react";
 import { toast } from "react-toastify";
 import {
-  defaultChainGasFee,
   defaultChainName,
   defaultChainSymbol,
   gravityChainName,
@@ -21,10 +20,12 @@ import { handleCopy, isObjEmpty } from "../lib/basicJavascript";
 
 const GravityToEthBridge = () => {
   // WALLET HOOKS
-  const chainContext = useChain(defaultChainName);
-  const { address, status, getSigningStargateClient } = chainContext;
+  const chainContext2 = useChain(gravityChainName);
+  const gravityAddress = chainContext2.address;
+  const statusGravity = chainContext2.status;
+  const { getSigningStargateClient: getSigningStargateClient2 } = chainContext2;
 
-  const gravityAddress = convertBech32Address(address, gravityChainName);
+  const mantleAddress = convertBech32Address(gravityAddress, defaultChainName);
 
   // HOOKS or GETTERS
   const { availableBalanceGravity, availableBalanceIBCToken } =
@@ -65,8 +66,7 @@ const GravityToEthBridge = () => {
           };
         } else if (
           isNaN(parseFloat(availableBalanceIBCToken)) ||
-          toDenom(action.payload) + parseFloat(defaultChainGasFee) >
-            parseFloat(availableBalanceIBCToken)
+          toDenom(action.payload) > parseFloat(availableBalanceIBCToken)
         ) {
           return {
             ...state,
@@ -90,10 +90,7 @@ const GravityToEthBridge = () => {
 
       case "SET_MAX_AMOUNT": {
         // if available balance is invalid, set error message
-        if (
-          isNaN(parseFloat(availableBalanceIBCToken)) ||
-          parseFloat(availableBalanceIBCToken) < parseFloat(defaultChainGasFee)
-        ) {
+        if (isNaN(parseFloat(availableBalanceIBCToken))) {
           return {
             ...state,
             transferAmount: 0,
@@ -114,8 +111,7 @@ const GravityToEthBridge = () => {
           return {
             ...state,
             transferAmount: fromChainDenom(
-              parseFloat(availableBalanceIBCToken) -
-                parseFloat(defaultChainGasFee)
+              parseFloat(availableBalanceIBCToken)
             ).toString(),
           };
         }
@@ -225,9 +221,6 @@ const GravityToEthBridge = () => {
       type: "SUBMIT",
     });
 
-    const signer = await getOfflineSigner();
-    console.log("signer: ", signer);
-
     // if no validation errors, proceed to transaction processing
     if (
       formState?.transferAmount &&
@@ -255,7 +248,7 @@ const GravityToEthBridge = () => {
     }
   }; */
 
-  const handleSubmitReverse = async (e) => {
+  const handleSubmit2 = async (e) => {
     console.log("inside handleSubmit()");
     e.preventDefault();
 
@@ -273,9 +266,8 @@ const GravityToEthBridge = () => {
       // define local variables
       const localTransferAmount = formState?.transferAmount;
       let memo;
-      const gravityAddress = convertBech32Address(address, gravityChainName);
 
-      // create transaction
+      // initiate toast notification
       const id = toast.loading("Transaction initiated ...", {
         position: "bottom-center",
         autoClose: 8000,
@@ -286,13 +278,15 @@ const GravityToEthBridge = () => {
         progress: undefined,
         theme: "dark",
       });
+
+      // initiate transaction from txn api
       const { response, error } = await sendIbcTokenToMantle(
         gravityAddress,
-        address,
+        mantleAddress,
         localTransferAmount,
         memo,
 
-        { getSigningStargateClient }
+        { getSigningStargateClient2 }
       );
       console.log("response: ", response, " error: ", error);
       if (response) {
@@ -332,7 +326,7 @@ const GravityToEthBridge = () => {
   const displayBalanceUnitGravity = gravityChainSymbol;
   const displayBalanceUnitGravityIBCToken = defaultChainSymbol;
   const isSubmitDisabled =
-    status != "Connected" || !isObjEmpty(formState?.errorMessages);
+    statusGravity != "Connected" || !isObjEmpty(formState?.errorMessages);
   const displayInputAmountValue = formState?.transferAmount;
   const isFormAmountError = formState?.errorMessages?.transferAmountErrorMsg;
   const displayFormAmountErrorMsg =
@@ -392,13 +386,13 @@ const GravityToEthBridge = () => {
         <small className="small text-error">{displayFormAmountErrorMsg}</small>
       )}
       <div className="d-flex align-items-center justify-content-end gap-3">
-        {/* <button
+        <button
           className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2"
           disabled={isSubmitDisabled}
-          onClick={handleSubmitReverse}
+          onClick={handleSubmit2}
         >
           Send to Mantle Chain <i className="bi bi-arrow-up" />
-        </button> */}
+        </button>
         <Link href={"https://bridge.blockscape.network/"}>
           <a target="_blank" rel="noreferrer">
             <button
