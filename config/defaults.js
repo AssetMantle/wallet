@@ -10,8 +10,23 @@ export const defaultFeeGas = "250000";
 export const defaultChainRPCProxy = "https://rpc.cosmos.directory/assetmantle";
 export const defaultChainRESTProxy =
   "https://rest.cosmos.directory/assetmantle";
+export const defaultChainGRPCProxy = "";
 export const defaultIBCSourcePort = "transfer";
 export const defaultIBCSourceChannel = "channel-8";
+
+// ASSETMANTLE TESTNET CHAIN
+export const assetmantleTestChainName = "assetmantletestnet";
+export const assetmantleTestChainSymbol = "$MNTL";
+export const assetmantleTestChainDenom = "umntl";
+export const assetmantleTestChainDenomExponent = 6;
+export const assetmantleTestChainGasFee = 500000;
+export const assetmantleTestChainMemoSize = 256;
+export const assetmantleTestFeeAmount = "2000";
+export const assetmantleTestFeeGas = "250000";
+export const assetmantleTestChainRPCProxy =
+  "http://rpc.testnet.assetmantle.one/";
+export const assetmantleTestChainRESTProxy =
+  "http://rest.testnet.assetmantle.one/";
 
 // GRAVITY CHAIN
 export const gravityChainRPCProxy =
@@ -27,7 +42,7 @@ export const gravityChainSymbol = "$GRAV";
 export const gravityChainDenom = "ugraviton";
 export const gravityFeeAmount = "2000";
 export const gravityIBCSourcePort = "transfer";
-export const gravityIBCSourceChannel = "channel-18";
+export const gravityIBCSourceChannel = "channel-82";
 
 // ETHEREUM CHAIN
 export const ethereumChainSymbol = "$ETH";
