@@ -14,18 +14,41 @@ import {
   defaultChainRPCProxy,
   defaultTheme,
   keplrWallets,
+  mantleAssetConfig,
+  mantleChainConfig,
+  mantleTestChainConfig,
+  mantleTestnetAssetConfig,
 } from "../config";
 import "../config/styles/index.scss";
-
 import { ethereumClient, wagmiClient, web3ModalProjectID } from "../data";
+import { getSigningGravityClientOptions } from "../modules";
 import ConnectModal from "../views/ConnectModal/ConnectModal";
 
 function CreateCosmosApp({ Component, pageProps }) {
   // useEffect for bootstrap js hydration
   useEffect(() => {
     require("bootstrap/dist/js/bootstrap.bundle.js");
-    console.log("leapwallets: ", leapwallets);
   }, []);
+
+  const customChains = chains.filter(
+    (chain) => chain.chain_name !== "assetmantle"
+  );
+
+  const customAssets = assets.filter(
+    (assets) => assets.chain_name !== "assetmantle"
+  );
+
+  // get custom signing options for the stargate client
+  // construct signer options
+  const signerOptions = {
+    signingStargate: (chain) => {
+      // return corresponding stargate options or undefined
+      switch (chain.chain_name) {
+        case "gravitybridge":
+          return getSigningGravityClientOptions();
+      }
+    },
+  };
 
   return (
     <>
@@ -54,9 +77,18 @@ function CreateCosmosApp({ Component, pageProps }) {
 
       <ChakraProvider theme={defaultTheme}>
         <ChainProvider
-          chains={chains}
-          assetLists={assets}
+          chains={[
+            ...customChains,
+            ...mantleChainConfig,
+            ...mantleTestChainConfig,
+          ]}
+          assetLists={[
+            ...customAssets,
+            ...mantleAssetConfig,
+            ...mantleTestnetAssetConfig,
+          ]}
           wallets={[...keplrWallets, ...leapwallets, ...cosmostationWallets]}
+          signerOptions={signerOptions}
           endpointOptions={{
             assetmantle: {
               rpc: [defaultChainRPCProxy],

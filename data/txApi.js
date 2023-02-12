@@ -9,9 +9,11 @@ import {
   defaultIBCSourceChannel,
   defaultIBCSourcePort,
   gravityChainDenom,
+  gravityChainName,
   gravityFeeAmount,
   gravityIBCSourceChannel,
   gravityIBCSourcePort,
+  gravityIBCToken,
 } from "../config";
 import { toChainDenom } from "../data";
 
@@ -467,10 +469,8 @@ export const sendIbcTokenToGravity = async (
   let response = null;
   try {
     console.log(fromAddress, toGravityAddress, amount);
-    // get the chain assets for the specified chain
-    const chainassets = assets.find((chain) => chain.chain_name === chainName);
-    // get the coin data from the chain assets data
-    const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
+    // get the coin data
+    const denomOfAmount = defaultChainDenom;
     // get the amount in denom terms
     const amountInDenom = toChainDenom(amount, chainName, chainDenom);
     // initialize stargate client and create txn
@@ -485,7 +485,7 @@ export const sendIbcTokenToGravity = async (
 
     // get the amount object
     const transferAmount = {
-      denom: coin.base,
+      denom: denomOfAmount,
       amount: amountInDenom,
     };
 
@@ -493,7 +493,7 @@ export const sendIbcTokenToGravity = async (
     const fee = {
       amount: [
         {
-          denom: "umntl",
+          denom: defaultChainDenom,
           amount: defaultFeeAmount,
         },
       ],
@@ -526,12 +526,13 @@ export const sendIbcTokenToMantle = async (
   amount,
   memo,
   {
-    getSigningStargateClient,
+    getSigningStargateClient2,
     chainName = defaultChainName,
     chainDenom = defaultChainDenom,
   }
 ) => {
   let response = null;
+
   try {
     console.log(
       "inside sendIbcTokenToMantle: ",
@@ -539,15 +540,17 @@ export const sendIbcTokenToMantle = async (
       toMantleAddress,
       amount
     );
-    // get the chain assets for the specified chain
-    const chainassets = assets.find((chain) => chain.chain_name === chainName);
-    // get the coin data from the chain assets data
-    const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
+    // get the coin data
+    const denomOfAmount = gravityIBCToken;
     // get the amount in denom terms
-    const amountInDenom = toChainDenom(amount, chainName, chainDenom);
-    // initialize stargate client and create txn
-    const stargateClient = await getSigningStargateClient();
-    const signer = stargateClient;
+    const amountInDenom = toChainDenom(
+      amount,
+      gravityChainName,
+      gravityChainDenom
+    );
+    // initialize signing client
+    const stargateClient = await getSigningStargateClient2();
+
     if (!stargateClient || !fromGravityAddress) {
       throw new Error("stargateClient or from address undefined");
     }
@@ -558,7 +561,7 @@ export const sendIbcTokenToMantle = async (
 
     // get the amount object
     const transferAmount = {
-      denom: coin.base,
+      denom: denomOfAmount,
       amount: amountInDenom,
     };
 
