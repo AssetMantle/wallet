@@ -160,10 +160,9 @@ const GravityToEthBridge = () => {
   const CustomToastWithLink = ({ txHash }) => (
     <p>
       Transaction Submitted. Check
-      <Link href={`https://explorer.assetmantle.one/transactions/${txHash}`}>
+      <Link href={`https://www.mintscan.io/gravity-bridge/txs/${txHash}`}>
         <a style={{ color: "#ffc640" }} target="_blank">
-          {" "}
-          Here
+          &nbsp; Here
         </a>
       </Link>
     </p>
