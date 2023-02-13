@@ -6,6 +6,9 @@ export const formConstants = {
 };
 
 export const placeholderAddress = "mantle1000000...000000";
+export const placeholderAddressGravity =
+  "gravity100000000000000000000000000000000000000";
+
 export const placeholderAddressEth =
   "0x0000000000000000000000000000000000000000";
 
