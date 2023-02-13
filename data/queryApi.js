@@ -93,13 +93,15 @@ export const toChainDenom = (
 ) => {
   let amount;
   // get the chain assets for the specified chain
-  const chainassets = assets.find((chain) => chain.chain_name === chainName);
+  const chainassets = assets?.find?.((chain) => chain.chain_name === chainName);
   // get the coin data from the chain assets data
-  const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
+  const coin = chainassets?.assets?.find?.(
+    (asset) => asset.base === chainDenom
+  );
   // Get the display exponent
   // we can get the exponent from chain registry asset denom_units
-  const exp = coin.denom_units.find(
-    (unit) => unit.denom === coin.display
+  const exp = coin?.denom_units?.find?.(
+    (unit) => unit?.denom === coin?.display
   )?.exponent;
   // show balance in display values by exponentiating it
   const valueBigNumber = new BigNumber(value?.toString() || 0);
@@ -121,15 +123,18 @@ export const decimalize = (
   chainDenom = defaultChainDenom
 ) => {
   // get the chain assets for the specified chain
-  const chainassets = assets.find((chain) => chain.chain_name === chainName);
+  const chainassets = assets?.find?.((chain) => chain.chain_name === chainName);
   // get the coin data from the chain assets data
-  const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
+  const coin = chainassets?.assets?.find?.(
+    (asset) => asset.base === chainDenom
+  );
   // Get the display exponent
   // we can get the exponent from chain registry asset denom_units
   const exp =
     exponent ||
-    coin.denom_units.find((unit) => unit.denom === coin.display)?.exponent;
-  const bnValue = BigNumber(value || placeholderAvailableBalance);
+    coin?.denom_units?.find?.((unit) => unit?.denom === coin?.display)
+      ?.exponent;
+  const bnValue = BigNumber(value || 0);
   if (bnValue.isNaN()) bnValue = BigNumber(0);
 
   return bnValue.toFixed(exp).toString();
@@ -150,7 +155,7 @@ export const isInvalidAddress = (address, chainName = defaultChainName) => {
       let hrpAddress = splitArrays?.[0];
 
       // get the hrp of the chain
-      const hrpChain = chains.find(
+      const hrpChain = chains?.find?.(
         (_chain) => _chain?.chain_name === chainName
       )?.bech32_prefix;
 
@@ -170,72 +175,6 @@ export const isInvalidAddress = (address, chainName = defaultChainName) => {
   return true;
 };
 
-// custom hook to implement multiple revalidation points to useChain of cosmosKit
-export const useChainSwr = () => {
-  // get the connected wallet parameters from useChain hook
-  const walletManager = useChain(defaultChainName);
-
-  // fetcher function for useSwr of useChainSwr()
-  const fetchWalletManager = async (url) => {
-    // console.log("inside fetchWalletManager, url: ", url);
-
-    let walletManagerObject;
-
-    // use a try catch block for creating rich Error object
-    try {
-      // get the properties of walletManager
-      const {
-        walletStatus,
-        username,
-        address,
-        currentChainName,
-        currentWalletName,
-      } = walletManager;
-
-      walletManagerObject = {
-        walletStatus,
-        username,
-        address,
-        currentChainName,
-        currentWalletName,
-      };
-      // console.log("swr fetcher success: ", url);
-    } catch (error) {
-      console.error(`swr fetcher : url: ${url},  error: ${error}`);
-      throw error;
-    }
-
-    // return the data
-    return walletManagerObject;
-  };
-
-  // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: walletManagerObject } = useSwr(
-    "walletManager",
-    fetchWalletManager,
-    {
-      refreshInterval: 1000,
-    }
-  );
-
-  return {
-    walletStatus: walletManagerObject?.walletStatus,
-    username: walletManagerObject?.username,
-    address: walletManagerObject?.address,
-    currentChainName: walletManagerObject?.currentChainName,
-    currentWalletName: walletManagerObject?.currentWalletName,
-  };
-};
-
-export const useExample = () => {
-  const data = "adasdsad";
-  const error = "wrroe";
-  return {
-    data,
-    error,
-  };
-};
-
 //Get total value being unbonded
 export const useTotalUnbonding = () => {
   // get the connected wallet parameters from useChain hook
@@ -252,18 +191,18 @@ export const useTotalUnbonding = () => {
           delegatorAddr: address,
         });
 
-      if (!unbondingResponses.length) {
+      if (!unbondingResponses?.length) {
         totalUnbondingAmount = 0;
       } else {
-        unbondingResponses?.map((item) => {
-          item?.entries.map((ele) =>
-            allUnbonding.push({
-              address: item.validatorAddress,
-              balance: ele.balance,
-              completion_time: ele.completionTime,
+        unbondingResponses?.map?.((item) => {
+          item?.entries.map?.((ele) =>
+            allUnbonding?.push?.({
+              address: item?.validatorAddress,
+              balance: ele?.balance,
+              completion_time: ele?.completionTime,
             })
           );
-          totalUnbondingAmount = allUnbonding?.reduce(
+          totalUnbondingAmount = allUnbonding?.reduce?.(
             (total, currentValue) =>
               parseFloat(total) + parseFloat(currentValue?.balance),
             parseFloat("0")
@@ -295,8 +234,8 @@ export const useTotalUnbonding = () => {
   );
 
   return {
-    totalUnbondingAmount: unbondingObject.totalUnbondingAmount,
-    allUnbonding: unbondingObject.allUnbonding,
+    totalUnbondingAmount: unbondingObject?.totalUnbondingAmount,
+    allUnbonding: unbondingObject?.allUnbonding,
     isLoadingUnbonding: !error && !unbondingObject,
     errorUnbonding: error,
   };
@@ -329,14 +268,14 @@ export const useTotalRewards = () => {
       let zeroBigNumber = new BigNumber("0");
 
       // reduce function to add up the BigNumber formats of individual reward values
-      totalRewardsInWei = rewardsArray.reduce(
+      totalRewardsInWei = rewardsArray?.reduce?.(
         (accumulator, currentValue) =>
           currentValue?.reward?.[0]?.amount
             ? accumulator.plus(new BigNumber(currentValue?.reward?.[0]?.amount))
             : accumulator.plus(new BigNumber("0")),
         zeroBigNumber
       );
-      totalRewards = totalRewardsInWei.toString();
+      totalRewards = totalRewardsInWei?.toString();
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
@@ -360,8 +299,8 @@ export const useTotalRewards = () => {
     }
   );
   return {
-    allRewards: rewardsObject.totalRewards,
-    rewardsArray: rewardsObject.rewardsArray,
+    allRewards: rewardsObject?.totalRewards,
+    rewardsArray: rewardsObject?.rewardsArray,
     isLoadingRewards: !error && !rewardsObject,
     errorRewards: error,
   };
@@ -396,16 +335,18 @@ export const useDelegatedValidators = () => {
         });
 
       //Create an array of delegated validators with all additional information about them
-      delegationResponses.map((item) => {
-        let match = validators.find(
+      delegationResponses?.map?.((item) => {
+        let match = validators?.find?.(
           (element) =>
             element?.operatorAddress === item?.delegation?.validatorAddress
         );
-        match.delegatedAmount = item?.balance?.amount;
-        delegatedValidators.push(match);
+        if (match) {
+          match.delegatedAmount = item?.balance?.amount;
+          delegatedValidators?.push?.(match);
+        }
       });
       //Get total delegated amount
-      totalDelegatedAmount = delegationResponses.reduce(
+      totalDelegatedAmount = delegationResponses?.reduce?.(
         (total, currentValue) =>
           parseFloat(total) + parseFloat(currentValue?.balance?.amount),
         parseFloat("0")
@@ -438,8 +379,8 @@ export const useDelegatedValidators = () => {
     }
   );
   return {
-    delegatedValidators: delegatedObject.delegatedValidators,
-    totalDelegatedAmount: delegatedObject.totalDelegatedAmount,
+    delegatedValidators: delegatedObject?.delegatedValidators,
+    totalDelegatedAmount: delegatedObject?.totalDelegatedAmount,
     isLoadingDelegatedAmount: !error && !delegatedObject,
     errorDelegatedAmount: error,
   };
@@ -509,7 +450,7 @@ export const useMntlUsd = () => {
     try {
       // fetch the data from API
       const res = await fetch(mntlUsdApi);
-      const resJson = await res.json();
+      const resJson = await res?.json?.();
       mntlUsdValue = resJson?.assetmantle?.usd;
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
@@ -635,22 +576,22 @@ export const useAvailableBalanceGravity = () => {
     }
   );
 
-  let availableBalanceGravityArray = balanceObjects.filter(
+  let availableBalanceGravityArray = balanceObjects?.filter?.(
     (value) => value?.denom == denomGravity
   );
 
   let availableBalanceGravityObject =
     availableBalanceGravityArray?.length != 0
-      ? availableBalanceGravityArray[0]
+      ? availableBalanceGravityArray?.[0]
       : placeholderGravityCoin;
 
-  let availableBalanceIBCTokenArray = balanceObjects.filter(
+  let availableBalanceIBCTokenArray = balanceObjects?.filter?.(
     (value) => value?.denom == denomGravityIBCToken
   );
 
   let availableBalanceIBCTokenObject =
     availableBalanceIBCTokenArray?.length != 0
-      ? availableBalanceIBCTokenArray[0]
+      ? availableBalanceIBCTokenArray?.[0]
       : placeholderGravityIBCCoin;
 
   return {
