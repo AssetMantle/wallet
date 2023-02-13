@@ -195,7 +195,7 @@ export const useTotalUnbonding = () => {
         totalUnbondingAmount = 0;
       } else {
         unbondingResponses?.map?.((item) => {
-          item?.entries.map?.((ele) =>
+          item?.entries?.map?.((ele) =>
             allUnbonding?.push?.({
               address: item?.validatorAddress,
               balance: ele?.balance,
