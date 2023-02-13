@@ -31,6 +31,8 @@ export const assetmantleTestChainRESTProxy =
   "http://rest.testnet.assetmantle.one/";
 
 // GRAVITY CHAIN
+// export const gravityChainRPCProxy = "https://gravity-rpc.ibs.team/";
+// export const gravityChainRESTProxy = "https://gravity-api.ibs.team/";
 export const gravityChainRPCProxy =
   "https://rpc.cosmos.directory:443/gravitybridge";
 export const gravityChainRESTProxy =
