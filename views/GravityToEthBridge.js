@@ -11,6 +11,7 @@ import {
 import {
   formConstants,
   fromChainDenom,
+  placeholderAddressGravity,
   sendIbcTokenToMantle,
   toDenom,
   useAvailableBalanceGravity,
@@ -21,11 +22,9 @@ import { handleCopy, isObjEmpty } from "../lib/basicJavascript";
 const GravityToEthBridge = () => {
   // WALLET HOOKS
   const chainContext2 = useChain(gravityChainName);
-  const gravityAddress = chainContext2.address;
+  const gravityAddress = chainContext2.address || placeholderAddressGravity;
   const statusGravity = chainContext2.status;
   const { getSigningStargateClient: getSigningStargateClient2 } = chainContext2;
-
-  const mantleAddress = convertBech32Address(gravityAddress, defaultChainName);
 
   // HOOKS or GETTERS
   const { availableBalanceGravity, availableBalanceIBCToken } =
@@ -265,6 +264,10 @@ const GravityToEthBridge = () => {
       // define local variables
       const localTransferAmount = formState?.transferAmount;
       let memo;
+      const mantleAddress = convertBech32Address(
+        gravityAddress,
+        defaultChainName
+      );
 
       // initiate toast notification
       const id = toast.loading("Transaction initiated ...", {
@@ -385,13 +388,13 @@ const GravityToEthBridge = () => {
         <small className="small text-error">{displayFormAmountErrorMsg}</small>
       )}
       <div className="d-flex align-items-center justify-content-end gap-3">
-        <button
+        {/* <button
           className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2"
           disabled={isSubmitDisabled}
           onClick={handleSubmit2}
         >
           Send to Mantle Chain <i className="bi bi-arrow-up" />
-        </button>
+        </button> */}
         <Link href={"https://bridge.blockscape.network/"}>
           <a target="_blank" rel="noreferrer">
             <button
