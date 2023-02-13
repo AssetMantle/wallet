@@ -23,6 +23,8 @@ import "../config/styles/index.scss";
 import { ethereumClient, wagmiClient, web3ModalProjectID } from "../data";
 import { getSigningGravityClientOptions } from "../modules";
 import ConnectModal from "../views/ConnectModal/ConnectModal";
+import "react-toastify/dist/ReactToastify.min.css";
+import "@splidejs/react-splide/css";
 
 function CreateCosmosApp({ Component, pageProps }) {
   // useEffect for bootstrap js hydration
