@@ -594,6 +594,7 @@ export const useAvailableBalanceGravity = () => {
     amount: placeholderAvailableBalance,
     denom: denomGravity,
   };
+
   let denomGravityIBCToken = gravityIBCToken;
   let placeholderGravityIBCCoin = {
     amount: placeholderAvailableBalance,
@@ -657,8 +658,8 @@ export const useAvailableBalanceGravity = () => {
     availableBalanceIBCToken: availableBalanceIBCTokenObject?.amount,
     denomGravity: availableBalanceGravityObject?.denom,
     denomGravityIBCToken: availableBalanceIBCTokenObject?.denom,
-    isLoadingAvailableBalance: !error && !balanceObjects,
-    errorAvailableBalance: error,
+    isLoadingAvailableBalanceGravity: !error && !balanceObjects,
+    errorAvailableBalanceGravity: error,
   };
 };
 
@@ -666,6 +667,12 @@ export const useTotalBalance = () => {
   // fetcher function for useSwr of useAvailableBalance()
   const { availableBalance, errorAvailableBalance, isLoadingAvailableBalance } =
     useAvailableBalance();
+
+  const {
+    availableBalanceIBCToken,
+    errorAvailableBalanceGravity,
+    isLoadingAvailableBalanceGravity,
+  } = useAvailableBalanceGravity();
 
   const {
     totalDelegatedAmount,
@@ -680,12 +687,14 @@ export const useTotalBalance = () => {
 
   const isLoading =
     isLoadingAvailableBalance ||
+    isLoadingAvailableBalanceGravity ||
     isLoadingDelegatedAmount ||
     isLoadingRewards ||
     isLoadingUnbonding;
 
   const isError =
     errorAvailableBalance ||
+    errorAvailableBalanceGravity ||
     errorDelegatedAmount ||
     errorRewards ||
     errorUnbonding;
@@ -693,12 +702,12 @@ export const useTotalBalance = () => {
   const summation =
     isLoading || isError
       ? placeholderAvailableBalance
-      : BigNumber(availableBalance || 0).plus(
-          BigNumber(totalDelegatedAmount || 0)
-            .plus(BigNumber(allRewards || 0))
-            .plus(BigNumber(totalUnbondingAmount || 0))
-            .toString()
-        );
+      : BigNumber(availableBalance || 0)
+          .plus(BigNumber(availableBalanceIBCToken || 0))
+          .plus(BigNumber(totalDelegatedAmount || 0))
+          .plus(BigNumber(allRewards || 0))
+          .plus(BigNumber(totalUnbondingAmount || 0))
+          .toString();
 
   return {
     totalBalance: summation,
