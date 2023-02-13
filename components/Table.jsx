@@ -32,6 +32,7 @@ function GlobalFilter({
           <i className="bi bi-search text-white"></i>
         </span>
         <input
+          className="w-100 bg-t "
           value={value || ""}
           onChange={(e) => {
             setValue(e.target.value);

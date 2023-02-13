@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import Head from "next/head";
-import { useQuickswap } from "../data";
+import { useQuickswap, useOsmosis } from "../data";
 
 export default function Earn() {
   const [searchValue, setSearchValue] = useState();
-  // const { allOsmosis, isLoadingOsmosis, errorOsmosis } = useOsmosis();
+  const { allOsmosis, isLoadingOsmosis, errorOsmosis } = useOsmosis();
   const { allQuickswap, isLoadingQuickswap, errorQuickswap } = useQuickswap();
   let earnInfo = [...allQuickswap];
-  console.log(earnInfo);
+  console.log(allOsmosis);
   // const earnInfo = [
   //   {
   //     logo: "/osmosis.png",
@@ -117,67 +117,8 @@ export default function Earn() {
               className="d-flex flex-column w-100 nav-bg p-2 rounded-4 flex-grow-1"
               style={{ height: "90%" }}
             >
-              <div className="d-flex align-items-center gap-3 w-100 p-2">
-                <div
-                  className="d-flex gap-2 am-input border-color-white rounded-3 py-1 px-3 align-items-center"
-                  style={{ flex: "1" }}
-                >
-                  <span
-                    className="input-group-text bg-t p-0 h-100"
-                    id="basic-addon1"
-                    style={{ border: "none" }}
-                  >
-                    <i className="bi bi-search text-white"></i>
-                  </span>
-                  <input
-                    type="text"
-                    className="am-input bg-t p-1 w-100 h-100"
-                    placeholder="Search"
-                    aria-label="Search"
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                    style={{ border: "none" }}
-                  />
-                </div>
-              </div>
               <div className="w-100 h-100" style={{ overflow: "auto" }}>
-                <table
-                  className="table"
-                  style={{ width: "max-content", minWidth: "100%" }}
-                >
-                  <thead
-                    className="position-sticky top-0 nav-bg"
-                    style={{
-                      zIndex: "200",
-                    }}
-                  >
-                    <tr className="caption2 text-white">
-                      <th scope="col" style={{ whiteSpace: "nowrap" }}>
-                        Name
-                      </th>
-                      <th scope="col" style={{ whiteSpace: "nowrap" }}>
-                        Category
-                      </th>
-                      <th scope="col" style={{ whiteSpace: "nowrap" }}>
-                        Chains
-                      </th>
-                      <th scope="col" style={{ whiteSpace: "nowrap" }}>
-                        APY
-                      </th>
-                      <th scope="col" style={{ whiteSpace: "nowrap" }}>
-                        TVL
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {earnInfo?.map?.((e, index) => (
-                      <tr key={index} className="caption2 text-white-300 ">
-                        <td>{e?.symbol}</td>
-                        <td>{e?.project}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                {/* <EarnTable data={earnInfo} />{" "} */}
               </div>
             </div>
           </div>

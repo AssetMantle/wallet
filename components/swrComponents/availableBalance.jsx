@@ -27,9 +27,17 @@ export const AvailableBalance = () => {
       {isLoadingAvailableBalance ? (
         <p>Loading...</p>
       ) : (
-        <p className={status === "Connected" ? "caption" : "caption text-gray"}>
-          {balanceDisplay}&nbsp;{denomDisplay}
-        </p>
+        <div
+          className={
+            status === "Connected"
+              ? "caption d-flex align-items-end"
+              : "caption text-gray d-flex align-items-end"
+          }
+        >
+          <p className="caption1">{Math.floor(balanceDisplay)}</p>.
+          <p className="caption2">{(balanceDisplay % 1).toFixed(6)}</p>
+          {denomDisplay}
+        </div>
       )}
     </>
   );
