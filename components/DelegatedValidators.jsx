@@ -1,5 +1,9 @@
 import React from "react";
-import { fromChainDenom } from "../data";
+import {
+  fromChainDenom,
+  useAllValidatorsBonded,
+  useAllValidatorsUnbonded,
+} from "../data";
 
 const DelegatedValidators = ({
   searchValue,
@@ -10,6 +14,16 @@ const DelegatedValidators = ({
   setShowClaimError,
   delegatedValidators,
 }) => {
+  const {
+    allValidatorsBonded,
+    isLoadingValidatorsBonded,
+    errorValidatorsBonded,
+  } = useAllValidatorsBonded();
+  const {
+    allValidatorsUnbonded,
+    isLoadingValidatorsUnbonded,
+    errorValidatorsUnbonded,
+  } = useAllValidatorsUnbonded();
   // controller for onError
   const handleOnError = (e) => {
     e.preventDefault();
@@ -25,7 +39,9 @@ const DelegatedValidators = ({
         ? delegatedValidators
             ?.filter(
               (item) =>
-                item?.status === 3 &&
+                allValidatorsBonded?.find(
+                  (e) => item?.operatorAddress == e?.operatorAddress
+                ) &&
                 item?.description?.moniker?.toLowerCase()?.includes(searchValue)
             )
             ?.map((item, index) => (
@@ -101,7 +117,9 @@ const DelegatedValidators = ({
         : delegatedValidators
             ?.filter(
               (item) =>
-                statusArray.includes(item?.status) &&
+                allValidatorsUnbonded?.find(
+                  (e) => item?.operatorAddress == e?.operatorAddress
+                ) &&
                 item?.description?.moniker?.toLowerCase()?.includes(searchValue)
             )
 
