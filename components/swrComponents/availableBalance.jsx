@@ -29,7 +29,7 @@ export const AvailableBalance = () => {
         <p>Loading...</p>
       ) : (
         <p className={status === "Connected" ? "caption" : "caption text-gray"}>
-          {getBalanceStyle(balanceDisplay, "caption", "caption2", false)}{" "}
+          {getBalanceStyle(balanceDisplay, "caption", "caption2")}{" "}
           {denomDisplay}
         </p>
       )}
@@ -58,7 +58,13 @@ export const AvailableBalanceUsd = () => {
 
   return (
     <p className="caption2 text-gray">
-      ${getBalanceStyle(balanceInUSDDisplay, "caption2", "small", true)}
+      $
+      {getBalanceStyle(
+        balanceInUSDDisplay,
+        "caption2 text-gray",
+        "small text-gray",
+        true
+      )}
       &nbsp;$USD
     </p>
   );
