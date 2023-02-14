@@ -4,6 +4,7 @@ import BigNumber from "bignumber.js";
 import {
   defaultChainName,
   defaultChainSymbol,
+  getBalanceStyle,
   placeholderMntlUsdValue,
   placeholderRewards,
 } from "../config";
@@ -144,13 +145,14 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
           </p>
         )}
         <p className={status === "Connected" ? "caption" : "caption text-gray"}>
-          {rewardsDisplay}&nbsp;
+          {getBalanceStyle(rewardsDisplay, "caption", "caption2", false)}&nbsp;
           {denomDisplay}
         </p>
         <p
           className={status === "Connected" ? "caption2" : "caption2 text-gray"}
         >
-          {rewardsInUSDDisplay}&nbsp;{"$USD"}
+          {getBalanceStyle(rewardsInUSDDisplay, "caption2", "small", false)}
+          &nbsp;{"$USD"}
         </p>
         <div className="d-flex justify-content-end">
           {stakeState?.selectedValidators?.length > 5 ||
