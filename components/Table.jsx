@@ -45,7 +45,6 @@ const Table = ({ columns, data }) => {
             return (
               <tr key={i} {...row.getRowProps()}>
                 {row.cells.map((cell, index) => {
-                  console.log(cell);
                   return (
                     <td key={index} {...cell.getCellProps()}>
                       {cell.render("Cell")}
