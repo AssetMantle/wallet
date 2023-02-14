@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import {
   defaultChainName,
   defaultChainSymbol,
+  getBalanceStyle,
   placeholderMntlUsdValue,
   placeholderTotalDelegations,
 } from "../config";
@@ -197,7 +198,8 @@ const Delegations = ({
           <p
             className={status === "Connected" ? "caption" : "caption text-gray"}
           >
-            {delegationsDisplay}&nbsp;{denomDisplay}
+            {getBalanceStyle(delegationsDisplay, "caption", "caption2")}&nbsp;
+            {denomDisplay}
           </p>
           <p
             className={

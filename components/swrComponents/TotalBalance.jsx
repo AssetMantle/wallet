@@ -4,6 +4,7 @@ import React from "react";
 import {
   defaultChainDenomExponent,
   defaultChainName,
+  getBalanceStyle,
   usdSymbol,
 } from "../../config";
 import { fromChainDenom, useMntlUsd, useTotalBalance } from "../../data";
@@ -30,7 +31,8 @@ export const TotalBalance = () => {
   return (
     <>
       <p className={isConnected ? "caption" : "caption text-gray"}>
-        {totalBalanceDisplay}&nbsp;{denomTotalBalance}
+        {getBalanceStyle(totalBalanceDisplay, "caption", "caption2")}&nbsp;
+        {denomTotalBalance}
       </p>
     </>
   );

@@ -44,7 +44,30 @@ function GlobalFilter({
   );
 }
 
-const Table = ({ columns, data }) => {
+const TradeTable = ({ data }) => {
+  const columns = [
+    {
+      Header: "Market Name",
+      accessor: "marketName",
+      Cell: (tableProps) => (
+        <div className="d-flex align-items-center justify-content-around">
+          <img src={tableProps.row.original.logo} width={20} alt="logo" />
+          <a
+            href={tableProps.row.original.url}
+            target="_blank"
+            width={20}
+            rel="noreferrer"
+          >
+            {tableProps.row.original.exchangeName}
+          </a>{" "}
+          <i className="bi bi-arrow-up-right"></i>
+        </div>
+      ),
+    },
+    { Header: "Trade Pair", accessor: "tradePair" },
+    { Header: "Price", accessor: "price" },
+    { Header: "Volume", accessor: "volume" },
+  ];
   const {
     getTableProps,
     getTableBodyProps,
@@ -70,17 +93,17 @@ const Table = ({ columns, data }) => {
         globalFilter={state.globalFilter}
         setGlobalFilter={setGlobalFilter}
       />
-      <table className="table caption2 text-white-300" {...getTableProps()}>
+      <table className="table caption2 text-white-300" {...getTableProps}>
         <thead>
           {headerGroups.map((headerGroup, index) => (
-            <tr key={index} {...headerGroup.getHeaderGroupProps()}>
+            <tr key={index} {...headerGroup.getHeaderGroupProps}>
               {headerGroup.headers.map((column, i) => (
                 // Add the sorting props to control sorting. For this example
                 // we can add them into the header props
                 <th
                   key={i}
                   className="text-white"
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
+                  {...column.getHeaderProps(column.getSortByToggleProps)}
                 >
                   {column.render("Header")}
                   {/* Add a sort direction indicator */}
@@ -96,14 +119,14 @@ const Table = ({ columns, data }) => {
             </tr>
           ))}
         </thead>
-        <tbody {...getTableBodyProps()}>
+        <tbody {...getTableBodyProps}>
           {rows.map((row, i) => {
             prepareRow(row);
             return (
-              <tr key={i} {...row.getRowProps()}>
+              <tr key={i} {...row.getRowProps}>
                 {row.cells.map((cell, index) => {
                   return (
-                    <td key={index} {...cell.getCellProps()}>
+                    <td key={index} {...cell.getCellProps}>
                       {cell.render("Cell")}
                     </td>
                   );
@@ -117,4 +140,4 @@ const Table = ({ columns, data }) => {
   );
 };
 
-export default Table;
+export default TradeTable;

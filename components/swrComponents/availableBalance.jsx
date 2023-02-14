@@ -5,6 +5,7 @@ import {
   placeholderAvailableBalance,
   placeholderMntlUsdValue,
   defaultChainName,
+  getBalanceStyle,
 } from "../../config";
 import { fromDenom, useAvailableBalance, useMntlUsd } from "../../data";
 
@@ -27,9 +28,18 @@ export const AvailableBalance = () => {
       {isLoadingAvailableBalance ? (
         <p>Loading...</p>
       ) : (
-        <p className={status === "Connected" ? "caption" : "caption text-gray"}>
-          {balanceDisplay}&nbsp;{denomDisplay}
-        </p>
+        <div
+          className={
+            status === "Connected"
+              ? "caption d-flex align-items-end"
+              : "caption text-gray d-flex align-items-end"
+          }
+        >
+          <p className="caption">
+            {getBalanceStyle(balanceDisplay, "caption", "caption2")}
+          </p>{" "}
+          {denomDisplay}
+        </div>
       )}
     </>
   );
@@ -54,5 +64,9 @@ export const AvailableBalanceUsd = () => {
           .toFixed(6)
           .toString();
 
-  return <p className="caption2 text-gray">${balanceInUSDDisplay}&nbsp;$USD</p>;
+  return (
+    <p className="caption2 text-gray">
+      ${getBalanceStyle(balanceInUSDDisplay, "small", "small")}&nbsp;$USD
+    </p>
+  );
 };

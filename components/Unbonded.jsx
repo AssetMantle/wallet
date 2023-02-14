@@ -5,6 +5,7 @@ import {
   placeholderMntlUsdValue,
   placeholderTotalUnbonding,
   defaultChainName,
+  getBalanceStyle,
 } from "../config";
 import {
   fromChainDenom,
@@ -118,7 +119,8 @@ const Unbonded = ({
           Undelegating
         </p>
         <p className={status === "Connected" ? "caption" : "caption text-gray"}>
-          {unbondingDisplay}&nbsp;{denomDisplay}
+          {getBalanceStyle(unbondingDisplay, "caption", "caption2")}&nbsp;
+          {denomDisplay}
         </p>
         <p className={status === "Connected" ? "caption" : "caption text-gray"}>
           {unbondingInUSDDisplay}&nbsp;{"$USD"}

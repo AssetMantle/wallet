@@ -4,6 +4,7 @@ import BigNumber from "bignumber.js";
 import {
   defaultChainName,
   defaultChainSymbol,
+  getBalanceStyle,
   placeholderMntlUsdValue,
   placeholderRewards,
 } from "../config";
@@ -144,7 +145,7 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
           </p>
         )}
         <p className={status === "Connected" ? "caption" : "caption text-gray"}>
-          {rewardsDisplay}&nbsp;
+          {getBalanceStyle(rewardsDisplay, "caption", "caption2")}&nbsp;
           {denomDisplay}
         </p>
         <p
