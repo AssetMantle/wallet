@@ -119,11 +119,11 @@ const Unbonded = ({
           Undelegating
         </p>
         <p className={status === "Connected" ? "caption" : "caption text-gray"}>
-          {getBalanceStyle(unbondingDisplay, "caption", "caption2", false)}
+          {getBalanceStyle(unbondingDisplay, "caption", "caption2")}
           &nbsp;{denomDisplay}
         </p>
         <p className={status === "Connected" ? "caption" : "caption text-gray"}>
-          {getBalanceStyle(unbondingInUSDDisplay, "caption2", "small", false)}
+          {getBalanceStyle(unbondingInUSDDisplay, "caption2", "small")}
           &nbsp;{"$USD"}
         </p>
         <div className="d-flex justify-content-end">

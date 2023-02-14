@@ -145,13 +145,13 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
           </p>
         )}
         <p className={status === "Connected" ? "caption" : "caption text-gray"}>
-          {getBalanceStyle(rewardsDisplay, "caption", "caption2", false)}&nbsp;
+          {getBalanceStyle(rewardsDisplay, "caption", "caption2")}&nbsp;
           {denomDisplay}
         </p>
         <p
           className={status === "Connected" ? "caption2" : "caption2 text-gray"}
         >
-          {getBalanceStyle(rewardsInUSDDisplay, "caption2", "small", false)}
+          {getBalanceStyle(rewardsInUSDDisplay, "caption2", "small")}
           &nbsp;{"$USD"}
         </p>
         <div className="d-flex justify-content-end">
