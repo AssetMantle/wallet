@@ -20,8 +20,17 @@ import { handleCopy, isObjEmpty } from "../lib/basicJavascript";
 
 const MntlToGravityBridge = () => {
   // WALLET HOOKS
-  const walletManager = useChain(defaultChainName);
-  const { address, getSigningStargateClient, status } = walletManager;
+  const chainContext = useChain(defaultChainName);
+  const { address, getSigningStargateClient, status } = chainContext;
+  const chainContext2 = useChain(gravityChainName);
+  const { address: gravityAddress2, status: gravityStatus2 } = chainContext2;
+
+  console.log(
+    "AssetMantle Wallet Data: ",
+    { address, status },
+    " Gravity Wallet Data: ",
+    { gravityAddress2, gravityStatus2 }
+  );
 
   // SWR HOOKS
   const { availableBalance } = useAvailableBalance();

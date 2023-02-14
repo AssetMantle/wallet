@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useReducer } from "react";
 import { toast } from "react-toastify";
 import {
-  defaultChainName,
   defaultChainSymbol,
   gravityChainName,
   gravityChainSymbol,
@@ -20,11 +19,12 @@ import { handleCopy, isObjEmpty } from "../lib/basicJavascript";
 
 const GravityToEthBridge = () => {
   // WALLET HOOKS
-  const chainContext = useChain(defaultChainName);
-  const { address, status, getSigningStargateClient, getOfflineSigner } =
-    chainContext;
-
-  const gravityAddress = convertBech32Address(address, gravityChainName);
+  const chainContext3 = useChain(gravityChainName);
+  const {
+    address: gravityAddress,
+    status: gravityStatus,
+    getOfflineSigner,
+  } = chainContext3;
 
   // HOOKS or GETTERS
   const { availableBalanceGravity, availableBalanceIBCToken } =
@@ -327,7 +327,7 @@ const GravityToEthBridge = () => {
   const displayBalanceUnitGravity = gravityChainSymbol;
   const displayBalanceUnitGravityIBCToken = defaultChainSymbol;
   const isSubmitDisabled =
-    status != "Connected" || !isObjEmpty(formState?.errorMessages);
+    gravityStatus != "Connected" || !isObjEmpty(formState?.errorMessages);
   const displayInputAmountValue = formState?.transferAmount;
   const isFormAmountError = formState?.errorMessages?.transferAmountErrorMsg;
   const displayFormAmountErrorMsg =
