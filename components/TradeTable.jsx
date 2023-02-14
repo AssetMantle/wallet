@@ -61,7 +61,11 @@ const TradeTable = ({ data }) => {
       ),
     },
     { Header: "Trade Pair", accessor: "tradePair" },
-    { Header: "Price", accessor: "price" },
+    {
+      Header: "Price",
+      accessor: "price",
+      Cell: (tableProps) => <p>${tableProps.row.original.price}</p>,
+    },
     { Header: "Volume", accessor: "volume" },
   ];
   // const {
