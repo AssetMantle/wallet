@@ -4,38 +4,19 @@ import BigNumber from "bignumber.js";
 export const getBalanceStyle = (
   balanceString,
   style1ClassName,
-  style2ClassName,
-  isGrey
+  style2ClassName
 ) => {
   if (balanceString && balanceString.toString().length) {
     const balanceArray = balanceString.toString().split(".");
     if (balanceArray.length > 1) {
       return (
-        <span
-          className={
-            isGrey ? `text-gray ${style1ClassName} ` : `${style1ClassName} `
-          }
-        >
+        <span className={style1ClassName}>
           {new BigNumber(balanceArray[0]).toFormat()}.
-          <span
-            className={
-              isGrey ? `text-gray ${style2ClassName} ` : `${style2ClassName} `
-            }
-          >
-            {balanceArray[1]}
-          </span>
+          <span className={style2ClassName}>{balanceArray[1]}</span>
         </span>
       );
     } else {
-      return (
-        <span
-          className={
-            isGrey ? `text-gray ${style2ClassName} ` : `${style2ClassName} `
-          }
-        >
-          {balanceArray[0]}
-        </span>
-      );
+      return <span className={style2ClassName}>{balanceArray[0]}</span>;
     }
   }
 };

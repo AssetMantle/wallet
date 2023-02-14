@@ -31,7 +31,7 @@ export const TotalBalance = () => {
   return (
     <>
       <p className={isConnected ? "caption" : "caption text-gray"}>
-        {getBalanceStyle(totalBalanceDisplay, "caption", "caption2", false)}
+        {getBalanceStyle(totalBalanceDisplay, "caption", "caption2")}
         &nbsp;
         {denomTotalBalance}
       </p>
@@ -64,7 +64,12 @@ export const TotalBalanceInUSD = () => {
 
   return (
     <p className="caption2 text-gray">
-      ${getBalanceStyle(totalBalanceInUSDDisplay, "caption2", "small", true)}
+      $
+      {getBalanceStyle(
+        totalBalanceInUSDDisplay,
+        "caption2 text-gray",
+        "small text-gray"
+      )}
       &nbsp;
       {usdSymbol}
     </p>
