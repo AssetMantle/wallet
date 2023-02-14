@@ -1,6 +1,7 @@
 import React from "react";
 import { fromChainDenom } from "../data";
 import Tooltip from "./Tooltip";
+import { useAllValidatorsBonded } from "../data";
 
 const AllValidators = ({
   setShowClaimError,
@@ -12,6 +13,16 @@ const AllValidators = ({
   totalTokens,
   delegatedValidators,
 }) => {
+  const {
+    allValidatorsBonded,
+    isLoadingValidatorsBonded,
+    errorValidatorsBonded,
+  } = useAllValidatorsBonded();
+  const {
+    allValidatorsUnbonded,
+    isLoadingValidatorsUnbonded,
+    errorValidatorsUnbonded,
+  } = useAllValidatorsBonded();
   // controller for onError
   const handleOnError = (e) => {
     e.preventDefault();
@@ -24,13 +35,11 @@ const AllValidators = ({
   return (
     <>
       {activeValidators
-        ? validatorsArray
-            ?.filter(
-              (item) =>
-                item?.status === 3 &&
-                item?.description?.moniker
-                  .toLowerCase()
-                  .includes(searchValue.toLowerCase())
+        ? allValidatorsBonded
+            ?.filter((item) =>
+              item?.description?.moniker
+                .toLowerCase()
+                .includes(searchValue.toLowerCase())
             )
             ?.map((item, index) => (
               <tr key={index} className="caption2 text-white-300">
@@ -121,13 +130,11 @@ const AllValidators = ({
                 </td>
               </tr>
             ))
-        : validatorsArray
-            ?.filter(
-              (item) =>
-                statusArray.includes(item?.status) &&
-                item?.description?.moniker
-                  .toLowerCase()
-                  .includes(searchValue.toLowerCase())
+        : allValidatorsBonded
+            ?.filter((item) =>
+              item?.description?.moniker
+                .toLowerCase()
+                .includes(searchValue.toLowerCase())
             )
 
             ?.map((item, index) => (
