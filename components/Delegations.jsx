@@ -198,7 +198,7 @@ const Delegations = ({
           <p
             className={status === "Connected" ? "caption" : "caption text-gray"}
           >
-            {getBalanceStyle(delegationsDisplay, "caption", "caption2", false)}
+            {getBalanceStyle(delegationsDisplay, "caption", "caption2")}
             &nbsp;{denomDisplay}
           </p>
           <p
@@ -206,12 +206,7 @@ const Delegations = ({
               status === "Connected" ? "caption2" : "caption2 text-gray"
             }
           >
-            {getBalanceStyle(
-              delegationsInUSDDisplay,
-              "caption2",
-              "small",
-              false
-            )}
+            {getBalanceStyle(delegationsInUSDDisplay, "caption2", "small")}
             &nbsp;{"$USD"}
           </p>
           {showRedelegateUndelegateAndClaim &&

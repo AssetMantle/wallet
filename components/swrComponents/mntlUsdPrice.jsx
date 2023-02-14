@@ -19,7 +19,7 @@ export const MntlUsdPrice = () => {
 
   return (
     <p className={status === "Connected" ? "caption" : "caption text-gray"}>
-      {getBalanceStyle(mntlUsdDisplay, "caption", "caption2", false)}&nbsp;
+      {getBalanceStyle(mntlUsdDisplay, "caption", "caption2")}&nbsp;
       {"$USD"}
     </p>
   );
