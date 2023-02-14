@@ -1,5 +1,44 @@
 import { extendTheme } from "@chakra-ui/react";
 
+export const getBalanceStyle = (
+  balanceString,
+  style1ClassName,
+  style2ClassName,
+  isGrey
+) => {
+  if (balanceString && balanceString.toString().length) {
+    const balanceArray = balanceString.toString().split(".");
+    if (balanceArray.length > 1) {
+      return (
+        <span
+          className={
+            isGrey ? `text-gray ${style1ClassName} ` : `${style1ClassName} `
+          }
+        >
+          {balanceArray[0]}.
+          <span
+            className={
+              isGrey ? `text-gray ${style2ClassName} ` : `${style2ClassName} `
+            }
+          >
+            {balanceArray[1]}
+          </span>
+        </span>
+      );
+    } else {
+      return (
+        <span
+          className={
+            isGrey ? `text-gray ${style2ClassName} ` : `${style2ClassName} `
+          }
+        >
+          {balanceArray[0]}
+        </span>
+      );
+    }
+  }
+};
+
 export const defaultThemeObject = {
   fonts: {
     body: "Inter, system-ui, sans-serif",
