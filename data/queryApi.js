@@ -659,52 +659,95 @@ export const useTotalBalance = () => {
 };
 
 //Get a list of all validators that can be delegated
-export const useAllValidators = () => {
-  const fetchAllValidators = async (url) => {
-    let allValidators;
+export const useAllValidatorsBonded = () => {
+  const fetchAllValidatorsBonded = async (url) => {
+    let allValidatorsBonded;
 
     // use a try catch block for creating rich Error object
     try {
       // get the data from cosmos queryClient
       const { validators } = await client.cosmos.staking.v1beta1.validators({
-        status: "",
+        status: "BOND_STATUS_BONDED",
       });
-      allValidators = validators;
+      allValidatorsBonded = validators;
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
     }
     // return the data
-    return allValidators;
+    return allValidatorsBonded;
   };
   // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: validatorsArray, error } = useSwr(
-    "validators",
-    fetchAllValidators,
+  const { data: bondedValidatorsArray, error } = useSwr(
+    "useAllValidatorsBonded",
+    fetchAllValidatorsBonded,
     {
-      fallbackData: [
-        {
-          commission: {},
-          consensusPubkey: {},
-          delegatorShares: "",
-          description: {},
-          jailed: "",
-          minSelfDelegation: "",
-          operatorAddress: placeholderAddress,
-          status: "",
-          tokens: "",
-          unbondingHeight: {},
-          unbondingTime: {},
-        },
-      ],
-      suspense: true,
-      refreshInterval: 1000,
+      fallbackData: [],
     }
   );
   return {
-    allValidators: validatorsArray,
-    isLoadingValidators: !error && !validatorsArray,
-    errorValidators: error,
+    allValidatorsBonded: bondedValidatorsArray,
+    isLoadingValidatorsBonded: !error && !bondedValidatorsArray,
+    errorValidatorsBonded: error,
+  };
+};
+
+export const useAllValidatorsUnbonded = () => {
+  const fetchAllValidatorsUnbonded = async (url) => {
+    let allValidatorsUnbonded;
+
+    // use a try catch block for creating rich Error object
+    try {
+      // get the data from cosmos queryClient
+      const { validators } = await client.cosmos.staking.v1beta1.validators({
+        status: "BOND_STATUS_UNBONDED",
+      });
+      allValidatorsUnbonded = validators;
+    } catch (error) {
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
+      throw error;
+    }
+    // return the data
+    return allValidatorsUnbonded;
+  };
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: unbondedValidatorsArray, error } = useSwr(
+    "useAllValidatorsUnbonded",
+    fetchAllValidatorsUnbonded,
+    {
+      fallbackData: [],
+    }
+  );
+  return {
+    allValidatorsUnbonded: unbondedValidatorsArray,
+    isLoadingValidatorsUnbonded: !error && !unbondedValidatorsArray,
+    errorValidatorsUnbonded: error,
+  };
+};
+
+export const useAllValidators = () => {
+  // fetcher function for useSwr of useAvailableBalance()
+  const {
+    allValidatorsBonded,
+    isLoadingValidatorsBonded,
+    errorValidatorsBonded,
+  } = useAllValidatorsBonded();
+
+  const {
+    allValidatorsUnbonded,
+    errorValidatorsUnbonded,
+    isLoadingValidatorsUnbonded,
+  } = useAllValidatorsUnbonded();
+
+  const isLoading = isLoadingValidatorsBonded || isLoadingValidatorsUnbonded;
+
+  const isError = errorValidatorsBonded || errorValidatorsUnbonded;
+  let allValidators = [...allValidatorsBonded, ...allValidatorsUnbonded];
+
+  return {
+    allValidators: allValidators,
+    isLoadingValidators: isLoading,
+    errorValidators: isError,
   };
 };
 
