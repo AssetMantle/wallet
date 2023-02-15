@@ -12,7 +12,7 @@ export default function Banner() {
         perPage: 1,
         pagination: false,
         autoplay: true,
-        interval: 8000,
+        interval: 4000,
         speed: 2000,
         arrowPath:
           "M23 13L21.59 14.41L26.17 19H10V21H26.17L21.58 25.59L23 27L30 20L23 13Z",
