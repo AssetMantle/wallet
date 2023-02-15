@@ -11,7 +11,7 @@ const EarnTable = ({ data }) => {
       Header: "Category",
       accessor: "project",
       Cell: (tableProps) => (
-        <div className="d-flex justify-content-around">
+        <div className="d-flex justify-content-start  gap-2">
           <div
             className="d-flex position-relative rounded-circle gap-1"
             style={{
