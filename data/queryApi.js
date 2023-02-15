@@ -68,7 +68,7 @@ export const toDenom = (value, exponent = defaultChainDenomExponent) => {
 
 export const fromChainDenom = (
   value,
-  exponent = 0,
+  exponent = null,
   chainName = defaultChainName,
   chainDenom = defaultChainDenom
 ) => {
@@ -86,7 +86,7 @@ export const fromChainDenom = (
   const valueBigNumber = new BigNumber(value?.toString() || 0);
   amount = valueBigNumber
     .shiftedBy(0 - Number(exp))
-    .toFormat(Number(exponent) == 0 ? Number(exp) : Number(exponent));
+    .toFormat(exponent ? Number(exponent) : Number(exp));
   return amount;
 };
 
@@ -130,11 +130,10 @@ export const decimalize = (
   const exp =
     exponent ||
     coin?.denom_units?.find?.((unit) => unit?.denom === coin?.display)
-      ?.exponent;
-  const bnValue = BigNumber(value || 0);
-  if (bnValue.isNaN()) bnValue = BigNumber(0);
-
-  return bnValue.toFormat(exp).toString();
+      ?.exponent ||
+    0;
+  const bnValue = BigNumber(value?.toString() || 0);
+  return bnValue.toFormat(Number(exp));
 };
 
 // function to check whether an address is invalid
