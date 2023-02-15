@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import {
   defaultChainName,
   defaultChainSymbol,
+  getBalanceStyle,
   placeholderMntlUsdValue,
   placeholderTotalDelegations,
 } from "../config";
@@ -197,14 +198,16 @@ const Delegations = ({
           <p
             className={status === "Connected" ? "caption" : "caption text-gray"}
           >
-            {delegationsDisplay}&nbsp;{denomDisplay}
+            {getBalanceStyle(delegationsDisplay, "caption", "caption2")}
+            &nbsp;{denomDisplay}
           </p>
           <p
             className={
               status === "Connected" ? "caption2" : "caption2 text-gray"
             }
           >
-            {delegationsInUSDDisplay}&nbsp;{"$USD"}
+            {getBalanceStyle(delegationsInUSDDisplay, "caption2", "small")}
+            &nbsp;{"$USD"}
           </p>
           {showRedelegateUndelegateAndClaim &&
           stakeState?.selectedValidators?.length === 1 ? (

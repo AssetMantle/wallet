@@ -1,5 +1,9 @@
 import React from "react";
-import { placeholderMntlUsdValue, defaultChainName } from "../../config";
+import {
+  placeholderMntlUsdValue,
+  defaultChainName,
+  getBalanceStyle,
+} from "../../config";
 import { useMntlUsd } from "../../data";
 import { useChain } from "@cosmos-kit/react";
 
@@ -15,7 +19,8 @@ export const MntlUsdPrice = () => {
 
   return (
     <p className={status === "Connected" ? "caption" : "caption text-gray"}>
-      {mntlUsdDisplay}&nbsp;{"$USD"}
+      {getBalanceStyle(mntlUsdDisplay, "caption", "caption2")}&nbsp;
+      {"$USD"}
     </p>
   );
 };

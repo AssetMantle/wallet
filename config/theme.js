@@ -1,4 +1,25 @@
 import { extendTheme } from "@chakra-ui/react";
+import BigNumber from "bignumber.js";
+
+export const getBalanceStyle = (
+  balanceString,
+  style1ClassName,
+  style2ClassName
+) => {
+  if (balanceString && balanceString.toString().length) {
+    const balanceArray = balanceString.toString().split(".");
+    if (balanceArray.length > 1) {
+      return (
+        <span className={style1ClassName}>
+          {new BigNumber(balanceArray[0]).toFormat()}.
+          <span className={style2ClassName}>{balanceArray[1]}</span>
+        </span>
+      );
+    } else {
+      return <span className={style2ClassName}>{balanceArray[0]}</span>;
+    }
+  }
+};
 
 export const defaultThemeObject = {
   fonts: {
