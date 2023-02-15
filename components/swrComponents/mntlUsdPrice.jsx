@@ -1,12 +1,9 @@
 import React from "react";
-import { placeholderMntlUsdValue, defaultChainName } from "../../config";
+import { placeholderMntlUsdValue } from "../../config";
 import { useMntlUsd } from "../../data";
-import { useChain } from "@cosmos-kit/react";
 
 export const MntlUsdPrice = () => {
   console.log("inside MntlUsdPrice");
-  const walletManager = useChain(defaultChainName);
-  const { getSigningStargateClient, address, status } = walletManager;
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
 
   const mntlUsdDisplay = errorMntlUsdValue
@@ -14,7 +11,7 @@ export const MntlUsdPrice = () => {
     : mntlUsdValue;
 
   return (
-    <p className={status === "Connected" ? "caption" : "caption text-gray"}>
+    <p className="caption">
       {mntlUsdDisplay}&nbsp;{"$USD"}
     </p>
   );

@@ -1,12 +1,12 @@
-import React from "react";
 import { useChain } from "@cosmos-kit/react";
+import React from "react";
 import {
+  defaultChainName,
   defaultChainSymbol,
   placeholderAvailableBalance,
   placeholderMntlUsdValue,
-  defaultChainName,
 } from "../../config";
-import { fromDenom, useAvailableBalance, useMntlUsd } from "../../data";
+import { fromChainDenom, useAvailableBalance, useMntlUsd } from "../../data";
 
 const denomDisplay = defaultChainSymbol;
 
@@ -18,9 +18,9 @@ export const AvailableBalance = () => {
   const { availableBalance, errorAvailableBalance, isLoadingAvailableBalance } =
     useAvailableBalance();
   const balanceDisplay =
-    errorAvailableBalance || isNaN(fromDenom(availableBalance))
+    errorAvailableBalance || isNaN(fromChainDenom(availableBalance))
       ? placeholderAvailableBalance
-      : fromDenom(availableBalance);
+      : fromChainDenom(availableBalance);
 
   return (
     <>
@@ -47,10 +47,10 @@ export const AvailableBalanceUsd = () => {
   const balanceInUSDDisplay =
     errorMntlUsdValue ||
     errorAvailableBalance ||
-    isNaN(fromDenom(availableBalance)) ||
+    isNaN(fromChainDenom(availableBalance)) ||
     isNaN(parseFloat(mntlUsdValue))
       ? placeholderMntlUsdValue
-      : (fromDenom(availableBalance) * parseFloat(mntlUsdValue))
+      : (fromChainDenom(availableBalance) * parseFloat(mntlUsdValue))
           .toFixed(6)
           .toString();
 

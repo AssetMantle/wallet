@@ -1,43 +1,30 @@
 import { Icon, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import { WalletStatus } from "@cosmos-kit/core";
-// import Image from "next/image";
+import Link from "next/link";
+import { useEffect } from "react";
 import { FiAlertTriangle } from "react-icons/fi";
+import { toast } from "react-toastify";
+import { toastConfig } from "../../config";
+import { ConnectOptionObject, WALLET_NOT_FOUND_ERROR_MSG } from "../../data";
 
-/* export const ConnectWalletButton = ({
-  buttonText,
-  isLoading,
-  isDisabled,
-  icon,
-  onClickConnectBtn,
-}: ConnectWalletType) => {
-  return (
-    <Button
-      w="full"
-      minW="fit-content"
-      size="lg"
-      isLoading={isLoading}
-      isDisabled={isDisabled}
-      bgImage="linear-gradient(109.6deg, rgba(157,75,199,1) 11.2%, rgba(119,81,204,1) 83.1%)"
-      color="white"
-      opacity={1}
-      transition="all .5s ease-in-out"
-      _hover={{
-        bgImage:
-          "linear-gradient(109.6deg, rgba(157,75,199,1) 11.2%, rgba(119,81,204,1) 83.1%)",
-        opacity: 0.75,
-      }}
-      _active={{
-        bgImage:
-          "linear-gradient(109.6deg, rgba(157,75,199,1) 11.2%, rgba(119,81,204,1) 83.1%)",
-        opacity: 0.9,
-      }}
-      onClick={onClickConnectBtn}
-    >
-      <Icon as={icon ? icon : IoWallet} mr={2} />
-      {buttonText ? buttonText : "Connect Wallet"}
-    </Button>
+const CustomToastWithLink = ({ wallet }) => {
+  console.log(
+    "inside CustomToastWithLink, installurl: ",
+    ConnectOptionObject[wallet]?.installUrl,
+    " wallet: ",
+    wallet
   );
-}; */
+  return (
+    <p>
+      Wallet not found. To install click
+      <Link href={ConnectOptionObject[wallet]?.installUrl}>
+        <a style={{ color: "#ffc640" }} target="_blank">
+          &nbsp; Here
+        </a>
+      </Link>
+    </p>
+  );
+};
 
 export const ConnectWalletButton = ({
   buttonText,
@@ -69,7 +56,7 @@ export const ConnectWalletButton = ({
           </div>
         )}
         {buttonIcon && <i className={`bi ${buttonIcon}`}></i>}
-        {buttonText ? buttonText : "Connect Wallet"}
+        {buttonText || "Connect Wallet"}
       </button>
     ) : (
       <div className="nav-item dropdown">
@@ -190,13 +177,14 @@ export const Rejected = ({ buttonText, wordOfWarning, onClick }) => {
   );
 };
 
-export const Error = ({ buttonText, wordOfWarning, onClick }) => {
+export const Error = ({ buttonText, buttonIcon, wordOfWarning, onClick }) => {
   const bg = useColorModeValue("orange.200", "orange.300");
 
   return (
     <Stack>
       <ConnectWalletButton
         buttonText={buttonText}
+        buttonIcon={buttonIcon}
         isDisabled={false}
         onClickConnectBtn={onClick}
       />
@@ -222,10 +210,11 @@ export const Error = ({ buttonText, wordOfWarning, onClick }) => {
   );
 };
 
-export const NotExist = ({ buttonText, onClick }) => {
+export const NotExist = ({ buttonText, buttonIcon, onClick }) => {
   return (
     <ConnectWalletButton
       buttonText={buttonText}
+      buttonIcon={buttonIcon}
       isDisabled={false}
       onClickConnectBtn={onClick}
     />
@@ -233,6 +222,7 @@ export const NotExist = ({ buttonText, onClick }) => {
 };
 
 export const WalletConnectComponent = ({
+  wallet,
   walletStatus,
   disconnect,
   connecting,
@@ -241,7 +231,28 @@ export const WalletConnectComponent = ({
   error,
   notExist,
 }) => {
-  console.log("walletStatus: ", walletStatus);
+  console.log("walletStatus: ", walletStatus, " wallet: ", wallet);
+
+  useEffect(() => {
+    if (walletStatus == WalletStatus.NotExist) {
+      toast.error(
+        wallet ? (
+          <CustomToastWithLink wallet={wallet} />
+        ) : (
+          WALLET_NOT_FOUND_ERROR_MSG
+        ),
+        toastConfig
+      );
+    } else if (
+      walletStatus == WalletStatus.Rejected ||
+      walletStatus == WalletStatus.Error
+    ) {
+      toast.error(WALLET_NOT_FOUND_ERROR_MSG, toastConfig);
+    }
+
+    return () => {};
+  }, [wallet, walletStatus]);
+
   switch (walletStatus) {
     case WalletStatus.Disconnected:
       return <>{disconnect}</>;

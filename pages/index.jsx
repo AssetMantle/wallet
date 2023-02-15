@@ -31,9 +31,9 @@ export default function Transact() {
   const { availableBalance } = useAvailableBalance();
   const chainContext = useChain(defaultChainName);
   const { getSigningStargateClient, address, status } = chainContext;
+  console.log("connection status: ", { address, status });
   const router = useRouter();
   const { toAddress, toAmount } = router.query;
-  console.log("toAddress: ", toAddress, " toAmount: ", toAmount);
 
   useEffect(() => {
     if (toAddress) {
@@ -426,8 +426,6 @@ export default function Transact() {
     ) : (
       formState?.errorMessages?.transferAmountErrorMsg
     );
-
-  console.log("formState: ", formState);
 
   return (
     <>

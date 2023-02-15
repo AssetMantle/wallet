@@ -14,46 +14,15 @@ import {
   WalletConnectComponent,
 } from "../components";
 import { defaultChainName } from "../config";
-import { NavBarData, placeholderAddress } from "../data";
-import { shortenAddress } from "../lib";
+import { ConnectOptionObject, NavBarData, placeholderAddress } from "../data";
+import { cleanString, shortenAddress } from "../lib";
 
 export default function Header() {
-  const {
-    chain,
-    openView,
-    username,
-    address,
-    wallet,
-    status,
-    connect,
-    disconnect,
-  } = useChain(defaultChainName);
+  const { openView, username, address, wallet, status, connect, disconnect } =
+    useChain(defaultChainName);
   const [showModal, setShowModal] = useState(false);
 
   const router = useRouter();
-
-  const ConnectOptionObject = {
-    cosmostation: {
-      icon: "/WalletIcons/cosmostation.png",
-      name: "Cosmostation",
-    },
-    keplr: {
-      icon: "/WalletIcons/keplr.png",
-      name: "Keplr",
-    },
-    keystore: {
-      icon: "/WalletIcons/keystore.png",
-      name: "Keystore",
-    },
-    leap: {
-      icon: "/WalletIcons/leap.png",
-      name: "Leap",
-    },
-    ledger: {
-      icon: "/WalletIcons/ledger.png",
-      name: "Ledger",
-    },
-  };
 
   // Events
   const onClickConnect = (e) => {
@@ -165,17 +134,11 @@ export default function Header() {
           >
             <img
               layout="fill"
-              src={
-                ConnectOptionObject[wallet?.prettyName.toLocaleLowerCase()]
-                  ?.icon
-              }
-              alt={
-                ConnectOptionObject[wallet?.prettyName.toLocaleLowerCase()]
-                  ?.name
-              }
+              src={ConnectOptionObject[cleanString(wallet?.prettyName)]?.icon}
+              alt={"♦︎"}
             />
           </div>
-          {ConnectOptionObject[wallet?.prettyName.toLocaleLowerCase()]?.name}
+          {ConnectOptionObject[cleanString(wallet?.prettyName)]?.name}
         </div>
         <div className="d-flex align-items-center gap-1">
           <span className="text-success">
@@ -197,9 +160,12 @@ export default function Header() {
     </div>
   );
 
+  console.log("wallet status pretty: ", cleanString(wallet?.prettyName));
+
   // Component
   const connectWalletButton = (
     <WalletConnectComponent
+      wallet={cleanString(wallet?.prettyName)}
       walletStatus={status}
       disconnect={
         <Disconnected
@@ -220,12 +186,25 @@ export default function Header() {
           {connectedModalJSX}
         </Connected>
       }
-      rejected={<Rejected buttonText="Reconnect" onClick={onClickConnect} />}
-      error={<Error buttonText="Change Wallet" onClick={onClickDisconnect} />}
+      rejected={
+        <Rejected
+          buttonText="Reconnect"
+          buttonIcon="bi-patch-exclamation-fill"
+          onClick={onClickConnect}
+        />
+      }
+      error={
+        <Error
+          buttonText="Not Connected"
+          buttonIcon="bi-patch-exclamation-fill"
+          onClick={onClickDisconnect}
+        />
+      }
       notExist={
         <NotExist
-          buttonText="Install Wallet"
-          onClick={() => window.open("https://www.keplr.app/", "_blank")}
+          buttonText="Not Connected"
+          buttonIcon="bi-patch-exclamation-fill"
+          onClick={onClickDisconnect}
         />
       }
     />

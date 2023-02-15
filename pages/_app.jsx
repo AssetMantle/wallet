@@ -1,5 +1,8 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import { wallets as leapwallets } from "@cosmos-kit/leap";
+import { wallets as leapWallets } from "@cosmos-kit/leap";
+import { wallets as trustWallets } from "@cosmos-kit/trust-extension";
+import { wallets as xdefiWallets } from "@cosmos-kit/xdefi-extension";
+import { wallets as vectisWallets } from "@cosmos-kit/vectis";
 import { ChainProvider } from "@cosmos-kit/react";
 import { Web3Modal } from "@web3modal/react";
 import { assets, chains } from "chain-registry";
@@ -32,9 +35,17 @@ function CreateCosmosApp({ Component, pageProps }) {
     require("bootstrap/dist/js/bootstrap.bundle.js");
   }, []);
 
-  const customChains = chains.filter(
+  const chainList = chains.filter(
     (chain) => chain.chain_name !== "assetmantle"
   );
+
+  // const chainList = chains;
+
+  const finalChains = [
+    ...mantleChainConfig,
+    ...chainList,
+    ...mantleTestChainConfig,
+  ];
 
   const customAssets = assets.filter(
     (assets) => assets.chain_name !== "assetmantle"
@@ -79,17 +90,20 @@ function CreateCosmosApp({ Component, pageProps }) {
 
       <ChakraProvider theme={defaultTheme}>
         <ChainProvider
-          chains={[
-            ...customChains,
-            ...mantleChainConfig,
-            ...mantleTestChainConfig,
-          ]}
+          chains={finalChains}
           assetLists={[
             ...customAssets,
             ...mantleAssetConfig,
             ...mantleTestnetAssetConfig,
           ]}
-          wallets={[...keplrWallets, ...leapwallets, ...cosmostationWallets]}
+          wallets={[
+            ...keplrWallets,
+            ...leapWallets,
+            ...cosmostationWallets,
+            ...vectisWallets,
+            ...trustWallets,
+            ...xdefiWallets,
+          ]}
           signerOptions={signerOptions}
           endpointOptions={{
             assetmantle: {
@@ -111,7 +125,7 @@ function CreateCosmosApp({ Component, pageProps }) {
               />
               <ToastContainer
                 position="bottom-center"
-                autoClose={500}
+                autoClose={8000}
                 hideProgressBar={false}
                 newestOnTop={false}
                 closeOnClick
