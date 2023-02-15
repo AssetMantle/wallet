@@ -1,5 +1,5 @@
 import React from "react";
-import { fromChainDenom } from "../data";
+import { fromChainDenom, useAllValidatorsUnbonded } from "../data";
 import Tooltip from "./Tooltip";
 import { useAllValidatorsBonded } from "../data";
 
@@ -22,7 +22,7 @@ const AllValidators = ({
     allValidatorsUnbonded,
     isLoadingValidatorsUnbonded,
     errorValidatorsUnbonded,
-  } = useAllValidatorsBonded();
+  } = useAllValidatorsUnbonded();
   // controller for onError
   const handleOnError = (e) => {
     e.preventDefault();
@@ -130,7 +130,7 @@ const AllValidators = ({
                 </td>
               </tr>
             ))
-        : allValidatorsBonded
+        : allValidatorsUnbonded
             ?.filter((item) =>
               item?.description?.moniker
                 .toLowerCase()
