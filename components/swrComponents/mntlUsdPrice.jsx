@@ -12,14 +12,22 @@ export const MntlUsdPrice = () => {
   const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status } = walletManager;
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
+  const isConnected = status == "Connected";
 
   const mntlUsdDisplay = errorMntlUsdValue
     ? placeholderMntlUsdValue
     : mntlUsdValue;
 
   return (
-    <p className={status === "Connected" ? "caption" : "caption text-gray"}>
-      {getBalanceStyle(mntlUsdDisplay, "caption", "caption2")}&nbsp;
+    <p className={isConnected ? "caption" : "caption text-gray"}>
+      {isConnected
+        ? getBalanceStyle(mntlUsdDisplay, "caption", "caption2")
+        : getBalanceStyle(
+            mntlUsdDisplay,
+            "caption text-gray",
+            "caption2 text-gray"
+          )}
+      &nbsp;
       {"$USD"}
     </p>
   );

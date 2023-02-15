@@ -76,10 +76,7 @@ export const fromChainDenom = (
   // show balance in display values by exponentiating it
   const valueBigNumber = new BigNumber(value?.toString() || 0);
   if (BigNumber.isBigNumber(valueBigNumber)) {
-    amount = valueBigNumber
-      .multipliedBy(10 ** -exp)
-      .toFixed(exp)
-      .toString();
+    amount = valueBigNumber.multipliedBy(10 ** -exp).toFormat(exp);
   } else {
     return "-1";
   }
@@ -137,7 +134,7 @@ export const decimalize = (
   const bnValue = BigNumber(value || 0);
   if (bnValue.isNaN()) bnValue = BigNumber(0);
 
-  return bnValue.toFixed(exp).toString();
+  return bnValue.toFormat(exp).toString();
 };
 
 // function to check whether an address is invalid

@@ -16,8 +16,11 @@ import {
   useAllValidators,
   useDelegatedValidators,
   useMntlUsd,
+  useAllValidatorsBonded,
+  useAllValidatorsUnbonded,
+  decimalize,
 } from "../data";
-import { isObjEmpty } from "../lib";
+import { isObjEmpty, shiftDecimalPlaces } from "../lib";
 import ModalContainer from "./ModalContainer";
 
 const denomDisplay = defaultChainSymbol;
@@ -32,6 +35,16 @@ const Delegations = ({
 }) => {
   const { allValidators, isLoadingValidators, errorValidators } =
     useAllValidators();
+  const {
+    allValidatorsBonded,
+    errorValidatorsBonded,
+    isLoadingValidatorsBonded,
+  } = useAllValidatorsBonded();
+  const {
+    allValidatorsUnbonded,
+    errorValidatorsUnbonded,
+    isLoadingValidatorsUnbonded,
+  } = useAllValidatorsUnbonded();
 
   const [searchValue, setSearchValue] = useState("");
   const [activeValidators, setActiveValidators] = useState(true);
@@ -45,7 +58,6 @@ const Delegations = ({
   } = useDelegatedValidators();
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
   let validatorsArray = allValidators.sort((a, b) => b.tokens - a.tokens);
-
   // modal handler
 
   const [ReDelegateModal, setReDelegateModal] = useState(false);
@@ -83,7 +95,7 @@ const Delegations = ({
     errorMntlUsdValue | isNaN(totalDelegatedAmount) ||
     isNaN(parseFloat(mntlUsdValue))
       ? placeholderMntlUsdValue
-      : (fromChainDenom(totalDelegatedAmount) * parseFloat(mntlUsdValue))
+      : (fromDenom(totalDelegatedAmount) * parseFloat(mntlUsdValue))
           .toFixed(6)
           .toString();
 
@@ -170,6 +182,12 @@ const Delegations = ({
     e.target.src = "/validatorAvatars/alt.png";
   };
 
+  const isConnected = !(
+    isLoadingDelegatedAmount ||
+    errorDelegatedAmount ||
+    status != "Connected"
+  );
+
   return (
     <>
       {stakeState?.selectedValidators?.length ? (
@@ -188,25 +206,31 @@ const Delegations = ({
           ) : (
             <p
               className={`caption d-flex gap-2 align-items-center ${
-                status === "Connected" ? null : "text-gray"
+                isConnected ? null : "text-gray"
               }`}
             >
               {" "}
               Delegated
             </p>
           )}
-          <p
-            className={status === "Connected" ? "caption" : "caption text-gray"}
-          >
-            {getBalanceStyle(delegationsDisplay, "caption", "caption2")}
+          <p className={isConnected ? "caption" : "caption text-gray"}>
+            {isConnected
+              ? getBalanceStyle(delegationsDisplay, "caption", "caption2")
+              : getBalanceStyle(
+                  delegationsDisplay,
+                  "caption text-gray",
+                  "caption2 text-gray"
+                )}
             &nbsp;{denomDisplay}
           </p>
-          <p
-            className={
-              status === "Connected" ? "caption2" : "caption2 text-gray"
-            }
-          >
-            {getBalanceStyle(delegationsInUSDDisplay, "caption2", "small")}
+          <p className={isConnected ? "caption2" : "caption2 text-gray"}>
+            {isConnected
+              ? getBalanceStyle(delegationsInUSDDisplay, "caption2 ", "small")
+              : getBalanceStyle(
+                  delegationsInUSDDisplay,
+                  "caption2 text-gray",
+                  "small text-gray"
+                )}
             &nbsp;{"$USD"}
           </p>
           {showRedelegateUndelegateAndClaim &&
@@ -419,12 +443,16 @@ const Delegations = ({
               </div>
               <p className="ps-3 my-2 caption2">
                 Delegated Amount:{" "}
-                {fromChainDenom(
-                  delegatedValidators?.find(
-                    (item) =>
-                      item?.operatorAddress ===
-                      stakeState?.selectedValidators[0]
-                  )?.delegatedAmount
+                {getBalanceStyle(
+                  fromChainDenom(
+                    delegatedValidators?.find(
+                      (item) =>
+                        item?.operatorAddress ===
+                        stakeState?.selectedValidators[0]
+                    )?.delegatedAmount
+                  ),
+                  "caption",
+                  "caption2"
                 )}
               </p>
               <p className="text-muted caption2 text-gray my-2">Delegate To</p>
@@ -521,13 +549,12 @@ const Delegations = ({
                     </thead>
                     <tbody>
                       {activeValidators
-                        ? validatorsArray
-                            ?.filter(
-                              (item) =>
-                                item?.status === 3 &&
-                                item?.description?.moniker
-                                  .toLowerCase()
-                                  .includes(searchValue.toLowerCase())
+                        ? allValidatorsBonded
+                            ?.sort((a, b) => b.tokens - a.tokens)
+                            ?.filter((item) =>
+                              item?.description?.moniker
+                                .toLowerCase()
+                                .includes(searchValue.toLowerCase())
                             )
                             ?.map((item, index) => (
                               <tr key={index} className="text-white">
@@ -580,36 +607,48 @@ const Delegations = ({
                                   )}
                                   %
                                 </td>
-                                {item?.commission?.commissionRates?.rate ==
-                                0 ? (
-                                  <td>0 %</td>
-                                ) : (
-                                  <td>
-                                    {item?.commission?.commissionRates?.rate.slice(
-                                      0,
-                                      -16
-                                    )}{" "}
-                                    %
-                                  </td>
-                                )}
-                                <td>{item?.tokens / 1000000}</td>
+
+                                <td>
+                                  {shiftDecimalPlaces(
+                                    item?.commission?.commissionRates?.rate,
+                                    -16
+                                  )}{" "}
+                                  %
+                                </td>
+                                <td>
+                                  {getBalanceStyle(
+                                    decimalize(item?.tokens / 1000000),
+                                    "caption",
+                                    "caption2"
+                                  )}
+                                </td>
                                 <td>
                                   {" "}
                                   {delegatedValidators?.find(
                                     (element) =>
                                       element?.operatorAddress ==
                                       item?.operatorAddress
-                                  )?.delegatedAmount || "-"}
+                                  )
+                                    ? getBalanceStyle(
+                                        fromChainDenom(
+                                          delegatedValidators?.find(
+                                            (element) =>
+                                              element?.operatorAddress ==
+                                              item?.operatorAddress
+                                          )?.delegatedAmount
+                                        ),
+                                        "caption",
+                                        "caption2"
+                                      )
+                                    : "-"}
                                 </td>
                               </tr>
                             ))
-                        : validatorsArray
-                            ?.filter(
-                              (item) =>
-                                item?.status === 1 &&
-                                item?.description?.moniker
-                                  .toLowerCase()
-                                  .includes(searchValue.toLowerCase())
+                        : allValidatorsUnbonded
+                            ?.filter((item) =>
+                              item?.description?.moniker
+                                .toLowerCase()
+                                .includes(searchValue.toLowerCase())
                             )
                             ?.map((item, index) => (
                               <tr key={index} className="text-white">
@@ -660,22 +699,38 @@ const Delegations = ({
                                   )}
                                   %
                                 </td>
-                                {item?.commission?.commissionRates?.rate ==
-                                0 ? (
-                                  <td>0 %</td>
-                                ) : (
-                                  <td>
-                                    {item?.commission?.commissionRates?.rate.slice(
-                                      0,
-                                      -16
-                                    )}{" "}
-                                    %
-                                  </td>
-                                )}
-                                <td>{item?.tokens / 1000000}</td>
+
                                 <td>
-                                  {item.delegatedAmount
-                                    ? item.delegatedAmount
+                                  {shiftDecimalPlaces(
+                                    item?.commission?.commissionRates?.rate,
+                                    -16
+                                  )}{" "}
+                                  %
+                                </td>
+                                <td>
+                                  {getBalanceStyle(
+                                    decimalize(item?.tokens / 1000000),
+                                    "caption",
+                                    "caption2"
+                                  )}
+                                </td>
+                                <td>
+                                  {delegatedValidators?.find(
+                                    (element) =>
+                                      element?.operatorAddress ==
+                                      item?.operatorAddress
+                                  )
+                                    ? getBalanceStyle(
+                                        fromChainDenom(
+                                          delegatedValidators?.find(
+                                            (element) =>
+                                              element?.operatorAddress ==
+                                              item?.operatorAddress
+                                          )?.delegatedAmount
+                                        ),
+                                        "caption",
+                                        "caption2"
+                                      )
                                     : "-"}
                                 </td>
                                 <td>

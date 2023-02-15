@@ -11,9 +11,11 @@ import {
   fromChainDenom,
   fromDenom,
   sendUndelegation,
-  useDelegatedValidators,
+  useAllValidatorsBonded,
+  useAllValidatorsUnbonded,
   useMntlUsd,
   useTotalUnbonding,
+  useDelegatedValidators,
 } from "../data";
 import ModalContainer from "./ModalContainer";
 import { isObjEmpty } from "../lib";
@@ -42,10 +44,26 @@ const Unbonded = ({
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
   const {
     delegatedValidators,
-    totalDelegatedAmount,
-    isLoadingDelegatedAmount,
     errorDelegatedAmount,
+    isLoadingDelegatedAmount,
+    totalDelegatedAmount,
   } = useDelegatedValidators();
+  const {
+    allValidatorsBonded,
+    errorValidatorsBonded,
+    isLoadingValidatorsBonded,
+  } = useAllValidatorsBonded();
+  const {
+    allValidatorsUnbonded,
+    errorValidatorsUnbonded,
+    isLoadingValidatorsUnbonded,
+  } = useAllValidatorsUnbonded();
+  // allUnbonding?.map((item) => {
+  //   console.log(
+  //     delegatedValidators?.find((e) => e?.operatorAddress == item?.address),
+  //     item
+  //   );
+  // });
 
   const selectedUnbonding = allUnbonding
     ?.filter((unbondingObject) =>
@@ -109,21 +127,39 @@ const Unbonded = ({
     }
   };
 
+  const isConnected = !(
+    isLoadingUnbonding ||
+    errorUnbonding ||
+    status != "Connected"
+  );
+
   return (
     <div className="nav-bg p-3 rounded-4 gap-3">
       <div className="d-flex flex-column gap-2">
         <p
           className={`caption d-flex gap-2 align-items-center
-          ${status === "Connected" ? "null" : "text-gray"}`}
+          ${isConnected ? "null" : "text-gray"}`}
         >
           Undelegating
         </p>
-        <p className={status === "Connected" ? "caption" : "caption text-gray"}>
-          {getBalanceStyle(unbondingDisplay, "caption", "caption2")}
+        <p className={isConnected ? "caption" : "caption text-gray"}>
+          {isConnected
+            ? getBalanceStyle(unbondingDisplay, "caption", "caption2")
+            : getBalanceStyle(
+                unbondingDisplay,
+                "caption text-gray",
+                "caption2 text-gray"
+              )}
           &nbsp;{denomDisplay}
         </p>
         <p className={status === "Connected" ? "caption" : "caption text-gray"}>
-          {getBalanceStyle(unbondingInUSDDisplay, "caption2", "small")}
+          {isConnected
+            ? getBalanceStyle(unbondingInUSDDisplay, "caption2", "small")
+            : getBalanceStyle(
+                unbondingInUSDDisplay,
+                "caption2 text-gray",
+                "small text-gray"
+              )}
           &nbsp;{"$USD"}
         </p>
         <div className="d-flex justify-content-end">
@@ -218,7 +254,7 @@ const Unbonded = ({
                   className="d-flex w-100 mt-3"
                   style={{ overflow: "auto", maxHeight: "400px" }}
                 >
-                  <table className="table">
+                  <table className="table text-white">
                     <thead className="bt-0">
                       <tr>
                         <th className="no-text-break text-white" scope="col">
@@ -233,53 +269,123 @@ const Unbonded = ({
                       </tr>
                     </thead>
                     <tbody>
-                      {allUnbonding?.map((item, index) => (
-                        <tr key={index}>
-                          <td
-                            className="text-white"
-                            onClick={() => {
-                              stakeDispatch({
-                                type: "SET_UNDELEGATION_SRC_ADDRESS",
-                                payload: item?.address,
-                              });
-                              setUnBondingModal(false);
-                              setUnDelegateModal(true);
-                            }}
-                          >
-                            {
-                              delegatedValidators?.find(
-                                (ele) => ele?.operatorAddress === item?.address
-                              )?.description?.moniker
-                            }
-                            <i className="bi bi-arrow-up-right" />
-                          </td>
-                          <td className="text-white">
-                            {fromDenom(item?.balance)}
-                          </td>
-                          <td className="text-white">
-                            {/* Calculate and display number of days left */}
-                            {Math.floor(
-                              ((item?.completion_time?.seconds?.low +
-                                item?.completion_time?.seconds?.high) *
-                                1000 -
-                                new Date().getTime()) /
-                                1000 /
-                                60 /
-                                60 /
-                                24
-                            )}{" "}
-                            days,{" "}
-                            {/* Calculate and display number of hours left */}
-                            {(
-                              ((item?.completion_time?.seconds?.low +
-                                item?.completion_time?.seconds?.high) %
-                                86400) /
-                              3600
-                            ).toFixed(2)}{" "}
-                            hours
-                          </td>
-                        </tr>
-                      ))}
+                      {activeValidators
+                        ? allUnbonding
+                            ?.filter((item) =>
+                              allValidatorsBonded?.find(
+                                (e) => e?.operatorAddress == item?.address
+                              )
+                            )
+                            ?.map((item, index) => (
+                              <tr key={index}>
+                                <td
+                                  className="text-white"
+                                  onClick={() => {
+                                    stakeDispatch({
+                                      type: "SET_UNDELEGATION_SRC_ADDRESS",
+                                      payload: item?.address,
+                                    });
+                                    setUnBondingModal(false);
+                                    setUnDelegateModal(true);
+                                  }}
+                                >
+                                  {
+                                    allValidatorsBonded?.find(
+                                      (ele) =>
+                                        ele?.operatorAddress === item?.address
+                                    )?.description?.moniker
+                                  }
+                                  <i className="bi bi-arrow-up-right" />
+                                </td>
+                                <td className="text-white">
+                                  {getBalanceStyle(
+                                    fromChainDenom(item?.balance),
+                                    "caption",
+                                    "caption2"
+                                  )}
+                                </td>
+                                <td className="text-white">
+                                  {/* Calculate and display number of days left */}
+                                  {Math.floor(
+                                    ((item?.completion_time?.seconds?.low +
+                                      item?.completion_time?.seconds?.high) *
+                                      1000 -
+                                      new Date().getTime()) /
+                                      1000 /
+                                      60 /
+                                      60 /
+                                      24
+                                  )}{" "}
+                                  days,{" "}
+                                  {/* Calculate and display number of hours left */}
+                                  {(
+                                    ((item?.completion_time?.seconds?.low +
+                                      item?.completion_time?.seconds?.high) %
+                                      86400) /
+                                    3600
+                                  ).toFixed(2)}{" "}
+                                  hours
+                                </td>
+                              </tr>
+                            ))
+                        : allUnbonding
+                            ?.filter((item) =>
+                              allValidatorsUnbonded?.find(
+                                (e) => e?.operatorAddress == item?.address
+                              )
+                            )
+                            ?.map((item, index) => {
+                              <tr key={index}>
+                                <td
+                                  className="text-white"
+                                  onClick={() => {
+                                    stakeDispatch({
+                                      type: "SET_UNDELEGATION_SRC_ADDRESS",
+                                      payload: item?.address,
+                                    });
+                                    setUnBondingModal(false);
+                                    setUnDelegateModal(true);
+                                  }}
+                                >
+                                  {
+                                    allValidatorsBonded?.find(
+                                      (ele) =>
+                                        ele?.operatorAddress === item?.address
+                                    )?.description?.moniker
+                                  }
+                                  <i className="bi bi-arrow-up-right" />
+                                </td>
+                                <td className="text-white">
+                                  {getBalanceStyle(
+                                    fromChainDenom(item?.balance),
+                                    "caption",
+                                    "caption2"
+                                  )}
+                                </td>
+                                <td className="text-white">
+                                  {/* Calculate and display number of days left */}
+                                  {Math.floor(
+                                    ((item?.completion_time?.seconds?.low +
+                                      item?.completion_time?.seconds?.high) *
+                                      1000 -
+                                      new Date().getTime()) /
+                                      1000 /
+                                      60 /
+                                      60 /
+                                      24
+                                  )}{" "}
+                                  days,{" "}
+                                  {/* Calculate and display number of hours left */}
+                                  {(
+                                    ((item?.completion_time?.seconds?.low +
+                                      item?.completion_time?.seconds?.high) %
+                                      86400) /
+                                    3600
+                                  ).toFixed(2)}{" "}
+                                  hours
+                                </td>
+                              </tr>;
+                            })}
                     </tbody>
                   </table>
                 </div>

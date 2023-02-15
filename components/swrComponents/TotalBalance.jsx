@@ -7,7 +7,12 @@ import {
   getBalanceStyle,
   usdSymbol,
 } from "../../config";
-import { fromChainDenom, useMntlUsd, useTotalBalance } from "../../data";
+import {
+  fromChainDenom,
+  fromDenom,
+  useMntlUsd,
+  useTotalBalance,
+} from "../../data";
 
 export const TotalBalance = () => {
   const {
@@ -31,7 +36,13 @@ export const TotalBalance = () => {
   return (
     <>
       <p className={isConnected ? "caption" : "caption text-gray"}>
-        {getBalanceStyle(totalBalanceDisplay, "caption", "caption2")}
+        {isConnected
+          ? getBalanceStyle(totalBalanceDisplay, "caption", "caption2")
+          : getBalanceStyle(
+              totalBalanceDisplay,
+              "caption text-gray",
+              "caption2 text-gray"
+            )}
         &nbsp;
         {denomTotalBalance}
       </p>
@@ -55,7 +66,7 @@ export const TotalBalanceInUSD = () => {
     errorMntlUsdValue
   );
 
-  const totalBalanceDisplay = fromChainDenom(totalBalance);
+  const totalBalanceDisplay = fromDenom(totalBalance);
 
   const totalBalanceInUSDDisplay = BigNumber(totalBalanceDisplay)
     .multipliedBy(BigNumber(mntlUsdValue))
