@@ -17,7 +17,6 @@ import {
   useWithdrawAddress,
   sendWithdrawAddress,
   isInvalidAddress,
-  decimalize,
 } from "../data";
 import ModalContainer from "./ModalContainer";
 import { toast } from "react-toastify";
@@ -345,7 +344,7 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
                           </td>
                           <td className="caption2">
                             {getBalanceStyle(
-                              decimalize(item?.tokens / 1000000),
+                              fromChainDenom(item?.delegatedAmount),
                               "caption",
                               "caption2"
                             )}
