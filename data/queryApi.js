@@ -47,19 +47,28 @@ const queryClientGravity = await cosmos.ClientFactory.createRPCQueryClient({
 });
 
 export const fromDenom = (value, exponent = defaultChainDenomExponent) => {
-  return parseFloat(
-    (parseFloat(value) / Math.pow(10, parseFloat(exponent))).toFixed(6)
-  );
+  if (isNaN(Number(exponent))) {
+    throw new Error("invalid decimals value for shiftDecimalPlaces");
+  }
+  const valueBigNumber = new BigNumber(value?.toString() || 0);
+  const amount = valueBigNumber
+    .shiftedBy(0 - Number(exponent))
+    .toFixed(Number(exponent));
+  return amount;
 };
 
 export const toDenom = (value, exponent = defaultChainDenomExponent) => {
-  return parseFloat(
-    (parseFloat(value) * Math.pow(10, parseFloat(exponent))).toFixed(0)
-  );
+  if (isNaN(Number(exponent))) {
+    throw new Error("invalid decimals value for shiftDecimalPlaces");
+  }
+  const valueBigNumber = new BigNumber(value?.toString() || 0);
+  amount = valueBigNumber.shiftedBy(Number(exponent)).toFixed(0);
+  return amount;
 };
 
 export const fromChainDenom = (
   value,
+  exponent = 0,
   chainName = defaultChainName,
   chainDenom = defaultChainDenom
 ) => {
@@ -70,16 +79,14 @@ export const fromChainDenom = (
   const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
   // Get the display exponent
   // we can get the exponent from chain registry asset denom_units
-  const exp = coin.denom_units.find(
-    (unit) => unit.denom === coin.display
-  )?.exponent;
+  const exp =
+    coin.denom_units.find((unit) => unit.denom === coin.display)?.exponent || 0;
+
   // show balance in display values by exponentiating it
   const valueBigNumber = new BigNumber(value?.toString() || 0);
-  if (BigNumber.isBigNumber(valueBigNumber)) {
-    amount = valueBigNumber.multipliedBy(10 ** -exp).toFormat(exp);
-  } else {
-    return "-1";
-  }
+  amount = valueBigNumber
+    .shiftedBy(0 - Number(exp))
+    .toFormat(Number(exponent) == 0 ? Number(exp) : Number(exponent));
   return amount;
 };
 
@@ -97,19 +104,12 @@ export const toChainDenom = (
   );
   // Get the display exponent
   // we can get the exponent from chain registry asset denom_units
-  const exp = coin?.denom_units?.find?.(
-    (unit) => unit?.denom === coin?.display
-  )?.exponent;
+  const exp =
+    coin?.denom_units?.find?.((unit) => unit?.denom === coin?.display)
+      ?.exponent || 0;
   // show balance in display values by exponentiating it
   const valueBigNumber = new BigNumber(value?.toString() || 0);
-  if (BigNumber.isBigNumber(valueBigNumber)) {
-    amount = valueBigNumber
-      .multipliedBy(10 ** exp)
-      .toFixed(0)
-      .toString();
-  } else {
-    return "-1";
-  }
+  amount = valueBigNumber.shiftedBy(Number(exp)).toFixed(0);
   return amount;
 };
 

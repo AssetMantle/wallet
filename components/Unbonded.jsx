@@ -428,11 +428,15 @@ const Unbonded = ({
                 </label>
                 <small className="caption2 text-gray">
                   Delegated Amount:
-                  {fromDenom(
-                    delegatedValidators?.find(
-                      (item) =>
-                        item?.operatorAddress === stakeState?.undelegationSrc
-                    )?.delegatedAmount
+                  {getBalanceStyle(
+                    fromChainDenom(
+                      delegatedValidators?.find(
+                        (item) =>
+                          item?.operatorAddress === stakeState?.undelegationSrc
+                      )?.delegatedAmount
+                    ),
+                    "caption2 text-gray",
+                    "small text-gray"
                   )}
                 </small>
               </div>

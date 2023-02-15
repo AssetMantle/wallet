@@ -18,7 +18,6 @@ import {
   useMntlUsd,
   useAllValidatorsBonded,
   useAllValidatorsUnbonded,
-  decimalize,
 } from "../data";
 import { isObjEmpty, shiftDecimalPlaces } from "../lib";
 import ModalContainer from "./ModalContainer";
@@ -306,11 +305,16 @@ const Delegations = ({
                   </label>
                   <small className="caption2 text-gray">
                     Delegated Amount:
-                    {fromDenom(
-                      delegatedValidators?.find(
-                        (item) =>
-                          item?.operatorAddress === stakeState?.undelegationSrc
-                      )?.delegatedAmount
+                    {getBalanceStyle(
+                      fromChainDenom(
+                        delegatedValidators?.find(
+                          (item) =>
+                            item?.operatorAddress ===
+                            stakeState?.undelegationSrc
+                        )?.delegatedAmount
+                      ),
+                      "caption2",
+                      "small"
                     )}
                   </small>
                 </div>
@@ -617,7 +621,7 @@ const Delegations = ({
                                 </td>
                                 <td>
                                   {getBalanceStyle(
-                                    decimalize(item?.tokens / 1000000),
+                                    fromChainDenom(item?.tokens, 2),
                                     "caption",
                                     "caption2"
                                   )}
@@ -709,7 +713,7 @@ const Delegations = ({
                                 </td>
                                 <td>
                                   {getBalanceStyle(
-                                    decimalize(item?.tokens / 1000000),
+                                    fromChainDenom(item?.tokens, 2),
                                     "caption",
                                     "caption2"
                                   )}
@@ -752,13 +756,17 @@ const Delegations = ({
                 </label>{" "}
                 <small className="caption2 text-gray my-2">
                   Delegated Amount :{" "}
-                  {fromDenom(
-                    delegatedValidators?.find((item) =>
-                      item?.operatorAddress?.includes(
-                        stakeState?.selectedValidators
-                      )
-                    )?.delegatedAmount
-                  ).toString()}
+                  {getBalanceStyle(
+                    fromChainDenom(
+                      delegatedValidators?.find((item) =>
+                        item?.operatorAddress?.includes(
+                          stakeState?.selectedValidators
+                        )
+                      )?.delegatedAmount
+                    ),
+                    "caption2 text-gray",
+                    "small text-gray"
+                  )}
                   &nbsp;
                   {defaultChainSymbol}
                 </small>

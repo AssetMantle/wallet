@@ -1,5 +1,5 @@
 import React from "react";
-import { decimalize, fromChainDenom, useAllValidatorsUnbonded } from "../data";
+import { fromChainDenom, useAllValidatorsUnbonded } from "../data";
 import Tooltip from "./Tooltip";
 import { useAllValidatorsBonded } from "../data";
 import { getBalanceStyle } from "../config";
@@ -119,7 +119,7 @@ const AllValidators = ({
                 </td>
                 <td>
                   {getBalanceStyle(
-                    decimalize((item?.tokens / 1000000).toFixed(2)),
+                    fromChainDenom(item?.tokens, 2),
                     "caption2 text-white-300",
                     "small text-white-300"
                   )}
@@ -215,7 +215,7 @@ const AllValidators = ({
 
                 <td>
                   {getBalanceStyle(
-                    decimalize(item?.tokens / 1000000),
+                    fromChainDenom(item?.tokens, 2),
                     "caption2 text-white-300",
                     "small text-white-300"
                   )}
