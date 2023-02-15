@@ -47,6 +47,8 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
       new BigNumber("0")
     );
 
+  console.log(delegatedValidators);
+
   const cumulativeRewards = errorRewards
     ? placeholderRewards
     : fromChainDenom(allRewards);
@@ -300,7 +302,7 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
 
                               <td className="caption2">
                                 {getBalanceStyle(
-                                  decimalize(item?.tokens / 1000000),
+                                  fromChainDenom(item?.delegatedAmount),
                                   "caption",
                                   "caption2"
                                 )}

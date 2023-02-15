@@ -13,9 +13,11 @@ import {
   defaultChainMemoSize,
   defaultChainName,
   defaultChainSymbol,
+  getBalanceStyle,
 } from "../config";
 import {
   formConstants,
+  fromChainDenom,
   fromDenom,
   isInvalidAddress,
   placeholderAddress,
@@ -526,7 +528,19 @@ export default function Transact() {
               >
                 Amount{" "}
                 <small>
-                  Balance : {fromDenom(availableBalance).toString()}&nbsp;
+                  Balance :{" "}
+                  {status === "Connected"
+                    ? getBalanceStyle(
+                        fromChainDenom(availableBalance),
+                        "caption",
+                        "caption2"
+                      )
+                    : getBalanceStyle(
+                        fromChainDenom(availableBalance),
+                        "caption text-gray",
+                        "caption2 text-gray"
+                      )}
+                  &nbsp;
                   {defaultChainSymbol}
                 </small>
               </label>
