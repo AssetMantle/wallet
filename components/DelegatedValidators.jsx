@@ -1,9 +1,11 @@
 import React from "react";
+import { getBalanceStyle } from "../config";
 import {
   fromChainDenom,
   useAllValidatorsBonded,
   useAllValidatorsUnbonded,
 } from "../data";
+import { shiftDecimalPlaces } from "../lib";
 
 const DelegatedValidators = ({
   searchValue,
@@ -37,6 +39,7 @@ const DelegatedValidators = ({
     <>
       {activeValidators
         ? delegatedValidators
+            ?.sort((a, b) => b.tokens - a.tokens)
             ?.filter(
               (item) =>
                 allValidatorsBonded?.find(
@@ -96,20 +99,25 @@ const DelegatedValidators = ({
                   </a>
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
-                {item?.commission?.commissionRates?.rate == 0 ? (
-                  <td>0%</td>
-                ) : (
-                  <td>
-                    {item?.commission?.commissionRates?.rate.slice(0, -16)} %
-                  </td>
-                )}
+
+                <td>
+                  {shiftDecimalPlaces(
+                    item?.commission?.commissionRates?.rate,
+                    -16
+                  )}{" "}
+                  %
+                </td>
                 <td>
                   {" "}
-                  {fromChainDenom(
-                    delegatedValidators?.find(
-                      (element) =>
-                        element?.operatorAddress == item?.operatorAddress
-                    )?.delegatedAmount
+                  {getBalanceStyle(
+                    fromChainDenom(
+                      delegatedValidators?.find(
+                        (element) =>
+                          element?.operatorAddress == item?.operatorAddress
+                      )?.delegatedAmount
+                    ),
+                    "caption2 text-white-300",
+                    "small text-white-300"
                   ) || "-"}
                 </td>
               </tr>
@@ -175,20 +183,26 @@ const DelegatedValidators = ({
                   </a>
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
-                {item?.commission?.commissionRates?.rate == 0 ? (
-                  <td>0%</td>
-                ) : (
-                  <td>
-                    item?.commission?.commissionRates?.rate.slice(0, -16)%
-                  </td>
-                )}{" "}
+
+                <td>
+                  {shiftDecimalPlaces(
+                    item?.commission?.commissionRates?.rate,
+                    -16
+                  )}
+                  %
+                </td>
+
                 <td>
                   {" "}
-                  {fromChainDenom(
-                    delegatedValidators?.find(
-                      (element) =>
-                        element?.operatorAddress == item?.operatorAddress
-                    )?.delegatedAmount
+                  {getBalanceStyle(
+                    fromChainDenom(
+                      delegatedValidators?.find(
+                        (element) =>
+                          element?.operatorAddress == item?.operatorAddress
+                      )?.delegatedAmount
+                    ),
+                    "caption2 text-white-300",
+                    "small text-white-300"
                   ) || "-"}
                 </td>
                 <td>

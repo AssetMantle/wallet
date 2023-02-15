@@ -1,5 +1,4 @@
 import { extendTheme } from "@chakra-ui/react";
-import BigNumber from "bignumber.js";
 
 export const getBalanceStyle = (
   balanceString,
@@ -11,7 +10,7 @@ export const getBalanceStyle = (
     if (balanceArray.length > 1) {
       return (
         <span className={style1ClassName}>
-          {new BigNumber(balanceArray[0]).toFormat()}.
+          {balanceArray[0]}.
           <span className={style2ClassName}>{balanceArray[1]}</span>
         </span>
       );

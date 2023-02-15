@@ -7,7 +7,7 @@ import {
   defaultChainName,
   getBalanceStyle,
 } from "../../config";
-import { fromDenom, useAvailableBalance, useMntlUsd } from "../../data";
+import { fromChainDenom, useAvailableBalance, useMntlUsd } from "../../data";
 
 const denomDisplay = defaultChainSymbol;
 
@@ -19,9 +19,9 @@ export const AvailableBalance = () => {
   const { availableBalance, errorAvailableBalance, isLoadingAvailableBalance } =
     useAvailableBalance();
   const balanceDisplay =
-    errorAvailableBalance || isNaN(fromDenom(availableBalance))
+    errorAvailableBalance || isNaN(fromChainDenom(availableBalance))
       ? placeholderAvailableBalance
-      : fromDenom(availableBalance);
+      : fromChainDenom(availableBalance);
 
   return (
     <>
@@ -29,7 +29,13 @@ export const AvailableBalance = () => {
         <p>Loading...</p>
       ) : (
         <p className={status === "Connected" ? "caption" : "caption text-gray"}>
-          {getBalanceStyle(balanceDisplay, "caption", "caption2")}{" "}
+          {status === "Connected"
+            ? getBalanceStyle(balanceDisplay, "caption", "caption2")
+            : getBalanceStyle(
+                balanceDisplay,
+                "caption text-gray",
+                "caption2 text-gray"
+              )}{" "}
           {denomDisplay}
         </p>
       )}
@@ -49,10 +55,10 @@ export const AvailableBalanceUsd = () => {
   const balanceInUSDDisplay =
     errorMntlUsdValue ||
     errorAvailableBalance ||
-    isNaN(fromDenom(availableBalance)) ||
+    isNaN(fromChainDenom(availableBalance)) ||
     isNaN(parseFloat(mntlUsdValue))
       ? placeholderMntlUsdValue
-      : (fromDenom(availableBalance) * parseFloat(mntlUsdValue))
+      : (fromChainDenom(availableBalance) * parseFloat(mntlUsdValue))
           .toFixed(6)
           .toString();
 

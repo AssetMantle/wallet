@@ -1,7 +1,9 @@
 import React from "react";
-import { fromChainDenom, useAllValidatorsUnbonded } from "../data";
+import { decimalize, fromChainDenom, useAllValidatorsUnbonded } from "../data";
 import Tooltip from "./Tooltip";
 import { useAllValidatorsBonded } from "../data";
+import { getBalanceStyle } from "../config";
+import { shiftDecimalPlaces } from "../lib";
 
 const AllValidators = ({
   setShowClaimError,
@@ -36,6 +38,7 @@ const AllValidators = ({
     <>
       {activeValidators
         ? allValidatorsBonded
+            ?.sort((a, b) => b.tokens - a.tokens)
             ?.filter((item) =>
               item?.description?.moniker
                 .toLowerCase()
@@ -107,24 +110,34 @@ const AllValidators = ({
                   </a>
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
-                {item?.commission?.commissionRates?.rate == 0 ? (
-                  <td>0 %</td>
-                ) : (
-                  <td>
-                    {item?.commission?.commissionRates?.rate.slice(0, -16)} %
-                  </td>
-                )}
-                <td>{(item?.tokens / 1000000).toFixed(2)}</td>
+                <td>
+                  {shiftDecimalPlaces(
+                    item?.commission?.commissionRates?.rate,
+                    -16
+                  )}
+                  %
+                </td>
+                <td>
+                  {getBalanceStyle(
+                    decimalize((item?.tokens / 1000000).toFixed(2)),
+                    "caption2 text-white-300",
+                    "small text-white-300"
+                  )}
+                </td>
                 <td>
                   {delegatedValidators?.find(
                     (element) =>
                       element?.operatorAddress == item?.operatorAddress
                   )
-                    ? fromChainDenom(
-                        delegatedValidators?.find(
-                          (element) =>
-                            element?.operatorAddress == item?.operatorAddress
-                        )?.delegatedAmount
+                    ? getBalanceStyle(
+                        fromChainDenom(
+                          delegatedValidators?.find(
+                            (element) =>
+                              element?.operatorAddress == item?.operatorAddress
+                          )?.delegatedAmount
+                        ),
+                        "caption2 text-white-300",
+                        "small text-white-300"
                       )
                     : "-"}
                 </td>
@@ -191,25 +204,37 @@ const AllValidators = ({
                   </a>
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
-                {item?.commission?.commissionRates?.rate == 0 ? (
-                  <td>0 %</td>
-                ) : (
-                  <td>
-                    {item?.commission?.commissionRates?.rate.slice(0, -16)} %
-                  </td>
-                )}
-                <td>{(item?.tokens / 1000000).toFixed(2)}</td>
+
+                <td>
+                  {shiftDecimalPlaces(
+                    item?.commission?.commissionRates?.rate,
+                    -16
+                  )}{" "}
+                  %
+                </td>
+
+                <td>
+                  {getBalanceStyle(
+                    decimalize(item?.tokens / 1000000),
+                    "caption2 text-white-300",
+                    "small text-white-300"
+                  )}
+                </td>
                 <td>
                   {" "}
                   {delegatedValidators?.find(
                     (element) =>
                       element?.operatorAddress == item?.operatorAddress
                   )
-                    ? fromChainDenom(
-                        delegatedValidators?.find(
-                          (element) =>
-                            element?.operatorAddress == item?.operatorAddress
-                        )?.delegatedAmount
+                    ? getBalanceStyle(
+                        fromChainDenom(
+                          delegatedValidators?.find(
+                            (element) =>
+                              element?.operatorAddress == item?.operatorAddress
+                          )?.delegatedAmount
+                        ),
+                        "caption2 text-white-300",
+                        "small text-white-300"
                       )
                     : "-"}
                 </td>
