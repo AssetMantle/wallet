@@ -1,14 +1,9 @@
 import React, { useState } from "react";
 import Head from "next/head";
-import { useQuickswap, useOsmosis } from "../data";
 import EarnTable from "../components/EarnTable";
 
 export default function Earn() {
   const [searchValue, setSearchValue] = useState();
-  const { allOsmosis, isLoadingOsmosis, errorOsmosis } = useOsmosis();
-  const { allQuickswap, isLoadingQuickswap, errorQuickswap } = useQuickswap();
-  let earnInfo = [...allQuickswap, ...allOsmosis];
-  console.log(isLoadingOsmosis);
 
   return (
     <>
@@ -52,7 +47,7 @@ export default function Earn() {
                 </div>
               </div>
               <div className="w-100 h-100" style={{ overflow: "auto" }}>
-                <EarnTable data={earnInfo} />
+                <EarnTable />
               </div>
             </div>
           </div>

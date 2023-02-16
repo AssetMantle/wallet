@@ -916,7 +916,7 @@ export const useTrade = () => {
 export const useOsmosis = () => {
   // fetcher function for useSwr of useAvailableBalance()
   const fetchAllOsmosis = async (url) => {
-    let osmosisData = [];
+    let osmosisData;
     try {
       const osmoMntlUsdcData = await fetch(
         "https://api.osmosis.zone/pools/v2/738"
@@ -936,6 +936,7 @@ export const useOsmosis = () => {
       const osmoAtomMntlAprData = await fetch(
         "https://api.osmosis.zone/apr/v2/686"
       ).then((res) => res.json());
+      console.log(osmoMntlOsmoAprData[0]?.apr_list[0]?.symbol);
       osmosisData = [
         {
           project: "Osmosis",
@@ -958,11 +959,12 @@ export const useOsmosis = () => {
             osmoMntlOsmoData[0]?.symbol + "-" + osmoMntlOsmoData[1]?.symbol,
           apy: Number(
             Math.max(
-              osmoMntlOsmoAprData[0]?.apr_list[0]?.apr_1d,
-              osmoMntlOsmoAprData[0]?.apr_list[0]?.apr_7d,
-              osmoMntlOsmoAprData[0]?.apr_list[0]?.apr_14d
+              osmoMntlOsmoAprData[0]?.apr_list[1]?.apr_1d,
+              osmoMntlOsmoAprData[0]?.apr_list[1]?.apr_7d,
+              osmoMntlOsmoAprData[0]?.apr_list[1]?.apr_14d
             )
           ).toFixed(2),
+          // osmoAtomMntlAprData[0?.apr_list?.map((e)=>console.log(e))],
           tvlUsd: osmoMntlOsmoData[0]?.liquidity?.toString()?.split(".")[0],
         },
         {
@@ -988,9 +990,7 @@ export const useOsmosis = () => {
     return osmosisData;
   };
   // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: osmosisArray, error } = useSwr("useOsmosis", fetchAllOsmosis, {
-    fallbackData: [],
-  });
+  const { data: osmosisArray, error } = useSwr("useOsmosis", fetchAllOsmosis);
   return {
     allOsmosis: osmosisArray,
     isLoadingOsmosis: !error && !osmosisArray,

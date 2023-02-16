@@ -1,8 +1,32 @@
 import React from "react";
+import { useOsmosis, useQuickswap } from "../data";
 import Table from "./Table";
 
-const EarnTable = ({ data }) => {
-  const columns = [
+const EarnTable = () => {
+  const { allOsmosis, isLoadingOsmosis, errorOsmosis } = useOsmosis();
+  const { allQuickswap, isLoadingQuickswap, errorQuickswap } = useQuickswap();
+  let isLoading = isLoadingOsmosis || isLoadingQuickswap;
+  const fetchedData = isLoading ? [] : [...allOsmosis, ...allQuickswap];
+  const loadingData = [
+    { symbol: true, project: true, chains: true, apy: true, tvlUsd: true },
+    { symbol: true, project: true, chains: true, apy: true, tvlUsd: true },
+    { symbol: true, project: true, chains: true, apy: true, tvlUsd: true },
+    { symbol: true, project: true, chains: true, apy: true, tvlUsd: true },
+    { symbol: true, project: true, chains: true, apy: true, tvlUsd: true },
+    { symbol: true, project: true, chains: true, apy: true, tvlUsd: true },
+    { symbol: true, project: true, chains: true, apy: true, tvlUsd: true },
+    { symbol: true, project: true, chains: true, apy: true, tvlUsd: true },
+    { symbol: true, project: true, chains: true, apy: true, tvlUsd: true },
+    { symbol: true, project: true, chains: true, apy: true, tvlUsd: true },
+    { symbol: true, project: true, chains: true, apy: true, tvlUsd: true },
+    { symbol: true, project: true, chains: true, apy: true, tvlUsd: true },
+    { symbol: true, project: true, chains: true, apy: true, tvlUsd: true },
+    { symbol: true, project: true, chains: true, apy: true, tvlUsd: true },
+    { symbol: true, project: true, chains: true, apy: true, tvlUsd: true },
+    { symbol: true, project: true, chains: true, apy: true, tvlUsd: true },
+  ];
+
+  const fetchedColumns = [
     {
       Header: "Name",
       accessor: "symbol",
@@ -60,9 +84,65 @@ const EarnTable = ({ data }) => {
     },
     { Header: "TVL", accessor: "tvlUsd" },
   ];
+  const loadingColumns = [
+    {
+      Header: "Name",
+      accessor: "symbol",
+      Cell: (tableProps) =>
+        tableProps.row.original.symbol ? (
+          <p className="placeholder-glow">
+            <span className="placeholder col-6"></span>
+          </p>
+        ) : null,
+    },
+    {
+      Header: "Category",
+      accessor: "project",
+      Cell: (tableProps) =>
+        tableProps.row.original.project ? (
+          <p className="placeholder-glow">
+            <span className="placeholder col-6"></span>
+          </p>
+        ) : null,
+    },
+    {
+      Header: "Chains",
+      accessor: "chains",
+      Cell: (tableProps) =>
+        tableProps.row.original.chains ? (
+          <p className="placeholder-glow">
+            <span className="placeholder col-6"></span>
+          </p>
+        ) : null,
+    },
+    {
+      Header: "APY",
+      accessor: "apy",
+      Cell: (tableProps) =>
+        tableProps.row.original.apy ? (
+          <p className="placeholder-glow">
+            <span className="placeholder col-6"></span>
+          </p>
+        ) : null,
+    },
+    {
+      Header: "TVL",
+      accessor: "tvlUsd",
+      Cell: (tableProps) =>
+        tableProps.row.original.tvlUsd ? (
+          <p className="placeholder-glow">
+            <span className="placeholder col-6"></span>
+          </p>
+        ) : null,
+    },
+  ];
   return (
     <>
-      <Table columns={columns} data={data} />
+      {isLoading ? (
+        <Table columns={loadingColumns} data={loadingData} />
+      ) : (
+        <Table columns={fetchedColumns} data={fetchedData} />
+      )}
     </>
   );
 };
