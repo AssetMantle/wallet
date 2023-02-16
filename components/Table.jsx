@@ -27,7 +27,9 @@ function GlobalFilter({ globalFilter, setGlobalFilter }) {
           <i className="bi bi-search text-white"></i>
         </span>
         <input
+          type="search"
           className="w-100 bg-t "
+          placeholder="Search"
           value={value || ""}
           onChange={(e) => {
             setValue(e.target.value);
@@ -47,7 +49,6 @@ const Table = ({ columns, data }) => {
     rows,
     prepareRow,
     state,
-    preGlobalFilteredRows,
     setGlobalFilter,
   } = useTable(
     {
@@ -61,45 +62,48 @@ const Table = ({ columns, data }) => {
   return (
     <>
       <GlobalFilter
-        preGlobalFilteredRows={preGlobalFilteredRows}
         globalFilter={state.globalFilter}
         setGlobalFilter={setGlobalFilter}
       />
-      <table className="table caption2 text-white-300" {...getTableProps}>
+      <table className="table caption2 text-white-300" {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup, index) => (
-            <tr key={index} {...headerGroup.getHeaderGroupProps}>
+            <tr key={index} {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column, i) => (
                 // Add the sorting props to control sorting. For this example
                 // we can add them into the header props
                 <th
                   key={i}
                   className="text-white"
-                  {...column.getHeaderProps(column.getSortByToggleProps)}
+                  {...column.getHeaderProps(column.getSortByToggleProps())}
                 >
                   {column.render("Header")}
                   {/* Add a sort direction indicator */}
                   <span>
-                    {column.isSorted
-                      ? column.isSortedDesc
-                        ? " 🔽"
-                        : " 🔼"
-                      : ""}
+                    {column.isSorted ? (
+                      column.isSortedDesc ? (
+                        <i className="bi bi-caret-down-fill"></i>
+                      ) : (
+                        <i className="bi bi-caret-up-fill"></i>
+                      )
+                    ) : (
+                      ""
+                    )}
                   </span>
                 </th>
               ))}
             </tr>
           ))}
         </thead>
-        <tbody {...getTableBodyProps}>
+        <tbody {...getTableBodyProps()}>
           {rows.map((row, i) => {
             prepareRow(row);
             return (
-              <tr key={i} {...row.getRowProps}>
+              <tr key={i} {...row.getRowProps()}>
                 {row.cells.map((cell, index) => {
                   console.log(cell);
                   return (
-                    <td key={index} {...cell.getCellProps}>
+                    <td key={index} {...cell.getCellProps()}>
                       {cell.render("Cell")}
                     </td>
                   );

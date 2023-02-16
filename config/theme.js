@@ -15,7 +15,7 @@ export const getBalanceStyle = (
         </span>
       );
     } else {
-      return <span className={style2ClassName}>{balanceArray[0]}</span>;
+      return <span className={style1ClassName}>{balanceArray[0]}</span>;
     }
   }
 };
