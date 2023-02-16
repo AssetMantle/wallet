@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Head from "next/head";
 import { useTrade } from "../data";
 import TradeTable from "../components/TradeTable";
-import EarnPageTokenDetails from "../components/EarnPageTokenDetails";
+import TradePageTokenDetails from "../components/TradePageTokenDetails";
 
 export default function Trade() {
   const [searchValue, setSearchValue] = useState("");
@@ -46,7 +46,7 @@ export default function Trade() {
               coming soon.
             </p>
           </div>
-          <EarnPageTokenDetails data={allTrades?.tokenDetails} />
+          <TradePageTokenDetails data={allTrades?.tokenDetails} />
         </div>
       </section>
     </>

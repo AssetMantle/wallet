@@ -1,7 +1,7 @@
 import React from "react";
 import { getBalanceStyle } from "../config";
 
-const EarnPageTokenDetails = ({ data }) => {
+const TradePageTokenDetails = ({ data }) => {
   return (
     <div className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-3">
       <h4 className="body1 text-primary">Token Details</h4>
@@ -53,4 +53,4 @@ const EarnPageTokenDetails = ({ data }) => {
   );
 };
 
-export default EarnPageTokenDetails;
+export default TradePageTokenDetails;
