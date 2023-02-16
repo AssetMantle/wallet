@@ -1,44 +1,8 @@
 import React from "react";
+import { getBalanceStyle } from "../config";
+import { decimalize } from "../data";
 
 import Table from "./Table";
-
-// function GlobalFilter({
-//   preGlobalFilteredRows,
-//   globalFilter,
-//   setGlobalFilter,
-// }) {
-//   const count = preGlobalFilteredRows.length;
-//   const [value, setValue] = React.useState(globalFilter);
-//   const onChange = useAsyncDebounce((value) => {
-//     setGlobalFilter(value || undefined);
-//   }, 200);
-
-//   return (
-//     <div className="d-flex align-items-center gap-3 w-100 p-2">
-//       <div
-//         className="d-flex gap-2 am-input border-color-white rounded-3 py-1 px-3 align-items-center"
-//         style={{ flex: "1" }}
-//       >
-//         <span
-//           className="input-group-text bg-t p-0 h-100"
-//           id="basic-addon1"
-//           style={{ border: "none" }}
-//         >
-//           {" "}
-//           <i className="bi bi-search text-white"></i>
-//         </span>
-//         <input
-//           className="w-100 bg-t "
-//           value={value || ""}
-//           onChange={(e) => {
-//             setValue(e.target.value);
-//             onChange(e.target.value);
-//           }}
-//         />
-//       </div>
-//     </div>
-//   );
-// }
 
 const TradeTable = ({ data }) => {
   const columns = [
@@ -64,27 +28,31 @@ const TradeTable = ({ data }) => {
     {
       Header: "Price",
       accessor: "price",
-      Cell: (tableProps) => <p>${tableProps.row.original.price}</p>,
+      Cell: (tableProps) => (
+        <p>
+          $
+          {getBalanceStyle(
+            decimalize(tableProps.row.original.price),
+            "caption text-white-300",
+            "caption2 text-white-300"
+          )}
+        </p>
+      ),
     },
-    { Header: "Volume", accessor: "volume" },
+    {
+      Header: "Volume(24Hour)",
+      accessor: "volume",
+      Cell: (tableProps) => (
+        <p>
+          {getBalanceStyle(
+            tableProps.row.original.volume,
+            "caption text-white-300",
+            "caption2 text-white-300"
+          )}
+        </p>
+      ),
+    },
   ];
-  // const {
-  //   getTableProps,
-  //   getTableBodyProps,
-  //   headerGroups,
-  //   rows,
-  //   prepareRow,
-  //   state,
-  //   preGlobalFilteredRows,
-  //   setGlobalFilter,
-  // } = useTable(
-  //   {
-  //     columns,
-  //     data,
-  //   },
-  //   useGlobalFilter,
-  //   useSortBy
-  // );
 
   return (
     <>

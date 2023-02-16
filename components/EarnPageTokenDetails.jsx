@@ -1,4 +1,5 @@
 import React from "react";
+import { getBalanceStyle } from "../config";
 
 const EarnPageTokenDetails = ({ data }) => {
   return (
@@ -16,13 +17,17 @@ const EarnPageTokenDetails = ({ data }) => {
             Circulating Supply
           </p>
         </div>
-        <p className="caption pb-3">{data?.circulatingSupply}</p>
+        <p className="caption pb-3">
+          {getBalanceStyle(data?.circulatingSupply, "caption", "caption2")}
+        </p>
         <div>
           <p className="caption d-flex gap-2 align-items-center text-white-300">
             Total Supply
           </p>
         </div>
-        <p className="caption pb-3">{data?.totalSupply}</p>
+        <p className="caption pb-3">
+          {getBalanceStyle(data?.totalSupply, "caption", "caption2")}
+        </p>
         <div>
           <p className="caption d-flex gap-2 align-items-center text-white-300">
             Max Supply
@@ -33,7 +38,9 @@ const EarnPageTokenDetails = ({ data }) => {
           <p className="caption d-flex gap-2 align-items-center text-white-300">
             24 Hour Trading Volume
           </p>
-          <p className="caption pb-3">${data?.volume}</p>
+          <p className="caption pb-3">
+            ${getBalanceStyle(data?.volume, "caption", "caption2")}
+          </p>
         </div>
         <div>
           <p className="caption d-flex gap-2 align-items-center text-white-300">
