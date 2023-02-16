@@ -928,7 +928,7 @@ export const useTrade = () => {
     let tokenDetails = {};
     const staticData = [
       {
-        logo: "/LBank.webp",
+        logo: "/trade/LBank.webp",
         name: "LBank",
         pair: "MNTL/USDT",
         target_coin_id: "tether",
@@ -936,7 +936,7 @@ export const useTrade = () => {
         url: "https://www.lbank.info/exchange/mntl/usdt",
       },
       {
-        logo: "/osmosis.png",
+        logo: "/trade/osmosis.webp",
         name: "Osmosis",
         target_coin_id: "osmosis",
         pair: "MNTL/OSMO",
@@ -944,7 +944,7 @@ export const useTrade = () => {
         url: "https://app.osmosis.zone/?from=OSMO&to=MNTL",
       },
       {
-        logo: "/osmosis.png",
+        logo: "/trade/osmosis.webp",
         name: "Osmosis",
         target_coin_id: "axlusdc",
         pair: "MNTL/AXLUSDC",
@@ -952,7 +952,7 @@ export const useTrade = () => {
         url: "https://app.osmosis.zone/?from=USDC&to=MNTL",
       },
       {
-        logo: "/Uniswap.png",
+        logo: "/trade/uniswap-v3.webp",
         name: "Uniswap (v3)",
         pair: "MNTL/ETH",
         target_coin_id: "weth",
@@ -960,7 +960,7 @@ export const useTrade = () => {
         url: "https://app.uniswap.org/#/swap?theme=dark&inputCurrency=ETH&outputCurrency=0x2c4f1df9c7de0c59778936c9b145ff56813f3295",
       },
       {
-        logo: "/MEXC.webp",
+        logo: "/trade/MEXC.webp",
         name: "MEXC Global",
         pair: "MNTL/USDT",
         target_coin_id: "tether",
@@ -968,7 +968,7 @@ export const useTrade = () => {
         url: "https://www.mexc.com/exchange/MNTL_USDT?inviteCode=1498J",
       },
       {
-        logo: "/osmosis.png",
+        logo: "/trade/osmosis.webp",
         name: "Osmosis",
         target_coin_id: "assetmantle",
         pair: "ATOM/MNTL",
@@ -976,7 +976,7 @@ export const useTrade = () => {
         url: "https://app.osmosis.zone/?from=ATOM&to=MNTL",
       },
       {
-        logo: "/quickswap.webp",
+        logo: "/trade/quickswap-dex.webp",
         name: "Quickswap",
         pair: "MNTL/USDC",
         target_coin_id: "usd-coin",
@@ -984,7 +984,7 @@ export const useTrade = () => {
         url: "https://quickswap.exchange/#/swap?swapIndex=0&currency0=0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174&currency1=0x38A536A31bA4d8C1Bcca016AbBf786ecD25877E8",
       },
       {
-        logo: "/quickswap.webp",
+        logo: "/trade/quickswap-dex.webp",
         name: "Quickswap",
         pair: "MNTL/VERSA",
         target_coin_id: "versagames",
