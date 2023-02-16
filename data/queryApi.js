@@ -128,9 +128,9 @@ export const decimalize = (
   // Get the display exponent
   // we can get the exponent from chain registry asset denom_units
   const exp =
-    exponent ||
+    exponent ??
     coin?.denom_units?.find?.((unit) => unit?.denom === coin?.display)
-      ?.exponent ||
+      ?.exponent ??
     0;
   const bnValue = BigNumber(value?.toString() || 0);
   return bnValue.toFormat(Number(exp));
