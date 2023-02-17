@@ -27,6 +27,7 @@ function GlobalFilter({ globalFilter, setGlobalFilter }) {
           <i className="bi bi-search text-white"></i>
         </span>
         <input
+          style={{ outline: "none" }}
           type="search"
           className="w-100 bg-t "
           placeholder="Search"
@@ -101,7 +102,6 @@ const Table = ({ columns, data }) => {
             return (
               <tr key={i} {...row.getRowProps()}>
                 {row.cells.map((cell, index) => {
-                  console.log(cell);
                   return (
                     <td key={index} {...cell.getCellProps()}>
                       {cell.render("Cell")}
