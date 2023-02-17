@@ -150,7 +150,6 @@ export default function Header() {
           onClick={() => navigator.clipboard.writeText(displayAddress)}
         >
           {shortenAddress(displayAddress)}
-
           <span className="text-primary">
             <i className="bi bi-files" />
           </span>
@@ -186,7 +185,7 @@ export default function Header() {
       </div>
       <hr className="my-3" />
       <button
-        className="d-flex align-items-center justify-content-center gap-2 text-center body2"
+        className="d-flex align-items-center justify-content-start gap-2 text-center body2 w-100 py-1"
         onClick={onClickDisconnect}
       >
         <span className="text-primary">
