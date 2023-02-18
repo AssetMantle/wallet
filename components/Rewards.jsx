@@ -4,6 +4,7 @@ import BigNumber from "bignumber.js";
 import {
   defaultChainName,
   defaultChainSymbol,
+  getBalanceStyle,
   placeholderMntlUsdValue,
   placeholderRewards,
 } from "../config";
@@ -19,6 +20,7 @@ import {
 } from "../data";
 import ModalContainer from "./ModalContainer";
 import { toast } from "react-toastify";
+import { shiftDecimalPlaces } from "../lib";
 
 const denomDisplay = defaultChainSymbol;
 
@@ -30,7 +32,8 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
     useWithdrawAddress();
   const { delegatedValidators } = useDelegatedValidators();
   const { getSigningStargateClient, address, status, wallet } = walletManager;
-  const { allRewards, rewardsArray, errorRewards } = useTotalRewards();
+  const { allRewards, isLoadingRewards, rewardsArray, errorRewards } =
+    useTotalRewards();
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
   // console.log("allRewards", allRewards, "rewards", rewardsArray);
   const selectedRewards = rewardsArray
@@ -42,6 +45,8 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
         accumulator.plus(new BigNumber(currentValue?.reward?.[0]?.amount) || 0),
       new BigNumber("0")
     );
+
+  console.log(delegatedValidators);
 
   const cumulativeRewards = errorRewards
     ? placeholderRewards
@@ -123,8 +128,11 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
 
   const isSubmitDisabled = status != "Connected";
 
-  const getCommission = (rate) =>
-    BigNumber(rate).isZero() ? 0 : BigNumber(rate).toString().slice(0, -16);
+  const isConnected = !(
+    isLoadingRewards ||
+    errorRewards ||
+    status != "Connected"
+  );
 
   return (
     <div className="nav-bg p-3 rounded-4 gap-3">
@@ -136,21 +144,33 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
         ) : (
           <p
             className={`caption d-flex gap-2 align-items-center ${
-              status === "Connected" ? null : "text-gray"
+              isConnected ? null : "text-gray"
             }`}
           >
             {" "}
             Rewards
           </p>
         )}
-        <p className={status === "Connected" ? "caption" : "caption text-gray"}>
-          {rewardsDisplay}&nbsp;
+        <p className={isConnected ? "caption" : "caption text-gray"}>
+          {isConnected
+            ? getBalanceStyle(rewardsDisplay, "caption", "caption2")
+            : getBalanceStyle(
+                rewardsDisplay,
+                "caption text-gray",
+                "caption2 text-gray"
+              )}
+          &nbsp;
           {denomDisplay}
         </p>
-        <p
-          className={status === "Connected" ? "caption2" : "caption2 text-gray"}
-        >
-          {rewardsInUSDDisplay}&nbsp;{"$USD"}
+        <p className={isConnected ? "caption2" : "caption2 text-gray"}>
+          {isConnected
+            ? getBalanceStyle(rewardsInUSDDisplay, "caption2", "small")
+            : getBalanceStyle(
+                rewardsInUSDDisplay,
+                "caption2 text-gray",
+                "small text-gray"
+              )}
+          &nbsp;{"$USD"}
         </p>
         <div className="d-flex justify-content-end">
           {stakeState?.selectedValidators?.length > 5 ||
@@ -203,8 +223,16 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
               <h6 className="caption2 my-1">Total Available $MNTL rewards:</h6>
               <p className="body2 my-1">
                 {stakeState?.selectedValidators.length
-                  ? fromChainDenom(selectedRewards)
-                  : fromChainDenom(allRewards)}{" "}
+                  ? getBalanceStyle(
+                      fromChainDenom(selectedRewards),
+                      "caption",
+                      "caption2"
+                    )
+                  : getBalanceStyle(
+                      fromChainDenom(allRewards),
+                      "caption",
+                      "caption2"
+                    )}{" "}
                 $MNTL
               </p>
               <p className="caption2 my-2 text-gray">Selected Validator</p>
@@ -264,22 +292,31 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
                                 {item?.description?.moniker}
                               </td>
                               <td className="caption2">
-                                {getCommission(
-                                  item?.commission?.commissionRates?.rate
+                                {shiftDecimalPlaces(
+                                  item?.commission?.commissionRates?.rate,
+                                  -16
                                 )}{" "}
                                 %
                               </td>
 
                               <td className="caption2">
-                                {item?.tokens / 1000000}
+                                {getBalanceStyle(
+                                  fromChainDenom(item?.delegatedAmount),
+                                  "caption",
+                                  "caption2"
+                                )}
                               </td>
                               <td className="caption2">
-                                {fromChainDenom(
-                                  rewardsArray?.find(
-                                    (element) =>
-                                      element?.validatorAddress ===
-                                      item?.operatorAddress
-                                  )?.reward[0]?.amount
+                                {getBalanceStyle(
+                                  fromChainDenom(
+                                    rewardsArray?.find(
+                                      (element) =>
+                                        element?.validatorAddress ===
+                                        item?.operatorAddress
+                                    )?.reward[0]?.amount
+                                  ),
+                                  "caption",
+                                  "caption2"
                                 )}
                               </td>
                             </tr>
@@ -299,19 +336,30 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
                             {item?.description?.moniker}
                           </td>
                           <td className="caption2">
-                            {getCommission(
-                              item?.commission?.commissionRates?.rate
+                            {shiftDecimalPlaces(
+                              item?.commission?.commissionRates?.rate,
+                              -16
                             )}{" "}
                             %
                           </td>
-                          <td className="caption2">{item?.tokens / 1000000}</td>
                           <td className="caption2">
-                            {fromChainDenom(
-                              rewardsArray?.find(
-                                (element) =>
-                                  element?.validatorAddress ===
-                                  item?.operatorAddress
-                              )?.reward[0]?.amount
+                            {getBalanceStyle(
+                              fromChainDenom(item?.delegatedAmount),
+                              "caption",
+                              "caption2"
+                            )}
+                          </td>
+                          <td className="caption2">
+                            {getBalanceStyle(
+                              fromChainDenom(
+                                rewardsArray?.find(
+                                  (element) =>
+                                    element?.validatorAddress ===
+                                    item?.operatorAddress
+                                )?.reward[0]?.amount
+                              ),
+                              "caption",
+                              "caption2"
                             )}
                           </td>
                         </tr>

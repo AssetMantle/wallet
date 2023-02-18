@@ -213,12 +213,8 @@ export default function Stake() {
                             </th>
                           </>
                         )
-                      ) : delegated ? (
-                        <th scope="col" style={{ whiteSpace: "nowrap" }}>
-                          Rank
-                        </th>
-                      ) : (
-                        <th></th>
+                      ) : delegated ? null : (
+                        <th scope="col" style={{ whiteSpace: "nowrap" }}></th>
                       )}
                       <th
                         colSpan="2"

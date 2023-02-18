@@ -47,19 +47,28 @@ const queryClientGravity = await cosmos.ClientFactory.createRPCQueryClient({
 });
 
 export const fromDenom = (value, exponent = defaultChainDenomExponent) => {
-  return parseFloat(
-    (parseFloat(value) / Math.pow(10, parseFloat(exponent))).toFixed(6)
-  );
+  if (isNaN(Number(exponent))) {
+    throw new Error("invalid decimals value for shiftDecimalPlaces");
+  }
+  const valueBigNumber = new BigNumber(value?.toString() || 0);
+  const amount = valueBigNumber
+    .shiftedBy(0 - Number(exponent))
+    .toFixed(Number(exponent));
+  return amount;
 };
 
 export const toDenom = (value, exponent = defaultChainDenomExponent) => {
-  return parseFloat(
-    (parseFloat(value) * Math.pow(10, parseFloat(exponent))).toFixed(0)
-  );
+  if (isNaN(Number(exponent))) {
+    throw new Error("invalid decimals value for shiftDecimalPlaces");
+  }
+  const valueBigNumber = new BigNumber(value?.toString() || 0);
+  amount = valueBigNumber.shiftedBy(Number(exponent)).toFixed(0);
+  return amount;
 };
 
 export const fromChainDenom = (
   value,
+  exponent = null,
   chainName = defaultChainName,
   chainDenom = defaultChainDenom
 ) => {
@@ -70,19 +79,14 @@ export const fromChainDenom = (
   const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
   // Get the display exponent
   // we can get the exponent from chain registry asset denom_units
-  const exp = coin.denom_units.find(
-    (unit) => unit.denom === coin.display
-  )?.exponent;
+  const exp =
+    coin.denom_units.find((unit) => unit.denom === coin.display)?.exponent || 0;
+
   // show balance in display values by exponentiating it
   const valueBigNumber = new BigNumber(value?.toString() || 0);
-  if (BigNumber.isBigNumber(valueBigNumber)) {
-    amount = valueBigNumber
-      .multipliedBy(10 ** -exp)
-      .toFixed(exp)
-      .toString();
-  } else {
-    return "-1";
-  }
+  amount = valueBigNumber
+    .shiftedBy(0 - Number(exp))
+    .toFormat(exponent ? Number(exponent) : Number(exp));
   return amount;
 };
 
@@ -100,19 +104,12 @@ export const toChainDenom = (
   );
   // Get the display exponent
   // we can get the exponent from chain registry asset denom_units
-  const exp = coin?.denom_units?.find?.(
-    (unit) => unit?.denom === coin?.display
-  )?.exponent;
+  const exp =
+    coin?.denom_units?.find?.((unit) => unit?.denom === coin?.display)
+      ?.exponent || 0;
   // show balance in display values by exponentiating it
   const valueBigNumber = new BigNumber(value?.toString() || 0);
-  if (BigNumber.isBigNumber(valueBigNumber)) {
-    amount = valueBigNumber
-      .multipliedBy(10 ** exp)
-      .toFixed(0)
-      .toString();
-  } else {
-    return "-1";
-  }
+  amount = valueBigNumber.shiftedBy(Number(exp)).toFixed(0);
   return amount;
 };
 
@@ -131,13 +128,12 @@ export const decimalize = (
   // Get the display exponent
   // we can get the exponent from chain registry asset denom_units
   const exp =
-    exponent ||
+    exponent ??
     coin?.denom_units?.find?.((unit) => unit?.denom === coin?.display)
-      ?.exponent;
-  const bnValue = BigNumber(value || 0);
-  if (bnValue.isNaN()) bnValue = BigNumber(0);
-
-  return bnValue.toFixed(exp).toString();
+      ?.exponent ??
+    0;
+  const bnValue = BigNumber(value?.toString() || 0);
+  return bnValue.toFormat(Number(exp));
 };
 
 // function to check whether an address is invalid
@@ -659,52 +655,95 @@ export const useTotalBalance = () => {
 };
 
 //Get a list of all validators that can be delegated
-export const useAllValidators = () => {
-  const fetchAllValidators = async (url) => {
-    let allValidators;
+export const useAllValidatorsBonded = () => {
+  const fetchAllValidatorsBonded = async (url) => {
+    let allValidatorsBonded;
 
     // use a try catch block for creating rich Error object
     try {
       // get the data from cosmos queryClient
       const { validators } = await client.cosmos.staking.v1beta1.validators({
-        status: "",
+        status: "BOND_STATUS_BONDED",
       });
-      allValidators = validators;
+      allValidatorsBonded = validators;
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
     }
     // return the data
-    return allValidators;
+    return allValidatorsBonded;
   };
   // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: validatorsArray, error } = useSwr(
-    "validators",
-    fetchAllValidators,
+  const { data: bondedValidatorsArray, error } = useSwr(
+    "useAllValidatorsBonded",
+    fetchAllValidatorsBonded,
     {
-      fallbackData: [
-        {
-          commission: {},
-          consensusPubkey: {},
-          delegatorShares: "",
-          description: {},
-          jailed: "",
-          minSelfDelegation: "",
-          operatorAddress: placeholderAddress,
-          status: "",
-          tokens: "",
-          unbondingHeight: {},
-          unbondingTime: {},
-        },
-      ],
-      suspense: true,
-      refreshInterval: 1000,
+      fallbackData: [],
     }
   );
   return {
-    allValidators: validatorsArray,
-    isLoadingValidators: !error && !validatorsArray,
-    errorValidators: error,
+    allValidatorsBonded: bondedValidatorsArray,
+    isLoadingValidatorsBonded: !error && !bondedValidatorsArray,
+    errorValidatorsBonded: error,
+  };
+};
+
+export const useAllValidatorsUnbonded = () => {
+  const fetchAllValidatorsUnbonded = async (url) => {
+    let allValidatorsUnbonded;
+
+    // use a try catch block for creating rich Error object
+    try {
+      // get the data from cosmos queryClient
+      const { validators } = await client.cosmos.staking.v1beta1.validators({
+        status: "BOND_STATUS_UNBONDED",
+      });
+      allValidatorsUnbonded = validators;
+    } catch (error) {
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
+      throw error;
+    }
+    // return the data
+    return allValidatorsUnbonded;
+  };
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: unbondedValidatorsArray, error } = useSwr(
+    "useAllValidatorsUnbonded",
+    fetchAllValidatorsUnbonded,
+    {
+      fallbackData: [],
+    }
+  );
+  return {
+    allValidatorsUnbonded: unbondedValidatorsArray,
+    isLoadingValidatorsUnbonded: !error && !unbondedValidatorsArray,
+    errorValidatorsUnbonded: error,
+  };
+};
+
+export const useAllValidators = () => {
+  // fetcher function for useSwr of useAvailableBalance()
+  const {
+    allValidatorsBonded,
+    isLoadingValidatorsBonded,
+    errorValidatorsBonded,
+  } = useAllValidatorsBonded();
+
+  const {
+    allValidatorsUnbonded,
+    errorValidatorsUnbonded,
+    isLoadingValidatorsUnbonded,
+  } = useAllValidatorsUnbonded();
+
+  const isLoading = isLoadingValidatorsBonded || isLoadingValidatorsUnbonded;
+
+  const isError = errorValidatorsBonded || errorValidatorsUnbonded;
+  let allValidators = [...allValidatorsBonded, ...allValidatorsUnbonded];
+
+  return {
+    allValidators: allValidators,
+    isLoadingValidators: isLoading,
+    errorValidators: isError,
   };
 };
 
@@ -886,119 +925,261 @@ export const useTrade = () => {
   // fetcher function for useSwr of useAvailableBalance()
   const fetchAllTrades = async (url) => {
     let tradeData = [];
+    let tokenDetails = {};
+    const staticData = [
+      {
+        logo: "lbank",
+        name: "LBank",
+        pair: "MNTL/USDT",
+        target_coin_id: "tether",
+
+        url: "https://www.lbank.info/exchange/mntl/usdt",
+      },
+      {
+        logo: "osmosis",
+        name: "Osmosis",
+        target_coin_id: "osmosis",
+        pair: "MNTL/OSMO",
+
+        url: "https://app.osmosis.zone/?from=OSMO&to=MNTL",
+      },
+      {
+        logo: "osmosis",
+        name: "Osmosis",
+        target_coin_id: "axlusdc",
+        pair: "MNTL/AXLUSDC",
+
+        url: "https://app.osmosis.zone/?from=USDC&to=MNTL",
+      },
+      {
+        logo: "uniswap-v3",
+        name: "Uniswap (v3)",
+        pair: "MNTL/ETH",
+        target_coin_id: "weth",
+        subTitle: "(ETH Pool)",
+        url: "https://app.uniswap.org/#/swap?theme=dark&inputCurrency=ETH&outputCurrency=0x2c4f1df9c7de0c59778936c9b145ff56813f3295",
+      },
+      {
+        logo: "mexc",
+        name: "MEXC Global",
+        pair: "MNTL/USDT",
+        target_coin_id: "tether",
+
+        url: "https://www.mexc.com/exchange/MNTL_USDT?inviteCode=1498J",
+      },
+      {
+        logo: "osmosis",
+        name: "Osmosis",
+        target_coin_id: "assetmantle",
+        pair: "ATOM/MNTL",
+
+        url: "https://app.osmosis.zone/?from=ATOM&to=MNTL",
+      },
+      {
+        logo: "quickswap-dex",
+        name: "Quickswap",
+        pair: "MNTL/USDC",
+        target_coin_id: "usd-coin",
+
+        url: "https://quickswap.exchange/#/swap?swapIndex=0&currency0=0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174&currency1=0x38A536A31bA4d8C1Bcca016AbBf786ecD25877E8",
+      },
+      {
+        logo: "quickswap-dex",
+        name: "Quickswap",
+        pair: "MNTL/VERSA",
+        target_coin_id: "versagames",
+
+        url: "https://quickswap.exchange/#/swap?inputCurrency=0x8497842420cfdbc97896c2353d75d89fc8d5be5d&outputCurrency=0x38a536a31ba4d8c1bcca016abbf786ecd25877e8&swapIndex=0",
+      },
+
+      // {
+      //   logo: "/osmosis.png",
+      //   name: "P2B",
+      //   pair: "MNTL/USDT",
+
+      //   subTitle: "(USDC Pool)",
+      //   url: "https://p2pb2b.com/trade/MNTL_USDT/",
+      //
+
+      // },
+      // {
+      //   logo: "/osmosis.png",
+      //   name: "Coinsbit",
+      //   pair: "MNTL/USDT",
+
+      //   subTitle: "(USDC Pool)",
+      //   url: "https://coinsbit.io/trade/MNTL_USDT",
+      //
+
+      // },
+    ];
 
     try {
       const data = await fetch(
         "https://api.coingecko.com/api/v3/coins/assetmantle?localization=false&tickers=true&market_data=true&community_data=false&developer_data=false&sparkline=false"
       ).then((res) => res.json());
-      tradeData = data;
+
+      tokenDetails = {
+        marketCap: data?.market_data?.market_cap?.usd,
+        circulatingSupply: data?.market_data?.circulating_supply,
+        totalSupply: data?.market_data?.total_supply,
+        maxSupply: data?.market_data?.max_supply,
+        fullyDilutedValuation: data?.market_data?.fully_diluted_valuation?.usd,
+        volume: data?.tickers
+          ?.reduce(
+            (accumulator, currentValue) =>
+              accumulator + parseFloat(currentValue?.volume),
+            0
+          )
+          .toFixed(2),
+      };
+
+      tradeData = data?.tickers?.map((item) => {
+        const match = staticData.find(
+          (element) =>
+            element.name == item?.market?.name &&
+            element.target_coin_id == item?.target_coin_id
+        );
+        return {
+          exchangeName: item?.market?.name,
+          tradePair: match?.pair,
+          volume: item?.converted_volume?.usd,
+          price: item?.converted_last?.usd,
+          logo: match?.logo,
+          url: match?.url,
+        };
+      });
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
     }
     // return the data
     // console.log("inside SWR:", tradesArray);
-    return tradeData;
+    return { tradeData, tokenDetails };
   };
   // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: tradesArray, error } = useSwr("useAllTrades", fetchAllTrades, {
+  const { data: tradesObject, error } = useSwr("useAllTrades", fetchAllTrades, {
     fallbackData: [],
     suspense: true,
   });
   // console.log("Outside SWR:", tradesArray);
   return {
-    allTrades: tradesArray,
-    isLoadingTrades: !error && !tradesArray,
+    allTrades: tradesObject,
+    isLoadingTrades: !error && !tradesObject,
     errorTrades: error,
   };
 };
 
-// export const useOsmosis = () => {
-//   // fetcher function for useSwr of useAvailableBalance()
-//   const fetchAllOsmosis = async (url) => {
-//     let osmosisData = [];
-//     try {
-//       const osmoMntlUsdcData = await fetch(
-//         "https://api.osmosis.zone/pools/v2/738"
-//       ).then((res) => res.json());
-//       const osmoMntlUsdcAprData = await fetch(
-//         "https://api.osmosis.zone/apr/v2/738"
-//       ).then((res) => res.json());
-//       const osmoMntlOsmoData = await fetch(
-//         "https://api.osmosis.zone/pools/v2/690"
-//       ).then((res) => res.json());
-//       const osmoMntlOsmoAprData = await fetch(
-//         "https://api.osmosis.zone/apr/v2/690"
-//       ).then((res) => res.json());
-//       const osmoAtomMntlData = await fetch(
-//         "https://api.osmosis.zone/pools/v2/690"
-//       ).then((res) => res.json());
-//       const osmoAtomMntlAprData = await fetch(
-//         "https://api.osmosis.zone/apr/v2/690"
-//       ).then((res) => res.json());
-//       osmosisData = [
-//         {
-//           name: "Osmosis",
-//           chain: "Cosmos",
-//           pair: osmoMntlUsdcData[0]?.symbol + "-" + osmoMntlUsdcData[1]?.symbol,
-//           apy: Number(
-//             Math.max(
-//               osmoMntlUsdcAprData[0]?.apr_list[0]?.apr_1d,
-//               osmoMntlUsdcAprData[0]?.apr_list[0]?.apr_7d,
-//               osmoMntlUsdcAprData[0]?.apr_list[0]?.apr_14d
-//             )
-//           ).toFixed(2),
-//           tvl: osmoMntlUsdcData[0]?.liquidity,
-//         },
-//         {
-//           name: "Osmosis",
-//           chain: "Cosmos",
-//           pair: osmoMntlOsmoData[0]?.symbol + "-" + osmoMntlOsmoData[1]?.symbol,
-//           apy: Number(
-//             Math.max(
-//               osmoMntlOsmoAprData[0]?.apr_list[0]?.apr_1d,
-//               osmoMntlOsmoAprData[0]?.apr_list[0]?.apr_7d,
-//               osmoMntlOsmoAprData[0]?.apr_list[0]?.apr_14d
-//             )
-//           ).toFixed(2),
-//           tvl: osmoMntlOsmoData[0]?.liquidity,
-//         },
-//         {
-//           name: "Osmosis",
-//           chain: "Cosmos",
-//           pair: osmoAtomMntlData[0]?.symbol + "-" + osmoAtomMntlData[1]?.symbol,
-//           apy: Number(
-//             Math.max(
-//               osmoAtomMntlAprData[0]?.apr_list[0]?.apr_1d,
-//               osmoAtomMntlAprData[0]?.apr_list[0]?.apr_7d,
-//               osmoAtomMntlAprData[0]?.apr_list[0]?.apr_14d
-//             )
-//           ).toFixed(2),
-//           tvl: osmoAtomMntlData[0]?.liquidity,
-//         },
-//       ];
-//     } catch (error) {
-//       console.error(`swr fetcher : url: ${url},  error: ${error}`);
-//       throw error;
-//     }
-//     // return the data
-//     return osmosisData;
-//   };
-//   // implement useSwr for cached and revalidation enabled data retrieval
-//   const { data: osmosisArray, error } = useSwr("useEarn", fetchAllOsmosis, {
-//     suspense: true,
-//   });
-//   return {
-//     allOsmosis: osmosisArray,
-//     isLoadingOsmosis: !error && !osmosisArray,
-//     errorOsmosis: error,
-//   };
-// };
+export const useOsmosis = () => {
+  // fetcher function for useSwr of useAvailableBalance()
+  const fetchAllOsmosis = async (url) => {
+    let osmosisData;
+    try {
+      const osmoMntlUsdcData = await fetch(
+        "https://api.osmosis.zone/pools/v2/738"
+      ).then((res) => res.json());
+      const osmoMntlUsdcAprData = await fetch(
+        "https://api.osmosis.zone/apr/v2/738"
+      ).then((res) => res.json());
+      const osmoMntlOsmoData = await fetch(
+        "https://api.osmosis.zone/pools/v2/690"
+      ).then((res) => res.json());
+      const osmoMntlOsmoAprData = await fetch(
+        "https://api.osmosis.zone/apr/v2/690"
+      ).then((res) => res.json());
+      const osmoAtomMntlData = await fetch(
+        "https://api.osmosis.zone/pools/v2/686"
+      ).then((res) => res.json());
+      const osmoAtomMntlAprData = await fetch(
+        "https://api.osmosis.zone/apr/v2/686"
+      ).then((res) => res.json());
+      console.log(
+        osmoMntlOsmoAprData[0]?.apr_list?.find((item) => item?.symbol == "MNTL")
+      );
+      osmosisData = [
+        {
+          project: "Osmosis",
+          chain: "Cosmos",
+          symbol:
+            osmoMntlUsdcData[0]?.symbol + "-" + osmoMntlUsdcData[1]?.symbol,
+          apy: Number(
+            Math.max(
+              osmoMntlUsdcAprData[0]?.apr_list[0]?.apr_1d,
+              osmoMntlUsdcAprData[0]?.apr_list[0]?.apr_7d,
+              osmoMntlUsdcAprData[0]?.apr_list[0]?.apr_14d
+            )
+          ).toFixed(2),
+          tvlUsd: osmoMntlUsdcData[0]?.liquidity?.toString()?.split(".")[0],
+          url: "https://app.osmosis.zone/pool/738",
+        },
+        {
+          project: "Osmosis",
+          chain: "Cosmos",
+          symbol:
+            osmoMntlOsmoData[0]?.symbol + "-" + osmoMntlOsmoData[1]?.symbol,
+          apy: Number(
+            Math.max(
+              osmoMntlOsmoAprData[0]?.apr_list?.find(
+                (item) => item?.symbol == "MNTL"
+              )?.apr_1d,
+              osmoMntlOsmoAprData[0]?.apr_list?.find(
+                (item) => item?.symbol == "MNTL"
+              )?.apr_7d,
+              osmoMntlOsmoAprData[0]?.apr_list?.find(
+                (item) => item?.symbol == "MNTL"
+              )?.apr_14d
+            )
+          ).toFixed(2),
+          // osmoAtomMntlAprData[0?.apr_list?.map((e)=>console.log(e))],
+          tvlUsd: osmoMntlOsmoData[0]?.liquidity?.toString()?.split(".")[0],
+          url: "https://app.osmosis.zone/pool/690",
+        },
+        {
+          project: "Osmosis",
+          chain: "Cosmos",
+          symbol:
+            osmoAtomMntlData[0]?.symbol + "-" + osmoAtomMntlData[1]?.symbol,
+          apy: Number(
+            Math.max(
+              osmoAtomMntlAprData[0]?.apr_list[0]?.apr_1d,
+              osmoAtomMntlAprData[0]?.apr_list[0]?.apr_7d,
+              osmoAtomMntlAprData[0]?.apr_list[0]?.apr_14d
+            )
+          ).toFixed(2),
+          tvlUsd: osmoAtomMntlData[0]?.liquidity?.toString()?.split(".")[0],
+          url: "https://app.osmosis.zone/pool/686",
+        },
+      ];
+    } catch (error) {
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
+      throw error;
+    }
+    // return the data
+    return osmosisData;
+  };
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: osmosisArray, error } = useSwr("useOsmosis", fetchAllOsmosis);
+  return {
+    allOsmosis: osmosisArray,
+    isLoadingOsmosis: !error && !osmosisArray,
+    errorOsmosis: error,
+  };
+};
 
 export const useQuickswap = () => {
   // fetcher function for useSwr of useAvailableBalance()
   const fetchAllQuickswap = async (url) => {
     let quickswapData = [];
+    const urlData = [
+      {
+        symbol: "VERSA",
+        url: "https://quickswap.exchange/#/pools/v2?currency0=0x38a536a31ba4d8c1bcca016abbf786ecd25877e8&currency1=0x8497842420cfdbc97896c2353d75d89fc8d5be5d",
+      },
+      {
+        symbol: "USDC",
+        url: "https://quickswap.exchange/#/pools/v2?currency0=0x2791bca1f2de4661ed88a30c99a7a9449aa84174&currency1=0x38a536a31ba4d8c1bcca016abbf786ecd25877e8",
+      },
+    ];
     try {
       const llamaData = await fetch("https://yields.llama.fi/pools").then(
         (res) => res.json()
@@ -1008,7 +1189,12 @@ export const useQuickswap = () => {
           item?.symbol.includes("MNTL") &&
           (item?.project == "quickswap-dex" || item?.project == "uniswap-v3")
       );
-      quickswapData = filteredLlamaData;
+      quickswapData = filteredLlamaData?.map((item) => {
+        return {
+          ...item,
+          url: urlData.find((e) => item?.symbol.includes(e.symbol)).url,
+        };
+      });
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
@@ -1017,10 +1203,14 @@ export const useQuickswap = () => {
     return quickswapData;
   };
   // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: quickswapArray, error } = useSwr("useEarn", fetchAllQuickswap, {
-    fallbackData: [],
-    suspense: true,
-  });
+  const { data: quickswapArray, error } = useSwr(
+    "useQuickswap",
+    fetchAllQuickswap,
+    {
+      fallbackData: [],
+      suspense: true,
+    }
+  );
   return {
     allQuickswap: quickswapArray,
     isLoadingQuickswap: !error && !quickswapArray,
