@@ -60,7 +60,7 @@ const EarnTable = () => {
             }}
           >
             <img
-              alt={tableProps.row.original.logo}
+              alt={tableProps.row.original.logo?.toLowerCase()}
               className="rounded-circle"
               layout="fill"
               src={`/trade/${tableProps?.row?.original?.project?.toLowerCase()}.webp`}
