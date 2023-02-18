@@ -5,12 +5,9 @@ import {
   getBalanceStyle,
 } from "../../config";
 import { useMntlUsd } from "../../data";
-import { useChain } from "@cosmos-kit/react";
 
 export const MntlUsdPrice = () => {
   console.log("inside MntlUsdPrice");
-  const walletManager = useChain(defaultChainName);
-  const { getSigningStargateClient, address, status } = walletManager;
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
   const isConnected = status == "Connected";
 

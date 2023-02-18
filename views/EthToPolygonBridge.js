@@ -340,14 +340,14 @@ const EthToPolygonBridge = () => {
     !mntlEthBalanceObject?.data ||
     mntlEthBalanceObject?.isLoading ||
     mntlEthBalanceObject?.isError
-      ? placeholderAvailableBalance
+      ? decimalize(placeholderAvailableBalance)
       : decimalize(mntlEthBalanceObject?.data?.formatted);
   const displayAvailableBalanceDenom = defaultChainSymbol;
   const displayEthBalance =
     !ethBalanceObject?.data ||
     ethBalanceObject?.isLoading ||
     ethBalanceObject?.isError
-      ? placeholderAvailableBalance
+      ? decimalize(placeholderAvailableBalance)
       : decimalize(ethBalanceObject?.data?.formatted);
   const displayEthBalanceDenom = ethereumChainSymbol;
 
@@ -366,6 +366,14 @@ const EthToPolygonBridge = () => {
       ));
 
   // connect button with logic
+  const notConnectedJSX = (
+    <button
+      className="caption2 d-flex gap-1 text-primary"
+      onClick={handleOpenWeb3Modal}
+    >
+      <i className="bi bi-link-45deg" /> Connect Wallet
+    </button>
+  );
   const connectButtonJSX = isWalletEthConnected ? (
     <>
       <button
@@ -383,12 +391,7 @@ const EthToPolygonBridge = () => {
       </button>
     </>
   ) : (
-    <button
-      className="caption2 d-flex gap-1 text-primary"
-      onClick={handleOpenWeb3Modal}
-    >
-      <i className="bi bi-link-45deg" /> Connect Wallet
-    </button>
+    notConnectedJSX
   );
 
   const submitButtonJSX = isApproveRequired ? (
@@ -426,7 +429,14 @@ const EthToPolygonBridge = () => {
     " isApproveRequired: ",
     isApproveRequired
   ); */
-
+  console.log(
+    "mounted: ",
+    isMounted(),
+    " address: ",
+    address,
+    " connected: ",
+    isConnected
+  );
   return (
     <>
       <div
@@ -443,14 +453,7 @@ const EthToPolygonBridge = () => {
             <h5 className="caption2 text-primary">Ethereum Chain</h5>
           </div>
           {isMounted() && connectButtonJSX}
-          {!isMounted() && (
-            <button
-              className="caption2 d-flex gap-1 text-primary"
-              onClick={handleOpenWeb3Modal}
-            >
-              <i className="bi bi-link-45deg" /> Connect Wallet
-            </button>
-          )}
+          {!isMounted() && notConnectedJSX}
         </div>
         <label
           htmlFor="GravityAmount"
@@ -458,11 +461,10 @@ const EthToPolygonBridge = () => {
         >
           Amount{" "}
           <small className="small text-gray">
-            ETH Balance : {isMounted() && displayEthBalance}{" "}
-            {displayEthBalanceDenom}
+            ETH Balance : {displayEthBalance} {displayEthBalanceDenom}
           </small>
           <small className="small text-gray">
-            MNTL Balance : {isMounted() && displayAvailableBalance}{" "}
+            MNTL Balance : {displayAvailableBalance}{" "}
             {displayAvailableBalanceDenom}
           </small>
         </label>

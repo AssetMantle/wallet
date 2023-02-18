@@ -10,15 +10,18 @@ import { configureChains, createClient, useAccount } from "wagmi";
 import { mainnet, polygon } from "wagmi/chains";
 import { placeholderAvailableBalance } from "../config";
 import { toChainDenom } from "./queryApi";
+import nonFungiblePositionManagerABI from "../data/contracts/nonFungiblePositionManagerABI.json";
+import uniV3StakerABI from "../data/contracts/uniV3StakerABI.json";
 
 // CONFIG PARAMETERS FOR ETH AND POLYGON
 export const selectedEthNetwork = "mainnet";
-export const web3ModalProjectID = "f068c2aa18a3ec82f5eafdc8abe7ae23";
+export const walletConnectProjectID = "f068c2aa18a3ec82f5eafdc8abe7ae23";
 
 export const ethConfig = {
   mainnet: {
     network: "mainnet",
     version: "v1",
+    chainID: "1",
     rpc: {
       pos: {
         parent: process.env.ETH_MAINNET_RPC,
@@ -51,6 +54,29 @@ export const ethConfig = {
     },
     rootChainManagerProxy: {
       parent: "0xA0c68C638235ee32657e8f720a23ceC1bFc77C77",
+    },
+    uniswap: {
+      nonFungiblePositionManager: {
+        address: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
+        abi: nonFungiblePositionManagerABI,
+      },
+      uniV3Staker: {
+        address: "0xe34139463bA50bD61336E0c446Bd8C0867c6fE65",
+        abi: uniV3StakerABI,
+      },
+      incentivePrograms: [
+        {
+          RewardTokenContract: "0x2C4F1DF9c7DE0C59778936C9b145fF56813F3295",
+          liquidityPoolContract: "0xf5b8304dc18579c4247caad705df01928248bc71",
+          startTime: "1676041245",
+          endtime: "1676214045",
+          refundeeAddress: "0x0ad4de31fc1E1e01Eaaf815dA18690441190f7ed",
+          token0: "0x2C4F1DF9c7DE0C59778936C9b145fF56813F3295",
+          token1: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+          fee: 3000,
+          totalRewards: 10000,
+        },
+      ],
     },
     SYNCER_URL: "https://testnetv3-syncer.api.matic.network/api/v1", // Backend service which syncs the Matic sidechain state to a MySQL database which we use for faster querying. This comes in handy especially for constructing withdrawal proofs while exiting assets from Plasma.
     WATCHER_URL: "https://testnetv3-watcher.api.matic.network/api/v1", // Backend service which syncs the Matic Plasma contract events on Ethereum mainchain to a MySQL database which we use for faster querying. This comes in handy especially for listening to asset deposits on the Plasma contract.
@@ -113,7 +139,7 @@ const chains = [mainnet, polygon];
 // create the provider & wagmi client & ethereum client
 const { provider } = configureChains(chains, [
   walletConnectProvider({
-    projectId: web3ModalProjectID,
+    projectId: walletConnectProjectID,
   }),
 ]);
 

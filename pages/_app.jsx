@@ -1,5 +1,8 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import { wallets as leapwallets } from "@cosmos-kit/leap";
+import { wallets as leapWallets } from "@cosmos-kit/leap";
+import { wallets as trustWallets } from "@cosmos-kit/trust-extension";
+import { wallets as xdefiWallets } from "@cosmos-kit/xdefi-extension";
+import { wallets as vectisWallets } from "@cosmos-kit/vectis";
 import { ChainProvider } from "@cosmos-kit/react";
 import { Web3Modal } from "@web3modal/react";
 import { assets, chains } from "chain-registry";
@@ -20,7 +23,7 @@ import {
   mantleTestnetAssetConfig,
 } from "../config";
 import "../config/styles/index.scss";
-import { ethereumClient, wagmiClient, web3ModalProjectID } from "../data";
+import { ethereumClient, wagmiClient, walletConnectProjectID } from "../data";
 import { getSigningGravityClientOptions } from "../modules";
 import ConnectModal from "../views/ConnectModal/ConnectModal";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -32,9 +35,17 @@ function CreateCosmosApp({ Component, pageProps }) {
     require("bootstrap/dist/js/bootstrap.bundle.js");
   }, []);
 
-  const customChains = chains.filter(
+  const chainList = chains.filter(
     (chain) => chain.chain_name !== "assetmantle"
   );
+
+  // const chainList = chains;
+
+  const finalChains = [
+    ...mantleChainConfig,
+    ...chainList,
+    ...mantleTestChainConfig,
+  ];
 
   const customAssets = assets.filter(
     (assets) => assets.chain_name !== "assetmantle"
@@ -50,6 +61,11 @@ function CreateCosmosApp({ Component, pageProps }) {
           return getSigningGravityClientOptions();
       }
     },
+  };
+
+  // implement session options
+  const sessionOptions = {
+    killOnTabClose: true,
   };
 
   return (
@@ -79,31 +95,42 @@ function CreateCosmosApp({ Component, pageProps }) {
 
       <ChakraProvider theme={defaultTheme}>
         <ChainProvider
-          chains={[
-            ...customChains,
-            ...mantleChainConfig,
-            ...mantleTestChainConfig,
-          ]}
+          chains={finalChains}
           assetLists={[
             ...customAssets,
             ...mantleAssetConfig,
             ...mantleTestnetAssetConfig,
           ]}
-          wallets={[...keplrWallets, ...leapwallets, ...cosmostationWallets]}
+          wallets={[
+            ...keplrWallets,
+            ...leapWallets,
+            ...cosmostationWallets,
+            ...vectisWallets,
+            ...trustWallets,
+            ...xdefiWallets,
+          ]}
           signerOptions={signerOptions}
+          sessionOptions={sessionOptions}
+          walletConnectOptions={{
+            signClient: {
+              projectId: walletConnectProjectID,
+              relayUrl: "wss://relay.walletconnect.org",
+            },
+          }}
           endpointOptions={{
             assetmantle: {
               rpc: [defaultChainRPCProxy],
               rest: [defaultChainRESTProxy],
             },
           }}
-          walletModal={ConnectModal} // Provide walletModal
+          // walletModal={"simple_v1"}
+          walletModal={ConnectModal}
         >
           <WagmiConfig client={wagmiClient}>
             <Layout>
               <Component {...pageProps} />
               <Web3Modal
-                projectId={web3ModalProjectID}
+                projectId={walletConnectProjectID}
                 themeColor="orange"
                 themeBackground="themeColor"
                 themeZIndex="99999"
@@ -111,7 +138,7 @@ function CreateCosmosApp({ Component, pageProps }) {
               />
               <ToastContainer
                 position="bottom-center"
-                autoClose={500}
+                autoClose={8000}
                 hideProgressBar={false}
                 newestOnTop={false}
                 closeOnClick

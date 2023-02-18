@@ -4,56 +4,31 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { QRCodeSVG } from "qrcode.react";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import {
   Connected,
   Connecting,
   Disconnected,
-  Error,
+  Errored,
   NotExist,
   Rejected,
   WalletConnectComponent,
 } from "../components";
-import { defaultChainName } from "../config";
-import { NavBarData, placeholderAddress } from "../data";
-import { shortenAddress } from "../lib";
+import { defaultChainName, toastConfig } from "../config";
+import {
+  ConnectOptionObject,
+  NavBarData,
+  placeholderAddress,
+  WALLET_DISCONNECT_ERROR_MSG,
+} from "../data";
+import { cleanString, shortenAddress } from "../lib";
 
 export default function Header() {
-  const {
-    chain,
-    openView,
-    username,
-    address,
-    wallet,
-    status,
-    connect,
-    disconnect,
-  } = useChain(defaultChainName);
+  const { openView, username, address, wallet, status, connect, disconnect } =
+    useChain(defaultChainName);
   const [showModal, setShowModal] = useState(false);
 
   const router = useRouter();
-
-  const ConnectOptionObject = {
-    cosmostation: {
-      icon: "/WalletIcons/cosmostation.png",
-      name: "Cosmostation",
-    },
-    keplr: {
-      icon: "/WalletIcons/keplr.png",
-      name: "Keplr",
-    },
-    keystore: {
-      icon: "/WalletIcons/keystore.png",
-      name: "Keystore",
-    },
-    leap: {
-      icon: "/WalletIcons/leap.png",
-      name: "Leap",
-    },
-    ledger: {
-      icon: "/WalletIcons/ledger.png",
-      name: "Ledger",
-    },
-  };
 
   // Events
   const onClickConnect = (e) => {
@@ -61,9 +36,15 @@ export default function Header() {
     connect();
   };
 
-  const onClickDisconnect = (e) => {
+  const onClickDisconnect = async (e) => {
+    console.log("inside onClickDisconnect");
     e.preventDefault();
-    disconnect(wallet?.name);
+    try {
+      await disconnect(wallet?.name);
+    } catch (error) {
+      console.error(error);
+      toast.error(WALLET_DISCONNECT_ERROR_MSG, toastConfig);
+    }
   };
 
   const handleOnClick = (e) => {
@@ -74,8 +55,6 @@ export default function Header() {
     } else {
       openView();
     }
-
-    // openView();
   };
 
   const displayAddress = address || placeholderAddress;
@@ -164,17 +143,11 @@ export default function Header() {
           >
             <img
               layout="fill"
-              src={
-                ConnectOptionObject[wallet?.prettyName.toLocaleLowerCase()]
-                  ?.icon
-              }
-              alt={
-                ConnectOptionObject[wallet?.prettyName.toLocaleLowerCase()]
-                  ?.name
-              }
+              src={ConnectOptionObject[cleanString(wallet?.prettyName)]?.icon}
+              alt={"♦︎"}
             />
           </div>
-          {ConnectOptionObject[wallet?.prettyName.toLocaleLowerCase()]?.name}
+          {ConnectOptionObject[cleanString(wallet?.prettyName)]?.name}
         </div>
         <div className="d-flex align-items-center gap-1">
           <span className="text-success">
@@ -199,8 +172,9 @@ export default function Header() {
   // Component
   const connectWalletButton = (
     <WalletConnectComponent
+      wallet={cleanString(wallet?.prettyName)}
       walletStatus={status}
-      disconnect={
+      disconnected={
         <Disconnected
           buttonText="Connect"
           buttonIcon="bi-wallet2"
@@ -219,12 +193,25 @@ export default function Header() {
           {connectedModalJSX}
         </Connected>
       }
-      rejected={<Rejected buttonText="Reconnect" onClick={onClickConnect} />}
-      error={<Error buttonText="Change Wallet" onClick={onClickDisconnect} />}
+      rejected={
+        <Rejected
+          buttonText="Reconnect"
+          buttonIcon="bi-patch-exclamation-fill"
+          onClick={onClickDisconnect}
+        />
+      }
+      errored={
+        <Errored
+          buttonText="Not Connected"
+          buttonIcon="bi-patch-exclamation-fill"
+          onClick={onClickDisconnect}
+        />
+      }
       notExist={
         <NotExist
-          buttonText="Install Wallet"
-          onClick={() => window.open("https://www.keplr.app/", "_blank")}
+          buttonText="Not Connected"
+          buttonIcon="bi-patch-exclamation-fill"
+          onClick={onClickDisconnect}
         />
       }
     />

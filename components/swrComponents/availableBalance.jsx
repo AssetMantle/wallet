@@ -1,6 +1,7 @@
-import React from "react";
 import { useChain } from "@cosmos-kit/react";
+import React from "react";
 import {
+  defaultChainName,
   defaultChainSymbol,
   placeholderAvailableBalance,
   placeholderMntlUsdValue,

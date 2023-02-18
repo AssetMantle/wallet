@@ -1,60 +1,15 @@
 import Link from "next/link";
-import React, { useState } from "react";
-import { mantleWalletV1URL } from "../../data";
-// import ModalContainer from "../../components/ModalContainer";
+import React from "react";
+import { ConnectOptionObject, mantleWalletV1URL } from "../../data";
+import { cleanString } from "../../lib";
 
-const ConnectModal = ({ isOpen, setOpen, walletRepo, theme }) => {
-  console.log({ isOpen, setOpen, walletRepo, theme });
-  const [generatedAddress, setGeneratedAddress] = useState("");
-
-  const handleLedger = async (e) => {
-    e.preventDefault();
-    console.log("Ledger Option Selected");
-    await walletRepo?.disconnect();
-  };
-
-  const handleKeystore = (e) => {
-    e.preventDefault();
-    console.log("Keystore Option Selected");
-  };
-
+const ConnectModal = ({ setOpen, walletRepo }) => {
   function handleCloseModal(e) {
     e.preventDefault();
     setOpen(false);
   }
 
-  function handleChangeGenAddress(e) {
-    e.preventDefault();
-    setGeneratedAddress(e.target.value);
-  }
-
-  const ConnectOptionObject = {
-    cosmostation: {
-      icon: "/WalletIcons/cosmostation.png",
-      name: "Cosmostation",
-    },
-    cosmostationmobile: {
-      icon: "/WalletIcons/cosmostation.png",
-      name: "Cosmostation",
-    },
-    keplr: {
-      icon: "/WalletIcons/keplr.png",
-      name: "Keplr",
-    },
-    keystore: {
-      icon: "/WalletIcons/keystore.png",
-      name: "Keystore",
-    },
-    leap: {
-      icon: "/WalletIcons/leap.png",
-      name: "Leap",
-    },
-    ledger: {
-      icon: "/WalletIcons/ledger.png",
-      name: "Ledger",
-    },
-  };
-
+  console.log("walletRepo: ", walletRepo);
   return (
     <div className="modal " tabIndex="-1" role="dialog" id="WalletConnectModal">
       <div
@@ -86,45 +41,50 @@ const ConnectModal = ({ isOpen, setOpen, walletRepo, theme }) => {
                 Connect with existing Wallet
               </h2>
               <div className="d-flex gap-2 flex-wrap">
-                {walletRepo?.wallets.map(({ _walletInfo, connect }, index) => (
-                  <button
-                    className="d-flex align-items-center gap-2 button-secondary py-2 px-3 rounded-2"
-                    key={index}
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                    onClick={async () => {
-                      await connect();
-                      setOpen(false);
-                    }}
-                  >
-                    <div
-                      className="position-relative"
-                      style={{ width: "25px", aspectRatio: "1/1" }}
+                {walletRepo?.wallets.map(
+                  (
+                    { walletPrettyName, connect, isError, isWalletConnected },
+                    index
+                  ) => (
+                    <button
+                      className="d-flex align-items-center gap-2 button-secondary py-2 px-3 rounded-2"
+                      key={index}
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                      onClick={async () => {
+                        await connect();
+                        setOpen(false);
+                        console.log(
+                          "wallet status now: ",
+                          isError,
+                          " connected: ",
+                          isWalletConnected
+                        );
+                      }}
                     >
-                      <img
-                        layout="fill"
-                        src={
-                          ConnectOptionObject[
-                            _walletInfo?.prettyName
-                              .toLowerCase()
-                              .replace(" ", "")
-                          ]?.icon
-                        }
-                        alt={_walletInfo?.prettyName}
-                      />
-                    </div>
-                    {_walletInfo?.prettyName}
-                    {console.log(
-                      ConnectOptionObject[_walletInfo?.prettyName]?.icon
-                    )}
-                  </button>
-                ))}
+                      <div
+                        className="position-relative"
+                        style={{ width: "25px", aspectRatio: "1/1" }}
+                      >
+                        <img
+                          layout="fill"
+                          src={
+                            ConnectOptionObject[cleanString(walletPrettyName)]
+                              ?.icon
+                          }
+                          alt={walletPrettyName}
+                        />
+                      </div>
+                      {walletPrettyName}
+                    </button>
+                  )
+                )}
               </div>
             </div>
 
             <div className="d-flex flex-column gap-3 mt-5">
               <h2 className="caption text-white">
-                Goto Old Wallet for Keystore & Ledger
+                Go to Old Wallet for Keystore & Ledger
               </h2>
               <div className="d-flex gap-2 flex-wrap">
                 <Link href={mantleWalletV1URL}>

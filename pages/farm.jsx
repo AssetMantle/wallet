@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import { disconnect } from "@wagmi/core";
+import { useWeb3Modal } from "@web3modal/react";
 import Head from "next/head";
-import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import Image from "next/image";
+import React, { useState } from "react";
+import { useAccount } from "wagmi";
+import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
+import { ethConfig, placeholderAddressEth } from "../data";
+import { handleCopy, shortenEthAddress, useIsMounted } from "../lib";
+import { UniswapStakeContents } from "../views";
 
 export default function Farm() {
-  const [Connected, setConnected] = useState(true);
+  // HOOKS
 
   const [Tab, setTab] = useState(0);
   const tabs = [
@@ -12,15 +18,151 @@ export default function Farm() {
     { name: "Unstake UniV3 LP", href: "#Unstake-UniV3-LP" },
   ];
 
-  const contentObg = {
-    img: "/profile.avif",
-    name: "Lorem ipsum",
-    href: "?sal",
-    catagory: "Liquid Staking",
-    chains: ["eth", "cosmos", "polygon"],
-    apy: 1.56,
-    tvl: 50,
+  const latestIncentiveProgram =
+    ethConfig?.mainnet?.uniswap?.incentivePrograms?.[0];
+
+  // hooks to work the multi-modal for ethereum
+  const { open } = useWeb3Modal();
+
+  // before useAccount, define the isMounted() hook to deal with SSR issues
+  const isMounted = useIsMounted();
+
+  // books to get the address of the connected wallet
+  const { address, isConnected } = useAccount();
+
+  // HANDLER FUNCTIONS
+  const handleCopyOnClick = (e) => {
+    e.preventDefault();
+    handleCopy(address);
   };
+
+  const handleOpenWeb3Modal = async (e) => {
+    e.preventDefault();
+    await open();
+  };
+
+  const handleDisconnectWeb3Modal = async (e) => {
+    e.preventDefault();
+    await disconnect();
+  };
+
+  // DISPLAY VARIABLES
+  const displayShortenedAddress = shortenEthAddress(
+    address || placeholderAddressEth
+  );
+  const isWalletEthConnected = isMounted() && isConnected;
+  const currentRewardPoolDisplay = latestIncentiveProgram?.totalRewards;
+
+  // connect button with logic
+  const notConnectedJSX = (
+    <button
+      className="caption2 d-flex gap-1 text-primary"
+      onClick={handleOpenWeb3Modal}
+    >
+      <i className="bi bi-link-45deg" /> Connect Wallet
+    </button>
+  );
+
+  const connectButtonJSX = isWalletEthConnected ? (
+    <>
+      <button
+        className="caption2 d-flex gap-1"
+        onClick={handleCopyOnClick}
+        style={{ wordBreak: "break-all" }}
+      >
+        {displayShortenedAddress}{" "}
+        <span className="text-primary">
+          <i className="bi bi-clipboard" />
+        </span>
+        <span className="text-primary" onClick={handleDisconnectWeb3Modal}>
+          <i className="bi bi-power" />
+        </span>
+      </button>
+    </>
+  ) : (
+    notConnectedJSX
+  );
+
+  const stakeDisplayJSX = (
+    <div
+      className="d-flex flex-column w-100 rounded-4 flex-grow-1 pt-2"
+      style={{ height: "90%" }}
+    >
+      <div className="row farm-data-container nav-bg rounded-4 p-3 mx-0">
+        <div className="col-3 d-flex flex-column gap-3">
+          <h4 className="caption text-gray">Reward Pool</h4>
+          <p className="body1">{currentRewardPoolDisplay}&nbsp;$MNTL</p>
+        </div>
+        <div className="col-3 d-flex flex-column gap-3">
+          <h4 className="caption text-gray">End</h4>
+          <p className="body1">--</p>
+        </div>
+        <div className="col-6 d-flex flex-column gap-3">
+          <h4 className="caption text-gray">Connect</h4>
+          {isMounted() && connectButtonJSX}
+          {!isMounted() && notConnectedJSX}
+        </div>
+      </div>
+    </div>
+  );
+
+  const stakeContentsJSX = <UniswapStakeContents />;
+
+  const unstakeDisplayJSX = (
+    <div
+      className="d-flex flex-column w-100 rounded-4 flex-grow-1 pt-2"
+      style={{ height: "90%" }}
+    >
+      <div className="row farm-data-container nav-bg rounded-4 p-3 mx-0">
+        <div className="col-3 d-flex flex-column gap-3">
+          <h4 className="caption text-gray">Reward Pool</h4>
+          <p className="body1">{currentRewardPoolDisplay}&nbsp;$MNTL</p>
+        </div>
+        <div className="col-3 d-flex flex-column gap-3">
+          <h4 className="caption text-gray">End</h4>
+          <p className="body1">12%</p>
+        </div>
+        <div className="col-6 d-flex flex-column gap-3">
+          <h4 className="caption text-gray">Connect</h4>
+          {isMounted() && connectButtonJSX}
+          {!isMounted() && notConnectedJSX}
+        </div>
+      </div>
+    </div>
+  );
+
+  const unstakeContentsJSX = React.Children.toArray(
+    [...new Array(13)].map((data) => (
+      <div className="bg-gray-800 p-3 rounded-4 d-flex gap-2 align-items-center justify-content-between">
+        <div className="d-flex gap-3">
+          <div
+            className="position-relative rounded-circle"
+            style={{ width: "40px", aspectRatio: "1/1" }}
+          >
+            <Image layout="fill" src="/chainLogos/mntl.svg" alt="mntl logo" />
+          </div>
+          <div className="d-flex flex-column gap-2">
+            <h3 className="body2">MNTL</h3>
+            <p className="caption">Unstake Token info</p>
+          </div>
+        </div>
+        <div className="d-flex gap-2 align-items-center">
+          <button className="button-secondary px-3 py-1">Stake</button>
+        </div>
+      </div>
+    ))
+  );
+
+  console.log(
+    "mounted: ",
+    isMounted(),
+    " address: ",
+    address,
+    " connected: ",
+    isConnected,
+    " isWalletEthConnected: ",
+    isWalletEthConnected
+  );
 
   return (
     <>
@@ -47,124 +189,16 @@ export default function Farm() {
             </nav>
             {
               {
-                0: (
-                  <div
-                    className="d-flex flex-column w-100 rounded-4 flex-grow-1 pt-2"
-                    style={{ height: "90%" }}
-                  >
-                    <div className="row farm-data-container nav-bg rounded-4 p-3 mx-0">
-                      <div className="col-3 d-flex flex-column gap-3">
-                        <h4 className="caption text-gray">TVL</h4>
-                        <p className="body1">$450</p>
-                      </div>
-                      <div className="col-3 d-flex flex-column gap-3">
-                        <h4 className="caption text-gray">APR</h4>
-                        <p className="body1">--</p>
-                      </div>
-                      <div className="col-6 d-flex flex-column gap-3">
-                        <h4 className="caption text-gray">Connect</h4>
-                        <button
-                          className="btn button-primary text-center w-100 my-auto"
-                          style={{ maxWidth: "100%" }}
-                          onClick={() => setConnected(!Connected)}
-                        >
-                          {Connected ? "Connected" : "Connect"}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ),
-                1: (
-                  <div
-                    className="d-flex flex-column w-100 rounded-4 flex-grow-1 pt-2"
-                    style={{ height: "90%" }}
-                  >
-                    <div className="row farm-data-container nav-bg rounded-4 p-3 mx-0">
-                      <div className="col-3 d-flex flex-column gap-3">
-                        <h4 className="caption text-gray">TVL</h4>
-                        <p className="body1">$450</p>
-                      </div>
-                      <div className="col-3 d-flex flex-column gap-3">
-                        <h4 className="caption text-gray">APR</h4>
-                        <p className="body1">--</p>
-                      </div>
-                      <div className="col-6 d-flex flex-column gap-3">
-                        <h4 className="caption text-gray">Connect</h4>
-                        <button
-                          className="btn button-primary text-center w-100 my-auto"
-                          style={{ maxWidth: "100%" }}
-                          onClick={() => setConnected(!Connected)}
-                        >
-                          {Connected ? "Connected" : "Connect"}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ),
+                0: stakeDisplayJSX,
+                1: stakeDisplayJSX,
               }[Tab]
             }
           </div>
           <div className="p-1"></div>
           {
             {
-              0:
-                Connected &&
-                React.Children.toArray(
-                  [...new Array(13)].map((data) => (
-                    <div className="bg-gray-800 p-3 rounded-4 d-flex gap-2 align-items-center justify-content-between">
-                      <div className="d-flex gap-3">
-                        <div
-                          className="position-relative rounded-circle"
-                          style={{ width: "40px", aspectRatio: "1/1" }}
-                        >
-                          <Image
-                            layout="fill"
-                            src="/chainLogos/mntl.svg"
-                            alt="mntl logo"
-                          />
-                        </div>
-                        <div className="d-flex flex-column gap-2">
-                          <h3 className="body2">MNTL</h3>
-                          <p className="caption">Token info</p>
-                        </div>
-                      </div>
-                      <div className="d-flex gap-2 align-items-center">
-                        <button className="button-secondary px-3 py-1">
-                          Stake
-                        </button>
-                      </div>
-                    </div>
-                  ))
-                ),
-              1:
-                Connected &&
-                React.Children.toArray(
-                  [...new Array(13)].map((data) => (
-                    <div className="bg-gray-800 p-3 rounded-4 d-flex gap-2 align-items-center justify-content-between">
-                      <div className="d-flex gap-3">
-                        <div
-                          className="position-relative rounded-circle"
-                          style={{ width: "40px", aspectRatio: "1/1" }}
-                        >
-                          <Image
-                            layout="fill"
-                            src="/chainLogos/mntl.svg"
-                            alt="mntl logo"
-                          />
-                        </div>
-                        <div className="d-flex flex-column gap-2">
-                          <h3 className="body2">MNTL</h3>
-                          <p className="caption">Token info</p>
-                        </div>
-                      </div>
-                      <div className="d-flex gap-2 align-items-center">
-                        <button className="button-secondary px-3 py-1">
-                          Stake
-                        </button>
-                      </div>
-                    </div>
-                  ))
-                ),
+              0: stakeContentsJSX,
+              1: unstakeContentsJSX,
             }[Tab]
           }
           <div className="p-2"></div>
@@ -172,8 +206,13 @@ export default function Farm() {
         <div className="col-12 col-lg-4">
           <div className="rounded-4 p-3 my-2 bg-gray-800 width-100 d-flex flex-column ">
             <p>
-              Instructional Copy. Lorem Ipsum Dolor Sit ametLorem ipsum dolor
-              sit amet, consectetur adipiscing elit. Aliquam pulvinar vitae
+              To purchase MNTL, visit the exchanges (CEX & DEX) shown to swap
+              with your available tokens.
+            </p>
+            <br></br>
+            <p>
+              Options to directly on-ramp to MNTL using fiat currencies will be
+              coming soon.
             </p>
           </div>
         </div>
