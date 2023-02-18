@@ -63,7 +63,7 @@ const EarnTable = () => {
               alt={tableProps.row.original.logo}
               className="rounded-circle"
               layout="fill"
-              src={`/trade/${tableProps?.row?.original?.project}.webp`}
+              src={`/trade/${tableProps?.row?.original?.project?.toLowerCase()}.webp`}
             />
           </div>
           <p>{tableProps?.row?.original?.project}</p>
@@ -86,7 +86,7 @@ const EarnTable = () => {
               alt={tableProps?.row?.original?.logo}
               className="rounded-circle"
               layout="fill"
-              src={`/earn/${tableProps?.row?.original?.chain}.svg`}
+              src={`/earn/${tableProps?.row?.original?.chain?.toLowerCase()}.svg`}
             />
           </div>
         </div>

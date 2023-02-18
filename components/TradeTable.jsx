@@ -14,7 +14,11 @@ const TradeTable = ({ data }) => {
         accessor: "exchangeName",
         Cell: (tableProps) => (
           <div className="d-flex align-items-center justify-content-around">
-            <img src={tableProps.row.original.logo} width={20} alt="logo" />
+            <img
+              src={tableProps.row.original.logo?.toLowerCase()}
+              width={20}
+              alt="logo"
+            />
             <a
               href={tableProps.row.original.url}
               target="_blank"
