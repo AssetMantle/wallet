@@ -15,7 +15,7 @@ const TradeTable = ({ data }) => {
         Cell: (tableProps) => (
           <div className="d-flex align-items-center justify-content-around">
             <img
-              src={tableProps.row.original.logo?.toLowerCase()}
+              src={`/trade/${tableProps?.row?.original?.logo?.toLowerCase()}.webp`}
               width={20}
               alt="logo"
             />
