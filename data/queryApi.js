@@ -1110,6 +1110,7 @@ export const useOsmosis = () => {
             )
           ).toFixed(2),
           tvlUsd: osmoMntlUsdcData[0]?.liquidity?.toString()?.split(".")[0],
+          url: "https://app.osmosis.zone/pool/738",
         },
         {
           project: "Osmosis",
@@ -1131,6 +1132,7 @@ export const useOsmosis = () => {
           ).toFixed(2),
           // osmoAtomMntlAprData[0?.apr_list?.map((e)=>console.log(e))],
           tvlUsd: osmoMntlOsmoData[0]?.liquidity?.toString()?.split(".")[0],
+          url: "https://app.osmosis.zone/pool/690",
         },
         {
           project: "Osmosis",
@@ -1145,6 +1147,7 @@ export const useOsmosis = () => {
             )
           ).toFixed(2),
           tvlUsd: osmoAtomMntlData[0]?.liquidity?.toString()?.split(".")[0],
+          url: "https://app.osmosis.zone/pool/686",
         },
       ];
     } catch (error) {
@@ -1167,6 +1170,16 @@ export const useQuickswap = () => {
   // fetcher function for useSwr of useAvailableBalance()
   const fetchAllQuickswap = async (url) => {
     let quickswapData = [];
+    const urlData = [
+      {
+        symbol: "VERSA",
+        url: "https://quickswap.exchange/#/pools/v2?currency0=0x38a536a31ba4d8c1bcca016abbf786ecd25877e8&currency1=0x8497842420cfdbc97896c2353d75d89fc8d5be5d",
+      },
+      {
+        symbol: "USDC",
+        url: "https://quickswap.exchange/#/pools/v2?currency0=0x2791bca1f2de4661ed88a30c99a7a9449aa84174&currency1=0x38a536a31ba4d8c1bcca016abbf786ecd25877e8",
+      },
+    ];
     try {
       const llamaData = await fetch("https://yields.llama.fi/pools").then(
         (res) => res.json()
@@ -1176,7 +1189,12 @@ export const useQuickswap = () => {
           item?.symbol.includes("MNTL") &&
           (item?.project == "quickswap-dex" || item?.project == "uniswap-v3")
       );
-      quickswapData = filteredLlamaData;
+      quickswapData = filteredLlamaData?.map((item) => {
+        return {
+          ...item,
+          url: urlData.find((e) => item?.symbol.includes(e.symbol)).url,
+        };
+      });
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;

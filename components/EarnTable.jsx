@@ -8,7 +8,7 @@ const EarnTable = () => {
   const { allQuickswap, isLoadingQuickswap, errorQuickswap } = useQuickswap();
   let isLoading = isLoadingOsmosis || isLoadingQuickswap;
   const fetchedData = isLoading ? [] : [...allOsmosis, ...allQuickswap];
-  console.log(allOsmosis);
+  console.log(allQuickswap);
   const loadingData = [
     { symbol: true, project: true, chains: true, apy: true, tvlUsd: true },
     { symbol: true, project: true, chains: true, apy: true, tvlUsd: true },
@@ -32,6 +32,19 @@ const EarnTable = () => {
     {
       Header: "Name",
       accessor: "symbol",
+      Cell: (tableProps) => (
+        <div className="d-flex align-items-center justify-content-around">
+          <a
+            href={tableProps.row.original.url}
+            target="_blank"
+            width={20}
+            rel="noreferrer"
+          >
+            {tableProps.row.original.symbol}
+          </a>{" "}
+          <i className="bi bi-arrow-up-right"></i>
+        </div>
+      ),
     },
     {
       Header: "Category",
