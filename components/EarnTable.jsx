@@ -8,7 +8,7 @@ const EarnTable = () => {
   const { allQuickswap, isLoadingQuickswap, errorQuickswap } = useQuickswap();
   let isLoading = isLoadingOsmosis || isLoadingQuickswap;
   const fetchedData = isLoading ? [] : [...allOsmosis, ...allQuickswap];
-  console.log(allQuickswap);
+  console.log(allOsmosis);
   const loadingData = [
     { symbol: true, project: true, chains: true, apy: true, tvlUsd: true },
     { symbol: true, project: true, chains: true, apy: true, tvlUsd: true },
