@@ -1069,92 +1069,117 @@ export const useTrade = () => {
     errorTrades: error,
   };
 };
-// export const useOsmosis = () => {
-//   // fetcher function for useSwr of useAvailableBalance()
-//   const fetchAllOsmosis = async (url) => {
-//     let osmosisData = [];
-//     try {
-//       const osmoMntlUsdcData = await fetch(
-//         "https://api.osmosis.zone/pools/v2/738"
-//       ).then((res) => res.json());
-//       const osmoMntlUsdcAprData = await fetch(
-//         "https://api.osmosis.zone/apr/v2/738"
-//       ).then((res) => res.json());
-//       const osmoMntlOsmoData = await fetch(
-//         "https://api.osmosis.zone/pools/v2/690"
-//       ).then((res) => res.json());
-//       const osmoMntlOsmoAprData = await fetch(
-//         "https://api.osmosis.zone/apr/v2/690"
-//       ).then((res) => res.json());
-//       const osmoAtomMntlData = await fetch(
-//         "https://api.osmosis.zone/pools/v2/690"
-//       ).then((res) => res.json());
-//       const osmoAtomMntlAprData = await fetch(
-//         "https://api.osmosis.zone/apr/v2/690"
-//       ).then((res) => res.json());
-//       osmosisData = [
-//         {
-//           name: "Osmosis",
-//           chain: "Cosmos",
-//           pair: osmoMntlUsdcData[0]?.symbol + "-" + osmoMntlUsdcData[1]?.symbol,
-//           apy: Number(
-//             Math.max(
-//               osmoMntlUsdcAprData[0]?.apr_list[0]?.apr_1d,
-//               osmoMntlUsdcAprData[0]?.apr_list[0]?.apr_7d,
-//               osmoMntlUsdcAprData[0]?.apr_list[0]?.apr_14d
-//             )
-//           ).toFixed(2),
-//           tvl: osmoMntlUsdcData[0]?.liquidity,
-//         },
-//         {
-//           name: "Osmosis",
-//           chain: "Cosmos",
-//           pair: osmoMntlOsmoData[0]?.symbol + "-" + osmoMntlOsmoData[1]?.symbol,
-//           apy: Number(
-//             Math.max(
-//               osmoMntlOsmoAprData[0]?.apr_list[0]?.apr_1d,
-//               osmoMntlOsmoAprData[0]?.apr_list[0]?.apr_7d,
-//               osmoMntlOsmoAprData[0]?.apr_list[0]?.apr_14d
-//             )
-//           ).toFixed(2),
-//           tvl: osmoMntlOsmoData[0]?.liquidity,
-//         },
-//         {
-//           name: "Osmosis",
-//           chain: "Cosmos",
-//           pair: osmoAtomMntlData[0]?.symbol + "-" + osmoAtomMntlData[1]?.symbol,
-//           apy: Number(
-//             Math.max(
-//               osmoAtomMntlAprData[0]?.apr_list[0]?.apr_1d,
-//               osmoAtomMntlAprData[0]?.apr_list[0]?.apr_7d,
-//               osmoAtomMntlAprData[0]?.apr_list[0]?.apr_14d
-//             )
-//           ).toFixed(2),
-//           tvl: osmoAtomMntlData[0]?.liquidity,
-//         },
-//       ];
-//     } catch (error) {
-//       console.error(`swr fetcher : url: ${url},  error: ${error}`);
-//       throw error;
-//     }
-//     // return the data
-//     return osmosisData;
-//   };
-//   // implement useSwr for cached and revalidation enabled data retrieval
-//   const { data: osmosisArray, error } = useSwr("useEarn", fetchAllOsmosis, {
-//     suspense: true,
-//   });
-//   return {
-//     allOsmosis: osmosisArray,
-//     isLoadingOsmosis: !error && !osmosisArray,
-//     errorOsmosis: error,
-//   };
-// };
+
+export const useOsmosis = () => {
+  // fetcher function for useSwr of useAvailableBalance()
+  const fetchAllOsmosis = async (url) => {
+    let osmosisData;
+    try {
+      const osmoMntlUsdcData = await fetch(
+        "https://api.osmosis.zone/pools/v2/738"
+      ).then((res) => res.json());
+      const osmoMntlUsdcAprData = await fetch(
+        "https://api.osmosis.zone/apr/v2/738"
+      ).then((res) => res.json());
+      const osmoMntlOsmoData = await fetch(
+        "https://api.osmosis.zone/pools/v2/690"
+      ).then((res) => res.json());
+      const osmoMntlOsmoAprData = await fetch(
+        "https://api.osmosis.zone/apr/v2/690"
+      ).then((res) => res.json());
+      const osmoAtomMntlData = await fetch(
+        "https://api.osmosis.zone/pools/v2/686"
+      ).then((res) => res.json());
+      const osmoAtomMntlAprData = await fetch(
+        "https://api.osmosis.zone/apr/v2/686"
+      ).then((res) => res.json());
+      console.log(
+        osmoMntlOsmoAprData[0]?.apr_list?.find((item) => item?.symbol == "MNTL")
+      );
+      osmosisData = [
+        {
+          project: "Osmosis",
+          chain: "Cosmos",
+          symbol:
+            osmoMntlUsdcData[0]?.symbol + "-" + osmoMntlUsdcData[1]?.symbol,
+          apy: Number(
+            Math.max(
+              osmoMntlUsdcAprData[0]?.apr_list[0]?.apr_1d,
+              osmoMntlUsdcAprData[0]?.apr_list[0]?.apr_7d,
+              osmoMntlUsdcAprData[0]?.apr_list[0]?.apr_14d
+            )
+          ).toFixed(2),
+          tvlUsd: osmoMntlUsdcData[0]?.liquidity?.toString()?.split(".")[0],
+          url: "https://app.osmosis.zone/pool/738",
+        },
+        {
+          project: "Osmosis",
+          chain: "Cosmos",
+          symbol:
+            osmoMntlOsmoData[0]?.symbol + "-" + osmoMntlOsmoData[1]?.symbol,
+          apy: Number(
+            Math.max(
+              osmoMntlOsmoAprData[0]?.apr_list?.find(
+                (item) => item?.symbol == "MNTL"
+              )?.apr_1d,
+              osmoMntlOsmoAprData[0]?.apr_list?.find(
+                (item) => item?.symbol == "MNTL"
+              )?.apr_7d,
+              osmoMntlOsmoAprData[0]?.apr_list?.find(
+                (item) => item?.symbol == "MNTL"
+              )?.apr_14d
+            )
+          ).toFixed(2),
+          // osmoAtomMntlAprData[0?.apr_list?.map((e)=>console.log(e))],
+          tvlUsd: osmoMntlOsmoData[0]?.liquidity?.toString()?.split(".")[0],
+          url: "https://app.osmosis.zone/pool/690",
+        },
+        {
+          project: "Osmosis",
+          chain: "Cosmos",
+          symbol:
+            osmoAtomMntlData[0]?.symbol + "-" + osmoAtomMntlData[1]?.symbol,
+          apy: Number(
+            Math.max(
+              osmoAtomMntlAprData[0]?.apr_list[0]?.apr_1d,
+              osmoAtomMntlAprData[0]?.apr_list[0]?.apr_7d,
+              osmoAtomMntlAprData[0]?.apr_list[0]?.apr_14d
+            )
+          ).toFixed(2),
+          tvlUsd: osmoAtomMntlData[0]?.liquidity?.toString()?.split(".")[0],
+          url: "https://app.osmosis.zone/pool/686",
+        },
+      ];
+    } catch (error) {
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
+      throw error;
+    }
+    // return the data
+    return osmosisData;
+  };
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: osmosisArray, error } = useSwr("useOsmosis", fetchAllOsmosis);
+  return {
+    allOsmosis: osmosisArray,
+    isLoadingOsmosis: !error && !osmosisArray,
+    errorOsmosis: error,
+  };
+};
 
 export const useQuickswap = () => {
   // fetcher function for useSwr of useAvailableBalance()
   const fetchAllQuickswap = async (url) => {
     let quickswapData = [];
+    const urlData = [
+      {
+        symbol: "VERSA",
+        url: "https://quickswap.exchange/#/pools/v2?currency0=0x38a536a31ba4d8c1bcca016abbf786ecd25877e8&currency1=0x8497842420cfdbc97896c2353d75d89fc8d5be5d",
+      },
+      {
+        symbol: "USDC",
+        url: "https://quickswap.exchange/#/pools/v2?currency0=0x2791bca1f2de4661ed88a30c99a7a9449aa84174&currency1=0x38a536a31ba4d8c1bcca016abbf786ecd25877e8",
+      },
+    ];
     try {
       const llamaData = await fetch("https://yields.llama.fi/pools").then(
         (res) => res.json()
@@ -1164,7 +1189,12 @@ export const useQuickswap = () => {
           item?.symbol.includes("MNTL") &&
           (item?.project == "quickswap-dex" || item?.project == "uniswap-v3")
       );
-      quickswapData = filteredLlamaData;
+      quickswapData = filteredLlamaData?.map((item) => {
+        return {
+          ...item,
+          url: urlData.find((e) => item?.symbol.includes(e.symbol)).url,
+        };
+      });
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
@@ -1173,10 +1203,14 @@ export const useQuickswap = () => {
     return quickswapData;
   };
   // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: quickswapArray, error } = useSwr("useEarn", fetchAllQuickswap, {
-    fallbackData: [],
-    suspense: true,
-  });
+  const { data: quickswapArray, error } = useSwr(
+    "useQuickswap",
+    fetchAllQuickswap,
+    {
+      fallbackData: [],
+      suspense: true,
+    }
+  );
   return {
     allQuickswap: quickswapArray,
     isLoadingQuickswap: !error && !quickswapArray,
