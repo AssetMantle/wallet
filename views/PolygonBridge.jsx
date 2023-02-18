@@ -190,14 +190,14 @@ const PolygonBridge = () => {
     !mntlEthBalanceObject?.data ||
     mntlEthBalanceObject?.isLoading ||
     mntlEthBalanceObject?.isError
-      ? placeholderAvailableBalance
+      ? decimalize(placeholderAvailableBalance)
       : decimalize(mntlEthBalanceObject?.data?.formatted);
   const displayAvailableBalanceDenom = defaultChainSymbol;
   const displayMaticBalance =
     !polygonBalanceObject?.data ||
     polygonBalanceObject?.isLoading ||
     polygonBalanceObject?.isError
-      ? placeholderAvailableBalance
+      ? decimalize(placeholderAvailableBalance)
       : decimalize(polygonBalanceObject?.data?.formatted);
   const displayMaticBalanceDenom = polygonChainSymbol;
 
@@ -208,6 +208,11 @@ const PolygonBridge = () => {
   const isSubmitDisabled = true;
 
   // connect button with logic
+  const notConnectedJSX = (
+    <span className="text-primary">
+      <i className="bi bi-patch-exclamation-fill" /> Not Connected
+    </span>
+  );
   const connectButtonJSX = isWalletEthConnected ? (
     <>
       <button
@@ -222,9 +227,7 @@ const PolygonBridge = () => {
       </button>
     </>
   ) : (
-    <span className="text-primary">
-      <i className="bi bi-patch-exclamation-fill" /> Not Connected
-    </span>
+    notConnectedJSX
   );
 
   /* console.log(
@@ -256,6 +259,7 @@ const PolygonBridge = () => {
             <h5 className="caption2 text-primary">Polygon Chain</h5>
           </div>
           {isMounted() && connectButtonJSX}
+          {!isMounted() && notConnectedJSX}
         </div>
 
         <label
@@ -264,11 +268,10 @@ const PolygonBridge = () => {
         >
           Amount{" "}
           <small className="small text-gray">
-            MATIC Balance : {isMounted() && displayMaticBalance}{" "}
-            {displayMaticBalanceDenom}
+            MATIC Balance : {displayMaticBalance} {displayMaticBalanceDenom}
           </small>
           <small className="small text-gray">
-            MNTL Balance : {isMounted() && displayAvailableBalance}{" "}
+            MNTL Balance : {displayAvailableBalance}{" "}
             {displayAvailableBalanceDenom}
           </small>
         </label>

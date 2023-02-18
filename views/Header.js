@@ -4,17 +4,23 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { QRCodeSVG } from "qrcode.react";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import {
   Connected,
   Connecting,
   Disconnected,
-  Error,
+  Errored,
   NotExist,
   Rejected,
   WalletConnectComponent,
 } from "../components";
-import { defaultChainName } from "../config";
-import { ConnectOptionObject, NavBarData, placeholderAddress } from "../data";
+import { defaultChainName, toastConfig } from "../config";
+import {
+  ConnectOptionObject,
+  NavBarData,
+  placeholderAddress,
+  WALLET_DISCONNECT_ERROR_MSG,
+} from "../data";
 import { cleanString, shortenAddress } from "../lib";
 
 export default function Header() {
@@ -30,9 +36,15 @@ export default function Header() {
     connect();
   };
 
-  const onClickDisconnect = (e) => {
+  const onClickDisconnect = async (e) => {
+    console.log("inside onClickDisconnect");
     e.preventDefault();
-    disconnect(wallet?.name);
+    try {
+      await disconnect(wallet?.name);
+    } catch (error) {
+      console.error(error);
+      toast.error(WALLET_DISCONNECT_ERROR_MSG, toastConfig);
+    }
   };
 
   const handleOnClick = (e) => {
@@ -43,8 +55,6 @@ export default function Header() {
     } else {
       openView();
     }
-
-    // openView();
   };
 
   const displayAddress = address || placeholderAddress;
@@ -160,14 +170,12 @@ export default function Header() {
     </div>
   );
 
-  console.log("wallet status pretty: ", cleanString(wallet?.prettyName));
-
   // Component
   const connectWalletButton = (
     <WalletConnectComponent
       wallet={cleanString(wallet?.prettyName)}
       walletStatus={status}
-      disconnect={
+      disconnected={
         <Disconnected
           buttonText="Connect"
           buttonIcon="bi-wallet2"
@@ -190,11 +198,11 @@ export default function Header() {
         <Rejected
           buttonText="Reconnect"
           buttonIcon="bi-patch-exclamation-fill"
-          onClick={onClickConnect}
+          onClick={onClickDisconnect}
         />
       }
-      error={
-        <Error
+      errored={
+        <Errored
           buttonText="Not Connected"
           buttonIcon="bi-patch-exclamation-fill"
           onClick={onClickDisconnect}

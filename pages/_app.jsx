@@ -23,7 +23,7 @@ import {
   mantleTestnetAssetConfig,
 } from "../config";
 import "../config/styles/index.scss";
-import { ethereumClient, wagmiClient, web3ModalProjectID } from "../data";
+import { ethereumClient, wagmiClient, walletConnectProjectID } from "../data";
 import { getSigningGravityClientOptions } from "../modules";
 import ConnectModal from "../views/ConnectModal/ConnectModal";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -61,6 +61,11 @@ function CreateCosmosApp({ Component, pageProps }) {
           return getSigningGravityClientOptions();
       }
     },
+  };
+
+  // implement session options
+  const sessionOptions = {
+    killOnTabClose: true,
   };
 
   return (
@@ -105,19 +110,27 @@ function CreateCosmosApp({ Component, pageProps }) {
             ...xdefiWallets,
           ]}
           signerOptions={signerOptions}
+          sessionOptions={sessionOptions}
+          walletConnectOptions={{
+            signClient: {
+              projectId: walletConnectProjectID,
+              relayUrl: "wss://relay.walletconnect.org",
+            },
+          }}
           endpointOptions={{
             assetmantle: {
               rpc: [defaultChainRPCProxy],
               rest: [defaultChainRESTProxy],
             },
           }}
-          walletModal={ConnectModal} // Provide walletModal
+          // walletModal={"simple_v1"}
+          walletModal={ConnectModal}
         >
           <WagmiConfig client={wagmiClient}>
             <Layout>
               <Component {...pageProps} />
               <Web3Modal
-                projectId={web3ModalProjectID}
+                projectId={walletConnectProjectID}
                 themeColor="orange"
                 themeBackground="themeColor"
                 themeZIndex="99999"

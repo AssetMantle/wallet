@@ -1,3 +1,5 @@
+import { assetmantleTestChainChainHost, defaultChainHost } from "./defaults";
+
 export const mantleAssetConfig = [
   {
     $schema: "../../assetlist.schema.json",
@@ -46,147 +48,6 @@ export const mantleTestnetAssetConfig = [
   },
 ];
 
-/* export const mantleChainConfig2 = [
-  {
-    $schema: "../../chain.schema.json",
-    chain_name: "assetmantle",
-    bech32_prefix: "mantle",
-    chain_id: "mantle-1",
-    network_type: "mainnet",
-    pretty_name: "AssetMantle",
-    slip44: 118,
-    status: "live",
-    staking: {
-      staking_tokens: [
-        {
-          denom: "umntl",
-        },
-      ],
-    },
-    fees: {
-      fee_tokens: [
-        {
-          denom: "umntl",
-          low_gas_price: 0.002,
-          average_gas_price: 0.0025,
-          high_gas_price: 0.003,
-        },
-        {
-          denom: "umntl",
-          low_gas_price: 0.002,
-          average_gas_price: 0.0025,
-          high_gas_price: 0.003,
-        },
-      ],
-    },
-    explorers: [
-      {
-        kind: "EZStaking Tools",
-        url: "https://ezstaking.tools/assetmantle",
-        tx_page: "https://ezstaking.tools/assetmantle/txs/${txHash}",
-        account_page:
-          "https://ezstaking.tools/assetmantle/account/${accountAddress}",
-      },
-      {
-        kind: "mintscan",
-        url: "https://www.mintscan.io/asset-mantle",
-        tx_page: "https://www.mintscan.io/asset-mantle/txs/${txHash}",
-        account_page:
-          "https://www.mintscan.io/asset-mantle/account/${accountAddress}",
-      },
-      {
-        kind: "ping.pub",
-        url: "https://explorer.postcapitalist.io/AssetMantle",
-        tx_page: "https://explorer.postcapitalist.io/AssetMantle/tx/${txHash}",
-      },
-      {
-        kind: "other",
-        url: "https://explorer.assetmantle.one",
-        tx_page: "https://explorer.assetmantle.one/transactions/${txHash}",
-      },
-      {
-        kind: "explorers.guru",
-        url: "https://assetmantle.explorers.guru",
-        tx_page: "https://assetmantle.explorers.guru/transaction/${txHash}",
-      },
-      {
-        kind: "atomscan",
-        url: "https://atomscan.com/assetmantle",
-        tx_page: "https://atomscan.com/assetmantle/transactions/${txHash}",
-      },
-    ],
-    apis: {
-      rpc: [
-        { address: "https://rpc.assetmantle.one/", provider: "AssetMantle" },
-        {
-          address: "https://rpc-assetmantle.blockpower.capital",
-          provider: "Blockpower",
-        },
-        {
-          address: "https://rpc-assetmantle.ecostake.com",
-          provider: "ecostake",
-        },
-        {
-          address: "https://assetmantle-rpc.polkachu.com",
-          provider: "Polkachu",
-        },
-        {
-          address: "https://rpc.assetmantle.nodestake.top",
-          provider: "NodeStake",
-        },
-        {
-          address: "https://rpc-assetmantle-ia.cosmosia.notional.ventures/",
-          provider: "Notional",
-        },
-        { address: "https://rpc-assetmanle.d-stake.xyz", provider: "D-stake" },
-        {
-          address: "https://rpc-assetmantle.whispernode.com",
-          provider: "WhisperNode🤐",
-        },
-      ],
-      rest: [
-        { address: "https://rest.assetmantle.one/", provider: "AssetMantle" },
-        {
-          address: "https://rest-assetmantle.ecostake.com",
-          provider: "ecostake",
-        },
-        {
-          address: "https://api.assetmantle.nodestake.top",
-          provider: "NodeStake",
-        },
-        {
-          address: "https://api-assetmantle-ia.cosmosia.notional.ventures/",
-          provider: "Notional",
-        },
-        {
-          address: "https://assetmantle-api.polkachu.com",
-          provider: "Polkachu",
-        },
-        { address: "https://api-assetmanle.d-stake.xyz", provider: "D-stake" },
-        {
-          address: "https://lcd-assetmantle.whispernode.com",
-          provider: "WhisperNode🤐",
-        },
-      ],
-      grpc: [
-        {
-          address: "https://grpc.assetmantle.nodestake.top",
-          provider: "NodeStake",
-        },
-        {
-          address: "grpc-assetmantle-ia.cosmosia.notional.ventures:443",
-          provider: "Notional",
-        },
-        {
-          address: "assetmantle-grpc.polkachu.com:14690",
-          provider: "Polkachu",
-        },
-        { address: "https://grpc-assetmanle.d-stake.xyz", provider: "D-stake" },
-      ],
-    },
-  },
-]; */
-
 export const mantleChainConfig = [
   {
     $schema: "../../chain.schema.json",
@@ -206,6 +67,7 @@ export const mantleChainConfig = [
         },
       ],
     },
+    walletUrlForStaking: `${defaultChainHost}/stake`,
     fees: {
       fee_tokens: [
         {
@@ -653,6 +515,7 @@ export const mantleChainConfig = [
       },
     ],
     slip44: 118,
+    beta: true,
   },
 ];
 
@@ -675,6 +538,7 @@ export const mantleTestChainConfig = [
         },
       ],
     },
+    walletUrlForStaking: `${assetmantleTestChainChainHost}/stake`,
     fees: {
       fee_tokens: [
         {

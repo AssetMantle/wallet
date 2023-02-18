@@ -1,8 +1,6 @@
-import { Icon, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import { WalletStatus } from "@cosmos-kit/core";
 import Link from "next/link";
 import { useEffect } from "react";
-import { FiAlertTriangle } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { toastConfig } from "../../config";
 import { ConnectOptionObject, WALLET_NOT_FOUND_ERROR_MSG } from "../../data";
@@ -122,8 +120,6 @@ export const Connected = ({
   buttonText,
   buttonIcon,
   icon,
-  dataBsToggle,
-  dataBsTarget,
   onClick,
   children,
 }) => {
@@ -132,8 +128,6 @@ export const Connected = ({
       buttonText={buttonText}
       buttonIcon={buttonIcon}
       icon={icon}
-      dataBsToggle={dataBsToggle}
-      dataBsTarget={dataBsTarget}
       onClickConnectBtn={onClick}
     >
       {children}
@@ -145,68 +139,24 @@ export const Connecting = () => {
   return <ConnectWalletButton isLoading={true} />;
 };
 
-export const Rejected = ({ buttonText, wordOfWarning, onClick }) => {
-  const bg = useColorModeValue("orange.200", "orange.300");
-
+export const Rejected = ({ buttonText, onClick }) => {
   return (
-    <Stack>
-      <ConnectWalletButton
-        buttonText={buttonText}
-        isDisabled={false}
-        onClickConnectBtn={onClick}
-      />
-      {wordOfWarning && (
-        <Stack
-          isInline={true}
-          borderRadius="md"
-          bg={bg}
-          color="blackAlpha.900"
-          p={4}
-          spacing={1}
-        >
-          <Icon as={FiAlertTriangle} mt={1} />
-          <Text>
-            <Text fontWeight="semibold" as="span">
-              Warning:&ensp;
-            </Text>
-            {wordOfWarning}
-          </Text>
-        </Stack>
-      )}
-    </Stack>
+    <ConnectWalletButton
+      buttonText={buttonText}
+      isDisabled={false}
+      onClickConnectBtn={onClick}
+    />
   );
 };
 
-export const Error = ({ buttonText, buttonIcon, wordOfWarning, onClick }) => {
-  const bg = useColorModeValue("orange.200", "orange.300");
-
+export const Errored = ({ buttonText, buttonIcon, onClick }) => {
   return (
-    <Stack>
-      <ConnectWalletButton
-        buttonText={buttonText}
-        buttonIcon={buttonIcon}
-        isDisabled={false}
-        onClickConnectBtn={onClick}
-      />
-      {wordOfWarning && (
-        <Stack
-          isInline={true}
-          borderRadius="md"
-          bg={bg}
-          color="blackAlpha.900"
-          p={4}
-          spacing={1}
-        >
-          <Icon as={FiAlertTriangle} mt={1} />
-          <Text>
-            <Text fontWeight="semibold" as="span">
-              Warning:&ensp;
-            </Text>
-            {wordOfWarning}
-          </Text>
-        </Stack>
-      )}
-    </Stack>
+    <ConnectWalletButton
+      buttonText={buttonText}
+      buttonIcon={buttonIcon}
+      isDisabled={false}
+      onClickConnectBtn={onClick}
+    />
   );
 };
 
@@ -224,11 +174,11 @@ export const NotExist = ({ buttonText, buttonIcon, onClick }) => {
 export const WalletConnectComponent = ({
   wallet,
   walletStatus,
-  disconnect,
+  disconnected,
   connecting,
   connected,
   rejected,
-  error,
+  errored,
   notExist,
 }) => {
   console.log("walletStatus: ", walletStatus, " wallet: ", wallet);
@@ -255,7 +205,7 @@ export const WalletConnectComponent = ({
 
   switch (walletStatus) {
     case WalletStatus.Disconnected:
-      return <>{disconnect}</>;
+      return <>{disconnected}</>;
     case WalletStatus.Connecting:
       return <>{connecting}</>;
     case WalletStatus.Connected:
@@ -263,10 +213,10 @@ export const WalletConnectComponent = ({
     case WalletStatus.Rejected:
       return <>{rejected}</>;
     case WalletStatus.Error:
-      return <>{error}</>;
+      return <>{errored}</>;
     case WalletStatus.NotExist:
       return <>{notExist}</>;
     default:
-      return <>{disconnect}</>;
+      return <>{disconnected}</>;
   }
 };

@@ -15,6 +15,7 @@ export const defaultChainRESTProxy = "https://rest.assetmantle.one";
 export const defaultChainGRPCProxy = "";
 export const defaultIBCSourcePort = "transfer";
 export const defaultIBCSourceChannel = "channel-8";
+export const defaultChainHost = "https://wallet.assetmantle.one";
 
 // ASSETMANTLE TESTNET CHAIN
 export const assetmantleTestChainName = "assetmantletestnet";
@@ -23,8 +24,11 @@ export const assetmantleTestChainDenom = "umntl";
 export const assetmantleTestChainDenomExponent = 6;
 export const assetmantleTestChainGasFee = 500000;
 export const assetmantleTestChainMemoSize = 256;
-export const assetmantleTestFeeAmount = "2000";
-export const assetmantleTestFeeGas = "250000";
+export const assetmantleTestChainFeeAmount = "2000";
+export const assetmantleTestChainFeeGas = "250000";
+export const assetmantleTestChainChainHost =
+  "https://testnet.wallet.assetmantle.one";
+
 export const assetmantleTestChainRPCProxy =
   "http://rpc.testnet.assetmantle.one/";
 export const assetmantleTestChainRESTProxy =
@@ -37,6 +41,7 @@ export const gravityChainRPCProxy =
   "https://rpc.cosmos.directory:443/gravitybridge";
 export const gravityChainRESTProxy =
   "https://rest.cosmos.directory/gravitybridge";
+
 export const gravityBasisPoints = 2;
 export const gravityBasisPointsScalingExponent = -4;
 export const gravityChainName = "gravitybridge";
