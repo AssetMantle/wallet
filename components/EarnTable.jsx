@@ -63,7 +63,7 @@ const EarnTable = () => {
               alt={tableProps.row.original.logo?.toLowerCase()}
               className="rounded-circle"
               layout="fill"
-              src={`/trade/${tableProps?.row?.original?.project?.toLowerCase()}.webp`}
+              src={`/tradePage/${tableProps?.row?.original?.project?.toLowerCase()}.webp`}
             />
           </div>
           <p>{tableProps?.row?.original?.project}</p>
