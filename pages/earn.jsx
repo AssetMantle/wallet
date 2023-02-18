@@ -1,10 +1,8 @@
-import React, { useState } from "react";
 import Head from "next/head";
+import React from "react";
 import EarnTable from "../components/EarnTable";
 
 export default function Earn() {
-  const [searchValue, setSearchValue] = useState();
-
   return (
     <>
       <Head>
@@ -31,14 +29,11 @@ export default function Earn() {
         </div>
         <div className="col-12 col-lg-4">
           <div className="rounded-4 p-3 my-2 bg-gray-800 width-100 d-flex flex-column ">
-            <p>
-              To purchase MNTL, visit the exchanges (CEX & DEX) shown to swap
-              with your available tokens.
-            </p>
+            <p>To earn yields, visit the listed DEXs to add $MNTL liquidity.</p>
             <br></br>
             <p>
-              Options to directly on-ramp to MNTL using fiat currencies will be
-              coming soon.
+              Some listed entries might have additional reward tokens available
+              as incentive.
             </p>
           </div>
         </div>

@@ -108,6 +108,7 @@ const EarnTable = () => {
       ),
     },
   ];
+
   const loadingColumns = [
     {
       Header: "Name",
