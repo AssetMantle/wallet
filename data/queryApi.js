@@ -48,9 +48,13 @@ const queryClientGravity = await cosmos.ClientFactory.createRPCQueryClient({
 
 export const fromDenom = (value, exponent = defaultChainDenomExponent) => {
   if (isNaN(Number(exponent))) {
-    throw new Error("invalid decimals value for shiftDecimalPlaces");
+    throw new Error("invalid exponent value for fromDenom");
   }
-  const valueBigNumber = new BigNumber(value?.toString() || 0);
+
+  const valueBigNumber = BigNumber(value?.toString() || 0).isNaN()
+    ? BigNumber(0)
+    : BigNumber(value?.toString() || 0);
+
   const amount = valueBigNumber
     .shiftedBy(0 - Number(exponent))
     .toFixed(Number(exponent));
@@ -59,10 +63,14 @@ export const fromDenom = (value, exponent = defaultChainDenomExponent) => {
 
 export const toDenom = (value, exponent = defaultChainDenomExponent) => {
   if (isNaN(Number(exponent))) {
-    throw new Error("invalid decimals value for shiftDecimalPlaces");
+    throw new Error("invalid exponent value for toDenom");
   }
-  const valueBigNumber = new BigNumber(value?.toString() || 0);
-  amount = valueBigNumber.shiftedBy(Number(exponent)).toFixed(0);
+
+  const valueBigNumber = BigNumber(value?.toString() || 0).isNaN()
+    ? BigNumber(0)
+    : BigNumber(value?.toString() || 0);
+
+  const amount = valueBigNumber.shiftedBy(Number(exponent)).toFixed(0);
   return amount;
 };
 
@@ -72,6 +80,10 @@ export const fromChainDenom = (
   chainName = defaultChainName,
   chainDenom = defaultChainDenom
 ) => {
+  if (exponent && isNaN(Number(exponent))) {
+    throw new Error("invalid exponent value for fromChainDenom");
+  }
+
   let amount;
   // get the chain assets for the specified chain
   const chainassets = assets.find((chain) => chain.chain_name === chainName);
@@ -83,7 +95,10 @@ export const fromChainDenom = (
     coin.denom_units.find((unit) => unit.denom === coin.display)?.exponent || 0;
 
   // show balance in display values by exponentiating it
-  const valueBigNumber = new BigNumber(value?.toString() || 0);
+  const valueBigNumber = BigNumber(value?.toString() || 0).isNaN()
+    ? BigNumber(0)
+    : BigNumber(value?.toString() || 0);
+
   amount = valueBigNumber
     .shiftedBy(0 - Number(exp))
     .toFormat(exponent ? Number(exponent) : Number(exp));
@@ -107,8 +122,12 @@ export const toChainDenom = (
   const exp =
     coin?.denom_units?.find?.((unit) => unit?.denom === coin?.display)
       ?.exponent || 0;
+
   // show balance in display values by exponentiating it
-  const valueBigNumber = new BigNumber(value?.toString() || 0);
+  const valueBigNumber = BigNumber(value?.toString() || 0).isNaN()
+    ? BigNumber(0)
+    : BigNumber(value?.toString() || 0);
+
   amount = valueBigNumber.shiftedBy(Number(exp)).toFixed(0);
   return amount;
 };
@@ -132,7 +151,10 @@ export const decimalize = (
     coin?.denom_units?.find?.((unit) => unit?.denom === coin?.display)
       ?.exponent ??
     0;
-  const bnValue = BigNumber(value?.toString() || 0);
+  let bnValue = BigNumber(value?.toString() || 0).isNaN()
+    ? BigNumber(0)
+    : BigNumber(value?.toString() || 0);
+
   return bnValue.toFormat(Number(exp));
 };
 
