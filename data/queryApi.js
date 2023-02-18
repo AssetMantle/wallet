@@ -928,7 +928,7 @@ export const useTrade = () => {
     let tokenDetails = {};
     const staticData = [
       {
-        logo: "/trade/LBank.webp",
+        logo: "/trade/lbank.webp",
         name: "LBank",
         pair: "MNTL/USDT",
         target_coin_id: "tether",
@@ -960,7 +960,7 @@ export const useTrade = () => {
         url: "https://app.uniswap.org/#/swap?theme=dark&inputCurrency=ETH&outputCurrency=0x2c4f1df9c7de0c59778936c9b145ff56813f3295",
       },
       {
-        logo: "/trade/MEXC.webp",
+        logo: "/trade/mexc.webp",
         name: "MEXC Global",
         pair: "MNTL/USDT",
         target_coin_id: "tether",
