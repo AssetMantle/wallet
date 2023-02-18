@@ -85,7 +85,7 @@ const EarnTable = () => {
       Cell: (tableProps) => (
         <p>
           {getBalanceStyle(
-            decimalize(tableProps?.row?.original?.apy, 2),
+            decimalize(tableProps?.row?.original?.apy, 4),
             "caption text-white-300",
             "caption2 text-white-300"
           )}
@@ -100,7 +100,7 @@ const EarnTable = () => {
         <p>
           $
           {getBalanceStyle(
-            decimalize(tableProps?.row?.original?.tvlUsd),
+            decimalize(tableProps?.row?.original?.tvlUsd, 2),
             "caption text-white-300",
             "caption2 text-white-300"
           )}
