@@ -2,7 +2,7 @@ import React from "react";
 import { getBalanceStyle, placeholderMntlUsdValue } from "../../config";
 import { useMntlUsd } from "../../data";
 
-export const MntlUsdPrice = () => {
+export const MntlUsdPrice = ({ status }) => {
   console.log("inside MntlUsdPrice");
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
 
@@ -10,11 +10,29 @@ export const MntlUsdPrice = () => {
     ? placeholderMntlUsdValue
     : mntlUsdValue;
 
+  const isConnected = status == "Connected";
+  console.log(status);
+
   return (
-    <p className={"caption"}>
-      {getBalanceStyle(mntlUsdDisplay, "caption", "caption2")}
-      &nbsp;
-      {"$USD"}
-    </p>
+    // <p className={"caption"}>
+    //   <p>
+    <div>
+      {isConnected ? (
+        <p> {getBalanceStyle(mntlUsdDisplay, "caption", "caption2")}</p>
+      ) : (
+        <p>
+          {" "}
+          {getBalanceStyle(
+            mntlUsdDisplay,
+            "caption text-gray",
+            "caption2 text-gray"
+          )}
+        </p>
+      )}
+    </div>
+
+    //   &nbsp;
+    //   {"$USD"}
+    // </p>
   );
 };
