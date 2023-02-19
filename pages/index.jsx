@@ -166,12 +166,14 @@ export default function Transact() {
       case "SET_HALF_AMOUNT": {
         // if available balance is invalid, set error message
         if (
-          isNaN(parseFloat(availableBalance)) ||
-          parseFloat(availableBalance) / 2 < parseFloat(defaultChainGasFee)
+          BigNumber(availableBalance).isNaN() ||
+          BigNumber(availableBalance)
+            .dividedBy(BigNumber(2))
+            .isLessThan(BigNumber(defaultChainGasFee))
         ) {
           return {
             ...state,
-            transferAmount: 0,
+            transferAmount: (fromDenom(availableBalance) / 2).toString(),
             errorMessages: {
               ...state.errorMessages,
               transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
@@ -203,7 +205,7 @@ export default function Transact() {
           );
           return {
             ...state,
-            transferAmount: 0,
+            transferAmount: fromDenom(availableBalance),
             errorMessages: {
               ...state.errorMessages,
               transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
