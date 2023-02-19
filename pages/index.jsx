@@ -1,4 +1,5 @@
 import { useChain } from "@cosmos-kit/react";
+import BigNumber from "bignumber.js";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -124,7 +125,10 @@ export default function Transact() {
           toDenom(action.payload) + parseFloat(defaultChainGasFee)
         );
         // if amount is greater than current balance, populate error message and update amount
-        if (isNaN(toDenom(action.payload)) || parseFloat(action.payload) <= 0) {
+        if (
+          BigNumber(toDenom(action.payload)).isNaN() ||
+          BigNumber(action.payload) <= 0
+        ) {
           return {
             ...state,
             transferAmount: action.payload,
@@ -134,9 +138,10 @@ export default function Transact() {
             },
           };
         } else if (
-          isNaN(parseFloat(availableBalance)) ||
-          toDenom(action.payload) + parseFloat(defaultChainGasFee) >
-            parseFloat(availableBalance)
+          BigNumber(availableBalance).isNaN() ||
+          BigNumber(toDenom(action.payload))
+            .plus(BigNumber(defaultChainGasFee))
+            .isGreaterThan(BigNumber(availableBalance))
         ) {
           return {
             ...state,
