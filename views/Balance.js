@@ -55,10 +55,16 @@ export default function Balance() {
         <AvailableBalanceUsd />
       </div>
       <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-1">
-        <p className={`caption d-flex gap-2 align-items-center text-white-300`}>
+        <p
+          className={
+            status == "Connected"
+              ? `caption d-flex gap-2 align-items-center text-white-300`
+              : `caption d-flex gap-2 align-items-center text-gray`
+          }
+        >
           Current Price of {denomDisplay}
         </p>
-        <MntlUsdPrice />
+        <MntlUsdPrice status={status} />
       </div>
       {/* <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-1">
         <p className="caption d-flex gap-2 align-items-center text-white-300">
