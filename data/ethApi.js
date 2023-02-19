@@ -18,6 +18,10 @@ export const selectedEthNetwork = "mainnet";
 export const walletConnectProjectID = "f068c2aa18a3ec82f5eafdc8abe7ae23";
 
 export const ethConfig = {
+  selected: {
+    chain: "mainnet",
+    uniswapIncentiveProgram: 0,
+  },
   mainnet: {
     network: "mainnet",
     version: "v1",
@@ -71,10 +75,13 @@ export const ethConfig = {
           startTime: "1676041245",
           endtime: "1676214045",
           refundeeAddress: "0x0ad4de31fc1E1e01Eaaf815dA18690441190f7ed",
+          totalRewards: 10000,
+          incentiveId:
+            "0xec26bf83e88de4eb86c7c98329701993a4692ba8e5410a0eaa5d2ecabe0a8167",
+          incentiveTuple: `["0x2C4F1DF9c7DE0C59778936C9b145fF56813F3295", "0xf5b8304dc18579c4247caad705df01928248bc71", 1676041245, 1676214045, "0x0ad4de31fc1E1e01Eaaf815dA18690441190f7ed"]`,
           token0: "0x2C4F1DF9c7DE0C59778936C9b145fF56813F3295",
           token1: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
           fee: 3000,
-          totalRewards: 10000,
         },
       ],
     },
@@ -292,6 +299,71 @@ export const useMaticBalance = () => {
     maticBalance: balanceValue,
     isLoadingMaticBalance: !error && !balanceValue,
     errorMaticBalance: error,
+  };
+};
+
+export const useStakedPositionsNftId = (incentiveId) => {
+  console.log("inside useStakedPositionsNftId, incentiveId: ", incentiveId);
+  // get the address from connected web3Modal
+  const { address } = useAccount();
+
+  // fetcher function for useSwr of useMaticBalance()
+  const fetchStakedPositionsNftId = async (url, address, incentiveId) => {
+    let positionNftsArray;
+    const query = `{incentivePositions(where: {incentive: "${incentiveId?.toString()}"}) {
+    position{
+      id
+      owner
+    }}}`;
+    const stakedPositionsNftApi =
+      "https://api.thegraph.com/subgraphs/name/revert-finance/uni-v3-staker-mainnet";
+    // use a try catch block for creating rich Error object
+    try {
+      // fetch the post request of graph query
+      const res = await fetch(stakedPositionsNftApi, {
+        method: "POST",
+        body: JSON.stringify({ query }),
+      });
+
+      const responseObject = await res.json();
+      const unfilteredPositionNftsArray =
+        responseObject?.data?.incentivePositions || [];
+
+      // positionNftsArray = unfilteredPositionNftsArray;
+      positionNftsArray = unfilteredPositionNftsArray
+        ?.filter?.(
+          (value) =>
+            value?.position?.owner?.toString?.().toLowerCase() ==
+            address?.toLowerCase?.()
+        )
+        ?.map?.((value) => value?.position?.id);
+
+      // console.log("swr fetcher success: ", url);
+    } catch (error) {
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
+      throw error;
+    }
+
+    // return the data
+    return positionNftsArray;
+  };
+
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: positionNftsArray, error } = useSWR(
+    address && incentiveId
+      ? ["useStakedPositionsNftId", address, incentiveId]
+      : null,
+    fetchStakedPositionsNftId,
+    {
+      fallbackData: [],
+      refreshInterval: 2000,
+    }
+  );
+
+  return {
+    positionNfts: positionNftsArray,
+    isLoadingPositionNfts: !error && !positionNftsArray,
+    errorPositionNfts: error,
   };
 };
 

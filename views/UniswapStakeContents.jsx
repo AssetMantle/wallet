@@ -171,7 +171,7 @@ const StaticUniswapStakeContents = () => {
       ? recordsJSX
       : noRecordsJSX;
 
-  console.log("contract values:", {
+  /* console.log("contract values:", {
     balanceOf,
     totalPositions,
     tokenOfOwnerByIndexContracts: tokenOfOwnerByIndexContracts(
@@ -186,7 +186,7 @@ const StaticUniswapStakeContents = () => {
     positionValues: positionValues,
     filteredPositionValues,
     latestIncentiveProgram,
-  });
+  }); */
 
   return renderedJSX;
 };

@@ -1,13 +1,12 @@
 import { disconnect } from "@wagmi/core";
 import { useWeb3Modal } from "@web3modal/react";
 import Head from "next/head";
-import Image from "next/image";
 import React, { useState } from "react";
 import { useAccount } from "wagmi";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import { ethConfig, placeholderAddressEth } from "../data";
 import { handleCopy, shortenEthAddress, useIsMounted } from "../lib";
-import { UniswapStakeContents } from "../views";
+import { UniswapStakeContents, UniswapUnstakeContents } from "../views";
 
 export default function Farm() {
   // HOOKS
@@ -108,50 +107,7 @@ export default function Farm() {
 
   const stakeContentsJSX = <UniswapStakeContents />;
 
-  const unstakeDisplayJSX = (
-    <div
-      className="d-flex flex-column w-100 rounded-4 flex-grow-1 pt-2"
-      style={{ height: "90%" }}
-    >
-      <div className="row farm-data-container nav-bg rounded-4 p-3 mx-0">
-        <div className="col-3 d-flex flex-column gap-3">
-          <h4 className="caption text-gray">Reward Pool</h4>
-          <p className="body1">{currentRewardPoolDisplay}&nbsp;$MNTL</p>
-        </div>
-        <div className="col-3 d-flex flex-column gap-3">
-          <h4 className="caption text-gray">End</h4>
-          <p className="body1">12%</p>
-        </div>
-        <div className="col-6 d-flex flex-column gap-3">
-          <h4 className="caption text-gray">Connect</h4>
-          {isMounted() && connectButtonJSX}
-          {!isMounted() && notConnectedJSX}
-        </div>
-      </div>
-    </div>
-  );
-
-  const unstakeContentsJSX = React.Children.toArray(
-    [...new Array(13)].map((data) => (
-      <div className="bg-gray-800 p-3 rounded-4 d-flex gap-2 align-items-center justify-content-between">
-        <div className="d-flex gap-3">
-          <div
-            className="position-relative rounded-circle"
-            style={{ width: "40px", aspectRatio: "1/1" }}
-          >
-            <Image layout="fill" src="/chainLogos/mntl.svg" alt="mntl logo" />
-          </div>
-          <div className="d-flex flex-column gap-2">
-            <h3 className="body2">MNTL</h3>
-            <p className="caption">Unstake Token info</p>
-          </div>
-        </div>
-        <div className="d-flex gap-2 align-items-center">
-          <button className="button-secondary px-3 py-1">Stake</button>
-        </div>
-      </div>
-    ))
-  );
+  const unstakeContentsJSX = <UniswapUnstakeContents />;
 
   console.log(
     "mounted: ",
