@@ -24,14 +24,7 @@ import ModalContainer from "./ModalContainer";
 
 const denomDisplay = defaultChainSymbol;
 
-const Delegations = ({
-  totalTokens,
-  stakeState,
-  stakeDispatch,
-  notify,
-  UnDelegateModal,
-  setUnDelegateModal,
-}) => {
+const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
   const { allValidators, isLoadingValidators, errorValidators } =
     useAllValidators();
   const {
@@ -60,6 +53,7 @@ const Delegations = ({
   // modal handler
 
   const [ReDelegateModal, setReDelegateModal] = useState(false);
+  const [UnDelegateModal, setUnDelegateModal] = useState(false);
 
   //Put all foundation nodes at the end of the array
   validatorsArray.forEach((item, index) => {
@@ -304,7 +298,7 @@ const Delegations = ({
                     Undelegate amount
                   </label>
                   <small className="caption2 text-gray">
-                    Delegated Amount:
+                    Delegated Amount:{" "}
                     {getBalanceStyle(
                       fromChainDenom(
                         delegatedValidators?.find(
@@ -313,8 +307,8 @@ const Delegations = ({
                             stakeState?.undelegationSrc
                         )?.delegatedAmount
                       ),
-                      "caption2",
-                      "small"
+                      "caption2 text-gray",
+                      "small text-gray"
                     )}
                   </small>
                 </div>
