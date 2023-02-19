@@ -19,7 +19,7 @@ import {
   useAllValidatorsBonded,
   useAllValidatorsUnbonded,
 } from "../data";
-import { isObjEmpty, shiftDecimalPlaces } from "../lib";
+import { shiftDecimalPlaces } from "../lib";
 import ModalContainer from "./ModalContainer";
 
 const denomDisplay = defaultChainSymbol;
@@ -353,7 +353,9 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
               <div className="d-flex align-items-center gap-2 justify-content-end">
                 <button
                   type="button"
-                  disabled={!isObjEmpty(stakeState?.errorMessages)}
+                  disabled={
+                    stakeState?.errorMessages?.undelegationAmountErrorMsg
+                  }
                   className="button-primary px-5 py-2"
                   onClick={handleUndelegate}
                 >
@@ -808,7 +810,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
             <div className="d-flex align-items-center gap-2 justify-content-end">
               <button
                 type="button"
-                disabled={!isObjEmpty(stakeState?.errorMessages)}
+                disabled={stakeState?.errorMessages?.redelegationAmountErrorMsg}
                 className="button-primary px-5 py-2"
                 onClick={handleRedelegate}
               >
