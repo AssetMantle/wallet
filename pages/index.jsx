@@ -124,9 +124,10 @@ export default function Transact() {
           "inside CHANGE_AMOUNT, action.payload: ",
           toDenom(action.payload) + parseFloat(defaultChainGasFee)
         );
+        console.log(BigNumber(toDenom(action.payload)));
         // if amount is greater than current balance, populate error message and update amount
         if (
-          BigNumber(toDenom(action.payload)).isNaN() ||
+          BigNumber(action.payload).isNaN() ||
           BigNumber(action.payload) <= 0
         ) {
           return {
