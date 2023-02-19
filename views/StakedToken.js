@@ -8,7 +8,6 @@ import { defaultChainName } from "../config";
 import { sendDelegation, useAvailableBalance, fromDenom } from "../data";
 import { toast } from "react-toastify";
 import { defaultChainSymbol } from "../config";
-import { isObjEmpty } from "../lib";
 
 export default function StakedToken({
   totalTokens,
@@ -197,7 +196,7 @@ export default function StakedToken({
           </div>
           <div className="d-flex align-items-center gap-2 justify-content-end">
             <button
-              disabled={!isObjEmpty(stakeState?.errorMessages)}
+              disabled={stakeState?.errorMessages?.transferAmountErrorMsg}
               type="button"
               className="button-primary px-5 py-2"
               onClick={handleSubmit}
