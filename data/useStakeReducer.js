@@ -203,7 +203,7 @@ const useStakeReducer = () => {
           );
           return {
             ...state,
-            redelegationAmount: 0,
+            redelegationAmount: fromDenom(delegatedAmount),
             errorMessages: {
               ...state.errorMessages,
               redelegationAmountErrorMsg: formConstants.transferAmountErrorMsg,
