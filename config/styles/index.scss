@@ -61,6 +61,7 @@ $fontSecondary: "Lato", sans-serif;
 
 * {
   scroll-behavior: smooth;
+  color: $primary-light;
   &::-webkit-scrollbar {
     width: 5px;
     height: 5px;
@@ -690,4 +691,8 @@ tbody {
     transform: scale(1.3) !important;
     fill: $dark-200 !important;
   }
+}
+
+input::placeholder {
+  color: $gray-100 !important;
 }

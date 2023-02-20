@@ -164,7 +164,7 @@ export default function Stake() {
                   />
                 </div>
                 <div
-                  className="d-flex gap-2 align-items-center"
+                  className="d-flex gap-2 align-items-center text-white"
                   onClick={() => {
                     setDelegated((prev) => !prev);
                     stakeDispatch({ type: "EMPTY_SELECTED_VALIDATORS" });
