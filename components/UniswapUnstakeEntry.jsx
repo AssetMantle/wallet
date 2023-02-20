@@ -1,6 +1,119 @@
+import { ethers } from "ethers";
 import React from "react";
+import { toast } from "react-toastify";
+import {
+  useAccount,
+  useContract,
+  useContractWrite,
+  usePrepareContractWrite,
+  useProvider,
+} from "wagmi";
+import { notify, toastConfig } from "../config";
+import { ethConfig, PREPARE_CONTRACT_ERROR } from "../data";
 
 export const UniswapUnstakeEntry = ({ tokenId }) => {
+  // VARIABLES
+  const uniV3StakerContractAddress =
+    ethConfig?.mainnet?.uniswap?.uniV3Staker?.address;
+  const latestIncentiveProgram =
+    ethConfig?.mainnet?.uniswap?.incentivePrograms?.[0];
+  const uniV3StakerABI = ethConfig?.mainnet?.uniswap?.uniV3Staker?.abi;
+
+  let toastId = null;
+
+  const uniV3StakerContract = {
+    address: uniV3StakerContractAddress,
+    abi: uniV3StakerABI,
+  };
+
+  const provider = useProvider();
+  const stakerContract = useContract({
+    ...uniV3StakerContract,
+    signerOrProvider: provider,
+  });
+
+  // HOOKS
+  const { address, isConnected } = useAccount();
+  let unstakeTokenTxn, withdrawTokenTxn;
+
+  if (isConnected && address && tokenId) {
+    unstakeTokenTxn = stakerContract?.interface?.encodeFunctionData?.(
+      "unstakeToken((address,address,uint256,uint256,address),uint256)",
+      // stakerContract?.interface?.fragments?.[23],
+      [latestIncentiveProgram?.incentiveTuple, Number(tokenId)]
+    );
+
+    withdrawTokenTxn = stakerContract?.interface?.encodeFunctionData?.(
+      "withdrawToken(uint256,address,bytes)",
+      // stakerContract?.interface?.fragments?.[24],
+      [Number(tokenId), address, []]
+    );
+  }
+
+  const multiCallData = [
+    ethers.utils.arrayify(unstakeTokenTxn),
+    ethers.utils.arrayify(withdrawTokenTxn),
+  ];
+
+  console.log(
+    " stakerContract: ",
+    stakerContract,
+    "tokenId: ",
+    tokenId,
+    "tuple: ",
+    latestIncentiveProgram?.incentiveTuple,
+    " multicalldata: ",
+    multiCallData
+  );
+
+  const { config } = usePrepareContractWrite({
+    ...uniV3StakerContract,
+    functionName: "multicall(bytes[])",
+    args: [multiCallData],
+    enabled: isConnected && address && tokenId,
+    chainId: 1,
+    onError(error) {
+      console.error(error);
+      toast.error(PREPARE_CONTRACT_ERROR, toastConfig);
+    },
+  });
+
+  const { writeAsync } = useContractWrite({
+    ...config,
+    onError(error) {
+      console.error(error);
+      notify(null, toastId, "Transaction Aborted. Try again.");
+      toastId = null;
+    },
+  });
+
+  // HANDLER FUNCTION
+  const handleSubmit = async (e) => {
+    console.log("inside handleSubmit()");
+    e.preventDefault();
+
+    try {
+      // initiate the toast
+      toastId = toast.loading("Transaction initiated ...", toastConfig);
+
+      // create transaction
+      const transactionResponse = await writeAsync();
+
+      console.log("response: ", transactionResponse, " error: ", error);
+      if (transactionResponse?.hash) {
+        notify(
+          transactionResponse?.hash,
+          toastId,
+          "Transaction Submitted. Check "
+        );
+      } else {
+        notify(null, toastId, "Transaction Aborted. Try again.");
+      }
+    } catch (error) {
+      console.error("Runtime Error: ", error);
+    }
+  };
+
   return (
     <div className="bg-gray-800 p-3 rounded-4 d-flex gap-2 align-items-center justify-content-between">
       <div className="d-flex gap-3">
@@ -15,7 +128,9 @@ export const UniswapUnstakeEntry = ({ tokenId }) => {
         </div>
       </div>
       <div className="d-flex gap-2 align-items-center">
-        <button className="button-secondary px-3 py-1">Unstake</button>
+        <button className="button-secondary px-3 py-1" onClick={handleSubmit}>
+          Unstake
+        </button>
       </div>
     </div>
   );

@@ -1,6 +1,13 @@
+import { ethers } from "ethers";
 import React from "react";
 import { toast } from "react-toastify";
-import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
+import {
+  useAccount,
+  useContract,
+  useContractWrite,
+  usePrepareContractWrite,
+  useProvider,
+} from "wagmi";
 import { notify, toastConfig } from "../config";
 import { ethConfig, PREPARE_CONTRACT_ERROR } from "../data";
 
@@ -22,35 +29,28 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
     abi: nonFungiblePositionManagerABI,
   };
 
-  console.log(
-    "nonFungiblePositionManagerContract: ",
-    nonFungiblePositionManagerContract
-  );
+  const provider = useProvider();
+  const npmContract = useContract({
+    ...nonFungiblePositionManagerContract,
+    signerOrProvider: provider,
+  });
+
+  console.log("npmContract: ", npmContract);
 
   // HOOKS
   const { address, isConnected } = useAccount();
-
+  const incentiveIdBytes = ethers.utils.arrayify(
+    ethers.utils.hexlify(latestIncentiveProgram?.incentiveId)
+  );
   const { config } = usePrepareContractWrite({
-    address: nonFungiblePositionManagerContractAddress,
-    abi: nonFungiblePositionManagerABI,
-    functionName: "safeTransferFrom",
-    args: [address, uniV3StakerContractAddress, Number(tokenId)],
-    enabled: isConnected && address && tokenId,
-    chainId: 1,
-    onError(error) {
-      console.error(error);
-      toast.error(PREPARE_CONTRACT_ERROR, toastConfig);
-    },
-  });
-
-  /* const { config, error } = usePrepareContractWrite({
     ...nonFungiblePositionManagerContract,
-    functionName: "safeTransferFrom",
+    // functionName: "safeTransferFrom(address,address,uint256)",
+    functionName: "safeTransferFrom(address,address,uint256,bytes)",
     args: [
       address,
       uniV3StakerContractAddress,
       Number(tokenId),
-      [latestIncentiveProgram?.incentiveId],
+      incentiveIdBytes,
     ],
     enabled: isConnected && address && tokenId,
     chainId: 1,
@@ -58,15 +58,7 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
       console.error(error);
       toast.error(PREPARE_CONTRACT_ERROR, toastConfig);
     },
-  }); */
-
-  /* const { config, error } = usePrepareContractWrite({
-    ...nonFungiblePositionManagerContract,
-    functionName: "approve",
-    args: [address, Number(tokenId)],
-    enabled: isConnected && address && tokenId,
-    chainId: 1,
-  }); */
+  });
 
   const { writeAsync } = useContractWrite({
     ...config,
@@ -103,6 +95,17 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
       console.error("Runtime Error: ", error);
     }
   };
+
+  console.log(
+    "npmContract: ",
+    npmContract,
+    " arrirify: ",
+    ethers.utils.arrayify(
+      ethers.utils.hexlify(latestIncentiveProgram?.incentiveId)
+    ),
+    " hexlify: ",
+    ethers.utils.hexlify(latestIncentiveProgram?.incentiveId)
+  );
 
   return (
     <div className="bg-gray-800 p-3 rounded-4 d-flex gap-2 align-items-center justify-content-between">
