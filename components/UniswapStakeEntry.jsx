@@ -1,4 +1,3 @@
-import { ethers } from "ethers";
 import React from "react";
 import { toast } from "react-toastify";
 import {
@@ -37,20 +36,22 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
 
   // HOOKS
   const { address, isConnected } = useAccount();
-  const incentiveIdBytes = ethers.utils.arrayify(
+  /* const incentiveIdBytes = ethers.utils.arrayify(
     "0xec26bf83e88de4eb86c7c98329701993a4692ba8e5410a0eaa5d2ecabe0a8167"
-  );
-  // Uint8Array [ 97, 98, 99 ]
+  ); */
+
+  const incentiveIdBytes =
+    "ec26bf83e88de4eb86c7c98329701993a4692ba8e5410a0eaa5d2ecabe0a8167";
 
   const { config } = usePrepareContractWrite({
     ...nonFungiblePositionManagerContract,
-    functionName: "safeTransferFrom(address,address,uint256)",
-    // functionName: "safeTransferFrom(address,address,uint256,bytes)",
+    // functionName: "safeTransferFrom(address,address,uint256)",
+    functionName: "safeTransferFrom(address,address,uint256,bytes)",
     args: [
       address,
       uniV3StakerContractAddress,
       Number(tokenId),
-      // incentiveIdBytes,
+      incentiveIdBytes,
     ],
     enabled: isConnected && address && tokenId,
     chainId: 1,
