@@ -49,7 +49,7 @@ export default function Banner() {
         >
           <a
             className="text-dark-hover mx-auto"
-            style={{ maxWidth: "80%" }}
+            style={{ width: "80%" }}
             href="https://github.com/AssetMantle/Bug-Bounty"
             target="_blank"
             rel="noopener noreferrer"
@@ -72,7 +72,7 @@ export default function Banner() {
         >
           <a
             className="text-dark-hover mx-auto"
-            style={{ maxWidth: "80%" }}
+            style={{ width: "80%" }}
             href="https://quickswap.exchange/#/farm/v2?tab=DualFarm"
             target="_blank"
             rel="noopener noreferrer"
