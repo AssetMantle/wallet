@@ -28,7 +28,7 @@ export default function Earn() {
           </div>
         </div>
         <div className="col-12 col-lg-4">
-          <div className="rounded-4 p-3 my-2 bg-gray-800 width-100 d-flex flex-column ">
+          <div className="rounded-4 p-3 my-2 bg-gray-800 width-100 d-flex flex-column text-white">
             <p>To earn yields, visit the listed DEXs to add $MNTL liquidity.</p>
             <br></br>
             <p>

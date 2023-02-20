@@ -1,4 +1,5 @@
 import { useChain } from "@cosmos-kit/react";
+import BigNumber from "bignumber.js";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -123,8 +124,12 @@ export default function Transact() {
           "inside CHANGE_AMOUNT, action.payload: ",
           toDenom(action.payload) + parseFloat(defaultChainGasFee)
         );
+        console.log(BigNumber(toDenom(action.payload)));
         // if amount is greater than current balance, populate error message and update amount
-        if (isNaN(toDenom(action.payload)) || parseFloat(action.payload) <= 0) {
+        if (
+          BigNumber(action.payload).isNaN() ||
+          BigNumber(action.payload) <= 0
+        ) {
           return {
             ...state,
             transferAmount: action.payload,
@@ -134,9 +139,10 @@ export default function Transact() {
             },
           };
         } else if (
-          isNaN(parseFloat(availableBalance)) ||
-          toDenom(action.payload) + parseFloat(defaultChainGasFee) >
-            parseFloat(availableBalance)
+          BigNumber(availableBalance).isNaN() ||
+          BigNumber(toDenom(action.payload))
+            .plus(BigNumber(defaultChainGasFee))
+            .isGreaterThan(BigNumber(availableBalance))
         ) {
           return {
             ...state,
@@ -161,12 +167,14 @@ export default function Transact() {
       case "SET_HALF_AMOUNT": {
         // if available balance is invalid, set error message
         if (
-          isNaN(parseFloat(availableBalance)) ||
-          parseFloat(availableBalance) / 2 < parseFloat(defaultChainGasFee)
+          BigNumber(availableBalance).isNaN() ||
+          BigNumber(availableBalance)
+            .dividedBy(BigNumber(2))
+            .isLessThan(BigNumber(defaultChainGasFee))
         ) {
           return {
             ...state,
-            transferAmount: 0,
+            transferAmount: (fromDenom(availableBalance) / 2).toString(),
             errorMessages: {
               ...state.errorMessages,
               transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
@@ -198,7 +206,7 @@ export default function Transact() {
           );
           return {
             ...state,
-            transferAmount: 0,
+            transferAmount: fromDenom(availableBalance),
             errorMessages: {
               ...state.errorMessages,
               transferAmountErrorMsg: formConstants.transferAmountErrorMsg,

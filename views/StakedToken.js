@@ -8,7 +8,6 @@ import { defaultChainName } from "../config";
 import { sendDelegation, useAvailableBalance, fromDenom } from "../data";
 import { toast } from "react-toastify";
 import { defaultChainSymbol } from "../config";
-import { isObjEmpty } from "../lib";
 
 export default function StakedToken({
   totalTokens,
@@ -20,7 +19,6 @@ export default function StakedToken({
 }) {
   const { availableBalance } = useAvailableBalance();
   const [openModal, setOpenModal] = useState(false);
-  const [unDelegateModal, setUnDelegateModal] = useState(false);
   const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status, wallet } = walletManager;
 
@@ -75,8 +73,6 @@ export default function StakedToken({
           <h4 className="body1 text-primary">Staked Tokens</h4>
           <Suspense fallback={<p>Loading</p>}>
             <Delegations
-              unDelegateModal={unDelegateModal}
-              setUnDelegateModal={setUnDelegateModal}
               notify={notify}
               stakeState={stakeState}
               stakeDispatch={stakeDispatch}
@@ -93,8 +89,6 @@ export default function StakedToken({
           <Suspense fallback={<p>Loading</p>}>
             <Unbonded
               notify={notify}
-              unDelegateModal={unDelegateModal}
-              setUnDelegateModal={setUnDelegateModal}
               stakeState={stakeState}
               stakeDispatch={stakeDispatch}
             />
@@ -202,7 +196,7 @@ export default function StakedToken({
           </div>
           <div className="d-flex align-items-center gap-2 justify-content-end">
             <button
-              disabled={!isObjEmpty(stakeState?.errorMessages)}
+              disabled={stakeState?.errorMessages?.transferAmountErrorMsg}
               type="button"
               className="button-primary px-5 py-2"
               onClick={handleSubmit}

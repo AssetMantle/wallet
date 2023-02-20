@@ -160,7 +160,7 @@ export default function Farm() {
           <div className="p-2"></div>
         </ScrollableSectionContainer>
         <div className="col-12 col-lg-4">
-          <div className="rounded-4 p-3 my-2 bg-gray-800 width-100 d-flex flex-column ">
+          <div className="rounded-4 p-3 my-2 bg-gray-800 width-100 d-flex flex-column text-white">
             <p>
               To purchase MNTL, visit the exchanges (CEX & DEX) shown to swap
               with your available tokens.
