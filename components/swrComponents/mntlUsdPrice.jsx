@@ -2,16 +2,12 @@ import React from "react";
 import { getBalanceStyle, placeholderMntlUsdValue } from "../../config";
 import { useMntlUsd } from "../../data";
 
-export const MntlUsdPrice = ({ status }) => {
-  console.log("inside MntlUsdPrice");
+export const MntlUsdPrice = () => {
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
 
   const mntlUsdDisplay = errorMntlUsdValue
     ? placeholderMntlUsdValue
     : mntlUsdValue;
-
-  const isConnected = status == "Connected";
-  console.log(status);
 
   return (
     <p className={"caption"}>

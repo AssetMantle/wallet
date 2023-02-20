@@ -9,7 +9,6 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
     setOpen(false);
   }
 
-  console.log("walletRepo: ", walletRepo);
   return (
     <div className="modal " tabIndex="-1" role="dialog" id="WalletConnectModal">
       <div
@@ -54,12 +53,6 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
                       onClick={async () => {
                         await connect();
                         setOpen(false);
-                        console.log(
-                          "wallet status now: ",
-                          isError,
-                          " connected: ",
-                          isWalletConnected
-                        );
                       }}
                     >
                       <div

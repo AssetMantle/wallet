@@ -35,8 +35,6 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
     signerOrProvider: provider,
   });
 
-  console.log("npmContract: ", npmContract);
-
   // HOOKS
   const { address, isConnected } = useAccount();
   const incentiveIdBytes = ethers.utils.arrayify(
@@ -98,7 +96,7 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
     }
   };
 
-  console.log(
+  /* console.log(
     "npmContract: ",
     npmContract,
     " arrirify: ",
@@ -113,7 +111,7 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
     incentiveIdBytes,
     " hexlify: ",
     ethers.utils.hexlify(latestIncentiveProgram?.incentiveId)
-  );
+  ); */
 
   return (
     <div className="bg-gray-800 p-3 rounded-4 d-flex gap-2 align-items-center justify-content-between">

@@ -40,8 +40,6 @@ export const AvailableBalance = () => {
 };
 
 export const AvailableBalanceUsd = () => {
-  console.log("inside AvailableBalanceUsd");
-
   const { availableBalance } = useAvailableBalance();
   const { mntlUsdValue } = useMntlUsd();
 

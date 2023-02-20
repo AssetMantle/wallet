@@ -34,7 +34,6 @@ export default function Transact() {
   const { availableBalance } = useAvailableBalance();
   const chainContext = useChain(defaultChainName);
   const { getSigningStargateClient, address, status } = chainContext;
-  console.log("connection status: ", { address, status });
   const router = useRouter();
   const { toAddress, toAmount } = router.query;
 
@@ -379,13 +378,30 @@ export default function Transact() {
 
     const isFormValid =
       formState?.transferAmount &&
-      !isNaN(parseFloat(toDenom(formState.transferAmount))) &&
-      !isNaN(parseFloat(availableBalance)) &&
-      parseFloat(availableBalance) > 0 &&
-      toDenom(formState.transferAmount) + parseFloat(defaultChainGasFee) <=
-        parseFloat(availableBalance) &&
+      !BigNumber(toDenom(formState.transferAmount)).isNaN() &&
+      !BigNumber(availableBalance).isNaN() &&
+      BigNumber(availableBalance).isGreaterThan(BigNumber(0)) &&
+      BigNumber(toDenom(formState.transferAmount))
+        .plus(BigNumber(defaultChainGasFee))
+        .isLessThanOrEqualTo(BigNumber(availableBalance)) &&
       formState?.recipientAddress &&
       !isInvalidAddress(formState?.recipientAddress);
+
+    console.log(
+      "inside handleSubmit, formValid: ",
+      isFormValid,
+      !!formState?.transferAmount,
+      !isNaN(parseFloat(toDenom(formState.transferAmount))),
+      !isNaN(parseFloat(availableBalance)),
+      parseFloat(availableBalance) > 0,
+      toDenom(formState.transferAmount) + parseFloat(defaultChainGasFee) <=
+        parseFloat(availableBalance),
+      !!formState?.recipientAddress,
+      !isInvalidAddress(formState?.recipientAddress),
+      toDenom(formState.transferAmount),
+      parseFloat(defaultChainGasFee),
+      parseFloat(availableBalance)
+    );
 
     if (isFormValid) {
       const id = toast.loading("Transaction initiated ...", {
