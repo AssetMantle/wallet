@@ -19,6 +19,10 @@ export const bech32AddressSeperator = "1";
 export const shortenAddressSize = 6;
 export const shortenAddressSizeEth = 4;
 
+// Wagmi related error
+export const PREPARE_CONTRACT_ERROR = "Error during preparing of contract";
+export const WRITE_CONTRACT_ERROR = "Error during writing config of contract";
+
 // Wallet related constants
 
 export const WALLET_NOT_FOUND_ERROR_MSG =

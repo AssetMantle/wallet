@@ -11,58 +11,74 @@ import {
 import { notify, toastConfig } from "../config";
 import { ethConfig, PREPARE_CONTRACT_ERROR } from "../data";
 
-export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
+export const UniswapUnstakeEntry = ({ tokenId }) => {
   // VARIABLES
-  const nonFungiblePositionManagerContractAddress =
-    ethConfig?.mainnet?.uniswap?.nonFungiblePositionManager?.address;
-  const nonFungiblePositionManagerABI =
-    ethConfig?.mainnet?.uniswap?.nonFungiblePositionManager?.abi;
   const uniV3StakerContractAddress =
     ethConfig?.mainnet?.uniswap?.uniV3Staker?.address;
   const latestIncentiveProgram =
     ethConfig?.mainnet?.uniswap?.incentivePrograms?.[0];
+  const uniV3StakerABI = ethConfig?.mainnet?.uniswap?.uniV3Staker?.abi;
 
   let toastId = null;
 
-  const nonFungiblePositionManagerContract = {
-    address: nonFungiblePositionManagerContractAddress,
-    abi: nonFungiblePositionManagerABI,
+  const uniV3StakerContract = {
+    address: uniV3StakerContractAddress,
+    abi: uniV3StakerABI,
   };
 
   const provider = useProvider();
-  const npmContract = useContract({
-    ...nonFungiblePositionManagerContract,
+  const stakerContract = useContract({
+    ...uniV3StakerContract,
     signerOrProvider: provider,
   });
 
-  console.log("npmContract: ", npmContract);
-
   // HOOKS
   const { address, isConnected } = useAccount();
-  const incentiveIdBytes = ethers.utils.arrayify(
-    "0xec26bf83e88de4eb86c7c98329701993a4692ba8e5410a0eaa5d2ecabe0a8167"
+  let unstakeTokenTxn, withdrawTokenTxn;
+
+  if (isConnected && address && tokenId) {
+    unstakeTokenTxn = stakerContract?.interface?.encodeFunctionData?.(
+      "unstakeToken((address,address,uint256,uint256,address),uint256)",
+      // stakerContract?.interface?.fragments?.[23],
+      [latestIncentiveProgram?.incentiveTuple, Number(tokenId)]
+    );
+
+    withdrawTokenTxn = stakerContract?.interface?.encodeFunctionData?.(
+      "withdrawToken(uint256,address,bytes)",
+      // stakerContract?.interface?.fragments?.[24],
+      [Number(tokenId), address, []]
+    );
+  }
+
+  const multiCallDataBytesArray = [
+    ethers.utils.arrayify(unstakeTokenTxn),
+    ethers.utils.arrayify(withdrawTokenTxn),
+  ];
+
+  console.log(
+    " stakerContract: ",
+    stakerContract,
+    "tokenId: ",
+    tokenId,
+    "tuple: ",
+    latestIncentiveProgram?.incentiveTuple,
+    " multicalldataBytesArray: ",
+    multiCallDataBytesArray
   );
-  // Uint8Array [ 97, 98, 99 ]
 
   const { config } = usePrepareContractWrite({
-    ...nonFungiblePositionManagerContract,
-    functionName: "safeTransferFrom(address,address,uint256)",
-    // functionName: "safeTransferFrom(address,address,uint256,bytes)",
-    args: [
-      address,
-      uniV3StakerContractAddress,
-      Number(tokenId),
-      // incentiveIdBytes,
-    ],
+    ...uniV3StakerContract,
+    functionName: "multicall(bytes[])",
+    args: [multiCallDataBytesArray],
     enabled: isConnected && address && tokenId,
     chainId: 1,
     onError(error) {
-      console.error("prepare error: ", error);
+      console.error(error);
       toast.error(PREPARE_CONTRACT_ERROR, toastConfig);
     },
   });
 
-  const { writeAsync } = useContractWrite({
+  const { data, write, writeAsync } = useContractWrite({
     ...config,
     onError(error) {
       console.error(error);
@@ -81,12 +97,12 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
       toastId = toast.loading("Transaction initiated ...", toastConfig);
 
       // create transaction
-      const transactionResponse = await writeAsync();
+      const transactionResult = await writeAsync();
 
-      console.log("response: ", transactionResponse);
-      if (transactionResponse?.hash) {
+      console.log("response: ", transactionResult);
+      if (transactionResult?.hash) {
         notify(
-          transactionResponse?.hash,
+          transactionResult?.hash,
           toastId,
           "Transaction Submitted. Check "
         );
@@ -97,23 +113,6 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
       console.error("Runtime Error: ", error);
     }
   };
-
-  console.log(
-    "npmContract: ",
-    npmContract,
-    " arrirify: ",
-    ethers.utils.arrayify(
-      ethers.utils.hexlify(latestIncentiveProgram?.incentiveId)
-    ),
-    " hexlify: ",
-    ethers.utils.hexlify(latestIncentiveProgram?.incentiveId),
-    " !writeAsync: ",
-    !writeAsync,
-    " incentiveIdBytes: ",
-    incentiveIdBytes,
-    " hexlify: ",
-    ethers.utils.hexlify(latestIncentiveProgram?.incentiveId)
-  );
 
   return (
     <div className="bg-gray-800 p-3 rounded-4 d-flex gap-2 align-items-center justify-content-between">
@@ -126,16 +125,11 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
         </div>
         <div className="d-flex flex-column gap-2">
           <h3 className="body2">Token ID: {tokenId}</h3>
-          <p className="caption">Liquidity: {liquidity}</p>
         </div>
       </div>
       <div className="d-flex gap-2 align-items-center">
-        <button
-          className="button-secondary px-3 py-1"
-          onClick={handleSubmit}
-          // disabled={!writeAsync}
-        >
-          Stake
+        <button className="button-secondary px-3 py-1" onClick={handleSubmit}>
+          Unstake
         </button>
       </div>
     </div>
