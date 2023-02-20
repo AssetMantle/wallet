@@ -40,22 +40,24 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
   // HOOKS
   const { address, isConnected } = useAccount();
   const incentiveIdBytes = ethers.utils.arrayify(
-    ethers.utils.hexlify(latestIncentiveProgram?.incentiveId)
+    "0xec26bf83e88de4eb86c7c98329701993a4692ba8e5410a0eaa5d2ecabe0a8167"
   );
+  // Uint8Array [ 97, 98, 99 ]
+
   const { config } = usePrepareContractWrite({
     ...nonFungiblePositionManagerContract,
-    // functionName: "safeTransferFrom(address,address,uint256)",
-    functionName: "safeTransferFrom(address,address,uint256,bytes)",
+    functionName: "safeTransferFrom(address,address,uint256)",
+    // functionName: "safeTransferFrom(address,address,uint256,bytes)",
     args: [
       address,
       uniV3StakerContractAddress,
       Number(tokenId),
-      incentiveIdBytes,
+      // incentiveIdBytes,
     ],
     enabled: isConnected && address && tokenId,
     chainId: 1,
     onError(error) {
-      console.error(error);
+      console.error("prepare error: ", error);
       toast.error(PREPARE_CONTRACT_ERROR, toastConfig);
     },
   });
@@ -81,7 +83,7 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
       // create transaction
       const transactionResponse = await writeAsync();
 
-      console.log("response: ", transactionResponse, " error: ", error);
+      console.log("response: ", transactionResponse);
       if (transactionResponse?.hash) {
         notify(
           transactionResponse?.hash,
@@ -104,6 +106,12 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
       ethers.utils.hexlify(latestIncentiveProgram?.incentiveId)
     ),
     " hexlify: ",
+    ethers.utils.hexlify(latestIncentiveProgram?.incentiveId),
+    " !writeAsync: ",
+    !writeAsync,
+    " incentiveIdBytes: ",
+    incentiveIdBytes,
+    " hexlify: ",
     ethers.utils.hexlify(latestIncentiveProgram?.incentiveId)
   );
 
@@ -125,7 +133,7 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
         <button
           className="button-secondary px-3 py-1"
           onClick={handleSubmit}
-          disabled={!writeAsync}
+          // disabled={!writeAsync}
         >
           Stake
         </button>

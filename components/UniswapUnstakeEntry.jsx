@@ -50,7 +50,7 @@ export const UniswapUnstakeEntry = ({ tokenId }) => {
     );
   }
 
-  const multiCallData = [
+  const multiCallDataBytesArray = [
     ethers.utils.arrayify(unstakeTokenTxn),
     ethers.utils.arrayify(withdrawTokenTxn),
   ];
@@ -62,14 +62,14 @@ export const UniswapUnstakeEntry = ({ tokenId }) => {
     tokenId,
     "tuple: ",
     latestIncentiveProgram?.incentiveTuple,
-    " multicalldata: ",
-    multiCallData
+    " multicalldataBytesArray: ",
+    multiCallDataBytesArray
   );
 
   const { config } = usePrepareContractWrite({
     ...uniV3StakerContract,
     functionName: "multicall(bytes[])",
-    args: [multiCallData],
+    args: [multiCallDataBytesArray],
     enabled: isConnected && address && tokenId,
     chainId: 1,
     onError(error) {
@@ -78,7 +78,7 @@ export const UniswapUnstakeEntry = ({ tokenId }) => {
     },
   });
 
-  const { writeAsync } = useContractWrite({
+  const { data, write, writeAsync } = useContractWrite({
     ...config,
     onError(error) {
       console.error(error);
@@ -97,12 +97,12 @@ export const UniswapUnstakeEntry = ({ tokenId }) => {
       toastId = toast.loading("Transaction initiated ...", toastConfig);
 
       // create transaction
-      const transactionResponse = await writeAsync();
+      const transactionResult = await writeAsync();
 
-      console.log("response: ", transactionResponse, " error: ", error);
-      if (transactionResponse?.hash) {
+      console.log("response: ", transactionResult);
+      if (transactionResult?.hash) {
         notify(
-          transactionResponse?.hash,
+          transactionResult?.hash,
           toastId,
           "Transaction Submitted. Check "
         );
