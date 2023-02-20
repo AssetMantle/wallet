@@ -16,14 +16,9 @@ export default function Stake() {
   const [showClaimError, setShowClaimError] = useState(false);
   const [activeValidators, setActiveValidators] = useState(true);
   const [delegated, setDelegated] = useState(false);
-  const { allValidators, isLoadingValidators, errorValidators } =
-    useAllValidators();
-  const {
-    delegatedValidators,
-    totalDelegatedAmount,
-    isLoadingDelegatedAmount,
-    errorDelegatedAmount,
-  } = useDelegatedValidators();
+  const { allValidators } = useAllValidators();
+  const { delegatedValidators } = useDelegatedValidators();
+
   let validatorsArray = allValidators.sort((a, b) => b.tokens - a.tokens);
 
   //Calculate total tokens to calculate voting power

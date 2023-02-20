@@ -57,14 +57,6 @@ const Unbonded = ({
     errorValidatorsUnbonded,
     isLoadingValidatorsUnbonded,
   } = useAllValidatorsUnbonded();
-  // allUnbonding?.map((item) => {
-  //   console.log(
-  //     delegatedValidators?.find((e) => e?.operatorAddress == item?.address),
-  //     item
-  //   );
-  // });
-
-  console.log(allUnbonding);
 
   const selectedUnbonding = allUnbonding
     ?.filter((unbondingObject) =>

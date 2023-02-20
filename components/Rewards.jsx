@@ -46,8 +46,6 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
       new BigNumber("0")
     );
 
-  console.log(delegatedValidators);
-
   const cumulativeRewards = errorRewards
     ? placeholderRewards
     : fromChainDenom(allRewards);
@@ -375,7 +373,7 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
                 </table>
               </div>
               <h6 className="caption my-2 mt-5">
-                Current wallet adress for claiming staking rewards:
+                Current wallet address for claiming staking rewards:
               </h6>
               <p className="caption2 my-2 text-gray">{withdrawAddress}</p>
               <p className="caption2 my-2 text-gray">

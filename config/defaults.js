@@ -1,3 +1,4 @@
+export const defaultRefreshInterval = 2000;
 // ASSETMANTLE CHAIN
 export const defaultChainName = "assetmantle";
 export const defaultChainSymbol = "$MNTL";

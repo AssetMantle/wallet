@@ -55,17 +55,6 @@ export const UniswapUnstakeEntry = ({ tokenId }) => {
     ethers.utils.arrayify(withdrawTokenTxn),
   ];
 
-  console.log(
-    " stakerContract: ",
-    stakerContract,
-    "tokenId: ",
-    tokenId,
-    "tuple: ",
-    latestIncentiveProgram?.incentiveTuple,
-    " multicalldataBytesArray: ",
-    multiCallDataBytesArray
-  );
-
   const { config } = usePrepareContractWrite({
     ...uniV3StakerContract,
     functionName: "multicall(bytes[])",
