@@ -194,7 +194,7 @@ export const isInvalidAddress = (address, chainName = defaultChainName) => {
 };
 
 const fetchTotalUnbonding = async (url, address) => {
-  console.log("inside fetchTotalUnbonding() ");
+  // console.log("inside fetchTotalUnbonding() ");
 
   let totalUnbondingAmount;
   let allUnbonding = [];
@@ -262,7 +262,7 @@ export const useTotalUnbonding = () => {
 };
 
 const fetchTotalRewards = async (url, address) => {
-  console.log("inside fetchTotalRewards() ");
+  // console.log("inside fetchTotalRewards() ");
 
   let totalRewards;
   let rewardsArray;
@@ -331,7 +331,7 @@ export const useTotalRewards = () => {
 
 // fetcher function for useSwr of useAvailableBalance()
 const fetchTotalDelegated = async (url, address) => {
-  console.log("inside fetchTotalDelegated() ");
+  // console.log("inside fetchTotalDelegated() ");
 
   let totalDelegatedAmount;
   let delegatedValidators = [];
@@ -413,7 +413,7 @@ export const useDelegatedValidators = () => {
 
 // fetcher function for useSwr of useAvailableBalance()
 const fetchTotalDelegations = async (url, address) => {
-  console.log("inside fetchTotalDelegations() ");
+  // console.log("inside fetchTotalDelegations() ");
 
   let totalDelegations;
 
@@ -468,9 +468,7 @@ export const useTotalDelegations = () => {
 export const useMntlUsd = () => {
   // fetcher function for useSwr of useAvailableBalance()
   const fetchMntlUsd = async (url) => {
-    console.log("inside fetchMntlUsd() ");
-
-    // console.log("inside fetchMntlUsd, url: ", url);
+    console.log("inside fetchMntlUsd, url: ", url);
     let mntlUsdValue;
 
     // use a try catch block for creating rich Error object
@@ -503,7 +501,7 @@ export const useMntlUsd = () => {
 
 // fetcher function for useSwr of useAvailableBalance()
 const fetchAvailableBalance = async (url, address) => {
-  console.log("inside fetchAvailableBalance ");
+  // console.log("inside fetchAvailableBalance ");
   let balanceValue;
 
   // use a try catch block for creating rich Error object
@@ -570,7 +568,7 @@ export const useAvailableBalanceGravity = () => {
 
   // fetcher function for useSwr of useAvailableBalance()
   const fetchAllBalancesGravity = async (url, address) => {
-    console.log("inside fetchAllBalancesGravity() ");
+    // console.log("inside fetchAllBalancesGravity() ");
 
     let balanceValues;
 
@@ -633,7 +631,7 @@ export const useAvailableBalanceGravity = () => {
 };
 
 const fetchAllValidatorsBonded = async (url) => {
-  console.log("inside fetchAllValidatorsBonded() ");
+  // console.log("inside fetchAllValidatorsBonded() ");
 
   let allValidatorsBonded;
 
@@ -671,7 +669,7 @@ export const useAllValidatorsBonded = () => {
 };
 
 const fetchAllValidatorsUnbonded = async (url) => {
-  console.log("inside fetchAllValidatorsUnbonded() ");
+  // console.log("inside fetchAllValidatorsUnbonded() ");
 
   let allValidatorsUnbonded;
 
@@ -710,9 +708,8 @@ export const useAllValidatorsUnbonded = () => {
 export const useAllValidators = () => {
   // fetcher function for useSwr of useAvailableBalance()
   const fetchAllValidators = async (url) => {
-    console.log("inside fetchAllValidators() ");
+    // console.log("inside fetchAllValidators() ");
 
-    // console.log("inside fetchTotalBalance, url: ", url);
     let validatorArray;
 
     // use a try catch block for creating rich Error object
@@ -767,9 +764,8 @@ export const useTotalBalance = () => {
 
   // fetcher function for useSwr of useAvailableBalance()
   const fetchTotalBalance = async (url, address) => {
-    console.log("inside fetchTotalBalance() ");
+    // console.log("inside fetchTotalBalance() ");
 
-    // console.log("inside fetchTotalBalance, url: ", url);
     let balanceValue;
 
     // use a try catch block for creating rich Error object
@@ -841,7 +837,7 @@ export const useVote = (proposalId) => {
   const { address } = walletManager;
   // fetcher function for useSwr of useAvailableBalance()
   const fetchVote = async (url, proposalId, address) => {
-    console.log("inside fetchVote() ");
+    // console.log("inside fetchVote() ");
 
     let voteInfo;
     // use a try catch block for creating rich Error object
@@ -882,7 +878,7 @@ export const useAllProposals = () => {
 
   // fetcher function for useSwr of useAvailableBalance()
   const fetchAllProposals = async (url) => {
-    console.log("inside fetchAllProposals() ");
+    // console.log("inside fetchAllProposals() ");
 
     let allProposals;
 
@@ -935,7 +931,7 @@ export const useAllProposals = () => {
 export const useAllVotes = (proposalId) => {
   // fetcher function for useSwr of useAvailableBalance()
   const fetchAllVotes = async (url) => {
-    console.log("inside fetchAllVotes() ");
+    // console.log("inside fetchAllVotes() ");
 
     // let proposalIdSample = "6";
     let allVotes;
@@ -982,7 +978,7 @@ export const useWithdrawAddress = () => {
 
   // fetcher function for useSwr of useAvailableBalance()
   const fetchWithdrawAddress = async () => {
-    console.log("inside fetchWithdrawAddress() ");
+    // console.log("inside fetchWithdrawAddress() ");
 
     let claimAddress;
 
@@ -1007,7 +1003,6 @@ export const useWithdrawAddress = () => {
     fetchWithdrawAddress,
     {
       fallbackData: placeholderAddress,
-      suspense: true,
       refreshInterval: defaultRefreshInterval,
     }
   );
@@ -1021,7 +1016,7 @@ export const useWithdrawAddress = () => {
 export const useTrade = () => {
   // fetcher function for useSwr of useAvailableBalance()
   const fetchAllTrades = async (url) => {
-    console.log("inside fetchAllTrades() ");
+    // console.log("inside fetchAllTrades() ");
     let tradeData = [];
     let tokenDetails = {};
     const staticData = [
@@ -1089,27 +1084,6 @@ export const useTrade = () => {
 
         url: "https://quickswap.exchange/#/swap?inputCurrency=0x8497842420cfdbc97896c2353d75d89fc8d5be5d&outputCurrency=0x38a536a31ba4d8c1bcca016abbf786ecd25877e8&swapIndex=0",
       },
-
-      // {
-      //   logo: "/osmosis.png",
-      //   name: "P2B",
-      //   pair: "MNTL/USDT",
-
-      //   subTitle: "(USDC Pool)",
-      //   url: "https://p2pb2b.com/trade/MNTL_USDT/",
-      //
-
-      // },
-      // {
-      //   logo: "/osmosis.png",
-      //   name: "Coinsbit",
-      //   pair: "MNTL/USDT",
-
-      //   subTitle: "(USDC Pool)",
-      //   url: "https://coinsbit.io/trade/MNTL_USDT",
-      //
-
-      // },
     ];
 
     try {
@@ -1171,82 +1145,102 @@ export const useTrade = () => {
 export const useOsmosis = () => {
   // fetcher function for useSwr of useAvailableBalance()
   const fetchAllOsmosis = async (url) => {
-    console.log("inside fetchAllOsmosis() ");
+    // console.log("inside fetchAllOsmosis() ");
 
     let osmosisData;
     try {
-      const osmoMntlUsdcData = await fetch(
+      const osmoMntlUsdcData = fetch(
         "https://api.osmosis.zone/pools/v2/738"
       ).then((res) => res.json());
-      const osmoMntlUsdcAprData = await fetch(
+      const osmoMntlUsdcAprData = fetch(
         "https://api.osmosis.zone/apr/v2/738"
       ).then((res) => res.json());
-      const osmoMntlOsmoData = await fetch(
+      const osmoMntlOsmoData = fetch(
         "https://api.osmosis.zone/pools/v2/690"
       ).then((res) => res.json());
-      const osmoMntlOsmoAprData = await fetch(
+      const osmoMntlOsmoAprData = fetch(
         "https://api.osmosis.zone/apr/v2/690"
       ).then((res) => res.json());
-      const osmoAtomMntlData = await fetch(
+      const osmoAtomMntlData = fetch(
         "https://api.osmosis.zone/pools/v2/686"
       ).then((res) => res.json());
-      const osmoAtomMntlAprData = await fetch(
+      const osmoAtomMntlAprData = fetch(
         "https://api.osmosis.zone/apr/v2/686"
       ).then((res) => res.json());
-      console.log(
-        osmoMntlOsmoAprData[0]?.apr_list?.find((item) => item?.symbol == "MNTL")
-      );
+
+      const aggregatedFetchArray = await Promise.all([
+        osmoMntlUsdcData,
+        osmoMntlUsdcAprData,
+        osmoMntlOsmoData,
+        osmoMntlOsmoAprData,
+        osmoAtomMntlData,
+        osmoAtomMntlAprData,
+      ]);
+
+      console.log("aggregatedFetchArray: ", aggregatedFetchArray);
       osmosisData = [
         {
           project: "Osmosis",
           chain: "Cosmos",
           symbol:
-            osmoMntlUsdcData[0]?.symbol + "-" + osmoMntlUsdcData[1]?.symbol,
+            aggregatedFetchArray?.[0]?.[0]?.symbol +
+            "-" +
+            aggregatedFetchArray?.[0]?.[1]?.symbol,
           apy: Number(
             Math.max(
-              osmoMntlUsdcAprData[0]?.apr_list[0]?.apr_1d,
-              osmoMntlUsdcAprData[0]?.apr_list[0]?.apr_7d,
-              osmoMntlUsdcAprData[0]?.apr_list[0]?.apr_14d
+              aggregatedFetchArray?.[1]?.[0]?.apr_list[0]?.apr_1d,
+              aggregatedFetchArray?.[1]?.[0]?.apr_list[0]?.apr_7d,
+              aggregatedFetchArray?.[1]?.[0]?.apr_list[0]?.apr_14d
             )
           ).toFixed(2),
-          tvlUsd: osmoMntlUsdcData[0]?.liquidity?.toString()?.split(".")[0],
+          tvlUsd: aggregatedFetchArray?.[0]?.[0]?.liquidity
+            ?.toString()
+            ?.split(".")[0],
           url: "https://app.osmosis.zone/pool/738",
         },
         {
           project: "Osmosis",
           chain: "Cosmos",
           symbol:
-            osmoMntlOsmoData[0]?.symbol + "-" + osmoMntlOsmoData[1]?.symbol,
+            aggregatedFetchArray?.[2]?.[0]?.symbol +
+            "-" +
+            aggregatedFetchArray?.[2]?.[1]?.symbol,
           apy: Number(
             Math.max(
-              osmoMntlOsmoAprData[0]?.apr_list?.find(
+              aggregatedFetchArray?.[3]?.[0]?.apr_list?.find(
                 (item) => item?.symbol == "MNTL"
               )?.apr_1d,
-              osmoMntlOsmoAprData[0]?.apr_list?.find(
+              aggregatedFetchArray?.[3]?.[0]?.apr_list?.find(
                 (item) => item?.symbol == "MNTL"
               )?.apr_7d,
-              osmoMntlOsmoAprData[0]?.apr_list?.find(
+              aggregatedFetchArray?.[3]?.[0]?.apr_list?.find(
                 (item) => item?.symbol == "MNTL"
               )?.apr_14d
             )
           ).toFixed(2),
           // osmoAtomMntlAprData[0?.apr_list?.map((e)=>console.log(e))],
-          tvlUsd: osmoMntlOsmoData[0]?.liquidity?.toString()?.split(".")[0],
+          tvlUsd: aggregatedFetchArray?.[2]?.[0]?.liquidity
+            ?.toString()
+            ?.split(".")[0],
           url: "https://app.osmosis.zone/pool/690",
         },
         {
           project: "Osmosis",
           chain: "Cosmos",
           symbol:
-            osmoAtomMntlData[0]?.symbol + "-" + osmoAtomMntlData[1]?.symbol,
+            aggregatedFetchArray?.[4]?.[0]?.symbol +
+            "-" +
+            aggregatedFetchArray?.[4]?.[1]?.symbol,
           apy: Number(
             Math.max(
-              osmoAtomMntlAprData[0]?.apr_list[0]?.apr_1d,
-              osmoAtomMntlAprData[0]?.apr_list[0]?.apr_7d,
-              osmoAtomMntlAprData[0]?.apr_list[0]?.apr_14d
+              aggregatedFetchArray?.[5]?.[0]?.apr_list[0]?.apr_1d,
+              aggregatedFetchArray?.[5]?.[0]?.apr_list[0]?.apr_7d,
+              aggregatedFetchArray?.[5]?.[0]?.apr_list[0]?.apr_14d
             )
           ).toFixed(2),
-          tvlUsd: osmoAtomMntlData[0]?.liquidity?.toString()?.split(".")[0],
+          tvlUsd: aggregatedFetchArray?.[4]?.[0]?.liquidity
+            ?.toString()
+            ?.split(".")[0],
           url: "https://app.osmosis.zone/pool/686",
         },
       ];
@@ -1269,7 +1263,7 @@ export const useOsmosis = () => {
 export const useQuickswap = () => {
   // fetcher function for useSwr of useAvailableBalance()
   const fetchAllQuickswap = async (url) => {
-    console.log("inside fetchAllQuickswap() ");
+    // console.log("inside fetchAllQuickswap() ");
 
     let quickswapData = [];
     const urlData = [
