@@ -321,6 +321,8 @@ export const useStakedPositionsNftId = (incentiveId) => {
       id
       owner
     }}}`;
+
+    // explorer: https://thegraph.com/hosted-service/subgraph/revert-finance/uni-v3-staker-mainnet
     const stakedPositionsNftApi =
       "https://api.thegraph.com/subgraphs/name/revert-finance/uni-v3-staker-mainnet";
     // use a try catch block for creating rich Error object

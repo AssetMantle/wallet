@@ -63,7 +63,8 @@ export const UniswapUnstakeEntry = ({ tokenId }) => {
     chainId: 1,
     onError(error) {
       console.error(error);
-      toast.error(PREPARE_CONTRACT_ERROR, toastConfig);
+      if (error?.message?.toString?.().contains?.("User denied Transaction"))
+        toast.error(PREPARE_CONTRACT_ERROR, toastConfig);
     },
   });
 
