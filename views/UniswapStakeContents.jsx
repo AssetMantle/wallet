@@ -18,16 +18,6 @@ const chainID = ethConfig?.mainnet?.chainID;
 
 const latestIncentiveProgram =
   ethConfig?.mainnet?.uniswap?.incentivePrograms?.[0];
-/* const latestIncentiveProgram = {
-  RewardTokenContract: "0x2C4F1DF9c7DE0C59778936C9b145fF56813F3295",
-  liquidityPoolContract: "0xf5b8304dc18579c4247caad705df01928248bc71",
-  startTime: "1676041245",
-  endtime: "1676214045",
-  refundeeAddress: "0x0ad4de31fc1E1e01Eaaf815dA18690441190f7ed",
-  token0: "0x686f2404e77Ab0d9070a46cdfb0B7feCDD2318b0",
-  token1: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-  fee: "3000",
-}; */
 
 const StaticUniswapStakeContents = () => {
   // HOOKS
@@ -50,7 +40,7 @@ const StaticUniswapStakeContents = () => {
     abi: uniV3StakerABI,
   };
 
-  // read the count of Position NFTs
+  // wagmi hook to read the count of Position NFTs
   const {
     data: balanceOf,
     isError: isErrorBalanceOf,
@@ -80,7 +70,7 @@ const StaticUniswapStakeContents = () => {
     return tokenArray;
   };
 
-  // read the array of Position NFT IDs from the count of position NFTs
+  // wagmi hook to read the array of Position NFT IDs from the count of position NFTs
   const {
     data: tokenValues,
     isError: isErrorTokenValues,
@@ -108,7 +98,7 @@ const StaticUniswapStakeContents = () => {
     return tokenArray;
   };
 
-  // read the array of Position NFT IDs from the count of position NFTs
+  // wagmi hook to read the array of Position NFT IDs from the count of position NFTs
   const {
     data: positionValues,
     isError: isErrorPositionValues,

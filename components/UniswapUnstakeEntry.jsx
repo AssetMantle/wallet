@@ -36,6 +36,8 @@ export const UniswapUnstakeEntry = ({ tokenId }) => {
   const { address, isConnected } = useAccount();
   let unstakeTokenTxn, withdrawTokenTxn;
 
+  console.log("entry values: ", { isConnected, address, tokenId });
+
   if (isConnected && address && tokenId) {
     unstakeTokenTxn = stakerContract?.interface?.encodeFunctionData?.(
       "unstakeToken((address,address,uint256,uint256,address),uint256)",
