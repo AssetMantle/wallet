@@ -136,9 +136,7 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
     <div className="nav-bg p-3 rounded-4 gap-3">
       <div className="d-flex flex-column gap-2">
         {stakeState?.selectedValidators.length ? (
-          <p className="caption d-flex gap-2 align-items-center">
-            Cumulative Rewards
-          </p>
+          <p className="caption d-flex gap-2 align-items-center">Rewards</p>
         ) : (
           <p
             className={`caption d-flex gap-2 align-items-center ${
@@ -146,7 +144,7 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
             }`}
           >
             {" "}
-            Rewards
+            Cumulative Rewards
           </p>
         )}
         <p className={isConnected ? "caption" : "caption text-gray"}>

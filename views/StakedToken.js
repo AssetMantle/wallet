@@ -148,7 +148,7 @@ export default function StakedToken({
           </div>
           <div className="py-4 text-center d-flex flex-column">
             <div className="d-flex my-2 justify-content-between">
-              <label htmlFor="delegationAmount caption text-gray">
+              <label htmlFor="delegationAmount" className="caption text-gray">
                 Delegation Amount
               </label>{" "}
               <small className="text-gray caption2">
@@ -238,7 +238,7 @@ export default function StakedToken({
             </div>
             <div className="modal-body p-4 text-center d-flex flex-column">
               <div className="d-flex my-2 justify-content-between">
-                <label htmlFor="delegationAmount caption text-gray">
+                <label htmlFor="delegationAmount" className="caption text-gray">
                   Delegation Amount
                 </label>{" "}
                 <small className="text-gray caption2">

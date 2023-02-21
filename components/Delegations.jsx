@@ -184,7 +184,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
   return (
     <>
       {stakeState?.selectedValidators?.length ? (
-        <p>
+        <p className="text-gray">
           {delegatedOutOfSelectedValidators?.length} out of{" "}
           {stakeState?.selectedValidators?.length} selected are Delegated
           Validators
@@ -193,9 +193,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
       <div className="nav-bg p-3 rounded-4 gap-3">
         <div className="d-flex flex-column gap-2">
           {stakeState?.selectedValidators?.length ? (
-            <p className="caption d-flex gap-2 align-items-center">
-              Cumulative Delegated
-            </p>
+            <p className="caption d-flex gap-2 align-items-center">Delegated</p>
           ) : (
             <p
               className={`caption d-flex gap-2 align-items-center ${
@@ -203,7 +201,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
               }`}
             >
               {" "}
-              Delegated
+              Cumulative Delegated
             </p>
           )}
           <p className={isConnected ? "caption" : "caption text-gray"}>
@@ -294,7 +292,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
               </div>
               <div className="py-4 text-center d-flex flex-column gap-1">
                 <div className="d-flex justify-content-between">
-                  <label htmlFor="delegationAmount caption2 mb-1">
+                  <label htmlFor="delegationAmount" className="caption2 mb-1">
                     Undelegate amount
                   </label>
                   <small className="caption2 text-gray">
@@ -747,7 +745,10 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
                 </div>
               </div>
               <div className="d-flex justify-content-between w-100 mt-4">
-                <label htmlFor="redelegationAmount caption text-gray my-2">
+                <label
+                  htmlFor="redelegationAmount"
+                  className="caption text-gray my-2"
+                >
                   Delegation amount
                 </label>{" "}
                 <small className="caption2 text-gray my-2">
