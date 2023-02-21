@@ -145,7 +145,7 @@ const Unbonded = ({
               )}
           &nbsp;{denomDisplay}
         </p>
-        <p className={status === "Connected" ? "caption" : "caption text-gray"}>
+        <p className={isConnected ? "caption" : "caption text-gray"}>
           {isConnected
             ? getBalanceStyle(unbondingInUSDDisplay, "caption2", "small")
             : getBalanceStyle(

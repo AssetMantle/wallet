@@ -804,7 +804,7 @@ export const useTotalBalance = () => {
         .plus(BigNumber(aggregatedFetchArray?.[3]?.totalUnbondingAmount || 0))
         .toString();
 
-      console.log("balanceValue: ", balanceValue);
+      // console.log("balanceValue: ", balanceValue);
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
