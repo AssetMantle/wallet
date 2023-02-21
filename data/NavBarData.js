@@ -38,12 +38,12 @@ export const NavBarData = {
       variant: "am-link",
       icon: <i className="bi bi-cash-coin" />,
     },
-    {
+    /* {
       title: "Farm",
       href: "/farm",
       variant: "am-link",
-      icon: <i className="bi bi-sign-turn-right-fill" />,
-    },
+      icon: <i className="bi bi-piggy-bank" />,
+    }, */
     {
       title: "Explorer",
       href: "https://explorer.assetmantle.one/",
