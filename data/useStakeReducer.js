@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js";
 import { useReducer } from "react";
 import { defaultChainGasFee } from "../config";
 import {
@@ -103,7 +104,7 @@ const useStakeReducer = () => {
           toDenom(action.payload) + parseFloat(defaultChainGasFee)
         );
         // if amount is greater than current balance, populate error message and update amount
-        if (isNaN(toDenom(action.payload))) {
+        if (BigNumber(action.payload).isNaN()) {
           return {
             ...state,
             delegationAmount: action.payload,
@@ -113,9 +114,10 @@ const useStakeReducer = () => {
             },
           };
         } else if (
-          isNaN(parseFloat(availableBalance)) ||
-          toDenom(action.payload) + parseFloat(defaultChainGasFee) >
-            parseFloat(availableBalance)
+          BigNumber(availableBalance).isNaN() ||
+          BigNumber(toDenom(action.payload))
+            .plus(BigNumber(defaultChainGasFee))
+            .isGreaterThan(BigNumber(availableBalance))
         ) {
           return {
             ...state,
@@ -148,8 +150,9 @@ const useStakeReducer = () => {
           )?.delegatedAmount;
         }
         if (
-          isNaN(parseFloat(delegatedAmount)) ||
-          parseFloat(delegatedAmount) < parseFloat(defaultChainGasFee)
+          BigNumber(delegatedAmount).isNaN() ||
+          BigNumber(availableBalance).isNaN() ||
+          BigNumber(availableBalance).isLessThan(BigNumber(defaultChainGasFee))
         ) {
           console.log(
             "available balance: ",
@@ -159,11 +162,10 @@ const useStakeReducer = () => {
           );
           return {
             ...state,
-            undelegationAmount: 0,
+            undelegationAmount: fromDenom(delegatedAmount),
             errorMessages: {
               ...state.errorMessages,
-              undelegationAmountErrorMsg:
-                formConstants.undelegationAmountErrorMsg,
+              undelegationAmountErrorMsg: formConstants.transferAmountErrorMsg,
             },
           };
         }
@@ -189,8 +191,9 @@ const useStakeReducer = () => {
           (item) => item?.operatorAddress === state?.selectedValidators[0]
         )?.delegatedAmount;
         if (
-          isNaN(parseFloat(delegatedAmount)) ||
-          parseFloat(delegatedAmount) < parseFloat(defaultChainGasFee)
+          BigNumber(delegatedAmount).isNaN() ||
+          BigNumber(availableBalance).isNaN() ||
+          BigNumber(availableBalance).isLessThan(BigNumber(defaultChainGasFee))
         ) {
           console.log(
             "available balance: ",
@@ -200,10 +203,10 @@ const useStakeReducer = () => {
           );
           return {
             ...state,
-            redelegationAmount: 0,
+            redelegationAmount: fromDenom(delegatedAmount),
             errorMessages: {
               ...state.errorMessages,
-              undelegationAmountErrorMsg: formConstants.transferAmountErrorMsg,
+              redelegationAmountErrorMsg: formConstants.transferAmountErrorMsg,
             },
           };
         }
@@ -237,7 +240,7 @@ const useStakeReducer = () => {
         }
 
         // if amount is greater than current balance, populate error message and update amount
-        if (isNaN(toDenom(action.payload))) {
+        if (BigNumber(action.payload).isNaN()) {
           return {
             ...state,
             undelegationAmount: action.payload,
@@ -247,9 +250,11 @@ const useStakeReducer = () => {
             },
           };
         } else if (
-          isNaN(parseFloat(delegatedAmount)) ||
-          toDenom(action.payload) + parseFloat(defaultChainGasFee) >
-            parseFloat(delegatedAmount)
+          BigNumber(delegatedAmount).isNaN() ||
+          BigNumber(toDenom(action.payload)).isGreaterThan(
+            BigNumber(delegatedAmount)
+          ) ||
+          BigNumber(availableBalance).isLessThan(BigNumber(defaultChainGasFee))
         ) {
           return {
             ...state,
@@ -305,7 +310,7 @@ const useStakeReducer = () => {
           "inside CHANGE_REDELEGATION_AMOUNT, action.payload: ",
           toDenom(action.payload) + parseFloat(defaultChainGasFee)
         );
-        if (isNaN(toDenom(action.payload))) {
+        if (BigNumber(action.payload).isNaN()) {
           return {
             ...state,
             redelegationAmount: action.payload,
@@ -317,9 +322,13 @@ const useStakeReducer = () => {
         }
         // if amount is greater than current balance, populate error message and update amount
         else if (
-          isNaN(parseFloat(availableBalance)) ||
-          toDenom(action.payload) + parseFloat(defaultChainGasFee) >
-            parseFloat(delegatedAmount)
+          BigNumber(availableBalance).isNaN() ||
+          BigNumber(toDenom(action.payload)).isGreaterThan(
+            BigNumber(delegatedAmount) ||
+              BigNumber(availableBalance).isLessThan(
+                BigNumber(defaultChainGasFee)
+              )
+          )
         ) {
           return {
             ...state,

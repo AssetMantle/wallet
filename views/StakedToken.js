@@ -8,7 +8,6 @@ import { defaultChainName } from "../config";
 import { sendDelegation, useAvailableBalance, fromDenom } from "../data";
 import { toast } from "react-toastify";
 import { defaultChainSymbol } from "../config";
-import { isObjEmpty } from "../lib";
 
 export default function StakedToken({
   totalTokens,
@@ -20,7 +19,6 @@ export default function StakedToken({
 }) {
   const { availableBalance } = useAvailableBalance();
   const [openModal, setOpenModal] = useState(false);
-  const [unDelegateModal, setUnDelegateModal] = useState(false);
   const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status, wallet } = walletManager;
 
@@ -67,7 +65,7 @@ export default function StakedToken({
     <>
       <section className="gap-3 pt-3 pt-lg-0">
         {!stakeState?.selectedValidators?.length && status === "Connected" ? (
-          <div className="rounded-4 p-3 my-2 bg-gray-800 width-100 d-flex flex-column ">
+          <div className="rounded-4 p-3 my-2 bg-gray-800 width-100 d-flex flex-column text-white">
             <p>Please select the Validators you wish to take actions on.</p>
           </div>
         ) : null}
@@ -75,8 +73,6 @@ export default function StakedToken({
           <h4 className="body1 text-primary">Staked Tokens</h4>
           <Suspense fallback={<p>Loading</p>}>
             <Delegations
-              unDelegateModal={unDelegateModal}
-              setUnDelegateModal={setUnDelegateModal}
               notify={notify}
               stakeState={stakeState}
               stakeDispatch={stakeDispatch}
@@ -93,8 +89,6 @@ export default function StakedToken({
           <Suspense fallback={<p>Loading</p>}>
             <Unbonded
               notify={notify}
-              unDelegateModal={unDelegateModal}
-              setUnDelegateModal={setUnDelegateModal}
               stakeState={stakeState}
               stakeDispatch={stakeDispatch}
             />
@@ -154,7 +148,7 @@ export default function StakedToken({
           </div>
           <div className="py-4 text-center d-flex flex-column">
             <div className="d-flex my-2 justify-content-between">
-              <label htmlFor="delegationAmount caption text-gray">
+              <label htmlFor="delegationAmount" className="caption text-gray">
                 Delegation Amount
               </label>{" "}
               <small className="text-gray caption2">
@@ -202,7 +196,7 @@ export default function StakedToken({
           </div>
           <div className="d-flex align-items-center gap-2 justify-content-end">
             <button
-              disabled={!isObjEmpty(stakeState?.errorMessages)}
+              disabled={stakeState?.errorMessages?.transferAmountErrorMsg}
               type="button"
               className="button-primary px-5 py-2"
               onClick={handleSubmit}
@@ -244,7 +238,7 @@ export default function StakedToken({
             </div>
             <div className="modal-body p-4 text-center d-flex flex-column">
               <div className="d-flex my-2 justify-content-between">
-                <label htmlFor="delegationAmount caption text-gray">
+                <label htmlFor="delegationAmount" className="caption text-gray">
                   Delegation Amount
                 </label>{" "}
                 <small className="text-gray caption2">

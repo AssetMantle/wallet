@@ -16,14 +16,9 @@ export default function Stake() {
   const [showClaimError, setShowClaimError] = useState(false);
   const [activeValidators, setActiveValidators] = useState(true);
   const [delegated, setDelegated] = useState(false);
-  const { allValidators, isLoadingValidators, errorValidators } =
-    useAllValidators();
-  const {
-    delegatedValidators,
-    totalDelegatedAmount,
-    isLoadingDelegatedAmount,
-    errorDelegatedAmount,
-  } = useDelegatedValidators();
+  const { allValidators } = useAllValidators();
+  const { delegatedValidators } = useDelegatedValidators();
+
   let validatorsArray = allValidators.sort((a, b) => b.tokens - a.tokens);
 
   //Calculate total tokens to calculate voting power
@@ -164,7 +159,7 @@ export default function Stake() {
                   />
                 </div>
                 <div
-                  className="d-flex gap-2 align-items-center"
+                  className="d-flex gap-2 align-items-center text-white"
                   onClick={() => {
                     setDelegated((prev) => !prev);
                     stakeDispatch({ type: "EMPTY_SELECTED_VALIDATORS" });
@@ -213,12 +208,8 @@ export default function Stake() {
                             </th>
                           </>
                         )
-                      ) : delegated ? (
-                        <th scope="col" style={{ whiteSpace: "nowrap" }}>
-                          Rank
-                        </th>
-                      ) : (
-                        <th></th>
+                      ) : delegated ? null : (
+                        <th scope="col" style={{ whiteSpace: "nowrap" }}></th>
                       )}
                       <th
                         colSpan="2"

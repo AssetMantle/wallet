@@ -172,7 +172,9 @@ export default function Vote() {
                     </div>
                   ))
                 ) : (
-                  <div>There are no active proposals at the moment</div>
+                  <div className="text-white">
+                    There are no active proposals at the moment
+                  </div>
                 )}
               </div>
             </div>

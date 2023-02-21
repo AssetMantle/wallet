@@ -1,4 +1,5 @@
 import { useChain } from "@cosmos-kit/react";
+import BigNumber from "bignumber.js";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -13,9 +14,11 @@ import {
   defaultChainMemoSize,
   defaultChainName,
   defaultChainSymbol,
+  getBalanceStyle,
 } from "../config";
 import {
   formConstants,
+  fromChainDenom,
   fromDenom,
   isInvalidAddress,
   placeholderAddress,
@@ -33,7 +36,6 @@ export default function Transact() {
   const { getSigningStargateClient, address, status } = chainContext;
   const router = useRouter();
   const { toAddress, toAmount } = router.query;
-  console.log("toAddress: ", toAddress, " toAmount: ", toAmount);
 
   useEffect(() => {
     if (toAddress) {
@@ -121,8 +123,12 @@ export default function Transact() {
           "inside CHANGE_AMOUNT, action.payload: ",
           toDenom(action.payload) + parseFloat(defaultChainGasFee)
         );
+        console.log(BigNumber(toDenom(action.payload)));
         // if amount is greater than current balance, populate error message and update amount
-        if (isNaN(toDenom(action.payload)) || parseFloat(action.payload) <= 0) {
+        if (
+          BigNumber(action.payload).isNaN() ||
+          BigNumber(action.payload) <= 0
+        ) {
           return {
             ...state,
             transferAmount: action.payload,
@@ -132,9 +138,10 @@ export default function Transact() {
             },
           };
         } else if (
-          isNaN(parseFloat(availableBalance)) ||
-          toDenom(action.payload) + parseFloat(defaultChainGasFee) >
-            parseFloat(availableBalance)
+          BigNumber(availableBalance).isNaN() ||
+          BigNumber(toDenom(action.payload))
+            .plus(BigNumber(defaultChainGasFee))
+            .isGreaterThan(BigNumber(availableBalance))
         ) {
           return {
             ...state,
@@ -159,12 +166,14 @@ export default function Transact() {
       case "SET_HALF_AMOUNT": {
         // if available balance is invalid, set error message
         if (
-          isNaN(parseFloat(availableBalance)) ||
-          parseFloat(availableBalance) / 2 < parseFloat(defaultChainGasFee)
+          BigNumber(availableBalance).isNaN() ||
+          BigNumber(availableBalance)
+            .dividedBy(BigNumber(2))
+            .isLessThan(BigNumber(defaultChainGasFee))
         ) {
           return {
             ...state,
-            transferAmount: 0,
+            transferAmount: (fromDenom(availableBalance) / 2).toString(),
             errorMessages: {
               ...state.errorMessages,
               transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
@@ -196,7 +205,7 @@ export default function Transact() {
           );
           return {
             ...state,
-            transferAmount: 0,
+            transferAmount: fromDenom(availableBalance),
             errorMessages: {
               ...state.errorMessages,
               transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
@@ -369,13 +378,30 @@ export default function Transact() {
 
     const isFormValid =
       formState?.transferAmount &&
-      !isNaN(parseFloat(toDenom(formState.transferAmount))) &&
-      !isNaN(parseFloat(availableBalance)) &&
-      parseFloat(availableBalance) > 0 &&
-      toDenom(formState.transferAmount) + parseFloat(defaultChainGasFee) <=
-        parseFloat(availableBalance) &&
+      !BigNumber(toDenom(formState.transferAmount)).isNaN() &&
+      !BigNumber(availableBalance).isNaN() &&
+      BigNumber(availableBalance).isGreaterThan(BigNumber(0)) &&
+      BigNumber(toDenom(formState.transferAmount))
+        .plus(BigNumber(defaultChainGasFee))
+        .isLessThanOrEqualTo(BigNumber(availableBalance)) &&
       formState?.recipientAddress &&
       !isInvalidAddress(formState?.recipientAddress);
+
+    console.log(
+      "inside handleSubmit, formValid: ",
+      isFormValid,
+      !!formState?.transferAmount,
+      !isNaN(parseFloat(toDenom(formState.transferAmount))),
+      !isNaN(parseFloat(availableBalance)),
+      parseFloat(availableBalance) > 0,
+      toDenom(formState.transferAmount) + parseFloat(defaultChainGasFee) <=
+        parseFloat(availableBalance),
+      !!formState?.recipientAddress,
+      !isInvalidAddress(formState?.recipientAddress),
+      toDenom(formState.transferAmount),
+      parseFloat(defaultChainGasFee),
+      parseFloat(availableBalance)
+    );
 
     if (isFormValid) {
       const id = toast.loading("Transaction initiated ...", {
@@ -426,8 +452,6 @@ export default function Transact() {
     ) : (
       formState?.errorMessages?.transferAmountErrorMsg
     );
-
-  console.log("formState: ", formState);
 
   return (
     <>
@@ -526,7 +550,19 @@ export default function Transact() {
               >
                 Amount{" "}
                 <small>
-                  Balance : {fromDenom(availableBalance).toString()}&nbsp;
+                  Balance :{" "}
+                  {status === "Connected"
+                    ? getBalanceStyle(
+                        fromChainDenom(availableBalance),
+                        "caption",
+                        "caption2"
+                      )
+                    : getBalanceStyle(
+                        fromChainDenom(availableBalance),
+                        "caption text-gray",
+                        "caption2 text-gray"
+                      )}
+                  &nbsp;
                   {defaultChainSymbol}
                 </small>
               </label>

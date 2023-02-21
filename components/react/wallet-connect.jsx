@@ -1,43 +1,28 @@
-import { Icon, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import { WalletStatus } from "@cosmos-kit/core";
-// import Image from "next/image";
-import { FiAlertTriangle } from "react-icons/fi";
+import Link from "next/link";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
+import { toastConfig } from "../../config";
+import { ConnectOptionObject, WALLET_NOT_FOUND_ERROR_MSG } from "../../data";
 
-/* export const ConnectWalletButton = ({
-  buttonText,
-  isLoading,
-  isDisabled,
-  icon,
-  onClickConnectBtn,
-}: ConnectWalletType) => {
-  return (
-    <Button
-      w="full"
-      minW="fit-content"
-      size="lg"
-      isLoading={isLoading}
-      isDisabled={isDisabled}
-      bgImage="linear-gradient(109.6deg, rgba(157,75,199,1) 11.2%, rgba(119,81,204,1) 83.1%)"
-      color="white"
-      opacity={1}
-      transition="all .5s ease-in-out"
-      _hover={{
-        bgImage:
-          "linear-gradient(109.6deg, rgba(157,75,199,1) 11.2%, rgba(119,81,204,1) 83.1%)",
-        opacity: 0.75,
-      }}
-      _active={{
-        bgImage:
-          "linear-gradient(109.6deg, rgba(157,75,199,1) 11.2%, rgba(119,81,204,1) 83.1%)",
-        opacity: 0.9,
-      }}
-      onClick={onClickConnectBtn}
-    >
-      <Icon as={icon ? icon : IoWallet} mr={2} />
-      {buttonText ? buttonText : "Connect Wallet"}
-    </Button>
+const CustomToastWithLink = ({ wallet }) => {
+  console.log(
+    "inside CustomToastWithLink, installurl: ",
+    ConnectOptionObject[wallet]?.installUrl,
+    " wallet: ",
+    wallet
   );
-}; */
+  return (
+    <p>
+      Wallet not found. To install click
+      <Link href={ConnectOptionObject[wallet]?.installUrl}>
+        <a style={{ color: "#ffc640" }} target="_blank">
+          &nbsp; Here
+        </a>
+      </Link>
+    </p>
+  );
+};
 
 export const ConnectWalletButton = ({
   buttonText,
@@ -50,72 +35,67 @@ export const ConnectWalletButton = ({
   dataBsTarget,
   children,
 }) => {
-  return !isLoading ? (
-    dataBsToggle || dataBsTarget ? (
+  return dataBsToggle || dataBsTarget ? (
+    <button
+      type="button"
+      className="button-secondary d-flex gap-1 align-items-center am-connect py-1 px-3"
+      style={{ textTransform: "none", cursor: "pointer" }}
+      data-bs-toggle={dataBsToggle}
+      data-bs-target={dataBsTarget}
+      disabled={isDisabled}
+      onClick={onClickConnectBtn}
+    >
+      {icon && (
+        <div
+          className="position-relative rounded-circle"
+          style={{ width: "23px", aspectRatio: "1/1" }}
+        >
+          <img layout="fill" className="rounded-circle" src={icon} alt="#" />
+        </div>
+      )}
+      {buttonIcon && <i className={`bi ${buttonIcon}`}></i>}
+      {isLoading && (
+        <span
+          className="spinner-grow spinner-grow-sm"
+          role="status"
+          aria-hidden="true"
+        ></span>
+      )}
+      &nbsp;{buttonText || "Connect Wallet"}
+    </button>
+  ) : (
+    <div className="nav-item dropdown">
       <button
         type="button"
-        className="button-secondary d-flex gap-1 align-items-center am-connect py-1 px-3"
-        data-bs-toggle={dataBsToggle}
-        data-bs-target={dataBsTarget}
-        disabled={isDisabled}
+        className="button-secondary d-flex gap-2 align-items-center nav-link dropdown-toggle am-nav-item py-1 px-3 text-primary"
+        style={{ textTransform: "none", cursor: "pointer" }}
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
         onClick={onClickConnectBtn}
+        id="navbarDropdown"
       >
         {icon && (
           <div
             className="position-relative rounded-circle"
-            style={{ width: "23px", aspectRatio: "1/1" }}
+            style={{ width: "20px", aspectRatio: "1/1" }}
           >
             <img layout="fill" className="rounded-circle" src={icon} alt="#" />
           </div>
         )}
         {buttonIcon && <i className={`bi ${buttonIcon}`}></i>}
-        {buttonText ? buttonText : "Connect Wallet"}
+        {isLoading && (
+          <span
+            className="spinner-grow spinner-grow-sm"
+            role="status"
+            aria-hidden="true"
+          ></span>
+        )}
+        <span className="caption2 text-primary">
+          &nbsp;{buttonText ? buttonText : "Connect Wallet"}
+        </span>
       </button>
-    ) : (
-      <div className="nav-item dropdown">
-        <button
-          type="button"
-          className="button-secondary d-flex gap-2 align-items-center nav-link dropdown-toggle am-nav-item py-1 px-3 text-lowercase text-primary"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-          // disabled={isDisabled}
-          onClick={onClickConnectBtn}
-          id="navbarDropdown"
-        >
-          {icon && (
-            <div
-              className="position-relative rounded-circle"
-              style={{ width: "20px", aspectRatio: "1/1" }}
-            >
-              <img
-                layout="fill"
-                className="rounded-circle"
-                src={icon}
-                alt="#"
-              />
-            </div>
-          )}
-          {buttonIcon && <i className={`bi ${buttonIcon}`}></i>}
-          <span className="caption2 text-primary">
-            {buttonText ? buttonText : "Connect Wallet"}
-          </span>
-        </button>
-        <div className="dropdown-menu">{children}</div>
-      </div>
-    )
-  ) : (
-    <button
-      type="button"
-      className="button-secondary d-flex gap-1 align-items-center am-nav-item py-1 px-3"
-      disabled
-    >
-      <span
-        className="spinner-grow spinner-grow-sm"
-        role="status"
-        aria-hidden="true"
-      ></span>
-      Loading...
-    </button>
+      <div className="dropdown-menu">{children}</div>
+    </div>
   );
 };
 
@@ -135,8 +115,6 @@ export const Connected = ({
   buttonText,
   buttonIcon,
   icon,
-  dataBsToggle,
-  dataBsTarget,
   onClick,
   children,
 }) => {
@@ -145,8 +123,6 @@ export const Connected = ({
       buttonText={buttonText}
       buttonIcon={buttonIcon}
       icon={icon}
-      dataBsToggle={dataBsToggle}
-      dataBsTarget={dataBsTarget}
       onClickConnectBtn={onClick}
     >
       {children}
@@ -154,78 +130,43 @@ export const Connected = ({
   );
 };
 
-export const Connecting = () => {
-  return <ConnectWalletButton isLoading={true} />;
-};
-
-export const Rejected = ({ buttonText, wordOfWarning, onClick }) => {
-  const bg = useColorModeValue("orange.200", "orange.300");
-
+export const Connecting = ({ onClick }) => {
   return (
-    <Stack>
-      <ConnectWalletButton
-        buttonText={buttonText}
-        isDisabled={false}
-        onClickConnectBtn={onClick}
-      />
-      {wordOfWarning && (
-        <Stack
-          isInline={true}
-          borderRadius="md"
-          bg={bg}
-          color="blackAlpha.900"
-          p={4}
-          spacing={1}
-        >
-          <Icon as={FiAlertTriangle} mt={1} />
-          <Text>
-            <Text fontWeight="semibold" as="span">
-              Warning:&ensp;
-            </Text>
-            {wordOfWarning}
-          </Text>
-        </Stack>
-      )}
-    </Stack>
+    <ConnectWalletButton
+      isLoading={true}
+      buttonText={"Loading..."}
+      onClickConnectBtn={onClick}
+    />
   );
 };
 
-export const Error = ({ buttonText, wordOfWarning, onClick }) => {
-  const bg = useColorModeValue("orange.200", "orange.300");
-
-  return (
-    <Stack>
-      <ConnectWalletButton
-        buttonText={buttonText}
-        isDisabled={false}
-        onClickConnectBtn={onClick}
-      />
-      {wordOfWarning && (
-        <Stack
-          isInline={true}
-          borderRadius="md"
-          bg={bg}
-          color="blackAlpha.900"
-          p={4}
-          spacing={1}
-        >
-          <Icon as={FiAlertTriangle} mt={1} />
-          <Text>
-            <Text fontWeight="semibold" as="span">
-              Warning:&ensp;
-            </Text>
-            {wordOfWarning}
-          </Text>
-        </Stack>
-      )}
-    </Stack>
-  );
-};
-
-export const NotExist = ({ buttonText, onClick }) => {
+export const Rejected = ({ buttonText, buttonIcon, onClick }) => {
   return (
     <ConnectWalletButton
       buttonText={buttonText}
+      buttonIcon={buttonIcon}
+      isDisabled={false}
+      onClickConnectBtn={onClick}
+    />
+  );
+};
+
+export const Errored = ({ buttonText, buttonIcon, onClick }) => {
+  return (
+    <ConnectWalletButton
+      buttonText={buttonText}
+      buttonIcon={buttonIcon}
+      isDisabled={false}
+      onClickConnectBtn={onClick}
+    />
+  );
+};
+
+export const NotExist = ({ buttonText, buttonIcon, onClick }) => {
+  return (
+    <ConnectWalletButton
+      buttonText={buttonText}
+      buttonIcon={buttonIcon}
       isDisabled={false}
       onClickConnectBtn={onClick}
     />
@@ -233,18 +174,38 @@ export const NotExist = ({ buttonText, onClick }) => {
 };
 
 export const WalletConnectComponent = ({
+  wallet,
   walletStatus,
-  disconnect,
+  disconnected,
   connecting,
   connected,
   rejected,
-  error,
+  errored,
   notExist,
 }) => {
-  console.log("walletStatus: ", walletStatus);
+  useEffect(() => {
+    if (walletStatus == WalletStatus.NotExist) {
+      toast.error(
+        wallet ? (
+          <CustomToastWithLink wallet={wallet} />
+        ) : (
+          WALLET_NOT_FOUND_ERROR_MSG
+        ),
+        toastConfig
+      );
+    } else if (
+      walletStatus == WalletStatus.Rejected ||
+      walletStatus == WalletStatus.Error
+    ) {
+      toast.error(WALLET_NOT_FOUND_ERROR_MSG, toastConfig);
+    }
+
+    return () => {};
+  }, [wallet, walletStatus]);
+
   switch (walletStatus) {
     case WalletStatus.Disconnected:
-      return <>{disconnect}</>;
+      return <>{disconnected}</>;
     case WalletStatus.Connecting:
       return <>{connecting}</>;
     case WalletStatus.Connected:
@@ -252,10 +213,10 @@ export const WalletConnectComponent = ({
     case WalletStatus.Rejected:
       return <>{rejected}</>;
     case WalletStatus.Error:
-      return <>{error}</>;
+      return <>{errored}</>;
     case WalletStatus.NotExist:
       return <>{notExist}</>;
     default:
-      return <>{disconnect}</>;
+      return <>{disconnected}</>;
   }
 };

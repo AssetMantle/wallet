@@ -19,4 +19,69 @@ export const bech32AddressSeperator = "1";
 export const shortenAddressSize = 6;
 export const shortenAddressSizeEth = 4;
 
+// Wagmi related error
+export const PREPARE_CONTRACT_ERROR = "Error during preparing of contract";
+export const WRITE_CONTRACT_ERROR = "Error during writing config of contract";
+
+// Wallet related constants
+
+export const WALLET_NOT_FOUND_ERROR_MSG =
+  "Wallet not found. Please try a different one.";
+export const WALLET_DISCONNECT_ERROR_MSG =
+  "Error during disconnect. Try refreshing the page";
+
 export const mantleWalletV1URL = "https://v1.wallet.assetmantle.one/";
+
+export const ConnectOptionObject = {
+  cosmostation: {
+    icon: "/WalletIcons/cosmostation.png",
+    name: "Cosmostation",
+    installUrl: "https://www.cosmostation.io/wallet#extension",
+  },
+  cosmostationmobile: {
+    icon: "/WalletIcons/cosmostation.png",
+    name: "Cosmostation Mobile",
+    installUrl: "https://www.cosmostation.io/wallet",
+  },
+  keplr: {
+    icon: "/WalletIcons/keplr.png",
+    name: "Keplr",
+    installUrl: "https://www.keplr.app/download",
+  },
+  keplrmobile: {
+    icon: "/WalletIcons/keplr.png",
+    name: "Keplr",
+    installUrl: "https://www.keplr.app/download",
+  },
+  trust: {
+    icon: "/WalletIcons/trust.png",
+    name: "Trust",
+    installUrl: "https://trustwallet.com/browser-extension/",
+  },
+  vectis: {
+    icon: "/WalletIcons/vectis.png",
+    name: "Vectis",
+    installUrl:
+      "https://chrome.google.com/webstore/detail/vectis-wallet/cgkaddoglojnmfiblgmlinfaijcdpfjm",
+  },
+  keystore: {
+    icon: "/WalletIcons/keystore.png",
+    name: "Keystore",
+    installUrl: "https://medium.com/coinmanager/what-is-keystore-e1f9bd328826",
+  },
+  leap: {
+    icon: "/WalletIcons/leap.png",
+    name: "Leap",
+    installUrl: "https://www.leapwallet.io/",
+  },
+  ledger: {
+    icon: "/WalletIcons/ledger.png",
+    name: "Ledger",
+    installUrl: "https://www.ledger.com/",
+  },
+  xdefi: {
+    icon: "/WalletIcons/xdefi.jpg",
+    name: "XDEFI",
+    installUrl: "https://www.xdefi.io/",
+  },
+};

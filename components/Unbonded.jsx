@@ -5,17 +5,19 @@ import {
   placeholderMntlUsdValue,
   placeholderTotalUnbonding,
   defaultChainName,
+  getBalanceStyle,
 } from "../config";
 import {
   fromChainDenom,
   fromDenom,
   sendUndelegation,
-  useDelegatedValidators,
+  useAllValidatorsBonded,
+  useAllValidatorsUnbonded,
   useMntlUsd,
   useTotalUnbonding,
+  useDelegatedValidators,
 } from "../data";
 import ModalContainer from "./ModalContainer";
-import { isObjEmpty } from "../lib";
 import { toast } from "react-toastify";
 
 const denomDisplay = defaultChainSymbol;
@@ -41,10 +43,20 @@ const Unbonded = ({
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
   const {
     delegatedValidators,
-    totalDelegatedAmount,
-    isLoadingDelegatedAmount,
     errorDelegatedAmount,
+    isLoadingDelegatedAmount,
+    totalDelegatedAmount,
   } = useDelegatedValidators();
+  const {
+    allValidatorsBonded,
+    errorValidatorsBonded,
+    isLoadingValidatorsBonded,
+  } = useAllValidatorsBonded();
+  const {
+    allValidatorsUnbonded,
+    errorValidatorsUnbonded,
+    isLoadingValidatorsUnbonded,
+  } = useAllValidatorsUnbonded();
 
   const selectedUnbonding = allUnbonding
     ?.filter((unbondingObject) =>
@@ -108,20 +120,40 @@ const Unbonded = ({
     }
   };
 
+  const isConnected = !(
+    isLoadingUnbonding ||
+    errorUnbonding ||
+    status != "Connected"
+  );
+
   return (
     <div className="nav-bg p-3 rounded-4 gap-3">
       <div className="d-flex flex-column gap-2">
         <p
           className={`caption d-flex gap-2 align-items-center
-          ${status === "Connected" ? "null" : "text-gray"}`}
+          ${isConnected ? "null" : "text-gray"}`}
         >
           Undelegating
         </p>
-        <p className={status === "Connected" ? "caption" : "caption text-gray"}>
-          {unbondingDisplay}&nbsp;{denomDisplay}
+        <p className={isConnected ? "caption" : "caption text-gray"}>
+          {isConnected
+            ? getBalanceStyle(unbondingDisplay, "caption", "caption2")
+            : getBalanceStyle(
+                unbondingDisplay,
+                "caption text-gray",
+                "caption2 text-gray"
+              )}
+          &nbsp;{denomDisplay}
         </p>
         <p className={status === "Connected" ? "caption" : "caption text-gray"}>
-          {unbondingInUSDDisplay}&nbsp;{"$USD"}
+          {isConnected
+            ? getBalanceStyle(unbondingInUSDDisplay, "caption2", "small")
+            : getBalanceStyle(
+                unbondingInUSDDisplay,
+                "caption2 text-gray",
+                "small text-gray"
+              )}
+          &nbsp;{"$USD"}
         </p>
         <div className="d-flex justify-content-end">
           {allUnbonding?.length != 0 && !isSubmitDisabled ? (
@@ -215,7 +247,7 @@ const Unbonded = ({
                   className="d-flex w-100 mt-3"
                   style={{ overflow: "auto", maxHeight: "400px" }}
                 >
-                  <table className="table">
+                  <table className="table text-white">
                     <thead className="bt-0">
                       <tr>
                         <th className="no-text-break text-white" scope="col">
@@ -230,53 +262,128 @@ const Unbonded = ({
                       </tr>
                     </thead>
                     <tbody>
-                      {allUnbonding?.map((item, index) => (
-                        <tr key={index}>
-                          <td
-                            className="text-white"
-                            onClick={() => {
-                              stakeDispatch({
-                                type: "SET_UNDELEGATION_SRC_ADDRESS",
-                                payload: item?.address,
-                              });
-                              setUnBondingModal(false);
-                              setUnDelegateModal(true);
-                            }}
-                          >
-                            {
-                              delegatedValidators?.find(
-                                (ele) => ele?.operatorAddress === item?.address
-                              )?.description?.moniker
-                            }
-                            <i className="bi bi-arrow-up-right" />
-                          </td>
-                          <td className="text-white">
-                            {fromDenom(item?.balance)}
-                          </td>
-                          <td className="text-white">
-                            {/* Calculate and display number of days left */}
-                            {Math.floor(
-                              ((item?.completion_time?.seconds?.low +
-                                item?.completion_time?.seconds?.high) *
-                                1000 -
-                                new Date().getTime()) /
-                                1000 /
-                                60 /
-                                60 /
-                                24
-                            )}{" "}
-                            days,{" "}
-                            {/* Calculate and display number of hours left */}
-                            {(
-                              ((item?.completion_time?.seconds?.low +
-                                item?.completion_time?.seconds?.high) %
-                                86400) /
-                              3600
-                            ).toFixed(2)}{" "}
-                            hours
-                          </td>
-                        </tr>
-                      ))}
+                      {activeValidators
+                        ? allUnbonding
+                            ?.filter((item) =>
+                              allValidatorsBonded?.find(
+                                (e) => e?.operatorAddress == item?.address
+                              )
+                            )
+                            ?.map((item, index) => (
+                              <tr key={index}>
+                                <td
+                                  className="text-white"
+                                  onClick={() => {
+                                    stakeDispatch({
+                                      type: "SET_UNDELEGATION_SRC_ADDRESS",
+                                      payload: item?.address,
+                                    });
+                                  }}
+                                >
+                                  <a
+                                    className="text-truncate"
+                                    style={{ maxWidth: "200px" }}
+                                    href={`https://explorer.assetmantle.one/validators/${item?.address}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
+                                    {" "}
+                                    {
+                                      allValidatorsBonded?.find(
+                                        (ele) =>
+                                          ele?.operatorAddress === item?.address
+                                      )?.description?.moniker
+                                    }
+                                    <i className="bi bi-arrow-up-right" />
+                                  </a>
+                                </td>
+                                <td className="text-white">
+                                  {getBalanceStyle(
+                                    fromChainDenom(item?.balance),
+                                    "caption",
+                                    "caption2"
+                                  )}
+                                </td>
+                                <td className="text-white">
+                                  {/* Calculate and display number of days left */}
+                                  {Math.floor(
+                                    ((item?.completion_time?.seconds?.low +
+                                      item?.completion_time?.seconds?.high) *
+                                      1000 -
+                                      new Date().getTime()) /
+                                      1000 /
+                                      60 /
+                                      60 /
+                                      24
+                                  )}{" "}
+                                  days,{" "}
+                                  {/* Calculate and display number of hours left */}
+                                  {(
+                                    ((item?.completion_time?.seconds?.low +
+                                      item?.completion_time?.seconds?.high) %
+                                      86400) /
+                                    3600
+                                  ).toFixed(2)}{" "}
+                                  hours
+                                </td>
+                              </tr>
+                            ))
+                        : allUnbonding
+                            ?.filter((item) =>
+                              allValidatorsUnbonded?.find(
+                                (e) => e?.operatorAddress == item?.address
+                              )
+                            )
+                            ?.map((item, index) => {
+                              <tr key={index}>
+                                <td
+                                  className="text-white"
+                                  onClick={() => {
+                                    stakeDispatch({
+                                      type: "SET_UNDELEGATION_SRC_ADDRESS",
+                                      payload: item?.address,
+                                    });
+                                  }}
+                                >
+                                  {
+                                    allValidatorsBonded?.find(
+                                      (ele) =>
+                                        ele?.operatorAddress === item?.address
+                                    )?.description?.moniker
+                                  }
+                                  <i className="bi bi-arrow-up-right" />
+                                </td>
+                                <td className="text-white">
+                                  {getBalanceStyle(
+                                    fromChainDenom(item?.balance),
+                                    "caption",
+                                    "caption2"
+                                  )}
+                                </td>
+                                <td className="text-white">
+                                  {/* Calculate and display number of days left */}
+                                  {Math.floor(
+                                    ((item?.completion_time?.seconds?.low +
+                                      item?.completion_time?.seconds?.high) *
+                                      1000 -
+                                      new Date().getTime()) /
+                                      1000 /
+                                      60 /
+                                      60 /
+                                      24
+                                  )}{" "}
+                                  days,{" "}
+                                  {/* Calculate and display number of hours left */}
+                                  {(
+                                    ((item?.completion_time?.seconds?.low +
+                                      item?.completion_time?.seconds?.high) %
+                                      86400) /
+                                    3600
+                                  ).toFixed(2)}{" "}
+                                  hours
+                                </td>
+                              </tr>;
+                            })}
                     </tbody>
                   </table>
                 </div>
@@ -285,99 +392,6 @@ const Unbonded = ({
           </div>
         </div>
       </ModalContainer>
-      {/* Undelegation Modal */}
-      {
-        <ModalContainer active={unDelegateModal} setActive={setUnDelegateModal}>
-          <div className="d-flex flex-column bg-gray-700 m-auto p-4 rounded-3 w-100">
-            <div className="d-flex align-items-center justify-content-between">
-              <h5 className="body2 text-primary d-flex align-items-center gap-2">
-                <button
-                  className="btn-close primary bg-t"
-                  onClick={() => setUnDelegateModal(false)}
-                  style={{ background: "none" }}
-                >
-                  <span className="text-primary">
-                    <i className="bi bi-chevron-left" />
-                  </span>
-                </button>
-                Undelegate
-              </h5>
-              <button
-                className="btn-close primary bg-t"
-                onClick={() => setUnDelegateModal(false)}
-                style={{ background: "none" }}
-              >
-                <span className="text-primary">
-                  <i className="bi bi-x-lg" />
-                </span>
-              </button>
-            </div>
-            <div className="py-4 text-center d-flex flex-column gap-1">
-              <div className="d-flex justify-content-between">
-                <label htmlFor="delegationAmount caption2 mb-1">
-                  Undelegate amount
-                </label>
-                <small className="caption2 text-gray">
-                  Delegated Amount:
-                  {fromDenom(
-                    delegatedValidators?.find(
-                      (item) =>
-                        item?.operatorAddress === stakeState?.undelegationSrc
-                    )?.delegatedAmount
-                  )}
-                </small>
-              </div>
-              <div>
-                <div className="p-3 border-white py-2 d-flex rounded-2 gap-2 am-input">
-                  <input
-                    className="bg-t"
-                    id="delegationAmount"
-                    style={{ flex: "1", border: "none", outline: "none" }}
-                    value={stakeState?.undelegationAmount}
-                    type="text"
-                    placeholder="Enter Undelegate Amount"
-                    onChange={(e) =>
-                      stakeDispatch({
-                        type: "CHANGE_UNDELEGATION_AMOUNT",
-                        payload: e.target.value,
-                      })
-                    }
-                  ></input>
-                  <button
-                    onClick={() =>
-                      stakeDispatch({
-                        type: "SET_MAX_UNDELEGATION_AMOUNT",
-                      })
-                    }
-                    className="text-primary"
-                  >
-                    Max
-                  </button>
-                </div>
-                <small
-                  id="amountInputErrorMsg"
-                  className="form-text text-danger d-flex align-items-center gap-1"
-                >
-                  {stakeState?.errorMessages?.undelegationAmountErrorMsg && (
-                    <i className="bi bi-info-circle" />
-                  )}{" "}
-                  {stakeState?.errorMessages?.undelegationAmountErrorMsg}
-                </small>
-              </div>
-            </div>
-            <div className="d-flex align-items-center gap-2 justify-content-end">
-              <button
-                type="button"
-                disabled={!isObjEmpty(stakeState?.errorMessages)}
-                className="button-primary px-5 py-2"
-                onClick={handleUndelegate}
-              >
-                Submit
-              </button>
-            </div>
-          </div>
-        </ModalContainer>
-      }
     </div>
   );
 };

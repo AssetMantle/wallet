@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import {
   defaultChainName,
   defaultChainSymbol,
+  getBalanceStyle,
   placeholderMntlUsdValue,
   placeholderTotalDelegations,
 } from "../config";
@@ -15,22 +16,27 @@ import {
   useAllValidators,
   useDelegatedValidators,
   useMntlUsd,
+  useAllValidatorsBonded,
+  useAllValidatorsUnbonded,
 } from "../data";
-import { isObjEmpty } from "../lib";
+import { shiftDecimalPlaces } from "../lib";
 import ModalContainer from "./ModalContainer";
 
 const denomDisplay = defaultChainSymbol;
 
-const Delegations = ({
-  totalTokens,
-  stakeState,
-  stakeDispatch,
-  notify,
-  UnDelegateModal,
-  setUnDelegateModal,
-}) => {
+const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
   const { allValidators, isLoadingValidators, errorValidators } =
     useAllValidators();
+  const {
+    allValidatorsBonded,
+    errorValidatorsBonded,
+    isLoadingValidatorsBonded,
+  } = useAllValidatorsBonded();
+  const {
+    allValidatorsUnbonded,
+    errorValidatorsUnbonded,
+    isLoadingValidatorsUnbonded,
+  } = useAllValidatorsUnbonded();
 
   const [searchValue, setSearchValue] = useState("");
   const [activeValidators, setActiveValidators] = useState(true);
@@ -44,10 +50,10 @@ const Delegations = ({
   } = useDelegatedValidators();
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
   let validatorsArray = allValidators.sort((a, b) => b.tokens - a.tokens);
-
   // modal handler
 
   const [ReDelegateModal, setReDelegateModal] = useState(false);
+  const [UnDelegateModal, setUnDelegateModal] = useState(false);
 
   //Put all foundation nodes at the end of the array
   validatorsArray.forEach((item, index) => {
@@ -82,7 +88,7 @@ const Delegations = ({
     errorMntlUsdValue | isNaN(totalDelegatedAmount) ||
     isNaN(parseFloat(mntlUsdValue))
       ? placeholderMntlUsdValue
-      : (fromChainDenom(totalDelegatedAmount) * parseFloat(mntlUsdValue))
+      : (fromDenom(totalDelegatedAmount) * parseFloat(mntlUsdValue))
           .toFixed(6)
           .toString();
 
@@ -169,10 +175,16 @@ const Delegations = ({
     e.target.src = "/validatorAvatars/alt.png";
   };
 
+  const isConnected = !(
+    isLoadingDelegatedAmount ||
+    errorDelegatedAmount ||
+    status != "Connected"
+  );
+
   return (
     <>
       {stakeState?.selectedValidators?.length ? (
-        <p>
+        <p className="text-gray">
           {delegatedOutOfSelectedValidators?.length} out of{" "}
           {stakeState?.selectedValidators?.length} selected are Delegated
           Validators
@@ -181,30 +193,36 @@ const Delegations = ({
       <div className="nav-bg p-3 rounded-4 gap-3">
         <div className="d-flex flex-column gap-2">
           {stakeState?.selectedValidators?.length ? (
-            <p className="caption d-flex gap-2 align-items-center">
-              Cumulative Delegated
-            </p>
+            <p className="caption d-flex gap-2 align-items-center">Delegated</p>
           ) : (
             <p
               className={`caption d-flex gap-2 align-items-center ${
-                status === "Connected" ? null : "text-gray"
+                isConnected ? null : "text-gray"
               }`}
             >
               {" "}
-              Delegated
+              Cumulative Delegated
             </p>
           )}
-          <p
-            className={status === "Connected" ? "caption" : "caption text-gray"}
-          >
-            {delegationsDisplay}&nbsp;{denomDisplay}
+          <p className={isConnected ? "caption" : "caption text-gray"}>
+            {isConnected
+              ? getBalanceStyle(delegationsDisplay, "caption", "caption2")
+              : getBalanceStyle(
+                  delegationsDisplay,
+                  "caption text-gray",
+                  "caption2 text-gray"
+                )}
+            &nbsp;{denomDisplay}
           </p>
-          <p
-            className={
-              status === "Connected" ? "caption2" : "caption2 text-gray"
-            }
-          >
-            {delegationsInUSDDisplay}&nbsp;{"$USD"}
+          <p className={isConnected ? "caption2" : "caption2 text-gray"}>
+            {isConnected
+              ? getBalanceStyle(delegationsInUSDDisplay, "caption2 ", "small")
+              : getBalanceStyle(
+                  delegationsInUSDDisplay,
+                  "caption2 text-gray",
+                  "small text-gray"
+                )}
+            &nbsp;{"$USD"}
           </p>
           {showRedelegateUndelegateAndClaim &&
           stakeState?.selectedValidators?.length === 1 ? (
@@ -274,16 +292,21 @@ const Delegations = ({
               </div>
               <div className="py-4 text-center d-flex flex-column gap-1">
                 <div className="d-flex justify-content-between">
-                  <label htmlFor="delegationAmount caption2 mb-1">
+                  <label htmlFor="delegationAmount" className="caption2 mb-1">
                     Undelegate amount
                   </label>
                   <small className="caption2 text-gray">
-                    Delegated Amount:
-                    {fromDenom(
-                      delegatedValidators?.find(
-                        (item) =>
-                          item?.operatorAddress === stakeState?.undelegationSrc
-                      )?.delegatedAmount
+                    Delegated Amount:{" "}
+                    {getBalanceStyle(
+                      fromChainDenom(
+                        delegatedValidators?.find(
+                          (item) =>
+                            item?.operatorAddress ===
+                            stakeState?.undelegationSrc
+                        )?.delegatedAmount
+                      ),
+                      "caption2 text-gray",
+                      "small text-gray"
                     )}
                   </small>
                 </div>
@@ -328,7 +351,9 @@ const Delegations = ({
               <div className="d-flex align-items-center gap-2 justify-content-end">
                 <button
                   type="button"
-                  disabled={!isObjEmpty(stakeState?.errorMessages)}
+                  disabled={
+                    stakeState?.errorMessages?.undelegationAmountErrorMsg
+                  }
                   className="button-primary px-5 py-2"
                   onClick={handleUndelegate}
                 >
@@ -416,12 +441,16 @@ const Delegations = ({
               </div>
               <p className="ps-3 my-2 caption2">
                 Delegated Amount:{" "}
-                {fromChainDenom(
-                  delegatedValidators?.find(
-                    (item) =>
-                      item?.operatorAddress ===
-                      stakeState?.selectedValidators[0]
-                  )?.delegatedAmount
+                {getBalanceStyle(
+                  fromChainDenom(
+                    delegatedValidators?.find(
+                      (item) =>
+                        item?.operatorAddress ===
+                        stakeState?.selectedValidators[0]
+                    )?.delegatedAmount
+                  ),
+                  "caption",
+                  "caption2"
                 )}
               </p>
               <p className="text-muted caption2 text-gray my-2">Delegate To</p>
@@ -518,13 +547,12 @@ const Delegations = ({
                     </thead>
                     <tbody>
                       {activeValidators
-                        ? validatorsArray
-                            ?.filter(
-                              (item) =>
-                                item?.status === 3 &&
-                                item?.description?.moniker
-                                  .toLowerCase()
-                                  .includes(searchValue.toLowerCase())
+                        ? allValidatorsBonded
+                            ?.sort((a, b) => b.tokens - a.tokens)
+                            ?.filter((item) =>
+                              item?.description?.moniker
+                                .toLowerCase()
+                                .includes(searchValue.toLowerCase())
                             )
                             ?.map((item, index) => (
                               <tr key={index} className="text-white">
@@ -577,36 +605,48 @@ const Delegations = ({
                                   )}
                                   %
                                 </td>
-                                {item?.commission?.commissionRates?.rate ==
-                                0 ? (
-                                  <td>0 %</td>
-                                ) : (
-                                  <td>
-                                    {item?.commission?.commissionRates?.rate.slice(
-                                      0,
-                                      -16
-                                    )}{" "}
-                                    %
-                                  </td>
-                                )}
-                                <td>{item?.tokens / 1000000}</td>
+
+                                <td>
+                                  {shiftDecimalPlaces(
+                                    item?.commission?.commissionRates?.rate,
+                                    -16
+                                  )}{" "}
+                                  %
+                                </td>
+                                <td>
+                                  {getBalanceStyle(
+                                    fromChainDenom(item?.tokens, 2),
+                                    "caption",
+                                    "caption2"
+                                  )}
+                                </td>
                                 <td>
                                   {" "}
                                   {delegatedValidators?.find(
                                     (element) =>
                                       element?.operatorAddress ==
                                       item?.operatorAddress
-                                  )?.delegatedAmount || "-"}
+                                  )
+                                    ? getBalanceStyle(
+                                        fromChainDenom(
+                                          delegatedValidators?.find(
+                                            (element) =>
+                                              element?.operatorAddress ==
+                                              item?.operatorAddress
+                                          )?.delegatedAmount
+                                        ),
+                                        "caption",
+                                        "caption2"
+                                      )
+                                    : "-"}
                                 </td>
                               </tr>
                             ))
-                        : validatorsArray
-                            ?.filter(
-                              (item) =>
-                                item?.status === 1 &&
-                                item?.description?.moniker
-                                  .toLowerCase()
-                                  .includes(searchValue.toLowerCase())
+                        : allValidatorsUnbonded
+                            ?.filter((item) =>
+                              item?.description?.moniker
+                                .toLowerCase()
+                                .includes(searchValue.toLowerCase())
                             )
                             ?.map((item, index) => (
                               <tr key={index} className="text-white">
@@ -657,22 +697,38 @@ const Delegations = ({
                                   )}
                                   %
                                 </td>
-                                {item?.commission?.commissionRates?.rate ==
-                                0 ? (
-                                  <td>0 %</td>
-                                ) : (
-                                  <td>
-                                    {item?.commission?.commissionRates?.rate.slice(
-                                      0,
-                                      -16
-                                    )}{" "}
-                                    %
-                                  </td>
-                                )}
-                                <td>{item?.tokens / 1000000}</td>
+
                                 <td>
-                                  {item.delegatedAmount
-                                    ? item.delegatedAmount
+                                  {shiftDecimalPlaces(
+                                    item?.commission?.commissionRates?.rate,
+                                    -16
+                                  )}{" "}
+                                  %
+                                </td>
+                                <td>
+                                  {getBalanceStyle(
+                                    fromChainDenom(item?.tokens, 2),
+                                    "caption",
+                                    "caption2"
+                                  )}
+                                </td>
+                                <td>
+                                  {delegatedValidators?.find(
+                                    (element) =>
+                                      element?.operatorAddress ==
+                                      item?.operatorAddress
+                                  )
+                                    ? getBalanceStyle(
+                                        fromChainDenom(
+                                          delegatedValidators?.find(
+                                            (element) =>
+                                              element?.operatorAddress ==
+                                              item?.operatorAddress
+                                          )?.delegatedAmount
+                                        ),
+                                        "caption",
+                                        "caption2"
+                                      )
                                     : "-"}
                                 </td>
                                 <td>
@@ -689,18 +745,25 @@ const Delegations = ({
                 </div>
               </div>
               <div className="d-flex justify-content-between w-100 mt-4">
-                <label htmlFor="redelegationAmount caption text-gray my-2">
+                <label
+                  htmlFor="redelegationAmount"
+                  className="caption text-gray my-2"
+                >
                   Delegation amount
                 </label>{" "}
                 <small className="caption2 text-gray my-2">
                   Delegated Amount :{" "}
-                  {fromDenom(
-                    delegatedValidators?.find((item) =>
-                      item?.operatorAddress?.includes(
-                        stakeState?.selectedValidators
-                      )
-                    )?.delegatedAmount
-                  ).toString()}
+                  {getBalanceStyle(
+                    fromChainDenom(
+                      delegatedValidators?.find((item) =>
+                        item?.operatorAddress?.includes(
+                          stakeState?.selectedValidators
+                        )
+                      )?.delegatedAmount
+                    ),
+                    "caption2 text-gray",
+                    "small text-gray"
+                  )}
                   &nbsp;
                   {defaultChainSymbol}
                 </small>
@@ -748,7 +811,7 @@ const Delegations = ({
             <div className="d-flex align-items-center gap-2 justify-content-end">
               <button
                 type="button"
-                disabled={!isObjEmpty(stakeState?.errorMessages)}
+                disabled={stakeState?.errorMessages?.redelegationAmountErrorMsg}
                 className="button-primary px-5 py-2"
                 onClick={handleRedelegate}
               >

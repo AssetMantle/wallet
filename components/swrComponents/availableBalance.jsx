@@ -1,58 +1,64 @@
-import React from "react";
 import { useChain } from "@cosmos-kit/react";
+import BigNumber from "bignumber.js";
+import React from "react";
 import {
-  defaultChainSymbol,
-  placeholderAvailableBalance,
-  placeholderMntlUsdValue,
   defaultChainName,
+  defaultChainSymbol,
+  getBalanceStyle,
 } from "../../config";
-import { fromDenom, useAvailableBalance, useMntlUsd } from "../../data";
+import {
+  decimalize,
+  fromChainDenom,
+  useAvailableBalance,
+  useMntlUsd,
+} from "../../data";
 
 const denomDisplay = defaultChainSymbol;
 
 export const AvailableBalance = () => {
   console.log("inside AvailableBalance");
   const walletManager = useChain(defaultChainName);
-  const { getSigningStargateClient, address, status } = walletManager;
+  const { status } = walletManager;
+  const { availableBalance } = useAvailableBalance();
 
-  const { availableBalance, errorAvailableBalance, isLoadingAvailableBalance } =
-    useAvailableBalance();
   const balanceDisplay =
-    errorAvailableBalance || isNaN(fromDenom(availableBalance))
-      ? placeholderAvailableBalance
-      : fromDenom(availableBalance);
+    status === "Connected"
+      ? getBalanceStyle(fromChainDenom(availableBalance), "caption", "caption2")
+      : getBalanceStyle(
+          fromChainDenom(availableBalance),
+          "caption text-gray",
+          "caption2 text-gray"
+        );
 
   return (
     <>
-      {isLoadingAvailableBalance ? (
-        <p>Loading...</p>
-      ) : (
-        <p className={status === "Connected" ? "caption" : "caption text-gray"}>
-          {balanceDisplay}&nbsp;{denomDisplay}
-        </p>
-      )}
+      <p className={status === "Connected" ? "caption" : "caption text-gray"}>
+        {balanceDisplay} {denomDisplay}
+      </p>
     </>
   );
 };
 
 export const AvailableBalanceUsd = () => {
-  console.log("inside AvailableBalanceUsd");
-  const walletManager = useChain(defaultChainName);
-  const { getSigningStargateClient, address, status } = walletManager;
+  const { availableBalance } = useAvailableBalance();
+  const { mntlUsdValue } = useMntlUsd();
 
-  const { availableBalance, errorAvailableBalance } = useAvailableBalance();
+  const balanceInUSDDisplayUnstyled = BigNumber(
+    fromChainDenom(availableBalance)
+  )
+    .multipliedBy(BigNumber(decimalize(mntlUsdValue)))
+    .toString();
 
-  const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
+  const balanceInUSDDisplay = getBalanceStyle(
+    decimalize(balanceInUSDDisplayUnstyled),
+    "caption2 text-gray",
+    "small text-gray"
+  );
 
-  const balanceInUSDDisplay =
-    errorMntlUsdValue ||
-    errorAvailableBalance ||
-    isNaN(fromDenom(availableBalance)) ||
-    isNaN(parseFloat(mntlUsdValue))
-      ? placeholderMntlUsdValue
-      : (fromDenom(availableBalance) * parseFloat(mntlUsdValue))
-          .toFixed(6)
-          .toString();
-
-  return <p className="caption2 text-gray">${balanceInUSDDisplay}&nbsp;$USD</p>;
+  return (
+    <p className="caption2 text-gray">
+      ${balanceInUSDDisplay}
+      &nbsp;$USD
+    </p>
+  );
 };
