@@ -5,15 +5,7 @@ import { useRouter } from "next/router";
 import { QRCodeSVG } from "qrcode.react";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import {
-  Connected,
-  Connecting,
-  Disconnected,
-  Errored,
-  NotExist,
-  Rejected,
-  WalletConnectComponent,
-} from "../components";
+import { ConnectButton, Connected } from "../components";
 import { defaultChainName, toastConfig } from "../config";
 import {
   ConnectOptionObject,
@@ -31,13 +23,8 @@ export default function Header() {
   const router = useRouter();
 
   // Events
-  const onClickConnect = (e) => {
-    e.preventDefault();
-    connect();
-  };
 
   const onClickDisconnect = async (e) => {
-    console.log("inside onClickDisconnect");
     e.preventDefault();
     try {
       await disconnect(wallet?.name);
@@ -47,14 +34,9 @@ export default function Header() {
     }
   };
 
-  const handleOnClick = (e) => {
+  const handleOnClickConnected = (e) => {
     e.preventDefault();
-
-    if (status === "Connected") {
-      setShowModal(false);
-    } else {
-      openView();
-    }
+    setShowModal(false);
   };
 
   const displayAddress = address || placeholderAddress;
@@ -171,50 +153,17 @@ export default function Header() {
 
   // Component
   const connectWalletButton = (
-    <WalletConnectComponent
-      wallet={cleanString(wallet?.prettyName)}
-      walletStatus={status}
-      disconnected={
-        <Disconnected
-          buttonText="Connect"
-          buttonIcon="bi-wallet2"
-          onClick={onClickConnect}
-        />
-      }
-      connecting={<Connecting />}
-      connected={
-        <Connected
-          buttonText={address ? shortenAddress(address) : "Connected"}
-          icon={
-            ConnectOptionObject?.[wallet?.prettyName.toLocaleLowerCase()]?.icon
-          }
-          onClick={handleOnClick}
-        >
-          {connectedModalJSX}
-        </Connected>
-      }
-      rejected={
-        <Rejected
-          buttonText="Reconnect"
-          buttonIcon="bi-patch-exclamation-fill"
-          onClick={onClickDisconnect}
-        />
-      }
-      errored={
-        <Errored
-          buttonText="Not Connected"
-          buttonIcon="bi-patch-exclamation-fill"
-          onClick={onClickDisconnect}
-        />
-      }
-      notExist={
-        <NotExist
-          buttonText="Not Connected"
-          buttonIcon="bi-patch-exclamation-fill"
-          onClick={onClickDisconnect}
-        />
-      }
-    />
+    <ConnectButton>
+      <Connected
+        buttonText={address ? shortenAddress(address) : "Connected"}
+        icon={
+          ConnectOptionObject?.[wallet?.prettyName.toLocaleLowerCase()]?.icon
+        }
+        onClick={handleOnClickConnected}
+      >
+        {connectedModalJSX}
+      </Connected>
+    </ConnectButton>
   );
 
   return (

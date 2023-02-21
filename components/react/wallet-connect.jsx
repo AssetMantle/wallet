@@ -35,72 +35,67 @@ export const ConnectWalletButton = ({
   dataBsTarget,
   children,
 }) => {
-  return !isLoading ? (
-    dataBsToggle || dataBsTarget ? (
+  return dataBsToggle || dataBsTarget ? (
+    <button
+      type="button"
+      className="button-secondary d-flex gap-1 align-items-center am-connect py-1 px-3"
+      style={{ textTransform: "none", cursor: "pointer" }}
+      data-bs-toggle={dataBsToggle}
+      data-bs-target={dataBsTarget}
+      disabled={isDisabled}
+      onClick={onClickConnectBtn}
+    >
+      {icon && (
+        <div
+          className="position-relative rounded-circle"
+          style={{ width: "23px", aspectRatio: "1/1" }}
+        >
+          <img layout="fill" className="rounded-circle" src={icon} alt="#" />
+        </div>
+      )}
+      {buttonIcon && <i className={`bi ${buttonIcon}`}></i>}
+      {isLoading && (
+        <span
+          className="spinner-grow spinner-grow-sm"
+          role="status"
+          aria-hidden="true"
+        ></span>
+      )}
+      &nbsp;{buttonText || "Connect Wallet"}
+    </button>
+  ) : (
+    <div className="nav-item dropdown">
       <button
         type="button"
-        className="button-secondary d-flex gap-1 align-items-center am-connect py-1 px-3"
-        data-bs-toggle={dataBsToggle}
-        data-bs-target={dataBsTarget}
-        disabled={isDisabled}
+        className="button-secondary d-flex gap-2 align-items-center nav-link dropdown-toggle am-nav-item py-1 px-3 text-primary"
+        style={{ textTransform: "none", cursor: "pointer" }}
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
         onClick={onClickConnectBtn}
+        id="navbarDropdown"
       >
         {icon && (
           <div
             className="position-relative rounded-circle"
-            style={{ width: "23px", aspectRatio: "1/1" }}
+            style={{ width: "20px", aspectRatio: "1/1" }}
           >
             <img layout="fill" className="rounded-circle" src={icon} alt="#" />
           </div>
         )}
         {buttonIcon && <i className={`bi ${buttonIcon}`}></i>}
-        {buttonText || "Connect Wallet"}
+        {isLoading && (
+          <span
+            className="spinner-grow spinner-grow-sm"
+            role="status"
+            aria-hidden="true"
+          ></span>
+        )}
+        <span className="caption2 text-primary">
+          &nbsp;{buttonText ? buttonText : "Connect Wallet"}
+        </span>
       </button>
-    ) : (
-      <div className="nav-item dropdown">
-        <button
-          type="button"
-          className="button-secondary d-flex gap-2 align-items-center nav-link dropdown-toggle am-nav-item py-1 px-3 text-lowercase text-primary"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-          // disabled={isDisabled}
-          onClick={onClickConnectBtn}
-          id="navbarDropdown"
-        >
-          {icon && (
-            <div
-              className="position-relative rounded-circle"
-              style={{ width: "20px", aspectRatio: "1/1" }}
-            >
-              <img
-                layout="fill"
-                className="rounded-circle"
-                src={icon}
-                alt="#"
-              />
-            </div>
-          )}
-          {buttonIcon && <i className={`bi ${buttonIcon}`}></i>}
-          <span className="caption2 text-primary">
-            {buttonText ? buttonText : "Connect Wallet"}
-          </span>
-        </button>
-        <div className="dropdown-menu">{children}</div>
-      </div>
-    )
-  ) : (
-    <button
-      type="button"
-      className="button-secondary d-flex gap-1 align-items-center am-nav-item py-1 px-3"
-      disabled
-    >
-      <span
-        className="spinner-grow spinner-grow-sm"
-        role="status"
-        aria-hidden="true"
-      ></span>
-      Loading...
-    </button>
+      <div className="dropdown-menu">{children}</div>
+    </div>
   );
 };
 
@@ -135,14 +130,21 @@ export const Connected = ({
   );
 };
 
-export const Connecting = () => {
-  return <ConnectWalletButton isLoading={true} />;
+export const Connecting = ({ onClick }) => {
+  return (
+    <ConnectWalletButton
+      isLoading={true}
+      buttonText={"Loading..."}
+      onClickConnectBtn={onClick}
+    />
+  );
 };
 
-export const Rejected = ({ buttonText, onClick }) => {
+export const Rejected = ({ buttonText, buttonIcon, onClick }) => {
   return (
     <ConnectWalletButton
       buttonText={buttonText}
+      buttonIcon={buttonIcon}
       isDisabled={false}
       onClickConnectBtn={onClick}
     />
