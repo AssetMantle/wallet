@@ -78,13 +78,19 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
       theme: "dark",
     });
 
-    const validatorAddresses = stakeState?.selectedValidators?.length
-      ? stakeState?.selectedValidators
-      : delegatedValidators?.map?.(
-          (validatorObject) => validatorObject?.operatorAddress
-        );
+    let validatorAddresses;
+    let delegatedValidatorsArray = delegatedValidators?.map?.(
+      (validatorObject) => validatorObject?.operatorAddress
+    );
 
-    console.log("validatorAddresses: ", validatorAddresses);
+    if (stakeState?.selectedValidators?.length > 0) {
+      // filter out only the validator addresses which are delegated
+      validatorAddresses = stakeState?.selectedValidators?.filter?.(
+        (validator) => delegatedValidatorsArray?.includes?.(validator)
+      );
+    } else {
+      validatorAddresses = delegatedValidatorsArray;
+    }
 
     // call the batch reward claim transaction
     const { response, error } = await sendRewardsBatched(
