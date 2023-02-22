@@ -16,10 +16,9 @@ import {
   decimalize,
   depositMntlToken,
   formConstants,
-  fromChainDenom,
+  fromDenom,
   parentERC20TokenAddress,
   placeholderAddressEth,
-  toChainDenom,
   toDenom,
   useAllowance,
 } from "../data";
@@ -42,15 +41,15 @@ const EthToPolygonBridge = () => {
   const { address, isConnected, connector } = useAccount();
 
   // get the MNTL token balance using wagmi hook
-  const mntlEthBalanceObject = useBalance({
+  const { data: mntlEthBalanceData } = useBalance({
     address: address,
     token: parentERC20TokenAddress,
   });
 
-  const mntlEthBalance = toChainDenom(mntlEthBalanceObject?.data?.formatted);
+  const mntlEthBalance = toDenom(mntlEthBalanceData?.formatted);
 
   // get the ETH balance using wagmi hook
-  const ethBalanceObject = useBalance({
+  const { data: ethBalanceData } = useBalance({
     address: address,
   });
 
@@ -66,18 +65,9 @@ const EthToPolygonBridge = () => {
     switch (action.type) {
       case "CHANGE_AMOUNT": {
         // if amount is greater than current balance, populate error message and update amount
-        if (!action.payload) {
-          return {
-            ...state,
-            transferAmount: action.payload,
-            errorMessages: {
-              ...state.errorMessages,
-              transferAmountErrorMsg: formConstants.requiredErrorMsg,
-            },
-          };
-        } else if (
-          isNaN(parseFloat(action.payload)) ||
-          isNaN(toDenom(action.payload))
+        if (
+          BigNumber(action.payload).isNaN() ||
+          BigNumber(action.payload) <= 0
         ) {
           return {
             ...state,
@@ -88,9 +78,10 @@ const EthToPolygonBridge = () => {
             },
           };
         } else if (
-          isNaN(parseFloat(mntlEthBalance)) ||
-          toDenom(action.payload) + parseFloat(defaultChainGasFee) >
-            parseFloat(mntlEthBalance)
+          BigNumber(mntlEthBalance).isNaN() ||
+          BigNumber(toDenom(action.payload)).isGreaterThan(
+            BigNumber(mntlEthBalance)
+          )
         ) {
           return {
             ...state,
@@ -115,12 +106,12 @@ const EthToPolygonBridge = () => {
       case "SET_MAX_AMOUNT": {
         // if available balance is invalid, set error message
         if (
-          isNaN(parseFloat(mntlEthBalance)) ||
-          parseFloat(mntlEthBalance) < parseFloat(defaultChainGasFee)
+          BigNumber(mntlEthBalance).isNaN() ||
+          BigNumber(mntlEthBalance).isLessThan(BigNumber(defaultChainGasFee))
         ) {
           return {
             ...state,
-            transferAmount: 0,
+            transferAmount: mntlEthBalance,
             errorMessages: {
               ...state.errorMessages,
               transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
@@ -133,9 +124,7 @@ const EthToPolygonBridge = () => {
           delete state.errorMessages?.transferAmountErrorMsg;
           return {
             ...state,
-            transferAmount: fromChainDenom(
-              parseFloat(mntlEthBalance) - parseFloat(defaultChainGasFee)
-            ).toString(),
+            transferAmount: fromDenom(mntlEthBalance),
           };
         }
       }
@@ -332,30 +321,25 @@ const EthToPolygonBridge = () => {
   };
 
   // DISPLAY VARIABLES
+  const isWalletEthConnected = isMounted() && isConnected;
   const displayShortenedAddress = shortenEthAddress(
     address || placeholderAddressEth
   );
   // const displayShortenedAddress = placeholderAddressEth;
-  const displayAvailableBalance =
-    !mntlEthBalanceObject?.data ||
-    mntlEthBalanceObject?.isLoading ||
-    mntlEthBalanceObject?.isError
-      ? decimalize(placeholderAvailableBalance)
-      : decimalize(mntlEthBalanceObject?.data?.formatted);
+  const displayAvailableBalance = !isWalletEthConnected
+    ? decimalize(placeholderAvailableBalance)
+    : decimalize(mntlEthBalanceData?.formatted);
   const displayAvailableBalanceDenom = defaultChainSymbol;
-  const displayEthBalance =
-    !ethBalanceObject?.data ||
-    ethBalanceObject?.isLoading ||
-    ethBalanceObject?.isError
-      ? decimalize(placeholderAvailableBalance)
-      : decimalize(ethBalanceObject?.data?.formatted);
+
+  const displayEthBalance = !isWalletEthConnected
+    ? decimalize(placeholderAvailableBalance)
+    : decimalize(ethBalanceData?.formatted);
   const displayEthBalanceDenom = ethereumChainSymbol;
 
   const displayInputAmountValue = formState?.transferAmount;
   const isFormAmountError = formState?.errorMessages?.transferAmountErrorMsg;
   const displayFormAmountErrorMsg =
     formState?.errorMessages?.transferAmountErrorMsg;
-  const isWalletEthConnected = isMounted() && isConnected;
   const isSubmitDisabled =
     !isWalletEthConnected || !isObjEmpty(formState?.errorMessages);
   const isApproveRequired =
@@ -429,14 +413,7 @@ const EthToPolygonBridge = () => {
     " isApproveRequired: ",
     isApproveRequired
   ); */
-  console.log(
-    "mounted: ",
-    isMounted(),
-    " address: ",
-    address,
-    " connected: ",
-    isConnected
-  );
+
   return (
     <>
       <div

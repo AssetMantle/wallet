@@ -99,10 +99,6 @@ const useStakeReducer = () => {
         }
       }
       case "CHANGE_DELEGATION_AMOUNT": {
-        console.log(
-          "inside CHANGE_DELEGATION_AMOUNT, action.payload: ",
-          toDenom(action.payload) + parseFloat(defaultChainGasFee)
-        );
         // if amount is greater than current balance, populate error message and update amount
         if (BigNumber(action.payload).isNaN()) {
           return {
@@ -306,10 +302,6 @@ const useStakeReducer = () => {
         const delegatedAmount = delegatedValidators?.find(
           (item) => item?.operatorAddress === state?.selectedValidators[0]
         )?.delegatedAmount;
-        console.log(
-          "inside CHANGE_REDELEGATION_AMOUNT, action.payload: ",
-          toDenom(action.payload) + parseFloat(defaultChainGasFee)
-        );
         if (BigNumber(action.payload).isNaN()) {
           return {
             ...state,
