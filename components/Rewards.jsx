@@ -1,26 +1,25 @@
 import { useChain } from "@cosmos-kit/react";
-import React, { useState } from "react";
 import BigNumber from "bignumber.js";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
 import {
   defaultChainName,
   defaultChainSymbol,
   getBalanceStyle,
-  placeholderMntlUsdValue,
-  placeholderRewards,
 } from "../config";
 import {
   fromChainDenom,
+  fromDenom,
+  isInvalidAddress,
   sendRewardsBatched,
+  sendWithdrawAddress,
   useDelegatedValidators,
   useMntlUsd,
   useTotalRewards,
   useWithdrawAddress,
-  sendWithdrawAddress,
-  isInvalidAddress,
 } from "../data";
-import ModalContainer from "./ModalContainer";
-import { toast } from "react-toastify";
 import { shiftDecimalPlaces } from "../lib";
+import ModalContainer from "./ModalContainer";
 
 const denomDisplay = defaultChainSymbol;
 
@@ -31,36 +30,29 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
   const { withdrawAddress } = useWithdrawAddress();
   const { delegatedValidators } = useDelegatedValidators();
   const { getSigningStargateClient, address, status } = walletManager;
-  const { allRewards, isLoadingRewards, rewardsArray, errorRewards } =
-    useTotalRewards();
-  const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
-  // console.log("allRewards", allRewards, "rewards", rewardsArray);
-  const selectedRewards = rewardsArray
-    ?.filter((rewardObject) =>
-      stakeState?.selectedValidators?.includes?.(rewardObject.validatorAddress)
-    )
-    .reduce(
-      (accumulator, currentValue) =>
-        accumulator.plus(new BigNumber(currentValue?.reward?.[0]?.amount) || 0),
-      new BigNumber("0")
-    );
+  const { allRewards, rewardsArray } = useTotalRewards();
+  const { mntlUsdValue } = useMntlUsd();
+  const selectedArray = rewardsArray?.filter?.((rewardObject) =>
+    stakeState?.selectedValidators?.includes?.(rewardObject.validatorAddress)
+  );
 
-  const cumulativeRewards = errorRewards
-    ? placeholderRewards
-    : fromChainDenom(allRewards);
+  const selectedRewards = selectedArray?.reduce?.(
+    (accumulator, currentValue) =>
+      BigNumber(accumulator)
+        .plus(new BigNumber(currentValue?.reward?.[0]?.amount || 0))
+        .toString(),
+    "0"
+  );
 
-  const rewardsDisplay = stakeState?.selectedValidators?.length
-    ? fromChainDenom(selectedRewards)
-    : cumulativeRewards;
+  const rewardsValue = stakeState?.selectedValidators?.length
+    ? selectedRewards
+    : allRewards;
 
-  const rewardsInUSDDisplay =
-    errorRewards ||
-    errorMntlUsdValue | isNaN(fromChainDenom(allRewards)) ||
-    isNaN(parseFloat(mntlUsdValue))
-      ? placeholderMntlUsdValue
-      : (fromChainDenom(allRewards) * parseFloat(mntlUsdValue))
-          .toFixed(6)
-          .toString();
+  const rewardsDisplay = fromChainDenom(rewardsValue);
+
+  const rewardsInUSDDisplay = BigNumber(fromDenom(rewardsValue))
+    .multipliedBy(BigNumber(mntlUsdValue))
+    .toString();
 
   const handleSubmitClaim = async (e) => {
     e.preventDefault();
@@ -155,11 +147,7 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
 
   const isSubmitDisabled = status != "Connected";
 
-  const isConnected = !(
-    isLoadingRewards ||
-    errorRewards ||
-    status != "Connected"
-  );
+  const isConnected = status == "Connected";
 
   const delegationInfoJSX = (
     <>
