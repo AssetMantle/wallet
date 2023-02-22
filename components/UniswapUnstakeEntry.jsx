@@ -1,4 +1,3 @@
-import { ethers } from "ethers";
 import React from "react";
 import { toast } from "react-toastify";
 import {
@@ -36,8 +35,6 @@ export const UniswapUnstakeEntry = ({ tokenId }) => {
   const { address, isConnected } = useAccount();
   let unstakeTokenTxn, withdrawTokenTxn;
 
-  console.log("entry values: ", { isConnected, address, tokenId });
-
   if (isConnected && address && tokenId) {
     unstakeTokenTxn = stakerContract?.interface?.encodeFunctionData?.(
       "unstakeToken((address,address,uint256,uint256,address),uint256)",
@@ -52,10 +49,7 @@ export const UniswapUnstakeEntry = ({ tokenId }) => {
     );
   }
 
-  const multiCallDataBytesArray = [
-    ethers.utils.arrayify(unstakeTokenTxn),
-    ethers.utils.arrayify(withdrawTokenTxn),
-  ];
+  const multiCallDataBytesArray = [unstakeTokenTxn, withdrawTokenTxn];
 
   const { config } = usePrepareContractWrite({
     ...uniV3StakerContract,
@@ -65,8 +59,7 @@ export const UniswapUnstakeEntry = ({ tokenId }) => {
     chainId: 1,
     onError(error) {
       console.error(error);
-      if (error?.message?.toString?.().contains?.("User denied Transaction"))
-        toast.error(PREPARE_CONTRACT_ERROR, toastConfig);
+      toast.error(PREPARE_CONTRACT_ERROR, toastConfig);
     },
   });
 
@@ -120,7 +113,11 @@ export const UniswapUnstakeEntry = ({ tokenId }) => {
         </div>
       </div>
       <div className="d-flex gap-2 align-items-center">
-        <button className="button-secondary px-3 py-1" onClick={handleSubmit}>
+        <button
+          className="button-secondary px-3 py-1"
+          onClick={handleSubmit}
+          disabled={!writeAsync}
+        >
           Unstake
         </button>
       </div>

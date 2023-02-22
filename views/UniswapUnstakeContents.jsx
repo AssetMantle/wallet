@@ -115,7 +115,7 @@ const StaticUniswapUnstakeContents = () => {
       ? recordsJSX
       : noRecordsJSX;
 
-  console.log(
+  /* console.log(
     "positionNFTs inside component: ",
     positionNfts,
     " loading: ",
@@ -126,7 +126,7 @@ const StaticUniswapUnstakeContents = () => {
     isSsr,
     " ownerValue: ",
     ownerValues
-  );
+  ); */
 
   return renderedJSX;
 };
