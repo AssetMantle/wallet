@@ -50,7 +50,7 @@ export default function Banner() {
           <a
             className="text-dark-hover mx-auto"
             style={{ maxWidth: "80%" }}
-            href="https://github.com/AssetMantle/Bug-Bounty"
+            href="https://hackenproof.com/assetmantle/assetmantle"
             target="_blank"
             rel="noopener noreferrer"
           >
