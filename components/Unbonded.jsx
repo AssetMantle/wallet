@@ -1,24 +1,21 @@
-import React, { useState } from "react";
 import { useChain } from "@cosmos-kit/react";
+import BigNumber from "bignumber.js";
+import React, { useState } from "react";
 import {
-  defaultChainSymbol,
-  placeholderMntlUsdValue,
-  placeholderTotalUnbonding,
   defaultChainName,
+  defaultChainSymbol,
   getBalanceStyle,
 } from "../config";
 import {
+  decimalize,
   fromChainDenom,
   fromDenom,
-  sendUndelegation,
   useAllValidatorsBonded,
   useAllValidatorsUnbonded,
   useMntlUsd,
   useTotalUnbonding,
-  useDelegatedValidators,
 } from "../data";
 import ModalContainer from "./ModalContainer";
-import { toast } from "react-toastify";
 
 const denomDisplay = defaultChainSymbol;
 
@@ -32,99 +29,40 @@ const Unbonded = ({
   const [unBondingModal, setUnBondingModal] = useState(false);
 
   const walletManager = useChain(defaultChainName);
-  const { getSigningStargateClient, address, status, wallet } = walletManager;
+  const { getSigningStargateClient, address, status } = walletManager;
   const [activeValidators, setActiveValidators] = useState(true);
-  const {
-    totalUnbondingAmount,
-    allUnbonding,
-    isLoadingUnbonding,
-    errorUnbonding,
-  } = useTotalUnbonding();
-  const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
-  const {
-    delegatedValidators,
-    errorDelegatedAmount,
-    isLoadingDelegatedAmount,
-    totalDelegatedAmount,
-  } = useDelegatedValidators();
-  const {
-    allValidatorsBonded,
-    errorValidatorsBonded,
-    isLoadingValidatorsBonded,
-  } = useAllValidatorsBonded();
-  const {
-    allValidatorsUnbonded,
-    errorValidatorsUnbonded,
-    isLoadingValidatorsUnbonded,
-  } = useAllValidatorsUnbonded();
+  const { totalUnbondingAmount, allUnbonding } = useTotalUnbonding();
+  const { mntlUsdValue } = useMntlUsd();
+  const { allValidatorsBonded } = useAllValidatorsBonded();
+  const { allValidatorsUnbonded } = useAllValidatorsUnbonded();
 
-  const selectedUnbonding = allUnbonding
-    ?.filter((unbondingObject) =>
-      stakeState?.selectedValidators?.includes(unbondingObject.address)
-    )
-    .reduce(
-      (accumulator, currentValue) =>
-        accumulator + parseFloat(currentValue?.balance),
-      0
-    );
+  const selectedUnbondingArray = allUnbonding?.filter((unbondingObject) =>
+    stakeState?.selectedValidators?.includes(unbondingObject.address)
+  );
 
-  const cumulativeUnbonding = errorUnbonding
-    ? placeholderTotalUnbonding
+  const selectedUnbonding = selectedUnbondingArray?.reduce(
+    (accumulator, currentValue) =>
+      accumulator + parseFloat(currentValue?.balance),
+    0
+  );
+
+  const unbondingValue = stakeState?.selectedValidators.length
+    ? selectedUnbonding
     : totalUnbondingAmount;
-  const unbondingDisplay = stakeState?.selectedValidators.length
-    ? fromChainDenom(selectedUnbonding)
-    : fromChainDenom(cumulativeUnbonding);
 
-  const unbondingInUSDDisplay =
-    errorUnbonding ||
-    errorMntlUsdValue | isNaN(fromDenom(totalUnbondingAmount)) ||
-    isNaN(parseFloat(mntlUsdValue))
-      ? placeholderMntlUsdValue
-      : (fromDenom(totalUnbondingAmount) * parseFloat(mntlUsdValue))
-          .toFixed(6)
-          .toString();
+  const unbondingDisplay = fromChainDenom(unbondingValue);
+
+  const unbondingInUSDDisplay = decimalize(
+    BigNumber(fromDenom(unbondingValue))
+      .multipliedBy(BigNumber(mntlUsdValue))
+      .toString()
+  );
 
   const secondsInADay = 86400;
 
   const isSubmitDisabled = status != "Connected";
 
-  const handleUndelegate = async (e) => {
-    e.preventDefault();
-    stakeDispatch({ type: "SUBMIT_UNDELEGATE" });
-    if (stakeState?.undelegationAmount) {
-      setUnDelegateModal(false);
-      const id = toast.loading("Transaction initiated ...", {
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-      const { response, error } = await sendUndelegation(
-        address,
-        stakeState?.undelegationSrc,
-        stakeState.undelegationAmount.toString(),
-        stakeState?.memo,
-        { getSigningStargateClient }
-      );
-      stakeDispatch({ type: "RESET_UNDELEGATE" });
-      console.log("response:", response, "error:", error);
-      if (response) {
-        notify(response?.transactionHash, id);
-      } else {
-        notify(null, id);
-      }
-    }
-  };
-
-  const isConnected = !(
-    isLoadingUnbonding ||
-    errorUnbonding ||
-    status != "Connected"
-  );
+  const isConnected = status == "Connected";
 
   return (
     <div className="nav-bg p-3 rounded-4 gap-3">
@@ -169,6 +107,7 @@ const Unbonded = ({
           ) : null}
         </div>
       </div>
+
       {/* Unbonding Modal */}
       <ModalContainer active={unBondingModal} setActive={setUnBondingModal}>
         <div className="d-flex flex-column bg-gray-700 m-auto p-4 rounded-3 w-100">
