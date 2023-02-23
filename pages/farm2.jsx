@@ -203,17 +203,10 @@ export default function Farm2() {
                 </div>
               </div>
             </nav>
-            {
-              {
-                0: stakeDisplayJSX,
-                1: stakeDisplayJSX,
-              }[Tab]
-            }
-            {isMounted() &&
-              {
-                0: stakeContentsJSX,
-                1: unstakeContentsJSX,
-              }[Tab]}
+            {stakeDisplayJSX}
+            {isMounted() && (
+              <>{StakeTab ? stakeContentsJSX : unstakeContentsJSX}</>
+            )}
           </div>
         </ScrollableSectionContainer>
         <ScrollableSectionContainer className="col-12 col-lg-4 d-flex flex-column gap-3 h-90">
