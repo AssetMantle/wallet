@@ -1,8 +1,10 @@
 import { useChain } from "@cosmos-kit/react";
+import { useWeb3Modal } from "@web3modal/react";
 import BigNumber from "bignumber.js";
 import Link from "next/link";
 import { useReducer } from "react";
 import { toast } from "react-toastify";
+import { useAccount } from "wagmi";
 import {
   defaultChainName,
   defaultChainSymbol,
@@ -20,7 +22,7 @@ import {
   useAvailableBalanceGravity,
 } from "../data";
 import { convertBech32Address, shortenAddress } from "../lib";
-import { handleCopy, isObjEmpty } from "../lib/basicJavascript";
+import { handleCopy, isObjEmpty, useIsMounted } from "../lib/basicJavascript";
 
 const GravityToEthBridge = () => {
   // WALLET HOOKS
@@ -32,6 +34,10 @@ const GravityToEthBridge = () => {
   const chainContext3 = useChain(defaultChainName);
   const { address: mantleAddress } = chainContext3;
   const gravityAddress = convertBech32Address(mantleAddress, gravityChainName);
+
+  const isMounted = useIsMounted();
+  const { address, isConnected, connector } = useAccount();
+  const { open } = useWeb3Modal();
 
   const isGravityConnected = gravityStatus == "Connected";
   // const [showConnectText, setShowConnectText] = useState(true);
@@ -216,6 +222,13 @@ const GravityToEthBridge = () => {
     setShowConnectText(false);
   }; */
 
+  // connect button with logic
+
+  const handleOpenWeb3Modal = async (e) => {
+    e.preventDefault();
+    await open();
+  };
+
   const handleAmountOnChange = (e) => {
     e.preventDefault();
     formDispatch({
@@ -349,16 +362,7 @@ const GravityToEthBridge = () => {
   };
 
   // DISPLAY VARIABLES
-
-  // connect button with logic
-  /* const notConnectedJSX = (
-    <button
-      className="caption2 d-flex gap-1 text-primary"
-      onClick={handleClickConnectWallet}
-    >
-      <i className="bi bi-link-45deg" /> Connect Wallet
-    </button>
-  ); */
+  const isWalletEthConnected = isMounted() && isConnected;
 
   const displayShortenedAddress = shortenAddress(
     gravityAddress,
@@ -378,23 +382,6 @@ const GravityToEthBridge = () => {
     </button>
   );
 
-  /* const connectButtonJSX = !showConnectText ? (
-    <>
-      <button
-        className="caption2 d-flex gap-1"
-        onClick={handleCopyOnClick}
-        style={{ wordBreak: "break-all" }}
-      >
-        {displayShortenedAddress}{" "}
-        <span className="text-primary">
-          <i className="bi bi-clipboard" />
-        </span>
-      </button>
-    </>
-  ) : (
-    notConnectedJSX
-  ); */
-
   const displayAvailableBalanceIBCToken = fromChainDenom(
     availableBalanceIBCToken
   );
@@ -409,6 +396,27 @@ const GravityToEthBridge = () => {
   const isFormAmountError = formState?.errorMessages?.transferAmountErrorMsg;
   const displayFormAmountErrorMsg =
     formState?.errorMessages?.transferAmountErrorMsg;
+
+  const connectEthWalletJSX = (
+    <button
+      onClick={handleOpenWeb3Modal}
+      className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
+    >
+      <i className="bi bi-link-45deg" /> Connect Ethereum Wallet
+    </button>
+  );
+
+  const submitButtonEthJSX = isWalletEthConnected ? (
+    <button
+      onClick={handleSubmit}
+      disabled={isSubmitDisabled}
+      className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
+    >
+      Send to Ethereum <i className="bi bi-arrow-down" />
+    </button>
+  ) : (
+    connectEthWalletJSX
+  );
 
   console.log(
     "isGravityConnected: ",
@@ -485,13 +493,7 @@ const GravityToEthBridge = () => {
             </button>
           </a>
         </Link> */}
-        <button
-          onClick={handleSubmit}
-          disabled={isSubmitDisabled}
-          className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
-        >
-          Send to Ethereum <i className="bi bi-arrow-down" />
-        </button>
+        {submitButtonEthJSX}
       </div>
     </div>
   );
