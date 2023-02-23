@@ -390,8 +390,7 @@ const GravityToEthBridge = () => {
   );
   const displayBalanceUnitGravity = gravityChainSymbol;
   const displayBalanceUnitGravityIBCToken = defaultChainSymbol;
-  const isSubmitDisabled =
-    !isGravityConnected || !isObjEmpty(formState?.errorMessages);
+  const isSubmitDisabled = !isObjEmpty(formState?.errorMessages);
   const displayInputAmountValue = formState?.transferAmount;
   const isFormAmountError = formState?.errorMessages?.transferAmountErrorMsg;
   const displayFormAmountErrorMsg =
@@ -402,7 +401,7 @@ const GravityToEthBridge = () => {
       onClick={handleOpenWeb3Modal}
       className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
     >
-      <i className="bi bi-link-45deg" /> Connect Ethereum Wallet
+      Connect Ethereum Wallet <i className="bi bi-link-45deg" />
     </button>
   );
 
