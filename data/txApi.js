@@ -520,6 +520,8 @@ export const sendIbcTokenToGravity = async (
   }
 };
 
+// GRAVITY CHAIN
+
 export const sendIbcTokenToMantle = async (
   fromGravityAddress,
   toMantleAddress,
