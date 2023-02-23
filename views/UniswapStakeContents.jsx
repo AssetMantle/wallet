@@ -16,11 +16,10 @@ const nonFungiblePositionManagerABI =
 const uniV3StakerABI = ethConfig?.mainnet?.uniswap?.uniV3Staker?.abi;
 const chainID = ethConfig?.mainnet?.chainID;
 
-const latestIncentiveProgram =
-  ethConfig?.mainnet?.uniswap?.incentivePrograms?.[1];
+const selectedIncentive = ethConfig?.selected?.uniswapIncentiveProgram;
 
-const secondIncentiveProgram =
-  ethConfig?.mainnet?.uniswap?.incentivePrograms?.[1];
+const latestIncentiveProgram =
+  ethConfig?.mainnet?.uniswap?.incentivePrograms?.[selectedIncentive];
 
 const StaticUniswapStakeContents = () => {
   // HOOKS
@@ -175,7 +174,7 @@ const StaticUniswapStakeContents = () => {
 
   console.log(
     "second incentive ID: ",
-    getIncentiveIdFromKey(secondIncentiveProgram?.incentiveTuple)
+    getIncentiveIdFromKey(latestIncentiveProgram?.incentiveTuple)
   );
 
   return renderedJSX;

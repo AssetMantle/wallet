@@ -16,7 +16,6 @@ const uniV3StakerContractAddress =
   ethConfig?.mainnet?.uniswap?.uniV3Staker?.address;
 const nonFungiblePositionManagerABI =
   ethConfig?.mainnet?.uniswap?.nonFungiblePositionManager?.abi;
-const uniV3StakerABI = ethConfig?.mainnet?.uniswap?.uniV3Staker?.abi;
 const chainID = ethConfig?.mainnet?.chainID;
 
 const nonFungiblePositionManagerContract = {
