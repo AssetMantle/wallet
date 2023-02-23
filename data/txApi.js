@@ -634,7 +634,7 @@ export const sendIbcTokenToEth = async (
 
     // get the amount object of type Coin
     const transferAmount = {
-      denom: gravityIBCToken,
+      denom: defaultChainDenom,
       amount: amountInDenom,
     };
 

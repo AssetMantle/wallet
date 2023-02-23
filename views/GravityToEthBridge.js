@@ -418,14 +418,16 @@ const GravityToEthBridge = () => {
   );
 
   console.log(
-    "isGravityConnected: ",
+    "!isGravityConnected: ",
     !isGravityConnected,
     " !isObjEmpty(formState?.errorMessages): ",
     !isObjEmpty(formState?.errorMessages),
     " signingClient: ",
     getSigningStargateClient2,
     " gravityAddress: ",
-    gravityAddress
+    gravityAddress,
+    " isMounted: ",
+    isMounted
   );
 
   return (
@@ -492,7 +494,8 @@ const GravityToEthBridge = () => {
             </button>
           </a>
         </Link> */}
-        {submitButtonEthJSX}
+        {isMounted() && submitButtonEthJSX}
+        {!isMounted() && connectEthWalletJSX}
       </div>
     </div>
   );
