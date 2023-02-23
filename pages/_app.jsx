@@ -1,6 +1,11 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { wallets as leapWallets } from "@cosmos-kit/leap";
 import { wallets as vectisWallets } from "@cosmos-kit/vectis";
+import { wallets as keplrWallets } from "@cosmos-kit/keplr";
+import { wallets as cosmostationWallets } from "@cosmos-kit/cosmostation";
+import { wallets as frontierWallets } from "@cosmos-kit/frontier-extension";
+import { wallets as trustWallets } from "@cosmos-kit/trust-extension";
+import { wallets as xdefiWallets } from "@cosmos-kit/xdefi-extension";
 import { ChainProvider } from "@cosmos-kit/react";
 import { Web3Modal } from "@web3modal/react";
 import { assets, chains } from "chain-registry";
@@ -10,7 +15,6 @@ import { ToastContainer } from "react-toastify";
 import { WagmiConfig } from "wagmi";
 import Layout from "../components/Layout";
 import {
-  cosmostationWallets,
   defaultChainRESTProxy,
   defaultChainRESTProxy2,
   defaultChainRPCProxy,
@@ -20,7 +24,6 @@ import {
   gravityChainRESTProxy2,
   gravityChainRPCProxy,
   gravityChainRPCProxy2,
-  keplrWallets,
   mantleAssetConfig,
   mantleChainConfig,
   mantleTestChainConfig,
@@ -106,10 +109,13 @@ function CreateCosmosApp({ Component, pageProps }) {
             ...mantleTestnetAssetConfig,
           ]}
           wallets={[
-            ...keplrWallets,
+            keplrWallets[0],
             ...leapWallets,
-            ...cosmostationWallets,
+            cosmostationWallets[0],
             ...vectisWallets,
+            ...frontierWallets,
+            ...trustWallets,
+            ...xdefiWallets,
           ]}
           signerOptions={signerOptions}
           sessionOptions={sessionOptions}

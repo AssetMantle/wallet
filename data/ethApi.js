@@ -20,7 +20,7 @@ export const walletConnectProjectID = "f068c2aa18a3ec82f5eafdc8abe7ae23";
 export const ethConfig = {
   selected: {
     chain: "mainnet",
-    uniswapIncentiveProgram: 0,
+    uniswapIncentiveProgram: 1,
   },
   mainnet: {
     network: "mainnet",
@@ -83,6 +83,26 @@ export const ethConfig = {
             "0xf5b8304dc18579c4247caad705df01928248bc71",
             1676041245,
             1676214045,
+            "0x0ad4de31fc1E1e01Eaaf815dA18690441190f7ed",
+          ],
+          token0: "0x2C4F1DF9c7DE0C59778936C9b145fF56813F3295",
+          token1: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+          fee: 3000,
+        },
+        {
+          RewardTokenContract: "0x2C4F1DF9c7DE0C59778936C9b145fF56813F3295",
+          liquidityPoolContract: "0xf5b8304dc18579c4247caad705df01928248bc71",
+          startTime: "1677058200",
+          endTime: "1677227400",
+          refundeeAddress: "0x0ad4de31fc1E1e01Eaaf815dA18690441190f7ed",
+          totalRewards: 2000,
+          incentiveId:
+            "0xad2a12075ed0b1656be4ebe084c82b2cad6ebf6dcdc6619d7cd32c602e0795ea",
+          incentiveTuple: [
+            "0x2C4F1DF9c7DE0C59778936C9b145fF56813F3295",
+            "0xf5b8304dc18579c4247caad705df01928248bc71",
+            1677058200,
+            1677227400,
             "0x0ad4de31fc1E1e01Eaaf815dA18690441190f7ed",
           ],
           token0: "0x2C4F1DF9c7DE0C59778936C9b145fF56813F3295",

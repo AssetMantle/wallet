@@ -15,7 +15,7 @@ export const UniswapUnstakeEntry = ({ tokenId }) => {
   const uniV3StakerContractAddress =
     ethConfig?.mainnet?.uniswap?.uniV3Staker?.address;
   const latestIncentiveProgram =
-    ethConfig?.mainnet?.uniswap?.incentivePrograms?.[0];
+    ethConfig?.mainnet?.uniswap?.incentivePrograms?.[1];
   const uniV3StakerABI = ethConfig?.mainnet?.uniswap?.uniV3Staker?.abi;
 
   let toastId = null;

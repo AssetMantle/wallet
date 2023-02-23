@@ -4,7 +4,7 @@ import { UniswapStakeEntry } from "../components";
 import { ethConfig } from "../data";
 import { useContractReads } from "wagmi";
 import dynamic from "next/dynamic";
-import { useIsMounted } from "../lib";
+import { useIsMounted, getIncentiveIdFromKey } from "../lib";
 import { UniswapStakeContentsLoading } from "./UniswapStakeContentsLoading";
 
 const nonFungiblePositionManagerContractAddress =
@@ -17,7 +17,10 @@ const uniV3StakerABI = ethConfig?.mainnet?.uniswap?.uniV3Staker?.abi;
 const chainID = ethConfig?.mainnet?.chainID;
 
 const latestIncentiveProgram =
-  ethConfig?.mainnet?.uniswap?.incentivePrograms?.[0];
+  ethConfig?.mainnet?.uniswap?.incentivePrograms?.[1];
+
+const secondIncentiveProgram =
+  ethConfig?.mainnet?.uniswap?.incentivePrograms?.[1];
 
 const StaticUniswapStakeContents = () => {
   // HOOKS
@@ -161,12 +164,9 @@ const StaticUniswapStakeContents = () => {
       ? recordsJSX
       : noRecordsJSX;
 
-  /* console.log("contract values:", {
+  console.log("contract values:", {
     balanceOf,
     totalPositions,
-    tokenOfOwnerByIndexContracts: tokenOfOwnerByIndexContracts(
-      totalPositions && totalPositions
-    ),
     totalPositions,
     isConnected,
     finalAddress,
@@ -176,7 +176,12 @@ const StaticUniswapStakeContents = () => {
     positionValues: positionValues,
     filteredPositionValues,
     latestIncentiveProgram,
-  }); */
+  });
+
+  console.log(
+    "second incentive ID: ",
+    getIncentiveIdFromKey(secondIncentiveProgram?.incentiveTuple)
+  );
 
   return renderedJSX;
 };

@@ -84,4 +84,9 @@ export const ConnectOptionObject = {
     name: "XDEFI",
     installUrl: "https://www.xdefi.io/",
   },
+  frontier: {
+    icon: "/WalletIcons/frontier.png",
+    name: "Frontier",
+    installUrl: "https://www.frontier.xyz/browser-extension",
+  },
 };
