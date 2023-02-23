@@ -358,6 +358,7 @@ const EthToPolygonBridge = () => {
       <i className="bi bi-link-45deg" /> Connect Wallet
     </button>
   );
+
   const connectButtonJSX = isWalletEthConnected ? (
     <>
       <button
