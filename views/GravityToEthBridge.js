@@ -28,11 +28,15 @@ const GravityToEthBridge = () => {
   // WALLET HOOKS
   const chainContext2 = useChain(gravityChainName);
   const {
-    getSigningStargateClient: getSigningStargateClient2,
+    // getSigningStargateClient: getSigningStargateClient2,
     status: gravityStatus,
   } = chainContext2;
   const chainContext3 = useChain(defaultChainName);
-  const { address: mantleAddress } = chainContext3;
+  const {
+    address: mantleAddress,
+    signAndBroadcast,
+    getSigningStargateClient: getSigningStargateClient2,
+  } = chainContext3;
   const gravityAddress = convertBech32Address(mantleAddress, gravityChainName);
 
   const isMounted = useIsMounted();
@@ -276,7 +280,10 @@ const GravityToEthBridge = () => {
         localTransferAmount,
         memo,
 
-        { getSigningStargateClient: getSigningStargateClient2 }
+        {
+          getSigningStargateClient: getSigningStargateClient2,
+          signAndBroadcast,
+        }
       );
       console.log("response: ", response, " error: ", error);
       // reset the form values
@@ -422,12 +429,14 @@ const GravityToEthBridge = () => {
     !isGravityConnected,
     " !isObjEmpty(formState?.errorMessages): ",
     !isObjEmpty(formState?.errorMessages),
-    " signingClient: ",
+    " getSigningStargateClient2: ",
     getSigningStargateClient2,
     " gravityAddress: ",
     gravityAddress,
     " isMounted: ",
-    isMounted
+    isMounted,
+    " signAndBroadcast: ",
+    signAndBroadcast
   );
 
   return (
