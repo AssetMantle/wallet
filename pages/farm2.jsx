@@ -210,44 +210,60 @@ export default function Farm2() {
           </div>
         </ScrollableSectionContainer>
         <ScrollableSectionContainer className="col-12 col-lg-4 d-flex flex-column gap-3 h-90">
-          <div className="d-flex gap-2 rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column text-white">
-            <h2 className="body1 text-primary mb-2">Incentive Programs</h2>
-            {IncentivePrograms &&
-              Array.isArray(IncentivePrograms) &&
-              IncentivePrograms.length > 0 &&
-              React.Children.toArray(
-                IncentivePrograms.map((program, index) => (
-                  <div
-                    className="nav-bg rounded-4 py-3 px-3 mx-0 d-flex align-items-center gap-2"
-                    role="button"
-                    onClick={() => setSelectedIncentive(index)}
-                  >
-                    {SelectedIncentive === index ? (
-                      <i className="bi bi-record-circle text-primary"></i>
-                    ) : (
-                      <i className="bi bi-circle"></i>
-                    )}
-                    <div className="d-flex flex-column gap-1">
-                      <p className="text-primary caption">{program.name}</p>
-                      <p
-                        className={`${
-                          program.ended ? "text-gray" : "text-success"
-                        } small`}
-                      >
-                        {program.ended ? program.subtitle : "Currently Active"}
-                      </p>
+          {StakeTab ? (
+            <div className="d-flex gap-2 rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column text-white">
+              <h2 className="body1 text-primary mb-2">Incentive Programs</h2>
+              {IncentivePrograms &&
+                Array.isArray(IncentivePrograms) &&
+                IncentivePrograms.length > 0 &&
+                React.Children.toArray(
+                  IncentivePrograms.map((program, index) => (
+                    <div
+                      className="nav-bg rounded-4 py-3 px-3 mx-0 d-flex align-items-center gap-2"
+                      role="button"
+                      onClick={() => setSelectedIncentive(index)}
+                    >
+                      {SelectedIncentive === index ? (
+                        <i className="bi bi-record-circle text-primary"></i>
+                      ) : (
+                        <i className="bi bi-circle"></i>
+                      )}
+                      <div className="d-flex flex-column gap-1">
+                        <p className="text-primary caption">{program.name}</p>
+                        <p
+                          className={`${
+                            program.ended ? "text-gray" : "text-success"
+                          } small`}
+                        >
+                          {program.ended
+                            ? program.subtitle
+                            : "Currently Active"}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ))
-              )}
-          </div>
+                  ))
+                )}
+            </div>
+          ) : (
+            <div className="d-flex gap-4 rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column text-white">
+              <h2 className="body1 text-primary">Token Details</h2>
+              <div className="nav-bg rounded-4 py-3 px-3 mx-0 d-flex flex-column gap-2">
+                <p className="caption text-gray">Wallet Address</p>
+                <p className="caption text-white pb-1">0x0x010x0...fhd4hm4hg</p>
+                <p className="caption text-gray">Liquidity</p>
+                <p className="caption text-white pb-1">$0,000.0000</p>
+                <p className="caption text-gray">Staking Rewards</p>
+                <p className="caption text-white pb-1">$0,000.0000</p>
+              </div>
+            </div>
+          )}
           <div className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column text-white">
-            <p>
+            <p className="caption2">
               To purchase MNTL, visit the exchanges (CEX & DEX) shown to swap
               with your available tokens.
             </p>
             <br></br>
-            <p>
+            <p className="caption2">
               Options to directly on-ramp to MNTL using fiat currencies will be
               coming soon.
             </p>
