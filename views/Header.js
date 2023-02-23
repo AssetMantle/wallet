@@ -16,8 +16,8 @@ import {
 import { cleanString, shortenAddress } from "../lib";
 
 export default function Header() {
-  const { openView, username, address, wallet, status, connect, disconnect } =
-    useChain(defaultChainName);
+  const chainContext = useChain(defaultChainName);
+  const { username, address, wallet, disconnect } = chainContext;
   const [showModal, setShowModal] = useState(false);
 
   const router = useRouter();

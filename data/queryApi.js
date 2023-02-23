@@ -20,13 +20,11 @@ import {
   placeholderMntlUsdValue,
 } from "../config";
 import { convertBech32Address } from "../lib";
-import { cosmos as cosmosModule } from "../modules";
+import { cosmos as cosmosModule, gravity } from "../modules";
 import { bech32AddressSeperator, placeholderAddress } from "./constants";
 
 const rpcEndpoint = defaultChainRPCProxy;
 const restEndpoint = defaultChainRESTProxy;
-
-const rpcEndpointGravity = gravityChainRPCProxy;
 
 const denom = assets.find(
   (assetObj) => assetObj?.chain_name === defaultChainName
@@ -39,11 +37,6 @@ const client = await cosmos.ClientFactory.createRPCQueryClient({
 
 const queryClient = await cosmosModule.ClientFactory.createLCDClient({
   restEndpoint: restEndpoint,
-});
-
-// get the REST Query Client for Gravity Bridge Chain
-const queryClientGravity = await cosmos.ClientFactory.createRPCQueryClient({
-  rpcEndpoint: rpcEndpointGravity,
 });
 
 export const fromDenom = (value, exponent = defaultChainDenomExponent) => {
@@ -549,6 +542,7 @@ export const useAvailableBalance = () => {
 export const useAvailableBalanceGravity = () => {
   // get the connected wallet parameters from useChain hook
   const { address } = useChain(defaultChainName);
+
   // const address = "gravity1yyduggdnk5kgszamt7s9f0ep2n6hylxr6kjz7u";
 
   const gravityAddress = convertBech32Address(address, gravityChainName);
@@ -568,6 +562,14 @@ export const useAvailableBalanceGravity = () => {
   // fetcher function for useSwr of useAvailableBalance()
   const fetchAllBalancesGravity = async (url, address) => {
     // console.log("inside fetchAllBalancesGravity() ");
+    // get the REST Query Client for Gravity Bridge Chain
+    const rpcEndpointGravity = gravityChainRPCProxy;
+
+    const queryClientGravity = await gravity.ClientFactory.createRPCQueryClient(
+      {
+        rpcEndpoint: rpcEndpointGravity,
+      }
+    );
 
     let balanceValues;
 
