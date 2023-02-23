@@ -138,14 +138,9 @@ const StaticUniswapStakeContents = () => {
   );
 
   const noRecordsJSX = (
-    <div className="bg-gray-800 p-3 rounded-4 d-flex gap-2 align-items-center justify-content-between">
-      <div className="d-flex gap-3">
-        <div className="d-flex flex-column gap-2">
-          <h3 className="body2">No Records Found</h3>
-          <p className="caption"></p>
-        </div>
-      </div>
-    </div>
+    <h3 className="caption text-error">
+      <i className="bi bi-info-circle"></i> No Records Found
+    </h3>
   );
 
   const recordsJSX = (
