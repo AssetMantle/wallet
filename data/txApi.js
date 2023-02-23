@@ -8,6 +8,8 @@ import {
   defaultFeeGas,
   defaultIBCSourceChannel,
   defaultIBCSourcePort,
+  gravityBasisPoints,
+  gravityBasisPointsScalingExponent,
   gravityChainDenom,
   gravityChainName,
   gravityFeeAmount,
@@ -16,6 +18,7 @@ import {
   gravityIBCToken,
 } from "../config";
 import { toChainDenom } from "../data";
+import { gravity } from "../modules";
 
 // get the wallet properties and functions for that specific chain
 export const sendTokensTxn = async (
@@ -528,7 +531,7 @@ export const sendIbcTokenToMantle = async (
   amount,
   memo,
   {
-    getSigningStargateClient2,
+    getSigningStargateClient,
     chainName = defaultChainName,
     chainDenom = defaultChainDenom,
   }
@@ -551,7 +554,7 @@ export const sendIbcTokenToMantle = async (
       gravityChainDenom
     );
     // initialize signing client
-    const stargateClient = await getSigningStargateClient2();
+    const stargateClient = await getSigningStargateClient();
 
     if (!stargateClient || !fromGravityAddress) {
       throw new Error("stargateClient or from address undefined");
@@ -591,6 +594,124 @@ export const sendIbcTokenToMantle = async (
       memo
     );
 
+    return { response, error: null };
+  } catch (error) {
+    console.error("Error during transaction: ", error?.message);
+    return { response: null, error };
+  }
+};
+
+export const sendIbcTokenToEth = async (
+  senderAddress,
+  ethDestAddress,
+  amount,
+  memo,
+  {
+    getSigningStargateClient,
+    chainName = defaultChainName,
+    chainDenom = defaultChainDenom,
+  }
+) => {
+  console.log(
+    "inside sendIcTokenToEth senderAdress: ",
+    senderAddress,
+    " ethDestAddress: ",
+    ethDestAddress,
+    " amount: ",
+    amount
+  );
+  try {
+    // keep the values to defaultChain and defaultDenom since we are dealing with ibc tokens of default chain
+    const amountInDenom = toChainDenom(amount, chainName, chainDenom);
+
+    // quick validation of amount being empty (not really required here, must go in form validation)
+    if (!BigNumber(amountInDenom).isGreaterThan(0)) {
+      return {
+        response: null,
+        error: new Error("Amount set is invalid"),
+      };
+    }
+
+    // get the amount object of type Coin
+    const transferAmount = {
+      denom: gravityIBCToken,
+      amount: amountInDenom,
+    };
+
+    const chainFeeAmountInDenom = BigNumber(amountInDenom.toString())
+      .multipliedBy(
+        BigNumber(gravityBasisPoints).multipliedBy(
+          BigNumber(10).exponentiatedBy(gravityBasisPointsScalingExponent)
+        )
+      )
+      .integerValue(BigNumber.ROUND_CEIL)
+      .toString();
+
+    // populate the chainFee data which will also be in MNTL
+    const chainFee = {
+      denom: defaultChainDenom,
+      amount: chainFeeAmountInDenom,
+    };
+
+    // populate the bridgeFee data, which will be in MNTL
+    const bridgeFee = {
+      denom: defaultChainDenom,
+      amount: "20000",
+    };
+
+    /* // initialize stargate client using signer and create txn
+    let signer = getOfflineSigner();
+    const stargateClient = await getSigningGravityClient({
+      rpcEndpoint: gravityChainRPCProxy,
+      signer: signer,
+    }); */
+
+    // initialize stargate client using getter
+    const stargateClient = await getSigningStargateClient();
+
+    console.log("registry: ", stargateClient?.registry);
+
+    /* // get the msg object
+    const msg2 = {
+      typeUrl: "/gravity.v1.MsgSendToEth",
+      value: {
+        sender: senderAddress,
+        ethDest: ethDestAddress,
+        amount: transferAmount,
+        bridgeFee,
+        chainFee,
+      },
+    }; */
+
+    const { sendToEth } = gravity.v1.MessageComposer.withTypeUrl;
+    const msg = sendToEth({
+      ethDest: ethDestAddress,
+      sender: senderAddress,
+      amount: transferAmount,
+      bridgeFee,
+      chainFee,
+    });
+
+    console.log("msg: ", msg);
+
+    // populate the fee data
+    const fee = {
+      amount: [
+        {
+          denom: gravityChainDenom,
+          amount: "2000",
+        },
+      ],
+      gas: "250000",
+    };
+
+    // use the stargate client to dispatch the transaction
+    const response = await stargateClient.signAndBroadcast(
+      senderAddress,
+      [msg],
+      fee,
+      memo
+    );
     return { response, error: null };
   } catch (error) {
     console.error("Error during transaction: ", error?.message);

@@ -1,7 +1,7 @@
 import { useChain } from "@cosmos-kit/react";
 import BigNumber from "bignumber.js";
 import Link from "next/link";
-import { useEffect, useReducer, useState } from "react";
+import { useReducer } from "react";
 import { toast } from "react-toastify";
 import {
   defaultChainName,
@@ -14,6 +14,7 @@ import {
   formConstants,
   fromChainDenom,
   fromDenom,
+  sendIbcTokenToEth,
   sendIbcTokenToMantle,
   toDenom,
   useAvailableBalanceGravity,
@@ -27,21 +28,23 @@ const GravityToEthBridge = () => {
   const {
     getSigningStargateClient: getSigningStargateClient2,
     status: gravityStatus,
-    address: gravityAddress,
   } = chainContext2;
+  const chainContext3 = useChain(defaultChainName);
+  const { address: mantleAddress } = chainContext3;
+  const gravityAddress = convertBech32Address(mantleAddress, gravityChainName);
 
   const isGravityConnected = gravityStatus == "Connected";
-  const [showConnectText, setShowConnectText] = useState(true);
+  // const [showConnectText, setShowConnectText] = useState(true);
 
   // HOOKS or GETTERS
   const { availableBalanceGravity, availableBalanceIBCToken } =
     useAvailableBalanceGravity();
 
-  useEffect(() => {
+  /* useEffect(() => {
     console.log("inside useEffect");
     setShowConnectText(true);
     return () => {};
-  }, [isGravityConnected]);
+  }, [isGravityConnected]); */
 
   // FORM REDUCER
   const initialState = {
@@ -208,10 +211,10 @@ const GravityToEthBridge = () => {
 
   // CONTROLLER FUNCTIONS
 
-  const handleClickConnectWallet = (e) => {
+  /* const handleClickConnectWallet = (e) => {
     e.preventDefault();
     setShowConnectText(false);
-  };
+  }; */
 
   const handleAmountOnChange = (e) => {
     e.preventDefault();
@@ -241,6 +244,18 @@ const GravityToEthBridge = () => {
       let memo;
       const ethDestAddress = "0xae6094170ABC0601b4bbe933D04368cD407C186a";
 
+      // initiate toast notification
+      const toastId2 = toast.loading("Transaction initiated ...", {
+        position: "bottom-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+
       // create transaction
       const { response, error } = await sendIbcTokenToEth(
         gravityAddress,
@@ -248,12 +263,18 @@ const GravityToEthBridge = () => {
         localTransferAmount,
         memo,
 
-        { getOfflineSigner }
+        { getSigningStargateClient: getSigningStargateClient2 }
       );
       console.log("response: ", response, " error: ", error);
-
       // reset the form values
       formDispatch({ type: "RESET" });
+
+      // notify toast message on success or error
+      if (response) {
+        notify(response?.transactionHash, toastId2);
+      } else {
+        notify(null, toastId2);
+      }
     }
   };
 
@@ -281,7 +302,7 @@ const GravityToEthBridge = () => {
       );
 
       // initiate toast notification
-      const id = toast.loading("Transaction initiated ...", {
+      const toastId = toast.loading("Transaction initiated ...", {
         position: "bottom-center",
         autoClose: 8000,
         hideProgressBar: false,
@@ -299,17 +320,19 @@ const GravityToEthBridge = () => {
         localTransferAmount,
         memo,
 
-        { getSigningStargateClient2 }
+        { getSigningStargateClient: getSigningStargateClient2 }
       );
       console.log("response: ", response, " error: ", error);
-      if (response) {
-        notify(response?.transactionHash, id);
-      } else {
-        notify(null, id);
-      }
 
       // reset the form values
       formDispatch({ type: "RESET" });
+
+      // notify toast message on success or error
+      if (response) {
+        notify(response?.transactionHash, toastId);
+      } else {
+        notify(null, toastId);
+      }
     }
   };
 
@@ -328,21 +351,34 @@ const GravityToEthBridge = () => {
   // DISPLAY VARIABLES
 
   // connect button with logic
-  const notConnectedJSX = (
+  /* const notConnectedJSX = (
     <button
       className="caption2 d-flex gap-1 text-primary"
       onClick={handleClickConnectWallet}
     >
       <i className="bi bi-link-45deg" /> Connect Wallet
     </button>
-  );
+  ); */
 
   const displayShortenedAddress = shortenAddress(
     gravityAddress,
     gravityChainName
   );
 
-  const connectButtonJSX = !showConnectText ? (
+  const connectButtonJSX = (
+    <button
+      className="caption2 d-flex gap-1"
+      onClick={handleCopyOnClick}
+      style={{ wordBreak: "break-all" }}
+    >
+      {displayShortenedAddress}{" "}
+      <span className="text-primary">
+        <i className="bi bi-clipboard" />
+      </span>
+    </button>
+  );
+
+  /* const connectButtonJSX = !showConnectText ? (
     <>
       <button
         className="caption2 d-flex gap-1"
@@ -357,7 +393,7 @@ const GravityToEthBridge = () => {
     </>
   ) : (
     notConnectedJSX
-  );
+  ); */
 
   const displayAvailableBalanceIBCToken = fromChainDenom(
     availableBalanceIBCToken
@@ -378,7 +414,11 @@ const GravityToEthBridge = () => {
     "isGravityConnected: ",
     !isGravityConnected,
     " !isObjEmpty(formState?.errorMessages): ",
-    !isObjEmpty(formState?.errorMessages)
+    !isObjEmpty(formState?.errorMessages),
+    " signingClient: ",
+    getSigningStargateClient2,
+    " gravityAddress: ",
+    gravityAddress
   );
 
   return (
@@ -446,11 +486,11 @@ const GravityToEthBridge = () => {
           </a>
         </Link> */}
         <button
-          className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2"
-          disabled={isSubmitDisabled}
           onClick={handleSubmit}
+          disabled={isSubmitDisabled}
+          className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
         >
-          Send to Ethereum <i className="bi bi-arrow-up" />
+          Send to Ethereum <i className="bi bi-arrow-down" />
         </button>
       </div>
     </div>

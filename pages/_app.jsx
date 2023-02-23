@@ -12,8 +12,14 @@ import Layout from "../components/Layout";
 import {
   cosmostationWallets,
   defaultChainRESTProxy,
+  defaultChainRESTProxy2,
   defaultChainRPCProxy,
+  defaultChainRPCProxy2,
   defaultTheme,
+  gravityChainRESTProxy,
+  gravityChainRESTProxy2,
+  gravityChainRPCProxy,
+  gravityChainRPCProxy2,
   keplrWallets,
   mantleAssetConfig,
   mantleChainConfig,
@@ -115,8 +121,12 @@ function CreateCosmosApp({ Component, pageProps }) {
           }}
           endpointOptions={{
             assetmantle: {
-              rpc: [defaultChainRPCProxy],
-              rest: [defaultChainRESTProxy],
+              rpc: [defaultChainRPCProxy, defaultChainRPCProxy2],
+              rest: [defaultChainRESTProxy, defaultChainRESTProxy2],
+            },
+            gravitybridge: {
+              rpc: [gravityChainRPCProxy, gravityChainRPCProxy2],
+              rest: [gravityChainRESTProxy, gravityChainRESTProxy2],
             },
           }}
           // walletModal={"simple_v1"}
