@@ -18,7 +18,7 @@ export default function Farm() {
   ];
 
   const latestIncentiveProgram =
-    ethConfig?.mainnet?.uniswap?.incentivePrograms?.[0];
+    ethConfig?.mainnet?.uniswap?.incentivePrograms?.[1];
 
   // hooks to work the multi-modal for ethereum
   const { open } = useWeb3Modal();

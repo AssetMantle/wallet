@@ -9,7 +9,7 @@ import {
 } from "wagmi";
 import { notify, toastConfig } from "../config";
 import { ethConfig } from "../data";
-import { getIncentiveIdFromKey } from "../lib";
+import { getIncentiveKeyEncoded } from "../lib";
 
 export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
   console.log("inside UniswapStakeEntry tokenId:  ", tokenId, " array: ");
@@ -21,7 +21,7 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
   const uniV3StakerContractAddress =
     ethConfig?.mainnet?.uniswap?.uniV3Staker?.address;
   const latestIncentiveProgram =
-    ethConfig?.mainnet?.uniswap?.incentivePrograms?.[0];
+    ethConfig?.mainnet?.uniswap?.incentivePrograms?.[1];
 
   let toastId = null;
 
@@ -38,13 +38,14 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
 
   // HOOKS
   const { address, isConnected } = useAccount();
+
   /* const incentiveIdBytes = ethers.utils.arrayify(
     "0xec26bf83e88de4eb86c7c98329701993a4692ba8e5410a0eaa5d2ecabe0a8167"
   ); */
 
-  const incentiveIdBytes = "0x";
-
-  const params = getIncentiveIdFromKey(latestIncentiveProgram?.incentiveTuple);
+  const incentiveIdBytes = getIncentiveKeyEncoded(
+    latestIncentiveProgram?.incentiveTuple
+  );
 
   /* const params = abiEncoder.encode(
     ["address", "address", "uint256", "uint256", ], // encode as address array
