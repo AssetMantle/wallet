@@ -608,6 +608,7 @@ export const sendIbcTokenToEth = async (
   memo,
   {
     getSigningStargateClient,
+    signAndBroadcast,
     chainName = defaultChainName,
     chainDenom = defaultChainDenom,
   }
@@ -634,7 +635,7 @@ export const sendIbcTokenToEth = async (
 
     // get the amount object of type Coin
     const transferAmount = {
-      denom: defaultChainDenom,
+      denom: gravityIBCToken,
       amount: amountInDenom,
     };
 
@@ -649,13 +650,13 @@ export const sendIbcTokenToEth = async (
 
     // populate the chainFee data which will also be in MNTL
     const chainFee = {
-      denom: defaultChainDenom,
+      denom: gravityIBCToken,
       amount: chainFeeAmountInDenom,
     };
 
     // populate the bridgeFee data, which will be in MNTL
     const bridgeFee = {
-      denom: defaultChainDenom,
+      denom: gravityIBCToken,
       amount: "20000",
     };
 
@@ -670,18 +671,6 @@ export const sendIbcTokenToEth = async (
     const stargateClient = await getSigningStargateClient();
 
     console.log("registry: ", stargateClient?.registry);
-
-    /* // get the msg object
-    const msg2 = {
-      typeUrl: "/gravity.v1.MsgSendToEth",
-      value: {
-        sender: senderAddress,
-        ethDest: ethDestAddress,
-        amount: transferAmount,
-        bridgeFee,
-        chainFee,
-      },
-    }; */
 
     const { sendToEth } = gravity.v1.MessageComposer.withTypeUrl;
     const msg = sendToEth({
@@ -706,12 +695,15 @@ export const sendIbcTokenToEth = async (
     };
 
     // use the stargate client to dispatch the transaction
-    const response = await stargateClient.signAndBroadcast(
+    /* const response = await stargateClient.signAndBroadcast(
       senderAddress,
       [msg],
       fee,
       memo
-    );
+    ); */
+
+    const response = await signAndBroadcast(senderAddress, [msg], fee, memo);
+
     return { response, error: null };
   } catch (error) {
     console.error("Error during transaction: ", error?.message);
