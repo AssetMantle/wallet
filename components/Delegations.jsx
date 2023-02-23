@@ -1,23 +1,23 @@
 import { useChain } from "@cosmos-kit/react";
+import BigNumber from "bignumber.js";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import {
   defaultChainName,
   defaultChainSymbol,
   getBalanceStyle,
-  placeholderMntlUsdValue,
-  placeholderTotalDelegations,
 } from "../config";
 import {
+  decimalize,
   fromChainDenom,
   fromDenom,
   sendRedelegation,
   sendUndelegation,
   useAllValidators,
-  useDelegatedValidators,
-  useMntlUsd,
   useAllValidatorsBonded,
   useAllValidatorsUnbonded,
+  useDelegatedValidators,
+  useMntlUsd,
 } from "../data";
 import { shiftDecimalPlaces } from "../lib";
 import ModalContainer from "./ModalContainer";
@@ -25,30 +25,17 @@ import ModalContainer from "./ModalContainer";
 const denomDisplay = defaultChainSymbol;
 
 const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
-  const { allValidators, isLoadingValidators, errorValidators } =
-    useAllValidators();
-  const {
-    allValidatorsBonded,
-    errorValidatorsBonded,
-    isLoadingValidatorsBonded,
-  } = useAllValidatorsBonded();
-  const {
-    allValidatorsUnbonded,
-    errorValidatorsUnbonded,
-    isLoadingValidatorsUnbonded,
-  } = useAllValidatorsUnbonded();
+  const { allValidators } = useAllValidators();
+  const { allValidatorsBonded } = useAllValidatorsBonded();
+  const { allValidatorsUnbonded } = useAllValidatorsUnbonded();
 
   const [searchValue, setSearchValue] = useState("");
   const [activeValidators, setActiveValidators] = useState(true);
   const walletManager = useChain(defaultChainName);
-  const { getSigningStargateClient, address, status, wallet } = walletManager;
-  const {
-    delegatedValidators,
-    totalDelegatedAmount,
-    isLoadingDelegatedAmount,
-    errorDelegatedAmount,
-  } = useDelegatedValidators();
-  const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
+  const { getSigningStargateClient, address, status } = walletManager;
+  const { delegatedValidators, totalDelegatedAmount } =
+    useDelegatedValidators();
+  const { mntlUsdValue } = useMntlUsd();
   let validatorsArray = allValidators.sort((a, b) => b.tokens - a.tokens);
   // modal handler
 
@@ -63,34 +50,31 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
   });
 
   //Create array of validators selected from list
-  const selectedDelegations = delegatedValidators
-    ?.filter((delegatedObject) =>
+  const selectedDelegationsArray = delegatedValidators?.filter(
+    (delegatedObject) =>
       stakeState?.selectedValidators?.includes(delegatedObject?.operatorAddress)
-    )
-    .reduce(
-      (accumulator, currentValue) =>
-        accumulator + parseFloat(currentValue?.delegatedAmount),
-      0
-    );
+  );
 
-  //Get total delegation amount of all validators selected
-  const cumulativeDelegations = errorDelegatedAmount
-    ? placeholderTotalDelegations
-    : totalDelegatedAmount;
+  const selectedDelegations = selectedDelegationsArray?.reduce(
+    (accumulator, currentValue) =>
+      BigNumber(accumulator)
+        .plus(BigNumber(currentValue?.delegatedAmount || 0))
+        .toString(),
+    "0"
+  );
 
   //Show total delegated amount if no validators selected or show cumulative delegated amount of selected validators
-  const delegationsDisplay = stakeState?.selectedValidators?.length
-    ? fromChainDenom(selectedDelegations)
-    : fromChainDenom(cumulativeDelegations);
+  const delegationsValue = stakeState?.selectedValidators?.length
+    ? selectedDelegations
+    : totalDelegatedAmount;
 
-  const delegationsInUSDDisplay =
-    errorDelegatedAmount ||
-    errorMntlUsdValue | isNaN(totalDelegatedAmount) ||
-    isNaN(parseFloat(mntlUsdValue))
-      ? placeholderMntlUsdValue
-      : (fromDenom(totalDelegatedAmount) * parseFloat(mntlUsdValue))
-          .toFixed(6)
-          .toString();
+  const delegationsDisplay = fromChainDenom(delegationsValue);
+
+  const delegationsInUSDDisplay = decimalize(
+    BigNumber(fromDenom(delegationsValue))
+      .multipliedBy(BigNumber(mntlUsdValue))
+      .toString()
+  );
 
   //Get number of validators delegated to out of selected validators
   const delegatedOutOfSelectedValidators = delegatedValidators?.filter((item) =>
@@ -175,11 +159,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
     e.target.src = "/validatorAvatars/alt.png";
   };
 
-  const isConnected = !(
-    isLoadingDelegatedAmount ||
-    errorDelegatedAmount ||
-    status != "Connected"
-  );
+  const isConnected = status == "Connected";
 
   return (
     <>

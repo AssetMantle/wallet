@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js";
 import { useReducer } from "react";
 import { useAccount, useBalance } from "wagmi";
 import {
@@ -12,7 +13,7 @@ import {
   decimalize,
   ethConfig,
   formConstants,
-  fromChainDenom,
+  fromDenom,
   placeholderAddressEth,
   toDenom,
 } from "../data";
@@ -32,18 +33,20 @@ const PolygonBridge = () => {
   const { address, isConnected } = useAccount();
 
   // get the mntl token balance in polygon chain using wagmi hook
-  const mntlEthBalanceObject = useBalance({
+  const { data: mntlEthBalanceData } = useBalance({
     address: address,
     token: childERC20TokenAddress,
     chainId: polygonChainId,
   });
 
   // get the matic balance in polygon chain using wagmi hook
-  const polygonBalanceObject = useBalance({
+  const { data: polygonBalanceData } = useBalance({
     address: address,
     token: ethConfig?.mainnet?.token?.child?.matic,
     chainId: polygonChainId,
   });
+
+  const polygonBalance = toDenom(polygonBalanceData?.formatted);
 
   // FORM REDUCER
   const initialState = {
@@ -57,18 +60,9 @@ const PolygonBridge = () => {
     switch (action.type) {
       case "CHANGE_AMOUNT": {
         // if amount is greater than current balance, populate error message and update amount
-        if (!action.payload) {
-          return {
-            ...state,
-            transferAmount: action.payload,
-            errorMessages: {
-              ...state.errorMessages,
-              transferAmountErrorMsg: formConstants.requiredErrorMsg,
-            },
-          };
-        } else if (
-          isNaN(parseFloat(action.payload)) ||
-          isNaN(toDenom(action.payload))
+        if (
+          BigNumber(action.payload).isNaN() ||
+          BigNumber(action.payload) <= 0
         ) {
           return {
             ...state,
@@ -79,9 +73,10 @@ const PolygonBridge = () => {
             },
           };
         } else if (
-          isNaN(parseFloat(mntlEthBalance)) ||
-          toDenom(action.payload) + parseFloat(defaultChainGasFee) >
-            parseFloat(mntlEthBalance)
+          BigNumber(polygonBalance).isNaN() ||
+          BigNumber(toDenom(action.payload)).isGreaterThan(
+            BigNumber(polygonBalance)
+          )
         ) {
           return {
             ...state,
@@ -106,12 +101,12 @@ const PolygonBridge = () => {
       case "SET_MAX_AMOUNT": {
         // if available balance is invalid, set error message
         if (
-          isNaN(parseFloat(mntlEthBalance)) ||
-          parseFloat(mntlEthBalance) < parseFloat(defaultChainGasFee)
+          BigNumber(polygonBalance).isNaN() ||
+          BigNumber(polygonBalance).isLessThan(BigNumber(defaultChainGasFee))
         ) {
           return {
             ...state,
-            transferAmount: 0,
+            transferAmount: polygonBalance,
             errorMessages: {
               ...state.errorMessages,
               transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
@@ -122,15 +117,13 @@ const PolygonBridge = () => {
         else {
           // delete the error message key if already exists
           delete state.errorMessages?.transferAmountErrorMsg;
-          console.log(
-            "state error message: ",
-            state.errorMessages?.transferAmountErrorMsg
-          );
           return {
             ...state,
-            transferAmount: fromChainDenom(
-              parseFloat(mntlEthBalance) - parseFloat(defaultChainGasFee)
-            ).toString(),
+            transferAmount: fromDenom(
+              BigNumber(polygonBalance)
+                .minus(BigNumber(defaultChainGasFee))
+                .toString()
+            ),
           };
         }
       }
@@ -182,29 +175,24 @@ const PolygonBridge = () => {
   };
 
   // DISPLAY VARIABLES
+  const isWalletEthConnected = isMounted() && isConnected;
   const displayShortenedAddress = shortenEthAddress(
     address || placeholderAddressEth
   );
   // const displayShortenedAddress = placeholderAddressEth;
-  const displayAvailableBalance =
-    !mntlEthBalanceObject?.data ||
-    mntlEthBalanceObject?.isLoading ||
-    mntlEthBalanceObject?.isError
-      ? decimalize(placeholderAvailableBalance)
-      : decimalize(mntlEthBalanceObject?.data?.formatted);
+  const displayAvailableBalance = !isWalletEthConnected
+    ? decimalize(placeholderAvailableBalance)
+    : decimalize(mntlEthBalanceData?.formatted);
   const displayAvailableBalanceDenom = defaultChainSymbol;
-  const displayMaticBalance =
-    !polygonBalanceObject?.data ||
-    polygonBalanceObject?.isLoading ||
-    polygonBalanceObject?.isError
-      ? decimalize(placeholderAvailableBalance)
-      : decimalize(polygonBalanceObject?.data?.formatted);
+
+  const displayMaticBalance = !isWalletEthConnected
+    ? decimalize(placeholderAvailableBalance)
+    : decimalize(polygonBalanceData?.formatted);
   const displayMaticBalanceDenom = polygonChainSymbol;
 
   const isFormAmountError = formState?.errorMessages?.transferAmountErrorMsg;
   const displayFormAmountErrorMsg =
     formState?.errorMessages?.transferAmountErrorMsg;
-  const isWalletEthConnected = isMounted() && isConnected;
   const isSubmitDisabled = true;
 
   // connect button with logic

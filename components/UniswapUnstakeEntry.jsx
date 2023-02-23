@@ -1,4 +1,3 @@
-import { ethers } from "ethers";
 import React from "react";
 import { toast } from "react-toastify";
 import {
@@ -50,10 +49,7 @@ export const UniswapUnstakeEntry = ({ tokenId }) => {
     );
   }
 
-  const multiCallDataBytesArray = [
-    ethers.utils.arrayify(unstakeTokenTxn),
-    ethers.utils.arrayify(withdrawTokenTxn),
-  ];
+  const multiCallDataBytesArray = [unstakeTokenTxn, withdrawTokenTxn];
 
   const { config } = usePrepareContractWrite({
     ...uniV3StakerContract,
@@ -63,8 +59,7 @@ export const UniswapUnstakeEntry = ({ tokenId }) => {
     chainId: 1,
     onError(error) {
       console.error(error);
-      if (error?.message?.toString?.().contains?.("User denied Transaction"))
-        toast.error(PREPARE_CONTRACT_ERROR, toastConfig);
+      toast.error(PREPARE_CONTRACT_ERROR, toastConfig);
     },
   });
 
@@ -127,7 +122,7 @@ export const UniswapUnstakeEntry = ({ tokenId }) => {
         <button
           className="button-primary px-4 py-2"
           onClick={handleSubmit}
-          // disabled={!writeAsync}
+          disabled={!writeAsync}
         >
           Unstake
         </button>

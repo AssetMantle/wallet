@@ -119,11 +119,6 @@ export default function Transact() {
       }
 
       case "CHANGE_AMOUNT": {
-        console.log(
-          "inside CHANGE_AMOUNT, action.payload: ",
-          toDenom(action.payload) + parseFloat(defaultChainGasFee)
-        );
-        console.log(BigNumber(toDenom(action.payload)));
         // if amount is greater than current balance, populate error message and update amount
         if (
           BigNumber(action.payload).isNaN() ||
@@ -265,19 +260,20 @@ export default function Transact() {
         if (!state.transferAmount) {
           localErrorMessages = {
             ...localErrorMessages,
-            transferAmountErrorMsg: formConstants.invalidValueErrorMsg,
+            transferAmountErrorMsg: formConstants.requiredErrorMsg,
           };
         }
 
-        if (isNaN(toDenom(state.transferAmount))) {
+        if (BigNumber(state.transferAmount).isNaN()) {
           localErrorMessages = {
             ...localErrorMessages,
-            transferAmountErrorMsg: formConstants.requiredErrorMsg,
+            transferAmountErrorMsg: formConstants.invalidValueErrorMsg,
           };
         } else if (
-          isNaN(parseFloat(availableBalance)) ||
-          toDenom(state.transferAmount) + parseFloat(defaultChainGasFee) >
-            parseFloat(availableBalance)
+          BigNumber(availableBalance).isNaN() ||
+          BigNumber(toDenom(action.payload))
+            .plus(BigNumber(defaultChainGasFee))
+            .isGreaterThan(BigNumber(availableBalance))
         ) {
           localErrorMessages = {
             ...localErrorMessages,
@@ -386,22 +382,6 @@ export default function Transact() {
         .isLessThanOrEqualTo(BigNumber(availableBalance)) &&
       formState?.recipientAddress &&
       !isInvalidAddress(formState?.recipientAddress);
-
-    console.log(
-      "inside handleSubmit, formValid: ",
-      isFormValid,
-      !!formState?.transferAmount,
-      !isNaN(parseFloat(toDenom(formState.transferAmount))),
-      !isNaN(parseFloat(availableBalance)),
-      parseFloat(availableBalance) > 0,
-      toDenom(formState.transferAmount) + parseFloat(defaultChainGasFee) <=
-        parseFloat(availableBalance),
-      !!formState?.recipientAddress,
-      !isInvalidAddress(formState?.recipientAddress),
-      toDenom(formState.transferAmount),
-      parseFloat(defaultChainGasFee),
-      parseFloat(availableBalance)
-    );
 
     if (isFormValid) {
       const id = toast.loading("Transaction initiated ...", {

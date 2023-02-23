@@ -1,4 +1,5 @@
 import { useChain } from "@cosmos-kit/react";
+import BigNumber from "bignumber.js";
 import Link from "next/link";
 import { useReducer } from "react";
 import { toast } from "react-toastify";
@@ -46,10 +47,7 @@ const MntlToGravityBridge = () => {
               transferAmountErrorMsg: formConstants.requiredErrorMsg,
             },
           };
-        } else if (
-          isNaN(parseFloat(action.payload)) ||
-          isNaN(toDenom(action.payload))
-        ) {
+        } else if (BigNumber(action.payload).isNaN()) {
           return {
             ...state,
             transferAmount: action.payload,
@@ -59,9 +57,10 @@ const MntlToGravityBridge = () => {
             },
           };
         } else if (
-          isNaN(parseFloat(availableBalance)) ||
-          toDenom(action.payload) + parseFloat(defaultChainGasFee) >
-            parseFloat(availableBalance)
+          BigNumber(availableBalance).isNaN() ||
+          BigNumber(toDenom(action.payload))
+            .plus(BigNumber(defaultChainGasFee))
+            .isGreaterThan(BigNumber(availableBalance))
         ) {
           return {
             ...state,

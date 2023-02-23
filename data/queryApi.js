@@ -160,7 +160,6 @@ export const decimalize = (
 
 // function to check whether an address is invalid
 export const isInvalidAddress = (address, chainName = defaultChainName) => {
-  console.log("inside isInvalidAddress, address: ", address);
   // check if the address is not null or placeholder address
   if (address && address != placeholderAddress) {
     try {
@@ -708,7 +707,7 @@ export const useAllValidatorsUnbonded = () => {
 export const useAllValidators = () => {
   // fetcher function for useSwr of useAvailableBalance()
   const fetchAllValidators = async (url) => {
-    // console.log("inside fetchAllValidators() ");
+    console.log("inside fetchAllValidators() ");
 
     let validatorArray;
 
@@ -730,8 +729,6 @@ export const useAllValidators = () => {
 
       validatorArray = [...aggregatedFetchArray[0], ...aggregatedFetchArray[1]];
       // console.log("aggregatedFetchArray: ", aggregatedFetchArray);
-
-      console.log("validatorArray: ", validatorArray);
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
@@ -804,7 +801,7 @@ export const useTotalBalance = () => {
         .plus(BigNumber(aggregatedFetchArray?.[3]?.totalUnbondingAmount || 0))
         .toString();
 
-      console.log("balanceValue: ", balanceValue);
+      // console.log("balanceValue: ", balanceValue);
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
