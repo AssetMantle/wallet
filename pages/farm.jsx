@@ -6,7 +6,11 @@ import { useAccount } from "wagmi";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import { ethConfig, placeholderAddressEth } from "../data";
 import { handleCopy, shortenEthAddress, useIsMounted } from "../lib";
-import { UniswapStakeContents, UniswapUnstakeContents } from "../views";
+import {
+  UniswapDashboard,
+  UniswapStakeContents,
+  UniswapUnstakeContents,
+} from "../views";
 
 export default function Farm() {
   // HOOKS
@@ -145,8 +149,8 @@ export default function Farm() {
             </nav>
             {
               {
-                0: stakeDisplayJSX,
-                1: stakeDisplayJSX,
+                0: <UniswapDashboard />,
+                1: <UniswapDashboard />,
               }[Tab]
             }
           </div>
