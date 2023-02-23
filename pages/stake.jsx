@@ -118,7 +118,10 @@ export default function Stake() {
                   className={`${
                     activeValidators ? "btn btn-primary" : "btn btn-inactive"
                   } caption`}
-                  onClick={() => setActiveValidators(true)}
+                  onClick={() => {
+                    setActiveValidators(true);
+                    stakeDispatch({ type: "EMPTY_SELECTED_VALIDATORS" });
+                  }}
                 >
                   Active
                 </button>
@@ -126,7 +129,10 @@ export default function Stake() {
                   className={`${
                     !activeValidators ? "btn btn-primary" : "btn btn-inactive"
                   } caption`}
-                  onClick={() => setActiveValidators(false)}
+                  onClick={() => {
+                    setActiveValidators(false);
+                    stakeDispatch({ type: "EMPTY_SELECTED_VALIDATORS" });
+                  }}
                 >
                   Inactive
                 </button>

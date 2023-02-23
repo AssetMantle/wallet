@@ -468,7 +468,7 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
             </div>
           </div>
         ) : (
-          { withdrawAddressModal }
+          withdrawAddressModal
         )}
       </ModalContainer>
     </div>

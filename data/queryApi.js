@@ -203,7 +203,6 @@ const fetchTotalUnbonding = async (url, address) => {
       await client.cosmos.staking.v1beta1.delegatorUnbondingDelegations({
         delegatorAddr: address,
       });
-
     if (!unbondingResponses?.length) {
       totalUnbondingAmount = 0;
     } else {
