@@ -26,17 +26,21 @@ import { handleCopy, isObjEmpty, useIsMounted } from "../lib/basicJavascript";
 
 const GravityToEthBridge = () => {
   // WALLET HOOKS
-  const chainContext4 = useChain(gravityChainName);
+  /* const chainContext4 = useChain(gravityChainName);
   const {
     address: gravityAddress,
     status: gravityStatus,
     getSigningStargateClient: getSigningStargateClientGravity,
-  } = chainContext4;
+  } = chainContext4; */
 
-  /* // get the gravity address from mantle
+  // get the gravity address from mantle
   const chainContext3 = useChain(defaultChainName);
-  const { address: mantleAddress } = chainContext3;
-  const gravityAddress = convertBech32Address(mantleAddress, gravityChainName); */
+  const {
+    address: mantleAddress,
+    status: gravityStatus,
+    getOfflineSigner,
+  } = chainContext3;
+  const gravityAddress = convertBech32Address(mantleAddress, gravityChainName);
 
   const isMounted = useIsMounted();
   const { isConnected } = useAccount();
@@ -197,7 +201,7 @@ const GravityToEthBridge = () => {
       });
     } else {
       toast.update(id, {
-        render: "Transaction failed.Try Again",
+        render: "Transaction failed. Try Again",
         type: "error",
         isLoading: false,
         position: "bottom-center",
@@ -269,7 +273,8 @@ const GravityToEthBridge = () => {
         memo,
 
         {
-          getSigningStargateClient: getSigningStargateClientGravity,
+          // getSigningStargateClient: getSigningStargateClientGravity,
+          getOfflineSigner,
         }
       );
       console.log("response: ", response, " error: ", error);
@@ -327,7 +332,10 @@ const GravityToEthBridge = () => {
         localTransferAmount,
         memo,
 
-        { getSigningStargateClient: getSigningStargateClientGravity }
+        {
+          // getSigningStargateClient: getSigningStargateClientGravity,
+          getOfflineSigner,
+        }
       );
       console.log("response: ", response, " error: ", error);
 

@@ -11,14 +11,16 @@ import {
   gravityBasisPoints,
   gravityBasisPointsScalingExponent,
   gravityChainDenom,
+  gravityChainId,
   gravityChainName,
+  gravityChainRPCProxy,
   gravityFeeAmount,
   gravityIBCSourceChannel,
   gravityIBCSourcePort,
   gravityIBCToken,
 } from "../config";
 import { toChainDenom } from "../data";
-import { gravity } from "../modules";
+import { gravity, getSigningGravityClient } from "../modules";
 
 // get the wallet properties and functions for that specific chain
 export const sendTokensTxn = async (
@@ -531,7 +533,7 @@ export const sendIbcTokenToMantle = async (
   amount,
   memo,
   {
-    getSigningStargateClient,
+    getOfflineSigner,
     chainName = defaultChainName,
     chainDenom = defaultChainDenom,
   }
@@ -553,12 +555,6 @@ export const sendIbcTokenToMantle = async (
       gravityChainName,
       gravityChainDenom
     );
-    // initialize signing client
-    const stargateClient = await getSigningStargateClient();
-
-    if (!stargateClient || !fromGravityAddress) {
-      throw new Error("stargateClient or from address undefined");
-    }
 
     // get the sourcePort and sourceChannel values pertaining to IBC transaction from AssetMantle to Gravity Chain
     const sourcePort = gravityIBCSourcePort;
@@ -580,6 +576,20 @@ export const sendIbcTokenToMantle = async (
       ],
       gas: defaultFeeGas,
     };
+
+    // initialize signing client
+    // const stargateClient = await getSigningStargateClient();
+
+    // initialize stargate client using signer and create txn
+    let signer = await getOfflineSigner(gravityChainId);
+    const stargateClient = await getSigningGravityClient({
+      rpcEndpoint: gravityChainRPCProxy,
+      signer: signer,
+    });
+
+    if (!stargateClient || !fromGravityAddress) {
+      throw new Error("stargateClient or from address undefined");
+    }
 
     // directly call sendIbcTokens from the stargateclient
     response = await stargateClient.sendIbcTokens(
@@ -607,7 +617,7 @@ export const sendIbcTokenToEth = async (
   amount,
   memo,
   {
-    getSigningStargateClient,
+    getOfflineSigner,
     chainName = defaultChainName,
     chainDenom = defaultChainDenom,
   }
@@ -681,15 +691,15 @@ export const sendIbcTokenToEth = async (
       gas: "250000",
     };
 
-    /* // initialize stargate client using signer and create txn
-    let signer = getOfflineSigner();
+    // initialize stargate client using signer and create txn
+    let signer = await getOfflineSigner(gravityChainId);
     const stargateClient = await getSigningGravityClient({
       rpcEndpoint: gravityChainRPCProxy,
       signer: signer,
-    }); */
+    });
 
-    // initialize stargate client using getter
-    const stargateClient = await getSigningStargateClient();
+    /* // initialize stargate client using getter
+    const stargateClient = await getSigningStargateClient(); */
 
     // use the stargate client to dispatch the transaction
     const response = await stargateClient.signAndBroadcast(

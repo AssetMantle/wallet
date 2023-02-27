@@ -55,7 +55,7 @@ export default function Vote() {
       });
     } else {
       toast.update(id, {
-        render: "Transaction failed.Try Again",
+        render: "Transaction failed. Try Again",
         type: "error",
         isLoading: false,
         position: "bottom-center",
