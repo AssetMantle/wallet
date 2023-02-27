@@ -94,6 +94,9 @@ input {
   padding-top: 68px;
   padding-top: 68px;
 }
+.h-90 {
+  height: 90% !important;
+}
 .am_app_container {
   overflow: hidden;
   height: 100dvh;
@@ -671,7 +674,11 @@ tbody {
     vertical-align: 0;
   }
 }
-
+.border-b-not_last {
+  &:not(:last-child) {
+    border-bottom: 1px solid $gray-100;
+  }
+}
 .farm-data-container {
   & > * {
     &:not(:last-child) {

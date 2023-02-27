@@ -100,7 +100,7 @@ export const UniswapUnstakeEntry = ({ tokenId }) => {
   };
 
   return (
-    <div className="bg-gray-800 p-3 rounded-4 d-flex gap-2 align-items-center justify-content-between">
+    <div className="border-b-not_last py-3 d-flex gap-2 align-items-center justify-content-between">
       <div className="d-flex gap-3">
         <div
           className="position-relative rounded-circle"
@@ -109,12 +109,18 @@ export const UniswapUnstakeEntry = ({ tokenId }) => {
           <img src="/tradePage/uniswap-v3.webp" alt="Uniswap Logo" />
         </div>
         <div className="d-flex flex-column gap-2">
-          <h3 className="body2">Token ID: {tokenId}</h3>
+          <h3 className="caption">
+            Token ID: <span className="text-gray caption2">{tokenId}</span>
+          </h3>
+          <p className="caption">
+            Liquidity:{" "}
+            {/* <span className="text-gray caption2">{liquidity}</span> */}
+          </p>
         </div>
       </div>
       <div className="d-flex gap-2 align-items-center">
         <button
-          className="button-secondary px-3 py-1"
+          className="button-primary px-4 py-2"
           onClick={handleSubmit}
           disabled={!writeAsync}
         >
