@@ -86,29 +86,6 @@ export default function Farm() {
     notConnectedJSX
   );
 
-  const stakeDisplayJSX = (
-    <div
-      className="d-flex flex-column w-100 rounded-4 flex-grow-1 pt-2"
-      style={{ height: "90%" }}
-    >
-      <div className="row farm-data-container nav-bg rounded-4 p-3 mx-0">
-        <div className="col-3 d-flex flex-column gap-3">
-          <h4 className="caption text-gray">Reward Pool</h4>
-          <p className="body1">{currentRewardPoolDisplay}&nbsp;$MNTL</p>
-        </div>
-        <div className="col-3 d-flex flex-column gap-3">
-          <h4 className="caption text-gray">End</h4>
-          <p className="body1">--</p>
-        </div>
-        <div className="col-6 d-flex flex-column gap-3">
-          <h4 className="caption text-gray">Connect</h4>
-          {isMounted() && connectButtonJSX}
-          {!isMounted() && notConnectedJSX}
-        </div>
-      </div>
-    </div>
-  );
-
   const stakeContentsJSX = <UniswapStakeContents />;
 
   const unstakeContentsJSX = <UniswapUnstakeContents />;

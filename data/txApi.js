@@ -608,7 +608,6 @@ export const sendIbcTokenToEth = async (
   memo,
   {
     getSigningStargateClient,
-    signAndBroadcast,
     chainName = defaultChainName,
     chainDenom = defaultChainDenom,
   }
@@ -660,18 +659,6 @@ export const sendIbcTokenToEth = async (
       amount: "20000",
     };
 
-    /* // initialize stargate client using signer and create txn
-    let signer = getOfflineSigner();
-    const stargateClient = await getSigningGravityClient({
-      rpcEndpoint: gravityChainRPCProxy,
-      signer: signer,
-    }); */
-
-    // initialize stargate client using getter
-    const stargateClient = await getSigningStargateClient();
-
-    console.log("registry: ", stargateClient?.registry);
-
     const { sendToEth } = gravity.v1.MessageComposer.withTypeUrl;
     const msg = sendToEth({
       ethDest: ethDestAddress,
@@ -694,15 +681,23 @@ export const sendIbcTokenToEth = async (
       gas: "250000",
     };
 
+    /* // initialize stargate client using signer and create txn
+    let signer = getOfflineSigner();
+    const stargateClient = await getSigningGravityClient({
+      rpcEndpoint: gravityChainRPCProxy,
+      signer: signer,
+    }); */
+
+    // initialize stargate client using getter
+    const stargateClient = await getSigningStargateClient();
+
     // use the stargate client to dispatch the transaction
-    /* const response = await stargateClient.signAndBroadcast(
+    const response = await stargateClient.signAndBroadcast(
       senderAddress,
       [msg],
       fee,
       memo
-    ); */
-
-    const response = await signAndBroadcast(senderAddress, [msg], fee, memo);
+    );
 
     return { response, error: null };
   } catch (error) {

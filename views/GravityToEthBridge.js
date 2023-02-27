@@ -26,21 +26,20 @@ import { handleCopy, isObjEmpty, useIsMounted } from "../lib/basicJavascript";
 
 const GravityToEthBridge = () => {
   // WALLET HOOKS
-  const chainContext2 = useChain(gravityChainName);
+  const chainContext4 = useChain(gravityChainName);
   const {
-    // getSigningStargateClient: getSigningStargateClient2,
+    address: gravityAddress,
     status: gravityStatus,
-  } = chainContext2;
+    getSigningStargateClient: getSigningStargateClientGravity,
+  } = chainContext4;
+
+  /* // get the gravity address from mantle
   const chainContext3 = useChain(defaultChainName);
-  const {
-    address: mantleAddress,
-    signAndBroadcast,
-    getSigningStargateClient: getSigningStargateClient2,
-  } = chainContext3;
-  const gravityAddress = convertBech32Address(mantleAddress, gravityChainName);
+  const { address: mantleAddress } = chainContext3;
+  const gravityAddress = convertBech32Address(mantleAddress, gravityChainName); */
 
   const isMounted = useIsMounted();
-  const { address, isConnected, connector } = useAccount();
+  const { isConnected } = useAccount();
   const { open } = useWeb3Modal();
 
   const isGravityConnected = gravityStatus == "Connected";
@@ -49,12 +48,6 @@ const GravityToEthBridge = () => {
   // HOOKS or GETTERS
   const { availableBalanceGravity, availableBalanceIBCToken } =
     useAvailableBalanceGravity();
-
-  /* useEffect(() => {
-    console.log("inside useEffect");
-    setShowConnectText(true);
-    return () => {};
-  }, [isGravityConnected]); */
 
   // FORM REDUCER
   const initialState = {
@@ -221,11 +214,6 @@ const GravityToEthBridge = () => {
 
   // CONTROLLER FUNCTIONS
 
-  /* const handleClickConnectWallet = (e) => {
-    e.preventDefault();
-    setShowConnectText(false);
-  }; */
-
   // connect button with logic
 
   const handleOpenWeb3Modal = async (e) => {
@@ -281,8 +269,7 @@ const GravityToEthBridge = () => {
         memo,
 
         {
-          getSigningStargateClient: getSigningStargateClient2,
-          signAndBroadcast,
+          getSigningStargateClient: getSigningStargateClientGravity,
         }
       );
       console.log("response: ", response, " error: ", error);
@@ -340,7 +327,7 @@ const GravityToEthBridge = () => {
         localTransferAmount,
         memo,
 
-        { getSigningStargateClient: getSigningStargateClient2 }
+        { getSigningStargateClient: getSigningStargateClientGravity }
       );
       console.log("response: ", response, " error: ", error);
 
@@ -429,14 +416,12 @@ const GravityToEthBridge = () => {
     !isGravityConnected,
     " !isObjEmpty(formState?.errorMessages): ",
     !isObjEmpty(formState?.errorMessages),
-    " getSigningStargateClient2: ",
-    getSigningStargateClient2,
     " gravityAddress: ",
     gravityAddress,
     " isMounted: ",
-    isMounted,
-    " signAndBroadcast: ",
-    signAndBroadcast
+    isMounted(),
+    " gravityStatus: ",
+    gravityStatus
   );
 
   return (

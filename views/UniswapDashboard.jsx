@@ -1,8 +1,16 @@
 import { disconnect } from "@wagmi/core";
 import { useWeb3Modal } from "@web3modal/react";
+import BigNumber from "bignumber.js";
 import dynamic from "next/dynamic";
 import React from "react";
-import { useAccount, useContractRead } from "wagmi";
+import { toast } from "react-toastify";
+import {
+  useAccount,
+  useContractRead,
+  useContractWrite,
+  usePrepareContractWrite,
+} from "wagmi";
+import { notify, toastConfig } from "../config";
 import { ethConfig, fromChainDenom, placeholderAddressEth } from "../data";
 import { handleCopy, shortenEthAddress, useIsMounted } from "../lib";
 
@@ -22,6 +30,7 @@ export const StaticUniswapDashboard = () => {
   const { address, isConnected } = useAccount();
   const isMounted = useIsMounted();
   const { open } = useWeb3Modal();
+  let toastId = null;
 
   // const finalAddress = uniV3StakerContractAddress;
 
@@ -43,6 +52,26 @@ export const StaticUniswapDashboard = () => {
       ...hookArgs,
     });
 
+  const { config } = usePrepareContractWrite({
+    ...uniV3StakerContract,
+    functionName: "claimReward",
+    args: [latestIncentiveProgram?.RewardTokenContract, address, 0],
+    enabled: isConnected && address,
+    chainId: 1,
+    onError(error) {
+      console.error(error.message);
+    },
+  });
+
+  const { writeAsync } = useContractWrite({
+    ...config,
+    onError(error) {
+      console.error(error);
+      notify(null, toastId, "Transaction Aborted. Try again.");
+      toastId = null;
+    },
+  });
+
   // HANDLER FUNCTIONS
   const handleCopyOnClick = (e) => {
     e.preventDefault();
@@ -57,6 +86,30 @@ export const StaticUniswapDashboard = () => {
   const handleDisconnectWeb3Modal = async (e) => {
     e.preventDefault();
     await disconnect();
+  };
+
+  const handleOnClickClaim = async (e) => {
+    e.preventDefault();
+    try {
+      // initiate the toast
+      toastId = toast.loading("Transaction initiated ...", toastConfig);
+
+      // create transaction
+      const transactionResponse = await writeAsync();
+
+      console.log("response: ", transactionResponse);
+      if (transactionResponse?.hash) {
+        notify(
+          transactionResponse?.hash,
+          toastId,
+          "Transaction Submitted. Check "
+        );
+      } else {
+        notify(null, toastId, "Transaction Aborted. Try again.");
+      }
+    } catch (error) {
+      console.error("Runtime Error: ", error);
+    }
   };
 
   const loadingJSX = "Loading...";
@@ -104,6 +157,12 @@ export const StaticUniswapDashboard = () => {
     notConnectedJSX
   );
 
+  const isClaimDisabled =
+    !isWalletEthConnected ||
+    BigNumber(rewardsBalance).isNaN() ||
+    BigNumber(rewardsBalance).isZero() ||
+    !writeAsync;
+
   return (
     <div
       className="d-flex flex-column w-100 rounded-4 flex-grow-1 pt-2"
@@ -116,7 +175,14 @@ export const StaticUniswapDashboard = () => {
         </div>
         <div className="col-3 d-flex flex-column gap-3">
           <h4 className="caption text-gray">Claimable</h4>
-          <p className="body1">{rewardsBalanceDisplay}</p>
+          <p className="caption">{rewardsBalanceDisplay}</p>
+          <button
+            className="button-primary caption2"
+            disabled={isClaimDisabled}
+            onClick={handleOnClickClaim}
+          >
+            Claim
+          </button>
         </div>
         <div className="col-6 d-flex flex-column gap-3">
           <h4 className="caption text-gray">Connect</h4>
