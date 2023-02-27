@@ -3,9 +3,6 @@ import { wallets as leapWallets } from "@cosmos-kit/leap";
 import { wallets as vectisWallets } from "@cosmos-kit/vectis";
 import { wallets as keplrWallets } from "@cosmos-kit/keplr";
 import { wallets as cosmostationWallets } from "@cosmos-kit/cosmostation";
-import { wallets as frontierWallets } from "@cosmos-kit/frontier-extension";
-import { wallets as trustWallets } from "@cosmos-kit/trust-extension";
-import { wallets as xdefiWallets } from "@cosmos-kit/xdefi-extension";
 import { ChainProvider } from "@cosmos-kit/react";
 import { Web3Modal } from "@web3modal/react";
 import { assets, chains } from "chain-registry";
@@ -20,10 +17,6 @@ import {
   defaultChainRPCProxy,
   defaultChainRPCProxy2,
   defaultTheme,
-  gravityChainRESTProxy,
-  gravityChainRESTProxy2,
-  gravityChainRPCProxy,
-  gravityChainRPCProxy2,
   mantleAssetConfig,
   mantleChainConfig,
   mantleTestChainConfig,
@@ -57,6 +50,12 @@ function CreateCosmosApp({ Component, pageProps }) {
   const customAssets = assets.filter(
     (assets) => assets.chain_name !== "assetmantle"
   );
+
+  const finalAssets = [
+    ...customAssets,
+    ...mantleAssetConfig,
+    ...mantleTestnetAssetConfig,
+  ];
 
   // get custom signing options for the stargate client
   // construct signer options
@@ -103,19 +102,12 @@ function CreateCosmosApp({ Component, pageProps }) {
       <ChakraProvider theme={defaultTheme}>
         <ChainProvider
           chains={finalChains}
-          assetLists={[
-            ...customAssets,
-            ...mantleAssetConfig,
-            ...mantleTestnetAssetConfig,
-          ]}
+          assetLists={finalAssets}
           wallets={[
             keplrWallets[0],
             ...leapWallets,
             cosmostationWallets[0],
             ...vectisWallets,
-            ...frontierWallets,
-            ...trustWallets,
-            ...xdefiWallets,
           ]}
           signerOptions={signerOptions}
           sessionOptions={sessionOptions}
@@ -130,10 +122,10 @@ function CreateCosmosApp({ Component, pageProps }) {
               rpc: [defaultChainRPCProxy, defaultChainRPCProxy2],
               rest: [defaultChainRESTProxy, defaultChainRESTProxy2],
             },
-            gravitybridge: {
-              rpc: [gravityChainRPCProxy, gravityChainRPCProxy2],
-              rest: [gravityChainRESTProxy, gravityChainRESTProxy2],
-            },
+            // gravitybridge: {
+            //   rpc: [gravityChainRPCProxy, gravityChainRPCProxy2],
+            //   rest: [gravityChainRESTProxy, gravityChainRESTProxy2],
+            // },
           }}
           // walletModal={"simple_v1"}
           walletModal={ConnectModal}

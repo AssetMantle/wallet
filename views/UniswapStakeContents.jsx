@@ -9,11 +9,8 @@ import { UniswapStakeContentsLoading } from "./UniswapStakeContentsLoading";
 
 const nonFungiblePositionManagerContractAddress =
   ethConfig?.mainnet?.uniswap?.nonFungiblePositionManager?.address;
-const uniV3StakerContractAddress =
-  ethConfig?.mainnet?.uniswap?.uniV3Staker?.address;
 const nonFungiblePositionManagerABI =
   ethConfig?.mainnet?.uniswap?.nonFungiblePositionManager?.abi;
-const uniV3StakerABI = ethConfig?.mainnet?.uniswap?.uniV3Staker?.abi;
 const chainID = ethConfig?.mainnet?.chainID;
 
 const selectedIncentive = ethConfig?.selected?.uniswapIncentiveProgram;
@@ -35,11 +32,6 @@ const StaticUniswapStakeContents = () => {
   const nonFungiblePositionManagerContract = {
     address: nonFungiblePositionManagerContractAddress,
     abi: nonFungiblePositionManagerABI,
-  };
-
-  const uniV3StakerContract = {
-    address: uniV3StakerContractAddress,
-    abi: uniV3StakerABI,
   };
 
   // wagmi hook to read the count of Position NFTs
