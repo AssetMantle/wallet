@@ -2,7 +2,7 @@ import { useChain } from "@cosmos-kit/react";
 import { useWeb3Modal } from "@web3modal/react";
 import BigNumber from "bignumber.js";
 import Link from "next/link";
-import { useReducer } from "react";
+import { useReducer, useState } from "react";
 import { toast } from "react-toastify";
 import { useAccount } from "wagmi";
 import {
@@ -25,6 +25,8 @@ import { convertBech32Address, shortenAddress } from "../lib";
 import { handleCopy, isObjEmpty, useIsMounted } from "../lib/basicJavascript";
 
 const GravityToEthBridge = () => {
+  const [gasFee, setGasFee] = useState();
+  console.log(gasFee);
   // WALLET HOOKS
   /* const chainContext4 = useChain(gravityChainName);
   const {
@@ -476,6 +478,24 @@ const GravityToEthBridge = () => {
       {isFormAmountError && (
         <small className="small text-error">{displayFormAmountErrorMsg}</small>
       )}
+      <div className="d-flex align-items-center justify-content-between gap-3">
+        <label className="caption2" htmlFor="gasFeeSelect">
+          Select Fee
+        </label>
+        <select
+          name="gasFeeSelect"
+          id="gasFeeSelect"
+          className="am-select caption2"
+          onChange={(e) => setGasFee(e.target.value)}
+        >
+          <option value="" disabled selected>
+            Select an option
+          </option>
+          <option value="instant">Instant ~ 2 minutes (2000 $MNTL)</option>
+          <option value="fast">Fast ~ 4 hours (1100 $MNTL)</option>
+          <option value="slow">Slow ~ 24 hours (250 $MNTL)</option>
+        </select>
+      </div>
       <div className="d-flex align-items-center justify-content-end gap-3">
         <button
           className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2"
