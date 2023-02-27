@@ -47,6 +47,7 @@ export const gravityChainRESTProxy2 =
 export const gravityBasisPoints = 2;
 export const gravityBasisPointsScalingExponent = -4;
 export const gravityChainName = "gravitybridge";
+export const gravityChainId = "gravity-bridge-3";
 export const gravityIBCToken =
   "ibc/00F2B62EB069321A454B708876476AFCD9C23C8C9C4A5A206DDF1CD96B645057";
 export const gravityChainSymbol = "$GRAV";

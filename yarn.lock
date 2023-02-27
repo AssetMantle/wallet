@@ -3922,16 +3922,6 @@
     "@cosmos-kit/cosmostation-extension" "^0.14.28"
     "@cosmos-kit/cosmostation-mobile" "^0.14.28"
 
-"@cosmos-kit/frontier-extension@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@cosmos-kit/frontier-extension/-/frontier-extension-0.0.2.tgz#5faa5d010f86eda88140fffc098ed02e42b46388"
-  integrity sha512-4oNte/GiKepJqN5nf9OzVDORwX7L8jNo0enkoUE5kAVDFBYOE6N1IoFGD2n2BLebbqXRFWdpIs3tu7cOU/9gZg==
-  dependencies:
-    "@babel/runtime" "7.11.2"
-    "@chain-registry/types" "0.13.1"
-    "@cosmos-kit/core" "^1.0.11"
-    react-icons "4.4.0"
-
 "@cosmos-kit/keplr-extension@^0.32.28":
   version "0.32.28"
   resolved "https://registry.yarnpkg.com/@cosmos-kit/keplr-extension/-/keplr-extension-0.32.28.tgz#d5e125bd1a7b482ee1b6afab28f83be719236cb6"
@@ -4002,15 +3992,6 @@
     react "18.2.0"
     react-icons "4.4.0"
 
-"@cosmos-kit/trust-extension@^0.13.28":
-  version "0.13.28"
-  resolved "https://registry.yarnpkg.com/@cosmos-kit/trust-extension/-/trust-extension-0.13.28.tgz#f0d0229d8b9d621a48691dc1827602f546465dc4"
-  integrity sha512-HrVE6PGMcq/fgZJrhH0nsLtn1IhCGng4oSJOwpF3e+r+nGQj1fm+9mhXx72HHstH5BOO1z6s0fhilvTsPrZaBQ==
-  dependencies:
-    "@babel/runtime" "7.11.2"
-    "@cosmos-kit/core" "^1.0.11"
-    react-icons "4.4.0"
-
 "@cosmos-kit/vectis-extension@^0.14.28":
   version "0.14.28"
   resolved "https://registry.yarnpkg.com/@cosmos-kit/vectis-extension/-/vectis-extension-0.14.28.tgz#416ff0cde01950657d9b3d7b5874b74192a97e22"
@@ -4040,16 +4021,6 @@
     "@walletconnect/types" "^2.4.3"
     "@walletconnect/utils" "^2.4.3"
     events "3.3.0"
-
-"@cosmos-kit/xdefi-extension@^0.14.5":
-  version "0.14.5"
-  resolved "https://registry.yarnpkg.com/@cosmos-kit/xdefi-extension/-/xdefi-extension-0.14.5.tgz#6e1113813311edd71c2b1c3b5f3ca2e35e5504ad"
-  integrity sha512-+wuXUWRDhB5JjtQZYmo38RNNJZxZeZIYf6gXk/6z/mBVvYqDRgpHfJlv9KYowEuFyEQi2jdfeD1A9jvFbVnlzw==
-  dependencies:
-    "@babel/runtime" "7.11.2"
-    "@chain-registry/types" "0.13.1"
-    "@cosmos-kit/core" "^1.0.11"
-    react-icons "4.4.0"
 
 "@cosmostation/extension-client@0.1.11":
   version "0.1.11"

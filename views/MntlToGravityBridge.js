@@ -184,7 +184,7 @@ const MntlToGravityBridge = () => {
       });
     } else {
       toast.update(id, {
-        render: "Transaction failed.Try Again",
+        render: "Transaction failed. Try Again",
         type: "error",
         isLoading: false,
         position: "bottom-center",
