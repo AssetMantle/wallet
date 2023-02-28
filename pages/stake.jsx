@@ -274,6 +274,8 @@ export default function Stake() {
 
         <ScrollableSectionContainer className="col-12 col-lg-4">
           <StakedToken
+            delegated={delegated}
+            setDelegated={setDelegated}
             notify={notify}
             stakeState={stakeState}
             stakeDispatch={stakeDispatch}

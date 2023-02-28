@@ -10,6 +10,8 @@ import { toast } from "react-toastify";
 import { defaultChainSymbol } from "../config";
 
 export default function StakedToken({
+  delegated,
+  setDelegated,
   totalTokens,
   setShowClaimError,
   showClaimError,
@@ -81,6 +83,8 @@ export default function StakedToken({
           </Suspense>
           <Suspense fallback={<p>Loading</p>}>
             <Rewards
+              delegated={delegated}
+              setDelegated={setDelegated}
               notify={notify}
               stakeState={stakeState}
               setShowClaimError={setShowClaimError}

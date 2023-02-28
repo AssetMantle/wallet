@@ -25,7 +25,13 @@ import ModalContainer from "./ModalContainer";
 
 const denomDisplay = defaultChainSymbol;
 
-const Rewards = ({ setShowClaimError, stakeState, notify }) => {
+const Rewards = ({
+  setShowClaimError,
+  stakeState,
+  notify,
+  setDelegated,
+  delegated,
+}) => {
   const [ClaimModal, setClaimModal] = useState(false);
 
   const walletManager = useChain(defaultChainName);
@@ -157,6 +163,7 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
       delegatedValidators?.length > 5 &&
       stakeState?.selectedValidators?.length === 0
     ) {
+      !delegated ? setDelegated(true) : null;
       setShowClaimError(true);
     } else {
       setClaimModal(true);
