@@ -2,6 +2,7 @@ import BigNumber from "bignumber.js";
 import dynamic from "next/dynamic";
 import React from "react";
 import { toast } from "react-toastify";
+import useSWR from "swr";
 import {
   useAccount,
   useContractRead,
@@ -14,7 +15,7 @@ import {
   notify,
   toastConfig,
 } from "../config";
-import { ethConfig, fromChainDenom } from "../data";
+import { ethConfig, fromChainDenom, useIncentiveList } from "../data";
 import { useIsMounted } from "../lib";
 
 const uniV3StakerContractAddress =
@@ -22,13 +23,14 @@ const uniV3StakerContractAddress =
 const uniV3StakerABI = ethConfig?.mainnet?.uniswap?.uniV3Staker?.abi;
 const chainID = ethConfig?.mainnet?.chainID;
 
-const selectedIncentive = ethConfig?.selected?.uniswapIncentiveProgram;
-
-const latestIncentiveProgram =
-  ethConfig?.mainnet?.uniswap?.incentivePrograms?.[selectedIncentive];
-
 const StaticUniswapRewards = () => {
   // HOOKS
+  // hooks to get the incentive program data
+  const { incentiveList, isLoadingIncentiveList } = useIncentiveList();
+  const { data: selectedIncentiveIndex } = useSWR("selectedIncentive");
+  const isIncentivePopulated = !isLoadingIncentiveList && incentiveList?.length;
+  const selectedIncentive = incentiveList?.[selectedIncentiveIndex] || [];
+
   // hooks to get the address of the connected wallet
   const { address, isConnected } = useAccount();
   const isMounted = useIsMounted();
@@ -46,17 +48,17 @@ const StaticUniswapRewards = () => {
     useContractRead({
       ...uniV3StakerContract,
       functionName: "rewards",
-      args: [latestIncentiveProgram?.RewardTokenContract, address],
+      args: [selectedIncentive?.rewardToken, address],
       select: (data) => data?.toString?.(),
-      enabled: isConnected && address,
+      enabled: isConnected && address && isIncentivePopulated,
       ...hookArgs,
     });
 
   const { config } = usePrepareContractWrite({
     ...uniV3StakerContract,
     functionName: "claimReward",
-    args: [latestIncentiveProgram?.RewardTokenContract, address, 0],
-    enabled: isConnected && address,
+    args: [selectedIncentive?.rewardToken, address, 0],
+    enabled: isConnected && address && isIncentivePopulated,
     chainId: 1,
     onError(error) {
       console.error(error.message);

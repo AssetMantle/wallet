@@ -5,14 +5,13 @@ import {
   modalConnectors,
   walletConnectProvider,
 } from "@web3modal/ethereum";
+import useSWR from "swr";
 import { configureChains, createClient, useAccount } from "wagmi";
 import { mainnet, polygon } from "wagmi/chains";
 import { placeholderAvailableBalance } from "../config";
-import { toChainDenom } from "./queryApi";
 import nonFungiblePositionManagerABI from "../data/contracts/nonFungiblePositionManagerABI.json";
 import uniV3StakerABI from "../data/contracts/uniV3StakerABI.json";
-import useSWR from "swr";
-import useSWRImmutable from "swr/immutable";
+import { toChainDenom } from "./queryApi";
 
 // CONFIG PARAMETERS FOR ETH AND POLYGON
 export const selectedEthNetwork = "mainnet";
@@ -68,6 +67,12 @@ export const ethConfig = {
       uniV3Staker: {
         address: "0xe34139463bA50bD61336E0c446Bd8C0867c6fE65",
         abi: uniV3StakerABI,
+      },
+      mntlEthPool: {
+        address: "0xf5b8304dc18579c4247caad705df01928248bc71",
+        token0: "0x2C4F1DF9c7DE0C59778936C9b145fF56813F3295",
+        token1: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        fee: "3000",
       },
       incentivePrograms: [
         {
@@ -403,12 +408,21 @@ export const useIncentiveList = () => {
     console.log("inside fetchIncentiveList, URL: ", url);
 
     let incentiveArray;
-    const query = `{incentivePositions(where: {incentive: "${incentiveId?.toString()}"}) {
-    position{
-      id
-      owner
-      liquidity
-    }}}`;
+    const query = `{
+      incentives(where: {
+        pool: "${ethConfig?.mainnet?.uniswap?.mntlEthPool?.address}"
+      }) {
+        id
+        rewardToken
+        pool
+        endTime
+        ended
+        reward
+        startTime
+        reward
+        refundee
+      }
+    }`;
 
     // explorer: https://thegraph.com/hosted-service/subgraph/revert-finance/uni-v3-staker-mainnet
     const stakedPositionsNftApi =
@@ -422,17 +436,9 @@ export const useIncentiveList = () => {
       });
 
       const responseObject = await res.json();
-      const unfilteredIncentiveArray =
-        responseObject?.data?.incentivePositions || [];
+      const unfilteredIncentiveArray = responseObject?.data?.incentives || [];
 
-      // incentiveArray = unfilteredIncentiveArray;
-      incentiveArray = unfilteredIncentiveArray
-        ?.filter?.(
-          (value) =>
-            value?.position?.owner?.toString?.().toLowerCase() ==
-            address?.toLowerCase?.()
-        )
-        ?.map?.((value) => value?.position);
+      incentiveArray = unfilteredIncentiveArray;
 
       // console.log("swr fetcher success: ", url);
     } catch (error) {
@@ -445,7 +451,7 @@ export const useIncentiveList = () => {
   };
 
   // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: incentiveArray, error } = useSWRImmutable(
+  const { data: incentiveArray, error } = useSWR(
     ["useIncentiveList"],
     fetchIncentiveList,
     {

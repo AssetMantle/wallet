@@ -1,8 +1,9 @@
 import React from "react";
 import { toast } from "react-toastify";
+import useSWR from "swr";
 import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 import { notify, toastConfig } from "../config";
-import { ethConfig, INCENTIVE_ENDED_ERROR } from "../data";
+import { ethConfig, INCENTIVE_ENDED_ERROR, useIncentiveList } from "../data";
 import { getIncentiveIdFromKey, getIncentiveKeyEncoded } from "../lib";
 
 export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
@@ -15,11 +16,6 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
   const uniV3StakerContractAddress =
     ethConfig?.mainnet?.uniswap?.uniV3Staker?.address;
 
-  const selectedIncentive = ethConfig?.selected?.uniswapIncentiveProgram;
-
-  const latestIncentiveProgram =
-    ethConfig?.mainnet?.uniswap?.incentivePrograms?.[selectedIncentive];
-
   let toastId = null;
 
   const nonFungiblePositionManagerContract = {
@@ -28,11 +24,28 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
   };
 
   // HOOKS
+  // hooks related to incentive program data
+  const { incentiveList, isLoadingIncentiveList } = useIncentiveList();
+  const { data: selectedIncentiveIndex } = useSWR("selectedIncentive");
+  const isIncentivePopulated = !isLoadingIncentiveList && incentiveList?.length;
+
+  const selectedIncentive = incentiveList?.[selectedIncentiveIndex] || [];
+
+  const selectedIncentiveTuple = isIncentivePopulated
+    ? [
+        selectedIncentive?.rewardToken,
+        selectedIncentive?.pool,
+        selectedIncentive?.startTime,
+        selectedIncentive?.endTime,
+        selectedIncentive?.refundee,
+      ]
+    : [];
+
   const { address, isConnected } = useAccount();
 
-  const incentiveIdBytes = getIncentiveKeyEncoded(
-    latestIncentiveProgram?.incentiveTuple
-  );
+  const incentiveIdBytes = selectedIncentiveTuple?.length
+    ? getIncentiveKeyEncoded(selectedIncentiveTuple)
+    : "0x";
 
   const { config } = usePrepareContractWrite({
     ...nonFungiblePositionManagerContract,
@@ -44,16 +57,14 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
       Number(tokenId),
       incentiveIdBytes,
     ],
-    enabled: isConnected && address && tokenId,
+    enabled: isConnected && address && tokenId && isIncentivePopulated,
     chainId: 1,
     onError(error) {
       console.error("prepare error: ", error);
       if (error?.message?.includes("incentive ended"))
         toast.error(INCENTIVE_ENDED_ERROR, {
           ...toastConfig,
-          toastId: getIncentiveIdFromKey(
-            latestIncentiveProgram?.incentiveTuple
-          ),
+          toastId: getIncentiveIdFromKey(selectedIncentiveTuple),
         });
       // toast.error(PREPARE_CONTRACT_ERROR, toastConfig);
     },

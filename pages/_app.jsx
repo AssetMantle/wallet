@@ -17,6 +17,10 @@ import {
   defaultChainRPCProxy,
   defaultChainRPCProxy2,
   defaultTheme,
+  gravityChainRESTProxy,
+  gravityChainRESTProxy2,
+  gravityChainRPCProxy,
+  gravityChainRPCProxy2,
   mantleAssetConfig,
   mantleChainConfig,
   mantleTestChainConfig,
@@ -28,6 +32,7 @@ import { getSigningGravityClientOptions } from "../modules";
 import ConnectModal from "../views/ConnectModal/ConnectModal";
 import "react-toastify/dist/ReactToastify.min.css";
 import "@splidejs/react-splide/css";
+import { SWRConfig } from "swr";
 
 function CreateCosmosApp({ Component, pageProps }) {
   // useEffect for bootstrap js hydration
@@ -98,65 +103,66 @@ function CreateCosmosApp({ Component, pageProps }) {
         />
         {/* open graphs end */}
       </Head>
-
-      <ChakraProvider theme={defaultTheme}>
-        <ChainProvider
-          chains={finalChains}
-          assetLists={finalAssets}
-          wallets={[
-            keplrWallets[0],
-            ...leapWallets,
-            cosmostationWallets[0],
-            ...vectisWallets,
-          ]}
-          signerOptions={signerOptions}
-          sessionOptions={sessionOptions}
-          walletConnectOptions={{
-            signClient: {
-              projectId: walletConnectProjectID,
-              relayUrl: "wss://relay.walletconnect.org",
-            },
-          }}
-          endpointOptions={{
-            assetmantle: {
-              rpc: [defaultChainRPCProxy, defaultChainRPCProxy2],
-              rest: [defaultChainRESTProxy, defaultChainRESTProxy2],
-            },
-            // gravitybridge: {
-            //   rpc: [gravityChainRPCProxy, gravityChainRPCProxy2],
-            //   rest: [gravityChainRESTProxy, gravityChainRESTProxy2],
-            // },
-          }}
-          // walletModal={"simple_v1"}
-          walletModal={ConnectModal}
-        >
-          <WagmiConfig client={wagmiClient}>
-            <Layout>
-              <Component {...pageProps} />
-              <Web3Modal
-                projectId={walletConnectProjectID}
-                themeColor="orange"
-                themeBackground="themeColor"
-                themeZIndex="99999"
-                ethereumClient={ethereumClient}
-              />
-              <ToastContainer
-                position="bottom-center"
-                autoClose={8000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="dark"
-              />
-              <ToastContainer />{" "}
-            </Layout>
-          </WagmiConfig>
-        </ChainProvider>
-      </ChakraProvider>
+      <SWRConfig value={{ fallback: { selectedIncentive: 0 } }}>
+        <ChakraProvider theme={defaultTheme}>
+          <ChainProvider
+            chains={finalChains}
+            assetLists={finalAssets}
+            wallets={[
+              keplrWallets[0],
+              ...leapWallets,
+              cosmostationWallets[0],
+              ...vectisWallets,
+            ]}
+            signerOptions={signerOptions}
+            sessionOptions={sessionOptions}
+            walletConnectOptions={{
+              signClient: {
+                projectId: walletConnectProjectID,
+                relayUrl: "wss://relay.walletconnect.org",
+              },
+            }}
+            endpointOptions={{
+              assetmantle: {
+                rpc: [defaultChainRPCProxy, defaultChainRPCProxy2],
+                rest: [defaultChainRESTProxy, defaultChainRESTProxy2],
+              },
+              gravitybridge: {
+                rpc: [gravityChainRPCProxy, gravityChainRPCProxy2],
+                rest: [gravityChainRESTProxy, gravityChainRESTProxy2],
+              },
+            }}
+            // walletModal={"simple_v1"}
+            walletModal={ConnectModal}
+          >
+            <WagmiConfig client={wagmiClient}>
+              <Layout>
+                <Component {...pageProps} />
+                <Web3Modal
+                  projectId={walletConnectProjectID}
+                  themeColor="orange"
+                  themeBackground="themeColor"
+                  themeZIndex="99999"
+                  ethereumClient={ethereumClient}
+                />
+                <ToastContainer
+                  position="bottom-center"
+                  autoClose={8000}
+                  hideProgressBar={false}
+                  newestOnTop={false}
+                  closeOnClick
+                  rtl={false}
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+                  theme="dark"
+                />
+                <ToastContainer />{" "}
+              </Layout>
+            </WagmiConfig>
+          </ChainProvider>
+        </ChakraProvider>
+      </SWRConfig>
     </>
   );
 }
