@@ -26,7 +26,7 @@ import {
   toDenom,
   useAvailableBalance,
 } from "../data";
-import { isObjEmpty } from "../lib";
+import { isObjEmpty, shortenAddress } from "../lib";
 
 export default function Transact() {
   // HOOKS
