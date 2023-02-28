@@ -1,5 +1,6 @@
 import React from "react";
 import { toast } from "react-toastify";
+import useSWR from "swr";
 import {
   useAccount,
   useContract,
@@ -8,18 +9,13 @@ import {
   useProvider,
 } from "wagmi";
 import { notify, toastConfig } from "../config";
-import { ethConfig, PREPARE_CONTRACT_ERROR } from "../data";
+import { ethConfig, PREPARE_CONTRACT_ERROR, useIncentiveList } from "../data";
 
 export const UniswapUnstakeEntry = ({ tokenId, liquidity }) => {
   // VARIABLES
   const uniV3StakerContractAddress =
     ethConfig?.mainnet?.uniswap?.uniV3Staker?.address;
   const uniV3StakerABI = ethConfig?.mainnet?.uniswap?.uniV3Staker?.abi;
-
-  const selectedIncentive = ethConfig?.selected?.uniswapIncentiveProgram;
-
-  const latestIncentiveProgram =
-    ethConfig?.mainnet?.uniswap?.incentivePrograms?.[selectedIncentive];
 
   let toastId = null;
 
@@ -35,14 +31,29 @@ export const UniswapUnstakeEntry = ({ tokenId, liquidity }) => {
   });
 
   // HOOKS
+  // hooks to get the incentive program data
+  const { incentiveList, isLoadingIncentiveList } = useIncentiveList();
+  const { data: selectedIncentiveIndex } = useSWR("selectedIncentive");
+  const isIncentivePopulated = !isLoadingIncentiveList && incentiveList?.length;
+
+  const selectedIncentiveTuple = isIncentivePopulated
+    ? [
+        incentiveList?.[selectedIncentiveIndex]?.rewardToken,
+        incentiveList?.[selectedIncentiveIndex]?.pool,
+        incentiveList?.[selectedIncentiveIndex]?.startTime,
+        incentiveList?.[selectedIncentiveIndex]?.endTime,
+        incentiveList?.[selectedIncentiveIndex]?.refundee,
+      ]
+    : [];
+
   const { address, isConnected } = useAccount();
   let unstakeTokenTxn, withdrawTokenTxn;
 
-  if (isConnected && address && tokenId) {
+  if (isConnected && address && tokenId && isIncentivePopulated) {
     unstakeTokenTxn = stakerContract?.interface?.encodeFunctionData?.(
       "unstakeToken((address,address,uint256,uint256,address),uint256)",
       // stakerContract?.interface?.fragments?.[23],
-      [latestIncentiveProgram?.incentiveTuple, Number(tokenId)]
+      [selectedIncentiveTuple, Number(tokenId)]
     );
 
     withdrawTokenTxn = stakerContract?.interface?.encodeFunctionData?.(
@@ -58,7 +69,7 @@ export const UniswapUnstakeEntry = ({ tokenId, liquidity }) => {
     ...uniV3StakerContract,
     functionName: "multicall(bytes[])",
     args: [multiCallDataBytesArray],
-    enabled: isConnected && address && tokenId,
+    enabled: isConnected && address && tokenId & isIncentivePopulated,
     chainId: 1,
     onError(error) {
       console.error(error);
@@ -66,7 +77,7 @@ export const UniswapUnstakeEntry = ({ tokenId, liquidity }) => {
     },
   });
 
-  const { data, write, writeAsync } = useContractWrite({
+  const { writeAsync } = useContractWrite({
     ...config,
     onError(error) {
       console.error(error);
