@@ -7,7 +7,7 @@ const selectedIncentive = ethConfig?.selected?.uniswapIncentiveProgram;
 const latestIncentiveProgram =
   ethConfig?.mainnet?.uniswap?.incentivePrograms?.[selectedIncentive];
 
-const StaticUniswapIncentiveList = () => {
+const StaticUniswapIncentiveList = ({ incentiveList }) => {
   // Data Variables
   const IncentivePrograms = [
     {
@@ -32,6 +32,10 @@ const StaticUniswapIncentiveList = () => {
     },
   ];
   // HOOKS
+  const { positionNfts, isLoadingPositionNfts, errorPositionNfts } =
+    useStakedPositionsNftId(
+      getIncentiveIdFromKey(latestIncentiveProgram?.incentiveTuple)
+    );
   const [SelectedIncentive, setSelectedIncentive] = useState();
 
   // DISPLAY VARIABLES

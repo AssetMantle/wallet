@@ -1,19 +1,26 @@
 import React from "react";
-import { getBalanceStyle, placeholderMntlUsdValue } from "../../config";
-import { useMntlUsd } from "../../data";
+import {
+  getBalanceStyle,
+  placeholderMntlUsdValue,
+  usdSymbol,
+} from "../../config";
+import { decimalize, useMntlUsd } from "../../data";
 
 export const MntlUsdPrice = () => {
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
 
-  const mntlUsdDisplay = errorMntlUsdValue
-    ? placeholderMntlUsdValue
-    : mntlUsdValue;
+  const mntlUsd = errorMntlUsdValue ? placeholderMntlUsdValue : mntlUsdValue;
+  const mntlUsdDisplay = getBalanceStyle(
+    decimalize(mntlUsd),
+    "caption",
+    "caption2"
+  );
 
   return (
     <p className={"caption"}>
-      {getBalanceStyle(mntlUsdDisplay, "caption", "caption2")}
+      {mntlUsdDisplay}
       &nbsp;
-      {"$USD"}
+      {usdSymbol}
     </p>
   );
 };

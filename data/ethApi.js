@@ -5,13 +5,14 @@ import {
   modalConnectors,
   walletConnectProvider,
 } from "@web3modal/ethereum";
-import useSWR from "swr";
 import { configureChains, createClient, useAccount } from "wagmi";
 import { mainnet, polygon } from "wagmi/chains";
 import { placeholderAvailableBalance } from "../config";
 import { toChainDenom } from "./queryApi";
 import nonFungiblePositionManagerABI from "../data/contracts/nonFungiblePositionManagerABI.json";
 import uniV3StakerABI from "../data/contracts/uniV3StakerABI.json";
+import useSWR from "swr";
+import useSWRImmutable from "swr/immutable";
 
 // CONFIG PARAMETERS FOR ETH AND POLYGON
 export const selectedEthNetwork = "mainnet";
@@ -393,6 +394,69 @@ export const useStakedPositionsNftId = (incentiveId) => {
     positionNfts: positionNftsArray,
     isLoadingPositionNfts: !error && !positionNftsArray,
     errorPositionNfts: error,
+  };
+};
+
+export const useIncentiveList = () => {
+  // fetcher function for useSwr of useMaticBalance()
+  const fetchIncentiveList = async (url) => {
+    console.log("inside fetchIncentiveList, URL: ", url);
+
+    let incentiveArray;
+    const query = `{incentivePositions(where: {incentive: "${incentiveId?.toString()}"}) {
+    position{
+      id
+      owner
+      liquidity
+    }}}`;
+
+    // explorer: https://thegraph.com/hosted-service/subgraph/revert-finance/uni-v3-staker-mainnet
+    const stakedPositionsNftApi =
+      "https://api.thegraph.com/subgraphs/name/revert-finance/uni-v3-staker-mainnet";
+    // use a try catch block for creating rich Error object
+    try {
+      // fetch the post request of graph query
+      const res = await fetch(stakedPositionsNftApi, {
+        method: "POST",
+        body: JSON.stringify({ query }),
+      });
+
+      const responseObject = await res.json();
+      const unfilteredIncentiveArray =
+        responseObject?.data?.incentivePositions || [];
+
+      // incentiveArray = unfilteredIncentiveArray;
+      incentiveArray = unfilteredIncentiveArray
+        ?.filter?.(
+          (value) =>
+            value?.position?.owner?.toString?.().toLowerCase() ==
+            address?.toLowerCase?.()
+        )
+        ?.map?.((value) => value?.position);
+
+      // console.log("swr fetcher success: ", url);
+    } catch (error) {
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
+      throw error;
+    }
+
+    // return the data
+    return incentiveArray;
+  };
+
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: incentiveArray, error } = useSWRImmutable(
+    ["useIncentiveList"],
+    fetchIncentiveList,
+    {
+      fallbackData: [],
+    }
+  );
+
+  return {
+    incentiveList: incentiveArray,
+    isLoadingIncentiveList: !error && !incentiveArray,
+    errorIncentiveList: error,
   };
 };
 

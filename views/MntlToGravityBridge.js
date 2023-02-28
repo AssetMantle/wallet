@@ -12,6 +12,7 @@ import {
 import {
   formConstants,
   fromChainDenom,
+  fromDenom,
   sendIbcTokenToGravity,
   toDenom,
   useAvailableBalance,
@@ -101,15 +102,11 @@ const MntlToGravityBridge = () => {
         else {
           // delete the error message key if already exists
           delete state.errorMessages?.transferAmountErrorMsg;
-          console.log(
-            "state error message: ",
-            state.errorMessages?.transferAmountErrorMsg
-          );
           return {
             ...state,
-            transferAmount: fromChainDenom(
-              parseFloat(availableBalance) - parseFloat(defaultChainGasFee)
-            ).toString(),
+            transferAmount: BigNumber(fromDenom(availableBalance))
+              .minus(BigNumber(fromDenom(defaultChainGasFee)))
+              .toString(),
           };
         }
       }
@@ -273,7 +270,7 @@ const MntlToGravityBridge = () => {
 
   // DISPLAY VARIABLES
   const displayShortenedAddress = shortenAddress(address);
-  const displayAvailableBalance = fromChainDenom(availableBalance).toString();
+  const displayAvailableBalance = fromChainDenom(availableBalance);
   const displayAvailableBalanceDenom = defaultChainSymbol;
   const isSubmitDisabled =
     status != "Connected" || !isObjEmpty(formState?.errorMessages);
