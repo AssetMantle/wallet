@@ -1,5 +1,4 @@
-export * from "./theme";
-export * from "./features";
 export * from "./defaults";
-export * from "./wallets";
+export * from "./mantleChain";
 export * from "./swrData";
+export * from "./theme";

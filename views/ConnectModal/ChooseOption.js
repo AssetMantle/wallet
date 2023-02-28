@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 
 export default function ChooseOption({
   ExistingWallet,
@@ -52,8 +51,9 @@ export default function ChooseOption({
             Array.isArray(ExistingWallet) &&
             ExistingWallet.length > 0 &&
             React.Children.toArray(
-              ExistingWallet.map((wallet) => (
+              ExistingWallet.map((wallet, index) => (
                 <button
+                  key={index}
                   className="d-flex align-items-center gap-1 button-secondary py-2 px-4 rounded-2"
                   onClick={() => handleSelect(wallet.name.toLowerCase(), 2)}
                 >
@@ -62,7 +62,7 @@ export default function ChooseOption({
                     className="position-relative"
                     style={{ width: "28px", aspectRatio: "1/1" }}
                   >
-                    <Image layout="fill" src={wallet.icon} alt={wallet.name} />
+                    <img layout="fill" src={wallet.icon} alt={wallet.name} />
                   </div>
                 </button>
               ))
@@ -80,7 +80,7 @@ export default function ChooseOption({
               className="position-relative"
               style={{ width: "28px", aspectRatio: "1/1" }}
             >
-              <Image layout="fill" src={Ledger.icon} alt={Ledger.name} />
+              <img layout="fill" src={Ledger.icon} alt={Ledger.name} />
             </div>
           </button>
         </div>
@@ -96,7 +96,7 @@ export default function ChooseOption({
               className="position-relative"
               style={{ width: "28px", aspectRatio: "1/1" }}
             >
-              <Image layout="fill" src={Keystore.icon} alt={Keystore.name} />
+              <img layout="fill" src={Keystore.icon} alt={Keystore.name} />
             </div>
           </button>
         </div>

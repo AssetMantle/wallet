@@ -1,75 +1,78 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import { wallets as leapwallets } from "@cosmos-kit/leap";
+import { wallets as leapWallets } from "@cosmos-kit/leap";
+import { wallets as vectisWallets } from "@cosmos-kit/vectis";
+import { wallets as keplrWallets } from "@cosmos-kit/keplr";
+import { wallets as cosmostationWallets } from "@cosmos-kit/cosmostation";
 import { ChainProvider } from "@cosmos-kit/react";
+import { Web3Modal } from "@web3modal/react";
 import { assets, chains } from "chain-registry";
 import Head from "next/head";
 import { useEffect } from "react";
+import { ToastContainer } from "react-toastify";
+import { WagmiConfig } from "wagmi";
 import Layout from "../components/Layout";
 import {
-  cosmostationWallets,
-  defaultChainGRPCProxy,
-  defaultChainName,
   defaultChainRESTProxy,
+  defaultChainRESTProxy2,
   defaultChainRPCProxy,
+  defaultChainRPCProxy2,
   defaultTheme,
-  keplrWallets,
+  mantleAssetConfig,
+  mantleChainConfig,
+  mantleTestChainConfig,
+  mantleTestnetAssetConfig,
 } from "../config";
 import "../config/styles/index.scss";
+import { ethereumClient, wagmiClient, walletConnectProjectID } from "../data";
+import { getSigningGravityClientOptions } from "../modules";
 import ConnectModal from "../views/ConnectModal/ConnectModal";
+import "react-toastify/dist/ReactToastify.min.css";
+import "@splidejs/react-splide/css";
 
 function CreateCosmosApp({ Component, pageProps }) {
   // useEffect for bootstrap js hydration
   useEffect(() => {
     require("bootstrap/dist/js/bootstrap.bundle.js");
-    console.log("leapwallets: ", leapwallets);
   }, []);
 
-  const assetmantleChain = chains.find(
-    (_chain) => _chain?.chain_name === "assetmantle"
+  const chainList = chains.filter(
+    (chain) => chain.chain_name !== "assetmantle"
   );
 
-  const assetmantleTestnetProps = {
-    apis: {
-      grpc: [{ address: defaultChainGRPCProxy, provider: "AssetMantle" }],
-      rest: [{ address: defaultChainRESTProxy, provider: "AssetMantle" }],
-      rpc: [{ address: defaultChainRPCProxy, provider: "AssetMantle" }],
+  // const chainList = chains;
+
+  const finalChains = [
+    ...mantleChainConfig,
+    ...chainList,
+    ...mantleTestChainConfig,
+  ];
+
+  const customAssets = assets.filter(
+    (assets) => assets.chain_name !== "assetmantle"
+  );
+
+  const finalAssets = [
+    ...customAssets,
+    ...mantleAssetConfig,
+    ...mantleTestnetAssetConfig,
+  ];
+
+  // get custom signing options for the stargate client
+  // construct signer options
+  const signerOptions = {
+    signingStargate: (chain) => {
+      // return corresponding stargate options or undefined
+      switch (chain.chain_name) {
+        case "gravitybridge":
+          return getSigningGravityClientOptions();
+      }
     },
-    bech32_prefix: "mantle",
-    chain_id: "test-mantle-2",
-    chain_name: "assetmantletestnet",
-    daemon_name: "mantelNode",
-    explorers: [
-      {
-        kind: "other",
-        tx_page:
-          "https://explorer.testnet.assetmantle.one/transactions/${txHash}",
-        url: "https://explorer.testnet.assetmantle.one",
-      },
-    ],
-    network_type: "testnet",
-    pretty_name: "AssetMantle Testnet",
-    slip44: 118,
-    status: "live",
   };
 
-  const assetmantletestnet = {
-    ...assetmantleChain,
-    ...assetmantleTestnetProps,
+  // implement session options
+  const sessionOptions = {
+    killOnTabClose: true,
   };
-
-  // get the exact asset configuration of the default chain
-  let assetmantleAssets = assets.find(
-    (_asset) => _asset?.chain_name === "assetmantle"
-  );
-
-  // make changes pertaining to testnet
-  let assetmantletestnetAssets = {
-    ...assetmantleAssets,
-    chain_name: defaultChainName,
-  };
-
-  // console.log("assetmantletestnetAssets: ", assetmantletestnetAssets);
-  // console.log("assetmantletestnet: ", assetmantletestnet);
 
   return (
     <>
@@ -98,20 +101,60 @@ function CreateCosmosApp({ Component, pageProps }) {
 
       <ChakraProvider theme={defaultTheme}>
         <ChainProvider
-          chains={[...chains, assetmantletestnet]}
-          assetLists={[...assets, assetmantletestnetAssets]}
-          wallets={[...keplrWallets, ...leapwallets, ...cosmostationWallets]}
-          endpointOptions={{
-            assetmantletestnet: {
-              rpc: [defaultChainRPCProxy],
-              rest: [defaultChainRESTProxy],
+          chains={finalChains}
+          assetLists={finalAssets}
+          wallets={[
+            keplrWallets[0],
+            ...leapWallets,
+            cosmostationWallets[0],
+            ...vectisWallets,
+          ]}
+          signerOptions={signerOptions}
+          sessionOptions={sessionOptions}
+          walletConnectOptions={{
+            signClient: {
+              projectId: walletConnectProjectID,
+              relayUrl: "wss://relay.walletconnect.org",
             },
           }}
-          walletModal={ConnectModal} // Provide walletModal
+          endpointOptions={{
+            assetmantle: {
+              rpc: [defaultChainRPCProxy, defaultChainRPCProxy2],
+              rest: [defaultChainRESTProxy, defaultChainRESTProxy2],
+            },
+            // gravitybridge: {
+            //   rpc: [gravityChainRPCProxy, gravityChainRPCProxy2],
+            //   rest: [gravityChainRESTProxy, gravityChainRESTProxy2],
+            // },
+          }}
+          // walletModal={"simple_v1"}
+          walletModal={ConnectModal}
         >
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <WagmiConfig client={wagmiClient}>
+            <Layout>
+              <Component {...pageProps} />
+              <Web3Modal
+                projectId={walletConnectProjectID}
+                themeColor="orange"
+                themeBackground="themeColor"
+                themeZIndex="99999"
+                ethereumClient={ethereumClient}
+              />
+              <ToastContainer
+                position="bottom-center"
+                autoClose={8000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+              />
+              <ToastContainer />{" "}
+            </Layout>
+          </WagmiConfig>
         </ChainProvider>
       </ChakraProvider>
     </>

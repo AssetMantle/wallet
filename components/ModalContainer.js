@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-export default function ModalContainer({ active, children }) {
+export default function ModalContainer({ active, setActive, children }) {
   useEffect(() => {
     active
       ? (document.querySelector("body").style.overflow = "hidden")
@@ -8,34 +8,37 @@ export default function ModalContainer({ active, children }) {
   }, [active]);
 
   return (
-    <>
-      {active && active !== 0 ? (
+    <div
+      className={`position-fixed top-0 bottom-0 start-0 end-0 align-items-center justify-content-center ${
+        active ? "d-flex" : "d-none"
+      }`}
+      style={{
+        width: "100%",
+        height: "100%",
+        background: "rgba(0, 0, 0, 0.7)",
+        backdropFilter: "blur(5px)",
+        zIndex: "1100",
+      }}
+    >
+      <div className="position-relative w-100 h-100">
         <div
-          className="position-fixed top-0 bottom-0 left-0 right-0 d-flex  pb-4"
+          className="position-absolute top-0 start-0 end-0 bottom-0"
+          style={{ zIndex: "1" }}
+          onClick={() => setActive(false)}
+        ></div>
+        <div
+          className="position-absolute top-0 start-0 end-0 bottom-0 my-auto d-flex m-auto p-2 align-items-start justify-content-center position-relative"
           style={{
-            width: "100dvw",
-            height: "100dvh",
-            background: "rgba(0, 0, 0, 0.7)",
-            backdropFilter: "blur(5px)",
-            zIndex: "500",
-            paddingTop: "80px",
+            width: "min(650px,100%)",
+            height: "100%",
+            zIndex: "2",
+            overflowX: "hidden",
+            overflowY: "auto",
           }}
         >
-          <div
-            className="d-flex m-auto p-2 align-items-start justify-content-center position-relative"
-            style={{
-              width: "min(600px,100%)",
-              height: "100%",
-              overflowX: "hidden",
-              overflowY: "auto",
-            }}
-          >
-            {children}
-          </div>
+          {children}
         </div>
-      ) : (
-        ""
-      )}
-    </>
+      </div>
+    </div>
   );
 }

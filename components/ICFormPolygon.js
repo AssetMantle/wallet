@@ -75,7 +75,7 @@ export default function ICFormPolygon() {
               className="position-relative"
               style={{ width: "21px", aspectRatio: "1/1" }}
             >
-              <Image
+              <img
                 src="/chainLogos/mntl.webp"
                 alt="AssetMantle"
                 layout="fill"
@@ -90,7 +90,7 @@ export default function ICFormPolygon() {
           >
             {MNtlAddress}{" "}
             <span className="text-primary">
-              <i className="bi bi-clipboard" />
+              <i className="bi bi-files" />
             </span>
           </button>
         </div>
@@ -145,7 +145,7 @@ export default function ICFormPolygon() {
           >
             {GravityAddress}{" "}
             <span className="text-primary">
-              <i className="bi bi-clipboard" />
+              <i className="bi bi-files" />
             </span>
           </button>
         </div>
@@ -204,7 +204,7 @@ export default function ICFormPolygon() {
             >
               {EthereumAddress}{" "}
               <span className="text-primary">
-                <i className="bi bi-clipboard" />
+                <i className="bi bi-files" />
               </span>
             </button>
           ) : (
@@ -271,7 +271,7 @@ export default function ICFormPolygon() {
             >
               {EthereumAddress}{" "}
               <span className="text-primary">
-                <i className="bi bi-clipboard" />
+                <i className="bi bi-files" />
               </span>
             </button>
           ) : (

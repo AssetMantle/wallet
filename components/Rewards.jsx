@@ -1,115 +1,425 @@
 import { useChain } from "@cosmos-kit/react";
+import BigNumber from "bignumber.js";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import {
   defaultChainName,
   defaultChainSymbol,
-  placeholderMntlUsdValue,
-  placeholderRewards,
+  getBalanceStyle,
 } from "../config";
 import {
+  fromChainDenom,
   fromDenom,
+  isInvalidAddress,
   sendRewardsBatched,
-  useAllValidators,
+  sendWithdrawAddress,
   useDelegatedValidators,
   useMntlUsd,
   useTotalRewards,
+  useWithdrawAddress,
 } from "../data";
+import { shiftDecimalPlaces } from "../lib";
+import ModalContainer from "./ModalContainer";
 
 const denomDisplay = defaultChainSymbol;
 
-const Rewards = ({ setShowClaimError, stakeState }) => {
+const Rewards = ({ setShowClaimError, stakeState, notify }) => {
+  const [ClaimModal, setClaimModal] = useState(false);
+
   const walletManager = useChain(defaultChainName);
-  const {
-    delegatedValidators,
-    totalDelegatedAmount,
-    isLoadingDelegatedAmount,
-    errorDelegatedAmount,
-  } = useDelegatedValidators();
+  const { withdrawAddress } = useWithdrawAddress();
+  const { delegatedValidators } = useDelegatedValidators();
   const { getSigningStargateClient, address, status } = walletManager;
+  const { allRewards, rewardsArray } = useTotalRewards();
+  const { mntlUsdValue } = useMntlUsd();
+  const selectedArray = rewardsArray?.filter?.((rewardObject) =>
+    stakeState?.selectedValidators?.includes?.(rewardObject.validatorAddress)
+  );
 
-  const { allRewards, rewardsArray, isLoadingRewards, errorRewards } =
-    useTotalRewards();
-  const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
-  const { allValidators, isLoadingValidators, errorValidators } =
-    useAllValidators();
+  const selectedRewards = selectedArray?.reduce?.(
+    (accumulator, currentValue) =>
+      BigNumber(accumulator)
+        .plus(new BigNumber(currentValue?.reward?.[0]?.amount || 0))
+        .toString(),
+    "0"
+  );
 
-  const selectedRewards = rewardsArray
-    ?.filter((rewardObject) =>
-      stakeState?.selectedValidators?.includes(rewardObject.validator_address)
-    )
-    .reduce(
-      (accumulator, currentValue) =>
-        accumulator + parseFloat(currentValue?.reward[0]?.amount),
-      0
+  const rewardsValue = stakeState?.selectedValidators?.length
+    ? selectedRewards
+    : allRewards;
+
+  const rewardsDisplay = fromChainDenom(rewardsValue);
+
+  const rewardsInUSDDisplay = BigNumber(fromDenom(rewardsValue))
+    .multipliedBy(BigNumber(mntlUsdValue))
+    .toString();
+
+  const handleSubmitClaim = async (e) => {
+    e.preventDefault();
+    setClaimModal(false);
+
+    // notify toast for transaction initiation
+    const id = toast.loading("Transaction initiated ...", {
+      position: "bottom-center",
+      autoClose: 8000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
+
+    let validatorAddresses;
+    let delegatedValidatorsArray = delegatedValidators?.map?.(
+      (validatorObject) => validatorObject?.operatorAddress
     );
-  const cumulativeRewards = errorRewards
-    ? placeholderRewards
-    : fromDenom(allRewards);
 
-  const rewardsDisplay = stakeState?.selectedValidators.length
-    ? fromDenom(selectedRewards)
-    : cumulativeRewards;
+    if (stakeState?.selectedValidators?.length > 0) {
+      // filter out only the validator addresses which are delegated
+      validatorAddresses = stakeState?.selectedValidators?.filter?.(
+        (validator) => delegatedValidatorsArray?.includes?.(validator)
+      );
+    } else {
+      validatorAddresses = delegatedValidatorsArray;
+    }
 
-  const rewardsInUSDDisplay =
-    errorRewards ||
-    errorMntlUsdValue | isNaN(fromDenom(allRewards)) ||
-    isNaN(parseFloat(mntlUsdValue))
-      ? placeholderMntlUsdValue
-      : (fromDenom(allRewards) * parseFloat(mntlUsdValue))
-          .toFixed(6)
-          .toString();
-
-  const handleClaim = async () => {
+    // call the batch reward claim transaction
     const { response, error } = await sendRewardsBatched(
       address,
-      stakeState?.selectedValidators,
+      withdrawAddress,
+      validatorAddresses,
       stakeState?.memo,
       { getSigningStargateClient }
     );
     console.log("response: ", response, " error: ", error);
+    if (response) {
+      notify(response?.transactionHash, id);
+    } else {
+      notify(null, id);
+    }
   };
 
   const [setupAddress, setSetupAddress] = useState(false);
-  const [NewAddress, setNewAddress] = useState();
+  const [newAddress, setNewAddress] = useState();
 
-  const handleAddressChange = () => {
+  const handleAddressChangeSubmit = async (e) => {
+    e.preventDefault();
     // do something to change the address
-    setSetupAddress(false);
+    setClaimModal(false);
+    const id = toast.loading("Transaction initiated ...", {
+      position: "bottom-center",
+      autoClose: 8000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
+    const { response, error } = await sendWithdrawAddress(
+      address,
+      newAddress,
+      stakeState?.memo,
+      {
+        getSigningStargateClient,
+      }
+    );
+    console.log("response: ", response, " error: ", error);
+    if (response) {
+      notify(response?.transactionHash, id);
+    } else {
+      notify(null, id);
+    }
   };
+
+  const handleOnClickClaimRewards = (e) => {
+    e.preventDefault();
+    if (
+      delegatedValidators?.length > 5 &&
+      stakeState?.selectedValidators?.length === 0
+    ) {
+      setShowClaimError(true);
+    } else {
+      setClaimModal(true);
+    }
+  };
+
+  const isSubmitDisabled = status != "Connected";
+
+  const isConnected = status == "Connected";
+
+  const delegationInfoJSX = (
+    <>
+      <h6 className="caption2 my-1">Total Available $MNTL rewards:</h6>
+      <p className="body2 my-1">
+        {stakeState?.selectedValidators?.length
+          ? getBalanceStyle(
+              fromChainDenom(selectedRewards),
+              "caption",
+              "caption2"
+            )
+          : getBalanceStyle(
+              fromChainDenom(allRewards),
+              "caption",
+              "caption2"
+            )}{" "}
+        $MNTL
+      </p>
+    </>
+  );
+
+  const delegationTableJSX = (
+    <>
+      <p className="caption2 my-2 text-gray">Selected Validator</p>
+      <div className="nav-bg p-2 rounded-4 w-100" style={{ overflowX: "auto" }}>
+        <table className="table claim-table">
+          <thead className="bt-0">
+            <tr>
+              <th
+                className="text-white caption2"
+                scope="col"
+                style={{ whiteSpace: "nowrap" }}
+              >
+                Validator Name
+              </th>
+              <th
+                className="text-white caption2"
+                scope="col"
+                style={{ whiteSpace: "nowrap" }}
+              >
+                Commission
+              </th>
+              <th
+                className="text-white caption2"
+                scope="col"
+                style={{ whiteSpace: "nowrap" }}
+              >
+                Delegated Amount
+              </th>
+              <th
+                className="text-white caption2"
+                scope="col"
+                style={{ whiteSpace: "nowrap" }}
+              >
+                Claimable Rewards
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {stakeState?.selectedValidators?.length ? (
+              delegatedValidators?.filter((item) =>
+                stakeState?.selectedValidators?.includes?.(
+                  item?.operatorAddress
+                )
+              ).length ? (
+                delegatedValidators
+                  ?.filter((item) =>
+                    stakeState?.selectedValidators?.includes?.(
+                      item?.operatorAddress
+                    )
+                  )
+                  .map((item, index) => (
+                    <tr key={index}>
+                      <td className="caption2">{item?.description?.moniker}</td>
+                      <td className="caption2">
+                        {shiftDecimalPlaces(
+                          item?.commission?.commissionRates?.rate,
+                          -16
+                        )}{" "}
+                        %
+                      </td>
+
+                      <td className="caption2">
+                        {getBalanceStyle(
+                          fromChainDenom(item?.delegatedAmount),
+                          "caption",
+                          "caption2"
+                        )}
+                      </td>
+                      <td className="caption2">
+                        {getBalanceStyle(
+                          fromChainDenom(
+                            rewardsArray?.find(
+                              (element) =>
+                                element?.validatorAddress ===
+                                item?.operatorAddress
+                            )?.reward[0]?.amount
+                          ),
+                          "caption",
+                          "caption2"
+                        )}
+                      </td>
+                    </tr>
+                  ))
+              ) : (
+                <tr>
+                  <td className="text-white text-center" colSpan={4}>
+                    None of the selected validators have been delegated to
+                  </td>
+                </tr>
+              )
+            ) : delegatedValidators?.length ? (
+              delegatedValidators?.map((item, index) => (
+                <tr key={index}>
+                  <td className="caption2">{item?.description?.moniker}</td>
+                  <td className="caption2">
+                    {shiftDecimalPlaces(
+                      item?.commission?.commissionRates?.rate,
+                      -16
+                    )}{" "}
+                    %
+                  </td>
+                  <td className="caption2">
+                    {getBalanceStyle(
+                      fromChainDenom(item?.delegatedAmount),
+                      "caption",
+                      "caption2"
+                    )}
+                  </td>
+                  <td className="caption2">
+                    {getBalanceStyle(
+                      fromChainDenom(
+                        rewardsArray?.find(
+                          (element) =>
+                            element?.validatorAddress === item?.operatorAddress
+                        )?.reward[0]?.amount
+                      ),
+                      "caption",
+                      "caption2"
+                    )}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td className="text-white text-center" colSpan={4}>
+                  No Record Found!!
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+
+  const setupWithdrawAddressJSX = (
+    <>
+      <h6 className="caption my-2 mt-5">
+        Current wallet address for claiming staking rewards:
+      </h6>
+      <p className="caption2 my-2 text-gray">{withdrawAddress}</p>
+      <p className="caption2 my-2 text-gray">
+        Want to claim your staking rewards to another wallet address?{" "}
+        <a
+          href="#"
+          className="caption text-primary"
+          onClick={(e) => {
+            e.preventDefault();
+            setSetupAddress(true);
+          }}
+        >
+          Setup address
+        </a>
+      </p>
+    </>
+  );
+
+  const withdrawAddressModal = (
+    <div className="d-flex flex-column bg-gray-700 m-auto p-4 rounded-3 w-100">
+      <div className="d-flex align-items-center justify-content-between">
+        <h5 className="body2 text-primary d-flex align-items-center gap-2">
+          <button onClick={() => setSetupAddress(false)}>
+            <i className="bi bi-chevron-left" />
+          </button>
+          Setup Rewards Withdrawal Address
+        </h5>
+        <button
+          className="btn-close primary bg-t"
+          onClick={() => setClaimModal(false)}
+          style={{ background: "none" }}
+        >
+          <span className="text-primary">
+            <i className="bi bi-x-lg" />
+          </span>
+        </button>
+      </div>
+      <div className="py-4 d-flex flex-column text-white">
+        <h6 className="caption2 my-1">Current Address</h6>
+        <p className="caption2 my-1">{withdrawAddress}</p>
+        <p className="caption2 my-2 text-gray">Revised Address</p>
+        <input
+          type="text"
+          className="am-input py-1 px-3 border-color-white rounded-2 bg-t"
+          placeholder="Enter Withdraw Address"
+          onChange={(e) => setNewAddress(e.target.value)}
+        />
+        {newAddress && newAddress === withdrawAddress && (
+          <p className="caption2 text-error pt-1">
+            Revised Address can&apos;t be same as current address.
+          </p>
+        )}
+        {isInvalidAddress(newAddress) && (
+          <p className="caption2 text-error pt-1">Invalid Address</p>
+        )}
+        <div className="d-flex align-items-center gap-2 justify-content-end">
+          <button
+            className="button-primary py-2 px-5 mt-3 caption text-center"
+            onClick={handleAddressChangeSubmit}
+            disabled={
+              newAddress == withdrawAddress || isInvalidAddress(newAddress)
+            }
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="nav-bg p-3 rounded-4 gap-3">
       <div className="d-flex flex-column gap-2">
-        {stakeState?.selectedValidators.length ? (
-          <p className="caption d-flex gap-2 align-items-center">
+        {stakeState?.selectedValidators?.length ? (
+          <p className="caption d-flex gap-2 align-items-center">Rewards</p>
+        ) : (
+          <p
+            className={`caption d-flex gap-2 align-items-center ${
+              isConnected ? null : "text-gray"
+            }`}
+          >
+            {" "}
             Cumulative Rewards
           </p>
-        ) : (
-          <p className="caption d-flex gap-2 align-items-center"> Rewards</p>
         )}
-        <p className="caption">
-          {rewardsDisplay}&nbsp;
+        <p className={isConnected ? "caption" : "caption text-gray"}>
+          {isConnected
+            ? getBalanceStyle(rewardsDisplay, "caption", "caption2")
+            : getBalanceStyle(
+                rewardsDisplay,
+                "caption text-gray",
+                "caption2 text-gray"
+              )}
+          &nbsp;
           {denomDisplay}
         </p>
-        <p className="caption2">
-          {rewardsInUSDDisplay}&nbsp;{"$USD"}
+        <p className={isConnected ? "caption2" : "caption2 text-gray"}>
+          {isConnected
+            ? getBalanceStyle(rewardsInUSDDisplay, "caption2", "small")
+            : getBalanceStyle(
+                rewardsInUSDDisplay,
+                "caption2 text-gray",
+                "small text-gray"
+              )}
+          &nbsp;{"$USD"}
         </p>
         <div className="d-flex justify-content-end">
-          {stakeState?.selectedValidators?.length > 5 ? null : (
+          {stakeState?.selectedValidators?.length > 5 ||
+          isSubmitDisabled ? null : (
             <button
               className="am-link text-start d-flex align-items-center gap-1"
-              data-bs-toggle={
-                delegatedValidators?.length > 5 &&
-                stakeState?.selectedValidators.length === 0
-                  ? ""
-                  : "modal"
-              }
-              data-bs-target="#claimRewardsModal"
-              onClick={() =>
-                delegatedValidators?.length > 5 &&
-                stakeState?.selectedValidators.length === 0 &&
-                setShowClaimError(true)
-              }
+              onClick={handleOnClickClaimRewards}
             >
               <i className="text-primary bi bi-box-arrow-in-down"></i>Claim
             </button>
@@ -117,267 +427,50 @@ const Rewards = ({ setShowClaimError, stakeState }) => {
         </div>
       </div>
 
-      <div
-        className="modal "
-        tabIndex="-1"
-        role="dialog"
-        id="claimRewardsModal"
-      >
-        <div
-          className="modal-dialog modal-dialog-centered"
-          role="document"
-          style={{ width: "min(100%,650px)", maxWidth: "min(100%,650px)" }}
-        >
-          {!setupAddress ? (
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title body2 text-primary d-flex align-items-center gap-2">
-                  <button
-                    type="button"
-                    className="btn-close primary"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                    style={{ background: "none" }}
-                  >
-                    <span className="text-primary">
-                      <i className="bi bi-chevron-left" />
-                    </span>
-                  </button>
-                  Claim Rewards
-                </h5>
+      <ModalContainer active={ClaimModal} setActive={setClaimModal}>
+        {!setupAddress ? (
+          <div className="d-flex flex-column bg-gray-700 m-auto p-4 rounded-3 w-100">
+            <div className="d-flex align-items-center justify-content-between">
+              <h5 className="body2 text-primary d-flex align-items-center gap-2">
                 <button
-                  type="button"
-                  className="btn-close primary"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
+                  className="btn-close primary bg-t"
+                  onClick={() => setClaimModal(false)}
                   style={{ background: "none" }}
                 >
                   <span className="text-primary">
-                    <i className="bi bi-x-lg" />
-                  </span>
-                </button>
-              </div>
-              <div className="modal-body p-4 d-flex flex-column text-white">
-                <h6 className="caption2 my-1">
-                  Total Available $MNTL rewards:
-                </h6>
-                <p className="body2 my-1">
-                  {stakeState?.selectedValidators.length
-                    ? rewardsArray
-                        ?.filter((item) =>
-                          stakeState?.selectedValidators?.includes(
-                            item?.validator_address
-                          )
-                        )
-                        .reduce(
-                          (accumulator, currentValue) =>
-                            parseFloat(accumulator) +
-                              parseFloat(currentValue?.reward[0]?.amount) || 0,
-                          parseFloat(0)
-                        )
-                    : rewardsArray?.reduce(
-                        (accumulator, currentValue) =>
-                          parseFloat(accumulator) +
-                            parseFloat(currentValue?.reward[0]?.amount) || 0,
-                        parseFloat(0)
-                      )}{" "}
-                  $MNTL
-                </p>
-                <p className="caption2 my-2 text-gray">Selected Validator</p>
-                <div
-                  className="nav-bg p-2 rounded-4 w-100"
-                  style={{ overflowX: "auto" }}
-                >
-                  <table className="table">
-                    <thead className="bt-0">
-                      <tr>
-                        <th
-                          className="text-white"
-                          scope="col"
-                          style={{ whiteSpace: "nowrap" }}
-                        >
-                          Validator Name
-                        </th>
-                        <th
-                          className="text-white"
-                          scope="col"
-                          style={{ whiteSpace: "nowrap" }}
-                        >
-                          Commission
-                        </th>
-                        <th
-                          className="text-white"
-                          scope="col"
-                          style={{ whiteSpace: "nowrap" }}
-                        >
-                          Delegated Amount
-                        </th>
-                        <th
-                          className="text-white"
-                          scope="col"
-                          style={{ whiteSpace: "nowrap" }}
-                        >
-                          Claimable Rewards
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {stakeState?.selectedValidators.length ? (
-                        delegatedValidators?.filter((item) =>
-                          stakeState?.selectedValidators.includes(
-                            item?.operator_address
-                          )
-                        ).length ? (
-                          delegatedValidators
-                            ?.filter((item) =>
-                              stakeState?.selectedValidators.includes(
-                                item?.operator_address
-                              )
-                            )
-                            .map((item, index) => (
-                              <tr key={index}>
-                                <td className="text-white">
-                                  {item?.description?.moniker}
-                                </td>
-                                <td className="text-white">
-                                  {item?.commission?.commission_rates?.rate *
-                                    100}
-                                  %
-                                </td>
-                                <td className="text-white">
-                                  {item?.tokens / 1000000}
-                                </td>
-                                <td className="text-white">
-                                  {rewardsArray?.find(
-                                    (element) =>
-                                      element?.validator_address ===
-                                      item?.operator_address
-                                  )?.reward[0]?.amount / 1000000}
-                                </td>
-                              </tr>
-                            ))
-                        ) : (
-                          <tr>
-                            <td className="text-white text-center" colSpan={4}>
-                              None of the selected validators have been
-                              delegated to
-                            </td>
-                          </tr>
-                        )
-                      ) : delegatedValidators?.length ? (
-                        delegatedValidators?.map((item, index) => (
-                          <tr key={index}>
-                            <td className="text-white">
-                              {item?.description?.moniker}
-                            </td>
-                            <td className="text-white">
-                              {item?.commission?.commission_rates?.rate * 100}%
-                            </td>
-                            <td className="text-white">
-                              {item?.tokens / 1000000}
-                            </td>
-                            <td className="text-white">
-                              {rewardsArray?.find(
-                                (element) =>
-                                  element?.validator_address ===
-                                  item?.operator_address
-                              )?.reward[0]?.amount / 1000000}
-                            </td>
-                          </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td className="text-white text-center" colSpan={4}>
-                            No Record Found!!
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-                <h6 className="caption my-2 mt-5">
-                  Current wallet adress for claiming staking rewards:
-                </h6>
-                <p className="caption2 my-2 text-gray">{address}</p>
-                <p className="caption2 my-2 text-gray">
-                  Want to claim your staking rewards to another wallet address?{" "}
-                  <a
-                    href="#"
-                    className="caption text-primary"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setSetupAddress(true);
-                    }}
-                  >
-                    Setup address
-                  </a>
-                </p>
-                <div className="d-flex justify-content-end">
-                  <button
-                    className="btn btn-primary px-5 mt-3 text-right rounded-5"
-                    onClick={handleClaim}
-                  >
-                    Submit
-                  </button>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title body2 text-primary d-flex align-items-center gap-2">
-                  <button onClick={() => setSetupAddress(false)}>
                     <i className="bi bi-chevron-left" />
-                  </button>
-                  Setup Rewards Withdrawal Address
-                </h5>
-                <button
-                  type="button"
-                  className="btn-close primary"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                  style={{ background: "none" }}
-                >
-                  <span className="text-primary">
-                    <i className="bi bi-x-lg" />
                   </span>
                 </button>
-              </div>
-              <div className="modal-body p-4 d-flex flex-column text-white">
-                <h6 className="caption2 my-1">Current Address</h6>
-                <p className="caption2 my-1">{address}</p>
-                <p className="caption2 my-2 text-gray">Revised Address</p>
-                <input
-                  type="text"
-                  className="am-input py-1 px-3 border-color-white rounded-2 bg-t"
-                  placeholder="Enter Withdraw Address"
-                  onChange={(e) => setNewAddress(e.target.value)}
-                />
-                {NewAddress && NewAddress === address && (
-                  <p className="caption2 text-error pt-1">
-                    Revised Address can&apos;t be same as current address.
-                  </p>
-                )}
-                <div className="d-flex justify-content-end">
-                  <button
-                    className="btn btn-primary px-5 mt-3 text-right rounded-5"
-                    onClick={handleAddressChange}
-                    disabled={
-                      NewAddress &&
-                      NewAddress !== address &&
-                      NewAddress.length == 45
-                        ? false
-                        : true
-                    }
-                  >
-                    Submit
-                  </button>
-                </div>
+                Claim Rewards
+              </h5>
+              <button
+                className="btn-close primary bg-t"
+                onClick={() => setClaimModal(false)}
+                style={{ background: "none" }}
+              >
+                <span className="text-primary">
+                  <i className="bi bi-x-lg" />
+                </span>
+              </button>
+            </div>
+            <div className="pt-4 d-flex flex-column text-white">
+              {delegationInfoJSX}
+              {delegationTableJSX}
+              {setupWithdrawAddressJSX}
+              <div className="d-flex align-items-center gap-2 justify-content-end">
+                <button
+                  className="button-primary py-2 px-5 mt-3 text-right rounded-5"
+                  onClick={handleSubmitClaim}
+                >
+                  Submit
+                </button>
               </div>
             </div>
-          )}
-        </div>
-      </div>
+          </div>
+        ) : (
+          { withdrawAddressModal }
+        )}
+      </ModalContainer>
     </div>
   );
 };

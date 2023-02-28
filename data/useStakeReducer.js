@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js";
 import { useReducer } from "react";
 import { defaultChainGasFee } from "../config";
 import {
@@ -8,7 +9,7 @@ import {
 } from "../data";
 import { formConstants } from "./constants";
 
-const UseStakeReducer = () => {
+const useStakeReducer = () => {
   const { availableBalance, denom, errorAvailableBalance } =
     useAvailableBalance();
 
@@ -42,6 +43,14 @@ const UseStakeReducer = () => {
         return {
           ...state,
           selectedValidators: [...state?.selectedValidators, action.payload],
+        };
+      }
+
+      case "EMPTY_SELECTED_VALIDATORS": {
+        return {
+          ...state,
+          selectedValidators: [],
+          undelegationAmount: "",
         };
       }
 
@@ -90,12 +99,8 @@ const UseStakeReducer = () => {
         }
       }
       case "CHANGE_DELEGATION_AMOUNT": {
-        console.log(
-          "inside CHANGE_DELEGATION_AMOUNT, action.payload: ",
-          toDenom(action.payload) + parseFloat(defaultChainGasFee)
-        );
         // if amount is greater than current balance, populate error message and update amount
-        if (isNaN(toDenom(action.payload))) {
+        if (BigNumber(action.payload).isNaN()) {
           return {
             ...state,
             delegationAmount: action.payload,
@@ -105,9 +110,10 @@ const UseStakeReducer = () => {
             },
           };
         } else if (
-          isNaN(parseFloat(availableBalance)) ||
-          toDenom(action.payload) + parseFloat(defaultChainGasFee) >
-            parseFloat(availableBalance)
+          BigNumber(availableBalance).isNaN() ||
+          BigNumber(toDenom(action.payload))
+            .plus(BigNumber(defaultChainGasFee))
+            .isGreaterThan(BigNumber(availableBalance))
         ) {
           return {
             ...state,
@@ -129,12 +135,20 @@ const UseStakeReducer = () => {
         }
       }
       case "SET_MAX_UNDELEGATION_AMOUNT": {
-        const delegatedAmount = delegatedValidators?.find(
-          (item) => item?.operator_address === state?.selectedValidators[0]
-        )?.delegatedAmount;
+        let delegatedAmount;
+        if (state?.selectedValidators == 0) {
+          delegatedAmount = delegatedValidators?.find(
+            (item) => item?.operatorAddress === state?.undelegationSrc
+          )?.delegatedAmount;
+        } else {
+          delegatedAmount = delegatedValidators?.find(
+            (item) => item?.operatorAddress === state?.selectedValidators[0]
+          )?.delegatedAmount;
+        }
         if (
-          isNaN(parseFloat(delegatedAmount)) ||
-          parseFloat(delegatedAmount) < parseFloat(defaultChainGasFee)
+          BigNumber(delegatedAmount).isNaN() ||
+          BigNumber(availableBalance).isNaN() ||
+          BigNumber(availableBalance).isLessThan(BigNumber(defaultChainGasFee))
         ) {
           console.log(
             "available balance: ",
@@ -144,11 +158,10 @@ const UseStakeReducer = () => {
           );
           return {
             ...state,
-            undelegationAmount: 0,
+            undelegationAmount: fromDenom(delegatedAmount),
             errorMessages: {
               ...state.errorMessages,
-              undelegationAmountErrorMsg:
-                formConstants.undelegationAmountErrorMsg,
+              undelegationAmountErrorMsg: formConstants.transferAmountErrorMsg,
             },
           };
         }
@@ -163,7 +176,7 @@ const UseStakeReducer = () => {
           return {
             ...state,
             undelegationAmount: fromDenom(
-              parseFloat(delegatedAmount) - parseFloat(defaultChainGasFee)
+              parseFloat(delegatedAmount)
             ).toString(),
           };
         }
@@ -171,11 +184,12 @@ const UseStakeReducer = () => {
 
       case "SET_MAX_REDELEGATION_AMOUNT": {
         const delegatedAmount = delegatedValidators?.find(
-          (item) => item?.operator_address === state?.selectedValidators[0]
+          (item) => item?.operatorAddress === state?.selectedValidators[0]
         )?.delegatedAmount;
         if (
-          isNaN(parseFloat(delegatedAmount)) ||
-          parseFloat(delegatedAmount) < parseFloat(defaultChainGasFee)
+          BigNumber(delegatedAmount).isNaN() ||
+          BigNumber(availableBalance).isNaN() ||
+          BigNumber(availableBalance).isLessThan(BigNumber(defaultChainGasFee))
         ) {
           console.log(
             "available balance: ",
@@ -185,38 +199,44 @@ const UseStakeReducer = () => {
           );
           return {
             ...state,
-            redelegationAmount: 0,
+            redelegationAmount: fromDenom(delegatedAmount),
             errorMessages: {
               ...state.errorMessages,
-              undelegationAmountErrorMsg:
-                formConstants.undelegationAmountErrorMsg,
+              redelegationAmountErrorMsg: formConstants.transferAmountErrorMsg,
             },
           };
         }
         // if valid available balance then set half value
         else {
           // delete the error message key if already exists
-          delete state.errorMessages?.undelegationAmountErrorMsg;
+          delete state.errorMessages?.redelegationAmountErrorMsg;
           console.log(
             "state error message: ",
-            state.errorMessages?.undelegationAmountErrorMsg
+            state.errorMessages?.redelegationAmountErrorMsg
           );
           return {
             ...state,
             redelegationAmount: fromDenom(
-              parseFloat(delegatedAmount) - parseFloat(defaultChainGasFee)
+              parseFloat(delegatedAmount)
             ).toString(),
           };
         }
       }
 
       case "CHANGE_UNDELEGATION_AMOUNT": {
-        console.log(
-          "inside CHANGE_AMOUNT, action.payload: ",
-          toDenom(action.payload) + parseFloat(defaultChainGasFee)
-        );
+        let delegatedAmount;
+        if (state?.selectedValidators == 0) {
+          delegatedAmount = delegatedValidators?.find(
+            (item) => item?.operatorAddress === state?.undelegationSrc
+          )?.delegatedAmount;
+        } else {
+          delegatedAmount = delegatedValidators?.find(
+            (item) => item?.operatorAddress === state?.selectedValidators[0]
+          )?.delegatedAmount;
+        }
+
         // if amount is greater than current balance, populate error message and update amount
-        if (isNaN(toDenom(action.payload))) {
+        if (BigNumber(action.payload).isNaN()) {
           return {
             ...state,
             undelegationAmount: action.payload,
@@ -226,17 +246,18 @@ const UseStakeReducer = () => {
             },
           };
         } else if (
-          isNaN(parseFloat(availableBalance)) ||
-          toDenom(action.payload) + parseFloat(defaultChainGasFee) >
-            parseFloat(availableBalance)
+          BigNumber(delegatedAmount).isNaN() ||
+          BigNumber(toDenom(action.payload)).isGreaterThan(
+            BigNumber(delegatedAmount)
+          ) ||
+          BigNumber(availableBalance).isLessThan(BigNumber(defaultChainGasFee))
         ) {
           return {
             ...state,
             undelegationAmount: action.payload,
             errorMessages: {
               ...state.errorMessages,
-              undelegationAmountErrorMsg:
-                formConstants.undelegationAmountErrorMsg,
+              undelegationAmountErrorMsg: formConstants.transferAmountErrorMsg,
             },
           };
         }
@@ -258,6 +279,7 @@ const UseStakeReducer = () => {
         return {
           ...state,
           redelegationDestination: action.payload,
+          errorMessages: {},
         };
       }
       case "SET_REDELEGATION_SRC_ADDRESS": {
@@ -277,23 +299,35 @@ const UseStakeReducer = () => {
         };
       }
       case "CHANGE_REDELEGATION_AMOUNT": {
-        console.log(
-          "inside CHANGE_REDELEGATION_AMOUNT, action.payload: ",
-          toDenom(action.payload) + parseFloat(defaultChainGasFee)
-        );
+        const delegatedAmount = delegatedValidators?.find(
+          (item) => item?.operatorAddress === state?.selectedValidators[0]
+        )?.delegatedAmount;
+        if (BigNumber(action.payload).isNaN()) {
+          return {
+            ...state,
+            redelegationAmount: action.payload,
+            errorMessages: {
+              ...state.errorMessages,
+              redelegationAmountErrorMsg: formConstants.requiredErrorMsg,
+            },
+          };
+        }
         // if amount is greater than current balance, populate error message and update amount
-        if (
-          isNaN(parseFloat(availableBalance)) ||
-          toDenom(action.payload) + parseFloat(defaultChainGasFee) >
-            parseFloat(availableBalance)
+        else if (
+          BigNumber(availableBalance).isNaN() ||
+          BigNumber(toDenom(action.payload)).isGreaterThan(
+            BigNumber(delegatedAmount) ||
+              BigNumber(availableBalance).isLessThan(
+                BigNumber(defaultChainGasFee)
+              )
+          )
         ) {
           return {
             ...state,
-            undelegationAmount: action.payload,
+            redelegationAmount: action.payload,
             errorMessages: {
               ...state.errorMessages,
-              undelegationAmountErrorMsg:
-                formConstants.undelegationAmountErrorMsg,
+              redelegationAmountErrorMsg: formConstants.transferAmountErrorMsg,
             },
           };
         }
@@ -304,14 +338,92 @@ const UseStakeReducer = () => {
           return {
             ...state,
             redelegationAmount: action.payload,
+            errorMessages: {},
           };
         }
       }
+      case "SUBMIT_REDELEGATE": {
+        if (!state.redelegationDestination) {
+          return {
+            ...state,
+            errorMessages: {
+              ...state.errorMessages,
+              redelegationAmountErrorMsg:
+                "Please select a validator to redelegate to",
+            },
+          };
+        } else if (!state.redelegationAmount) {
+          return {
+            ...state,
+            errorMessages: {
+              ...state.errorMessages,
+              redelegationAmountErrorMsg: formConstants.requiredErrorMsg,
+            },
+          };
+        } else {
+          return {
+            ...state,
+            errorMessages: {},
+          };
+        }
+      }
+      case "SUBMIT_DELEGATE": {
+        if (!state.delegationAmount) {
+          return {
+            ...state,
+            errorMessages: {
+              ...state.errorMessages,
+              transferAmountErrorMsg: formConstants.requiredErrorMsg,
+            },
+          };
+        } else {
+          return {
+            ...state,
+            errorMessages: {},
+          };
+        }
+      }
+      case "SUBMIT_UNDELEGATE": {
+        if (!state.undelegationAmount) {
+          return {
+            ...state,
+            errorMessages: {
+              ...state.errorMessages,
+              undelegationAmountErrorMsg: formConstants.requiredErrorMsg,
+            },
+          };
+        } else {
+          return {
+            ...state,
+            errorMessages: {},
+          };
+        }
+      }
+      case "RESET_UNDELEGATE": {
+        return {
+          ...state,
+          undelegationAmount: "",
+        };
+      }
+      case "RESET_REDELEGATE": {
+        return {
+          ...state,
+          redelegationAmount: "",
+        };
+      }
+      case "RESET_DELEGATE": {
+        return {
+          ...state,
+          delegationAmount: "",
+          delegationAddress: "",
+        };
+      }
+      default:
+        console.log("default case");
     }
   };
-
   const [stakeState, stakeDispatch] = useReducer(stakeReducer, initialState);
   return { stakeState, stakeDispatch };
 };
 
-export default UseStakeReducer;
+export default useStakeReducer;

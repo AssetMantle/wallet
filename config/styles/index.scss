@@ -1,5 +1,5 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css");
-@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css");
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css");
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Work+Sans:wght@500;600;700&display=swap");
 
 // variables
@@ -79,6 +79,13 @@ body {
   font-family: $fontPrimary;
 }
 
+input {
+  color: $primary-light;
+  &::placeholder {
+    color: $gray-100 !important;
+  }
+}
+
 .my-16 {
   margin-top: 128px;
   margin-bottom: 128px;
@@ -86,6 +93,9 @@ body {
 .py-6 {
   padding-top: 68px;
   padding-top: 68px;
+}
+.h-90 {
+  height: 90% !important;
 }
 .am_app_container {
   overflow: hidden;
@@ -174,16 +184,17 @@ a:hover {
   background-color: $bg;
   border-color: $primary-main;
   color: $color;
-  &:disabled {
-    color: $discolor;
-    background-color: $disBG;
-    border-color: $primary-disabled;
-  }
   &:hover {
     color: $color !important;
     background-color: $bg !important;
     border: 1px solid $primary-main !important;
     box-shadow: 0px 0px 10px $yellow-800 !important;
+  }
+  &:disabled {
+    color: $discolor !important;
+    background-color: $disBG !important;
+    border-color: $primary-disabled !important;
+    box-shadow: none !important;
   }
 }
 @mixin LinkRoot {
@@ -192,11 +203,11 @@ a:hover {
   text-transform: capitalize;
   font-feature-settings: "liga" off;
   color: $primary-main;
-  &:disabled {
-    color: $primary-disabled;
-  }
   &:hover {
     color: $primary-main !important;
+  }
+  &:disabled {
+    color: $primary-disabled !important;
   }
 }
 
@@ -254,6 +265,14 @@ a:hover {
     }
   }
 }
+.am-connect {
+  border-color: $primary-light;
+  color: $primary-light;
+  &:hover {
+    border-color: $primary-main;
+    color: $primary-main;
+  }
+}
 
 .am-progress {
   width: 100%;
@@ -281,6 +300,9 @@ a:hover {
 }
 .bg-t {
   background-color: transparent !important;
+}
+.bg-dark-200 {
+  background-color: $dark-200;
 }
 .bg-gray-700 {
   background-color: $gray-700;
@@ -355,6 +377,13 @@ a:hover {
 .border-color-primary {
   border: 1px solid;
   border-color: $primary-main;
+}
+.border-color-primary-hover {
+  border: 2px solid;
+  border-color: transparent;
+  &:hover {
+    border-color: $primary-main;
+  }
 }
 .overflow-y {
   overflow: hidden;
@@ -466,6 +495,7 @@ hr,
       width: min(95vw, 260px);
       transform: translateX(50%) translateY(-10%);
       box-shadow: 1px 1px 5px $dark-100;
+      z-index: 1000;
     }
   }
 }
@@ -500,11 +530,25 @@ hr,
       max-width: 100px;
     }
   }
+  &.claim-table {
+    & > :not(caption) > * > * {
+      border: none;
+      text-align: center;
+      vertical-align: middle;
+      height: max-content;
+      &:nth-child(4) {
+        max-width: unset;
+      }
+    }
+  }
 }
 input[type="checkbox"] {
   accent-color: $primary-main;
   width: 18px;
   aspect-ratio: 1/1;
+}
+input[type="radio"] {
+  accent-color: $primary-main;
 }
 .btn-close {
   opacity: 1;
@@ -617,5 +661,47 @@ tbody {
 .no-marker {
   &::marker {
     content: "";
+  }
+}
+.bg-voted {
+  background: $gray-700;
+}
+.vote_no_with_veto {
+  &::before {
+    border-radius: 50%;
+    border: 2px solid $gray-700;
+    background-color: $gray-700;
+    vertical-align: 0;
+  }
+}
+.border-b-not_last {
+  &:not(:last-child) {
+    border-bottom: 1px solid $gray-100;
+  }
+}
+.farm-data-container {
+  & > * {
+    &:not(:last-child) {
+      border-right: 2px solid $gray-100;
+    }
+  }
+}
+
+.splide__arrow {
+  background-color: transparent !important;
+  opacity: 1;
+  &:focus {
+    outline: none !important;
+  }
+  &.splide__arrow--next {
+    right: 10px;
+  }
+  &.splide__arrow--prev {
+    left: 10px;
+    transform: scaleX(-1) translateY(-48%) !important;
+  }
+  & > svg {
+    transform: scale(1.3) !important;
+    fill: $dark-200 !important;
   }
 }

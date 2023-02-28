@@ -1,6 +1,11 @@
-import Image from "next/image";
 import React from "react";
-import { useDelegatedValidators } from "../data";
+import { getBalanceStyle } from "../config";
+import {
+  fromChainDenom,
+  useAllValidatorsBonded,
+  useAllValidatorsUnbonded,
+} from "../data";
+import { shiftDecimalPlaces } from "../lib";
 
 const DelegatedValidators = ({
   searchValue,
@@ -9,20 +14,37 @@ const DelegatedValidators = ({
   totalTokens,
   stakeDispatch,
   setShowClaimError,
+  delegatedValidators,
 }) => {
   const {
-    delegatedValidators,
-    totalDelegatedAmount,
-    isLoadingDelegatedAmount,
-    errorDelegatedAmount,
-  } = useDelegatedValidators();
+    allValidatorsBonded,
+    isLoadingValidatorsBonded,
+    errorValidatorsBonded,
+  } = useAllValidatorsBonded();
+  const {
+    allValidatorsUnbonded,
+    isLoadingValidatorsUnbonded,
+    errorValidatorsUnbonded,
+  } = useAllValidatorsUnbonded();
+  // controller for onError
+  const handleOnError = (e) => {
+    e.preventDefault();
+    // console.log("e: ", e);
+    e.target.src = "/validatorAvatars/alt.png";
+  };
+
+  const statusArray = [0, 1, 2, -1];
+
   return (
     <>
       {activeValidators
         ? delegatedValidators
+            ?.sort((a, b) => b.tokens - a.tokens)
             ?.filter(
               (item) =>
-                item?.status === 3 &&
+                allValidatorsBonded?.find(
+                  (e) => item?.operatorAddress == e?.operatorAddress
+                ) &&
                 item?.description?.moniker?.toLowerCase()?.includes(searchValue)
             )
             ?.map((item, index) => (
@@ -30,96 +52,166 @@ const DelegatedValidators = ({
                 <td>
                   <input
                     type="checkbox"
+                    checked={stakeState?.selectedValidators?.includes(
+                      item?.operatorAddress
+                    )}
                     onChange={() => {
                       setShowClaimError(false);
                       stakeState?.selectedValidators?.includes(
-                        item?.operator_address
+                        item?.operatorAddress
                       )
                         ? stakeDispatch({
                             type: "REMOVE_FROM_SELECTED_VALIDATORS",
-                            payload: item?.operator_address,
+                            payload: item?.operatorAddress,
                           })
                         : stakeDispatch({
                             type: "SET_SELECTED_VALIDATORS",
-                            payload: item?.operator_address,
+                            payload: item?.operatorAddress,
                           });
                     }}
                   ></input>
                 </td>
-                <td>{index + 1}</td>
+                {activeValidators ? <td>{index + 1}</td> : null}
                 <td>
                   <div
                     className="d-flex position-relative rounded-circle gap-1"
                     style={{ width: "25px", aspectRatio: "1/1" }}
                   >
-                    <Image
+                    <img
                       alt={item?.description?.moniker}
                       className="rounded-circle"
                       layout="fill"
-                      src={`/validatoravatars/${item?.operatorAddress}.png`}
-                      onError={(e) => console.log(e)}
+                      src={`/validatorAvatars/${item?.operatorAddress}.png`}
+                      onError={handleOnError}
                     />
                   </div>
                 </td>
                 <td className=" d-flex align-items-center justify-content-start">
-                  {item?.description?.moniker}
+                  <a
+                    className="text-truncate"
+                    href={`https://explorer.assetmantle.one/validators/${item.operatorAddress}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {" "}
+                    {item?.description?.moniker}{" "}
+                    <i className="bi bi-arrow-up-right" />
+                  </a>
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
+
                 <td>
-                  {Math.floor(item?.commission?.commission_rates?.rate * 100)}%
+                  {shiftDecimalPlaces(
+                    item?.commission?.commissionRates?.rate,
+                    -16
+                  )}{" "}
+                  %
                 </td>
-                <td>{(item?.tokens / 1000000).toFixed(2)}</td>
+                <td>
+                  {" "}
+                  {getBalanceStyle(
+                    fromChainDenom(
+                      delegatedValidators?.find(
+                        (element) =>
+                          element?.operatorAddress == item?.operatorAddress
+                      )?.delegatedAmount
+                    ),
+                    "caption2 text-white-300",
+                    "small text-white-300"
+                  ) || "-"}
+                </td>
               </tr>
             ))
         : delegatedValidators
             ?.filter(
               (item) =>
-                item?.status === 1 &&
+                allValidatorsUnbonded?.find(
+                  (e) => item?.operatorAddress == e?.operatorAddress
+                ) &&
                 item?.description?.moniker?.toLowerCase()?.includes(searchValue)
             )
+
             ?.map((item, index) => (
               <tr key={index} className="caption2 text-white-300">
                 <td>
                   <input
                     type="checkbox"
+                    checked={stakeState?.selectedValidators?.includes(
+                      item?.operatorAddress
+                    )}
                     onChange={() => {
+                      setShowClaimError(false);
                       stakeState?.selectedValidators.includes(
-                        item?.operator_address
+                        item?.operatorAddress
                       )
                         ? stakeDispatch({
                             type: "REMOVE_FROM_SELECTED_VALIDATORS",
-                            payload: item?.operator_address,
+                            payload: item?.operatorAddress,
                           })
                         : stakeDispatch({
                             type: "SET_SELECTED_VALIDATORS",
-                            payload: item?.operator_address,
+                            payload: item?.operatorAddress,
                           });
                     }}
                   ></input>
                 </td>
-                <td>{index + 1}</td>
+                {activeValidators ? <td>{index + 1}</td> : null}
                 <td>
                   <div
                     className="d-flex position-relative rounded-circle"
                     style={{ width: "25px", aspectRatio: "1/1" }}
                   >
-                    <Image
+                    <img
                       alt={item?.description?.moniker}
                       className="rounded-circle"
                       layout="fill"
-                      src={`/validatoravatars/${item?.operatorAddress}.png`}
-                      onError={(e) => console.log(e)}
+                      src={`/validatorAvatars/${item?.operatorAddress}.png`}
+                      onError={handleOnError}
                     />
                   </div>
                 </td>
                 <td className=" d-flex align-items-center justify-content-start gap-1">
-                  {item?.description?.moniker}
+                  <a
+                    className="text-truncate"
+                    href={`https://explorer.assetmantle.one/validators/${item.operatorAddress}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {" "}
+                    {item?.description?.moniker}{" "}
+                    <i className="bi bi-arrow-up-right" />
+                  </a>
                 </td>
                 <td>{((item?.tokens * 100) / totalTokens).toFixed(2)}%</td>
+
                 <td>
-                  {Math.floor(item?.commission?.commission_rates?.rate * 100)}%
+                  {shiftDecimalPlaces(
+                    item?.commission?.commissionRates?.rate,
+                    -16
+                  )}
+                  %
                 </td>
-                <td>{(item?.tokens / 1000000).toFixed(2)}</td>
+
+                <td>
+                  {" "}
+                  {getBalanceStyle(
+                    fromChainDenom(
+                      delegatedValidators?.find(
+                        (element) =>
+                          element?.operatorAddress == item?.operatorAddress
+                      )?.delegatedAmount
+                    ),
+                    "caption2 text-white-300",
+                    "small text-white-300"
+                  ) || "-"}
+                </td>
+                <td>
+                  {item?.jailed ? (
+                    <i className="bi bi-exclamation-octagon text-danger"></i>
+                  ) : (
+                    "-"
+                  )}
+                </td>
               </tr>
             ))}
     </>

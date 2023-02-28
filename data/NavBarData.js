@@ -18,13 +18,31 @@ export const NavBarData = {
       title: "Vote",
       href: "/vote",
       variant: "am-link",
-      icon: <i className="bi bi-building-fill" />,
+      icon: <i className="bi bi-receipt-cutoff" />,
     },
     {
       title: "Bridge",
       href: "/bridge",
       variant: "am-link",
       icon: <i className="bi bi-diagram-2" />,
+    },
+    {
+      title: "Trade",
+      href: "/trade",
+      variant: "am-link",
+      icon: <i className="bi bi-bag" />,
+    },
+    {
+      title: "Earn",
+      href: "/earn",
+      variant: "am-link",
+      icon: <i className="bi bi-cash-coin" />,
+    },
+    {
+      title: "Farm",
+      href: "/farm",
+      variant: "am-link",
+      icon: <i className="bi bi-piggy-bank" />,
     },
     {
       title: "Explorer",

@@ -1,7 +1,12 @@
 import { useChain } from "@cosmos-kit/react";
+import BigNumber from "bignumber.js";
 import Head from "next/head";
-import { QRCodeSVG } from "qrcode.react";
-import React, { Suspense, useReducer, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import React, { useEffect, useReducer, useState } from "react";
+import { toast } from "react-toastify";
+import ConnectedRecieve from "../components/ConnectedRecieve";
+import DisconnecedRecieve from "../components/DisconnecedRecieve";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import Tooltip from "../components/Tooltip";
 import {
@@ -9,9 +14,11 @@ import {
   defaultChainMemoSize,
   defaultChainName,
   defaultChainSymbol,
+  getBalanceStyle,
 } from "../config";
 import {
   formConstants,
+  fromChainDenom,
   fromDenom,
   isInvalidAddress,
   placeholderAddress,
@@ -22,37 +29,57 @@ import {
 import { isObjEmpty, shortenAddress } from "../lib";
 
 export default function Transact() {
+  // HOOKS
   const [advanced, setAdvanced] = useState(false);
   const { availableBalance } = useAvailableBalance();
-  const walletManager = useChain(defaultChainName);
-  const { getSigningStargateClient, address, status } = walletManager;
+  const chainContext = useChain(defaultChainName);
+  const { getSigningStargateClient, address, status } = chainContext;
+  const router = useRouter();
+  const { toAddress, toAmount } = router.query;
 
-  const displayAddress = address || placeholderAddress;
+  useEffect(() => {
+    if (toAddress) {
+      formDispatch({
+        type: "CHANGE_RECIPIENT_ADDRESS",
+        payload: toAddress,
+      });
+    }
 
+    if (toAmount) {
+      formDispatch({
+        type: "CHANGE_AMOUNT",
+        payload: toAmount,
+      });
+    }
+
+    return () => {};
+  }, [toAddress, toAmount]);
+
+  useEffect(() => {
+    if (toAddress && formState?.recipientAddress == toAddress) {
+      formDispatch({
+        type: "CHANGE_RECIPIENT_ADDRESS",
+        payload: toAddress,
+      });
+    }
+
+    if (toAmount && formState?.transferAmount == toAmount) {
+      formDispatch({
+        type: "CHANGE_AMOUNT",
+        payload: toAmount,
+      });
+    }
+
+    return () => {};
+  }, [availableBalance]);
+
+  // FORM REDUCER
   const initialState = {
-    recipientAddress: "",
-    transferAmount: "",
+    recipientAddress: toAddress || "",
+    transferAmount: toAmount || "",
     memo: "",
     // all error values -> errorMessages: {recipientAddressErrorMsg: "", transferAmountErrorMsg: "" }
     errorMessages: {},
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    formDispatch({
-      type: "SUBMIT",
-    });
-    console.log("inside handleSubmit()");
-    if (formState.errorMessages) {
-      const { response, error } = await sendTokensTxn(
-        address,
-        formState.recipientAddress,
-        formState.transferAmount,
-        formState.memo,
-        { getSigningStargateClient }
-      );
-      console.log("response: ", response, " error: ", error);
-    }
   };
 
   const formReducer = (state = initialState, action) => {
@@ -92,24 +119,24 @@ export default function Transact() {
       }
 
       case "CHANGE_AMOUNT": {
-        console.log(
-          "inside CHANGE_AMOUNT, action.payload: ",
-          toDenom(action.payload) + parseFloat(defaultChainGasFee)
-        );
         // if amount is greater than current balance, populate error message and update amount
-        if (isNaN(toDenom(action.payload))) {
+        if (
+          BigNumber(action.payload).isNaN() ||
+          BigNumber(action.payload) <= 0
+        ) {
           return {
             ...state,
             transferAmount: action.payload,
             errorMessages: {
               ...state.errorMessages,
-              transferAmountErrorMsg: formConstants.requiredErrorMsg,
+              transferAmountErrorMsg: formConstants.invalidValueErrorMsg,
             },
           };
         } else if (
-          isNaN(parseFloat(availableBalance)) ||
-          toDenom(action.payload) + parseFloat(defaultChainGasFee) >
-            parseFloat(availableBalance)
+          BigNumber(availableBalance).isNaN() ||
+          BigNumber(toDenom(action.payload))
+            .plus(BigNumber(defaultChainGasFee))
+            .isGreaterThan(BigNumber(availableBalance))
         ) {
           return {
             ...state,
@@ -134,12 +161,14 @@ export default function Transact() {
       case "SET_HALF_AMOUNT": {
         // if available balance is invalid, set error message
         if (
-          isNaN(parseFloat(availableBalance)) ||
-          parseFloat(availableBalance) / 2 < parseFloat(defaultChainGasFee)
+          BigNumber(availableBalance).isNaN() ||
+          BigNumber(availableBalance)
+            .dividedBy(BigNumber(2))
+            .isLessThan(BigNumber(defaultChainGasFee))
         ) {
           return {
             ...state,
-            transferAmount: 0,
+            transferAmount: (fromDenom(availableBalance) / 2).toString(),
             errorMessages: {
               ...state.errorMessages,
               transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
@@ -171,7 +200,7 @@ export default function Transact() {
           );
           return {
             ...state,
-            transferAmount: 0,
+            transferAmount: fromDenom(availableBalance),
             errorMessages: {
               ...state.errorMessages,
               transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
@@ -213,7 +242,6 @@ export default function Transact() {
 
       case "SUBMIT": {
         // if any required field is blank, set error message
-
         let localErrorMessages = state?.errorMessages;
         if (!state.recipientAddress) {
           localErrorMessages = {
@@ -222,10 +250,34 @@ export default function Transact() {
           };
         }
 
+        if (isInvalidAddress(state.recipientAddress)) {
+          localErrorMessages = {
+            ...localErrorMessages,
+            recipientAddressErrorMsg: formConstants.recipientAddressErrorMsg,
+          };
+        }
+
         if (!state.transferAmount) {
           localErrorMessages = {
             ...localErrorMessages,
             transferAmountErrorMsg: formConstants.requiredErrorMsg,
+          };
+        }
+
+        if (BigNumber(state.transferAmount).isNaN()) {
+          localErrorMessages = {
+            ...localErrorMessages,
+            transferAmountErrorMsg: formConstants.invalidValueErrorMsg,
+          };
+        } else if (
+          BigNumber(availableBalance).isNaN() ||
+          BigNumber(toDenom(action.payload))
+            .plus(BigNumber(defaultChainGasFee))
+            .isGreaterThan(BigNumber(availableBalance))
+        ) {
+          localErrorMessages = {
+            ...localErrorMessages,
+            transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
           };
         }
 
@@ -244,6 +296,10 @@ export default function Transact() {
         }
       }
 
+      case "RESET": {
+        return { ...initialState };
+      }
+
       default:
         console.log("default case");
     }
@@ -253,6 +309,129 @@ export default function Transact() {
 
   const [Tab, setTab] = useState(0);
   const tabs = [{ name: "Send", href: "#send" }];
+
+  // CONFIG FUNCTIONS
+  const CustomToastWithLink = ({ txHash }) => (
+    <p>
+      Transaction Submitted. Check
+      <Link href={`https://explorer.assetmantle.one/transactions/${txHash}`}>
+        <a style={{ color: "#ffc640" }} target="_blank">
+          {" "}
+          Here
+        </a>
+      </Link>
+    </p>
+  );
+
+  const notify = (txHash, id) => {
+    if (txHash) {
+      toast.update(id, {
+        render: <CustomToastWithLink txHash={txHash} />,
+        type: "success",
+        isLoading: false,
+        position: "bottom-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        toastId: txHash,
+      });
+    } else {
+      toast.update(id, {
+        render: "Transaction failed. Try Again",
+        type: "error",
+        isLoading: false,
+        position: "bottom-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  };
+
+  // CONTROLLER FUNCTIONS
+  const handleSubmit = async (e) => {
+    // copy form states to local variables
+    const localRecipientAddress = formState.recipientAddress;
+    const localTransferAmount = formState.transferAmount;
+    const localMemo = formState.memo;
+    formDispatch({
+      type: "CHANGE_RECIPIENT_ADDRESS",
+      payload: localRecipientAddress,
+    });
+
+    formDispatch({
+      type: "CHANGE_AMOUNT",
+      payload: localTransferAmount,
+    });
+
+    const isFormValid =
+      formState?.transferAmount &&
+      !BigNumber(toDenom(formState.transferAmount)).isNaN() &&
+      !BigNumber(availableBalance).isNaN() &&
+      BigNumber(availableBalance).isGreaterThan(BigNumber(0)) &&
+      BigNumber(toDenom(formState.transferAmount))
+        .plus(BigNumber(defaultChainGasFee))
+        .isLessThanOrEqualTo(BigNumber(availableBalance)) &&
+      formState?.recipientAddress &&
+      !isInvalidAddress(formState?.recipientAddress);
+
+    if (isFormValid) {
+      const id = toast.loading("Transaction initiated ...", {
+        position: "bottom-center",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+
+      const { response, error } = await sendTokensTxn(
+        address,
+        localRecipientAddress,
+        localTransferAmount,
+        localMemo,
+        { getSigningStargateClient }
+      );
+      formDispatch({ type: "RESET" });
+
+      // reset the form values
+      console.log("response: ", response, " error: ", error);
+      if (response) {
+        notify(response?.transactionHash, id);
+      } else {
+        notify(null, id);
+      }
+    }
+  };
+
+  // DISPLAY VARIABLES
+  const isSubmitDisabled =
+    !isObjEmpty(formState?.errorMessages) || status != "Connected";
+  const displayAmountValue = formState?.transferAmount;
+  const displayAddress = address || placeholderAddress;
+  const isAmountError = !!formState?.errorMessages?.transferAmountErrorMsg;
+  const displayAmountErrorMsg =
+    formState?.errorMessages?.transferAmountErrorMsg ==
+    formConstants.transferAmountErrorMsg ? (
+      <span>
+        Insufficient Balance. To get more tokens go to{" "}
+        <Link href="/trade">
+          <a style={{ textDecoration: "underline" }}>Trade</a>
+        </Link>
+      </span>
+    ) : (
+      formState?.errorMessages?.transferAmountErrorMsg
+    );
 
   return (
     <>
@@ -279,7 +458,11 @@ export default function Transact() {
             </nav>
             <div className="nav-bg rounded-4 d-flex flex-column p-3 gap-3">
               <label
-                className="caption d-flex gap-2 align-items-center"
+                className={
+                  status === "Connected"
+                    ? "caption d-flex gap-2 align-items-center"
+                    : "caption d-flex gap-2 align-items-center text-gray"
+                }
                 htmlFor="recipientAddress"
               >
                 Recipient Address{" "}
@@ -289,6 +472,7 @@ export default function Transact() {
                 <input
                   className="bg-t p-3 py-2 rounded-2 am-input w-100"
                   type="text"
+                  disabled={status === "Disconnected"}
                   name="recipientAddress"
                   id="recipientAddress"
                   value={formState?.recipientAddress}
@@ -312,13 +496,22 @@ export default function Transact() {
               </div>
 
               <label
-                className="caption d-flex gap-2 align-items-center"
+                className={
+                  status === "Connected"
+                    ? "caption d-flex gap-2 align-items-center"
+                    : "caption d-flex gap-2 align-items-center text-gray"
+                }
                 htmlFor="token"
               >
                 Token
               </label>
               <input
-                className="bg-t p-3 py-2 rounded-2 am-input"
+                disabled={status === "Disconnected"}
+                className={
+                  status === "Connected"
+                    ? "bg-t p-3 py-2 rounded-2 am-input"
+                    : "bg-t p-3 py-2 rounded-2 am-input text-gray"
+                }
                 type="text"
                 name="token"
                 id="token"
@@ -328,12 +521,28 @@ export default function Transact() {
               />
 
               <label
-                className="caption d-flex gap-2 align-items-end justify-content-between"
+                className={
+                  status === "Connected"
+                    ? "caption d-flex gap-2 align-items-end justify-content-between"
+                    : "caption d-flex gap-2 align-items-end justify-content-between text-gray"
+                }
                 htmlFor="amount"
               >
                 Amount{" "}
                 <small>
-                  Balance : {fromDenom(availableBalance).toString()}&nbsp;
+                  Balance :{" "}
+                  {status === "Connected"
+                    ? getBalanceStyle(
+                        fromChainDenom(availableBalance),
+                        "caption",
+                        "caption2"
+                      )
+                    : getBalanceStyle(
+                        fromChainDenom(availableBalance),
+                        "caption text-gray",
+                        "caption2 text-gray"
+                      )}
+                  &nbsp;
                   {defaultChainSymbol}
                 </small>
               </label>
@@ -341,11 +550,12 @@ export default function Transact() {
               <div>
                 <div className="p-3 py-2 d-flex rounded-2 gap-2 am-input">
                   <input
+                    disabled={status === "Disconnected"}
                     className="bg-t"
                     type="number"
                     name="amount"
                     id="amount"
-                    value={formState?.transferAmount}
+                    value={displayAmountValue}
                     placeholder="Enter Amount"
                     style={{ flex: "1", border: "none", outline: "none" }}
                     onChange={(e) =>
@@ -380,10 +590,8 @@ export default function Transact() {
                   id="amountInputErrorMsg"
                   className="form-text text-danger d-flex align-items-center gap-1"
                 >
-                  {formState?.errorMessages?.transferAmountErrorMsg && (
-                    <i className="bi bi-info-circle" />
-                  )}{" "}
-                  {formState?.errorMessages?.transferAmountErrorMsg}
+                  {isAmountError && <i className="bi bi-info-circle" />}{" "}
+                  {displayAmountErrorMsg}
                 </small>
               </div>
 
@@ -416,6 +624,7 @@ export default function Transact() {
                   </label>
                   <input
                     className="bg-t p-3 py-2 rounded-2 am-input"
+                    disabled={status === "Disconnected"}
                     type="text"
                     name="memo"
                     id="memo"
@@ -433,7 +642,7 @@ export default function Transact() {
               <button
                 className="btn button-primary px-5 ms-auto"
                 type="submit"
-                disabled={!isObjEmpty(formState?.errorMessages)}
+                disabled={isSubmitDisabled}
                 onClick={handleSubmit}
               >
                 Send
@@ -442,84 +651,25 @@ export default function Transact() {
           </div>
         </ScrollableSectionContainer>
         <div className="col-12 pt-3 pt-lg-0 col-lg-4">
-          <div
-            className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-2 transitionAll"
-            role="button"
-            data-bs-toggle="modal"
-            data-bs-target="#receiveModal"
-          >
-            <nav className="d-flex align-items-center justify-content-between gap-3">
-              <div className="d-flex gap-3 align-items-center">
-                <button className={`body1 text-primary`}>Receive</button>
-              </div>
-            </nav>
-            <div className="nav-bg rounded-4 d-flex flex-column p-3 gap-2 align-items-center justify-content-center">
-              <div
-                style={{
-                  width: "min(140px, 100%)",
-                  aspectRatio: "1/1",
-                  position: "relative",
-                }}
-              >
-                <Suspense fallback={"Loading..."}>
-                  <QRCodeSVG
-                    width="100%"
-                    height="100%"
-                    value={displayAddress}
-                  />
-                </Suspense>
-              </div>
-              <h4 className="body2 text-primary">Wallet Address</h4>
-              <button
-                className="d-flex align-items-center justify-content-center gap-2 text-center caption2 pt-1"
-                onClick={() => navigator.clipboard.writeText(displayAddress)}
-                style={{ wordBreak: "break-all" }}
-              >
-                {shortenAddress(displayAddress)}
-                <span className="text-primary">
-                  <i className="bi bi-clipboard" />
-                </span>
-              </button>
-            </div>
-          </div>
+          {status === "Connected" ? (
+            <ConnectedRecieve displayAddress={displayAddress} />
+          ) : (
+            <DisconnecedRecieve />
+          )}
         </div>
       </section>
-      <div className="modal " tabIndex="-1" role="dialog" id="receiveModal">
-        <div className="modal-dialog modal-dialog-centered" role="document">
-          <div className="modal-content">
-            <div className="modal-body p-3  d-flex flex-column">
-              <div className="nav-bg rounded-4 d-flex flex-column p-4 px-2 gap-2 align-items-center justify-content-center">
-                <div
-                  style={{
-                    width: "min(350px, 100%)",
-                    aspectRatio: "1/1",
-                    position: "relative",
-                  }}
-                >
-                  <Suspense fallback="Loading...">
-                    <QRCodeSVG
-                      width="100%"
-                      height="100%"
-                      value={displayAddress}
-                    />
-                  </Suspense>
-                </div>
-                <h4 className="body2 text-primary pt-1">Wallet Address</h4>
-                <button
-                  className="d-flex align-items-center justify-content-center gap-2 text-center caption2"
-                  onClick={() => navigator.clipboard.writeText(displayAddress)}
-                  style={{ wordBreak: "break-all" }}
-                >
-                  <Suspense fallback="Loading...">{displayAddress}</Suspense>
-                  <span className="text-primary">
-                    <i className="bi bi-clipboard" />
-                  </span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
+      {/* <TransactionManifestModal
+        id="transactionManifestModal"
+        displayData={[
+          { title: "From:", value: address },
+          { title: "To:", value: formState.recipientAddress },
+          { title: "Amount:", value: formState.transferAmount },
+          { title: "Transaction Type", value: "Send" },
+          { title: "Wallet Type", value: wallet?.prettyName },
+        ]}
+        handleSubmit={handleSubmit}
+      /> */}
     </>
   );
 }

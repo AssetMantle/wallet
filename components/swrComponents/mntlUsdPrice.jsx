@@ -1,10 +1,8 @@
 import React from "react";
-import { placeholderMntlUsdValue } from "../../config";
+import { getBalanceStyle, placeholderMntlUsdValue } from "../../config";
 import { useMntlUsd } from "../../data";
 
 export const MntlUsdPrice = () => {
-  console.log("inside MntlUsdPrice");
-
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
 
   const mntlUsdDisplay = errorMntlUsdValue
@@ -12,8 +10,10 @@ export const MntlUsdPrice = () => {
     : mntlUsdValue;
 
   return (
-    <p className="caption">
-      {mntlUsdDisplay}&nbsp;{"$USD"}
+    <p className={"caption"}>
+      {getBalanceStyle(mntlUsdDisplay, "caption", "caption2")}
+      &nbsp;
+      {"$USD"}
     </p>
   );
 };
