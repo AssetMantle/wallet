@@ -666,7 +666,7 @@ export const sendIbcTokenToEth = async (
     // populate the bridgeFee data, which will be in MNTL
     const bridgeFee = {
       denom: gravityIBCToken,
-      amount: "20000",
+      amount: "1930000000",
     };
 
     const { sendToEth } = gravity.v1.MessageComposer.withTypeUrl;

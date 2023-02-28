@@ -1,10 +1,8 @@
+import dynamic from "next/dynamic";
 import React from "react";
-import { useAccount, useContractRead } from "wagmi";
+import { useAccount, useContractRead, useContractReads } from "wagmi";
 import { UniswapStakeEntry } from "../components";
 import { ethConfig } from "../data";
-import { useContractReads } from "wagmi";
-import dynamic from "next/dynamic";
-import { useIsMounted, getIncentiveIdFromKey } from "../lib";
 import { UniswapStakeContentsLoading } from "./UniswapStakeContentsLoading";
 
 const nonFungiblePositionManagerContractAddress =
@@ -22,7 +20,7 @@ const StaticUniswapStakeContents = () => {
   // HOOKS
   // hooks to get the address of the connected wallet
   const { address, isConnected } = useAccount();
-  const isMounted = useIsMounted();
+  // const isMounted = useIsMounted();
 
   const finalAddress = address;
   // const finalAddress = uniV3StakerContractAddress;
@@ -144,9 +142,10 @@ const StaticUniswapStakeContents = () => {
   const loadingJSX = <UniswapStakeContentsLoading />;
 
   const renderedJSX =
-    !isMounted() || isLoadingPositionValues
+    isLoadingPositionValues || isLoadingTokenValues || isLoadingBalanceOf
       ? loadingJSX
-      : filteredPositionValues?.length > 0 && !isErrorPositionValues
+      : filteredPositionValues?.length > 0 &&
+        !(isErrorPositionValues || isErrorBalanceOf || isErrorTokenValues)
       ? recordsJSX
       : noRecordsJSX;
 
@@ -163,11 +162,6 @@ const StaticUniswapStakeContents = () => {
     filteredPositionValues,
     latestIncentiveProgram,
   });
-
-  console.log(
-    "second incentive ID: ",
-    getIncentiveIdFromKey(latestIncentiveProgram?.incentiveTuple)
-  );
 
   return renderedJSX;
 };

@@ -10,7 +10,7 @@ import {
 import { notify, toastConfig } from "../config";
 import { ethConfig, PREPARE_CONTRACT_ERROR } from "../data";
 
-export const UniswapUnstakeEntry = ({ tokenId }) => {
+export const UniswapUnstakeEntry = ({ tokenId, liquidity }) => {
   // VARIABLES
   const uniV3StakerContractAddress =
     ethConfig?.mainnet?.uniswap?.uniV3Staker?.address;
@@ -116,8 +116,7 @@ export const UniswapUnstakeEntry = ({ tokenId }) => {
             Token ID: <span className="text-gray caption2">{tokenId}</span>
           </h3>
           <p className="caption">
-            Liquidity:{" "}
-            {/* <span className="text-gray caption2">{liquidity}</span> */}
+            Liquidity: <span className="text-gray caption2">{liquidity}</span>
           </p>
         </div>
       </div>

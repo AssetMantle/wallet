@@ -1,8 +1,9 @@
 import dynamic from "next/dynamic";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useAccount, useContractReads } from "wagmi";
 import { UniswapUnstakeEntry } from "../components";
 import { ethConfig, useStakedPositionsNftId } from "../data";
+import { getIncentiveIdFromKey } from "../lib";
 import { UniswapStakeContentsLoading } from "./UniswapStakeContentsLoading";
 
 const selectedIncentive = ethConfig?.selected?.uniswapIncentiveProgram;
@@ -29,19 +30,11 @@ const StaticUniswapUnstakeContents = () => {
   // HOOKS
   // const isMounted = useIsMounted();
   const { positionNfts, isLoadingPositionNfts, errorPositionNfts } =
-    useStakedPositionsNftId(latestIncentiveProgram?.incentiveId);
+    useStakedPositionsNftId(
+      getIncentiveIdFromKey(latestIncentiveProgram?.incentiveTuple)
+    );
 
   const { address, isConnected } = useAccount();
-
-  const [isSsr, setIsSsr] = useState(false);
-
-  useEffect(() => {
-    setIsSsr(true);
-
-    return () => {};
-  }, []);
-
-  // read the owner of the returned positions
 
   // function to return the contract data array for multi-read of positions multi-read
   const positionsContracts = (tokenValuesArray) => {
@@ -50,7 +43,7 @@ const StaticUniswapUnstakeContents = () => {
       tokenArray.push({
         ...nonFungiblePositionManagerContract,
         functionName: "ownerOf",
-        args: [tokenValuesArray?.[index]],
+        args: [tokenValuesArray?.[index]?.id],
       });
     }
     return tokenArray;
@@ -66,8 +59,9 @@ const StaticUniswapUnstakeContents = () => {
     enabled: isConnected && address && positionNfts?.length,
     select: (data) =>
       data?.map?.((valObject, index) => ({
-        tokenId: positionNfts?.[index],
+        tokenId: positionNfts?.[index]?.id,
         owner: valObject,
+        liquidity: positionNfts?.[index]?.liquidity,
       })),
     ...hookArgs,
   });
@@ -88,7 +82,11 @@ const StaticUniswapUnstakeContents = () => {
     <>
       {React.Children.toArray(
         filteredPositionNfts?.map?.((data, index) => (
-          <UniswapUnstakeEntry tokenId={data?.tokenId} key={index} />
+          <UniswapUnstakeEntry
+            tokenId={data?.tokenId}
+            liquidity={data?.liquidity}
+            key={index}
+          />
         ))
       )}
     </>
@@ -97,11 +95,7 @@ const StaticUniswapUnstakeContents = () => {
   const loadingJSX = <UniswapStakeContentsLoading />;
 
   const renderedJSX =
-    !positionNfts ||
-    !filteredPositionNfts ||
-    isLoadingPositionNfts ||
-    isLoadingOwnerValues ||
-    !isSsr
+    isLoadingPositionNfts || isLoadingOwnerValues
       ? loadingJSX
       : filteredPositionNfts?.length > 0 &&
         !errorPositionNfts &&
@@ -109,18 +103,18 @@ const StaticUniswapUnstakeContents = () => {
       ? recordsJSX
       : noRecordsJSX;
 
-  /* console.log(
-    "positionNFTs inside component: ",
+  console.log(
+    "positionNFTs: ",
     positionNfts,
     " loading: ",
     isLoadingPositionNfts,
     " error: ",
     errorPositionNfts,
-    " isSSr: ",
-    isSsr,
     " ownerValue: ",
-    ownerValues
-  ); */
+    ownerValues,
+    " filteredPositionNfts: ",
+    filteredPositionNfts
+  );
 
   return renderedJSX;
 };
