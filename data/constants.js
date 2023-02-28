@@ -23,6 +23,8 @@ export const shortenAddressSizeEth = 4;
 export const PREPARE_CONTRACT_ERROR = "Prepare Contract Error";
 export const INCENTIVE_ENDED_ERROR =
   "Cannot stake as Incentive has already ended";
+export const ALREADY_UNSTAKED_ERROR =
+  "Token already unstaked. Withdraw Token manually";
 export const WRITE_CONTRACT_ERROR = "Error during writing config of contract";
 
 // Wallet related constants

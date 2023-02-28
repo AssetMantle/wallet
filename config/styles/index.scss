@@ -127,6 +127,15 @@ input {
 .h3 {
   @include fontRoot(500, 1.25rem);
 }
+.h4 {
+  @include fontRoot(700, 1.7rem);
+}
+.h5 {
+  @include fontRoot(400, 1.5rem);
+}
+.h6 {
+  @include fontRoot(500, 1.25rem);
+}
 // .h4 {
 //   @include fontRoot(700, 1.8rem);
 // }
