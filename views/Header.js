@@ -62,12 +62,12 @@ export default function Header() {
       <a
         className={`d-flex gap-1 align-items-center ${
           router.asPath === navItem.href ? "active" : ""
-        } am-nav-item body2 `}
+        } am-nav-item caption`}
         target={navItem.target ? navItem.target : "_self"}
       >
-        {navItem.icon && <span className="h3 icon">{navItem.icon}</span>}
+        {navItem.icon && <span className="h6 icon">{navItem.icon}</span>}
         {navItem.title}
-        {navItem.endIcon && <span className="h3 icon">{navItem.endIcon}</span>}
+        {navItem.endIcon && <span className="h6 icon">{navItem.endIcon}</span>}
       </a>
     </Link>
   ));
