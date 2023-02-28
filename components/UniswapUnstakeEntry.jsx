@@ -9,7 +9,8 @@ import {
   useProvider,
 } from "wagmi";
 import { notify, toastConfig } from "../config";
-import { ethConfig, PREPARE_CONTRACT_ERROR, useIncentiveList } from "../data";
+import { ALREADY_UNSTAKED_ERROR, ethConfig, useIncentiveList } from "../data";
+import { getIncentiveIdFromKey } from "../lib";
 
 export const UniswapUnstakeEntry = ({ tokenId, liquidity }) => {
   // VARIABLES
@@ -73,7 +74,11 @@ export const UniswapUnstakeEntry = ({ tokenId, liquidity }) => {
     chainId: 1,
     onError(error) {
       console.error(error);
-      toast.error(PREPARE_CONTRACT_ERROR, toastConfig);
+      if (error?.message?.includes("stake does not exist"))
+        toast.error(ALREADY_UNSTAKED_ERROR, {
+          ...toastConfig,
+          toastId: getIncentiveIdFromKey(selectedIncentiveTuple),
+        });
     },
   });
 
