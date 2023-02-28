@@ -22,7 +22,7 @@ export const shortenAddressSizeEth = 4;
 // Wagmi related error
 export const PREPARE_CONTRACT_ERROR = "Prepare Contract Error";
 export const INCENTIVE_ENDED_ERROR =
-  "Cannot stake as Incentive as already ended";
+  "Cannot stake as Incentive has already ended";
 export const WRITE_CONTRACT_ERROR = "Error during writing config of contract";
 
 // Wallet related constants

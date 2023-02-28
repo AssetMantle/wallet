@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 import { notify, toastConfig } from "../config";
 import { ethConfig, INCENTIVE_ENDED_ERROR } from "../data";
-import { getIncentiveKeyEncoded } from "../lib";
+import { getIncentiveIdFromKey, getIncentiveKeyEncoded } from "../lib";
 
 export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
   console.log("inside UniswapStakeEntry tokenId:  ", tokenId, " array: ");
@@ -51,7 +51,9 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
       if (error?.message?.includes("incentive ended"))
         toast.error(INCENTIVE_ENDED_ERROR, {
           ...toastConfig,
-          toastId: latestIncentiveProgram?.incentiveId,
+          toastId: getIncentiveIdFromKey(
+            latestIncentiveProgram?.incentiveTuple
+          ),
         });
       // toast.error(PREPARE_CONTRACT_ERROR, toastConfig);
     },

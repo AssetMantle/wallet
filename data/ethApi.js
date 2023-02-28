@@ -340,6 +340,7 @@ export const useStakedPositionsNftId = (incentiveId) => {
     position{
       id
       owner
+      liquidity
     }}}`;
 
     // explorer: https://thegraph.com/hosted-service/subgraph/revert-finance/uni-v3-staker-mainnet
@@ -364,7 +365,7 @@ export const useStakedPositionsNftId = (incentiveId) => {
             value?.position?.owner?.toString?.().toLowerCase() ==
             address?.toLowerCase?.()
         )
-        ?.map?.((value) => value?.position?.id);
+        ?.map?.((value) => value?.position);
 
       // console.log("swr fetcher success: ", url);
     } catch (error) {

@@ -488,12 +488,11 @@ const GravityToEthBridge = () => {
           className="am-select caption2"
           onChange={(e) => setGasFee(e.target.value)}
         >
-          <option value="" disabled selected>
-            Select an option
+          <option value="instant" selected>
+            Instant ~ 2 minutes (1950 $MNTL)
           </option>
-          <option value="instant">Instant ~ 2 minutes (2000 $MNTL)</option>
-          <option value="fast">Fast ~ 4 hours (1100 $MNTL)</option>
-          <option value="slow">Slow ~ 24 hours (250 $MNTL)</option>
+          <option value="fast">Fast ~ 4 hours (1030 $MNTL)</option>
+          <option value="slow">Slow ~ 24 hours (130 $MNTL)</option>
         </select>
       </div>
       <div className="d-flex align-items-center justify-content-end gap-3">

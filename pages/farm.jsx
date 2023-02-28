@@ -1,13 +1,20 @@
 import { disconnect } from "@wagmi/core";
 import { useWeb3Modal } from "@web3modal/react";
+import { BigNumber } from "bignumber.js";
 import Head from "next/head";
 import React, { useState } from "react";
 import { useAccount } from "wagmi";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
+import { defaultChainSymbol } from "../config";
 import { ethConfig, placeholderAddressEth } from "../data";
-import { handleCopy, shortenEthAddress, useIsMounted } from "../lib";
 import {
-  UniswapDashboard,
+  getTimeDifference,
+  handleCopy,
+  shortenEthAddress,
+  useIsMounted,
+} from "../lib";
+import {
+  UniswapRewards,
   UniswapStakeContents,
   UniswapUnstakeContents,
 } from "../views";
@@ -16,13 +23,13 @@ export default function Farm() {
   // HOOKS
 
   const [Tab, setTab] = useState(0);
-  const tabs = [
-    { name: "Stake UniV3 LP", href: "#Stake-UniV3-LP" },
-    { name: "Unstake UniV3 LP", href: "#Unstake-UniV3-LP" },
-  ];
+  const [StakeTab, setStakeTab] = useState(true);
+  const tabs = [{ name: "Uniswap V3 LP Staking" }];
+
+  const selectedIncentive = ethConfig?.selected?.uniswapIncentiveProgram;
 
   const latestIncentiveProgram =
-    ethConfig?.mainnet?.uniswap?.incentivePrograms?.[1];
+    ethConfig?.mainnet?.uniswap?.incentivePrograms?.[selectedIncentive];
 
   // hooks to work the multi-modal for ethereum
   const { open } = useWeb3Modal();
@@ -55,14 +62,56 @@ export default function Farm() {
   );
   const isWalletEthConnected = isMounted() && isConnected;
   const currentRewardPoolDisplay = latestIncentiveProgram?.totalRewards;
+  const currentRewardPoolDenomDisplay = defaultChainSymbol;
+
+  const currentTimestamp = Math.floor(Date.now() / 1000);
+  const incentiveEndTimestamp = latestIncentiveProgram?.endTime;
+  const incentiveDurationDisplay = BigNumber(
+    incentiveEndTimestamp
+  ).isGreaterThan(BigNumber(currentTimestamp))
+    ? `${getTimeDifference(incentiveEndTimestamp, currentTimestamp)} remaining`
+    : `Incentive Ended`;
+
+  const tabTitleJSX = tabs.map((tab, index) => (
+    <button
+      key={index}
+      className={`body1 ${Tab === index ? "text-primary" : "text-white"}`}
+      onClick={() => setTab(index)}
+    >
+      {tab.name}
+    </button>
+  ));
+
+  const tabGroupJSX = (
+    <div className="">
+      <div className="btn-group">
+        <button
+          className={`${
+            StakeTab ? "btn btn-primary" : "btn btn-inactive"
+          } caption2`}
+          onClick={() => setStakeTab(true)}
+        >
+          Stake
+        </button>
+        <button
+          className={`${
+            !StakeTab ? "btn btn-primary" : "btn btn-inactive"
+          } caption2`}
+          onClick={() => setStakeTab(false)}
+        >
+          Unstake
+        </button>
+      </div>
+    </div>
+  );
 
   // connect button with logic
   const notConnectedJSX = (
     <button
-      className="caption2 d-flex gap-1 text-primary"
+      className="button-primary px-5 py-2 ms-auto"
       onClick={handleOpenWeb3Modal}
     >
-      <i className="bi bi-link-45deg" /> Connect Wallet
+      Connect Wallet
     </button>
   );
 
@@ -86,6 +135,22 @@ export default function Farm() {
     notConnectedJSX
   );
 
+  const stakeDashboardJSX = (
+    <div
+      className="d-flex flex-column w-100 rounded-4 flex-grow-1 pt-2"
+      style={{ height: "90%" }}
+    >
+      <div className="row nav-bg rounded-4 p-3 mx-0">
+        <h4 className="col-3 py-1 caption text-gray">Reward Pool</h4>
+        <p className="col-9 py-1 body2">
+          {currentRewardPoolDisplay}&nbsp;{currentRewardPoolDenomDisplay}
+        </p>
+        <h4 className="col-3 py-1 caption text-gray">Duration</h4>
+        <p className="col-9 py-1 body2">{incentiveDurationDisplay}</p>
+      </div>
+    </div>
+  );
+
   const stakeContentsJSX = <UniswapStakeContents />;
 
   const unstakeContentsJSX = <UniswapUnstakeContents />;
@@ -107,52 +172,23 @@ export default function Farm() {
         <title>Farm | MantleWallet</title>
       </Head>
       <section className="row h-100">
-        <ScrollableSectionContainer className="col-12 col-lg-8 d-flex">
-          <div className="bg-gray-800 p-3 rounded-4 d-flex flex-column gap-2">
-            <nav className="d-flex align-items-center justify-content-between gap-3">
-              <div className="d-flex gap-3 align-items-center">
-                {tabs.map((tab, index) => (
-                  <button
-                    key={index}
-                    className={`body1 ${
-                      Tab === index ? "text-primary" : "text-white"
-                    }`}
-                    onClick={() => setTab(index)}
-                  >
-                    {tab.name}
-                  </button>
-                ))}
+        <ScrollableSectionContainer className="col-12 col-lg-8 d-flex h-90">
+          <div className="bg-gray-800 p-4 rounded-4 d-flex flex-column gap-2">
+            <nav className="d-flex flex-column align-items-start justify-content-between gap-3">
+              <div className="d-flex gap-3 w-100">{tabTitleJSX}</div>
+              <div className="d-flex align-items-center justify-content-between gap-3 w-100">
+                <div className="">{connectButtonJSX}</div>
+                {tabGroupJSX}
               </div>
             </nav>
-            {
-              {
-                0: <UniswapDashboard />,
-                1: <UniswapDashboard />,
-              }[Tab]
-            }
+            {stakeDashboardJSX}
+            {StakeTab ? stakeContentsJSX : unstakeContentsJSX}
           </div>
-          <div className="p-1"></div>
-          {
-            {
-              0: stakeContentsJSX,
-              1: unstakeContentsJSX,
-            }[Tab]
-          }
-          <div className="p-2"></div>
         </ScrollableSectionContainer>
-        <div className="col-12 col-lg-4">
-          <div className="rounded-4 p-3 my-2 bg-gray-800 width-100 d-flex flex-column text-white">
-            <p>
-              To purchase MNTL, visit the exchanges (CEX & DEX) shown to swap
-              with your available tokens.
-            </p>
-            <br></br>
-            <p>
-              Options to directly on-ramp to MNTL using fiat currencies will be
-              coming soon.
-            </p>
-          </div>
-        </div>
+        <ScrollableSectionContainer className="col-12 col-lg-4 d-flex flex-column gap-3 h-90">
+          <UniswapRewards />
+          {/* <UniswapIncentiveList /> */}
+        </ScrollableSectionContainer>
       </section>
     </>
   );

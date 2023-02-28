@@ -24,7 +24,7 @@ const selectedIncentive = ethConfig?.selected?.uniswapIncentiveProgram;
 const latestIncentiveProgram =
   ethConfig?.mainnet?.uniswap?.incentivePrograms?.[selectedIncentive];
 
-export const StaticUniswapDashboard = () => {
+const StaticUniswapDashboard = () => {
   // HOOKS
   // hooks to get the address of the connected wallet
   const { address, isConnected } = useAccount();
