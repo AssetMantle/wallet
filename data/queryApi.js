@@ -1,7 +1,7 @@
 import { normalizeBech32 } from "@cosmjs/encoding";
 import { useChain } from "@cosmos-kit/react";
 import BigNumber from "bignumber.js";
-import { assets, chains } from "chain-registry";
+import { assets } from "chain-registry";
 import { cosmos } from "osmojs";
 import useSwr from "swr";
 import {
@@ -79,9 +79,11 @@ export const fromChainDenom = (
 
   let amount;
   // get the chain assets for the specified chain
-  const chainassets = assets.find((chain) => chain.chain_name === chainName);
+  const chainassets = assets?.find?.((chain) => chain.chain_name === chainName);
   // get the coin data from the chain assets data
-  const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
+  const coin = chainassets?.assets?.find?.(
+    (asset) => asset.base === chainDenom
+  );
   // Get the display exponent
   // we can get the exponent from chain registry asset denom_units
   const exp =
