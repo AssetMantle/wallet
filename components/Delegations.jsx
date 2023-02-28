@@ -6,6 +6,7 @@ import {
   defaultChainName,
   defaultChainSymbol,
   getBalanceStyle,
+  toastConfig,
   usdSymbol,
 } from "../config";
 import {
@@ -108,16 +109,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
     stakeDispatch({ type: "SUBMIT_REDELEGATE" });
     if (stakeState?.redelegationAmount && stakeState?.redelegationDestination) {
       setReDelegateModal(false);
-      const id = toast.loading("Transaction initiated ...", {
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      const id = toast.loading("Transaction initiated ...", toastConfig);
       const { response, error } = await sendRedelegation(
         address,
         stakeState?.redelegationSrc,
@@ -141,16 +133,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
     stakeDispatch({ type: "SUBMIT_UNDELEGATE" });
     if (stakeState?.undelegationAmount) {
       setUnDelegateModal(false);
-      const id = toast.loading("Transaction initiated ...", {
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      const id = toast.loading("Transaction initiated ...", toastConfig);
       const { response, error } = await sendUndelegation(
         address,
         stakeState?.undelegationSrc,

@@ -19,6 +19,7 @@ import {
   useIsMounted,
 } from "../lib";
 import {
+  UniswapIncentiveList,
   UniswapRewards,
   UniswapStakeContents,
   UniswapUnstakeContents,
@@ -208,7 +209,7 @@ export default function Farm() {
         </ScrollableSectionContainer>
         <ScrollableSectionContainer className="col-12 col-lg-4 d-flex flex-column gap-3 h-90">
           <UniswapRewards />
-          {/* <UniswapIncentiveList /> */}
+          <UniswapIncentiveList />
         </ScrollableSectionContainer>
       </section>
     </>
