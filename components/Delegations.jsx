@@ -6,6 +6,8 @@ import {
   defaultChainName,
   defaultChainSymbol,
   getBalanceStyle,
+  toastConfig,
+  usdSymbol,
 } from "../config";
 import {
   decimalize,
@@ -37,6 +39,9 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
     useDelegatedValidators();
   const { mntlUsdValue } = useMntlUsd();
   let validatorsArray = allValidators.sort((a, b) => b.tokens - a.tokens);
+
+  const isConnected = status == "Connected";
+
   // modal handler
 
   const [ReDelegateModal, setReDelegateModal] = useState(false);
@@ -68,13 +73,25 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
     ? selectedDelegations
     : totalDelegatedAmount;
 
-  const delegationsDisplay = fromChainDenom(delegationsValue);
+  const delegationsDisplay = isConnected
+    ? getBalanceStyle(fromChainDenom(delegationsValue), "caption", "caption2")
+    : getBalanceStyle(
+        fromChainDenom(delegationsValue),
+        "caption text-gray",
+        "caption2 text-gray"
+      );
 
-  const delegationsInUSDDisplay = decimalize(
-    BigNumber(fromDenom(delegationsValue))
-      .multipliedBy(BigNumber(mntlUsdValue))
-      .toString()
-  );
+  const delegationsInUSD = BigNumber(fromDenom(delegationsValue))
+    .multipliedBy(BigNumber(mntlUsdValue || 0))
+    .toString();
+
+  const delegationsInUSDDisplay = isConnected
+    ? getBalanceStyle(decimalize(delegationsInUSD), "caption2 ", "small")
+    : getBalanceStyle(
+        decimalize(delegationsInUSD),
+        "caption2 text-gray",
+        "small text-gray"
+      );
 
   //Get number of validators delegated to out of selected validators
   const delegatedOutOfSelectedValidators = delegatedValidators?.filter((item) =>
@@ -92,16 +109,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
     stakeDispatch({ type: "SUBMIT_REDELEGATE" });
     if (stakeState?.redelegationAmount && stakeState?.redelegationDestination) {
       setReDelegateModal(false);
-      const id = toast.loading("Transaction initiated ...", {
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      const id = toast.loading("Transaction initiated ...", toastConfig);
       const { response, error } = await sendRedelegation(
         address,
         stakeState?.redelegationSrc,
@@ -125,16 +133,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
     stakeDispatch({ type: "SUBMIT_UNDELEGATE" });
     if (stakeState?.undelegationAmount) {
       setUnDelegateModal(false);
-      const id = toast.loading("Transaction initiated ...", {
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      const id = toast.loading("Transaction initiated ...", toastConfig);
       const { response, error } = await sendUndelegation(
         address,
         stakeState?.undelegationSrc,
@@ -159,8 +158,6 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
     e.target.src = "/validatorAvatars/alt.png";
   };
 
-  const isConnected = status == "Connected";
-
   return (
     <>
       {stakeState?.selectedValidators?.length ? (
@@ -176,33 +173,23 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
             <p className="caption d-flex gap-2 align-items-center">Delegated</p>
           ) : (
             <p
-              className={`caption d-flex gap-2 align-items-center ${
-                isConnected ? null : "text-gray"
-              }`}
+              className={
+                isConnected
+                  ? `caption d-flex gap-2 align-items-center`
+                  : `caption d-flex gap-2 align-items-center text-gray`
+              }
             >
               {" "}
-              Cumulative Delegated
+              Cumulative Delegations
             </p>
           )}
           <p className={isConnected ? "caption" : "caption text-gray"}>
-            {isConnected
-              ? getBalanceStyle(delegationsDisplay, "caption", "caption2")
-              : getBalanceStyle(
-                  delegationsDisplay,
-                  "caption text-gray",
-                  "caption2 text-gray"
-                )}
+            {delegationsDisplay}
             &nbsp;{denomDisplay}
           </p>
           <p className={isConnected ? "caption2" : "caption2 text-gray"}>
-            {isConnected
-              ? getBalanceStyle(delegationsInUSDDisplay, "caption2 ", "small")
-              : getBalanceStyle(
-                  delegationsInUSDDisplay,
-                  "caption2 text-gray",
-                  "small text-gray"
-                )}
-            &nbsp;{"$USD"}
+            {delegationsInUSDDisplay}
+            &nbsp;{usdSymbol}
           </p>
           {showRedelegateUndelegateAndClaim &&
           stakeState?.selectedValidators?.length === 1 ? (
@@ -801,32 +788,6 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
           </div>
         </ModalContainer>
       </div>
-
-      {/* <TransactionManifestModal
-        id="redelegateTransactionManifestModal"
-        displayData={[
-          { title: "Redelegating From:", value: stakeState.redelegationSrc },
-          {
-            title: "Redelegating To:",
-            value: stakeState.redelegationDestination,
-          },
-          { title: "Amount:", value: stakeState.redelegationAmount },
-          { title: "Transaction Type", value: "Redelegate" },
-          { title: "Wallet Type", value: wallet?.prettyName },
-        ]}
-        handleSubmit={handleRedelegate}
-      />
-
-      <TransactionManifestModal
-        id="undelegateTransactionManifestModal"
-        displayData={[
-          { title: "Undelegating From:", value: stakeState.undelegationSrc },
-          { title: "Amount:", value: stakeState.undelegationAmount },
-          { title: "Transaction Type", value: "Undelegate" },
-          { title: "Wallet Type", value: wallet?.prettyName },
-        ]}
-        handleSubmit={handleUndelegate}
-      /> */}
     </>
   );
 };

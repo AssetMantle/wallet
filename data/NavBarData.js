@@ -52,6 +52,14 @@ export const NavBarData = {
       icon: <i className="bi bi-book" />,
       endIcon: <i className="bi bi-arrow-up-right" />,
     },
+    {
+      title: "MantlePlace",
+      href: "https://marketplace.assetmantle.one/",
+      variant: "am-link",
+      target: "_blank",
+      icon: <i className="bi bi-shop-window" />,
+      endIcon: <i className="bi bi-arrow-up-right" />,
+    },
   ],
   rightNav: [
     {

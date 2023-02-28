@@ -9,9 +9,9 @@ import useSWR from "swr";
 import { configureChains, createClient, useAccount } from "wagmi";
 import { mainnet, polygon } from "wagmi/chains";
 import { placeholderAvailableBalance } from "../config";
-import { toChainDenom } from "./queryApi";
 import nonFungiblePositionManagerABI from "../data/contracts/nonFungiblePositionManagerABI.json";
 import uniV3StakerABI from "../data/contracts/uniV3StakerABI.json";
+import { toChainDenom } from "./queryApi";
 
 // CONFIG PARAMETERS FOR ETH AND POLYGON
 export const selectedEthNetwork = "mainnet";
@@ -67,6 +67,12 @@ export const ethConfig = {
       uniV3Staker: {
         address: "0xe34139463bA50bD61336E0c446Bd8C0867c6fE65",
         abi: uniV3StakerABI,
+      },
+      mntlEthPool: {
+        address: "0xf5b8304dc18579c4247caad705df01928248bc71",
+        token0: "0x2C4F1DF9c7DE0C59778936C9b145fF56813F3295",
+        token1: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        fee: "3000",
       },
       incentivePrograms: [
         {
@@ -393,6 +399,70 @@ export const useStakedPositionsNftId = (incentiveId) => {
     positionNfts: positionNftsArray,
     isLoadingPositionNfts: !error && !positionNftsArray,
     errorPositionNfts: error,
+  };
+};
+
+export const useIncentiveList = () => {
+  // fetcher function for useSwr of useMaticBalance()
+  const fetchIncentiveList = async (url) => {
+    console.log("inside fetchIncentiveList, URL: ", url);
+
+    let incentiveArray;
+    const query = `{
+      incentives(where: {
+        pool: "${ethConfig?.mainnet?.uniswap?.mntlEthPool?.address}"
+      }) {
+        id
+        rewardToken
+        pool
+        endTime
+        ended
+        reward
+        startTime
+        reward
+        refundee
+      }
+    }`;
+
+    // explorer: https://thegraph.com/hosted-service/subgraph/revert-finance/uni-v3-staker-mainnet
+    const stakedPositionsNftApi =
+      "https://api.thegraph.com/subgraphs/name/revert-finance/uni-v3-staker-mainnet";
+    // use a try catch block for creating rich Error object
+    try {
+      // fetch the post request of graph query
+      const res = await fetch(stakedPositionsNftApi, {
+        method: "POST",
+        body: JSON.stringify({ query }),
+      });
+
+      const responseObject = await res.json();
+      const unfilteredIncentiveArray = responseObject?.data?.incentives || [];
+
+      incentiveArray = unfilteredIncentiveArray;
+
+      // console.log("swr fetcher success: ", url);
+    } catch (error) {
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
+      throw error;
+    }
+
+    // return the data
+    return incentiveArray;
+  };
+
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: incentiveArray, error } = useSWR(
+    ["useIncentiveList"],
+    fetchIncentiveList,
+    {
+      fallbackData: [],
+    }
+  );
+
+  return {
+    incentiveList: incentiveArray,
+    isLoadingIncentiveList: !error && !incentiveArray,
+    errorIncentiveList: error,
   };
 };
 

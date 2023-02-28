@@ -5,10 +5,12 @@ import {
   defaultChainName,
   defaultChainSymbol,
   getBalanceStyle,
+  usdSymbol,
 } from "../../config";
 import {
   decimalize,
   fromChainDenom,
+  fromDenom,
   useAvailableBalance,
   useMntlUsd,
 } from "../../data";
@@ -40,25 +42,30 @@ export const AvailableBalance = () => {
 };
 
 export const AvailableBalanceUsd = () => {
-  const { availableBalance } = useAvailableBalance();
+  const walletManager = useChain(defaultChainName);
+  const { status } = walletManager;
+
+  const { availableBalance, isLoadingAvailableBalance } = useAvailableBalance();
   const { mntlUsdValue } = useMntlUsd();
 
-  const balanceInUSDDisplayUnstyled = BigNumber(
-    fromChainDenom(availableBalance)
-  )
-    .multipliedBy(BigNumber(decimalize(mntlUsdValue)))
+  const isConnected = status == "Connected" && !isLoadingAvailableBalance;
+
+  const balanceInUSD = BigNumber(fromDenom(availableBalance))
+    .multipliedBy(BigNumber(mntlUsdValue || 0))
     .toString();
 
-  const balanceInUSDDisplay = getBalanceStyle(
-    decimalize(balanceInUSDDisplayUnstyled),
-    "caption2 text-gray",
-    "small text-gray"
-  );
+  const balanceInUSDDisplay = isConnected
+    ? getBalanceStyle(decimalize(balanceInUSD), "caption2", "small")
+    : getBalanceStyle(
+        decimalize(balanceInUSD),
+        "caption2 text-gray",
+        "small text-gray"
+      );
 
   return (
-    <p className="caption2 text-gray">
-      ${balanceInUSDDisplay}
-      &nbsp;$USD
+    <p className={isConnected ? "caption2" : "caption2 text-gray"}>
+      {balanceInUSDDisplay}
+      &nbsp;{usdSymbol}
     </p>
   );
 };

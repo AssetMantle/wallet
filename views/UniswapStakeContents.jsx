@@ -1,8 +1,9 @@
 import dynamic from "next/dynamic";
 import React from "react";
+import useSWR from "swr";
 import { useAccount, useContractRead, useContractReads } from "wagmi";
 import { UniswapStakeEntry } from "../components";
-import { ethConfig } from "../data";
+import { ethConfig, useIncentiveList } from "../data";
 import { UniswapStakeContentsLoading } from "./UniswapStakeContentsLoading";
 
 const nonFungiblePositionManagerContractAddress =
@@ -13,11 +14,17 @@ const chainID = ethConfig?.mainnet?.chainID;
 
 const selectedIncentive = ethConfig?.selected?.uniswapIncentiveProgram;
 
-const latestIncentiveProgram =
-  ethConfig?.mainnet?.uniswap?.incentivePrograms?.[selectedIncentive];
+ethConfig?.mainnet?.uniswap?.incentivePrograms?.[selectedIncentive];
+
+const mntlEthPool = ethConfig?.mainnet?.uniswap?.mntlEthPool;
 
 const StaticUniswapStakeContents = () => {
   // HOOKS
+  // hooks to get the incentive program data
+  const { incentiveList, isLoadingIncentiveList } = useIncentiveList();
+  const { data: selectedIncentiveIndex } = useSWR("selectedIncentive");
+  const isIncentivePopulated = !isLoadingIncentiveList && incentiveList?.length;
+
   // hooks to get the address of the connected wallet
   const { address, isConnected } = useAccount();
   // const isMounted = useIsMounted();
@@ -114,9 +121,9 @@ const StaticUniswapStakeContents = () => {
 
   const filteredPositionValues = positionValues?.filter?.(
     (positionValue) =>
-      positionValue?.fee == Number(latestIncentiveProgram?.fee) &&
-      positionValue?.token0 == latestIncentiveProgram?.token0 &&
-      positionValue?.token1 == latestIncentiveProgram?.token1
+      positionValue?.fee == Number(mntlEthPool?.fee) &&
+      positionValue?.token0 == mntlEthPool?.token0 &&
+      positionValue?.token1 == mntlEthPool?.token1
   );
 
   const noRecordsJSX = (
@@ -160,7 +167,6 @@ const StaticUniswapStakeContents = () => {
     isLoadingTokenValues,
     positionValues: positionValues,
     filteredPositionValues,
-    latestIncentiveProgram,
   });
 
   return renderedJSX;

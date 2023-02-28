@@ -10,6 +10,7 @@ import {
   defaultChainSymbol,
   ethereumChainSymbol,
   placeholderAvailableBalance,
+  toastConfig,
 } from "../config";
 import {
   approveMaxDeposit,
@@ -185,29 +186,15 @@ const EthToPolygonBridge = () => {
         render: <CustomToastWithLink message={message} txHash={txHash} />,
         type: "success",
         isLoading: false,
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
         toastId: txHash,
+        ...toastConfig,
       });
     } else {
       toast.update(id, {
         render: message,
         type: "error",
         isLoading: false,
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
+        ...toastConfig,
       });
     }
   };
@@ -247,16 +234,7 @@ const EthToPolygonBridge = () => {
       parseFloat(formState?.transferAmount) > 0 &&
       isObjEmpty(formState?.errorMessages)
     ) {
-      const id = toast.loading("Transaction initiated ...", {
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      const id = toast.loading("Transaction initiated ...", toastConfig);
       // define local variables
       const localTransferAmount = formState?.transferAmount;
 
@@ -284,16 +262,7 @@ const EthToPolygonBridge = () => {
 
     try {
       // initiate the toast
-      const id2 = toast.loading("Transaction initiated ...", {
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      const id2 = toast.loading("Transaction initiated ...", toastConfig);
 
       // create transaction
       const { response, error } = await approveMaxDeposit(address, connector);

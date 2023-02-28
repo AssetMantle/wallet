@@ -1,13 +1,9 @@
 import { useChain } from "@cosmos-kit/react";
 import BigNumber from "bignumber.js";
 import React from "react";
+import { defaultChainName, getBalanceStyle, usdSymbol } from "../../config";
 import {
-  defaultChainDenomExponent,
-  defaultChainName,
-  getBalanceStyle,
-  usdSymbol,
-} from "../../config";
-import {
+  decimalize,
   fromChainDenom,
   fromDenom,
   useMntlUsd,
@@ -24,25 +20,24 @@ export const TotalBalance = () => {
 
   const chainContext = useChain(defaultChainName);
   const { status } = chainContext;
-
-  const totalBalanceDisplay = fromChainDenom(totalBalance);
-
   const isConnected = !(
     isLoadingTotalBalance ||
     isErrorTotalBalance ||
     status != "Connected"
   );
 
+  const totalBalanceDisplay = isConnected
+    ? getBalanceStyle(fromChainDenom(totalBalance), "caption", "caption2")
+    : getBalanceStyle(
+        fromChainDenom(totalBalance),
+        "caption text-gray",
+        "caption2 text-gray"
+      );
+
   return (
     <>
       <p className={isConnected ? "caption" : "caption text-gray"}>
-        {isConnected
-          ? getBalanceStyle(totalBalanceDisplay, "caption", "caption2")
-          : getBalanceStyle(
-              totalBalanceDisplay,
-              "caption text-gray",
-              "caption2 text-gray"
-            )}
+        {totalBalanceDisplay}
         &nbsp;
         {denomTotalBalance}
       </p>
@@ -66,21 +61,21 @@ export const TotalBalanceInUSD = () => {
     errorMntlUsdValue
   );
 
-  const totalBalanceDisplay = fromDenom(totalBalance);
-
-  const totalBalanceInUSDDisplay = BigNumber(totalBalanceDisplay)
-    .multipliedBy(BigNumber(mntlUsdValue))
-    .toFixed(defaultChainDenomExponent)
+  const totalBalanceInUSD = BigNumber(fromDenom(totalBalance))
+    .multipliedBy(BigNumber(mntlUsdValue || 0))
     .toString();
 
-  return (
-    <p className="caption2 text-gray">
-      $
-      {getBalanceStyle(
-        totalBalanceInUSDDisplay,
+  const totalBalanceInUSDDisplay = isConnected
+    ? getBalanceStyle(decimalize(totalBalanceInUSD), "caption2", "small")
+    : getBalanceStyle(
+        decimalize(totalBalanceInUSD),
         "caption2 text-gray",
         "small text-gray"
-      )}
+      );
+
+  return (
+    <p className={isConnected ? "caption2" : "caption2 text-gray"}>
+      {totalBalanceInUSDDisplay}
       &nbsp;
       {usdSymbol}
     </p>

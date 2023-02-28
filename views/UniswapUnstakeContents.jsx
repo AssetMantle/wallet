@@ -1,15 +1,11 @@
 import dynamic from "next/dynamic";
 import React from "react";
+import useSWR from "swr";
 import { useAccount, useContractReads } from "wagmi";
 import { UniswapUnstakeEntry } from "../components";
-import { ethConfig, useStakedPositionsNftId } from "../data";
+import { ethConfig, useIncentiveList, useStakedPositionsNftId } from "../data";
 import { getIncentiveIdFromKey } from "../lib";
 import { UniswapStakeContentsLoading } from "./UniswapStakeContentsLoading";
-
-const selectedIncentive = ethConfig?.selected?.uniswapIncentiveProgram;
-
-const latestIncentiveProgram =
-  ethConfig?.mainnet?.uniswap?.incentivePrograms?.[selectedIncentive];
 
 const nonFungiblePositionManagerContractAddress =
   ethConfig?.mainnet?.uniswap?.nonFungiblePositionManager?.address;
@@ -28,11 +24,28 @@ const hookArgs = { watch: true, chainId: chainID };
 
 const StaticUniswapUnstakeContents = () => {
   // HOOKS
+  // hooks to get the incentive program data
+  const { incentiveList, isLoadingIncentiveList } = useIncentiveList();
+  const { data: selectedIncentiveIndex } = useSWR("selectedIncentive");
+  const isIncentivePopulated = !isLoadingIncentiveList && incentiveList?.length;
+
+  const selectedIncentiveTuple = isIncentivePopulated
+    ? [
+        incentiveList?.[selectedIncentiveIndex]?.rewardToken,
+        incentiveList?.[selectedIncentiveIndex]?.pool,
+        incentiveList?.[selectedIncentiveIndex]?.startTime,
+        incentiveList?.[selectedIncentiveIndex]?.endTime,
+        incentiveList?.[selectedIncentiveIndex]?.refundee,
+      ]
+    : [];
+
+  const selectedIncentiveId = selectedIncentiveTuple?.length
+    ? getIncentiveIdFromKey(selectedIncentiveTuple)
+    : null;
+
   // const isMounted = useIsMounted();
   const { positionNfts, isLoadingPositionNfts, errorPositionNfts } =
-    useStakedPositionsNftId(
-      getIncentiveIdFromKey(latestIncentiveProgram?.incentiveTuple)
-    );
+    useStakedPositionsNftId(selectedIncentiveId);
 
   const { address, isConnected } = useAccount();
 
@@ -113,7 +126,9 @@ const StaticUniswapUnstakeContents = () => {
     " ownerValue: ",
     ownerValues,
     " filteredPositionNfts: ",
-    filteredPositionNfts
+    filteredPositionNfts,
+    " selectedIncentiveId: ",
+    selectedIncentiveId
   );
 
   return renderedJSX;

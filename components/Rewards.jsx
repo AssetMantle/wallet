@@ -6,8 +6,11 @@ import {
   defaultChainName,
   defaultChainSymbol,
   getBalanceStyle,
+  toastConfig,
+  usdSymbol,
 } from "../config";
 import {
+  decimalize,
   fromChainDenom,
   fromDenom,
   isInvalidAddress,
@@ -48,27 +51,34 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
     ? selectedRewards
     : allRewards;
 
-  const rewardsDisplay = fromChainDenom(rewardsValue);
+  const isConnected = status == "Connected";
 
-  const rewardsInUSDDisplay = BigNumber(fromDenom(rewardsValue))
-    .multipliedBy(BigNumber(mntlUsdValue))
+  const rewardsDisplay = isConnected
+    ? getBalanceStyle(fromChainDenom(rewardsValue), "caption", "caption2")
+    : getBalanceStyle(
+        fromChainDenom(rewardsValue),
+        "caption text-gray",
+        "caption2 text-gray"
+      );
+
+  const rewardsInUSD = BigNumber(fromDenom(rewardsValue))
+    .multipliedBy(BigNumber(mntlUsdValue || 0))
     .toString();
+
+  const rewardsInUSDDisplay = isConnected
+    ? getBalanceStyle(decimalize(rewardsInUSD), "caption2", "small")
+    : getBalanceStyle(
+        decimalize(rewardsInUSD),
+        "caption2 text-gray",
+        "small text-gray"
+      );
 
   const handleSubmitClaim = async (e) => {
     e.preventDefault();
     setClaimModal(false);
 
     // notify toast for transaction initiation
-    const id = toast.loading("Transaction initiated ...", {
-      position: "bottom-center",
-      autoClose: 8000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-    });
+    const id = toast.loading("Transaction initiated ...", toastConfig);
 
     let validatorAddresses;
     let delegatedValidatorsArray = delegatedValidators?.map?.(
@@ -107,16 +117,7 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
     e.preventDefault();
     // do something to change the address
     setClaimModal(false);
-    const id = toast.loading("Transaction initiated ...", {
-      position: "bottom-center",
-      autoClose: 8000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-    });
+    const id = toast.loading("Transaction initiated ...", toastConfig);
     const { response, error } = await sendWithdrawAddress(
       address,
       newAddress,
@@ -146,8 +147,6 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
   };
 
   const isSubmitDisabled = status != "Connected";
-
-  const isConnected = status == "Connected";
 
   const delegationInfoJSX = (
     <>
@@ -394,25 +393,13 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
           </p>
         )}
         <p className={isConnected ? "caption" : "caption text-gray"}>
-          {isConnected
-            ? getBalanceStyle(rewardsDisplay, "caption", "caption2")
-            : getBalanceStyle(
-                rewardsDisplay,
-                "caption text-gray",
-                "caption2 text-gray"
-              )}
+          {rewardsDisplay}
           &nbsp;
           {denomDisplay}
         </p>
         <p className={isConnected ? "caption2" : "caption2 text-gray"}>
-          {isConnected
-            ? getBalanceStyle(rewardsInUSDDisplay, "caption2", "small")
-            : getBalanceStyle(
-                rewardsInUSDDisplay,
-                "caption2 text-gray",
-                "small text-gray"
-              )}
-          &nbsp;{"$USD"}
+          {rewardsInUSDDisplay}
+          &nbsp;{usdSymbol}
         </p>
         <div className="d-flex justify-content-end">
           {stakeState?.selectedValidators?.length > 5 ||

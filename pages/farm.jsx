@@ -3,10 +3,15 @@ import { useWeb3Modal } from "@web3modal/react";
 import { BigNumber } from "bignumber.js";
 import Head from "next/head";
 import React, { useState } from "react";
+import useSWR from "swr";
 import { useAccount } from "wagmi";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
-import { defaultChainSymbol } from "../config";
-import { ethConfig, placeholderAddressEth } from "../data";
+import { defaultChainSymbol, getBalanceStyle } from "../config";
+import {
+  fromChainDenom,
+  placeholderAddressEth,
+  useIncentiveList,
+} from "../data";
 import {
   getTimeDifference,
   handleCopy,
@@ -14,6 +19,7 @@ import {
   useIsMounted,
 } from "../lib";
 import {
+  UniswapIncentiveList,
   UniswapRewards,
   UniswapStakeContents,
   UniswapUnstakeContents,
@@ -25,11 +31,9 @@ export default function Farm() {
   const [Tab, setTab] = useState(0);
   const [StakeTab, setStakeTab] = useState(true);
   const tabs = [{ name: "Uniswap V3 LP Staking" }];
-
-  const selectedIncentive = ethConfig?.selected?.uniswapIncentiveProgram;
-
-  const latestIncentiveProgram =
-    ethConfig?.mainnet?.uniswap?.incentivePrograms?.[selectedIncentive];
+  const { incentiveList, isLoadingIncentiveList } = useIncentiveList();
+  const { data: selectedIncentiveIndex } = useSWR("selectedIncentive");
+  const isIncentivePopulated = !isLoadingIncentiveList && incentiveList?.length;
 
   // hooks to work the multi-modal for ethereum
   const { open } = useWeb3Modal();
@@ -61,16 +65,32 @@ export default function Farm() {
     address || placeholderAddressEth
   );
   const isWalletEthConnected = isMounted() && isConnected;
-  const currentRewardPoolDisplay = latestIncentiveProgram?.totalRewards;
+
+  const currentRewardPoolDisplay = isIncentivePopulated
+    ? getBalanceStyle(
+        fromChainDenom(incentiveList?.[selectedIncentiveIndex]?.reward),
+        "caption",
+        "caption2"
+      )
+    : getBalanceStyle(fromChainDenom(0), "caption", "caption2");
+
   const currentRewardPoolDenomDisplay = defaultChainSymbol;
 
   const currentTimestamp = Math.floor(Date.now() / 1000);
-  const incentiveEndTimestamp = latestIncentiveProgram?.endTime;
-  const incentiveDurationDisplay = BigNumber(
-    incentiveEndTimestamp
-  ).isGreaterThan(BigNumber(currentTimestamp))
-    ? `${getTimeDifference(incentiveEndTimestamp, currentTimestamp)} remaining`
-    : `Incentive Ended`;
+
+  const incentiveEndTimestamp =
+    incentiveList?.[selectedIncentiveIndex]?.endTime || 0;
+
+  const incentiveDurationDisplay = isIncentivePopulated
+    ? BigNumber(incentiveEndTimestamp).isGreaterThan(
+        BigNumber(currentTimestamp)
+      )
+      ? `${getTimeDifference(
+          incentiveEndTimestamp,
+          currentTimestamp
+        )} remaining`
+      : `Incentive Ended`
+    : `---`;
 
   const tabTitleJSX = tabs.map((tab, index) => (
     <button
@@ -163,7 +183,9 @@ export default function Farm() {
     " connected: ",
     isConnected,
     " isWalletEthConnected: ",
-    isWalletEthConnected
+    isWalletEthConnected,
+    " incentiveList: ",
+    incentiveList
   );
 
   return (
@@ -187,7 +209,7 @@ export default function Farm() {
         </ScrollableSectionContainer>
         <ScrollableSectionContainer className="col-12 col-lg-4 d-flex flex-column gap-3 h-90">
           <UniswapRewards />
-          {/* <UniswapIncentiveList /> */}
+          <UniswapIncentiveList />
         </ScrollableSectionContainer>
       </section>
     </>

@@ -5,6 +5,7 @@ import {
   defaultChainName,
   defaultChainSymbol,
   getBalanceStyle,
+  usdSymbol,
 } from "../config";
 import {
   decimalize,
@@ -29,12 +30,14 @@ const Unbonded = ({
   const [unBondingModal, setUnBondingModal] = useState(false);
 
   const walletManager = useChain(defaultChainName);
-  const { getSigningStargateClient, address, status } = walletManager;
+  const { status } = walletManager;
   const [activeValidators, setActiveValidators] = useState(true);
   const { totalUnbondingAmount, allUnbonding } = useTotalUnbonding();
   const { mntlUsdValue } = useMntlUsd();
   const { allValidatorsBonded } = useAllValidatorsBonded();
   const { allValidatorsUnbonded } = useAllValidatorsUnbonded();
+
+  const isConnected = status == "Connected";
 
   const selectedUnbondingArray = allUnbonding?.filter((unbondingObject) =>
     stakeState?.selectedValidators?.includes(unbondingObject.address)
@@ -50,19 +53,29 @@ const Unbonded = ({
     ? selectedUnbonding
     : totalUnbondingAmount;
 
-  const unbondingDisplay = fromChainDenom(unbondingValue);
+  const unbondingDisplay = isConnected
+    ? getBalanceStyle(fromChainDenom(unbondingValue), "caption", "caption2")
+    : getBalanceStyle(
+        fromChainDenom(unbondingValue),
+        "caption text-gray",
+        "caption2 text-gray"
+      );
 
-  const unbondingInUSDDisplay = decimalize(
-    BigNumber(fromDenom(unbondingValue))
-      .multipliedBy(BigNumber(mntlUsdValue))
-      .toString()
-  );
+  const unbondingInUSD = BigNumber(fromDenom(unbondingValue))
+    .multipliedBy(BigNumber(mntlUsdValue))
+    .toString();
+
+  const unbondingInUSDDisplay = isConnected
+    ? getBalanceStyle(decimalize(unbondingInUSD), "caption2", "small")
+    : getBalanceStyle(
+        decimalize(unbondingInUSD),
+        "caption2 text-gray",
+        "small text-gray"
+      );
 
   const secondsInADay = 86400;
 
   const isSubmitDisabled = status != "Connected";
-
-  const isConnected = status == "Connected";
 
   return (
     <div className="nav-bg p-3 rounded-4 gap-3">
@@ -74,24 +87,12 @@ const Unbonded = ({
           Undelegating
         </p>
         <p className={isConnected ? "caption" : "caption text-gray"}>
-          {isConnected
-            ? getBalanceStyle(unbondingDisplay, "caption", "caption2")
-            : getBalanceStyle(
-                unbondingDisplay,
-                "caption text-gray",
-                "caption2 text-gray"
-              )}
+          {unbondingDisplay}
           &nbsp;{denomDisplay}
         </p>
         <p className={isConnected ? "caption2" : "caption2 text-gray"}>
-          {isConnected
-            ? getBalanceStyle(unbondingInUSDDisplay, "caption2", "small")
-            : getBalanceStyle(
-                unbondingInUSDDisplay,
-                "caption2 text-gray",
-                "small text-gray"
-              )}
-          &nbsp;{"$USD"}
+          {unbondingInUSDDisplay}
+          &nbsp;{usdSymbol}
         </p>
         <div className="d-flex justify-content-end">
           {allUnbonding?.length != 0 && !isSubmitDisabled ? (
