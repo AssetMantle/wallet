@@ -11,6 +11,7 @@ import {
   gravityChainGasFee,
   gravityChainName,
   gravityChainSymbol,
+  toastConfig,
 } from "../config";
 import {
   formConstants,
@@ -191,29 +192,15 @@ const GravityToEthBridge = () => {
         render: <CustomToastWithLink txHash={txHash} />,
         type: "success",
         isLoading: false,
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
         toastId: txHash,
+        ...toastConfig,
       });
     } else {
       toast.update(id, {
         render: "Transaction failed. Try Again",
         type: "error",
         isLoading: false,
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
+        ...toastConfig,
       });
     }
   };
@@ -256,16 +243,7 @@ const GravityToEthBridge = () => {
       const ethDestAddress = "0xae6094170ABC0601b4bbe933D04368cD407C186a";
 
       // initiate toast notification
-      const toastId2 = toast.loading("Transaction initiated ...", {
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      const toastId2 = toast.loading("Transaction initiated ...", toastConfig);
 
       // create transaction
       const { response, error } = await sendIbcTokenToEth(
@@ -316,16 +294,7 @@ const GravityToEthBridge = () => {
       );
 
       // initiate toast notification
-      const toastId = toast.loading("Transaction initiated ...", {
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      const toastId = toast.loading("Transaction initiated ...", toastConfig);
 
       // initiate transaction from txn api
       const { response, error } = await sendIbcTokenToMantle(

@@ -17,6 +17,7 @@ import {
   defaultChainRPCProxy,
   defaultChainRPCProxy2,
   defaultTheme,
+  defaultToastContainerId,
   gravityChainRESTProxy,
   gravityChainRESTProxy2,
   gravityChainRPCProxy,
@@ -156,6 +157,7 @@ function CreateCosmosApp({ Component, pageProps }) {
                   draggable
                   pauseOnHover
                   theme="dark"
+                  containerId={defaultToastContainerId}
                 />
                 <ToastContainer />{" "}
               </Layout>

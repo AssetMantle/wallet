@@ -8,6 +8,7 @@ import {
   defaultChainName,
   defaultChainSymbol,
   gravityChainName,
+  toastConfig,
 } from "../config";
 import {
   formConstants,
@@ -169,29 +170,15 @@ const MntlToGravityBridge = () => {
         render: <CustomToastWithLink txHash={txHash} />,
         type: "success",
         isLoading: false,
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
         toastId: txHash,
+        ...toastConfig,
       });
     } else {
       toast.update(id, {
         render: "Transaction failed. Try Again",
         type: "error",
         isLoading: false,
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
+        ...toastConfig,
       });
     }
   };
@@ -226,16 +213,7 @@ const MntlToGravityBridge = () => {
       const gravityAddress = convertBech32Address(address, gravityChainName);
 
       // create transaction
-      const id = toast.loading("Transaction initiated ...", {
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      const id = toast.loading("Transaction initiated ...", toastConfig);
       const { response, error } = await sendIbcTokenToGravity(
         address,
         gravityAddress,

@@ -6,6 +6,7 @@ import {
   defaultChainName,
   defaultChainSymbol,
   getBalanceStyle,
+  toastConfig,
   usdSymbol,
 } from "../config";
 import {
@@ -77,16 +78,7 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
     setClaimModal(false);
 
     // notify toast for transaction initiation
-    const id = toast.loading("Transaction initiated ...", {
-      position: "bottom-center",
-      autoClose: 8000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-    });
+    const id = toast.loading("Transaction initiated ...", toastConfig);
 
     let validatorAddresses;
     let delegatedValidatorsArray = delegatedValidators?.map?.(
@@ -125,16 +117,7 @@ const Rewards = ({ setShowClaimError, stakeState, notify }) => {
     e.preventDefault();
     // do something to change the address
     setClaimModal(false);
-    const id = toast.loading("Transaction initiated ...", {
-      position: "bottom-center",
-      autoClose: 8000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-    });
+    const id = toast.loading("Transaction initiated ...", toastConfig);
     const { response, error } = await sendWithdrawAddress(
       address,
       newAddress,
