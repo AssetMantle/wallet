@@ -4,7 +4,14 @@ import BigNumber from "bignumber.js";
 import Link from "next/link";
 import { useReducer } from "react";
 import { toast } from "react-toastify";
-import { useAccount, useBalance } from "wagmi";
+import { ethers } from "ethers";
+import {
+  useAccount,
+  useBalance,
+  useContractRead,
+  useContractWrite,
+  usePrepareContractWrite,
+} from "wagmi";
 import {
   defaultChainGasFee,
   defaultChainSymbol,
@@ -16,10 +23,12 @@ import {
   approveMaxDeposit,
   decimalize,
   depositMntlToken,
+  ethConfig,
   formConstants,
   fromDenom,
   parentERC20TokenAddress,
   placeholderAddressEth,
+  PREPARE_CONTRACT_ERROR,
   toDenom,
   useAllowance,
 } from "../data";
@@ -29,6 +38,16 @@ import {
   shortenEthAddress,
   useIsMounted,
 } from "../lib";
+import { erc20ABI } from "wagmi";
+
+const gravityEthereumBridgeContract =
+  ethConfig?.mainnet?.gravity?.ethereumBridge;
+const chainID = ethConfig?.mainnet?.chainID;
+const hookArgs = { watch: true, chainId: chainID };
+const mntlTokenContract = {
+  address: ethConfig?.mainnet?.token?.parent?.erc20,
+  abi: erc20ABI,
+};
 
 const EthToPolygonBridge = () => {
   // WALLET HOOKS
@@ -36,10 +55,28 @@ const EthToPolygonBridge = () => {
   const { open } = useWeb3Modal();
   // before useAccount, define the isMounted() hook to deal with SSR issues
   const isMounted = useIsMounted();
+  // read the allowance of polygon deposit
   const { allowance } = useAllowance();
-
-  // books to get the address of the connected wallet
+  // hook to get the address of the connected wallet
   const { address, isConnected, connector } = useAccount();
+  const isWalletEthConnected = isMounted() && isConnected;
+  const MAX_UINT256 = BigNumber(2).exponentiatedBy(256).minus(1);
+  // const MAX_UINT256 = BigNumber("1.157920892373162e+71");
+  let id3, toastId4;
+
+  // wagmi hook to read the allowance of gravity deposit
+  const {
+    data: allowanceGravity,
+    isError: isErrorAllowanceGravity,
+    isLoading: isLoadingAllowanceGravity,
+  } = useContractRead({
+    ...mntlTokenContract,
+    functionName: "allowance",
+    args: [address, gravityEthereumBridgeContract?.address],
+    select: (data) => data?.toString?.(),
+    enabled: isWalletEthConnected && address,
+    ...hookArgs,
+  });
 
   // get the MNTL token balance using wagmi hook
   const { data: mntlEthBalanceData } = useBalance({
@@ -52,6 +89,30 @@ const EthToPolygonBridge = () => {
   // get the ETH balance using wagmi hook
   const { data: ethBalanceData } = useBalance({
     address: address,
+  });
+
+  const { config: configApprove } = usePrepareContractWrite({
+    ...mntlTokenContract,
+    functionName: "approve",
+    args: [gravityEthereumBridgeContract?.address, ethers.constants.MaxUint256],
+    enabled: isWalletEthConnected && address,
+    chainId: chainID,
+    onError(error) {
+      console.error("prepare error: ", error);
+      if (true)
+        toast.error(PREPARE_CONTRACT_ERROR, {
+          ...toastConfig,
+        });
+    },
+  });
+
+  const { writeAsync } = useContractWrite({
+    ...configApprove,
+    onError(error) {
+      console.error(error);
+      notify(null, toastId4, "Transaction Aborted. Try again.");
+      toastId4 = null;
+    },
   });
 
   // FORM REDUCER
@@ -218,8 +279,8 @@ const EthToPolygonBridge = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    console.log("inside handleSubmit()");
+  const handleSubmitPolygon = async (e) => {
+    console.log("inside handleSubmitPolygon()");
     e.preventDefault();
 
     // execute the dispatch operations pertaining to submit
@@ -256,8 +317,8 @@ const EthToPolygonBridge = () => {
     }
   };
 
-  const handleApproveSubmit = async (e) => {
-    console.log("inside handleApproveSubmit()");
+  const handleApproveSubmitPolygon = async (e) => {
+    console.log("inside handleApproveSubmitPolygon()");
     e.preventDefault();
 
     try {
@@ -277,6 +338,70 @@ const EthToPolygonBridge = () => {
     }
   };
 
+  const handleSubmitGravity = async (e) => {
+    console.log("inside handleSubmitGravity()");
+    e.preventDefault();
+
+    // execute the dispatch operations pertaining to submit
+    formDispatch({
+      type: "SUBMIT",
+    });
+
+    // if no validation errors, proceed to transaction processing
+    if (
+      formState?.transferAmount &&
+      !isNaN(parseFloat(formState?.transferAmount)) &&
+      parseFloat(formState?.transferAmount) > 0 &&
+      isObjEmpty(formState?.errorMessages)
+    ) {
+      id3 = toast.loading("Transaction initiated ...", toastConfig);
+      // define local variables
+      const localTransferAmount = formState?.transferAmount;
+
+      // create transaction
+      const { response, error } = await depositMntlToken(
+        address,
+        localTransferAmount,
+        connector
+      );
+      console.log("response: ", response, " error: ", error);
+
+      // reset the form values
+      formDispatch({ type: "RESET" });
+      if (response) {
+        notify(response, id3, "Transaction might take upto 22 mins. Check ");
+      } else {
+        notify(null, id3, "Transaction Aborted. Try again.");
+      }
+    }
+  };
+
+  const handleApproveSubmitGravity = async (e) => {
+    console.log("inside handlhandleApproveSubmitGravityeSubmit()");
+    e.preventDefault();
+
+    try {
+      // initiate the toast
+      toastId4 = toast.loading("Transaction initiated ...", toastConfig);
+
+      // create transaction
+      const transactionResponse = await writeAsync();
+
+      console.log("response: ", transactionResponse);
+      if (transactionResponse?.hash) {
+        notify(
+          transactionResponse?.hash,
+          toastId4,
+          "Transaction Submitted. Check "
+        );
+      } else {
+        notify(null, toastId4, "Transaction Aborted. Try again.");
+      }
+    } catch (error) {
+      console.error("Runtime Error: ", error);
+    }
+  };
+
   const handleOnClickMax = (e) => {
     e.preventDefault();
     formDispatch({
@@ -290,7 +415,6 @@ const EthToPolygonBridge = () => {
   };
 
   // DISPLAY VARIABLES
-  const isWalletEthConnected = isMounted() && isConnected;
   const displayShortenedAddress = shortenEthAddress(
     address || placeholderAddressEth
   );
@@ -311,10 +435,17 @@ const EthToPolygonBridge = () => {
     formState?.errorMessages?.transferAmountErrorMsg;
   const isSubmitDisabled =
     !isWalletEthConnected || !isObjEmpty(formState?.errorMessages);
-  const isApproveRequired =
+  const isApproveRequiredPolygon =
     isWalletEthConnected &&
     (BigNumber(allowance).isZero() ||
       BigNumber(allowance).isLessThan(
+        BigNumber(formState?.transferAmount || 0)
+      ));
+
+  const isApproveRequiredGravity =
+    isWalletEthConnected &&
+    (BigNumber(allowanceGravity).isZero() ||
+      BigNumber(allowanceGravity).isLessThan(
         BigNumber(formState?.transferAmount || 0)
       ));
 
@@ -348,41 +479,52 @@ const EthToPolygonBridge = () => {
     notConnectedJSX
   );
 
-  const submitButtonJSX = isApproveRequired ? (
+  const depositToPolygonButtonJSX = isApproveRequiredPolygon ? (
     <button
       className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
-      onClick={handleApproveSubmit}
+      onClick={handleApproveSubmitPolygon}
     >
-      Approve Deposit <i className="bi bi-hand-thumbs-up-fill" />
+      Approve Polygon Send <i className="bi bi-hand-thumbs-up-fill" />
     </button>
   ) : (
     <button
       className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
       disabled={isSubmitDisabled}
-      onClick={handleSubmit}
+      onClick={handleSubmitPolygon}
     >
-      Send to Polygon Chain <i className="bi bi-arrow-down" />
+      Send to Polygon <i className="bi bi-arrow-down" />
     </button>
   );
 
-  /*  console.log(
+  const depositToGravityButtonJSX = isApproveRequiredGravity ? (
+    <button
+      className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2"
+      onClick={handleApproveSubmitGravity}
+    >
+      Approve Gravity Send <i className="bi bi-hand-thumbs-up-fill" />
+    </button>
+  ) : (
+    <button
+      className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2"
+      disabled={isSubmitDisabled}
+      onClick={handleSubmitGravity}
+    >
+      Send to Ethereum <i className="bi bi-arrow-down" />
+    </button>
+  );
+
+  console.log(
     " isConnected: ",
-    isMounted() && isConnected,
-    " address: ",
-    isMounted() && address,
-    " selectedChain: ",
-    selectedChain,
-    " isMounted(): ",
-    isMounted(),
+    isConnected,
     "mntl balance: ",
     displayAvailableBalance,
     " eth balance: ",
     displayEthBalance,
-    " mntlEthBalanceObject: ",
-    mntlEthBalanceObject,
-    " isApproveRequired: ",
-    isApproveRequired
-  ); */
+    " isApproveRequiredPolygon: ",
+    isApproveRequiredPolygon,
+    " maxval: ",
+    MAX_UINT256
+  );
 
   return (
     <>
@@ -433,10 +575,8 @@ const EthToPolygonBridge = () => {
           {displayFormAmountErrorMsg}
         </small>
         <div className="d-flex align-items-center justify-content-end gap-3">
-          {/* <button className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2">
-          Send to Gravity bridge <i className="bi bi-arrow-up" />
-        </button> */}
-          {submitButtonJSX}
+          {depositToGravityButtonJSX}
+          {depositToPolygonButtonJSX}
         </div>
       </div>
     </>

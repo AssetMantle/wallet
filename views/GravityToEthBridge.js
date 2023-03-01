@@ -27,7 +27,7 @@ import { handleCopy, isObjEmpty, useIsMounted } from "../lib/basicJavascript";
 
 const GravityToEthBridge = () => {
   const [gasFee, setGasFee] = useState();
-  console.log(gasFee);
+  console.log("gasFee: ", gasFee);
   // WALLET HOOKS
   /* const chainContext4 = useChain(gravityChainName);
   const {
@@ -390,7 +390,7 @@ const GravityToEthBridge = () => {
     connectEthWalletJSX
   );
 
-  console.log(
+  /* console.log(
     "!isGravityConnected: ",
     !isGravityConnected,
     " !isObjEmpty(formState?.errorMessages): ",
@@ -401,7 +401,7 @@ const GravityToEthBridge = () => {
     isMounted(),
     " gravityStatus: ",
     gravityStatus
-  );
+  ); */
 
   return (
     <div className={`bg-gray-800 p-3 rounded-4 d-flex flex-column gap-3 ${""}`}>
@@ -454,12 +454,11 @@ const GravityToEthBridge = () => {
         <select
           name="gasFeeSelect"
           id="gasFeeSelect"
+          defaultValue="instant"
           className="am-select caption2"
           onChange={(e) => setGasFee(e.target.value)}
         >
-          <option value="instant" selected>
-            Instant ~ 2 minutes (1950 $MNTL)
-          </option>
+          <option value="instant">Instant ~ 2 minutes (1950 $MNTL)</option>
           <option value="fast">Fast ~ 4 hours (1030 $MNTL)</option>
           <option value="slow">Slow ~ 24 hours (130 $MNTL)</option>
         </select>

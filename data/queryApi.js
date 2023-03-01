@@ -18,6 +18,7 @@ import {
   mntlUsdApi,
   placeholderAvailableBalance,
   placeholderMntlUsdValue,
+  slowRefreshInterval,
 } from "../config";
 import { convertBech32Address } from "../lib";
 import { cosmos as cosmosModule, gravity } from "../modules";
@@ -310,8 +311,7 @@ export const useTotalRewards = () => {
         },
       ],
 
-      refreshInterval: defaultRefreshInterval,
-      suspense: true,
+      refreshInterval: slowRefreshInterval,
     }
   );
   return {
@@ -482,7 +482,7 @@ export const useMntlUsd = () => {
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: mntlUsdValue, error } = useSwr("useMntlUsd", fetchMntlUsd, {
     fallbackData: placeholderMntlUsdValue,
-    refreshInterval: 10000,
+    refreshInterval: slowRefreshInterval,
   });
 
   return {
