@@ -29,13 +29,6 @@ const GravityToEthBridge = () => {
   const [gasFee, setGasFee] = useState();
   console.log("gasFee: ", gasFee);
   // WALLET HOOKS
-  /* const chainContext4 = useChain(gravityChainName);
-  const {
-    address: gravityAddress,
-    status: gravityStatus,
-    getSigningStargateClient: getSigningStargateClientGravity,
-  } = chainContext4; */
-
   // get the gravity address from mantle
   const chainContext3 = useChain(defaultChainName);
   const {
@@ -49,7 +42,6 @@ const GravityToEthBridge = () => {
   const { isConnected } = useAccount();
   const { open } = useWeb3Modal();
 
-  const isGravityConnected = gravityStatus == "Connected";
   // const [showConnectText, setShowConnectText] = useState(true);
 
   // HOOKS or GETTERS
@@ -336,6 +328,7 @@ const GravityToEthBridge = () => {
 
   // DISPLAY VARIABLES
   const isWalletEthConnected = isMounted() && isConnected;
+  const isWalletCosmosConnected = isMounted() && gravityStatus == "Connected";
 
   const displayShortenedAddress = shortenAddress(
     gravityAddress,
@@ -364,6 +357,8 @@ const GravityToEthBridge = () => {
   const displayBalanceUnitGravity = gravityChainSymbol;
   const displayBalanceUnitGravityIBCToken = defaultChainSymbol;
   const isSubmitDisabled = !isObjEmpty(formState?.errorMessages);
+  const isSubmitDisabledGravity =
+    !isWalletCosmosConnected || !isObjEmpty(formState?.errorMessages);
   const displayInputAmountValue = formState?.transferAmount;
   const isFormAmountError = formState?.errorMessages?.transferAmountErrorMsg;
   const displayFormAmountErrorMsg =
@@ -466,23 +461,11 @@ const GravityToEthBridge = () => {
       <div className="d-flex align-items-center justify-content-end gap-3">
         <button
           className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2"
-          disabled={isSubmitDisabled}
+          disabled={isSubmitDisabledGravity}
           onClick={handleSubmitMantle}
         >
           Send to Mantle Chain <i className="bi bi-arrow-up" />
         </button>
-        {/* <Link href={"https://bridge.blockscape.network/"}>
-          <a target="_blank" rel="noreferrer">
-            <button
-              className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
-              // disabled={isSubmitDisabled}
-              // onClick={handleSubmit}
-            >
-              Bridge Link to Ethereum Chain{" "}
-              <i className="bi bi-box-arrow-up-right" />
-            </button>
-          </a>
-        </Link> */}
         {isMounted() && submitButtonEthJSX}
         {!isMounted() && connectEthWalletJSX}
       </div>
