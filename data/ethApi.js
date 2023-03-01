@@ -10,6 +10,7 @@ import { configureChains, createClient, useAccount } from "wagmi";
 import { mainnet, polygon } from "wagmi/chains";
 import { placeholderAvailableBalance } from "../config";
 import nonFungiblePositionManagerABI from "../data/contracts/nonFungiblePositionManagerABI.json";
+import gravityBridgeABI from "../data/contracts/gravityBridgeABI.json";
 import uniV3StakerABI from "../data/contracts/uniV3StakerABI.json";
 import { toChainDenom } from "./queryApi";
 
@@ -25,7 +26,7 @@ export const ethConfig = {
   mainnet: {
     network: "mainnet",
     version: "v1",
-    chainID: "1",
+    chainID: 1,
     rpc: {
       pos: {
         parent: process.env.ETH_MAINNET_RPC,
@@ -58,6 +59,12 @@ export const ethConfig = {
     },
     rootChainManagerProxy: {
       parent: "0xA0c68C638235ee32657e8f720a23ceC1bFc77C77",
+    },
+    gravity: {
+      ethereumBridge: {
+        address: "0xa4108aA1Ec4967F8b52220a4f7e94A8201F2D906",
+        abi: gravityBridgeABI,
+      },
     },
     uniswap: {
       nonFungiblePositionManager: {

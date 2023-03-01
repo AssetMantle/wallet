@@ -3,10 +3,11 @@
   "plugins": ["prettier", "unused-imports"],
   "rules": {
     "prettier/prettier": "warn",
-    "no-console": "warn",
+    "no-console": "off",
     "no-unused-vars": "off",
     "no-undef": "warn",
     "no-img-element": "off",
+    "@next/next/no-img-element": "off",
     "react/no-unknown-property": [
       "error",
       {
