@@ -479,7 +479,7 @@ const Rewards = ({
             </div>
           </div>
         ) : (
-          { withdrawAddressModal }
+          withdrawAddressModal
         )}
       </ModalContainer>
     </div>

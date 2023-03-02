@@ -452,7 +452,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
                       <i className="bi bi-search text-primary"></i>
                     </span>
                     <input
-                      type="text"
+                      type="search"
                       className="am-input bg-t p-1 w-100 h-100"
                       placeholder="Search"
                       aria-label="Search"
