@@ -1,5 +1,6 @@
 // MISC
 export const defaultRefreshInterval = 2000;
+export const slowRefreshInterval = 10000;
 export const defaultToastContainerId = "ToastContainerID1";
 // ASSETMANTLE CHAIN
 export const defaultChainName = "assetmantle";
@@ -62,6 +63,7 @@ export const gravityIBCSourceChannel = "channel-82";
 // ETHEREUM CHAIN
 export const ethereumChainSymbol = "$ETH";
 export const ethereumChainId = 1;
+export const defaultEthGasPrice = "40000000000";
 
 // POLYGON CHAIN
 export const polygonChainSymbol = "$MATIC";

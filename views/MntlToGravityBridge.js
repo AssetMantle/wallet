@@ -69,7 +69,7 @@ const MntlToGravityBridge = () => {
             transferAmount: action.payload,
             errorMessages: {
               ...state.errorMessages,
-              transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
+              transferAmountErrorMsg: formConstants.insufficientBalanceErrorMsg,
             },
           };
         }

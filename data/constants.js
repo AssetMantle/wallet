@@ -1,6 +1,17 @@
+import Link from "next/link";
+
 export const formConstants = {
   recipientAddressErrorMsg: "Invalid Address",
   transferAmountErrorMsg: "Insufficient Balance",
+  insufficientBalanceErrorMsg: (
+    <span>
+      Insufficient Balance. To get more tokens go to{" "}
+      <Link href="/trade">
+        <a style={{ textDecoration: "underline" }}>Trade</a>
+      </Link>
+    </span>
+  ),
+  insufficientBalanceFeeErrorMsg: "Insufficient Balance to pay for Chain Fee",
   requiredErrorMsg: "Required field is blank",
   invalidValueErrorMsg: "Input value is invalid",
 };

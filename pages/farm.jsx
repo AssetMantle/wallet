@@ -128,10 +128,10 @@ export default function Farm() {
   // connect button with logic
   const notConnectedJSX = (
     <button
-      className="button-primary px-5 py-2 ms-auto"
+      className="caption2 d-flex gap-1 text-primary"
       onClick={handleOpenWeb3Modal}
     >
-      Connect Wallet
+      <i className="bi bi-link-45deg" /> Connect Wallet
     </button>
   );
 

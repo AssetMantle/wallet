@@ -1,3 +1,5 @@
+import { disconnect } from "@wagmi/core";
+import { useWeb3Modal } from "@web3modal/react";
 import BigNumber from "bignumber.js";
 import { useReducer } from "react";
 import { useAccount, useBalance } from "wagmi";
@@ -28,6 +30,7 @@ const PolygonBridge = () => {
   // WALLET HOOKS
   // before useAccount, define the isMounted() hook to deal with SSR issues
   const isMounted = useIsMounted();
+  const { open } = useWeb3Modal();
 
   // books to get the address of the connected wallet
   const { address, isConnected } = useAccount();
@@ -37,6 +40,7 @@ const PolygonBridge = () => {
     address: address,
     token: childERC20TokenAddress,
     chainId: polygonChainId,
+    watch: true,
   });
 
   // get the matic balance in polygon chain using wagmi hook
@@ -44,6 +48,7 @@ const PolygonBridge = () => {
     address: address,
     token: ethConfig?.mainnet?.token?.child?.matic,
     chainId: polygonChainId,
+    watch: true,
   });
 
   const polygonBalance = toDenom(polygonBalanceData?.formatted);
@@ -62,7 +67,7 @@ const PolygonBridge = () => {
         // if amount is greater than current balance, populate error message and update amount
         if (
           BigNumber(action.payload).isNaN() ||
-          BigNumber(action.payload) <= 0
+          BigNumber(action.payload).isLessThanOrEqualTo(0)
         ) {
           return {
             ...state,
@@ -174,6 +179,16 @@ const PolygonBridge = () => {
     handleCopy(address);
   };
 
+  const handleOpenWeb3Modal = async (e) => {
+    e.preventDefault();
+    await open();
+  };
+
+  const handleDisconnectWeb3Modal = async (e) => {
+    e.preventDefault();
+    await disconnect();
+  };
+
   // DISPLAY VARIABLES
   const isWalletEthConnected = isMounted() && isConnected;
   const displayShortenedAddress = shortenEthAddress(
@@ -197,10 +212,14 @@ const PolygonBridge = () => {
 
   // connect button with logic
   const notConnectedJSX = (
-    <span className="text-primary">
-      <i className="bi bi-patch-exclamation-fill" /> Not Connected
-    </span>
+    <button
+      className="caption2 d-flex gap-1 text-primary"
+      onClick={handleOpenWeb3Modal}
+    >
+      <i className="bi bi-link-45deg" /> Connect Wallet
+    </button>
   );
+
   const connectButtonJSX = isWalletEthConnected ? (
     <>
       <button
@@ -211,6 +230,9 @@ const PolygonBridge = () => {
         {displayShortenedAddress}{" "}
         <span className="text-primary">
           <i className="bi bi-clipboard" />
+        </span>
+        <span className="text-primary" onClick={handleDisconnectWeb3Modal}>
+          <i className="bi bi-power" />
         </span>
       </button>
     </>
