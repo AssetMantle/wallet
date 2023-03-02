@@ -1,7 +1,7 @@
 import { normalizeBech32 } from "@cosmjs/encoding";
 import { useChain } from "@cosmos-kit/react";
 import BigNumber from "bignumber.js";
-import { assets } from "chain-registry";
+import { assets, chains } from "chain-registry";
 import { cosmos } from "osmojs";
 import useSwr from "swr";
 import {
@@ -978,7 +978,7 @@ export const useWithdrawAddress = () => {
   const { address } = walletManager;
 
   // fetcher function for useSwr of useAvailableBalance()
-  const fetchWithdrawAddress = async () => {
+  const fetchWithdrawAddress = async (url, address) => {
     // console.log("inside fetchWithdrawAddress() ");
 
     let claimAddress;
@@ -1000,7 +1000,7 @@ export const useWithdrawAddress = () => {
   };
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: withdrawAddress, error } = useSwr(
-    address ? ["validators", address] : null,
+    address ? ["useWithdrawAddress", address] : null,
     fetchWithdrawAddress,
     {
       fallbackData: placeholderAddress,
@@ -1014,122 +1014,123 @@ export const useWithdrawAddress = () => {
   };
 };
 
-export const useTrade = () => {
-  // fetcher function for useSwr of useAvailableBalance()
-  const fetchAllTrades = async (url) => {
-    // console.log("inside fetchAllTrades() ");
-    let tradeData = [];
-    let tokenDetails = {};
-    const staticData = [
-      {
-        logo: "lbank",
-        name: "LBank",
-        pair: "MNTL/USDT",
-        target_coin_id: "tether",
+// fetcher function for useSwr of useAvailableBalance()
+const fetchAllTrades = async (url) => {
+  // console.log("inside fetchAllTrades() ");
+  let tradeData = [];
+  let tokenDetails = {};
+  const staticData = [
+    {
+      logo: "lbank",
+      name: "LBank",
+      pair: "MNTL/USDT",
+      target_coin_id: "tether",
 
-        url: "https://www.lbank.info/exchange/mntl/usdt",
-      },
-      {
-        logo: "osmosis",
-        name: "Osmosis",
-        target_coin_id: "osmosis",
-        pair: "MNTL/OSMO",
+      url: "https://www.lbank.info/exchange/mntl/usdt",
+    },
+    {
+      logo: "osmosis",
+      name: "Osmosis",
+      target_coin_id: "osmosis",
+      pair: "MNTL/OSMO",
 
-        url: "https://app.osmosis.zone/?from=OSMO&to=MNTL",
-      },
-      {
-        logo: "osmosis",
-        name: "Osmosis",
-        target_coin_id: "axlusdc",
-        pair: "MNTL/AXLUSDC",
+      url: "https://app.osmosis.zone/?from=OSMO&to=MNTL",
+    },
+    {
+      logo: "osmosis",
+      name: "Osmosis",
+      target_coin_id: "axlusdc",
+      pair: "MNTL/AXLUSDC",
 
-        url: "https://app.osmosis.zone/?from=USDC&to=MNTL",
-      },
-      {
-        logo: "uniswap-v3",
-        name: "Uniswap (v3)",
-        pair: "MNTL/ETH",
-        target_coin_id: "weth",
-        subTitle: "(ETH Pool)",
-        url: "https://app.uniswap.org/#/swap?theme=dark&inputCurrency=ETH&outputCurrency=0x2c4f1df9c7de0c59778936c9b145ff56813f3295",
-      },
-      {
-        logo: "mexc",
-        name: "MEXC Global",
-        pair: "MNTL/USDT",
-        target_coin_id: "tether",
+      url: "https://app.osmosis.zone/?from=USDC&to=MNTL",
+    },
+    {
+      logo: "uniswap-v3",
+      name: "Uniswap (v3)",
+      pair: "MNTL/ETH",
+      target_coin_id: "weth",
+      subTitle: "(ETH Pool)",
+      url: "https://app.uniswap.org/#/swap?theme=dark&inputCurrency=ETH&outputCurrency=0x2c4f1df9c7de0c59778936c9b145ff56813f3295",
+    },
+    {
+      logo: "mexc",
+      name: "MEXC Global",
+      pair: "MNTL/USDT",
+      target_coin_id: "tether",
 
-        url: "https://www.mexc.com/exchange/MNTL_USDT?inviteCode=1498J",
-      },
-      {
-        logo: "osmosis",
-        name: "Osmosis",
-        target_coin_id: "assetmantle",
-        pair: "ATOM/MNTL",
+      url: "https://www.mexc.com/exchange/MNTL_USDT?inviteCode=1498J",
+    },
+    {
+      logo: "osmosis",
+      name: "Osmosis",
+      target_coin_id: "assetmantle",
+      pair: "ATOM/MNTL",
 
-        url: "https://app.osmosis.zone/?from=ATOM&to=MNTL",
-      },
-      {
-        logo: "quickswap-dex",
-        name: "Quickswap",
-        pair: "MNTL/USDC",
-        target_coin_id: "usd-coin",
+      url: "https://app.osmosis.zone/?from=ATOM&to=MNTL",
+    },
+    {
+      logo: "quickswap-dex",
+      name: "Quickswap",
+      pair: "MNTL/USDC",
+      target_coin_id: "usd-coin",
 
-        url: "https://quickswap.exchange/#/swap?swapIndex=0&currency0=0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174&currency1=0x38A536A31bA4d8C1Bcca016AbBf786ecD25877E8",
-      },
-      {
-        logo: "quickswap-dex",
-        name: "Quickswap",
-        pair: "MNTL/VERSA",
-        target_coin_id: "versagames",
+      url: "https://quickswap.exchange/#/swap?swapIndex=0&currency0=0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174&currency1=0x38A536A31bA4d8C1Bcca016AbBf786ecD25877E8",
+    },
+    {
+      logo: "quickswap-dex",
+      name: "Quickswap",
+      pair: "MNTL/VERSA",
+      target_coin_id: "versagames",
 
-        url: "https://quickswap.exchange/#/swap?inputCurrency=0x8497842420cfdbc97896c2353d75d89fc8d5be5d&outputCurrency=0x38a536a31ba4d8c1bcca016abbf786ecd25877e8&swapIndex=0",
-      },
-    ];
+      url: "https://quickswap.exchange/#/swap?inputCurrency=0x8497842420cfdbc97896c2353d75d89fc8d5be5d&outputCurrency=0x38a536a31ba4d8c1bcca016abbf786ecd25877e8&swapIndex=0",
+    },
+  ];
 
-    try {
-      const data = await fetch(
-        "https://api.coingecko.com/api/v3/coins/assetmantle?localization=false&tickers=true&market_data=true&community_data=false&developer_data=false&sparkline=false"
-      ).then((res) => res.json());
+  try {
+    const data = await fetch(
+      "https://api.coingecko.com/api/v3/coins/assetmantle?localization=false&tickers=true&market_data=true&community_data=false&developer_data=false&sparkline=false"
+    ).then((res) => res.json());
 
-      tokenDetails = {
-        marketCap: data?.market_data?.market_cap?.usd,
-        circulatingSupply: data?.market_data?.circulating_supply,
-        totalSupply: data?.market_data?.total_supply,
-        maxSupply: data?.market_data?.max_supply,
-        fullyDilutedValuation: data?.market_data?.fully_diluted_valuation?.usd,
-        volume: data?.tickers
-          ?.reduce(
-            (accumulator, currentValue) =>
-              accumulator + parseFloat(currentValue?.volume),
-            0
-          )
-          .toFixed(2),
+    tokenDetails = {
+      marketCap: data?.market_data?.market_cap?.usd,
+      circulatingSupply: data?.market_data?.circulating_supply,
+      totalSupply: data?.market_data?.total_supply,
+      maxSupply: data?.market_data?.max_supply,
+      fullyDilutedValuation: data?.market_data?.fully_diluted_valuation?.usd,
+      volume: data?.tickers
+        ?.reduce(
+          (accumulator, currentValue) =>
+            accumulator + parseFloat(currentValue?.volume),
+          0
+        )
+        .toFixed(2),
+    };
+
+    tradeData = data?.tickers?.map((item) => {
+      const match = staticData.find(
+        (element) =>
+          element.name == item?.market?.name &&
+          element.target_coin_id == item?.target_coin_id
+      );
+      return {
+        exchangeName: item?.market?.name,
+        tradePair: match?.pair,
+        volume: item?.converted_volume?.usd,
+        price: item?.converted_last?.usd,
+        logo: match?.logo,
+        url: match?.url,
       };
+    });
+  } catch (error) {
+    console.error(`swr fetcher : url: ${url},  error: ${error}`);
+    throw error;
+  }
+  // return the data
+  // console.log("inside SWR:", tradesArray);
+  return { tradeData, tokenDetails };
+};
 
-      tradeData = data?.tickers?.map((item) => {
-        const match = staticData.find(
-          (element) =>
-            element.name == item?.market?.name &&
-            element.target_coin_id == item?.target_coin_id
-        );
-        return {
-          exchangeName: item?.market?.name,
-          tradePair: match?.pair,
-          volume: item?.converted_volume?.usd,
-          price: item?.converted_last?.usd,
-          logo: match?.logo,
-          url: match?.url,
-        };
-      });
-    } catch (error) {
-      console.error(`swr fetcher : url: ${url},  error: ${error}`);
-      throw error;
-    }
-    // return the data
-    // console.log("inside SWR:", tradesArray);
-    return { tradeData, tokenDetails };
-  };
+export const useTrade = () => {
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: tradesObject, error } = useSwr("useAllTrades", fetchAllTrades, {
     fallbackData: [],

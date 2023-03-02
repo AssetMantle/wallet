@@ -170,7 +170,9 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
       <div className="nav-bg p-3 rounded-4 gap-3">
         <div className="d-flex flex-column gap-2">
           {stakeState?.selectedValidators?.length ? (
-            <p className="caption d-flex gap-2 align-items-center">Delegated</p>
+            <p className="caption d-flex gap-2 align-items-center">
+              Selected Delegations
+            </p>
           ) : (
             <p
               className={
