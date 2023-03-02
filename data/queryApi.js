@@ -17,7 +17,6 @@ import {
   gravityIBCToken,
   mntlUsdApi,
   placeholderAvailableBalance,
-  placeholderMntlUsdValue,
   slowRefreshInterval,
 } from "../config";
 import { convertBech32Address } from "../lib";
@@ -463,7 +462,7 @@ export const useMntlUsd = () => {
   // fetcher function for useSwr of useAvailableBalance()
   const fetchMntlUsd = async (url) => {
     console.log("inside fetchMntlUsd, url: ", url);
-    let mntlUsdValue;
+    let mntlUsdValue, mntlPerEthValue;
 
     // use a try catch block for creating rich Error object
     try {
@@ -471,23 +470,25 @@ export const useMntlUsd = () => {
       const res = await fetch(mntlUsdApi);
       const resJson = await res?.json?.();
       mntlUsdValue = resJson?.assetmantle?.usd;
+      mntlPerEthValue = resJson?.assetmantle?.eth;
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
     }
 
     // return the data
-    return mntlUsdValue;
+    return { mntlUsdValue, mntlPerEthValue };
   };
 
   // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: mntlUsdValue, error } = useSwr("useMntlUsd", fetchMntlUsd, {
-    fallbackData: placeholderMntlUsdValue,
+  const { data: mntlValueObject, error } = useSwr("useMntlUsd", fetchMntlUsd, {
+    fallbackData: { mntlUsdValue: "0", mntlPerEthValue: "0" },
     refreshInterval: slowRefreshInterval,
   });
 
   return {
-    mntlUsdValue: mntlUsdValue,
+    mntlUsdValue: mntlValueObject?.mntlUsdValue,
+    mntlPerEthValue: mntlValueObject?.mntlPerEthValue,
     // isLoadingMntlUsdValue: !error && !mntlUsdValue,
     errorMntlUsdValue: error,
   };
