@@ -19,7 +19,7 @@ import {
   gravityIBCSourcePort,
   gravityIBCToken,
 } from "../config";
-import { toChainDenom } from "../data";
+import { toChainDenom, toDenom } from "../data";
 import { gravity, getSigningGravityClient } from "../modules";
 
 // get the wallet properties and functions for that specific chain
@@ -615,6 +615,7 @@ export const sendIbcTokenToEth = async (
   senderAddress,
   ethDestAddress,
   amount,
+  bridgeFeeAmount,
   memo,
   {
     getOfflineSigner,
@@ -628,7 +629,9 @@ export const sendIbcTokenToEth = async (
     " ethDestAddress: ",
     ethDestAddress,
     " amount: ",
-    amount
+    amount,
+    " bridgeFeeAmount: ",
+    bridgeFeeAmount
   );
   try {
     // keep the values to defaultChain and defaultDenom since we are dealing with ibc tokens of default chain
@@ -650,12 +653,14 @@ export const sendIbcTokenToEth = async (
 
     const chainFeeAmountInDenom = BigNumber(amountInDenom.toString())
       .multipliedBy(
-        BigNumber(gravityBasisPoints).multipliedBy(
-          BigNumber(10).exponentiatedBy(gravityBasisPointsScalingExponent)
+        BigNumber(gravityBasisPoints).shiftedBy(
+          gravityBasisPointsScalingExponent
         )
       )
       .integerValue(BigNumber.ROUND_CEIL)
       .toString();
+
+    const bridgeFeeInDenom = toDenom(bridgeFeeAmount);
 
     // populate the chainFee data which will also be in MNTL
     const chainFee = {
@@ -666,7 +671,7 @@ export const sendIbcTokenToEth = async (
     // populate the bridgeFee data, which will be in MNTL
     const bridgeFee = {
       denom: gravityIBCToken,
-      amount: "1930000000",
+      amount: bridgeFeeInDenom,
     };
 
     const { sendToEth } = gravity.v1.MessageComposer.withTypeUrl;
