@@ -45,7 +45,9 @@ const DelegatedValidators = ({
                 allValidatorsBonded?.find(
                   (e) => item?.operatorAddress == e?.operatorAddress
                 ) &&
-                item?.description?.moniker?.toLowerCase()?.includes(searchValue)
+                item?.description?.moniker
+                  ?.toLowerCase()
+                  ?.includes(searchValue.toLowerCase())
             )
             ?.map((item, index) => (
               <tr key={index} className="caption2 text-white-300">
@@ -128,7 +130,9 @@ const DelegatedValidators = ({
                 allValidatorsUnbonded?.find(
                   (e) => item?.operatorAddress == e?.operatorAddress
                 ) &&
-                item?.description?.moniker?.toLowerCase()?.includes(searchValue)
+                item?.description?.moniker
+                  ?.toLowerCase()
+                  ?.includes(searchValue.toLowerCase())
             )
 
             ?.map((item, index) => (

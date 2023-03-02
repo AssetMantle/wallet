@@ -28,6 +28,7 @@ const Unbonded = ({
   notify,
 }) => {
   const [unBondingModal, setUnBondingModal] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
 
   const walletManager = useChain(defaultChainName);
   const { status } = walletManager;
@@ -77,6 +78,12 @@ const Unbonded = ({
 
   const isSubmitDisabled = status != "Connected";
 
+  const handleOnError = (e) => {
+    e.preventDefault();
+    // console.log("e: ", e);
+    e.target.src = "/validatorAvatars/alt.png";
+  };
+
   return (
     <div className="nav-bg p-3 rounded-4 gap-3">
       <div className="d-flex flex-column gap-2">
@@ -117,7 +124,7 @@ const Unbonded = ({
               <button
                 type="button"
                 className="btn-close primary"
-                onClick={() => setUnDelegateModal(false)}
+                onClick={() => setUnBondingModal(false)}
                 style={{ background: "none" }}
               >
                 <span className="text-primary">
@@ -153,9 +160,10 @@ const Unbonded = ({
                       <i className="bi bi-search text-primary"></i>
                     </span>
                     <input
-                      type="text"
+                      type="search"
                       className="am-input bg-t p-1 w-100 h-100"
                       placeholder="Search"
+                      onChange={(e) => setSearchValue(e.target.value)}
                       aria-label="Search"
                       style={{ border: "none" }}
                     />
@@ -204,22 +212,41 @@ const Unbonded = ({
                     <tbody>
                       {activeValidators
                         ? allUnbonding
-                            ?.filter((item) =>
-                              allValidatorsBonded?.find(
-                                (e) => e?.operatorAddress == item?.address
-                              )
+                            ?.map((item) => {
+                              return {
+                                ...item,
+                                moniker: allValidatorsBonded?.find(
+                                  (e) => e?.operatorAddress == item?.address
+                                )?.description?.moniker,
+                              };
+                            })
+                            ?.filter(
+                              (item) =>
+                                allValidatorsBonded?.find(
+                                  (e) => e?.operatorAddress == item?.address
+                                ) &&
+                                item?.moniker
+                                  ?.toLowerCase()
+                                  .includes(searchValue.toLowerCase())
                             )
                             ?.map((item, index) => (
                               <tr key={index}>
-                                <td
-                                  className="text-white"
-                                  onClick={() => {
-                                    stakeDispatch({
-                                      type: "SET_UNDELEGATION_SRC_ADDRESS",
-                                      payload: item?.address,
-                                    });
-                                  }}
-                                >
+                                <td className="text-white d-flex">
+                                  <div
+                                    className="d-flex position-relative rounded-circle me-2"
+                                    style={{
+                                      width: "25px",
+                                      aspectRatio: "1/1",
+                                    }}
+                                  >
+                                    <img
+                                      layout="fill"
+                                      alt={item?.description?.moniker}
+                                      className="rounded-circle"
+                                      src={`/validatorAvatars/${item?.address}.png`}
+                                      onError={handleOnError}
+                                    />
+                                  </div>
                                   <a
                                     className="text-truncate"
                                     style={{ maxWidth: "200px" }}
@@ -228,12 +255,7 @@ const Unbonded = ({
                                     rel="noreferrer"
                                   >
                                     {" "}
-                                    {
-                                      allValidatorsBonded?.find(
-                                        (ele) =>
-                                          ele?.operatorAddress === item?.address
-                                      )?.description?.moniker
-                                    }
+                                    {item?.moniker}
                                     <i className="bi bi-arrow-up-right" />
                                   </a>
                                 </td>
@@ -269,29 +291,52 @@ const Unbonded = ({
                               </tr>
                             ))
                         : allUnbonding
-                            ?.filter((item) =>
-                              allValidatorsUnbonded?.find(
-                                (e) => e?.operatorAddress == item?.address
-                              )
+                            ?.map((item) => {
+                              return {
+                                ...item,
+                                moniker: allValidatorsUnbonded?.find(
+                                  (e) => e?.operatorAddress == item?.address
+                                )?.description?.moniker,
+                              };
+                            })
+                            ?.filter(
+                              (item) =>
+                                allValidatorsUnbonded?.find(
+                                  (e) => e?.operatorAddress == item?.address
+                                ) &&
+                                item?.moniker
+                                  ?.toLowerCase()
+                                  .includes(searchValue.toLowerCase())
                             )
-                            ?.map((item, index) => {
+                            ?.map((item, index) => (
                               <tr key={index}>
-                                <td
-                                  className="text-white"
-                                  onClick={() => {
-                                    stakeDispatch({
-                                      type: "SET_UNDELEGATION_SRC_ADDRESS",
-                                      payload: item?.address,
-                                    });
-                                  }}
-                                >
-                                  {
-                                    allValidatorsBonded?.find(
-                                      (ele) =>
-                                        ele?.operatorAddress === item?.address
-                                    )?.description?.moniker
-                                  }
-                                  <i className="bi bi-arrow-up-right" />
+                                <td className="text-white d-flex">
+                                  {" "}
+                                  <div
+                                    className="d-flex position-relative rounded-circle me-2"
+                                    style={{
+                                      width: "25px",
+                                      aspectRatio: "1/1",
+                                    }}
+                                  >
+                                    <img
+                                      layout="fill"
+                                      alt={item?.description?.moniker}
+                                      className="rounded-circle"
+                                      src={`/validatorAvatars/${item?.address}.png`}
+                                      onError={handleOnError}
+                                    />
+                                  </div>
+                                  <a
+                                    className="text-truncate"
+                                    style={{ maxWidth: "200px" }}
+                                    href={`https://explorer.assetmantle.one/validators/${item?.address}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
+                                    {item?.moniker}
+                                    <i className="bi bi-arrow-up-right" />{" "}
+                                  </a>
                                 </td>
                                 <td className="text-white">
                                   {getBalanceStyle(
@@ -322,8 +367,8 @@ const Unbonded = ({
                                   ).toFixed(2)}{" "}
                                   hours
                                 </td>
-                              </tr>;
-                            })}
+                              </tr>
+                            ))}
                     </tbody>
                   </table>
                 </div>
