@@ -63,6 +63,7 @@ export const gravityIBCSourceChannel = "channel-82";
 // ETHEREUM CHAIN
 export const ethereumChainSymbol = "$ETH";
 export const ethereumChainId = 1;
+export const defaultEthGasPrice = "40000000000";
 
 // POLYGON CHAIN
 export const polygonChainSymbol = "$MATIC";

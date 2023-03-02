@@ -40,6 +40,7 @@ const PolygonBridge = () => {
     address: address,
     token: childERC20TokenAddress,
     chainId: polygonChainId,
+    watch: true,
   });
 
   // get the matic balance in polygon chain using wagmi hook
@@ -47,6 +48,7 @@ const PolygonBridge = () => {
     address: address,
     token: ethConfig?.mainnet?.token?.child?.matic,
     chainId: polygonChainId,
+    watch: true,
   });
 
   const polygonBalance = toDenom(polygonBalanceData?.formatted);

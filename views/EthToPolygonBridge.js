@@ -87,6 +87,7 @@ const EthToPolygonBridge = () => {
   const { data: mntlEthBalanceData } = useBalance({
     address: address,
     token: parentERC20TokenAddress,
+    watch: true,
   });
 
   const mntlEthBalance = toDenom(mntlEthBalanceData?.formatted);
@@ -94,6 +95,7 @@ const EthToPolygonBridge = () => {
   // get the ETH balance using wagmi hook
   const { data: ethBalanceData } = useBalance({
     address: address,
+    watch: true,
   });
 
   // FORM REDUCER
@@ -338,11 +340,7 @@ const EthToPolygonBridge = () => {
       console.log("response: ", response, " error: ", error);
 
       if (response) {
-        notify(
-          response,
-          toastId1,
-          "Transaction might take upto 22 mins. Check "
-        );
+        notify(response, toastId1, "Transfer might take upto 22 mins. Check ");
       } else {
         notify(null, toastId1, "Transaction Aborted. Try again.");
       }
@@ -407,7 +405,7 @@ const EthToPolygonBridge = () => {
           notify(
             transactionResponse?.hash,
             toastId3,
-            "Transaction Submitted. Check "
+            "Transfer might take upto 20 mins. Check "
           );
         } else {
           notify(null, toastId3, "Transaction Aborted. Try again.");
@@ -465,6 +463,7 @@ const EthToPolygonBridge = () => {
   const displayAvailableBalance = !isWalletEthConnected
     ? decimalize(placeholderAvailableBalance)
     : decimalize(mntlEthBalanceData?.formatted);
+
   const displayAvailableBalanceDenom = defaultChainSymbol;
 
   const displayEthBalance = !isWalletEthConnected
@@ -560,7 +559,7 @@ const EthToPolygonBridge = () => {
     </button>
   );
 
-  console.log(
+  /* console.log(
     " isConnected: ",
     isConnected,
     "mntl balance: ",
@@ -573,7 +572,7 @@ const EthToPolygonBridge = () => {
     MAX_UINT256.toString(),
     " mntlEthBalanceData?.formatted: ",
     mntlEthBalanceData?.formatted
-  );
+  ); */
 
   return (
     <>

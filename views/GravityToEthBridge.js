@@ -8,12 +8,14 @@ import { useAccount } from "wagmi";
 import {
   defaultChainName,
   defaultChainSymbol,
+  defaultEthGasPrice,
   gravityChainGasFee,
   gravityChainName,
   gravityChainSymbol,
   toastConfig,
 } from "../config";
 import {
+  ethConfig,
   formConstants,
   fromChainDenom,
   fromDenom,
@@ -21,12 +23,14 @@ import {
   sendIbcTokenToMantle,
   toDenom,
   useAvailableBalanceGravity,
+  useMntlUsd,
 } from "../data";
 import { convertBech32Address, shortenAddress } from "../lib";
 import { handleCopy, isObjEmpty, useIsMounted } from "../lib/basicJavascript";
+import { useFeeData } from "wagmi";
 
 const GravityToEthBridge = () => {
-  const [gasFee, setGasFee] = useState();
+  const [gasFee, setGasFee] = useState("fast");
   console.log("gasFee: ", gasFee);
   // WALLET HOOKS
   // get the gravity address from mantle
@@ -37,10 +41,33 @@ const GravityToEthBridge = () => {
     getOfflineSigner,
   } = chainContext3;
   const gravityAddress = convertBech32Address(mantleAddress, gravityChainName);
+  const { mntlPerEthValue } = useMntlUsd();
 
   const isMounted = useIsMounted();
   const { isConnected } = useAccount();
   const { open } = useWeb3Modal();
+
+  const { data: gasData } = useFeeData();
+
+  const gasPrice = gasData?.formatted?.gasPrice || defaultEthGasPrice;
+  const bridgeFeeGas = ethConfig?.mainnet?.gravity?.bridgeFeeGas;
+  const bridgeFee = {
+    slow: BigNumber(gasPrice)
+      .multipliedBy(BigNumber(bridgeFeeGas?.slow))
+      .shiftedBy(-18)
+      .dividedToIntegerBy(BigNumber(mntlPerEthValue))
+      .toString(),
+    fast: BigNumber(gasPrice)
+      .multipliedBy(BigNumber(bridgeFeeGas?.fast))
+      .shiftedBy(-18)
+      .dividedToIntegerBy(BigNumber(mntlPerEthValue))
+      .toString(),
+    instant: BigNumber(gasPrice)
+      .multipliedBy(BigNumber(bridgeFeeGas?.instant))
+      .shiftedBy(-18)
+      .dividedToIntegerBy(BigNumber(mntlPerEthValue))
+      .toString(),
+  };
 
   // const [showConnectText, setShowConnectText] = useState(true);
 
@@ -385,18 +412,16 @@ const GravityToEthBridge = () => {
     connectEthWalletJSX
   );
 
-  /* console.log(
-    "!isGravityConnected: ",
-    !isGravityConnected,
-    " !isObjEmpty(formState?.errorMessages): ",
-    !isObjEmpty(formState?.errorMessages),
+  console.log(
     " gravityAddress: ",
     gravityAddress,
     " isMounted: ",
     isMounted(),
     " gravityStatus: ",
-    gravityStatus
-  ); */
+    gravityStatus,
+    " feedata: ",
+    JSON.stringify(gasData?.formatted)
+  );
 
   return (
     <div className={`bg-gray-800 p-3 rounded-4 d-flex flex-column gap-3 ${""}`}>
@@ -449,13 +474,17 @@ const GravityToEthBridge = () => {
         <select
           name="gasFeeSelect"
           id="gasFeeSelect"
-          defaultValue="instant"
+          defaultValue="fast"
           className="am-select caption2"
           onChange={(e) => setGasFee(e.target.value)}
         >
-          <option value="instant">Instant ~ 2 minutes (1950 $MNTL)</option>
-          <option value="fast">Fast ~ 4 hours (1030 $MNTL)</option>
-          <option value="slow">Slow ~ 24 hours (130 $MNTL)</option>
+          <option value="instant">
+            Instant ~ 2 minutes ({bridgeFee?.instant} $MNTL)
+          </option>
+          <option value="fast">Fast ~ 4 hours ({bridgeFee?.fast} $MNTL)</option>
+          <option value="slow">
+            Slow ~ 24 hours ({bridgeFee?.slow} $MNTL)
+          </option>
         </select>
       </div>
       <div className="d-flex align-items-center justify-content-end gap-3">
@@ -464,7 +493,7 @@ const GravityToEthBridge = () => {
           disabled={isSubmitDisabledGravity}
           onClick={handleSubmitMantle}
         >
-          Send to Mantle Chain <i className="bi bi-arrow-up" />
+          Send to Mantle <i className="bi bi-arrow-up" />
         </button>
         {isMounted() && submitButtonEthJSX}
         {!isMounted() && connectEthWalletJSX}

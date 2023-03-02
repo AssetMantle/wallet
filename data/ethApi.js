@@ -65,6 +65,11 @@ export const ethConfig = {
         address: "0xa4108aA1Ec4967F8b52220a4f7e94A8201F2D906",
         abi: gravityBridgeABI,
       },
+      bridgeFeeGas: {
+        slow: 50000,
+        fast: 400000,
+        instant: 750000,
+      },
     },
     uniswap: {
       nonFungiblePositionManager: {
