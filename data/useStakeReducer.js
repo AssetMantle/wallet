@@ -120,7 +120,7 @@ const useStakeReducer = () => {
             delegationAmount: action.payload,
             errorMessages: {
               ...state.errorMessages,
-              transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
+              transferAmountErrorMsg: formConstants.insufficientBalanceErrorMsg,
             },
           };
         }
