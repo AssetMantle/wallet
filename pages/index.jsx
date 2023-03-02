@@ -123,7 +123,7 @@ export default function Transact() {
         // if amount is greater than current balance, populate error message and update amount
         if (
           BigNumber(action.payload).isNaN() ||
-          BigNumber(action.payload) <= 0
+          BigNumber(action.payload).isLessThanOrEqualTo(0)
         ) {
           return {
             ...state,

@@ -44,7 +44,7 @@ const GravityToEthBridge = () => {
   const { mntlPerEthValue } = useMntlUsd();
 
   const isMounted = useIsMounted();
-  const { isConnected } = useAccount();
+  const { address: ethDestAddress, isConnected } = useAccount();
   const { open } = useWeb3Modal();
 
   const { data: gasData } = useFeeData();
@@ -90,7 +90,7 @@ const GravityToEthBridge = () => {
         // if amount is greater than current balance, populate error message and update amount
         if (
           BigNumber(action.payload).isNaN() ||
-          BigNumber(action.payload) <= 0
+          BigNumber(action.payload).isLessThanOrEqualTo(0)
         ) {
           return {
             ...state,
@@ -112,6 +112,46 @@ const GravityToEthBridge = () => {
             errorMessages: {
               ...state.errorMessages,
               transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
+            },
+          };
+        }
+        // if valid amount, remove any previous error message set and return updated amount
+        else {
+          // delete the error message key if already exists
+          delete state.errorMessages.transferAmountErrorMsg;
+          return {
+            ...state,
+            transferAmount: action.payload,
+          };
+        }
+      }
+      case "CHANGE_AMOUNT_ETHEREUM": {
+        // if amount is greater than current balance, populate error message and update amount
+        if (
+          BigNumber(action.payload).isNaN() ||
+          BigNumber(action.payload).isLessThanOrEqualTo(0)
+        ) {
+          return {
+            ...state,
+            transferAmount: action.payload,
+            errorMessages: {
+              ...state.errorMessages,
+              transferAmountErrorMsg: formConstants.invalidValueErrorMsg,
+            },
+          };
+        } else if (
+          BigNumber(availableBalanceIBCToken).isNaN() ||
+          BigNumber(toDenom(action.payload))
+            .plus(BigNumber(toDenom(bridgeFee?.[gasFee])))
+            .isGreaterThan(BigNumber(availableBalanceIBCToken))
+        ) {
+          return {
+            ...state,
+            transferAmount: action.payload,
+            errorMessages: {
+              ...state.errorMessages,
+              transferAmountErrorMsg:
+                formConstants.insufficientBalanceFeeErrorMsg,
             },
           };
         }
@@ -245,22 +285,27 @@ const GravityToEthBridge = () => {
     console.log("inside handleSubmit()");
     e.preventDefault();
 
-    // execute the dispatch operations pertaining to submit
+    // define local variables
+    const localTransferAmount = formState?.transferAmount;
+    let memo;
+
+    // manually trigger form validation messages if any
     formDispatch({
-      type: "SUBMIT",
+      type: "CHANGE_AMOUNT_ETHEREUM",
+      payload: localTransferAmount,
     });
 
-    // if no validation errors, proceed to transaction processing
-    if (
-      formState?.transferAmount &&
-      !BigNumber(formState?.transferAmount).isNaN() &&
-      isObjEmpty(formState?.errorMessages)
-    ) {
-      // define local variables
-      const localTransferAmount = formState?.transferAmount;
-      let memo;
-      const ethDestAddress = "0xae6094170ABC0601b4bbe933D04368cD407C186a";
+    const isFormValid = !(
+      BigNumber(localTransferAmount).isNaN() ||
+      BigNumber(localTransferAmount).isLessThanOrEqualTo(0) ||
+      BigNumber(availableBalanceIBCToken).isNaN() ||
+      BigNumber(toDenom(localTransferAmount))
+        .plus(BigNumber(toDenom(bridgeFee?.[gasFee])))
+        .isGreaterThan(BigNumber(availableBalanceIBCToken))
+    );
 
+    // if no validation errors, proceed to transaction processing
+    if (isFormValid) {
       // initiate toast notification
       const toastId2 = toast.loading("Transaction initiated ...", toastConfig);
 
@@ -269,10 +314,10 @@ const GravityToEthBridge = () => {
         gravityAddress,
         ethDestAddress,
         localTransferAmount,
+        bridgeFee?.[gasFee],
         memo,
 
         {
-          // getSigningStargateClient: getSigningStargateClientGravity,
           getOfflineSigner,
         }
       );
@@ -293,25 +338,26 @@ const GravityToEthBridge = () => {
     console.log("inside handleSubmit()");
     e.preventDefault();
 
-    // execute the dispatch operations pertaining to submit
+    // define local variables
+    const localTransferAmount = formState?.transferAmount;
+    let memo;
+    const mantleAddress = convertBech32Address(
+      gravityAddress,
+      defaultChainName
+    );
+
+    // manually trigger form validation messages if any
     formDispatch({
-      type: "SUBMIT",
+      type: "CHANGE_AMOUNT",
+      payload: localTransferAmount,
     });
 
     // if no validation errors, proceed to transaction processing
     if (
-      formState?.transferAmount &&
-      !BigNumber(formState?.transferAmount).isNaN() &&
+      localTransferAmount &&
+      !BigNumber(localTransferAmount).isNaN() &&
       isObjEmpty(formState?.errorMessages)
     ) {
-      // define local variables
-      const localTransferAmount = formState?.transferAmount;
-      let memo;
-      const mantleAddress = convertBech32Address(
-        gravityAddress,
-        defaultChainName
-      );
-
       // initiate toast notification
       const toastId = toast.loading("Transaction initiated ...", toastConfig);
 
@@ -469,7 +515,7 @@ const GravityToEthBridge = () => {
       )}
       <div className="d-flex align-items-center justify-content-between gap-3">
         <label className="caption2" htmlFor="gasFeeSelect">
-          Select Fee
+          Select Chain Fee for Ethereum Transfer
         </label>
         <select
           name="gasFeeSelect"
