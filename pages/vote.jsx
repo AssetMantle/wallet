@@ -7,7 +7,7 @@ import useVoteReducer from "../data/useVoteReducer";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import { sendVote } from "../data/txApi";
 import { useChain } from "@cosmos-kit/react";
-import { defaultChainName } from "../config";
+import { defaultChainName, toastConfig } from "../config";
 import ActiveProposals from "../components/ActiveProposals";
 import Head from "next/head";
 import { isObjEmpty } from "../lib";
@@ -43,29 +43,15 @@ export default function Vote() {
         render: <CustomToastWithLink txHash={txHash} />,
         type: "success",
         isLoading: false,
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
         toastId: txHash,
+        ...toastConfig,
       });
     } else {
       toast.update(id, {
-        render: "Transaction failed.Try Again",
+        render: "Transaction failed. Try Again",
         type: "error",
         isLoading: false,
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
+        ...toastConfig,
       });
     }
   };
@@ -75,16 +61,7 @@ export default function Vote() {
     setVoteModal(false);
     voteDispatch({ type: "SUBMIT_VOTE" });
     if (voteState.voteOption) {
-      const id = toast.loading("Transaction initiated ...", {
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      const id = toast.loading("Transaction initiated ...", toastConfig);
       const { response, error } = await sendVote(
         voteState?.proposalID,
         address,

@@ -1,24 +1,39 @@
 import { disconnect } from "@wagmi/core";
 import { useWeb3Modal } from "@web3modal/react";
+import { BigNumber } from "bignumber.js";
 import Head from "next/head";
 import React, { useState } from "react";
+import useSWR from "swr";
 import { useAccount } from "wagmi";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
-import { ethConfig, placeholderAddressEth } from "../data";
-import { handleCopy, shortenEthAddress, useIsMounted } from "../lib";
-import { UniswapStakeContents, UniswapUnstakeContents } from "../views";
+import { defaultChainSymbol, getBalanceStyle } from "../config";
+import {
+  fromChainDenom,
+  placeholderAddressEth,
+  useIncentiveList,
+} from "../data";
+import {
+  getTimeDifference,
+  handleCopy,
+  shortenEthAddress,
+  useIsMounted,
+} from "../lib";
+import {
+  UniswapIncentiveList,
+  UniswapRewards,
+  UniswapStakeContents,
+  UniswapUnstakeContents,
+} from "../views";
 
 export default function Farm() {
   // HOOKS
 
   const [Tab, setTab] = useState(0);
-  const tabs = [
-    { name: "Stake UniV3 LP", href: "#Stake-UniV3-LP" },
-    { name: "Unstake UniV3 LP", href: "#Unstake-UniV3-LP" },
-  ];
-
-  const latestIncentiveProgram =
-    ethConfig?.mainnet?.uniswap?.incentivePrograms?.[0];
+  const [StakeTab, setStakeTab] = useState(true);
+  const tabs = [{ name: "Uniswap V3 LP Staking" }];
+  const { incentiveList, isLoadingIncentiveList } = useIncentiveList();
+  const { data: selectedIncentiveIndex } = useSWR("selectedIncentive");
+  const isIncentivePopulated = !isLoadingIncentiveList && incentiveList?.length;
 
   // hooks to work the multi-modal for ethereum
   const { open } = useWeb3Modal();
@@ -50,7 +65,65 @@ export default function Farm() {
     address || placeholderAddressEth
   );
   const isWalletEthConnected = isMounted() && isConnected;
-  const currentRewardPoolDisplay = latestIncentiveProgram?.totalRewards;
+
+  const currentRewardPoolDisplay = isIncentivePopulated
+    ? getBalanceStyle(
+        fromChainDenom(incentiveList?.[selectedIncentiveIndex]?.reward),
+        "caption",
+        "caption2"
+      )
+    : getBalanceStyle(fromChainDenom(0), "caption", "caption2");
+
+  const currentRewardPoolDenomDisplay = defaultChainSymbol;
+
+  const currentTimestamp = Math.floor(Date.now() / 1000);
+
+  const incentiveEndTimestamp =
+    incentiveList?.[selectedIncentiveIndex]?.endTime || 0;
+
+  const incentiveDurationDisplay = isIncentivePopulated
+    ? BigNumber(incentiveEndTimestamp).isGreaterThan(
+        BigNumber(currentTimestamp)
+      )
+      ? `${getTimeDifference(
+          incentiveEndTimestamp,
+          currentTimestamp
+        )} remaining`
+      : `Incentive Ended`
+    : `---`;
+
+  const tabTitleJSX = tabs.map((tab, index) => (
+    <button
+      key={index}
+      className={`body1 ${Tab === index ? "text-primary" : "text-white"}`}
+      onClick={() => setTab(index)}
+    >
+      {tab.name}
+    </button>
+  ));
+
+  const tabGroupJSX = (
+    <div className="">
+      <div className="btn-group">
+        <button
+          className={`${
+            StakeTab ? "btn btn-primary" : "btn btn-inactive"
+          } caption2`}
+          onClick={() => setStakeTab(true)}
+        >
+          Stake
+        </button>
+        <button
+          className={`${
+            !StakeTab ? "btn btn-primary" : "btn btn-inactive"
+          } caption2`}
+          onClick={() => setStakeTab(false)}
+        >
+          Unstake
+        </button>
+      </div>
+    </div>
+  );
 
   // connect button with logic
   const notConnectedJSX = (
@@ -82,25 +155,18 @@ export default function Farm() {
     notConnectedJSX
   );
 
-  const stakeDisplayJSX = (
+  const stakeDashboardJSX = (
     <div
       className="d-flex flex-column w-100 rounded-4 flex-grow-1 pt-2"
       style={{ height: "90%" }}
     >
-      <div className="row farm-data-container nav-bg rounded-4 p-3 mx-0">
-        <div className="col-3 d-flex flex-column gap-3">
-          <h4 className="caption text-gray">Reward Pool</h4>
-          <p className="body1">{currentRewardPoolDisplay}&nbsp;$MNTL</p>
-        </div>
-        <div className="col-3 d-flex flex-column gap-3">
-          <h4 className="caption text-gray">End</h4>
-          <p className="body1">--</p>
-        </div>
-        <div className="col-6 d-flex flex-column gap-3">
-          <h4 className="caption text-gray">Connect</h4>
-          {isMounted() && connectButtonJSX}
-          {!isMounted() && notConnectedJSX}
-        </div>
+      <div className="row nav-bg rounded-4 p-3 mx-0">
+        <h4 className="col-3 py-1 caption text-gray">Reward Pool</h4>
+        <p className="col-9 py-1 body2">
+          {currentRewardPoolDisplay}&nbsp;{currentRewardPoolDenomDisplay}
+        </p>
+        <h4 className="col-3 py-1 caption text-gray">Duration</h4>
+        <p className="col-9 py-1 body2">{incentiveDurationDisplay}</p>
       </div>
     </div>
   );
@@ -117,7 +183,9 @@ export default function Farm() {
     " connected: ",
     isConnected,
     " isWalletEthConnected: ",
-    isWalletEthConnected
+    isWalletEthConnected,
+    " incentiveList: ",
+    incentiveList
   );
 
   return (
@@ -126,52 +194,23 @@ export default function Farm() {
         <title>Farm | MantleWallet</title>
       </Head>
       <section className="row h-100">
-        <ScrollableSectionContainer className="col-12 col-lg-8 d-flex">
-          <div className="bg-gray-800 p-3 rounded-4 d-flex flex-column gap-2">
-            <nav className="d-flex align-items-center justify-content-between gap-3">
-              <div className="d-flex gap-3 align-items-center">
-                {tabs.map((tab, index) => (
-                  <button
-                    key={index}
-                    className={`body1 ${
-                      Tab === index ? "text-primary" : "text-white"
-                    }`}
-                    onClick={() => setTab(index)}
-                  >
-                    {tab.name}
-                  </button>
-                ))}
+        <ScrollableSectionContainer className="col-12 col-lg-8 d-flex h-90">
+          <div className="bg-gray-800 p-4 rounded-4 d-flex flex-column gap-2">
+            <nav className="d-flex flex-column align-items-start justify-content-between gap-3">
+              <div className="d-flex gap-3 w-100">{tabTitleJSX}</div>
+              <div className="d-flex align-items-center justify-content-between gap-3 w-100">
+                <div className="">{connectButtonJSX}</div>
+                {tabGroupJSX}
               </div>
             </nav>
-            {
-              {
-                0: stakeDisplayJSX,
-                1: stakeDisplayJSX,
-              }[Tab]
-            }
+            {stakeDashboardJSX}
+            {StakeTab ? stakeContentsJSX : unstakeContentsJSX}
           </div>
-          <div className="p-1"></div>
-          {
-            {
-              0: stakeContentsJSX,
-              1: unstakeContentsJSX,
-            }[Tab]
-          }
-          <div className="p-2"></div>
         </ScrollableSectionContainer>
-        <div className="col-12 col-lg-4">
-          <div className="rounded-4 p-3 my-2 bg-gray-800 width-100 d-flex flex-column text-white">
-            <p>
-              To purchase MNTL, visit the exchanges (CEX & DEX) shown to swap
-              with your available tokens.
-            </p>
-            <br></br>
-            <p>
-              Options to directly on-ramp to MNTL using fiat currencies will be
-              coming soon.
-            </p>
-          </div>
-        </div>
+        <ScrollableSectionContainer className="col-12 col-lg-4 d-flex flex-column gap-3 h-90">
+          <UniswapRewards />
+          <UniswapIncentiveList />
+        </ScrollableSectionContainer>
       </section>
     </>
   );

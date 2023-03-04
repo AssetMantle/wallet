@@ -1,14 +1,11 @@
 import dynamic from "next/dynamic";
-import React, { useEffect, useState } from "react";
+import React from "react";
+import useSWR from "swr";
 import { useAccount, useContractReads } from "wagmi";
 import { UniswapUnstakeEntry } from "../components";
-import { ethConfig, useStakedPositionsNftId } from "../data";
+import { ethConfig, useIncentiveList, useStakedPositionsNftId } from "../data";
+import { getIncentiveIdFromKey } from "../lib";
 import { UniswapStakeContentsLoading } from "./UniswapStakeContentsLoading";
-
-const selectedIncentive = ethConfig?.selected?.uniswapIncentiveProgram;
-
-const latestIncentiveProgram =
-  ethConfig?.mainnet?.uniswap?.incentivePrograms?.[selectedIncentive];
 
 const nonFungiblePositionManagerContractAddress =
   ethConfig?.mainnet?.uniswap?.nonFungiblePositionManager?.address;
@@ -16,7 +13,6 @@ const uniV3StakerContractAddress =
   ethConfig?.mainnet?.uniswap?.uniV3Staker?.address;
 const nonFungiblePositionManagerABI =
   ethConfig?.mainnet?.uniswap?.nonFungiblePositionManager?.abi;
-const uniV3StakerABI = ethConfig?.mainnet?.uniswap?.uniV3Staker?.abi;
 const chainID = ethConfig?.mainnet?.chainID;
 
 const nonFungiblePositionManagerContract = {
@@ -28,21 +24,30 @@ const hookArgs = { watch: true, chainId: chainID };
 
 const StaticUniswapUnstakeContents = () => {
   // HOOKS
+  // hooks to get the incentive program data
+  const { incentiveList, isLoadingIncentiveList } = useIncentiveList();
+  const { data: selectedIncentiveIndex } = useSWR("selectedIncentive");
+  const isIncentivePopulated = !isLoadingIncentiveList && incentiveList?.length;
+
+  const selectedIncentiveTuple = isIncentivePopulated
+    ? [
+        incentiveList?.[selectedIncentiveIndex]?.rewardToken,
+        incentiveList?.[selectedIncentiveIndex]?.pool,
+        incentiveList?.[selectedIncentiveIndex]?.startTime,
+        incentiveList?.[selectedIncentiveIndex]?.endTime,
+        incentiveList?.[selectedIncentiveIndex]?.refundee,
+      ]
+    : [];
+
+  const selectedIncentiveId = selectedIncentiveTuple?.length
+    ? getIncentiveIdFromKey(selectedIncentiveTuple)
+    : null;
+
   // const isMounted = useIsMounted();
   const { positionNfts, isLoadingPositionNfts, errorPositionNfts } =
-    useStakedPositionsNftId(latestIncentiveProgram?.incentiveId);
+    useStakedPositionsNftId(selectedIncentiveId);
 
   const { address, isConnected } = useAccount();
-
-  const [isSsr, setIsSsr] = useState(false);
-
-  useEffect(() => {
-    setIsSsr(true);
-
-    return () => {};
-  }, []);
-
-  // read the owner of the returned positions
 
   // function to return the contract data array for multi-read of positions multi-read
   const positionsContracts = (tokenValuesArray) => {
@@ -51,7 +56,7 @@ const StaticUniswapUnstakeContents = () => {
       tokenArray.push({
         ...nonFungiblePositionManagerContract,
         functionName: "ownerOf",
-        args: [tokenValuesArray?.[index]],
+        args: [tokenValuesArray?.[index]?.id],
       });
     }
     return tokenArray;
@@ -67,8 +72,9 @@ const StaticUniswapUnstakeContents = () => {
     enabled: isConnected && address && positionNfts?.length,
     select: (data) =>
       data?.map?.((valObject, index) => ({
-        tokenId: positionNfts?.[index],
+        tokenId: positionNfts?.[index]?.id,
         owner: valObject,
+        liquidity: positionNfts?.[index]?.liquidity,
       })),
     ...hookArgs,
   });
@@ -80,21 +86,20 @@ const StaticUniswapUnstakeContents = () => {
 
   // RENDERED COMPONENTS
   const noRecordsJSX = (
-    <div className="bg-gray-800 p-3 rounded-4 d-flex gap-2 align-items-center justify-content-between">
-      <div className="d-flex gap-3">
-        <div className="d-flex flex-column gap-2">
-          <h3 className="body2">No Records Found</h3>
-          <p className="caption"></p>
-        </div>
-      </div>
-    </div>
+    <h3 className="caption text-error">
+      <i className="bi bi-info-circle"></i> No Records Found
+    </h3>
   );
 
   const recordsJSX = (
     <>
       {React.Children.toArray(
         filteredPositionNfts?.map?.((data, index) => (
-          <UniswapUnstakeEntry tokenId={data?.tokenId} key={index} />
+          <UniswapUnstakeEntry
+            tokenId={data?.tokenId}
+            liquidity={data?.liquidity}
+            key={index}
+          />
         ))
       )}
     </>
@@ -103,11 +108,7 @@ const StaticUniswapUnstakeContents = () => {
   const loadingJSX = <UniswapStakeContentsLoading />;
 
   const renderedJSX =
-    !positionNfts ||
-    !filteredPositionNfts ||
-    isLoadingPositionNfts ||
-    isLoadingOwnerValues ||
-    !isSsr
+    isLoadingPositionNfts || isLoadingOwnerValues
       ? loadingJSX
       : filteredPositionNfts?.length > 0 &&
         !errorPositionNfts &&
@@ -115,18 +116,20 @@ const StaticUniswapUnstakeContents = () => {
       ? recordsJSX
       : noRecordsJSX;
 
-  /* console.log(
-    "positionNFTs inside component: ",
+  console.log(
+    "positionNFTs: ",
     positionNfts,
     " loading: ",
     isLoadingPositionNfts,
     " error: ",
     errorPositionNfts,
-    " isSSr: ",
-    isSsr,
     " ownerValue: ",
-    ownerValues
-  ); */
+    ownerValues,
+    " filteredPositionNfts: ",
+    filteredPositionNfts,
+    " selectedIncentiveId: ",
+    selectedIncentiveId
+  );
 
   return renderedJSX;
 };

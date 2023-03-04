@@ -1,11 +1,14 @@
 import Link from "next/link";
 import { toast } from "react-toastify";
+import { defaultToastContainerId } from "./defaults";
 
 export const placeholderAvailableBalance = "0.0000";
 export const placeholderMntlUsdValue = "0.0000";
 export const placeholderRewards = "0.0000";
 export const mntlUsdApi =
-  "https://api.coingecko.com/api/v3/simple/price?ids=assetmantle&vs_currencies=usd&precision=6";
+  "https://api.coingecko.com/api/v3/simple/price?ids=assetmantle&vs_currencies=usd%2Ceth&precision=18";
+// "https://api.coingecko.com/api/v3/simple/price?ids=assetmantle&vs_currencies=usd&precision=6";
+
 export const placeholderTotalDelegations = "0.0000";
 export const placeholderTotalUnbonding = "0.0000";
 
@@ -20,6 +23,7 @@ export const toastConfig = {
   draggable: true,
   pauseOnHover: true,
   theme: "dark",
+  containerId: defaultToastContainerId,
 };
 
 const CustomToastWithLink = ({ txHash, message }) => (
@@ -40,29 +44,15 @@ export const notify = (txHash, id, message) => {
       render: <CustomToastWithLink message={message} txHash={txHash} />,
       type: "success",
       isLoading: false,
-      position: "bottom-center",
-      autoClose: 8000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
       toastId: txHash,
+      ...toastConfig,
     });
   } else {
     toast.update(id, {
       render: message,
       type: "error",
       isLoading: false,
-      position: "bottom-center",
-      autoClose: 8000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
+      ...toastConfig,
     });
   }
 };

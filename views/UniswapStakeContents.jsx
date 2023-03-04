@@ -1,29 +1,33 @@
-import React from "react";
-import { useAccount, useContractRead } from "wagmi";
-import { UniswapStakeEntry } from "../components";
-import { ethConfig } from "../data";
-import { useContractReads } from "wagmi";
 import dynamic from "next/dynamic";
-import { useIsMounted } from "../lib";
+import React from "react";
+import useSWR from "swr";
+import { useAccount, useContractRead, useContractReads } from "wagmi";
+import { UniswapStakeEntry } from "../components";
+import { ethConfig, useIncentiveList } from "../data";
 import { UniswapStakeContentsLoading } from "./UniswapStakeContentsLoading";
 
 const nonFungiblePositionManagerContractAddress =
   ethConfig?.mainnet?.uniswap?.nonFungiblePositionManager?.address;
-const uniV3StakerContractAddress =
-  ethConfig?.mainnet?.uniswap?.uniV3Staker?.address;
 const nonFungiblePositionManagerABI =
   ethConfig?.mainnet?.uniswap?.nonFungiblePositionManager?.abi;
-const uniV3StakerABI = ethConfig?.mainnet?.uniswap?.uniV3Staker?.abi;
 const chainID = ethConfig?.mainnet?.chainID;
 
-const latestIncentiveProgram =
-  ethConfig?.mainnet?.uniswap?.incentivePrograms?.[0];
+const selectedIncentive = ethConfig?.selected?.uniswapIncentiveProgram;
+
+ethConfig?.mainnet?.uniswap?.incentivePrograms?.[selectedIncentive];
+
+const mntlEthPool = ethConfig?.mainnet?.uniswap?.mntlEthPool;
 
 const StaticUniswapStakeContents = () => {
   // HOOKS
+  // hooks to get the incentive program data
+  const { incentiveList, isLoadingIncentiveList } = useIncentiveList();
+  const { data: selectedIncentiveIndex } = useSWR("selectedIncentive");
+  const isIncentivePopulated = !isLoadingIncentiveList && incentiveList?.length;
+
   // hooks to get the address of the connected wallet
   const { address, isConnected } = useAccount();
-  const isMounted = useIsMounted();
+  // const isMounted = useIsMounted();
 
   const finalAddress = address;
   // const finalAddress = uniV3StakerContractAddress;
@@ -33,11 +37,6 @@ const StaticUniswapStakeContents = () => {
   const nonFungiblePositionManagerContract = {
     address: nonFungiblePositionManagerContractAddress,
     abi: nonFungiblePositionManagerABI,
-  };
-
-  const uniV3StakerContract = {
-    address: uniV3StakerContractAddress,
-    abi: uniV3StakerABI,
   };
 
   // wagmi hook to read the count of Position NFTs
@@ -122,20 +121,15 @@ const StaticUniswapStakeContents = () => {
 
   const filteredPositionValues = positionValues?.filter?.(
     (positionValue) =>
-      positionValue?.fee == Number(latestIncentiveProgram?.fee) &&
-      positionValue?.token0 == latestIncentiveProgram?.token0 &&
-      positionValue?.token1 == latestIncentiveProgram?.token1
+      positionValue?.fee == Number(mntlEthPool?.fee) &&
+      positionValue?.token0 == mntlEthPool?.token0 &&
+      positionValue?.token1 == mntlEthPool?.token1
   );
 
   const noRecordsJSX = (
-    <div className="bg-gray-800 p-3 rounded-4 d-flex gap-2 align-items-center justify-content-between">
-      <div className="d-flex gap-3">
-        <div className="d-flex flex-column gap-2">
-          <h3 className="body2">No Records Found</h3>
-          <p className="caption"></p>
-        </div>
-      </div>
-    </div>
+    <h3 className="caption text-error">
+      <i className="bi bi-info-circle"></i> No Records Found
+    </h3>
   );
 
   const recordsJSX = (
@@ -155,18 +149,16 @@ const StaticUniswapStakeContents = () => {
   const loadingJSX = <UniswapStakeContentsLoading />;
 
   const renderedJSX =
-    !isMounted() || isLoadingPositionValues
+    isLoadingPositionValues || isLoadingTokenValues || isLoadingBalanceOf
       ? loadingJSX
-      : filteredPositionValues?.length > 0 && !isErrorPositionValues
+      : filteredPositionValues?.length > 0 &&
+        !(isErrorPositionValues || isErrorBalanceOf || isErrorTokenValues)
       ? recordsJSX
       : noRecordsJSX;
 
-  /* console.log("contract values:", {
+  console.log("contract values:", {
     balanceOf,
     totalPositions,
-    tokenOfOwnerByIndexContracts: tokenOfOwnerByIndexContracts(
-      totalPositions && totalPositions
-    ),
     totalPositions,
     isConnected,
     finalAddress,
@@ -175,8 +167,7 @@ const StaticUniswapStakeContents = () => {
     isLoadingTokenValues,
     positionValues: positionValues,
     filteredPositionValues,
-    latestIncentiveProgram,
-  }); */
+  });
 
   return renderedJSX;
 };

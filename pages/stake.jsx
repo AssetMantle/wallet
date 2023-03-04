@@ -9,6 +9,7 @@ import ScrollableSectionContainer from "../components/ScrollableSectionContainer
 import Head from "next/head";
 import { toast } from "react-toastify";
 import Link from "next/link";
+import { toastConfig } from "../config";
 
 export default function Stake() {
   const [searchValue, setSearchValue] = useState("");
@@ -45,29 +46,15 @@ export default function Stake() {
         render: <CustomToastWithLink txHash={txHash} />,
         type: "success",
         isLoading: false,
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
         toastId: txHash,
+        ...toastConfig,
       });
     } else {
       toast.update(id, {
-        render: "Transaction failed.Try Again",
+        render: "Transaction failed. Try Again",
         type: "error",
         isLoading: false,
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
+        ...toastConfig,
       });
     }
   };
@@ -118,7 +105,10 @@ export default function Stake() {
                   className={`${
                     activeValidators ? "btn btn-primary" : "btn btn-inactive"
                   } caption`}
-                  onClick={() => setActiveValidators(true)}
+                  onClick={() => {
+                    setActiveValidators(true);
+                    stakeDispatch({ type: "EMPTY_SELECTED_VALIDATORS" });
+                  }}
                 >
                   Active
                 </button>
@@ -126,7 +116,10 @@ export default function Stake() {
                   className={`${
                     !activeValidators ? "btn btn-primary" : "btn btn-inactive"
                   } caption`}
-                  onClick={() => setActiveValidators(false)}
+                  onClick={() => {
+                    setActiveValidators(false);
+                    stakeDispatch({ type: "EMPTY_SELECTED_VALIDATORS" });
+                  }}
                 >
                   Inactive
                 </button>
@@ -274,6 +267,8 @@ export default function Stake() {
 
         <ScrollableSectionContainer className="col-12 col-lg-4">
           <StakedToken
+            delegated={delegated}
+            setDelegated={setDelegated}
             notify={notify}
             stakeState={stakeState}
             stakeDispatch={stakeDispatch}

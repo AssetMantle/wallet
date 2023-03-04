@@ -1,6 +1,17 @@
+import Link from "next/link";
+
 export const formConstants = {
   recipientAddressErrorMsg: "Invalid Address",
   transferAmountErrorMsg: "Insufficient Balance",
+  insufficientBalanceErrorMsg: (
+    <span>
+      Insufficient Balance. To get more tokens go to{" "}
+      <Link href="/trade">
+        <a style={{ textDecoration: "underline" }}>Trade</a>
+      </Link>
+    </span>
+  ),
+  insufficientBalanceFeeErrorMsg: "Insufficient Balance to pay for Chain Fee",
   requiredErrorMsg: "Required field is blank",
   invalidValueErrorMsg: "Input value is invalid",
 };
@@ -21,6 +32,10 @@ export const shortenAddressSizeEth = 4;
 
 // Wagmi related error
 export const PREPARE_CONTRACT_ERROR = "Prepare Contract Error";
+export const INCENTIVE_ENDED_ERROR =
+  "Cannot stake as Incentive has already ended";
+export const ALREADY_UNSTAKED_ERROR =
+  "Token already unstaked. Withdraw Token manually";
 export const WRITE_CONTRACT_ERROR = "Error during writing config of contract";
 
 // Wallet related constants
@@ -83,5 +98,10 @@ export const ConnectOptionObject = {
     icon: "/WalletIcons/xdefi.jpg",
     name: "XDEFI",
     installUrl: "https://www.xdefi.io/",
+  },
+  frontier: {
+    icon: "/WalletIcons/frontier.png",
+    name: "Frontier",
+    installUrl: "https://www.frontier.xyz/browser-extension",
   },
 };

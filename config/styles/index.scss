@@ -94,6 +94,9 @@ input {
   padding-top: 68px;
   padding-top: 68px;
 }
+.h-90 {
+  height: 90% !important;
+}
 .am_app_container {
   overflow: hidden;
   height: 100dvh;
@@ -122,6 +125,15 @@ input {
   @include fontRoot(500, 1.75rem);
 }
 .h3 {
+  @include fontRoot(500, 1.25rem);
+}
+.h4 {
+  @include fontRoot(700, 1.7rem);
+}
+.h5 {
+  @include fontRoot(400, 1.5rem);
+}
+.h6 {
   @include fontRoot(500, 1.25rem);
 }
 // .h4 {
@@ -671,7 +683,11 @@ tbody {
     vertical-align: 0;
   }
 }
-
+.border-b-not_last {
+  &:not(:last-child) {
+    border-bottom: 1px solid $gray-100;
+  }
+}
 .farm-data-container {
   & > * {
     &:not(:last-child) {

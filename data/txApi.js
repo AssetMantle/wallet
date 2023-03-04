@@ -8,14 +8,19 @@ import {
   defaultFeeGas,
   defaultIBCSourceChannel,
   defaultIBCSourcePort,
+  gravityBasisPoints,
+  gravityBasisPointsScalingExponent,
   gravityChainDenom,
+  gravityChainId,
   gravityChainName,
+  gravityChainRPCProxy,
   gravityFeeAmount,
   gravityIBCSourceChannel,
   gravityIBCSourcePort,
   gravityIBCToken,
 } from "../config";
-import { toChainDenom } from "../data";
+import { toChainDenom, toDenom } from "../data";
+import { gravity, getSigningGravityClient } from "../modules";
 
 // get the wallet properties and functions for that specific chain
 export const sendTokensTxn = async (
@@ -520,13 +525,15 @@ export const sendIbcTokenToGravity = async (
   }
 };
 
+// GRAVITY CHAIN
+
 export const sendIbcTokenToMantle = async (
   fromGravityAddress,
   toMantleAddress,
   amount,
   memo,
   {
-    getSigningStargateClient2,
+    getOfflineSigner,
     chainName = defaultChainName,
     chainDenom = defaultChainDenom,
   }
@@ -548,12 +555,6 @@ export const sendIbcTokenToMantle = async (
       gravityChainName,
       gravityChainDenom
     );
-    // initialize signing client
-    const stargateClient = await getSigningStargateClient2();
-
-    if (!stargateClient || !fromGravityAddress) {
-      throw new Error("stargateClient or from address undefined");
-    }
 
     // get the sourcePort and sourceChannel values pertaining to IBC transaction from AssetMantle to Gravity Chain
     const sourcePort = gravityIBCSourcePort;
@@ -576,6 +577,20 @@ export const sendIbcTokenToMantle = async (
       gas: defaultFeeGas,
     };
 
+    // initialize signing client
+    // const stargateClient = await getSigningStargateClient();
+
+    // initialize stargate client using signer and create txn
+    let signer = await getOfflineSigner(gravityChainId);
+    const stargateClient = await getSigningGravityClient({
+      rpcEndpoint: gravityChainRPCProxy,
+      signer: signer,
+    });
+
+    if (!stargateClient || !fromGravityAddress) {
+      throw new Error("stargateClient or from address undefined");
+    }
+
     // directly call sendIbcTokens from the stargateclient
     response = await stargateClient.sendIbcTokens(
       fromGravityAddress,
@@ -585,6 +600,116 @@ export const sendIbcTokenToMantle = async (
       sourceChannel,
       undefined,
       1773583353,
+      fee,
+      memo
+    );
+
+    return { response, error: null };
+  } catch (error) {
+    console.error("Error during transaction: ", error?.message);
+    return { response: null, error };
+  }
+};
+
+export const sendIbcTokenToEth = async (
+  senderAddress,
+  ethDestAddress,
+  amount,
+  bridgeFeeAmount,
+  memo,
+  {
+    getOfflineSigner,
+    chainName = defaultChainName,
+    chainDenom = defaultChainDenom,
+  }
+) => {
+  console.log(
+    "inside sendIcTokenToEth senderAdress: ",
+    senderAddress,
+    " ethDestAddress: ",
+    ethDestAddress,
+    " amount: ",
+    amount,
+    " bridgeFeeAmount: ",
+    bridgeFeeAmount
+  );
+  try {
+    // keep the values to defaultChain and defaultDenom since we are dealing with ibc tokens of default chain
+    const amountInDenom = toChainDenom(amount, chainName, chainDenom);
+
+    // quick validation of amount being empty (not really required here, must go in form validation)
+    if (!BigNumber(amountInDenom).isGreaterThan(0)) {
+      return {
+        response: null,
+        error: new Error("Amount set is invalid"),
+      };
+    }
+
+    // get the amount object of type Coin
+    const transferAmount = {
+      denom: gravityIBCToken,
+      amount: amountInDenom,
+    };
+
+    const chainFeeAmountInDenom = BigNumber(amountInDenom.toString())
+      .multipliedBy(
+        BigNumber(gravityBasisPoints).shiftedBy(
+          gravityBasisPointsScalingExponent
+        )
+      )
+      .integerValue(BigNumber.ROUND_CEIL)
+      .toString();
+
+    const bridgeFeeInDenom = toDenom(bridgeFeeAmount);
+
+    // populate the chainFee data which will also be in MNTL
+    const chainFee = {
+      denom: gravityIBCToken,
+      amount: chainFeeAmountInDenom,
+    };
+
+    // populate the bridgeFee data, which will be in MNTL
+    const bridgeFee = {
+      denom: gravityIBCToken,
+      amount: bridgeFeeInDenom,
+    };
+
+    const { sendToEth } = gravity.v1.MessageComposer.withTypeUrl;
+    const msg = sendToEth({
+      ethDest: ethDestAddress,
+      sender: senderAddress,
+      amount: transferAmount,
+      bridgeFee,
+      chainFee,
+    });
+
+    console.log("msg: ", msg);
+
+    // populate the fee data
+    const fee = {
+      amount: [
+        {
+          denom: gravityChainDenom,
+          amount: "2000",
+        },
+      ],
+      gas: "250000",
+    };
+
+    // initialize stargate client using signer and create txn
+    let signer = await getOfflineSigner(gravityChainId);
+    const stargateClient = await getSigningGravityClient({
+      rpcEndpoint: gravityChainRPCProxy,
+      signer: signer,
+    });
+
+    /* // initialize stargate client using getter
+    const stargateClient = await getSigningStargateClient(); */
+
+    // use the stargate client to dispatch the transaction
+    const response = await stargateClient.signAndBroadcast(
+      senderAddress,
+      [msg],
       fee,
       memo
     );

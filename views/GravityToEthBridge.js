@@ -1,30 +1,75 @@
 import { useChain } from "@cosmos-kit/react";
+import { useWeb3Modal } from "@web3modal/react";
+import BigNumber from "bignumber.js";
 import Link from "next/link";
-import { useReducer } from "react";
+import { useReducer, useState } from "react";
 import { toast } from "react-toastify";
+import { useAccount } from "wagmi";
 import {
   defaultChainName,
   defaultChainSymbol,
+  defaultEthGasPrice,
+  gravityChainGasFee,
   gravityChainName,
   gravityChainSymbol,
+  toastConfig,
 } from "../config";
 import {
+  ethConfig,
   formConstants,
   fromChainDenom,
-  placeholderAddressGravity,
+  fromDenom,
+  sendIbcTokenToEth,
   sendIbcTokenToMantle,
   toDenom,
   useAvailableBalanceGravity,
+  useMntlUsd,
 } from "../data";
 import { convertBech32Address, shortenAddress } from "../lib";
-import { handleCopy, isObjEmpty } from "../lib/basicJavascript";
+import { handleCopy, isObjEmpty, useIsMounted } from "../lib/basicJavascript";
+import { useFeeData } from "wagmi";
 
 const GravityToEthBridge = () => {
+  const [gasFee, setGasFee] = useState("fast");
+  console.log("gasFee: ", gasFee);
   // WALLET HOOKS
-  const chainContext2 = useChain(gravityChainName);
-  const gravityAddress = chainContext2.address || placeholderAddressGravity;
-  const statusGravity = chainContext2.status;
-  const { getSigningStargateClient: getSigningStargateClient2 } = chainContext2;
+  // get the gravity address from mantle
+  const chainContext3 = useChain(defaultChainName);
+  const {
+    address: mantleAddress,
+    status: gravityStatus,
+    getOfflineSigner,
+  } = chainContext3;
+  const gravityAddress = convertBech32Address(mantleAddress, gravityChainName);
+  const { mntlPerEthValue } = useMntlUsd();
+
+  const isMounted = useIsMounted();
+  const { address: ethDestAddress, isConnected } = useAccount();
+  const { open } = useWeb3Modal();
+
+  const { data: gasData } = useFeeData();
+
+  const gasPrice = gasData?.formatted?.gasPrice || defaultEthGasPrice;
+  const bridgeFeeGas = ethConfig?.mainnet?.gravity?.bridgeFeeGas;
+  const bridgeFee = {
+    slow: BigNumber(gasPrice)
+      .multipliedBy(BigNumber(bridgeFeeGas?.slow))
+      .shiftedBy(-18)
+      .dividedToIntegerBy(BigNumber(mntlPerEthValue))
+      .toString(),
+    fast: BigNumber(gasPrice)
+      .multipliedBy(BigNumber(bridgeFeeGas?.fast))
+      .shiftedBy(-18)
+      .dividedToIntegerBy(BigNumber(mntlPerEthValue))
+      .toString(),
+    instant: BigNumber(gasPrice)
+      .multipliedBy(BigNumber(bridgeFeeGas?.instant))
+      .shiftedBy(-18)
+      .dividedToIntegerBy(BigNumber(mntlPerEthValue))
+      .toString(),
+  };
+
+  // const [showConnectText, setShowConnectText] = useState(true);
 
   // HOOKS or GETTERS
   const { availableBalanceGravity, availableBalanceIBCToken } =
@@ -42,18 +87,10 @@ const GravityToEthBridge = () => {
     switch (action.type) {
       case "CHANGE_AMOUNT": {
         // if amount is greater than current balance, populate error message and update amount
-        if (!action.payload) {
-          return {
-            ...state,
-            transferAmount: action.payload,
-            errorMessages: {
-              ...state.errorMessages,
-              transferAmountErrorMsg: formConstants.requiredErrorMsg,
-            },
-          };
-        } else if (
-          isNaN(parseFloat(action.payload)) ||
-          isNaN(toDenom(action.payload))
+        // if amount is greater than current balance, populate error message and update amount
+        if (
+          BigNumber(action.payload).isNaN() ||
+          BigNumber(action.payload).isLessThanOrEqualTo(0)
         ) {
           return {
             ...state,
@@ -64,8 +101,10 @@ const GravityToEthBridge = () => {
             },
           };
         } else if (
-          isNaN(parseFloat(availableBalanceIBCToken)) ||
-          toDenom(action.payload) > parseFloat(availableBalanceIBCToken)
+          BigNumber(availableBalanceIBCToken).isNaN() ||
+          BigNumber(toDenom(action.payload)).isGreaterThan(
+            BigNumber(availableBalanceIBCToken)
+          )
         ) {
           return {
             ...state,
@@ -86,13 +125,58 @@ const GravityToEthBridge = () => {
           };
         }
       }
+      case "CHANGE_AMOUNT_ETHEREUM": {
+        // if amount is greater than current balance, populate error message and update amount
+        if (
+          BigNumber(action.payload).isNaN() ||
+          BigNumber(action.payload).isLessThanOrEqualTo(0)
+        ) {
+          return {
+            ...state,
+            transferAmount: action.payload,
+            errorMessages: {
+              ...state.errorMessages,
+              transferAmountErrorMsg: formConstants.invalidValueErrorMsg,
+            },
+          };
+        } else if (
+          BigNumber(availableBalanceIBCToken).isNaN() ||
+          BigNumber(toDenom(action.payload))
+            .plus(BigNumber(toDenom(bridgeFee?.[gasFee])))
+            .isGreaterThan(BigNumber(availableBalanceIBCToken))
+        ) {
+          return {
+            ...state,
+            transferAmount: action.payload,
+            errorMessages: {
+              ...state.errorMessages,
+              transferAmountErrorMsg:
+                formConstants.insufficientBalanceFeeErrorMsg,
+            },
+          };
+        }
+        // if valid amount, remove any previous error message set and return updated amount
+        else {
+          // delete the error message key if already exists
+          delete state.errorMessages.transferAmountErrorMsg;
+          return {
+            ...state,
+            transferAmount: action.payload,
+          };
+        }
+      }
 
       case "SET_MAX_AMOUNT": {
         // if available balance is invalid, set error message
-        if (isNaN(parseFloat(availableBalanceIBCToken))) {
+        if (
+          BigNumber(availableBalanceIBCToken).isNaN() ||
+          BigNumber(availableBalanceGravity).isLessThan(
+            BigNumber(gravityChainGasFee)
+          )
+        ) {
           return {
             ...state,
-            transferAmount: 0,
+            transferAmount: availableBalanceIBCToken,
             errorMessages: {
               ...state.errorMessages,
               transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
@@ -103,15 +187,9 @@ const GravityToEthBridge = () => {
         else {
           // delete the error message key if already exists
           delete state.errorMessages?.transferAmountErrorMsg;
-          console.log(
-            "state error message: ",
-            state.errorMessages?.transferAmountErrorMsg
-          );
           return {
             ...state,
-            transferAmount: fromChainDenom(
-              parseFloat(availableBalanceIBCToken)
-            ).toString(),
+            transferAmount: fromDenom(availableBalanceIBCToken),
           };
         }
       }
@@ -173,34 +251,27 @@ const GravityToEthBridge = () => {
         render: <CustomToastWithLink txHash={txHash} />,
         type: "success",
         isLoading: false,
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
         toastId: txHash,
+        ...toastConfig,
       });
     } else {
       toast.update(id, {
-        render: "Transaction failed.Try Again",
+        render: "Transaction failed. Try Again",
         type: "error",
         isLoading: false,
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
+        ...toastConfig,
       });
     }
   };
 
   // CONTROLLER FUNCTIONS
+
+  // connect button with logic
+
+  const handleOpenWeb3Modal = async (e) => {
+    e.preventDefault();
+    await open();
+  };
 
   const handleAmountOnChange = (e) => {
     e.preventDefault();
@@ -210,76 +281,85 @@ const GravityToEthBridge = () => {
     });
   };
 
-  /* const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     console.log("inside handleSubmit()");
     e.preventDefault();
 
-    // execute the dispatch operations pertaining to submit
+    // define local variables
+    const localTransferAmount = formState?.transferAmount;
+    let memo;
+
+    // manually trigger form validation messages if any
     formDispatch({
-      type: "SUBMIT",
+      type: "CHANGE_AMOUNT_ETHEREUM",
+      payload: localTransferAmount,
     });
 
+    const isFormValid = !(
+      BigNumber(localTransferAmount).isNaN() ||
+      BigNumber(localTransferAmount).isLessThanOrEqualTo(0) ||
+      BigNumber(availableBalanceIBCToken).isNaN() ||
+      BigNumber(toDenom(localTransferAmount))
+        .plus(BigNumber(toDenom(bridgeFee?.[gasFee])))
+        .isGreaterThan(BigNumber(availableBalanceIBCToken))
+    );
+
     // if no validation errors, proceed to transaction processing
-    if (
-      formState?.transferAmount &&
-      !isNaN(parseFloat(formState?.transferAmount)) &&
-      isObjEmpty(formState?.errorMessages)
-    ) {
-      // define local variables
-      const localTransferAmount = formState?.transferAmount;
-      let memo;
-      const ethDestAddress = "0xae6094170ABC0601b4bbe933D04368cD407C186a";
+    if (isFormValid) {
+      // initiate toast notification
+      const toastId2 = toast.loading("Transaction initiated ...", toastConfig);
 
       // create transaction
       const { response, error } = await sendIbcTokenToEth(
         gravityAddress,
         ethDestAddress,
         localTransferAmount,
+        bridgeFee?.[gasFee],
         memo,
 
-        { getOfflineSigner }
+        {
+          getOfflineSigner,
+        }
       );
       console.log("response: ", response, " error: ", error);
-
       // reset the form values
       formDispatch({ type: "RESET" });
-    }
-  }; */
 
-  const handleSubmit2 = async (e) => {
+      // notify toast message on success or error
+      if (response) {
+        notify(response?.transactionHash, toastId2);
+      } else {
+        notify(null, toastId2);
+      }
+    }
+  };
+
+  const handleSubmitMantle = async (e) => {
     console.log("inside handleSubmit()");
     e.preventDefault();
 
-    // execute the dispatch operations pertaining to submit
+    // define local variables
+    const localTransferAmount = formState?.transferAmount;
+    let memo;
+    const mantleAddress = convertBech32Address(
+      gravityAddress,
+      defaultChainName
+    );
+
+    // manually trigger form validation messages if any
     formDispatch({
-      type: "SUBMIT",
+      type: "CHANGE_AMOUNT",
+      payload: localTransferAmount,
     });
 
     // if no validation errors, proceed to transaction processing
     if (
-      formState?.transferAmount &&
-      !isNaN(parseFloat(formState?.transferAmount)) &&
+      localTransferAmount &&
+      !BigNumber(localTransferAmount).isNaN() &&
       isObjEmpty(formState?.errorMessages)
     ) {
-      // define local variables
-      const localTransferAmount = formState?.transferAmount;
-      let memo;
-      const mantleAddress = convertBech32Address(
-        gravityAddress,
-        defaultChainName
-      );
-
       // initiate toast notification
-      const id = toast.loading("Transaction initiated ...", {
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      const toastId = toast.loading("Transaction initiated ...", toastConfig);
 
       // initiate transaction from txn api
       const { response, error } = await sendIbcTokenToMantle(
@@ -288,17 +368,22 @@ const GravityToEthBridge = () => {
         localTransferAmount,
         memo,
 
-        { getSigningStargateClient2 }
+        {
+          // getSigningStargateClient: getSigningStargateClientGravity,
+          getOfflineSigner,
+        }
       );
       console.log("response: ", response, " error: ", error);
-      if (response) {
-        notify(response?.transactionHash, id);
-      } else {
-        notify(null, id);
-      }
 
       // reset the form values
       formDispatch({ type: "RESET" });
+
+      // notify toast message on success or error
+      if (response) {
+        notify(response?.transactionHash, toastId);
+      } else {
+        notify(null, toastId);
+      }
     }
   };
 
@@ -315,10 +400,27 @@ const GravityToEthBridge = () => {
   };
 
   // DISPLAY VARIABLES
+  const isWalletEthConnected = isMounted() && isConnected;
+  const isWalletCosmosConnected = isMounted() && gravityStatus == "Connected";
+
   const displayShortenedAddress = shortenAddress(
     gravityAddress,
     gravityChainName
   );
+
+  const connectButtonJSX = (
+    <button
+      className="caption2 d-flex gap-1"
+      onClick={handleCopyOnClick}
+      style={{ wordBreak: "break-all" }}
+    >
+      {displayShortenedAddress}{" "}
+      <span className="text-primary">
+        <i className="bi bi-clipboard" />
+      </span>
+    </button>
+  );
+
   const displayAvailableBalanceIBCToken = fromChainDenom(
     availableBalanceIBCToken
   );
@@ -327,12 +429,45 @@ const GravityToEthBridge = () => {
   );
   const displayBalanceUnitGravity = gravityChainSymbol;
   const displayBalanceUnitGravityIBCToken = defaultChainSymbol;
-  const isSubmitDisabled =
-    statusGravity != "Connected" || !isObjEmpty(formState?.errorMessages);
+  const isSubmitDisabled = !isObjEmpty(formState?.errorMessages);
+  const isSubmitDisabledGravity =
+    !isWalletCosmosConnected || !isObjEmpty(formState?.errorMessages);
   const displayInputAmountValue = formState?.transferAmount;
   const isFormAmountError = formState?.errorMessages?.transferAmountErrorMsg;
   const displayFormAmountErrorMsg =
     formState?.errorMessages?.transferAmountErrorMsg;
+
+  const connectEthWalletJSX = (
+    <button
+      onClick={handleOpenWeb3Modal}
+      className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
+    >
+      Connect Ethereum Wallet <i className="bi bi-link-45deg" />
+    </button>
+  );
+
+  const submitButtonEthJSX = isWalletEthConnected ? (
+    <button
+      onClick={handleSubmit}
+      disabled={isSubmitDisabled}
+      className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
+    >
+      Send to Ethereum <i className="bi bi-arrow-down" />
+    </button>
+  ) : (
+    connectEthWalletJSX
+  );
+
+  console.log(
+    " gravityAddress: ",
+    gravityAddress,
+    " isMounted: ",
+    isMounted(),
+    " gravityStatus: ",
+    gravityStatus,
+    " feedata: ",
+    JSON.stringify(gasData?.formatted)
+  );
 
   return (
     <div className={`bg-gray-800 p-3 rounded-4 d-flex flex-column gap-3 ${""}`}>
@@ -346,16 +481,7 @@ const GravityToEthBridge = () => {
           </div>
           <h5 className="caption2 text-primary">Gravity Bridge</h5>
         </div>
-        <button
-          className="caption2 d-flex gap-1"
-          onClick={handleCopyOnClick}
-          style={{ wordBreak: "break-all" }}
-        >
-          {displayShortenedAddress}{" "}
-          <span className="text-primary">
-            <i className="bi bi-clipboard" />
-          </span>
-        </button>
+        {connectButtonJSX}
       </div>
       <label
         htmlFor="GravityAmount"
@@ -387,26 +513,36 @@ const GravityToEthBridge = () => {
       {isFormAmountError && (
         <small className="small text-error">{displayFormAmountErrorMsg}</small>
       )}
-      <div className="d-flex align-items-center justify-content-end gap-3">
-        {/* <button
-          className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2"
-          disabled={isSubmitDisabled}
-          onClick={handleSubmit2}
+      <div className="d-flex align-items-center justify-content-between gap-3">
+        <label className="caption2" htmlFor="gasFeeSelect">
+          Select Chain Fee for Ethereum Transfer
+        </label>
+        <select
+          name="gasFeeSelect"
+          id="gasFeeSelect"
+          defaultValue="fast"
+          className="am-select caption2"
+          onChange={(e) => setGasFee(e.target.value)}
         >
-          Send to Mantle Chain <i className="bi bi-arrow-up" />
-        </button> */}
-        <Link href={"https://bridge.blockscape.network/"}>
-          <a target="_blank" rel="noreferrer">
-            <button
-              className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
-              // disabled={isSubmitDisabled}
-              // onClick={handleSubmit}
-            >
-              Bridge Link to Ethereum Chain{" "}
-              <i className="bi bi-box-arrow-up-right" />
-            </button>
-          </a>
-        </Link>
+          <option value="instant">
+            Instant ~ 2 minutes ({bridgeFee?.instant} $MNTL)
+          </option>
+          <option value="fast">Fast ~ 4 hours ({bridgeFee?.fast} $MNTL)</option>
+          <option value="slow">
+            Slow ~ 24 hours ({bridgeFee?.slow} $MNTL)
+          </option>
+        </select>
+      </div>
+      <div className="d-flex align-items-center justify-content-end gap-3">
+        <button
+          className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2"
+          disabled={isSubmitDisabledGravity}
+          onClick={handleSubmitMantle}
+        >
+          Send to Mantle <i className="bi bi-arrow-up" />
+        </button>
+        {isMounted() && submitButtonEthJSX}
+        {!isMounted() && connectEthWalletJSX}
       </div>
     </div>
   );

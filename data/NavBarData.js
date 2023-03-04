@@ -38,18 +38,26 @@ export const NavBarData = {
       variant: "am-link",
       icon: <i className="bi bi-cash-coin" />,
     },
-    /* {
+    {
       title: "Farm",
       href: "/farm",
       variant: "am-link",
       icon: <i className="bi bi-piggy-bank" />,
-    }, */
+    },
     {
       title: "Explorer",
-      href: "https://explorer.assetmantle.one/",
+      href: "https://explorer.testnet.assetmantle.one/",
       variant: "am-link",
       target: "_blank",
       icon: <i className="bi bi-book" />,
+      endIcon: <i className="bi bi-arrow-up-right" />,
+    },
+    {
+      title: "MantlePlace",
+      href: "https://marketplace.assetmantle.one/",
+      variant: "am-link",
+      target: "_blank",
+      icon: <i className="bi bi-shop-window" />,
       endIcon: <i className="bi bi-arrow-up-right" />,
     },
   ],

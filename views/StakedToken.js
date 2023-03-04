@@ -4,12 +4,14 @@ import Delegations from "../components/Delegations";
 import ModalContainer from "../components/ModalContainer";
 import Rewards from "../components/Rewards";
 import Unbonded from "../components/Unbonded";
-import { defaultChainName } from "../config";
+import { defaultChainName, toastConfig } from "../config";
 import { sendDelegation, useAvailableBalance, fromDenom } from "../data";
 import { toast } from "react-toastify";
 import { defaultChainSymbol } from "../config";
 
 export default function StakedToken({
+  delegated,
+  setDelegated,
   totalTokens,
   setShowClaimError,
   showClaimError,
@@ -20,7 +22,7 @@ export default function StakedToken({
   const { availableBalance } = useAvailableBalance();
   const [openModal, setOpenModal] = useState(false);
   const walletManager = useChain(defaultChainName);
-  const { getSigningStargateClient, address, status, wallet } = walletManager;
+  const { getSigningStargateClient, address, status } = walletManager;
 
   const [DelegateModal, setDelegateModal] = useState(false);
 
@@ -31,16 +33,7 @@ export default function StakedToken({
     });
     if (stakeState.delegationAmount) {
       setDelegateModal(false);
-      const id = toast.loading("Transaction initiated ...", {
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      const id = toast.loading("Transaction initiated ...", toastConfig);
       const { response, error } = await sendDelegation(
         address,
         stakeState?.delegationAddress,
@@ -81,6 +74,8 @@ export default function StakedToken({
           </Suspense>
           <Suspense fallback={<p>Loading</p>}>
             <Rewards
+              delegated={delegated}
+              setDelegated={setDelegated}
               notify={notify}
               stakeState={stakeState}
               setShowClaimError={setShowClaimError}

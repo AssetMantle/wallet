@@ -5,6 +5,7 @@ import {
   defaultChainName,
   defaultChainSymbol,
   getBalanceStyle,
+  usdSymbol,
 } from "../config";
 import {
   decimalize,
@@ -27,14 +28,17 @@ const Unbonded = ({
   notify,
 }) => {
   const [unBondingModal, setUnBondingModal] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
 
   const walletManager = useChain(defaultChainName);
-  const { getSigningStargateClient, address, status } = walletManager;
+  const { status } = walletManager;
   const [activeValidators, setActiveValidators] = useState(true);
   const { totalUnbondingAmount, allUnbonding } = useTotalUnbonding();
   const { mntlUsdValue } = useMntlUsd();
   const { allValidatorsBonded } = useAllValidatorsBonded();
   const { allValidatorsUnbonded } = useAllValidatorsUnbonded();
+
+  const isConnected = status == "Connected";
 
   const selectedUnbondingArray = allUnbonding?.filter((unbondingObject) =>
     stakeState?.selectedValidators?.includes(unbondingObject.address)
@@ -50,19 +54,35 @@ const Unbonded = ({
     ? selectedUnbonding
     : totalUnbondingAmount;
 
-  const unbondingDisplay = fromChainDenom(unbondingValue);
+  const unbondingDisplay = isConnected
+    ? getBalanceStyle(fromChainDenom(unbondingValue), "caption", "caption2")
+    : getBalanceStyle(
+        fromChainDenom(unbondingValue),
+        "caption text-gray",
+        "caption2 text-gray"
+      );
 
-  const unbondingInUSDDisplay = decimalize(
-    BigNumber(fromDenom(unbondingValue))
-      .multipliedBy(BigNumber(mntlUsdValue))
-      .toString()
-  );
+  const unbondingInUSD = BigNumber(fromDenom(unbondingValue))
+    .multipliedBy(BigNumber(mntlUsdValue))
+    .toString();
+
+  const unbondingInUSDDisplay = isConnected
+    ? getBalanceStyle(decimalize(unbondingInUSD), "caption2", "small")
+    : getBalanceStyle(
+        decimalize(unbondingInUSD),
+        "caption2 text-gray",
+        "small text-gray"
+      );
 
   const secondsInADay = 86400;
 
   const isSubmitDisabled = status != "Connected";
 
-  const isConnected = status == "Connected";
+  const handleOnError = (e) => {
+    e.preventDefault();
+    // console.log("e: ", e);
+    e.target.src = "/validatorAvatars/alt.png";
+  };
 
   return (
     <div className="nav-bg p-3 rounded-4 gap-3">
@@ -74,24 +94,12 @@ const Unbonded = ({
           Undelegating
         </p>
         <p className={isConnected ? "caption" : "caption text-gray"}>
-          {isConnected
-            ? getBalanceStyle(unbondingDisplay, "caption", "caption2")
-            : getBalanceStyle(
-                unbondingDisplay,
-                "caption text-gray",
-                "caption2 text-gray"
-              )}
+          {unbondingDisplay}
           &nbsp;{denomDisplay}
         </p>
         <p className={isConnected ? "caption2" : "caption2 text-gray"}>
-          {isConnected
-            ? getBalanceStyle(unbondingInUSDDisplay, "caption2", "small")
-            : getBalanceStyle(
-                unbondingInUSDDisplay,
-                "caption2 text-gray",
-                "small text-gray"
-              )}
-          &nbsp;{"$USD"}
+          {unbondingInUSDDisplay}
+          &nbsp;{usdSymbol}
         </p>
         <div className="d-flex justify-content-end">
           {allUnbonding?.length != 0 && !isSubmitDisabled ? (
@@ -116,7 +124,7 @@ const Unbonded = ({
               <button
                 type="button"
                 className="btn-close primary"
-                onClick={() => setUnDelegateModal(false)}
+                onClick={() => setUnBondingModal(false)}
                 style={{ background: "none" }}
               >
                 <span className="text-primary">
@@ -152,9 +160,10 @@ const Unbonded = ({
                       <i className="bi bi-search text-primary"></i>
                     </span>
                     <input
-                      type="text"
+                      type="search"
                       className="am-input bg-t p-1 w-100 h-100"
                       placeholder="Search"
+                      onChange={(e) => setSearchValue(e.target.value)}
                       aria-label="Search"
                       style={{ border: "none" }}
                     />
@@ -203,22 +212,41 @@ const Unbonded = ({
                     <tbody>
                       {activeValidators
                         ? allUnbonding
-                            ?.filter((item) =>
-                              allValidatorsBonded?.find(
-                                (e) => e?.operatorAddress == item?.address
-                              )
+                            ?.map((item) => {
+                              return {
+                                ...item,
+                                moniker: allValidatorsBonded?.find(
+                                  (e) => e?.operatorAddress == item?.address
+                                )?.description?.moniker,
+                              };
+                            })
+                            ?.filter(
+                              (item) =>
+                                allValidatorsBonded?.find(
+                                  (e) => e?.operatorAddress == item?.address
+                                ) &&
+                                item?.moniker
+                                  ?.toLowerCase()
+                                  .includes(searchValue.toLowerCase())
                             )
                             ?.map((item, index) => (
                               <tr key={index}>
-                                <td
-                                  className="text-white"
-                                  onClick={() => {
-                                    stakeDispatch({
-                                      type: "SET_UNDELEGATION_SRC_ADDRESS",
-                                      payload: item?.address,
-                                    });
-                                  }}
-                                >
+                                <td className="text-white d-flex">
+                                  <div
+                                    className="d-flex position-relative rounded-circle me-2"
+                                    style={{
+                                      width: "25px",
+                                      aspectRatio: "1/1",
+                                    }}
+                                  >
+                                    <img
+                                      layout="fill"
+                                      alt={item?.description?.moniker}
+                                      className="rounded-circle"
+                                      src={`/validatorAvatars/${item?.address}.png`}
+                                      onError={handleOnError}
+                                    />
+                                  </div>
                                   <a
                                     className="text-truncate"
                                     style={{ maxWidth: "200px" }}
@@ -227,12 +255,7 @@ const Unbonded = ({
                                     rel="noreferrer"
                                   >
                                     {" "}
-                                    {
-                                      allValidatorsBonded?.find(
-                                        (ele) =>
-                                          ele?.operatorAddress === item?.address
-                                      )?.description?.moniker
-                                    }
+                                    {item?.moniker}
                                     <i className="bi bi-arrow-up-right" />
                                   </a>
                                 </td>
@@ -268,29 +291,52 @@ const Unbonded = ({
                               </tr>
                             ))
                         : allUnbonding
-                            ?.filter((item) =>
-                              allValidatorsUnbonded?.find(
-                                (e) => e?.operatorAddress == item?.address
-                              )
+                            ?.map((item) => {
+                              return {
+                                ...item,
+                                moniker: allValidatorsUnbonded?.find(
+                                  (e) => e?.operatorAddress == item?.address
+                                )?.description?.moniker,
+                              };
+                            })
+                            ?.filter(
+                              (item) =>
+                                allValidatorsUnbonded?.find(
+                                  (e) => e?.operatorAddress == item?.address
+                                ) &&
+                                item?.moniker
+                                  ?.toLowerCase()
+                                  .includes(searchValue.toLowerCase())
                             )
-                            ?.map((item, index) => {
+                            ?.map((item, index) => (
                               <tr key={index}>
-                                <td
-                                  className="text-white"
-                                  onClick={() => {
-                                    stakeDispatch({
-                                      type: "SET_UNDELEGATION_SRC_ADDRESS",
-                                      payload: item?.address,
-                                    });
-                                  }}
-                                >
-                                  {
-                                    allValidatorsBonded?.find(
-                                      (ele) =>
-                                        ele?.operatorAddress === item?.address
-                                    )?.description?.moniker
-                                  }
-                                  <i className="bi bi-arrow-up-right" />
+                                <td className="text-white d-flex">
+                                  {" "}
+                                  <div
+                                    className="d-flex position-relative rounded-circle me-2"
+                                    style={{
+                                      width: "25px",
+                                      aspectRatio: "1/1",
+                                    }}
+                                  >
+                                    <img
+                                      layout="fill"
+                                      alt={item?.description?.moniker}
+                                      className="rounded-circle"
+                                      src={`/validatorAvatars/${item?.address}.png`}
+                                      onError={handleOnError}
+                                    />
+                                  </div>
+                                  <a
+                                    className="text-truncate"
+                                    style={{ maxWidth: "200px" }}
+                                    href={`https://explorer.assetmantle.one/validators/${item?.address}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
+                                    {item?.moniker}
+                                    <i className="bi bi-arrow-up-right" />{" "}
+                                  </a>
                                 </td>
                                 <td className="text-white">
                                   {getBalanceStyle(
@@ -321,8 +367,8 @@ const Unbonded = ({
                                   ).toFixed(2)}{" "}
                                   hours
                                 </td>
-                              </tr>;
-                            })}
+                              </tr>
+                            ))}
                     </tbody>
                   </table>
                 </div>

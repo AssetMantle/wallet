@@ -9,9 +9,10 @@ import useSWR from "swr";
 import { configureChains, createClient, useAccount } from "wagmi";
 import { mainnet, polygon } from "wagmi/chains";
 import { placeholderAvailableBalance } from "../config";
-import { toChainDenom } from "./queryApi";
 import nonFungiblePositionManagerABI from "../data/contracts/nonFungiblePositionManagerABI.json";
+import gravityBridgeABI from "../data/contracts/gravityBridgeABI.json";
 import uniV3StakerABI from "../data/contracts/uniV3StakerABI.json";
+import { toChainDenom } from "./queryApi";
 
 // CONFIG PARAMETERS FOR ETH AND POLYGON
 export const selectedEthNetwork = "mainnet";
@@ -20,12 +21,12 @@ export const walletConnectProjectID = "f068c2aa18a3ec82f5eafdc8abe7ae23";
 export const ethConfig = {
   selected: {
     chain: "mainnet",
-    uniswapIncentiveProgram: 0,
+    uniswapIncentiveProgram: 1,
   },
   mainnet: {
     network: "mainnet",
     version: "v1",
-    chainID: "1",
+    chainID: 1,
     rpc: {
       pos: {
         parent: process.env.ETH_MAINNET_RPC,
@@ -59,6 +60,17 @@ export const ethConfig = {
     rootChainManagerProxy: {
       parent: "0xA0c68C638235ee32657e8f720a23ceC1bFc77C77",
     },
+    gravity: {
+      ethereumBridge: {
+        address: "0xa4108aA1Ec4967F8b52220a4f7e94A8201F2D906",
+        abi: gravityBridgeABI,
+      },
+      bridgeFeeGas: {
+        slow: 50000,
+        fast: 400000,
+        instant: 750000,
+      },
+    },
     uniswap: {
       nonFungiblePositionManager: {
         address: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
@@ -67,6 +79,12 @@ export const ethConfig = {
       uniV3Staker: {
         address: "0xe34139463bA50bD61336E0c446Bd8C0867c6fE65",
         abi: uniV3StakerABI,
+      },
+      mntlEthPool: {
+        address: "0xf5b8304dc18579c4247caad705df01928248bc71",
+        token0: "0x2C4F1DF9c7DE0C59778936C9b145fF56813F3295",
+        token1: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        fee: "3000",
       },
       incentivePrograms: [
         {
@@ -83,6 +101,26 @@ export const ethConfig = {
             "0xf5b8304dc18579c4247caad705df01928248bc71",
             1676041245,
             1676214045,
+            "0x0ad4de31fc1E1e01Eaaf815dA18690441190f7ed",
+          ],
+          token0: "0x2C4F1DF9c7DE0C59778936C9b145fF56813F3295",
+          token1: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+          fee: 3000,
+        },
+        {
+          RewardTokenContract: "0x2C4F1DF9c7DE0C59778936C9b145fF56813F3295",
+          liquidityPoolContract: "0xf5b8304dc18579c4247caad705df01928248bc71",
+          startTime: "1677058200",
+          endTime: "1677227400",
+          refundeeAddress: "0x0ad4de31fc1E1e01Eaaf815dA18690441190f7ed",
+          totalRewards: 2000,
+          incentiveId:
+            "0xad2a12075ed0b1656be4ebe084c82b2cad6ebf6dcdc6619d7cd32c602e0795ea",
+          incentiveTuple: [
+            "0x2C4F1DF9c7DE0C59778936C9b145fF56813F3295",
+            "0xf5b8304dc18579c4247caad705df01928248bc71",
+            1677058200,
+            1677227400,
             "0x0ad4de31fc1E1e01Eaaf815dA18690441190f7ed",
           ],
           token0: "0x2C4F1DF9c7DE0C59778936C9b145fF56813F3295",
@@ -320,6 +358,7 @@ export const useStakedPositionsNftId = (incentiveId) => {
     position{
       id
       owner
+      liquidity
     }}}`;
 
     // explorer: https://thegraph.com/hosted-service/subgraph/revert-finance/uni-v3-staker-mainnet
@@ -344,7 +383,7 @@ export const useStakedPositionsNftId = (incentiveId) => {
             value?.position?.owner?.toString?.().toLowerCase() ==
             address?.toLowerCase?.()
         )
-        ?.map?.((value) => value?.position?.id);
+        ?.map?.((value) => value?.position);
 
       // console.log("swr fetcher success: ", url);
     } catch (error) {
@@ -372,6 +411,70 @@ export const useStakedPositionsNftId = (incentiveId) => {
     positionNfts: positionNftsArray,
     isLoadingPositionNfts: !error && !positionNftsArray,
     errorPositionNfts: error,
+  };
+};
+
+export const useIncentiveList = () => {
+  // fetcher function for useSwr of useMaticBalance()
+  const fetchIncentiveList = async (url) => {
+    console.log("inside fetchIncentiveList, URL: ", url);
+
+    let incentiveArray;
+    const query = `{
+      incentives(where: {
+        pool: "${ethConfig?.mainnet?.uniswap?.mntlEthPool?.address}"
+      }) {
+        id
+        rewardToken
+        pool
+        endTime
+        ended
+        reward
+        startTime
+        reward
+        refundee
+      }
+    }`;
+
+    // explorer: https://thegraph.com/hosted-service/subgraph/revert-finance/uni-v3-staker-mainnet
+    const stakedPositionsNftApi =
+      "https://api.thegraph.com/subgraphs/name/revert-finance/uni-v3-staker-mainnet";
+    // use a try catch block for creating rich Error object
+    try {
+      // fetch the post request of graph query
+      const res = await fetch(stakedPositionsNftApi, {
+        method: "POST",
+        body: JSON.stringify({ query }),
+      });
+
+      const responseObject = await res.json();
+      const unfilteredIncentiveArray = responseObject?.data?.incentives || [];
+
+      incentiveArray = unfilteredIncentiveArray;
+
+      // console.log("swr fetcher success: ", url);
+    } catch (error) {
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
+      throw error;
+    }
+
+    // return the data
+    return incentiveArray;
+  };
+
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: incentiveArray, error } = useSWR(
+    ["useIncentiveList"],
+    fetchIncentiveList,
+    {
+      fallbackData: [],
+    }
+  );
+
+  return {
+    incentiveList: incentiveArray,
+    isLoadingIncentiveList: !error && !incentiveArray,
+    errorIncentiveList: error,
   };
 };
 

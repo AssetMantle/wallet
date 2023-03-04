@@ -8,10 +8,12 @@ import {
   defaultChainName,
   defaultChainSymbol,
   gravityChainName,
+  toastConfig,
 } from "../config";
 import {
   formConstants,
   fromChainDenom,
+  fromDenom,
   sendIbcTokenToGravity,
   toDenom,
   useAvailableBalance,
@@ -67,7 +69,7 @@ const MntlToGravityBridge = () => {
             transferAmount: action.payload,
             errorMessages: {
               ...state.errorMessages,
-              transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
+              transferAmountErrorMsg: formConstants.insufficientBalanceErrorMsg,
             },
           };
         }
@@ -101,15 +103,11 @@ const MntlToGravityBridge = () => {
         else {
           // delete the error message key if already exists
           delete state.errorMessages?.transferAmountErrorMsg;
-          console.log(
-            "state error message: ",
-            state.errorMessages?.transferAmountErrorMsg
-          );
           return {
             ...state,
-            transferAmount: fromChainDenom(
-              parseFloat(availableBalance) - parseFloat(defaultChainGasFee)
-            ).toString(),
+            transferAmount: BigNumber(fromDenom(availableBalance))
+              .minus(BigNumber(fromDenom(defaultChainGasFee)))
+              .toString(),
           };
         }
       }
@@ -172,29 +170,15 @@ const MntlToGravityBridge = () => {
         render: <CustomToastWithLink txHash={txHash} />,
         type: "success",
         isLoading: false,
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
         toastId: txHash,
+        ...toastConfig,
       });
     } else {
       toast.update(id, {
-        render: "Transaction failed.Try Again",
+        render: "Transaction failed. Try Again",
         type: "error",
         isLoading: false,
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
+        ...toastConfig,
       });
     }
   };
@@ -229,16 +213,7 @@ const MntlToGravityBridge = () => {
       const gravityAddress = convertBech32Address(address, gravityChainName);
 
       // create transaction
-      const id = toast.loading("Transaction initiated ...", {
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      const id = toast.loading("Transaction initiated ...", toastConfig);
       const { response, error } = await sendIbcTokenToGravity(
         address,
         gravityAddress,
@@ -273,7 +248,7 @@ const MntlToGravityBridge = () => {
 
   // DISPLAY VARIABLES
   const displayShortenedAddress = shortenAddress(address);
-  const displayAvailableBalance = fromChainDenom(availableBalance).toString();
+  const displayAvailableBalance = fromChainDenom(availableBalance);
   const displayAvailableBalanceDenom = defaultChainSymbol;
   const isSubmitDisabled =
     status != "Connected" || !isObjEmpty(formState?.errorMessages);

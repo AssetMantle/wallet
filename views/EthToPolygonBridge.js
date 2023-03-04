@@ -1,33 +1,56 @@
+import { useChain } from "@cosmos-kit/react";
 import { disconnect } from "@wagmi/core";
 import { useWeb3Modal } from "@web3modal/react";
 import BigNumber from "bignumber.js";
+import { ethers } from "ethers";
 import Link from "next/link";
 import { useReducer } from "react";
 import { toast } from "react-toastify";
-import { useAccount, useBalance } from "wagmi";
 import {
-  defaultChainGasFee,
+  erc20ABI,
+  useAccount,
+  useBalance,
+  useContractRead,
+  useContractWrite,
+  usePrepareContractWrite,
+} from "wagmi";
+import {
+  defaultChainName,
   defaultChainSymbol,
   ethereumChainSymbol,
+  gravityChainName,
   placeholderAvailableBalance,
+  toastConfig,
 } from "../config";
 import {
   approveMaxDeposit,
   decimalize,
   depositMntlToken,
+  ethConfig,
   formConstants,
   fromDenom,
   parentERC20TokenAddress,
   placeholderAddressEth,
+  PREPARE_CONTRACT_ERROR,
   toDenom,
   useAllowance,
 } from "../data";
 import {
+  convertBech32Address,
   handleCopy,
   isObjEmpty,
   shortenEthAddress,
   useIsMounted,
 } from "../lib";
+
+const gravityEthereumBridgeContract =
+  ethConfig?.mainnet?.gravity?.ethereumBridge;
+const chainID = ethConfig?.mainnet?.chainID;
+const hookArgs = { watch: true, chainId: chainID };
+const mntlTokenContract = {
+  address: ethConfig?.mainnet?.token?.parent?.erc20,
+  abi: erc20ABI,
+};
 
 const EthToPolygonBridge = () => {
   // WALLET HOOKS
@@ -35,15 +58,36 @@ const EthToPolygonBridge = () => {
   const { open } = useWeb3Modal();
   // before useAccount, define the isMounted() hook to deal with SSR issues
   const isMounted = useIsMounted();
+  // read the allowance of polygon deposit
   const { allowance } = useAllowance();
+  // hook to get the cosmos wallet
+  const chainContext5 = useChain(defaultChainName);
+  const { address: mantleAddress, status: mantleStatus } = chainContext5;
+  const gravityAddress = convertBech32Address(mantleAddress, gravityChainName);
 
-  // books to get the address of the connected wallet
+  // hook to get the address of the connected ethereum wallet
   const { address, isConnected, connector } = useAccount();
+  const isWalletEthConnected = isMounted() && isConnected;
+  const isWalletCosmosConnected = isMounted() && mantleStatus == "Connected";
+  const MAX_UINT256 = ethers.constants.MaxUint256;
+  // const MAX_UINT256 = BigNumber("1.157920892373162e+71");
+  let toastId1, toastId2, toastId3, toastId4;
+
+  // wagmi hook to read the allowance of gravity deposit
+  const { data: allowanceGravity } = useContractRead({
+    ...mntlTokenContract,
+    functionName: "allowance",
+    args: [address, gravityEthereumBridgeContract?.address],
+    select: (data) => data?.toString?.(),
+    enabled: isWalletEthConnected && address,
+    ...hookArgs,
+  });
 
   // get the MNTL token balance using wagmi hook
   const { data: mntlEthBalanceData } = useBalance({
     address: address,
     token: parentERC20TokenAddress,
+    watch: true,
   });
 
   const mntlEthBalance = toDenom(mntlEthBalanceData?.formatted);
@@ -51,6 +95,7 @@ const EthToPolygonBridge = () => {
   // get the ETH balance using wagmi hook
   const { data: ethBalanceData } = useBalance({
     address: address,
+    watch: true,
   });
 
   // FORM REDUCER
@@ -67,7 +112,7 @@ const EthToPolygonBridge = () => {
         // if amount is greater than current balance, populate error message and update amount
         if (
           BigNumber(action.payload).isNaN() ||
-          BigNumber(action.payload) <= 0
+          BigNumber(action.payload).isLessThanOrEqualTo(0)
         ) {
           return {
             ...state,
@@ -78,7 +123,6 @@ const EthToPolygonBridge = () => {
             },
           };
         } else if (
-          BigNumber(mntlEthBalance).isNaN() ||
           BigNumber(toDenom(action.payload)).isGreaterThan(
             BigNumber(mntlEthBalance)
           )
@@ -105,28 +149,10 @@ const EthToPolygonBridge = () => {
 
       case "SET_MAX_AMOUNT": {
         // if available balance is invalid, set error message
-        if (
-          BigNumber(mntlEthBalance).isNaN() ||
-          BigNumber(mntlEthBalance).isLessThan(BigNumber(defaultChainGasFee))
-        ) {
-          return {
-            ...state,
-            transferAmount: mntlEthBalance,
-            errorMessages: {
-              ...state.errorMessages,
-              transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
-            },
-          };
-        }
-        // if valid available balance then set half value
-        else {
-          // delete the error message key if already exists
-          delete state.errorMessages?.transferAmountErrorMsg;
-          return {
-            ...state,
-            transferAmount: fromDenom(mntlEthBalance),
-          };
-        }
+        return {
+          ...state,
+          transferAmount: fromDenom(mntlEthBalance),
+        };
       }
 
       case "SUBMIT": {
@@ -167,6 +193,66 @@ const EthToPolygonBridge = () => {
 
   const [formState, formDispatch] = useReducer(formReducer, initialState);
 
+  // hooks to prepare and send ethereum transaction for token approval
+  const { config: configApprove } = usePrepareContractWrite({
+    ...mntlTokenContract,
+    functionName: "approve",
+    args: [gravityEthereumBridgeContract?.address, MAX_UINT256],
+    enabled: isWalletEthConnected && address,
+    chainId: chainID,
+    onError(error) {
+      console.error("prepare error: ", error);
+      if (true)
+        toast.error(PREPARE_CONTRACT_ERROR, {
+          ...toastConfig,
+        });
+    },
+  });
+
+  const { writeAsync } = useContractWrite({
+    ...configApprove,
+    onError(error) {
+      console.error(error);
+      notify(null, toastId4, "Transaction Aborted. Try again.");
+      toastId4 = null;
+    },
+  });
+
+  // hooks to prepare and send ethereum transaction for token transfer to gravity
+  const { config: configSendGravity } = usePrepareContractWrite({
+    ...gravityEthereumBridgeContract,
+    functionName: "sendToCosmos",
+    args: [
+      mntlTokenContract?.address,
+      gravityAddress,
+      toDenom(formState?.transferAmount),
+    ],
+    enabled:
+      isWalletEthConnected &&
+      isWalletCosmosConnected &&
+      address &&
+      gravityAddress &&
+      formState?.transferAmount,
+    chainId: chainID,
+    onError(error) {
+      console.error("prepare error: ", error);
+      /* if (true) {
+        toast.error(PREPARE_CONTRACT_ERROR, {
+          ...toastConfig,
+        });
+      } */
+    },
+  });
+
+  const { writeAsync: writeAsyncGravity } = useContractWrite({
+    ...configSendGravity,
+    onError(error) {
+      console.error(error);
+      notify(null, toastId3, "Transaction Aborted. Try again.");
+      toastId3 = null;
+    },
+  });
+
   const CustomToastWithLink = ({ txHash, message }) => (
     <p>
       {message}
@@ -185,29 +271,15 @@ const EthToPolygonBridge = () => {
         render: <CustomToastWithLink message={message} txHash={txHash} />,
         type: "success",
         isLoading: false,
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
         toastId: txHash,
+        ...toastConfig,
       });
     } else {
       toast.update(id, {
         render: message,
         type: "error",
         isLoading: false,
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
+        ...toastConfig,
       });
     }
   };
@@ -231,32 +303,31 @@ const EthToPolygonBridge = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    console.log("inside handleSubmit()");
+  const handleSubmitPolygon = async (e) => {
+    console.log("inside handleSubmitPolygon()");
     e.preventDefault();
 
-    // execute the dispatch operations pertaining to submit
+    // copy form states to local variables
+    const localTransferAmount = formState?.transferAmount;
+    const localMntlEthBalance = mntlEthBalanceData?.formatted;
+
+    // manually trigger form validation messages if any
     formDispatch({
-      type: "SUBMIT",
+      type: "CHANGE_AMOUNT",
+      payload: localTransferAmount,
     });
 
-    // if no validation errors, proceed to transaction processing
-    if (
-      formState?.transferAmount &&
-      !isNaN(parseFloat(formState?.transferAmount)) &&
-      parseFloat(formState?.transferAmount) > 0 &&
-      isObjEmpty(formState?.errorMessages)
-    ) {
-      const id = toast.loading("Transaction initiated ...", {
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+    // manually calculate form validation logic
+    const isFormValid =
+      !BigNumber(localTransferAmount).isNaN() &&
+      !BigNumber(localTransferAmount).isLessThanOrEqualTo(0) &&
+      BigNumber(toDenom(localTransferAmount)).isLessThanOrEqualTo(
+        BigNumber(toDenom(localMntlEthBalance))
+      ) &&
+      isObjEmpty(formState?.errorMessages);
+
+    if (isFormValid) {
+      toastId1 = toast.loading("Transaction initiated ...", toastConfig);
       // define local variables
       const localTransferAmount = formState?.transferAmount;
 
@@ -268,40 +339,104 @@ const EthToPolygonBridge = () => {
       );
       console.log("response: ", response, " error: ", error);
 
+      if (response) {
+        notify(response, toastId1, "Transfer might take upto 22 mins. Check ");
+      } else {
+        notify(null, toastId1, "Transaction Aborted. Try again.");
+      }
       // reset the form values
       formDispatch({ type: "RESET" });
-      if (response) {
-        notify(response, id, "Transaction might take upto 22 mins. Check ");
-      } else {
-        notify(null, id, "Transaction Aborted. Try again.");
-      }
     }
   };
 
-  const handleApproveSubmit = async (e) => {
-    console.log("inside handleApproveSubmit()");
+  const handleApproveSubmitPolygon = async (e) => {
+    console.log("inside handleApproveSubmitPolygon()");
     e.preventDefault();
 
     try {
       // initiate the toast
-      const id2 = toast.loading("Transaction initiated ...", {
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      toastId2 = toast.loading("Transaction initiated ...", toastConfig);
 
       // create transaction
       const { response, error } = await approveMaxDeposit(address, connector);
       console.log("response: ", response, " error: ", error);
       if (response) {
-        notify(response, id2, "Transaction Submitted. Check ");
+        notify(response, toastId2, "Transaction Submitted. Check ");
       } else {
-        notify(null, id2, "Transaction Aborted. Try again.");
+        notify(null, toastId2, "Transaction Aborted. Try again.");
+      }
+    } catch (error) {
+      console.error("Runtime Error: ", error);
+    }
+  };
+
+  const handleSubmitGravity = async (e) => {
+    console.log("inside handleSubmitGravity()");
+    e.preventDefault();
+
+    // copy form states to local variables
+    const localTransferAmount = formState?.transferAmount;
+    const localMntlEthBalance = mntlEthBalanceData?.formatted;
+
+    // manually trigger form validation messages if any
+    formDispatch({
+      type: "CHANGE_AMOUNT",
+      payload: localTransferAmount,
+    });
+
+    // manually calculate form validation logic
+    const isFormValid =
+      !BigNumber(localTransferAmount).isNaN() &&
+      !BigNumber(localTransferAmount).isLessThanOrEqualTo(0) &&
+      BigNumber(toDenom(localTransferAmount)).isLessThanOrEqualTo(
+        BigNumber(toDenom(localMntlEthBalance))
+      ) &&
+      isObjEmpty(formState?.errorMessages);
+
+    if (isFormValid) {
+      try {
+        // initiate the toast
+        toastId3 = toast.loading("Transaction initiated ...", toastConfig);
+
+        // create transaction
+        const transactionResponse = await writeAsyncGravity();
+
+        if (transactionResponse?.hash) {
+          notify(
+            transactionResponse?.hash,
+            toastId3,
+            "Transfer might take upto 20 mins. Check "
+          );
+        } else {
+          notify(null, toastId3, "Transaction Aborted. Try again.");
+        }
+      } catch (error) {
+        console.error("Runtime Error: ", error);
+      }
+      formDispatch({ type: "RESET" });
+    }
+  };
+
+  const handleApproveSubmitGravity = async (e) => {
+    console.log("inside handlhandleApproveSubmitGravityeSubmit()");
+    e.preventDefault();
+
+    try {
+      // initiate the toast
+      toastId4 = toast.loading("Transaction initiated ...", toastConfig);
+
+      // create transaction
+      const transactionResponse = await writeAsync();
+
+      console.log("response: ", transactionResponse);
+      if (transactionResponse?.hash) {
+        notify(
+          transactionResponse?.hash,
+          toastId4,
+          "Transaction Submitted. Check "
+        );
+      } else {
+        notify(null, toastId4, "Transaction Aborted. Try again.");
       }
     } catch (error) {
       console.error("Runtime Error: ", error);
@@ -321,7 +456,6 @@ const EthToPolygonBridge = () => {
   };
 
   // DISPLAY VARIABLES
-  const isWalletEthConnected = isMounted() && isConnected;
   const displayShortenedAddress = shortenEthAddress(
     address || placeholderAddressEth
   );
@@ -329,6 +463,7 @@ const EthToPolygonBridge = () => {
   const displayAvailableBalance = !isWalletEthConnected
     ? decimalize(placeholderAvailableBalance)
     : decimalize(mntlEthBalanceData?.formatted);
+
   const displayAvailableBalanceDenom = defaultChainSymbol;
 
   const displayEthBalance = !isWalletEthConnected
@@ -342,10 +477,21 @@ const EthToPolygonBridge = () => {
     formState?.errorMessages?.transferAmountErrorMsg;
   const isSubmitDisabled =
     !isWalletEthConnected || !isObjEmpty(formState?.errorMessages);
-  const isApproveRequired =
+  const isSubmitDisabledGravity =
+    !isWalletEthConnected ||
+    !isWalletCosmosConnected ||
+    !isObjEmpty(formState?.errorMessages);
+  const isApproveRequiredPolygon =
     isWalletEthConnected &&
-    (BigNumber(allowance).isZero() ||
+    (BigNumber(allowance).isLessThanOrEqualTo(0) ||
       BigNumber(allowance).isLessThan(
+        BigNumber(formState?.transferAmount || 0)
+      ));
+
+  const isApproveRequiredGravity =
+    isWalletEthConnected &&
+    (BigNumber(allowanceGravity).isLessThanOrEqualTo(0) ||
+      BigNumber(allowanceGravity).isLessThan(
         BigNumber(formState?.transferAmount || 0)
       ));
 
@@ -358,6 +504,7 @@ const EthToPolygonBridge = () => {
       <i className="bi bi-link-45deg" /> Connect Wallet
     </button>
   );
+
   const connectButtonJSX = isWalletEthConnected ? (
     <>
       <button
@@ -378,40 +525,53 @@ const EthToPolygonBridge = () => {
     notConnectedJSX
   );
 
-  const submitButtonJSX = isApproveRequired ? (
+  const depositToPolygonButtonJSX = isApproveRequiredPolygon ? (
     <button
       className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
-      onClick={handleApproveSubmit}
+      onClick={handleApproveSubmitPolygon}
     >
-      Approve Deposit <i className="bi bi-hand-thumbs-up-fill" />
+      Approve Polygon Send <i className="bi bi-hand-thumbs-up-fill" />
     </button>
   ) : (
     <button
       className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
       disabled={isSubmitDisabled}
-      onClick={handleSubmit}
+      onClick={handleSubmitPolygon}
     >
-      Send to Polygon Chain <i className="bi bi-arrow-down" />
+      Send to Polygon <i className="bi bi-arrow-down" />
     </button>
   );
 
-  /*  console.log(
+  const depositToGravityButtonJSX = isApproveRequiredGravity ? (
+    <button
+      className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2"
+      onClick={handleApproveSubmitGravity}
+    >
+      Approve Gravity Send <i className="bi bi-hand-thumbs-up-fill" />
+    </button>
+  ) : (
+    <button
+      className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2"
+      disabled={isSubmitDisabledGravity}
+      onClick={handleSubmitGravity}
+    >
+      Send to Gravity <i className="bi bi-arrow-up" />
+    </button>
+  );
+
+  /* console.log(
     " isConnected: ",
-    isMounted() && isConnected,
-    " address: ",
-    isMounted() && address,
-    " selectedChain: ",
-    selectedChain,
-    " isMounted(): ",
-    isMounted(),
+    isConnected,
     "mntl balance: ",
     displayAvailableBalance,
     " eth balance: ",
     displayEthBalance,
-    " mntlEthBalanceObject: ",
-    mntlEthBalanceObject,
-    " isApproveRequired: ",
-    isApproveRequired
+    " isApproveRequiredPolygon: ",
+    isApproveRequiredPolygon,
+    " maxval: ",
+    MAX_UINT256.toString(),
+    " mntlEthBalanceData?.formatted: ",
+    mntlEthBalanceData?.formatted
   ); */
 
   return (
@@ -463,10 +623,8 @@ const EthToPolygonBridge = () => {
           {displayFormAmountErrorMsg}
         </small>
         <div className="d-flex align-items-center justify-content-end gap-3">
-          {/* <button className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2">
-          Send to Gravity bridge <i className="bi bi-arrow-up" />
-        </button> */}
-          {submitButtonJSX}
+          {depositToGravityButtonJSX}
+          {depositToPolygonButtonJSX}
         </div>
       </div>
     </>

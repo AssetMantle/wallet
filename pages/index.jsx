@@ -15,6 +15,7 @@ import {
   defaultChainName,
   defaultChainSymbol,
   getBalanceStyle,
+  toastConfig,
 } from "../config";
 import {
   formConstants,
@@ -122,7 +123,7 @@ export default function Transact() {
         // if amount is greater than current balance, populate error message and update amount
         if (
           BigNumber(action.payload).isNaN() ||
-          BigNumber(action.payload) <= 0
+          BigNumber(action.payload).isLessThanOrEqualTo(0)
         ) {
           return {
             ...state,
@@ -143,7 +144,7 @@ export default function Transact() {
             transferAmount: action.payload,
             errorMessages: {
               ...state.errorMessages,
-              transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
+              transferAmountErrorMsg: formConstants.insufficientBalanceErrorMsg,
             },
           };
         }
@@ -329,35 +330,22 @@ export default function Transact() {
         render: <CustomToastWithLink txHash={txHash} />,
         type: "success",
         isLoading: false,
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
         toastId: txHash,
+        ...toastConfig,
       });
     } else {
       toast.update(id, {
-        render: "Transaction failed.Try Again",
+        render: "Transaction failed. Try Again",
         type: "error",
         isLoading: false,
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
+        ...toastConfig,
       });
     }
   };
 
   // CONTROLLER FUNCTIONS
   const handleSubmit = async (e) => {
+    e.preventDefault();
     // copy form states to local variables
     const localRecipientAddress = formState.recipientAddress;
     const localTransferAmount = formState.transferAmount;
@@ -384,16 +372,7 @@ export default function Transact() {
       !isInvalidAddress(formState?.recipientAddress);
 
     if (isFormValid) {
-      const id = toast.loading("Transaction initiated ...", {
-        position: "bottom-center",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      const id = toast.loading("Transaction initiated ...", toastConfig);
 
       const { response, error } = await sendTokensTxn(
         address,
@@ -419,19 +398,6 @@ export default function Transact() {
     !isObjEmpty(formState?.errorMessages) || status != "Connected";
   const displayAmountValue = formState?.transferAmount;
   const displayAddress = address || placeholderAddress;
-  const isAmountError = !!formState?.errorMessages?.transferAmountErrorMsg;
-  const displayAmountErrorMsg =
-    formState?.errorMessages?.transferAmountErrorMsg ==
-    formConstants.transferAmountErrorMsg ? (
-      <span>
-        Insufficient Balance. To get more tokens go to{" "}
-        <Link href="/trade">
-          <a style={{ textDecoration: "underline" }}>Trade</a>
-        </Link>
-      </span>
-    ) : (
-      formState?.errorMessages?.transferAmountErrorMsg
-    );
 
   return (
     <>
@@ -586,12 +552,21 @@ export default function Transact() {
                     max
                   </button>
                 </div>
-                <small
+                {/* <small
                   id="amountInputErrorMsg"
                   className="form-text text-danger d-flex align-items-center gap-1"
                 >
                   {isAmountError && <i className="bi bi-info-circle" />}{" "}
                   {displayAmountErrorMsg}
+                </small> */}
+                <small
+                  id="amountInputErrorMsg"
+                  className="form-text text-danger d-flex align-items-center gap-1"
+                >
+                  {formState?.errorMessages?.transferAmountErrorMsg && (
+                    <i className="bi bi-info-circle" />
+                  )}{" "}
+                  {formState?.errorMessages?.transferAmountErrorMsg}
                 </small>
               </div>
 
