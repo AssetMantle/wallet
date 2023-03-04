@@ -1,7 +1,12 @@
 import { useChain } from "@cosmos-kit/react";
 import BigNumber from "bignumber.js";
 import React from "react";
-import { defaultChainName, getBalanceStyle, usdSymbol } from "../../config";
+import {
+  defaultChainName,
+  defaultChainSymbol,
+  getBalanceStyle,
+  usdSymbol,
+} from "../../config";
 import {
   decimalize,
   fromChainDenom,
@@ -11,12 +16,8 @@ import {
 } from "../../data";
 
 export const TotalBalance = () => {
-  const {
-    denomTotalBalance,
-    totalBalance,
-    isErrorTotalBalance,
-    isLoadingTotalBalance,
-  } = useTotalBalance();
+  const { totalBalance, isErrorTotalBalance, isLoadingTotalBalance } =
+    useTotalBalance();
 
   const chainContext = useChain(defaultChainName);
   const { status } = chainContext;
@@ -34,12 +35,14 @@ export const TotalBalance = () => {
         "caption2 text-gray"
       );
 
+  const denomDisplay = defaultChainSymbol;
+
   return (
     <>
       <p className={isConnected ? "caption" : "caption text-gray"}>
         {totalBalanceDisplay}
         &nbsp;
-        {denomTotalBalance}
+        {denomDisplay}
       </p>
     </>
   );
