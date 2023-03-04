@@ -315,7 +315,7 @@ const PolygonBridge = () => {
             className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
             disabled={isSubmitDisabled}
           >
-            Send to Ethereum Chain <i className="bi bi-arrow-down" />
+            Send to Ethereum Chain <i className="bi bi-arrow-up" />
           </button>
         </div>
       </div>
