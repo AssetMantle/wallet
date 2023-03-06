@@ -8,7 +8,7 @@ import {
 import useSWR from "swr";
 import { configureChains, createClient, useAccount } from "wagmi";
 import { mainnet, polygon } from "wagmi/chains";
-import { placeholderAvailableBalance } from "../config";
+import { placeholderAvailableBalance, slowRefreshInterval } from "../config";
 import nonFungiblePositionManagerABI from "../data/contracts/nonFungiblePositionManagerABI.json";
 import gravityBridgeABI from "../data/contracts/gravityBridgeABI.json";
 import uniV3StakerABI from "../data/contracts/uniV3StakerABI.json";
@@ -27,6 +27,7 @@ export const ethConfig = {
     network: "mainnet",
     version: "v1",
     chainID: 1,
+    polygonChainId: 137,
     rpc: {
       pos: {
         parent: process.env.ETH_MAINNET_RPC,
@@ -141,6 +142,10 @@ export const ethConfig = {
       address: process.env.USER2_FROM,
     },
     proofApi: process.env.PROOF_API || "https://apis.matic.network/",
+    polygonOpenApi: {
+      url: "https://open-api.polygon.technology/api/v1/burn/address?userAddress=0xae6094170ABC0601b4bbe933D04368cD407C186a&isPos=true&tokenType=ERC20&page=0&pageSize=20",
+      key: "64cbf956-198a-47e0-b4a1-2b3432d8f70d",
+    },
   },
   testnet: {
     network: "testnet",
@@ -478,10 +483,57 @@ export const useIncentiveList = () => {
   };
 };
 
+// swr hook to query the list of burnt and checkpointed txns to be exited from polygon
+export const useCheckpointedBurnTransactions = () => {
+  // get the address from connected web3Modal
+  const { address } = useAccount();
+  const polygonOpenApi = ethConfig?.mainnet?.polygonOpenApi?.url;
+  const polygonOpenApiKey = ethConfig?.mainnet?.polygonOpenApi?.key;
+  const polytonMntlToken = ethConfig?.mainnet?.token?.child?.erc20;
+
+  // fetcher to get the list of burn transactions for an address
+  const fetchBurnTransactions = async (url, address) => {
+    console.log(
+      "inside fetchBurnTransactions, url: ",
+      url,
+      " address: ",
+      address
+    );
+    const res = await fetch(polygonOpenApi, {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        "x-access-token": polygonOpenApiKey,
+      },
+    });
+    const data = await res?.json?.();
+    const burnTransactionsArray = data?.result?.filter?.(
+      (txnObject) =>
+        txnObject?.childToken == polytonMntlToken &&
+        txnObject?.transactionStatus == "burnt"
+    );
+    return burnTransactionsArray;
+  };
+
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: burnTransactionsArray, error } = useSWR(
+    address ? ["useCheckpointedBurnTransactions", address] : null,
+    fetchBurnTransactions,
+    {
+      fallbackData: [],
+      refreshInterval: slowRefreshInterval,
+    }
+  );
+
+  return {
+    burnTransactions: burnTransactionsArray,
+    isLoadingBurnTransactions: !error && !burnTransactionsArray,
+    errorBurnTransactions: error,
+  };
+};
+
 // swr hook to query the MNTL Token Balance in Eth Chain
 export const useAllowance = () => {
-  console.log("inside useAllowance");
-
   // get the address from connected web3Modal
   const { address, connector } = useAccount();
   // const ethAddress = isConnected ? address : placeholderAddressEth;
@@ -492,7 +544,7 @@ export const useAllowance = () => {
 
   // fetcher function for useSwr of useMntlEthBalance()
   const fetchAllowance = async (url, address, connector) => {
-    console.log("inside fetchAllowance, address: ", address);
+    // console.log("inside fetchAllowance, address: ", address);
     let allowanceValue;
 
     // use a try catch block for creating rich Error object
@@ -645,6 +697,65 @@ export const approveMaxDeposit = async (address, connector) => {
     // console.log("swr fetcher success: ", url);
   } catch (error) {
     console.error(`error: ${error}`);
+    return { response: null, error: error };
+  }
+
+  // return the data
+  return { response: response, error: null };
+};
+
+export const withdrawMntlToken = async (address, amount, connector) => {
+  console.log(
+    "inside withdrawMntlToken, address: ",
+    address,
+    " amount: ",
+    amount
+  );
+  let response;
+
+  // convert amount to denom amount
+  let denomAmount = toChainDenom(amount);
+  const polygonChainId = ethConfig?.mainnet?.polygonChainId;
+
+  // use a try catch block for creating rich Error object
+  try {
+    // declare a new POS client
+    const posClient = new POSClient();
+    // get the Ethereum Provider
+    // const ethereumProvider = await detectEthereumProvider();
+    const newProvider = await connector.getProvider();
+    console.log("newProvider: ", newProvider);
+
+    // initialize POS client
+    await posClient.init({
+      network: ethConfig[selectedEthNetwork]?.network, // 'testnet' or 'mainnet'
+      version: ethConfig[selectedEthNetwork]?.version, // 'mumbai' or 'v1'
+      parent: {
+        provider: newProvider,
+      },
+      child: {
+        provider: newProvider,
+      },
+    });
+
+    // get the parent ERC20 token
+    const childERC20Token = posClient.erc20(childERC20TokenAddress);
+
+    // Function: depositFor(address user, address rootToken, bytes depositData) in rootChainManagerProxy
+    const transactionResponse = await childERC20Token.withdrawStart(
+      denomAmount,
+      {
+        from: address,
+        chainId: polygonChainId,
+      }
+    );
+
+    const txHash = await transactionResponse.getTransactionHash();
+
+    response = txHash;
+    // console.log("swr fetcher success: ", url);
+  } catch (error) {
+    console.error(`error: ${error.message}`);
     return { response: null, error: error };
   }
 

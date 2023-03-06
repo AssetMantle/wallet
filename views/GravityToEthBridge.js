@@ -458,7 +458,7 @@ const GravityToEthBridge = () => {
     connectEthWalletJSX
   );
 
-  console.log(
+  /* console.log(
     " gravityAddress: ",
     gravityAddress,
     " isMounted: ",
@@ -467,7 +467,7 @@ const GravityToEthBridge = () => {
     gravityStatus,
     " feedata: ",
     JSON.stringify(gasData?.formatted)
-  );
+  ); */
 
   return (
     <div className={`bg-gray-800 p-3 rounded-4 d-flex flex-column gap-3 ${""}`}>
