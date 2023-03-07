@@ -42,7 +42,7 @@ const useStakeReducer = () => {
       case "SET_SELECTED_VALIDATORS": {
         return {
           ...state,
-          selectedValidators: [...state?.selectedValidators, action.payload],
+          selectedValidators: action.payload,
         };
       }
 
@@ -52,14 +52,6 @@ const useStakeReducer = () => {
           selectedValidators: [],
           undelegationAmount: "",
         };
-      }
-
-      case "REMOVE_FROM_SELECTED_VALIDATORS": {
-        const validators = state?.selectedValidators;
-        const filteredValidators = validators.filter(
-          (item) => item !== action.payload
-        );
-        return { ...state, selectedValidators: filteredValidators };
       }
 
       case "SET_MAX_DELEGATION_AMOUNT": {

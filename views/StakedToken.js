@@ -93,7 +93,7 @@ export default function StakedToken({
               stakeDispatch={stakeDispatch}
             />
           </Suspense>
-          {stakeState?.selectedValidators?.length === 1 ? (
+          {stakeState?.selectedValidators?.length == 1 ? (
             <button
               className="button-primary text-center px-3 py-2"
               style={{ maxWidth: "100%" }}

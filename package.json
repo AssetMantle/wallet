@@ -50,6 +50,7 @@
     "@nivo/sunburst": "^0.80.0",
     "@osmonauts/lcd": "^0.8.0",
     "@splidejs/react-splide": "^0.7.12",
+    "@tanstack/react-table": "^8.7.9",
     "@web3modal/ethereum": "^2.1.1",
     "@web3modal/react": "^2.1.1",
     "bignumber.js": "^9.1.1",
