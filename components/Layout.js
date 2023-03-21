@@ -26,7 +26,7 @@ export default function Layout({ children }) {
       </div>
       <div
         className="d-flex d-md-none overflow-hidden show-on-mobile align-items-center justify-content-center p-3"
-        style={{ height: "100vh" }}
+        style={{ height: "100dvh" }}
       >
         <div
           className="d-flex flex-column rounded-3 bg-gray-700 overflow-hidden"
