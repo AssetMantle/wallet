@@ -17,6 +17,7 @@ export default function Banner() {
         arrowPath:
           "M23 13L21.59 14.41L26.17 19H10V21H26.17L21.58 25.59L23 27L30 20L23 13Z",
       }}
+      className="bg-yellow-100"
     >
       <SplideSlide>
         <div
