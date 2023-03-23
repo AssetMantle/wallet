@@ -35,7 +35,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
   const [activeValidators, setActiveValidators] = useState(true);
   const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status } = walletManager;
-  const { delegatedValidators, totalDelegatedAmount } =
+  const { delegatedValidators, totalDelegatedAmount, isValidating } =
     useDelegatedValidators();
   const { mntlUsdValue } = useMntlUsd();
   let validatorsArray = allValidators.sort((a, b) => b.tokens - a.tokens);
@@ -186,7 +186,13 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
             </p>
           )}
           <p className={isConnected ? "caption" : "caption text-gray"}>
-            {delegationsDisplay}
+            {isValidating ? (
+              <p className="placeholder-glow">
+                <span className="placeholder col-6"></span>
+              </p>
+            ) : (
+              delegationsDisplay
+            )}{" "}
             &nbsp;{denomDisplay}
           </p>
           <p className={isConnected ? "caption2" : "caption2 text-gray"}>

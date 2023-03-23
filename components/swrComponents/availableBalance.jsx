@@ -21,7 +21,7 @@ export const AvailableBalance = () => {
   console.log("inside AvailableBalance");
   const walletManager = useChain(defaultChainName);
   const { status } = walletManager;
-  const { availableBalance } = useAvailableBalance();
+  const { availableBalance, isValidating, isLoading } = useAvailableBalance();
 
   const balanceDisplay =
     status === "Connected"
@@ -35,7 +35,14 @@ export const AvailableBalance = () => {
   return (
     <>
       <p className={status === "Connected" ? "caption" : "caption text-gray"}>
-        {balanceDisplay} {denomDisplay}
+        {isValidating ? (
+          <p className="placeholder-glow">
+            <span className="placeholder col-6"></span>
+          </p>
+        ) : (
+          balanceDisplay
+        )}{" "}
+        {denomDisplay}
       </p>
     </>
   );

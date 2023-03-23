@@ -377,7 +377,11 @@ export const useDelegatedValidators = () => {
   // console.log("address: ", address, " currentWalletInfo: ", currentWalletInfo);
 
   // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: delegatedObject, error } = useSwr(
+  const {
+    data: delegatedObject,
+    error,
+    isValidating,
+  } = useSwr(
     address ? ["useDelegatedValidators", address] : null,
     fetchTotalDelegated,
     {
@@ -399,6 +403,7 @@ export const useDelegatedValidators = () => {
     delegatedValidators: delegatedObject?.delegatedValidators,
     totalDelegatedAmount: delegatedObject?.totalDelegatedAmount,
     isLoadingDelegatedAmount: !error && !delegatedObject,
+    isValidating: isValidating,
     errorDelegatedAmount: error,
   };
 };
@@ -523,7 +528,11 @@ export const useAvailableBalance = () => {
   const { address } = walletManager;
 
   // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: balanceObject, error } = useSwr(
+  const {
+    data: balanceObject,
+    error,
+    isValidating,
+  } = useSwr(
     address ? ["useAvailableBalance", address] : null,
     fetchAvailableBalance,
     {
@@ -536,6 +545,7 @@ export const useAvailableBalance = () => {
   return {
     availableBalance: balanceObject?.amount,
     denom: balanceObject?.denom,
+    isValidating: isValidating,
     isLoadingAvailableBalance: !error && !balanceObject,
     errorAvailableBalance: error,
   };
