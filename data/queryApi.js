@@ -232,18 +232,18 @@ export const useTotalUnbonding = () => {
 
   const { data: unbondingObject, error } = useSwr(
     address ? ["useTotalUnbonding", address] : null,
-    fetchTotalUnbonding,
-    {
-      fallbackData: [
-        {
-          delegatorAddress: placeholderAddress,
-          entries: [],
-          validatorAddress: placeholderAddress,
-        },
-      ],
-      refreshInterval: defaultRefreshInterval,
-      suspense: true,
-    }
+    fetchTotalUnbonding
+    // {
+    //   fallbackData: [
+    //     {
+    //       delegatorAddress: placeholderAddress,
+    //       entries: [],
+    //       validatorAddress: placeholderAddress,
+    //     },
+    //   ],
+    //   refreshInterval: defaultRefreshInterval,
+    //   suspense: true,
+    // }
   );
 
   return {
@@ -301,17 +301,17 @@ export const useTotalRewards = () => {
 
   const { data: rewardsObject, error } = useSwr(
     address ? ["useTotalRewards", address] : null,
-    fetchTotalRewards,
-    {
-      fallbackData: [
-        {
-          validatorAddress: placeholderAddress,
-          reward: [],
-        },
-      ],
+    fetchTotalRewards
+    // {
+    //   fallbackData: [
+    //     {
+    //       validatorAddress: placeholderAddress,
+    //       reward: [],
+    //     },
+    //   ],
 
-      refreshInterval: slowRefreshInterval,
-    }
+    //   refreshInterval: slowRefreshInterval,
+    // }
   );
   return {
     allRewards: rewardsObject?.totalRewards,
@@ -377,33 +377,28 @@ export const useDelegatedValidators = () => {
   // console.log("address: ", address, " currentWalletInfo: ", currentWalletInfo);
 
   // implement useSwr for cached and revalidation enabled data retrieval
-  const {
-    data: delegatedObject,
-    error,
-    isValidating,
-  } = useSwr(
+  const { data: delegatedObject, error } = useSwr(
     address ? ["useDelegatedValidators", address] : null,
-    fetchTotalDelegated,
-    {
-      fallbackData: [
-        {
-          balance: { denom: "umntl", amount: 0 },
-          delegation: {
-            delegator_address: "delegator_address",
-            validator_address: "validator_address",
-            shares: "298317289",
-          },
-        },
-      ],
-      suspense: true,
-      refreshInterval: defaultRefreshInterval,
-    }
+    fetchTotalDelegated
+    // {
+    //   fallbackData: [
+    //     {
+    //       balance: { denom: "umntl", amount: 0 },
+    //       delegation: {
+    //         delegator_address: "delegator_address",
+    //         validator_address: "validator_address",
+    //         shares: "298317289",
+    //       },
+    //     },
+    //   ],
+    //   suspense: true,
+    //   refreshInterval: defaultRefreshInterval,
+    // }
   );
   return {
     delegatedValidators: delegatedObject?.delegatedValidators,
     totalDelegatedAmount: delegatedObject?.totalDelegatedAmount,
     isLoadingDelegatedAmount: !error && !delegatedObject,
-    isValidating: isValidating,
     errorDelegatedAmount: error,
   };
 };
@@ -528,24 +523,18 @@ export const useAvailableBalance = () => {
   const { address } = walletManager;
 
   // implement useSwr for cached and revalidation enabled data retrieval
-  const {
-    data: balanceObject,
-    error,
-    isValidating,
-  } = useSwr(
+  const { data: balanceObject, error } = useSwr(
     address ? ["useAvailableBalance", address] : null,
-    fetchAvailableBalance,
-    {
-      fallbackData: { amount: placeholderAvailableBalance, denom },
-      refreshInterval: defaultRefreshInterval,
-      // suspense: true,
-    }
+    fetchAvailableBalance
+    // {
+    //   fallbackData: { amount: placeholderAvailableBalance, denom },
+    //   refreshInterval: defaultRefreshInterval,
+    //   // suspense: true,
+    // }
   );
-
   return {
     availableBalance: balanceObject?.amount,
     denom: balanceObject?.denom,
-    isValidating: isValidating,
     isLoadingAvailableBalance: !error && !balanceObject,
     errorAvailableBalance: error,
   };
@@ -828,11 +817,11 @@ export const useTotalBalance = () => {
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: balanceValue, error } = useSwr(
     address ? ["useTotalBalance", address] : null,
-    fetchTotalBalance,
-    {
-      fallbackData: placeholderAvailableBalance,
-      refreshInterval: defaultRefreshInterval,
-    }
+    fetchTotalBalance
+    // {
+    //   fallbackData: placeholderAvailableBalance,
+    //   refreshInterval: defaultRefreshInterval,
+    // }
   );
 
   return {

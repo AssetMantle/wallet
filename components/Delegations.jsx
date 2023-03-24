@@ -35,8 +35,11 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
   const [activeValidators, setActiveValidators] = useState(true);
   const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status } = walletManager;
-  const { delegatedValidators, totalDelegatedAmount, isValidating } =
-    useDelegatedValidators();
+  const {
+    delegatedValidators,
+    totalDelegatedAmount,
+    isLoadingDelegatedAmount,
+  } = useDelegatedValidators();
   const { mntlUsdValue } = useMntlUsd();
   let validatorsArray = allValidators.sort((a, b) => b.tokens - a.tokens);
 
@@ -185,8 +188,8 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
               Cumulative Delegations
             </p>
           )}
-          <p className={isConnected ? "caption" : "caption text-gray"}>
-            {isValidating ? (
+          <div className={isConnected ? "caption" : "caption text-gray"}>
+            {isLoadingDelegatedAmount ? (
               <p className="placeholder-glow">
                 <span className="placeholder col-6"></span>
               </p>
@@ -194,11 +197,17 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
               delegationsDisplay
             )}{" "}
             &nbsp;{denomDisplay}
-          </p>
-          <p className={isConnected ? "caption2" : "caption2 text-gray"}>
-            {delegationsInUSDDisplay}
+          </div>
+          <div className={isConnected ? "caption2" : "caption2 text-gray"}>
+            {isLoadingDelegatedAmount ? (
+              <p className="placeholder-glow">
+                <span className="placeholder col-6"></span>
+              </p>
+            ) : (
+              delegationsInUSDDisplay
+            )}
             &nbsp;{usdSymbol}
-          </p>
+          </div>
           {showRedelegateUndelegateAndClaim &&
           stakeState?.selectedValidators?.length === 1 ? (
             <div className="d-flex justify-content-end">

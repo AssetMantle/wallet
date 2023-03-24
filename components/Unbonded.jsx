@@ -33,7 +33,8 @@ const Unbonded = ({
   const walletManager = useChain(defaultChainName);
   const { status } = walletManager;
   const [activeValidators, setActiveValidators] = useState(true);
-  const { totalUnbondingAmount, allUnbonding } = useTotalUnbonding();
+  const { totalUnbondingAmount, allUnbonding, isLoadingUnbonding } =
+    useTotalUnbonding();
   const { mntlUsdValue } = useMntlUsd();
   const { allValidatorsBonded } = useAllValidatorsBonded();
   const { allValidatorsUnbonded } = useAllValidatorsUnbonded();
@@ -93,14 +94,26 @@ const Unbonded = ({
         >
           Undelegating
         </p>
-        <p className={isConnected ? "caption" : "caption text-gray"}>
-          {unbondingDisplay}
+        <div className={isConnected ? "caption" : "caption text-gray"}>
+          {isLoadingUnbonding ? (
+            <p className="placeholder-glow">
+              <span className="placeholder col-6"></span>
+            </p>
+          ) : (
+            unbondingDisplay
+          )}
           &nbsp;{denomDisplay}
-        </p>
-        <p className={isConnected ? "caption2" : "caption2 text-gray"}>
-          {unbondingInUSDDisplay}
+        </div>
+        <div className={isConnected ? "caption2" : "caption2 text-gray"}>
+          {isLoadingUnbonding ? (
+            <p className="placeholder-glow">
+              <span className="placeholder col-6"></span>
+            </p>
+          ) : (
+            unbondingInUSDDisplay
+          )}
           &nbsp;{usdSymbol}
-        </p>
+        </div>
         <div className="d-flex justify-content-end">
           {allUnbonding?.length != 0 && !isSubmitDisabled ? (
             <button
