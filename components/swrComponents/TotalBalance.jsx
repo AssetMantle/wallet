@@ -39,11 +39,17 @@ export const TotalBalance = () => {
 
   return (
     <>
-      <p className={isConnected ? "caption" : "caption text-gray"}>
-        {totalBalanceDisplay}
+      <div className={isConnected ? "caption" : "caption text-gray"}>
+        {isLoadingTotalBalance ? (
+          <p className="placeholder-glow">
+            <span className="placeholder bg-light col-6"></span>
+          </p>
+        ) : (
+          totalBalanceDisplay
+        )}
         &nbsp;
         {denomDisplay}
-      </p>
+      </div>
     </>
   );
 };
@@ -77,10 +83,16 @@ export const TotalBalanceInUSD = () => {
       );
 
   return (
-    <p className={isConnected ? "caption2" : "caption2 text-gray"}>
-      {totalBalanceInUSDDisplay}
+    <div className={isConnected ? "caption2" : "caption2 text-gray"}>
+      {isLoadingTotalBalance ? (
+        <p className="placeholder-glow">
+          <span className="placeholder bg-light col-6"></span>
+        </p>
+      ) : (
+        totalBalanceInUSDDisplay
+      )}
       &nbsp;
       {usdSymbol}
-    </p>
+    </div>
   );
 };

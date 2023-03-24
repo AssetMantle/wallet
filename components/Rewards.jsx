@@ -37,7 +37,8 @@ const Rewards = ({
 
   const walletManager = useChain(defaultChainName);
   const { withdrawAddress } = useWithdrawAddress();
-  const { delegatedValidators } = useDelegatedValidators();
+  const { delegatedValidators, isLoadingDelegatedAmount } =
+    useDelegatedValidators();
   const { getSigningStargateClient, address, status } = walletManager;
   const { allRewards, rewardsArray } = useTotalRewards();
   const { mntlUsdValue } = useMntlUsd();
@@ -399,15 +400,27 @@ const Rewards = ({
             Cumulative Rewards
           </p>
         )}
-        <p className={isConnected ? "caption" : "caption text-gray"}>
-          {rewardsDisplay}
+        <div className={isConnected ? "caption" : "caption text-gray"}>
+          {isLoadingDelegatedAmount ? (
+            <p className="placeholder-glow">
+              <span className="placeholder col-6 bg-light"></span>
+            </p>
+          ) : (
+            rewardsDisplay
+          )}
           &nbsp;
           {denomDisplay}
-        </p>
-        <p className={isConnected ? "caption2" : "caption2 text-gray"}>
-          {rewardsInUSDDisplay}
+        </div>
+        <div className={isConnected ? "caption2" : "caption2 text-gray"}>
+          {isLoadingDelegatedAmount ? (
+            <p className="placeholder-glow">
+              <span className="placeholder col-6 bg-light"></span>
+            </p>
+          ) : (
+            rewardsInUSDDisplay
+          )}
           &nbsp;{usdSymbol}
-        </p>
+        </div>
         <div className="d-flex justify-content-end">
           {stakeState?.selectedValidators?.length > 5 ||
           isSubmitDisabled ? null : (

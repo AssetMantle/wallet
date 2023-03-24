@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import AllValidators from "../components/AllValidators";
 import DelegatedValidators from "../components/DelegatedValidators";
 import Tooltip from "../components/Tooltip";
-import { useAllValidators, useDelegatedValidators } from "../data";
+import {
+  useAllValidators,
+  useAllValidatorsBonded,
+  useDelegatedValidators,
+} from "../data";
 import useStakeReducer from "../data/useStakeReducer";
 import StakedToken from "../views/StakedToken";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
@@ -18,9 +22,205 @@ export default function Stake() {
   const [activeValidators, setActiveValidators] = useState(true);
   const [delegated, setDelegated] = useState(false);
   const { allValidators } = useAllValidators();
-  const { delegatedValidators } = useDelegatedValidators();
+  const { delegatedValidators, isLoadingDelegatedAmount } =
+    useDelegatedValidators();
+  const {
+    allValidatorsBonded,
+    isLoadingValidatorsBonded,
+    errorValidatorsBonded,
+  } = useAllValidatorsBonded();
 
   let validatorsArray = allValidators.sort((a, b) => b.tokens - a.tokens);
+
+  const loadingData = [
+    [
+      "Checkbox",
+      "Rank ",
+      "validatorName",
+      "votingPower",
+      "Commission",
+      "Delegations",
+      "Delegated Amount",
+      "Jailed",
+      "Column",
+    ],
+    [
+      "Checkbox",
+      "Rank ",
+      "validatorName",
+      "votingPower",
+      "Commission",
+      "Delegations",
+      "Delegated Amount",
+      "Jailed",
+      "Column",
+    ],
+    [
+      "Checkbox",
+      "Rank ",
+      "validatorName",
+      "votingPower",
+      "Commission",
+      "Delegations",
+      "Delegated Amount",
+      "Jailed",
+      "Column",
+    ],
+    [
+      "Checkbox",
+      "Rank ",
+      "validatorName",
+      "votingPower",
+      "Commission",
+      "Delegations",
+      "Delegated Amount",
+      "Jailed",
+      "Column",
+    ],
+    [
+      "Checkbox",
+      "Rank ",
+      "validatorName",
+      "votingPower",
+      "Commission",
+      "Delegations",
+      "Delegated Amount",
+      "Jailed",
+      "Column",
+    ],
+    [
+      "Checkbox",
+      "Rank ",
+      "validatorName",
+      "votingPower",
+      "Commission",
+      "Delegations",
+      "Delegated Amount",
+      "Jailed",
+      "Column",
+    ],
+    [
+      "Checkbox",
+      "Rank ",
+      "validatorName",
+      "votingPower",
+      "Commission",
+      "Delegations",
+      "Delegated Amount",
+      "Jailed",
+      "Column",
+    ],
+    [
+      "Checkbox",
+      "Rank ",
+      "validatorName",
+      "votingPower",
+      "Commission",
+      "Delegations",
+      "Delegated Amount",
+      "Jailed",
+      "Column",
+    ],
+    [
+      "Checkbox",
+      "Rank ",
+      "validatorName",
+      "votingPower",
+      "Commission",
+      "Delegations",
+      "Delegated Amount",
+      "Jailed",
+      "Column",
+    ],
+    [
+      "Checkbox",
+      "Rank ",
+      "validatorName",
+      "votingPower",
+      "Commission",
+      "Delegations",
+      "Delegated Amount",
+      "Jailed",
+      "Column",
+    ],
+    [
+      "Checkbox",
+      "Rank ",
+      "validatorName",
+      "votingPower",
+      "Commission",
+      "Delegations",
+      "Delegated Amount",
+      "Jailed",
+      "Column",
+    ],
+    [
+      "Checkbox",
+      "Rank ",
+      "validatorName",
+      "votingPower",
+      "Commission",
+      "Delegations",
+      "Delegated Amount",
+      "Jailed",
+      "Column",
+    ],
+    [
+      "Checkbox",
+      "Rank ",
+      "validatorName",
+      "votingPower",
+      "Commission",
+      "Delegations",
+      "Delegated Amount",
+      "Jailed",
+      "Column",
+    ],
+    [
+      "Checkbox",
+      "Rank ",
+      "validatorName",
+      "votingPower",
+      "Commission",
+      "Delegations",
+      "Delegated Amount",
+      "Jailed",
+      "Column",
+    ],
+    [
+      "Checkbox",
+      "Rank ",
+      "validatorName",
+      "votingPower",
+      "Commission",
+      "Delegations",
+      "Delegated Amount",
+      "Jailed",
+      "Column",
+    ],
+    [
+      "Checkbox",
+      "Rank ",
+      "validatorName",
+      "votingPower",
+      "Commission",
+      "Delegations",
+      "Delegated Amount",
+      "Jailed",
+      "Column",
+    ],
+    [
+      "Checkbox",
+      "Rank ",
+      "validatorName",
+      "votingPower",
+      "Commission",
+      "Delegations",
+      "Delegated Amount",
+      "Jailed",
+      "Column",
+    ],
+  ];
 
   //Calculate total tokens to calculate voting power
   const totalTokens = validatorsArray.reduce(
@@ -234,29 +434,54 @@ export default function Stake() {
                   </thead>
                   <tbody>
                     {delegated ? (
-                      <DelegatedValidators
-                        delegatedValidators={delegatedValidators}
-                        searchValue={searchValue}
-                        setShowClaimError={setShowClaimError}
-                        stakeDispatch={stakeDispatch}
-                        stakeState={stakeState}
-                        activeValidators={activeValidators}
-                        totalTokens={totalTokens}
-                      />
-                    ) : (
-                      allValidators.length !== 1 &&
-                      allValidators && (
-                        <AllValidators
+                      isLoadingDelegatedAmount ? (
+                        loadingData.map((item, index) => (
+                          <tr key={index}>
+                            {item.map((ele, i) => (
+                              <td key={i}>
+                                <p className="placeholder-glow ">
+                                  <span className="placeholder col-6 bg-light"></span>
+                                </p>
+                              </td>
+                            ))}
+                          </tr>
+                        ))
+                      ) : (
+                        <DelegatedValidators
                           delegatedValidators={delegatedValidators}
-                          setShowClaimError={setShowClaimError}
                           searchValue={searchValue}
+                          setShowClaimError={setShowClaimError}
                           stakeDispatch={stakeDispatch}
                           stakeState={stakeState}
-                          validatorsArray={validatorsArray}
                           activeValidators={activeValidators}
                           totalTokens={totalTokens}
                         />
                       )
+                    ) : allValidators.length !== 1 &&
+                      allValidators &&
+                      isLoadingValidatorsBonded ? (
+                      loadingData.map((item, index) => (
+                        <tr key={index}>
+                          {item.map((ele, i) => (
+                            <td key={i}>
+                              <p className="placeholder-glow ">
+                                <span className="placeholder col-6 bg-light"></span>
+                              </p>
+                            </td>
+                          ))}
+                        </tr>
+                      ))
+                    ) : (
+                      <AllValidators
+                        delegatedValidators={delegatedValidators}
+                        setShowClaimError={setShowClaimError}
+                        searchValue={searchValue}
+                        stakeDispatch={stakeDispatch}
+                        stakeState={stakeState}
+                        validatorsArray={validatorsArray}
+                        activeValidators={activeValidators}
+                        totalTokens={totalTokens}
+                      />
                     )}
                   </tbody>
                 </table>
