@@ -1084,14 +1084,6 @@ const fetchAllTrades = async (url) => {
 
       url: "https://quickswap.exchange/#/swap?inputCurrency=0x8497842420cfdbc97896c2353d75d89fc8d5be5d&outputCurrency=0x38a536a31ba4d8c1bcca016abbf786ecd25877e8&swapIndex=0",
     },
-    {
-      logo: "Bitrue",
-      name: "Bitrue",
-      pair: "MNTL/USDT",
-      target_coin_id: "tether",
-
-      url: "https://www.bitrue.com/trade/mntl_usdt",
-    },
   ];
 
   try {
