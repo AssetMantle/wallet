@@ -4,8 +4,18 @@ import { decimalize } from "../data";
 
 import Table from "./Table";
 
-const TradeTable = ({ data }) => {
+const TradeTable = ({ isLoading, data }) => {
   const memoizedData = React.useMemo(() => data, []);
+
+  const loadingData = [
+    { exchangeName: true, tradePair: true, price: true, volume: true },
+    { exchangeName: true, tradePair: true, price: true, volume: true },
+    { exchangeName: true, tradePair: true, price: true, volume: true },
+    { exchangeName: true, tradePair: true, price: true, volume: true },
+    { exchangeName: true, tradePair: true, price: true, volume: true },
+    { exchangeName: true, tradePair: true, price: true, volume: true },
+    { exchangeName: true, tradePair: true, price: true, volume: true },
+  ];
 
   const columns = React.useMemo(
     () => [
@@ -65,9 +75,55 @@ const TradeTable = ({ data }) => {
     []
   );
 
+  const loadingColumns = [
+    {
+      Header: "Market Name",
+      accessor: "exchangeName",
+      Cell: (tableProps) =>
+        tableProps.row.original.exchangeName ? (
+          <p className="placeholder-glow">
+            <span className="placeholder col-6"></span>
+          </p>
+        ) : null,
+    },
+    {
+      Header: "Trade Pair",
+      accessor: "tradePair",
+      Cell: (tableProps) =>
+        tableProps.row.original.tradePair ? (
+          <p className="placeholder-glow">
+            <span className="placeholder col-6"></span>
+          </p>
+        ) : null,
+    },
+    {
+      Header: "Price",
+      accessor: "price",
+      Cell: (tableProps) =>
+        tableProps.row.original.price ? (
+          <p className="placeholder-glow">
+            <span className="placeholder col-6"></span>
+          </p>
+        ) : null,
+    },
+    {
+      Header: "Volume(24Hour)",
+      accessor: "volume",
+      Cell: (tableProps) =>
+        tableProps.row.original.volume ? (
+          <p className="placeholder-glow">
+            <span className="placeholder col-6"></span>
+          </p>
+        ) : null,
+    },
+  ];
+
   return (
     <>
-      <Table columns={columns} data={memoizedData} />
+      <Table
+        columns={isLoading ? loadingColumns : columns}
+        data={isLoading ? loadingData : memoizedData}
+      />
     </>
   );
 };

@@ -657,11 +657,11 @@ export const useAllValidatorsBonded = () => {
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: bondedValidatorsArray, error } = useSwr(
     "useAllValidatorsBonded",
-    fetchAllValidatorsBonded,
-    {
-      fallbackData: [],
-      // refreshInterval: 22000,
-    }
+    fetchAllValidatorsBonded
+    // {
+    //   fallbackData: [],
+    //   // refreshInterval: 22000,
+    // }
   );
   return {
     allValidatorsBonded: bondedValidatorsArray,
@@ -1131,10 +1131,14 @@ const fetchAllTrades = async (url) => {
 
 export const useTrade = () => {
   // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: tradesObject, error } = useSwr("useAllTrades", fetchAllTrades, {
-    fallbackData: [],
-    suspense: true,
-  });
+  const { data: tradesObject, error } = useSwr(
+    "useAllTrades",
+    fetchAllTrades
+    //  {
+    //   fallbackData: [],
+    //   suspense: true,
+    // }
+  );
   // console.log("Outside SWR:", tradesArray);
   return {
     allTrades: tradesObject,

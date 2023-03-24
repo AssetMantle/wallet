@@ -97,7 +97,7 @@ const Unbonded = ({
         <div className={isConnected ? "caption" : "caption text-gray"}>
           {isLoadingUnbonding ? (
             <p className="placeholder-glow">
-              <span className="placeholder col-6"></span>
+              <span className="placeholder col-6 bg-light"></span>
             </p>
           ) : (
             unbondingDisplay
@@ -107,7 +107,7 @@ const Unbonded = ({
         <div className={isConnected ? "caption2" : "caption2 text-gray"}>
           {isLoadingUnbonding ? (
             <p className="placeholder-glow">
-              <span className="placeholder col-6"></span>
+              <span className="placeholder col-6 bg-light"></span>
             </p>
           ) : (
             unbondingInUSDDisplay

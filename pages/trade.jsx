@@ -28,7 +28,10 @@ export default function Trade() {
             >
               <div className="w-100 h-100" style={{ overflow: "auto" }}>
                 {allTrades?.tradeData?.length ? (
-                  <TradeTable data={allTrades?.tradeData} />
+                  <TradeTable
+                    isLoading={isLoadingTrades}
+                    data={allTrades?.tradeData}
+                  />
                 ) : null}
               </div>
             </div>
@@ -46,7 +49,10 @@ export default function Trade() {
               coming soon.
             </p>
           </div>
-          <TradePageTokenDetails data={allTrades?.tokenDetails} />
+          <TradePageTokenDetails
+            isLoading={isLoadingTrades}
+            data={allTrades?.tokenDetails}
+          />
         </div>
       </section>
     </>

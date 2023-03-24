@@ -403,7 +403,7 @@ const Rewards = ({
         <div className={isConnected ? "caption" : "caption text-gray"}>
           {isLoadingDelegatedAmount ? (
             <p className="placeholder-glow">
-              <span className="placeholder col-6"></span>
+              <span className="placeholder col-6 bg-light"></span>
             </p>
           ) : (
             rewardsDisplay
@@ -414,7 +414,7 @@ const Rewards = ({
         <div className={isConnected ? "caption2" : "caption2 text-gray"}>
           {isLoadingDelegatedAmount ? (
             <p className="placeholder-glow">
-              <span className="placeholder col-6"></span>
+              <span className="placeholder col-6 bg-light"></span>
             </p>
           ) : (
             rewardsInUSDDisplay

@@ -37,7 +37,7 @@ export const AvailableBalance = () => {
       <div className={status === "Connected" ? "caption" : "caption text-gray"}>
         {isLoadingAvailableBalance ? (
           <p className="placeholder-glow">
-            <span className="placeholder col-6"></span>
+            <span className="placeholder col-6 bg-light"></span>
           </p>
         ) : (
           balanceDisplay
@@ -72,8 +72,8 @@ export const AvailableBalanceUsd = () => {
   return (
     <div className={isConnected ? "caption2" : "caption2 text-gray"}>
       {isLoadingAvailableBalance ? (
-        <p className="placeholder-glow">
-          <span className="placeholder col-6"></span>
+        <p className="placeholder-glow ">
+          <span className="placeholder col-6 bg-light"></span>
         </p>
       ) : (
         balanceInUSDDisplay

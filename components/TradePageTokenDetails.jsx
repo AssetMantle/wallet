@@ -2,7 +2,9 @@ import React from "react";
 import { getBalanceStyle } from "../config";
 import { decimalize } from "../data";
 
-const TradePageTokenDetails = ({ data }) => {
+const TradePageTokenDetails = ({ isLoading, data }) => {
+  // const { allTrades, isLoadingTrades, errorTrades } = useTrade();
+
   return (
     <div className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-3">
       <h4 className="body1 text-primary">Token Details</h4>
@@ -12,57 +14,100 @@ const TradePageTokenDetails = ({ data }) => {
             Market Cap
           </p>
         </div>
-        <p className="caption pb-3">${decimalize(data?.marketCap, 2)}</p>
+        <div className="caption pb-3">
+          $
+          {isLoading ? (
+            <p className="placeholder-glow">
+              <span className="placeholder col-6"></span>
+            </p>
+          ) : (
+            decimalize(data?.marketCap, 2)
+          )}
+        </div>
         <div>
           <p className="caption d-flex gap-2 align-items-center text-white-300">
             Circulating Supply
           </p>
         </div>
-        <p className="caption pb-3">
-          {getBalanceStyle(
-            decimalize(data?.circulatingSupply),
-            "caption",
-            "caption2"
+        <div className="caption pb-3">
+          {isLoading ? (
+            <p className="placeholder-glow">
+              <span className="placeholder col-6"></span>
+            </p>
+          ) : (
+            getBalanceStyle(
+              decimalize(data?.circulatingSupply),
+              "caption",
+              "caption2"
+            )
           )}
-        </p>
+        </div>
         <div>
           <p className="caption d-flex gap-2 align-items-center text-white-300">
             Total Supply
           </p>
         </div>
-        <p className="caption pb-3">
-          {getBalanceStyle(
-            decimalize(data?.totalSupply),
-            "caption",
-            "caption2"
+        <div className="caption pb-3">
+          {isLoading ? (
+            <p className="placeholder-glow">
+              <span className="placeholder col-6"></span>
+            </p>
+          ) : (
+            getBalanceStyle(
+              decimalize(data?.totalSupply),
+              "caption",
+              "caption2"
+            )
           )}
-        </p>
+        </div>
         <div>
           <p className="caption d-flex gap-2 align-items-center text-white-300">
             Max Supply
           </p>
         </div>
-        <p className="caption pb-3">${decimalize(data?.maxSupply, 0)}</p>
+        <div className="caption pb-3">
+          $
+          {isLoading ? (
+            <p className="placeholder-glow">
+              <span className="placeholder col-6"></span>
+            </p>
+          ) : (
+            decimalize(data?.maxSupply, 0)
+          )}
+        </div>
         <div>
           <p className="caption d-flex gap-2 align-items-center text-white-300">
             24 Hour Trading Volume
           </p>
-          <p className="caption pb-3">
+          <div className="caption pb-3">
             $
-            {getBalanceStyle(
-              decimalize(data?.volume, 2),
-              "caption",
-              "caption2"
+            {isLoading ? (
+              <p className="placeholder-glow">
+                <span className="placeholder col-6"></span>
+              </p>
+            ) : (
+              getBalanceStyle(
+                decimalize(data?.volume, 2),
+                "caption",
+                "caption2"
+              )
             )}
-          </p>
+          </div>
         </div>
         <div>
           <p className="caption d-flex gap-2 align-items-center text-white-300">
             Fully Diluted Valuation
           </p>
-          <p className="caption pb-3">
-            ${decimalize(data?.fullyDilutedValuation, 2)}
-          </p>
+          <div className="caption pb-3">
+            $
+            {isLoading ? (
+              <p className="placeholder-glow">
+                <span className="placeholder col-6"></span>
+              </p>
+            ) : (
+              decimalize(data?.fullyDilutedValuation, 2)
+            )}
+          </div>
         </div>
       </div>
     </div>

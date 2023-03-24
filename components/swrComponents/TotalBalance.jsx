@@ -42,7 +42,7 @@ export const TotalBalance = () => {
       <div className={isConnected ? "caption" : "caption text-gray"}>
         {isLoadingTotalBalance ? (
           <p className="placeholder-glow">
-            <span className="placeholder col-6"></span>
+            <span className="placeholder bg-light col-6"></span>
           </p>
         ) : (
           totalBalanceDisplay
@@ -86,7 +86,7 @@ export const TotalBalanceInUSD = () => {
     <div className={isConnected ? "caption2" : "caption2 text-gray"}>
       {isLoadingTotalBalance ? (
         <p className="placeholder-glow">
-          <span className="placeholder col-6"></span>
+          <span className="placeholder bg-light col-6"></span>
         </p>
       ) : (
         totalBalanceInUSDDisplay
