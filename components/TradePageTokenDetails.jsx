@@ -15,13 +15,12 @@ const TradePageTokenDetails = ({ isLoading, data }) => {
           </p>
         </div>
         <div className="caption pb-3">
-          $
           {isLoading ? (
             <p className="placeholder-glow">
-              <span className="placeholder col-6"></span>
+              <span className="placeholder col-6 w-100"></span>
             </p>
           ) : (
-            decimalize(data?.marketCap, 2)
+            <>$ {decimalize(data?.marketCap, 2)}</>
           )}
         </div>
         <div>
@@ -32,7 +31,7 @@ const TradePageTokenDetails = ({ isLoading, data }) => {
         <div className="caption pb-3">
           {isLoading ? (
             <p className="placeholder-glow">
-              <span className="placeholder col-6"></span>
+              <span className="placeholder col-6 w-100"></span>
             </p>
           ) : (
             getBalanceStyle(
@@ -50,7 +49,7 @@ const TradePageTokenDetails = ({ isLoading, data }) => {
         <div className="caption pb-3">
           {isLoading ? (
             <p className="placeholder-glow">
-              <span className="placeholder col-6"></span>
+              <span className="placeholder col-6 w-100"></span>
             </p>
           ) : (
             getBalanceStyle(
@@ -66,13 +65,12 @@ const TradePageTokenDetails = ({ isLoading, data }) => {
           </p>
         </div>
         <div className="caption pb-3">
-          $
           {isLoading ? (
             <p className="placeholder-glow">
-              <span className="placeholder col-6"></span>
+              <span className="placeholder col-6 w-100"></span>
             </p>
           ) : (
-            decimalize(data?.maxSupply, 0)
+            <>$ {decimalize(data?.maxSupply, 0)}</>
           )}
         </div>
         <div>
@@ -80,17 +78,19 @@ const TradePageTokenDetails = ({ isLoading, data }) => {
             24 Hour Trading Volume
           </p>
           <div className="caption pb-3">
-            $
             {isLoading ? (
               <p className="placeholder-glow">
-                <span className="placeholder col-6"></span>
+                <span className="placeholder col-6 w-100"></span>
               </p>
             ) : (
-              getBalanceStyle(
-                decimalize(data?.volume, 2),
-                "caption",
-                "caption2"
-              )
+              <>
+                ${" "}
+                {getBalanceStyle(
+                  decimalize(data?.volume, 2),
+                  "caption",
+                  "caption2"
+                )}
+              </>
             )}
           </div>
         </div>
@@ -99,13 +99,12 @@ const TradePageTokenDetails = ({ isLoading, data }) => {
             Fully Diluted Valuation
           </p>
           <div className="caption pb-3">
-            $
             {isLoading ? (
               <p className="placeholder-glow">
-                <span className="placeholder col-6"></span>
+                <span className="placeholder col-6 w-100"></span>
               </p>
             ) : (
-              decimalize(data?.fullyDilutedValuation, 2)
+              <>$ {decimalize(data?.fullyDilutedValuation, 2)}</>
             )}
           </div>
         </div>

@@ -94,26 +94,42 @@ const Unbonded = ({
         >
           Undelegating
         </p>
-        <div className={isConnected ? "caption" : "caption text-gray"}>
-          {isLoadingUnbonding ? (
-            <p className="placeholder-glow">
-              <span className="placeholder col-6 bg-light"></span>
-            </p>
-          ) : (
-            unbondingDisplay
-          )}
-          &nbsp;{denomDisplay}
-        </div>
-        <div className={isConnected ? "caption2" : "caption2 text-gray"}>
-          {isLoadingUnbonding ? (
-            <p className="placeholder-glow">
-              <span className="placeholder col-6 bg-light"></span>
-            </p>
-          ) : (
-            unbondingInUSDDisplay
-          )}
-          &nbsp;{usdSymbol}
-        </div>
+        {isConnected ? (
+          <div className="caption">
+            {isLoadingUnbonding ? (
+              <p className="placeholder-glow">
+                <span className="placeholder col-6 bg-light w-100"></span>
+              </p>
+            ) : (
+              <>
+                {" "}
+                {unbondingDisplay} {denomDisplay}
+              </>
+            )}{" "}
+          </div>
+        ) : (
+          <div className="caption text-gray">
+            {unbondingDisplay} {denomDisplay}
+          </div>
+        )}
+        {isConnected ? (
+          <div className="caption">
+            {isLoadingUnbonding ? (
+              <p className="placeholder-glow">
+                <span className="placeholder col-6 bg-light w-100"></span>
+              </p>
+            ) : (
+              <>
+                {" "}
+                {unbondingInUSDDisplay} {usdSymbol}
+              </>
+            )}{" "}
+          </div>
+        ) : (
+          <div className="caption text-gray">
+            {unbondingInUSDDisplay} {usdSymbol}
+          </div>
+        )}
         <div className="d-flex justify-content-end">
           {allUnbonding?.length != 0 && !isSubmitDisabled ? (
             <button

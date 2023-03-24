@@ -400,27 +400,42 @@ const Rewards = ({
             Cumulative Rewards
           </p>
         )}
-        <div className={isConnected ? "caption" : "caption text-gray"}>
-          {isLoadingDelegatedAmount ? (
-            <p className="placeholder-glow">
-              <span className="placeholder col-6 bg-light"></span>
-            </p>
-          ) : (
-            rewardsDisplay
-          )}
-          &nbsp;
-          {denomDisplay}
-        </div>
-        <div className={isConnected ? "caption2" : "caption2 text-gray"}>
-          {isLoadingDelegatedAmount ? (
-            <p className="placeholder-glow">
-              <span className="placeholder col-6 bg-light"></span>
-            </p>
-          ) : (
-            rewardsInUSDDisplay
-          )}
-          &nbsp;{usdSymbol}
-        </div>
+        {isConnected ? (
+          <div className="caption">
+            {isLoadingDelegatedAmount ? (
+              <p className="placeholder-glow">
+                <span className="placeholder col-6 bg-light w-100"></span>
+              </p>
+            ) : (
+              <>
+                {" "}
+                {rewardsDisplay} {denomDisplay}
+              </>
+            )}{" "}
+          </div>
+        ) : (
+          <div className="caption text-gray">
+            {rewardsDisplay} {denomDisplay}
+          </div>
+        )}
+        {isConnected ? (
+          <div className="caption">
+            {isLoadingDelegatedAmount ? (
+              <p className="placeholder-glow">
+                <span className="placeholder col-6 bg-light w-100"></span>
+              </p>
+            ) : (
+              <>
+                {" "}
+                {rewardsInUSDDisplay} {usdSymbol}
+              </>
+            )}{" "}
+          </div>
+        ) : (
+          <div className="caption text-gray">
+            {rewardsInUSDDisplay} {usdSymbol}
+          </div>
+        )}
         <div className="d-flex justify-content-end">
           {stakeState?.selectedValidators?.length > 5 ||
           isSubmitDisabled ? null : (

@@ -188,26 +188,42 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
               Cumulative Delegations
             </p>
           )}
-          <div className={isConnected ? "caption" : "caption text-gray"}>
-            {isLoadingDelegatedAmount ? (
-              <p className="placeholder-glow">
-                <span className="placeholder col-6 bg-light"></span>
-              </p>
-            ) : (
-              delegationsDisplay
-            )}{" "}
-            &nbsp;{denomDisplay}
-          </div>
-          <div className={isConnected ? "caption2" : "caption2 text-gray"}>
-            {isLoadingDelegatedAmount ? (
-              <p className="placeholder-glow">
-                <span className="placeholder col-6 bg-light"></span>
-              </p>
-            ) : (
-              delegationsInUSDDisplay
-            )}
-            &nbsp;{usdSymbol}
-          </div>
+          {isConnected ? (
+            <div className="caption">
+              {isLoadingDelegatedAmount ? (
+                <p className="placeholder-glow">
+                  <span className="placeholder col-6 bg-light w-100"></span>
+                </p>
+              ) : (
+                <>
+                  {" "}
+                  {delegationsDisplay} {denomDisplay}
+                </>
+              )}{" "}
+            </div>
+          ) : (
+            <div className="caption text-gray">
+              {delegationsDisplay} {denomDisplay}
+            </div>
+          )}
+          {isConnected ? (
+            <div className="caption">
+              {isLoadingDelegatedAmount ? (
+                <p className="placeholder-glow">
+                  <span className="placeholder col-6 bg-light w-100"></span>
+                </p>
+              ) : (
+                <>
+                  {" "}
+                  {delegationsInUSDDisplay} {usdSymbol}
+                </>
+              )}{" "}
+            </div>
+          ) : (
+            <div className="caption text-gray">
+              {delegationsInUSDDisplay} {usdSymbol}
+            </div>
+          )}
           {showRedelegateUndelegateAndClaim &&
           stakeState?.selectedValidators?.length === 1 ? (
             <div className="d-flex justify-content-end">

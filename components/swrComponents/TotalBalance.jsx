@@ -21,12 +21,7 @@ export const TotalBalance = () => {
 
   const chainContext = useChain(defaultChainName);
   const { status } = chainContext;
-  const isConnected = !(
-    isLoadingTotalBalance ||
-    isErrorTotalBalance ||
-    status != "Connected"
-  );
-
+  const isConnected = status == "Connected";
   const totalBalanceDisplay = isConnected
     ? getBalanceStyle(fromChainDenom(totalBalance), "caption", "caption2")
     : getBalanceStyle(
@@ -39,17 +34,24 @@ export const TotalBalance = () => {
 
   return (
     <>
-      <div className={isConnected ? "caption" : "caption text-gray"}>
-        {isLoadingTotalBalance ? (
-          <p className="placeholder-glow">
-            <span className="placeholder bg-light col-6"></span>
-          </p>
-        ) : (
-          totalBalanceDisplay
-        )}
-        &nbsp;
-        {denomDisplay}
-      </div>
+      {isConnected ? (
+        <div className="caption">
+          {isLoadingTotalBalance ? (
+            <p className="placeholder-glow">
+              <span className="placeholder col-6 bg-light w-100"></span>
+            </p>
+          ) : (
+            <>
+              {" "}
+              {totalBalanceDisplay} {denomDisplay}
+            </>
+          )}{" "}
+        </div>
+      ) : (
+        <div className="caption text-gray">
+          {totalBalanceDisplay} {usdSymbol}
+        </div>
+      )}
     </>
   );
 };
@@ -63,13 +65,7 @@ export const TotalBalanceInUSD = () => {
 
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
 
-  const isConnected = !(
-    isLoadingTotalBalance ||
-    isErrorTotalBalance ||
-    status != "Connected" ||
-    errorMntlUsdValue
-  );
-
+  const isConnected = status == "Connected";
   const totalBalanceInUSD = BigNumber(fromDenom(totalBalance))
     .multipliedBy(BigNumber(mntlUsdValue || 0))
     .toString();
@@ -83,16 +79,26 @@ export const TotalBalanceInUSD = () => {
       );
 
   return (
-    <div className={isConnected ? "caption2" : "caption2 text-gray"}>
-      {isLoadingTotalBalance ? (
-        <p className="placeholder-glow">
-          <span className="placeholder bg-light col-6"></span>
-        </p>
+    <>
+      {" "}
+      {isConnected ? (
+        <div className="caption">
+          {isLoadingTotalBalance ? (
+            <p className="placeholder-glow">
+              <span className="placeholder col-6 bg-light w-100"></span>
+            </p>
+          ) : (
+            <>
+              {" "}
+              {totalBalanceInUSDDisplay} {usdSymbol}
+            </>
+          )}{" "}
+        </div>
       ) : (
-        totalBalanceInUSDDisplay
+        <div className="caption text-gray">
+          {totalBalanceInUSDDisplay} {usdSymbol}
+        </div>
       )}
-      &nbsp;
-      {usdSymbol}
-    </div>
+    </>
   );
 };
