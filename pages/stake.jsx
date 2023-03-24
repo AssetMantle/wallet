@@ -13,7 +13,8 @@ import ScrollableSectionContainer from "../components/ScrollableSectionContainer
 import Head from "next/head";
 import { toast } from "react-toastify";
 import Link from "next/link";
-import { toastConfig } from "../config";
+import { defaultChainName, toastConfig } from "../config";
+import { useChain } from "@cosmos-kit/react";
 
 export default function Stake() {
   const [searchValue, setSearchValue] = useState("");
@@ -29,6 +30,10 @@ export default function Stake() {
     isLoadingValidatorsBonded,
     errorValidatorsBonded,
   } = useAllValidatorsBonded();
+
+  const walletManager = useChain(defaultChainName);
+  const { status } = walletManager;
+  const isConnected = status == "Connected";
 
   let validatorsArray = allValidators.sort((a, b) => b.tokens - a.tokens);
 
@@ -434,7 +439,7 @@ export default function Stake() {
                   </thead>
                   <tbody>
                     {delegated ? (
-                      isLoadingDelegatedAmount ? (
+                      isLoadingDelegatedAmount && isConnected ? (
                         loadingData.map((item, index) => (
                           <tr key={index}>
                             {item.map((ele, i) => (
