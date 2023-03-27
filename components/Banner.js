@@ -21,7 +21,7 @@ export default function Banner() {
     >
       <SplideSlide>
         <div
-          className="alert alert-warning alert-dismissible fade show m-0 rounded-0 py-1 text-center bg-yellow-100 border-0 text-dark d-flex px-2"
+          className="alert alert-warning alert-dismissible show m-0 rounded-0 py-1 text-center bg-yellow-100 border-0 text-dark d-flex px-2"
           role="alert"
         >
           <a
