@@ -714,3 +714,8 @@ tbody {
     fill: $dark-200 !important;
   }
 }
+.slick-prev::before,
+.slick-next::before {
+  opacity: 1 !important;
+  color: $dark-200 !important;
+}
