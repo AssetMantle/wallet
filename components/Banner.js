@@ -1,27 +1,70 @@
 import React from "react";
-import { Splide, SplideSlide } from "@splidejs/react-splide";
+import Slider from "react-slick";
 
 export default function Banner() {
+  function SampleNextArrow(props) {
+    const { className, style, onClick } = props;
+    return (
+      <div
+        className={className}
+        style={{ ...style, display: "flex", right: "5px" }}
+        onClick={onClick}
+      >
+        {/* <i className="bi bi-arrow-right text-black p-absolute top-0 bottom-0 start-0 end-0"></i> */}
+      </div>
+    );
+  }
+
+  function SamplePrevArrow(props) {
+    const { className, style, onClick } = props;
+    return (
+      <div
+        className={className}
+        style={{
+          ...style,
+          display: "flex",
+          zIndex: 100,
+          left: "5px",
+        }}
+        onClick={onClick}
+      >
+        {/* <i className="bi bi-arrow-left text-black p-absolute top-0 bottom-0 start-0 end-0"></i> */}
+      </div>
+    );
+  }
+  const settings = {
+    infinite: true,
+    speed: 2000,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    dots: false,
+    autoplay: true,
+    speed: 2000,
+    autoplaySpeed: 4000,
+    nextArrow: <SampleNextArrow />,
+    prevArrow: <SamplePrevArrow />,
+  };
   return (
-    <Splide
-      options={{
-        type: "loop",
-        rewind: true,
-        width: "100%",
-        gap: "32px",
-        perPage: 1,
-        pagination: false,
-        autoplay: true,
-        interval: 4000,
-        speed: 2000,
-        arrowPath:
-          "M23 13L21.59 14.41L26.17 19H10V21H26.17L21.58 25.59L23 27L30 20L23 13Z",
-      }}
+    <Slider
+      // options={{
+      //   type: "loop",
+      //   rewind: true,
+      //   width: "100%",
+      //   gap: "32px",
+      //   perPage: 1,
+      //   pagination: false,
+      //   autoplay: true,
+      //   interval: 4000,
+      //   speed: 2000,
+      //   arrowPath:
+      //     "M23 13L21.59 14.41L26.17 19H10V21H26.17L21.58 25.59L23 27L30 20L23 13Z",
+      // }}
       className="bg-yellow-100"
+      {...settings}
     >
-      <SplideSlide>
+      <div>
         <div
-          className="alert alert-warning alert-dismissible show m-0 rounded-0 py-1 text-center bg-yellow-100 border-0 text-dark d-flex px-2"
+          className="alert alert-warning alert-dismissible fade show m-0 rounded-0 py-1 text-center bg-yellow-100 border-0 text-dark d-flex px-2"
           role="alert"
         >
           <a
@@ -42,8 +85,8 @@ export default function Banner() {
     aria-label="Close"
   ></button> */}
         </div>
-      </SplideSlide>
-      <SplideSlide>
+      </div>
+      <div>
         <div
           className="alert alert-warning alert-dismissible fade show m-0 rounded-0 py-1 text-center bg-yellow-100 border-0 text-dark d-flex px-2"
           role="alert"
@@ -65,8 +108,8 @@ export default function Banner() {
         aria-label="Close"
       ></button> */}
         </div>
-      </SplideSlide>
-      <SplideSlide>
+      </div>
+      <div>
         <div
           className="alert alert-warning alert-dismissible fade show m-0 rounded-0 py-1 text-center bg-yellow-100 border-0 text-dark d-flex px-2"
           role="alert"
@@ -87,7 +130,7 @@ export default function Banner() {
         aria-label="Close"
       ></button> */}
         </div>
-      </SplideSlide>
-    </Splide>
+      </div>
+    </Slider>
   );
 }
