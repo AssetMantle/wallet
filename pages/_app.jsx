@@ -28,11 +28,11 @@ import {
   mantleTestnetAssetConfig,
 } from "../config";
 import "../config/styles/index.scss";
+import "@splidejs/react-splide/css";
 import { ethereumClient, wagmiClient, walletConnectProjectID } from "../data";
 import { getSigningGravityClientOptions } from "../modules";
 import ConnectModal from "../views/ConnectModal/ConnectModal";
 import "react-toastify/dist/ReactToastify.min.css";
-import "@splidejs/react-splide/css";
 import { SWRConfig } from "swr";
 
 function CreateCosmosApp({ Component, pageProps }) {
