@@ -40,7 +40,7 @@ export default function Banner() {
     dots: false,
     autoplay: true,
     speed: 2000,
-    autoplaySpeed: 4000,
+    autoplaySpeed: 5000,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
   };
