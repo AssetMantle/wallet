@@ -5,6 +5,7 @@ import {
   useAccount,
   useContract,
   useContractWrite,
+  useNetwork,
   usePrepareContractWrite,
   useProvider,
 } from "wagmi";
@@ -17,6 +18,8 @@ export const UniswapUnstakeEntry = ({ tokenId, liquidity }) => {
   const uniV3StakerContractAddress =
     ethConfig?.mainnet?.uniswap?.uniV3Staker?.address;
   const uniV3StakerABI = ethConfig?.mainnet?.uniswap?.uniV3Staker?.abi;
+
+  const ethereumChainID = ethConfig?.mainnet?.chainID;
 
   let toastId = null;
 
@@ -32,6 +35,8 @@ export const UniswapUnstakeEntry = ({ tokenId, liquidity }) => {
   });
 
   // HOOKS
+  const { chain } = useNetwork();
+
   // hooks to get the incentive program data
   const { incentiveList, isLoadingIncentiveList } = useIncentiveList();
   const { data: selectedIncentiveIndex } = useSWR("selectedIncentive");
@@ -70,7 +75,11 @@ export const UniswapUnstakeEntry = ({ tokenId, liquidity }) => {
     ...uniV3StakerContract,
     functionName: "multicall(bytes[])",
     args: [multiCallDataBytesArray],
-    enabled: isConnected && address && tokenId & isIncentivePopulated,
+    enabled:
+      isConnected &&
+      address &&
+      tokenId & isIncentivePopulated &&
+      ethereumChainID == chain?.id,
     chainId: 1,
     onError(error) {
       console.error(error);

@@ -1,6 +1,7 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { wallets as leapWallets } from "@cosmos-kit/leap";
 import { wallets as vectisWallets } from "@cosmos-kit/vectis";
+import { wallets as frontierWallets } from "@cosmos-kit/frontier-extension";
 import { wallets as keplrWallets } from "@cosmos-kit/keplr";
 import { wallets as cosmostationWallets } from "@cosmos-kit/cosmostation";
 import { ChainProvider } from "@cosmos-kit/react";
@@ -114,6 +115,7 @@ function CreateCosmosApp({ Component, pageProps }) {
               ...leapWallets,
               cosmostationWallets[0],
               ...vectisWallets,
+              ...frontierWallets,
             ]}
             signerOptions={signerOptions}
             sessionOptions={sessionOptions}

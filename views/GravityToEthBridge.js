@@ -1,7 +1,6 @@
 import { useChain } from "@cosmos-kit/react";
 import { useWeb3Modal } from "@web3modal/react";
 import BigNumber from "bignumber.js";
-import Link from "next/link";
 import { useReducer, useState } from "react";
 import { toast } from "react-toastify";
 import { useAccount } from "wagmi";
@@ -13,6 +12,7 @@ import {
   gravityChainName,
   gravityChainSymbol,
   toastConfig,
+  updateToastNotification,
 } from "../config";
 import {
   ethConfig,
@@ -233,41 +233,9 @@ const GravityToEthBridge = () => {
 
   const [formState, formDispatch] = useReducer(formReducer, initialState);
 
-  // CONFIG FUNCTIONS
-  const CustomToastWithLink = ({ txHash }) => (
-    <p>
-      Transaction Submitted. Check
-      <Link href={`https://www.mintscan.io/gravity-bridge/txs/${txHash}`}>
-        <a style={{ color: "#ffc640" }} target="_blank">
-          &nbsp; Here
-        </a>
-      </Link>
-    </p>
-  );
-
-  const notify = (txHash, id) => {
-    if (txHash) {
-      toast.update(id, {
-        render: <CustomToastWithLink txHash={txHash} />,
-        type: "success",
-        isLoading: false,
-        toastId: txHash,
-        ...toastConfig,
-      });
-    } else {
-      toast.update(id, {
-        render: "Transaction failed. Try Again",
-        type: "error",
-        isLoading: false,
-        ...toastConfig,
-      });
-    }
-  };
-
   // CONTROLLER FUNCTIONS
 
   // connect button with logic
-
   const handleOpenWeb3Modal = async (e) => {
     e.preventDefault();
     await open();
@@ -322,14 +290,19 @@ const GravityToEthBridge = () => {
         }
       );
       console.log("response: ", response, " error: ", error);
+
       // reset the form values
       formDispatch({ type: "RESET" });
 
       // notify toast message on success or error
       if (response) {
-        notify(response?.transactionHash, toastId2);
+        updateToastNotification(
+          gravityChainName,
+          response?.transactionHash,
+          toastId2
+        );
       } else {
-        notify(null, toastId2);
+        updateToastNotification(gravityChainName, null, toastId2);
       }
     }
   };
@@ -369,7 +342,6 @@ const GravityToEthBridge = () => {
         memo,
 
         {
-          // getSigningStargateClient: getSigningStargateClientGravity,
           getOfflineSigner,
         }
       );
@@ -380,9 +352,13 @@ const GravityToEthBridge = () => {
 
       // notify toast message on success or error
       if (response) {
-        notify(response?.transactionHash, toastId);
+        updateToastNotification(
+          gravityChainName,
+          response?.transactionHash,
+          toastId
+        );
       } else {
-        notify(null, toastId);
+        updateToastNotification(gravityChainName, null, toastId);
       }
     }
   };

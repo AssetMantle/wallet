@@ -1,7 +1,12 @@
 import React from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
-import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
+import {
+  useAccount,
+  useContractWrite,
+  useNetwork,
+  usePrepareContractWrite,
+} from "wagmi";
 import { notify, toastConfig } from "../config";
 import { ethConfig, INCENTIVE_ENDED_ERROR, useIncentiveList } from "../data";
 import { getIncentiveIdFromKey, getIncentiveKeyEncoded } from "../lib";
@@ -16,6 +21,8 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
   const uniV3StakerContractAddress =
     ethConfig?.mainnet?.uniswap?.uniV3Staker?.address;
 
+  const ethereumChainID = ethConfig?.mainnet?.chainID;
+
   let toastId = null;
 
   const nonFungiblePositionManagerContract = {
@@ -24,6 +31,9 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
   };
 
   // HOOKS
+  // get the current network
+  const { chain } = useNetwork();
+
   // hooks related to incentive program data
   const { incentiveList, isLoadingIncentiveList } = useIncentiveList();
   const { data: selectedIncentiveIndex } = useSWR("selectedIncentive");
@@ -57,16 +67,20 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
       Number(tokenId),
       incentiveIdBytes,
     ],
-    enabled: isConnected && address && tokenId && isIncentivePopulated,
-    chainId: 1,
+    enabled:
+      isConnected &&
+      address &&
+      tokenId &&
+      isIncentivePopulated &&
+      ethereumChainID == chain?.id,
+    chainId: ethereumChainID,
     onError(error) {
-      console.error("prepare error: ", error);
+      console.error("prepare error1: ", error);
       if (error?.message?.includes("incentive ended"))
         toast.error(INCENTIVE_ENDED_ERROR, {
           ...toastConfig,
           toastId: getIncentiveIdFromKey(selectedIncentiveTuple),
         });
-      // toast.error(PREPARE_CONTRACT_ERROR, toastConfig);
     },
   });
 

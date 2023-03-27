@@ -46,6 +46,7 @@ const StaticUniswapStakeContents = () => {
     isLoading: isLoadingBalanceOf,
   } = useContractRead({
     ...nonFungiblePositionManagerContract,
+    chainID: chainID,
     functionName: "balanceOf",
     args: [finalAddress],
     select: (data) => data?.toString?.(),

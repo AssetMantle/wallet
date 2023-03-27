@@ -8,6 +8,7 @@ import {
   useAccount,
   useContractRead,
   useContractWrite,
+  useNetwork,
   usePrepareContractWrite,
 } from "wagmi";
 import { notify, toastConfig } from "../config";
@@ -24,8 +25,12 @@ const selectedIncentive = ethConfig?.selected?.uniswapIncentiveProgram;
 const latestIncentiveProgram =
   ethConfig?.mainnet?.uniswap?.incentivePrograms?.[selectedIncentive];
 
+const ethereumChainID = ethConfig?.mainnet?.chainID;
+
 const StaticUniswapDashboard = () => {
   // HOOKS
+  const { chain } = useNetwork();
+
   // hooks to get the address of the connected wallet
   const { address, isConnected } = useAccount();
   const isMounted = useIsMounted();
@@ -56,7 +61,7 @@ const StaticUniswapDashboard = () => {
     ...uniV3StakerContract,
     functionName: "claimReward",
     args: [latestIncentiveProgram?.RewardTokenContract, address, 0],
-    enabled: isConnected && address,
+    enabled: isConnected && address && ethereumChainID == chain?.id,
     chainId: 1,
     onError(error) {
       console.error(error.message);

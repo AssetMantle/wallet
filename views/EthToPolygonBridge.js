@@ -3,7 +3,6 @@ import { disconnect } from "@wagmi/core";
 import { useWeb3Modal } from "@web3modal/react";
 import BigNumber from "bignumber.js";
 import { ethers } from "ethers";
-import Link from "next/link";
 import { useReducer } from "react";
 import { toast } from "react-toastify";
 import {
@@ -12,15 +11,18 @@ import {
   useBalance,
   useContractRead,
   useContractWrite,
+  useNetwork,
   usePrepareContractWrite,
 } from "wagmi";
 import {
   defaultChainName,
   defaultChainSymbol,
+  ethereumChainName,
   ethereumChainSymbol,
   gravityChainName,
   placeholderAvailableBalance,
   toastConfig,
+  updateToastNotification,
 } from "../config";
 import {
   approveMaxDeposit,
@@ -33,7 +35,6 @@ import {
   placeholderAddressEth,
   PREPARE_CONTRACT_ERROR,
   toDenom,
-  useAllowance,
 } from "../data";
 import {
   convertBech32Address,
@@ -45,8 +46,9 @@ import {
 
 const gravityEthereumBridgeContract =
   ethConfig?.mainnet?.gravity?.ethereumBridge;
-const chainID = ethConfig?.mainnet?.chainID;
-const hookArgs = { watch: true, chainId: chainID };
+const polygonDepositContract = ethConfig?.mainnet?.polygon?.depositContract;
+const ethereumChainID = ethConfig?.mainnet?.chainID;
+const hookArgs = { watch: true, chainId: ethereumChainID };
 const mntlTokenContract = {
   address: ethConfig?.mainnet?.token?.parent?.erc20,
   abi: erc20ABI,
@@ -59,11 +61,13 @@ const EthToPolygonBridge = () => {
   // before useAccount, define the isMounted() hook to deal with SSR issues
   const isMounted = useIsMounted();
   // read the allowance of polygon deposit
-  const { allowance } = useAllowance();
+  // const { allowance } = useAllowance();
   // hook to get the cosmos wallet
   const chainContext5 = useChain(defaultChainName);
   const { address: mantleAddress, status: mantleStatus } = chainContext5;
   const gravityAddress = convertBech32Address(mantleAddress, gravityChainName);
+
+  const { chain } = useNetwork();
 
   // hook to get the address of the connected ethereum wallet
   const { address, isConnected, connector } = useAccount();
@@ -73,7 +77,17 @@ const EthToPolygonBridge = () => {
   // const MAX_UINT256 = BigNumber("1.157920892373162e+71");
   let toastId1, toastId2, toastId3, toastId4;
 
-  // wagmi hook to read the allowance of gravity deposit
+  // wagmi hook to read the allowance of polygon deposit
+  const { data: allowancePolygon } = useContractRead({
+    ...mntlTokenContract,
+    functionName: "allowance",
+    args: [address, polygonDepositContract?.address],
+    select: (data) => data?.toString?.(),
+    enabled: isWalletEthConnected && address,
+    ...hookArgs,
+  });
+
+  // wagmi hook to read the allowance of gravity deposit in Eth Chain
   const { data: allowanceGravity } = useContractRead({
     ...mntlTokenContract,
     functionName: "allowance",
@@ -87,7 +101,7 @@ const EthToPolygonBridge = () => {
   const { data: mntlEthBalanceData } = useBalance({
     address: address,
     token: parentERC20TokenAddress,
-    watch: true,
+    ...hookArgs,
   });
 
   const mntlEthBalance = toDenom(mntlEthBalanceData?.formatted);
@@ -95,7 +109,7 @@ const EthToPolygonBridge = () => {
   // get the ETH balance using wagmi hook
   const { data: ethBalanceData } = useBalance({
     address: address,
-    watch: true,
+    ...hookArgs,
   });
 
   // FORM REDUCER
@@ -198,14 +212,15 @@ const EthToPolygonBridge = () => {
     ...mntlTokenContract,
     functionName: "approve",
     args: [gravityEthereumBridgeContract?.address, MAX_UINT256],
-    enabled: isWalletEthConnected && address,
-    chainId: chainID,
+    enabled: isWalletEthConnected && address && chain?.id == ethereumChainID,
+    chainId: ethereumChainID,
     onError(error) {
-      console.error("prepare error: ", error);
-      if (true)
+      console.error("prepare error2: ", error);
+      if (true) {
         toast.error(PREPARE_CONTRACT_ERROR, {
           ...toastConfig,
         });
+      }
     },
   });
 
@@ -213,7 +228,7 @@ const EthToPolygonBridge = () => {
     ...configApprove,
     onError(error) {
       console.error(error);
-      notify(null, toastId4, "Transaction Aborted. Try again.");
+      updateToastNotification(ethereumChainName, null, toastId4);
       toastId4 = null;
     },
   });
@@ -232,10 +247,11 @@ const EthToPolygonBridge = () => {
       isWalletCosmosConnected &&
       address &&
       gravityAddress &&
-      formState?.transferAmount,
-    chainId: chainID,
+      formState?.transferAmount &&
+      chain?.id == ethereumChainID,
+    chainId: ethereumChainID,
     onError(error) {
-      console.error("prepare error: ", error);
+      console.error("prepare error3: ", error);
       /* if (true) {
         toast.error(PREPARE_CONTRACT_ERROR, {
           ...toastConfig,
@@ -248,41 +264,10 @@ const EthToPolygonBridge = () => {
     ...configSendGravity,
     onError(error) {
       console.error(error);
-      notify(null, toastId3, "Transaction Aborted. Try again.");
+      updateToastNotification(ethereumChainName, null, toastId3);
       toastId3 = null;
     },
   });
-
-  const CustomToastWithLink = ({ txHash, message }) => (
-    <p>
-      {message}
-      <Link href={`https://etherscan.io/tx/${txHash}`}>
-        <a style={{ color: "#ffc640" }} target="_blank">
-          {" "}
-          Here
-        </a>
-      </Link>
-    </p>
-  );
-
-  const notify = (txHash, id, message) => {
-    if (txHash) {
-      toast.update(id, {
-        render: <CustomToastWithLink message={message} txHash={txHash} />,
-        type: "success",
-        isLoading: false,
-        toastId: txHash,
-        ...toastConfig,
-      });
-    } else {
-      toast.update(id, {
-        render: message,
-        type: "error",
-        isLoading: false,
-        ...toastConfig,
-      });
-    }
-  };
 
   // CONTROLLER FUNCTIONS
   const handleOpenWeb3Modal = async (e) => {
@@ -340,9 +325,14 @@ const EthToPolygonBridge = () => {
       console.log("response: ", response, " error: ", error);
 
       if (response) {
-        notify(response, toastId1, "Transfer might take upto 22 mins. Check ");
+        updateToastNotification(
+          ethereumChainName,
+          response,
+          toastId1,
+          "Transfer might take upto 22 mins. Check "
+        );
       } else {
-        notify(null, toastId1, "Transaction Aborted. Try again.");
+        updateToastNotification(ethereumChainName, null, toastId1);
       }
       // reset the form values
       formDispatch({ type: "RESET" });
@@ -361,9 +351,9 @@ const EthToPolygonBridge = () => {
       const { response, error } = await approveMaxDeposit(address, connector);
       console.log("response: ", response, " error: ", error);
       if (response) {
-        notify(response, toastId2, "Transaction Submitted. Check ");
+        updateToastNotification(ethereumChainName, response, toastId2);
       } else {
-        notify(null, toastId2, "Transaction Aborted. Try again.");
+        updateToastNotification(ethereumChainName, null, toastId2);
       }
     } catch (error) {
       console.error("Runtime Error: ", error);
@@ -402,13 +392,14 @@ const EthToPolygonBridge = () => {
         const transactionResponse = await writeAsyncGravity();
 
         if (transactionResponse?.hash) {
-          notify(
+          updateToastNotification(
+            ethereumChainName,
             transactionResponse?.hash,
             toastId3,
             "Transfer might take upto 20 mins. Check "
           );
         } else {
-          notify(null, toastId3, "Transaction Aborted. Try again.");
+          updateToastNotification(ethereumChainName, null, toastId3);
         }
       } catch (error) {
         console.error("Runtime Error: ", error);
@@ -430,13 +421,13 @@ const EthToPolygonBridge = () => {
 
       console.log("response: ", transactionResponse);
       if (transactionResponse?.hash) {
-        notify(
+        updateToastNotification(
+          ethereumChainName,
           transactionResponse?.hash,
-          toastId4,
-          "Transaction Submitted. Check "
+          toastId4
         );
       } else {
-        notify(null, toastId4, "Transaction Aborted. Try again.");
+        updateToastNotification(ethereumChainName, null, toastId4);
       }
     } catch (error) {
       console.error("Runtime Error: ", error);
@@ -483,8 +474,8 @@ const EthToPolygonBridge = () => {
     !isObjEmpty(formState?.errorMessages);
   const isApproveRequiredPolygon =
     isWalletEthConnected &&
-    (BigNumber(allowance).isLessThanOrEqualTo(0) ||
-      BigNumber(allowance).isLessThan(
+    (BigNumber(allowancePolygon).isLessThanOrEqualTo(0) ||
+      BigNumber(allowancePolygon).isLessThan(
         BigNumber(formState?.transferAmount || 0)
       ));
 
@@ -530,7 +521,7 @@ const EthToPolygonBridge = () => {
       className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
       onClick={handleApproveSubmitPolygon}
     >
-      Approve Polygon Send <i className="bi bi-hand-thumbs-up-fill" />
+      Approve Polygon Send <i className="bi bi-hand-thumbs-up" />
     </button>
   ) : (
     <button
@@ -547,7 +538,7 @@ const EthToPolygonBridge = () => {
       className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2"
       onClick={handleApproveSubmitGravity}
     >
-      Approve Gravity Send <i className="bi bi-hand-thumbs-up-fill" />
+      Approve Gravity Send <i className="bi bi-hand-thumbs-up" />
     </button>
   ) : (
     <button
@@ -568,10 +559,10 @@ const EthToPolygonBridge = () => {
     displayEthBalance,
     " isApproveRequiredPolygon: ",
     isApproveRequiredPolygon,
-    " maxval: ",
-    MAX_UINT256.toString(),
-    " mntlEthBalanceData?.formatted: ",
-    mntlEthBalanceData?.formatted
+    " allowancePolygon: ",
+    allowancePolygon,
+    " allowanceGravity: ",
+    allowanceGravity
   ); */
 
   return (

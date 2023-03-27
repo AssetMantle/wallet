@@ -1,27 +1,30 @@
 import { disconnect } from "@wagmi/core";
 import { useWeb3Modal } from "@web3modal/react";
 import BigNumber from "bignumber.js";
-import Link from "next/link";
-import { useReducer } from "react";
+import { useReducer, useState } from "react";
 import { toast } from "react-toastify";
-import { useAccount, useBalance, useNetwork, useSwitchNetwork } from "wagmi";
+import { useAccount, useBalance, useProvider } from "wagmi";
+import Tooltip from "../components/Tooltip";
 import {
   defaultChainSymbol,
   placeholderAvailableBalance,
-  polygonChainId,
+  polygonChainName,
   polygonChainSymbol,
   toastConfig,
+  updateToastNotification,
 } from "../config";
 import {
   childERC20TokenAddress,
   decimalize,
   ethConfig,
+  exitMntlToken,
   formConstants,
+  fromChainDenom,
   fromDenom,
   placeholderAddressEth,
   toDenom,
-  withdrawMntlToken,
   useCheckpointedBurnTransactions,
+  withdrawMntlToken,
 } from "../data";
 import {
   handleCopy,
@@ -30,37 +33,43 @@ import {
   useIsMounted,
 } from "../lib";
 
+const polygonChainId = ethConfig?.mainnet?.polygonChainId;
+const hookArgs = { watch: true, chainId: polygonChainId };
+
 const PolygonBridge = () => {
   // WALLET HOOKS
   // before useAccount, define the isMounted() hook to deal with SSR issues
   const isMounted = useIsMounted();
   const { open } = useWeb3Modal();
+  const [checkpointedTxnIndex, setCheckpointedTxnIndex] = useState(0);
 
-  let toastId1;
+  let toastId1, toastId2;
+
+  // get the providers for ethereum and polygon
+  const providerEthereum = useProvider({ chainId: 1 });
+  const providerPolygon = useProvider({ chainId: 137 });
+
+  // network and swtich
 
   // books to get the address of the connected wallet
   const { address, isConnected, connector } = useAccount();
 
   // get the mntl token balance in polygon chain using wagmi hook
   const { data: mntlEthBalanceData } = useBalance({
+    ...hookArgs,
     address: address,
     token: childERC20TokenAddress,
-    chainId: polygonChainId,
-    watch: true,
   });
 
-  const { chain } = useNetwork();
-  const { chains, pendingChainId, switchNetwork } = useSwitchNetwork();
   const { burnTransactions } = useCheckpointedBurnTransactions();
 
   const mntlEthBalance = toDenom(mntlEthBalanceData?.formatted);
 
   // get the matic balance in polygon chain using wagmi hook
   const { data: polygonBalanceData } = useBalance({
+    ...hookArgs,
     address: address,
     token: ethConfig?.mainnet?.token?.child?.matic,
-    chainId: polygonChainId,
-    watch: true,
   });
 
   // FORM REDUCER
@@ -160,37 +169,6 @@ const PolygonBridge = () => {
 
   // CONTROLLER FUNCTIONS
 
-  const CustomToastWithLink = ({ txHash, message }) => (
-    <p>
-      {message}
-      <Link href={`https://polygonscan.com/tx/${txHash}`}>
-        <a style={{ color: "#ffc640" }} target="_blank">
-          {" "}
-          Here
-        </a>
-      </Link>
-    </p>
-  );
-
-  const notify = (txHash, id, message) => {
-    if (txHash) {
-      toast.update(id, {
-        render: <CustomToastWithLink message={message} txHash={txHash} />,
-        type: "success",
-        isLoading: false,
-        toastId: txHash,
-        ...toastConfig,
-      });
-    } else {
-      toast.update(id, {
-        render: message,
-        type: "error",
-        isLoading: false,
-        ...toastConfig,
-      });
-    }
-  };
-
   const handleCopyOnClick = (e) => {
     e.preventDefault();
     handleCopy(address);
@@ -224,6 +202,9 @@ const PolygonBridge = () => {
     console.log("inside handleSubmitWithdraw()");
     e.preventDefault();
 
+    const polygonProviderObj = await providerPolygon?.ready;
+    console.log("polygonProviderObj: ", polygonProviderObj);
+
     // copy form states to local variables
     const localTransferAmount = formState?.transferAmount;
     const localMntlEthBalance = mntlEthBalanceData?.formatted;
@@ -244,14 +225,14 @@ const PolygonBridge = () => {
       isObjEmpty(formState?.errorMessages);
 
     if (isFormValid) {
+      // switch network test
+      // switchNetwork?.(137);
+
+      // initiate toast notification
       toastId1 = toast.loading("Transaction initiated ...", toastConfig);
 
       // define local variables
       const localTransferAmount = formState?.transferAmount;
-      const polygonChainId = ethConfig?.mainnet?.polygonChainId;
-
-      // switch network to polygon
-      // switchNetwork?.(polygonChainId);
 
       // create transaction
       const { response, error } = await withdrawMntlToken(
@@ -262,13 +243,43 @@ const PolygonBridge = () => {
       console.log("response: ", response, " error: ", error);
 
       if (response) {
-        notify(response, toastId1, "Transfer submitted. Check ");
+        updateToastNotification(
+          polygonChainName,
+          response,
+          toastId1,
+          "Withdraw might take upto 22 mins. Check"
+        );
       } else {
-        notify(null, toastId1, "Transaction Aborted. Try again.");
+        updateToastNotification(polygonChainName, null, toastId1);
       }
       // reset the form values
       formDispatch({ type: "RESET" });
     }
+  };
+
+  const handleSubmitEthereum = async (e) => {
+    console.log("inside handleSubmitEthereum()");
+    e.preventDefault();
+
+    toastId2 = toast.loading("Transaction initiated ...", toastConfig);
+
+    // define local variables
+    const txHash = burnTransactions?.[checkpointedTxnIndex]?.transactionHash;
+
+    // const parentProvider = await connector?.getProvider({ chainId: 1 });
+    // const childProvider = await connector?.getProvider({ chainId: 137 });
+
+    // create transaction
+    const { response, error } = await exitMntlToken(address, txHash);
+    console.log("response: ", response, " error: ", error);
+
+    if (response) {
+      updateToastNotification(polygonChainName, response, toastId2);
+    } else {
+      updateToastNotification(polygonChainName, null, toastId2);
+    }
+    // reset the form values
+    formDispatch({ type: "RESET" });
   };
 
   // DISPLAY VARIABLES
@@ -292,6 +303,10 @@ const PolygonBridge = () => {
     formState?.errorMessages?.transferAmountErrorMsg;
   const isSubmitDisabled =
     !isWalletEthConnected || !isObjEmpty(formState?.errorMessages);
+  const isSubmitDisabledEthereum =
+    !isWalletEthConnected ||
+    !isObjEmpty(formState?.errorMessages) ||
+    burnTransactions?.length == 0;
   const displayInputAmountValue = formState?.transferAmount;
 
   // connect button with logic
@@ -333,10 +348,10 @@ const PolygonBridge = () => {
     displayMaticBalance,
     " burnTransactions: ",
     burnTransactions,
-    " chain: ",
-    chain,
-    " chains: ",
-    chains
+    " providerEthereum: ",
+    providerEthereum,
+    " providerPolygon",
+    providerPolygon
   );
 
   return (
@@ -394,7 +409,44 @@ const PolygonBridge = () => {
             disabled={isSubmitDisabled}
             onClick={handleSubmitWithdraw}
           >
-            Send to Ethereum <i className="bi bi-arrow-up" />
+            1. Withdraw from Polygon <i className="bi bi-rocket-takeoff" />
+          </button>
+        </div>
+        <div className="d-flex align-items-center justify-content-end gap-3">
+          <Tooltip
+            titlePrimary={true}
+            description={
+              "Once a Withdraw Transaction is checkpointed, the dropdown will be populated with the transaction detail to be sent to Ethereum"
+            }
+            style={{ right: "330%" }}
+          />
+          <select
+            name="checkpointedBurnTxnSelect"
+            id="checkpointedBurnTxnSelect"
+            defaultValue={checkpointedTxnIndex}
+            className="am-select caption2"
+            onChange={(e) => setCheckpointedTxnIndex(e.target.value)}
+          >
+            {burnTransactions?.length > 0 ? (
+              burnTransactions?.map?.((txnObject, index) => (
+                <option key={index} value={index}>
+                  {`${defaultChainSymbol} ${fromChainDenom(
+                    txnObject?.amount
+                  )}, ${shortenEthAddress(txnObject?.transactionHash)}`}
+                </option>
+              ))
+            ) : (
+              <option key={0} value={0}>
+                No Active Withdraw Txns Found
+              </option>
+            )}
+          </select>
+          <button
+            className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
+            disabled={isSubmitDisabledEthereum}
+            onClick={handleSubmitEthereum}
+          >
+            2. Send to Ethereum <i className="bi bi-arrow-up" />
           </button>
         </div>
       </div>

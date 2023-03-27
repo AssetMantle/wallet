@@ -3888,6 +3888,16 @@
     react-icons "4.4.0"
     ts-log "^2.2.5"
 
+"@cosmos-kit/core@^1.1.3":
+  version "1.1.11"
+  resolved "https://registry.yarnpkg.com/@cosmos-kit/core/-/core-1.1.11.tgz#b4dc499b2d8c24b2267c2f89fa452727dc961ca5"
+  integrity sha512-PSKTfrqK2OgH66BBCFKsbluQIAmgs2UL9Ghovxen82Wge5fqviufPaftC78pfhOOOZcKlas3zb+nDy/+NwIRkw==
+  dependencies:
+    "@chain-registry/types" "0.13.0"
+    "@walletconnect/types" "2.2.0"
+    bowser "2.11.0"
+    events "3.3.0"
+
 "@cosmos-kit/cosmostation-extension@^0.14.28":
   version "0.14.28"
   resolved "https://registry.yarnpkg.com/@cosmos-kit/cosmostation-extension/-/cosmostation-extension-0.14.28.tgz#b482d19129ea9fd5653e4650198cf09b63b5512c"
@@ -3921,6 +3931,12 @@
     "@babel/runtime" "7.11.2"
     "@cosmos-kit/cosmostation-extension" "^0.14.28"
     "@cosmos-kit/cosmostation-mobile" "^0.14.28"
+
+"@cosmos-kit/frontier-extension@file:./data/extensions/frontier.tgz":
+  version "0.1.3"
+  resolved "file:./data/extensions/frontier.tgz#892bb1c704038a66ddca626b8a532cd3067e31be"
+  dependencies:
+    "@cosmos-kit/core" "^1.1.3"
 
 "@cosmos-kit/keplr-extension@^0.32.28":
   version "0.32.28"
@@ -4988,6 +5004,13 @@
   integrity sha512-va15kYZr7KZNNPZdxONGQzpUr+4sxVu7V/VG7a8mRfPPXUyhEYj5RzXCQmGrlP3tAh0L3HHm5AjBMFYRqlM9SA==
   dependencies:
     "@lit-labs/ssr-dom-shim" "^1.0.0"
+
+"@maticnetwork/maticjs-ethers@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@maticnetwork/maticjs-ethers/-/maticjs-ethers-1.0.3.tgz#29dc7740f07d2f295535633e2c2e7f9fa0e21d90"
+  integrity sha512-paGulmLG62We/pyOVH3Q7mZd/E/SGFKa+rXtyvpoMB8v5oFn/yTtoKvLWyIoZ8zBi4JrjSegKL+/US5+OibYwQ==
+  dependencies:
+    ethers "^5.5.1"
 
 "@maticnetwork/maticjs-web3@^1.0.4":
   version "1.0.4"
@@ -9009,7 +9032,7 @@ ethereumjs-util@^7.1.0, ethereumjs-util@^7.1.1, ethereumjs-util@^7.1.2, ethereum
     ethereum-cryptography "^0.1.3"
     rlp "^2.2.4"
 
-ethers@^5.7.2:
+ethers@^5.5.1, ethers@^5.7.2:
   version "5.7.2"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.7.2.tgz#3a7deeabbb8c030d4126b24f84e525466145872e"
   integrity sha512-wswUsmWo1aOK8rR7DIKiWSw9DbLWe6x98Jrn8wcTflTVvaXhAMaB5zGAXy0GYQEQp9iO1iSHWVyARQm11zUtyg==

@@ -7,6 +7,7 @@ import {
   useAccount,
   useContractRead,
   useContractWrite,
+  useNetwork,
   usePrepareContractWrite,
 } from "wagmi";
 import {
@@ -22,9 +23,12 @@ const uniV3StakerContractAddress =
   ethConfig?.mainnet?.uniswap?.uniV3Staker?.address;
 const uniV3StakerABI = ethConfig?.mainnet?.uniswap?.uniV3Staker?.abi;
 const chainID = ethConfig?.mainnet?.chainID;
+const ethereumChainID = ethConfig?.mainnet?.chainID;
 
 const StaticUniswapRewards = () => {
   // HOOKS
+  const { chain } = useNetwork();
+
   // hooks to get the incentive program data
   const { incentiveList, isLoadingIncentiveList } = useIncentiveList();
   const { data: selectedIncentiveIndex } = useSWR("selectedIncentive");
@@ -58,7 +62,11 @@ const StaticUniswapRewards = () => {
     ...uniV3StakerContract,
     functionName: "claimReward",
     args: [selectedIncentive?.rewardToken, address, 0],
-    enabled: isConnected && address && isIncentivePopulated,
+    enabled:
+      isConnected &&
+      address &&
+      isIncentivePopulated &&
+      ethereumChainID == chain?.id,
     chainId: 1,
     onError(error) {
       console.error(error.message);

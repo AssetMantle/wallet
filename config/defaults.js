@@ -2,6 +2,8 @@
 export const defaultRefreshInterval = 2000;
 export const slowRefreshInterval = 10000;
 export const defaultToastContainerId = "ToastContainerID1";
+export const defaultToastErrorMessage = "Transaction Aborted. Try again.";
+export const defaultToastSubmittedMessage = "Transaction submitted. Check ";
 // ASSETMANTLE CHAIN
 export const defaultChainName = "assetmantle";
 export const defaultChainSymbol = "$MNTL";
@@ -61,11 +63,13 @@ export const gravityIBCSourcePort = "transfer";
 export const gravityIBCSourceChannel = "channel-82";
 
 // ETHEREUM CHAIN
+export const ethereumChainName = "ethereum";
 export const ethereumChainSymbol = "$ETH";
 export const ethereumChainId = 1;
 export const defaultEthGasPrice = "40000000000";
 
 // POLYGON CHAIN
+export const polygonChainName = "polygon";
 export const polygonChainSymbol = "$MATIC";
 export const polygonChainId = 137;
 
