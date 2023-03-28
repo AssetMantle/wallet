@@ -79,7 +79,12 @@ export default function Header() {
     >
       <Link href="/">
         <a>
-          <Image layout="fill" src={NavBarData.logo} alt={NavBarData.title} />
+          <Image
+            layout="fill"
+            src={NavBarData.logo}
+            alt={NavBarData.title}
+            priority={true}
+          />
         </a>
       </Link>
     </div>
