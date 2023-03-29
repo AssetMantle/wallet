@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useVote } from "../data";
 import Tooltip from "./Tooltip";
 
@@ -6,17 +6,22 @@ const ActiveProposals = ({
   status,
   voteState,
   proposal,
+  voteDispatch,
   index,
-  OnVoteSelect,
-  onVoteHover,
+  // OnVoteSelect,
+  // onVoteHover,
 }) => {
   const { voteInfo, isLoadingVote, errorVote } = useVote(proposal?.proposal_id);
+  const [OnVoteSelect, setOnVoteSelect] = useState(null);
+  const [onVoteHover, setOnVoteHover] = useState(null);
 
   const getTypeProposal = (typeUrl) => {
     const typeProposalArray = typeUrl?.split?.(".");
     const typeProposal = typeProposalArray?.slice?.(-1)?.[0];
     return typeProposal;
   };
+
+  const hasVoted = voteInfo?.hasVoted || false;
 
   const voteOptions = [
     {
@@ -45,10 +50,19 @@ const ActiveProposals = ({
     },
   ];
 
-  const hasVoted = !!voteInfo.option;
-
   return (
-    <>
+    <div
+      onMouseOver={() => setOnVoteHover(proposal?.proposal_id)}
+      onMouseOut={() => setOnVoteHover(null)}
+      className={`col-12 col-md-6 p-2`}
+      onClick={() => {
+        setOnVoteSelect(index);
+        voteDispatch({
+          type: "SET_PROPOSAL_ID",
+          payload: proposal?.proposal_id,
+        });
+      }}
+    >
       <div
         className={hasVoted ? `bg-voted rounded-3` : `bg-translucent rounded-3`}
         // style={{ opacity: proposal.idIcon ? "1" : "0.6" }}
@@ -64,9 +78,9 @@ const ActiveProposals = ({
                       <span className="position-relative body1">
                         <i
                           className={`position-absolute top-0 bottom-0 left-0 vote_no_with_veto ${
-                            voteOptions.find(
-                              (item) => item?.option == proposal?.option
-                            ).icon
+                            voteOptions?.find?.(
+                              (item) => item?.option == voteInfo?.option
+                            )?.icon
                           }`}
                           style={{
                             zIndex: "1",
@@ -75,9 +89,9 @@ const ActiveProposals = ({
                         ></i>{" "}
                         <i
                           className={`position-absolute top-0 bottom-0 vote_no_with_veto ${
-                            voteOptions.find(
-                              (item) => item?.option == proposal?.option
-                            ).icon
+                            voteOptions?.find?.(
+                              (item) => item?.option == voteInfo?.option
+                            )?.icon
                           }`}
                           style={{
                             left: "12px",
@@ -94,21 +108,21 @@ const ActiveProposals = ({
                     title={
                       <i
                         className={
-                          voteOptions.find(
-                            (item) => item?.option == proposal?.option
-                          ).icon
+                          voteOptions?.find?.(
+                            (item) => item?.option == voteInfo?.option
+                          )?.icon
                         }
                         style={{
-                          color: voteOptions.find(
-                            (item) => item?.option == proposal?.option
-                          ).color,
+                          color: voteOptions?.find?.(
+                            (item) => item?.option == voteInfo?.option
+                          )?.color,
                         }}
                       ></i>
                     }
                     description={
-                      voteOptions.find(
-                        (item) => item?.option == proposal?.option
-                      ).description
+                      voteOptions?.find?.(
+                        (item) => item?.option == voteInfo?.option
+                      )?.description
                     }
                   />
                 )
@@ -146,7 +160,7 @@ const ActiveProposals = ({
           </p>
           {OnVoteSelect !== index &&
           onVoteHover === proposal?.proposal_id &&
-          voteState.proposalId !== proposal?.proposal_id ? (
+          voteState.proposalID !== proposal?.proposal_id ? (
             <span
               className="text-primary position-absolute bottom-0"
               style={{
@@ -170,7 +184,7 @@ const ActiveProposals = ({
           ) : null}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
