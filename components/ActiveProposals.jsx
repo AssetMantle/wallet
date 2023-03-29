@@ -46,7 +46,7 @@ const ActiveProposals = ({
       option: "VOTE_OPTION_NO_WITH_VETO",
       icon: "bi bi-x-circle-fill",
       description: "No With Veto",
-      color: "#FF9133",
+      color: "#696969",
     },
   ];
 
@@ -72,60 +72,27 @@ const ActiveProposals = ({
             <h4 className="d-flex gap-2 align-items-center body2 text-primary">
               #{proposal?.proposal_id}{" "}
               {hasVoted ? (
-                proposal?.option == "VOTE_OPTION_NO_WITH_VETO" ? (
-                  <Tooltip
-                    title={
-                      <span className="position-relative body1">
-                        <i
-                          className={`position-absolute top-0 bottom-0 left-0 vote_no_with_veto ${
-                            voteOptions?.find?.(
-                              (item) => item?.option == voteInfo?.option
-                            )?.icon
-                          }`}
-                          style={{
-                            zIndex: "1",
-                            color: "red",
-                          }}
-                        ></i>{" "}
-                        <i
-                          className={`position-absolute top-0 bottom-0 vote_no_with_veto ${
-                            voteOptions?.find?.(
-                              (item) => item?.option == voteInfo?.option
-                            )?.icon
-                          }`}
-                          style={{
-                            left: "12px",
-                            zIndex: "2",
-                            color: "red",
-                          }}
-                        ></i>
-                      </span>
-                    }
-                    description="No with Veto"
-                  />
-                ) : (
-                  <Tooltip
-                    title={
-                      <i
-                        className={
-                          voteOptions?.find?.(
-                            (item) => item?.option == voteInfo?.option
-                          )?.icon
-                        }
-                        style={{
-                          color: voteOptions?.find?.(
-                            (item) => item?.option == voteInfo?.option
-                          )?.color,
-                        }}
-                      ></i>
-                    }
-                    description={
-                      voteOptions?.find?.(
-                        (item) => item?.option == voteInfo?.option
-                      )?.description
-                    }
-                  />
-                )
+                <Tooltip
+                  title={
+                    <i
+                      className={
+                        voteOptions?.find?.(
+                          (item) => item?.option == voteInfo?.option
+                        )?.icon
+                      }
+                      style={{
+                        color: voteOptions?.find?.(
+                          (item) => item?.option == voteInfo?.option
+                        )?.color,
+                      }}
+                    ></i>
+                  }
+                  description={
+                    voteOptions?.find?.(
+                      (item) => item?.option == voteInfo?.option
+                    )?.description
+                  }
+                />
               ) : null}
             </h4>
             <div
