@@ -118,33 +118,30 @@ const DonutChart = ({ selectedProposal, isLoadingProposals }) => {
             </div>
           </nav>
 
-          {isLoadingVotes ? (
-            <p>Loading</p>
-          ) : (
-            <ResponsiveSunburst
-              data={chartData}
-              margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
-              id="name"
-              value="power"
-              cornerRadius={2}
-              borderColor={{ theme: "background" }}
-              colors={{ scheme: "set2" }}
-              childColor={{
-                from: "color",
-                modifiers: [["brighter", 0.1]],
-              }}
-              theme={{
-                tooltip: {
-                  container: {
-                    background: "#333",
-                  },
+          <ResponsiveSunburst
+            data={chartData}
+            margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
+            id="name"
+            value="power"
+            cornerRadius={2}
+            borderColor={{ theme: "background" }}
+            colors={{ scheme: "set2" }}
+            childColor={{
+              from: "color",
+              modifiers: [["brighter", 0.1]],
+            }}
+            theme={{
+              tooltip: {
+                container: {
+                  background: "#333",
                 },
-              }}
-              enableArcLabels={true}
-              arcLabelsSkipAngle={10}
-              arcLabelsTextColor="black"
-            />
-          )}
+              },
+            }}
+            enableArcLabels={true}
+            arcLabelsSkipAngle={10}
+            arcLabelsTextColor="black"
+          />
+
           <div className="justify-content-around mb-5 row">
             {legend.map((item, index) => (
               <div
