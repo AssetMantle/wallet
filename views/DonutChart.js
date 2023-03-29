@@ -2,7 +2,7 @@ import React from "react";
 import { ResponsiveSunburst } from "@nivo/sunburst";
 import { useAllVotes } from "../data";
 
-const DonutChart = ({ selectedProposal, proposalID, isLoadingProposals }) => {
+const DonutChart = ({ selectedProposal, isLoadingProposals }) => {
   const isDataZero =
     selectedProposal?.finalTallyResult?.yes == 0 &&
     selectedProposal?.finalTallyResult?.abstain == 0 &&
@@ -16,14 +16,20 @@ const DonutChart = ({ selectedProposal, proposalID, isLoadingProposals }) => {
     { title: "No with Veto", color: "#E689C2" },
   ];
 
-  const { allVotes, isLoadingVotes, errorVotes } = useAllVotes(proposalID);
+  const { allVotes, isLoadingVotes, errorVotes } = useAllVotes(
+    selectedProposal?.proposal_id
+  );
 
-  const yesVotes = allVotes.filter((item) => item?.option == "VOTE_OPTION_YES");
-  const noVotes = allVotes.filter((item) => item?.option == "VOTE_OPTION_NO");
-  const abstainVotes = allVotes.filter(
+  const yesVotes = allVotes?.filter?.(
+    (item) => item?.option == "VOTE_OPTION_YES"
+  );
+  const noVotes = allVotes?.filter?.(
+    (item) => item?.option == "VOTE_OPTION_NO"
+  );
+  const abstainVotes = allVotes?.filter?.(
     (item) => item?.option == "VOTE_OPTION_ABSTAIN"
   );
-  const noWithVetoVotes = allVotes.filter(
+  const noWithVetoVotes = allVotes?.filter?.(
     (item) => item?.option == "VOTE_OPTION_NO_WITH_VETO"
   );
 
@@ -35,7 +41,7 @@ const DonutChart = ({ selectedProposal, proposalID, isLoadingProposals }) => {
       {
         name: "Yes",
         color: "hsl(11, 70%, 50%)",
-        children: yesVotes.map((item) => {
+        children: yesVotes?.map?.((item) => {
           return {
             name: item?.voter,
             color: "hsl(62, 70%, 50%)",
@@ -49,7 +55,7 @@ const DonutChart = ({ selectedProposal, proposalID, isLoadingProposals }) => {
       {
         name: "Abstain",
         color: "hsl(11, 70%, 50%)",
-        children: abstainVotes.map((item) => {
+        children: abstainVotes?.map?.((item) => {
           return {
             name: item?.voter,
             color: "hsl(62, 70%, 50%)",
@@ -63,7 +69,7 @@ const DonutChart = ({ selectedProposal, proposalID, isLoadingProposals }) => {
       {
         name: "No",
         color: "hsl(11, 70%, 50%)",
-        children: noVotes.map((item) => {
+        children: noVotes?.map?.((item) => {
           return {
             name: item?.voter,
             color: "hsl(62, 70%, 50%)",
@@ -77,7 +83,7 @@ const DonutChart = ({ selectedProposal, proposalID, isLoadingProposals }) => {
       {
         name: "No With Veto",
         color: "hsl(11, 70%, 50%)",
-        children: noWithVetoVotes.map((item) => {
+        children: noWithVetoVotes?.map?.((item) => {
           return {
             name: item?.voter,
             color: "hsl(62, 70%, 50%)",
@@ -112,29 +118,33 @@ const DonutChart = ({ selectedProposal, proposalID, isLoadingProposals }) => {
             </div>
           </nav>
 
-          <ResponsiveSunburst
-            data={chartData}
-            margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
-            id="name"
-            value="power"
-            cornerRadius={2}
-            borderColor={{ theme: "background" }}
-            colors={{ scheme: "set2" }}
-            childColor={{
-              from: "color",
-              modifiers: [["brighter", 0.1]],
-            }}
-            theme={{
-              tooltip: {
-                container: {
-                  background: "#333",
+          {isLoadingVotes ? (
+            <p>Loading</p>
+          ) : (
+            <ResponsiveSunburst
+              data={chartData}
+              margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
+              id="name"
+              value="power"
+              cornerRadius={2}
+              borderColor={{ theme: "background" }}
+              colors={{ scheme: "set2" }}
+              childColor={{
+                from: "color",
+                modifiers: [["brighter", 0.1]],
+              }}
+              theme={{
+                tooltip: {
+                  container: {
+                    background: "#333",
+                  },
                 },
-              },
-            }}
-            enableArcLabels={true}
-            arcLabelsSkipAngle={10}
-            arcLabelsTextColor="black"
-          />
+              }}
+              enableArcLabels={true}
+              arcLabelsSkipAngle={10}
+              arcLabelsTextColor="black"
+            />
+          )}
           <div className="justify-content-around mb-5 row">
             {legend.map((item, index) => (
               <div

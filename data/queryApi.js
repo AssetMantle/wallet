@@ -854,20 +854,20 @@ export const useVote = (proposalId) => {
       });
       voteInfo = vote;
     } catch (error) {
-      console.error(`swr fetcher : url: ${url},  error: ${error}`);
+      if (error.response.status == 400) {
+        return { hasVoted: false };
+      } else {
+        console.error(`swr fetcher : url: ${url},  error: ${error} `);
+        throw error;
+      }
     }
-    // return the data
-    return voteInfo;
+    //return the data
+    return { ...voteInfo, hasVoted: true };
   };
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: voteObject, error } = useSwr(
     proposalId && address ? ["vote", proposalId, address] : null,
-    fetchVote,
-    {
-      fallbackData: {},
-      suspense: true,
-      refreshInterval: defaultRefreshInterval,
-    }
+    fetchVote
   );
   return {
     voteInfo: voteObject,
@@ -907,24 +907,7 @@ export const useAllProposals = () => {
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: proposalsArray, error } = useSwr(
     "useAllProposals",
-    fetchAllProposals,
-    {
-      fallbackData: [
-        {
-          proposal_id: "",
-          content: {},
-          status: "",
-          deposit_end_time: "",
-          final_tally_result: {},
-          submit_time: "",
-          total_deposit: [],
-          voting_end_time: "",
-          voting_start_time: "",
-        },
-      ],
-      suspense: true,
-      refreshInterval: defaultRefreshInterval,
-    }
+    fetchAllProposals
   );
   return {
     allProposals: proposalsArray,
@@ -955,20 +938,7 @@ export const useAllVotes = (proposalId) => {
     return allVotes;
   };
   // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: votesArray, error } = useSwr("useAllVotes", fetchAllVotes, {
-    fallbackData: [
-      {
-        balance: { denom: "umntl", amount: 0 },
-        delegation: {
-          delegator_address: "delegator_address",
-          validator_address: "validator_address",
-          shares: "298317289",
-        },
-      },
-    ],
-    suspense: true,
-    refreshInterval: defaultRefreshInterval,
-  });
+  const { data: votesArray, error } = useSwr("useAllVotes", fetchAllVotes);
   return {
     allVotes: votesArray,
     isLoadingVotes: !error && !votesArray,
