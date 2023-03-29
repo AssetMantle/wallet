@@ -21,7 +21,11 @@ import {
 } from "../config";
 import { convertBech32Address } from "../lib";
 import { cosmos as cosmosModule, gravity } from "../modules";
-import { bech32AddressSeperator, placeholderAddress } from "./constants";
+import {
+  bech32AddressSeperator,
+  placeholderAddress,
+  staticTradeData,
+} from "./constants";
 
 const rpcEndpoint = defaultChainRPCProxy;
 const restEndpoint = defaultChainRESTProxy;
@@ -1019,80 +1023,6 @@ const fetchAllTrades = async (url) => {
   // console.log("inside fetchAllTrades() ");
   let tradeData = [];
   let tokenDetails = {};
-  const staticData = [
-    {
-      logo: "lbank",
-      name: "LBank",
-      pair: "MNTL/USDT",
-      target_coin_id: "tether",
-
-      url: "https://www.lbank.info/exchange/mntl/usdt",
-    },
-    {
-      logo: "osmosis",
-      name: "Osmosis",
-      target_coin_id: "osmosis",
-      pair: "MNTL/OSMO",
-
-      url: "https://app.osmosis.zone/?from=OSMO&to=MNTL",
-    },
-    {
-      logo: "osmosis",
-      name: "Osmosis",
-      target_coin_id: "axlusdc",
-      pair: "MNTL/AXLUSDC",
-
-      url: "https://app.osmosis.zone/?from=USDC&to=MNTL",
-    },
-    {
-      logo: "uniswap-v3",
-      name: "Uniswap (v3)",
-      pair: "MNTL/ETH",
-      target_coin_id: "weth",
-      subTitle: "(ETH Pool)",
-      url: "https://app.uniswap.org/#/swap?theme=dark&inputCurrency=ETH&outputCurrency=0x2c4f1df9c7de0c59778936c9b145ff56813f3295",
-    },
-    {
-      logo: "mexc",
-      name: "MEXC Global",
-      pair: "MNTL/USDT",
-      target_coin_id: "tether",
-
-      url: "https://www.mexc.com/exchange/MNTL_USDT?inviteCode=1498J",
-    },
-    {
-      logo: "osmosis",
-      name: "Osmosis",
-      target_coin_id: "assetmantle",
-      pair: "ATOM/MNTL",
-
-      url: "https://app.osmosis.zone/?from=ATOM&to=MNTL",
-    },
-    {
-      logo: "quickswap-dex",
-      name: "Quickswap",
-      pair: "MNTL/USDC",
-      target_coin_id: "usd-coin",
-
-      url: "https://quickswap.exchange/#/swap?swapIndex=0&currency0=0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174&currency1=0x38A536A31bA4d8C1Bcca016AbBf786ecD25877E8",
-    },
-    {
-      logo: "quickswap-dex",
-      name: "Quickswap",
-      pair: "MNTL/VERSA",
-      target_coin_id: "versagames",
-
-      url: "https://quickswap.exchange/#/swap?inputCurrency=0x8497842420cfdbc97896c2353d75d89fc8d5be5d&outputCurrency=0x38a536a31ba4d8c1bcca016abbf786ecd25877e8&swapIndex=0",
-    },
-    {
-      logo: "Bitrue",
-      name: "Bitrue",
-      pair: "MNTL/USDT",
-      target_coin_id: "tether",
-
-      url: "https://www.bitrue.com/trade/mntl_usdt",
-    },
-  ];
 
   try {
     const data = await fetch(
@@ -1115,10 +1045,11 @@ const fetchAllTrades = async (url) => {
     };
 
     tradeData = data?.tickers?.map((item) => {
-      const match = staticData.find(
+      const match = staticTradeData.find(
         (element) =>
           element.name == item?.market?.name &&
-          element.target_coin_id == item?.target_coin_id
+          element.target_coin_id == item?.target_coin_id &&
+          element.coin_id == item?.coin_id
       );
       return {
         exchangeName: item?.market?.name,
@@ -1140,10 +1071,14 @@ const fetchAllTrades = async (url) => {
 
 export const useTrade = () => {
   // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: tradesObject, error } = useSwr("useAllTrades", fetchAllTrades, {
-    fallbackData: [],
-    suspense: true,
-  });
+  const { data: tradesObject, error } = useSwr(
+    "useTrade",
+    fetchAllTrades
+    // , {
+    //   fallbackData: [],
+    //   suspense: true,
+    // }
+  );
   // console.log("Outside SWR:", tradesArray);
   return {
     allTrades: tradesObject,

@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import Head from "next/head";
-import { useTrade } from "../data";
 import TradeTable from "../components/TradeTable";
 import TradePageTokenDetails from "../components/TradePageTokenDetails";
 
 export default function Trade() {
   const [searchValue, setSearchValue] = useState("");
-  const { allTrades, isLoadingTrades, errorTrades } = useTrade();
 
   return (
     <>
@@ -27,9 +25,7 @@ export default function Trade() {
               style={{ height: "90%" }}
             >
               <div className="w-100 h-100" style={{ overflow: "auto" }}>
-                {allTrades?.tradeData?.length ? (
-                  <TradeTable data={allTrades?.tradeData} />
-                ) : null}
+                <TradeTable />
               </div>
             </div>
           </div>
@@ -46,7 +42,7 @@ export default function Trade() {
               coming soon.
             </p>
           </div>
-          <TradePageTokenDetails data={allTrades?.tokenDetails} />
+          <TradePageTokenDetails />
         </div>
       </section>
     </>
