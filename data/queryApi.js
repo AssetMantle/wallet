@@ -867,8 +867,11 @@ export const useVote = (proposalId) => {
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: voteObject, error } = useSwr(
     proposalId && address ? ["vote", proposalId, address] : null,
-    fetchVote
+    fetchVote,
+    { refreshInterval: defaultRefreshInterval }
   );
+
+  console.log("voteObject");
   return {
     voteInfo: voteObject,
     isLoadingVote: !error && !voteObject,
