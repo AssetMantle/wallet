@@ -10,7 +10,7 @@ import {
 } from "wagmi";
 import { notify, toastConfig } from "../config";
 import { ALREADY_UNSTAKED_ERROR, ethConfig, useIncentiveList } from "../data";
-import { getIncentiveIdFromKey } from "../lib";
+import { getIncentiveIdFromKey, shiftDecimalPlaces } from "../lib";
 
 export const UniswapUnstakeEntry = ({ tokenId, liquidity }) => {
   // VARIABLES
@@ -117,6 +117,9 @@ export const UniswapUnstakeEntry = ({ tokenId, liquidity }) => {
       console.error("Runtime Error: ", error);
     }
   };
+
+  // DISPLAY VARIABLES
+  const displayLiquidity = shiftDecimalPlaces(liquidity, -18);
 
   return (
     <div className="border-b-not_last py-3 d-flex gap-2 align-items-center justify-content-between">

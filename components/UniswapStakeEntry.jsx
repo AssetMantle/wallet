@@ -3,8 +3,12 @@ import { toast } from "react-toastify";
 import useSWR from "swr";
 import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 import { notify, toastConfig } from "../config";
-import { ethConfig, INCENTIVE_ENDED_ERROR, useIncentiveList } from "../data";
-import { getIncentiveIdFromKey, getIncentiveKeyEncoded } from "../lib";
+import { INCENTIVE_ENDED_ERROR, ethConfig, useIncentiveList } from "../data";
+import {
+  getIncentiveIdFromKey,
+  getIncentiveKeyEncoded,
+  shiftDecimalPlaces,
+} from "../lib";
 
 export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
   console.log("inside UniswapStakeEntry tokenId:  ", tokenId, " array: ");
@@ -105,6 +109,9 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
       console.error("Runtime Error: ", error);
     }
   };
+
+  // DISPLAY FUNCTIONS
+  const displayLiquidity = shiftDecimalPlaces(liquidity, -18);
 
   return (
     <div className="border-b-not_last py-3 d-flex gap-2 align-items-center justify-content-between">
