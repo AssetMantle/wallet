@@ -419,7 +419,7 @@ export const useIncentiveList = () => {
   const fetchIncentiveList = async (url) => {
     console.log("inside fetchIncentiveList, URL: ", url);
 
-    let incentiveArray;
+    /* let incentiveArray;
     const query = `{
       incentives(where: {
         pool: "${ethConfig?.mainnet?.uniswap?.mntlEthPool?.address}"
@@ -456,7 +456,20 @@ export const useIncentiveList = () => {
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
-    }
+    } */
+
+    const incentiveArray = [
+      {
+        startTime: "1680353156",
+        endTime: "1688211001",
+        ended: false,
+        id: "0xc33d77241f75a0fe0eead793052f459bc62942177b597fd64d7e1b93f9b2f86b",
+        pool: "0xf5b8304dc18579c4247caad705df01928248bc71",
+        refundee: "0xae6094170abc0601b4bbe933d04368cd407c186a",
+        reward: "2500000000000",
+        rewardToken: "0x2c4f1df9c7de0c59778936c9b145ff56813f3295",
+      },
+    ];
 
     // return the data
     return incentiveArray;
