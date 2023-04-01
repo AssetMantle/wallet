@@ -34,6 +34,7 @@ export const UniswapUnstakeEntry = ({ tokenId, liquidity }) => {
   // HOOKS
   // hooks to get the incentive program data
   const { incentiveList, isLoadingIncentiveList } = useIncentiveList();
+  console.log("incentive list: ", incentiveList);
   const { data: selectedIncentiveIndex } = useSWR("selectedIncentive");
   const isIncentivePopulated = !isLoadingIncentiveList && incentiveList?.length;
 

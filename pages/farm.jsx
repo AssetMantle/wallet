@@ -19,7 +19,6 @@ import {
   useIsMounted,
 } from "../lib";
 import {
-  UniswapIncentiveList,
   UniswapRewards,
   UniswapStakeContents,
   UniswapUnstakeContents,
@@ -91,6 +90,19 @@ export default function Farm() {
         )} remaining`
       : `Incentive Ended`
     : `---`;
+
+  console.log(
+    "isIncentivePopulated: ",
+    isIncentivePopulated,
+    " incentiveList: ",
+    incentiveList,
+    " isLoadingIncentiveList: ",
+    isLoadingIncentiveList,
+    " incentiveEndTimestamp: ",
+    incentiveEndTimestamp,
+    " currentTimestamp: ",
+    currentTimestamp
+  );
 
   const tabTitleJSX = tabs.map((tab, index) => (
     <button
@@ -209,7 +221,7 @@ export default function Farm() {
         </ScrollableSectionContainer>
         <ScrollableSectionContainer className="col-12 col-lg-4 d-flex flex-column gap-3 h-90">
           <UniswapRewards />
-          <UniswapIncentiveList />
+          {/* <UniswapIncentiveList /> */}
         </ScrollableSectionContainer>
       </section>
     </>
