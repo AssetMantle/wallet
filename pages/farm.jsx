@@ -172,9 +172,21 @@ export default function Farm() {
         <h4 className="col-3 py-1 caption text-gray">APR</h4>
         <p className="col-9 py-1 body2">200%</p>
         <h4 className="col-3 py-1 caption text-gray">Token Pair</h4>
-        <p className="col-9 py-1 body2">MNTL-ETH (click <a className="am-link text-decoration-none" href="https://info.uniswap.org/#/pools/0xf5b8304dc18579c4247caad705df01928248bc71" target="_blank">here</a> to add liquidity)</p>
-        <div className="col-12 rounded-4 p-3 body2 border border-1">
-          <i className="bi bi-info-circle" />&nbsp;Keep the fee as 0.3% while adding liquidity
+        <p className="col-9 py-1 body2">
+          MNTL-ETH (click{" "}
+          <a
+            className="text-primary text-decoration-none body2"
+            href="https://info.uniswap.org/#/pools/0xf5b8304dc18579c4247caad705df01928248bc71"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            here
+          </a>{" "}
+          to add liquidity)
+        </p>
+        <div className="col-12 rounded-3 py-2 px-3 my-1 caption2 border border-1">
+          <i className="bi bi-info-circle" />
+          &nbsp;Keep the fee as 0.3% while adding liquidity
         </div>
       </div>
     </div>
@@ -207,8 +219,18 @@ export default function Farm() {
           <div className="bg-gray-800 p-4 rounded-4 d-flex flex-column gap-2">
             <nav className="d-flex flex-column align-items-start justify-content-between gap-3">
               <div className="d-flex gap-3 w-100">{tabTitleJSX}</div>
-              <div className="rounded-4 p-3 body2 border border-1">
-                <i className="bi bi-info-circle" />&nbsp;For LP Farming in Polygon chain (QuickSwap) click <a className="am-link text-decoration-none" href="https://versagames.io/versa/earn" target="_blank">here</a>.
+              <div className="rounded-3 py-2 px-3 caption2 border border-1">
+                <i className="bi bi-info-circle" />
+                &nbsp;For LP Farming in Polygon chain (QuickSwap) click{" "}
+                <a
+                  className="am-link text-decoration-none text-lowercase"
+                  href="https://versagames.io/versa/earn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  here
+                </a>
+                .
               </div>
               <div className="d-flex align-items-center justify-content-between gap-3 w-100">
                 <div className="">{connectButtonJSX}</div>
