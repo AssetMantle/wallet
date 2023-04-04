@@ -566,6 +566,18 @@ input[type="radio"] {
   accent-color: $primary-main;
 }
 // specific styles
+.am_resp_right_ham {
+  @media (max-width: 1199px) {
+    position: fixed;
+    display: flex !important;
+    z-index: 1000;
+    &.of_auto {
+      overflow: auto;
+      height: 100%;
+    }
+  }
+}
+
 .dropdown-toggle {
   & > .rotatableIcon {
     transition: all 300ms ease-in-out;
