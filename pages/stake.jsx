@@ -91,7 +91,7 @@ export default function Stake() {
         <title>Stake | MantleWallet</title>
       </Head>
       <section className="row h-100">
-        <div className="col-12 col-lg-8 h-100">
+        <div className="col-8 h-100">
           <div
             className="bg-gray-800 p-3 rounded-4 d-flex flex-column gap-2"
             style={{ height: "90%" }}
@@ -265,7 +265,7 @@ export default function Stake() {
           </div>
         </div>
 
-        <ScrollableSectionContainer className="col-12 col-lg-4">
+        <ScrollableSectionContainer className="col-4">
           <StakedToken
             delegated={delegated}
             setDelegated={setDelegated}

@@ -227,7 +227,7 @@ export default function Farm() {
         <title>Farm | MantleWallet</title>
       </Head>
       <section className="row h-100">
-        <ScrollableSectionContainer className="col-12 col-lg-8 d-flex h-90">
+        <ScrollableSectionContainer className="col-8 d-flex h-90">
           <div className="bg-gray-800 p-4 rounded-4 d-flex flex-column gap-2">
             <nav className="d-flex flex-column align-items-start justify-content-between gap-3">
               <div className="d-flex gap-3 w-100">{tabTitleJSX}</div>
@@ -253,7 +253,7 @@ export default function Farm() {
             {StakeTab ? stakeContentsJSX : unstakeContentsJSX}
           </div>
         </ScrollableSectionContainer>
-        <ScrollableSectionContainer className="col-12 col-lg-4 d-flex flex-column gap-3 h-90">
+        <ScrollableSectionContainer className="col-4 d-flex flex-column gap-3 h-90">
           <UniswapRewards />
           {/* <UniswapIncentiveList /> */}
         </ScrollableSectionContainer>

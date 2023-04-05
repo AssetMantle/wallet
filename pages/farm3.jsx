@@ -107,7 +107,7 @@ export default function Farm3() {
         <title>Farm | MantleWallet</title>
       </Head>
       <section className="row h-100">
-        <ScrollableSectionContainer className="col-12 col-lg-8 d-flex">
+        <ScrollableSectionContainer className="col-8 d-flex">
           <div className="bg-gray-800 p-3 rounded-4 d-flex flex-column gap-2">
             <nav className="d-flex align-items-center justify-content-between gap-3">
               <div className="d-flex gap-3 align-items-center">
@@ -140,7 +140,7 @@ export default function Farm3() {
           }
           <div className="p-2"></div>
         </ScrollableSectionContainer>
-        <div className="col-12 col-lg-4">
+        <ScrollableSectionContainer className="col-4">
           <div className="rounded-4 p-3 my-2 bg-gray-800 width-100 d-flex flex-column text-white">
             <p>
               To purchase MNTL, visit the exchanges (CEX & DEX) shown to swap
@@ -152,7 +152,7 @@ export default function Farm3() {
               coming soon.
             </p>
           </div>
-        </div>
+        </ScrollableSectionContainer>
       </section>
     </>
   );
