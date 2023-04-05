@@ -119,6 +119,7 @@ export const staticTradeData = [
   },
   {
     logo: "osmosis",
+    project: "Osmosis",
     name: "Osmosis",
     target_coin_id: "osmosis",
     pair: "MNTL/OSMO",
@@ -129,6 +130,7 @@ export const staticTradeData = [
   },
   {
     logo: "osmosis",
+    project: "Osmosis",
     name: "Osmosis",
     target_coin_id: "axlusdc",
     coin_id: "assetmantle",
@@ -142,6 +144,7 @@ export const staticTradeData = [
     logo: "uniswap-v3",
     name: "Uniswap (v3)",
     pair: "MNTL/ETH",
+    coin_id: "assetmantle",
     target_coin_id: "weth",
     subTitle: "(ETH Pool)",
     url: "https://app.uniswap.org/#/swap?theme=dark&inputCurrency=ETH&outputCurrency=0x2c4f1df9c7de0c59778936c9b145ff56813f3295",
@@ -160,6 +163,7 @@ export const staticTradeData = [
   },
   {
     logo: "osmosis",
+    project: "Osmosis",
     name: "Osmosis",
     target_coin_id: "assetmantle",
     pair: "ATOM/MNTL",
@@ -218,5 +222,40 @@ export const staticTradeData = [
     url: "https://app.cswap.one/trade",
     price: "0.000000",
     volume: "0.000000",
+  },
+];
+
+export const staticEarnData = [
+  {
+    symbol: "MNTL-USDC",
+    logo: "osmosis",
+    project: "Osmosis",
+    chain: "cosmos",
+    apy: "0.000000",
+    tvlUsd: "0.00",
+  },
+  {
+    symbol: "MNTL-OSMO",
+    logo: "osmosis",
+    project: "Osmosis",
+    chain: "cosmos",
+    apy: "0.000000",
+    tvlUsd: "0.00",
+  },
+  {
+    symbol: "ATOM-MNTL",
+    logo: "osmosis",
+    project: "Osmosis",
+    chain: "cosmos",
+    apy: "0.000000",
+    tvlUsd: "0.00",
+  },
+  {
+    symbol: "USDC-MNTL",
+    logo: "quickswap-dex",
+    project: "quickswap-dex",
+    chain: "polygon",
+    apy: "0.000000",
+    tvlUsd: "0.00",
   },
 ];
