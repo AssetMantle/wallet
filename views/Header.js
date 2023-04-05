@@ -211,7 +211,7 @@ export default function Header({ setLeftCol }) {
           </div>
           {rightHam && (
             <div
-              className="d-flex d-xl-none position-absolute top-0 end-0 p-3"
+              className="d-flex d-xl-none position-absolute top-0 start-0 p-3"
               role="button"
               onClick={() => setRightHam(false)}
             >
