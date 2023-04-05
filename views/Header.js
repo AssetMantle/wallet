@@ -15,10 +15,13 @@ import {
 } from "../data";
 import { cleanString, shortenAddress } from "../lib";
 
-export default function Header() {
+export default function Header({ setLeftCol }) {
   const chainContext = useChain(defaultChainName);
   const { username, address, wallet, disconnect } = chainContext;
   const [showModal, setShowModal] = useState(false);
+
+  // menus ham
+  const [rightHam, setRightHam] = useState(false);
 
   const router = useRouter();
 
@@ -65,9 +68,11 @@ export default function Header() {
         } am-nav-item caption`}
         target={navItem.target ? navItem.target : "_self"}
       >
-        {navItem.icon && <span className="h6 icon">{navItem.icon}</span>}
+        {navItem.icon && <span className="caption icon">{navItem.icon}</span>}
         {navItem.title}
-        {navItem.endIcon && <span className="h6 icon">{navItem.endIcon}</span>}
+        {navItem.endIcon && (
+          <span className="caption icon">{navItem.endIcon}</span>
+        )}
       </a>
     </Link>
   ));
@@ -75,7 +80,7 @@ export default function Header() {
   const appLogoJSX = (
     <div
       className="d-flex position-relative"
-      style={{ width: "min(195.05px,30%)", aspectRatio: "195.05/33" }}
+      style={{ width: "min(195.05px,10%)", aspectRatio: "195.05/33" }}
     >
       <Link href="/">
         <a>
@@ -180,16 +185,47 @@ export default function Header() {
         className="container-xxl d-flex align-items-center gap-3 p-3 px-4"
         style={{ maxWidth: "1920px" }}
       >
+        <div
+          className="d-flex d-lg-none my-auto"
+          role="button"
+          onClick={() => setLeftCol(true)}
+        >
+          <i className="bi bi-list h2"></i>
+        </div>
         {appLogoJSX}
-        <nav className="navbar-nav d-flex align-items-center gap-3 flex-row gap-3 flex-grow-1 justify-content-between">
-          <div className="d-flex gap-4 flex-row align-items-center">
+        <nav
+          className={`navbar-nav d-none d-xl-flex align-items-center gap-3 flex-row gap-3 flex-grow-1 justify-content-center justify-content-xl-between ${
+            rightHam
+              ? "am_resp_right_ham w-50 top-0 end-0 bottom-0 d-flex flex-column flex-xl-row nav-bg p-4 p-xl-0 gap-5 gap-xl-3 of_auto"
+              : ""
+          }`}
+        >
+          <div
+            className={`d-flex gap-4 flex-column flex-xl-row align-items-center`}
+          >
             {navigationMenusLeftJSX}
           </div>
           <div className="d-flex gap-3 flex-row align-items-center">
             {navigationMenusRightJSX}
             {connectWalletButton}
           </div>
+          {rightHam && (
+            <div
+              className="d-flex d-xl-none position-absolute top-0 end-0 p-3"
+              role="button"
+              onClick={() => setRightHam(false)}
+            >
+              <i className="bi bi-x-lg h2"></i>
+            </div>
+          )}
         </nav>
+        <div
+          className="d-flex d-xl-none ms-auto my-auto"
+          role="button"
+          onClick={() => setRightHam(true)}
+        >
+          <i className="bi bi-list h2 text-white"></i>
+        </div>
       </div>
     </header>
   );
