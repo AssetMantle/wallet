@@ -85,7 +85,7 @@ export default function Vote() {
         <title>Vote | MantleWallet</title>
       </Head>
       <section className="row h-100">
-        <ScrollableSectionContainer className="col-12 col-lg-8 px-1">
+        <ScrollableSectionContainer className="col-8 px-1">
           <div className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-2 transitionAll">
             <nav className="d-flex align-items-center justify-content-between gap-3">
               <h1 className="body2 text-primary">Proposals</h1>
@@ -139,7 +139,7 @@ export default function Vote() {
             </div>
           </div>
         </ScrollableSectionContainer>
-        <div className="d-flex flex-column col-lg-4">
+        <ScrollableSectionContainer className="d-flex flex-column col-4">
           {voteState?.proposalID ? (
             <>
               <DonutChart
@@ -166,7 +166,7 @@ export default function Vote() {
               voteState={voteState}
             />
           )}
-        </div>
+        </ScrollableSectionContainer>
 
         <ModalContainer active={VoteModal} setActive={setVoteModal}>
           <div className="d-flex flex-column bg-gray-700 m-auto p-4 rounded-3 w-100">

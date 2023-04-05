@@ -9,7 +9,7 @@ export default function Earn() {
         <title>Earn | MantleWallet</title>
       </Head>
       <section className="row h-100">
-        <div className="col-12 col-lg-8 h-100">
+        <div className="col-8 h-100">
           <div
             className="bg-gray-800 p-3 pb-5 rounded-4 d-flex flex-column gap-2"
             style={{ height: "90%" }}
@@ -27,7 +27,7 @@ export default function Earn() {
             </div>
           </div>
         </div>
-        <div className="col-12 col-lg-4">
+        <div className="col-4">
           <div className="rounded-4 p-3 my-2 bg-gray-800 width-100 d-flex flex-column text-white">
             <p>To earn yields, visit the listed DEXs to add $MNTL liquidity.</p>
             <br></br>
