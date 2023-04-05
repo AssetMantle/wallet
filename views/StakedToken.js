@@ -56,9 +56,9 @@ export default function StakedToken({
 
   return (
     <>
-      <section className="gap-3 pt-3 pt-lg-0">
+      <section className="gap-3">
         {!stakeState?.selectedValidators?.length && status === "Connected" ? (
-          <div className="rounded-4 p-3 my-2 bg-gray-800 width-100 d-flex flex-column text-white">
+          <div className="rounded-4 p-3 mb-3 bg-gray-800 width-100 d-flex flex-column text-white">
             <p>Please select the Validators you wish to take actions on.</p>
           </div>
         ) : null}
