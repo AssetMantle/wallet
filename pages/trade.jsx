@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Head from "next/head";
 import TradeTable from "../components/TradeTable";
 import TradePageTokenDetails from "../components/TradePageTokenDetails";
+import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 
 export default function Trade() {
   const [searchValue, setSearchValue] = useState("");
@@ -12,7 +13,7 @@ export default function Trade() {
         <title>Trade | MantleWallet</title>
       </Head>
       <section className="row h-100">
-        <div className="col-12 col-lg-8 h-100">
+        <ScrollableSectionContainer className="col-8 h-100">
           <div
             className="bg-gray-800 p-3 pb-5 rounded-4 d-flex flex-column gap-2"
             style={{ height: "90%" }}
@@ -29,8 +30,8 @@ export default function Trade() {
               </div>
             </div>
           </div>
-        </div>
-        <div className="col-12 col-lg-4">
+        </ScrollableSectionContainer>
+        <ScrollableSectionContainer className="col-4">
           <div className="rounded-4 p-3 my-2 bg-gray-800 width-100 d-flex flex-column text-white">
             <p>
               To purchase MNTL, visit the exchanges (CEX & DEX) shown to swap
@@ -43,7 +44,7 @@ export default function Trade() {
             </p>
           </div>
           <TradePageTokenDetails />
-        </div>
+        </ScrollableSectionContainer>
       </section>
     </>
   );
