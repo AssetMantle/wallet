@@ -21,11 +21,9 @@ export const TotalBalance = () => {
 
   const chainContext = useChain(defaultChainName);
   const { status } = chainContext;
-  const isConnected = !(
-    isLoadingTotalBalance ||
-    isErrorTotalBalance ||
-    status != "Connected"
-  );
+  const isConnected = !(status != "Connected");
+
+  console.log(isLoadingTotalBalance);
 
   const totalBalanceDisplay = isConnected
     ? getBalanceStyle(fromChainDenom(totalBalance), "caption", "caption2")
@@ -39,11 +37,23 @@ export const TotalBalance = () => {
 
   return (
     <>
-      <p className={isConnected ? "caption" : "caption text-gray"}>
-        {totalBalanceDisplay}
-        &nbsp;
-        {denomDisplay}
-      </p>
+      {isConnected ? (
+        <div className="caption">
+          {isLoadingTotalBalance ? (
+            <p className="placeholder-glow">
+              <span className="placeholder col-6 bg-light w-100"></span>
+            </p>
+          ) : (
+            <>
+              {totalBalanceDisplay} {denomDisplay}
+            </>
+          )}{" "}
+        </div>
+      ) : (
+        <div className="caption text-gray">
+          {totalBalanceDisplay} {denomDisplay}
+        </div>
+      )}
     </>
   );
 };
@@ -57,12 +67,7 @@ export const TotalBalanceInUSD = () => {
 
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
 
-  const isConnected = !(
-    isLoadingTotalBalance ||
-    isErrorTotalBalance ||
-    status != "Connected" ||
-    errorMntlUsdValue
-  );
+  const isConnected = !(status != "Connected");
 
   const totalBalanceInUSD = BigNumber(fromDenom(totalBalance))
     .multipliedBy(BigNumber(mntlUsdValue || 0))
@@ -77,10 +82,24 @@ export const TotalBalanceInUSD = () => {
       );
 
   return (
-    <p className={isConnected ? "caption2" : "caption2 text-gray"}>
-      {totalBalanceInUSDDisplay}
-      &nbsp;
-      {usdSymbol}
-    </p>
+    <>
+      {isConnected ? (
+        <div className="caption">
+          {isLoadingTotalBalance ? (
+            <p className="placeholder-glow">
+              <span className="placeholder col-6 bg-light w-100"></span>
+            </p>
+          ) : (
+            <>
+              {totalBalanceInUSDDisplay} {usdSymbol}
+            </>
+          )}{" "}
+        </div>
+      ) : (
+        <div className="caption text-gray">
+          {totalBalanceInUSDDisplay} {usdSymbol}
+        </div>
+      )}
+    </>
   );
 };

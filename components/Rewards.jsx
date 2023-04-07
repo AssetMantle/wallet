@@ -39,7 +39,7 @@ const Rewards = ({
   const { withdrawAddress } = useWithdrawAddress();
   const { delegatedValidators } = useDelegatedValidators();
   const { getSigningStargateClient, address, status } = walletManager;
-  const { allRewards, rewardsArray } = useTotalRewards();
+  const { allRewards, rewardsArray, isLoadingRewards } = useTotalRewards();
   const { mntlUsdValue } = useMntlUsd();
   const selectedArray = rewardsArray?.filter?.((rewardObject) =>
     stakeState?.selectedValidators?.includes?.(rewardObject.validatorAddress)
@@ -399,15 +399,42 @@ const Rewards = ({
             Cumulative Rewards
           </p>
         )}
-        <p className={isConnected ? "caption" : "caption text-gray"}>
-          {rewardsDisplay}
-          &nbsp;
-          {denomDisplay}
-        </p>
-        <p className={isConnected ? "caption2" : "caption2 text-gray"}>
-          {rewardsInUSDDisplay}
-          &nbsp;{usdSymbol}
-        </p>
+        {isConnected ? (
+          <div className="caption">
+            {isLoadingRewards ? (
+              <p className="placeholder-glow">
+                <span className="placeholder col-6 bg-light w-100"></span>
+              </p>
+            ) : (
+              <>
+                {" "}
+                {rewardsDisplay} {denomDisplay}
+              </>
+            )}{" "}
+          </div>
+        ) : (
+          <div className="caption text-gray">
+            {rewardsDisplay} {denomDisplay}
+          </div>
+        )}
+        {isConnected ? (
+          <div className="caption">
+            {isLoadingRewards ? (
+              <p className="placeholder-glow">
+                <span className="placeholder col-6 bg-light w-100"></span>
+              </p>
+            ) : (
+              <>
+                {" "}
+                {rewardsInUSDDisplay} {usdSymbol}
+              </>
+            )}{" "}
+          </div>
+        ) : (
+          <div className="caption text-gray">
+            {rewardsInUSDDisplay} {usdSymbol}
+          </div>
+        )}
         <div className="d-flex justify-content-end">
           {stakeState?.selectedValidators?.length > 5 ||
           isSubmitDisabled ? null : (
