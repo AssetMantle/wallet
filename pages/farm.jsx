@@ -221,6 +221,52 @@ export default function Farm() {
     incentiveList
   );
 
+  // New UI related data
+  const POOLs = [
+    {
+      name: "Liquidity Pool Name",
+      from: "uniswap",
+      pools: [
+        {
+          tokens: "ETH – MNTL",
+          rewardPool: "$0,000.0000",
+          duration: "00Days,00Hours",
+        },
+      ],
+    },
+    {
+      name: "Liquidity Pool Name",
+      from: "polygon",
+      pools: [
+        {
+          tokens: "VERSA – MNTL",
+          rewardPool: "$0,000.0000",
+          duration: "00Days,00Hours",
+          tvl: "$10,370",
+          apr: "254.52%",
+        },
+        {
+          tokens: "USDC – MNTL",
+          rewardPool: "$0,000.0000",
+          duration: "00Days,00Hours",
+          tvl: "$10,370",
+          apr: "254.52%",
+        },
+      ],
+    },
+    {
+      name: "Liquidity Pool Name",
+      from: "osmosis",
+      pools: [
+        {
+          tokens: "USDC – MNTL",
+          rewardPool: "$0,000.0000",
+          duration: "00Days,00Hours",
+        },
+      ],
+    },
+  ];
+
   return (
     <>
       <Head>
@@ -228,7 +274,7 @@ export default function Farm() {
       </Head>
       <section className="row h-100">
         <ScrollableSectionContainer className="col-8 d-flex h-90">
-          <div className="bg-gray-800 p-4 rounded-4 d-flex flex-column gap-2">
+          {/* <div className="bg-gray-800 p-4 rounded-4 d-flex flex-column gap-2">
             <nav className="d-flex flex-column align-items-start justify-content-between gap-3">
               <div className="d-flex gap-3 w-100">{tabTitleJSX}</div>
               <div className="rounded-3 py-2 px-3 caption2 border border-1">
@@ -251,6 +297,11 @@ export default function Farm() {
             </nav>
             {stakeDashboardJSX}
             {StakeTab ? stakeContentsJSX : unstakeContentsJSX}
+          </div> */}
+
+          {/* New UI starts from here  */}
+          <div className="bg-gray-800 p-4 rounded-4 d-flex flex-column gap-2">
+            {React.Children.toArray()}
           </div>
         </ScrollableSectionContainer>
         <ScrollableSectionContainer className="col-4 d-flex flex-column gap-3 h-90">
