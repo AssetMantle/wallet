@@ -2,13 +2,19 @@ import React, { useState } from "react";
 import Stake from "./Stake";
 import Unstake from "./Unstake";
 
-export default function LiquidityPoolCard({ pool, Connected, setConnected }) {
+export default function LiquidityPoolCard({
+  pool,
+  index,
+  Connected,
+  setConnected,
+}) {
   const [HaveReward, setHaveReward] = useState(false);
+  const [Error, setError] = useState(true);
   const [Tokens] = useState(pool && pool.tokens && pool.tokens.split(" – "));
 
   return (
     <>
-      <div className="nav-bg p-3 rounded-3 d-flex flex-column gap-3">
+      <div className="bg-gray-800 p-4 rounded-4 d-flex flex-column gap-3">
         <div className="d-flex align-items-center justify-content-between gap-3">
           <div className="d-flex align-items-center gap-3">
             <div
@@ -82,21 +88,23 @@ export default function LiquidityPoolCard({ pool, Connected, setConnected }) {
           </div>
         </div>
         <div className="border-bottom"></div>
-        <div className="d-flex align-items-center gap-2">
-          <i className="bi bi-info-circle text-white" />{" "}
-          <p className="caption text-white">
-            Insufficient balance to stake in Liquidity Pool.
-          </p>{" "}
-          <a
-            href={pool.lpTokenLink && pool.lpTokenLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="am-link body2"
-          >
-            <span className="text-primary body2">Get LP Tokens</span>{" "}
-            <i className="text-primary bi bi-arrow-up-right body2"></i>
-          </a>
-        </div>
+        {Error && (
+          <p className="">
+            <i className="bi bi-info-circle text-white" />{" "}
+            <span className="caption text-white">
+              Insufficient balance to stake in Liquidity Pool.
+            </span>{" "}
+            <a
+              href={pool.lpTokenLink && pool.lpTokenLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="am-link"
+            >
+              <span className="text-primary caption">Get LP Tokens</span>{" "}
+              <i className="text-primary bi bi-arrow-up-right caption"></i>
+            </a>
+          </p>
+        )}
         <div className="d-flex justify-content-end gap-2">
           {pool.stakeType && pool.stakeType === "external" ? (
             <>
@@ -174,7 +182,7 @@ export default function LiquidityPoolCard({ pool, Connected, setConnected }) {
               </button>
             </div>
             <div className="modal-body p-3  d-flex flex-column">
-              <div className="nav-bg rounded-4 d-flex flex-column p-1 gap-2 align-items-center justify-content-center">
+              <div className="nav-bg rounded-4 d-flex flex-column py-1 px-4 gap-2 align-items-center justify-content-center">
                 {React.Children.toArray(
                   [...Array(10)].map(() => (
                     <Stake
@@ -224,7 +232,7 @@ export default function LiquidityPoolCard({ pool, Connected, setConnected }) {
               </button>
             </div>
             <div className="modal-body p-3  d-flex flex-column">
-              <div className="nav-bg rounded-4 d-flex flex-column p-1 gap-2 align-items-center justify-content-center">
+              <div className="nav-bg rounded-4 d-flex flex-column py-1 px-4 gap-2 align-items-center justify-content-center">
                 {React.Children.toArray(
                   [...Array(10)].map(() => (
                     <Unstake
