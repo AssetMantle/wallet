@@ -23,6 +23,7 @@ import {
   UniswapStakeContents,
   UniswapUnstakeContents,
 } from "../views";
+import LiquidityPoolComponent from "../components/LiquidityPoolComponent";
 
 export default function Farm() {
   // HOOKS
@@ -91,18 +92,18 @@ export default function Farm() {
       : `Incentive Ended`
     : `---`;
 
-  console.log(
-    "isIncentivePopulated: ",
-    isIncentivePopulated,
-    " incentiveList: ",
-    incentiveList,
-    " isLoadingIncentiveList: ",
-    isLoadingIncentiveList,
-    " incentiveEndTimestamp: ",
-    incentiveEndTimestamp,
-    " currentTimestamp: ",
-    currentTimestamp
-  );
+  // console.log(
+  //   "isIncentivePopulated: ",
+  //   isIncentivePopulated,
+  //   " incentiveList: ",
+  //   incentiveList,
+  //   " isLoadingIncentiveList: ",
+  //   isLoadingIncentiveList,
+  //   " incentiveEndTimestamp: ",
+  //   incentiveEndTimestamp,
+  //   " currentTimestamp: ",
+  //   currentTimestamp
+  // );
 
   const tabTitleJSX = tabs.map((tab, index) => (
     <button
@@ -208,18 +209,18 @@ export default function Farm() {
 
   const unstakeContentsJSX = <UniswapUnstakeContents />;
 
-  console.log(
-    "mounted: ",
-    isMounted(),
-    " address: ",
-    address,
-    " connected: ",
-    isConnected,
-    " isWalletEthConnected: ",
-    isWalletEthConnected,
-    " incentiveList: ",
-    incentiveList
-  );
+  // console.log(
+  //   "mounted: ",
+  //   isMounted(),
+  //   " address: ",
+  //   address,
+  //   " connected: ",
+  //   isConnected,
+  //   " isWalletEthConnected: ",
+  //   isWalletEthConnected,
+  //   " incentiveList: ",
+  //   incentiveList
+  // );
 
   // New UI related data
   const POOLs = [
@@ -229,6 +230,7 @@ export default function Farm() {
       pools: [
         {
           tokens: "ETH – MNTL",
+          lpTokenLink: "",
           rewardPool: "$0,000.0000",
           duration: "00Days,00Hours",
         },
@@ -240,6 +242,7 @@ export default function Farm() {
       pools: [
         {
           tokens: "VERSA – MNTL",
+          lpTokenLink: "",
           rewardPool: "$0,000.0000",
           duration: "00Days,00Hours",
           tvl: "$10,370",
@@ -247,6 +250,7 @@ export default function Farm() {
         },
         {
           tokens: "USDC – MNTL",
+          lpTokenLink: "",
           rewardPool: "$0,000.0000",
           duration: "00Days,00Hours",
           tvl: "$10,370",
@@ -260,8 +264,11 @@ export default function Farm() {
       pools: [
         {
           tokens: "USDC – MNTL",
+          lpTokenLink: "",
           rewardPool: "$0,000.0000",
           duration: "00Days,00Hours",
+          stakeType: "external",
+          extLink: "",
         },
       ],
     },
@@ -273,37 +280,41 @@ export default function Farm() {
         <title>Farm | MantleWallet</title>
       </Head>
       <section className="row h-100">
-        <ScrollableSectionContainer className="col-8 d-flex h-90">
-          {/* <div className="bg-gray-800 p-4 rounded-4 d-flex flex-column gap-2">
-            <nav className="d-flex flex-column align-items-start justify-content-between gap-3">
-              <div className="d-flex gap-3 w-100">{tabTitleJSX}</div>
-              <div className="rounded-3 py-2 px-3 caption2 border border-1">
-                <i className="bi bi-info-circle" />
-                &nbsp;For LP Farming in Polygon chain (QuickSwap) click{" "}
-                <a
-                  className="am-link text-decoration-none text-lowercase"
-                  href="https://versagames.io/versa/earn"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  here
-                </a>
-                .
-              </div>
-              <div className="d-flex align-items-center justify-content-between gap-3 w-100">
-                <div className="">{connectButtonJSX}</div>
-                {tabGroupJSX}
-              </div>
-            </nav>
-            {stakeDashboardJSX}
-            {StakeTab ? stakeContentsJSX : unstakeContentsJSX}
-          </div> */}
+        <div className="col-8 h-90">
+          <ScrollableSectionContainer className="d-flex h-100">
+            <div className="bg-gray-800 p-4 rounded-4 d-flex flex-column gap-2">
+              <nav className="d-flex flex-column align-items-start justify-content-between gap-3">
+                <div className="d-flex gap-3 w-100">{tabTitleJSX}</div>
+                <div className="rounded-3 py-2 px-3 caption2 border border-1">
+                  <i className="bi bi-info-circle" />
+                  &nbsp;For LP Farming in Polygon chain (QuickSwap) click{" "}
+                  <a
+                    className="am-link text-decoration-none text-lowercase"
+                    href="https://versagames.io/versa/earn"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    here
+                  </a>
+                  .
+                </div>
+                <div className="d-flex align-items-center justify-content-between gap-3 w-100">
+                  <div className="">{connectButtonJSX}</div>
+                  {tabGroupJSX}
+                </div>
+              </nav>
+              {stakeDashboardJSX}
+              {StakeTab ? stakeContentsJSX : unstakeContentsJSX}
+            </div>
 
-          {/* New UI starts from here  */}
-          <div className="bg-gray-800 p-4 rounded-4 d-flex flex-column gap-2">
-            {React.Children.toArray()}
-          </div>
-        </ScrollableSectionContainer>
+            {/* New UI starts from here  */}
+            <div className="d-flex flex-column gap-3">
+              {React.Children.toArray(
+                POOLs.map((pool) => <LiquidityPoolComponent data={pool} />)
+              )}
+            </div>
+          </ScrollableSectionContainer>
+        </div>
         <ScrollableSectionContainer className="col-4 d-flex flex-column gap-3 h-90">
           <UniswapRewards />
           {/* <UniswapIncentiveList /> */}
