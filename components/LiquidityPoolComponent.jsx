@@ -9,7 +9,7 @@ export default function LiquidityPoolComponent({ data, index }) {
   return (
     <div
       className="nav-bg p-3 rounded-4 pe-0 d-flex flex-column gap-2"
-      style={{ marginTop: index === 0 ? "-8px" : "" }}
+      style={{ marginTop: index === 0 ? "-24px" : "" }}
     >
       <div className="d-flex align-items-center justify-content-between">
         <h1 className="h3 text-primary">{data.name}</h1>

@@ -9,7 +9,7 @@ export default function LiquidityPoolCard({
   setConnected,
 }) {
   const [HaveReward, setHaveReward] = useState(false);
-  const [Error, setError] = useState(true);
+  const [Error, setError] = useState(false);
   const [Tokens] = useState(pool && pool.tokens && pool.tokens.split(" – "));
 
   return (
@@ -57,7 +57,7 @@ export default function LiquidityPoolCard({
           <div className="col-7 py-2">
             <div className="row">
               <div className="col-6 text-gray caption">Reward Pool</div>
-              <div className="col-6 body2">
+              <div className="col-6 caption">
                 {pool.rewardPool && pool.rewardPool}
               </div>
             </div>
@@ -66,14 +66,14 @@ export default function LiquidityPoolCard({
             {pool.tvl && (
               <div className="row">
                 <div className="col-6 text-gray caption">TVL</div>
-                <div className="col-6 body2">{pool.tvl}</div>
+                <div className="col-6 caption">{pool.tvl}</div>
               </div>
             )}
           </div>
           <div className="col-7 py-2">
             <div className="row">
               <div className="col-6 text-gray caption">Duration</div>
-              <div className="col-6 body2">
+              <div className="col-6 caption">
                 {pool.duration && pool.duration}
               </div>
             </div>
@@ -82,7 +82,7 @@ export default function LiquidityPoolCard({
             {pool.apr && (
               <div className="row">
                 <div className="col-6 text-gray caption">APR</div>
-                <div className="col-6 body2">{pool.apr}</div>
+                <div className="col-6 caption">{pool.apr}</div>
               </div>
             )}
           </div>

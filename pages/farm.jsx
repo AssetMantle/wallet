@@ -308,7 +308,7 @@ export default function Farm() {
             </div> */}
 
             {/* New UI starts from here  */}
-            <div className="bg-gray-800 rounded-4 p-3 pt-0 d-flex flex-column gap-3 mt-2">
+            <div className="bg-gray-800 rounded-4 p-3 d-flex flex-column gap-3 mt-2">
               {React.Children.toArray(
                 POOLs.map((pool, index) => (
                   <LiquidityPoolComponent data={pool} index={index} />
