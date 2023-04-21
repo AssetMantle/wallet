@@ -1,26 +1,33 @@
 import React, { useState } from "react";
 import LiquidityPoolCard from "./LiquidityPoolCard";
 
-export default function LiquidityPoolComponent({ data }) {
+export default function LiquidityPoolComponent({ data, index }) {
   const [Connected, setConnected] = useState(false);
 
   const address = "0x0x010x0k7tfhd4hm4hgasfuyg689khb34w4a6kbd6v2v";
 
   return (
-    <div className="bg-gray-800 p-4 rounded-4 pe-0 d-flex flex-column gap-3">
+    <div
+      className="nav-bg p-3 rounded-4 pe-0 d-flex flex-column gap-2"
+      style={{ marginTop: index === 0 ? "-8px" : "" }}
+    >
       <div className="d-flex align-items-center justify-content-between">
         <h1 className="h3 text-primary">{data.name}</h1>
-        <div className="nav-bg p-1 px-3 rounded-start">
+        <div
+          className={`bg-gray-800 p-1 px-3 rounded-start ${
+            data.from !== "polygon" && "py-2"
+          }`}
+        >
           <div
             className="position-relative overflow-hidden"
             style={{
-              height: data.form === "polygon" ? "26px" : "20px",
-              aspectRatio: data.form === "polygon" ? "77/26" : "72/20",
+              height: data.from === "polygon" ? "26px" : "20px",
+              aspectRatio: data.from === "polygon" ? "77/26" : "72/20",
             }}
           >
             <img
               src={`/farm/icons/${data.from}.svg`}
-              alt={`${data.form} icon`}
+              alt={`${data.from} icon`}
               className="w-100 h-100"
               style={{ objectFit: "contain", objectPosition: "center" }}
             />
@@ -40,7 +47,7 @@ export default function LiquidityPoolComponent({ data }) {
         )}
         <div className="opacity-0">a</div>
       </button>
-      <div className="pe-4 d-flex flex-column gap-3 ">
+      <div className="pe-3 d-flex flex-column gap-3 ">
         {data.pools &&
           Array.isArray(data.pools) &&
           data.pools.length > 0 &&
