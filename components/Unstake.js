@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Unstake({ tokenId, liquidity, icon = "mntl" }) {
   return (
-    <div className="border-b-not_last p-3 d-flex gap-2 align-items-center justify-content-between w-100">
+    <div className="border-b-not_last py-3 d-flex gap-2 align-items-center justify-content-between w-100">
       <div className="d-flex gap-3">
         <div
           className="position-relative rounded-circle"
