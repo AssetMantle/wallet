@@ -280,9 +280,9 @@ export default function Farm() {
         <title>Farm | MantleWallet</title>
       </Head>
       <section className="row h-100">
-        <div className="col-8 h-90">
+        <div className="col-8 h-100">
           <ScrollableSectionContainer className="d-flex h-100">
-            <div className="bg-gray-800 p-4 rounded-4 d-flex flex-column gap-2">
+            {/* <div className="bg-gray-800 p-4 rounded-4 d-flex flex-column gap-2">
               <nav className="d-flex flex-column align-items-start justify-content-between gap-3">
                 <div className="d-flex gap-3 w-100">{tabTitleJSX}</div>
                 <div className="rounded-3 py-2 px-3 caption2 border border-1">
@@ -305,12 +305,14 @@ export default function Farm() {
               </nav>
               {stakeDashboardJSX}
               {StakeTab ? stakeContentsJSX : unstakeContentsJSX}
-            </div>
+            </div> */}
 
             {/* New UI starts from here  */}
-            <div className="d-flex flex-column gap-3">
+            <div className="bg-gray-800 rounded-4 p-3 pt-0 d-flex flex-column gap-3 mt-2">
               {React.Children.toArray(
-                POOLs.map((pool) => <LiquidityPoolComponent data={pool} />)
+                POOLs.map((pool, index) => (
+                  <LiquidityPoolComponent data={pool} index={index} />
+                ))
               )}
             </div>
           </ScrollableSectionContainer>
