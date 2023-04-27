@@ -22,19 +22,6 @@ export default function LiquidityPoolCard({
               style={{ width: "72px", aspectRatio: "72/40" }}
             >
               <div
-                className="position-absolute start-0 overflow-hidden"
-                style={{ width: "40px", aspectRatio: "1/1" }}
-              >
-                <img
-                  src={`/farm/icons/${
-                    Tokens && Tokens[0] && Tokens[0].toLowerCase()
-                  }.svg`}
-                  alt={`${Tokens && Tokens[0]} icon`}
-                  className="w-100 h-100"
-                  style={{ objectFit: "cover", objectPosition: "center" }}
-                />
-              </div>
-              <div
                 className="position-absolute end-0 overflow-hidden"
                 style={{ width: "40px", aspectRatio: "1/1" }}
               >
@@ -43,6 +30,19 @@ export default function LiquidityPoolCard({
                     Tokens && Tokens[1] && Tokens[1].toLowerCase()
                   }.svg`}
                   alt={`${Tokens && Tokens[1]} icon`}
+                  className="w-100 h-100"
+                  style={{ objectFit: "cover", objectPosition: "center" }}
+                />
+              </div>
+              <div
+                className="position-absolute start-0 overflow-hidden"
+                style={{ width: "40px", aspectRatio: "1/1" }}
+              >
+                <img
+                  src={`/farm/icons/${
+                    Tokens && Tokens[0] && Tokens[0].toLowerCase()
+                  }.svg`}
+                  alt={`${Tokens && Tokens[0]} icon`}
                   className="w-100 h-100"
                   style={{ objectFit: "cover", objectPosition: "center" }}
                 />
