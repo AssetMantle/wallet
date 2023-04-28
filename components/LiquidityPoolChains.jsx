@@ -3,12 +3,8 @@ import LiquidityPoolChainCard from "./LiquidityPoolChainCard";
 
 export default function LiquidityPoolChains({ data, setChain }) {
   return (
-    <div
-      className="nav-bg p-3 rounded-4 pe-0 d-flex flex-column gap-2 border-color-primary-hover"
-      role="button"
-      onClick={() => setChain(data.name)}
-    >
-      <div className="d-flex align-items-center justify-content-between">
+    <div className="nav-bg rounded-4 d-flex flex-column">
+      <div className="d-flex align-items-center justify-content-between p-3 pe-0">
         <div className="d-flex gap-2 align-items-center mb-1">
           <div className={``}>
             <div
@@ -51,12 +47,18 @@ export default function LiquidityPoolChains({ data, setChain }) {
         </div>
       </div>
       <i className="border-bottom me-3"></i>
-      <div className="pe-3 d-flex flex-column gap-3 ">
+      <div className="d-flex flex-column">
         {data.pools &&
           Array.isArray(data.pools) &&
           data.pools.length > 0 &&
           React.Children.toArray(
-            data.pools.map((pool) => <LiquidityPoolChainCard pool={pool} />)
+            data.pools.map((pool) => (
+              <LiquidityPoolChainCard
+                pool={pool}
+                name={data.name}
+                setChain={setChain}
+              />
+            ))
           )}
       </div>
     </div>
