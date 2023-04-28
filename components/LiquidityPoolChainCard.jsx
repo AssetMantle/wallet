@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 
-export default function LiquidityPoolChainCard({ pool }) {
+export default function LiquidityPoolChainCard({ pool, setChain, name }) {
   const [Tokens] = useState(pool && pool.tokens && pool.tokens.split(" – "));
   return (
-    <div className="d-flex align-items-center justify-content-between">
+    <div
+      className="d-flex align-items-center justify-content-between border-color-primary-hover px-3 py-2 rounded-4"
+      role="button"
+      onClick={() => setChain({ name, card: pool.tokens })}
+    >
       <div className="d-flex align-items-center gap-1">
         <div
           className="position-relative"
