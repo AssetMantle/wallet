@@ -19,11 +19,12 @@ import {
   useIsMounted,
 } from "../lib";
 import {
-  UniswapRewards,
+  // UniswapRewards,
   UniswapStakeContents,
   UniswapUnstakeContents,
 } from "../views";
 import LiquidityPoolComponent from "../components/LiquidityPoolComponent";
+import LiquidityPoolChains from "../components/LiquidityPoolChains";
 
 export default function Farm() {
   // HOOKS
@@ -225,23 +226,25 @@ export default function Farm() {
   // New UI related data
   const POOLs = [
     {
-      name: "Liquidity Pool Name",
-      from: "uniswap",
+      name: "Uniswap",
+      from: "eth",
       pools: [
         {
-          tokens: "ETH – MNTL",
+          tokens: "MNTL – ETH",
           lpTokenLink: "",
           rewardPool: "$0,000.0000",
           duration: "00Days,00Hours",
+          apr: "000.00%",
+          tvl: "$00.000",
         },
       ],
     },
     {
-      name: "Liquidity Pool Name",
+      name: "Quickswap",
       from: "polygon",
       pools: [
         {
-          tokens: "VERSA – MNTL",
+          tokens: "MNTL – VERSA",
           lpTokenLink: "",
           rewardPool: "$0,000.0000",
           duration: "00Days,00Hours",
@@ -249,7 +252,7 @@ export default function Farm() {
           apr: "254.52%",
         },
         {
-          tokens: "USDC – MNTL",
+          tokens: "MNTL – USDC",
           lpTokenLink: "",
           rewardPool: "$0,000.0000",
           duration: "00Days,00Hours",
@@ -259,11 +262,27 @@ export default function Farm() {
       ],
     },
     {
-      name: "Liquidity Pool Name",
+      name: "Osmosis DEX",
       from: "osmosis",
       pools: [
         {
-          tokens: "USDC – MNTL",
+          tokens: "MNTL – USDC",
+          lpTokenLink: "",
+          rewardPool: "$0,000.0000",
+          duration: "00Days,00Hours",
+          stakeType: "external",
+          extLink: "",
+        },
+        {
+          tokens: "MNTL – OSMO",
+          lpTokenLink: "",
+          rewardPool: "$0,000.0000",
+          duration: "00Days,00Hours",
+          stakeType: "external",
+          extLink: "",
+        },
+        {
+          tokens: "MNTL – ATOM",
           lpTokenLink: "",
           rewardPool: "$0,000.0000",
           duration: "00Days,00Hours",
@@ -272,7 +291,32 @@ export default function Farm() {
         },
       ],
     },
+    {
+      name: "Comdex cSwap",
+      from: "comdex",
+      pools: [
+        {
+          tokens: "MNTL – CMST",
+          rewardPool: "$0,000.0000",
+          duration: "00Days,00Hours",
+          tvl: "$10,370",
+          apr: "254.52%",
+        },
+        {
+          tokens: "MNTL – CMDX",
+          rewardPool: "$0,000.0000",
+          duration: "00Days,00Hours",
+          tvl: "$10,370",
+          apr: "254.52%",
+        },
+      ],
+    },
   ];
+
+  const [SelectedChainName, setSelectedChainName] = useState({
+    name: POOLs[0].name,
+    card: POOLs[0].pools[0].tokens,
+  });
 
   return (
     <>
@@ -308,17 +352,37 @@ export default function Farm() {
             </div> */}
 
             {/* New UI starts from here  */}
-            <div className="bg-gray-800 rounded-4 p-3 d-flex flex-column gap-3 mt-2">
+            <div className="bg-gray-800 rounded-4 p-3 d-flex flex-column gap-3">
               {React.Children.toArray(
                 POOLs.map((pool, index) => (
-                  <LiquidityPoolComponent data={pool} index={index} />
+                  <LiquidityPoolComponent
+                    data={pool}
+                    index={index}
+                    selectedChain={SelectedChainName && SelectedChainName}
+                  />
                 ))
               )}
+              {/* {SelectedChain && <LiquidityPoolComponent data={SelectedChain} />} */}
             </div>
           </ScrollableSectionContainer>
         </div>
         <ScrollableSectionContainer className="col-4 d-flex flex-column gap-3 h-90">
-          <UniswapRewards />
+          {/* New UI starts from here  */}
+          <div className="bg-gray-800 rounded-4 p-3 d-flex flex-column gap-3 mt-2">
+            <h2 className="body1 text-primary">Chains</h2>
+            {React.Children.toArray(
+              POOLs.map((pool, index) => (
+                <LiquidityPoolChains
+                  data={pool}
+                  index={index}
+                  setChain={setSelectedChainName}
+                />
+              ))
+            )}
+          </div>
+          {/* New UI Ends Here */}
+
+          {/* <UniswapRewards /> */}
           {/* <UniswapIncentiveList /> */}
         </ScrollableSectionContainer>
       </section>
