@@ -22,7 +22,8 @@ export default function StakedToken({
   const { availableBalance } = useAvailableBalance();
   const [openModal, setOpenModal] = useState(false);
   const walletManager = useChain(defaultChainName);
-  const { getSigningStargateClient, address, status } = walletManager;
+  const { getSigningStargateClient, address, status, getOfflineSigner } =
+    walletManager;
 
   const [DelegateModal, setDelegateModal] = useState(false);
 
@@ -39,7 +40,7 @@ export default function StakedToken({
         stakeState?.delegationAddress,
         stakeState?.delegationAmount,
         stakeState?.memo,
-        { getSigningStargateClient }
+        { getOfflineSigner }
       );
 
       stakeDispatch({ type: "RESET_DELEGATE" });

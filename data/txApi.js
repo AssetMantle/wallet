@@ -18,9 +18,15 @@ import {
   gravityIBCSourceChannel,
   gravityIBCSourcePort,
   gravityIBCToken,
+  defaultChainRPCProxy,
+  mantleChainConfig,
 } from "../config";
 import { toChainDenom, toDenom } from "../data";
-import { gravity, getSigningGravityClient } from "../modules";
+import {
+  gravity,
+  getSigningGravityClient,
+  getSigningCosmosClient,
+} from "../modules";
 
 // get the wallet properties and functions for that specific chain
 export const sendTokensTxn = async (
@@ -29,7 +35,7 @@ export const sendTokensTxn = async (
   amount,
   memo = "",
   {
-    getSigningStargateClient,
+    getOfflineSigner,
     chainName = defaultChainName,
     chainDenom = defaultChainDenom,
   }
@@ -42,7 +48,11 @@ export const sendTokensTxn = async (
     // get the amount in denom terms
     const amountInDenom = toChainDenom(amount, chainName, chainDenom);
     // initialize stargate client and create txn
-    const stargateClient = await getSigningStargateClient();
+    let signer = await getOfflineSigner(mantleChainConfig[0].chain_id);
+    const stargateClient = await getSigningCosmosClient({
+      rpcEndpoint: defaultChainRPCProxy,
+      signer: signer,
+    });
     if (!stargateClient || !fromAddress) {
       throw new Error("stargateClient or from address undefined");
     }
@@ -111,7 +121,11 @@ export const sendRedelegation = async (
     // // populate the optional argument fromAddress
     const fromAddress = delegatorAddress;
     // // initialize stargate client and create txn
-    const stargateClient = await getSigningStargateClient();
+    let signer = await getOfflineSigner(mantleChainConfig[0].chain_id);
+    const stargateClient = await getSigningCosmosClient({
+      rpcEndpoint: defaultChainRPCProxy,
+      signer: signer,
+    });
     console.log(amountInDenom);
     if (!stargateClient || !fromAddress) {
       throw new Error("stargateClient or from address undefined");
@@ -161,62 +175,78 @@ export const sendDelegation = async (
   amount,
   memo,
   {
-    getSigningStargateClient,
+    getOfflineSigner,
     chainName = defaultChainName,
     chainDenom = defaultChainDenom,
   }
-) => {
-  try {
-    // get the chain assets for the specified chain
-    const chainassets = assets.find((chain) => chain.chain_name === chainName);
-    // get the coin data from the chain assets data
-    const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
-    // get the amount in denom terms
-    const amountInDenom = toChainDenom(amount, chainName, chainDenom);
-    // // populate the optional argument fromAddress
-    const fromAddress = delegatorAddress;
-    // // initialize stargate client and create txn
-    const stargateClient = await getSigningStargateClient();
-    if (!stargateClient || !fromAddress) {
-      throw new Error("stargateClient or from address undefined");
-    }
+) =>
+  // {
+  //   getSigningStargateClient,
+  //   chainName = defaultChainName,
+  //   chainDenom = defaultChainDenom,
+  // }
+  {
+    try {
+      // get the chain assets for the specified chain
+      const chainassets = assets.find(
+        (chain) => chain.chain_name === chainName
+      );
+      // get the coin data from the chain assets data
+      const coin = chainassets.assets.find(
+        (asset) => asset.base === chainDenom
+      );
+      // get the amount in denom terms
+      const amountInDenom = toChainDenom(amount, chainName, chainDenom);
+      // // populate the optional argument fromAddress
+      const fromAddress = delegatorAddress;
+      // // initialize stargate client and create txn
+      // const stargateClient = await getSigningStargateClient();
+      let signer = await getOfflineSigner(mantleChainConfig[0].chain_id);
+      const stargateClient = await getSigningCosmosClient({
+        rpcEndpoint: defaultChainRPCProxy,
+        signer: signer,
+      });
 
-    // create a message template from the composer
-    const { delegate } = cosmos.staking.v1beta1.MessageComposer.withTypeUrl;
+      if (!stargateClient || !fromAddress) {
+        throw new Error("stargateClient or from address undefined");
+      }
 
-    const msg = delegate({
-      delegatorAddress,
-      validatorAddress,
-      amount: {
-        denom: coin.base,
-        amount: amountInDenom,
-      },
-    });
+      // create a message template from the composer
+      const { delegate } = cosmos.staking.v1beta1.MessageComposer.withTypeUrl;
 
-    // populate the fee data
-    const fee = {
-      amount: [
-        {
-          denom: "umntl",
-          amount: defaultFeeAmount,
+      const msg = delegate({
+        delegatorAddress,
+        validatorAddress,
+        amount: {
+          denom: coin.base,
+          amount: amountInDenom,
         },
-      ],
-      gas: defaultFeeGas,
-    };
-    // use the stargate client to dispatch the transaction
-    const response = await stargateClient.signAndBroadcast(
-      delegatorAddress,
-      [msg],
-      fee,
-      memo
-    );
-    console.log("msg: ", msg, " amount: ", amountInDenom);
-    return { response, error: null };
-  } catch (error) {
-    console.error("Error during transaction: ", error?.message);
-    return { response: null, error };
-  }
-};
+      });
+
+      // populate the fee data
+      const fee = {
+        amount: [
+          {
+            denom: "umntl",
+            amount: defaultFeeAmount,
+          },
+        ],
+        gas: defaultFeeGas,
+      };
+      // use the stargate client to dispatch the transaction
+      const response = await stargateClient.signAndBroadcast(
+        delegatorAddress,
+        [msg],
+        fee,
+        memo
+      );
+      console.log("msg: ", msg, " amount: ", amountInDenom);
+      return { response, error: null };
+    } catch (error) {
+      console.error("Error during transaction: ", error?.message);
+      return { response: null, error };
+    }
+  };
 
 export const sendUndelegation = async (
   delegatorAddress,
@@ -239,7 +269,11 @@ export const sendUndelegation = async (
     // // populate the optional argument fromAddress
     const fromAddress = delegatorAddress;
     // // initialize stargate client and create txn
-    const stargateClient = await getSigningStargateClient();
+    let signer = await getOfflineSigner(mantleChainConfig[0].chain_id);
+    const stargateClient = await getSigningCosmosClient({
+      rpcEndpoint: defaultChainRPCProxy,
+      signer: signer,
+    });
     if (!stargateClient || !fromAddress) {
       throw new Error("stargateClient or from address undefined");
     }
@@ -355,7 +389,11 @@ export const sendWithdrawAddress = async (
     // // get the amount in denom terms
     // const amountInDenom = toChainDenom(amount, chainName, chainDenom);
     // // initialize stargate client and create txn
-    const stargateClient = await getSigningStargateClient();
+    let signer = await getOfflineSigner(mantleChainConfig[0].chain_id);
+    const stargateClient = await getSigningCosmosClient({
+      rpcEndpoint: defaultChainRPCProxy,
+      signer: signer,
+    });
     if (!stargateClient || !address) {
       throw new Error("stargateClient or from address undefined");
     }
@@ -411,7 +449,11 @@ export const sendRewardsBatched = async (
     const fromAddress = address;
     console.log(address, withdrawAddress);
     // initialize stargate client and create txn
-    const stargateClient = await getSigningStargateClient();
+    let signer = await getOfflineSigner(mantleChainConfig[0].chain_id);
+    const stargateClient = await getSigningCosmosClient({
+      rpcEndpoint: defaultChainRPCProxy,
+      signer: signer,
+    });
     if (!stargateClient || !fromAddress) {
       throw new Error("stargateClient or from address undefined");
     }

@@ -34,7 +34,8 @@ export default function Transact() {
   const [advanced, setAdvanced] = useState(false);
   const { availableBalance } = useAvailableBalance();
   const chainContext = useChain(defaultChainName);
-  const { getSigningStargateClient, address, status } = chainContext;
+  const { getSigningStargateClient, address, status, getOfflineSigner } =
+    chainContext;
   const router = useRouter();
   const { toAddress, toAmount } = router.query;
 
@@ -379,7 +380,7 @@ export default function Transact() {
         localRecipientAddress,
         localTransferAmount,
         localMemo,
-        { getSigningStargateClient }
+        { getOfflineSigner }
       );
       formDispatch({ type: "RESET" });
 
