@@ -335,7 +335,11 @@ export const sendVote = async (
     // // populate the optional argument fromAddress
     const fromAddress = voter;
     // // initialize stargate client and create txn
-    const stargateClient = await getSigningStargateClient();
+    let signer = await getOfflineSigner(mantleChainConfig[0].chain_id);
+    const stargateClient = await getSigningCosmosClient({
+      rpcEndpoint: defaultChainRPCProxy,
+      signer: signer,
+    });
     if (!stargateClient || !fromAddress) {
       throw new Error("stargateClient or from address undefined");
     }
