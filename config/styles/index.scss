@@ -49,7 +49,6 @@ $background-radial: radial-gradient(
   $yellow-200 100%
 );
 $background-selected-tag: $yellow-900;
-$primary: $yellow-100;
 $card-bg: $gray-800;
 $modal-content-bg: $gray-400;
 $text-muted: $white-400;
@@ -717,7 +716,7 @@ tbody {
 
 // MINIMAL CUSTOMIZATIONS TO THEME SET ACROSS THE APP
 $assetmantle-yellow: #f2af13;
-$primary: $assetmantle-cyan;
+$primary: $assetmantle-yellow;
 
 // THIS SHOULD ALWAYS BE THE LAST LINE OF THIS FILE. DO NOT ADD ANY STYLE ATTRIBUTES
 // BELOW THIS IMPORT
