@@ -14,6 +14,7 @@ import {
   WALLET_DISCONNECT_ERROR_MSG,
 } from "../data";
 import { cleanString, shortenAddress } from "../lib";
+import { Button, Stack } from "react-bootstrap";
 
 export default function Header({ setLeftCol }) {
   const chainContext = useChain(defaultChainName);
@@ -39,7 +40,7 @@ export default function Header({ setLeftCol }) {
 
   const handleOnClickConnected = (e) => {
     e.preventDefault();
-    setShowModal(false);
+    // setShowModal(false);
   };
 
   const displayAddress = address || placeholderAddress;
@@ -53,9 +54,11 @@ export default function Header({ setLeftCol }) {
         }`}
         target={navItem.target ? navItem.target : "_self"}
       >
-        {navItem.icon && <span className="h3 icon">{navItem.icon}</span>}
+        {navItem.icon && <span className="body2 icon">{navItem.icon}</span>}
         {navItem.title}
-        {navItem.endIcon && <span className="h3 icon">{navItem.endIcon}</span>}
+        {navItem.endIcon && (
+          <span className="body2 icon">{navItem.endIcon}</span>
+        )}
       </a>
     </Link>
   ));
@@ -79,7 +82,7 @@ export default function Header({ setLeftCol }) {
 
   const appLogoJSX = (
     <div
-      className="d-flex position-relative"
+      className="position-relative"
       style={{ width: "min(195.05px,30%)", aspectRatio: "195.05/33" }}
     >
       <Link href="/">
@@ -97,16 +100,16 @@ export default function Header({ setLeftCol }) {
 
   const connectedModalJSX = (
     <div
-      className="nav-bg p-3 rounded-4 text-white border-color-white-400"
-      style={{ border: "2px solid" }}
+      className="bg-black p-3 rounded-4 text-white border border-white border-2"
+      // style={{ border: "2px solid" }}
     >
-      <div className="d-flex gap-3">
-        <div className="d-flex flex-column gap-0">
-          <h4 className="body2">{displayUserName}</h4>
-        </div>
-      </div>
-      <hr className="my-3" />
-      <div className="d-flex flex-column">
+      <Stack direction="horizontal" gap={3}>
+        <Stack gap={0}>
+          <h4 className="body2 m-0">{displayUserName}</h4>
+        </Stack>
+      </Stack>
+      <hr className="border border-white border-1 my-3" />
+      <Stack gap={0}>
         <div
           className="position-relative mx-auto"
           style={{
@@ -116,19 +119,22 @@ export default function Header({ setLeftCol }) {
         >
           <QRCodeSVG width="100%" height="100%" value={displayAddress} />
         </div>
-        <button
-          className="d-flex align-items-center justify-content-center gap-2 text-center caption2 pt-3"
+        <Button
+          variant="link"
+          className="d-flex align-items-center justify-content-center gap-2 text-center caption2 pt-3 text-decoration-none text-white"
           onClick={() => navigator.clipboard.writeText(displayAddress)}
         >
           {shortenAddress(displayAddress)}
-          <span className="text-primary">
-            <i className="bi bi-files" />
-          </span>
-        </button>
-      </div>
-      <hr className="my-3" />
-      <div className="d-flex align-items-center justify-content-between gap-2 text-center caption">
-        <div className="d-flex align-items-center gap-1">
+          <i className="bi bi-files text-primary" />
+        </Button>
+      </Stack>
+      <hr className="border border-white border-1 my-3" />
+      <Stack
+        gap={0}
+        direction="horizontal"
+        className="align-items-center justify-content-between text-center caption"
+      >
+        <Stack direction="horizontal" gap={1} className="align-items-center">
           <div
             className="position-relative"
             style={{ width: "25px", aspectRatio: "1/1" }}
@@ -140,24 +146,21 @@ export default function Header({ setLeftCol }) {
             />
           </div>
           {ConnectOptionObject[cleanString(wallet?.prettyName)]?.name}
-        </div>
-        <div className="d-flex align-items-center gap-1">
-          <span className="text-success">
-            <i className="bi bi-check-circle" />
-          </span>
+        </Stack>
+        <Stack direction="horizontal" gap={1} className="align-items-center">
+          <i className="bi bi-check-circle text-success" />
           Connected
-        </div>
-      </div>
-      <hr className="my-3" />
-      <button
-        className="d-flex align-items-center justify-content-start gap-2 text-center body2 w-100 py-1"
+        </Stack>
+      </Stack>
+      <hr className="border border-white border-1 my-3" />
+      <Button
+        variant="link"
+        className="d-flex align-items-center justify-content-start gap-2 text-center body2 w-100 py-1 text-white text-decoration-none"
         onClick={onClickDisconnect}
       >
-        <span className="text-primary">
-          <i className="bi bi-box-arrow-left" />
-        </span>
+        <i className="bi bi-box-arrow-left text-primary" />
         Disconnect
-      </button>
+      </Button>
     </div>
   );
 
@@ -178,11 +181,13 @@ export default function Header({ setLeftCol }) {
 
   return (
     <header
-      className="nav-bg position-sticky top-0 start-0 end-0"
+      className="bg-black position-sticky top-0 start-0 end-0"
       style={{ zIndex: "1000" }}
     >
-      <div
-        className="container-xxl d-flex align-items-center gap-3 p-3 px-4"
+      <Stack
+        className="align-items-center p-3 px-4 h-auto"
+        gap={3}
+        direction="horizontal"
         style={{ maxWidth: "1920px" }}
       >
         <div
@@ -196,7 +201,7 @@ export default function Header({ setLeftCol }) {
         <nav
           className={`navbar-nav d-none d-xl-flex align-items-center gap-3 flex-row gap-3 flex-grow-1 justify-content-center justify-content-xl-between ${
             rightHam
-              ? "am_resp_right_ham w-50 top-0 end-0 bottom-0 d-flex flex-column flex-xl-row nav-bg p-4 p-xl-0 gap-5 gap-xl-3 of_auto"
+              ? "am_resp_right_ham w-50 top-0 end-0 bottom-0 d-flex flex-column flex-xl-row bg-black bg-opacity-75 p-4 p-xl-0 gap-5 gap-xl-3 of_auto"
               : ""
           }`}
         >
@@ -215,18 +220,18 @@ export default function Header({ setLeftCol }) {
               role="button"
               onClick={() => setRightHam(false)}
             >
-              <i className="bi bi-x-lg h2"></i>
+              <i className="bi bi-x-lg h2 m-auto"></i>
             </div>
           )}
         </nav>
         <div
-          className="d-flex d-xl-none ms-auto my-auto"
+          className="d-flex d-xl-none align-items-center ms-auto my-auto"
           role="button"
           onClick={() => setRightHam(true)}
         >
-          <i className="bi bi-list h2 text-white"></i>
+          <i className="bi bi-list h2 text-white m-auto"></i>
         </div>
-      </div>
+      </Stack>
     </header>
   );
 }
