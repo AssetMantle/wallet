@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { toastConfig } from "../../config";
 import { ConnectOptionObject, WALLET_NOT_FOUND_ERROR_MSG } from "../../data";
+import { Button } from "react-bootstrap";
 
 const CustomToastWithLink = ({ wallet }) => {
   console.log(
@@ -36,9 +37,9 @@ export const ConnectWalletButton = ({
   children,
 }) => {
   return dataBsToggle || dataBsTarget ? (
-    <button
-      type="button"
-      className="button-secondary d-flex gap-1 align-items-center am-connect py-1 px-3"
+    <Button
+      variant="outline-primary"
+      className="d-flex gap-1 align-items-center am-connect py-1 px-3 rounded-4 "
       style={{ textTransform: "none", cursor: "pointer" }}
       data-bs-toggle={dataBsToggle}
       data-bs-target={dataBsTarget}
@@ -62,12 +63,12 @@ export const ConnectWalletButton = ({
         ></span>
       )}
       &nbsp;{buttonText || "Connect Wallet"}
-    </button>
+    </Button>
   ) : (
     <div className="nav-item dropdown">
-      <button
-        type="button"
-        className="button-secondary d-flex gap-2 align-items-center nav-link dropdown-toggle am-nav-item py-1 px-3 text-primary"
+      <Button
+        variant="outline-primary"
+        className="d-flex gap-2 align-items-center nav-link dropdown-toggle am-nav-item am-connected py-1 px-3 rounded-4 "
         style={{ textTransform: "none", cursor: "pointer" }}
         data-bs-toggle="dropdown"
         aria-expanded="false"
@@ -90,11 +91,11 @@ export const ConnectWalletButton = ({
             aria-hidden="true"
           ></span>
         )}
-        <span className="caption2 text-primary">
+        <span className="caption2">
           &nbsp;{buttonText ? buttonText : "Connect Wallet"}
         </span>
-      </button>
-      <div className="dropdown-menu">{children}</div>
+      </Button>
+      <div className="dropdown-menu border-0">{children}</div>
     </div>
   );
 };
