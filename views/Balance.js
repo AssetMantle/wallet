@@ -7,8 +7,14 @@ import {
   TotalBalance,
   TotalBalanceInUSD,
 } from "../components";
-import Tooltip from "../components/Tooltip";
+// import Tooltip from "../components/Tooltip";
 import { defaultChainName, defaultChainSymbol } from "../config";
+import {
+  // OverlayTrigger,
+  Stack,
+  // Tooltip
+} from "react-bootstrap";
+import Tooltip from "../components/Tooltip";
 
 export default function Balance() {
   const denomDisplay = defaultChainSymbol;
@@ -16,15 +22,37 @@ export default function Balance() {
   const { status } = chainContext;
 
   return (
-    <section className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-3">
-      <h4 className="body1 text-primary">Wallet Balances</h4>
-      <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-1">
-        <p
-          className={`caption d-flex gap-2 align-items-center text-${
+    <Stack className="rounded-4 p-3 bg-light-subtle h-auto flex-grow-0" gap={3}>
+      <h4 className="body1 text-primary m-0">Wallet Balances</h4>
+      <Stack className="bg-black p-3 rounded-4" gap={1}>
+        <Stack
+          gap={2}
+          direction="horizontal"
+          className={`caption align-items-center m-0 text-${
             status === "Connected" ? "white-300" : "gray"
           }`}
         >
           Total Balance
+          {/* <OverlayTrigger
+            as="span"
+            overlay={
+              <Tooltip as id={"totalBalance"}>
+                Sum total of Available, Delegated, Rewards Claimable, and
+                Undelegating balances
+              </Tooltip>
+            }
+          >
+            <i className="bi bi-info-circle"></i>
+          </OverlayTrigger> */}
+          {/* <button
+            type="button"
+            className="btn btn-secondary"
+            data-bs-toggle="tooltip"
+            data-bs-placement="bottom"
+            data-bs-title="Tooltip on bottom"
+          >
+            Tooltip on bottom
+          </button> */}
           <Tooltip
             titlePrimary={true}
             description={
@@ -32,13 +60,13 @@ export default function Balance() {
             }
             style={{ right: "330%" }}
           />
-        </p>
+        </Stack>
         <TotalBalance />
         <TotalBalanceInUSD />
-      </div>
-      <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-1">
+      </Stack>
+      <Stack className="bg-black p-3 rounded-4" gap={1}>
         <p
-          className={`caption d-flex gap-2 align-items-center text-${
+          className={`caption d-flex gap-2 align-items-center m-0 text-${
             status === "Connected" ? "white-300" : "gray"
           }`}
         >
@@ -53,13 +81,15 @@ export default function Balance() {
         <AvailableBalance />
         {/* </Suspense> */}
         <AvailableBalanceUsd />
-      </div>
-      <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-1">
-        <p className={`caption d-flex gap-2 align-items-center text-white-300`}>
+      </Stack>
+      <Stack className="bg-black p-3 rounded-4" gap={1}>
+        <p
+          className={`caption d-flex gap-2 align-items-center m-0 text-white-300`}
+        >
           Current Price of {denomDisplay}
         </p>
         <MntlUsdPrice />
-      </div>
-    </section>
+      </Stack>
+    </Stack>
   );
 }
