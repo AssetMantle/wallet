@@ -7,10 +7,8 @@ import {
   TotalBalance,
   TotalBalanceInUSD,
 } from "../components";
-// import Tooltip from "../components/Tooltip";
 import { defaultChainName, defaultChainSymbol } from "../config";
 import { OverlayTrigger, Stack, Tooltip } from "react-bootstrap";
-// import Tooltip from "../components/Tooltip";
 
 export default function Balance() {
   const denomDisplay = defaultChainSymbol;
@@ -40,22 +38,6 @@ export default function Balance() {
           >
             <i className="bi bi-info-circle text-primary"></i>
           </OverlayTrigger>
-          {/* <button
-            type="button"
-            className="btn btn-secondary"
-            data-bs-toggle="tooltip"
-            data-bs-placement="bottom"
-            data-bs-title="Tooltip on bottom"
-          >
-            Tooltip on bottom
-          </button> */}
-          {/* <Tooltip
-            titlePrimary={true}
-            description={
-              "Sum total of Available, Delegated, Rewards Claimable, and Undelegating balances"
-            }
-            style={{ right: "330%" }}
-          /> */}
         </Stack>
         <TotalBalance />
         <TotalBalanceInUSD />
@@ -79,11 +61,6 @@ export default function Balance() {
           >
             <i className="bi bi-info-circle text-primary"></i>
           </OverlayTrigger>
-          {/* <Tooltip
-            titlePrimary={true}
-            description={"Amount that can be transferred."}
-            style={{ right: "330%" }}
-          /> */}
         </Stack>
         {/* <Suspense fallback={<p>Loading...</p>}> */}
         <AvailableBalance />
