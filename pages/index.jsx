@@ -5,10 +5,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useReducer, useState } from "react";
 import { toast } from "react-toastify";
-import ConnectedRecieve from "../components/ConnectedRecieve";
-import DisconnecedRecieve from "../components/DisconnecedRecieve";
+import ConnectedReceive from "../components/ConnectedReceive";
+import DisconnectedReceive from "../components/DisconnectedReceive";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
-import Tooltip from "../components/Tooltip";
 import {
   defaultChainGasFee,
   defaultChainMemoSize,
@@ -28,6 +27,15 @@ import {
   useAvailableBalance,
 } from "../data";
 import { isObjEmpty } from "../lib";
+import {
+  // Accordion,
+  Button,
+  Col,
+  OverlayTrigger,
+  Row,
+  Stack,
+  Tooltip,
+} from "react-bootstrap";
 
 export default function Transact() {
   // HOOKS
@@ -404,235 +412,304 @@ export default function Transact() {
       <Head>
         <title>Transact | MantleWallet</title>
       </Head>
-      <section className="row h-100">
-        <ScrollableSectionContainer className="col-8">
-          <div className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-2 transitionAll">
-            <nav className="d-flex align-items-center justify-content-between gap-3">
-              <div className="d-flex gap-3 align-items-center">
-                {tabs.map((tab, index) => (
-                  <button
-                    key={index}
-                    className={`body1 ${
-                      Tab === index ? "text-primary" : "text-white"
-                    }`}
-                    onClick={() => setTab(index)}
-                  >
-                    {tab.name}
-                  </button>
-                ))}
-              </div>
-            </nav>
-            <div className="nav-bg rounded-4 d-flex flex-column p-3 gap-3">
-              <label
-                className={
-                  status === "Connected"
-                    ? "caption d-flex gap-2 align-items-center"
-                    : "caption d-flex gap-2 align-items-center text-gray"
-                }
-                htmlFor="recipientAddress"
+      <Row className="row h-100" as="section">
+        <Col xs={8} className="h-100 pb-2">
+          <ScrollableSectionContainer>
+            <Stack
+              className="rounded-4 p-3 bg-light-subtle width-100 transitionAll flex-grow-0"
+              gap={2}
+            >
+              <Stack
+                as="nav"
+                direction="horizontal"
+                gap={3}
+                className="align-items-center justify-content-between"
               >
-                Recipient Address{" "}
-                <Tooltip description="Recipient’s address starts with mantle; eg: mantle10x0k7t.....hb34w4a6kbd6" />
-              </label>
-              <div>
-                <input
-                  className="bg-t p-3 py-2 rounded-2 am-input w-100"
-                  type="text"
-                  disabled={status === "Disconnected"}
-                  name="recipientAddress"
-                  id="recipientAddress"
-                  value={formState?.recipientAddress}
-                  placeholder="Enter Recipient’s Address"
-                  onChange={(e) =>
-                    formDispatch({
-                      type: "CHANGE_RECIPIENT_ADDRESS",
-                      payload: e.target.value,
-                    })
-                  }
-                />
-                <small
-                  id="addressInputErrorMsg"
-                  className="form-text text-danger d-flex align-items-center gap-1"
+                <Stack
+                  direction="horizontal"
+                  gap={3}
+                  className="align-items-center"
                 >
-                  {formState?.errorMessages?.recipientAddressErrorMsg && (
-                    <i className="bi bi-info-circle" />
-                  )}{" "}
-                  {formState?.errorMessages?.recipientAddressErrorMsg}
-                </small>
-              </div>
-
-              <label
-                className={
-                  status === "Connected"
-                    ? "caption d-flex gap-2 align-items-center"
-                    : "caption d-flex gap-2 align-items-center text-gray"
-                }
-                htmlFor="token"
-              >
-                Token
-              </label>
-              <input
-                disabled={status === "Disconnected"}
-                className={
-                  status === "Connected"
-                    ? "bg-t p-3 py-2 rounded-2 am-input"
-                    : "bg-t p-3 py-2 rounded-2 am-input text-gray"
-                }
-                type="text"
-                name="token"
-                id="token"
-                readOnly
-                value={defaultChainSymbol}
-                placeholder="Enter Recipient’s Token"
-              />
-
-              <label
-                className={
-                  status === "Connected"
-                    ? "caption d-flex gap-2 align-items-end justify-content-between"
-                    : "caption d-flex gap-2 align-items-end justify-content-between text-gray"
-                }
-                htmlFor="amount"
-              >
-                Amount{" "}
-                <small>
-                  Balance :{" "}
-                  {status === "Connected"
-                    ? getBalanceStyle(
-                        fromChainDenom(availableBalance),
-                        "caption",
-                        "caption2"
-                      )
-                    : getBalanceStyle(
-                        fromChainDenom(availableBalance),
-                        "caption text-gray",
-                        "caption2 text-gray"
-                      )}
-                  &nbsp;
-                  {defaultChainSymbol}
-                </small>
-              </label>
-
-              <div>
-                <div className="p-3 py-2 d-flex rounded-2 gap-2 am-input">
+                  {tabs.map((tab, index) => (
+                    <button
+                      key={index}
+                      className={`body1 ${
+                        Tab === index ? "text-primary" : "text-white"
+                      }`}
+                      onClick={() => setTab(index)}
+                    >
+                      {tab.name}
+                    </button>
+                  ))}
+                </Stack>
+              </Stack>
+              <Stack gap={3} className="bg-black rounded-4 p-3">
+                <label
+                  className={`caption d-flex gap-2 align-items-center ${
+                    status === "Connected" ? "" : "text-body"
+                  }`}
+                  htmlFor="recipientAddress"
+                >
+                  Recipient Address{" "}
+                  <OverlayTrigger
+                    as="span"
+                    overlay={
+                      <Tooltip as id={"totalBalance"}>
+                        Recipient’s address starts with mantle; eg:
+                        mantle10x0k7t.....hb34w4a6kbd6
+                      </Tooltip>
+                    }
+                  >
+                    <i className="bi bi-info-circle"></i>
+                  </OverlayTrigger>
+                  {/* <Tooltip description="Recipient’s address starts with mantle; eg: mantle10x0k7t.....hb34w4a6kbd6" /> */}
+                </label>
+                <div>
                   <input
+                    className="bg-transparent p-3 py-2 rounded-2 border border-secondary w-100"
+                    type="text"
                     disabled={status === "Disconnected"}
-                    className="bg-t"
-                    type="number"
-                    name="amount"
-                    id="amount"
-                    value={displayAmountValue}
-                    placeholder="Enter Amount"
-                    style={{ flex: "1", border: "none", outline: "none" }}
+                    name="recipientAddress"
+                    id="recipientAddress"
+                    value={formState?.recipientAddress}
+                    placeholder="Enter Recipient’s Address"
                     onChange={(e) =>
                       formDispatch({
-                        type: "CHANGE_AMOUNT",
+                        type: "CHANGE_RECIPIENT_ADDRESS",
                         payload: e.target.value,
                       })
                     }
                   />
-                  <button
-                    className="bg-gray-800 p-1 px-2 text-primary"
-                    onClick={() =>
-                      formDispatch({
-                        type: "SET_HALF_AMOUNT",
-                      })
-                    }
+                  <small
+                    id="addressInputErrorMsg"
+                    className="form-text text-danger d-flex align-items-center gap-1"
                   >
-                    half
-                  </button>
-                  <button
-                    className="bg-gray-800 p-1 px-2 text-primary"
-                    onClick={() =>
-                      formDispatch({
-                        type: "SET_MAX_AMOUNT",
-                      })
-                    }
-                  >
-                    max
-                  </button>
+                    {formState?.errorMessages?.recipientAddressErrorMsg && (
+                      <i className="bi bi-info-circle" />
+                    )}{" "}
+                    {formState?.errorMessages?.recipientAddressErrorMsg}
+                  </small>
                 </div>
-                {/* <small
+
+                <label
+                  className={`caption d-flex gap-2 align-items-center ${
+                    status === "Connected" ? "" : "text-body"
+                  }`}
+                  htmlFor="token"
+                >
+                  Token
+                </label>
+                <input
+                  disabled={status === "Disconnected"}
+                  className={`bg-transparent p-3 py-2 rounded-2 border border-secondary w-100 ${
+                    status === "Connected" ? "" : "text-body"
+                  }`}
+                  type="text"
+                  name="token"
+                  id="token"
+                  readOnly
+                  value={defaultChainSymbol}
+                  placeholder="Enter Recipient’s Token"
+                />
+
+                <label
+                  className={`caption d-flex gap-2 align-items-end justify-content-between ${
+                    status === "Connected" ? "" : "text-body"
+                  }`}
+                  htmlFor="amount"
+                >
+                  Amount{" "}
+                  <small>
+                    Balance :{" "}
+                    {status === "Connected"
+                      ? getBalanceStyle(
+                          fromChainDenom(availableBalance),
+                          "caption",
+                          "caption2"
+                        )
+                      : getBalanceStyle(
+                          fromChainDenom(availableBalance),
+                          "caption text-body",
+                          "caption2 text-body"
+                        )}
+                    &nbsp;
+                    {defaultChainSymbol}
+                  </small>
+                </label>
+
+                <div>
+                  <Stack
+                    direction="horizontal"
+                    gap={2}
+                    className="p-3 py-2 rounded-2 border border-secondary"
+                  >
+                    <input
+                      disabled={status === "Disconnected"}
+                      className="bg-transparent flex-grow-1"
+                      type="number"
+                      name="amount"
+                      id="amount"
+                      value={displayAmountValue}
+                      placeholder="Enter Amount"
+                      style={{ flex: "1", border: "none", outline: "none" }}
+                      onChange={(e) =>
+                        formDispatch({
+                          type: "CHANGE_AMOUNT",
+                          payload: e.target.value,
+                        })
+                      }
+                    />
+                    <Button
+                      variant="link"
+                      className={`bg-light-subtle p-1 px-2 text-primary text-decoration-none ${
+                        status === "Disconnected" ? "bg-opacity-75" : ""
+                      }`}
+                      disabled={status === "Disconnected"}
+                      onClick={() =>
+                        formDispatch({
+                          type: "SET_HALF_AMOUNT",
+                        })
+                      }
+                    >
+                      half
+                    </Button>
+                    <Button
+                      variant="link"
+                      className={`bg-light-subtle p-1 px-2 text-primary text-decoration-none ${
+                        status === "Disconnected" ? "bg-opacity-75" : ""
+                      }`}
+                      disabled={status === "Disconnected"}
+                      onClick={() =>
+                        formDispatch({
+                          type: "SET_MAX_AMOUNT",
+                        })
+                      }
+                    >
+                      max
+                    </Button>
+                  </Stack>
+                  {/* <small
                   id="amountInputErrorMsg"
                   className="form-text text-danger d-flex align-items-center gap-1"
                 >
                   {isAmountError && <i className="bi bi-info-circle" />}{" "}
                   {displayAmountErrorMsg}
                 </small> */}
-                <small
-                  id="amountInputErrorMsg"
-                  className="form-text text-danger d-flex align-items-center gap-1"
-                >
-                  {formState?.errorMessages?.transferAmountErrorMsg && (
-                    <i className="bi bi-info-circle" />
-                  )}{" "}
-                  {formState?.errorMessages?.transferAmountErrorMsg}
-                </small>
-              </div>
-
-              <button
-                className="text-primary d-flex gap-2 align-items-center caption"
-                onClick={() => setAdvanced(!advanced)}
-              >
-                Advanced Details{" "}
-                <span
-                  className="transitionAll d-flex align-items-center justify-content-center"
-                  style={{
-                    transform: advanced ? "rotate(180deg)" : "rotate(0deg)",
-                    transformOrigin: "center",
-                  }}
-                >
-                  <i className="bi bi-chevron-down" />
-                </span>
-              </button>
-              {advanced && (
-                <>
-                  <label
-                    className="caption d-flex gap-2 align-items-center pt-2"
-                    htmlFor="memo"
+                  <small
+                    id="amountInputErrorMsg"
+                    className="form-text text-danger d-flex align-items-center gap-1"
                   >
-                    Memo
-                    <Tooltip
-                      description="Memo is an optional field & is not the place to insert mnemonic"
-                      style={{ right: "-190%" }}
+                    {formState?.errorMessages?.transferAmountErrorMsg && (
+                      <i className="bi bi-info-circle" />
+                    )}{" "}
+                    {formState?.errorMessages?.transferAmountErrorMsg}
+                  </small>
+                </div>
+
+                <button
+                  className="text-primary d-flex gap-2 align-items-center caption"
+                  onClick={() => setAdvanced(!advanced)}
+                >
+                  Advanced Details{" "}
+                  <span
+                    className="transitionAll d-flex align-items-center justify-content-center"
+                    style={{
+                      transform: advanced ? "rotate(180deg)" : "rotate(0deg)",
+                      transformOrigin: "center",
+                    }}
+                  >
+                    <i className="bi bi-chevron-down" />
+                  </span>
+                </button>
+                {advanced && (
+                  <>
+                    <label
+                      className="caption d-flex gap-2 align-items-center pt-2"
+                      htmlFor="memo"
+                    >
+                      Memo
+                      <Tooltip
+                        description="Memo is an optional field & is not the place to insert mnemonic"
+                        style={{ right: "-190%" }}
+                      />
+                    </label>
+                    <input
+                      className="bg-t p-3 py-2 rounded-2 am-input"
+                      disabled={status === "Disconnected"}
+                      type="text"
+                      name="memo"
+                      id="memo"
+                      placeholder="Enter Memo"
+                      value={formState.memo}
+                      onChange={(e) =>
+                        formDispatch({
+                          type: "CHANGE_MEMO",
+                          payload: e.target.value,
+                        })
+                      }
                     />
-                  </label>
-                  <input
-                    className="bg-t p-3 py-2 rounded-2 am-input"
-                    disabled={status === "Disconnected"}
-                    type="text"
-                    name="memo"
-                    id="memo"
-                    placeholder="Enter Memo"
-                    value={formState.memo}
-                    onChange={(e) =>
-                      formDispatch({
-                        type: "CHANGE_MEMO",
-                        payload: e.target.value,
-                      })
-                    }
-                  />
-                </>
-              )}
-              <button
-                className="btn button-primary px-5 ms-auto"
-                type="submit"
-                disabled={isSubmitDisabled}
-                onClick={handleSubmit}
-              >
-                Send
-              </button>
-            </div>
-          </div>
-        </ScrollableSectionContainer>
-        <ScrollableSectionContainer className="col-4">
-          {status === "Connected" ? (
-            <ConnectedRecieve displayAddress={displayAddress} />
-          ) : (
-            <DisconnecedRecieve />
-          )}
-        </ScrollableSectionContainer>
-      </section>
+                  </>
+                )}
+                {/* <Accordion className="bg-transparent p-0 border-0">
+                  <Accordion.Item
+                    eventKey="0"
+                    className="p-0 m-0 bg-transparent"
+                  >
+                    <Accordion.Header className="text-white bg-transparent">
+                      Advanced Details
+                    </Accordion.Header>
+                    <Accordion.Body className="d-flex flex-column">
+                      <label
+                        className="caption d-flex gap-2 align-items-center pt-2"
+                        htmlFor="memo"
+                      >
+                        Memo
+                        <Tooltip
+                          description="Memo is an optional field & is not the place to insert mnemonic"
+                          style={{ right: "-190%" }}
+                        />
+                      </label>
+                      <input
+                        className="bg-t p-3 py-2 rounded-2 am-input"
+                        disabled={status === "Disconnected"}
+                        type="text"
+                        name="memo"
+                        id="memo"
+                        placeholder="Enter Memo"
+                        value={formState.memo}
+                        onChange={(e) =>
+                          formDispatch({
+                            type: "CHANGE_MEMO",
+                            payload: e.target.value,
+                          })
+                        }
+                      />
+                    </Accordion.Body>
+                  </Accordion.Item>
+                </Accordion> */}
+                <Button
+                  variant="primary"
+                  className="m-0 ms-auto rounded-5 px-5 font-bold"
+                  type="submit"
+                  disabled={isSubmitDisabled}
+                  onClick={handleSubmit}
+                >
+                  Send
+                </Button>
+              </Stack>
+            </Stack>
+          </ScrollableSectionContainer>
+        </Col>
+        <Col xs={4} className="h-100 pb-2">
+          <ScrollableSectionContainer>
+            {status === "Connected" ? (
+              <ConnectedReceive displayAddress={displayAddress} />
+            ) : (
+              <DisconnectedReceive />
+            )}
+          </ScrollableSectionContainer>
+        </Col>
+      </Row>
 
       {/* <TransactionManifestModal
         id="transactionManifestModal"
