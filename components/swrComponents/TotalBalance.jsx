@@ -31,15 +31,15 @@ export const TotalBalance = () => {
     ? getBalanceStyle(fromChainDenom(totalBalance), "caption", "caption2")
     : getBalanceStyle(
         fromChainDenom(totalBalance),
-        "caption text-gray",
-        "caption2 text-gray"
+        "caption text-secondary",
+        "caption2 text-secondary"
       );
 
   const denomDisplay = defaultChainSymbol;
 
   return (
     <>
-      <p className={`caption m-0 ${isConnected ? "" : " text-gray"}`}>
+      <p className={`caption m-0 ${isConnected ? "" : " text-secondary"}`}>
         {totalBalanceDisplay}
         &nbsp;
         {denomDisplay}
@@ -72,12 +72,12 @@ export const TotalBalanceInUSD = () => {
     ? getBalanceStyle(decimalize(totalBalanceInUSD), "caption2", "small")
     : getBalanceStyle(
         decimalize(totalBalanceInUSD),
-        "caption2 text-gray",
-        "small text-gray"
+        "caption2 text-secondary",
+        "small text-secondary"
       );
 
   return (
-    <p className={`caption2 m-0 ${isConnected ? "" : " text-gray"}`}>
+    <p className={`caption2 m-0 ${isConnected ? "" : " text-secondary"}`}>
       {totalBalanceInUSDDisplay}
       &nbsp;
       {usdSymbol}

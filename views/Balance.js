@@ -23,7 +23,9 @@ export default function Balance() {
           gap={2}
           direction="horizontal"
           className={`caption align-items-center m-0 text-${
-            status === "Connected" ? "white-300" : "gray"
+            status === "Connected"
+              ? "white text-opacity-75"
+              : "secondary-emphasis"
           }`}
         >
           Total Balance
@@ -47,7 +49,9 @@ export default function Balance() {
           gap={2}
           direction="horizontal"
           className={`caption align-items-center m-0 text-${
-            status === "Connected" ? "white-300" : "gray"
+            status === "Connected"
+              ? "white text-opacity-75"
+              : "secondary-emphasis"
           }`}
         >
           Available Balance
@@ -69,7 +73,7 @@ export default function Balance() {
       </Stack>
       <Stack className="bg-black p-3 rounded-4" gap={1}>
         <p
-          className={`caption d-flex gap-2 align-items-center m-0 text-white-300`}
+          className={`caption d-flex gap-2 align-items-center m-0 text-white text-opacity-75`}
         >
           Current Price of {denomDisplay}
         </p>
