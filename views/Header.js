@@ -19,7 +19,7 @@ import { Button, Stack } from "react-bootstrap";
 export default function Header({ setLeftCol }) {
   const chainContext = useChain(defaultChainName);
   const { username, address, wallet, disconnect } = chainContext;
-  const [showModal, setShowModal] = useState(false);
+  // const [showModal, setShowModal] = useState(false);
 
   // menus ham
   const [rightHam, setRightHam] = useState(false);
@@ -155,11 +155,11 @@ export default function Header({ setLeftCol }) {
       <hr className="border border-white border-1 my-3" />
       <Button
         variant="link"
-        className="d-flex align-items-center justify-content-start gap-2 text-center body2 w-100 py-1 text-white text-decoration-none"
+        className="d-flex align-items-center justify-content-start gap-2 text-center w-100 py-1 px-0 text-white text-decoration-none"
         onClick={onClickDisconnect}
       >
-        <i className="bi bi-box-arrow-left text-primary" />
-        Disconnect
+        <i className="bi bi-box-arrow-left text-primary body2" />
+        <span className="body2">Disconnect</span>
       </Button>
     </div>
   );
