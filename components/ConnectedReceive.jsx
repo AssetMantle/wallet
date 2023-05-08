@@ -1,9 +1,10 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { shortenAddress } from "../lib";
-import { Stack } from "react-bootstrap";
+import { Button, Modal, Stack } from "react-bootstrap";
 
 const ConnectedReceive = ({ displayAddress }) => {
+  const [Show, setShow] = useState(false);
   return (
     <>
       <Stack
@@ -22,10 +23,9 @@ const ConnectedReceive = ({ displayAddress }) => {
         </Stack>
         <Stack
           className="bg-black rounded-4 p-3 align-items-center justify-content-center border-color-primary-hover"
-          gap={3}
+          gap={2}
           role="button"
-          data-bs-toggle="modal"
-          data-bs-target="#receiveModal"
+          onClick={() => setShow(true)}
         >
           <div
             style={{
@@ -40,10 +40,10 @@ const ConnectedReceive = ({ displayAddress }) => {
             </Suspense>
           </div>
           <h4 className="body2 text-primary m-0">Wallet Address</h4>
-          <button
-            className="d-flex align-items-center justify-content-center gap-2 text-center caption2 pt-1"
+          <Button
+            variant="link"
+            className="d-flex align-items-center justify-content-center gap-2 text-center caption2 p-0 text-decoration-none text-wrap text-break text-white"
             onClick={() => navigator.clipboard.writeText(displayAddress)}
-            style={{ wordBreak: "break-all" }}
           >
             <Suspense fallback="Loading...">
               {shortenAddress(displayAddress)}
@@ -51,45 +51,52 @@ const ConnectedReceive = ({ displayAddress }) => {
             <span className="text-primary">
               <i className="bi bi-clipboard" />
             </span>
-          </button>
+          </Button>
         </Stack>
       </Stack>
-      <div className="modal " tabIndex="-1" role="dialog" id="receiveModal">
-        <div className="modal-dialog modal-dialog-centered" role="document">
-          <div className="modal-content">
-            <div className="modal-body p-3  d-flex flex-column">
-              <div className="bg-black rounded-4 d-flex flex-column p-4 px-2 gap-2 align-items-center justify-content-center">
-                <div
-                  style={{
-                    width: "min(350px, 100%)",
-                    aspectRatio: "1/1",
-                    position: "relative",
-                  }}
-                >
-                  <Suspense fallback="Loading...">
-                    <QRCodeSVG
-                      width="100%"
-                      height="100%"
-                      value={displayAddress}
-                    />
-                  </Suspense>
-                </div>
-                <h4 className="body2 text-primary pt-1">Wallet Address</h4>
-                <button
-                  className="d-flex align-items-center justify-content-center gap-2 text-center caption2"
-                  onClick={() => navigator.clipboard.writeText(displayAddress)}
-                  style={{ wordBreak: "break-all" }}
-                >
-                  <Suspense fallback="Loading...">{displayAddress}</Suspense>
-                  <span className="text-primary">
-                    <i className="bi bi-clipboard" />
-                  </span>
-                </button>
+      <Modal
+        show={Show}
+        onHide={() => setShow(false)}
+        centered
+        size="lg"
+        aria-labelledby="receive-modal"
+      >
+        <Modal.Body className="p-0">
+          <Stack className="p-3">
+            <Stack
+              className="bg-black rounded-4 p-4 px-2 align-items-center justify-content-center"
+              gap={2}
+            >
+              <div
+                style={{
+                  width: "min(350px, 100%)",
+                  aspectRatio: "1/1",
+                  position: "relative",
+                }}
+              >
+                <Suspense fallback="Loading...">
+                  <QRCodeSVG
+                    width="100%"
+                    height="100%"
+                    value={displayAddress}
+                  />
+                </Suspense>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
+              <h4 className="body2 text-primary m-0">Wallet Address</h4>
+              <Button
+                variant="link"
+                className="d-flex align-items-center justify-content-center gap-2 text-center caption2 p-0 text-decoration-none text-wrap text-break text-white"
+                onClick={() => navigator.clipboard.writeText(displayAddress)}
+              >
+                <Suspense fallback="Loading...">{displayAddress}</Suspense>
+                <span className="text-primary">
+                  <i className="bi bi-clipboard" />
+                </span>
+              </Button>
+            </Stack>
+          </Stack>
+        </Modal.Body>
+      </Modal>
     </>
   );
 };
