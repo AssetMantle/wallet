@@ -34,7 +34,9 @@ export const AvailableBalance = () => {
 
   return (
     <>
-      <p className={status === "Connected" ? "caption" : "caption text-gray"}>
+      <p
+        className={`caption m-0 ${status === "Connected" ? "" : " text-gray"}`}
+      >
         {balanceDisplay} {denomDisplay}
       </p>
     </>
@@ -63,7 +65,7 @@ export const AvailableBalanceUsd = () => {
       );
 
   return (
-    <p className={isConnected ? "caption2" : "caption2 text-gray"}>
+    <p className={`caption2 m-0 ${isConnected ? "" : " text-gray"}`}>
       {balanceInUSDDisplay}
       &nbsp;{usdSymbol}
     </p>
