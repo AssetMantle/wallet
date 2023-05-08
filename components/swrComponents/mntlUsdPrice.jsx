@@ -17,7 +17,7 @@ export const MntlUsdPrice = () => {
   );
 
   return (
-    <p className={"caption"}>
+    <p className={"caption m-0"}>
       {mntlUsdDisplay}
       &nbsp;
       {usdSymbol}
