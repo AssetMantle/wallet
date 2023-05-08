@@ -9,12 +9,8 @@ import {
 } from "../components";
 // import Tooltip from "../components/Tooltip";
 import { defaultChainName, defaultChainSymbol } from "../config";
-import {
-  // OverlayTrigger,
-  Stack,
-  // Tooltip
-} from "react-bootstrap";
-import Tooltip from "../components/Tooltip";
+import { OverlayTrigger, Stack, Tooltip } from "react-bootstrap";
+// import Tooltip from "../components/Tooltip";
 
 export default function Balance() {
   const denomDisplay = defaultChainSymbol;
@@ -33,7 +29,7 @@ export default function Balance() {
           }`}
         >
           Total Balance
-          {/* <OverlayTrigger
+          <OverlayTrigger
             as="span"
             overlay={
               <Tooltip as id={"totalBalance"}>
@@ -42,8 +38,8 @@ export default function Balance() {
               </Tooltip>
             }
           >
-            <i className="bi bi-info-circle"></i>
-          </OverlayTrigger> */}
+            <i className="bi bi-info-circle text-primary"></i>
+          </OverlayTrigger>
           {/* <button
             type="button"
             className="btn btn-secondary"
@@ -53,30 +49,42 @@ export default function Balance() {
           >
             Tooltip on bottom
           </button> */}
-          <Tooltip
+          {/* <Tooltip
             titlePrimary={true}
             description={
               "Sum total of Available, Delegated, Rewards Claimable, and Undelegating balances"
             }
             style={{ right: "330%" }}
-          />
+          /> */}
         </Stack>
         <TotalBalance />
         <TotalBalanceInUSD />
       </Stack>
       <Stack className="bg-black p-3 rounded-4" gap={1}>
-        <p
-          className={`caption d-flex gap-2 align-items-center m-0 text-${
+        <Stack
+          gap={2}
+          direction="horizontal"
+          className={`caption align-items-center m-0 text-${
             status === "Connected" ? "white-300" : "gray"
           }`}
         >
           Available Balance
-          <Tooltip
+          <OverlayTrigger
+            as="span"
+            overlay={
+              <Tooltip as id={"totalBalance"}>
+                Amount that can be transferred.
+              </Tooltip>
+            }
+          >
+            <i className="bi bi-info-circle text-primary"></i>
+          </OverlayTrigger>
+          {/* <Tooltip
             titlePrimary={true}
             description={"Amount that can be transferred."}
             style={{ right: "330%" }}
-          />
-        </p>
+          /> */}
+        </Stack>
         {/* <Suspense fallback={<p>Loading...</p>}> */}
         <AvailableBalance />
         {/* </Suspense> */}
