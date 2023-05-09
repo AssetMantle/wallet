@@ -454,7 +454,7 @@ export default function Transact() {
                   <OverlayTrigger
                     as="span"
                     overlay={
-                      <Tooltip as id={"totalBalance"}>
+                      <Tooltip as id={"address-demo"}>
                         Recipient’s address starts with mantle; eg:
                         mantle10x0k7t.....hb34w4a6kbd6
                       </Tooltip>
@@ -628,13 +628,24 @@ export default function Transact() {
                       htmlFor="memo"
                     >
                       Memo
-                      <Tooltip
+                      <OverlayTrigger
+                        as="span"
+                        overlay={
+                          <Tooltip as id={"memo-index"}>
+                            Memo is an optional field & is not the place to
+                            insert mnemonic
+                          </Tooltip>
+                        }
+                      >
+                        <i className="bi bi-info-circle"></i>
+                      </OverlayTrigger>
+                      {/* <Tooltip
                         description="Memo is an optional field & is not the place to insert mnemonic"
                         style={{ right: "-190%" }}
-                      />
+                      /> */}
                     </label>
                     <input
-                      className="bg-t p-3 py-2 rounded-2 am-input"
+                      className="bg-transparent p-3 py-2 rounded-2 border border-secondary w-100"
                       disabled={status === "Disconnected"}
                       type="text"
                       name="memo"
