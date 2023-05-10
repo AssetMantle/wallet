@@ -127,9 +127,22 @@ const StaticUniswapStakeContents = () => {
   );
 
   const noRecordsJSX = (
-    <h3 className="caption text-error">
-      <i className="bi bi-info-circle"></i> No Records Found
-    </h3>
+    <p className="">
+      <i className="bi bi-info-circle text-white" />{" "}
+      <span className="caption text-white">Get LP Tokens at</span>{" "}
+      <a
+        href="https://app.uniswap.org/#/add/0x2c4f1df9c7de0c59778936c9b145ff56813f3295/ETH/3000?minPrice=0.000001&maxPrice=0.000006"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="am-link"
+      >
+        <span className="text-primary caption">Uniswap</span>{" "}
+        <i className="text-primary bi bi-arrow-up-right caption"></i>
+      </a>
+      <span className="caption text-white">
+        {`, and then come back and deposit it here to earn MNTL Tokens`}
+      </span>{" "}
+    </p>
   );
 
   const recordsJSX = (
