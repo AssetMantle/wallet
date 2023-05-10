@@ -31,9 +31,9 @@ import {
 import { UniswapStakeContents, UniswapUnstakeContents } from "../views";
 import { toast } from "react-toastify";
 
-export function UniswapFarmPool({ poolIndex }) {
+export function QuickswapFarmPool({ selectedPoolIndex }) {
   // hooks to work the multi-modal for ethereum
-  const { open } = useWeb3Modal();
+  const { open, setDefaultChain } = useWeb3Modal();
 
   // before useAccount, define the isMounted() hook to deal with SSR issues
   const isMounted = useIsMounted();
@@ -118,7 +118,6 @@ export function UniswapFarmPool({ poolIndex }) {
 
   const handleOpenWeb3Modal = async (e) => {
     e.preventDefault();
-    await disconnect();
     await open();
   };
 
@@ -128,7 +127,7 @@ export function UniswapFarmPool({ poolIndex }) {
   };
 
   const uniswapFarm = farmPools?.[0];
-  const selectedUniswapFarmPool = uniswapFarm?.pools?.[poolIndex];
+  const selectedUniswapFarmPool = uniswapFarm?.pools?.[selectedPoolIndex];
 
   const tokenPairArray = selectedUniswapFarmPool?.tokens.split(" – ");
   let toastId;
@@ -199,20 +198,6 @@ export function UniswapFarmPool({ poolIndex }) {
       </>
     );
 
-  const appLogoJSX = (
-    <div
-      className="position-relative"
-      style={{ width: "30px", aspectRatio: "1/1" }}
-    >
-      <img
-        src={`/farm/icons/${cleanString(uniswapFarm?.name)}.svg`}
-        alt={`${uniswapFarm?.name} icon`}
-        className="w-100 h-100"
-        style={{ objectFit: "cover", objectPosition: "center" }}
-      />
-    </div>
-  );
-
   const chainLogoJSX = (
     <div
       className={`bg-gray-800 p-1 px-3 rounded-start ${
@@ -282,7 +267,19 @@ export function UniswapFarmPool({ poolIndex }) {
       <div className="d-flex align-items-center justify-content-between">
         {/* App name and connected Address */}
         <div className="d-flex gap-2 mb-1">
-          <div className={``}>{appLogoJSX}</div>
+          <div className={``}>
+            <div
+              className="position-relative"
+              style={{ width: "30px", aspectRatio: "1/1" }}
+            >
+              <img
+                src={`/farm/icons/${cleanString(uniswapFarm?.name)}.svg`}
+                alt={`${uniswapFarm?.name} icon`}
+                className="w-100 h-100"
+                style={{ objectFit: "cover", objectPosition: "center" }}
+              />
+            </div>
+          </div>
           <div className="d-flex flex-column gap-1">
             <h1 className="h3 text-primary m-0">{uniswapFarm?.name}</h1>
             {connectedAddressJSX}

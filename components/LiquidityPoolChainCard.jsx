@@ -1,12 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
+import { farmPools } from "../data";
 
-export default function LiquidityPoolChainCard({ pool, setChain, name }) {
-  const [Tokens] = useState(pool && pool.tokens && pool.tokens.split(" – "));
+export default function LiquidityPoolChainCard({
+  setSelectedPool,
+  appIndex,
+  poolIndex,
+}) {
+  const selectedApp = farmPools?.[appIndex];
+  const pool = selectedApp?.pools?.[poolIndex];
+  const tokenPairArray = pool?.tokens?.split?.(" – ");
+
+  const handleOnClickPair = (e) => {
+    e.preventDefault();
+    setSelectedPool({
+      appIndex,
+      poolIndex,
+    });
+  };
   return (
     <div
       className="d-flex align-items-center justify-content-between border-color-primary-hover px-3 py-2 rounded-4"
       role="button"
-      onClick={() => setChain({ name, card: pool.tokens })}
+      onClick={handleOnClickPair}
     >
       <div className="d-flex align-items-center gap-1">
         <div
@@ -18,10 +33,8 @@ export default function LiquidityPoolChainCard({ pool, setChain, name }) {
             style={{ width: "30px", aspectRatio: "1/1" }}
           >
             <img
-              src={`/farm/icons/${
-                Tokens && Tokens[1] && Tokens[1].toLowerCase()
-              }.svg`}
-              alt={`${Tokens && Tokens[1]} icon`}
+              src={`/farm/icons/${tokenPairArray?.[1]?.toLowerCase?.()}.svg`}
+              alt={`${tokenPairArray?.[1]} icon`}
               className="w-100 h-100"
               style={{ objectFit: "cover", objectPosition: "center" }}
             />
@@ -31,21 +44,19 @@ export default function LiquidityPoolChainCard({ pool, setChain, name }) {
             style={{ width: "30px", aspectRatio: "1/1" }}
           >
             <img
-              src={`/farm/icons/${
-                Tokens && Tokens[0] && Tokens[0].toLowerCase()
-              }.svg`}
-              alt={`${Tokens && Tokens[0]} icon`}
+              src={`/farm/icons/${tokenPairArray?.[0]?.toLowerCase?.()}.svg`}
+              alt={`${tokenPairArray?.[0]} icon`}
               className="w-100 h-100"
               style={{ objectFit: "cover", objectPosition: "center" }}
             />
           </div>
         </div>
         <h2 className="caption2 text-primary m-0">
-          {pool.tokens && pool.tokens}
+          {pool?.tokens && pool?.tokens}
         </h2>
       </div>
       <p className="small m-0 text-gray">
-        {pool && pool.apr && `APR: ${pool.apr}`}
+        {pool && pool?.apr && `APR: ${pool?.apr}`}
       </p>
     </div>
   );

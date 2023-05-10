@@ -10,11 +10,7 @@ import {
 import { useAccount } from "wagmi";
 import { placeholderAddressEth } from "../data";
 
-export default function LiquidityPoolComponentBackup({
-  data,
-  index,
-  selectedChain,
-}) {
+export default function LiquidityPoolComponent({ data, index, selectedChain }) {
   const [Connected, setConnected] = useState(false);
 
   // hooks to work the multi-modal for ethereum
