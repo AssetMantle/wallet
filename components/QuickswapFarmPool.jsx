@@ -1,63 +1,44 @@
 import { disconnect } from "@wagmi/core";
 import { useWeb3Modal } from "@web3modal/react";
+import dynamic from "next/dynamic";
 import React from "react";
-import useSWR from "swr";
-import {
-  useAccount,
-  useContractRead,
-  useContractWrite,
-  usePrepareContractWrite,
-} from "wagmi";
+import { toast } from "react-toastify";
+import { useAccount } from "wagmi";
+import { polygon } from "wagmi/chains";
 import {
   defaultChainSymbol,
   getBalanceStyle,
   notify,
   toastConfig,
 } from "../config";
-import {
-  ethConfig,
-  farmPools,
-  fromChainDenom,
-  placeholderAddressEth,
-  useIncentiveList,
-} from "../data";
+import { farmPools, fromChainDenom, placeholderAddressEth } from "../data";
 import {
   cleanString,
   getTimeDifference,
   handleCopy,
   shortenEthAddress,
-  useIsMounted,
 } from "../lib";
-import { UniswapStakeContents, UniswapUnstakeContents } from "../views";
-import { toast } from "react-toastify";
 
-export function QuickswapFarmPool({ selectedPoolIndex }) {
+function StaticQuickswapFarmPool({ poolIndex }) {
   // hooks to work the multi-modal for ethereum
   const { open, setDefaultChain } = useWeb3Modal();
+  setDefaultChain(polygon);
 
   // before useAccount, define the isMounted() hook to deal with SSR issues
-  const isMounted = useIsMounted();
+  // const isMounted = useIsMounted();
 
   // books to get the address of the connected wallet
   const { address, isConnected } = useAccount();
 
-  // wagmi hooks to read and write in contracts
-  const uniV3StakerContractAddress =
-    ethConfig?.mainnet?.uniswap?.uniV3Staker?.address;
-  const uniV3StakerABI = ethConfig?.mainnet?.uniswap?.uniV3Staker?.abi;
-  const chainID = ethConfig?.mainnet?.chainID;
-  const uniV3StakerContract = {
-    address: uniV3StakerContractAddress,
-    abi: uniV3StakerABI,
-  };
-  const { incentiveList, isLoadingIncentiveList } = useIncentiveList();
-  const { data: selectedIncentiveIndex } = useSWR("selectedIncentive");
-  const isIncentivePopulated = !isLoadingIncentiveList && incentiveList?.length;
-  const selectedIncentive = incentiveList?.[selectedIncentiveIndex] || [];
+  const chainID = polygon?.id;
   const hookArgs = { watch: true, chainId: chainID };
 
+  // temp variables
+  let isLoadingRewardsBalance = false;
+  let rewardsBalance = 0;
+
   // wagmi hook to read the count of Position NFTs
-  const { data: rewardsBalance, isLoading: isLoadingRewardsBalance } =
+  /* const { data: rewardsBalance, isLoading: isLoadingRewardsBalance } =
     useContractRead({
       ...uniV3StakerContract,
       functionName: "rewards",
@@ -85,17 +66,18 @@ export function QuickswapFarmPool({ selectedPoolIndex }) {
       notify(null, toastId, "Transaction Aborted. Try again.");
       toastId = null;
     },
-  });
+  }); */
 
   // HANDLER FUNCTIONS
   const handleOnClickClaim = async (e) => {
     e.preventDefault();
+    let transactionResponse;
     try {
       // initiate the toast
       toastId = toast.loading("Transaction initiated ...", toastConfig);
 
       // create transaction
-      const transactionResponse = await writeAsync();
+      // transactionResponse = await writeAsync();
 
       console.log("response: ", transactionResponse);
       if (transactionResponse?.hash) {
@@ -111,6 +93,7 @@ export function QuickswapFarmPool({ selectedPoolIndex }) {
       console.error("Runtime Error: ", error);
     }
   };
+
   const handleCopyOnClick = (e) => {
     e.preventDefault();
     handleCopy(address);
@@ -118,6 +101,7 @@ export function QuickswapFarmPool({ selectedPoolIndex }) {
 
   const handleOpenWeb3Modal = async (e) => {
     e.preventDefault();
+    await disconnect();
     await open();
   };
 
@@ -126,17 +110,18 @@ export function QuickswapFarmPool({ selectedPoolIndex }) {
     await disconnect();
   };
 
-  const uniswapFarm = farmPools?.[0];
-  const selectedUniswapFarmPool = uniswapFarm?.pools?.[selectedPoolIndex];
+  const quickswapFarm = farmPools?.[1];
+  const selectedQuickswapFarmPool = quickswapFarm?.pools?.[poolIndex];
 
-  const tokenPairArray = selectedUniswapFarmPool?.tokens.split(" – ");
+  const tokenPairArray = selectedQuickswapFarmPool?.tokens.split(" – ");
   let toastId;
 
   // DISPLAY VARIABLES
   const displayShortenedAddress = shortenEthAddress(
     address || placeholderAddressEth
   );
-  const isWalletEthConnected = isMounted() && isConnected;
+  // const isWalletEthConnected = isMounted() && isConnected;
+  const isWalletEthConnected = isConnected;
   const loadingJSX = "Loading...";
 
   const connectedAddressJSX = isWalletEthConnected && (
@@ -189,31 +174,52 @@ export function QuickswapFarmPool({ selectedPoolIndex }) {
   );
 
   const rewardsBalanceDenomDisplay = defaultChainSymbol;
-  const rewardsBalanceDisplay =
+  /* const rewardsBalanceDisplay =
     !isMounted() || isLoadingRewardsBalance ? (
       loadingJSX
     ) : (
       <>
         {rewardsBalanceStyled}&nbsp;{rewardsBalanceDenomDisplay}
       </>
-    );
+    ); */
+  const rewardsBalanceDisplay = isLoadingRewardsBalance ? (
+    loadingJSX
+  ) : (
+    <>
+      {rewardsBalanceStyled}&nbsp;{rewardsBalanceDenomDisplay}
+    </>
+  );
+
+  const appLogoJSX = (
+    <div
+      className="position-relative"
+      style={{ width: "30px", aspectRatio: "1/1" }}
+    >
+      <img
+        src={`/farm/icons/${cleanString(quickswapFarm?.name)}.svg`}
+        alt={`${quickswapFarm?.name} icon`}
+        className="w-100 h-100"
+        style={{ objectFit: "cover", objectPosition: "center" }}
+      />
+    </div>
+  );
 
   const chainLogoJSX = (
     <div
       className={`bg-gray-800 p-1 px-3 rounded-start ${
-        uniswapFarm?.from !== "polygon" && "py-2"
+        quickswapFarm?.from !== "polygon" && "py-2"
       }`}
     >
       <div
         className="position-relative overflow-hidden"
         style={{
-          height: uniswapFarm?.from === "polygon" ? "26px" : "20px",
-          aspectRatio: uniswapFarm?.from === "polygon" ? "77/26" : "72/20",
+          height: quickswapFarm?.from === "polygon" ? "26px" : "20px",
+          aspectRatio: quickswapFarm?.from === "polygon" ? "77/26" : "72/20",
         }}
       >
         <img
-          src={`/farm/icons/f${uniswapFarm?.from}.svg`}
-          alt={`${uniswapFarm?.from} icon`}
+          src={`/farm/icons/f${quickswapFarm?.from}.svg`}
+          alt={`${quickswapFarm?.from} icon`}
           className="w-100 h-100"
           style={{ objectFit: "contain", objectPosition: "center" }}
         />
@@ -253,35 +259,25 @@ export function QuickswapFarmPool({ selectedPoolIndex }) {
 
   const currentTimestamp = Math.floor(Date.now() / 1000);
   const durationRemaining =
-    selectedUniswapFarmPool?.startTime > currentTimestamp
+    selectedQuickswapFarmPool?.startTime > currentTimestamp
       ? "Not Started"
-      : currentTimestamp > selectedUniswapFarmPool?.endTime
+      : currentTimestamp > selectedQuickswapFarmPool?.endTime
       ? "Incentive Ended"
       : `${getTimeDifference(
-          selectedUniswapFarmPool?.endTime,
+          selectedQuickswapFarmPool?.endTime,
           currentTimestamp
         )} remaining`;
+
+  console.log("tokenPairArray: ", tokenPairArray);
 
   return (
     <div className={`nav-bg p-3 rounded-4 pe-0 d-flex flex-column gap-2 `}>
       <div className="d-flex align-items-center justify-content-between">
         {/* App name and connected Address */}
         <div className="d-flex gap-2 mb-1">
-          <div className={``}>
-            <div
-              className="position-relative"
-              style={{ width: "30px", aspectRatio: "1/1" }}
-            >
-              <img
-                src={`/farm/icons/${cleanString(uniswapFarm?.name)}.svg`}
-                alt={`${uniswapFarm?.name} icon`}
-                className="w-100 h-100"
-                style={{ objectFit: "cover", objectPosition: "center" }}
-              />
-            </div>
-          </div>
+          <div className={``}>{appLogoJSX}</div>
           <div className="d-flex flex-column gap-1">
-            <h1 className="h3 text-primary m-0">{uniswapFarm?.name}</h1>
+            <h1 className="h3 text-primary m-0">{quickswapFarm?.name}</h1>
             {connectedAddressJSX}
           </div>
         </div>
@@ -293,7 +289,7 @@ export function QuickswapFarmPool({ selectedPoolIndex }) {
           <div className="d-flex align-items-center justify-content-between gap-3">
             <div className="d-flex align-items-center gap-3">
               {logoPairJSX}
-              <h2 className="h3 m-0">{selectedUniswapFarmPool?.tokens}</h2>
+              <h2 className="h3 m-0">{selectedQuickswapFarmPool?.tokens}</h2>
             </div>
             <button className="am-link px-2" onClick={handleOnClickClaim}>
               Claim Reward
@@ -308,7 +304,7 @@ export function QuickswapFarmPool({ selectedPoolIndex }) {
               <div className="row">
                 <div className="col-6 text-gray caption">Reward Pool</div>
                 <div className="col-6 caption">
-                  {selectedUniswapFarmPool?.rewardPool}
+                  {selectedQuickswapFarmPool?.rewardPool}
                 </div>
               </div>
             </div>
@@ -316,7 +312,7 @@ export function QuickswapFarmPool({ selectedPoolIndex }) {
               <div className="row">
                 <div className="col-6 text-gray caption">TVL</div>
                 <div className="col-6 caption">
-                  {selectedUniswapFarmPool?.tvl}
+                  {selectedQuickswapFarmPool?.tvl}
                 </div>
               </div>
             </div>
@@ -330,7 +326,7 @@ export function QuickswapFarmPool({ selectedPoolIndex }) {
               <div className="row">
                 <div className="col-6 text-gray caption">APR</div>
                 <div className="col-6 caption">
-                  {selectedUniswapFarmPool?.apr}
+                  {selectedQuickswapFarmPool?.apr}
                 </div>
               </div>
             </div>
@@ -340,93 +336,14 @@ export function QuickswapFarmPool({ selectedPoolIndex }) {
             {ctaButtonsJSX}
           </div>
         </div>
-
-        {/* stake modal */}
-        <div className="modal " tabIndex="-1" role="dialog" id="cardStake">
-          <div
-            className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg"
-            role="document"
-          >
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title body2 text-primary d-flex align-items-center gap-2">
-                  <button
-                    type="button"
-                    className="btn-close primary"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                    style={{ background: "none" }}
-                  >
-                    <span className="text-primary">
-                      <i className="bi bi-chevron-left" />
-                    </span>
-                  </button>
-                  Stake
-                </h5>
-                <button
-                  type="button"
-                  className="btn-close primary"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                  style={{ background: "none" }}
-                >
-                  <span className="text-primary">
-                    <i className="bi bi-x-lg" />
-                  </span>
-                </button>
-              </div>
-              <div className="modal-body p-3  d-flex flex-column">
-                <div className="nav-bg rounded-4 d-flex flex-column py-1 px-4 gap-2 align-items-center justify-content-center">
-                  <UniswapStakeContents />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* unstake modal */}
-        <div className="modal " tabIndex="-1" role="dialog" id="cardUnstake">
-          <div
-            className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg"
-            role="document"
-          >
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title body2 text-primary d-flex align-items-center gap-2">
-                  <button
-                    type="button"
-                    className="btn-close primary"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                    style={{ background: "none" }}
-                  >
-                    <span className="text-primary">
-                      <i className="bi bi-chevron-left" />
-                    </span>
-                  </button>
-                  Unstake
-                </h5>
-                <button
-                  type="button"
-                  className="btn-close primary"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                  style={{ background: "none" }}
-                >
-                  <span className="text-primary">
-                    <i className="bi bi-x-lg" />
-                  </span>
-                </button>
-              </div>
-              <div className="modal-body p-3  d-flex flex-column">
-                <div className="nav-bg rounded-4 d-flex flex-column py-1 px-4 gap-2 align-items-center justify-content-center">
-                  <UniswapUnstakeContents />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
 }
+
+export const QuickswapFarmPool = dynamic(
+  () => Promise.resolve(StaticQuickswapFarmPool),
+  {
+    ssr: false,
+  }
+);

@@ -1,5 +1,6 @@
 import React from "react";
 import { farmPools } from "../data";
+import { disconnect } from "@wagmi/core";
 
 export default function LiquidityPoolChainCard({
   setSelectedPool,
@@ -10,8 +11,9 @@ export default function LiquidityPoolChainCard({
   const pool = selectedApp?.pools?.[poolIndex];
   const tokenPairArray = pool?.tokens?.split?.(" – ");
 
-  const handleOnClickPair = (e) => {
+  const handleOnClickPair = async (e) => {
     e.preventDefault();
+    await disconnect();
     setSelectedPool({
       appIndex,
       poolIndex,

@@ -1,9 +1,11 @@
 import Head from "next/head";
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import { ExternalFarmPool, UniswapFarmPool } from "../components";
 import LiquidityPoolChains from "../components/LiquidityPoolChains";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import { farmPools } from "../data";
+import { QuickswapFarmPool } from "../components/QuickswapFarmPool";
+import { useIsMounted } from "../lib";
 
 export default function Farm() {
   // HOOKS
@@ -12,20 +14,25 @@ export default function Farm() {
     appIndex: 0,
     poolIndex: 0,
   });
+  const isMounted = useIsMounted();
+  const loadingJSX = "Loading...";
 
   // HANDLER FUNCTIONS
 
   const farmPoolJSX =
-    selectedPool?.appIndex == 0 || selectedPool?.appIndex == 1 ? (
+    isMounted &&
+    (selectedPool?.appIndex == 0 || selectedPool?.appIndex == 1 ? (
       selectedPool?.appIndex == 0 ? (
         <UniswapFarmPool poolIndex={selectedPool?.poolIndex} />
-      ) : null
+      ) : (
+        <QuickswapFarmPool poolIndex={selectedPool?.poolIndex} />
+      )
     ) : (
       <ExternalFarmPool
         appIndex={selectedPool?.appIndex}
         poolIndex={selectedPool?.poolIndex}
       />
-    );
+    ));
 
   console.log(
     " appIndex: ",
@@ -44,7 +51,7 @@ export default function Farm() {
           <ScrollableSectionContainer className="d-flex h-100">
             {/* New UI starts from here  */}
             <div className="bg-gray-800 rounded-4 p-3 d-flex flex-column gap-3">
-              {farmPoolJSX}
+              <Suspense fallback={loadingJSX}>{farmPoolJSX}</Suspense>
             </div>
           </ScrollableSectionContainer>
         </div>

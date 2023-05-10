@@ -116,7 +116,7 @@ const StaticUniswapUnstakeContents = () => {
       ? recordsJSX
       : noRecordsJSX;
 
-  console.log(
+  /* console.log(
     "positionNFTs: ",
     positionNfts,
     " loading: ",
@@ -129,7 +129,7 @@ const StaticUniswapUnstakeContents = () => {
     filteredPositionNfts,
     " selectedIncentiveId: ",
     selectedIncentiveId
-  );
+  ); */
 
   return renderedJSX;
 };

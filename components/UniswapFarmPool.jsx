@@ -1,6 +1,7 @@
 import { disconnect } from "@wagmi/core";
 import { useWeb3Modal } from "@web3modal/react";
 import React from "react";
+import { toast } from "react-toastify";
 import useSWR from "swr";
 import {
   useAccount,
@@ -8,6 +9,7 @@ import {
   useContractWrite,
   usePrepareContractWrite,
 } from "wagmi";
+import { mainnet } from "wagmi/chains";
 import {
   defaultChainSymbol,
   getBalanceStyle,
@@ -26,17 +28,16 @@ import {
   getTimeDifference,
   handleCopy,
   shortenEthAddress,
-  useIsMounted,
 } from "../lib";
 import { UniswapStakeContents, UniswapUnstakeContents } from "../views";
-import { toast } from "react-toastify";
 
 export function UniswapFarmPool({ poolIndex }) {
   // hooks to work the multi-modal for ethereum
-  const { open } = useWeb3Modal();
+  const { open, setDefaultChain } = useWeb3Modal();
+  setDefaultChain(mainnet);
 
   // before useAccount, define the isMounted() hook to deal with SSR issues
-  const isMounted = useIsMounted();
+  // const isMounted = useIsMounted();
 
   // books to get the address of the connected wallet
   const { address, isConnected } = useAccount();
@@ -137,7 +138,8 @@ export function UniswapFarmPool({ poolIndex }) {
   const displayShortenedAddress = shortenEthAddress(
     address || placeholderAddressEth
   );
-  const isWalletEthConnected = isMounted() && isConnected;
+  // const isWalletEthConnected = isMounted() && isConnected;
+  const isWalletEthConnected = isConnected;
   const loadingJSX = "Loading...";
 
   const connectedAddressJSX = isWalletEthConnected && (
@@ -190,14 +192,21 @@ export function UniswapFarmPool({ poolIndex }) {
   );
 
   const rewardsBalanceDenomDisplay = defaultChainSymbol;
-  const rewardsBalanceDisplay =
+  /* const rewardsBalanceDisplay =
     !isMounted() || isLoadingRewardsBalance ? (
       loadingJSX
     ) : (
       <>
         {rewardsBalanceStyled}&nbsp;{rewardsBalanceDenomDisplay}
       </>
-    );
+    ); */
+  const rewardsBalanceDisplay = isLoadingRewardsBalance ? (
+    loadingJSX
+  ) : (
+    <>
+      {rewardsBalanceStyled}&nbsp;{rewardsBalanceDenomDisplay}
+    </>
+  );
 
   const appLogoJSX = (
     <div
@@ -276,6 +285,8 @@ export function UniswapFarmPool({ poolIndex }) {
           selectedUniswapFarmPool?.endTime,
           currentTimestamp
         )} remaining`;
+
+  console.log("tokenPairArray: ", tokenPairArray);
 
   return (
     <div className={`nav-bg p-3 rounded-4 pe-0 d-flex flex-column gap-2 `}>

@@ -347,7 +347,6 @@ export const useMaticBalance = () => {
 };
 
 export const useStakedPositionsNftId = (incentiveId) => {
-  console.log("inside useStakedPositionsNftId, incentiveId: ", incentiveId);
   // get the address from connected web3Modal
   const { address } = useAccount();
 
