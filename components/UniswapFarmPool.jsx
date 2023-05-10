@@ -1,12 +1,13 @@
 import { disconnect } from "@wagmi/core";
 import { useWeb3Modal } from "@web3modal/react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 import {
   useAccount,
   useContractRead,
   useContractWrite,
+  useNetwork,
   usePrepareContractWrite,
 } from "wagmi";
 import { mainnet } from "wagmi/chains";
@@ -38,9 +39,18 @@ export function UniswapFarmPool({ poolIndex }) {
 
   // before useAccount, define the isMounted() hook to deal with SSR issues
   // const isMounted = useIsMounted();
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+    (async () => {
+      await disconnect();
+    })();
+  }, []);
 
   // books to get the address of the connected wallet
   const { address, isConnected } = useAccount();
+  const { chain, chains } = useNetwork();
 
   // wagmi hooks to read and write in contracts
   const uniV3StakerContractAddress =
@@ -56,6 +66,8 @@ export function UniswapFarmPool({ poolIndex }) {
   const isIncentivePopulated = !isLoadingIncentiveList && incentiveList?.length;
   const selectedIncentive = incentiveList?.[selectedIncentiveIndex] || [];
   const hookArgs = { watch: true, chainId: chainID };
+  const isCorrectChain = chainID == chain?.id;
+  const isWalletEthConnected = isConnected && isCorrectChain;
 
   // wagmi hook to read the count of Position NFTs
   const { data: rewardsBalance, isLoading: isLoadingRewardsBalance } =
@@ -64,7 +76,7 @@ export function UniswapFarmPool({ poolIndex }) {
       functionName: "rewards",
       args: [selectedIncentive?.rewardToken, address],
       select: (data) => data?.toString?.(),
-      enabled: isConnected && address && isIncentivePopulated,
+      enabled: isWalletEthConnected && address && isIncentivePopulated,
       ...hookArgs,
     });
 
@@ -72,7 +84,7 @@ export function UniswapFarmPool({ poolIndex }) {
     ...uniV3StakerContract,
     functionName: "claimReward",
     args: [selectedIncentive?.rewardToken, address, 0],
-    enabled: isConnected && address && isIncentivePopulated,
+    enabled: isWalletEthConnected && address && isIncentivePopulated,
     chainId: 1,
     onError(error) {
       console.error(error.message);
@@ -139,7 +151,6 @@ export function UniswapFarmPool({ poolIndex }) {
     address || placeholderAddressEth
   );
   // const isWalletEthConnected = isMounted() && isConnected;
-  const isWalletEthConnected = isConnected;
   const loadingJSX = "Loading...";
 
   const connectedAddressJSX = isWalletEthConnected && (
@@ -245,6 +256,10 @@ export function UniswapFarmPool({ poolIndex }) {
     </div>
   );
 
+  if (!hasMounted) {
+    return loadingJSX;
+  }
+
   const logoPairJSX = (
     <div
       className="position-relative"
@@ -286,7 +301,7 @@ export function UniswapFarmPool({ poolIndex }) {
           currentTimestamp
         )} remaining`;
 
-  console.log("tokenPairArray: ", tokenPairArray);
+  console.log("chain: ", chain);
 
   return (
     <div className={`nav-bg p-3 rounded-4 pe-0 d-flex flex-column gap-2 `}>
