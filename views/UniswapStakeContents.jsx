@@ -169,7 +169,7 @@ const StaticUniswapStakeContents = () => {
       ? recordsJSX
       : noRecordsJSX;
 
-  console.log("contract values:", {
+  /* console.log("contract values:", {
     balanceOf,
     totalPositions,
     totalPositions,
@@ -180,7 +180,7 @@ const StaticUniswapStakeContents = () => {
     isLoadingTokenValues,
     positionValues: positionValues,
     filteredPositionValues,
-  });
+  }); */
 
   return renderedJSX;
 };
