@@ -23,15 +23,21 @@ export default function Farm() {
     isMounted &&
     (selectedPool?.appIndex == 0 || selectedPool?.appIndex == 1 ? (
       selectedPool?.appIndex == 0 ? (
-        <UniswapFarmPool poolIndex={selectedPool?.poolIndex} />
+        <Suspense fallback={loadingJSX}>
+          <UniswapFarmPool poolIndex={selectedPool?.poolIndex} />
+        </Suspense>
       ) : (
-        <QuickswapFarmPool poolIndex={selectedPool?.poolIndex} />
+        <Suspense fallback={loadingJSX}>
+          <QuickswapFarmPool poolIndex={selectedPool?.poolIndex} />{" "}
+        </Suspense>
       )
     ) : (
-      <ExternalFarmPool
-        appIndex={selectedPool?.appIndex}
-        poolIndex={selectedPool?.poolIndex}
-      />
+      <Suspense fallback={loadingJSX}>
+        <ExternalFarmPool
+          appIndex={selectedPool?.appIndex}
+          poolIndex={selectedPool?.poolIndex}
+        />{" "}
+      </Suspense>
     ));
 
   console.log(
@@ -51,7 +57,7 @@ export default function Farm() {
           <ScrollableSectionContainer className="d-flex h-100">
             {/* New UI starts from here  */}
             <div className="bg-gray-800 rounded-4 p-3 d-flex flex-column gap-3">
-              <Suspense fallback={loadingJSX}>{farmPoolJSX}</Suspense>
+              {farmPoolJSX}
             </div>
           </ScrollableSectionContainer>
         </div>

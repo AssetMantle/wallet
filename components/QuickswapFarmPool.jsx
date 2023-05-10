@@ -1,7 +1,7 @@
 import { disconnect } from "@wagmi/core";
 import { useWeb3Modal } from "@web3modal/react";
 import dynamic from "next/dynamic";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useAccount } from "wagmi";
 import { polygon } from "wagmi/chains";
@@ -26,6 +26,13 @@ function StaticQuickswapFarmPool({ poolIndex }) {
 
   // before useAccount, define the isMounted() hook to deal with SSR issues
   // const isMounted = useIsMounted();
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    (async () => {
+      await disconnect();
+    })();
+    setHasMounted(true);
+  }, []);
 
   // books to get the address of the connected wallet
   const { address, isConnected } = useAccount();
@@ -268,7 +275,9 @@ function StaticQuickswapFarmPool({ poolIndex }) {
           currentTimestamp
         )} remaining`;
 
-  console.log("tokenPairArray: ", tokenPairArray);
+  if (!hasMounted) {
+    return loadingJSX;
+  }
 
   return (
     <div className={`nav-bg p-3 rounded-4 pe-0 d-flex flex-column gap-2 `}>
