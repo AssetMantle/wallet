@@ -12,43 +12,46 @@ export default function LiquidityPoolCard({
   const [Error, setError] = useState(false);
   const [Tokens] = useState(pool && pool.tokens && pool.tokens.split(" – "));
 
+  const logoPairJSX = (
+    <div
+      className="position-relative"
+      style={{ width: "72px", aspectRatio: "72/40" }}
+    >
+      <div
+        className="position-absolute end-0 overflow-hidden"
+        style={{ width: "40px", aspectRatio: "1/1" }}
+      >
+        <img
+          src={`/farm/icons/${
+            Tokens && Tokens[1] && Tokens[1].toLowerCase()
+          }.svg`}
+          alt={`${Tokens && Tokens[1]} icon`}
+          className="w-100 h-100"
+          style={{ objectFit: "cover", objectPosition: "center" }}
+        />
+      </div>
+      <div
+        className="position-absolute start-0 overflow-hidden"
+        style={{ width: "40px", aspectRatio: "1/1" }}
+      >
+        <img
+          src={`/farm/icons/${
+            Tokens && Tokens[0] && Tokens[0].toLowerCase()
+          }.svg`}
+          alt={`${Tokens && Tokens[0]} icon`}
+          className="w-100 h-100"
+          style={{ objectFit: "cover", objectPosition: "center" }}
+        />
+      </div>
+    </div>
+  );
   return (
     selectedCard === pool.tokens && (
       <>
         <div className="bg-gray-800 p-4 rounded-4 d-flex flex-column gap-3">
           <div className="d-flex align-items-center justify-content-between gap-3">
             <div className="d-flex align-items-center gap-3">
-              <div
-                className="position-relative"
-                style={{ width: "72px", aspectRatio: "72/40" }}
-              >
-                <div
-                  className="position-absolute end-0 overflow-hidden"
-                  style={{ width: "40px", aspectRatio: "1/1" }}
-                >
-                  <img
-                    src={`/farm/icons/${
-                      Tokens && Tokens[1] && Tokens[1].toLowerCase()
-                    }.svg`}
-                    alt={`${Tokens && Tokens[1]} icon`}
-                    className="w-100 h-100"
-                    style={{ objectFit: "cover", objectPosition: "center" }}
-                  />
-                </div>
-                <div
-                  className="position-absolute start-0 overflow-hidden"
-                  style={{ width: "40px", aspectRatio: "1/1" }}
-                >
-                  <img
-                    src={`/farm/icons/${
-                      Tokens && Tokens[0] && Tokens[0].toLowerCase()
-                    }.svg`}
-                    alt={`${Tokens && Tokens[0]} icon`}
-                    className="w-100 h-100"
-                    style={{ objectFit: "cover", objectPosition: "center" }}
-                  />
-                </div>
-              </div>
+              {logoPairJSX}
               <h2 className="h3 m-0">{pool.tokens && pool.tokens}</h2>
             </div>
             {HaveReward && (

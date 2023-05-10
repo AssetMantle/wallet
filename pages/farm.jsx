@@ -5,6 +5,8 @@ import Head from "next/head";
 import React, { useState } from "react";
 import useSWR from "swr";
 import { useAccount } from "wagmi";
+import { UniswapFarmPool } from "../components";
+import LiquidityPoolChains from "../components/LiquidityPoolChains";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import { defaultChainSymbol, getBalanceStyle } from "../config";
 import {
@@ -23,8 +25,6 @@ import {
   UniswapStakeContents,
   UniswapUnstakeContents,
 } from "../views";
-import LiquidityPoolComponent from "../components/LiquidityPoolComponent";
-import LiquidityPoolChains from "../components/LiquidityPoolChains";
 
 export default function Farm() {
   // HOOKS
@@ -35,6 +35,108 @@ export default function Farm() {
   const { incentiveList, isLoadingIncentiveList } = useIncentiveList();
   const { data: selectedIncentiveIndex } = useSWR("selectedIncentive");
   const isIncentivePopulated = !isLoadingIncentiveList && incentiveList?.length;
+
+  // New UI related data
+  const POOLs = [
+    {
+      name: "Uniswap",
+      from: "eth",
+      pools: [
+        {
+          tokens: "MNTL – ETH",
+          lpTokenLink: "",
+          rewardPool: "2,500,0000 $MNTL",
+          duration: "00Days,00Hours",
+          apr: "200%",
+          tvl: "$30,000",
+          startTime: "1680353156",
+          endTime: "1688211001",
+        },
+      ],
+    },
+    {
+      name: "Quickswap",
+      from: "polygon",
+      pools: [
+        {
+          tokens: "MNTL – VERSA",
+          lpTokenLink: "",
+          rewardPool: "$0,000.0000",
+          duration: "00Days,00Hours",
+          tvl: "$10,370",
+          apr: "254.52%",
+        },
+        {
+          tokens: "MNTL – USDC",
+          lpTokenLink: "",
+          rewardPool: "$0,000.0000",
+          duration: "00Days,00Hours",
+          tvl: "$10,370",
+          apr: "254.52%",
+        },
+      ],
+    },
+    {
+      name: "Osmosis DEX",
+      from: "osmosis",
+      pools: [
+        {
+          tokens: "MNTL – USDC",
+          lpTokenLink: "",
+          rewardPool: "$0,000.0000",
+          duration: "00Days,00Hours",
+          stakeType: "external",
+          extLink: "",
+        },
+        {
+          tokens: "MNTL – OSMO",
+          lpTokenLink: "",
+          rewardPool: "$0,000.0000",
+          duration: "00Days,00Hours",
+          stakeType: "external",
+          extLink: "",
+        },
+        {
+          tokens: "MNTL – ATOM",
+          lpTokenLink: "",
+          rewardPool: "$0,000.0000",
+          duration: "00Days,00Hours",
+          stakeType: "external",
+          extLink: "",
+        },
+      ],
+    },
+    {
+      name: "Comdex cSwap",
+      from: "comdex",
+      pools: [
+        {
+          tokens: "MNTL – CMST",
+          rewardPool: "$0,000.0000",
+          duration: "00Days,00Hours",
+          tvl: "$10,370",
+          apr: "254.52%",
+        },
+        {
+          tokens: "MNTL – CMDX",
+          rewardPool: "$0,000.0000",
+          duration: "00Days,00Hours",
+          tvl: "$10,370",
+          apr: "254.52%",
+        },
+      ],
+    },
+  ];
+
+  const [selectedPoolName, setSelectedPoolName] = useState({
+    name: POOLs[0].name,
+    card: POOLs[0].pools[0].tokens,
+  });
+
+  const [selectedPool, setSelectedPool] = useState({
+    appIndex: 0,
+    poolIndex: 0,
+  });
 
   // hooks to work the multi-modal for ethereum
   const { open } = useWeb3Modal();
@@ -65,6 +167,7 @@ export default function Farm() {
   const displayShortenedAddress = shortenEthAddress(
     address || placeholderAddressEth
   );
+
   const isWalletEthConnected = isMounted() && isConnected;
 
   const currentRewardPoolDisplay = isIncentivePopulated
@@ -92,19 +195,6 @@ export default function Farm() {
         )} remaining`
       : `Incentive Ended`
     : `---`;
-
-  // console.log(
-  //   "isIncentivePopulated: ",
-  //   isIncentivePopulated,
-  //   " incentiveList: ",
-  //   incentiveList,
-  //   " isLoadingIncentiveList: ",
-  //   isLoadingIncentiveList,
-  //   " incentiveEndTimestamp: ",
-  //   incentiveEndTimestamp,
-  //   " currentTimestamp: ",
-  //   currentTimestamp
-  // );
 
   const tabTitleJSX = tabs.map((tab, index) => (
     <button
@@ -210,113 +300,18 @@ export default function Farm() {
 
   const unstakeContentsJSX = <UniswapUnstakeContents />;
 
-  // console.log(
-  //   "mounted: ",
-  //   isMounted(),
-  //   " address: ",
-  //   address,
-  //   " connected: ",
-  //   isConnected,
-  //   " isWalletEthConnected: ",
-  //   isWalletEthConnected,
-  //   " incentiveList: ",
-  //   incentiveList
-  // );
-
-  // New UI related data
-  const POOLs = [
-    {
-      name: "Uniswap",
-      from: "eth",
-      pools: [
-        {
-          tokens: "MNTL – ETH",
-          lpTokenLink: "",
-          rewardPool: "$0,000.0000",
-          duration: "00Days,00Hours",
-          apr: "000.00%",
-          tvl: "$00.000",
-        },
-      ],
-    },
-    {
-      name: "Quickswap",
-      from: "polygon",
-      pools: [
-        {
-          tokens: "MNTL – VERSA",
-          lpTokenLink: "",
-          rewardPool: "$0,000.0000",
-          duration: "00Days,00Hours",
-          tvl: "$10,370",
-          apr: "254.52%",
-        },
-        {
-          tokens: "MNTL – USDC",
-          lpTokenLink: "",
-          rewardPool: "$0,000.0000",
-          duration: "00Days,00Hours",
-          tvl: "$10,370",
-          apr: "254.52%",
-        },
-      ],
-    },
-    {
-      name: "Osmosis DEX",
-      from: "osmosis",
-      pools: [
-        {
-          tokens: "MNTL – USDC",
-          lpTokenLink: "",
-          rewardPool: "$0,000.0000",
-          duration: "00Days,00Hours",
-          stakeType: "external",
-          extLink: "",
-        },
-        {
-          tokens: "MNTL – OSMO",
-          lpTokenLink: "",
-          rewardPool: "$0,000.0000",
-          duration: "00Days,00Hours",
-          stakeType: "external",
-          extLink: "",
-        },
-        {
-          tokens: "MNTL – ATOM",
-          lpTokenLink: "",
-          rewardPool: "$0,000.0000",
-          duration: "00Days,00Hours",
-          stakeType: "external",
-          extLink: "",
-        },
-      ],
-    },
-    {
-      name: "Comdex cSwap",
-      from: "comdex",
-      pools: [
-        {
-          tokens: "MNTL – CMST",
-          rewardPool: "$0,000.0000",
-          duration: "00Days,00Hours",
-          tvl: "$10,370",
-          apr: "254.52%",
-        },
-        {
-          tokens: "MNTL – CMDX",
-          rewardPool: "$0,000.0000",
-          duration: "00Days,00Hours",
-          tvl: "$10,370",
-          apr: "254.52%",
-        },
-      ],
-    },
-  ];
-
-  const [SelectedChainName, setSelectedChainName] = useState({
-    name: POOLs[0].name,
-    card: POOLs[0].pools[0].tokens,
-  });
+  /* console.log(
+    "mounted: ",
+    isMounted(),
+    " address: ",
+    address,
+    " connected: ",
+    isConnected,
+    " isWalletEthConnected: ",
+    isWalletEthConnected,
+    " incentiveList: ",
+    incentiveList
+  ); */
 
   return (
     <>
@@ -326,42 +321,9 @@ export default function Farm() {
       <section className="row h-100">
         <div className="col-8 h-100">
           <ScrollableSectionContainer className="d-flex h-100">
-            {/* <div className="bg-gray-800 p-4 rounded-4 d-flex flex-column gap-2">
-              <nav className="d-flex flex-column align-items-start justify-content-between gap-3">
-                <div className="d-flex gap-3 w-100">{tabTitleJSX}</div>
-                <div className="rounded-3 py-2 px-3 caption2 border border-1">
-                  <i className="bi bi-info-circle" />
-                  &nbsp;For LP Farming in Polygon chain (QuickSwap) click{" "}
-                  <a
-                    className="am-link text-decoration-none text-lowercase"
-                    href="https://versagames.io/versa/earn"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    here
-                  </a>
-                  .
-                </div>
-                <div className="d-flex align-items-center justify-content-between gap-3 w-100">
-                  <div className="">{connectButtonJSX}</div>
-                  {tabGroupJSX}
-                </div>
-              </nav>
-              {stakeDashboardJSX}
-              {StakeTab ? stakeContentsJSX : unstakeContentsJSX}
-            </div> */}
-
             {/* New UI starts from here  */}
             <div className="bg-gray-800 rounded-4 p-3 d-flex flex-column gap-3">
-              {React.Children.toArray(
-                POOLs.map((pool, index) => (
-                  <LiquidityPoolComponent
-                    data={pool}
-                    index={index}
-                    selectedChain={SelectedChainName && SelectedChainName}
-                  />
-                ))
-              )}
+              <UniswapFarmPool selectedPoolIndex={selectedPool?.poolIndex} />
               {/* {SelectedChain && <LiquidityPoolComponent data={SelectedChain} />} */}
             </div>
           </ScrollableSectionContainer>
@@ -375,15 +337,11 @@ export default function Farm() {
                 <LiquidityPoolChains
                   data={pool}
                   index={index}
-                  setChain={setSelectedChainName}
+                  setChain={setSelectedPoolName}
                 />
               ))
             )}
           </div>
-          {/* New UI Ends Here */}
-
-          {/* <UniswapRewards /> */}
-          {/* <UniswapIncentiveList /> */}
         </ScrollableSectionContainer>
       </section>
     </>

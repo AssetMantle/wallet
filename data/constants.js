@@ -259,3 +259,96 @@ export const staticEarnData = [
     tvlUsd: "0.00",
   },
 ];
+
+// New UI related data
+export const farmPools = [
+  {
+    name: "Uniswap",
+    from: "eth",
+    pools: [
+      {
+        tokens: "MNTL – ETH",
+        lpTokenLink:
+          "https://app.uniswap.org/#/add/0x2c4f1df9c7de0c59778936c9b145ff56813f3295/ETH/3000?minPrice=0.000001&maxPrice=0.000006",
+        rewardPool: "2,500,0000 $MNTL",
+        duration: "00Days,00Hours",
+        apr: "200%",
+        tvl: "$30,000",
+        startTime: "1680353156",
+        endTime: "1688211001",
+      },
+    ],
+  },
+  {
+    name: "Quickswap",
+    from: "polygon",
+    pools: [
+      {
+        tokens: "MNTL – VERSA",
+        lpTokenLink: "",
+        rewardPool: "$0,000.0000",
+        duration: "00Days,00Hours",
+        tvl: "$10,370",
+        apr: "254.52%",
+      },
+      {
+        tokens: "MNTL – USDC",
+        lpTokenLink: "",
+        rewardPool: "$0,000.0000",
+        duration: "00Days,00Hours",
+        tvl: "$10,370",
+        apr: "254.52%",
+      },
+    ],
+  },
+  {
+    name: "Osmosis DEX",
+    from: "osmosis",
+    pools: [
+      {
+        tokens: "MNTL – USDC",
+        lpTokenLink: "",
+        rewardPool: "$0,000.0000",
+        duration: "00Days,00Hours",
+        stakeType: "external",
+        extLink: "",
+      },
+      {
+        tokens: "MNTL – OSMO",
+        lpTokenLink: "",
+        rewardPool: "$0,000.0000",
+        duration: "00Days,00Hours",
+        stakeType: "external",
+        extLink: "",
+      },
+      {
+        tokens: "MNTL – ATOM",
+        lpTokenLink: "",
+        rewardPool: "$0,000.0000",
+        duration: "00Days,00Hours",
+        stakeType: "external",
+        extLink: "",
+      },
+    ],
+  },
+  {
+    name: "Comdex cSwap",
+    from: "comdex",
+    pools: [
+      {
+        tokens: "MNTL – CMST",
+        rewardPool: "$0,000.0000",
+        duration: "00Days,00Hours",
+        tvl: "$10,370",
+        apr: "254.52%",
+      },
+      {
+        tokens: "MNTL – CMDX",
+        rewardPool: "$0,000.0000",
+        duration: "00Days,00Hours",
+        tvl: "$10,370",
+        apr: "254.52%",
+      },
+    ],
+  },
+];
