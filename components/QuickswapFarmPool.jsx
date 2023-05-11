@@ -3,7 +3,7 @@ import { useWeb3Modal } from "@web3modal/react";
 import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { useAccount } from "wagmi";
+import { useAccount, useBlockNumber, useContractRead, useNetwork } from "wagmi";
 import { polygon } from "wagmi/chains";
 import {
   defaultChainSymbol,
@@ -18,6 +18,7 @@ import {
   handleCopy,
   shortenEthAddress,
 } from "../lib";
+import BigNumber from "bignumber.js";
 
 function StaticQuickswapFarmPool({ poolIndex }) {
   // hooks to work the multi-modal for ethereum
@@ -35,27 +36,84 @@ function StaticQuickswapFarmPool({ poolIndex }) {
   }, []);
 
   // books to get the address of the connected wallet
-  const { address, isConnected } = useAccount();
-
   const chainID = polygon?.id;
+  const { address, isConnected } = useAccount();
+  const { chain } = useNetwork();
+  const { data: blockNumber, isLoading: isBlockNumberLoading } = useBlockNumber(
+    {
+      chainId: chainID,
+      watch: false,
+    }
+  );
+
+  const quickswapFarm = farmPools?.[1];
+  const selectedQuickswapFarmPool = quickswapFarm?.pools?.[poolIndex];
+  const tokenPairArray = selectedQuickswapFarmPool?.tokens.split(" – ");
+  let toastId;
+
+  const isCorrectChain = chainID == chain?.id;
   const hookArgs = { watch: true, chainId: chainID };
 
-  // temp variables
-  let isLoadingRewardsBalance = false;
-  let rewardsBalance = 0;
+  const farmStartBlock =
+    selectedQuickswapFarmPool?.startRewardBlock?.toString?.();
+  const farmEndBlock = selectedQuickswapFarmPool?.endRewardBlock?.toString?.();
+  const currentBlock = blockNumber?.toString?.() || "0";
+
+  const numberOfSeconds = BigNumber(farmEndBlock)
+    .minus(BigNumber(currentBlock))
+    .multipliedBy(2.2)
+    .absoluteValue()
+    .toFixed(0);
+  const durationRemaining = BigNumber(farmStartBlock).isGreaterThan(
+    BigNumber(currentBlock)
+  )
+    ? "Not Started"
+    : BigNumber(currentBlock).isGreaterThan(BigNumber(farmEndBlock))
+    ? "Incentive Ended"
+    : `${getTimeDifference(numberOfSeconds, 0)} remaining`;
+
+  const rewardPerBlock = selectedQuickswapFarmPool?.rewardPerBlock || 0;
+  const rewardsPerDay = BigNumber(rewardPerBlock)
+    .multipliedBy(86400)
+    .dividedToIntegerBy(2.2)
+    .toString();
+  const rewardsPerDayStyled = getBalanceStyle(
+    fromChainDenom(rewardsPerDay, 0),
+    "caption",
+    "caption2"
+  );
+
+  // wagmi data & hooks to read and write in contracts
+  const quickV2StakerContractAddress =
+    selectedQuickswapFarmPool?.farmContractAddress;
+  const quickV2StakerContractABI = selectedQuickswapFarmPool?.farmContractABI;
+  const quickV2StakerContract = {
+    address: quickV2StakerContractAddress,
+    abi: quickV2StakerContractABI,
+  };
 
   // wagmi hook to read the count of Position NFTs
-  /* const { data: rewardsBalance, isLoading: isLoadingRewardsBalance } =
+  const { data: userStakeInfo, isLoading: isLoadingUserStakeInfo } =
     useContractRead({
-      ...uniV3StakerContract,
-      functionName: "rewards",
-      args: [selectedIncentive?.rewardToken, address],
+      ...quickV2StakerContract,
+      functionName: "userInfo",
+      args: [address],
       select: (data) => data?.toString?.(),
-      enabled: isConnected && address && isIncentivePopulated,
+      enabled: isConnected && isCorrectChain && address,
       ...hookArgs,
     });
 
-  const { config } = usePrepareContractWrite({
+  const { data: pendingRewards, isLoading: isLoadingPendingRewards } =
+    useContractRead({
+      ...quickV2StakerContract,
+      functionName: "pendingReward",
+      args: [address],
+      select: (data) => data?.toString?.(),
+      enabled: isConnected && isCorrectChain && address,
+      ...hookArgs,
+    });
+
+  /*const { config } = usePrepareContractWrite({
     ...uniV3StakerContract,
     functionName: "claimReward",
     args: [selectedIncentive?.rewardToken, address, 0],
@@ -74,6 +132,15 @@ function StaticQuickswapFarmPool({ poolIndex }) {
       toastId = null;
     },
   }); */
+
+  const userInfoArray = userStakeInfo?.split(",") || [];
+  const userLpStakedAmount = userInfoArray?.[0];
+
+  const pendingRewardsStyled = getBalanceStyle(
+    fromChainDenom(pendingRewards, 0),
+    "caption",
+    "caption2"
+  );
 
   // HANDLER FUNCTIONS
   const handleOnClickClaim = async (e) => {
@@ -116,12 +183,6 @@ function StaticQuickswapFarmPool({ poolIndex }) {
     e.preventDefault();
     await disconnect();
   };
-
-  const quickswapFarm = farmPools?.[1];
-  const selectedQuickswapFarmPool = quickswapFarm?.pools?.[poolIndex];
-
-  const tokenPairArray = selectedQuickswapFarmPool?.tokens.split(" – ");
-  let toastId;
 
   // DISPLAY VARIABLES
   const displayShortenedAddress = shortenEthAddress(
@@ -174,26 +235,17 @@ function StaticQuickswapFarmPool({ poolIndex }) {
     </button>
   );
 
-  const rewardsBalanceStyled = getBalanceStyle(
-    fromChainDenom(rewardsBalance),
-    "caption",
-    "caption2"
+  const rewardsPerDayDenomDisplay = defaultChainSymbol;
+  const rewardsPerDayDisplay = (
+    <>
+      {rewardsPerDayStyled}&nbsp;{rewardsPerDayDenomDisplay}&nbsp;{`per day`}
+    </>
   );
-
-  const rewardsBalanceDenomDisplay = defaultChainSymbol;
-  /* const rewardsBalanceDisplay =
-    !isMounted() || isLoadingRewardsBalance ? (
-      loadingJSX
-    ) : (
-      <>
-        {rewardsBalanceStyled}&nbsp;{rewardsBalanceDenomDisplay}
-      </>
-    ); */
-  const rewardsBalanceDisplay = isLoadingRewardsBalance ? (
-    loadingJSX
+  const pendingRewardsDisplay = isLoadingPendingRewards ? (
+    "Loadin..."
   ) : (
     <>
-      {rewardsBalanceStyled}&nbsp;{rewardsBalanceDenomDisplay}
+      {pendingRewardsStyled}&nbsp;{rewardsPerDayDenomDisplay}
     </>
   );
 
@@ -264,16 +316,18 @@ function StaticQuickswapFarmPool({ poolIndex }) {
     </div>
   );
 
-  const currentTimestamp = Math.floor(Date.now() / 1000);
-  const durationRemaining =
-    selectedQuickswapFarmPool?.startTime > currentTimestamp
-      ? "Not Started"
-      : currentTimestamp > selectedQuickswapFarmPool?.endTime
-      ? "Incentive Ended"
-      : `${getTimeDifference(
-          selectedQuickswapFarmPool?.endTime,
-          currentTimestamp
-        )} remaining`;
+  console.log(
+    "userStakeInfo: ",
+    typeof userStakeInfo,
+    " numberOfSeconds: ",
+    numberOfSeconds,
+    " currentBlock: ",
+    currentBlock,
+    " rewardsPerDay: ",
+    rewardsPerDay,
+    " farmEndBlock: ",
+    farmEndBlock
+  );
 
   if (!hasMounted) {
     return loadingJSX;
@@ -304,7 +358,7 @@ function StaticQuickswapFarmPool({ poolIndex }) {
               Claim Reward
             </button>
             <div className="d-flex align-items-center gap-3">
-              <p>{rewardsBalanceDisplay}</p>
+              <p>{pendingRewardsDisplay}</p>
             </div>
           </div>
           <div className="border-bottom"></div>
@@ -312,9 +366,7 @@ function StaticQuickswapFarmPool({ poolIndex }) {
             <div className="col-7 py-2">
               <div className="row">
                 <div className="col-6 text-gray caption">Reward Pool</div>
-                <div className="col-6 caption">
-                  {selectedQuickswapFarmPool?.rewardPool}
-                </div>
+                <div className="col-6 caption">{rewardsPerDayDisplay}</div>
               </div>
             </div>
             <div className="col-4 py-2">
@@ -328,7 +380,9 @@ function StaticQuickswapFarmPool({ poolIndex }) {
             <div className="col-7 py-2">
               <div className="row">
                 <div className="col-6 text-gray caption">Duration</div>
-                <div className="col-6 caption">{durationRemaining}</div>
+                <div className="col-6 caption">
+                  {isBlockNumberLoading ? "Loading..." : durationRemaining}
+                </div>
               </div>
             </div>
             <div className="col-4 py-2">

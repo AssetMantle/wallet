@@ -134,24 +134,24 @@ export function ExternalFarmPool({ appIndex, poolIndex }) {
           </div>
           <div className="border-bottom"></div>
           <div className="row">
-            <div className="col-7 py-2">
+            {/* <div className="col-7 py-2">
               <div className="row">
                 <div className="col-6 text-gray caption">Reward Pool</div>
                 <div className="col-6 caption">{selectedPool?.rewardPool}</div>
               </div>
-            </div>
+            </div> */}
             <div className="col-4 py-2">
               <div className="row">
                 <div className="col-6 text-gray caption">TVL</div>
                 <div className="col-6 caption">{selectedPool?.tvl}</div>
               </div>
             </div>
-            <div className="col-7 py-2">
+            {/* <div className="col-7 py-2">
               <div className="row">
                 <div className="col-6 text-gray caption">Duration</div>
                 <div className="col-6 caption">{durationRemaining}</div>
               </div>
-            </div>
+            </div> */}
             <div className="col-4 py-2">
               <div className="row">
                 <div className="col-6 text-gray caption">APR</div>

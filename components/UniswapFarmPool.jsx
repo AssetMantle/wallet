@@ -50,7 +50,7 @@ export function UniswapFarmPool({ poolIndex }) {
 
   // books to get the address of the connected wallet
   const { address, isConnected } = useAccount();
-  const { chain, chains } = useNetwork();
+  const { chain } = useNetwork();
 
   // wagmi hooks to read and write in contracts
   const uniV3StakerContractAddress =
