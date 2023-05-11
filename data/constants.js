@@ -236,6 +236,7 @@ export const staticEarnData = [
     chain: "cosmos",
     apy: "0.000000",
     tvlUsd: "0.00",
+    url: "https://app.osmosis.zone/pool/738",
   },
   {
     symbol: "MNTL-OSMO",
@@ -244,6 +245,7 @@ export const staticEarnData = [
     chain: "cosmos",
     apy: "0.000000",
     tvlUsd: "0.00",
+    url: "https://app.osmosis.zone/pool/690",
   },
   {
     symbol: "ATOM-MNTL",
@@ -252,6 +254,7 @@ export const staticEarnData = [
     chain: "cosmos",
     apy: "0.000000",
     tvlUsd: "0.00",
+    url: "https://app.osmosis.zone/pool/686",
   },
   {
     symbol: "USDC-MNTL",
@@ -260,6 +263,7 @@ export const staticEarnData = [
     chain: "polygon",
     apy: "0.000000",
     tvlUsd: "0.00",
+    url: "https://quickswap.exchange/#/pools/v2?currency0=0x2791bca1f2de4661ed88a30c99a7a9449aa84174&currency1=0x38a536a31ba4d8c1bcca016abbf786ecd25877e8",
   },
 ];
 
