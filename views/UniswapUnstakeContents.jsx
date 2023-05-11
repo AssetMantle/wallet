@@ -86,7 +86,7 @@ const StaticUniswapUnstakeContents = () => {
 
   // RENDERED COMPONENTS
   const noRecordsJSX = (
-    <h3 className="caption text-error">
+    <h3 className="caption text-center text-error">
       <i className="bi bi-info-circle"></i> No Records Found
     </h3>
   );

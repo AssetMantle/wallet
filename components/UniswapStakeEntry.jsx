@@ -107,7 +107,7 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
   };
 
   return (
-    <div className="border-b-not_last py-3 d-flex gap-2 align-items-center justify-content-between">
+    <div className="border-b-not_last py-3 d-flex gap-2 align-items-center justify-content-between w-100">
       <div className="d-flex gap-3">
         <div
           className="position-relative rounded-circle"
@@ -128,6 +128,8 @@ export const UniswapStakeEntry = ({ tokenId, liquidity }) => {
         <button
           className="button-primary px-4 py-2"
           onClick={handleSubmit}
+          data-bs-dismiss="modal"
+          aria-label="Close"
           disabled={!writeAsync}
         >
           Stake
