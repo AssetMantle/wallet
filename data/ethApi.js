@@ -6,7 +6,7 @@ import {
   walletConnectProvider,
 } from "@web3modal/ethereum";
 import useSWR from "swr";
-import { configureChains, createClient, useAccount } from "wagmi";
+import { configureChains, createClient, useAccount, useNetwork } from "wagmi";
 import { mainnet, polygon } from "wagmi/chains";
 import { placeholderAvailableBalance } from "../config";
 import nonFungiblePositionManagerABI from "../data/contracts/nonFungiblePositionManagerABI.json";
@@ -499,6 +499,10 @@ export const useAllowance = () => {
 
   // get the address from connected web3Modal
   const { address, connector } = useAccount();
+  const { chain } = useNetwork();
+  const chainID = ethConfig?.mainnet?.chainID;
+  const isCorrectChain = chainID == chain?.id;
+
   // const ethAddress = isConnected ? address : placeholderAddressEth;
   // console.log("connector: ", connector);
 
@@ -552,7 +556,7 @@ export const useAllowance = () => {
 
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: allowanceValue, error } = useSWR(
-    address ? ["useAllowance", address, connector] : null,
+    address && isCorrectChain ? ["useAllowance", address, connector] : null,
     fetchAllowance,
     {
       fallbackData: placeholderAvailableBalance,

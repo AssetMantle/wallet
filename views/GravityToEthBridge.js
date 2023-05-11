@@ -1,10 +1,12 @@
 import { useChain } from "@cosmos-kit/react";
+import { disconnect } from "@wagmi/core";
 import { useWeb3Modal } from "@web3modal/react";
 import BigNumber from "bignumber.js";
 import Link from "next/link";
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { toast } from "react-toastify";
-import { useAccount } from "wagmi";
+import { useAccount, useFeeData, useNetwork } from "wagmi";
+import { mainnet } from "wagmi/chains";
 import {
   defaultChainName,
   defaultChainSymbol,
@@ -27,7 +29,6 @@ import {
 } from "../data";
 import { convertBech32Address, shortenAddress } from "../lib";
 import { handleCopy, isObjEmpty, useIsMounted } from "../lib/basicJavascript";
-import { useFeeData } from "wagmi";
 
 const GravityToEthBridge = () => {
   const [gasFee, setGasFee] = useState("fast");
@@ -44,8 +45,17 @@ const GravityToEthBridge = () => {
   const { mntlPerEthValue } = useMntlUsd();
 
   const isMounted = useIsMounted();
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
   const { address: ethDestAddress, isConnected } = useAccount();
-  const { open } = useWeb3Modal();
+  const { chain } = useNetwork();
+  const chainID = ethConfig?.mainnet?.chainID;
+  const isCorrectChain = chainID == chain?.id;
+
+  const { open, setDefaultChain } = useWeb3Modal();
+  setDefaultChain(mainnet);
 
   const { data: gasData } = useFeeData();
 
@@ -270,6 +280,7 @@ const GravityToEthBridge = () => {
 
   const handleOpenWeb3Modal = async (e) => {
     e.preventDefault();
+    await disconnect();
     await open();
   };
 
@@ -400,8 +411,8 @@ const GravityToEthBridge = () => {
   };
 
   // DISPLAY VARIABLES
-  const isWalletEthConnected = isMounted() && isConnected;
-  const isWalletCosmosConnected = isMounted() && gravityStatus == "Connected";
+  const isWalletEthConnected = hasMounted && isConnected;
+  const isWalletCosmosConnected = hasMounted && gravityStatus == "Connected";
 
   const displayShortenedAddress = shortenAddress(
     gravityAddress,
@@ -446,23 +457,24 @@ const GravityToEthBridge = () => {
     </button>
   );
 
-  const submitButtonEthJSX = isWalletEthConnected ? (
-    <button
-      onClick={handleSubmit}
-      disabled={isSubmitDisabled}
-      className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
-    >
-      Send to Ethereum <i className="bi bi-arrow-down" />
-    </button>
-  ) : (
-    connectEthWalletJSX
-  );
+  const submitButtonEthJSX =
+    isWalletEthConnected && isCorrectChain ? (
+      <button
+        onClick={handleSubmit}
+        disabled={isSubmitDisabled}
+        className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
+      >
+        Send to Ethereum <i className="bi bi-arrow-down" />
+      </button>
+    ) : (
+      connectEthWalletJSX
+    );
 
   console.log(
     " gravityAddress: ",
     gravityAddress,
     " isMounted: ",
-    isMounted(),
+    hasMounted,
     " gravityStatus: ",
     gravityStatus,
     " feedata: ",
@@ -541,8 +553,8 @@ const GravityToEthBridge = () => {
         >
           Send to Mantle <i className="bi bi-arrow-up" />
         </button>
-        {isMounted() && submitButtonEthJSX}
-        {!isMounted() && connectEthWalletJSX}
+        {hasMounted && submitButtonEthJSX}
+        {!hasMounted && connectEthWalletJSX}
       </div>
     </div>
   );

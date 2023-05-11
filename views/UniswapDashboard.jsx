@@ -80,6 +80,7 @@ const StaticUniswapDashboard = () => {
 
   const handleOpenWeb3Modal = async (e) => {
     e.preventDefault();
+    await disconnect();
     await open();
   };
 
