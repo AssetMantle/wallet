@@ -1,14 +1,15 @@
-import React, { useState } from "react";
-import LiquidityPoolCard from "./LiquidityPoolCard";
+import { disconnect } from "@wagmi/core";
 import { useWeb3Modal } from "@web3modal/react";
+import React, { useState } from "react";
+import { useAccount } from "wagmi";
+import { placeholderAddressEth } from "../data";
 import {
   cleanString,
   handleCopy,
   shortenEthAddress,
   useIsMounted,
 } from "../lib";
-import { useAccount } from "wagmi";
-import { placeholderAddressEth } from "../data";
+import LiquidityPoolCard from "./LiquidityPoolCard";
 
 export default function LiquidityPoolComponent({ data, index, selectedChain }) {
   const [Connected, setConnected] = useState(false);
@@ -30,6 +31,7 @@ export default function LiquidityPoolComponent({ data, index, selectedChain }) {
 
   const handleOpenWeb3Modal = async (e) => {
     e.preventDefault();
+    await disconnect();
     await open();
   };
 

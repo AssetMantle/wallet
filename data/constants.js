@@ -287,7 +287,8 @@ export const farmPools = [
     pools: [
       {
         tokens: "MNTL – VERSA",
-        lpTokenLink: "",
+        lpTokenLink:
+          "https://quickswap.exchange/#/pools/v2?currency1=0x8497842420cfdbc97896c2353d75d89fc8d5be5d&currency0=0x38A536A31bA4d8C1Bcca016AbBf786ecD25877E8",
         rewardPool: "$0,000.0000",
         duration: "00Days,00Hours",
         tvl: "$10,370",
@@ -303,7 +304,8 @@ export const farmPools = [
       },
       {
         tokens: "MNTL – USDC",
-        lpTokenLink: "",
+        lpTokenLink:
+          "https://quickswap.exchange/#/pools/v2?currency0=0x2791bca1f2de4661ed88a30c99a7a9449aa84174&currency1=0x38A536A31bA4d8C1Bcca016AbBf786ecD25877E8",
         rewardPool: "$0,000.0000",
         duration: "00Days,00Hours",
         tvl: "$10,370",
@@ -329,7 +331,7 @@ export const farmPools = [
         rewardPool: "$0,000.0000",
         duration: "00Days,00Hours",
         stakeType: "external",
-        extLink: "",
+        extLink: "https://app.osmosis.zone/pool/738",
         apr: "200%",
         tvl: "$30,000",
         startTime: "1680353156",
@@ -341,7 +343,7 @@ export const farmPools = [
         rewardPool: "$0,000.0000",
         duration: "00Days,00Hours",
         stakeType: "external",
-        extLink: "",
+        extLink: "https://app.osmosis.zone/pool/690",
         apr: "200%",
         tvl: "$30,000",
         startTime: "1680353156",
@@ -353,7 +355,7 @@ export const farmPools = [
         rewardPool: "$0,000.0000",
         duration: "00Days,00Hours",
         stakeType: "external",
-        extLink: "",
+        extLink: "https://app.osmosis.zone/pool/686",
         apr: "200%",
         tvl: "$30,000",
         startTime: "1680353156",
@@ -375,6 +377,7 @@ export const farmPools = [
         tvl: "$30,000",
         startTime: "1680353156",
         endTime: "1688211001",
+        extLink: "https://app.cswap.one/farm/31",
       },
       {
         tokens: "MNTL – CMDX",
@@ -386,6 +389,7 @@ export const farmPools = [
         tvl: "$30,000",
         startTime: "1680353156",
         endTime: "1688211001",
+        extLink: "https://app.cswap.one/farm/30",
       },
     ],
   },

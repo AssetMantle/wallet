@@ -12,8 +12,10 @@ import {
   useBalance,
   useContractRead,
   useContractWrite,
+  useNetwork,
   usePrepareContractWrite,
 } from "wagmi";
+import { mainnet } from "wagmi/chains";
 import {
   defaultChainName,
   defaultChainSymbol,
@@ -23,6 +25,7 @@ import {
   toastConfig,
 } from "../config";
 import {
+  PREPARE_CONTRACT_ERROR,
   approveMaxDeposit,
   decimalize,
   depositMntlToken,
@@ -31,7 +34,6 @@ import {
   fromDenom,
   parentERC20TokenAddress,
   placeholderAddressEth,
-  PREPARE_CONTRACT_ERROR,
   toDenom,
   useAllowance,
 } from "../data";
@@ -55,11 +57,12 @@ const mntlTokenContract = {
 const EthToPolygonBridge = () => {
   // WALLET HOOKS
   // hooks to work the multi-modal for ethereum
-  const { open } = useWeb3Modal();
+  const { open, setDefaultChain } = useWeb3Modal();
+  setDefaultChain(mainnet);
   // before useAccount, define the isMounted() hook to deal with SSR issues
   const isMounted = useIsMounted();
   // read the allowance of polygon deposit
-  const { allowance } = useAllowance();
+  const { allowance, isLoadingAllowance } = useAllowance();
   // hook to get the cosmos wallet
   const chainContext5 = useChain(defaultChainName);
   const { address: mantleAddress, status: mantleStatus } = chainContext5;
@@ -67,11 +70,14 @@ const EthToPolygonBridge = () => {
 
   // hook to get the address of the connected ethereum wallet
   const { address, isConnected, connector } = useAccount();
+  const { chain } = useNetwork();
   const isWalletEthConnected = isMounted() && isConnected;
   const isWalletCosmosConnected = isMounted() && mantleStatus == "Connected";
   const MAX_UINT256 = ethers.constants.MaxUint256;
   // const MAX_UINT256 = BigNumber("1.157920892373162e+71");
   let toastId1, toastId2, toastId3, toastId4;
+
+  const isCorrectChain = chainID == chain?.id;
 
   // wagmi hook to read the allowance of gravity deposit
   const { data: allowanceGravity } = useContractRead({
@@ -87,7 +93,7 @@ const EthToPolygonBridge = () => {
   const { data: mntlEthBalanceData } = useBalance({
     address: address,
     token: parentERC20TokenAddress,
-    watch: true,
+    ...hookArgs,
   });
 
   const mntlEthBalance = toDenom(mntlEthBalanceData?.formatted);
@@ -95,7 +101,7 @@ const EthToPolygonBridge = () => {
   // get the ETH balance using wagmi hook
   const { data: ethBalanceData } = useBalance({
     address: address,
-    watch: true,
+    ...hookArgs,
   });
 
   // FORM REDUCER
@@ -198,7 +204,7 @@ const EthToPolygonBridge = () => {
     ...mntlTokenContract,
     functionName: "approve",
     args: [gravityEthereumBridgeContract?.address, MAX_UINT256],
-    enabled: isWalletEthConnected && address,
+    enabled: isWalletEthConnected && isCorrectChain && address,
     chainId: chainID,
     onError(error) {
       console.error("prepare error: ", error);
@@ -229,6 +235,7 @@ const EthToPolygonBridge = () => {
     ],
     enabled:
       isWalletEthConnected &&
+      isCorrectChain &&
       isWalletCosmosConnected &&
       address &&
       gravityAddress &&
@@ -287,6 +294,7 @@ const EthToPolygonBridge = () => {
   // CONTROLLER FUNCTIONS
   const handleOpenWeb3Modal = async (e) => {
     e.preventDefault();
+    await disconnect();
     await open();
   };
 
@@ -476,7 +484,10 @@ const EthToPolygonBridge = () => {
   const displayFormAmountErrorMsg =
     formState?.errorMessages?.transferAmountErrorMsg;
   const isSubmitDisabled =
-    !isWalletEthConnected || !isObjEmpty(formState?.errorMessages);
+    isLoadingAllowance ||
+    !isWalletEthConnected ||
+    !isCorrectChain ||
+    !isObjEmpty(formState?.errorMessages);
   const isSubmitDisabledGravity =
     !isWalletEthConnected ||
     !isWalletCosmosConnected ||
@@ -505,30 +516,32 @@ const EthToPolygonBridge = () => {
     </button>
   );
 
-  const connectButtonJSX = isWalletEthConnected ? (
-    <>
-      <button
-        className="caption2 d-flex gap-1"
-        onClick={handleCopyOnClick}
-        style={{ wordBreak: "break-all" }}
-      >
-        {displayShortenedAddress}{" "}
-        <span className="text-primary">
-          <i className="bi bi-clipboard" />
-        </span>
-        <span className="text-primary" onClick={handleDisconnectWeb3Modal}>
-          <i className="bi bi-power" />
-        </span>
-      </button>
-    </>
-  ) : (
-    notConnectedJSX
-  );
+  const connectButtonJSX =
+    isWalletEthConnected && isCorrectChain ? (
+      <>
+        <button
+          className="caption2 d-flex gap-1"
+          onClick={handleCopyOnClick}
+          style={{ wordBreak: "break-all" }}
+        >
+          {displayShortenedAddress}{" "}
+          <span className="text-primary">
+            <i className="bi bi-clipboard" />
+          </span>
+          <span className="text-primary" onClick={handleDisconnectWeb3Modal}>
+            <i className="bi bi-power" />
+          </span>
+        </button>
+      </>
+    ) : (
+      notConnectedJSX
+    );
 
   const depositToPolygonButtonJSX = isApproveRequiredPolygon ? (
     <button
       className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
       onClick={handleApproveSubmitPolygon}
+      disabled={isSubmitDisabled}
     >
       Approve Polygon Send <i className="bi bi-hand-thumbs-up-fill" />
     </button>

@@ -3,7 +3,16 @@ import { useWeb3Modal } from "@web3modal/react";
 import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { useAccount, useBlockNumber, useContractRead, useNetwork } from "wagmi";
+import {
+  useAccount,
+  useBlockNumber,
+  useContractRead,
+  useNetwork,
+  erc20ABI,
+  useBalance,
+  usePrepareContractWrite,
+  useContractWrite,
+} from "wagmi";
 import { polygon } from "wagmi/chains";
 import {
   defaultChainSymbol,
@@ -11,7 +20,12 @@ import {
   notify,
   toastConfig,
 } from "../config";
-import { farmPools, fromChainDenom, placeholderAddressEth } from "../data";
+import {
+  PREPARE_CONTRACT_ERROR,
+  farmPools,
+  fromChainDenom,
+  placeholderAddressEth,
+} from "../data";
 import {
   cleanString,
   getTimeDifference,
@@ -19,6 +33,7 @@ import {
   shortenEthAddress,
 } from "../lib";
 import BigNumber from "bignumber.js";
+import { ethers } from "ethers";
 
 function StaticQuickswapFarmPool({ poolIndex }) {
   // hooks to work the multi-modal for ethereum
@@ -45,11 +60,13 @@ function StaticQuickswapFarmPool({ poolIndex }) {
       watch: false,
     }
   );
+  const MAX_UINT256 = ethers.constants.MaxUint256;
 
   const quickswapFarm = farmPools?.[1];
   const selectedQuickswapFarmPool = quickswapFarm?.pools?.[poolIndex];
   const tokenPairArray = selectedQuickswapFarmPool?.tokens.split(" – ");
-  let toastId;
+  const poolUrl = selectedQuickswapFarmPool?.lpTokenLink;
+  let toastId, toastId2, toastId3, toastId4;
 
   const isCorrectChain = chainID == chain?.id;
   const hookArgs = { watch: true, chainId: chainID };
@@ -86,13 +103,15 @@ function StaticQuickswapFarmPool({ poolIndex }) {
   // wagmi data & hooks to read and write in contracts
   const quickV2StakerContractAddress =
     selectedQuickswapFarmPool?.farmContractAddress;
+  const lpTokenContractAddress = selectedQuickswapFarmPool?.lpTokenAddress;
   const quickV2StakerContractABI = selectedQuickswapFarmPool?.farmContractABI;
   const quickV2StakerContract = {
     address: quickV2StakerContractAddress,
     abi: quickV2StakerContractABI,
   };
+  const lpTokenContract = { address: lpTokenContractAddress, abi: erc20ABI };
 
-  // wagmi hook to read the count of Position NFTs
+  // wagmi hook to read the user stake info in staker contract
   const { data: userStakeInfo, isLoading: isLoadingUserStakeInfo } =
     useContractRead({
       ...quickV2StakerContract,
@@ -103,6 +122,7 @@ function StaticQuickswapFarmPool({ poolIndex }) {
       ...hookArgs,
     });
 
+  // wagmi hook to read the user's pending rewards in staker contract
   const { data: pendingRewards, isLoading: isLoadingPendingRewards } =
     useContractRead({
       ...quickV2StakerContract,
@@ -112,6 +132,50 @@ function StaticQuickswapFarmPool({ poolIndex }) {
       enabled: isConnected && isCorrectChain && address,
       ...hookArgs,
     });
+
+  // wagmi hook to read the allowance of gravity deposit
+  const { data: lpTokenAllowance, isLoading: isLoadingLpTokenAllowance } =
+    useContractRead({
+      ...lpTokenContract,
+      functionName: "allowance",
+      args: [address, quickV2StakerContractAddress],
+      select: (data) => data?.toString?.(),
+      enabled: isWalletEthConnected && isCorrectChain && address,
+      ...hookArgs,
+    });
+
+  // get the MNTL token balance using wagmi hook
+  const { data: lpTokenBalance, isLoading: isLoadingLpTokenBalance } =
+    useBalance({
+      address: address,
+      token: lpTokenContractAddress,
+      watch: true,
+    });
+
+  // hooks to prepare and send ethereum transaction for token approval
+  const { config: configApprove } = usePrepareContractWrite({
+    ...lpTokenContract,
+    functionName: "approve",
+    args: [quickV2StakerContractAddress, MAX_UINT256],
+    enabled: isWalletEthConnected && isCorrectChain && address,
+    chainId: chainID,
+    onError(error) {
+      console.error("prepare error: ", error);
+      if (true)
+        toast.error(PREPARE_CONTRACT_ERROR, {
+          ...toastConfig,
+        });
+    },
+  });
+
+  const { writeAsync: writeAsyncApprove } = useContractWrite({
+    ...configApprove,
+    onError(error) {
+      console.error(error);
+      notify(null, toastId2, "Transaction Aborted. Try again.");
+      toastId2 = null;
+    },
+  });
 
   /*const { config } = usePrepareContractWrite({
     ...uniV3StakerContract,
@@ -184,6 +248,32 @@ function StaticQuickswapFarmPool({ poolIndex }) {
     await disconnect();
   };
 
+  const handleApproveLpTransfer = async (e) => {
+    console.log("inside handlhandleApproveSubmitGravityeSubmit()");
+    e.preventDefault();
+
+    try {
+      // initiate the toast
+      toastId2 = toast.loading("Transaction initiated ...", toastConfig);
+
+      // create transaction
+      const transactionResponse = await writeAsyncApprove();
+
+      console.log("response: ", transactionResponse);
+      if (transactionResponse?.hash) {
+        notify(
+          transactionResponse?.hash,
+          toastId2,
+          "Transaction Submitted. Check "
+        );
+      } else {
+        notify(null, toastId2, "Transaction Aborted. Try again.");
+      }
+    } catch (error) {
+      console.error("Runtime Error: ", error);
+    }
+  };
+
   // DISPLAY VARIABLES
   const displayShortenedAddress = shortenEthAddress(
     address || placeholderAddressEth
@@ -191,6 +281,15 @@ function StaticQuickswapFarmPool({ poolIndex }) {
   // const isWalletEthConnected = isMounted() && isConnected;
   const isWalletEthConnected = isConnected;
   const loadingJSX = "Loading...";
+
+  const isCtaDisabled =
+    !userLpStakedAmount ||
+    BigNumber(userLpStakedAmount).isNaN() ||
+    BigNumber(userLpStakedAmount).isZero();
+
+  const isApproveLpRequired =
+    BigNumber(lpTokenAllowance).isLessThan(lpTokenBalance) ||
+    BigNumber(lpTokenAllowance).isEqualTo(0);
 
   const connectedAddressJSX = isWalletEthConnected && (
     <>
@@ -209,23 +308,39 @@ function StaticQuickswapFarmPool({ poolIndex }) {
     </>
   );
 
-  const ctaButtonsJSX = isWalletEthConnected ? (
-    <>
-      <button
-        className="button-secondary px-5 py-2 d-flex gap-2"
-        data-bs-toggle="modal"
-        data-bs-target="#cardUnstake"
-      >
-        Unstake
+  const ctaApproveButtonJSX =
+    isLoadingLpTokenAllowance || isLoadingLpTokenBalance ? (
+      <button className="button-secondary px-5 py-2 d-flex gap-2">
+        Loading...
       </button>
+    ) : isApproveLpRequired ? (
       <button
         className="button-primary px-5 py-2 d-flex gap-2"
-        data-bs-toggle="modal"
-        data-bs-target="#cardStake"
+        onClick={handleApproveLpTransfer}
       >
-        Stake
+        Approve LP Transfer
       </button>
-    </>
+    ) : (
+      <>
+        <button
+          className="button-secondary px-5 py-2 d-flex gap-2"
+          data-bs-toggle="modal"
+          data-bs-target="#cardUnstake"
+        >
+          Unstake
+        </button>
+        <button
+          className="button-primary px-5 py-2 d-flex gap-2"
+          data-bs-toggle="modal"
+          data-bs-target="#cardStake"
+        >
+          Stake
+        </button>
+      </>
+    );
+
+  const ctaButtonsJSX = isWalletEthConnected ? (
+    ctaApproveButtonJSX
   ) : (
     <button
       className="button-primary px-5 py-2 d-flex gap-2"
@@ -242,13 +357,30 @@ function StaticQuickswapFarmPool({ poolIndex }) {
     </>
   );
   const pendingRewardsDisplay = isLoadingPendingRewards ? (
-    "Loadin..."
+    "Loading..."
   ) : (
     <>
       {pendingRewardsStyled}&nbsp;{rewardsPerDayDenomDisplay}
     </>
   );
-
+  const noRecordsJSX = (
+    <p className="text-center">
+      <i className="bi bi-info-circle text-white" />{" "}
+      <span className="caption text-white">Get LP Tokens at</span>{" "}
+      <a
+        href={poolUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="am-link"
+      >
+        <span className="text-primary caption">QuickSwap</span>{" "}
+        <i className="text-primary bi bi-arrow-up-right caption"></i>
+      </a>
+      <span className="caption text-white">
+        {`, and then come back and deposit it here to earn MNTL Tokens`}
+      </span>{" "}
+    </p>
+  );
   const appLogoJSX = (
     <div
       className="position-relative"
@@ -317,8 +449,8 @@ function StaticQuickswapFarmPool({ poolIndex }) {
   );
 
   console.log(
-    "userStakeInfo: ",
-    typeof userStakeInfo,
+    "userLpStakedAmount: ",
+    userLpStakedAmount,
     " numberOfSeconds: ",
     numberOfSeconds,
     " currentBlock: ",
@@ -395,6 +527,15 @@ function StaticQuickswapFarmPool({ poolIndex }) {
             </div>
           </div>
           <div className="border-bottom"></div>
+          <div className="d-flex justify-content-end gap-2">
+            {isWalletEthConnected &&
+              !isLoadingUserStakeInfo &&
+              BigNumber(userLpStakedAmount).isZero && (
+                <>
+                  {noRecordsJSX} <div className="border-bottom"></div>
+                </>
+              )}
+          </div>
           <div className="d-flex justify-content-end gap-2">
             {ctaButtonsJSX}
           </div>
