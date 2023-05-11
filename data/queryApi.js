@@ -1095,7 +1095,7 @@ export const useOsmosis = () => {
         osmoAtomMntlAprData,
       ]);
 
-      console.log("aggregatedFetchArray: ", aggregatedFetchArray);
+      // console.log("aggregatedFetchArray: ", aggregatedFetchArray);
       osmosisData = [
         {
           project: "Osmosis",
@@ -1213,6 +1213,7 @@ export const useQuickswap = () => {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
     }
+    console.log(quickswapData);
     // return the data
     return quickswapData;
   };
