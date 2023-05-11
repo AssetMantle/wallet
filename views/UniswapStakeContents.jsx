@@ -127,7 +127,7 @@ const StaticUniswapStakeContents = () => {
   );
 
   const noRecordsJSX = (
-    <p className="">
+    <p className="text-center">
       <i className="bi bi-info-circle text-white" />{" "}
       <span className="caption text-white">Get LP Tokens at</span>{" "}
       <a
