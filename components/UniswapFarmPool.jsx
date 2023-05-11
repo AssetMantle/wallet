@@ -405,7 +405,10 @@ export function UniswapFarmPool({ poolIndex }) {
                 </button>
               </div>
               <div className="modal-body p-3  d-flex flex-column">
-                <div className="nav-bg rounded-4 d-flex flex-column py-1 px-4 gap-2 align-items-center justify-content-center">
+                <div
+                  className="nav-bg rounded-4 d-flex flex-column py-1 px-4 gap-2 align-items-center justify-content-center"
+                  style={{ minHeight: "250px" }}
+                >
                   <UniswapStakeContents />
                 </div>
               </div>
@@ -448,7 +451,10 @@ export function UniswapFarmPool({ poolIndex }) {
                 </button>
               </div>
               <div className="modal-body p-3  d-flex flex-column">
-                <div className="nav-bg rounded-4 d-flex flex-column py-1 px-4 gap-2 align-items-center justify-content-center">
+                <div
+                  className="nav-bg rounded-4 d-flex flex-column py-1 px-4 gap-2 align-items-center justify-content-center"
+                  style={{ minHeight: "250px" }}
+                >
                   <UniswapUnstakeContents />
                 </div>
               </div>
