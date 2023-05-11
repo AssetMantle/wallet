@@ -100,7 +100,7 @@ export const fromChainDenom = (
 
   amount = valueBigNumber
     .shiftedBy(0 - Number(exp))
-    .toFormat(exponent ? Number(exponent) : Number(exp));
+    .toFormat(exponent ?? exponent ? Number(exponent) : Number(exp));
   return amount;
 };
 
