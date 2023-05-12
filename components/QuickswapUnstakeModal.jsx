@@ -162,7 +162,7 @@ export const QuickswapUnstakeModal = ({
   };
   const [formState, formDispatch] = useReducer(formReducer, initialState);
 
-  // hooks to prepare and send ethereum transaction for stake
+  // hooks to prepare and send ethereum transaction for unstake
   const { config: configUnstake } = usePrepareContractWrite({
     ...quickV2StakerContract,
     functionName: "withdraw",

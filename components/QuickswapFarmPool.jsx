@@ -157,6 +157,32 @@ function StaticQuickswapFarmPool({ poolIndex }) {
       ...hookArgs,
     });
 
+  // hooks to prepare and send ethereum transaction for claim reward (unstake)
+  const { config: configUnstake } = usePrepareContractWrite({
+    ...quickV2StakerContract,
+    functionName: "withdraw",
+    args: ["0"],
+    enabled: isWalletEthConnected && isCorrectChain && address,
+    chainId: chainID,
+    onError(error) {
+      console.error("prepare error: ", error);
+      /* if (true) {
+        toast.error(PREPARE_CONTRACT_ERROR, {
+          ...toastConfig,
+        });
+      } */
+    },
+  });
+
+  const { writeAsync: writeAsyncClaimReward } = useContractWrite({
+    ...configUnstake,
+    onError(error) {
+      console.error(error);
+      notify(null, toastId3, "Transaction Aborted. Try again.");
+      toastId3 = null;
+    },
+  });
+
   // hooks to prepare and send ethereum transaction for token approval
   const { config: configApprove } = usePrepareContractWrite({
     ...lpTokenContract,
@@ -200,12 +226,12 @@ function StaticQuickswapFarmPool({ poolIndex }) {
   );
 
   // HANDLER FUNCTIONS
-  /* const handleOnClickClaim = async (e) => {
+  const handleOnClickClaim = async (e) => {
     e.preventDefault();
     let transactionResponse;
     try {
       // initiate the toast
-      toastId = toast.loading("Transaction initiated ...", toastConfig);
+      toastId3 = toast.loading("Transaction initiated ...", toastConfig);
 
       // create transaction
       transactionResponse = await writeAsyncClaimReward();
@@ -214,17 +240,17 @@ function StaticQuickswapFarmPool({ poolIndex }) {
       if (transactionResponse?.hash) {
         notify(
           transactionResponse?.hash,
-          toastId,
+          toastId3,
           "Transaction Submitted. Check ",
           "polygon"
         );
       } else {
-        notify(null, toastId, "Transaction Aborted. Try again.", polygon);
+        notify(null, toastId3, "Transaction Aborted. Try again.", polygon);
       }
     } catch (error) {
       console.error("Runtime Error: ", error);
     }
-  }; */
+  };
 
   const handleCopyOnClick = (e) => {
     e.preventDefault();
@@ -523,12 +549,12 @@ function StaticQuickswapFarmPool({ poolIndex }) {
               {logoPairJSX}
               <h2 className="h3 m-0">{selectedQuickswapFarmPool?.tokens}</h2>
             </div>
-            {/* <button className="am-link px-2" onClick={handleOnClickClaim}>
+            <button className="am-link px-2" onClick={handleOnClickClaim}>
               Claim Reward
             </button>
             <div className="d-flex align-items-center gap-3">
               <p>{pendingRewardsDisplay}</p>
-            </div> */}
+            </div>
           </div>
           <div className="border-bottom"></div>
           <div className="row">
