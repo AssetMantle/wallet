@@ -69,6 +69,7 @@ export default function Farm() {
               farmPools.map((pool, index) => (
                 <LiquidityPoolChains
                   setSelectedPool={setSelectedPool}
+                  selectedPool={selectedPool}
                   appIndex={index}
                 />
               ))

@@ -3,7 +3,11 @@ import LiquidityPoolChainCard from "./LiquidityPoolChainCard";
 import { cleanString } from "../lib";
 import { farmPools } from "../data";
 
-export default function LiquidityPoolChains({ setSelectedPool, appIndex }) {
+export default function LiquidityPoolChains({
+  setSelectedPool,
+  selectedPool,
+  appIndex,
+}) {
   const data = farmPools?.[appIndex];
   const appLogoPathname = cleanString(data?.name);
 
@@ -64,6 +68,7 @@ export default function LiquidityPoolChains({ setSelectedPool, appIndex }) {
             data?.pools?.map?.((pool, index) => (
               <LiquidityPoolChainCard
                 setSelectedPool={setSelectedPool}
+                selectedPool={selectedPool}
                 appIndex={appIndex}
                 poolIndex={index}
               />
