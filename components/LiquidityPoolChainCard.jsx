@@ -4,6 +4,7 @@ import { disconnect } from "@wagmi/core";
 
 export default function LiquidityPoolChainCard({
   setSelectedPool,
+  selectedPool,
   appIndex,
   poolIndex,
 }) {
@@ -13,17 +14,39 @@ export default function LiquidityPoolChainCard({
 
   const handleOnClickPair = async (e) => {
     e.preventDefault();
-    await disconnect();
-    setSelectedPool({
-      appIndex,
-      poolIndex,
-    });
+    if (
+      selectedPool.poolIndex !== poolIndex ||
+      selectedPool.appIndex !== appIndex
+    ) {
+      await disconnect();
+      setSelectedPool({
+        appIndex,
+        poolIndex,
+      });
+    }
   };
   return (
     <div
-      className="d-flex align-items-center justify-content-between border-color-primary-hover px-3 py-2 rounded-4"
-      role="button"
+      className={`d-flex align-items-center justify-content-between px-3 py-2 rounded-4 ${
+        selectedPool.poolIndex === poolIndex &&
+        selectedPool.appIndex === appIndex
+          ? "border-color-primary"
+          : "border-color-primary-hover"
+      }`}
+      role={
+        selectedPool.poolIndex === poolIndex &&
+        selectedPool.appIndex === appIndex
+          ? ""
+          : "button"
+      }
       onClick={handleOnClickPair}
+      style={{
+        cursor:
+          selectedPool.poolIndex === poolIndex &&
+          selectedPool.appIndex === appIndex
+            ? "not-allowed"
+            : "pointer",
+      }}
     >
       <div className="d-flex align-items-center gap-1">
         <div
