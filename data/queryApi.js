@@ -1067,105 +1067,136 @@ export const useOsmosis = () => {
 
     let osmosisData;
     try {
-      const osmoMntlUsdcData = fetch(
-        "https://api.osmosis.zone/pools/v2/738"
-      ).then((res) => res.json());
-      const osmoMntlUsdcAprData = fetch(
-        "https://api.osmosis.zone/apr/v2/738"
-      ).then((res) => res.json());
-      const osmoMntlOsmoData = fetch(
-        "https://api.osmosis.zone/pools/v2/690"
-      ).then((res) => res.json());
-      const osmoMntlOsmoAprData = fetch(
-        "https://api.osmosis.zone/apr/v2/690"
-      ).then((res) => res.json());
-      const osmoAtomMntlData = fetch(
-        "https://api.osmosis.zone/pools/v2/686"
-      ).then((res) => res.json());
-      const osmoAtomMntlAprData = fetch(
-        "https://api.osmosis.zone/apr/v2/686"
-      ).then((res) => res.json());
+      // const osmoMntlUsdcData = fetch("/api/osmosis/pools/v2/738").then((res) =>
+      //   res.json()
+      // );
+      // // const osmoMntlUsdcAprData = fetch("/api/osmosis/apr/v2/738").then((res) =>
+      // //   res.json()
+      // // );
+      // const osmoMntlOsmoData = fetch("/api/osmosis/pools/v2/690").then((res) =>
+      //   res.json()
+      // );
+      // // const osmoMntlOsmoAprData = fetch("/api/osmosis/apr/v2/690").then((res) =>
+      // //   res.json()
+      // // );
+      // // const osmoAtomMntlData = fetch("/api/osmosis/pools/v2/686").then((res) =>
+      // //   res.json()
+      // // );
+      // const osmoAtomMntlAprData = fetch("/api/osmosis/apr/v2/686").then((res) =>
+      //   res.json()
+      // );
 
-      const aggregatedFetchArray = await Promise.all([
-        osmoMntlUsdcData,
-        osmoMntlUsdcAprData,
-        osmoMntlOsmoData,
-        osmoMntlOsmoAprData,
-        osmoAtomMntlData,
-        osmoAtomMntlAprData,
-      ]);
+      // const aggregatedFetchArray = await Promise.allSettled([
+      //   osmoMntlUsdcData,
+      //   // osmoMntlUsdcAprData,
+      //   osmoMntlOsmoData,
+      //   // osmoMntlOsmoAprData,
+      //   // osmoAtomMntlData,
+      //   osmoAtomMntlAprData,
+      // ]);
 
-      // console.log("aggregatedFetchArray: ", aggregatedFetchArray);
-      osmosisData = [
+      const urlData = [
         {
-          project: "Osmosis",
-          chain: "Cosmos",
-          symbol:
-            aggregatedFetchArray?.[0]?.[0]?.symbol +
-            "-" +
-            aggregatedFetchArray?.[0]?.[1]?.symbol,
-          apy: Number(
-            Math.max(
-              aggregatedFetchArray?.[1]?.[0]?.apr_list[0]?.apr_1d,
-              aggregatedFetchArray?.[1]?.[0]?.apr_list[0]?.apr_7d,
-              aggregatedFetchArray?.[1]?.[0]?.apr_list[0]?.apr_14d
-            )
-          ).toFixed(2),
-          tvlUsd: aggregatedFetchArray?.[0]?.[0]?.liquidity
-            ?.toString()
-            ?.split(".")[0],
+          symbol: "ATOM",
+          url: "https://app.osmosis.zone/pool/686",
+        },
+        {
+          symbol: "USDC",
           url: "https://app.osmosis.zone/pool/738",
         },
         {
-          project: "Osmosis",
-          chain: "Cosmos",
-          symbol:
-            aggregatedFetchArray?.[2]?.[0]?.symbol +
-            "-" +
-            aggregatedFetchArray?.[2]?.[1]?.symbol,
-          apy: Number(
-            Math.max(
-              aggregatedFetchArray?.[3]?.[0]?.apr_list?.find(
-                (item) => item?.symbol == "MNTL"
-              )?.apr_1d,
-              aggregatedFetchArray?.[3]?.[0]?.apr_list?.find(
-                (item) => item?.symbol == "MNTL"
-              )?.apr_7d,
-              aggregatedFetchArray?.[3]?.[0]?.apr_list?.find(
-                (item) => item?.symbol == "MNTL"
-              )?.apr_14d
-            )
-          ).toFixed(2),
-          // osmoAtomMntlAprData[0?.apr_list?.map((e)=>console.log(e))],
-          tvlUsd: aggregatedFetchArray?.[2]?.[0]?.liquidity
-            ?.toString()
-            ?.split(".")[0],
+          symbol: "OSMO",
           url: "https://app.osmosis.zone/pool/690",
         },
-        {
-          project: "Osmosis",
-          chain: "Cosmos",
-          symbol:
-            aggregatedFetchArray?.[4]?.[0]?.symbol +
-            "-" +
-            aggregatedFetchArray?.[4]?.[1]?.symbol,
-          apy: Number(
-            Math.max(
-              aggregatedFetchArray?.[5]?.[0]?.apr_list[0]?.apr_1d,
-              aggregatedFetchArray?.[5]?.[0]?.apr_list[0]?.apr_7d,
-              aggregatedFetchArray?.[5]?.[0]?.apr_list[0]?.apr_14d
-            )
-          ).toFixed(2),
-          tvlUsd: aggregatedFetchArray?.[4]?.[0]?.liquidity
-            ?.toString()
-            ?.split(".")[0],
-          url: "https://app.osmosis.zone/pool/686",
-        },
       ];
+
+      const llamaData = await fetch("https://yields.llama.fi/pools").then(
+        (res) => res.json()
+      );
+
+      const filteredLlamaData = llamaData?.data?.filter(
+        (item) =>
+          item?.symbol.includes("MNTL") && item?.project == "osmosis-dex"
+      );
+
+      osmosisData = filteredLlamaData?.map((item) => {
+        return {
+          ...item,
+          url: urlData.find((e) => item?.symbol.includes(e.symbol)).url,
+        };
+      });
+
+      // osmosisData = [
+      //   {
+      //     project: "Osmosis",
+      //     chain: "Cosmos",
+      //     symbol:
+      //       aggregatedFetchArray?.[0]?.[0]?.symbol +
+      //       "-" +
+      //       aggregatedFetchArray?.[0]?.[1]?.symbol,
+      //     apy: Number(
+      //       Math.max(
+      //         aggregatedFetchArray?.[1]?.[0]?.apr_list[0]?.apr_1d,
+      //         aggregatedFetchArray?.[1]?.[0]?.apr_list[0]?.apr_7d,
+      //         aggregatedFetchArray?.[1]?.[0]?.apr_list[0]?.apr_14d
+      //       )
+      //     ).toFixed(2),
+      //     tvlUsd: aggregatedFetchArray?.[0]?.[0]?.liquidity
+      //       ?.toString()
+      //       ?.split(".")[0],
+      //     url: "https://app.osmosis.zone/pool/738",
+      //   },
+      //   {
+      //     project: "Osmosis",
+      //     chain: "Cosmos",
+      //     symbol:
+      //       aggregatedFetchArray?.[2]?.[0]?.symbol +
+      //       "-" +
+      //       aggregatedFetchArray?.[2]?.[1]?.symbol,
+      //     apy: Number(
+      //       Math.max(
+      //         aggregatedFetchArray?.[3]?.[0]?.apr_list?.find(
+      //           (item) => item?.symbol == "MNTL"
+      //         )?.apr_1d,
+      //         aggregatedFetchArray?.[3]?.[0]?.apr_list?.find(
+      //           (item) => item?.symbol == "MNTL"
+      //         )?.apr_7d,
+      //         aggregatedFetchArray?.[3]?.[0]?.apr_list?.find(
+      //           (item) => item?.symbol == "MNTL"
+      //         )?.apr_14d
+      //       )
+      //     ).toFixed(2),
+      //     // osmoAtomMntlAprData[0?.apr_list?.map((e)=>console.log(e))],
+      //     tvlUsd: aggregatedFetchArray?.[2]?.[0]?.liquidity
+      //       ?.toString()
+      //       ?.split(".")[0],
+      //     url: "https://app.osmosis.zone/pool/690",
+      //   },
+      //   {
+      //     project: "Osmosis",
+      //     chain: "Cosmos",
+      //     symbol:
+      //       aggregatedFetchArray?.[4]?.[0]?.symbol +
+      //       "-" +
+      //       aggregatedFetchArray?.[4]?.[1]?.symbol,
+      //     apy: Number(
+      //       Math.max(
+      //         aggregatedFetchArray?.[5]?.[0]?.apr_list[0]?.apr_1d,
+      //         aggregatedFetchArray?.[5]?.[0]?.apr_list[0]?.apr_7d,
+      //         aggregatedFetchArray?.[5]?.[0]?.apr_list[0]?.apr_14d
+      //       )
+      //     ).toFixed(2),
+      //     tvlUsd: aggregatedFetchArray?.[4]?.[0]?.liquidity
+      //       ?.toString()
+      //       ?.split(".")[0],
+      //     url: "https://app.osmosis.zone/pool/686",
+      //   },
+      // ];
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
     }
+
     // return the data
     return osmosisData;
   };
@@ -1203,6 +1234,7 @@ export const useQuickswap = () => {
           item?.symbol.includes("MNTL") &&
           (item?.project == "quickswap-dex" || item?.project == "uniswap-v3")
       );
+
       quickswapData = filteredLlamaData?.map((item) => {
         return {
           ...item,
@@ -1213,7 +1245,6 @@ export const useQuickswap = () => {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
     }
-    console.log(quickswapData);
     // return the data
     return quickswapData;
   };

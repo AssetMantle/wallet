@@ -54,6 +54,7 @@
     "bootstrap": "^5.2.2",
     "bootstrap-icons": "^1.10.3",
     "chain-registry": "^1.7.0",
+    "cors": "^2.8.5",
     "ethers": "^5.7.2",
     "framer-motion": "7.6.5",
     "next": "12.3.1",

@@ -15,6 +15,7 @@ const TradeTable = () => {
   } else {
     tradeData = allTrades?.tradeData;
   }
+  console.log(tradeData);
   const memoizedData = React.useMemo(() => tradeData, [isLoadingTrades]);
   const fetchedColumns = [
     {
