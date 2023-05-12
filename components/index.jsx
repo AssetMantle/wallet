@@ -5,3 +5,5 @@ export * from "./UniswapUnstakeEntry";
 export * from "./ConnectButton";
 export * from "./UniswapFarmPool";
 export * from "./ExternalFarmPool";
+export * from "./QuickswapStakeModal";
+export * from "./QuickswapUnstakeModal";
