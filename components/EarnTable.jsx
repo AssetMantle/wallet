@@ -13,11 +13,15 @@ const EarnTable = () => {
   // if (isLoading && isErrorOsmosis && isErrorQuickswap) {
   //   fetchedData = [];
   // } else
-  if (!isErrorQuickswap && isErrorOsmosis) {
+  if (isLoading || (!isErrorQuickswap && isErrorOsmosis)) {
     fetchedData = [...allQuickswap];
-  } else if (isErrorOsmosis && !isErrorQuickswap) {
+  } else if (isLoading || (isErrorOsmosis && !isErrorQuickswap)) {
     fetchedData = [...allOsmosis];
+  } else {
+    fetchedData = [...allOsmosis, ...allQuickswap];
   }
+
+  console.log(fetchedData);
   // else if (isLoading) {
   //   fetchedData = [];
   // }
@@ -91,7 +95,7 @@ const EarnTable = () => {
               alt={tableProps.row.original.logo?.toLowerCase()}
               className="rounded-circle"
               layout="fill"
-              src={`/tradePage/${tableProps?.row?.original?.project?.toLowerCase()}.webp`}
+              src={`/earn/${tableProps?.row?.original?.project?.toLowerCase()}.webp`}
             />
           </div>
           <p>{tableProps?.row?.original?.project}</p>
@@ -268,7 +272,6 @@ const EarnTable = () => {
   } else {
     columns = fetchedColumns;
   }
-  console.log(columns, earnData);
 
   return (
     <>
