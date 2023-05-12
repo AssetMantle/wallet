@@ -279,17 +279,12 @@ export const QuickswapStakeModal = ({
     formState?.errorMessages?.transferAmountErrorMsg;
 
   const formJSX = (
-    <div
-      className={`bg-gray-800 p-3 rounded-4 d-flex flex-column gap-3 ${"border-color-primary"}`}
-    >
+    <div className={`p-3 rounded-4 d-flex flex-column gap-3 w-100`}>
       <label
         htmlFor="mntlAmount"
         className="caption2 text-gray d-flex align-items-center justify-content-between gap-2"
       >
         Amount{" "}
-        <small className="small text-gray">
-          MATIC Balance : {displayMaticBalance}
-        </small>
         <small className="small text-gray">
           Available Balance : {displayAvailableBalance}
         </small>
@@ -307,21 +302,25 @@ export const QuickswapStakeModal = ({
           Max
         </button>
       </div>
-      <small
-        id="addressInputErrorMsg"
-        className="form-text text-danger d-flex align-items-center gap-1"
-      >
-        {isFormAmountError && <i className="bi bi-info-circle" />}{" "}
-        {displayFormAmountErrorMsg}
+      <small className="small text-gray">
+        MATIC Balance : {displayMaticBalance}
       </small>
+      {isFormAmountError && (
+        <small
+          id="addressInputErrorMsg"
+          className="form-text text-danger d-flex align-items-center gap-1"
+        >
+          <i className="bi bi-info-circle" /> {displayFormAmountErrorMsg}
+        </small>
+      )}
       <div className="d-flex align-items-center justify-content-end gap-2">
         <button
           onClick={handleSubmit}
           disabled={isSubmitDisabled}
-          className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
+          className="button-primary py-2 px-5 d-flex gap-2 align-items-center caption2"
           data-bs-dismiss="modal"
         >
-          Submit <i className="bi bi-arrow-down" />
+          Submit
         </button>
       </div>
     </div>
@@ -362,10 +361,7 @@ export const QuickswapStakeModal = ({
             </button>
           </div>
           <div className="modal-body p-3  d-flex flex-column">
-            <div
-              className="nav-bg rounded-4 d-flex flex-column py-1 px-4 gap-2 align-items-center justify-content-center"
-              style={{ minHeight: "250px" }}
-            >
+            <div className="nav-bg rounded-4 d-flex flex-column p-1 gap-2 align-items-center justify-content-center">
               {formJSX}
             </div>
           </div>
