@@ -58,32 +58,6 @@ export const QuickswapStakeModal = ({
       watch: true,
     });
 
-  // hooks to prepare and send ethereum transaction for stake
-  const { config: configStake } = usePrepareContractWrite({
-    ...quickV2StakerContract,
-    functionName: "deposit",
-    args: [toDenom(formState?.transferAmount)],
-    enabled: isWalletEthConnected && address && formState?.transferAmount,
-    chainId: chainID,
-    onError(error) {
-      console.error("prepare error: ", error);
-      /* if (true) {
-        toast.error(PREPARE_CONTRACT_ERROR, {
-          ...toastConfig,
-        });
-      } */
-    },
-  });
-
-  const { writeAsync: writeAsyncStake } = useContractWrite({
-    ...configStake,
-    onError(error) {
-      console.error(error);
-      notify(null, toastId1, "Transaction Aborted. Try again.");
-      toastId1 = null;
-    },
-  });
-
   // FORM REDUCER
   const initialState = {
     transferAmount: "",
@@ -114,8 +88,8 @@ export const QuickswapStakeModal = ({
           };
         } else if (
           BigNumber(availableBalance).isNaN() ||
-          BigNumber(toDenom(action.payload)).isGreaterThan(
-            BigNumber(toDenom(availableBalance))
+          BigNumber(toDenom(action.payload, 18)).isGreaterThan(
+            BigNumber(toDenom(availableBalance, 18))
           )
         ) {
           return {
@@ -187,6 +161,32 @@ export const QuickswapStakeModal = ({
   };
   const [formState, formDispatch] = useReducer(formReducer, initialState);
 
+  // hooks to prepare and send ethereum transaction for stake
+  const { config: configStake } = usePrepareContractWrite({
+    ...quickV2StakerContract,
+    functionName: "deposit",
+    args: [toDenom(formState?.transferAmount, 18)],
+    enabled: isWalletEthConnected && address && formState?.transferAmount,
+    chainId: chainID,
+    onError(error) {
+      console.error("prepare error: ", error);
+      /* if (true) {
+        toast.error(PREPARE_CONTRACT_ERROR, {
+          ...toastConfig,
+        });
+      } */
+    },
+  });
+
+  const { writeAsync: writeAsyncStake } = useContractWrite({
+    ...configStake,
+    onError(error) {
+      console.error(error);
+      notify(null, toastId1, "Transaction Aborted. Try again.");
+      toastId1 = null;
+    },
+  });
+
   // HANDLER FUNCTIONS
   const handleAmountOnChange = (e) => {
     e.preventDefault();
@@ -214,8 +214,8 @@ export const QuickswapStakeModal = ({
     const isFormValid =
       !BigNumber(localTransferAmount).isNaN() &&
       !BigNumber(localTransferAmount).isLessThanOrEqualTo(0) &&
-      BigNumber(toDenom(localTransferAmount)).isLessThanOrEqualTo(
-        BigNumber(toDenom(localLpBalance))
+      BigNumber(toDenom(localTransferAmount, 18)).isLessThanOrEqualTo(
+        BigNumber(toDenom(localLpBalance, 18))
       ) &&
       isObjEmpty(formState?.errorMessages);
 

@@ -50,39 +50,14 @@ export const QuickswapUnstakeModal = ({
   const isWalletEthConnected = hasMounted && isConnected && isCorrectChain;
 
   // get the matic balance in polygon chain using wagmi hook
-  const { data: polygonBalanceData, isLoading: isLoadingPolygonBalance } =
-    useBalance({
+  const { data: maticBalance, isLoading: isLoadingPolygonBalance } = useBalance(
+    {
       address: address,
       token: ethConfig?.mainnet?.token?.child?.matic,
       chainId: chainID,
       watch: true,
-    });
-
-  // hooks to prepare and send ethereum transaction for stake
-  const { config: configStake } = usePrepareContractWrite({
-    ...quickV2StakerContract,
-    functionName: "withdraw",
-    args: [toDenom(formState?.transferAmount)],
-    enabled: isWalletEthConnected && address && formState?.transferAmount,
-    chainId: chainID,
-    onError(error) {
-      console.error("prepare error: ", error);
-      /* if (true) {
-        toast.error(PREPARE_CONTRACT_ERROR, {
-          ...toastConfig,
-        });
-      } */
-    },
-  });
-
-  const { writeAsync: writeAsyncStake } = useContractWrite({
-    ...configStake,
-    onError(error) {
-      console.error(error);
-      notify(null, toastId1, "Transaction Aborted. Try again.");
-      toastId1 = null;
-    },
-  });
+    }
+  );
 
   // FORM REDUCER
   const initialState = {
@@ -114,8 +89,8 @@ export const QuickswapUnstakeModal = ({
           };
         } else if (
           BigNumber(availableBalance).isNaN() ||
-          BigNumber(toDenom(action.payload)).isGreaterThan(
-            BigNumber(toDenom(availableBalance))
+          BigNumber(toDenom(action.payload, 18)).isGreaterThan(
+            BigNumber(toDenom(availableBalance, 18))
           )
         ) {
           return {
@@ -187,6 +162,32 @@ export const QuickswapUnstakeModal = ({
   };
   const [formState, formDispatch] = useReducer(formReducer, initialState);
 
+  // hooks to prepare and send ethereum transaction for stake
+  const { config: configUnstake } = usePrepareContractWrite({
+    ...quickV2StakerContract,
+    functionName: "withdraw",
+    args: [toDenom(formState?.transferAmount, 18)],
+    enabled: isWalletEthConnected && address && formState?.transferAmount,
+    chainId: chainID,
+    onError(error) {
+      console.error("prepare error: ", error);
+      /* if (true) {
+        toast.error(PREPARE_CONTRACT_ERROR, {
+          ...toastConfig,
+        });
+      } */
+    },
+  });
+
+  const { writeAsync: writeAsyncUnstake } = useContractWrite({
+    ...configUnstake,
+    onError(error) {
+      console.error(error);
+      notify(null, toastId1, "Transaction Aborted. Try again.");
+      toastId1 = null;
+    },
+  });
+
   // HANDLER FUNCTIONS
   const handleAmountOnChange = (e) => {
     e.preventDefault();
@@ -202,7 +203,7 @@ export const QuickswapUnstakeModal = ({
 
     // copy form states to local variables
     const localTransferAmount = formState?.transferAmount;
-    const localLpBalance = balance?.formatted;
+    const localStakedLpBalance = balance?.formatted;
 
     // manually trigger form validation messages if any
     formDispatch({
@@ -213,9 +214,9 @@ export const QuickswapUnstakeModal = ({
     // manually calculate form validation logic
     const isFormValid =
       !BigNumber(localTransferAmount).isNaN() &&
-      !BigNumber(localTransferAmount).isLessThanOrEqualTo(0) &&
-      BigNumber(toDenom(localTransferAmount)).isLessThanOrEqualTo(
-        BigNumber(toDenom(localLpBalance))
+      !BigNumber(toDenom(localTransferAmount, 18)).isLessThanOrEqualTo(0) &&
+      BigNumber(toDenom(localTransferAmount, 18)).isLessThanOrEqualTo(
+        BigNumber(toDenom(localStakedLpBalance, 18))
       ) &&
       isObjEmpty(formState?.errorMessages);
 
@@ -225,7 +226,7 @@ export const QuickswapUnstakeModal = ({
         toastId1 = toast.loading("Transaction initiated ...", toastConfig);
 
         // create transaction
-        const transactionResponse = await writeAsyncStake();
+        const transactionResponse = await writeAsyncUnstake();
 
         if (transactionResponse?.hash) {
           notify(
@@ -267,7 +268,7 @@ export const QuickswapUnstakeModal = ({
     <>{"Loading..."}</>
   ) : (
     <>
-      {decimalize(polygonBalanceData?.formatted || "0")}&nbsp;
+      {decimalize(maticBalance?.formatted || "0")}&nbsp;
       {displayMaticBalanceDenom}
     </>
   );
@@ -326,6 +327,8 @@ export const QuickswapUnstakeModal = ({
       </div>
     </div>
   );
+
+  console.log("amount: ", toDenom(formState?.transferAmount, 18));
 
   return (
     <div className="modal " tabIndex="-1" role="dialog" id="quickswapUnstake">

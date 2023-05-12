@@ -25,6 +25,7 @@ import {
 import {
   farmPools,
   fromChainDenom,
+  fromDenom,
   placeholderAddressEth,
   toDenom,
 } from "../data";
@@ -98,7 +99,7 @@ function StaticQuickswapFarmPool({ poolIndex }) {
     .dividedToIntegerBy(2.2)
     .toString();
   const rewardsPerDayStyled = getBalanceStyle(
-    fromChainDenom(rewardsPerDay, 0),
+    BigNumber(fromDenom(rewardsPerDay)).toFixed(0),
     "caption",
     "caption2"
   );
