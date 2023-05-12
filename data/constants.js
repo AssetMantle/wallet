@@ -13,6 +13,7 @@ export const formConstants = {
       </Link>
     </span>
   ),
+  insufficientBalanceErrorMsg2: "Insufficient Balance.",
   insufficientBalanceFeeErrorMsg: "Insufficient Balance to pay for Chain Fee",
   requiredErrorMsg: "Required field is blank",
   invalidValueErrorMsg: "Input value is invalid",

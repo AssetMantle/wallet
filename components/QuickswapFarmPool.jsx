@@ -1,17 +1,19 @@
 import { disconnect } from "@wagmi/core";
 import { useWeb3Modal } from "@web3modal/react";
+import BigNumber from "bignumber.js";
+import { ethers } from "ethers";
 import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import {
+  erc20ABI,
   useAccount,
+  useBalance,
   useBlockNumber,
   useContractRead,
-  useNetwork,
-  erc20ABI,
-  useBalance,
-  usePrepareContractWrite,
   useContractWrite,
+  useNetwork,
+  usePrepareContractWrite,
 } from "wagmi";
 import { polygon } from "wagmi/chains";
 import {
@@ -21,10 +23,10 @@ import {
   toastConfig,
 } from "../config";
 import {
-  PREPARE_CONTRACT_ERROR,
   farmPools,
   fromChainDenom,
   placeholderAddressEth,
+  toDenom,
 } from "../data";
 import {
   cleanString,
@@ -32,8 +34,8 @@ import {
   handleCopy,
   shortenEthAddress,
 } from "../lib";
-import BigNumber from "bignumber.js";
-import { ethers } from "ethers";
+import { QuickswapStakeModal } from "./QuickswapStakeModal";
+import { QuickswapUnstakeModal } from "./QuickswapUnstakeModal";
 
 function StaticQuickswapFarmPool({ poolIndex }) {
   // hooks to work the multi-modal for ethereum
@@ -60,6 +62,7 @@ function StaticQuickswapFarmPool({ poolIndex }) {
       watch: false,
     }
   );
+
   const MAX_UINT256 = ethers.constants.MaxUint256;
 
   const quickswapFarm = farmPools?.[1];
@@ -117,7 +120,6 @@ function StaticQuickswapFarmPool({ poolIndex }) {
       ...quickV2StakerContract,
       functionName: "userInfo",
       args: [address],
-      select: (data) => data?.toString?.(),
       enabled: isConnected && isCorrectChain && address,
       ...hookArgs,
     });
@@ -131,6 +133,7 @@ function StaticQuickswapFarmPool({ poolIndex }) {
       select: (data) => data?.toString?.(),
       enabled: isConnected && isCorrectChain && address,
       ...hookArgs,
+      staleTime: 10000,
     });
 
   // wagmi hook to read the allowance of gravity deposit
@@ -149,7 +152,8 @@ function StaticQuickswapFarmPool({ poolIndex }) {
     useBalance({
       address: address,
       token: lpTokenContractAddress,
-      watch: true,
+      enabled: isWalletEthConnected && isCorrectChain && address,
+      ...hookArgs,
     });
 
   // hooks to prepare and send ethereum transaction for token approval
@@ -161,10 +165,10 @@ function StaticQuickswapFarmPool({ poolIndex }) {
     chainId: chainID,
     onError(error) {
       console.error("prepare error: ", error);
-      if (true)
+      /*  if (true)
         toast.error(PREPARE_CONTRACT_ERROR, {
           ...toastConfig,
-        });
+        }); */
     },
   });
 
@@ -177,28 +181,16 @@ function StaticQuickswapFarmPool({ poolIndex }) {
     },
   });
 
-  /*const { config } = usePrepareContractWrite({
-    ...uniV3StakerContract,
-    functionName: "claimReward",
-    args: [selectedIncentive?.rewardToken, address, 0],
-    enabled: isConnected && address && isIncentivePopulated,
-    chainId: 1,
-    onError(error) {
-      console.error(error.message);
-    },
-  });
+  const userLpStakedAmount = userStakeInfo?.amount?.toString?.();
+  const userLpStakedAmountBigNumber = BigNumber(
+    userLpStakedAmount?.toString() || 0
+  ).isNaN()
+    ? BigNumber(0)
+    : BigNumber(userLpStakedAmount?.toString() || 0);
 
-  const { writeAsync } = useContractWrite({
-    ...config,
-    onError(error) {
-      console.error(error);
-      notify(null, toastId, "Transaction Aborted. Try again.");
-      toastId = null;
-    },
-  }); */
-
-  const userInfoArray = userStakeInfo?.split(",") || [];
-  const userLpStakedAmount = userInfoArray?.[0];
+  const userLpStakedAmountFormatted = {
+    formatted: userLpStakedAmountBigNumber.shiftedBy(Number(-18)).toString(),
+  };
 
   const pendingRewardsStyled = getBalanceStyle(
     fromChainDenom(pendingRewards, 0),
@@ -207,7 +199,7 @@ function StaticQuickswapFarmPool({ poolIndex }) {
   );
 
   // HANDLER FUNCTIONS
-  const handleOnClickClaim = async (e) => {
+  /* const handleOnClickClaim = async (e) => {
     e.preventDefault();
     let transactionResponse;
     try {
@@ -215,22 +207,23 @@ function StaticQuickswapFarmPool({ poolIndex }) {
       toastId = toast.loading("Transaction initiated ...", toastConfig);
 
       // create transaction
-      // transactionResponse = await writeAsync();
+      transactionResponse = await writeAsyncClaimReward();
 
       console.log("response: ", transactionResponse);
       if (transactionResponse?.hash) {
         notify(
           transactionResponse?.hash,
           toastId,
-          "Transaction Submitted. Check "
+          "Transaction Submitted. Check ",
+          "polygon"
         );
       } else {
-        notify(null, toastId, "Transaction Aborted. Try again.");
+        notify(null, toastId, "Transaction Aborted. Try again.", polygon);
       }
     } catch (error) {
       console.error("Runtime Error: ", error);
     }
-  };
+  }; */
 
   const handleCopyOnClick = (e) => {
     e.preventDefault();
@@ -282,14 +275,10 @@ function StaticQuickswapFarmPool({ poolIndex }) {
   const isWalletEthConnected = isConnected;
   const loadingJSX = "Loading...";
 
-  const isCtaDisabled =
-    !userLpStakedAmount ||
-    BigNumber(userLpStakedAmount).isNaN() ||
-    BigNumber(userLpStakedAmount).isZero();
-
   const isApproveLpRequired =
-    BigNumber(lpTokenAllowance).isLessThan(lpTokenBalance) ||
-    BigNumber(lpTokenAllowance).isEqualTo(0);
+    BigNumber(lpTokenAllowance).isLessThan(
+      BigNumber(toDenom(lpTokenBalance?.formatted))
+    ) || BigNumber(lpTokenAllowance).isEqualTo(0);
 
   const connectedAddressJSX = isWalletEthConnected && (
     <>
@@ -325,14 +314,14 @@ function StaticQuickswapFarmPool({ poolIndex }) {
         <button
           className="button-secondary px-5 py-2 d-flex gap-2"
           data-bs-toggle="modal"
-          data-bs-target="#cardUnstake"
+          data-bs-target="#quickswapUnstake"
         >
           Unstake
         </button>
         <button
           className="button-primary px-5 py-2 d-flex gap-2"
           data-bs-toggle="modal"
-          data-bs-target="#cardStake"
+          data-bs-target="#quickswapStake"
         >
           Stake
         </button>
@@ -448,9 +437,54 @@ function StaticQuickswapFarmPool({ poolIndex }) {
     </div>
   );
 
+  /* const stakeModalJSX = (
+    <div className="modal " tabIndex="-1" role="dialog" id="cardStake">
+      <div
+        className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg"
+        role="document"
+      >
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title body2 text-primary d-flex align-items-center gap-2">
+              <button
+                type="button"
+                className="btn-close primary"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+                style={{ background: "none" }}
+              >
+                <span className="text-primary">
+                  <i className="bi bi-chevron-left" />
+                </span>
+              </button>
+              Stake
+            </h5>
+            <button
+              type="button"
+              className="btn-close primary"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              style={{ background: "none" }}
+            >
+              <span className="text-primary">
+                <i className="bi bi-x-lg" />
+              </span>
+            </button>
+          </div>
+          <div className="modal-body p-3  d-flex flex-column">
+            <div
+              className="nav-bg rounded-4 d-flex flex-column py-1 px-4 gap-2 align-items-center justify-content-center"
+              style={{ minHeight: "250px" }}
+            >
+              <UniswapStakeContents />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  ); */
+
   console.log(
-    "userLpStakedAmount: ",
-    userLpStakedAmount,
     " numberOfSeconds: ",
     numberOfSeconds,
     " currentBlock: ",
@@ -458,7 +492,9 @@ function StaticQuickswapFarmPool({ poolIndex }) {
     " rewardsPerDay: ",
     rewardsPerDay,
     " farmEndBlock: ",
-    farmEndBlock
+    farmEndBlock,
+    " userStakeInfo: ",
+    userStakeInfo?.amount?.toString?.()
   );
 
   if (!hasMounted) {
@@ -486,12 +522,12 @@ function StaticQuickswapFarmPool({ poolIndex }) {
               {logoPairJSX}
               <h2 className="h3 m-0">{selectedQuickswapFarmPool?.tokens}</h2>
             </div>
-            <button className="am-link px-2" onClick={handleOnClickClaim}>
+            {/* <button className="am-link px-2" onClick={handleOnClickClaim}>
               Claim Reward
             </button>
             <div className="d-flex align-items-center gap-3">
               <p>{pendingRewardsDisplay}</p>
-            </div>
+            </div> */}
           </div>
           <div className="border-bottom"></div>
           <div className="row">
@@ -530,7 +566,7 @@ function StaticQuickswapFarmPool({ poolIndex }) {
           <div className="d-flex justify-content-end gap-2">
             {isWalletEthConnected &&
               !isLoadingUserStakeInfo &&
-              BigNumber(userLpStakedAmount).isZero && (
+              BigNumber(userLpStakedAmount).isZero() && (
                 <>
                   {noRecordsJSX} <div className="border-bottom"></div>
                 </>
@@ -541,6 +577,16 @@ function StaticQuickswapFarmPool({ poolIndex }) {
           </div>
         </div>
       </div>
+      <QuickswapStakeModal
+        balance={lpTokenBalance}
+        isLoadingBalance={isLoadingLpTokenBalance}
+        poolIndex={poolIndex}
+      />
+      <QuickswapUnstakeModal
+        balance={userLpStakedAmountFormatted}
+        isLoadingBalance={isLoadingUserStakeInfo}
+        poolIndex={poolIndex}
+      />
     </div>
   );
 }
