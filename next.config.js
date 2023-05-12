@@ -8,6 +8,14 @@ const nextConfig = {
     return config;
   },
   reactStrictMode: true,
+  async rewrites() {
+    return [
+      {
+        source: "/api/osmosis/:path*",
+        destination: "https://api.osmosis.zone/:path*",
+      },
+    ];
+  },
   // swcMinify: true,
 };
 

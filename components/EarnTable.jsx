@@ -7,9 +7,30 @@ const EarnTable = () => {
   const { allOsmosis, isLoadingOsmosis, errorOsmosis } = useOsmosis();
   const { allQuickswap, isLoadingQuickswap, errorQuickswap } = useQuickswap();
   let isLoading = isLoadingOsmosis || isLoadingQuickswap;
-  let isError = errorOsmosis || errorQuickswap;
-  const fetchedData =
-    isLoading || isError ? [] : [...allOsmosis, ...allQuickswap];
+  let isErrorOsmosis = errorOsmosis;
+  let isErrorQuickswap = errorQuickswap;
+  let fetchedData;
+  // if (isLoading && isErrorOsmosis && isErrorQuickswap) {
+  //   fetchedData = [];
+  // } else
+  if (isLoading || (!isErrorQuickswap && isErrorOsmosis)) {
+    fetchedData = [...allQuickswap];
+  } else if (isLoading || (isErrorOsmosis && !isErrorQuickswap)) {
+    fetchedData = [...allOsmosis];
+  } else {
+    fetchedData = [...allOsmosis, ...allQuickswap];
+  }
+
+  console.log(fetchedData);
+  // else if (isLoading) {
+  //   fetchedData = [];
+  // }
+  // else {
+  //   fetchedData = [...allOsmosis, ...allQuickswap];
+  // }
+  // const isData =  !(isLoading || isErrorOsmosis || isErrorQuickswap)
+  //  fetchedData =
+  //   isData ? [] : [...allOsmosis, ...allQuickswap];
 
   const loadingData = [
     { symbol: true, project: true, chains: true, apy: true, tvlUsd: true },
@@ -33,7 +54,7 @@ const EarnTable = () => {
   const placeHolderData = staticEarnData;
 
   let earnData = [];
-  if (isLoading || isError) {
+  if (isLoading || (isErrorOsmosis && isErrorQuickswap)) {
     earnData = placeHolderData;
   } else {
     earnData = fetchedData;
@@ -74,7 +95,7 @@ const EarnTable = () => {
               alt={tableProps.row.original.logo?.toLowerCase()}
               className="rounded-circle"
               layout="fill"
-              src={`/tradePage/${tableProps?.row?.original?.project?.toLowerCase()}.webp`}
+              src={`/earn/${tableProps?.row?.original?.project?.toLowerCase()}.webp`}
             />
           </div>
           <p>{tableProps?.row?.original?.project}</p>
@@ -246,7 +267,7 @@ const EarnTable = () => {
   ];
 
   let columns = [];
-  if (isLoading || isError) {
+  if (isLoading || (isErrorOsmosis && isErrorQuickswap)) {
     columns = nonFetchedColumns;
   } else {
     columns = fetchedColumns;
