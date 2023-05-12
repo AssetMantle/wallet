@@ -44,7 +44,7 @@ export default function LiquidityPoolChainCard({
         cursor:
           selectedPool.poolIndex === poolIndex &&
           selectedPool.appIndex === appIndex
-            ? "not-allowed"
+            ? "default"
             : "pointer",
       }}
     >
