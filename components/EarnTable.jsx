@@ -118,7 +118,7 @@ const EarnTable = () => {
               alt={tableProps?.row?.original?.logo}
               className="rounded-circle"
               layout="fill"
-              src={`/earn/${tableProps?.row?.original?.chain?.toLowerCase()}.svg`}
+              src={`/earn/osmosis.svg`}
             />
           </div>
         </div>
