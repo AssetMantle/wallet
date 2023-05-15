@@ -23,6 +23,7 @@ import {
 } from "../data";
 import { shiftDecimalPlaces } from "../lib";
 import ModalContainer from "./ModalContainer";
+import { Stack } from "react-bootstrap";
 
 const denomDisplay = defaultChainSymbol;
 
@@ -77,8 +78,8 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
     ? getBalanceStyle(fromChainDenom(delegationsValue), "caption", "caption2")
     : getBalanceStyle(
         fromChainDenom(delegationsValue),
-        "caption text-gray",
-        "caption2 text-gray"
+        "caption text-body",
+        "caption2 text-body"
       );
 
   const delegationsInUSD = BigNumber(fromDenom(delegationsValue))
@@ -89,8 +90,8 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
     ? getBalanceStyle(decimalize(delegationsInUSD), "caption2 ", "small")
     : getBalanceStyle(
         decimalize(delegationsInUSD),
-        "caption2 text-gray",
-        "small text-gray"
+        "caption2 text-body",
+        "small text-body"
       );
 
   //Get number of validators delegated to out of selected validators
@@ -161,74 +162,76 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
   return (
     <>
       {stakeState?.selectedValidators?.length ? (
-        <p className="text-gray">
+        <p className="text-body-emphasis m-0">
           {delegatedOutOfSelectedValidators?.length} out of{" "}
           {stakeState?.selectedValidators?.length} selected are Delegated
           Validators
         </p>
       ) : null}
-      <div className="nav-bg p-3 rounded-4 gap-3">
-        <div className="d-flex flex-column gap-2">
+      <div className="bg-black p-3 rounded-4 gap-3">
+        <Stack className="" gap={2}>
           {stakeState?.selectedValidators?.length ? (
-            <p className="caption d-flex gap-2 align-items-center">
+            <p className="caption d-flex gap-2 align-items-center m-0">
               Selected Delegations
             </p>
           ) : (
             <p
-              className={
-                isConnected
-                  ? `caption d-flex gap-2 align-items-center`
-                  : `caption d-flex gap-2 align-items-center text-gray`
-              }
+              className={`caption d-flex gap-2 align-items-center m-0 ${
+                isConnected ? `` : `text-body`
+              }`}
             >
               {" "}
               Cumulative Delegations
             </p>
           )}
-          <p className={isConnected ? "caption" : "caption text-gray"}>
+          <p className={`caption m-0 ${isConnected ? "" : "text-body"}`}>
             {delegationsDisplay}
             &nbsp;{denomDisplay}
           </p>
-          <p className={isConnected ? "caption2" : "caption2 text-gray"}>
+          <p className={`caption2 m-0 ${isConnected ? "" : "text-body"}`}>
             {delegationsInUSDDisplay}
             &nbsp;{usdSymbol}
           </p>
           {showRedelegateUndelegateAndClaim &&
           stakeState?.selectedValidators?.length === 1 ? (
-            <div className="d-flex justify-content-end">
-              <div className="d-flex gap-1 flex-wrap flex-row justify-content-end">
-                <button
-                  className="d-flex align-items-center gap-1 am-link text-start caption2"
-                  onClick={() => {
-                    {
-                      stakeDispatch({
-                        type: "SET_REDELEGATION_SRC_ADDRESS",
-                        payload: stakeState?.selectedValidators[0],
-                      });
-                      setReDelegateModal(true);
-                    }
-                  }}
-                >
-                  <i className="text-primary bi bi-arrow-clockwise"></i>
-                  Redelegate
-                </button>
-                <button
-                  className="d-flex align-items-center gap-1 am-link text-start caption2"
-                  onClick={() => {
+            // <Stack direction="horizontal" className="justify-content-end">
+            <Stack
+              direction="horizontal"
+              className="flex-wrap flex-row justify-content-end"
+              gap={1}
+            >
+              <button
+                className="d-flex align-items-center gap-1 am-link text-start caption2"
+                onClick={() => {
+                  {
                     stakeDispatch({
-                      type: "SET_UNDELEGATION_SRC_ADDRESS",
+                      type: "SET_REDELEGATION_SRC_ADDRESS",
                       payload: stakeState?.selectedValidators[0],
                     });
-                    setUnDelegateModal(true);
-                  }}
-                >
-                  <i className="text-primary bi bi-arrow-counterclockwise"></i>
-                  Undelegate
-                </button>
-              </div>
-            </div>
-          ) : null}
-        </div>
+                    setReDelegateModal(true);
+                  }
+                }}
+              >
+                <i className="text-primary bi bi-arrow-clockwise"></i>
+                Redelegate
+              </button>
+              <button
+                className="d-flex align-items-center gap-1 am-link text-start caption2"
+                onClick={() => {
+                  stakeDispatch({
+                    type: "SET_UNDELEGATION_SRC_ADDRESS",
+                    payload: stakeState?.selectedValidators[0],
+                  });
+                  setUnDelegateModal(true);
+                }}
+              >
+                <i className="text-primary bi bi-arrow-counterclockwise"></i>
+                Undelegate
+              </button>
+            </Stack>
+          ) : // {/* </Stack> */}
+          null}
+        </Stack>
         {/* Undelegation Modal */}
         {
           <ModalContainer
@@ -264,7 +267,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
                   <label htmlFor="delegationAmount" className="caption2 mb-1">
                     Undelegate amount
                   </label>
-                  <small className="caption2 text-gray">
+                  <small className="caption2 text-body">
                     Delegated Amount:{" "}
                     {getBalanceStyle(
                       fromChainDenom(
@@ -274,8 +277,8 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
                             stakeState?.undelegationSrc
                         )?.delegatedAmount
                       ),
-                      "caption2 text-gray",
-                      "small text-gray"
+                      "caption2 text-body",
+                      "small text-body"
                     )}
                   </small>
                 </div>
@@ -359,7 +362,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
               </button>
             </div>
             <div className="py-4 text-center d-flex flex-column align-items-start">
-              <p className="text-muted caption2 text-gray my-2">
+              <p className="text-muted caption2 text-body my-2">
                 Delegate From
               </p>{" "}
               <div className="d-flex align-items-center gap-2">
@@ -422,8 +425,8 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
                   "caption2"
                 )}
               </p>
-              <p className="text-muted caption2 text-gray my-2">Delegate To</p>
-              <div className="nav-bg d-flex flex-column p-2 rounded-3 w-100">
+              <p className="text-muted caption2 text-body my-2">Delegate To</p>
+              <div className="bg-black d-flex flex-column p-2 rounded-3 w-100">
                 <div className="d-flex align-items-center justify-content-between my-2 w-100 gap-3">
                   <div
                     className="d-flex gap-2 am-input border-color-white rounded-3 py-1 px-3 align-items-center"
@@ -477,7 +480,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
                     style={{ width: "max-content", minWidth: "100%" }}
                   >
                     <thead
-                      className="bt-0 top-0 nav-bg"
+                      className="bt-0 top-0 bg-black"
                       style={{
                         zIndex: "200",
                       }}
@@ -716,11 +719,11 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
               <div className="d-flex justify-content-between w-100 mt-4">
                 <label
                   htmlFor="redelegationAmount"
-                  className="caption text-gray my-2"
+                  className="caption text-body my-2"
                 >
                   Delegation amount
                 </label>{" "}
-                <small className="caption2 text-gray my-2">
+                <small className="caption2 text-body my-2">
                   Delegated Amount :{" "}
                   {getBalanceStyle(
                     fromChainDenom(
@@ -730,8 +733,8 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
                         )
                       )?.delegatedAmount
                     ),
-                    "caption2 text-gray",
-                    "small text-gray"
+                    "caption2 text-body",
+                    "small text-body"
                   )}
                   &nbsp;
                   {defaultChainSymbol}

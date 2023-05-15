@@ -23,6 +23,7 @@ import {
 } from "../data";
 import { shiftDecimalPlaces } from "../lib";
 import ModalContainer from "./ModalContainer";
+import { Stack } from "react-bootstrap";
 
 const denomDisplay = defaultChainSymbol;
 
@@ -63,8 +64,8 @@ const Rewards = ({
     ? getBalanceStyle(fromChainDenom(rewardsValue), "caption", "caption2")
     : getBalanceStyle(
         fromChainDenom(rewardsValue),
-        "caption text-gray",
-        "caption2 text-gray"
+        "caption text-body",
+        "caption2 text-body"
       );
 
   const rewardsInUSD = BigNumber(fromDenom(rewardsValue))
@@ -75,8 +76,8 @@ const Rewards = ({
     ? getBalanceStyle(decimalize(rewardsInUSD), "caption2", "small")
     : getBalanceStyle(
         decimalize(rewardsInUSD),
-        "caption2 text-gray",
-        "small text-gray"
+        "caption2 text-body",
+        "small text-body"
       );
 
   const handleSubmitClaim = async (e) => {
@@ -177,8 +178,11 @@ const Rewards = ({
 
   const delegationTableJSX = (
     <>
-      <p className="caption2 my-2 text-gray">Selected Validator</p>
-      <div className="nav-bg p-2 rounded-4 w-100" style={{ overflowX: "auto" }}>
+      <p className="caption2 my-2 text-body m-0">Selected Validator</p>
+      <div
+        className="bg-black p-2 rounded-4 w-100"
+        style={{ overflowX: "auto" }}
+      >
         <table className="table claim-table">
           <thead className="bt-0">
             <tr>
@@ -315,8 +319,8 @@ const Rewards = ({
       <h6 className="caption my-2 mt-5">
         Current wallet address for claiming staking rewards:
       </h6>
-      <p className="caption2 my-2 text-gray">{withdrawAddress}</p>
-      <p className="caption2 my-2 text-gray">
+      <p className="caption2 my-2 text-body">{withdrawAddress}</p>
+      <p className="caption2 my-2 text-body">
         Want to claim your staking rewards to another wallet address?{" "}
         <a
           href="#"
@@ -354,7 +358,7 @@ const Rewards = ({
       <div className="py-4 d-flex flex-column text-white">
         <h6 className="caption2 my-1">Current Address</h6>
         <p className="caption2 my-1">{withdrawAddress}</p>
-        <p className="caption2 my-2 text-gray">Revised Address</p>
+        <p className="caption2 my-2 text-body">Revised Address</p>
         <input
           type="text"
           className="am-input py-1 px-3 border-color-white rounded-2 bg-t"
@@ -385,30 +389,30 @@ const Rewards = ({
   );
 
   return (
-    <div className="nav-bg p-3 rounded-4 gap-3">
-      <div className="d-flex flex-column gap-2">
+    <div className="bg-black p-3 rounded-4 gap-3">
+      <Stack className="" gap={2}>
         {stakeState?.selectedValidators?.length ? (
-          <p className="caption d-flex gap-2 align-items-center">Rewards</p>
+          <p className="caption d-flex gap-2 align-items-center m-0">Rewards</p>
         ) : (
           <p
-            className={`caption d-flex gap-2 align-items-center ${
-              isConnected ? null : "text-gray"
+            className={`caption d-flex gap-2 align-items-center m-0 ${
+              isConnected ? null : "text-body"
             }`}
           >
             {" "}
             Cumulative Rewards
           </p>
         )}
-        <p className={isConnected ? "caption" : "caption text-gray"}>
+        <p className={`caption m-0 ${isConnected ? "" : "text-body"}`}>
           {rewardsDisplay}
           &nbsp;
           {denomDisplay}
         </p>
-        <p className={isConnected ? "caption2" : "caption2 text-gray"}>
+        <p className={`caption2 m-0 ${isConnected ? "" : "text-body"}`}>
           {rewardsInUSDDisplay}
           &nbsp;{usdSymbol}
         </p>
-        <div className="d-flex justify-content-end">
+        <Stack direction="horizontal" className="justify-content-end">
           {stakeState?.selectedValidators?.length > 5 ||
           isSubmitDisabled ? null : (
             <button
@@ -418,8 +422,8 @@ const Rewards = ({
               <i className="text-primary bi bi-box-arrow-in-down"></i>Claim
             </button>
           )}
-        </div>
-      </div>
+        </Stack>
+      </Stack>
 
       <ModalContainer active={ClaimModal} setActive={setClaimModal}>
         {!setupAddress ? (

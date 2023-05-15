@@ -17,6 +17,7 @@ import {
   useTotalUnbonding,
 } from "../data";
 import ModalContainer from "./ModalContainer";
+import { Stack } from "react-bootstrap";
 
 const denomDisplay = defaultChainSymbol;
 
@@ -58,8 +59,8 @@ const Unbonded = ({
     ? getBalanceStyle(fromChainDenom(unbondingValue), "caption", "caption2")
     : getBalanceStyle(
         fromChainDenom(unbondingValue),
-        "caption text-gray",
-        "caption2 text-gray"
+        "caption text-body",
+        "caption2 text-body"
       );
 
   const unbondingInUSD = BigNumber(fromDenom(unbondingValue))
@@ -70,8 +71,8 @@ const Unbonded = ({
     ? getBalanceStyle(decimalize(unbondingInUSD), "caption2", "small")
     : getBalanceStyle(
         decimalize(unbondingInUSD),
-        "caption2 text-gray",
-        "small text-gray"
+        "caption2 text-body",
+        "small text-body"
       );
 
   const secondsInADay = 86400;
@@ -85,23 +86,23 @@ const Unbonded = ({
   };
 
   return (
-    <div className="nav-bg p-3 rounded-4 gap-3">
-      <div className="d-flex flex-column gap-2">
+    <div className="bg-black p-3 rounded-4 gap-3">
+      <Stack className="" gap={2}>
         <p
-          className={`caption d-flex gap-2 align-items-center
-          ${isConnected ? "null" : "text-gray"}`}
+          className={`caption d-flex gap-2 align-items-center m-0
+          ${isConnected ? "null" : "text-body"}`}
         >
           Undelegating
         </p>
-        <p className={isConnected ? "caption" : "caption text-gray"}>
+        <p className={`caption m-0 ${isConnected ? "" : "text-body"}`}>
           {unbondingDisplay}
           &nbsp;{denomDisplay}
         </p>
-        <p className={isConnected ? "caption2" : "caption2 text-gray"}>
+        <p className={`caption2 m-0 ${isConnected ? "" : "text-body"}`}>
           {unbondingInUSDDisplay}
           &nbsp;{usdSymbol}
         </p>
-        <div className="d-flex justify-content-end">
+        <Stack direction="horizontal" className="justify-content-end">
           {allUnbonding?.length != 0 && !isSubmitDisabled ? (
             <button
               className="d-flex align-items-center gap-1 am-link text-start caption2"
@@ -113,8 +114,8 @@ const Unbonded = ({
               <i className="text-primary bi bi-eye"></i>View
             </button>
           ) : null}
-        </div>
-      </div>
+        </Stack>
+      </Stack>
 
       {/* Unbonding Modal */}
       <ModalContainer active={unBondingModal} setActive={setUnBondingModal}>
@@ -146,7 +147,7 @@ const Unbonded = ({
           </div>
           <div className="pt-4 text-center d-flex flex-column">
             <div className="d-flex justify-content-between">
-              <div className="d-flex flex-column nav-bg w-100 rounded-3 px-3 py-1">
+              <div className="d-flex flex-column bg-black w-100 rounded-3 px-3 py-1">
                 <div className="d-flex align-items-center justify-content-between my-2 w-100 gap-3">
                   <div
                     className="d-flex gap-2 am-input border-color-white rounded-3 py-1 px-3 align-items-center"
