@@ -1263,3 +1263,53 @@ export const useQuickswap = () => {
     errorQuickswap: error,
   };
 };
+
+export const useComdex = () => {
+  // fetcher function for useSwr of useAvailableBalance()
+  const fetchAllComdex = async (url) => {
+    // console.log("inside fetchAllQuickswap() ");
+
+    let comdexData = [];
+
+    try {
+      const CmstMntlTvlData = await fetch(
+        "https://stat.comdex.one/api/v2/cswap/pairs/33"
+      ).then((res) => res.json());
+      const CmdxMntlTvlData = await fetch(
+        "https://stat.comdex.one/api/v2/cswap/pairs/32"
+      ).then((res) => res.json());
+
+      const comdexAprData = await fetch(
+        "https://stat.comdex.one/api/v2/cswap/aprs"
+      ).then((res) => res.json());
+      comdexData = [
+        {
+          pair: "MNTL/CMST",
+          tvl: CmstMntlTvlData?.data?.total_liquidity,
+          apr: comdexAprData?.data?.["33"]?.incentive_rewards?.[0]?.apr,
+          // ?.incentive_rewards?.apr,
+        },
+        {
+          pair: "MNTL/CMDX",
+          tvl: CmdxMntlTvlData?.data?.total_liquidity,
+          apr: comdexAprData?.data?.["32"]?.incentive_rewards?.[0]?.apr,
+        },
+      ];
+    } catch (error) {
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
+      throw error;
+    }
+    // return the data
+    return comdexData;
+  };
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: comdexArray, error } = useSwr("useComdex", fetchAllComdex, {
+    fallbackData: [],
+    suspense: true,
+  });
+  return {
+    allComdex: comdexArray,
+    isLoadingComdex: !error && !comdexArray,
+    errorComdex: error,
+  };
+};
