@@ -14,6 +14,7 @@ import {
   useContractWrite,
   useNetwork,
   usePrepareContractWrite,
+  useToken,
 } from "wagmi";
 import { polygon } from "wagmi/chains";
 import {
@@ -43,6 +44,29 @@ function StaticQuickswapFarmPool({ poolIndex }) {
   const { open, setDefaultChain } = useWeb3Modal();
   setDefaultChain(polygon);
 
+  const quickswapFarm = farmPools?.[1];
+  const selectedQuickswapFarmPool = quickswapFarm?.pools?.[poolIndex];
+  const tokenPairArray = selectedQuickswapFarmPool?.tokens.split(" – ");
+  const poolUrl = selectedQuickswapFarmPool?.lpTokenLink;
+
+  // wagmi data & hooks to read and write in contracts
+  const quickV2StakerContractAddress =
+    selectedQuickswapFarmPool?.farmContractAddress;
+  const lpTokenContractAddress = selectedQuickswapFarmPool?.lpTokenAddress;
+  const quickV2StakerContractABI = selectedQuickswapFarmPool?.farmContractABI;
+  const quickV2StakerContract = {
+    address: quickV2StakerContractAddress,
+    abi: quickV2StakerContractABI,
+  };
+  const lpTokenContract = { address: lpTokenContractAddress, abi: erc20ABI };
+
+  const MAX_UINT256 = ethers.constants.MaxUint256;
+
+  let toastId, toastId2, toastId3, toastId4;
+
+  const isCorrectChain = chainID == chain?.id;
+  const hookArgs = { watch: true, chainId: chainID };
+
   // before useAccount, define the isMounted() hook to deal with SSR issues
   // const isMounted = useIsMounted();
   const [hasMounted, setHasMounted] = useState(false);
@@ -63,17 +87,15 @@ function StaticQuickswapFarmPool({ poolIndex }) {
       watch: false,
     }
   );
-
-  const MAX_UINT256 = ethers.constants.MaxUint256;
-
-  const quickswapFarm = farmPools?.[1];
-  const selectedQuickswapFarmPool = quickswapFarm?.pools?.[poolIndex];
-  const tokenPairArray = selectedQuickswapFarmPool?.tokens.split(" – ");
-  const poolUrl = selectedQuickswapFarmPool?.lpTokenLink;
-  let toastId, toastId2, toastId3, toastId4;
-
-  const isCorrectChain = chainID == chain?.id;
-  const hookArgs = { watch: true, chainId: chainID };
+  const {
+    data: tokenDataObject,
+    isError,
+    isLoading,
+  } = useToken({
+    address: lpTokenContractAddress,
+    // enabled: isWalletEthConnected && isCorrectChain && address,
+    ...hookArgs,
+  });
 
   const farmStartBlock =
     selectedQuickswapFarmPool?.startRewardBlock?.toString?.();
@@ -103,17 +125,6 @@ function StaticQuickswapFarmPool({ poolIndex }) {
     "caption",
     "caption2"
   );
-
-  // wagmi data & hooks to read and write in contracts
-  const quickV2StakerContractAddress =
-    selectedQuickswapFarmPool?.farmContractAddress;
-  const lpTokenContractAddress = selectedQuickswapFarmPool?.lpTokenAddress;
-  const quickV2StakerContractABI = selectedQuickswapFarmPool?.farmContractABI;
-  const quickV2StakerContract = {
-    address: quickV2StakerContractAddress,
-    abi: quickV2StakerContractABI,
-  };
-  const lpTokenContract = { address: lpTokenContractAddress, abi: erc20ABI };
 
   // wagmi hook to read the user stake info in staker contract
   const { data: userStakeInfo, isLoading: isLoadingUserStakeInfo } =
@@ -148,7 +159,7 @@ function StaticQuickswapFarmPool({ poolIndex }) {
       ...hookArgs,
     });
 
-  // get the MNTL token balance using wagmi hook
+  // get the LP token balance of user address using wagmi hook
   const { data: lpTokenBalance, isLoading: isLoadingLpTokenBalance } =
     useBalance({
       address: address,
@@ -156,6 +167,19 @@ function StaticQuickswapFarmPool({ poolIndex }) {
       enabled: isWalletEthConnected && isCorrectChain && address,
       ...hookArgs,
     });
+
+  // get the LP token balance of farm pool using wagmi hook
+  const {
+    data: lpTokenBalanceFarmPool,
+    isLoading: isLoadingLpTokenBalanceFarmPool,
+  } = useBalance({
+    address: quickV2StakerContractAddress,
+    token: lpTokenContractAddress,
+    enabled: isWalletEthConnected && isCorrectChain && address,
+    ...hookArgs,
+  });
+
+  console.log("balance quickswap", lpTokenBalanceFarmPool);
 
   // hooks to prepare and send ethereum transaction for claim reward (unstake)
   const { config: configUnstake } = usePrepareContractWrite({

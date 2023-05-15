@@ -305,6 +305,7 @@ export const farmPools = [
         rewardPerBlock: 282922,
         lpTokenName: "VERSA-MNTL-LP",
         lpTokenAddress: "0x725307420669f89aDe13505C13c8c7e73e3949dD",
+        totalSupply: "315196365358941524",
         lpTokenDecimals: 18,
       },
       {
@@ -322,6 +323,7 @@ export const farmPools = [
         rewardPerBlock: 778035,
         lpTokenName: "USDC-MNTL-LP",
         lpTokenAddress: "0x5e1878eb8a10cc8690798ece6bfd3425e189361e",
+        totalSupply: "260757835897",
         lpTokenDecimals: 18,
       },
     ],

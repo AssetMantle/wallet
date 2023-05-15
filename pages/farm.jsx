@@ -3,13 +3,14 @@ import React, { Suspense, useState } from "react";
 import { ExternalFarmPool, UniswapFarmPool } from "../components";
 import LiquidityPoolChains from "../components/LiquidityPoolChains";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
-import { farmPools } from "../data";
+import { farmPools, useComdex } from "../data";
 import { QuickswapFarmPool } from "../components/QuickswapFarmPool";
 import { useIsMounted } from "../lib";
 
 export default function Farm() {
   // HOOKS
-
+  const { allComdex, isLoadingComdex, errorComdex } = useComdex();
+  console.log("comdex data", allComdex);
   const [selectedPool, setSelectedPool] = useState({
     appIndex: 0,
     poolIndex: 0,
