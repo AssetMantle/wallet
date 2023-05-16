@@ -1,14 +1,15 @@
 import React from "react";
-import { farmPools } from "../data";
+import { farmPools, useComdex, useOsmosis } from "../data";
 import { cleanString, getTimeDifference } from "../lib";
 
 export function ExternalFarmPool({ appIndex, poolIndex }) {
   const selectedApp = farmPools?.[appIndex];
   const selectedPool = selectedApp?.pools?.[poolIndex];
-
+  const { allComdex, isLoadingComdex, errorComdex } = useComdex();
+  const { allOsmosis, errorOsmosis, isLoadingOsmosis } = useOsmosis();
   const tokenPairArray = selectedPool?.tokens.split(" – ");
   const appLogoPathname = cleanString(selectedApp?.name);
-
+  console.log(typeof allComdex[0]?.apr);
   // DISPLAY VARIABLES
 
   const appLogoJSX = (
@@ -143,7 +144,30 @@ export function ExternalFarmPool({ appIndex, poolIndex }) {
             <div className="col-4 py-2">
               <div className="row">
                 <div className="col-6 text-gray caption">TVL</div>
-                <div className="col-6 caption">{selectedPool?.tvl}</div>
+                {appIndex == 2 && (
+                  <div className="col-6 caption">
+                    $
+                    {
+                      allOsmosis?.find(
+                        (item) =>
+                          item?.symbol.includes(tokenPairArray[0]) &&
+                          item?.symbol.includes(tokenPairArray[1])
+                      )?.tvlUsd
+                    }
+                  </div>
+                )}
+                {appIndex == 3 && (
+                  <div className="col-6 caption">
+                    $
+                    {allComdex
+                      ?.find(
+                        (item) =>
+                          item?.pair.includes(tokenPairArray[0]) &&
+                          item?.pair.includes(tokenPairArray[1])
+                      )
+                      ?.tvlUsd?.toFixed(2)}
+                  </div>
+                )}
               </div>
             </div>
             {/* <div className="col-7 py-2">
@@ -155,7 +179,32 @@ export function ExternalFarmPool({ appIndex, poolIndex }) {
             <div className="col-4 py-2">
               <div className="row">
                 <div className="col-6 text-gray caption">APR</div>
-                <div className="col-6 caption">{selectedPool?.apr}</div>
+                {appIndex == 2 && (
+                  <div className="col-6 caption">
+                    {" "}
+                    {allOsmosis
+                      ?.find(
+                        (item) =>
+                          item?.symbol.includes(tokenPairArray[0]) &&
+                          item?.symbol.includes(tokenPairArray[1])
+                      )
+                      ?.apy?.toFixed(2)}
+                    %
+                  </div>
+                )}
+                {appIndex == 3 && (
+                  <div className="col-6 caption">
+                    {" "}
+                    {parseFloat(
+                      allComdex?.find(
+                        (item) =>
+                          item?.pair.includes(tokenPairArray[0]) &&
+                          item?.pair.includes(tokenPairArray[1])
+                      )?.apr
+                    )?.toFixed(2)}
+                    %
+                  </div>
+                )}
               </div>
             </div>
           </div>
