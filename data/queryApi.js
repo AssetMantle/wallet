@@ -1285,14 +1285,18 @@ export const useComdex = () => {
       comdexData = [
         {
           pair: "MNTL/CMST",
-          tvl: CmstMntlTvlData?.data?.total_liquidity,
-          apr: comdexAprData?.data?.["33"]?.incentive_rewards?.[0]?.apr,
+          tvlUsd: CmstMntlTvlData?.data?.total_liquidity,
+          apr: comdexAprData?.data?.[
+            "33"
+          ]?.incentive_rewards?.[0]?.apr?.toFixed(5),
           // ?.incentive_rewards?.apr,
         },
         {
           pair: "MNTL/CMDX",
-          tvl: CmdxMntlTvlData?.data?.total_liquidity,
-          apr: comdexAprData?.data?.["32"]?.incentive_rewards?.[0]?.apr,
+          tvlUsd: CmdxMntlTvlData?.data?.total_liquidity,
+          apr: comdexAprData?.data?.[
+            "32"
+          ]?.incentive_rewards?.[0]?.apr?.toFixed(5),
         },
       ];
     } catch (error) {
