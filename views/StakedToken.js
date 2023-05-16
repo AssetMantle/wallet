@@ -8,6 +8,7 @@ import { defaultChainName, toastConfig } from "../config";
 import { sendDelegation, useAvailableBalance, fromDenom } from "../data";
 import { toast } from "react-toastify";
 import { defaultChainSymbol } from "../config";
+import { Stack } from "react-bootstrap";
 
 export default function StakedToken({
   delegated,
@@ -58,12 +59,12 @@ export default function StakedToken({
     <>
       <section className="gap-3">
         {!stakeState?.selectedValidators?.length && status === "Connected" ? (
-          <div className="rounded-4 p-3 mb-3 bg-gray-800 width-100 d-flex flex-column text-white">
+          <Stack className="rounded-4 p-3 mb-3 bg-light-subtle width-100 text-white m-0">
             <p>Please select the Validators you wish to take actions on.</p>
-          </div>
+          </Stack>
         ) : null}
-        <div className="rounded-4 gap-3 p-3 bg-gray-800 width-100 d-flex flex-column">
-          <h4 className="body1 text-primary">Staked Tokens</h4>
+        <Stack className="rounded-4 gap-3 p-3 bg-light-subtle w-100">
+          <h4 className="body1 text-primary m-0">Staked Tokens</h4>
           <Suspense fallback={<p>Loading</p>}>
             <Delegations
               notify={notify}
@@ -114,7 +115,7 @@ export default function StakedToken({
               </p>
             </div>
           ) : null}
-        </div>
+        </Stack>
       </section>
       <ModalContainer active={DelegateModal} setActive={setDelegateModal}>
         <div className="d-flex flex-column bg-gray-700 m-auto p-4 rounded-3 w-100">
@@ -143,10 +144,10 @@ export default function StakedToken({
           </div>
           <div className="py-4 text-center d-flex flex-column">
             <div className="d-flex my-2 justify-content-between">
-              <label htmlFor="delegationAmount" className="caption text-gray">
+              <label htmlFor="delegationAmount" className="caption text-body">
                 Delegation Amount
               </label>{" "}
-              <small className="text-gray caption2">
+              <small className="text-body caption2">
                 Balance : {fromDenom(availableBalance).toString()}&nbsp;
                 {defaultChainSymbol}
               </small>
@@ -233,10 +234,10 @@ export default function StakedToken({
             </div>
             <div className="modal-body p-4 text-center d-flex flex-column">
               <div className="d-flex my-2 justify-content-between">
-                <label htmlFor="delegationAmount" className="caption text-gray">
+                <label htmlFor="delegationAmount" className="caption text-body">
                   Delegation Amount
                 </label>{" "}
-                <small className="text-gray caption2">
+                <small className="text-body caption2">
                   Balance : {fromDenom(availableBalance).toString()}&nbsp;
                   {defaultChainSymbol}
                 </small>
