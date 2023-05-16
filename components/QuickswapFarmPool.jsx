@@ -6,7 +6,6 @@ import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import {
-  erc20ABI,
   useAccount,
   useBalance,
   useBlockNumber,
@@ -29,6 +28,8 @@ import {
   fromDenom,
   placeholderAddressEth,
   toDenom,
+  useMntlUsd,
+  useQuickswap,
 } from "../data";
 import {
   cleanString,
@@ -42,7 +43,11 @@ import { QuickswapUnstakeModal } from "./QuickswapUnstakeModal";
 function StaticQuickswapFarmPool({ poolIndex }) {
   // hooks to work the multi-modal for ethereum
   const { open, setDefaultChain } = useWeb3Modal();
+  const { allQuickswap, isLoadingQuickswap, errorQuickswap } = useQuickswap();
+  const { mntlUsdValue } = useMntlUsd();
+  console.log(allQuickswap);
   setDefaultChain(polygon);
+  const totalSupplyValue = farmPools?.[1]?.pools?.[0]?.totalSupply;
 
   const quickswapFarm = farmPools?.[1];
   const selectedQuickswapFarmPool = quickswapFarm?.pools?.[poolIndex];
@@ -58,14 +63,13 @@ function StaticQuickswapFarmPool({ poolIndex }) {
     address: quickV2StakerContractAddress,
     abi: quickV2StakerContractABI,
   };
-  const lpTokenContract = { address: lpTokenContractAddress, abi: erc20ABI };
+
+  const lpTokenABI = selectedQuickswapFarmPool?.lpTokenABI;
+  const lpTokenContract = { address: lpTokenContractAddress, abi: lpTokenABI };
 
   const MAX_UINT256 = ethers.constants.MaxUint256;
 
   let toastId, toastId2, toastId3, toastId4;
-
-  const isCorrectChain = chainID == chain?.id;
-  const hookArgs = { watch: true, chainId: chainID };
 
   // before useAccount, define the isMounted() hook to deal with SSR issues
   // const isMounted = useIsMounted();
@@ -87,15 +91,14 @@ function StaticQuickswapFarmPool({ poolIndex }) {
       watch: false,
     }
   );
-  const {
-    data: tokenDataObject,
-    isError,
-    isLoading,
-  } = useToken({
+  const isCorrectChain = chainID == chain?.id;
+  const hookArgs = { watch: true, chainId: chainID };
+
+  const { data: lpTokenObject } = useToken({
     address: lpTokenContractAddress,
-    // enabled: isWalletEthConnected && isCorrectChain && address,
     ...hookArgs,
   });
+  console.log("data", lpTokenObject);
 
   const farmStartBlock =
     selectedQuickswapFarmPool?.startRewardBlock?.toString?.();
@@ -175,11 +178,41 @@ function StaticQuickswapFarmPool({ poolIndex }) {
   } = useBalance({
     address: quickV2StakerContractAddress,
     token: lpTokenContractAddress,
-    enabled: isWalletEthConnected && isCorrectChain && address,
     ...hookArgs,
   });
 
-  console.log("balance quickswap", lpTokenBalanceFarmPool);
+  const balance = BigNumber(lpTokenBalanceFarmPool?.value?._hex);
+
+  const stakedRatio = balance?.dividedBy(BigNumber(totalSupplyValue));
+
+  // wagmi hook to get reserves of MNTL from the LP Token
+
+  const { data: lpTokensReserves, isLoading: isLoadingLpTokensReserves } =
+    useContractRead({
+      ...lpTokenContract,
+      functionName: "getReserves",
+      args: [],
+      // enabled: isConnected && isCorrectChain && address,
+      ...hookArgs,
+    });
+
+  const reserves = fromDenom(
+    BigNumber(lpTokensReserves?._reserve0?._hex)?.toString()
+  );
+
+  const stakedToken = BigNumber(reserves)?.multipliedBy(stakedRatio);
+
+  const mntlTvl = stakedToken?.multipliedBy(BigNumber(mntlUsdValue));
+  const tvl = mntlTvl?.multipliedBy(2)?.toNumber()?.toFixed(2);
+
+  const rewardsPerYear = rewardsPerDay * 365;
+  const rewardsPerYearInUsd = BigNumber(fromDenom(rewardsPerYear)).multipliedBy(
+    BigNumber(mntlUsdValue)
+  );
+  const apr = rewardsPerYearInUsd
+    ?.dividedBy(tvl)
+    ?.multipliedBy(BigNumber(100))
+    ?.toFixed(2);
 
   // hooks to prepare and send ethereum transaction for claim reward (unstake)
   const { config: configUnstake } = usePrepareContractWrite({
@@ -591,9 +624,13 @@ function StaticQuickswapFarmPool({ poolIndex }) {
             <div className="col-4 py-2">
               <div className="row">
                 <div className="col-6 text-gray caption">TVL</div>
-                <div className="col-6 caption">
-                  {selectedQuickswapFarmPool?.tvl}
-                </div>
+                {!tokenPairArray.includes("USDC") ? (
+                  <div className="col-6 caption">${tvl}</div>
+                ) : (
+                  <div className="col-6 caption">
+                    ${allQuickswap?.[0]?.tvlUsd}
+                  </div>
+                )}
               </div>
             </div>
             <div className="col-7 py-2">
@@ -607,9 +644,13 @@ function StaticQuickswapFarmPool({ poolIndex }) {
             <div className="col-4 py-2">
               <div className="row">
                 <div className="col-6 text-gray caption">APR</div>
-                <div className="col-6 caption">
-                  {selectedQuickswapFarmPool?.apr}
-                </div>
+                {!tokenPairArray.includes("USDC") ? (
+                  <div className="col-6 caption">{apr}%</div>
+                ) : (
+                  <div className="col-6 caption">
+                    {allQuickswap?.[0]?.apy?.toFixed(2)}%
+                  </div>
+                )}
               </div>
             </div>
           </div>

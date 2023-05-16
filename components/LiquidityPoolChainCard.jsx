@@ -1,5 +1,5 @@
 import React from "react";
-import { farmPools } from "../data";
+import { farmPools, useComdex, useOsmosis, useQuickswap } from "../data";
 import { disconnect } from "@wagmi/core";
 
 export default function LiquidityPoolChainCard({
@@ -8,6 +8,10 @@ export default function LiquidityPoolChainCard({
   appIndex,
   poolIndex,
 }) {
+  const { allComdex, isLoadingComdex, errorComdex } = useComdex();
+  const { allOsmosis, errorOsmosis, isLoadingOsmosis } = useOsmosis();
+  const { allQuickswap, isLoadingQuickswap, errorQuickswap } = useQuickswap();
+
   const selectedApp = farmPools?.[appIndex];
   const pool = selectedApp?.pools?.[poolIndex];
   const tokenPairArray = pool?.tokens?.split?.(" – ");
@@ -79,10 +83,48 @@ export default function LiquidityPoolChainCard({
         <h2 className="caption2 text-primary m-0">
           {pool?.tokens && pool?.tokens}
         </h2>
-      </div>
-      <p className="small m-0 text-gray">
-        {pool && pool?.apr && `APR: ${pool?.apr}`}
-      </p>
+      </div>{" "}
+      {/* {appIndex == 0 && (
+        <p className="small m-0 text-gray">
+          {pool && pool?.apr && `APR: ${pool?.apr}`}
+        </p>
+      )}
+      {appIndex == 1 &&
+        (tokenPairArray.includes("USDC") ? (
+          <p className="small m-0 text-gray">APR: {allQuickswap?.[0]?.apy}</p>
+        ) : (
+          <p className="small m-0 text-gray">
+            {pool && pool?.apr && `APR: ${pool?.apr}`}
+          </p>
+        ))}
+      {appIndex == 2 && (
+        <p className="small m-0 text-gray">
+          {" "}
+          APR:{" "}
+          {
+            allOsmosis?.find(
+              (item) =>
+                item?.symbol.includes(tokenPairArray[0]) &&
+                item?.symbol.includes(tokenPairArray[1])
+            )?.apy
+          }{" "}
+          %
+        </p>
+      )}
+      {appIndex == 3 && (
+        <p className="small m-0 text-gray">
+          {" "}
+          APR:{" "}
+          {
+            allComdex?.find(
+              (item) =>
+                item?.pair.includes(tokenPairArray[0]) &&
+                item?.pair.includes(tokenPairArray[1])
+            )?.apr
+          }{" "}
+          %
+        </p>
+      )} */}
     </div>
   );
 }
