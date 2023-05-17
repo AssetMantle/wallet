@@ -1210,6 +1210,61 @@ export const useOsmosis = () => {
   };
 };
 
+export const useQuickswap = () => {
+  // fetcher function for useSwr of useAvailableBalance()
+  const fetchAllQuickswap = async (url) => {
+    // console.log("inside fetchAllQuickswap() ");
+
+    let quickswapData = [];
+    const urlData = [
+      {
+        symbol: "VERSA",
+        url: "https://quickswap.exchange/#/pools/v2?currency0=0x38a536a31ba4d8c1bcca016abbf786ecd25877e8&currency1=0x8497842420cfdbc97896c2353d75d89fc8d5be5d",
+      },
+      {
+        symbol: "USDC",
+        url: "https://quickswap.exchange/#/pools/v2?currency0=0x2791bca1f2de4661ed88a30c99a7a9449aa84174&currency1=0x38a536a31ba4d8c1bcca016abbf786ecd25877e8",
+      },
+    ];
+    try {
+      const llamaData = await fetch("https://yields.llama.fi/pools").then(
+        (res) => res.json()
+      );
+      const filteredLlamaData = llamaData?.data?.filter(
+        (item) =>
+          item?.symbol.includes("MNTL") &&
+          (item?.project == "quickswap-dex" || item?.project == "uniswap-v3")
+      );
+
+      quickswapData = filteredLlamaData?.map((item) => {
+        return {
+          ...item,
+          url: urlData.find((e) => item?.symbol.includes(e.symbol)).url,
+        };
+      });
+    } catch (error) {
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
+      throw error;
+    }
+    // return the data
+    return quickswapData;
+  };
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: quickswapArray, error } = useSwr(
+    "useQuickswap",
+    fetchAllQuickswap,
+    {
+      fallbackData: [],
+      suspense: true,
+    }
+  );
+  return {
+    allQuickswap: quickswapArray,
+    isLoadingQuickswap: !error && !quickswapArray,
+    errorQuickswap: error,
+  };
+};
+
 export const useEthereumFarm = () => {
   // fetcher function for useSwr of useAvailableBalance()
   const fetchEthereumFarm = async (url) => {
@@ -1296,60 +1351,7 @@ export const useComdexFarm = (poolID) => {
 };
 
 /*
-export const useQuickswap = () => {
-  // fetcher function for useSwr of useAvailableBalance()
-  const fetchAllQuickswap = async (url) => {
-    // console.log("inside fetchAllQuickswap() ");
 
-    let quickswapData = [];
-    const urlData = [
-      {
-        symbol: "VERSA",
-        url: "https://quickswap.exchange/#/pools/v2?currency0=0x38a536a31ba4d8c1bcca016abbf786ecd25877e8&currency1=0x8497842420cfdbc97896c2353d75d89fc8d5be5d",
-      },
-      {
-        symbol: "USDC",
-        url: "https://quickswap.exchange/#/pools/v2?currency0=0x2791bca1f2de4661ed88a30c99a7a9449aa84174&currency1=0x38a536a31ba4d8c1bcca016abbf786ecd25877e8",
-      },
-    ];
-    try {
-      const llamaData = await fetch("https://yields.llama.fi/pools").then(
-        (res) => res.json()
-      );
-      const filteredLlamaData = llamaData?.data?.filter(
-        (item) =>
-          item?.symbol.includes("MNTL") &&
-          (item?.project == "quickswap-dex" || item?.project == "uniswap-v3")
-      );
-
-      quickswapData = filteredLlamaData?.map((item) => {
-        return {
-          ...item,
-          url: urlData.find((e) => item?.symbol.includes(e.symbol)).url,
-        };
-      });
-    } catch (error) {
-      console.error(`swr fetcher : url: ${url},  error: ${error}`);
-      throw error;
-    }
-    // return the data
-    return quickswapData;
-  };
-  // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: quickswapArray, error } = useSwr(
-    "useQuickswap",
-    fetchAllQuickswap,
-    {
-      fallbackData: [],
-      suspense: true,
-    }
-  );
-  return {
-    allQuickswap: quickswapArray,
-    isLoadingQuickswap: !error && !quickswapArray,
-    errorQuickswap: error,
-  };
-};
 
 export const usePolygonFarm = (poolIndex) => {
   let polygonFarmData;
