@@ -147,7 +147,7 @@ export const staticTradeData = [
   },
   {
     logo: "uniswap-v3",
-    name: "Uniswap (v3)",
+    name: "Uniswap V3 (Ethereum)",
     pair: "MNTL/ETH",
     coin_id: "assetmantle",
     target_coin_id: "weth",
