@@ -1,16 +1,15 @@
 import Head from "next/head";
 import React, { Suspense, useState } from "react";
 import { ExternalFarmPool, UniswapFarmPool } from "../components";
-import LiquidityPoolChains from "../components/LiquidityPoolChains";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
-import { farmPools, useComdex } from "../data";
 import { QuickswapFarmPool } from "../components/QuickswapFarmPool";
 import { useIsMounted } from "../lib";
+import LiquidityPoolChainPolygon from "../components/LiquidityPoolChainPolygon";
+import LiquidityPoolChainComdex from "../components/LiquidityPoolChainComdex";
+import LiquidityPoolChainOsmosis from "../components/LiquidityPoolChainOsmosis";
 
 export default function Farm() {
   // HOOKS
-  const { allComdex, isLoadingComdex, errorComdex } = useComdex();
-  console.log("comdex data", allComdex);
   const [selectedPool, setSelectedPool] = useState({
     appIndex: 0,
     poolIndex: 0,
@@ -66,15 +65,26 @@ export default function Farm() {
           {/* New UI starts from here  */}
           <div className="bg-gray-800 rounded-4 p-3 d-flex flex-column gap-3 mt-2">
             <h2 className="body1 text-primary">Chains</h2>
-            {React.Children.toArray(
-              farmPools.map((pool, index) => (
-                <LiquidityPoolChains
-                  setSelectedPool={setSelectedPool}
-                  selectedPool={selectedPool}
-                  appIndex={index}
-                />
-              ))
-            )}
+            {/* <LiquidityPoolChainEthereum
+              setSelectedPool={setSelectedPool}
+              selectedPool={selectedPool}
+              appIndex={0}
+            /> */}
+            <LiquidityPoolChainPolygon
+              setSelectedPool={setSelectedPool}
+              selectedPool={selectedPool}
+              appIndex={1}
+            />
+            <LiquidityPoolChainOsmosis
+              setSelectedPool={setSelectedPool}
+              selectedPool={selectedPool}
+              appIndex={2}
+            />
+            <LiquidityPoolChainComdex
+              setSelectedPool={setSelectedPool}
+              selectedPool={selectedPool}
+              appIndex={3}
+            />
           </div>
         </ScrollableSectionContainer>
       </section>

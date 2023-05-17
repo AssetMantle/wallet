@@ -23,6 +23,7 @@ import { convertBech32Address } from "../lib";
 import { cosmos as cosmosModule, gravity } from "../modules";
 import {
   bech32AddressSeperator,
+  farmPools,
   placeholderAddress,
   staticTradeData,
 } from "./constants";
@@ -1264,41 +1265,137 @@ export const useQuickswap = () => {
   };
 };
 
-export const useComdex = () => {
-  // fetcher function for useSwr of useAvailableBalance()
-  const fetchAllComdex = async (url) => {
-    // console.log("inside fetchAllQuickswap() ");
+export const usePolygonFarm = (poolIndex) => {
+  let polygonFarmData;
+  const { mntlUsdValue, errorMntlUsdValue, isLoadingMntlUsdValue } =
+    useMntlUsd();
 
-    let comdexData = [];
-
+  const fetchAllPolygonFarm = async (url, poolIndex, mntlUsdValue) => {
+    const selectedQuickswapFarmPool = farmPools?.[1]?.pools?.[poolIndex];
+    const quickV2StakerContractAddress =
+      selectedQuickswapFarmPool?.farmContractAddress;
+    const lpTokenContractAddress = selectedQuickswapFarmPool?.lpTokenAddress;
+    const lpTokenABI = selectedQuickswapFarmPool?.lpTokenABI;
+    const lpTokenContract = {
+      address: lpTokenContractAddress,
+      abi: lpTokenABI,
+    };
+    const hookArgs = { chainId: 137 };
+    const rewardPerBlock = selectedQuickswapFarmPool?.rewardPerBlock || 0;
+    const rewardsPerDay = BigNumber(rewardPerBlock)
+      .multipliedBy(86400)
+      .dividedToIntegerBy(2.2)
+      .toString();
+    const totalSupplyValue = selectedQuickswapFarmPool?.totalSupply;
+    console.log("inside fetchAllPolygonFarm");
     try {
-      const CmstMntlTvlData = await fetch(
-        "https://stat.comdex.one/api/v2/cswap/pairs/33"
-      ).then((res) => res.json());
-      const CmdxMntlTvlData = await fetch(
-        "https://stat.comdex.one/api/v2/cswap/pairs/32"
-      ).then((res) => res.json());
+      // const lpTokenBalanceFarmPool = await fetchBalance({
+      //   address: quickV2StakerContractAddress,
+      //   token: lpTokenContractAddress,
+      //   ...hookArgs,
+      // });
+      const balance = toDenom("0.00000002141123112412124", 18);
+      console.log("balance", balance);
+      const stakedRatio = BigNumber(balance)
+        ?.dividedBy(BigNumber(totalSupplyValue))
+        .toString();
+
+      // wagmi hook to get reserves of MNTL from the LP Token
+
+      // const lpTokensReserves = await readContract({
+      //   ...lpTokenContract,
+      //   functionName: "getReserves",
+      //   args: [],
+      //   // enabled: isConnected && isCorrectChain && address,
+      //   ...hookArgs,
+      // });
+
+      const reserves = fromDenom("18923152141");
+      console.log("reserves", reserves);
+      const stakedToken = BigNumber(reserves)
+        ?.multipliedBy(BigNumber(stakedRatio))
+        .toString();
+      let polygonFarmData;
+
+      const mntlTvl = BigNumber(stakedToken)
+        ?.multipliedBy(BigNumber(mntlUsdValue))
+        .toString();
+      const tvl = BigNumber(mntlTvl).multipliedBy(2).toFixed(2);
+      const rewardsPerYear = rewardsPerDay * 365;
+      const rewardsPerYearInUsd = BigNumber(
+        fromDenom(rewardsPerYear)
+      ).multipliedBy(BigNumber(mntlUsdValue));
+      const apr = rewardsPerYearInUsd
+        ?.dividedBy(tvl)
+        ?.multipliedBy(BigNumber(100))
+        ?.toFixed(2);
+      polygonFarmData = {
+        pair: poolIndex == 0 ? "MNTL-VERSA" : "MNTL-USDC",
+        apr: apr,
+        tvl: tvl,
+      };
+      console.log("polygonFarmData", polygonFarmData);
+    } catch (error) {
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
+      throw error;
+    }
+
+    // return the data
+    return polygonFarmData;
+  };
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: polygonFarmObject, error } = useSwr(
+    mntlUsdValue ? ["usePolygonFarm", poolIndex, mntlUsdValue] : null,
+    fetchAllPolygonFarm,
+    { suspense: true }
+  );
+  console.log("polygonFarmObject", polygonFarmObject);
+  return {
+    allPolygonFarm: polygonFarmObject,
+    isLoadingPolygonFarm: !error && !polygonFarmObject,
+    errorPolygonFarm: error,
+  };
+};
+
+export const useComdexFarm = (poolID) => {
+  // fetcher function for useSwr of useAvailableBalance()
+  console.log("in queryApi", poolID);
+  const fetchAllComdex = async (url, poolID) => {
+    // console.log("inside fetchAllQuickswap() ");
+    const initialData = [
+      {
+        api: "https://stat.comdex.one/api/v2/cswap/pairs/33",
+        pair: "MNTL/CMST",
+        poolNumber: "33",
+      },
+      {
+        api: "https://stat.comdex.one/api/v2/cswap/pairs/32",
+        pair: "MNTL/CMDX",
+        poolNumber: "32",
+      },
+    ];
+    let comdexData;
+    try {
+      const tvlData = await fetch(initialData[poolID].api).then((res) =>
+        res.json()
+      );
+      //   "https://stat.comdex.one/api/v2/cswap/pairs/33"
+      // ).then((res) => res.json());
+      // const CmdxMntlTvlData = await fetch(
+      //   "https://stat.comdex.one/api/v2/cswap/pairs/32"
+      // ).then((res) => res.json());
 
       const comdexAprData = await fetch(
         "https://stat.comdex.one/api/v2/cswap/aprs"
       ).then((res) => res.json());
-      comdexData = [
-        {
-          pair: "MNTL/CMST",
-          tvlUsd: CmstMntlTvlData?.data?.total_liquidity,
-          apr: comdexAprData?.data?.[
-            "33"
-          ]?.incentive_rewards?.[0]?.apr?.toFixed(5),
-          // ?.incentive_rewards?.apr,
-        },
-        {
-          pair: "MNTL/CMDX",
-          tvlUsd: CmdxMntlTvlData?.data?.total_liquidity,
-          apr: comdexAprData?.data?.[
-            "32"
-          ]?.incentive_rewards?.[0]?.apr?.toFixed(5),
-        },
-      ];
+      comdexData = {
+        pair: initialData[poolID].pair,
+        tvlUsd: tvlData?.data?.total_liquidity,
+        apr: comdexAprData?.data?.[
+          initialData[poolID].poolNumber
+        ]?.incentive_rewards?.[0]?.apr?.toFixed(5),
+        // ?.incentive_rewards?.apr,
+      };
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
@@ -1307,10 +1404,14 @@ export const useComdex = () => {
     return comdexData;
   };
   // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: comdexArray, error } = useSwr("useComdex", fetchAllComdex, {
-    fallbackData: [],
-    suspense: true,
-  });
+  const { data: comdexArray, error } = useSwr(
+    ["useComdex", poolID],
+    fetchAllComdex,
+    {
+      fallbackData: [],
+      suspense: true,
+    }
+  );
   return {
     allComdex: comdexArray,
     isLoadingComdex: !error && !comdexArray,

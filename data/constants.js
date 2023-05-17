@@ -2,6 +2,7 @@ import Link from "next/link";
 import quickV2MntlUsdcStakerABI from "../data/contracts/quickV2MntlUsdcStakerABI.json";
 import quickV2MntlVersaStakerABI from "../data/contracts/quickV2MntlVersaStakerABI.json";
 import lpMntlVersaABI from "../data/contracts/lpMntlVersaABI.json";
+import lpMntlUsdcABI from "../data/contracts/lpMntlUsdcABI.json";
 
 export const formConstants = {
   recipientAddressErrorMsg: "Invalid Address",
@@ -324,6 +325,7 @@ export const farmPools = [
         startRewardBlock: 40980673,
         rewardPerBlock: 778035,
         lpTokenName: "USDC-MNTL-LP",
+        lpTokenABI: lpMntlUsdcABI,
         lpTokenAddress: "0x5e1878eb8a10cc8690798ece6bfd3425e189361e",
         totalSupply: "260757835897",
         lpTokenDecimals: 18,

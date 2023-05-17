@@ -29,6 +29,7 @@ import {
   placeholderAddressEth,
   toDenom,
   useMntlUsd,
+  usePolygonFarm,
   useQuickswap,
 } from "../data";
 import {
@@ -44,8 +45,9 @@ function StaticQuickswapFarmPool({ poolIndex }) {
   // hooks to work the multi-modal for ethereum
   const { open, setDefaultChain } = useWeb3Modal();
   const { allQuickswap, isLoadingQuickswap, errorQuickswap } = useQuickswap();
+  const { allPolygonFarm, isLoadingPolygonFarm, errorPolygonFarm } =
+    usePolygonFarm(poolIndex);
   const { mntlUsdValue } = useMntlUsd();
-  console.log(allQuickswap);
   setDefaultChain(polygon);
   const totalSupplyValue = farmPools?.[1]?.pools?.[0]?.totalSupply;
 
@@ -98,7 +100,6 @@ function StaticQuickswapFarmPool({ poolIndex }) {
     address: lpTokenContractAddress,
     ...hookArgs,
   });
-  console.log("data", lpTokenObject);
 
   const farmStartBlock =
     selectedQuickswapFarmPool?.startRewardBlock?.toString?.();
