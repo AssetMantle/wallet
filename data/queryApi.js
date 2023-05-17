@@ -1066,38 +1066,8 @@ export const useTrade = () => {
 export const useOsmosis = () => {
   // fetcher function for useSwr of useAvailableBalance()
   const fetchAllOsmosis = async (url) => {
-    // console.log("inside fetchAllOsmosis() ");
-
     let osmosisData;
     try {
-      // const osmoMntlUsdcData = fetch("/api/osmosis/pools/v2/738").then((res) =>
-      //   res.json()
-      // );
-      // // const osmoMntlUsdcAprData = fetch("/api/osmosis/apr/v2/738").then((res) =>
-      // //   res.json()
-      // // );
-      // const osmoMntlOsmoData = fetch("/api/osmosis/pools/v2/690").then((res) =>
-      //   res.json()
-      // );
-      // // const osmoMntlOsmoAprData = fetch("/api/osmosis/apr/v2/690").then((res) =>
-      // //   res.json()
-      // // );
-      // // const osmoAtomMntlData = fetch("/api/osmosis/pools/v2/686").then((res) =>
-      // //   res.json()
-      // // );
-      // const osmoAtomMntlAprData = fetch("/api/osmosis/apr/v2/686").then((res) =>
-      //   res.json()
-      // );
-
-      // const aggregatedFetchArray = await Promise.allSettled([
-      //   osmoMntlUsdcData,
-      //   // osmoMntlUsdcAprData,
-      //   osmoMntlOsmoData,
-      //   // osmoMntlOsmoAprData,
-      //   // osmoAtomMntlData,
-      //   osmoAtomMntlAprData,
-      // ]);
-
       const urlData = [
         {
           symbol: "ATOM",
@@ -1128,73 +1098,6 @@ export const useOsmosis = () => {
           url: urlData.find((e) => item?.symbol.includes(e.symbol)).url,
         };
       });
-
-      // osmosisData = [
-      //   {
-      //     project: "Osmosis",
-      //     chain: "Cosmos",
-      //     symbol:
-      //       aggregatedFetchArray?.[0]?.[0]?.symbol +
-      //       "-" +
-      //       aggregatedFetchArray?.[0]?.[1]?.symbol,
-      //     apy: Number(
-      //       Math.max(
-      //         aggregatedFetchArray?.[1]?.[0]?.apr_list[0]?.apr_1d,
-      //         aggregatedFetchArray?.[1]?.[0]?.apr_list[0]?.apr_7d,
-      //         aggregatedFetchArray?.[1]?.[0]?.apr_list[0]?.apr_14d
-      //       )
-      //     ).toFixed(2),
-      //     tvlUsd: aggregatedFetchArray?.[0]?.[0]?.liquidity
-      //       ?.toString()
-      //       ?.split(".")[0],
-      //     url: "https://app.osmosis.zone/pool/738",
-      //   },
-      //   {
-      //     project: "Osmosis",
-      //     chain: "Cosmos",
-      //     symbol:
-      //       aggregatedFetchArray?.[2]?.[0]?.symbol +
-      //       "-" +
-      //       aggregatedFetchArray?.[2]?.[1]?.symbol,
-      //     apy: Number(
-      //       Math.max(
-      //         aggregatedFetchArray?.[3]?.[0]?.apr_list?.find(
-      //           (item) => item?.symbol == "MNTL"
-      //         )?.apr_1d,
-      //         aggregatedFetchArray?.[3]?.[0]?.apr_list?.find(
-      //           (item) => item?.symbol == "MNTL"
-      //         )?.apr_7d,
-      //         aggregatedFetchArray?.[3]?.[0]?.apr_list?.find(
-      //           (item) => item?.symbol == "MNTL"
-      //         )?.apr_14d
-      //       )
-      //     ).toFixed(2),
-      //     // osmoAtomMntlAprData[0?.apr_list?.map((e)=>console.log(e))],
-      //     tvlUsd: aggregatedFetchArray?.[2]?.[0]?.liquidity
-      //       ?.toString()
-      //       ?.split(".")[0],
-      //     url: "https://app.osmosis.zone/pool/690",
-      //   },
-      //   {
-      //     project: "Osmosis",
-      //     chain: "Cosmos",
-      //     symbol:
-      //       aggregatedFetchArray?.[4]?.[0]?.symbol +
-      //       "-" +
-      //       aggregatedFetchArray?.[4]?.[1]?.symbol,
-      //     apy: Number(
-      //       Math.max(
-      //         aggregatedFetchArray?.[5]?.[0]?.apr_list[0]?.apr_1d,
-      //         aggregatedFetchArray?.[5]?.[0]?.apr_list[0]?.apr_7d,
-      //         aggregatedFetchArray?.[5]?.[0]?.apr_list[0]?.apr_14d
-      //       )
-      //     ).toFixed(2),
-      //     tvlUsd: aggregatedFetchArray?.[4]?.[0]?.liquidity
-      //       ?.toString()
-      //       ?.split(".")[0],
-      //     url: "https://app.osmosis.zone/pool/686",
-      //   },
-      // ];
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
@@ -1204,11 +1107,76 @@ export const useOsmosis = () => {
     return osmosisData;
   };
   // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: osmosisArray, error } = useSwr("useOsmosis", fetchAllOsmosis);
+  const { data: osmosisData, error } = useSwr("useOsmosis", fetchAllOsmosis);
   return {
-    allOsmosis: osmosisArray,
-    isLoadingOsmosis: !error && !osmosisArray,
+    allOsmosis: osmosisData,
+    isLoadingOsmosis: !error && !osmosisData,
     errorOsmosis: error,
+  };
+};
+
+export const useComdexFarm = () => {
+  // fetcher function for useSwr of useAvailableBalance()
+  const fetchAllComdex = async (url) => {
+    const initialData = [
+      {
+        api: "https://stat.comdex.one/api/v2/cswap/pairs/33",
+        pair: "MNTL/CMST",
+        poolNumber: "33",
+      },
+      {
+        api: "https://stat.comdex.one/api/v2/cswap/pairs/32",
+        pair: "MNTL/CMDX",
+        poolNumber: "32",
+      },
+    ];
+    let comdexData = [];
+    /*  try {
+      initialData.map(async (item) => {
+        const tvlData = await fetch(item.api).then((res) => res.json());
+
+        const comdexAprData = await fetch(
+          "https://stat.comdex.one/api/v2/cswap/aprs"
+        ).then((res) => res.json());
+
+        comdexData.push({
+          pair: item.pair,
+          tvlUsd: tvlData?.data?.total_liquidity,
+          apr: comdexAprData?.data?.[
+            item.poolNumber
+          ]?.incentive_rewards?.[0]?.apr?.toFixed(5),
+        });
+      });
+    } catch (error) {
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
+      throw error;
+    } */
+
+    try {
+      comdexData.push({
+        pair: "MNTL/CMST",
+        tvl: "12000",
+        apr: "123",
+      });
+      comdexData.push({
+        pair: "MNTL/CMDX",
+        tvl: "13000",
+        apr: "456",
+      });
+    } catch (error) {
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
+      throw error;
+    }
+    // return the data
+    return comdexData;
+  };
+
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: comdexData, error } = useSwr("useComdex", fetchAllComdex);
+  return {
+    comdexFarm: comdexData,
+    isLoadingComdexFarm: !error && !comdexData,
+    errorComdexFarm: error,
   };
 };
 
@@ -1294,55 +1262,6 @@ export const useEthereumFarm = () => {
     ethereumFarm: uniswapData,
     isLoadingEtherumFarm: !error && !uniswapData,
     errorEtherumFarm: error,
-  };
-};
-
-export const useComdexFarm = () => {
-  // fetcher function for useSwr of useAvailableBalance()
-  const fetchAllComdex = async (url, poolID) => {
-    const initialData = [
-      {
-        api: "https://stat.comdex.one/api/v2/cswap/pairs/33",
-        pair: "MNTL/CMST",
-        poolNumber: "33",
-      },
-      {
-        api: "https://stat.comdex.one/api/v2/cswap/pairs/32",
-        pair: "MNTL/CMDX",
-        poolNumber: "32",
-      },
-    ];
-    let comdexData = [];
-    try {
-      initialData.map(async (item) => {
-        const tvlData = await fetch(item.api).then((res) => res.json());
-        const comdexAprData = await fetch(
-          "https://stat.comdex.one/api/v2/cswap/aprs"
-        ).then((res) => res.json());
-        comdexData.push({
-          pair: item.pair,
-          tvlUsd: tvlData?.data?.total_liquidity,
-          apr: comdexAprData?.data?.[
-            item.poolNumber
-          ]?.incentive_rewards?.[0]?.apr?.toFixed(5),
-        });
-      });
-    } catch (error) {
-      console.error(`swr fetcher : url: ${url},  error: ${error}`);
-      throw error;
-    }
-    // return the data
-    return comdexData;
-  };
-  // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: comdexData, error } = useSwr("useComdex", fetchAllComdex, {
-    suspense: true,
-  });
-  console.log("comdexData", comdexData);
-  return {
-    comdexFarm: comdexData,
-    isLoadingComdexFarm: !error && !comdexData,
-    errorComdexFarm: error,
   };
 };
 

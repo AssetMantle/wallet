@@ -100,11 +100,13 @@ export function ExternalFarmPoolComdex({ appIndex, poolIndex }) {
 
   const displayTvl = isLoadingComdexFarm
     ? "Loading..."
-    : `$ ${BigNumber(comdexFarm?.tvlUsd || 0).toFixed(2)}`;
+    : `$ ${BigNumber(comdexFarm?.[poolIndex].tvl).toFixed(2)}`;
 
   const displayApr = isLoadingComdexFarm
     ? "Loading..."
-    : `${BigNumber(comdexFarm?.apr || 0).toFixed(2)}%`;
+    : `${BigNumber(comdexFarm?.[poolIndex].apr).toFixed(2)}%`;
+
+  console.log("comdexFarm: ", comdexFarm);
 
   return (
     <div className={`nav-bg p-3 rounded-4 pe-0 d-flex flex-column gap-2 `}>

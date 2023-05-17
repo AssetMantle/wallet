@@ -1,7 +1,6 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { farmPools } from "../data";
 import { cleanString } from "../lib";
-import { LiquidityPoolChainCardComdex } from "./LiquidityPoolChainCardComdex";
 
 export const LiquidityPoolChainComdex = ({
   setSelectedPool,
@@ -63,25 +62,20 @@ export const LiquidityPoolChainComdex = ({
       </div>
       <i className="border-bottom me-3"></i>
       <div className="d-flex flex-column">
-        <Suspense fallback={loadingJSX}>
-          {" "}
-          <LiquidityPoolChainCardComdex
-            setSelectedPool={setSelectedPool}
-            selectedPool={selectedPool}
-            appIndex={appIndex}
-            poolIndex={0}
-            key={0}
-          />
-        </Suspense>
-        <Suspense fallback={loadingJSX}>
-          <LiquidityPoolChainCardComdex
-            setSelectedPool={setSelectedPool}
-            selectedPool={selectedPool}
-            appIndex={appIndex}
-            poolIndex={1}
-            key={1}
-          />
-        </Suspense>
+        {/* {data?.pools &&
+          Array.isArray(data?.pools) &&
+          data?.pools.length > 0 &&
+          React.Children.toArray(
+            data?.pools?.map?.((pool, index) => (
+              <LiquidityPoolChainCardComdex
+                setSelectedPool={setSelectedPool}
+                selectedPool={selectedPool}
+                appIndex={appIndex}
+                poolIndex={index}
+                key={index}
+              />
+            ))
+          )} */}
       </div>
     </div>
   );

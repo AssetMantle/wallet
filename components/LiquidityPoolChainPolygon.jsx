@@ -59,8 +59,8 @@ export const LiquidityPoolChainPolygon = ({
         </div>
       </div>
       <i className="border-bottom me-3"></i>
-      {/* <div className="d-flex flex-column">
-        {data?.pools &&
+      <div className="d-flex flex-column">
+        {/* {data?.pools &&
           Array.isArray(data?.pools) &&
           data?.pools.length > 0 &&
           React.Children.toArray(
@@ -73,8 +73,8 @@ export const LiquidityPoolChainPolygon = ({
                 key={index}
               />
             ))
-          )}
-      </div> */}
+          )} */}
+      </div>
     </div>
   );
 };
