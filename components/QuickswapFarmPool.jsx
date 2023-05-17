@@ -29,7 +29,6 @@ import {
   placeholderAddressEth,
   toDenom,
   useMntlUsd,
-  usePolygonFarm,
   useQuickswap,
 } from "../data";
 import {
@@ -44,9 +43,7 @@ import { QuickswapUnstakeModal } from "./QuickswapUnstakeModal";
 function StaticQuickswapFarmPool({ poolIndex }) {
   // hooks to work the multi-modal for ethereum
   const { open, setDefaultChain } = useWeb3Modal();
-  const { allQuickswap, isLoadingQuickswap, errorQuickswap } = useQuickswap();
-  const { allPolygonFarm, isLoadingPolygonFarm, errorPolygonFarm } =
-    usePolygonFarm(poolIndex);
+  const { allQuickswap, isLoadingQuickswap } = useQuickswap();
   const { mntlUsdValue } = useMntlUsd();
   setDefaultChain(polygon);
   const totalSupplyValue = farmPools?.[1]?.pools?.[0]?.totalSupply;
@@ -522,52 +519,12 @@ function StaticQuickswapFarmPool({ poolIndex }) {
     </div>
   );
 
-  /* const stakeModalJSX = (
-    <div className="modal " tabIndex="-1" role="dialog" id="cardStake">
-      <div
-        className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg"
-        role="document"
-      >
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title body2 text-primary d-flex align-items-center gap-2">
-              <button
-                type="button"
-                className="btn-close primary"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-                style={{ background: "none" }}
-              >
-                <span className="text-primary">
-                  <i className="bi bi-chevron-left" />
-                </span>
-              </button>
-              Stake
-            </h5>
-            <button
-              type="button"
-              className="btn-close primary"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-              style={{ background: "none" }}
-            >
-              <span className="text-primary">
-                <i className="bi bi-x-lg" />
-              </span>
-            </button>
-          </div>
-          <div className="modal-body p-3  d-flex flex-column">
-            <div
-              className="nav-bg rounded-4 d-flex flex-column py-1 px-4 gap-2 align-items-center justify-content-center"
-              style={{ minHeight: "250px" }}
-            >
-              <UniswapStakeContents />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  ); */
+  const displayTvl = isLoadingQuickswap
+    ? "Loading..."
+    : `$ ${allQuickswap?.[0]?.tvlUsd}`;
+  const displayApr = isLoadingQuickswap
+    ? "Loading..."
+    : `${allQuickswap?.[0]?.apy?.toFixed(2)}%`;
 
   console.log(
     " numberOfSeconds: ",
@@ -628,9 +585,7 @@ function StaticQuickswapFarmPool({ poolIndex }) {
                 {!tokenPairArray.includes("USDC") ? (
                   <div className="col-6 caption">${tvl}</div>
                 ) : (
-                  <div className="col-6 caption">
-                    ${allQuickswap?.[0]?.tvlUsd}
-                  </div>
+                  <div className="col-6 caption">{displayTvl}</div>
                 )}
               </div>
             </div>
@@ -648,9 +603,7 @@ function StaticQuickswapFarmPool({ poolIndex }) {
                 {!tokenPairArray.includes("USDC") ? (
                   <div className="col-6 caption">{apr}%</div>
                 ) : (
-                  <div className="col-6 caption">
-                    {allQuickswap?.[0]?.apy?.toFixed(2)}%
-                  </div>
+                  <div className="col-6 caption">{displayApr}</div>
                 )}
               </div>
             </div>
