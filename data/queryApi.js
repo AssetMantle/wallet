@@ -1265,96 +1265,92 @@ export const useEthereumFarm = () => {
   };
 };
 
-export const usePolygonFarm = (poolIndex) => {
-  let polygonFarmData;
+export const usePolygonFarm = () => {
   const { mntlUsdValue } = useMntlUsd();
 
-  const fetchPolygonFarm = async (url, poolIndex, mntlUsdValue) => {
-    const selectedQuickswapFarmPool = farmPools?.[1]?.pools?.[poolIndex];
-    const quickV2StakerContractAddress =
-      selectedQuickswapFarmPool?.farmContractAddress;
-    const lpTokenContractAddress = selectedQuickswapFarmPool?.lpTokenAddress;
-    const lpTokenABI = selectedQuickswapFarmPool?.lpTokenABI;
-    const lpTokenContract = {
-      address: lpTokenContractAddress,
-      abi: lpTokenABI,
-    };
-    const hookArgs = { chainId: 137 };
-    const rewardPerBlock = selectedQuickswapFarmPool?.rewardPerBlock || 0;
-    const rewardsPerDay = BigNumber(rewardPerBlock)
-      .multipliedBy(86400)
-      .dividedToIntegerBy(2.2)
-      .toString();
-    const totalSupplyValue = selectedQuickswapFarmPool?.totalSupply;
-    console.log("inside fetchPolygonFarm");
+  const fetchPolygonFarm = async (url, mntlUsdValue) => {
+    let polygonFarmData = [];
+    const quickswapFarmPools = farmPools?.[1]?.pools;
     try {
-      const lpTokenBalanceFarmPool = await fetchBalance({
-        address: quickV2StakerContractAddress,
-        token: lpTokenContractAddress,
-        ...hookArgs,
+      quickswapFarmPools.map(async (item, index) => {
+        const quickV2StakerContractAddress = item?.farmContractAddress;
+        const lpTokenContractAddress = item?.lpTokenAddress;
+        const lpTokenABI = item?.lpTokenABI;
+        const lpTokenContract = {
+          address: lpTokenContractAddress,
+          abi: lpTokenABI,
+        };
+        const hookArgs = { chainId: 137 };
+        const rewardPerBlock = item?.rewardPerBlock || 0;
+        const rewardsPerDay = BigNumber(rewardPerBlock)
+          .multipliedBy(86400)
+          .dividedToIntegerBy(2.2)
+          .toString();
+        const totalSupplyValue = item?.totalSupply;
+        const lpTokenBalanceFarmPool = await fetchBalance({
+          address: quickV2StakerContractAddress,
+          token: lpTokenContractAddress,
+          ...hookArgs,
+        });
+
+        const balance = toDenom(lpTokenBalanceFarmPool?.formatted, 18);
+        const stakedRatio = BigNumber(balance)
+          ?.dividedBy(BigNumber(totalSupplyValue))
+          .toString();
+
+        // wagmi hook to get reserves of MNTL from the LP Token
+
+        const lpTokensReserves = await readContract({
+          ...lpTokenContract,
+          functionName: "getReserves",
+          args: [],
+          ...hookArgs,
+        });
+
+        const reserves = fromDenom(
+          lpTokensReserves?.[index == 0 ? "_reserve0" : "_reserve1"]?.toString()
+        );
+        const stakedToken = BigNumber(reserves)
+          ?.multipliedBy(BigNumber(stakedRatio))
+          .toString();
+
+        const mntlTvl = BigNumber(stakedToken)
+          ?.multipliedBy(BigNumber(mntlUsdValue))
+          .toString();
+
+        const tvl = BigNumber(mntlTvl).multipliedBy(2).toFixed(2);
+
+        const rewardsPerYear = BigNumber(rewardsPerDay)
+          .multipliedBy(365)
+          .toString();
+
+        const rewardsPerYearInUsd = BigNumber(fromDenom(rewardsPerYear))
+          .multipliedBy(BigNumber(mntlUsdValue))
+          .toString();
+
+        const apr = BigNumber(rewardsPerYearInUsd)
+          ?.dividedBy(tvl)
+          ?.multipliedBy(BigNumber(100))
+          ?.toFixed(2);
+        polygonFarmData.push({
+          pair: item?.tokens,
+          apr: apr,
+          tvl: tvl,
+        });
       });
-
-      const balance = toDenom(lpTokenBalanceFarmPool?.formatted, 18);
-      const stakedRatio = BigNumber(balance)
-        ?.dividedBy(BigNumber(totalSupplyValue))
-        .toString();
-
-      // wagmi hook to get reserves of MNTL from the LP Token
-
-      const lpTokensReserves = await readContract({
-        ...lpTokenContract,
-        functionName: "getReserves",
-        args: [],
-        ...hookArgs,
-      });
-
-      const reserves = fromDenom(
-        lpTokensReserves?.[
-          poolIndex == 0 ? "_reserve0" : "_reserve1"
-        ]?.toString()
-      );
-      const stakedToken = BigNumber(reserves)
-        ?.multipliedBy(BigNumber(stakedRatio))
-        .toString();
-
-      const mntlTvl = BigNumber(stakedToken)
-        ?.multipliedBy(BigNumber(mntlUsdValue))
-        .toString();
-
-      const tvl = BigNumber(mntlTvl).multipliedBy(2).toFixed(2);
-
-      const rewardsPerYear = BigNumber(rewardsPerDay)
-        .multipliedBy(365)
-        .toString();
-
-      const rewardsPerYearInUsd = BigNumber(fromDenom(rewardsPerYear))
-        .multipliedBy(BigNumber(mntlUsdValue))
-        .toString();
-
-      const apr = BigNumber(rewardsPerYearInUsd)
-        ?.dividedBy(tvl)
-        ?.multipliedBy(BigNumber(100))
-        ?.toFixed(2);
-
-      polygonFarmData = {
-        pair: poolIndex == 0 ? "MNTL-VERSA" : "MNTL-USDC",
-        apr: apr,
-        tvl: tvl,
-      };
-
-      console.log("polygonFarmData", polygonFarmData);
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
     }
 
+    console.log("polygonFarmData", polygonFarmData);
     // return the data
     return polygonFarmData;
   };
 
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: polygonFarmObject, error } = useSwr(
-    mntlUsdValue ? ["usePolygonFarm", poolIndex, mntlUsdValue] : null,
+    mntlUsdValue ? ["usePolygonFarm", mntlUsdValue] : null,
     fetchPolygonFarm,
     { suspense: true }
   );

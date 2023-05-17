@@ -522,10 +522,10 @@ function StaticQuickswapFarmPool({ poolIndex }) {
 
   const displayTvl = isLoadingPolygonFarm
     ? "Loading..."
-    : `$ ${allPolygonFarm?.tvl}`;
+    : `$ ${allPolygonFarm?.[poolIndex]?.tvl}`;
   const displayApr = isLoadingPolygonFarm
     ? "Loading..."
-    : `${allPolygonFarm?.apr}%`;
+    : `${allPolygonFarm?.[poolIndex]?.apr}%`;
 
   /* console.log(
     " numberOfSeconds: ",

@@ -29,7 +29,9 @@ export function LiquidityPoolChainCardPolygon({
   };
 
   // DISPLAY VARIABLES
-  const displayApr = isLoadingPolygonFarm ? "..." : `${allPolygonFarm?.apr}%`;
+  const displayApr = isLoadingPolygonFarm
+    ? "..."
+    : `${allPolygonFarm?.[poolIndex]?.apr}%`;
 
   const pairLogoJSX = (
     <div
