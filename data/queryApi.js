@@ -23,9 +23,11 @@ import { convertBech32Address } from "../lib";
 import { cosmos as cosmosModule, gravity } from "../modules";
 import {
   bech32AddressSeperator,
+  farmPools,
   placeholderAddress,
   staticTradeData,
 } from "./constants";
+import { fetchBalance, readContract } from "wagmi/actions";
 
 const rpcEndpoint = defaultChainRPCProxy;
 const restEndpoint = defaultChainRESTProxy;
@@ -1350,15 +1352,11 @@ export const useComdexFarm = (poolID) => {
   };
 };
 
-/*
-
-
 export const usePolygonFarm = (poolIndex) => {
   let polygonFarmData;
-  const { mntlUsdValue, errorMntlUsdValue, isLoadingMntlUsdValue } =
-    useMntlUsd();
+  const { mntlUsdValue } = useMntlUsd();
 
-  const fetchAllPolygonFarm = async (url, poolIndex, mntlUsdValue) => {
+  const fetchPolygonFarm = async (url, poolIndex, mntlUsdValue) => {
     const selectedQuickswapFarmPool = farmPools?.[1]?.pools?.[poolIndex];
     const quickV2StakerContractAddress =
       selectedQuickswapFarmPool?.farmContractAddress;
@@ -1375,53 +1373,61 @@ export const usePolygonFarm = (poolIndex) => {
       .dividedToIntegerBy(2.2)
       .toString();
     const totalSupplyValue = selectedQuickswapFarmPool?.totalSupply;
-    console.log("inside fetchAllPolygonFarm");
+    console.log("inside fetchPolygonFarm");
     try {
-      // const lpTokenBalanceFarmPool = await fetchBalance({
-      //   address: quickV2StakerContractAddress,
-      //   token: lpTokenContractAddress,
-      //   ...hookArgs,
-      // });
-      const balance = toDenom("0.00000002141123112412124", 18);
-      console.log("balance", balance);
+      const lpTokenBalanceFarmPool = await fetchBalance({
+        address: quickV2StakerContractAddress,
+        token: lpTokenContractAddress,
+        ...hookArgs,
+      });
+
+      const balance = toDenom(lpTokenBalanceFarmPool?.formatted, 18);
       const stakedRatio = BigNumber(balance)
         ?.dividedBy(BigNumber(totalSupplyValue))
         .toString();
 
       // wagmi hook to get reserves of MNTL from the LP Token
 
-      // const lpTokensReserves = await readContract({
-      //   ...lpTokenContract,
-      //   functionName: "getReserves",
-      //   args: [],
-      //   // enabled: isConnected && isCorrectChain && address,
-      //   ...hookArgs,
-      // });
+      const lpTokensReserves = await readContract({
+        ...lpTokenContract,
+        functionName: "getReserves",
+        args: [],
+        ...hookArgs,
+      });
 
-      const reserves = fromDenom("18923152141");
-      console.log("reserves", reserves);
+      const reserves = fromDenom(
+        lpTokensReserves?.[
+          poolIndex == 0 ? "_reserve0" : "_reserve1"
+        ]?.toString()
+      );
       const stakedToken = BigNumber(reserves)
         ?.multipliedBy(BigNumber(stakedRatio))
         .toString();
-      let polygonFarmData;
 
       const mntlTvl = BigNumber(stakedToken)
         ?.multipliedBy(BigNumber(mntlUsdValue))
         .toString();
+
       const tvl = BigNumber(mntlTvl).multipliedBy(2).toFixed(2);
-      const rewardsPerYear = rewardsPerDay * 365;
-      const rewardsPerYearInUsd = BigNumber(
-        fromDenom(rewardsPerYear)
-      ).multipliedBy(BigNumber(mntlUsdValue));
-      const apr = rewardsPerYearInUsd
+
+      const rewardsPerYear = BigNumber(rewardsPerDay)
+        .multipliedBy(365)
+        .toString();
+      const rewardsPerYearInUsd = BigNumber(fromDenom(rewardsPerYear))
+        .multipliedBy(BigNumber(mntlUsdValue))
+        .toString();
+
+      const apr = BigNumber(rewardsPerYearInUsd)
         ?.dividedBy(tvl)
         ?.multipliedBy(BigNumber(100))
         ?.toFixed(2);
+
       polygonFarmData = {
         pair: poolIndex == 0 ? "MNTL-VERSA" : "MNTL-USDC",
         apr: apr,
         tvl: tvl,
       };
+
       console.log("polygonFarmData", polygonFarmData);
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
@@ -1431,10 +1437,11 @@ export const usePolygonFarm = (poolIndex) => {
     // return the data
     return polygonFarmData;
   };
+
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: polygonFarmObject, error } = useSwr(
     mntlUsdValue ? ["usePolygonFarm", poolIndex, mntlUsdValue] : null,
-    fetchAllPolygonFarm,
+    fetchPolygonFarm,
     { suspense: true }
   );
   console.log("polygonFarmObject", polygonFarmObject);
@@ -1444,5 +1451,3 @@ export const usePolygonFarm = (poolIndex) => {
     errorPolygonFarm: error,
   };
 };
-
-*/
