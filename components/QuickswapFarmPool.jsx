@@ -29,7 +29,7 @@ import {
   placeholderAddressEth,
   toDenom,
   useMntlUsd,
-  useQuickswap,
+  usePolygonFarm,
 } from "../data";
 import {
   cleanString,
@@ -43,7 +43,8 @@ import { QuickswapUnstakeModal } from "./QuickswapUnstakeModal";
 function StaticQuickswapFarmPool({ poolIndex }) {
   // hooks to work the multi-modal for ethereum
   const { open, setDefaultChain } = useWeb3Modal();
-  const { allQuickswap, isLoadingQuickswap } = useQuickswap();
+  // const { allQuickswap, isLoadingQuickswap } = useQuickswap();
+  const { allPolygonFarm, isLoadingPolygonFarm } = usePolygonFarm(poolIndex);
   const { mntlUsdValue } = useMntlUsd();
   setDefaultChain(polygon);
   const totalSupplyValue = farmPools?.[1]?.pools?.[0]?.totalSupply;
@@ -519,14 +520,14 @@ function StaticQuickswapFarmPool({ poolIndex }) {
     </div>
   );
 
-  const displayTvl = isLoadingQuickswap
+  const displayTvl = isLoadingPolygonFarm
     ? "Loading..."
-    : `$ ${allQuickswap?.[0]?.tvlUsd}`;
-  const displayApr = isLoadingQuickswap
+    : `$ ${allPolygonFarm?.tvl}`;
+  const displayApr = isLoadingPolygonFarm
     ? "Loading..."
-    : `${allQuickswap?.[0]?.apy?.toFixed(2)}%`;
+    : `${allPolygonFarm?.apr}%`;
 
-  console.log(
+  /* console.log(
     " numberOfSeconds: ",
     numberOfSeconds,
     " currentBlock: ",
@@ -537,7 +538,7 @@ function StaticQuickswapFarmPool({ poolIndex }) {
     farmEndBlock,
     " userStakeInfo: ",
     userStakeInfo?.amount?.toString?.()
-  );
+  ); */
 
   if (!hasMounted) {
     return loadingJSX;
@@ -582,11 +583,7 @@ function StaticQuickswapFarmPool({ poolIndex }) {
             <div className="col-4 py-2">
               <div className="row">
                 <div className="col-6 text-gray caption">TVL</div>
-                {!tokenPairArray.includes("USDC") ? (
-                  <div className="col-6 caption">${tvl}</div>
-                ) : (
-                  <div className="col-6 caption">{displayTvl}</div>
-                )}
+                <div className="col-6 caption">{displayTvl}</div>
               </div>
             </div>
             <div className="col-7 py-2">
@@ -600,11 +597,7 @@ function StaticQuickswapFarmPool({ poolIndex }) {
             <div className="col-4 py-2">
               <div className="row">
                 <div className="col-6 text-gray caption">APR</div>
-                {!tokenPairArray.includes("USDC") ? (
-                  <div className="col-6 caption">{apr}%</div>
-                ) : (
-                  <div className="col-6 caption">{displayApr}</div>
-                )}
+                <div className="col-6 caption">{displayApr}</div>
               </div>
             </div>
           </div>

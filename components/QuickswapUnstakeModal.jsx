@@ -327,8 +327,6 @@ export const QuickswapUnstakeModal = ({
     </div>
   );
 
-  console.log("amount: ", toDenom(formState?.transferAmount, 18));
-
   return (
     <div className="modal " tabIndex="-1" role="dialog" id="quickswapUnstake">
       <div
