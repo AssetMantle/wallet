@@ -1,7 +1,6 @@
 import React from "react";
 import { farmPools } from "../data";
 import { cleanString } from "../lib";
-import { LiquidityPoolChainCardPolygon } from "./LiquidityPoolChainCardPolygon";
 
 export const LiquidityPoolChainPolygon = ({
   setSelectedPool,
@@ -60,7 +59,7 @@ export const LiquidityPoolChainPolygon = ({
         </div>
       </div>
       <i className="border-bottom me-3"></i>
-      <div className="d-flex flex-column">
+      {/* <div className="d-flex flex-column">
         {data?.pools &&
           Array.isArray(data?.pools) &&
           data?.pools.length > 0 &&
@@ -75,7 +74,7 @@ export const LiquidityPoolChainPolygon = ({
               />
             ))
           )}
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { farmPools } from "../data";
 import { cleanString } from "../lib";
 import { LiquidityPoolChainCardComdex } from "./LiquidityPoolChainCardComdex";
@@ -29,6 +29,8 @@ export const LiquidityPoolChainComdex = ({
       <h1 className="caption2 text-gray text-primary m-0">{data?.name}</h1>
     </div>
   );
+
+  const loadingJSX = "Loading...";
 
   const chainLogoJSX = (
     <div
@@ -61,20 +63,25 @@ export const LiquidityPoolChainComdex = ({
       </div>
       <i className="border-bottom me-3"></i>
       <div className="d-flex flex-column">
-        <LiquidityPoolChainCardComdex
-          setSelectedPool={setSelectedPool}
-          selectedPool={selectedPool}
-          appIndex={appIndex}
-          poolIndex={0}
-          key={0}
-        />
-        <LiquidityPoolChainCardComdex
-          setSelectedPool={setSelectedPool}
-          selectedPool={selectedPool}
-          appIndex={appIndex}
-          poolIndex={1}
-          key={1}
-        />
+        <Suspense fallback={loadingJSX}>
+          {" "}
+          <LiquidityPoolChainCardComdex
+            setSelectedPool={setSelectedPool}
+            selectedPool={selectedPool}
+            appIndex={appIndex}
+            poolIndex={0}
+            key={0}
+          />
+        </Suspense>
+        <Suspense fallback={loadingJSX}>
+          <LiquidityPoolChainCardComdex
+            setSelectedPool={setSelectedPool}
+            selectedPool={selectedPool}
+            appIndex={appIndex}
+            poolIndex={1}
+            key={1}
+          />
+        </Suspense>
       </div>
     </div>
   );

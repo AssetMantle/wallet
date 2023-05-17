@@ -12,8 +12,8 @@ export function LiquidityPoolChainCardComdex({
   const selectedApp = farmPools?.[appIndex];
   const pool = selectedApp?.pools?.[poolIndex];
   const tokenPairArray = pool?.tokens?.split?.(" – ");
-  const { comdexFarm, isLoadingComdexFarm } = useComdexFarm(poolIndex);
-
+  const { comdexFarm, isLoadingComdexFarm } = useComdexFarm();
+  console.log("cdx hook", comdexFarm, isLoadingComdexFarm);
   const handleOnClickPair = async (e) => {
     e.preventDefault();
     if (
@@ -29,9 +29,9 @@ export function LiquidityPoolChainCardComdex({
   };
 
   // DISPLAY VARIABLES
-  const displayApr = isLoadingComdexFarm
-    ? "..."
-    : `${BigNumber(comdexFarm?.apr || 0).toFixed(2)}%`;
+  const displayApr = `${BigNumber(comdexFarm?.[poolIndex]?.apr || 0).toFixed(
+    2
+  )}%`;
 
   const pairLogoJSX = (
     <div

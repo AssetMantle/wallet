@@ -9,7 +9,7 @@ export function ExternalFarmPoolComdex({ appIndex, poolIndex }) {
   const tokenPairArray = selectedPool?.tokens.split(" – ");
   const appLogoPathname = cleanString(selectedApp?.name);
 
-  const { comdexFarm, isLoadingComdexFarm } = useComdexFarm(poolIndex);
+  const { comdexFarm, isLoadingComdexFarm } = useComdexFarm();
 
   // DISPLAY VARIABLES
 

@@ -1297,7 +1297,7 @@ export const useEthereumFarm = () => {
   };
 };
 
-export const useComdexFarm = (poolID) => {
+export const useComdexFarm = () => {
   // fetcher function for useSwr of useAvailableBalance()
   const fetchAllComdex = async (url, poolID) => {
     const initialData = [
@@ -1312,24 +1312,21 @@ export const useComdexFarm = (poolID) => {
         poolNumber: "32",
       },
     ];
-    let comdexData;
+    let comdexData = [];
     try {
-      const tvlData = await fetch(initialData[poolID].api).then((res) =>
-        res.json()
-      );
-
-      const comdexAprData = await fetch(
-        "https://stat.comdex.one/api/v2/cswap/aprs"
-      ).then((res) => res.json());
-
-      comdexData = {
-        pair: initialData[poolID].pair,
-        tvlUsd: tvlData?.data?.total_liquidity,
-        apr: comdexAprData?.data?.[
-          initialData[poolID].poolNumber
-        ]?.incentive_rewards?.[0]?.apr?.toFixed(5),
-        // ?.incentive_rewards?.apr,
-      };
+      initialData.map(async (item) => {
+        const tvlData = await fetch(item.api).then((res) => res.json());
+        const comdexAprData = await fetch(
+          "https://stat.comdex.one/api/v2/cswap/aprs"
+        ).then((res) => res.json());
+        comdexData.push({
+          pair: item.pair,
+          tvlUsd: tvlData?.data?.total_liquidity,
+          apr: comdexAprData?.data?.[
+            item.poolNumber
+          ]?.incentive_rewards?.[0]?.apr?.toFixed(5),
+        });
+      });
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
@@ -1338,13 +1335,10 @@ export const useComdexFarm = (poolID) => {
     return comdexData;
   };
   // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: comdexData, error } = useSwr(
-    ["useComdex", poolID],
-    fetchAllComdex,
-    {
-      suspense: true,
-    }
-  );
+  const { data: comdexData, error } = useSwr("useComdex", fetchAllComdex, {
+    suspense: true,
+  });
+  console.log("comdexData", comdexData);
   return {
     comdexFarm: comdexData,
     isLoadingComdexFarm: !error && !comdexData,
