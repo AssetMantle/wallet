@@ -1,15 +1,16 @@
 import React from "react";
-import { farmPools, useComdex, useOsmosis } from "../data";
+import { farmPools, useComdexFarm, useOsmosis } from "../data";
 import { cleanString, getTimeDifference } from "../lib";
 
 export function ExternalFarmPool({ appIndex, poolIndex }) {
+  console.log("poolIndex", poolIndex);
   const selectedApp = farmPools?.[appIndex];
   const selectedPool = selectedApp?.pools?.[poolIndex];
-  const { allComdex, isLoadingComdex, errorComdex } = useComdex();
+  const { allComdex, errorComdex, isLoadingComdex } = useComdexFarm(poolIndex);
+  console.log("in external", allComdex);
   const { allOsmosis, errorOsmosis, isLoadingOsmosis } = useOsmosis();
   const tokenPairArray = selectedPool?.tokens.split(" – ");
   const appLogoPathname = cleanString(selectedApp?.name);
-  console.log(typeof allComdex[0]?.apr);
   // DISPLAY VARIABLES
 
   const appLogoJSX = (
@@ -158,14 +159,7 @@ export function ExternalFarmPool({ appIndex, poolIndex }) {
                 )}
                 {appIndex == 3 && (
                   <div className="col-6 caption">
-                    $
-                    {allComdex
-                      ?.find(
-                        (item) =>
-                          item?.pair.includes(tokenPairArray[0]) &&
-                          item?.pair.includes(tokenPairArray[1])
-                      )
-                      ?.tvlUsd?.toFixed(2)}
+                    ${allComdex?.tvlUsd?.toFixed(2)}
                   </div>
                 )}
               </div>
@@ -195,14 +189,7 @@ export function ExternalFarmPool({ appIndex, poolIndex }) {
                 {appIndex == 3 && (
                   <div className="col-6 caption">
                     {" "}
-                    {parseFloat(
-                      allComdex?.find(
-                        (item) =>
-                          item?.pair.includes(tokenPairArray[0]) &&
-                          item?.pair.includes(tokenPairArray[1])
-                      )?.apr
-                    )?.toFixed(2)}
-                    %
+                    {parseFloat(allComdex?.apr)?.toFixed(2)}%
                   </div>
                 )}
               </div>
