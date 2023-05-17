@@ -1,9 +1,9 @@
 import React from "react";
 import { farmPools } from "../data";
 import { cleanString } from "../lib";
-import LiquidityPoolChainCardComdex from "./LiquidityPoolChainCardComdex";
+import { LiquidityPoolChainCardComdex } from "./LiquidityPoolChainCardComdex";
 
-const LiquidityPoolChainComdex = ({
+export const LiquidityPoolChainComdex = ({
   setSelectedPool,
   selectedPool,
   appIndex,
@@ -61,22 +61,21 @@ const LiquidityPoolChainComdex = ({
       </div>
       <i className="border-bottom me-3"></i>
       <div className="d-flex flex-column">
-        {data?.pools &&
-          Array.isArray(data?.pools) &&
-          data?.pools.length > 0 &&
-          React.Children.toArray(
-            data?.pools?.map?.((pool, index) => (
-              <LiquidityPoolChainCardComdex
-                setSelectedPool={setSelectedPool}
-                selectedPool={selectedPool}
-                appIndex={appIndex}
-                poolIndex={index}
-              />
-            ))
-          )}
+        <LiquidityPoolChainCardComdex
+          setSelectedPool={setSelectedPool}
+          selectedPool={selectedPool}
+          appIndex={appIndex}
+          poolIndex={0}
+          key={0}
+        />
+        <LiquidityPoolChainCardComdex
+          setSelectedPool={setSelectedPool}
+          selectedPool={selectedPool}
+          appIndex={appIndex}
+          poolIndex={1}
+          key={1}
+        />
       </div>
     </div>
   );
 };
-
-export default LiquidityPoolChainPolygon;

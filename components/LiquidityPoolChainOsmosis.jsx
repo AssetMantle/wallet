@@ -1,9 +1,9 @@
 import React from "react";
 import { farmPools } from "../data";
 import { cleanString } from "../lib";
-import LiquidityPoolChainCardOsmosis from "./LiquidityPoolChainCardOsmosis";
+import { LiquidityPoolChainCardOsmosis } from "./LiquidityPoolChainCardOsmosis";
 
-const LiquidityPoolChainOsmosis = ({
+export const LiquidityPoolChainOsmosis = ({
   setSelectedPool,
   selectedPool,
   appIndex,
@@ -71,6 +71,7 @@ const LiquidityPoolChainOsmosis = ({
                 selectedPool={selectedPool}
                 appIndex={appIndex}
                 poolIndex={index}
+                key={index}
               />
             ))
           )}
@@ -78,5 +79,3 @@ const LiquidityPoolChainOsmosis = ({
     </div>
   );
 };
-
-export default LiquidityPoolChainPolygon;

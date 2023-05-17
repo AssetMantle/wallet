@@ -1,8 +1,8 @@
 import { disconnect } from "@wagmi/core";
 import React from "react";
-import { farmPools, useOsmosis } from "../data";
+import { farmPools, useEthereumFarm } from "../data";
 
-export function LiquidityPoolChainCardOsmosis({
+export function LiquidityPoolChainCardEthereum({
   setSelectedPool,
   selectedPool,
   appIndex,
@@ -12,7 +12,7 @@ export function LiquidityPoolChainCardOsmosis({
   const pool = selectedApp?.pools?.[poolIndex];
   const tokenPairArray = pool?.tokens?.split?.(" – ");
 
-  const { allOsmosis, isLoadingOsmosis } = useOsmosis();
+  const { ethereumFarm, isLoadingEtherumFarm } = useEthereumFarm();
 
   const handleOnClickPair = async (e) => {
     e.preventDefault();
@@ -29,16 +29,7 @@ export function LiquidityPoolChainCardOsmosis({
   };
 
   // DISPLAY VARIABLES
-  const displayApr = isLoadingOsmosis
-    ? "Loading..."
-    : `${allOsmosis
-        ?.find(
-          (item) =>
-            item?.symbol.includes(tokenPairArray[0]) &&
-            item?.symbol.includes(tokenPairArray[1])
-        )
-        ?.apy?.toFixed(2)}%`;
-
+  const displayApr = isLoadingEtherumFarm ? "..." : ethereumFarm?.apr || "0";
   const pairLogoJSX = (
     <div
       className="position-relative"

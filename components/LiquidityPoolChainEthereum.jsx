@@ -1,16 +1,15 @@
 import React from "react";
-import { farmPools, usePolygonFarm } from "../data";
+import { farmPools } from "../data";
 import { cleanString } from "../lib";
+import { LiquidityPoolChainCardEthereum } from "./LiquidityPoolChainCardEthereum";
 
-const LiquidityPoolChainPolygon = ({
+export const LiquidityPoolChainEthereum = ({
   setSelectedPool,
   selectedPool,
   appIndex,
 }) => {
   const data = farmPools?.[appIndex];
   const appLogoPathname = cleanString(data?.name);
-  const { allPolygonFarm, errorPolygonFarm, isLoadingPolygonFarm } =
-    usePolygonFarm(selectedPool);
 
   const appLogoJSX = (
     <div className="d-flex gap-2 align-items-center mb-1">
@@ -62,22 +61,21 @@ const LiquidityPoolChainPolygon = ({
       </div>
       <i className="border-bottom me-3"></i>
       <div className="d-flex flex-column">
-        {/* {data?.pools &&
+        {data?.pools &&
           Array.isArray(data?.pools) &&
           data?.pools.length > 0 &&
           React.Children.toArray(
             data?.pools?.map?.((pool, index) => (
-              <LiquidityPoolChainCard
+              <LiquidityPoolChainCardEthereum
                 setSelectedPool={setSelectedPool}
                 selectedPool={selectedPool}
                 appIndex={appIndex}
                 poolIndex={index}
+                key={index}
               />
             ))
-          )} */}
+          )}
       </div>
     </div>
   );
 };
-
-export default LiquidityPoolChainPolygon;
