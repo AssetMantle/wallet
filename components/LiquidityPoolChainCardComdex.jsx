@@ -1,6 +1,7 @@
 import { disconnect } from "@wagmi/core";
 import React from "react";
-import { farmPools } from "../data";
+import { farmPools, useComdexFarm } from "../data";
+import BigNumber from "bignumber.js";
 
 export function LiquidityPoolChainCardComdex({
   setSelectedPool,
@@ -11,6 +12,7 @@ export function LiquidityPoolChainCardComdex({
   const selectedApp = farmPools?.[appIndex];
   const pool = selectedApp?.pools?.[poolIndex];
   const tokenPairArray = pool?.tokens?.split?.(" – ");
+  const { comdexFarm, isLoadingComdexFarm } = useComdexFarm(poolIndex);
 
   const handleOnClickPair = async (e) => {
     e.preventDefault();
@@ -27,7 +29,10 @@ export function LiquidityPoolChainCardComdex({
   };
 
   // DISPLAY VARIABLES
-  const displayApr = "323";
+  const displayApr = isLoadingComdexFarm
+    ? "..."
+    : `${BigNumber(comdexFarm?.apr || 0).toFixed(2)}%`;
+
   const pairLogoJSX = (
     <div
       className="position-relative"

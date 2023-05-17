@@ -89,26 +89,34 @@ export default function Farm() {
           {/* New UI starts from here  */}
           <div className="bg-gray-800 rounded-4 p-3 d-flex flex-column gap-3 mt-2">
             <h2 className="body1 text-primary">Chains</h2>
-            <LiquidityPoolChainEthereum
-              setSelectedPool={setSelectedPool}
-              selectedPool={selectedPool}
-              appIndex={0}
-            />
-            <LiquidityPoolChainPolygon
-              setSelectedPool={setSelectedPool}
-              selectedPool={selectedPool}
-              appIndex={1}
-            />
-            <LiquidityPoolChainOsmosis
-              setSelectedPool={setSelectedPool}
-              selectedPool={selectedPool}
-              appIndex={2}
-            />
-            <LiquidityPoolChainComdex
-              setSelectedPool={setSelectedPool}
-              selectedPool={selectedPool}
-              appIndex={3}
-            />
+            <Suspense fallback={loadingJSX}>
+              <LiquidityPoolChainEthereum
+                setSelectedPool={setSelectedPool}
+                selectedPool={selectedPool}
+                appIndex={0}
+              />
+            </Suspense>
+            <Suspense fallback={loadingJSX}>
+              <LiquidityPoolChainPolygon
+                setSelectedPool={setSelectedPool}
+                selectedPool={selectedPool}
+                appIndex={1}
+              />
+            </Suspense>
+            <Suspense fallback={loadingJSX}>
+              <LiquidityPoolChainOsmosis
+                setSelectedPool={setSelectedPool}
+                selectedPool={selectedPool}
+                appIndex={2}
+              />
+            </Suspense>
+            <Suspense fallback={loadingJSX}>
+              <LiquidityPoolChainComdex
+                setSelectedPool={setSelectedPool}
+                selectedPool={selectedPool}
+                appIndex={3}
+              />
+            </Suspense>
           </div>
         </ScrollableSectionContainer>
       </section>

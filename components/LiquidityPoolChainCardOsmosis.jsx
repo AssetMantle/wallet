@@ -30,7 +30,7 @@ export function LiquidityPoolChainCardOsmosis({
 
   // DISPLAY VARIABLES
   const displayApr = isLoadingOsmosis
-    ? "Loading..."
+    ? "..."
     : `${allOsmosis
         ?.find(
           (item) =>

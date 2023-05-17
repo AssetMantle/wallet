@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { farmPools } from "../data";
 import { cleanString } from "../lib";
 import { LiquidityPoolChainCardOsmosis } from "./LiquidityPoolChainCardOsmosis";
@@ -10,6 +10,11 @@ export const LiquidityPoolChainOsmosis = ({
 }) => {
   const data = farmPools?.[appIndex];
   const appLogoPathname = cleanString(data?.name);
+
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   const appLogoJSX = (
     <div className="d-flex gap-2 align-items-center mb-1">
@@ -46,6 +51,8 @@ export const LiquidityPoolChainOsmosis = ({
       />
     </div>
   );
+
+  // if (!hasMounted) return "Loading...";
 
   return (
     <div className="nav-bg rounded-4 d-flex flex-column">

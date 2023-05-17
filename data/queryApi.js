@@ -1413,6 +1413,7 @@ export const usePolygonFarm = (poolIndex) => {
       const rewardsPerYear = BigNumber(rewardsPerDay)
         .multipliedBy(365)
         .toString();
+
       const rewardsPerYearInUsd = BigNumber(fromDenom(rewardsPerYear))
         .multipliedBy(BigNumber(mntlUsdValue))
         .toString();

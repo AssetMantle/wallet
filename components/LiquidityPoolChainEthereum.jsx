@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { farmPools } from "../data";
 import { cleanString } from "../lib";
 import { LiquidityPoolChainCardEthereum } from "./LiquidityPoolChainCardEthereum";
@@ -10,6 +10,7 @@ export const LiquidityPoolChainEthereum = ({
 }) => {
   const data = farmPools?.[appIndex];
   const appLogoPathname = cleanString(data?.name);
+  const loadingJSX = "Loading...";
 
   const appLogoJSX = (
     <div className="d-flex gap-2 align-items-center mb-1">
@@ -66,13 +67,15 @@ export const LiquidityPoolChainEthereum = ({
           data?.pools.length > 0 &&
           React.Children.toArray(
             data?.pools?.map?.((pool, index) => (
-              <LiquidityPoolChainCardEthereum
-                setSelectedPool={setSelectedPool}
-                selectedPool={selectedPool}
-                appIndex={appIndex}
-                poolIndex={index}
-                key={index}
-              />
+              <Suspense fallback={loadingJSX}>
+                <LiquidityPoolChainCardEthereum
+                  setSelectedPool={setSelectedPool}
+                  selectedPool={selectedPool}
+                  appIndex={appIndex}
+                  poolIndex={index}
+                  key={index}
+                />
+              </Suspense>
             ))
           )}
       </div>
