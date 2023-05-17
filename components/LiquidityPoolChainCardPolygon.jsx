@@ -1,6 +1,6 @@
 import { disconnect } from "@wagmi/core";
 import React from "react";
-import { farmPools, useEthereumFarm } from "../data";
+import { farmPools, usePolygonFarm } from "../data";
 
 export function LiquidityPoolChainCardPolygon({
   setSelectedPool,
@@ -12,7 +12,7 @@ export function LiquidityPoolChainCardPolygon({
   const pool = selectedApp?.pools?.[poolIndex];
   const tokenPairArray = pool?.tokens?.split?.(" – ");
 
-  const { ethereumFarm, isLoadingEtherumFarm } = useEthereumFarm();
+  const { allPolygonFarm, isLoadingPolygonFarm } = usePolygonFarm(poolIndex);
 
   const handleOnClickPair = async (e) => {
     e.preventDefault();
@@ -29,7 +29,8 @@ export function LiquidityPoolChainCardPolygon({
   };
 
   // DISPLAY VARIABLES
-  const displayApr = isLoadingEtherumFarm ? "..." : ethereumFarm?.apr || "0";
+  const displayApr = `${allPolygonFarm?.apr}%`;
+
   const pairLogoJSX = (
     <div
       className="position-relative"
@@ -61,6 +62,8 @@ export function LiquidityPoolChainCardPolygon({
   );
 
   const aprJSX = <p className="small m-0 text-gray">APR: {displayApr}%</p>;
+
+  console.log("allPolygonFarm: ", allPolygonFarm);
 
   return (
     <div
