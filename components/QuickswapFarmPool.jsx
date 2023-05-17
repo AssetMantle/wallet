@@ -44,7 +44,7 @@ function StaticQuickswapFarmPool({ poolIndex }) {
   // hooks to work the multi-modal for ethereum
   const { open, setDefaultChain } = useWeb3Modal();
   // const { allQuickswap, isLoadingQuickswap } = useQuickswap();
-  const { allPolygonFarm, isLoadingPolygonFarm } = usePolygonFarm(poolIndex);
+  const { allPolygonFarm, isLoadingPolygonFarm } = usePolygonFarm();
   const { mntlUsdValue } = useMntlUsd();
   setDefaultChain(polygon);
   const totalSupplyValue = farmPools?.[1]?.pools?.[0]?.totalSupply;

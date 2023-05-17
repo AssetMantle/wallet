@@ -1,6 +1,7 @@
 import React from "react";
 import { farmPools } from "../data";
 import { cleanString } from "../lib";
+import { LiquidityPoolChainCardComdex } from "./LiquidityPoolChainCardComdex";
 
 export const LiquidityPoolChainComdex = ({
   setSelectedPool,
@@ -62,7 +63,7 @@ export const LiquidityPoolChainComdex = ({
       </div>
       <i className="border-bottom me-3"></i>
       <div className="d-flex flex-column">
-        {/* {data?.pools &&
+        {data?.pools &&
           Array.isArray(data?.pools) &&
           data?.pools.length > 0 &&
           React.Children.toArray(
@@ -75,7 +76,7 @@ export const LiquidityPoolChainComdex = ({
                 key={index}
               />
             ))
-          )} */}
+          )}
       </div>
     </div>
   );

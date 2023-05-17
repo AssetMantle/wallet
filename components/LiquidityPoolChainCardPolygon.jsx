@@ -1,6 +1,7 @@
 import { disconnect } from "@wagmi/core";
 import React from "react";
 import { farmPools, usePolygonFarm } from "../data";
+import BigNumber from "bignumber.js";
 
 export function LiquidityPoolChainCardPolygon({
   setSelectedPool,
@@ -12,7 +13,7 @@ export function LiquidityPoolChainCardPolygon({
   const pool = selectedApp?.pools?.[poolIndex];
   const tokenPairArray = pool?.tokens?.split?.(" – ");
 
-  const { allPolygonFarm, isLoadingPolygonFarm } = usePolygonFarm(poolIndex);
+  const { allPolygonFarm, isLoadingPolygonFarm } = usePolygonFarm();
 
   const handleOnClickPair = async (e) => {
     e.preventDefault();
@@ -31,7 +32,7 @@ export function LiquidityPoolChainCardPolygon({
   // DISPLAY VARIABLES
   const displayApr = isLoadingPolygonFarm
     ? "..."
-    : `${allPolygonFarm?.[poolIndex]?.apr}%`;
+    : `${BigNumber(allPolygonFarm?.[poolIndex]?.apr || 0).toFixed(2)}%`;
 
   const pairLogoJSX = (
     <div

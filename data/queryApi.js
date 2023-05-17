@@ -1351,8 +1351,7 @@ export const usePolygonFarm = () => {
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: polygonFarmObject, error } = useSwr(
     mntlUsdValue ? ["usePolygonFarm", mntlUsdValue] : null,
-    fetchPolygonFarm,
-    { suspense: true }
+    fetchPolygonFarm
   );
   console.log("polygonFarmObject", polygonFarmObject);
   return {
