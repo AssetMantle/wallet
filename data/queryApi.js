@@ -23,7 +23,6 @@ import { convertBech32Address } from "../lib";
 import { cosmos as cosmosModule, gravity } from "../modules";
 import {
   bech32AddressSeperator,
-  farmPools,
   placeholderAddress,
   staticTradeData,
 } from "./constants";
@@ -1211,6 +1210,92 @@ export const useOsmosis = () => {
   };
 };
 
+export const useEthereumFarm = () => {
+  // fetcher function for useSwr of useAvailableBalance()
+  const fetchEthereumFarm = async (url) => {
+    console.log("inside fetchEthereumFarm() ");
+    let uniswapData;
+
+    try {
+      uniswapData = {};
+      uniswapData.apr = "200";
+      uniswapData.tvl = "30000";
+      uniswapData.pair = "MNTL-ETH";
+    } catch (error) {
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
+      throw error;
+    }
+    // return the data
+    return uniswapData;
+  };
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: uniswapData, error } = useSwr(
+    "useEthereumFarm",
+    fetchEthereumFarm
+  );
+  return {
+    ethereumFarm: uniswapData,
+    isLoadingEtherumFarm: !error && !uniswapData,
+    errorEtherumFarm: error,
+  };
+};
+
+export const useComdexFarm = (poolID) => {
+  // fetcher function for useSwr of useAvailableBalance()
+  const fetchAllComdex = async (url, poolID) => {
+    const initialData = [
+      {
+        api: "https://stat.comdex.one/api/v2/cswap/pairs/33",
+        pair: "MNTL/CMST",
+        poolNumber: "33",
+      },
+      {
+        api: "https://stat.comdex.one/api/v2/cswap/pairs/32",
+        pair: "MNTL/CMDX",
+        poolNumber: "32",
+      },
+    ];
+    let comdexData;
+    try {
+      const tvlData = await fetch(initialData[poolID].api).then((res) =>
+        res.json()
+      );
+
+      const comdexAprData = await fetch(
+        "https://stat.comdex.one/api/v2/cswap/aprs"
+      ).then((res) => res.json());
+
+      comdexData = {
+        pair: initialData[poolID].pair,
+        tvlUsd: tvlData?.data?.total_liquidity,
+        apr: comdexAprData?.data?.[
+          initialData[poolID].poolNumber
+        ]?.incentive_rewards?.[0]?.apr?.toFixed(5),
+        // ?.incentive_rewards?.apr,
+      };
+    } catch (error) {
+      console.error(`swr fetcher : url: ${url},  error: ${error}`);
+      throw error;
+    }
+    // return the data
+    return comdexData;
+  };
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: comdexData, error } = useSwr(
+    ["useComdex", poolID],
+    fetchAllComdex,
+    {
+      suspense: true,
+    }
+  );
+  return {
+    comdexFarm: comdexData,
+    isLoadingComdexFarm: !error && !comdexData,
+    errorComdexFarm: error,
+  };
+};
+
+/*
 export const useQuickswap = () => {
   // fetcher function for useSwr of useAvailableBalance()
   const fetchAllQuickswap = async (url) => {
@@ -1358,64 +1443,4 @@ export const usePolygonFarm = (poolIndex) => {
   };
 };
 
-export const useComdexFarm = (poolID) => {
-  // fetcher function for useSwr of useAvailableBalance()
-  console.log("in queryApi", poolID);
-  const fetchAllComdex = async (url, poolID) => {
-    // console.log("inside fetchAllQuickswap() ");
-    const initialData = [
-      {
-        api: "https://stat.comdex.one/api/v2/cswap/pairs/33",
-        pair: "MNTL/CMST",
-        poolNumber: "33",
-      },
-      {
-        api: "https://stat.comdex.one/api/v2/cswap/pairs/32",
-        pair: "MNTL/CMDX",
-        poolNumber: "32",
-      },
-    ];
-    let comdexData;
-    try {
-      const tvlData = await fetch(initialData[poolID].api).then((res) =>
-        res.json()
-      );
-      //   "https://stat.comdex.one/api/v2/cswap/pairs/33"
-      // ).then((res) => res.json());
-      // const CmdxMntlTvlData = await fetch(
-      //   "https://stat.comdex.one/api/v2/cswap/pairs/32"
-      // ).then((res) => res.json());
-
-      const comdexAprData = await fetch(
-        "https://stat.comdex.one/api/v2/cswap/aprs"
-      ).then((res) => res.json());
-      comdexData = {
-        pair: initialData[poolID].pair,
-        tvlUsd: tvlData?.data?.total_liquidity,
-        apr: comdexAprData?.data?.[
-          initialData[poolID].poolNumber
-        ]?.incentive_rewards?.[0]?.apr?.toFixed(5),
-        // ?.incentive_rewards?.apr,
-      };
-    } catch (error) {
-      console.error(`swr fetcher : url: ${url},  error: ${error}`);
-      throw error;
-    }
-    // return the data
-    return comdexData;
-  };
-  // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: comdexArray, error } = useSwr(
-    ["useComdex", poolID],
-    fetchAllComdex,
-    {
-      fallbackData: [],
-      suspense: true,
-    }
-  );
-  return {
-    allComdex: comdexArray,
-    isLoadingComdex: !error && !comdexArray,
-    errorComdex: error,
-  };
-};
+*/

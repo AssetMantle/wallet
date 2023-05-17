@@ -1,16 +1,14 @@
 import React from "react";
-import { farmPools, useComdexFarm, useOsmosis } from "../data";
-import { cleanString, getTimeDifference } from "../lib";
+import { farmPools, useOsmosis } from "../data";
+import { cleanString } from "../lib";
 
-export function ExternalFarmPool({ appIndex, poolIndex }) {
+export function ExternalFarmPoolOsmosis({ appIndex, poolIndex }) {
   console.log("poolIndex", poolIndex);
   const selectedApp = farmPools?.[appIndex];
   const selectedPool = selectedApp?.pools?.[poolIndex];
-  const { allComdex, errorComdex, isLoadingComdex } = useComdexFarm(poolIndex);
-  console.log("in external", allComdex);
-  const { allOsmosis, errorOsmosis, isLoadingOsmosis } = useOsmosis();
   const tokenPairArray = selectedPool?.tokens.split(" – ");
   const appLogoPathname = cleanString(selectedApp?.name);
+  const { allOsmosis, isLoadingOsmosis } = useOsmosis();
   // DISPLAY VARIABLES
 
   const appLogoJSX = (
@@ -98,23 +96,25 @@ export function ExternalFarmPool({ appIndex, poolIndex }) {
     </div>
   );
 
-  const currentTimestamp = Math.floor(Date.now() / 1000);
-  const durationRemaining =
-    selectedPool?.startTime > currentTimestamp
-      ? "Not Started"
-      : currentTimestamp > selectedPool?.endTime
-      ? "Incentive Ended"
-      : `${getTimeDifference(
-          selectedPool?.endTime,
-          currentTimestamp
-        )} remaining`;
+  const displayTvl = isLoadingOsmosis
+    ? "Loading..."
+    : `$ ${
+        allOsmosis?.find(
+          (item) =>
+            item?.symbol.includes(tokenPairArray[0]) &&
+            item?.symbol.includes(tokenPairArray[1])
+        )?.tvlUsd
+      }`;
 
-  console.log(
-    "tokenPairArray: ",
-    tokenPairArray,
-    " appLogoPathname: ",
-    appLogoPathname
-  );
+  const displayApr = isLoadingOsmosis
+    ? "Loading..."
+    : `${allOsmosis
+        ?.find(
+          (item) =>
+            item?.symbol.includes(tokenPairArray[0]) &&
+            item?.symbol.includes(tokenPairArray[1])
+        )
+        ?.apy?.toFixed(2)}%`;
 
   return (
     <div className={`nav-bg p-3 rounded-4 pe-0 d-flex flex-column gap-2 `}>
@@ -136,62 +136,16 @@ export function ExternalFarmPool({ appIndex, poolIndex }) {
           </div>
           <div className="border-bottom"></div>
           <div className="row">
-            {/* <div className="col-7 py-2">
-              <div className="row">
-                <div className="col-6 text-gray caption">Reward Pool</div>
-                <div className="col-6 caption">{selectedPool?.rewardPool}</div>
-              </div>
-            </div> */}
             <div className="col-4 py-2">
               <div className="row">
                 <div className="col-6 text-gray caption">TVL</div>
-                {appIndex == 2 && (
-                  <div className="col-6 caption">
-                    $
-                    {
-                      allOsmosis?.find(
-                        (item) =>
-                          item?.symbol.includes(tokenPairArray[0]) &&
-                          item?.symbol.includes(tokenPairArray[1])
-                      )?.tvlUsd
-                    }
-                  </div>
-                )}
-                {appIndex == 3 && (
-                  <div className="col-6 caption">
-                    ${allComdex?.tvlUsd?.toFixed(2)}
-                  </div>
-                )}
+                <div className="col-6 caption">{displayTvl}</div>
               </div>
             </div>
-            {/* <div className="col-7 py-2">
-              <div className="row">
-                <div className="col-6 text-gray caption">Duration</div>
-                <div className="col-6 caption">{durationRemaining}</div>
-              </div>
-            </div> */}
             <div className="col-4 py-2">
               <div className="row">
                 <div className="col-6 text-gray caption">APR</div>
-                {appIndex == 2 && (
-                  <div className="col-6 caption">
-                    {" "}
-                    {allOsmosis
-                      ?.find(
-                        (item) =>
-                          item?.symbol.includes(tokenPairArray[0]) &&
-                          item?.symbol.includes(tokenPairArray[1])
-                      )
-                      ?.apy?.toFixed(2)}
-                    %
-                  </div>
-                )}
-                {appIndex == 3 && (
-                  <div className="col-6 caption">
-                    {" "}
-                    {parseFloat(allComdex?.apr)?.toFixed(2)}%
-                  </div>
-                )}
+                {<div className="col-6 caption"> {displayApr}</div>}
               </div>
             </div>
           </div>

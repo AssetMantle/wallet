@@ -1,12 +1,17 @@
 import Head from "next/head";
 import React, { Suspense, useState } from "react";
-import { ExternalFarmPool, UniswapFarmPool } from "../components";
-import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
+import {
+  ExternalFarmPoolComdex,
+  ExternalFarmPoolOsmosis,
+  LiquidityPoolChainComdex,
+  LiquidityPoolChainEthereum,
+  LiquidityPoolChainOsmosis,
+  LiquidityPoolChainPolygon,
+  UniswapFarmPool,
+} from "../components";
 import { QuickswapFarmPool } from "../components/QuickswapFarmPool";
+import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import { useIsMounted } from "../lib";
-import LiquidityPoolChainPolygon from "../components/LiquidityPoolChainPolygon";
-import LiquidityPoolChainComdex from "../components/LiquidityPoolChainComdex";
-import LiquidityPoolChainOsmosis from "../components/LiquidityPoolChainOsmosis";
 
 export default function Farm() {
   // HOOKS
@@ -16,29 +21,48 @@ export default function Farm() {
   });
   const isMounted = useIsMounted();
   const loadingJSX = "Loading...";
+  let farmPoolJSX;
 
   // HANDLER FUNCTIONS
 
-  const farmPoolJSX =
-    isMounted &&
-    (selectedPool?.appIndex == 0 || selectedPool?.appIndex == 1 ? (
-      selectedPool?.appIndex == 0 ? (
+  switch (selectedPool?.appIndex) {
+    case 0:
+    default:
+      farmPoolJSX = isMounted && (
         <Suspense fallback={loadingJSX}>
           <UniswapFarmPool poolIndex={selectedPool?.poolIndex} />
         </Suspense>
-      ) : (
+      );
+      break;
+
+    case 1:
+      farmPoolJSX = isMounted && (
         <Suspense fallback={loadingJSX}>
           <QuickswapFarmPool poolIndex={selectedPool?.poolIndex} />{" "}
         </Suspense>
-      )
-    ) : (
-      <Suspense fallback={loadingJSX}>
-        <ExternalFarmPool
-          appIndex={selectedPool?.appIndex}
-          poolIndex={selectedPool?.poolIndex}
-        />{" "}
-      </Suspense>
-    ));
+      );
+      break;
+    case 2:
+      farmPoolJSX = isMounted && (
+        <Suspense fallback={loadingJSX}>
+          <ExternalFarmPoolOsmosis
+            appIndex={selectedPool?.appIndex}
+            poolIndex={selectedPool?.poolIndex}
+          />
+        </Suspense>
+      );
+      break;
+    case 3:
+      farmPoolJSX = isMounted && (
+        <Suspense fallback={loadingJSX}>
+          <ExternalFarmPoolComdex
+            appIndex={selectedPool?.appIndex}
+            poolIndex={selectedPool?.poolIndex}
+          />
+        </Suspense>
+      );
+      break;
+  }
 
   console.log(
     " appIndex: ",
@@ -65,11 +89,11 @@ export default function Farm() {
           {/* New UI starts from here  */}
           <div className="bg-gray-800 rounded-4 p-3 d-flex flex-column gap-3 mt-2">
             <h2 className="body1 text-primary">Chains</h2>
-            {/* <LiquidityPoolChainEthereum
+            <LiquidityPoolChainEthereum
               setSelectedPool={setSelectedPool}
               selectedPool={selectedPool}
               appIndex={0}
-            /> */}
+            />
             <LiquidityPoolChainPolygon
               setSelectedPool={setSelectedPool}
               selectedPool={selectedPool}
