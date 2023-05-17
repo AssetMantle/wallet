@@ -1025,6 +1025,7 @@ const fetchAllTrades = async (url) => {
           element.target_coin_id == item?.target_coin_id &&
           element.coin_id == item?.coin_id
       );
+      console.log(match);
       return {
         exchangeName: item?.market?.name,
         tradePair: match?.pair,
