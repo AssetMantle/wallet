@@ -1,6 +1,7 @@
 import React from "react";
 import { ResponsiveSunburst } from "@nivo/sunburst";
 import { useAllVotes } from "../data";
+import { Col, Row, Stack } from "react-bootstrap";
 
 const DonutChart = ({ selectedProposal, isLoadingProposals }) => {
   const isDataZero =
@@ -100,23 +101,33 @@ const DonutChart = ({ selectedProposal, isLoadingProposals }) => {
   return (
     <>
       {isDataZero ? (
-        <div className="rounded-4 p-3 my-2 bg-gray-800 width-100 d-flex flex-column ">
-          <p>No votes yet</p>
-        </div>
+        <Stack className="rounded-4 p-3 my-2 bg-light-subtle width-100">
+          <p className="m-0">No votes yet</p>
+        </Stack>
       ) : isLoadingProposals ? (
-        <p>Loading</p>
+        <p className="m-0">Loading</p>
       ) : (
-        <div
+        <Stack
           style={{ height: "400px" }}
-          className="rounded-4 p-3 bg-gray-800 width-100 gap-2 d-flex flex-column  mb-5"
+          gap={2}
+          className="rounded-4 p-3 bg-light-subtle width-100 mb-5"
         >
-          <nav className="d-flex align-items-center justify-content-between gap-3">
-            <div className="d-flex gap-3 align-items-center">
+          <Stack
+            as="nav"
+            gap={3}
+            direction="horizontal"
+            className="align-items-center justify-content-between"
+          >
+            <Stack
+              direction="horizontal"
+              gap={3}
+              className="align-items-center"
+            >
               <button className={`body2 text-primary`}>
                 Voting Statistics
               </button>
-            </div>
-          </nav>
+            </Stack>
+          </Stack>
 
           <ResponsiveSunburst
             data={chartData}
@@ -142,24 +153,23 @@ const DonutChart = ({ selectedProposal, isLoadingProposals }) => {
             arcLabelsTextColor="black"
           />
 
-          <div className="justify-content-around mb-5 row">
-            {legend.map((item, index) => (
-              <div
-                key={index}
-                className="col-6 d-flex flex-row align-items-center"
-              >
-                <div
-                  style={{
-                    backgroundColor: item.color,
-                    height: "12px",
-                    width: "30px",
-                  }}
-                ></div>
-                <p className="ms-2">{item.title}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+          <Row className="justify-content-around mb-5">
+            {React.Children.toArray(
+              legend.map((item) => (
+                <Col className="d-flex flex-row align-items-center">
+                  <div
+                    style={{
+                      backgroundColor: item.color,
+                      height: "12px",
+                      width: "30px",
+                    }}
+                  ></div>
+                  <p className="m-0 ms-2">{item.title}</p>
+                </Col>
+              ))
+            )}
+          </Row>
+        </Stack>
       )}
     </>
   );
