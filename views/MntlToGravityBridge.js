@@ -20,6 +20,7 @@ import {
 } from "../data";
 import { convertBech32Address, shortenAddress } from "../lib";
 import { handleCopy, isObjEmpty } from "../lib/basicJavascript";
+import { Button, Stack } from "react-bootstrap";
 
 const MntlToGravityBridge = () => {
   // WALLET HOOKS
@@ -258,19 +259,28 @@ const MntlToGravityBridge = () => {
     formState?.errorMessages?.transferAmountErrorMsg;
 
   return (
-    <div
-      className={`bg-gray-800 p-3 rounded-4 d-flex flex-column gap-3 ${"border-color-primary"}`}
+    <Stack
+      gap={2}
+      className={`bg-light-subtle p-3 rounded-4 ${"border border-primary"}`}
     >
-      <div className="caption d-flex gap-2 align-items-center justify-content-between">
-        <div className="d-flex gap-2 align-items-center position-relative">
+      <Stack
+        gap={2}
+        direction="horizontal"
+        className="caption align-items-center justify-content-between"
+      >
+        <Stack
+          gap={2}
+          direction="horizontal"
+          className="align-items-center position-relative"
+        >
           <div
             className="position-relative"
             style={{ width: "21px", aspectRatio: "1/1" }}
           >
             <img src="/chainLogos/mntl.webp" alt="AssetMantle" layout="fill" />
           </div>
-          <h5 className="caption2 text-primary">AssetMantle</h5>
-        </div>
+          <h5 className="caption2 text-primary m-0">AssetMantle</h5>
+        </Stack>
         <button
           className="caption2 d-flex gap-1"
           onClick={handleCopyOnClick}
@@ -281,39 +291,49 @@ const MntlToGravityBridge = () => {
             <i className="bi bi-files" />
           </span>
         </button>
-      </div>
+      </Stack>
       <label
         htmlFor="mntlAmount"
-        className="caption2 text-gray d-flex align-items-center justify-content-between gap-2"
+        className="caption2 text-white-50 fw-normal d-flex align-items-center justify-content-between gap-2 pt-1"
       >
         Amount{" "}
-        <small className="small text-gray">
+        <small className="small text-white-50 fw-normal">
           Available Balance : {displayAvailableBalance}
           &nbsp;
           {displayAvailableBalanceDenom}
         </small>
       </label>
-      <div className="input-white d-flex py-2 px-3 rounded-2">
+      <Stack
+        direction="horizontal"
+        className="border border-white py-2 px-3 rounded-2"
+      >
         <input
           type="number"
           placeholder="Enter Amount"
           name="mntlAmount"
-          className="am-input-secondary caption2 flex-grow-1 bg-t"
+          className="caption2 flex-grow-1 bg-transparent"
           value={displayInputAmountValue}
           onChange={handleAmountOnChange}
         />
         <button className="text-primary caption2" onClick={handleOnClickMax}>
           Max
         </button>
-      </div>
-      <small
+      </Stack>
+      <Stack
+        as="small"
+        gap={1}
+        direction="horizontal"
         id="addressInputErrorMsg"
-        className="form-text text-danger d-flex align-items-center gap-1"
+        className="form-text text-danger align-items-center"
       >
         {isFormAmountError && <i className="bi bi-info-circle" />}{" "}
         {displayFormAmountErrorMsg}
-      </small>
-      <div className="d-flex align-items-center justify-content-end gap-2">
+      </Stack>
+      <Stack
+        gap={2}
+        direction="horizontal"
+        className="align-items-center justify-content-end"
+      >
         {/* <button
           onClick={handleGravitySubmit}
           disabled={isSubmitDisabled}
@@ -321,15 +341,16 @@ const MntlToGravityBridge = () => {
         >
           Send to AssetMantle <i className="bi bi-arrow-up" />
         </button> */}
-        <button
+        <Button
+          variant="primary"
+          className="d-flex gap-2 align-items-center caption fw-semibold rounded-5 px-4 text-dark"
           onClick={handleGravitySubmit}
           disabled={isSubmitDisabled}
-          className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
         >
           Send to Gravity Bridge <i className="bi bi-arrow-down" />
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Stack>
+    </Stack>
   );
 };
 
