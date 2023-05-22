@@ -16,8 +16,8 @@ export default function Bridge() {
         <title>Bridge | MantleWallet</title>
       </Head>
       <Row as={`main`} className="h-100">
-        <Col xs={8}>
-          <ScrollableSectionContainer className="">
+        <Col xs={8} className="h-100 pb-2">
+          <ScrollableSectionContainer className="h-100">
             <Stack
               as={`section`}
               className="rounded-4 p-3 bg-light-subtle width-100 flex-grow-0"
@@ -42,7 +42,7 @@ export default function Bridge() {
             </Stack>
           </ScrollableSectionContainer>
         </Col>
-        <Col xs={4}>
+        <Col xs={4} className="h-100 pb-2">
           <ScrollableSectionContainer className="d-flex flex-column gap-3">
             <div className="rounded-4 p-3 bg-light-subtle width-100 text-white-300">
               <Tooltip

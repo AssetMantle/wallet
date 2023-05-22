@@ -25,6 +25,7 @@ import {
   shortenEthAddress,
   useIsMounted,
 } from "../lib";
+import { Button, Stack } from "react-bootstrap";
 
 const PolygonBridge = () => {
   // WALLET HOOKS
@@ -255,11 +256,17 @@ const PolygonBridge = () => {
 
   return (
     <>
-      <div
-        className={`bg-gray-800 p-3 rounded-4 d-flex flex-column gap-3 ${""}`}
-      >
-        <div className="caption d-flex gap-2 align-items-center justify-content-between">
-          <div className="d-flex gap-2 align-items-center position-relative">
+      <Stack gap={3} className={`bg-light-subtle p-3 rounded-4 ${""}`}>
+        <Stack
+          gap={2}
+          direction="horizontal"
+          className="caption align-items-center justify-content-between"
+        >
+          <Stack
+            gap={2}
+            direction="horizontal"
+            className="align-items-center position-relative"
+          >
             <div
               className="position-relative"
               style={{ width: "21px", aspectRatio: "1/1" }}
@@ -267,30 +274,32 @@ const PolygonBridge = () => {
               <img src="/chainLogos/polygon.svg" alt="Polygon Chain" />
             </div>
             <h5 className="caption2 text-primary">Polygon Chain</h5>
-          </div>
+          </Stack>
           {isMounted() && connectButtonJSX}
           {!isMounted() && notConnectedJSX}
-        </div>
+        </Stack>
 
         <label
           htmlFor="GravityAmount"
-          className="caption2 text-gray d-flex align-items-center justify-content-between gap-2"
+          className="caption2 text-white-50 d-flex align-items-center justify-content-between gap-2"
         >
           Amount{" "}
-          <small className="small text-gray">
+          <small className="small text-white-50">
             MATIC Balance : {displayMaticBalance} {displayMaticBalanceDenom}
           </small>
-          <small className="small text-gray">
+          <small className="small text-white-50">
             MNTL Balance : {displayAvailableBalance}{" "}
             {displayAvailableBalanceDenom}
           </small>
         </label>
-        {/*  <div className="input-white d-flex py-2 px-3 rounded-2">
+        {/*  <Stack
+          direction="horizontal"
+          className="border border-white py-2 px-3 rounded-2">
           <input
             type="number"
             placeholder="Enter Amount"
             name="ethAmount"
-            className="am-input-secondary caption2 flex-grow-1 bg-t"
+            className="caption2 flex-grow-1 bg-transparent"
             value={displayInputAmountValue}
             onChange={handleAmountOnChange}
             disabled={isSubmitDisabled}
@@ -302,23 +311,28 @@ const PolygonBridge = () => {
           >
             Max
           </button>
-        </div> */}
+        </Stack> */}
         <small className="small text-error">
           {isFormAmountError && <i className="bi bi-info-circle" />}{" "}
           {displayFormAmountErrorMsg}
         </small>
-        <div className="d-flex align-items-center justify-content-end gap-3">
+        <Stack
+          direction="horizontal"
+          gap={3}
+          className="align-items-center justify-content-end"
+        >
           {/* <button className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2">
           Send to Gravity bridge <i className="bi bi-arrow-up" />
         </button> */}
-          <button
-            className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
+          <Button
+            variant="primary"
+            className="d-flex gap-2 align-items-center caption fw-semibold rounded-5 px-4 text-dark"
             disabled={isSubmitDisabled}
           >
             Send to Ethereum Chain <i className="bi bi-arrow-up" />
-          </button>
-        </div>
-      </div>
+          </Button>
+        </Stack>
+      </Stack>
     </>
   );
 };

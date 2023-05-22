@@ -28,8 +28,9 @@ import {
 import { convertBech32Address, shortenAddress } from "../lib";
 import { handleCopy, isObjEmpty, useIsMounted } from "../lib/basicJavascript";
 import { useFeeData } from "wagmi";
+import { Button, Stack } from "react-bootstrap";
 
-const GravityToEthBridge = () => {
+export default function GravityToEthBridge() {
   const [gasFee, setGasFee] = useState("fast");
   console.log("gasFee: ", gasFee);
   // WALLET HOOKS
@@ -438,22 +439,24 @@ const GravityToEthBridge = () => {
     formState?.errorMessages?.transferAmountErrorMsg;
 
   const connectEthWalletJSX = (
-    <button
+    <Button
+      variant="primary"
+      className="d-flex gap-2 align-items-center caption fw-semibold rounded-5 px-4 text-dark"
       onClick={handleOpenWeb3Modal}
-      className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
     >
       Connect Ethereum Wallet <i className="bi bi-link-45deg" />
-    </button>
+    </Button>
   );
 
   const submitButtonEthJSX = isWalletEthConnected ? (
-    <button
+    <Button
+      variant="primary"
+      className="d-flex gap-2 align-items-center caption fw-semibold rounded-5 px-4 text-dark"
       onClick={handleSubmit}
       disabled={isSubmitDisabled}
-      className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
     >
       Send to Ethereum <i className="bi bi-arrow-down" />
-    </button>
+    </Button>
   ) : (
     connectEthWalletJSX
   );
@@ -470,9 +473,17 @@ const GravityToEthBridge = () => {
   );
 
   return (
-    <div className={`bg-gray-800 p-3 rounded-4 d-flex flex-column gap-3 ${""}`}>
-      <div className="caption d-flex gap-2 align-items-center justify-content-between">
-        <div className="d-flex gap-2 align-items-center position-relative">
+    <Stack gap={3} className={`bg-light-subtle p-3 rounded-4 ${""}`}>
+      <Stack
+        gap={2}
+        direction="horizontal"
+        className="caption align-items-center justify-content-between"
+      >
+        <Stack
+          gap={2}
+          direction="horizontal"
+          className="align-items-center position-relative"
+        >
           <div
             className="position-relative"
             style={{ width: "21px", aspectRatio: "1/1" }}
@@ -480,41 +491,48 @@ const GravityToEthBridge = () => {
             <img src="/chainLogos/grav.svg" alt="Gravity Bridge" />
           </div>
           <h5 className="caption2 text-primary">Gravity Bridge</h5>
-        </div>
+        </Stack>
         {connectButtonJSX}
-      </div>
+      </Stack>
       <label
         htmlFor="GravityAmount"
-        className="caption2 text-gray d-flex align-items-center justify-content-between gap-2"
+        className="caption2 text-white-50 d-flex align-items-center justify-content-between gap-2"
       >
         Amount{" "}
-        <small className="small text-gray">
+        <small className="small text-white-50">
           Gravity Balance : {displayAvailableBalanceGravity}{" "}
           {displayBalanceUnitGravity}
         </small>
-        <small className="small text-gray">
+        <small className="small text-white-50">
           MNTL Balance : {displayAvailableBalanceIBCToken}{" "}
           {displayBalanceUnitGravityIBCToken}
         </small>
       </label>
-      <div className="input-white d-flex py-2 px-3 rounded-2">
+      <Stack
+        direction="horizontal"
+        className="border border-white py-2 px-3 rounded-2"
+      >
         <input
           type="number"
           placeholder="Enter Amount"
           name="GravityAmount"
-          className="am-input-secondary caption2 flex-grow-1 bg-t"
+          className="caption2 flex-grow-1 bg-transparent"
           value={displayInputAmountValue}
           onChange={handleAmountOnChange}
         />
         <button className="text-primary caption2" onClick={handleOnClickMax}>
           Max
         </button>
-      </div>
+      </Stack>
       {isFormAmountError && (
         <small className="small text-error">{displayFormAmountErrorMsg}</small>
       )}
-      <div className="d-flex align-items-center justify-content-between gap-3">
-        <label className="caption2" htmlFor="gasFeeSelect">
+      <Stack
+        direction="horizontal"
+        gap={3}
+        className="align-items-center justify-content-between"
+      >
+        <label className="small" htmlFor="gasFeeSelect">
           Select Chain Fee for Ethereum Transfer
         </label>
         <select
@@ -532,20 +550,23 @@ const GravityToEthBridge = () => {
             Slow ~ 24 hours ({bridgeFee?.slow} $MNTL)
           </option>
         </select>
-      </div>
-      <div className="d-flex align-items-center justify-content-end gap-3">
-        <button
-          className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2"
+      </Stack>
+      <Stack
+        direction="horizontal"
+        gap={3}
+        className="align-items-center justify-content-end"
+      >
+        <Button
+          variant="outline-primary"
+          className="btn btn-outline-primary d-flex gap-2 align-items-center caption fw-semibold rounded-5 px-4"
           disabled={isSubmitDisabledGravity}
           onClick={handleSubmitMantle}
         >
           Send to Mantle <i className="bi bi-arrow-up" />
-        </button>
+        </Button>
         {isMounted() && submitButtonEthJSX}
         {!isMounted() && connectEthWalletJSX}
-      </div>
-    </div>
+      </Stack>
+    </Stack>
   );
-};
-
-export default GravityToEthBridge;
+}
