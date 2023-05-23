@@ -341,7 +341,7 @@ export function UniswapFarmPool({ poolIndex }) {
                 </div>
               </div>
             </div>
-            <div className="col-4 py-2">
+            <div className="col-5 py-2">
               <div className="row">
                 <div className="col-6 text-gray caption">TVL</div>
                 <div className="col-6 caption">
@@ -355,7 +355,7 @@ export function UniswapFarmPool({ poolIndex }) {
                 <div className="col-6 caption">{durationRemaining}</div>
               </div>
             </div>
-            <div className="col-4 py-2">
+            <div className="col-5 py-2">
               <div className="row">
                 <div className="col-6 text-gray caption">APR</div>
                 <div className="col-6 caption">

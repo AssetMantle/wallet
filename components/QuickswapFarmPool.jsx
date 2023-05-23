@@ -580,7 +580,7 @@ function StaticQuickswapFarmPool({ poolIndex }) {
                 <div className="col-6 caption">{rewardsPerDayDisplay}</div>
               </div>
             </div>
-            <div className="col-4 py-2">
+            <div className="col-5 py-2">
               <div className="row">
                 <div className="col-6 text-gray caption">TVL</div>
                 <div className="col-6 caption">{displayTvl}</div>
@@ -594,7 +594,7 @@ function StaticQuickswapFarmPool({ poolIndex }) {
                 </div>
               </div>
             </div>
-            <div className="col-4 py-2">
+            <div className="col-5 py-2">
               <div className="row">
                 <div className="col-6 text-gray caption">APR</div>
                 <div className="col-6 caption">{displayApr}</div>
