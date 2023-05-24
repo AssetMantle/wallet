@@ -67,8 +67,8 @@ export default function ICFormPolygon() {
   };
 
   return (
-    <section className="nav-bg d-flex flex-column gap-3 rounded-4 p-3">
-      <div className="bg-gray-800 p-3 rounded-4 d-flex flex-column gap-3">
+    <section className="bg-black d-flex flex-column gap-3 rounded-4 p-3">
+      <div className="bg-light-subtle p-3 rounded-4 d-flex flex-column gap-3">
         <div className="caption d-flex gap-2 align-items-center justify-content-between">
           <div className="d-flex gap-2 align-items-center position-relative">
             <div
@@ -96,10 +96,10 @@ export default function ICFormPolygon() {
         </div>
         <label
           htmlFor="mntlAmount"
-          className="caption2 text-gray d-flex align-items-center justify-content-between gap-2"
+          className="caption2 text-body d-flex align-items-center justify-content-between gap-2"
         >
           Amount{" "}
-          <small className="small text-gray">
+          <small className="small text-body">
             Transferable Balance : {MNtlBalance.toFixed(4)} $MNTL
           </small>
         </label>
@@ -123,7 +123,7 @@ export default function ICFormPolygon() {
           </button>
         </div>
       </div>
-      <div className="bg-gray-800 p-3 rounded-4 d-flex flex-column gap-3">
+      <div className="bg-light-subtle p-3 rounded-4 d-flex flex-column gap-3">
         <div className="caption d-flex gap-2 align-items-center justify-content-between">
           <div className="d-flex gap-2 align-items-center position-relative">
             <div
@@ -151,10 +151,10 @@ export default function ICFormPolygon() {
         </div>
         <label
           htmlFor="GravityAmount"
-          className="caption2 text-gray d-flex align-items-center justify-content-between gap-2"
+          className="caption2 text-body d-flex align-items-center justify-content-between gap-2"
         >
           Amount{" "}
-          <small className="small text-gray">
+          <small className="small text-body">
             Transferable Balance : {GravityBalance.toFixed(4)} $MNTL
           </small>
         </label>
@@ -181,7 +181,7 @@ export default function ICFormPolygon() {
           </button>
         </div>
       </div>
-      <div className="bg-gray-800 p-3 rounded-4 d-flex flex-column gap-3">
+      <div className="bg-light-subtle p-3 rounded-4 d-flex flex-column gap-3">
         <div className="caption d-flex gap-2 align-items-center justify-content-between">
           <div className="d-flex gap-2 align-items-center position-relative">
             <div
@@ -218,10 +218,10 @@ export default function ICFormPolygon() {
         </div>
         <label
           htmlFor="ethAmount"
-          className="caption2 text-gray d-flex align-items-center justify-content-between gap-2"
+          className="caption2 text-body d-flex align-items-center justify-content-between gap-2"
         >
           Amount{" "}
-          <small className="small text-gray">
+          <small className="small text-body">
             Transferable Balance : {EthBalance.toFixed(4)} $MNTL
           </small>
         </label>
@@ -248,7 +248,7 @@ export default function ICFormPolygon() {
           </button>
         </div>
       </div>
-      <div className="bg-gray-800 p-3 rounded-4 d-flex flex-column gap-3">
+      <div className="bg-light-subtle p-3 rounded-4 d-flex flex-column gap-3">
         <div className="caption d-flex gap-2 align-items-center justify-content-between">
           <div className="d-flex gap-2 align-items-center position-relative">
             <div
@@ -275,15 +275,15 @@ export default function ICFormPolygon() {
               </span>
             </button>
           ) : (
-            <span className="text-gray caption2">Connect metamask</span>
+            <span className="text-body caption2">Connect metamask</span>
           )}
         </div>
         <label
           htmlFor="mntlAmount"
-          className="caption2 text-gray d-flex align-items-center justify-content-between gap-2"
+          className="caption2 text-body d-flex align-items-center justify-content-between gap-2"
         >
           Amount{" "}
-          <small className="small text-gray">
+          <small className="small text-body">
             Transferable Balance : {PolygonBalance.toFixed(4)} $MNTL
           </small>
         </label>
