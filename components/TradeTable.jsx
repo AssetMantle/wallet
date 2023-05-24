@@ -3,6 +3,7 @@ import { getBalanceStyle } from "../config";
 import { decimalize, staticTradeData, useTrade } from "../data";
 
 import Table from "./Table";
+import { Stack } from "react-bootstrap";
 
 const TradeTable = () => {
   const { allTrades, isLoadingTrades, errorTrades } = useTrade();
@@ -21,22 +22,30 @@ const TradeTable = () => {
       Header: "Market Name",
       accessor: "exchangeName",
       Cell: (tableProps) => (
-        <div className="d-flex align-items-center justify-content-around">
-          <img
-            src={`/tradePage/${tableProps?.row?.original?.logo}.webp`}
-            width={20}
-            alt="logo"
-          />
+        <Stack
+          direction="horizontal"
+          className="align-items-center justify-content-around"
+        >
+          <div
+            className="position-relative"
+            style={{ width: "20px", aspectRatio: "1/1" }}
+          >
+            <img
+              src={`/tradePage/${tableProps?.row?.original?.logo}.webp`}
+              className="h-100 w-100"
+              style={{ objectFit: "cover", objectPosition: "center" }}
+              alt="logo"
+            />
+          </div>
           <a
             href={tableProps.row.original.url}
             target="_blank"
-            width={20}
             rel="noreferrer"
           >
             {tableProps.row.original.exchangeName}
           </a>{" "}
           <i className="bi bi-arrow-up-right"></i>
-        </div>
+        </Stack>
       ),
       sortMethod: (a, b) => a - b,
     },
@@ -49,8 +58,8 @@ const TradeTable = () => {
           $
           {getBalanceStyle(
             decimalize(tableProps.row.original.price),
-            "caption text-white-300",
-            "caption2 text-white-300"
+            "caption text-white-300 m-0",
+            "caption2 text-white-300 m-0"
           )}
         </p>
       ),
@@ -60,11 +69,11 @@ const TradeTable = () => {
       Header: "Volume(24Hour)",
       accessor: "volume",
       Cell: (tableProps) => (
-        <p>
+        <p className="m-0">
           {getBalanceStyle(
             decimalize(tableProps.row.original.volume),
-            "caption text-white-300",
-            "caption2 text-white-300"
+            "caption text-white-300 m-0",
+            "caption2 text-white-300 m-0"
           )}
         </p>
       ),
@@ -76,22 +85,30 @@ const TradeTable = () => {
       Header: "Market Name",
       accessor: "name",
       Cell: (tableProps) => (
-        <div className="d-flex align-items-center justify-content-around">
-          <img
-            src={`/tradePage/${tableProps?.row?.original?.logo}.webp`}
-            width={20}
-            alt="logo"
-          />
+        <Stack
+          direction="horizontal"
+          className="align-items-center justify-content-around"
+        >
+          <div
+            className="position-relative"
+            style={{ width: "20px", aspectRatio: "1/1" }}
+          >
+            <img
+              src={`/tradePage/${tableProps?.row?.original?.logo}.webp`}
+              className="h-100 w-100"
+              style={{ objectFit: "cover", objectPosition: "center" }}
+              alt="logo"
+            />
+          </div>
           <a
             href={tableProps.row.original.url}
             target="_blank"
-            width={20}
             rel="noreferrer"
           >
             {tableProps.row.original.name}
           </a>{" "}
           <i className="bi bi-arrow-up-right"></i>
-        </div>
+        </Stack>
       ),
       sortMethod: (a, b) => a - b,
     },
@@ -102,17 +119,16 @@ const TradeTable = () => {
       Cell: (tableProps) => (
         <div>
           {isLoadingTrades ? (
-            <p className="placeholder-glow">
+            <p className="placeholder-glow m-0">
               <span className="placeholder col-6"></span>
             </p>
           ) : (
-            <p>
-              {" "}
+            <p className="m-0">
               $
               {getBalanceStyle(
                 decimalize(tableProps.row.original.price),
-                "caption text-white-300",
-                "caption2 text-white-300"
+                "caption text-white-300 m-0",
+                "caption2 text-white-300 m-0"
               )}
             </p>
           )}
@@ -126,15 +142,15 @@ const TradeTable = () => {
       Cell: (tableProps) => (
         <div>
           {isLoadingTrades ? (
-            <p className="placeholder-glow">
+            <p className="placeholder-glow m-0">
               <span className="placeholder col-6"></span>
             </p>
           ) : (
-            <p>
+            <p className="m-0">
               {getBalanceStyle(
                 decimalize(tableProps.row.original.volume),
-                "caption text-white-300",
-                "caption2 text-white-300"
+                "caption text-white-300 m-0",
+                "caption2 text-white-300 m-0"
               )}
             </p>
           )}

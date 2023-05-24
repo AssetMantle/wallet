@@ -1,4 +1,5 @@
 import React from "react";
+import { Stack } from "react-bootstrap";
 import {
   useTable,
   useSortBy,
@@ -13,13 +14,18 @@ function GlobalFilter({ globalFilter, setGlobalFilter }) {
   }, 200);
 
   return (
-    <div className="d-flex align-items-center gap-3 w-100 p-2">
-      <div
-        className="d-flex gap-2 am-input border-color-white rounded-3 py-1 px-3 align-items-center"
-        style={{ flex: "1" }}
+    <Stack
+      direction="horizontal"
+      gap={3}
+      className="align-items-center w-100 p-2"
+    >
+      <Stack
+        gap={2}
+        direction="horizontal"
+        className="border border-white rounded-3 py-1 px-3 align-items-center flex-grow-1"
       >
         <span
-          className="input-group-text bg-t p-0 h-100"
+          className="input-group-text p-0 h-100"
           id="basic-addon1"
           style={{ border: "none" }}
         >
@@ -29,7 +35,7 @@ function GlobalFilter({ globalFilter, setGlobalFilter }) {
         <input
           style={{ outline: "none" }}
           type="search"
-          className="w-100 bg-t "
+          className="bg-transparent border border-0 p-1 w-100 h-100"
           placeholder="Search"
           value={value || ""}
           onChange={(e) => {
@@ -37,12 +43,12 @@ function GlobalFilter({ globalFilter, setGlobalFilter }) {
             onChange(e.target.value);
           }}
         />
-      </div>
-    </div>
+      </Stack>
+    </Stack>
   );
 }
 
-const Table = ({ columns, data }) => {
+export default function Table({ columns, data }) {
   const {
     getTableProps,
     getTableBodyProps,
@@ -75,22 +81,20 @@ const Table = ({ columns, data }) => {
                 // we can add them into the header props
                 <th
                   key={i}
-                  className="text-white"
+                  className="text-white text-nowrap"
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                 >
                   {column.render("Header")}
                   {/* Add a sort direction indicator */}
-                  <span>
-                    {column.isSorted ? (
-                      column.isSortedDesc ? (
-                        <i className="bi bi-caret-down-fill"></i>
-                      ) : (
-                        <i className="bi bi-caret-up-fill"></i>
-                      )
+                  {column.isSorted ? (
+                    column.isSortedDesc ? (
+                      <i className="bi bi-caret-down-fill"></i>
                     ) : (
-                      ""
-                    )}
-                  </span>
+                      <i className="bi bi-caret-up-fill"></i>
+                    )
+                  ) : (
+                    ""
+                  )}
                 </th>
               ))}
             </tr>
@@ -103,7 +107,11 @@ const Table = ({ columns, data }) => {
               <tr key={i} {...row.getRowProps()}>
                 {row.cells.map((cell, index) => {
                   return (
-                    <td key={index} {...cell.getCellProps()}>
+                    <td
+                      key={index}
+                      {...cell.getCellProps()}
+                      className="text-nowrap"
+                    >
                       {cell.render("Cell")}
                     </td>
                   );
@@ -115,6 +123,4 @@ const Table = ({ columns, data }) => {
       </table>
     </>
   );
-};
-
-export default Table;
+}
