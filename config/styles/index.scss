@@ -58,6 +58,7 @@ $fontSecondary: "Lato", sans-serif;
 
 * {
   scroll-behavior: smooth;
+  box-sizing: border-box !important;
   &::-webkit-scrollbar {
     width: 5px;
     height: 5px;
@@ -71,8 +72,6 @@ $fontSecondary: "Lato", sans-serif;
   }
 }
 body {
-  background-color: $dark-200 !important;
-  color: $primary-light;
   font-family: $fontPrimary;
 }
 
@@ -113,50 +112,6 @@ input {
   @media (max-width: 358px) {
     font-size: calc($size / 1.6);
   }
-}
-
-.h1 {
-  @include fontRoot(500, 2.25rem);
-}
-.h2 {
-  @include fontRoot(500, 1.75rem);
-}
-.h3 {
-  @include fontRoot(500, 1.25rem);
-}
-.h4 {
-  @include fontRoot(700, 1.7rem);
-}
-.h5 {
-  @include fontRoot(400, 1.5rem);
-}
-.h6 {
-  @include fontRoot(500, 1.25rem);
-}
-// .h4 {
-//   @include fontRoot(700, 1.8rem);
-// }
-.subtitle1 {
-  @include fontRoot(600, 1.125rem);
-  font-feature-settings: "liga" off;
-}
-.subtitle2 {
-  @include fontRoot(700, 0.875rem);
-}
-.body1 {
-  @include fontRoot(400, 1.375rem);
-}
-.body2 {
-  @include fontRoot(400, 1.125rem);
-}
-.caption {
-  @include fontRoot(400, 1rem);
-}
-.caption2 {
-  @include fontRoot(400, 0.875rem);
-}
-.small {
-  @include fontRoot(400, 0.75rem);
 }
 .lato {
   font-family: $fontSecondary;
@@ -203,36 +158,36 @@ a:hover {
     box-shadow: none !important;
   }
 }
-@mixin LinkRoot {
-  @include fontRoot(600, 0.875rem, $fontSecondary);
-  text-align: center;
-  text-transform: capitalize;
-  font-feature-settings: "liga" off;
-  color: $primary-main;
-  &:hover {
-    color: $primary-main !important;
-  }
-  &:disabled {
-    color: $primary-disabled !important;
-  }
-}
+// @mixin LinkRoot {
+//   @include fontRoot(600, 0.875rem, $fontSecondary);
+//   text-align: center;
+//   text-transform: capitalize;
+//   font-feature-settings: "liga" off;
+//   color: $primary-main;
+//   &:hover {
+//     color: $primary-main !important;
+//   }
+//   &:disabled {
+//     color: $primary-disabled !important;
+//   }
+// }
 
-.button-primary {
-  @include buttonRoot($primary-main, $primary-disabled, $gray-600, $gray-600);
-  max-width: max-content;
-}
-.button-secondary {
-  @include buttonRoot(
-    "transparent",
-    "transparent",
-    $primary-main,
-    $primary-disabled
-  );
-}
+// .button-primary {
+//   @include buttonRoot($primary-main, $primary-disabled, $gray-600, $gray-600);
+//   max-width: max-content;
+// }
+// .button-secondary {
+//   @include buttonRoot(
+//     "transparent",
+//     "transparent",
+//     $primary-main,
+//     $primary-disabled
+//   );
+// }
 
-.am-link {
-  @include LinkRoot();
-}
+// .am-link {
+//   @include LinkRoot();
+// }
 
 .am-nav-item {
   position: relative;
@@ -290,35 +245,35 @@ a:hover {
 
 // customs as needed
 // globally
-.btn-inactive {
-  background-color: $gray-800;
-  color: white !important;
-  border: 1px solid #383838 !important;
-}
-.btn-primary {
-  color: $gray-600;
-}
-.nav-bg {
-  background-color: $nav-bg;
-}
-.bg-theme-white {
-  background-color: $primary-light !important;
-}
-.bg-t {
-  background-color: transparent !important;
-}
-.bg-dark-200 {
-  background-color: $dark-200;
-}
-.bg-gray-700 {
-  background-color: $gray-700;
-}
-.bg-gray-800 {
-  background-color: $gray-800;
-}
-.bg-yellow-100 {
-  background-color: $yellow-100;
-}
+// .btn-inactive {
+//   background-color: $gray-800;
+//   color: white !important;
+//   border: 1px solid #383838 !important;
+// }
+// .btn-primary {
+//   color: $gray-600;
+// }
+// .nav-bg {
+//   background-color: $nav-bg;
+// }
+// .bg-theme-white {
+//   background-color: $primary-light !important;
+// }
+// .bg-t {
+//   background-color: transparent !important;
+// }
+// .bg-dark-200 {
+//   background-color: $dark-200;
+// }
+// .bg-gray-700 {
+//   background-color: $gray-700;
+// }
+// .bg-gray-800 {
+//   background-color: $gray-800;
+// }
+// .bg-yellow-100 {
+//   background-color: $yellow-100;
+// }
 .bg-yellow-100-hover {
   &:hover {
     background-color: $yellow-100;
@@ -329,37 +284,37 @@ a:hover {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(30px);
 }
-.bg-blue-100 {
-  background-color: $blue-100;
-}
+// .bg-blue-100 {
+//   background-color: $blue-100;
+// }
 .hover-dark-100 {
   &:hover {
     background-color: $dark-100 !important;
   }
 }
-.text-white {
-  color: $primary-light !important;
-}
-.text-white-200 {
-  color: $white-200 !important;
-}
-.text-white-300 {
-  color: $white-300 !important;
-}
-.text-gray {
-  color: $gray-100;
-}
-.text-dark {
-  color: $dark-400 !important;
-}
-.text-dark-hover {
-  &:hover {
-    color: $dark-400 !important;
-  }
-}
-.text-primary {
-  color: $primary-main !important;
-}
+// .text-white {
+//   color: $primary-light !important;
+// }
+// .text-white-200 {
+//   color: $white-200 !important;
+// }
+// .text-white-300 {
+//   color: $white-300 !important;
+// }
+// .text-gray {
+//   color: $gray-100;
+// }
+// .text-dark {
+//   color: $dark-400 !important;
+// }
+// .text-dark-hover {
+//   &:hover {
+//     color: $dark-400 !important;
+//   }
+// }
+// .text-primary {
+//   color: $primary-main !important;
+// }
 .text-hover-primary {
   &:hover {
     color: $primary-main;
@@ -371,19 +326,19 @@ a:hover {
 .text-success {
   color: $success;
 }
-.border-color-light_gray {
-  border-color: $gray-100;
-}
-.border-color-white {
-  border-color: $primary-light !important;
-}
-.border-color-white-400 {
-  border-color: $white-400 !important;
-}
-.border-color-primary {
-  border: 1px solid;
-  border-color: $primary-main;
-}
+// .border-color-light_gray {
+//   border-color: $gray-100;
+// }
+// .border-color-white {
+//   border-color: $primary-light !important;
+// }
+// .border-color-white-400 {
+//   border-color: $white-400 !important;
+// }
+// .border-color-primary {
+//   border: 1px solid;
+//   border-color: $primary-main;
+// }
 .border-color-primary-hover {
   border: 2px solid;
   border-color: transparent;
@@ -391,10 +346,10 @@ a:hover {
     border-color: $primary-main;
   }
 }
-.overflow-y {
-  overflow: hidden;
-  overflow-x: auto;
-}
+// .overflow-y {
+//   overflow: hidden;
+//   overflow-x: auto;
+// }
 .icon {
   line-height: 100%;
   margin: auto;
@@ -407,12 +362,12 @@ a:hover {
 .card {
   border: none;
 }
-.no-underline {
-  text-decoration: none;
-  &:hover {
-    text-decoration: none;
-  }
-}
+// .no-underline {
+//   text-decoration: none;
+//   &:hover {
+//     text-decoration: none;
+//   }
+// }
 .hover-underline {
   text-decoration: none;
   &:hover {
@@ -439,35 +394,35 @@ a:hover {
     }
   }
 }
-hr,
-.divider {
-  border: none;
-  height: 2px !important;
-  background-color: $white-400 !important;
-  border-radius: 4px !important;
-  width: 100%;
-}
-.am-input {
-  border: 1px solid $gray-200;
-  outline: none;
-  &:hover,
-  &:focus {
-    outline: none;
-  }
-}
-.input-white {
-  border: 1px solid $white-400;
-}
-.am-input-secondary {
-  background: transparent;
-  border: none;
-  outline: none;
-  &:hover,
-  &:focus {
-    border: none;
-    outline: none;
-  }
-}
+// hr,
+// .divider {
+//   border: none;
+//   height: 2px !important;
+//   background-color: $white-400 !important;
+//   border-radius: 4px !important;
+//   width: 100%;
+// }
+// .am-input {
+//   border: 1px solid $gray-200;
+//   outline: none;
+//   &:hover,
+//   &:focus {
+//     outline: none;
+//   }
+// }
+// .input-white {
+//   border: 1px solid $white-400;
+// }
+// .am-input-secondary {
+//   background: transparent;
+//   border: none;
+//   outline: none;
+//   &:hover,
+//   &:focus {
+//     border: none;
+//     outline: none;
+//   }
+// }
 .am-select {
   padding: 8px 16px;
   background-color: transparent;
@@ -548,32 +503,32 @@ hr,
     }
   }
 }
-input[type="checkbox"] {
-  accent-color: $primary-main;
-  width: 18px;
-  aspect-ratio: 1/1;
-}
-input[type="radio"] {
-  accent-color: $primary-main;
-}
+// input[type="checkbox"] {
+//   // accent-color: $primary-main;
+//   width: 18px;
+//   aspect-ratio: 1/1;
+// }
+// input[type="radio"] {
+//   accent-color: $primary-main;
+// }
 .btn-close {
   opacity: 1;
 }
-.accent-primary {
-  accent-color: $primary-main;
-}
+// .accent-primary {
+//   accent-color: $primary-main;
+// }
 // specific styles
-.am_resp_right_ham {
-  @media (max-width: 1199px) {
-    position: fixed;
-    display: flex !important;
-    z-index: 1000;
-    &.of_auto {
-      overflow: auto;
-      height: 100%;
-    }
-  }
-}
+// .am_resp_right_ham {
+//   @media (max-width: 1199px) {
+//     position: fixed;
+//     display: flex !important;
+//     z-index: 1000;
+//     &.of_auto {
+//       overflow: auto;
+//       height: 100%;
+//     }
+//   }
+// }
 
 .dropdown-toggle {
   & > .rotatableIcon {
@@ -665,9 +620,6 @@ summary::marker {
   position: relative;
   box-shadow: none !important;
 }
-.no-text-wrap {
-  white-space: nowrap !important;
-}
 tbody {
   & > tr {
     &:last-child td,
@@ -721,3 +673,129 @@ $primary: $assetmantle-yellow;
 // THIS SHOULD ALWAYS BE THE LAST LINE OF THIS FILE. DO NOT ADD ANY STYLE ATTRIBUTES
 // BELOW THIS IMPORT
 @import "~bootstrap/scss/bootstrap";
+
+.h1 {
+  @include fontRoot(500, 2.25rem);
+}
+.h2 {
+  @include fontRoot(500, 1.75rem);
+}
+.h3 {
+  @include fontRoot(500, 1.25rem);
+}
+.h4 {
+  @include fontRoot(700, 1.7rem);
+}
+.h5 {
+  @include fontRoot(400, 1.5rem);
+}
+.h6 {
+  @include fontRoot(500, 1.25rem);
+}
+// .h4 {
+//   @include fontRoot(700, 1.8rem);
+// }
+.subtitle1 {
+  @include fontRoot(600, 1.125rem);
+  font-feature-settings: "liga" off;
+}
+.subtitle2 {
+  @include fontRoot(700, 0.875rem);
+}
+.body1 {
+  @include fontRoot(400, 1.375rem);
+}
+.body2 {
+  @include fontRoot(400, 1.125rem);
+}
+.caption {
+  @include fontRoot(400, 1rem);
+}
+.caption2 {
+  @include fontRoot(400, 0.875rem);
+}
+.small {
+  @include fontRoot(400, 0.75rem);
+}
+
+// specific styles
+.am_resp_right_ham {
+  @media (max-width: 1199px) {
+    position: fixed;
+    display: flex !important;
+    z-index: 1000;
+    &.of_auto {
+      overflow: auto;
+      height: 100%;
+    }
+  }
+}
+
+.am-connect {
+  border-color: $white;
+  color: $white;
+  background-color: transparent;
+  &:hover {
+    background-color: transparent;
+    border-color: $primary;
+    color: $primary;
+  }
+  &ed {
+    border-color: $primary;
+    color: $primary !important;
+    background-color: transparent !important;
+    & > * {
+      color: $primary;
+    }
+    &:focus,
+    &:active,
+    &:hover {
+      background-color: transparent !important;
+      border-color: $primary;
+      color: $primary !important;
+    }
+  }
+}
+.am-select {
+  padding: 8px 16px;
+  background-color: transparent;
+  border: 1px solid $gray-200;
+  outline: none;
+  color: $primary;
+  & > option {
+    background-color: $gray-800;
+    padding: 8px 16px;
+    border-radius: 0;
+    &:hover {
+      color: $gray-800;
+      background-color: $primary;
+    }
+  }
+}
+
+// can remove after replacing
+.am-tooltip {
+  cursor: pointer;
+  position: relative;
+  & > .am-tooltip-d {
+    display: none;
+    transition: all 200ms ease-in;
+    width: 0px;
+  }
+  &:hover {
+    & > .am-tooltip-d {
+      display: flex;
+      bottom: 100%;
+      right: 50%;
+      width: max(200%, 260px);
+      transform: translateX(50%) translateY(-0%);
+      box-shadow: 1px 1px 5px $dark-100;
+      z-index: 1000;
+      word-break: break-all;
+    }
+  }
+}
+
+.transitionAll {
+  transition: all 0.3s ease-in-out;
+}
