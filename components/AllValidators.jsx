@@ -1,9 +1,10 @@
 import React from "react";
 import { fromChainDenom, useAllValidatorsUnbonded } from "../data";
-import Tooltip from "./Tooltip";
+// import Tooltip from "./Tooltip";
 import { useAllValidatorsBonded } from "../data";
 import { getBalanceStyle } from "../config";
 import { shiftDecimalPlaces } from "../lib";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 const AllValidators = ({
   setShowClaimError,
@@ -45,7 +46,7 @@ const AllValidators = ({
                 .includes(searchValue.toLowerCase())
             )
             ?.map((item, index) => (
-              <tr key={index} className="caption2 text-white-300">
+              <tr key={index} className="caption2 text-white-50">
                 <td>
                   <input
                     type="checkbox"
@@ -66,18 +67,20 @@ const AllValidators = ({
                             payload: item?.operatorAddress,
                           });
                     }}
-                  ></input>
+                  />
                 </td>
                 {index < 10 ? (
                   <td>
-                    <Tooltip
-                      titlePrimary={"text-warning"}
-                      title={<i className="bi bi-patch-exclamation-fill"></i>}
-                      description="It is preferable to not stake to the top 10 validators"
-                      style={{
-                        transform: "translateX(83%) translateY(-1%)",
-                      }}
-                    />
+                    <OverlayTrigger
+                      as="span"
+                      overlay={
+                        <Tooltip as id={"doNotStake"}>
+                          It is preferable to not stake to the top 10 validators
+                        </Tooltip>
+                      }
+                    >
+                      <i className="bi bi-patch-exclamation-fill text-warning" />
+                    </OverlayTrigger>
                   </td>
                 ) : (
                   <td></td>
@@ -85,13 +88,14 @@ const AllValidators = ({
                 {activeValidators ? <td>{index + 1}</td> : null}
                 <td>
                   <div
-                    className="d-flex position-relative rounded-circle"
+                    className="d-flex position-relative rounded-circle overflow-hidden"
                     style={{ width: "25px", aspectRatio: "1/1" }}
                   >
                     <img
                       layout="fill"
+                      className="h-100 w-100"
+                      style={{ objectFit: "cover", objectPosition: "center" }}
                       alt={item?.description?.moniker}
-                      className="rounded-circle"
                       src={`/validatorAvatars/${item?.operatorAddress}.png`}
                       onError={handleOnError}
                     />
@@ -178,13 +182,14 @@ const AllValidators = ({
                 {activeValidators ? <td>{index + 1}</td> : null}
                 <td>
                   <div
-                    className="d-flex position-relative rounded-circle"
+                    className="d-flex position-relative rounded-circle overflow-hidden"
                     style={{ width: "25px", aspectRatio: "1/1" }}
                   >
                     <img
                       layout="fill"
+                      className="h-100 w-100"
+                      style={{ objectFit: "cover", objectPosition: "center" }}
                       alt={item?.description?.moniker}
-                      className="rounded-circle"
                       src={`/validatorAvatars/${item?.operatorAddress}.png`}
                       onError={handleOnError}
                     />
