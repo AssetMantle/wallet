@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useVote } from "../data";
-import Tooltip from "./Tooltip";
+import { Col, OverlayTrigger, Stack, Tooltip } from "react-bootstrap";
+// import Tooltip from "./Tooltip";
 
 const ActiveProposals = ({
   status,
@@ -51,10 +52,12 @@ const ActiveProposals = ({
   ];
 
   return (
-    <div
+    <Col
+      xs={12}
+      md={6}
       onMouseOver={() => setOnVoteHover(proposal?.proposal_id)}
       onMouseOut={() => setOnVoteHover(null)}
-      className={`col-12 col-md-6 p-2`}
+      // className={`col-12 col-md-6 p-2`}
       onClick={() => {
         setOnVoteSelect(index);
         voteDispatch({
@@ -64,59 +67,76 @@ const ActiveProposals = ({
       }}
     >
       <div
-        className={hasVoted ? `bg-voted rounded-3` : `bg-translucent rounded-3`}
+        className={
+          hasVoted ? `bg-body-secondary rounded-3` : `bg-translucent rounded-3`
+        }
         // style={{ opacity: proposal.idIcon ? "1" : "0.6" }}
       >
-        <div className="d-flex flex-column gap-2 p-2">
-          <div className="d-flex justify-content-between gap-2 pb-2">
-            <h4 className="d-flex gap-2 align-items-center body2 text-primary">
+        <Stack className="p-2" gap={2}>
+          <Stack
+            gap={2}
+            direction="horizontal"
+            className="justify-content-between pb-2"
+          >
+            <h4 className="d-flex gap-2 align-items-center body2 text-primary m-0">
               #{proposal?.proposal_id}{" "}
               {hasVoted ? (
-                <Tooltip
-                  title={
-                    <i
-                      className={
+                <OverlayTrigger
+                  as="span"
+                  overlay={
+                    <Tooltip
+                      id={
                         voteOptions?.find?.(
                           (item) => item?.option == voteInfo?.option
                         )?.icon
                       }
-                      style={{
-                        color: voteOptions?.find?.(
+                    >
+                      {
+                        voteOptions?.find?.(
                           (item) => item?.option == voteInfo?.option
-                        )?.color,
-                      }}
-                    ></i>
+                        )?.description
+                      }
+                    </Tooltip>
                   }
-                  description={
-                    voteOptions?.find?.(
-                      (item) => item?.option == voteInfo?.option
-                    )?.description
-                  }
-                />
+                >
+                  <i
+                    className={
+                      voteOptions?.find?.(
+                        (item) => item?.option == voteInfo?.option
+                      )?.icon
+                    }
+                    style={{
+                      color: voteOptions?.find?.(
+                        (item) => item?.option == voteInfo?.option
+                      )?.color,
+                    }}
+                  />
+                </OverlayTrigger>
               ) : null}
             </h4>
-            <div
-              className="button-secondary caption bg-translucent px-2 py-1 text-truncate"
-              style={{ fontWeight: "400" }}
-            >
+            <div className="border border-primary fw-400 caption bg-translucent px-2 py-1 text-truncate rounded-4">
               {getTypeProposal(proposal?.content?.["@type"])}
             </div>
-          </div>
-          <h5 className="caption2 text-primary text-truncate">
+          </Stack>
+          <h5 className="caption2 text-primary text-truncate m-0">
             {proposal?.content?.title}
           </h5>
-          <p className="caption2">
+          <p className="caption2 m-0">
             Voting Start :{" "}
             {new Date(proposal?.voting_start_time).toLocaleDateString()}
           </p>
-          <p className="caption2">
+          <p className="caption2 m-0">
             Voting End :{" "}
             {new Date(proposal?.voting_end_time).toLocaleDateString()}
           </p>
-        </div>
-        <div className="py-2 d-flex justify-content-between align-items-center position-relative">
+        </Stack>
+        <Stack
+          gap={2}
+          direction="horizontal"
+          className="py-2 justify-content-between align-items-center position-relative"
+        >
           <p
-            className="small bg-blue-100 p-2 pe-5 text-dark text-uppercase"
+            className="small bg-blue-100 p-2 pe-5 text-dark text-uppercase m-0"
             style={{
               clipPath: "polygon(0% 0%, 80% 0%, 100% 50%, 80% 100%, 0% 100%)",
               width: "max-content",
@@ -149,9 +169,9 @@ const ActiveProposals = ({
               <i className="bi bi-record-circle text-primary"></i>
             </span>
           ) : null}
-        </div>
+        </Stack>
       </div>
-    </div>
+    </Col>
   );
 };
 
