@@ -717,6 +717,10 @@ $primary: $assetmantle-yellow;
 .small {
   @include fontRoot(400, 0.75rem);
 }
+.bg-translucent {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(30px);
+}
 
 // specific styles
 .am_resp_right_ham {
