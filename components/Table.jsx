@@ -25,7 +25,7 @@ function GlobalFilter({ globalFilter, setGlobalFilter }) {
         className="border border-white rounded-3 py-1 px-3 align-items-center flex-grow-1"
       >
         <span
-          className="input-group-text p-0 h-100"
+          className="input-group-text p-0 h-100 bg-transparent"
           id="basic-addon1"
           style={{ border: "none" }}
         >
