@@ -2,12 +2,12 @@ import React from "react";
 import Head from "next/head";
 import ICTransactionInfo from "../components/ICTransactionInfo";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
-import Tooltip from "../components/Tooltip";
+// import Tooltip from "../components/Tooltip";
 import EthToPolygonBridge from "../views/EthToPolygonBridge";
 import GravityToEthBridge from "../views/GravityToEthBridge";
 import MntlToGravityBridge from "../views/MntlToGravityBridge";
 import PolygonBridge from "../views/PolygonBridge";
-import { Col, Row, Stack } from "react-bootstrap";
+import { Col, OverlayTrigger, Row, Stack, Tooltip } from "react-bootstrap";
 
 export default function Bridge() {
   return (
@@ -45,11 +45,12 @@ export default function Bridge() {
         <Col xs={4} className="h-100 pb-2">
           <ScrollableSectionContainer className="d-flex flex-column gap-3">
             <div className="rounded-4 p-3 bg-light-subtle width-100 text-white-300">
-              <Tooltip
-                titlePrimary={true}
-                description={""}
-                style={{ right: "330%" }}
-              />
+              <OverlayTrigger
+                as="span"
+                overlay={<Tooltip as id={"transactionSequence"}></Tooltip>}
+              >
+                <i className="bi bi-info-circle text-primary"></i>
+              </OverlayTrigger>
               &nbsp;The Order in which you need to complete the transactions:
             </div>
             <ICTransactionInfo
