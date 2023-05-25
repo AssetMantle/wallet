@@ -172,18 +172,18 @@ export default function Farm() {
       className="d-flex flex-column w-100 rounded-4 flex-grow-1 pt-2"
       style={{ height: "90%" }}
     >
-      <div className="row nav-bg rounded-4 p-3 mx-0">
-        <h4 className="col-3 py-1 caption text-gray">Reward Pool</h4>
+      <div className="row bg-black rounded-4 p-3 mx-0">
+        <h4 className="col-3 py-1 caption text-body">Reward Pool</h4>
         <p className="col-9 py-1 body2">
           {currentRewardPoolDisplay}&nbsp;{currentRewardPoolDenomDisplay}
         </p>
-        <h4 className="col-3 py-1 caption text-gray">Duration</h4>
+        <h4 className="col-3 py-1 caption text-body">Duration</h4>
         <p className="col-9 py-1 body2">{incentiveDurationDisplay}</p>
-        <h4 className="col-3 py-1 caption text-gray">TVL</h4>
+        <h4 className="col-3 py-1 caption text-body">TVL</h4>
         <p className="col-9 py-1 body2">$30,000</p>
-        <h4 className="col-3 py-1 caption text-gray">APR</h4>
+        <h4 className="col-3 py-1 caption text-body">APR</h4>
         <p className="col-9 py-1 body2">200%</p>
-        <h4 className="col-3 py-1 caption text-gray">Token Pair</h4>
+        <h4 className="col-3 py-1 caption text-body">Token Pair</h4>
         <p className="col-9 py-1 body2">
           MNTL-ETH (click{" "}
           <a
@@ -228,7 +228,7 @@ export default function Farm() {
       </Head>
       <section className="row h-100">
         <ScrollableSectionContainer className="col-8 d-flex h-90">
-          <div className="bg-gray-800 p-4 rounded-4 d-flex flex-column gap-2">
+          <div className="bg-light-subtle p-4 rounded-4 d-flex flex-column gap-2">
             <nav className="d-flex flex-column align-items-start justify-content-between gap-3">
               <div className="d-flex gap-3 w-100">{tabTitleJSX}</div>
               <div className="rounded-3 py-2 px-3 caption2 border border-1">
