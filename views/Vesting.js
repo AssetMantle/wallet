@@ -1,34 +1,49 @@
 import React from "react";
-import Tooltip from "../components/Tooltip";
+// import Tooltip from "../components/Tooltip";
+import { OverlayTrigger, Stack, Tooltip } from "react-bootstrap";
 
 export default function Vesting() {
   return (
-    <section className="rounded-5 p-4 bg-gray-800 width-100 d-flex flex-column gap-3">
-      <h4 className="body1 text-primary">Vesting</h4>
-      <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-1">
-        <p className="caption d-flex gap-2 align-items-center text-white-300">
+    <Stack
+      className="rounded-5 p-4 bg-light-subtle width-100"
+      gap={3}
+      as={section}
+    >
+      <h4 className="body1 text-primary m-0">Vesting</h4>
+      <Stack className="bg-black p-3 rounded-4" gap={1}>
+        <p className="caption d-flex gap-2 align-items-center text-white-50 m-0">
           Vesting
-          <Tooltip titlePrimary={true} description={""} />
+          <OverlayTrigger
+            as="span"
+            overlay={<Tooltip as id={"vesting"}></Tooltip>}
+          >
+            <i className="bi bi-info-circle text-primary"></i>
+          </OverlayTrigger>
         </p>
-        <p className="caption">0.0000 $MNTL</p>
-        <p className="small text-gray">$0.0000&nbsp;$USD</p>
-      </div>
-      {/* <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-1">
+        <p className="caption m-0">0.0000 $MNTL</p>
+        <p className="small text-body m-0">$0.0000&nbsp;$USD</p>
+      </Stack>
+      {/* <div className="bg-black p-3 rounded-4 d-flex flex-column gap-1">
         <p className="caption d-flex gap-2 align-items-center text-white-300">
           Transferable
           <Tooltip titlePrimary={true} description={""} />
         </p>
         <p className="caption">0.0000 $MNTL</p>
-        <p className="small text-gray">$0.0000</p>
+        <p className="small text-body">$0.0000</p>
       </div> */}
-      <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-1">
+      <Stack className="bg-black p-3 rounded-4" gap={1}>
         <p className="caption d-flex gap-2 align-items-center text-white-300">
           Delegatable
-          <Tooltip titlePrimary={true} description={""} />
+          <OverlayTrigger
+            as="span"
+            overlay={<Tooltip as id={"delegatable"}></Tooltip>}
+          >
+            <i className="bi bi-info-circle text-primary"></i>
+          </OverlayTrigger>
         </p>
-        <p className="caption">0.0000 $MNTL</p>
-        <p className="small text-gray">$0.0000&nbsp;$USD</p>
-      </div>
-    </section>
+        <p className="caption m-0">0.0000 $MNTL</p>
+        <p className="small text-body m-0">$0.0000&nbsp;$USD</p>
+      </Stack>
+    </Stack>
   );
 }
