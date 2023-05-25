@@ -168,13 +168,13 @@ const StaticUniswapDashboard = () => {
       className="d-flex flex-column w-100 rounded-4 flex-grow-1 pt-2"
       style={{ height: "90%" }}
     >
-      <div className="row farm-data-container nav-bg rounded-4 p-3 mx-0">
+      <div className="row farm-data-container bg-black rounded-4 p-3 mx-0">
         <div className="col-3 d-flex flex-column gap-3">
-          <h4 className="caption text-gray">Reward Pool</h4>
+          <h4 className="caption text-body">Reward Pool</h4>
           <p className="body1">{currentRewardPoolDisplay}&nbsp;$MNTL</p>
         </div>
         <div className="col-3 d-flex flex-column gap-3">
-          <h4 className="caption text-gray">Claimable</h4>
+          <h4 className="caption text-body">Claimable</h4>
           <p className="caption">{rewardsBalanceDisplay}</p>
           <button
             className="button-primary caption2"
@@ -185,7 +185,7 @@ const StaticUniswapDashboard = () => {
           </button>
         </div>
         <div className="col-6 d-flex flex-column gap-3">
-          <h4 className="caption text-gray">Connect</h4>
+          <h4 className="caption text-body">Connect</h4>
           {isMounted() && connectButtonJSX}
           {!isMounted() && notConnectedJSX}
         </div>

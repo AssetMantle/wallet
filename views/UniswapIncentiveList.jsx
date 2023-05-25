@@ -21,7 +21,7 @@ const StaticUniswapIncentiveList = () => {
   // DISPLAY VARIABLES
 
   return (
-    <div className="d-flex gap-2 rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column text-white">
+    <div className="d-flex gap-2 rounded-4 p-3 bg-light-subtle width-100 d-flex flex-column text-white">
       <h2 className="body1 text-primary mb-2">Incentive Programs</h2>
       {isIncentivePopulated &&
         Array.isArray(incentiveList) &&
@@ -29,7 +29,7 @@ const StaticUniswapIncentiveList = () => {
         React.Children.toArray(
           incentiveList.map((incentiveObject, index) => (
             <div
-              className="nav-bg rounded-4 py-3 px-3 mx-0 d-flex align-items-center gap-2"
+              className="bg-black rounded-4 py-3 px-3 mx-0 d-flex align-items-center gap-2"
               role="button"
               onClick={() => mutate(index)}
             >
@@ -45,7 +45,7 @@ const StaticUniswapIncentiveList = () => {
                 <p
                   className={`${
                     incentiveObject?.endTime <= currentTimestamp
-                      ? "text-gray"
+                      ? "text-body"
                       : "text-success"
                   } small`}
                 >
