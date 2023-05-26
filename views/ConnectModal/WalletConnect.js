@@ -1,4 +1,5 @@
 import React from "react";
+import { Button, Stack } from "react-bootstrap";
 
 export default function WalletConnect({
   ExistingWallet,
@@ -7,15 +8,25 @@ export default function WalletConnect({
   setStep,
 }) {
   return (
-    <div className="bg-gray-800 p-4 rounded-4 w-100 my-auto">
-      <div className="d-flex align-items-center justify-content-between ">
-        <h1 className="body1 text-primary d-flex align-items-center gap-2">
+    <div className="bg-light-subtle p-4 rounded-4 w-100 my-auto">
+      <Stack
+        className="align-items-center justify-content-between"
+        direction="horizontal"
+      >
+        <Stack
+          direction="horizontal"
+          gap={2}
+          as="h1"
+          className="body1 text-primary align-items-center m-0"
+        >
           <div
-            className="position-relative"
+            className="position-relative overflow-hidden"
             style={{ width: "28px", aspectRatio: "1/1" }}
           >
             <img
               layout="fill"
+              className="h-100 w-100"
+              style={{ objectFit: "cover", objectPosition: "center" }}
               src={
                 ExistingWallet.filter(
                   (el) => el.name.toLowerCase() === byWallet
@@ -29,30 +40,34 @@ export default function WalletConnect({
             />
           </div>
           Request to Connect wallet
-        </h1>
-        <button className="btn text-primary body1" onClick={() => close()}>
-          <span className="text-primary">
-            <i className="bi bi-x-lg" />
-          </span>
-        </button>
-      </div>
-      <p className="text-white-200 caption my-1">
+        </Stack>
+        <Button
+          variant="link"
+          className="text-decoration-none text-primary body1"
+          onClick={() => close()}
+        >
+          <i className="bi bi-x-lg text-primary" />
+        </Button>
+      </Stack>
+      <p className="text-white-50 caption m-0 my-1">
         Click “Connect” to be redirected to {byWallet}.
       </p>
-      <div className="d-flex align-items-center justify-content-end gap-3 flex-wrap mt-5">
-        <button
-          className="button-secondary caption py-2 px-5"
+      <Stack className="align-items-center justify-content-end gap-3 flex-wrap mt-5">
+        <Button
+          variant="outline-primary"
+          className="caption text-primary px-5"
           onClick={() => setStep(1)}
         >
           Cancel
-        </button>
-        <button
-          className="button-primary caption py-2 px-5"
+        </Button>
+        <Button
+          variant="primary"
+          className="text-dark caption py-2 px-5"
           onClick={() => setStep(3)}
         >
           Connect
-        </button>
-      </div>
+        </Button>
+      </Stack>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import React from "react";
+import { Button, Stack } from "react-bootstrap";
 
 export default function UploadKeystore({ close, setStep, setFile }) {
   const handleChange = (e) => {
@@ -6,37 +7,51 @@ export default function UploadKeystore({ close, setStep, setFile }) {
     setStep(5);
   };
   return (
-    <div className="bg-gray-800 p-4 rounded-4 w-100 my-auto">
-      <div className="d-flex align-items-center justify-content-between ">
-        <h1 className="body1 text-primary d-flex align-items-center gap-2">
+    <div className="bg-light-subtle p-4 rounded-4 w-100 my-auto">
+      <Stack
+        direction="horizontal"
+        className="align-items-center justify-content-between "
+      >
+        <Stack
+          className="body1 text-primary align-items-center"
+          as="h1"
+          direction="horizontal"
+          gap={2}
+        >
           <button className="" onClick={() => setStep(1)}>
-            <i className="bi bi-chevron-left" />
+            <i className="bi bi-chevron-left text-primary" />
           </button>
           Connect with Keystore
-        </h1>
-        <button className="btn text-primary body1" onClick={() => close()}>
-          <span className="text-primary">
-            <i className="bi bi-x-lg" />
-          </span>
-        </button>
-      </div>
-      <p className="text-white-200 caption my-1 ps-2">
+        </Stack>
+        <Button
+          variant="link"
+          className="text-decoration-none text-primary body1"
+          onClick={() => close()}
+        >
+          <i className="bi bi-x-lg text-primary" />
+        </Button>
+      </Stack>
+      <p className="text-white-50 caption m-0 my-1 ps-2">
         Connect your wallet using any of the options below
       </p>
-      <div
-        className="d-flex align-items-center justify-content-center border-color-white rounded-0 position-relative mt-4"
+      <Stack
+        className="align-items-center justify-content-center border border-white rounded-0 position-relative mt-4"
         style={{ border: "1px dashed" }}
       >
-        <div className="d-flex flex-column text-primary p-3 text-center gap-3">
+        <Stack className="text-primary p-3 text-center" gap={3}>
           <span className="h4 text-primary mx-auto">
             <i className="bi bi-upload" />
           </span>
           <p className="caption text-white">Drop file here</p>
-          <p className="caption text-white-200">or</p>
-          <div className="button-secondary py-2 px-5 d-flex align-items-center gap-2">
+          <p className="caption text-white-50">or</p>
+          <Stack
+            direction="horizontal"
+            className="border border-primary py-2 px-5 align-items-center rounded-4"
+            gap={3}
+          >
             Browse <i className="bi bi-search" />
-          </div>
-        </div>
+          </Stack>
+        </Stack>
         <input
           type="file"
           className="position-absolute top-0 bottom-0 start-0 end-0"
@@ -44,12 +59,16 @@ export default function UploadKeystore({ close, setStep, setFile }) {
           style={{ opacity: "0" }}
           onChange={(e) => handleChange(e)}
         />
-      </div>
-      <p className="caption2 mt-3">
+      </Stack>
+      <p className="caption2 m-0 mt-3">
         Do not have one?{" "}
-        <button className="am-link" onClick={() => setStep(8)}>
+        <Button
+          variant="link"
+          className="text-decoration-none"
+          onClick={() => setStep(8)}
+        >
           Create keystore
-        </button>
+        </Button>
       </p>
     </div>
   );
