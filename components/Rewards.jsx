@@ -22,8 +22,7 @@ import {
   useWithdrawAddress,
 } from "../data";
 import { shiftDecimalPlaces } from "../lib";
-import ModalContainer from "./ModalContainer";
-import { Stack } from "react-bootstrap";
+import { Button, Modal, Stack } from "react-bootstrap";
 
 const denomDisplay = defaultChainSymbol;
 
@@ -158,8 +157,8 @@ const Rewards = ({
 
   const delegationInfoJSX = (
     <>
-      <h6 className="caption2 my-1">Total Available $MNTL rewards:</h6>
-      <p className="body2 my-1">
+      <h6 className="caption2 m-0 my-1">Total Available $MNTL rewards:</h6>
+      <p className="body2 m-0 my-1">
         {stakeState?.selectedValidators?.length
           ? getBalanceStyle(
               fromChainDenom(selectedRewards),
@@ -178,7 +177,7 @@ const Rewards = ({
 
   const delegationTableJSX = (
     <>
-      <p className="caption2 my-2 text-body m-0">Selected Validator</p>
+      <p className="caption2 m-0 my-2 text-white-50 m-0">Selected Validator</p>
       <div
         className="bg-black p-2 rounded-4 w-100"
         style={{ overflowX: "auto" }}
@@ -316,11 +315,11 @@ const Rewards = ({
 
   const setupWithdrawAddressJSX = (
     <>
-      <h6 className="caption my-2 mt-5">
+      <h6 className="caption m-0 my-2 mt-5">
         Current wallet address for claiming staking rewards:
       </h6>
-      <p className="caption2 my-2 text-body">{withdrawAddress}</p>
-      <p className="caption2 my-2 text-body">
+      <p className="caption2 m-0 my-2 text-white-50">{withdrawAddress}</p>
+      <p className="caption2 m-0 my-2 text-white-50">
         Want to claim your staking rewards to another wallet address?{" "}
         <a
           href="#"
@@ -337,55 +336,61 @@ const Rewards = ({
   );
 
   const withdrawAddressModal = (
-    <div className="d-flex flex-column bg-gray-700 m-auto p-4 rounded-3 w-100">
-      <div className="d-flex align-items-center justify-content-between">
-        <h5 className="body2 text-primary d-flex align-items-center gap-2">
+    <Stack className="bg-gray-700 m-auto p-4 rounded-3 w-100">
+      <Stack
+        className="align-items-center justify-content-between"
+        direction="horizontal"
+      >
+        <h5 className="body2 text-primary d-flex align-items-center gap-2 m-0">
           <button onClick={() => setSetupAddress(false)}>
             <i className="bi bi-chevron-left" />
           </button>
           Setup Rewards Withdrawal Address
         </h5>
         <button
-          className="btn-close primary bg-t"
+          className="primary bg-transparent"
           onClick={() => setClaimModal(false)}
           style={{ background: "none" }}
         >
-          <span className="text-primary">
-            <i className="bi bi-x-lg" />
-          </span>
+          <i className="bi bi-x-lg text-primary" />
         </button>
-      </div>
-      <div className="py-4 d-flex flex-column text-white">
-        <h6 className="caption2 my-1">Current Address</h6>
-        <p className="caption2 my-1">{withdrawAddress}</p>
-        <p className="caption2 my-2 text-body">Revised Address</p>
+      </Stack>
+      <Stack className="py-4 text-white">
+        <h6 className="caption2 m-0 my-1">Current Address</h6>
+        <p className="caption2 m-0 my-1">{withdrawAddress}</p>
+        <p className="caption2 m-0 my-2 text-white-50">Revised Address</p>
         <input
           type="text"
-          className="am-input py-1 px-3 border-color-white rounded-2 bg-t"
+          className="py-1 px-3 border border-white rounded-2 bg-transparent"
           placeholder="Enter Withdraw Address"
           onChange={(e) => setNewAddress(e.target.value)}
         />
         {newAddress && newAddress === withdrawAddress && (
-          <p className="caption2 text-error pt-1">
+          <p className="caption2 m-0 text-error pt-1">
             Revised Address can&apos;t be same as current address.
           </p>
         )}
         {isInvalidAddress(newAddress) && (
-          <p className="caption2 text-error pt-1">Invalid Address</p>
+          <p className="caption2 m-0 text-error pt-1">Invalid Address</p>
         )}
-        <div className="d-flex align-items-center gap-2 justify-content-end">
-          <button
-            className="button-primary py-2 px-5 mt-3 caption text-center"
+        <Stack
+          className="align-items-center justify-content-end"
+          direction="horizontal"
+          gap={2}
+        >
+          <Button
+            variant="primary"
+            className="rounded-5 py-2 px-5 mt-3 caption text-center"
             onClick={handleAddressChangeSubmit}
             disabled={
               newAddress == withdrawAddress || isInvalidAddress(newAddress)
             }
           >
             Submit
-          </button>
-        </div>
-      </div>
-    </div>
+          </Button>
+        </Stack>
+      </Stack>
+    </Stack>
   );
 
   return (
@@ -425,50 +430,62 @@ const Rewards = ({
         </Stack>
       </Stack>
 
-      <ModalContainer active={ClaimModal} setActive={setClaimModal}>
-        {!setupAddress ? (
-          <div className="d-flex flex-column bg-gray-700 m-auto p-4 rounded-3 w-100">
-            <div className="d-flex align-items-center justify-content-between">
-              <h5 className="body2 text-primary d-flex align-items-center gap-2">
+      <Modal
+        show={ClaimModal}
+        onHide={() => setClaimModal(false)}
+        centered
+        size="lg"
+        aria-labelledby="receive-modal"
+      >
+        <Modal.Body className="p-0">
+          {!setupAddress ? (
+            <Stack className="bg-gray-700 m-auto p-4 rounded-3 w-100">
+              <Stack
+                className="align-items-center justify-content-between"
+                direction="horizontal"
+              >
+                <h5 className="body2 text-primary d-flex align-items-center gap-2 m-0">
+                  <button
+                    className="primary bg-transparent"
+                    onClick={() => setClaimModal(false)}
+                    style={{ background: "none" }}
+                  >
+                    <i className="bi bi-chevron-left text-primary" />
+                  </button>
+                  Claim Rewards
+                </h5>
                 <button
-                  className="btn-close primary bg-t"
+                  className="primary bg-transparent"
                   onClick={() => setClaimModal(false)}
                   style={{ background: "none" }}
                 >
-                  <span className="text-primary">
-                    <i className="bi bi-chevron-left" />
-                  </span>
+                  <i className="bi bi-x-lg text-primary" />
                 </button>
-                Claim Rewards
-              </h5>
-              <button
-                className="btn-close primary bg-t"
-                onClick={() => setClaimModal(false)}
-                style={{ background: "none" }}
-              >
-                <span className="text-primary">
-                  <i className="bi bi-x-lg" />
-                </span>
-              </button>
-            </div>
-            <div className="pt-4 d-flex flex-column text-white">
-              {delegationInfoJSX}
-              {delegationTableJSX}
-              {setupWithdrawAddressJSX}
-              <div className="d-flex align-items-center gap-2 justify-content-end">
-                <button
-                  className="button-primary py-2 px-5 mt-3 text-right rounded-5"
-                  onClick={handleSubmitClaim}
+              </Stack>
+              <Stack className="pt-4 text-white">
+                {delegationInfoJSX}
+                {delegationTableJSX}
+                {setupWithdrawAddressJSX}
+                <Stack
+                  className="align-items-center justify-content-end"
+                  gap={2}
+                  direction="horizontal"
                 >
-                  Submit
-                </button>
-              </div>
-            </div>
-          </div>
-        ) : (
-          withdrawAddressModal
-        )}
-      </ModalContainer>
+                  <Button
+                    variant="variation"
+                    className="rounded-5 py-2 px-5 mt-3 text-right"
+                    onClick={handleSubmitClaim}
+                  >
+                    Submit
+                  </Button>
+                </Stack>
+              </Stack>
+            </Stack>
+          ) : (
+            withdrawAddressModal
+          )}
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };
