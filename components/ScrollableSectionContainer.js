@@ -1,13 +1,11 @@
 import React from "react";
+import { Stack } from "react-bootstrap";
 
 export default function ScrollableSectionContainer({ className, children }) {
   return (
-    <div
-      className={`h-100 d-flex flex-column gap-2 pb-5 ${className}`}
-      style={{ overflowY: "auto" }}
-    >
+    <Stack className={`h-100 pb-5 overflow-y-auto ${className}`} gap={2}>
       {children}
       <div className="p-2"></div>
-    </div>
+    </Stack>
   );
 }
