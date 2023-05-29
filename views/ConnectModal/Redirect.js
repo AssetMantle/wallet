@@ -1,5 +1,6 @@
 import React from "react";
 import { useEffect } from "react";
+import { Stack } from "react-bootstrap";
 
 export default function Redirect({ byWallet, close, connected }) {
   const WalletConnectFunctions = {
@@ -37,9 +38,12 @@ export default function Redirect({ byWallet, close, connected }) {
   }, []);
 
   return (
-    <div className="bg-gray-800 p-4 rounded-4 w-100 my-auto">
-      <div className="d-flex align-items-center justify-content-between ">
-        <h1 className="body1 text-primary d-flex align-items-center gap-2">
+    <div className="bg-light-subtle p-4 rounded-4 w-100 my-auto">
+      <Stack
+        className="align-items-center justify-content-between"
+        direction="horizontal"
+      >
+        <h1 className="body1 text-primary d-flex align-items-center gap-2 m-0">
           Redirecting to keplr
         </h1>
         <button className="btn text-primary body1" onClick={() => close()}>
@@ -47,8 +51,8 @@ export default function Redirect({ byWallet, close, connected }) {
             <i className="bi bi-x-lg" />
           </span>
         </button>
-      </div>
-      <p className="text-white-200 caption my-1">
+      </Stack>
+      <p className="text-white-200 caption m-0 my-1">
         You are being redirected to {byWallet} for the next steps.
       </p>
     </div>

@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
+import { Button, Col, Row, Stack } from "react-bootstrap";
 
 export default function Mnemonic({ MnemonicSeed, close, setStep }) {
   const [hidden, setHidden] = useState(true);
@@ -64,9 +65,12 @@ export default function Mnemonic({ MnemonicSeed, close, setStep }) {
   };
 
   return (
-    <div className="bg-gray-800 p-4 rounded-4 w-100 my-auto">
-      <div className="d-flex align-items-center justify-content-between ">
-        <h1 className="body1 text-primary d-flex align-items-center gap-2">
+    <div className="bg-light-subtle p-4 rounded-4 w-100 my-auto">
+      <Stack
+        className="align-items-center justify-content-between"
+        direction="horizontal"
+      >
+        <h1 className="body1 text-primary d-flex align-items-center gap-2 m-0">
           <button className="" onClick={() => setStep(8)}>
             <i className="bi bi-chevron-left" />
           </button>
@@ -77,12 +81,16 @@ export default function Mnemonic({ MnemonicSeed, close, setStep }) {
             <i className="bi bi-x-lg" />
           </span>
         </button>
-      </div>
-      <p className="text-white-200 caption my-1 ps-2">
+      </Stack>
+      <p className="text-white-200 caption m-0 my-1 ps-2">
         Securely store this recovery phrase to recover wallet account
       </p>
-      <div className="d-flex align-items-center justify-content-between gap-2 my-4">
-        <div className="d-flex align-items-center gap-2">
+      <Stack
+        className="align-items-center justify-content-between my-4"
+        gap={2}
+        direction="horizontal"
+      >
+        <Stack className="align-items-center" gap={2} direction="horizontal">
           Click to show or hide seed phrase
           <button
             className="body2 text-primary"
@@ -94,51 +102,54 @@ export default function Mnemonic({ MnemonicSeed, close, setStep }) {
               <i className="bi bi-eye" />
             )}
           </button>
-        </div>
-        <div className="d-flex align-items-center box-nav">
-          <button
-            className={`am-link body2 box-nav-item px-4 py-1 ${
+        </Stack>
+        <Stack className="align-items-center box-nav" direction="horizontal">
+          <Button
+            variation="link"
+            className={`text-primary text-decoration-none body2 box-nav-item px-4 py-1 ${
               SeedLength === 12 ? "active" : ""
             }`}
             onClick={() => setSeedLength(12)}
           >
             12
-          </button>
-          <button
-            className={`am-link body2 d-flex gap-1 box-nav-item px-4 py-1 ${
+          </Button>
+          <Button
+            variation="link"
+            className={`text-primary text-decoration-none body2 d-flex gap-1 box-nav-item px-4 py-1 ${
               SeedLength === 24 ? "active" : ""
             }`}
             onClick={() => setSeedLength(24)}
           >
             24
-          </button>
-        </div>
-      </div>
-      <div className="row mt-4">
+          </Button>
+        </Stack>
+      </Stack>
+      <Row className="mt-4">
         {React.Children.toArray(
           [...Array(SeedLength)].map((a, index) => (
-            <div key={index} className={`col-3 d-flex flex-column gap-1 my-1`}>
+            <Col xs={3} key={index} className={`d-flex flex-column gap-1 my-1`}>
               {index + 1 < 10 ? `0${index + 1}` : index + 1}
               <input
-                className="am-input border-color-white bg-t mnemonic rounded-2 p-1 px-2"
+                className="border border-white bg-transparent mnemonic rounded-2 p-1 px-2"
                 type={hidden ? "password" : "text"}
                 onChange={(e) => handleInputSeed(e)}
                 onFocus={() => setFocused(index)}
                 onKeyDown={(e) => handleKeyDown(e)}
                 onPaste={(e) => handlePaste(e)}
               />
-            </div>
+            </Col>
           ))
         )}
-      </div>
-      <div className="d-flex mt-4">
-        <button
-          className="button-primary px-5 py-1 ms-auto"
+      </Row>
+      <Stack className="mt-4">
+        <Button
+          variant="primary"
+          className="rounded-5 px-5 py-1 ms-auto"
           onClick={handleConfirm}
         >
           Confirm
-        </button>
-      </div>
+        </Button>
+      </Stack>
     </div>
   );
 }
