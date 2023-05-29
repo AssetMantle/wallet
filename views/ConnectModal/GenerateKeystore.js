@@ -1,49 +1,61 @@
 import React from "react";
+import { Button, Stack } from "react-bootstrap";
 
 export default function GenerateKeystore({ close, setStep }) {
   const handleImportExistingMnemonic = () => {
     console.log("Importing Existing Mnemonic");
   };
   return (
-    <div className="bg-gray-800 p-4 rounded-4 w-100 my-auto">
-      <div className="d-flex align-items-center justify-content-between ">
-        <h1 className="body1 text-primary d-flex align-items-center gap-2">
+    <div className="bg-light-subtle p-4 rounded-4 w-100 my-auto">
+      <Stack
+        className="align-items-center justify-content-between"
+        direction="horizontal"
+      >
+        <h1 className="body1 text-primary d-flex align-items-center gap-2 m-0">
           <button className="" onClick={() => setStep(4)}>
             <i className="bi bi-chevron-left" />
           </button>
           Create Keystore
         </h1>
-        <button className="btn text-primary body1" onClick={() => close()}>
+        <Button
+          variant="link"
+          className="text-primary text-decoration-none body1"
+          onClick={() => close()}
+        >
           <span className="text-primary">
             <i className="bi bi-x-lg" />
           </span>
-        </button>
-      </div>
-      <p className="text-white-200 caption my-1 ps-2">
+        </Button>
+      </Stack>
+      <p className="text-white-200 caption my-1 ps-2 m-0">
         Connect your wallet using any of the options below.
       </p>
-      <div className="d-flex align-items-center justify-content-center flex-column mt-5 gap-4">
-        <button
-          className="button-secondary px-3 py-2 d-flex align-items-center gap-2"
+      <Stack className="align-items-center justify-content-center mt-5" gap={4}>
+        <Button
+          variant="outline-primary"
+          className="px-3 py-2 d-flex align-items-center gap-2"
           onClick={handleImportExistingMnemonic}
         >
           Import Existing Mnemonic <i className="bi bi-download" />
-        </button>
-        <div
-          className="d-flex align-items-center gap-2 body2"
+        </Button>
+        <Stack
+          className="align-items-center body2"
+          gap={2}
+          direction="horizontal"
           style={{ width: "min(300px, 100%)" }}
         >
           <hr className="flex-grow-1 w-100" />
           Or
           <hr className="flex-grow-1 w-100" />
-        </div>
-        <button
-          className="button-secondary px-3 py-2 d-flex align-items-center gap-2"
+        </Stack>
+        <Button
+          variant="outline-primary"
+          className="px-3 py-2 d-flex align-items-center gap-2"
           onClick={() => setStep(9)}
         >
           Generate New mnemonic <i className="bi bi-plus-circle" />
-        </button>
-      </div>
+        </Button>
+      </Stack>
     </div>
   );
 }

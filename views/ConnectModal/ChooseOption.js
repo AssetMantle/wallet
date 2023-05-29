@@ -1,4 +1,5 @@
 import React from "react";
+import { Button, Stack } from "react-bootstrap";
 
 export default function ChooseOption({
   ExistingWallet,
@@ -31,94 +32,119 @@ export default function ChooseOption({
   };
 
   return (
-    <div className="bg-gray-800 p-4 rounded-4 w-100 my-auto">
-      <div className="d-flex align-items-center justify-content-between ">
-        <h1 className="body1 text-primary">Connect Wallet</h1>
+    <div className="bg-light-subtle p-4 rounded-4 w-100 my-auto">
+      <Stack className="d-flex align-items-center justify-content-between ">
+        <h1 className="body1 text-primary m-0">Connect Wallet</h1>
         <button className="btn text-primary body1" onClick={() => close()}>
           <span className="text-primary">
             <i className="bi bi-x-lg" />
           </span>
         </button>
-      </div>
+      </Stack>
       <div className="text-white body2 my-1 text-center">Connect With</div>
-      <p className="text-white-200 caption my-1 text-center">
+      <p className="text-white-200 caption my-1 text-center m-0">
         Connect your wallet using any of the options below
       </p>
-      <div className="d-flex flex-column gap-3 mt-5">
-        <h2 className="caption text-white">Connect with existing Wallet</h2>
-        <div className="d-flex gap-2 flex-wrap">
+      <Stack className="mt-5" gap={3}>
+        <h2 className="caption text-white m-0">Connect with existing Wallet</h2>
+        <Stack className="flex-wrap" gap={2} direction="horizontal">
           {ExistingWallet &&
             Array.isArray(ExistingWallet) &&
             ExistingWallet.length > 0 &&
             React.Children.toArray(
               ExistingWallet.map((wallet, index) => (
-                <button
+                <Button
+                  variant="outline-primary"
                   key={index}
-                  className="d-flex align-items-center gap-1 button-secondary py-2 px-4 rounded-2"
+                  className="d-flex align-items-center gap-1 py-2 px-4 rounded-2"
                   onClick={() => handleSelect(wallet.name.toLowerCase(), 2)}
                 >
                   {wallet.name}
                   <div
-                    className="position-relative"
+                    className="position-relative overflow-hidden"
                     style={{ width: "28px", aspectRatio: "1/1" }}
                   >
-                    <img layout="fill" src={wallet.icon} alt={wallet.name} />
+                    <img
+                      layout="fill"
+                      className="w-100 h-100"
+                      src={wallet.icon}
+                      alt={wallet.name}
+                      style={{ objectFit: "cover", objectPosition: "center" }}
+                    />
                   </div>
-                </button>
+                </Button>
               ))
             )}
-        </div>
+        </Stack>
         <hr className="my-2" />
-        <h2 className="caption text-white">Connect with Ledger</h2>
-        <div className="d-flex">
-          <button
-            className="d-flex align-items-center gap-1 button-secondary py-2 px-4 rounded-2"
+        <h2 className="caption text-white m-0">Connect with Ledger</h2>
+        <Stack className="" direction="horizontal">
+          <Button
+            variant="outline-primary"
+            className="d-flex align-items-center gap-1 py-2 px-4 rounded-2"
             onClick={() => handleLedger(Ledger.name.toLowerCase())}
           >
             {Ledger.name}
             <div
-              className="position-relative"
+              className="position-relative overflow-hidden"
               style={{ width: "28px", aspectRatio: "1/1" }}
             >
-              <img layout="fill" src={Ledger.icon} alt={Ledger.name} />
+              <img
+                layout="fill"
+                src={Ledger.icon}
+                alt={Ledger.name}
+                className="h-100 w-100"
+                style={{ objectFit: "cover", objectPosition: "center" }}
+              />
             </div>
-          </button>
-        </div>
+          </Button>
+        </Stack>
         <hr className="my-2" />
-        <h2 className="caption text-white">Connect with Keystore</h2>
-        <div className="d-flex">
-          <button
-            className="d-flex align-items-center gap-1 button-secondary py-2 px-4 rounded-2"
+        <h2 className="caption text-white m-0">Connect with Keystore</h2>
+        <Stack className="" direction="horizontal">
+          <Button
+            variant="outline-primary"
+            className="d-flex align-items-center gap-1 py-2 px-4 rounded-2"
             onClick={() => handleSelect(Keystore.name.toLowerCase(), 4)}
           >
             {Keystore.name}
             <div
-              className="position-relative"
+              className="position-relative overflow-hidden"
               style={{ width: "28px", aspectRatio: "1/1" }}
             >
-              <img layout="fill" src={Keystore.icon} alt={Keystore.name} />
+              <img
+                layout="fill"
+                src={Keystore.icon}
+                alt={Keystore.name}
+                className="h-100 w-100"
+                style={{ objectFit: "cover", objectPosition: "center" }}
+              />
             </div>
-          </button>
-        </div>
-        <div className="d-flex align-items-center gap-2 body2">
+          </Button>
+        </Stack>
+        <Stack
+          className="align-items-center body2"
+          gap={2}
+          direction="horizontal"
+        >
           <hr className="divider" />
           Or
           <hr className="divider" />
-        </div>
-        <div className="d-flex flex-column">
+        </Stack>
+        <Stack className="">
           <div className="text-white body2 text-center">Generate Only Mode</div>
-          <p className="text-white-200 caption text-center">
+          <p className="text-white-200 caption text-center m-0">
             Use this option to view only and generate .json for transactions
           </p>
-        </div>
+        </Stack>
         <input
           type="text"
-          className="am-input border-color-white bg-transparent px-4 py-1 rounded-2 mt-3"
+          className="border border-white bg-transparent px-4 py-1 rounded-2 mt-3"
           placeholder="Input your wallet address"
           value={WalletAddress}
           onChange={(e) => handleGenerateMode(e)}
         />
-      </div>
+      </Stack>
     </div>
   );
 }
