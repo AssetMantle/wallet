@@ -38,7 +38,7 @@ export default function Stake() {
   );
 
   const CustomToastWithLink = ({ txHash }) => (
-    <p>
+    <p className="m-0">
       Transaction Submitted. Check
       <Link href={`https://explorer.assetmantle.one/transactions/${txHash}`}>
         <a style={{ color: "#ffc640" }} target="_blank">
@@ -134,8 +134,8 @@ export default function Stake() {
                 </Button>
               </div>
             </Stack>
-            <div
-              className="d-flex flex-column w-100 bg-black p-2 rounded-4 flex-grow-1"
+            <Stack
+              className="w-100 bg-black p-2 rounded-4 flex-grow-1"
               style={{ height: "88%" }}
             >
               <Stack
@@ -148,12 +148,6 @@ export default function Stake() {
                   direction="horizontal"
                   className="border border-white rounded-3 py-1 px-3 align-items-center flex-grow-1"
                 >
-                  {/* <span
-                    className="input-group-text bg-transparent p-0 h-100"
-                    id="basic-addon1"
-                    style={{ border: "none" }}
-                  >
-                  </span> */}
                   <i className="bi bi-search text-white"></i>
                   <input
                     type="search"
@@ -186,8 +180,10 @@ export default function Stake() {
                   >
                     <i className="bi bi-info-circle"></i>
                   </OverlayTrigger>
-                  <div
-                    className={`d-flex rounded-4 align-items-center transitionAll ${
+                  <Stack
+                    as="span"
+                    direction="horizontal"
+                    className={`rounded-4 align-items-center transitionAll my-auto ${
                       delegated
                         ? "bg-primary justify-content-end"
                         : "bg-white justify-content-start"
@@ -195,7 +191,7 @@ export default function Stake() {
                     style={{ width: "40px", padding: "2px" }}
                   >
                     <span className="p-2 rounded-4 bg-dark"></span>
-                  </div>
+                  </Stack>
                 </Stack>
               </Stack>
               <div className="w-100 mt-3 h-100" style={{ overflow: "auto" }}>
@@ -287,7 +283,7 @@ export default function Stake() {
                   </tbody>
                 </table>
               </div>
-            </div>
+            </Stack>
           </Stack>
         </Col>
 
