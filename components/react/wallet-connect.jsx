@@ -14,7 +14,7 @@ const CustomToastWithLink = ({ wallet }) => {
     wallet
   );
   return (
-    <p>
+    <p className="m-0">
       Wallet not found. To install click
       <Link href={ConnectOptionObject[wallet]?.installUrl}>
         <a style={{ color: "#ffc640" }} target="_blank">
