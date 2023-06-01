@@ -22,8 +22,7 @@ import {
   useMntlUsd,
 } from "../data";
 import { shiftDecimalPlaces } from "../lib";
-import ModalContainer from "./ModalContainer";
-import { Stack } from "react-bootstrap";
+import { Button, Modal, Stack } from "react-bootstrap";
 
 const denomDisplay = defaultChainSymbol;
 
@@ -234,564 +233,609 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
         </Stack>
         {/* Undelegation Modal */}
         {
-          <ModalContainer
-            active={UnDelegateModal}
-            setActive={setUnDelegateModal}
+          <Modal
+            show={UnDelegateModal}
+            onHide={() => setUnDelegateModal(false)}
+            centered
+            size="md"
+            aria-labelledby="undelegation-modal"
           >
-            <div className="d-flex flex-column bg-gray-700 m-auto p-4 rounded-3 w-100">
-              <div className="d-flex align-items-center justify-content-between">
-                <h5 className="body2 text-primary d-flex align-items-center gap-2">
-                  <button
-                    className="btn-close primary bg-t"
-                    onClick={() => setUnDelegateModal(false)}
-                    style={{ background: "none" }}
-                  >
-                    <span className="text-primary">
-                      <i className="bi bi-chevron-left" />
-                    </span>
-                  </button>
-                  Undelegate
-                </h5>
-                <button
-                  className="btn-close primary bg-t"
-                  onClick={() => setUnDelegateModal(false)}
-                  style={{ background: "none" }}
+            <Modal.Body className="p-0">
+              <Stack className="bg-gray-700 m-auto p-4 rounded-3 w-100">
+                <Stack
+                  className="align-items-center justify-content-between"
+                  direction="horizontal"
                 >
-                  <span className="text-primary">
-                    <i className="bi bi-x-lg" />
-                  </span>
-                </button>
-              </div>
-              <div className="py-4 text-center d-flex flex-column gap-1">
-                <div className="d-flex justify-content-between">
-                  <label htmlFor="delegationAmount" className="caption2 mb-1">
-                    Undelegate amount
-                  </label>
-                  <small className="caption2 text-body">
-                    Delegated Amount:{" "}
-                    {getBalanceStyle(
-                      fromChainDenom(
-                        delegatedValidators?.find(
-                          (item) =>
-                            item?.operatorAddress ===
-                            stakeState?.undelegationSrc
-                        )?.delegatedAmount
-                      ),
-                      "caption2 text-body",
-                      "small text-body"
-                    )}
-                  </small>
-                </div>
-                <div>
-                  <div className="p-3 border-white py-2 d-flex rounded-2 gap-2 am-input">
-                    <input
-                      className="bg-t"
-                      id="delegationAmount"
-                      style={{ flex: "1", border: "none", outline: "none" }}
-                      value={stakeState?.undelegationAmount}
-                      type="text"
-                      placeholder="Enter Undelegate Amount"
-                      onChange={(e) =>
-                        stakeDispatch({
-                          type: "CHANGE_UNDELEGATION_AMOUNT",
-                          payload: e.target.value,
-                        })
-                      }
-                    ></input>
+                  <h5 className="body2 text-primary d-flex align-items-center gap-2 m-0">
                     <button
-                      onClick={() =>
-                        stakeDispatch({
-                          type: "SET_MAX_UNDELEGATION_AMOUNT",
-                        })
-                      }
-                      className="text-primary"
+                      className="primary bg-transparent"
+                      onClick={() => setUnDelegateModal(false)}
                     >
-                      Max
+                      <i className="bi bi-chevron-left text-primary" />
                     </button>
-                  </div>
-                  <small
-                    id="amountInputErrorMsg"
-                    className="form-text text-danger d-flex align-items-center gap-1"
+                    Undelegate
+                  </h5>
+                  <button
+                    className="primary bg-transparent"
+                    onClick={() => setUnDelegateModal(false)}
                   >
-                    {stakeState?.errorMessages?.undelegationAmountErrorMsg && (
-                      <i className="bi bi-info-circle" />
-                    )}{" "}
-                    {stakeState?.errorMessages?.undelegationAmountErrorMsg}
-                  </small>
-                </div>
-              </div>
-              <div className="d-flex align-items-center gap-2 justify-content-end">
-                <button
-                  type="button"
-                  disabled={
-                    stakeState?.errorMessages?.undelegationAmountErrorMsg
-                  }
-                  className="button-primary px-5 py-2"
-                  onClick={handleUndelegate}
+                    <i className="bi bi-x-lg text-primary" />
+                  </button>
+                </Stack>
+                <Stack className="py-4 text-center" gap={1}>
+                  <Stack
+                    className="justify-content-between"
+                    direction="horizontal"
+                  >
+                    <label htmlFor="delegationAmount" className="caption2 mb-1">
+                      Undelegate amount
+                    </label>
+                    <small className="caption2 text-body">
+                      Delegated Amount:{" "}
+                      {getBalanceStyle(
+                        fromChainDenom(
+                          delegatedValidators?.find(
+                            (item) =>
+                              item?.operatorAddress ===
+                              stakeState?.undelegationSrc
+                          )?.delegatedAmount
+                        ),
+                        "caption2 text-body",
+                        "small text-body"
+                      )}
+                    </small>
+                  </Stack>
+                  <div>
+                    <Stack
+                      className="p-3 border-white py-2 rounded-2 border border-white"
+                      direction="horizontal"
+                      gap={2}
+                    >
+                      <input
+                        className="bg-transparent flex-grow-1 border border-0"
+                        id="delegationAmount"
+                        style={{ outline: "none" }}
+                        value={stakeState?.undelegationAmount}
+                        type="text"
+                        placeholder="Enter Undelegate Amount"
+                        onChange={(e) =>
+                          stakeDispatch({
+                            type: "CHANGE_UNDELEGATION_AMOUNT",
+                            payload: e.target.value,
+                          })
+                        }
+                      ></input>
+                      <button
+                        onClick={() =>
+                          stakeDispatch({
+                            type: "SET_MAX_UNDELEGATION_AMOUNT",
+                          })
+                        }
+                        className="text-primary"
+                      >
+                        Max
+                      </button>
+                    </Stack>
+                    <small
+                      id="amountInputErrorMsg"
+                      className="form-text text-danger d-flex align-items-center gap-1"
+                    >
+                      {stakeState?.errorMessages
+                        ?.undelegationAmountErrorMsg && (
+                        <i className="bi bi-info-circle" />
+                      )}{" "}
+                      {stakeState?.errorMessages?.undelegationAmountErrorMsg}
+                    </small>
+                  </div>
+                </Stack>
+                <Stack
+                  className="align-items-center justify-content-end"
+                  gap={2}
+                  direction="horizontal"
                 >
-                  Submit
-                </button>
-              </div>
-            </div>
-          </ModalContainer>
+                  <Button
+                    variant="primary"
+                    disabled={
+                      stakeState?.errorMessages?.undelegationAmountErrorMsg
+                    }
+                    className="rounded-5 px-5 py-2"
+                    onClick={handleUndelegate}
+                  >
+                    Submit
+                  </Button>
+                </Stack>
+              </Stack>
+            </Modal.Body>
+          </Modal>
         }
         {/* {Redelegation Modal} */}
-        <ModalContainer active={ReDelegateModal} setActive={setReDelegateModal}>
-          <div className="d-flex flex-column bg-gray-700 m-auto p-4 rounded-3 w-100">
-            <div className="d-flex align-items-center justify-content-between">
-              <h5 className="body2 text-primary d-flex align-items-center gap-2">
+        <Modal
+          show={ReDelegateModal}
+          onHide={() => setReDelegateModal(false)}
+          centered
+          size="lg"
+          aria-labelledby="redelegation-modal"
+          scrollable
+        >
+          <Modal.Body className="p-0">
+            <Stack className="bg-gray-700 m-auto p-4 rounded-3 w-100">
+              <Stack
+                className="align-items-center justify-content-between"
+                direction="horizontal"
+              >
+                <h5 className="body2 text-primary d-flex align-items-center gap-2 m-0">
+                  <button
+                    className="primary bg-transparent"
+                    onClick={() => setReDelegateModal(false)}
+                    style={{ background: "none" }}
+                  >
+                    <i className="bi bi-chevron-left text-primary" />
+                  </button>
+                  Redelegate
+                </h5>
                 <button
-                  className="btn-close primary bg-t"
+                  className="primary bg-transparent"
                   onClick={() => setReDelegateModal(false)}
                   style={{ background: "none" }}
                 >
-                  <span className="text-primary">
-                    <i className="bi bi-chevron-left" />
-                  </span>
+                  <i className="bi bi-x-lg text-primary" />
                 </button>
-                Redelegate
-              </h5>
-              <button
-                className="btn-close primary bg-t"
-                onClick={() => setReDelegateModal(false)}
-                style={{ background: "none" }}
-              >
-                <span className="text-primary">
-                  <i className="bi bi-x-lg" />
-                </span>
-              </button>
-            </div>
-            <div className="py-4 text-center d-flex flex-column align-items-start">
-              <p className="text-muted caption2 text-body my-2">
-                Delegate From
-              </p>{" "}
-              <div className="d-flex align-items-center gap-2">
-                <p className="ps-3 caption2">Validator Name: </p>
-                <div
-                  className="d-flex justify-content-around position-relative rounded-circle"
-                  style={{ width: "20px", aspectRatio: "1/1" }}
+              </Stack>
+              <Stack className="py-4 text-center align-items-start">
+                <p className="text-muted caption2 text-body m-0 my-2">
+                  Delegate From
+                </p>{" "}
+                <Stack
+                  className="align-items-center"
+                  gap={2}
+                  direction="horizontal"
                 >
-                  <img
-                    layout="fill"
-                    alt={
+                  <p className="ps-3 caption2 m-0">Validator Name: </p>
+                  <div
+                    className="d-flex justify-content-around position-relative rounded-circle"
+                    style={{ width: "20px", aspectRatio: "1/1" }}
+                  >
+                    <img
+                      layout="fill"
+                      alt={
+                        delegatedValidators?.find(
+                          (item) =>
+                            item?.operatorAddress ===
+                            stakeState?.selectedValidators[0]
+                        )?.description?.moniker
+                      }
+                      className="rounded-circle w-100 h-auto"
+                      src={`/validatorAvatars/${
+                        delegatedValidators?.find(
+                          (item) =>
+                            item?.operatorAddress ===
+                            stakeState?.selectedValidators[0]
+                        )?.operatorAddress
+                      }.png`}
+                      onError={handleOnError}
+                    />
+                  </div>
+                  <a
+                    href={`https://explorer.assetmantle.one/validators/${
+                      delegatedValidators?.find(
+                        (item) =>
+                          item?.operatorAddress ===
+                          stakeState?.selectedValidators[0]
+                      )?.operatorAddress
+                    }`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {
                       delegatedValidators?.find(
                         (item) =>
                           item?.operatorAddress ===
                           stakeState?.selectedValidators[0]
                       )?.description?.moniker
                     }
-                    className="rounded-circle w-100 h-auto"
-                    src={`/validatorAvatars/${
+                  </a>
+                </Stack>
+                <p className="ps-3 m-0 my-2 caption2">
+                  Delegated Amount:{" "}
+                  {getBalanceStyle(
+                    fromChainDenom(
                       delegatedValidators?.find(
                         (item) =>
                           item?.operatorAddress ===
                           stakeState?.selectedValidators[0]
-                      )?.operatorAddress
-                    }.png`}
-                    onError={handleOnError}
-                  />
-                </div>
-                <a
-                  href={`https://explorer.assetmantle.one/validators/${
-                    delegatedValidators?.find(
-                      (item) =>
-                        item?.operatorAddress ===
-                        stakeState?.selectedValidators[0]
-                    )?.operatorAddress
-                  }`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {
-                    delegatedValidators?.find(
-                      (item) =>
-                        item?.operatorAddress ===
-                        stakeState?.selectedValidators[0]
-                    )?.description?.moniker
-                  }
-                </a>
-              </div>
-              <p className="ps-3 my-2 caption2">
-                Delegated Amount:{" "}
-                {getBalanceStyle(
-                  fromChainDenom(
-                    delegatedValidators?.find(
-                      (item) =>
-                        item?.operatorAddress ===
-                        stakeState?.selectedValidators[0]
-                    )?.delegatedAmount
-                  ),
-                  "caption",
-                  "caption2"
-                )}
-              </p>
-              <p className="text-muted caption2 text-body my-2">Delegate To</p>
-              <div className="bg-black d-flex flex-column p-2 rounded-3 w-100">
-                <div className="d-flex align-items-center justify-content-between my-2 w-100 gap-3">
-                  <div
-                    className="d-flex gap-2 am-input border-color-white rounded-3 py-1 px-3 align-items-center"
-                    style={{ flex: "1" }}
-                  >
-                    <span
-                      className="input-group-text bg-t p-0 h-100"
-                      id="basic-addon1"
-                      style={{ border: "none" }}
-                    >
-                      <i className="bi bi-search text-primary"></i>
-                    </span>
-                    <input
-                      type="search"
-                      className="am-input bg-t p-1 w-100 h-100"
-                      placeholder="Search"
-                      aria-label="Search"
-                      style={{ border: "none" }}
-                      onChange={(e) => setSearchValue(e.target.value)}
-                    />
-                  </div>
-                  <div className="btn-group">
-                    <button
-                      className={`${
-                        activeValidators
-                          ? "btn btn-primary"
-                          : "btn btn-inactive"
-                      } caption`}
-                      onClick={() => setActiveValidators(true)}
-                    >
-                      Active
-                    </button>
-                    <button
-                      className={`${
-                        !activeValidators
-                          ? "btn btn-primary"
-                          : "btn btn-inactive"
-                      } caption`}
-                      onClick={() => setActiveValidators(false)}
-                    >
-                      Inactive
-                    </button>
-                  </div>
-                </div>
-                <div
-                  className="d-flex w-100 mt-3"
-                  style={{ overflow: "auto", maxHeight: "300px" }}
-                >
-                  <table
-                    className="table "
-                    style={{ width: "max-content", minWidth: "100%" }}
-                  >
-                    <thead
-                      className="bt-0 top-0 bg-black"
-                      style={{
-                        zIndex: "200",
-                      }}
-                    >
-                      <tr>
-                        <th></th>
-                        <th className="text-white text-wrap " scope="col">
-                          Rank
-                        </th>
-                        {/* <th></th> */}
-                        <th
-                          className="text-white text-wrap "
-                          scope="col"
-                          colSpan={2}
-                        >
-                          Validator Name
-                        </th>
-                        <th className="text-white text-wrap " scope="col">
-                          Voting Power
-                        </th>
-                        <th className="text-white text-wrap " scope="col">
-                          Commission
-                        </th>
-                        <th className="text-white text-wrap " scope="col">
-                          Delegations
-                        </th>
-                        <th className="text-white text-wrap " scope="col">
-                          Delegated Amount
-                        </th>
-                        {activeValidators ? null : (
-                          <th className="text-white text-wrap " scope="col">
-                            Jailed
-                          </th>
-                        )}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {activeValidators
-                        ? allValidatorsBonded
-                            ?.sort((a, b) => b.tokens - a.tokens)
-                            ?.filter((item) =>
-                              item?.description?.moniker
-                                .toLowerCase()
-                                .includes(searchValue.toLowerCase())
-                            )
-                            ?.map((item, index) => (
-                              <tr key={index} className="text-white">
-                                <td>
-                                  <input
-                                    type="radio"
-                                    name="radio"
-                                    className="radio-btn"
-                                    onChange={() =>
-                                      stakeDispatch({
-                                        type: "SET_REDELEGATION_DESTINATION_ADDRESS",
-                                        payload: item?.operatorAddress,
-                                      })
-                                    }
-                                  />
-                                </td>
-                                <td>{index + 1}</td>
-                                <td>
-                                  {" "}
-                                  <div
-                                    className="d-flex position-relative rounded-circle"
-                                    style={{
-                                      width: "25px",
-                                      aspectRatio: "1/1",
-                                    }}
-                                  >
-                                    <img
-                                      layout="fill"
-                                      alt={item?.description?.moniker}
-                                      className="rounded-circle"
-                                      src={`/validatorAvatars/${item?.operatorAddress}.png`}
-                                      onError={handleOnError}
-                                    />
-                                  </div>
-                                </td>
-                                <td>
-                                  {" "}
-                                  <a
-                                    href={`https://explorer.assetmantle.one/validators/${item.operatorAddress}`}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                  >
-                                    {item?.description?.moniker}
-                                    <i className="bi bi-arrow-up-right" />
-                                  </a>
-                                </td>
-                                <td>
-                                  {((item?.tokens * 100) / totalTokens).toFixed(
-                                    4
-                                  )}
-                                  %
-                                </td>
-
-                                <td>
-                                  {shiftDecimalPlaces(
-                                    item?.commission?.commissionRates?.rate,
-                                    -16
-                                  )}{" "}
-                                  %
-                                </td>
-                                <td>
-                                  {getBalanceStyle(
-                                    fromChainDenom(item?.tokens, 2),
-                                    "caption",
-                                    "caption2"
-                                  )}
-                                </td>
-                                <td>
-                                  {" "}
-                                  {delegatedValidators?.find(
-                                    (element) =>
-                                      element?.operatorAddress ==
-                                      item?.operatorAddress
-                                  )
-                                    ? getBalanceStyle(
-                                        fromChainDenom(
-                                          delegatedValidators?.find(
-                                            (element) =>
-                                              element?.operatorAddress ==
-                                              item?.operatorAddress
-                                          )?.delegatedAmount
-                                        ),
-                                        "caption",
-                                        "caption2"
-                                      )
-                                    : "-"}
-                                </td>
-                              </tr>
-                            ))
-                        : allValidatorsUnbonded
-                            ?.filter((item) =>
-                              item?.description?.moniker
-                                .toLowerCase()
-                                .includes(searchValue.toLowerCase())
-                            )
-                            ?.map((item, index) => (
-                              <tr key={index} className="text-white">
-                                <td>
-                                  <input
-                                    type="radio"
-                                    name="radio"
-                                    onChange={() =>
-                                      stakeDispatch({
-                                        type: "SET_REDELEGATION_DESTINATION_ADDRESS",
-                                        payload: item?.operatorAddress,
-                                      })
-                                    }
-                                  />
-                                </td>
-                                <td>{index + 1}</td>
-                                <td>
-                                  <div
-                                    className="d-flex position-relative rounded-circle"
-                                    style={{
-                                      width: "25px",
-                                      aspectRatio: "1/1",
-                                    }}
-                                  >
-                                    <img
-                                      layout="fill"
-                                      alt={item?.description?.moniker}
-                                      className="rounded-circle"
-                                      src={`/validatorAvatars/${item?.operatorAddress}.png`}
-                                      onError={handleOnError}
-                                    />
-                                  </div>
-                                </td>
-                                <td>
-                                  {" "}
-                                  <a
-                                    href={`https://explorer.assetmantle.one/validators/${item.operatorAddress}`}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                  >
-                                    {item?.description?.moniker}
-                                    <i className="bi bi-arrow-up-right" />
-                                  </a>
-                                </td>
-                                <td>
-                                  {((item?.tokens * 100) / totalTokens).toFixed(
-                                    4
-                                  )}
-                                  %
-                                </td>
-
-                                <td>
-                                  {shiftDecimalPlaces(
-                                    item?.commission?.commissionRates?.rate,
-                                    -16
-                                  )}{" "}
-                                  %
-                                </td>
-                                <td>
-                                  {getBalanceStyle(
-                                    fromChainDenom(item?.tokens, 2),
-                                    "caption",
-                                    "caption2"
-                                  )}
-                                </td>
-                                <td>
-                                  {delegatedValidators?.find(
-                                    (element) =>
-                                      element?.operatorAddress ==
-                                      item?.operatorAddress
-                                  )
-                                    ? getBalanceStyle(
-                                        fromChainDenom(
-                                          delegatedValidators?.find(
-                                            (element) =>
-                                              element?.operatorAddress ==
-                                              item?.operatorAddress
-                                          )?.delegatedAmount
-                                        ),
-                                        "caption",
-                                        "caption2"
-                                      )
-                                    : "-"}
-                                </td>
-                                <td>
-                                  {item?.jailed ? (
-                                    <i className="bi bi-exclamation-octagon text-danger"></i>
-                                  ) : (
-                                    "-"
-                                  )}
-                                </td>
-                              </tr>
-                            ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <div className="d-flex justify-content-between w-100 mt-4">
-                <label
-                  htmlFor="redelegationAmount"
-                  className="caption text-body my-2"
-                >
-                  Delegation amount
-                </label>{" "}
-                <small className="caption2 text-body my-2">
-                  Delegated Amount :{" "}
-                  {getBalanceStyle(
-                    fromChainDenom(
-                      delegatedValidators?.find((item) =>
-                        item?.operatorAddress?.includes(
-                          stakeState?.selectedValidators
-                        )
                       )?.delegatedAmount
                     ),
-                    "caption2 text-body",
-                    "small text-body"
+                    "caption",
+                    "caption2"
                   )}
-                  &nbsp;
-                  {defaultChainSymbol}
-                </small>
-              </div>
-              <div className="w-100">
-                <div className="p-3 border-white py-2 d-flex rounded-2 gap-2 am-input">
-                  <input
-                    className="bg-t "
-                    id="redelegationAmount"
-                    style={{
-                      flex: "1",
-                      border: "none",
-                      outline: "none",
-                    }}
-                    type="text"
-                    value={stakeState?.redelegationAmount}
-                    placeholder="Enter Redelegation Amount"
-                    onChange={(e) =>
-                      stakeDispatch({
-                        type: "CHANGE_REDELEGATION_AMOUNT",
-                        payload: e.target.value,
-                      })
-                    }
-                  ></input>
-                  <button
-                    onClick={() =>
-                      stakeDispatch({ type: "SET_MAX_REDELEGATION_AMOUNT" })
-                    }
-                    className="text-primary"
+                </p>
+                <p className="text-muted caption2 text-body m-0 my-2">
+                  Delegate To
+                </p>
+                <Stack className="bg-black p-2 rounded-3 w-100">
+                  <Stack
+                    className="align-items-center justify-content-between my-2 w-100"
+                    gap={3}
+                    direction="horizontal"
                   >
-                    Max
-                  </button>
-                </div>
-                <small
-                  id="amountInputErrorMsg"
-                  className="form-text text-danger d-flex align-items-center gap-1"
+                    <Stack
+                      className="border border-white rounded-3 py-1 px-3 align-items-center"
+                      direction="horizontal"
+                      gap={2}
+                      style={{ flex: "1" }}
+                    >
+                      <i className="bi bi-search text-primary"></i>
+                      <input
+                        type="search"
+                        className="bg-transparent p-1 w-100 h-100"
+                        placeholder="Search"
+                        aria-label="Search"
+                        style={{ border: "none" }}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                      />
+                    </Stack>
+                    <div className="btn-group">
+                      <Button
+                        variant={`${
+                          activeValidators ? "primary" : "outline-light"
+                        }`}
+                        className={`${
+                          activeValidators ? "text-dark" : ""
+                        } caption`}
+                        onClick={() => setActiveValidators(true)}
+                      >
+                        Active
+                      </Button>
+                      <Button
+                        variant={`${
+                          !activeValidators ? "primary" : "outline-light"
+                        }`}
+                        className={`${
+                          !activeValidators ? "text-dark" : ""
+                        } caption`}
+                        onClick={() => setActiveValidators(false)}
+                      >
+                        Inactive
+                      </Button>
+                    </div>
+                  </Stack>
+                  <Stack
+                    className="w-100 mt-3 overflow-auto"
+                    style={{ maxHeight: "300px" }}
+                  >
+                    <table
+                      className="table"
+                      style={{ width: "max-content", minWidth: "100%" }}
+                    >
+                      <thead
+                        className="bt-0 top-0 bg-black"
+                        style={{
+                          zIndex: "200",
+                        }}
+                      >
+                        <tr>
+                          <th></th>
+                          <th className="text-white text-wrap " scope="col">
+                            Rank
+                          </th>
+                          {/* <th></th> */}
+                          <th
+                            className="text-white text-wrap "
+                            scope="col"
+                            colSpan={2}
+                          >
+                            Validator Name
+                          </th>
+                          <th className="text-white text-wrap " scope="col">
+                            Voting Power
+                          </th>
+                          <th className="text-white text-wrap " scope="col">
+                            Commission
+                          </th>
+                          <th className="text-white text-wrap " scope="col">
+                            Delegations
+                          </th>
+                          <th className="text-white text-wrap " scope="col">
+                            Delegated Amount
+                          </th>
+                          {activeValidators ? null : (
+                            <th className="text-white text-wrap " scope="col">
+                              Jailed
+                            </th>
+                          )}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {activeValidators
+                          ? allValidatorsBonded
+                              ?.sort((a, b) => b.tokens - a.tokens)
+                              ?.filter((item) =>
+                                item?.description?.moniker
+                                  .toLowerCase()
+                                  .includes(searchValue.toLowerCase())
+                              )
+                              ?.map((item, index) => (
+                                <tr key={index} className="text-white">
+                                  <td>
+                                    <input
+                                      type="radio"
+                                      name="radio"
+                                      className="radio-btn"
+                                      onChange={() =>
+                                        stakeDispatch({
+                                          type: "SET_REDELEGATION_DESTINATION_ADDRESS",
+                                          payload: item?.operatorAddress,
+                                        })
+                                      }
+                                    />
+                                  </td>
+                                  <td>{index + 1}</td>
+                                  <td>
+                                    {" "}
+                                    <div
+                                      className="d-flex position-relative rounded-circle"
+                                      style={{
+                                        width: "25px",
+                                        aspectRatio: "1/1",
+                                      }}
+                                    >
+                                      <img
+                                        layout="fill"
+                                        alt={item?.description?.moniker}
+                                        className="rounded-circle"
+                                        src={`/validatorAvatars/${item?.operatorAddress}.png`}
+                                        onError={handleOnError}
+                                      />
+                                    </div>
+                                  </td>
+                                  <td>
+                                    {" "}
+                                    <a
+                                      href={`https://explorer.assetmantle.one/validators/${item.operatorAddress}`}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                    >
+                                      {item?.description?.moniker}
+                                      <i className="bi bi-arrow-up-right" />
+                                    </a>
+                                  </td>
+                                  <td>
+                                    {(
+                                      (item?.tokens * 100) /
+                                      totalTokens
+                                    ).toFixed(4)}
+                                    %
+                                  </td>
+
+                                  <td>
+                                    {shiftDecimalPlaces(
+                                      item?.commission?.commissionRates?.rate,
+                                      -16
+                                    )}{" "}
+                                    %
+                                  </td>
+                                  <td>
+                                    {getBalanceStyle(
+                                      fromChainDenom(item?.tokens, 2),
+                                      "caption",
+                                      "caption2"
+                                    )}
+                                  </td>
+                                  <td>
+                                    {" "}
+                                    {delegatedValidators?.find(
+                                      (element) =>
+                                        element?.operatorAddress ==
+                                        item?.operatorAddress
+                                    )
+                                      ? getBalanceStyle(
+                                          fromChainDenom(
+                                            delegatedValidators?.find(
+                                              (element) =>
+                                                element?.operatorAddress ==
+                                                item?.operatorAddress
+                                            )?.delegatedAmount
+                                          ),
+                                          "caption",
+                                          "caption2"
+                                        )
+                                      : "-"}
+                                  </td>
+                                </tr>
+                              ))
+                          : allValidatorsUnbonded
+                              ?.filter((item) =>
+                                item?.description?.moniker
+                                  .toLowerCase()
+                                  .includes(searchValue.toLowerCase())
+                              )
+                              ?.map((item, index) => (
+                                <tr key={index} className="text-white">
+                                  <td>
+                                    <input
+                                      type="radio"
+                                      name="radio"
+                                      onChange={() =>
+                                        stakeDispatch({
+                                          type: "SET_REDELEGATION_DESTINATION_ADDRESS",
+                                          payload: item?.operatorAddress,
+                                        })
+                                      }
+                                    />
+                                  </td>
+                                  <td>{index + 1}</td>
+                                  <td>
+                                    <div
+                                      className="d-flex position-relative rounded-circle"
+                                      style={{
+                                        width: "25px",
+                                        aspectRatio: "1/1",
+                                      }}
+                                    >
+                                      <img
+                                        layout="fill"
+                                        alt={item?.description?.moniker}
+                                        className="rounded-circle"
+                                        src={`/validatorAvatars/${item?.operatorAddress}.png`}
+                                        onError={handleOnError}
+                                      />
+                                    </div>
+                                  </td>
+                                  <td>
+                                    {" "}
+                                    <a
+                                      href={`https://explorer.assetmantle.one/validators/${item.operatorAddress}`}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                    >
+                                      {item?.description?.moniker}
+                                      <i className="bi bi-arrow-up-right" />
+                                    </a>
+                                  </td>
+                                  <td>
+                                    {(
+                                      (item?.tokens * 100) /
+                                      totalTokens
+                                    ).toFixed(4)}
+                                    %
+                                  </td>
+
+                                  <td>
+                                    {shiftDecimalPlaces(
+                                      item?.commission?.commissionRates?.rate,
+                                      -16
+                                    )}{" "}
+                                    %
+                                  </td>
+                                  <td>
+                                    {getBalanceStyle(
+                                      fromChainDenom(item?.tokens, 2),
+                                      "caption",
+                                      "caption2"
+                                    )}
+                                  </td>
+                                  <td>
+                                    {delegatedValidators?.find(
+                                      (element) =>
+                                        element?.operatorAddress ==
+                                        item?.operatorAddress
+                                    )
+                                      ? getBalanceStyle(
+                                          fromChainDenom(
+                                            delegatedValidators?.find(
+                                              (element) =>
+                                                element?.operatorAddress ==
+                                                item?.operatorAddress
+                                            )?.delegatedAmount
+                                          ),
+                                          "caption",
+                                          "caption2"
+                                        )
+                                      : "-"}
+                                  </td>
+                                  <td>
+                                    {item?.jailed ? (
+                                      <i className="bi bi-exclamation-octagon text-danger"></i>
+                                    ) : (
+                                      "-"
+                                    )}
+                                  </td>
+                                </tr>
+                              ))}
+                      </tbody>
+                    </table>
+                  </Stack>
+                </Stack>
+                <Stack
+                  className="justify-content-between w-100 mt-4"
+                  direction="horizontal"
                 >
-                  {stakeState?.errorMessages?.redelegationAmountErrorMsg && (
-                    <i className="bi bi-info-circle" />
-                  )}{" "}
-                  {stakeState?.errorMessages?.redelegationAmountErrorMsg}
-                </small>
-              </div>
-            </div>
-            <div className="d-flex align-items-center gap-2 justify-content-end">
-              <button
-                type="button"
-                disabled={stakeState?.errorMessages?.redelegationAmountErrorMsg}
-                className="button-primary px-5 py-2"
-                onClick={handleRedelegate}
+                  <label
+                    htmlFor="redelegationAmount"
+                    className="caption text-white-50 my-2"
+                  >
+                    Delegation amount
+                  </label>{" "}
+                  <small className="caption2 text-white-50 my-2">
+                    Delegated Amount :{" "}
+                    {getBalanceStyle(
+                      fromChainDenom(
+                        delegatedValidators?.find((item) =>
+                          item?.operatorAddress?.includes(
+                            stakeState?.selectedValidators
+                          )
+                        )?.delegatedAmount
+                      ),
+                      "caption2 text-body",
+                      "small text-body"
+                    )}
+                    &nbsp;
+                    {defaultChainSymbol}
+                  </small>
+                </Stack>
+                <div className="w-100">
+                  <Stack
+                    direction="horizontal"
+                    gap={2}
+                    className="p-3 border border-white py-2 rounded-2"
+                  >
+                    <input
+                      className="bg-transparent"
+                      id="redelegationAmount"
+                      style={{
+                        flex: "1",
+                        border: "none",
+                        outline: "none",
+                      }}
+                      type="text"
+                      value={stakeState?.redelegationAmount}
+                      placeholder="Enter Redelegation Amount"
+                      onChange={(e) =>
+                        stakeDispatch({
+                          type: "CHANGE_REDELEGATION_AMOUNT",
+                          payload: e.target.value,
+                        })
+                      }
+                    />
+                    <button
+                      onClick={() =>
+                        stakeDispatch({ type: "SET_MAX_REDELEGATION_AMOUNT" })
+                      }
+                      className="text-primary"
+                    >
+                      Max
+                    </button>
+                  </Stack>
+                  <small
+                    id="amountInputErrorMsg"
+                    className="form-text text-danger d-flex align-items-center gap-1"
+                  >
+                    {stakeState?.errorMessages?.redelegationAmountErrorMsg && (
+                      <i className="bi bi-info-circle" />
+                    )}{" "}
+                    {stakeState?.errorMessages?.redelegationAmountErrorMsg}
+                  </small>
+                </div>
+              </Stack>
+              <Stack
+                className="align-items-center justify-content-end"
+                direction="horizontal"
+                gap={2}
               >
-                Submit
-              </button>
-            </div>
-          </div>
-        </ModalContainer>
+                <Button
+                  variant="primary"
+                  disabled={
+                    stakeState?.errorMessages?.redelegationAmountErrorMsg
+                  }
+                  className="rounded-5 px-5 py-2 fw-semibold"
+                  onClick={handleRedelegate}
+                >
+                  Submit
+                </Button>
+              </Stack>
+            </Stack>
+          </Modal.Body>
+        </Modal>
       </div>
     </>
   );
