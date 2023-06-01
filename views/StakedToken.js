@@ -1,14 +1,13 @@
 import { useChain } from "@cosmos-kit/react";
 import React, { Suspense, useState } from "react";
 import Delegations from "../components/Delegations";
-import ModalContainer from "../components/ModalContainer";
 import Rewards from "../components/Rewards";
 import Unbonded from "../components/Unbonded";
 import { defaultChainName, toastConfig } from "../config";
 import { sendDelegation, useAvailableBalance, fromDenom } from "../data";
 import { toast } from "react-toastify";
 import { defaultChainSymbol } from "../config";
-import { Stack } from "react-bootstrap";
+import { Button, Modal, Stack } from "react-bootstrap";
 
 export default function StakedToken({
   delegated,
@@ -90,8 +89,8 @@ export default function StakedToken({
             />
           </Suspense>
           {stakeState?.selectedValidators?.length === 1 ? (
-            <button
-              className="button-primary text-center px-3 py-2"
+            <Button
+              className="rounded-5 text-center px-3 py-2"
               style={{ maxWidth: "100%" }}
               disabled={isSubmitDisabled}
               onClick={() => {
@@ -101,153 +100,75 @@ export default function StakedToken({
                 });
                 setDelegateModal(true);
               }}
-              // data-bs-toggle="modal"
-              // data-bs-target="#delegateModal"
             >
               Delegate
-            </button>
+            </Button>
           ) : null}
           {stakeState?.selectedValidators?.length > 5 || showClaimError ? (
-            <div className="d-flex justify-content-between">
-              <p className="text-error">
+            <Stack className="justify-content-between">
+              <p className="text-error m-0">
                 <i className="bi bi-exclamation-circle text-error"></i>{" "}
                 Cumulative Rewards can be claimed only for 5 or less validators
               </p>
-            </div>
+            </Stack>
           ) : null}
         </Stack>
       </section>
-      <ModalContainer active={DelegateModal} setActive={setDelegateModal}>
-        <div className="d-flex flex-column bg-gray-700 m-auto p-4 rounded-3 w-100">
-          <div className="d-flex align-items-center justify-content-between">
-            <h5 className="body2 text-primary d-flex align-items-center gap-2">
-              <button
-                className="btn-close primary bg-t"
-                onClick={() => setDelegateModal(false)}
-                style={{ background: "none" }}
-              >
-                <span className="text-primary">
-                  <i className="bi bi-chevron-left" />
-                </span>
-              </button>
-              Delegate
-            </h5>
-            <button
-              className="btn-close primary bg-t"
-              onClick={() => setDelegateModal(false)}
-              style={{ background: "none" }}
+      <Modal
+        show={DelegateModal}
+        onHide={() => setDelegateModal(false)}
+        centered
+        size="lg"
+        aria-labelledby="redelegation-modal"
+        scrollable
+      >
+        <Modal.Body className="p-0">
+          <Stack className="m-auto p-4 rounded-3 w-100">
+            <Stack
+              className="align-items-center justify-content-between"
+              direction="horizontal"
             >
-              <span className="text-primary">
-                <i className="bi bi-x-lg" />
-              </span>
-            </button>
-          </div>
-          <div className="py-4 text-center d-flex flex-column">
-            <div className="d-flex my-2 justify-content-between">
-              <label htmlFor="delegationAmount" className="caption text-body">
-                Delegation Amount
-              </label>{" "}
-              <small className="text-body caption2">
-                Balance : {fromDenom(availableBalance).toString()}&nbsp;
-                {defaultChainSymbol}
-              </small>
-            </div>
-            <div>
-              <div className="p-3 border-white py-2 d-flex rounded-2 gap-2 am-input">
-                <input
-                  className="bg-t"
-                  id="delegationAmount"
-                  style={{ flex: "1", border: "none", outline: "none" }}
-                  type="text"
-                  value={stakeState?.delegationAmount}
-                  placeholder="Enter Delegation Amount"
-                  onChange={(e) =>
-                    stakeDispatch({
-                      type: "CHANGE_DELEGATION_AMOUNT",
-                      payload: e.target.value,
-                    })
-                  }
-                ></input>
+              <h5 className="body2 text-primary d-flex align-items-center gap-2 m-0">
                 <button
-                  onClick={() =>
-                    stakeDispatch({
-                      type: "SET_MAX_DELEGATION_AMOUNT",
-                    })
-                  }
-                  className="text-primary"
+                  className="primary bg-transparent"
+                  onClick={() => setDelegateModal(false)}
                 >
-                  Max
-                </button>
-              </div>
-              <small
-                id="amountInputErrorMsg"
-                className="form-text text-danger d-flex align-items-center gap-1"
-              >
-                {stakeState?.errorMessages?.transferAmountErrorMsg && (
-                  <i className="bi bi-info-circle" />
-                )}{" "}
-                {stakeState?.errorMessages?.transferAmountErrorMsg}
-              </small>
-            </div>
-          </div>
-          <div className="d-flex align-items-center gap-2 justify-content-end">
-            <button
-              disabled={stakeState?.errorMessages?.transferAmountErrorMsg}
-              type="button"
-              className="button-primary px-5 py-2"
-              onClick={handleSubmit}
-            >
-              Submit
-            </button>
-          </div>
-        </div>
-      </ModalContainer>
-      {/* <div className="modal " tabIndex="-1" role="dialog" id="delegateModal">
-        <div className="modal-dialog modal-dialog-centered" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title body2 text-primary d-flex align-items-center gap-2">
-                <button
-                  type="button"
-                  className="btn-close primary"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                  style={{ background: "none" }}
-                >
-                  <span className="text-primary">
-                    <i className="bi bi-chevron-left" />
-                  </span>
+                  <i className="bi bi-chevron-left text-primary" />
                 </button>
                 Delegate
               </h5>
               <button
-                type="button"
-                className="btn-close primary"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-                style={{ background: "none" }}
+                className="primary bg-transparent"
+                onClick={() => setDelegateModal(false)}
               >
-                <span className="text-primary">
-                  <i className="bi bi-x-lg" />
-                </span>
+                <i className="bi bi-x-lg text-primary" />
               </button>
-            </div>
-            <div className="modal-body p-4 text-center d-flex flex-column">
-              <div className="d-flex my-2 justify-content-between">
-                <label htmlFor="delegationAmount" className="caption text-body">
+            </Stack>
+            <Stack className="py-4 text-center">
+              <Stack
+                className="my-2 justify-content-between"
+                direction="horizontal"
+              >
+                <label
+                  htmlFor="delegationAmount"
+                  className="caption text-white-50"
+                >
                   Delegation Amount
                 </label>{" "}
-                <small className="text-body caption2">
+                <small className="text-white-50 caption2">
                   Balance : {fromDenom(availableBalance).toString()}&nbsp;
                   {defaultChainSymbol}
                 </small>
-              </div>
+              </Stack>
               <div>
-                <div className="p-3 border-white py-2 d-flex rounded-2 gap-2 am-input">
+                <Stack
+                  className="p-3 border border-white py-2 rounded-2"
+                  direction="horizontal"
+                  gap={2}
+                >
                   <input
-                    className="bg-t"
+                    className="bg-transparent flex-grow-1 border border-0"
                     id="delegationAmount"
-                    style={{ flex: "1", border: "none", outline: "none" }}
                     type="text"
                     value={stakeState?.delegationAmount}
                     placeholder="Enter Delegation Amount"
@@ -257,7 +178,7 @@ export default function StakedToken({
                         payload: e.target.value,
                       })
                     }
-                  ></input>
+                  />
                   <button
                     onClick={() =>
                       stakeDispatch({
@@ -268,7 +189,7 @@ export default function StakedToken({
                   >
                     Max
                   </button>
-                </div>
+                </Stack>
                 <small
                   id="amountInputErrorMsg"
                   className="form-text text-danger d-flex align-items-center gap-1"
@@ -279,24 +200,24 @@ export default function StakedToken({
                   {stakeState?.errorMessages?.transferAmountErrorMsg}
                 </small>
               </div>
-            </div>
-            <div className="modal-footer ">
-              <button
-                disabled={!isObjEmpty(stakeState?.errorMessages)}
-                type="button"
-                className="button-primary px-5 py-2"
-                // data-bs-toggle={
-                //   stakeState.delegationAmount.length != 0 ? "modal" : ""
-                // }
-                // data-bs-target="#stakeTransactionManifestModal"
+            </Stack>
+            <Stack
+              className="align-items-center justify-content-end"
+              gap={2}
+              direction="horizontal"
+            >
+              <Button
+                variant="primary"
+                disabled={stakeState?.errorMessages?.transferAmountErrorMsg}
+                className="rounded-5 px-5 py-2"
                 onClick={handleSubmit}
               >
                 Submit
-              </button>
-            </div>
-          </div>
-        </div>
-      </div> */}
+              </Button>
+            </Stack>
+          </Stack>
+        </Modal.Body>
+      </Modal>
 
       {/* <TransactionManifestModal
         id="stakeTransactionManifestModal"
