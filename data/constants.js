@@ -1,4 +1,8 @@
 import Link from "next/link";
+import quickV2MntlUsdcStakerABI from "../data/contracts/quickV2MntlUsdcStakerABI.json";
+import quickV2MntlVersaStakerABI from "../data/contracts/quickV2MntlVersaStakerABI.json";
+import lpMntlVersaABI from "../data/contracts/lpMntlVersaABI.json";
+import lpMntlUsdcABI from "../data/contracts/lpMntlUsdcABI.json";
 
 export const formConstants = {
   recipientAddressErrorMsg: "Invalid Address",
@@ -257,5 +261,142 @@ export const staticEarnData = [
     chain: "polygon",
     apy: "0.000000",
     tvlUsd: "0.00",
+  },
+];
+
+// New UI related data
+export const farmPools = [
+  {
+    name: "Uniswap",
+    from: "eth",
+    pools: [
+      {
+        tokens: "MNTL – ETH",
+        lpTokenLink:
+          "https://app.uniswap.org/#/add/0x2c4f1df9c7de0c59778936c9b145ff56813f3295/ETH/3000?minPrice=0.000001&maxPrice=0.000006",
+        rewardPool: "2,500,0000 $MNTL",
+        duration: "00Days,00Hours",
+        apr: "200%",
+        tvl: "$30,000",
+        startTime: "1680353156",
+        endTime: "1688211001",
+      },
+    ],
+  },
+  {
+    name: "Quickswap",
+    from: "polygon",
+    pools: [
+      {
+        tokens: "MNTL – VERSA",
+        lpTokenLink:
+          "https://quickswap.exchange/#/pools/v2?currency1=0x8497842420cfdbc97896c2353d75d89fc8d5be5d&currency0=0x38A536A31bA4d8C1Bcca016AbBf786ecD25877E8",
+        rewardPool: "$0,000.0000",
+        duration: "00Days,00Hours",
+        tvl: "$10,370",
+        apr: "254.52%",
+        farmContractAddress: "0x00ed0e8580d1043B5588D6cd626060044c6d1131",
+        farmContractABI: quickV2MntlVersaStakerABI,
+        endRewardBlock: 44515218,
+        startRewardBlock: 40980673,
+        rewardPerBlock: 282922,
+        lpTokenName: "VERSA-MNTL-LP",
+        lpTokenAddress: "0x725307420669f89aDe13505C13c8c7e73e3949dD",
+        lpTokenABI: lpMntlVersaABI,
+        totalSupply: "315196365358941524",
+        lpTokenDecimals: 18,
+      },
+      {
+        tokens: "MNTL – USDC",
+        lpTokenLink:
+          "https://quickswap.exchange/#/pools/v2?currency0=0x2791bca1f2de4661ed88a30c99a7a9449aa84174&currency1=0x38A536A31bA4d8C1Bcca016AbBf786ecD25877E8",
+        rewardPool: "$0,000.0000",
+        duration: "00Days,00Hours",
+        tvl: "$10,370",
+        apr: "254.52%",
+        farmContractAddress: "0x6B732925ba28A7f3d41575d1032C0ED9A240f608",
+        farmContractABI: quickV2MntlUsdcStakerABI,
+        endRewardBlock: 44515218,
+        startRewardBlock: 40980673,
+        rewardPerBlock: 778035,
+        lpTokenName: "USDC-MNTL-LP",
+        lpTokenABI: lpMntlUsdcABI,
+        lpTokenAddress: "0x5e1878eb8a10cc8690798ece6bfd3425e189361e",
+        totalSupply: "260757835897",
+        lpTokenDecimals: 18,
+      },
+    ],
+  },
+  {
+    name: "Osmosis DEX",
+    from: "osmosis",
+    pools: [
+      {
+        tokens: "MNTL – USDC",
+        lpTokenLink: "",
+        rewardPool: "$0,000.0000",
+        duration: "00Days,00Hours",
+        stakeType: "external",
+        extLink: "https://app.osmosis.zone/pool/738",
+        apr: "200%",
+        tvl: "$30,000",
+        startTime: "1680353156",
+        endTime: "1688211001",
+      },
+      {
+        tokens: "MNTL – OSMO",
+        lpTokenLink: "",
+        rewardPool: "$0,000.0000",
+        duration: "00Days,00Hours",
+        stakeType: "external",
+        extLink: "https://app.osmosis.zone/pool/690",
+        apr: "200%",
+        tvl: "$30,000",
+        startTime: "1680353156",
+        endTime: "1688211001",
+      },
+      {
+        tokens: "MNTL – ATOM",
+        lpTokenLink: "",
+        rewardPool: "$0,000.0000",
+        duration: "00Days,00Hours",
+        stakeType: "external",
+        extLink: "https://app.osmosis.zone/pool/686",
+        apr: "200%",
+        tvl: "$30,000",
+        startTime: "1680353156",
+        endTime: "1688211001",
+      },
+    ],
+  },
+  {
+    name: "Comdex cSwap",
+    from: "comdex",
+    pools: [
+      {
+        tokens: "MNTL – CMST",
+        rewardPool: "$0,000.0000",
+        duration: "00Days,00Hours",
+        tvl: "$10,370",
+        apr: "254.52%",
+        apr: "200%",
+        tvl: "$30,000",
+        startTime: "1680353156",
+        endTime: "1688211001",
+        extLink: "https://app.cswap.one/farm/31",
+      },
+      {
+        tokens: "MNTL – CMDX",
+        rewardPool: "$0,000.0000",
+        duration: "00Days,00Hours",
+        tvl: "$10,370",
+        apr: "254.52%",
+        apr: "200%",
+        tvl: "$30,000",
+        startTime: "1680353156",
+        endTime: "1688211001",
+        extLink: "https://app.cswap.one/farm/30",
+      },
+    ],
   },
 ];

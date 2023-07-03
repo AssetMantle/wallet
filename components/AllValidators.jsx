@@ -101,7 +101,7 @@ const AllValidators = ({
                     />
                   </div>
                 </td>
-                <td className="d-flex align-items-center justify-content-start gap-1">
+                <td className="d-flex align-items-center justify-content-start gap-1 text-white">
                   <a
                     className="text-truncate"
                     style={{ maxWidth: "200px" }}

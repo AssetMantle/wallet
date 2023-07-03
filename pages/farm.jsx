@@ -1,14 +1,11 @@
 import Head from "next/head";
 import React, { Suspense, useState } from "react";
-import {
-  ExternalFarmPoolComdex,
-  ExternalFarmPoolOsmosis,
-  LiquidityPoolChainComdex,
-  LiquidityPoolChainEthereum,
-  LiquidityPoolChainOsmosis,
-  LiquidityPoolChainPolygon,
-  UniswapFarmPool,
-} from "../components";
+import { ExternalFarmPoolComdex, ExternalFarmPoolOsmosis } from "../components";
+import { LiquidityPoolChainPolygon } from "../components/LiquidityPoolChainPolygon";
+import { LiquidityPoolChainOsmosis } from "../components/LiquidityPoolChainOsmosis";
+import { LiquidityPoolChainComdex } from "../components/LiquidityPoolChainComdex";
+import { LiquidityPoolChainEthereum } from "../components/LiquidityPoolChainEthereum";
+import { UniswapFarmPool } from "../components/UniswapFarmPool";
 import { QuickswapFarmPool } from "../components/QuickswapFarmPool";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import { useIsMounted } from "../lib";
