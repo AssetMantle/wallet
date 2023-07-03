@@ -7,6 +7,7 @@ import { Stack } from "react-bootstrap";
 const EarnTable = () => {
   const { allOsmosis, isLoadingOsmosis, errorOsmosis } = useOsmosis();
   const { allQuickswap, isLoadingQuickswap, errorQuickswap } = useQuickswap();
+
   let isLoading = isLoadingOsmosis || isLoadingQuickswap;
   let isError = errorOsmosis || errorQuickswap;
   const fetchedData =
