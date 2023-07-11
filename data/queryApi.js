@@ -238,42 +238,7 @@ export const useTotalUnbonding = () => {
 
   const { data: unbondingObject, error } = useSwr(
     address ? ["useTotalUnbonding", address] : null,
-    async ([url, address]) => {
-      // console.log("inside fetchTotalUnbonding() ");
-
-      let totalUnbondingAmount;
-      let allUnbonding = [];
-
-      try {
-        const { unbondingResponses } =
-          await client.cosmos.staking.v1beta1.delegatorUnbondingDelegations({
-            delegatorAddr: address,
-          });
-        if (!unbondingResponses?.length) {
-          totalUnbondingAmount = 0;
-        } else {
-          unbondingResponses?.map?.((item) => {
-            item?.entries?.map?.((ele) =>
-              allUnbonding?.push?.({
-                address: item?.validatorAddress,
-                balance: ele?.balance,
-                completion_time: ele?.completionTime,
-              })
-            );
-            totalUnbondingAmount = allUnbonding?.reduce?.(
-              (total, currentValue) =>
-                parseFloat(total) + parseFloat(currentValue?.balance),
-              parseFloat("0")
-            );
-          });
-        }
-      } catch (error) {
-        console.error(`swr fetcher : url: ${url},  error: ${error}`);
-        throw error;
-      }
-      // console.log(totalUnbondingAmount, allUnbonding);
-      return { totalUnbondingAmount, allUnbonding };
-    },
+    fetchTotalUnbonding,
     {
       fallbackData: [
         {
@@ -342,46 +307,7 @@ export const useTotalRewards = () => {
 
   const { data: rewardsObject, error } = useSwr(
     address ? ["useTotalRewards", address] : null,
-    async ([url, address]) => {
-      // console.log("inside fetchTotalRewards() ");
-
-      let totalRewards;
-      let rewardsArray;
-      let totalRewardsInWei;
-      try {
-        const { rewards } =
-          await client.cosmos.distribution.v1beta1.delegationTotalRewards({
-            delegatorAddress: address,
-          });
-        rewardsArray = rewards?.map?.((item) => {
-          let amount = BigNumber(item?.reward?.[0]?.amount || 0)
-            .dividedToIntegerBy(BigNumber(10).exponentiatedBy(18))
-            .toString();
-
-          return {
-            ...item,
-            reward: [{ amount: amount, denom: item?.reward?.[0]?.denom }],
-          };
-        });
-        let zeroBigNumber = new BigNumber("0");
-
-        // reduce function to add up the BigNumber formats of individual reward values
-        totalRewardsInWei = rewardsArray?.reduce?.(
-          (accumulator, currentValue) =>
-            currentValue?.reward?.[0]?.amount
-              ? accumulator.plus(
-                  new BigNumber(currentValue?.reward?.[0]?.amount)
-                )
-              : accumulator.plus(new BigNumber("0")),
-          zeroBigNumber
-        );
-        totalRewards = totalRewardsInWei?.toString();
-      } catch (error) {
-        console.error(`swr fetcher : url: ${url},  error: ${error}`);
-        throw error;
-      }
-      return { totalRewards, rewardsArray };
-    },
+    fetchTotalRewards,
     {
       fallbackData: [
         {
@@ -459,50 +385,7 @@ export const useDelegatedValidators = () => {
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: delegatedObject, error } = useSwr(
     address ? ["useDelegatedValidators", address] : null,
-    async ([url, address]) => {
-      // console.log("inside fetchTotalDelegated() ");
-
-      let totalDelegatedAmount;
-      let delegatedValidators = [];
-
-      // use a try catch block for creating rich Error object
-      try {
-        // get the data from cosmos queryClient
-
-        //Fetch a list of all validators
-        const { validators } = await client.cosmos.staking.v1beta1.validators({
-          status: "",
-        });
-        //Fetch a list of all validators that have been delegated by the delegator
-        const { delegationResponses } =
-          await client.cosmos.staking.v1beta1.delegatorDelegations({
-            delegatorAddr: address,
-          });
-
-        //Create an array of delegated validators with all additional information about them
-        delegationResponses?.map?.((item) => {
-          let match = validators?.find?.(
-            (element) =>
-              element?.operatorAddress === item?.delegation?.validatorAddress
-          );
-          if (match) {
-            match.delegatedAmount = item?.balance?.amount;
-            delegatedValidators?.push?.(match);
-          }
-        });
-        //Get total delegated amount
-        totalDelegatedAmount = delegationResponses?.reduce?.(
-          (total, currentValue) =>
-            parseFloat(total) + parseFloat(currentValue?.balance?.amount),
-          parseFloat("0")
-        );
-      } catch (error) {
-        console.error(`swr fetcher : url: ${url},  error: ${error}`);
-        throw error;
-      }
-      // return the data
-      return { totalDelegatedAmount, delegatedValidators };
-    },
+    fetchTotalDelegated,
     {
       fallbackData: [
         {
@@ -557,26 +440,7 @@ export const useTotalDelegations = () => {
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: delegationsArray, error } = useSwr(
     address ? ["useTotalDelegations", address] : null,
-    async ([url, address]) => {
-      // console.log("inside fetchTotalDelegations() ");
-
-      let totalDelegations;
-
-      // use a try catch block for creating rich Error object
-      try {
-        // get the data from cosmos queryClient
-        const { validators } =
-          await client.cosmos.staking.v1beta1.delegatorValidators({
-            delegatorAddr: address,
-          });
-        totalDelegations = validators;
-      } catch (error) {
-        console.error(`swr fetcher : url: ${url},  error: ${error}`);
-        throw error;
-      }
-      // return the data
-      return totalDelegations;
-    },
+    fetchTotalDelegations,
     {
       fallbackData: [
         {
@@ -622,32 +486,10 @@ export const useMntlUsd = () => {
   };
 
   // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: mntlValueObject, error } = useSwr(
-    "useMntlUsd",
-    async ([url]) => {
-      console.log("inside fetchMntlUsd, url: ", url);
-      let mntlUsdValue, mntlPerEthValue;
-
-      // use a try catch block for creating rich Error object
-      try {
-        // fetch the data from API
-        const res = await fetch(mntlUsdApi);
-        const resJson = await res?.json?.();
-        mntlUsdValue = resJson?.assetmantle?.usd;
-        mntlPerEthValue = resJson?.assetmantle?.eth;
-      } catch (error) {
-        console.error(`swr fetcher : url: ${url},  error: ${error}`);
-        throw error;
-      }
-
-      // return the data
-      return { mntlUsdValue, mntlPerEthValue };
-    },
-    {
-      fallbackData: { mntlUsdValue: "0", mntlPerEthValue: "0" },
-      refreshInterval: slowRefreshInterval,
-    }
-  );
+  const { data: mntlValueObject, error } = useSwr("useMntlUsd", fetchMntlUsd, {
+    fallbackData: { mntlUsdValue: "0", mntlPerEthValue: "0" },
+    refreshInterval: slowRefreshInterval,
+  });
 
   return {
     mntlUsdValue: mntlValueObject?.mntlUsdValue,
@@ -688,28 +530,7 @@ export const useAvailableBalance = () => {
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: balanceObject, error } = useSwr(
     address ? ["useAvailableBalance", address] : null,
-    async ([url, address]) => {
-      // console.log("inside fetchAvailableBalance ");
-      let balanceValue;
-
-      // use a try catch block for creating rich Error object
-      try {
-        // get the data from cosmos queryClient
-        const { balance } = await client.cosmos.bank.v1beta1.balance({
-          address,
-          denom,
-        });
-
-        balanceValue = balance;
-        // console.log("swr fetcher success: ", url);
-      } catch (error) {
-        console.error(`swr fetcher : url: ${url},  error: ${error}`);
-        throw error;
-      }
-
-      // return the data
-      return balanceValue;
-    },
+    fetchAvailableBalance,
     {
       fallbackData: { amount: placeholderAvailableBalance, denom },
       refreshInterval: defaultRefreshInterval,
@@ -781,36 +602,7 @@ export const useAvailableBalanceGravity = () => {
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: balanceObjects, error } = useSwr(
     gravityAddress ? ["gravitybalance", gravityAddress] : null,
-    async ([url, address]) => {
-      // console.log("inside fetchAllBalancesGravity() ");
-      // get the REST Query Client for Gravity Bridge Chain
-      const rpcEndpointGravity = gravityChainRPCProxy;
-
-      const queryClientGravity =
-        await gravity.ClientFactory.createRPCQueryClient({
-          rpcEndpoint: rpcEndpointGravity,
-        });
-
-      let balanceValues;
-
-      // use a try catch block for creating rich Error object
-      try {
-        // get the data from cosmos queryClient
-        const { balances } =
-          await queryClientGravity.cosmos.bank.v1beta1.allBalances({
-            address: address,
-          });
-
-        balanceValues = balances;
-        // console.log("swr fetcher success: ", balances);
-      } catch (error) {
-        console.error(`swr fetcher error: ${url}`);
-        throw error;
-      }
-
-      // return the data
-      return balanceValues;
-    },
+    fetchAllBalancesGravity,
     {
       fallbackData: [placeholderGravityCoin, placeholderGravityIBCCoin],
       refreshInterval: defaultRefreshInterval,
@@ -871,25 +663,7 @@ export const useAllValidatorsBonded = () => {
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: bondedValidatorsArray, error } = useSwr(
     "useAllValidatorsBonded",
-    async ([url]) => {
-      // console.log("inside fetchAllValidatorsBonded() ");
-
-      let allValidatorsBonded;
-
-      // use a try catch block for creating rich Error object
-      try {
-        // get the data from cosmos queryClient
-        const { validators } = await client.cosmos.staking.v1beta1.validators({
-          status: "BOND_STATUS_BONDED",
-        });
-        allValidatorsBonded = validators;
-      } catch (error) {
-        console.error(`swr fetcher : url: ${url},  error: ${error}`);
-        throw error;
-      }
-      // return the data
-      return allValidatorsBonded;
-    },
+    fetchAllValidatorsBonded,
     {
       fallbackData: [],
       // refreshInterval: 22000,
@@ -926,25 +700,7 @@ export const useAllValidatorsUnbonded = () => {
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: unbondedValidatorsArray, error } = useSwr(
     "useAllValidatorsUnbonded",
-    async ([url]) => {
-      // console.log("inside fetchAllValidatorsUnbonded() ");
-
-      let allValidatorsUnbonded;
-
-      // use a try catch block for creating rich Error object
-      try {
-        // get the data from cosmos queryClient
-        const { validators } = await client.cosmos.staking.v1beta1.validators({
-          status: "BOND_STATUS_UNBONDED",
-        });
-        allValidatorsUnbonded = validators;
-      } catch (error) {
-        console.error(`swr fetcher : url: ${url},  error: ${error}`);
-        throw error;
-      }
-      // return the data
-      return allValidatorsUnbonded;
-    },
+    fetchAllValidatorsUnbonded,
     {
       fallbackData: [],
       // refreshInterval: 20000,
@@ -994,40 +750,7 @@ export const useAllValidators = () => {
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: validatorArray, error } = useSwr(
     "useAllValidators",
-    async ([url]) => {
-      console.log("inside fetchAllValidators() ");
-
-      let validatorArray;
-
-      // use a try catch block for creating rich Error object
-      try {
-        // get the aggregated balance values from other swr fetchers
-        const validatorBondedFetcher = fetchAllValidatorsBonded(
-          "useAllValidatorsBonded2"
-        );
-
-        const validatorUnbondedFetcher = fetchAllValidatorsUnbonded(
-          "useAllValidatorsUnbonded2"
-        );
-
-        const aggregatedFetchArray = await Promise.all([
-          validatorBondedFetcher,
-          validatorUnbondedFetcher,
-        ]);
-
-        validatorArray = [
-          ...aggregatedFetchArray[0],
-          ...aggregatedFetchArray[1],
-        ];
-        // console.log("aggregatedFetchArray: ", aggregatedFetchArray);
-      } catch (error) {
-        console.error(`swr fetcher : url: ${url},  error: ${error}`);
-        throw error;
-      }
-
-      // return the data
-      return validatorArray;
-    },
+    fetchAllValidators,
     {
       fallbackData: [],
     }
@@ -1100,54 +823,7 @@ export const useTotalBalance = () => {
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: balanceValue, error } = useSwr(
     address ? ["useTotalBalance", address] : null,
-    async ([url, address]) => {
-      let balanceValue;
-
-      // use a try catch block for creating rich Error object
-      try {
-        // get the aggregated balance values from other swr fetchers
-        const availableBalanceFetcher = fetchAvailableBalance(
-          "useAvailableBalance",
-          address
-        );
-
-        const delegatedBalanceFetcher = fetchTotalDelegated(
-          "useDelegatedValidators",
-          address
-        );
-
-        const rewardsBalanceFetcher = fetchTotalRewards(
-          "useTotalRewards",
-          address
-        );
-
-        const unbondingBalanceFetcher = fetchTotalUnbonding(
-          "useTotalUnbonding",
-          address
-        );
-
-        const aggregatedFetchArray = await Promise.all([
-          availableBalanceFetcher,
-          delegatedBalanceFetcher,
-          rewardsBalanceFetcher,
-          unbondingBalanceFetcher,
-        ]);
-
-        balanceValue = BigNumber(aggregatedFetchArray?.[0]?.amount || 0)
-          .plus(BigNumber(aggregatedFetchArray?.[1]?.totalDelegatedAmount || 0))
-          .plus(BigNumber(aggregatedFetchArray?.[2]?.totalRewards || 0))
-          .plus(BigNumber(aggregatedFetchArray?.[3]?.totalUnbondingAmount || 0))
-          .toString();
-
-        // console.log("balanceValue: ", balanceValue);
-      } catch (error) {
-        console.error(`swr fetcher : url: ${url},  error: ${error}`);
-        throw error;
-      }
-
-      // return the data
-      return balanceValue;
-    },
+    fetchTotalBalance,
     {
       fallbackData: placeholderAvailableBalance,
       refreshInterval: defaultRefreshInterval,
@@ -1192,29 +868,7 @@ export const useVote = (proposalId) => {
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: voteObject, error } = useSwr(
     proposalId && address ? ["vote", proposalId, address] : null,
-    async ([url, proposalId, address]) => {
-      // console.log("inside fetchVote() ");
-
-      let voteInfo;
-      // use a try catch block for creating rich Error object
-      try {
-        // get the data from cosmos queryClient
-        const { vote } = await queryClient.cosmos.gov.v1beta1.vote({
-          proposalId: proposalId,
-          voter: address,
-        });
-        voteInfo = vote;
-      } catch (error) {
-        if (error.response.status == 400) {
-          return { hasVoted: false };
-        } else {
-          console.error(`swr fetcher : url: ${url},  error: ${error} `);
-          throw error;
-        }
-      }
-      //return the data
-      return { ...voteInfo, hasVoted: true };
-    },
+    fetchVote,
     { refreshInterval: defaultRefreshInterval }
   );
 
@@ -1257,28 +911,7 @@ export const useAllProposals = () => {
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: proposalsArray, error } = useSwr(
     "useAllProposals",
-    async ([url]) => {
-      // console.log("inside fetchAllProposals() ");
-
-      let allProposals;
-
-      // use a try catch block for creating rich Error object
-      try {
-        // get the data from cosmos queryClient
-        const { proposals } = await queryClient.cosmos.gov.v1beta1.proposals({
-          depositor: "",
-          proposalStatus: 2,
-          voter: "",
-        });
-
-        allProposals = proposals;
-      } catch (error) {
-        console.error(`swr fetcher : url: ${url},  error: ${error}`);
-        throw error;
-      }
-      // return the data
-      return allProposals;
-    }
+    fetchAllProposals
   );
   return {
     allProposals: proposalsArray,
@@ -1309,25 +942,7 @@ export const useAllVotes = (proposalId) => {
     return allVotes;
   };
   // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: votesArray, error } = useSwr("useAllVotes", async ([url]) => {
-    // console.log("inside fetchAllVotes() ");
-
-    // let proposalIdSample = "6";
-    let allVotes;
-
-    // use a try catch block for creating rich Error object
-    try {
-      const { votes } = await queryClient.cosmos.gov.v1beta1.votes({
-        proposalId: proposalId?.toString(),
-      });
-      allVotes = votes;
-    } catch (error) {
-      console.error(`swr fetcher : url: ${url},  error: ${error}`);
-      throw error;
-    }
-    // return the data
-    return allVotes;
-  });
+  const { data: votesArray, error } = useSwr("useAllVotes", fetchAllVotes);
   return {
     allVotes: votesArray,
     isLoadingVotes: !error && !votesArray,
@@ -1364,26 +979,7 @@ export const useWithdrawAddress = () => {
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: withdrawAddress, error } = useSwr(
     address ? ["useWithdrawAddress", address] : null,
-    async ([url, address]) => {
-      // console.log("inside fetchWithdrawAddress() ");
-
-      let claimAddress;
-
-      // use a try catch block for creating rich Error object
-      try {
-        // get the data from cosmos queryClient
-        const { withdrawAddress } =
-          await client.cosmos.distribution.v1beta1.delegatorWithdrawAddress({
-            delegatorAddress: address,
-          });
-        claimAddress = withdrawAddress;
-      } catch (error) {
-        console.error(`swr fetcher : url: ${url},  error: ${error}`);
-        throw error;
-      }
-      // return the data
-      return claimAddress;
-    },
+    fetchWithdrawAddress,
     {
       fallbackData: placeholderAddress,
       refreshInterval: defaultRefreshInterval,
@@ -1451,56 +1047,7 @@ export const useTrade = () => {
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: tradesObject, error } = useSwr(
     "useTrade",
-    async ([url]) => {
-      // console.log("inside fetchAllTrades() ");
-      let tradeData = [];
-      let tokenDetails = {};
-
-      try {
-        const data = await fetch(
-          "https://api.coingecko.com/api/v3/coins/assetmantle?localization=false&tickers=true&market_data=true&community_data=false&developer_data=false&sparkline=false"
-        ).then((res) => res.json());
-
-        tokenDetails = {
-          marketCap: data?.market_data?.market_cap?.usd,
-          circulatingSupply: data?.market_data?.circulating_supply,
-          totalSupply: data?.market_data?.total_supply,
-          maxSupply: data?.market_data?.max_supply,
-          fullyDilutedValuation:
-            data?.market_data?.fully_diluted_valuation?.usd,
-          volume: data?.tickers
-            ?.reduce(
-              (accumulator, currentValue) =>
-                accumulator + parseFloat(currentValue?.volume),
-              0
-            )
-            .toFixed(2),
-        };
-
-        tradeData = data?.tickers?.map((item) => {
-          const match = staticTradeData.find(
-            (element) =>
-              element.name == item?.market?.name &&
-              element.target_coin_id == item?.target_coin_id &&
-              element.coin_id == item?.coin_id
-          );
-          return {
-            exchangeName: item?.market?.name,
-            tradePair: match?.pair,
-            volume: item?.converted_volume?.usd,
-            price: item?.converted_last?.usd,
-            logo: match?.logo,
-            url: match?.url,
-          };
-        });
-      } catch (error) {
-        console.error(`swr fetcher : url: ${url},  error: ${error}`);
-        throw error;
-      }
-      // return the data
-      // console.log("inside SWR:", tradesArray);
-      return { tradeData, tokenDetails };
-    }
+    fetchAllTrades
     // , {
     //   fallbackData: [],
     //   suspense: true,
@@ -1517,7 +1064,7 @@ export const useTrade = () => {
 export const useOsmosis = () => {
   // fetcher function for useSwr of useAvailableBalance()
   const fetchAllOsmosis = async (url) => {
-    // console.log("inside fetchAllOsmosis() ");
+    console.log("inside fetchAllOsmosis() fun.");
 
     let osmosisData;
     try {
@@ -1624,113 +1171,7 @@ export const useOsmosis = () => {
     return osmosisData;
   };
   // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: osmosisArray, error } = useSwr("useOsmosis", async ([url]) => {
-    // console.log("inside fetchAllOsmosis() ");
-
-    let osmosisData;
-    try {
-      const osmoMntlUsdcData = fetch(
-        "https://api.osmosis.zone/pools/v2/738"
-      ).then((res) => res.json());
-      const osmoMntlUsdcAprData = fetch(
-        "https://api.osmosis.zone/apr/v2/738"
-      ).then((res) => res.json());
-      const osmoMntlOsmoData = fetch(
-        "https://api.osmosis.zone/pools/v2/690"
-      ).then((res) => res.json());
-      const osmoMntlOsmoAprData = fetch(
-        "https://api.osmosis.zone/apr/v2/690"
-      ).then((res) => res.json());
-      const osmoAtomMntlData = fetch(
-        "https://api.osmosis.zone/pools/v2/686"
-      ).then((res) => res.json());
-      const osmoAtomMntlAprData = fetch(
-        "https://api.osmosis.zone/apr/v2/686"
-      ).then((res) => res.json());
-
-      const aggregatedFetchArray = await Promise.all([
-        osmoMntlUsdcData,
-        osmoMntlUsdcAprData,
-        osmoMntlOsmoData,
-        osmoMntlOsmoAprData,
-        osmoAtomMntlData,
-        osmoAtomMntlAprData,
-      ]);
-
-      console.log("aggregatedFetchArray: ", aggregatedFetchArray);
-      osmosisData = [
-        {
-          project: "Osmosis",
-          chain: "Cosmos",
-          symbol:
-            aggregatedFetchArray?.[0]?.[0]?.symbol +
-            "-" +
-            aggregatedFetchArray?.[0]?.[1]?.symbol,
-          apy: Number(
-            Math.max(
-              aggregatedFetchArray?.[1]?.[0]?.apr_list[0]?.apr_1d,
-              aggregatedFetchArray?.[1]?.[0]?.apr_list[0]?.apr_7d,
-              aggregatedFetchArray?.[1]?.[0]?.apr_list[0]?.apr_14d
-            )
-          ).toFixed(2),
-          tvlUsd: aggregatedFetchArray?.[0]?.[0]?.liquidity
-            ?.toString()
-            ?.split(".")[0],
-          url: "https://app.osmosis.zone/pool/738",
-        },
-        {
-          project: "Osmosis",
-          chain: "Cosmos",
-          symbol:
-            aggregatedFetchArray?.[2]?.[0]?.symbol +
-            "-" +
-            aggregatedFetchArray?.[2]?.[1]?.symbol,
-          apy: Number(
-            Math.max(
-              aggregatedFetchArray?.[3]?.[0]?.apr_list?.find(
-                (item) => item?.symbol == "MNTL"
-              )?.apr_1d,
-              aggregatedFetchArray?.[3]?.[0]?.apr_list?.find(
-                (item) => item?.symbol == "MNTL"
-              )?.apr_7d,
-              aggregatedFetchArray?.[3]?.[0]?.apr_list?.find(
-                (item) => item?.symbol == "MNTL"
-              )?.apr_14d
-            )
-          ).toFixed(2),
-          // osmoAtomMntlAprData[0?.apr_list?.map((e)=>console.log(e))],
-          tvlUsd: aggregatedFetchArray?.[2]?.[0]?.liquidity
-            ?.toString()
-            ?.split(".")[0],
-          url: "https://app.osmosis.zone/pool/690",
-        },
-        {
-          project: "Osmosis",
-          chain: "Cosmos",
-          symbol:
-            aggregatedFetchArray?.[4]?.[0]?.symbol +
-            "-" +
-            aggregatedFetchArray?.[4]?.[1]?.symbol,
-          apy: Number(
-            Math.max(
-              aggregatedFetchArray?.[5]?.[0]?.apr_list[0]?.apr_1d,
-              aggregatedFetchArray?.[5]?.[0]?.apr_list[0]?.apr_7d,
-              aggregatedFetchArray?.[5]?.[0]?.apr_list[0]?.apr_14d
-            )
-          ).toFixed(2),
-          tvlUsd: aggregatedFetchArray?.[4]?.[0]?.liquidity
-            ?.toString()
-            ?.split(".")[0],
-          url: "https://app.osmosis.zone/pool/686",
-        },
-      ];
-    } catch (error) {
-      console.error(`swr fetcher : url: ${url},  error: ${error}`);
-      throw error;
-    }
-    // return the data
-    return osmosisData;
-  });
+  const { data: osmosisArray, error } = useSwr("useOsmosis", fetchAllOsmosis);
   return {
     allOsmosis: osmosisArray,
     isLoadingOsmosis: !error && !osmosisArray,
@@ -1779,42 +1220,7 @@ export const useQuickswap = () => {
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: quickswapArray, error } = useSwr(
     "useQuickswap",
-    async ([url]) => {
-      // console.log("inside fetchAllQuickswap() ");
-
-      let quickswapData = [];
-      const urlData = [
-        {
-          symbol: "VERSA",
-          url: "https://quickswap.exchange/#/pools/v2?currency0=0x38a536a31ba4d8c1bcca016abbf786ecd25877e8&currency1=0x8497842420cfdbc97896c2353d75d89fc8d5be5d",
-        },
-        {
-          symbol: "USDC",
-          url: "https://quickswap.exchange/#/pools/v2?currency0=0x2791bca1f2de4661ed88a30c99a7a9449aa84174&currency1=0x38a536a31ba4d8c1bcca016abbf786ecd25877e8",
-        },
-      ];
-      try {
-        const llamaData = await fetch("https://yields.llama.fi/pools").then(
-          (res) => res.json()
-        );
-        const filteredLlamaData = llamaData?.data?.filter(
-          (item) =>
-            item?.symbol.includes("MNTL") &&
-            (item?.project == "quickswap-dex" || item?.project == "uniswap-v3")
-        );
-        quickswapData = filteredLlamaData?.map((item) => {
-          return {
-            ...item,
-            url: urlData.find((e) => item?.symbol.includes(e.symbol)).url,
-          };
-        });
-      } catch (error) {
-        console.error(`swr fetcher : url: ${url},  error: ${error}`);
-        throw error;
-      }
-      // return the data
-      return quickswapData;
-    },
+    fetchAllQuickswap,
     {
       fallbackData: [],
       suspense: true,
@@ -1850,21 +1256,7 @@ export const useEthereumFarm = () => {
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: uniswapData, error } = useSwr(
     "useEthereumFarm",
-    async ([url]) => {
-      let uniswapData;
-
-      try {
-        uniswapData = {};
-        uniswapData.apr = "200";
-        uniswapData.tvl = "30000";
-        uniswapData.pair = "MNTL-ETH";
-      } catch (error) {
-        console.error(`swr fetcher : url: ${url},  error: ${error}`);
-        throw error;
-      }
-      // return the data
-      return uniswapData;
-    }
+    fetchEthereumFarm
   );
   return {
     ethereumFarm: uniswapData,
@@ -1916,44 +1308,7 @@ export const useComdexFarm = (poolID) => {
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: comdexData, error } = useSwr(
     ["useComdex", poolID],
-    async ([url, poolID]) => {
-      const initialData = [
-        {
-          api: "https://stat.comdex.one/api/v2/cswap/pairs/33",
-          pair: "MNTL/CMST",
-          poolNumber: "33",
-        },
-        {
-          api: "https://stat.comdex.one/api/v2/cswap/pairs/32",
-          pair: "MNTL/CMDX",
-          poolNumber: "32",
-        },
-      ];
-      let comdexData;
-      try {
-        const tvlData = await fetch(initialData[poolID].api).then((res) =>
-          res.json()
-        );
-
-        const comdexAprData = await fetch(
-          "https://stat.comdex.one/api/v2/cswap/aprs"
-        ).then((res) => res.json());
-
-        comdexData = {
-          pair: initialData[poolID].pair,
-          tvlUsd: tvlData?.data?.total_liquidity,
-          apr: comdexAprData?.data?.[
-            initialData[poolID].poolNumber
-          ]?.incentive_rewards?.[0]?.apr?.toFixed(5),
-          // ?.incentive_rewards?.apr,
-        };
-      } catch (error) {
-        console.error(`swr fetcher : url: ${url},  error: ${error}`);
-        throw error;
-      }
-      // return the data
-      return comdexData;
-    },
+    fetchAllComdex,
     { fallbackData: [], suspense: true }
   );
   return {
@@ -2053,89 +1408,10 @@ export const usePolygonFarm = (poolIndex) => {
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: polygonFarmObject, error } = useSwr(
     mntlUsdValue ? ["usePolygonFarm", poolIndex, mntlUsdValue] : null,
-    async ([url, poolIndex, mntlUsdValue]) => {
-      const selectedQuickswapFarmPool = farmPools?.[1]?.pools?.[poolIndex];
-      const quickV2StakerContractAddress =
-        selectedQuickswapFarmPool?.farmContractAddress;
-      const lpTokenContractAddress = selectedQuickswapFarmPool?.lpTokenAddress;
-      const lpTokenABI = selectedQuickswapFarmPool?.lpTokenABI;
-      const lpTokenContract = {
-        address: lpTokenContractAddress,
-        abi: lpTokenABI,
-      };
-      const hookArgs = { chainId: 137 };
-      const rewardPerBlock = selectedQuickswapFarmPool?.rewardPerBlock || 0;
-      const rewardsPerDay = BigNumber(rewardPerBlock)
-        .multipliedBy(86400)
-        .dividedToIntegerBy(2.2)
-        .toString();
-      const totalSupplyValue = selectedQuickswapFarmPool?.totalSupply;
-      console.log("inside fetchPolygonFarm");
-      try {
-        const lpTokenBalanceFarmPool = await fetchBalance({
-          address: quickV2StakerContractAddress,
-          token: lpTokenContractAddress,
-          ...hookArgs,
-        });
-
-        const balance = toDenom(lpTokenBalanceFarmPool?.formatted, 18);
-        const stakedRatio = BigNumber(balance)
-          ?.dividedBy(BigNumber(totalSupplyValue))
-          .toString();
-
-        // wagmi hook to get reserves of MNTL from the LP Token
-
-        const lpTokensReserves = await readContract({
-          ...lpTokenContract,
-          functionName: "getReserves",
-          args: [],
-          ...hookArgs,
-        });
-
-        const reserves = fromDenom(
-          lpTokensReserves?.[
-            poolIndex == 0 ? "_reserve0" : "_reserve1"
-          ]?.toString()
-        );
-        const stakedToken = BigNumber(reserves)
-          ?.multipliedBy(BigNumber(stakedRatio))
-          .toString();
-
-        const mntlTvl = BigNumber(stakedToken)
-          ?.multipliedBy(BigNumber(mntlUsdValue))
-          .toString();
-
-        const tvl = BigNumber(mntlTvl).multipliedBy(2).toFixed(2);
-
-        const rewardsPerYear = BigNumber(rewardsPerDay)
-          .multipliedBy(365)
-          .toString();
-
-        const rewardsPerYearInUsd = BigNumber(fromDenom(rewardsPerYear))
-          .multipliedBy(BigNumber(mntlUsdValue))
-          .toString();
-
-        const apr = BigNumber(rewardsPerYearInUsd)
-          ?.dividedBy(tvl)
-          ?.multipliedBy(BigNumber(100))
-          ?.toFixed(2);
-
-        polygonFarmData = {
-          pair: poolIndex == 0 ? "MNTL-VERSA" : "MNTL-USDC",
-          apr: apr,
-          tvl: tvl,
-        };
-
-        console.log("polygonFarmData", polygonFarmData);
-      } catch (error) {
-        console.error(`swr fetcher : url: ${url},  error: ${error}`);
-        throw error;
-      }
-
-      // return the data
-      return polygonFarmData;
-    },
-    { suspense: true }
+    fetchPolygonFarm,
+    {
+      // suspense: true
+    }
   );
   console.log("polygonFarmObject", polygonFarmObject);
   return {
