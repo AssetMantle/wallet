@@ -31,13 +31,15 @@ export function LiquidityPoolChainCardOsmosis({
   // DISPLAY VARIABLES
   const displayApr = isLoadingOsmosis
     ? "..."
-    : `${allOsmosis
-        ?.find(
-          (item) =>
-            item?.symbol.includes(tokenPairArray[0]) &&
-            item?.symbol.includes(tokenPairArray[1])
-        )
-        ?.apy?.toFixed(2)}%`;
+    : `${
+        allOsmosis
+          ?.find?.(
+            (item) =>
+              item?.symbol.includes(tokenPairArray[0]) &&
+              item?.symbol.includes(tokenPairArray[1])
+          )
+          ?.apy?.toFixed?.(2) || 0
+      }%`;
 
   const pairLogoJSX = (
     <div
@@ -69,7 +71,7 @@ export function LiquidityPoolChainCardOsmosis({
     </div>
   );
 
-  const aprJSX = <p className="small m-0 text-gray">APR: {displayApr}%</p>;
+  const aprJSX = <p className="small m-0 text-gray">APR: {displayApr}</p>;
 
   return (
     <div
