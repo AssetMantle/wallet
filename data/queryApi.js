@@ -193,7 +193,7 @@ export const isInvalidAddress = (address, chainName = defaultChainName) => {
   return true;
 };
 
-const fetchTotalUnbonding = async (url, address) => {
+const fetchTotalUnbonding = async ([url, address]) => {
   // console.log("inside fetchTotalUnbonding() ");
 
   let totalUnbondingAmount;
@@ -260,7 +260,7 @@ export const useTotalUnbonding = () => {
   };
 };
 
-const fetchTotalRewards = async (url, address) => {
+const fetchTotalRewards = async ([url, address]) => {
   // console.log("inside fetchTotalRewards() ");
 
   let totalRewards;
@@ -328,7 +328,7 @@ export const useTotalRewards = () => {
 };
 
 // fetcher function for useSwr of useAvailableBalance()
-const fetchTotalDelegated = async (url, address) => {
+const fetchTotalDelegated = async ([url, address]) => {
   // console.log("inside fetchTotalDelegated() ");
 
   let totalDelegatedAmount;
@@ -410,7 +410,7 @@ export const useDelegatedValidators = () => {
 };
 
 // fetcher function for useSwr of useAvailableBalance()
-const fetchTotalDelegations = async (url, address) => {
+const fetchTotalDelegations = async ([url, address]) => {
   // console.log("inside fetchTotalDelegations() ");
 
   let totalDelegations;
@@ -465,7 +465,7 @@ export const useTotalDelegations = () => {
 
 export const useMntlUsd = () => {
   // fetcher function for useSwr of useAvailableBalance()
-  const fetchMntlUsd = async (url) => {
+  const fetchMntlUsd = async ([url]) => {
     console.log("inside fetchMntlUsd, url: ", url);
     let mntlUsdValue, mntlPerEthValue;
 
@@ -500,7 +500,7 @@ export const useMntlUsd = () => {
 };
 
 // fetcher function for useSwr of useAvailableBalance()
-const fetchAvailableBalance = async (url, address) => {
+const fetchAvailableBalance = async ([url, address]) => {
   // console.log("inside fetchAvailableBalance ");
   let balanceValue;
 
@@ -567,7 +567,7 @@ export const useAvailableBalanceGravity = () => {
   };
 
   // fetcher function for useSwr of useAvailableBalance()
-  const fetchAllBalancesGravity = async (url, address) => {
+  const fetchAllBalancesGravity = async ([url, address]) => {
     // console.log("inside fetchAllBalancesGravity() ");
     // get the REST Query Client for Gravity Bridge Chain
     const rpcEndpointGravity = gravityChainRPCProxy;
@@ -638,7 +638,7 @@ export const useAvailableBalanceGravity = () => {
   };
 };
 
-const fetchAllValidatorsBonded = async (url) => {
+const fetchAllValidatorsBonded = async ([url]) => {
   // console.log("inside fetchAllValidatorsBonded() ");
 
   let allValidatorsBonded;
@@ -676,7 +676,7 @@ export const useAllValidatorsBonded = () => {
   };
 };
 
-const fetchAllValidatorsUnbonded = async (url) => {
+const fetchAllValidatorsUnbonded = async ([url]) => {
   // console.log("inside fetchAllValidatorsUnbonded() ");
 
   let allValidatorsUnbonded;
@@ -715,7 +715,7 @@ export const useAllValidatorsUnbonded = () => {
 
 export const useAllValidators = () => {
   // fetcher function for useSwr of useAvailableBalance()
-  const fetchAllValidators = async (url) => {
+  const fetchAllValidators = async ([url]) => {
     console.log("inside fetchAllValidators() ");
 
     let validatorArray;
@@ -769,7 +769,7 @@ export const useTotalBalance = () => {
   const { address } = chainContext;
 
   // fetcher function for useSwr of useAvailableBalance()
-  const fetchTotalBalance = async (url, address) => {
+  const fetchTotalBalance = async ([url, address]) => {
     // console.log("inside fetchTotalBalance() ");
 
     let balanceValue;
@@ -842,7 +842,7 @@ export const useVote = (proposalId) => {
   const walletManager = useChain(defaultChainName);
   const { address } = walletManager;
   // fetcher function for useSwr of useAvailableBalance()
-  const fetchVote = async (url, proposalId, address) => {
+  const fetchVote = async ([url, proposalId, address]) => {
     // console.log("inside fetchVote() ");
 
     let voteInfo;
@@ -886,7 +886,7 @@ export const useAllProposals = () => {
   const { walletStatus, address, currentWalletInfo } = walletManager;
 
   // fetcher function for useSwr of useAvailableBalance()
-  const fetchAllProposals = async (url) => {
+  const fetchAllProposals = async ([url]) => {
     // console.log("inside fetchAllProposals() ");
 
     let allProposals;
@@ -922,7 +922,7 @@ export const useAllProposals = () => {
 
 export const useAllVotes = (proposalId) => {
   // fetcher function for useSwr of useAvailableBalance()
-  const fetchAllVotes = async (url) => {
+  const fetchAllVotes = async ([url]) => {
     // console.log("inside fetchAllVotes() ");
 
     // let proposalIdSample = "6";
@@ -956,7 +956,7 @@ export const useWithdrawAddress = () => {
   const { address } = walletManager;
 
   // fetcher function for useSwr of useAvailableBalance()
-  const fetchWithdrawAddress = async (url, address) => {
+  const fetchWithdrawAddress = async ([url, address]) => {
     // console.log("inside fetchWithdrawAddress() ");
 
     let claimAddress;
@@ -993,7 +993,7 @@ export const useWithdrawAddress = () => {
 };
 
 // fetcher function for useSwr of useAvailableBalance()
-const fetchAllTrades = async (url) => {
+const fetchAllTrades = async ([url]) => {
   // console.log("inside fetchAllTrades() ");
   let tradeData = [];
   let tokenDetails = {};
@@ -1063,7 +1063,7 @@ export const useTrade = () => {
 
 export const useOsmosis = () => {
   // fetcher function for useSwr of useAvailableBalance()
-  const fetchAllOsmosis = async (url) => {
+  const fetchAllOsmosis = async ([url]) => {
     console.log("inside fetchAllOsmosis() fun.");
 
     let osmosisData;
@@ -1181,7 +1181,7 @@ export const useOsmosis = () => {
 
 export const useQuickswap = () => {
   // fetcher function for useSwr of useAvailableBalance()
-  const fetchAllQuickswap = async (url) => {
+  const fetchAllQuickswap = async ([url]) => {
     // console.log("inside fetchAllQuickswap() ");
 
     let quickswapData = [];
@@ -1236,7 +1236,7 @@ export const useQuickswap = () => {
 export const useEthereumFarm = () => {
   console.log("in useEthereumFarm");
   // fetcher function for useSwr of useAvailableBalance()
-  const fetchEthereumFarm = async (url) => {
+  const fetchEthereumFarm = async ([url]) => {
     console.log("inside fetchEthereumFarm() ");
     let uniswapData;
 
@@ -1267,7 +1267,7 @@ export const useEthereumFarm = () => {
 
 export const useComdexFarm = (poolID) => {
   // fetcher function for useSwr of useAvailableBalance()
-  const fetchAllComdex = async (url, poolID) => {
+  const fetchAllComdex = async ([url, poolID]) => {
     const initialData = [
       {
         api: "https://stat.comdex.one/api/v2/cswap/pairs/33",
@@ -1322,7 +1322,7 @@ export const usePolygonFarm = (poolIndex) => {
   let polygonFarmData;
   const { mntlUsdValue } = useMntlUsd();
 
-  const fetchPolygonFarm = async (url, poolIndex, mntlUsdValue) => {
+  const fetchPolygonFarm = async ([url, poolIndex, mntlUsdValue]) => {
     const selectedQuickswapFarmPool = farmPools?.[1]?.pools?.[poolIndex];
     const quickV2StakerContractAddress =
       selectedQuickswapFarmPool?.farmContractAddress;

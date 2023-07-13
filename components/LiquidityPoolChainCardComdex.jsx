@@ -31,7 +31,7 @@ export function LiquidityPoolChainCardComdex({
   // DISPLAY VARIABLES
   const displayApr = isLoadingComdexFarm
     ? "..."
-    : `${BigNumber(comdexFarm?.apr || 0).toFixed(2)}%`;
+    : `${BigNumber(comdexFarm?.apr || 0)?.toFixed?.(2)}`;
 
   const pairLogoJSX = (
     <div
