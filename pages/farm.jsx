@@ -1,12 +1,15 @@
 import Head from "next/head";
 import React, { Suspense, useState } from "react";
-import { ExternalFarmPoolComdex, ExternalFarmPoolOsmosis } from "../components";
-import { LiquidityPoolChainPolygon } from "../components/LiquidityPoolChainPolygon";
-import { LiquidityPoolChainOsmosis } from "../components/LiquidityPoolChainOsmosis";
-import { LiquidityPoolChainComdex } from "../components/LiquidityPoolChainComdex";
-import { LiquidityPoolChainEthereum } from "../components/LiquidityPoolChainEthereum";
-import { UniswapFarmPool } from "../components/UniswapFarmPool";
-import { QuickswapFarmPool } from "../components/QuickswapFarmPool";
+import {
+  ExternalFarmPoolComdex,
+  ExternalFarmPoolOsmosis,
+  LiquidityPoolChainComdex,
+  LiquidityPoolChainEthereum,
+  LiquidityPoolChainOsmosis,
+  LiquidityPoolChainPolygon,
+  UniswapFarmPool,
+  QuickswapFarmPool,
+} from "../components";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import { useIsMounted } from "../lib";
 
@@ -35,7 +38,7 @@ export default function Farm() {
     case 1:
       farmPoolJSX = isMounted && (
         <Suspense fallback={loadingJSX}>
-          <QuickswapFarmPool poolIndex={selectedPool?.poolIndex} />{" "}
+          <QuickswapFarmPool poolIndex={selectedPool?.poolIndex} />
         </Suspense>
       );
       break;

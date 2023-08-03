@@ -1,7 +1,7 @@
 import React from "react";
 import { farmPools } from "../data";
 import { cleanString } from "../lib";
-import { LiquidityPoolChainCardPolygon } from "./LiquidityPoolChainCardPolygon";
+import { LiquidityPoolChainCardPolygon } from "../components";
 
 export const LiquidityPoolChainPolygon = ({
   setSelectedPool,
