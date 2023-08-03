@@ -1,4 +1,4 @@
-import { Link } from "@chakra-ui/react";
+import Link from "next/link";
 import React from "react";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import { Stack } from "react-bootstrap";
