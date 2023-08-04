@@ -2,6 +2,7 @@ import React from "react";
 import { farmPools, useComdexFarm } from "../data";
 import { cleanString } from "../lib";
 import BigNumber from "bignumber.js";
+import { Col, Row, Stack } from "react-bootstrap";
 
 export function ExternalFarmPoolComdex({ appIndex, poolIndex }) {
   const selectedApp = farmPools?.[appIndex];
@@ -15,24 +16,20 @@ export function ExternalFarmPoolComdex({ appIndex, poolIndex }) {
   // DISPLAY VARIABLES
 
   const appLogoJSX = (
-    <div className="d-flex gap-2 align-items-center mb-1">
-      <div className={``}>
-        <div
-          className="position-relative"
-          style={{ width: "30px", aspectRatio: "1/1" }}
-        >
-          <img
-            src={`/farm/icons/${appLogoPathname}.svg`}
-            alt={`${selectedApp?.name} icon`}
-            className="w-100 h-100"
-            style={{ objectFit: "cover", objectPosition: "center" }}
-          />
-        </div>
+    <Stack className="align-items-center mb-1" direction="horizontal" gap={2}>
+      <div
+        className="position-relative"
+        style={{ width: "30px", aspectRatio: "1/1" }}
+      >
+        <img
+          src={`/farm/icons/${appLogoPathname}.svg`}
+          alt={`${selectedApp?.name} icon`}
+          className="w-100 h-100"
+          style={{ objectFit: "cover", objectPosition: "center" }}
+        />
       </div>
-      <h1 className="caption2 text-gray text-primary m-0">
-        {selectedApp?.name}
-      </h1>
-    </div>
+      <h1 className="caption2 text-primary m-0">{selectedApp?.name}</h1>
+    </Stack>
   );
 
   const ctaButtonsJSX = (
@@ -40,7 +37,7 @@ export function ExternalFarmPoolComdex({ appIndex, poolIndex }) {
       href={selectedPool?.extLink}
       target="_blank"
       rel="noopener noreferrer"
-      className="button-primary px-5 py-2 d-flex gap-2"
+      className="btn btn-primary px-5 rounded-5 py-2 d-flex gap-2 fw-semibold"
     >
       Stake <i className="bi bi-arrow-up-right"></i>
     </a>
@@ -48,7 +45,7 @@ export function ExternalFarmPoolComdex({ appIndex, poolIndex }) {
 
   const chainLogoJSX = (
     <div
-      className={`bg-gray-800 p-1 px-3 rounded-start ${
+      className={`bg-light-subtle p-1 px-3 rounded-start ${
         selectedApp?.from !== "polygon" && "py-2"
       }`}
     >
@@ -108,44 +105,66 @@ export function ExternalFarmPoolComdex({ appIndex, poolIndex }) {
     : `${BigNumber(comdexFarm?.apr || 0).toFixed(2)}%`;
 
   return (
-    <div className={`nav-bg p-3 rounded-4 pe-0 d-flex flex-column gap-2 `}>
-      <div className="d-flex align-items-center justify-content-between">
+    <Stack className={`bg-black p-3 rounded-4 pe-0`} gap={2}>
+      <Stack
+        direction="horizontal"
+        className="align-items-center justify-content-between"
+      >
         {/* App name and connected Address */}
-        <div className="d-flex gap-2 mb-1">
-          <div className={``}>{appLogoJSX}</div>
-        </div>
+        <Stack direction="horizontal" className="mb-1" gap={2}>
+          {appLogoJSX}
+        </Stack>
         {chainLogoJSX}
-      </div>
+      </Stack>
 
-      <div className="pe-3 d-flex flex-column gap-3 ">
-        <div className="bg-gray-800 p-4 rounded-4 d-flex flex-column gap-3">
-          <div className="d-flex align-items-center justify-content-between gap-3">
-            <div className="d-flex align-items-center gap-3">
+      <Stack className="pe-3" gap={3}>
+        <Stack className="bg-light-subtle p-4 rounded-4" gap={3}>
+          <Stack
+            className="align-items-center justify-content-between"
+            direction="horizontal"
+            gap={3}
+          >
+            <Stack
+              className="align-items-center"
+              direction="horizontal"
+              gap={3}
+            >
               {logoPairJSX}
               <h2 className="h3 m-0">{selectedPool?.tokens}</h2>
-            </div>
-          </div>
-          <div className="border-bottom"></div>
-          <div className="row">
-            <div className="col-5 py-2">
-              <div className="row">
-                <div className="col-6 text-gray caption">TVL</div>
-                <div className="col-6 caption">{displayTvl}</div>
-              </div>
-            </div>
-            <div className="col-5 py-2">
-              <div className="row">
-                <div className="col-6 text-gray caption">APR</div>
-                {<div className="col-6 caption"> {displayApr}</div>}
-              </div>
-            </div>
-          </div>
-          <div className="border-bottom"></div>
-          <div className="d-flex justify-content-end gap-2">
+            </Stack>
+          </Stack>
+          <div className="border-bottom border-secondary" />
+          <Row>
+            <Col xs={5} className="py-2">
+              <Row>
+                <Col xs={6} className="text-light caption">
+                  TVL
+                </Col>
+                <Col xs={6} className="caption">
+                  {displayTvl}
+                </Col>
+              </Row>
+            </Col>
+            <Col xs={5} className="py-2">
+              <Row>
+                <Col xs={6} className="text-light caption">
+                  APR
+                </Col>
+                {
+                  <Col xs={6} className="caption">
+                    {" "}
+                    {displayApr}
+                  </Col>
+                }
+              </Row>
+            </Col>
+          </Row>
+          <div className="border-bottom border-secondary" />
+          <Stack className="justify-content-end" direction="horizontal" gap={2}>
             {ctaButtonsJSX}
-          </div>
-        </div>
-      </div>
-    </div>
+          </Stack>
+        </Stack>
+      </Stack>
+    </Stack>
   );
 }
