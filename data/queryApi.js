@@ -777,25 +777,25 @@ export const useTotalBalance = () => {
     // use a try catch block for creating rich Error object
     try {
       // get the aggregated balance values from other swr fetchers
-      const availableBalanceFetcher = fetchAvailableBalance(
+      const availableBalanceFetcher = fetchAvailableBalance([
         "useAvailableBalance",
-        address
-      );
+        address,
+      ]);
 
-      const delegatedBalanceFetcher = fetchTotalDelegated(
+      const delegatedBalanceFetcher = fetchTotalDelegated([
         "useDelegatedValidators",
-        address
-      );
+        address,
+      ]);
 
-      const rewardsBalanceFetcher = fetchTotalRewards(
+      const rewardsBalanceFetcher = fetchTotalRewards([
         "useTotalRewards",
-        address
-      );
+        address,
+      ]);
 
-      const unbondingBalanceFetcher = fetchTotalUnbonding(
+      const unbondingBalanceFetcher = fetchTotalUnbonding([
         "useTotalUnbonding",
-        address
-      );
+        address,
+      ]);
 
       const aggregatedFetchArray = await Promise.all([
         availableBalanceFetcher,
