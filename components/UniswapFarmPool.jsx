@@ -173,7 +173,7 @@ export function UniswapFarmPool({ poolIndex }) {
   );
 
   const [StakeModal, setStakeModal] = useState(false);
-  const [UnstakeModal, setUnstakeModal] = useState(true);
+  const [UnstakeModal, setUnstakeModal] = useState(false);
 
   const ctaButtonsJSX = isWalletEthConnected ? (
     <>
