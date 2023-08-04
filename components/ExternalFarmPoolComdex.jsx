@@ -27,7 +27,7 @@ export function ExternalFarmPoolComdex({ appIndex, poolIndex }) {
           style={{ objectFit: "cover", objectPosition: "center" }}
         />
       </div>
-      <h1 className="caption2 text-primary m-0">{selectedApp?.name}</h1>
+      <h1 className="h3 text-primary m-0">{selectedApp?.name}</h1>
     </Stack>
   );
 
