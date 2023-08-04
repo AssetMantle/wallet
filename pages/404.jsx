@@ -8,7 +8,7 @@ export default function Custom404() {
     <ScrollableSectionContainer>
       <Stack className="align-items-center justify-content-center" gap={3}>
         <img
-          src="/404.png"
+          src="/404.webp"
           style={{ width: "min(480px,100%)" }}
           alt="404 illustration"
         />
