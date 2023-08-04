@@ -380,6 +380,9 @@ function StaticQuickswapFarmPool({ poolIndex }) {
     </>
   );
 
+  const [StakeModal, setStakeModal] = useState(false);
+  const [UnstakeModal, setUnstakeModal] = useState(false);
+
   const ctaApproveButtonJSX =
     isLoadingLpTokenAllowance || isLoadingLpTokenBalance ? (
       <Button
@@ -401,16 +404,14 @@ function StaticQuickswapFarmPool({ poolIndex }) {
         <Button
           className="rounded-5 fw-medium px-5 py-2 d-flex gap-2"
           variant="outline-primary"
-          data-bs-toggle="modal"
-          data-bs-target="#quickswapUnstake"
+          onClick={() => setUnstakeModal(true)}
         >
           Unstake
         </Button>
         <Button
           className="rounded-5 fw-medium px-5 py-2 d-flex gap-2"
           variant="primary"
-          data-bs-toggle="modal"
-          data-bs-target="#quickswapStake"
+          onClick={() => setStakeModal(true)}
         >
           Stake
         </Button>
@@ -671,11 +672,15 @@ function StaticQuickswapFarmPool({ poolIndex }) {
         balance={lpTokenBalance}
         isLoadingBalance={isLoadingLpTokenBalance}
         poolIndex={poolIndex}
+        Show={StakeModal}
+        setShow={setStakeModal}
       />
       <QuickswapUnstakeModal
         balance={userLpStakedAmountFormatted}
         isLoadingBalance={isLoadingUserStakeInfo}
         poolIndex={poolIndex}
+        Show={UnstakeModal}
+        setShow={setUnstakeModal}
       />
     </>
   );

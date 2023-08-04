@@ -18,11 +18,14 @@ import {
   toDenom,
 } from "../data";
 import { isObjEmpty } from "../lib";
+import { Button, Modal, Stack } from "react-bootstrap";
 
 export const QuickswapUnstakeModal = ({
   balance,
   isLoadingBalance,
   poolIndex,
+  Show,
+  setShow,
 }) => {
   const availableBalance = balance?.formatted || "0";
   const quickswapFarm = farmPools?.[1];
@@ -126,7 +129,6 @@ export const QuickswapUnstakeModal = ({
 
       case "SUBMIT": {
         // if any required field is blank, set error message
-        console.log("action.payload: ", state?.transferAmount);
 
         let localErrorMessages = state?.errorMessages;
 
@@ -157,7 +159,7 @@ export const QuickswapUnstakeModal = ({
       }
 
       default:
-        console.log("default case");
+        false;
     }
   };
   const [formState, formDispatch] = useReducer(formReducer, initialState);
@@ -198,7 +200,6 @@ export const QuickswapUnstakeModal = ({
   };
 
   const handleSubmit = async (e) => {
-    console.log("inside handleSubmit()");
     e.preventDefault();
 
     // copy form states to local variables
@@ -244,6 +245,7 @@ export const QuickswapUnstakeModal = ({
       }
       formDispatch({ type: "RESET" });
     }
+    setShow(false);
   };
 
   const handleOnClickMax = (e) => {
@@ -280,30 +282,41 @@ export const QuickswapUnstakeModal = ({
     formState?.errorMessages?.transferAmountErrorMsg;
 
   const formJSX = (
-    <div className={`p-3 rounded-4 d-flex flex-column gap-3 w-100`}>
+    <Stack className={`p-3 rounded-4 w-100`} gap={3}>
       <label
         htmlFor="mntlAmount"
-        className="caption2 text-gray d-flex align-items-center justify-content-between gap-2"
+        className="caption2 text-light d-flex align-items-center justify-content-between gap-2"
       >
         Amount{" "}
-        <small className="small text-gray">
+        <small className="small text-light">
           Staked Balance : {displayAvailableBalance}
         </small>
       </label>
-      <div className="input-white d-flex py-2 px-3 rounded-2">
+      <Stack
+        direction="horizontal"
+        gap={2}
+        className="p-3 py-2 rounded-2 border border-secondary"
+      >
         <input
           type="number"
           placeholder="Enter Amount"
           name="mntlAmount"
-          className="am-input-secondary caption2 flex-grow-1 bg-t"
+          className="bg-transparent flex-grow-1"
+          style={{ outline: "none" }}
           value={displayInputAmountValue}
           onChange={handleAmountOnChange}
         />
-        <button className="text-primary caption2" onClick={handleOnClickMax}>
+        <Button
+          variant="link"
+          className={`bg-light-subtle p-1 px-2 text-primary text-decoration-none ${
+            status === "Disconnected" ? "bg-opacity-75" : ""
+          }`}
+          onClick={handleOnClickMax}
+        >
           Max
-        </button>
-      </div>
-      <small className="small text-gray">
+        </Button>
+      </Stack>
+      <small className="small text-light">
         MATIC Balance : {displayMaticBalance}
       </small>
       {isFormAmountError && (
@@ -314,60 +327,62 @@ export const QuickswapUnstakeModal = ({
           <i className="bi bi-info-circle" /> {displayFormAmountErrorMsg}
         </small>
       )}
-      <div className="d-flex align-items-center justify-content-end gap-2">
-        <button
+      <Stack
+        className="align-items-center justify-content-end"
+        direction="horizontal"
+        gap={2}
+      >
+        <Button
+          variant="primary"
+          className="rounded-5 py-2 px-5 d-flex gap-2 align-items-center caption2"
           onClick={handleSubmit}
           disabled={isSubmitDisabled}
-          className="button-primary py-2 px-5 d-flex gap-2 align-items-center caption2"
-          data-bs-dismiss="modal"
         >
           Submit
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Stack>
+    </Stack>
   );
 
   return (
-    <div className="modal " tabIndex="-1" role="dialog" id="quickswapUnstake">
-      <div
-        className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg"
-        role="document"
-      >
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title body2 text-primary d-flex align-items-center gap-2">
-              <button
-                type="button"
-                className="btn-close primary"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-                style={{ background: "none" }}
-              >
-                <span className="text-primary">
-                  <i className="bi bi-chevron-left" />
-                </span>
-              </button>
-              Unstake
-            </h5>
-            <button
-              type="button"
-              className="btn-close primary"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-              style={{ background: "none" }}
+    <Modal
+      show={Show}
+      onHide={() => setShow(false)}
+      centered
+      size="lg"
+      aria-labelledby="quickswap-unstake-modal"
+    >
+      <Modal.Body className="p-0">
+        <Stack className="p-3">
+          <Stack
+            direction="horizontal"
+            gap={2}
+            className="align-items-center pb-2"
+          >
+            <Button
+              variant="link"
+              className="p-0"
+              onClick={() => setShow(false)}
             >
-              <span className="text-primary">
-                <i className="bi bi-x-lg" />
-              </span>
-            </button>
-          </div>
-          <div className="modal-body p-3  d-flex flex-column">
-            <div className="nav-bg rounded-4 d-flex flex-column p-1 gap-2 align-items-center justify-content-center">
-              {formJSX}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+              <i className="bi bi-chevron-left fw-bold h2 text-primary" />
+            </Button>
+            <h2 className="h3 m-0 text-primary">Unstake</h2>
+            <Button
+              variant="link"
+              className="ms-auto"
+              onClick={() => setShow(false)}
+            >
+              <i className="bi bi-x fw-bold h2 text-primary"></i>
+            </Button>
+          </Stack>
+          <Stack
+            className="bg-black rounded-4 p-1 align-items-center justify-content-center"
+            gap={2}
+          >
+            {formJSX}
+          </Stack>
+        </Stack>
+      </Modal.Body>
+    </Modal>
   );
 };
