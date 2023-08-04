@@ -31,6 +31,7 @@ import {
   shortenEthAddress,
 } from "../lib";
 import { UniswapStakeContents, UniswapUnstakeContents } from "../views";
+import { Button, Col, Modal, Row, Stack } from "react-bootstrap";
 
 export function UniswapFarmPool({ poolIndex }) {
   // hooks to work the multi-modal for ethereum
@@ -110,7 +111,6 @@ export function UniswapFarmPool({ poolIndex }) {
       // create transaction
       const transactionResponse = await writeAsync();
 
-      console.log("response: ", transactionResponse);
       if (transactionResponse?.hash) {
         notify(
           transactionResponse?.hash,
@@ -155,45 +155,51 @@ export function UniswapFarmPool({ poolIndex }) {
 
   const connectedAddressJSX = isWalletEthConnected && (
     <>
-      <button
-        className="d-flex gap-2 align-items-center pe-4 caption2"
+      <Button
+        className="d-flex gap-2 align-items-center pe-4 caption2 am-connect"
+        variant="outline-primary"
+        as="button"
         onClick={handleCopyOnClick}
         style={{ wordBreak: "break-all" }}
       >
         {displayShortenedAddress}
-        <i className="bi bi-files text-primary"></i>
+        <i className="bi bi-files"></i>
         {/* <i className="opacity-0">a</i> */}
-        <span className="text-primary" onClick={handleDisconnectWeb3Modal}>
+        <span className="" onClick={handleDisconnectWeb3Modal}>
           <i className="bi bi-power" />
         </span>
-      </button>
+      </Button>
     </>
   );
 
+  const [StakeModal, setStakeModal] = useState(false);
+  const [UnstakeModal, setUnstakeModal] = useState(true);
+
   const ctaButtonsJSX = isWalletEthConnected ? (
     <>
-      <button
-        className="button-secondary px-5 py-2 d-flex gap-2"
-        data-bs-toggle="modal"
-        data-bs-target="#cardUnstake"
+      <Button
+        className="rounded-5 fw-medium px-5 py-2 d-flex gap-2"
+        variant="outline-primary"
+        onClick={() => setUnstakeModal(true)}
       >
         Unstake
-      </button>
-      <button
-        className="button-primary px-5 py-2 d-flex gap-2"
-        data-bs-toggle="modal"
-        data-bs-target="#cardStake"
+      </Button>
+      <Button
+        className="rounded-5 fw-medium px-5 py-2 d-flex gap-2"
+        variant="primary"
+        onClick={() => setStakeModal(true)}
       >
         Stake
-      </button>
+      </Button>
     </>
   ) : (
-    <button
-      className="button-primary px-5 py-2 d-flex gap-2"
+    <Button
+      variant="primary"
+      className="rounded-5 fw-medium px-5 py-2 d-flex gap-2"
       onClick={handleOpenWeb3Modal}
     >
       <i className="bi bi-wallet2"></i> Connect Wallet
-    </button>
+    </Button>
   );
 
   const rewardsBalanceStyled = getBalanceStyle(
@@ -235,7 +241,7 @@ export function UniswapFarmPool({ poolIndex }) {
 
   const chainLogoJSX = (
     <div
-      className={`bg-gray-800 p-1 px-3 rounded-start ${
+      className={`bg-light-subtle p-1 px-3 rounded-start ${
         uniswapFarm?.from !== "polygon" && "py-2"
       }`}
     >
@@ -301,167 +307,191 @@ export function UniswapFarmPool({ poolIndex }) {
           currentTimestamp
         )} remaining`;
 
-  console.log("chain: ", chain);
-
   return (
-    <div className={`nav-bg p-3 rounded-4 pe-0 d-flex flex-column gap-2 `}>
-      <div className="d-flex align-items-center justify-content-between">
-        {/* App name and connected Address */}
-        <div className="d-flex gap-2 mb-1">
-          <div className={``}>{appLogoJSX}</div>
-          <div className="d-flex flex-column gap-1">
-            <h1 className="h3 text-primary m-0">{uniswapFarm?.name}</h1>
-            {connectedAddressJSX}
-          </div>
-        </div>
-        {chainLogoJSX}
-      </div>
+    <>
+      <Stack className={`bg-black p-3 rounded-4 pe-0`} gap={2}>
+        <Stack
+          className="align-items-center justify-content-between"
+          direction="horizontal"
+        >
+          {/* App name and connected Address */}
+          <Stack className="mb-1" direction="horizontal" gap={2}>
+            {appLogoJSX}
+            <Stack gap={1}>
+              <h1 className="h3 text-primary m-0">{uniswapFarm?.name}</h1>
+              {connectedAddressJSX}
+            </Stack>
+          </Stack>
+          {chainLogoJSX}
+        </Stack>
 
-      <div className="pe-3 d-flex flex-column gap-3 ">
-        <div className="bg-gray-800 p-4 rounded-4 d-flex flex-column gap-3">
-          <div className="d-flex align-items-center justify-content-between gap-3">
-            <div className="d-flex align-items-center gap-3">
-              {logoPairJSX}
-              <h2 className="h3 m-0">{selectedUniswapFarmPool?.tokens}</h2>
-            </div>
-            <button className="am-link px-2" onClick={handleOnClickClaim}>
-              Claim Reward
-            </button>
-            <div className="d-flex align-items-center gap-3">
-              <p>{rewardsBalanceDisplay}</p>
-            </div>
-          </div>
-          <div className="border-bottom"></div>
-          <div className="row">
-            <div className="col-7 py-2">
-              <div className="row">
-                <div className="col-6 text-gray caption">Reward Pool</div>
-                <div className="col-6 caption">
-                  {selectedUniswapFarmPool?.rewardPool}
-                </div>
-              </div>
-            </div>
-            <div className="col-5 py-2">
-              <div className="row">
-                <div className="col-6 text-gray caption">TVL</div>
-                <div className="col-6 caption">
-                  {selectedUniswapFarmPool?.tvl}
-                </div>
-              </div>
-            </div>
-            <div className="col-7 py-2">
-              <div className="row">
-                <div className="col-6 text-gray caption">Duration</div>
-                <div className="col-6 caption">{durationRemaining}</div>
-              </div>
-            </div>
-            <div className="col-5 py-2">
-              <div className="row">
-                <div className="col-6 text-gray caption">APR</div>
-                <div className="col-6 caption">
-                  {selectedUniswapFarmPool?.apr}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="border-bottom"></div>
-          <div className="d-flex justify-content-end gap-2">
-            {ctaButtonsJSX}
-          </div>
-        </div>
+        <Stack className="pe-3" gap={3}>
+          <Stack className="bg-light-subtle p-4 rounded-4" gap={3}>
+            <Stack
+              className="align-items-center justify-content-between"
+              direction="horizontal"
+              gap={3}
+            >
+              <Stack
+                className="align-items-center"
+                direction="horizontal"
+                gap={3}
+              >
+                {logoPairJSX}
+                <h2 className="h3 m-0">{selectedUniswapFarmPool?.tokens}</h2>
+              </Stack>
+              <Button
+                variant="link"
+                className="text-decoration-none text-primary px-2"
+                onClick={handleOnClickClaim}
+              >
+                Claim Reward
+              </Button>
+              <Stack className="align-items-center my-auto" gap={3}>
+                <p className="m-0">{rewardsBalanceDisplay}</p>
+              </Stack>
+            </Stack>
 
-        {/* stake modal */}
-        <div className="modal " tabIndex="-1" role="dialog" id="cardStake">
-          <div
-            className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg"
-            role="document"
-          >
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title body2 text-primary d-flex align-items-center gap-2">
-                  <button
-                    type="button"
-                    className="btn-close primary"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                    style={{ background: "none" }}
-                  >
-                    <span className="text-primary">
-                      <i className="bi bi-chevron-left" />
-                    </span>
-                  </button>
-                  Stake
-                </h5>
-                <button
-                  type="button"
-                  className="btn-close primary"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                  style={{ background: "none" }}
-                >
-                  <span className="text-primary">
-                    <i className="bi bi-x-lg" />
-                  </span>
-                </button>
-              </div>
-              <div className="modal-body p-3  d-flex flex-column">
-                <div
-                  className="nav-bg rounded-4 d-flex flex-column py-1 px-4 gap-2 align-items-center justify-content-center"
-                  style={{ minHeight: "250px" }}
-                >
-                  <UniswapStakeContents />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+            <div className="border-bottom border-secondary" />
 
-        {/* unstake modal */}
-        <div className="modal " tabIndex="-1" role="dialog" id="cardUnstake">
-          <div
-            className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg"
-            role="document"
-          >
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title body2 text-primary d-flex align-items-center gap-2">
-                  <button
-                    type="button"
-                    className="btn-close primary"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                    style={{ background: "none" }}
-                  >
-                    <span className="text-primary">
-                      <i className="bi bi-chevron-left" />
-                    </span>
-                  </button>
-                  Unstake
-                </h5>
-                <button
-                  type="button"
-                  className="btn-close primary"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                  style={{ background: "none" }}
-                >
-                  <span className="text-primary">
-                    <i className="bi bi-x-lg" />
-                  </span>
-                </button>
-              </div>
-              <div className="modal-body p-3  d-flex flex-column">
-                <div
-                  className="nav-bg rounded-4 d-flex flex-column py-1 px-4 gap-2 align-items-center justify-content-center"
-                  style={{ minHeight: "250px" }}
-                >
-                  <UniswapUnstakeContents />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+            <Row>
+              <Col xs={7} className="py-2">
+                <Row>
+                  <Col xs={6} className="text-light caption">
+                    Reward Pool
+                  </Col>
+                  <Col xs={6} className="caption">
+                    {selectedUniswapFarmPool?.rewardPool}
+                  </Col>
+                </Row>
+              </Col>
+              <Col xs={5} className="py-2">
+                <Row>
+                  <Col xs={6} className="text-light caption">
+                    TVL
+                  </Col>
+                  <Col xs={6} className="caption">
+                    {selectedUniswapFarmPool?.tvl}
+                  </Col>
+                </Row>
+              </Col>
+              <Col xs={7} className="py-2">
+                <Row>
+                  <Col xs={6} className="text-light caption">
+                    Duration
+                  </Col>
+                  <Col xs={6} className="caption">
+                    {durationRemaining}
+                  </Col>
+                </Row>
+              </Col>
+              <Col xs={5} className="py-2">
+                <Row>
+                  <Col xs={6} className="text-light caption">
+                    APR
+                  </Col>
+                  <Col xs={6} className="caption">
+                    {selectedUniswapFarmPool?.apr}
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+
+            <div className="border-bottom border-secondary" />
+
+            <Stack
+              className="justify-content-end"
+              direction="horizontal"
+              gap={2}
+            >
+              {ctaButtonsJSX}
+            </Stack>
+          </Stack>
+        </Stack>
+      </Stack>
+
+      {/* stake modal */}
+      <Modal
+        show={StakeModal}
+        onHide={() => setStakeModal(false)}
+        centered
+        size="lg"
+        aria-labelledby="quickswap-unstake-modal"
+      >
+        <Modal.Body className="p-0">
+          <Stack className="p-3">
+            <Stack
+              direction="horizontal"
+              gap={2}
+              className="align-items-center pb-2"
+            >
+              <Button
+                variant="link"
+                className="p-0"
+                onClick={() => setStakeModal(false)}
+              >
+                <i className="bi bi-chevron-left fw-bold h2 text-primary" />
+              </Button>
+              <h2 className="h3 m-0 text-primary">Unstake</h2>
+              <Button
+                variant="link"
+                className="ms-auto"
+                onClick={() => setStakeModal(false)}
+              >
+                <i className="bi bi-x-lg fw-bold h2 text-primary"></i>
+              </Button>
+            </Stack>
+            <Stack
+              className="bg-black rounded-4 p-1 align-items-center justify-content-center"
+              gap={2}
+            >
+              <UniswapStakeContents />
+            </Stack>
+          </Stack>
+        </Modal.Body>
+      </Modal>
+
+      {/* unstake modal */}
+      <Modal
+        show={UnstakeModal}
+        onHide={() => setUnstakeModal(false)}
+        centered
+        size="lg"
+        aria-labelledby="quickswap-unstake-modal"
+      >
+        <Modal.Body className="p-0">
+          <Stack className="p-3">
+            <Stack
+              direction="horizontal"
+              gap={2}
+              className="align-items-center pb-2"
+            >
+              <Button
+                variant="link"
+                className="p-0"
+                onClick={() => setUnstakeModal(false)}
+              >
+                <i className="bi bi-chevron-left fw-bold h2 text-primary" />
+              </Button>
+              <h2 className="h3 m-0 text-primary">Unstake</h2>
+              <Button
+                variant="link"
+                className="ms-auto"
+                onClick={() => setUnstakeModal(false)}
+              >
+                <i className="bi bi-x fw-bold h2 text-primary"></i>
+              </Button>
+            </Stack>
+            <Stack
+              className="bg-black rounded-4 p-1 align-items-center justify-content-center"
+              gap={2}
+              style={{ minHeight: "250px" }}
+            >
+              <UniswapUnstakeContents />
+            </Stack>
+          </Stack>
+        </Modal.Body>
+      </Modal>
+    </>
   );
 }
