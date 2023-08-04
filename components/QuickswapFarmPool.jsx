@@ -39,6 +39,7 @@ import {
 } from "../lib";
 import { QuickswapStakeModal } from "./QuickswapStakeModal";
 import { QuickswapUnstakeModal } from "./QuickswapUnstakeModal";
+import { Button, Col, Row, Stack } from "react-bootstrap";
 
 function StaticQuickswapFarmPool({ poolIndex }) {
   // hooks to work the multi-modal for ethereum
@@ -292,7 +293,6 @@ function StaticQuickswapFarmPool({ poolIndex }) {
       // create transaction
       transactionResponse = await writeAsyncClaimReward();
 
-      console.log("response: ", transactionResponse);
       if (transactionResponse?.hash) {
         notify(
           transactionResponse?.hash,
@@ -325,7 +325,6 @@ function StaticQuickswapFarmPool({ poolIndex }) {
   };
 
   const handleApproveLpTransfer = async (e) => {
-    console.log("inside handlhandleApproveSubmitGravityeSubmit()");
     e.preventDefault();
 
     try {
@@ -335,7 +334,6 @@ function StaticQuickswapFarmPool({ poolIndex }) {
       // create transaction
       const transactionResponse = await writeAsyncApprove();
 
-      console.log("response: ", transactionResponse);
       if (transactionResponse?.hash) {
         notify(
           transactionResponse?.hash,
@@ -365,61 +363,70 @@ function StaticQuickswapFarmPool({ poolIndex }) {
 
   const connectedAddressJSX = isWalletEthConnected && (
     <>
-      <button
-        className="d-flex gap-2 align-items-center pe-4 caption2"
+      <Button
+        className="d-flex gap-2 align-items-center pe-4 caption2 am-connect"
+        variant="outline-primary"
+        as="button"
         onClick={handleCopyOnClick}
         style={{ wordBreak: "break-all" }}
       >
         {displayShortenedAddress}
-        <i className="bi bi-files text-primary"></i>
+        <i className="bi bi-files"></i>
         {/* <i className="opacity-0">a</i> */}
-        <span className="text-primary" onClick={handleDisconnectWeb3Modal}>
+        <span onClick={handleDisconnectWeb3Modal}>
           <i className="bi bi-power" />
         </span>
-      </button>
+      </Button>
     </>
   );
 
   const ctaApproveButtonJSX =
     isLoadingLpTokenAllowance || isLoadingLpTokenBalance ? (
-      <button className="button-secondary px-5 py-2 d-flex gap-2">
+      <Button
+        className="rounded-5 fw-medium px-5 py-2 d-flex gap-2"
+        variant="outline-primary"
+      >
         Loading...
-      </button>
+      </Button>
     ) : isApproveLpRequired ? (
-      <button
-        className="button-primary px-5 py-2 d-flex gap-2"
+      <Button
+        variant="primary"
+        className="rounded-5 fw-medium px-5 py-2 d-flex gap-2"
         onClick={handleApproveLpTransfer}
       >
         Approve LP Transfer
-      </button>
+      </Button>
     ) : (
       <>
-        <button
-          className="button-secondary px-5 py-2 d-flex gap-2"
+        <Button
+          className="rounded-5 fw-medium px-5 py-2 d-flex gap-2"
+          variant="outline-primary"
           data-bs-toggle="modal"
           data-bs-target="#quickswapUnstake"
         >
           Unstake
-        </button>
-        <button
-          className="button-primary px-5 py-2 d-flex gap-2"
+        </Button>
+        <Button
+          className="rounded-5 fw-medium px-5 py-2 d-flex gap-2"
+          variant="primary"
           data-bs-toggle="modal"
           data-bs-target="#quickswapStake"
         >
           Stake
-        </button>
+        </Button>
       </>
     );
 
   const ctaButtonsJSX = isWalletEthConnected ? (
     ctaApproveButtonJSX
   ) : (
-    <button
-      className="button-primary px-5 py-2 d-flex gap-2"
+    <Button
+      variant="primary"
+      className="rounded-5 fw-medium px-5 py-2 d-flex gap-2"
       onClick={handleOpenWeb3Modal}
     >
       <i className="bi bi-wallet2"></i> Connect Wallet
-    </button>
+    </Button>
   );
 
   const rewardsPerDayDenomDisplay = defaultChainSymbol;
@@ -469,7 +476,7 @@ function StaticQuickswapFarmPool({ poolIndex }) {
 
   const chainLogoJSX = (
     <div
-      className={`bg-gray-800 p-1 px-3 rounded-start ${
+      className={`bg-light-subtle p-1 px-3 rounded-start ${
         quickswapFarm?.from !== "polygon" && "py-2"
       }`}
     >
@@ -522,10 +529,10 @@ function StaticQuickswapFarmPool({ poolIndex }) {
 
   const displayTvl = isLoadingPolygonFarm
     ? "Loading..."
-    : `$ ${allPolygonFarm?.tvl}`;
+    : `$ ${allPolygonFarm?.tvl || 0}`;
   const displayApr = isLoadingPolygonFarm
     ? "Loading..."
-    : `${allPolygonFarm?.apr}%`;
+    : `${allPolygonFarm?.apr || 0}%`;
 
   /* console.log(
     " numberOfSeconds: ",
@@ -545,77 +552,121 @@ function StaticQuickswapFarmPool({ poolIndex }) {
   }
 
   return (
-    <div className={`nav-bg p-3 rounded-4 pe-0 d-flex flex-column gap-2 `}>
-      <div className="d-flex align-items-center justify-content-between">
-        {/* App name and connected Address */}
-        <div className="d-flex gap-2 mb-1">
-          <div className={``}>{appLogoJSX}</div>
-          <div className="d-flex flex-column gap-1">
-            <h1 className="h3 text-primary m-0">{quickswapFarm?.name}</h1>
-            {connectedAddressJSX}
-          </div>
-        </div>
-        {chainLogoJSX}
-      </div>
+    <>
+      <Stack className={`bg-black p-3 rounded-4 pe-0`} gap={2}>
+        <Stack
+          className="align-items-center justify-content-between"
+          direction="horizontal"
+        >
+          {/* App name and connected Address */}
+          <Stack className="mb-1" direction="horizontal" gap={2}>
+            {appLogoJSX}
+            <Stack gap={1}>
+              <h1 className="h3 text-primary m-0">{quickswapFarm?.name}</h1>
+              {connectedAddressJSX}
+            </Stack>
+          </Stack>
+          {chainLogoJSX}
+        </Stack>
 
-      <div className="pe-3 d-flex flex-column gap-3 ">
-        <div className="bg-gray-800 p-4 rounded-4 d-flex flex-column gap-3">
-          <div className="d-flex align-items-center justify-content-between gap-3">
-            <div className="d-flex align-items-center gap-3">
-              {logoPairJSX}
-              <h2 className="h3 m-0">{selectedQuickswapFarmPool?.tokens}</h2>
-            </div>
-            <button className="am-link px-2" onClick={handleOnClickClaim}>
-              Claim Reward
-            </button>
-            <div className="d-flex align-items-center gap-3">
-              <p>{pendingRewardsDisplay}</p>
-            </div>
-          </div>
-          <div className="border-bottom"></div>
-          <div className="row">
-            <div className="col-7 py-2">
-              <div className="row">
-                <div className="col-6 text-gray caption">Reward Pool</div>
-                <div className="col-6 caption">{rewardsPerDayDisplay}</div>
-              </div>
-            </div>
-            <div className="col-5 py-2">
-              <div className="row">
-                <div className="col-6 text-gray caption">TVL</div>
-                <div className="col-6 caption">{displayTvl}</div>
-              </div>
-            </div>
-            <div className="col-7 py-2">
-              <div className="row">
-                <div className="col-6 text-gray caption">Duration</div>
-                <div className="col-6 caption">
-                  {isBlockNumberLoading ? "Loading..." : durationRemaining}
-                </div>
-              </div>
-            </div>
-            <div className="col-5 py-2">
-              <div className="row">
-                <div className="col-6 text-gray caption">APR</div>
-                <div className="col-6 caption">{displayApr}</div>
-              </div>
-            </div>
-          </div>
-          <div className="border-bottom"></div>
-          <div className="d-flex justify-content-end gap-2">
-            {isWalletEthConnected &&
-              !isLoadingUserStakeInfo &&
-              BigNumber(userLpStakedAmount).isZero() && (
-                <>
-                  {noRecordsJSX} <div className="border-bottom"></div>
-                </>
-              )}
-          </div>
-          <div className="d-flex justify-content-end gap-2">
-            {ctaButtonsJSX}
-          </div>
-        </div>
-      </div>
+        <Stack className="pe-3" gap={3}>
+          <Stack className="bg-light-subtle p-4 rounded-4" gap={3}>
+            <Stack
+              className="align-items-center justify-content-between"
+              direction="horizontal"
+              gap={3}
+            >
+              <Stack
+                className="align-items-center"
+                direction="horizontal"
+                gap={3}
+              >
+                {logoPairJSX}
+                <h2 className="h3 m-0">{selectedQuickswapFarmPool?.tokens}</h2>
+              </Stack>
+              <Button
+                variant="link"
+                className="text-decoration-none text-primary px-2"
+                onClick={handleOnClickClaim}
+              >
+                Claim Reward
+              </Button>
+              <Stack className="align-items-center my-auto" gap={3}>
+                <p className="m-0">{pendingRewardsDisplay}</p>
+              </Stack>
+            </Stack>
+
+            <div className="border-bottom border-secondary" />
+
+            <Row>
+              <Col xs={7} className="py-2">
+                <Row>
+                  <Col xs={6} className="text-light caption">
+                    Reward Pool
+                  </Col>
+                  <Col xs={6} className="caption">
+                    {rewardsPerDayDisplay}
+                  </Col>
+                </Row>
+              </Col>
+              <Col xs={5} className="py-2">
+                <Row>
+                  <Col xs={6} className="text-light caption">
+                    TVL
+                  </Col>
+                  <Col xs={6} className="caption">
+                    {displayTvl}
+                  </Col>
+                </Row>
+              </Col>
+              <Col xs={7} className="py-2">
+                <Row>
+                  <Col xs={6} className="text-light caption">
+                    Duration
+                  </Col>
+                  <Col xs={6} className="caption">
+                    {isBlockNumberLoading ? "Loading..." : durationRemaining}
+                  </Col>
+                </Row>
+              </Col>
+              <Col xs={5} className="py-2">
+                <Row>
+                  <Col xs={6} className="text-light caption">
+                    APR
+                  </Col>
+                  <Col xs={6} className="caption">
+                    {displayApr}
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+
+            <div className="border-bottom border-secondary" />
+
+            <Stack
+              className="justify-content-end"
+              direction="horizontal"
+              gap={2}
+            >
+              {isWalletEthConnected &&
+                !isLoadingUserStakeInfo &&
+                BigNumber(userLpStakedAmount).isZero() && (
+                  <>
+                    {noRecordsJSX}{" "}
+                    <div className="border-bottom border-secondary" />
+                  </>
+                )}
+            </Stack>
+            <Stack
+              className="justify-content-end"
+              direction="horizontal"
+              gap={3}
+            >
+              {ctaButtonsJSX}
+            </Stack>
+          </Stack>
+        </Stack>
+      </Stack>
       <QuickswapStakeModal
         balance={lpTokenBalance}
         isLoadingBalance={isLoadingLpTokenBalance}
@@ -626,7 +677,7 @@ function StaticQuickswapFarmPool({ poolIndex }) {
         isLoadingBalance={isLoadingUserStakeInfo}
         poolIndex={poolIndex}
       />
-    </div>
+    </>
   );
 }
 
