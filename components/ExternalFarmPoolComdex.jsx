@@ -11,7 +11,6 @@ export function ExternalFarmPoolComdex({ appIndex, poolIndex }) {
   const appLogoPathname = cleanString(selectedApp?.name);
 
   const { comdexFarm, isLoadingComdexFarm } = useComdexFarm(poolIndex);
-  console.log("comdexFarm", comdexFarm);
 
   // DISPLAY VARIABLES
 

@@ -99,30 +99,18 @@ export function ExternalFarmPoolOsmosis({ appIndex, poolIndex }) {
           (item) =>
             item?.symbol.includes(tokenPairArray[0]) &&
             item?.symbol.includes(tokenPairArray[1])
-        )?.tvlUsd !== undefined
-          ? allOsmosis?.find(
-              (item) =>
-                item?.symbol.includes(tokenPairArray[0]) &&
-                item?.symbol.includes(tokenPairArray[1])
-            )?.tvlUsd
-          : "0"
+        )?.tvlUsd || 0
       }`;
 
   const displayApr = isLoadingOsmosis
     ? "Loading..."
-    : allOsmosis?.find(
-        (item) =>
-          item?.symbol.includes(tokenPairArray[0]) &&
-          item?.symbol.includes(tokenPairArray[1])
-      )?.apy !== undefined
-    ? `${allOsmosis
-        ?.find(
+    : `${(
+        allOsmosis?.find(
           (item) =>
             item?.symbol.includes(tokenPairArray[0]) &&
             item?.symbol.includes(tokenPairArray[1])
-        )
-        ?.apy?.toFixed(2)}%`
-    : "0%";
+        )?.apy || 0
+      ).toFixed(2)}%`;
 
   return (
     <Stack className={`bg-black p-3 rounded-4 pe-0`} gap={2}>
