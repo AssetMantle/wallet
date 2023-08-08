@@ -33,13 +33,11 @@ export function LiquidityPoolChainCardOsmosis({
   const displayApr = isLoadingOsmosis
     ? "..."
     : `${
-        allOsmosis
-          ?.find?.(
-            (item) =>
-              item?.symbol.includes(tokenPairArray[0]) &&
-              item?.symbol.includes(tokenPairArray[1])
-          )
-          ?.apy?.toFixed?.(2) || 0
+        allOsmosis?.find?.(
+          (item) =>
+            item?.symbol.includes(tokenPairArray[0]) &&
+            item?.symbol.includes(tokenPairArray[1])
+        )?.apy || 0
       }`;
 
   const pairLogoJSX = (

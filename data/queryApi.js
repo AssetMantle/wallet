@@ -1105,13 +1105,15 @@ export const useOsmosis = () => {
             aggregatedFetchArray?.[0]?.[0]?.symbol +
             "-" +
             aggregatedFetchArray?.[0]?.[1]?.symbol,
-          apy: Number(
-            Math.max(
-              aggregatedFetchArray?.[1]?.[0]?.apr_list[0]?.apr_1d,
-              aggregatedFetchArray?.[1]?.[0]?.apr_list[0]?.apr_7d,
-              aggregatedFetchArray?.[1]?.[0]?.apr_list[0]?.apr_14d
-            )
-          ).toFixed(2),
+          apy:
+            aggregatedFetchArray?.[1]?.length &&
+            Number(
+              Math.max(
+                aggregatedFetchArray?.[1]?.[0]?.apr_list[0]?.apr_1d,
+                aggregatedFetchArray?.[1]?.[0]?.apr_list[0]?.apr_7d,
+                aggregatedFetchArray?.[1]?.[0]?.apr_list[0]?.apr_14d
+              )
+            ).toFixed(2),
           tvlUsd: aggregatedFetchArray?.[0]?.[0]?.liquidity
             ?.toString()
             ?.split(".")[0],
@@ -1124,19 +1126,21 @@ export const useOsmosis = () => {
             aggregatedFetchArray?.[2]?.[0]?.symbol +
             "-" +
             aggregatedFetchArray?.[2]?.[1]?.symbol,
-          apy: Number(
-            Math.max(
-              aggregatedFetchArray?.[3]?.[0]?.apr_list?.find(
-                (item) => item?.symbol == "MNTL"
-              )?.apr_1d,
-              aggregatedFetchArray?.[3]?.[0]?.apr_list?.find(
-                (item) => item?.symbol == "MNTL"
-              )?.apr_7d,
-              aggregatedFetchArray?.[3]?.[0]?.apr_list?.find(
-                (item) => item?.symbol == "MNTL"
-              )?.apr_14d
-            )
-          ).toFixed(2),
+          apy:
+            aggregatedFetchArray?.[3]?.length &&
+            Number(
+              Math.max(
+                aggregatedFetchArray?.[3]?.[0]?.apr_list?.find(
+                  (item) => item?.symbol == "OSMO"
+                )?.apr_1d,
+                aggregatedFetchArray?.[3]?.[0]?.apr_list?.find(
+                  (item) => item?.symbol == "OSMO"
+                )?.apr_7d,
+                aggregatedFetchArray?.[3]?.[0]?.apr_list?.find(
+                  (item) => item?.symbol == "OSMO"
+                )?.apr_14d
+              )
+            ).toFixed(2),
           // osmoAtomMntlAprData[0?.apr_list?.map((e)=>console.log(e))],
           tvlUsd: aggregatedFetchArray?.[2]?.[0]?.liquidity
             ?.toString()
@@ -1150,13 +1154,15 @@ export const useOsmosis = () => {
             aggregatedFetchArray?.[4]?.[0]?.symbol +
             "-" +
             aggregatedFetchArray?.[4]?.[1]?.symbol,
-          apy: Number(
-            Math.max(
-              aggregatedFetchArray?.[5]?.[0]?.apr_list[0]?.apr_1d,
-              aggregatedFetchArray?.[5]?.[0]?.apr_list[0]?.apr_7d,
-              aggregatedFetchArray?.[5]?.[0]?.apr_list[0]?.apr_14d
-            )
-          ).toFixed(2),
+          apy:
+            aggregatedFetchArray?.[5]?.length &&
+            Number(
+              Math.max(
+                aggregatedFetchArray?.[5]?.[0]?.apr_list[0]?.apr_1d,
+                aggregatedFetchArray?.[5]?.[0]?.apr_list[0]?.apr_7d,
+                aggregatedFetchArray?.[5]?.[0]?.apr_list[0]?.apr_14d
+              )
+            ).toFixed(2),
           tvlUsd: aggregatedFetchArray?.[4]?.[0]?.liquidity
             ?.toString()
             ?.split(".")[0],
