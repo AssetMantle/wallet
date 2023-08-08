@@ -157,7 +157,7 @@ export const staticTradeData = [
   },
   {
     logo: "mexc",
-    name: "MEXC Global",
+    name: "MEXC",
     pair: "MNTL/USDT",
     target_coin_id: "tether",
     coin_id: "assetmantle",
