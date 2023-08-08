@@ -11,6 +11,8 @@ export const defaultChainGasFee = 500000;
 export const defaultChainMemoSize = 256;
 export const defaultFeeAmount = "2000";
 export const defaultFeeGas = "250000";
+export const premiumFeeGas = "350000";
+export const ultraPremiumGas = "500000";
 
 export const defaultChainRPCProxy = "https://rpc.assetmantle.one";
 export const defaultChainRESTProxy = "https://rest.assetmantle.one";

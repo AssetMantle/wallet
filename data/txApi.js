@@ -18,6 +18,8 @@ import {
   gravityIBCSourceChannel,
   gravityIBCSourcePort,
   gravityIBCToken,
+  premiumFeeGas,
+  ultraPremiumGas,
 } from "../config";
 import { toChainDenom, toDenom } from "../data";
 import { gravity, getSigningGravityClient } from "../modules";
@@ -138,7 +140,7 @@ export const sendRedelegation = async (
           amount: defaultFeeAmount,
         },
       ],
-      gas: defaultFeeGas,
+      gas: premiumFeeGas,
     };
     // use the stargate client to dispatch the transaction
     const response = await stargateClient.signAndBroadcast(
@@ -426,12 +428,17 @@ export const sendRewardsBatched = async (
         validatorAddress,
       })
     );
-    // get gas fees using simulate
-    const gasResponse = await stargateClient.simulate(
-      fromAddress,
-      msgArray,
-      memo
-    );
+    let gasResponse;
+    try {
+      // get gas fees using simulate
+      gasResponse = await stargateClient.simulate(fromAddress, msgArray, memo);
+      gasResponse = BigNumber(gasResponse).isNaN()
+        ? ultraPremiumGas
+        : gasResponse;
+    } catch (error) {
+      console.error("Error during Simulate: ", error?.message);
+      gasResponse = ultraPremiumGas;
+    }
 
     // populate the fee data
     const fee = {
