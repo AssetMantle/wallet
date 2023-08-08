@@ -364,7 +364,7 @@ function StaticQuickswapFarmPool({ poolIndex }) {
   const connectedAddressJSX = isWalletEthConnected && (
     <>
       <Button
-        className="d-flex gap-2 align-items-center pe-4 caption2 am-connect"
+        className="d-flex gap-2 align-items-center pe-4 caption2 am-connect fw-medium"
         variant="outline-primary"
         as="button"
         onClick={handleCopyOnClick}

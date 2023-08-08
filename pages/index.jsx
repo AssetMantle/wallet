@@ -700,7 +700,7 @@ export default function Transact() {
                 </Accordion> */}
                 <Button
                   variant="primary"
-                  className="m-0 ms-auto rounded-5 px-5 font-bold"
+                  className="m-0 ms-auto rounded-5 px-5 fw-medium"
                   type="submit"
                   disabled={isSubmitDisabled}
                   onClick={handleSubmit}

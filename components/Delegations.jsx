@@ -338,7 +338,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
                     disabled={
                       stakeState?.errorMessages?.undelegationAmountErrorMsg
                     }
-                    className="rounded-5 px-5 py-2"
+                    className="rounded-5 px-5 py-2 fw-medium"
                     onClick={handleUndelegate}
                   >
                     Submit
@@ -479,7 +479,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
                         variant={`${
                           activeValidators ? "primary" : "outline-light"
                         }`}
-                        className={`${
+                        className={`fw-medium ${
                           activeValidators ? "text-dark" : ""
                         } caption`}
                         onClick={() => setActiveValidators(true)}
@@ -490,7 +490,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
                         variant={`${
                           !activeValidators ? "primary" : "outline-light"
                         }`}
-                        className={`${
+                        className={`fw-medium ${
                           !activeValidators ? "text-dark" : ""
                         } caption`}
                         onClick={() => setActiveValidators(false)}
@@ -766,8 +766,8 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
                           )
                         )?.delegatedAmount
                       ),
-                      "caption2 text-body",
-                      "small text-body"
+                      "caption2 text-white-50",
+                      "small text-white-50"
                     )}
                     &nbsp;
                     {defaultChainSymbol}
@@ -827,7 +827,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
                   disabled={
                     stakeState?.errorMessages?.redelegationAmountErrorMsg
                   }
-                  className="rounded-5 px-5 py-2 fw-semibold"
+                  className="rounded-5 px-5 py-2 fw-medium"
                   onClick={handleRedelegate}
                 >
                   Submit

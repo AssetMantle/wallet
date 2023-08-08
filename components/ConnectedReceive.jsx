@@ -58,7 +58,7 @@ const ConnectedReceive = ({ displayAddress }) => {
         show={Show}
         onHide={() => setShow(false)}
         centered
-        size="lg"
+        size="md"
         aria-labelledby="receive-modal"
       >
         <Modal.Body className="p-0">

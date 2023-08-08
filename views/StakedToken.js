@@ -118,8 +118,8 @@ export default function StakedToken({
         show={DelegateModal}
         onHide={() => setDelegateModal(false)}
         centered
-        size="lg"
-        aria-labelledby="redelegation-modal"
+        size="md"
+        aria-labelledby="delegation-modal"
         scrollable
       >
         <Modal.Body className="p-0">
@@ -209,7 +209,7 @@ export default function StakedToken({
               <Button
                 variant="primary"
                 disabled={stakeState?.errorMessages?.transferAmountErrorMsg}
-                className="rounded-5 px-5 py-2"
+                className="rounded-5 px-5 py-2 fw-medium"
                 onClick={handleSubmit}
               >
                 Submit
