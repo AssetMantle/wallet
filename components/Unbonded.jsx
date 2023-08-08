@@ -104,7 +104,7 @@ const Unbonded = ({
         <Stack direction="horizontal" className="justify-content-end">
           {allUnbonding?.length != 0 && !isSubmitDisabled ? (
             <button
-              className="d-flex align-items-center gap-1 am-link text-start caption2"
+              className="d-flex align-items-center gap-1 am-link text-start caption2 text-primary"
               onClick={() => {
                 stakeDispatch({ type: "EMPTY_SELECTED_VALIDATORS" });
                 setUnBondingModal(true);
