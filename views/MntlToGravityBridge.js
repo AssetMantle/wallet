@@ -312,6 +312,7 @@ const MntlToGravityBridge = () => {
           placeholder="Enter Amount"
           name="mntlAmount"
           className="caption2 flex-grow-1 bg-transparent"
+          style={{ outline: "none" }}
           value={displayInputAmountValue}
           onChange={handleAmountOnChange}
         />

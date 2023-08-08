@@ -622,6 +622,7 @@ const EthToPolygonBridge = () => {
             placeholder="Enter Amount"
             name="ethAmount"
             className="caption2 flex-grow-1 bg-transparent"
+            style={{ outline: "none" }}
             value={displayInputAmountValue}
             onChange={handleAmountOnChange}
           />
