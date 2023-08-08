@@ -104,13 +104,15 @@ export function ExternalFarmPoolOsmosis({ appIndex, poolIndex }) {
 
   const displayApr = isLoadingOsmosis
     ? "Loading..."
-    : `${(
-        allOsmosis?.find(
-          (item) =>
-            item?.symbol.includes(tokenPairArray[0]) &&
-            item?.symbol.includes(tokenPairArray[1])
-        )?.apy || 0
-      ).toFixed(2)}%`;
+    : `${
+        allOsmosis
+          ?.find(
+            (item) =>
+              item?.symbol.includes(tokenPairArray[0]) &&
+              item?.symbol.includes(tokenPairArray[1])
+          )
+          ?.apy?.toFixed?.(2) || 0
+      }%`;
 
   return (
     <Stack className={`bg-black p-3 rounded-4 pe-0`} gap={2}>
