@@ -2,6 +2,7 @@ import React from "react";
 import { farmPools } from "../data";
 import { cleanString } from "../lib";
 import { LiquidityPoolChainCardComdex } from "./LiquidityPoolChainCardComdex";
+import { Stack } from "react-bootstrap";
 
 export const LiquidityPoolChainComdex = ({
   setSelectedPool,
@@ -12,22 +13,20 @@ export const LiquidityPoolChainComdex = ({
   const appLogoPathname = cleanString(data?.name);
 
   const appLogoJSX = (
-    <div className="d-flex gap-2 align-items-center mb-1">
-      <div className={``}>
-        <div
-          className="position-relative"
-          style={{ width: "30px", aspectRatio: "1/1" }}
-        >
-          <img
-            src={`/farm/icons/${appLogoPathname}.svg`}
-            alt={`${data?.name} icon`}
-            className="w-100 h-100"
-            style={{ objectFit: "cover", objectPosition: "center" }}
-          />
-        </div>
+    <Stack className="align-items-center mb-1" direction="horizontal" gap={2}>
+      <div
+        className="position-relative"
+        style={{ width: "30px", aspectRatio: "1/1" }}
+      >
+        <img
+          src={`/farm/icons/${appLogoPathname}.svg`}
+          alt={`${data?.name} icon`}
+          className="w-100 h-100"
+          style={{ objectFit: "cover", objectPosition: "center" }}
+        />
       </div>
-      <h1 className="caption2 text-gray text-primary m-0">{data?.name}</h1>
-    </div>
+      <h1 className="caption2 text-primary m-0">{data?.name}</h1>
+    </Stack>
   );
 
   const chainLogoJSX = (
@@ -48,19 +47,24 @@ export const LiquidityPoolChainComdex = ({
   );
 
   return (
-    <div className="nav-bg rounded-4 d-flex flex-column">
-      <div className="d-flex align-items-center justify-content-between p-3 pe-0">
+    <Stack className="bg-black rounded-4">
+      <Stack
+        className="align-items-center justify-content-between p-3 pe-0"
+        direction="horizontal"
+      >
         {appLogoJSX}
         <div
-          className={`bg-gray-800 p-1 px-3 rounded-start ${
+          className={`bg-light-subtle p-1 px-3 rounded-start ${
             data?.from !== "polygon" && "py-2"
           }`}
         >
           {chainLogoJSX}
         </div>
-      </div>
-      <i className="border-bottom me-3"></i>
-      <div className="d-flex flex-column">
+      </Stack>
+
+      <i className="border-bottom me-3" />
+
+      <Stack>
         <LiquidityPoolChainCardComdex
           setSelectedPool={setSelectedPool}
           selectedPool={selectedPool}
@@ -75,7 +79,7 @@ export const LiquidityPoolChainComdex = ({
           poolIndex={1}
           key={1}
         />
-      </div>
-    </div>
+      </Stack>
+    </Stack>
   );
 };
