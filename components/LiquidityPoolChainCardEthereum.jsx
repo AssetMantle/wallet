@@ -1,6 +1,7 @@
 import { disconnect } from "@wagmi/core";
 import React from "react";
 import { farmPools, useEthereumFarm } from "../data";
+import { Stack } from "react-bootstrap";
 
 export function LiquidityPoolChainCardEthereum({
   setSelectedPool,
@@ -60,14 +61,15 @@ export function LiquidityPoolChainCardEthereum({
     </div>
   );
 
-  const aprJSX = <p className="small m-0 text-gray">APR: {displayApr}%</p>;
+  const aprJSX = <p className="small m-0 text-light">APR: {displayApr}%</p>;
 
   return (
-    <div
-      className={`d-flex align-items-center justify-content-between px-3 py-2 rounded-4 ${
+    <Stack
+      direction="horizontal"
+      className={`align-items-center justify-content-between px-3 py-2 rounded-4 ${
         selectedPool.poolIndex === poolIndex &&
         selectedPool.appIndex === appIndex
-          ? "border-color-primary"
+          ? "border border-2 border-primary"
           : "border-color-primary-hover"
       }`}
       role={
@@ -85,13 +87,13 @@ export function LiquidityPoolChainCardEthereum({
             : "pointer",
       }}
     >
-      <div className="d-flex align-items-center gap-1">
+      <Stack className="align-items-center" direction="horizontal" gap={1}>
         {pairLogoJSX}
         <h2 className="caption2 text-primary m-0">
           {pool?.tokens && pool?.tokens}
         </h2>
-      </div>{" "}
+      </Stack>
       {aprJSX}
-    </div>
+    </Stack>
   );
 }
