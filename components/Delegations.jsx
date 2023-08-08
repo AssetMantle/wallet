@@ -200,7 +200,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
               gap={1}
             >
               <button
-                className="d-flex align-items-center gap-1 am-link text-start caption2"
+                className="d-flex align-items-center gap-1 am-link text-start caption2 text-primary"
                 onClick={() => {
                   {
                     stakeDispatch({
@@ -215,7 +215,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
                 Redelegate
               </button>
               <button
-                className="d-flex align-items-center gap-1 am-link text-start caption2"
+                className="d-flex align-items-center gap-1 am-link text-start caption2 text-primary"
                 onClick={() => {
                   stakeDispatch({
                     type: "SET_UNDELEGATION_SRC_ADDRESS",
