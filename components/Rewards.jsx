@@ -421,7 +421,7 @@ const Rewards = ({
           {stakeState?.selectedValidators?.length > 5 ||
           isSubmitDisabled ? null : (
             <button
-              className="am-link text-start d-flex align-items-center gap-1"
+              className="am-link text-start d-flex align-items-center gap-1 text-primary"
               onClick={handleOnClickClaimRewards}
             >
               <i className="text-primary bi bi-box-arrow-in-down"></i>Claim
@@ -472,8 +472,8 @@ const Rewards = ({
                   direction="horizontal"
                 >
                   <Button
-                    variant="variation"
-                    className="rounded-5 py-2 px-5 mt-3 text-right"
+                    variant="primary"
+                    className="rounded-5 py-2 px-5 mt-3 text-right fw-medium"
                     onClick={handleSubmitClaim}
                   >
                     Submit
