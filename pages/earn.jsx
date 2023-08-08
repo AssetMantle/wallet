@@ -33,7 +33,7 @@ export default function Earn() {
           </Stack>
         </Col>
         <Col xs={4}>
-          <Stack className="rounded-4 p-3 my-2 bg-light-subtle width-100 text-white">
+          <Stack className="rounded-4 p-3 mb-2 bg-light-subtle width-100 text-white">
             <p className="m-0">
               To earn yields, visit the listed DEXs to add $MNTL liquidity.
             </p>

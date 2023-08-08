@@ -152,6 +152,7 @@ export default function Stake() {
                   <input
                     type="search"
                     className="bg-transparent border border-0 p-1 w-100 h-100"
+                    style={{ outline: "none" }}
                     placeholder="Search"
                     aria-label="Search"
                     value={searchValue}

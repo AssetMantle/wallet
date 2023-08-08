@@ -90,7 +90,7 @@ export default function StakedToken({
           </Suspense>
           {stakeState?.selectedValidators?.length === 1 ? (
             <Button
-              className="rounded-5 text-center px-3 py-2"
+              className="rounded-5 text-center px-3 py-2 fw-medium"
               style={{ maxWidth: "100%" }}
               disabled={isSubmitDisabled}
               onClick={() => {

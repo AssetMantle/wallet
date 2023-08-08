@@ -39,7 +39,7 @@ export default function Trade() {
         </Col>
         <Col xs={4} className="h-100">
           <ScrollableSectionContainer className="h-100">
-            <Stack className="rounded-4 p-3 my-2 bg-light-subtle width-100 text-white">
+            <Stack className="rounded-4 p-3 mb-2 bg-light-subtle width-100 text-white">
               <p className="m-0">
                 To purchase MNTL, visit the exchanges (CEX & DEX) shown to swap
                 with your available tokens.
