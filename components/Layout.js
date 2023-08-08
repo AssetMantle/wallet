@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Balance from "../views/Balance";
 import Header from "../views/Header";
-import Banner from "./Banner";
+// import Banner from "./Banner";s
 // import Vesting from "../views/Vesting";
 import ScrollableSectionContainer from "./ScrollableSectionContainer";
 import { Stack } from "react-bootstrap";
@@ -11,7 +11,7 @@ export default function Layout({ children }) {
   return (
     <>
       <div className="d-none d-md-block am_app_container">
-        <Banner />
+        {/* <Banner /> */}
         <Header setLeftCol={setLeftCol} />
         <main
           className="container-xxl pt-4 h-100"
