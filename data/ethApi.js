@@ -16,7 +16,7 @@ import { toChainDenom } from "./queryApi";
 
 // CONFIG PARAMETERS FOR ETH AND POLYGON
 export const selectedEthNetwork = "mainnet";
-export const walletConnectProjectID = "0a7a1ee422fb578ca74aacb0c6cb3b6a";
+export const walletConnectProjectID = "3c99548613e06cd9f58858fd392e5d56";
 
 export const ethConfig = {
   selected: {

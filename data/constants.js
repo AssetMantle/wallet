@@ -108,6 +108,33 @@ export const ConnectOptionObject = {
     name: "Frontier",
     installUrl: "https://www.frontier.xyz/browser-extension",
   },
+  compass: {
+    icon: "/WalletIcons/compass.jpg",
+    name: "Compass",
+    installUrl:
+      "https://chrome.google.com/webstore/detail/compass-wallet-for-sei/anokgmphncpekkhclmingpimjmcooifb",
+  },
+  exodus: {
+    icon: "/WalletIcons/exodus.jpg",
+    name: "Exodus",
+    installUrl: "https://www.exodus.com/download",
+  },
+  okxwallet: {
+    icon: "/WalletIcons/okxwallet.jpg",
+    name: "Okx",
+    installUrl: "https://www.okx.com/web3",
+  },
+  shell: {
+    icon: "/WalletIcons/shell.jpg",
+    name: "Shell",
+    installUrl: "https://shellwallet.io",
+  },
+  station: {
+    icon: "/WalletIcons/station.jpg",
+    name: "Station",
+    installUrl:
+      "https://chrome.google.com/webstore/detail/station-wallet/aiifbnbfobpmeekipheeijimdpnlpgpp",
+  },
 };
 
 export const staticTradeData = [

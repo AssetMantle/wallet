@@ -4,17 +4,17 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { QRCodeSVG } from "qrcode.react";
 import React, { useState } from "react";
+import { Button, Stack } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { ConnectButton, Connected } from "../components";
 import { defaultChainName, toastConfig } from "../config";
 import {
   ConnectOptionObject,
   NavBarData,
-  placeholderAddress,
   WALLET_DISCONNECT_ERROR_MSG,
+  placeholderAddress,
 } from "../data";
 import { cleanString, shortenAddress } from "../lib";
-import { Button, Stack } from "react-bootstrap";
 
 export default function Header({ setLeftCol }) {
   const chainContext = useChain(defaultChainName);
