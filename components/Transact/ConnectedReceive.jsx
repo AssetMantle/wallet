@@ -8,7 +8,7 @@ const ConnectedReceive = ({ displayAddress }) => {
   return (
     <>
       <Stack
-        className="rounded-4 p-3 bg-light-subtle width-100 transitionAll flex-grow-0"
+        className="rounded-4 p-3 bg-secondary width-100 transitionAll flex-grow-0"
         gap={2}
       >
         <Stack
