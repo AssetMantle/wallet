@@ -358,6 +358,16 @@ $primary: $assetmantle-yellow;
 // BELOW THIS IMPORT
 @import "~bootstrap/scss/bootstrap";
 
+// Style resets
+a {
+  text-decoration: none;
+}
+button {
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
 .h1 {
   @include fontRoot(500, 2.25rem);
 }
