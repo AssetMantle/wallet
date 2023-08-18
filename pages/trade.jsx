@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Head from "next/head";
-import TradeTable from "../components/TradeTable";
-import TradePageTokenDetails from "../components/TradePageTokenDetails";
+import TradeTable from "../components/trade/TradeTable";
+import TradePageTokenDetails from "../components/trade/TradePageTokenDetails";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import { Col, Row, Stack } from "react-bootstrap";
 

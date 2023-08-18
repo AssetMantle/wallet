@@ -1,12 +1,12 @@
 import React from "react";
 import Head from "next/head";
-import ICTransactionInfo from "../components/ICTransactionInfo";
+import ICTransactionInfo from "../components/bridge/ICTransactionInfo";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 // import Tooltip from "../components/Tooltip";
-import EthToPolygonBridge from "../views/EthToPolygonBridge";
-import GravityToEthBridge from "../views/GravityToEthBridge";
-import MntlToGravityBridge from "../views/MntlToGravityBridge";
-import PolygonBridge from "../views/PolygonBridge";
+import EthToPolygonBridge from "../views/bridge/EthToPolygonBridge";
+import GravityToEthBridge from "../views/bridge/GravityToEthBridge";
+import MntlToGravityBridge from "../views/bridge/MntlToGravityBridge";
+import PolygonBridge from "../views/bridge/PolygonBridge";
 import { Col, OverlayTrigger, Row, Stack, Tooltip } from "react-bootstrap";
 
 export default function Bridge() {

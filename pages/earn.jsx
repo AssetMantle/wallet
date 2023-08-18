@@ -1,6 +1,6 @@
 import Head from "next/head";
 import React from "react";
-import EarnTable from "../components/EarnTable";
+import EarnTable from "../components/earn/EarnTable";
 import { Col, Row, Stack } from "react-bootstrap";
 
 export default function Earn() {

@@ -5,8 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useReducer, useState } from "react";
 import { toast } from "react-toastify";
-import ConnectedReceive from "../components/ConnectedReceive";
-import DisconnectedReceive from "../components/DisconnectedReceive";
+import ConnectedReceive from "../components/Transact/ConnectedReceive";
+import DisconnectedReceive from "../components/Transact/DisconnectedReceive";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import {
   defaultChainGasFee,
@@ -416,7 +416,7 @@ export default function Transact() {
         <Col xs={8} className="h-100 pb-2">
           <ScrollableSectionContainer>
             <Stack
-              className="rounded-4 p-3 bg-light-subtle width-100 transitionAll flex-grow-0"
+              className="rounded-4 p-3 bg-secondary width-100 transitionAll flex-grow-0"
               gap={2}
             >
               <Stack

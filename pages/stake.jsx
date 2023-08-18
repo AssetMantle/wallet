@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import AllValidators from "../components/AllValidators";
-import DelegatedValidators from "../components/DelegatedValidators";
+import AllValidators from "../components/stake/AllValidators";
+import DelegatedValidators from "../components/stake/DelegatedValidators";
 import { useAllValidators, useDelegatedValidators } from "../data";
 import useStakeReducer from "../data/useStakeReducer";
-import StakedToken from "../views/StakedToken";
+import StakedToken from "../views/stake/StakedToken";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import Head from "next/head";
 import { toast } from "react-toastify";

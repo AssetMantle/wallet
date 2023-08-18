@@ -9,7 +9,7 @@ import {
   LiquidityPoolChainPolygon,
   UniswapFarmPool,
   QuickswapFarmPool,
-} from "../components";
+} from "../components/farm";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import { useIsMounted } from "../lib";
 import { Col, Row, Stack } from "react-bootstrap";

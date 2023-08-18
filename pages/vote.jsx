@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useAllProposals } from "../data/queryApi";
-import DonutChart from "../views/DonutChart";
-import VoteInfo from "../views/VoteInfo";
+import DonutChart from "../views/vote/DonutChart";
+import VoteInfo from "../views/vote/VoteInfo";
 import useVoteReducer from "../data/useVoteReducer";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import { sendVote } from "../data/txApi";
 import { useChain } from "@cosmos-kit/react";
 import { defaultChainName, toastConfig } from "../config";
-import ActiveProposals from "../components/ActiveProposals";
+import ActiveProposals from "../components/vote/ActiveProposals";
 import Head from "next/head";
 import { isObjEmpty } from "../lib";
 import ModalContainer from "../components/ModalContainer";
