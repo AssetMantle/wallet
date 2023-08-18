@@ -367,6 +367,21 @@ button {
   border: none;
   outline: none;
 }
+input {
+  accent-color: $assetmantle-yellow;
+  outline: none;
+  &[type="checkbox"] {
+    background-color: transparent;
+  }
+  &[type="number"] {
+    -moz-appearance: textfield;
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+}
 
 .h1 {
   @include fontRoot(500, 2.25rem);
