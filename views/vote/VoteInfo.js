@@ -21,7 +21,7 @@ const VoteInfo = ({ isConnected }) => {
   return (
     // <div className="col-12 pt-3 pt-lg-0 col-lg-4">
     <Stack
-      className="rounded-4 p-3 bg-light-subtle width-100 transitionAll flex-grow-0"
+      className="rounded-4 p-3 bg-secondary width-100 transitionAll flex-grow-0"
       gap={2}
     >
       <Stack
@@ -40,16 +40,15 @@ const VoteInfo = ({ isConnected }) => {
         </p>
         {isConnected ? (
           totalDelegatedAmount && allValidators ? (
-            <p className="m-0">
+            <p className="text-white-50 m-0">
               {((totalDelegatedAmount * 100) / totalTokens).toFixed(10)}%
             </p>
           ) : (
-            <p className="m-0">0%</p>
+            <p className="text-white-50 m-0">0%</p>
           )
         ) : (
-          <p className="text-body m-0">0%</p>
+          <p className="text-white-50 m-0">0%</p>
         )}
-        <br />
       </Stack>
     </Stack>
     // </div>
