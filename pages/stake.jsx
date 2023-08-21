@@ -15,8 +15,6 @@ import {
   OverlayTrigger,
   Row,
   Stack,
-  // ToggleButton,
-  // ToggleButtonGroup,
   Tooltip,
 } from "react-bootstrap";
 
@@ -103,7 +101,7 @@ export default function Stake() {
         <Col xs={8} className="h-100 pb-2">
           <Stack
             gap={2}
-            className="bg-light-subtle p-3 rounded-4"
+            className="bg-secondary p-3 rounded-4"
             style={{ height: "90%" }}
           >
             <Stack
@@ -116,6 +114,7 @@ export default function Stake() {
               <div className="btn-group">
                 <Button
                   variant={activeValidators ? "primary" : "outline-light"}
+                  className="fw-medium"
                   onClick={() => {
                     setActiveValidators(true);
                     stakeDispatch({ type: "EMPTY_SELECTED_VALIDATORS" });
@@ -125,6 +124,7 @@ export default function Stake() {
                 </Button>
                 <Button
                   variant={!activeValidators ? "primary" : "outline-light"}
+                  className="fw-medium"
                   onClick={() => {
                     setActiveValidators(false);
                     stakeDispatch({ type: "EMPTY_SELECTED_VALIDATORS" });
