@@ -41,10 +41,11 @@ const TradeTable = () => {
             href={tableProps.row.original.url}
             target="_blank"
             rel="noreferrer"
+            className="text-primary"
           >
             {tableProps.row.original.exchangeName}
           </a>{" "}
-          <i className="bi bi-arrow-up-right"></i>
+          <i className="bi bi-arrow-up-right text-primary"></i>
         </Stack>
       ),
       sortMethod: (a, b) => a - b,
@@ -104,10 +105,11 @@ const TradeTable = () => {
             href={tableProps.row.original.url}
             target="_blank"
             rel="noreferrer"
+            className="text-primary"
           >
             {tableProps.row.original.name}
           </a>{" "}
-          <i className="bi bi-arrow-up-right"></i>
+          <i className="bi bi-arrow-up-right text-primary" />
         </Stack>
       ),
       sortMethod: (a, b) => a - b,

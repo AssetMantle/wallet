@@ -1,6 +1,6 @@
 import React from "react";
-import { getBalanceStyle } from "../config";
-import { decimalize, useTrade } from "../data";
+import { getBalanceStyle } from "../../config";
+import { decimalize, useTrade } from "../../data";
 import { Stack } from "react-bootstrap";
 
 const TradePageTokenDetails = () => {
@@ -8,7 +8,7 @@ const TradePageTokenDetails = () => {
   const data = allTrades?.tokenDetails;
 
   return (
-    <Stack gap={3} className="rounded-4 p-3 bg-light-subtle width-100">
+    <Stack gap={3} className="rounded-4 p-3 bg-secondary width-100">
       <h4 className="body1 text-primary m-0">Token Details</h4>
       <Stack gap={1} className="bg-black p-3 rounded-4">
         <div>
