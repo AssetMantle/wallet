@@ -477,7 +477,7 @@ export default function GravityToEthBridge() {
   );
 
   return (
-    <Stack gap={3} className={`bg-light-subtle p-3 rounded-4 ${""}`}>
+    <Stack gap={3} className={`bg-secondary p-3 rounded-4 ${""}`}>
       <Stack
         gap={2}
         direction="horizontal"
@@ -520,7 +520,7 @@ export default function GravityToEthBridge() {
           type="number"
           placeholder="Enter Amount"
           name="GravityAmount"
-          className="caption2 flex-grow-1 bg-transparent"
+          className="caption2 flex-grow-1 bg-transparent border border-0"
           style={{ outline: "none" }}
           value={displayInputAmountValue}
           onChange={handleAmountOnChange}
@@ -563,7 +563,7 @@ export default function GravityToEthBridge() {
       >
         <Button
           variant="outline-primary"
-          className="btn btn-outline-primary d-flex gap-2 align-items-center caption fw-semibold rounded-5 px-4"
+          className="d-flex gap-2 align-items-center caption fw-semibold rounded-5 px-4"
           disabled={isSubmitDisabledGravity}
           onClick={handleSubmitMantle}
         >

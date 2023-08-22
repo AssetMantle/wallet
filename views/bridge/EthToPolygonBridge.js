@@ -578,7 +578,7 @@ const EthToPolygonBridge = () => {
 
   return (
     <>
-      <Stack gap={3} className={`bg-light-subtle p-3 rounded-4 ${""}`}>
+      <Stack gap={3} className={`bg-secondary p-3 rounded-4 ${""}`}>
         <Stack
           gap={2}
           direction="horizontal"
@@ -621,7 +621,7 @@ const EthToPolygonBridge = () => {
             type="number"
             placeholder="Enter Amount"
             name="ethAmount"
-            className="caption2 flex-grow-1 bg-transparent"
+            className="caption2 flex-grow-1 bg-transparent border border-0"
             style={{ outline: "none" }}
             value={displayInputAmountValue}
             onChange={handleAmountOnChange}

@@ -261,7 +261,7 @@ const MntlToGravityBridge = () => {
   return (
     <Stack
       gap={2}
-      className={`bg-light-subtle p-3 rounded-4 ${"border border-primary"}`}
+      className={`bg-secondary p-3 rounded-4 ${"border border-primary"}`}
     >
       <Stack
         gap={2}
@@ -311,7 +311,7 @@ const MntlToGravityBridge = () => {
           type="number"
           placeholder="Enter Amount"
           name="mntlAmount"
-          className="caption2 flex-grow-1 bg-transparent"
+          className="caption2 flex-grow-1 bg-transparent border border-0"
           style={{ outline: "none" }}
           value={displayInputAmountValue}
           onChange={handleAmountOnChange}

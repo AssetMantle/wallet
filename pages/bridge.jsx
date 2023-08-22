@@ -2,7 +2,6 @@ import React from "react";
 import Head from "next/head";
 import ICTransactionInfo from "../components/bridge/ICTransactionInfo";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
-// import Tooltip from "../components/Tooltip";
 import EthToPolygonBridge from "../views/bridge/EthToPolygonBridge";
 import GravityToEthBridge from "../views/bridge/GravityToEthBridge";
 import MntlToGravityBridge from "../views/bridge/MntlToGravityBridge";
@@ -20,7 +19,7 @@ export default function Bridge() {
           <ScrollableSectionContainer className="h-100">
             <Stack
               as={`section`}
-              className="rounded-4 p-3 bg-light-subtle width-100 flex-grow-0"
+              className="rounded-4 p-3 bg-secondary width-100 flex-grow-0"
               gap={3}
             >
               <Stack
@@ -44,7 +43,7 @@ export default function Bridge() {
         </Col>
         <Col xs={4} className="h-100 pb-2">
           <ScrollableSectionContainer className="d-flex flex-column gap-3">
-            <div className="rounded-4 p-3 bg-light-subtle width-100 text-white-300">
+            <div className="rounded-4 p-3 bg-secondary width-100 text-white-50">
               <OverlayTrigger
                 as="span"
                 overlay={<Tooltip as id={"transactionSequence"}></Tooltip>}
