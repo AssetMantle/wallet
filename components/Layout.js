@@ -46,7 +46,7 @@ export default function Layout({ children }) {
         style={{ height: "100dvh" }}
       >
         <Stack
-          className="rounded-3 bg-body-secondary overflow-hidden flex-grow-0 h-auto m-auto"
+          className="rounded-3 bg-secondary overflow-hidden flex-grow-0 h-auto m-auto"
           style={{ width: "min(400px,100%)" }}
         >
           <Stack
@@ -54,11 +54,11 @@ export default function Layout({ children }) {
             className="align-items-center justify-content-between bg-black p-3"
           >
             <Stack direction="horizontal" gap={2}>
-              <i className="bi bi-circle-fill text-error"></i>
+              <i className="bi bi-circle-fill text-danger"></i>
               <i className="bi bi-circle-fill text-primary"></i>
               <i className="bi bi-circle-fill text-success"></i>
             </Stack>
-            <i className="bi bi-info-circle text-info"></i>
+            <i className="bi bi-info-circle text-white"></i>
           </Stack>
           <Stack
             className="h2 align-items-center p-3"
