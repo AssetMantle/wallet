@@ -41,7 +41,7 @@ export function ExternalFarmPoolOsmosis({ appIndex, poolIndex }) {
 
   const chainLogoJSX = (
     <div
-      className={`bg-light-subtle p-1 px-3 rounded-start ${
+      className={`bg-secondary p-1 px-3 rounded-start ${
         selectedApp?.from !== "polygon" && "py-2"
       }`}
     >
@@ -128,7 +128,7 @@ export function ExternalFarmPoolOsmosis({ appIndex, poolIndex }) {
       </Stack>
 
       <Stack className="pe-3" gap={3}>
-        <Stack className="bg-light-subtle p-4 rounded-4" gap={3}>
+        <Stack className="bg-secondary p-4 rounded-4" gap={3}>
           <Stack
             className="align-items-center justify-content-between"
             direction="horizontal"
