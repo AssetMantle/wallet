@@ -24,7 +24,7 @@ export default function Ibc() {
     e.preventDefault();
   };
   return (
-    <section className="rounded-5 p-4 bg-light-subtle width-100 d-flex flex-column gap-3 transitionAll">
+    <section className="rounded-5 p-4 bg-secondary width-100 d-flex flex-column gap-3 transitionAll">
       <nav className="d-flex align-items-center justify-content-between gap-3">
         <div className="d-flex gap-3 align-items-center">
           <button className={`am-link  body2`}>IBC Transaction</button>
@@ -110,13 +110,13 @@ export default function Ibc() {
             onChange={(e) => setAmount(e.target.value)}
           />
           <button
-            className="bg-light-subtle p-1 px-2 text-primary"
+            className="bg-secondary p-1 px-2 text-primary"
             onClick={() => setAmount(balance / 2)}
           >
             half
           </button>
           <button
-            className="bg-light-subtle p-1 px-2 text-primary"
+            className="bg-secondary p-1 px-2 text-primary"
             onClick={() => setAmount(balance - gasFee)}
           >
             max

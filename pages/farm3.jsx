@@ -108,7 +108,7 @@ export default function Farm3() {
       </Head>
       <section className="row h-100">
         <ScrollableSectionContainer className="col-8 d-flex">
-          <div className="bg-light-subtle p-3 rounded-4 d-flex flex-column gap-2">
+          <div className="bg-secondary p-3 rounded-4 d-flex flex-column gap-2">
             <nav className="d-flex align-items-center justify-content-between gap-3">
               <div className="d-flex gap-3 align-items-center">
                 {tabs.map((tab, index) => (
@@ -141,7 +141,7 @@ export default function Farm3() {
           <div className="p-2"></div>
         </ScrollableSectionContainer>
         <ScrollableSectionContainer className="col-4">
-          <div className="rounded-4 p-3 my-2 bg-light-subtle width-100 d-flex flex-column text-white">
+          <div className="rounded-4 p-3 my-2 bg-secondary width-100 d-flex flex-column text-white">
             <p>
               To purchase MNTL, visit the exchanges (CEX & DEX) shown to swap
               with your available tokens.

@@ -74,7 +74,7 @@ export default function Farm() {
         <Col xs={8} className="h-100 pb-2">
           <ScrollableSectionContainer className="d-flex h-100">
             {/* New UI starts from here  */}
-            <Stack className="rounded-4 p-3 bg-light-subtle width-100 transitionAll flex-grow-0">
+            <Stack className="rounded-4 p-3 bg-secondary width-100 transitionAll flex-grow-0">
               {farmPoolJSX}
             </Stack>
           </ScrollableSectionContainer>
@@ -82,7 +82,7 @@ export default function Farm() {
         <Col xs={4} className="h-100 pb-2">
           <ScrollableSectionContainer>
             {/* New UI starts from here  */}
-            <Stack className="bg-light-subtle rounded-4 p-3" gap={3}>
+            <Stack className="bg-secondary rounded-4 p-3" gap={3}>
               <h2 className="body1 text-primary m-0">Chains</h2>
               <Suspense fallback={loadingJSX}>
                 <LiquidityPoolChainEthereum
