@@ -343,7 +343,7 @@ const Rewards = ({
       >
         <h5 className="body2 text-primary d-flex align-items-center gap-2 m-0">
           <button onClick={() => setSetupAddress(false)}>
-            <i className="bi bi-chevron-left" />
+            <i className="bi bi-chevron-left text-primary" />
           </button>
           Setup Rewards Withdrawal Address
         </h5>

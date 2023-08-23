@@ -6,7 +6,7 @@ import {
   defaultChainSymbol,
   getBalanceStyle,
   usdSymbol,
-} from "../config";
+} from "../../config";
 import {
   decimalize,
   fromChainDenom,
@@ -15,7 +15,7 @@ import {
   useAllValidatorsUnbonded,
   useMntlUsd,
   useTotalUnbonding,
-} from "../data";
+} from "../../data";
 import { Button, Modal, Stack } from "react-bootstrap";
 
 const denomDisplay = defaultChainSymbol;
@@ -256,7 +256,7 @@ const Unbonded = ({
                                       />
                                     </div>
                                     <a
-                                      className="text-truncate"
+                                      className="text-truncate text-white"
                                       style={{ maxWidth: "200px" }}
                                       href={`https://explorer.assetmantle.one/validators/${item?.address}`}
                                       target="_blank"
@@ -336,7 +336,7 @@ const Unbonded = ({
                                       />
                                     </div>
                                     <a
-                                      className="text-truncate"
+                                      className="text-truncate text-white"
                                       style={{ maxWidth: "200px" }}
                                       href={`https://explorer.assetmantle.one/validators/${item?.address}`}
                                       target="_blank"
