@@ -60,10 +60,11 @@ const EarnTable = () => {
             target="_blank"
             width={20}
             rel="noreferrer"
+            className="text-primary"
           >
             {tableProps.row.original.symbol}
           </a>{" "}
-          <i className="bi bi-arrow-up-right"></i>
+          <i className="bi bi-arrow-up-right text-primary"></i>
         </Stack>
       ),
     },
@@ -168,10 +169,11 @@ const EarnTable = () => {
             target="_blank"
             width={20}
             rel="noreferrer"
+            className="text-primary"
           >
             {tableProps.row.original.symbol}
           </a>{" "}
-          <i className="bi bi-arrow-up-right"></i>
+          <i className="bi bi-arrow-up-right text-primary"></i>
         </Stack>
       ),
     },

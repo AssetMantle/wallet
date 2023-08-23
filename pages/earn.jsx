@@ -13,7 +13,7 @@ export default function Earn() {
         <Col xs={8} className="h-100">
           <Stack
             gap={2}
-            className="bg-light-subtle p-3 pb-5 rounded-4"
+            className="bg-secondary p-3 rounded-4"
             style={{ height: "90%" }}
           >
             <Stack
@@ -33,7 +33,7 @@ export default function Earn() {
           </Stack>
         </Col>
         <Col xs={4}>
-          <Stack className="rounded-4 p-3 mb-2 bg-light-subtle width-100 text-white">
+          <Stack className="rounded-4 p-3 mb-2 bg-secondary width-100 text-white-50">
             <p className="m-0">
               To earn yields, visit the listed DEXs to add $MNTL liquidity.
             </p>
