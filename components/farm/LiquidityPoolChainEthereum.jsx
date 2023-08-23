@@ -55,7 +55,7 @@ export const LiquidityPoolChainEthereum = ({
       >
         {appLogoJSX}
         <div
-          className={`bg-light-subtle p-1 px-3 rounded-start ${
+          className={`bg-secondary p-1 px-3 rounded-start ${
             data?.from !== "polygon" && "py-2"
           }`}
         >
