@@ -5,7 +5,7 @@ import { OverlayTrigger, Stack, Tooltip } from "react-bootstrap";
 export default function Vesting() {
   return (
     <Stack
-      className="rounded-5 p-4 bg-light-subtle width-100"
+      className="rounded-5 p-4 bg-secondary width-100"
       gap={3}
       as={section}
     >
