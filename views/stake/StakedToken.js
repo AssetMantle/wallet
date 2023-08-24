@@ -1,8 +1,8 @@
 import { useChain } from "@cosmos-kit/react";
 import React, { Suspense, useState } from "react";
-import Delegations from "../../components/Transact/Delegations";
+import Delegations from "../../components/stake/Delegations";
 import Rewards from "../../components/stake/Rewards";
-import Unbonded from "../../components/Unbonded";
+import Unbonded from "../../components/stake/Unbonded";
 import { defaultChainName, toastConfig } from "../../config";
 import { sendDelegation, useAvailableBalance, fromDenom } from "../../data";
 import { toast } from "react-toastify";
@@ -58,11 +58,11 @@ export default function StakedToken({
     <>
       <section className="gap-3">
         {!stakeState?.selectedValidators?.length && status === "Connected" ? (
-          <Stack className="rounded-4 p-3 mb-3 bg-light-subtle width-100 text-white m-0">
+          <Stack className="rounded-4 p-3 mb-3 bg-secondary width-100 text-white m-0">
             <p>Please select the Validators you wish to take actions on.</p>
           </Stack>
         ) : null}
-        <Stack className="rounded-4 gap-3 p-3 bg-light-subtle w-100">
+        <Stack className="rounded-4 gap-3 p-3 bg-secondary w-100">
           <h4 className="body1 text-primary m-0">Staked Tokens</h4>
           <Suspense fallback={<p>Loading</p>}>
             <Delegations
