@@ -126,7 +126,7 @@ const StaticUniswapRewards = () => {
     !writeAsync;
 
   return (
-    <div className="d-flex gap-4 rounded-4 p-3 bg-light-subtle width-100 d-flex flex-column text-white">
+    <div className="d-flex gap-4 rounded-4 p-3 bg-secondary width-100 d-flex flex-column text-white">
       <h2 className="body1 text-primary">Rewards</h2>
       <div className="bg-black rounded-4 py-3 px-3 mx-0 d-flex flex-column gap-2">
         <p className="caption text-body">Staking Rewards</p>

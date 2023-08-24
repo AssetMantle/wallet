@@ -21,7 +21,7 @@ const StaticUniswapIncentiveList = () => {
   // DISPLAY VARIABLES
 
   return (
-    <div className="d-flex gap-2 rounded-4 p-3 bg-light-subtle width-100 d-flex flex-column text-white">
+    <div className="d-flex gap-2 rounded-4 p-3 bg-secondary width-100 d-flex flex-column text-white">
       <h2 className="body1 text-primary mb-2">Incentive Programs</h2>
       {isIncentivePopulated &&
         Array.isArray(incentiveList) &&
