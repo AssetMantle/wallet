@@ -132,33 +132,30 @@ export function ExternalFarmPoolComdex({ appIndex, poolIndex }) {
               <h2 className="h3 m-0">{selectedPool?.tokens}</h2>
             </Stack>
           </Stack>
-          <div className="border-bottom border-secondary" />
+          <div className="border-bottom border-light" />
           <Row>
             <Col xs={5} className="py-2">
               <Row>
-                <Col xs={6} className="text-light caption">
+                <Col xs={3} className="text-light caption">
                   TVL
                 </Col>
-                <Col xs={6} className="caption">
+                <Col xs={9} className="caption">
                   {displayTvl}
                 </Col>
               </Row>
             </Col>
             <Col xs={5} className="py-2">
               <Row>
-                <Col xs={6} className="text-light caption">
+                <Col xs={3} className="text-light caption">
                   APR
                 </Col>
-                {
-                  <Col xs={6} className="caption">
-                    {" "}
-                    {displayApr}
-                  </Col>
-                }
+                <Col xs={9} className="caption">
+                  {displayApr}
+                </Col>
               </Row>
             </Col>
           </Row>
-          <div className="border-bottom border-secondary" />
+          <div className="border-bottom border-light" />
           <Stack className="justify-content-end" direction="horizontal" gap={2}>
             {ctaButtonsJSX}
           </Stack>

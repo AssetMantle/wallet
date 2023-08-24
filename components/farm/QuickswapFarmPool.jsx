@@ -477,7 +477,7 @@ function StaticQuickswapFarmPool({ poolIndex }) {
 
   const chainLogoJSX = (
     <div
-      className={`bg-light-subtle p-1 px-3 rounded-start ${
+      className={`bg-secondary p-1 px-3 rounded-start ${
         quickswapFarm?.from !== "polygon" && "py-2"
       }`}
     >
@@ -571,7 +571,7 @@ function StaticQuickswapFarmPool({ poolIndex }) {
         </Stack>
 
         <Stack className="pe-3" gap={3}>
-          <Stack className="bg-light-subtle p-4 rounded-4" gap={3}>
+          <Stack className="bg-secondary p-4 rounded-4" gap={3}>
             <Stack
               className="align-items-center justify-content-between"
               direction="horizontal"
@@ -585,64 +585,66 @@ function StaticQuickswapFarmPool({ poolIndex }) {
                 {logoPairJSX}
                 <h2 className="h3 m-0">{selectedQuickswapFarmPool?.tokens}</h2>
               </Stack>
-              <Button
-                variant="link"
-                className="text-decoration-none text-primary px-2"
-                onClick={handleOnClickClaim}
-              >
-                Claim Reward
-              </Button>
-              <Stack className="align-items-center my-auto" gap={3}>
-                <p className="m-0">{pendingRewardsDisplay}</p>
+              {isWalletEthConnected && (
+                <Button
+                  variant="link"
+                  className="text-decoration-none text-primary px-2"
+                  onClick={handleOnClickClaim}
+                >
+                  Claim Reward
+                </Button>
+              )}
+              <Stack className="align-items-end my-auto" gap={3}>
+                <p className="m-0 text-white">{pendingRewardsDisplay}</p>
               </Stack>
             </Stack>
 
-            <div className="border-bottom border-secondary" />
+            <div className="border-bottom border-light" />
 
             <Row>
               <Col xs={7} className="py-2">
                 <Row>
-                  <Col xs={6} className="text-light caption">
+                  <Col xs={5} className="text-light caption">
                     Reward Pool
                   </Col>
-                  <Col xs={6} className="caption">
+                  <Col xs={7} className="caption">
                     {rewardsPerDayDisplay}
                   </Col>
                 </Row>
               </Col>
               <Col xs={5} className="py-2">
                 <Row>
-                  <Col xs={6} className="text-light caption">
+                  <Col xs={3} className="text-light caption">
                     TVL
                   </Col>
-                  <Col xs={6} className="caption">
+                  <Col xs={9} className="caption">
                     {displayTvl}
                   </Col>
                 </Row>
               </Col>
               <Col xs={7} className="py-2">
                 <Row>
-                  <Col xs={6} className="text-light caption">
+                  <Col xs={5} className="text-light caption">
                     Duration
                   </Col>
-                  <Col xs={6} className="caption">
+                  <Col xs={7} className="caption">
                     {isBlockNumberLoading ? "Loading..." : durationRemaining}
                   </Col>
                 </Row>
               </Col>
               <Col xs={5} className="py-2">
                 <Row>
-                  <Col xs={6} className="text-light caption">
+                  <Col xs={3} className="text-light caption">
                     APR
                   </Col>
-                  <Col xs={6} className="caption">
+                  <Col xs={9} className="caption">
                     {displayApr}
                   </Col>
                 </Row>
               </Col>
             </Row>
 
-            <div className="border-bottom border-secondary" />
+            <div className="border-bottom border-light" />
 
             <Stack
               className="justify-content-end"
@@ -654,7 +656,7 @@ function StaticQuickswapFarmPool({ poolIndex }) {
                 BigNumber(userLpStakedAmount).isZero() && (
                   <>
                     {noRecordsJSX}{" "}
-                    <div className="border-bottom border-secondary" />
+                    <div className="border-bottom border-light" />
                   </>
                 )}
             </Stack>

@@ -143,22 +143,30 @@ export function ExternalFarmPoolOsmosis({ appIndex, poolIndex }) {
               <h2 className="h3 m-0">{selectedPool?.tokens}</h2>
             </Stack>
           </Stack>
-          <div className="border-bottom border-secondary" />
+          <div className="border-bottom border-light" />
           <Row>
             <Col className="col-5 py-2">
               <Row>
-                <Col className="col-6 text-light caption">TVL</Col>
-                <Col className="col-6 caption">{displayTvl}</Col>
+                <Col xs={3} className="text-light caption">
+                  TVL
+                </Col>
+                <Col xs={9} className="caption">
+                  {displayTvl}
+                </Col>
               </Row>
             </Col>
             <Col className="col-5 py-2">
               <Row>
-                <Col className="col-6 text-light caption">APR</Col>
-                {<Col className="col-6 caption"> {displayApr}</Col>}
+                <Col xs={3} className="text-light caption">
+                  APR
+                </Col>
+                <Col xs={9} className="caption">
+                  {displayApr}
+                </Col>
               </Row>
             </Col>
           </Row>
-          <div className="border-bottom border-secondary" />
+          <div className="border-bottom border-light" />
           <Stack className="justify-content-end" direction="horizontal" gap={2}>
             {ctaButtonsJSX}
           </Stack>
