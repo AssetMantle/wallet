@@ -418,7 +418,7 @@ export function UniswapFarmPool({ poolIndex }) {
         onHide={() => setStakeModal(false)}
         centered
         size="lg"
-        aria-labelledby="quickswap-unstake-modal"
+        aria-labelledby="quickswap-stake-modal"
       >
         <Modal.Body className="p-0">
           <Stack className="p-3">
@@ -434,7 +434,7 @@ export function UniswapFarmPool({ poolIndex }) {
               >
                 <i className="bi bi-chevron-left fw-bold h2 text-primary" />
               </Button>
-              <h2 className="h3 m-0 text-primary">Unstake</h2>
+              <h2 className="h3 m-0 text-primary">Stake</h2>
               <Button
                 variant="link"
                 className="ms-auto"
@@ -446,6 +446,7 @@ export function UniswapFarmPool({ poolIndex }) {
             <Stack
               className="bg-black rounded-4 p-1 align-items-center justify-content-center"
               gap={2}
+              style={{ minHeight: "250px" }}
             >
               <UniswapStakeContents />
             </Stack>
