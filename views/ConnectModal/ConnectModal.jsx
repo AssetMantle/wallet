@@ -20,7 +20,7 @@ const ConnectModal = ({ setOpen, walletRepo, Show }) => {
         aria-labelledby="wallet-connect-modal"
       >
         <Modal.Body className="p-0">
-          <div className="bg-light-subtle p-4 rounded-4 w-100 my-auto">
+          <div className="bg-secondary p-4 rounded-4 w-100 my-auto">
             <Stack
               direction="horizontal"
               className="align-items-center justify-content-between"
@@ -128,7 +128,7 @@ const ConnectModal = ({ setOpen, walletRepo, Show }) => {
           style={{ maxWidth: "min(100%, 600px)" }}
         >
           <div className="modal-content">
-            <div className="bg-light-subtle p-4 rounded-4 w-100 my-auto">
+            <div className="bg-secondary p-4 rounded-4 w-100 my-auto">
               <Stack
                 direction="horizontal"
                 className="align-items-center justify-content-between"
@@ -162,7 +162,7 @@ const ConnectModal = ({ setOpen, walletRepo, Show }) => {
                     ) => (
                       <Button
                         variant="outline-primary"
-                        className="d-flex align-items-center gap-2 py-2 px-3 rounded-2"
+                        className="d-flex align-items-center gap-2 py-2 px-3 rounded-2 fw-medium"
                         key={index}
                         data-bs-dismiss="modal"
                         aria-label="Close"
@@ -173,7 +173,11 @@ const ConnectModal = ({ setOpen, walletRepo, Show }) => {
                       >
                         <div
                           className="position-relative overflow-hidden"
-                          style={{ width: "25px", aspectRatio: "1/1" }}
+                          style={{
+                            width: "25px",
+                            aspectRatio: "1/1",
+                            borderRadius: "7px",
+                          }}
                         >
                           <img
                             layout="fill"
@@ -198,13 +202,13 @@ const ConnectModal = ({ setOpen, walletRepo, Show }) => {
 
               <Stack className="mt-5" gap={3}>
                 <h2 className="caption text-white m-0">
-                  Go to Old Wallet for Keystore & Ledger
+                  Go to Old Wallet for Keystore
                 </h2>
                 <Stack className="flex-wrap" direction="horizontal" gap={3}>
                   <Link href={mantleWalletV1URL}>
                     <a>
                       <Button
-                        className="d-flex align-items-center gap-2 py-2 px-3 rounded-2"
+                        className="d-flex align-items-center gap-2 py-2 px-3 rounded-2 fw-medium"
                         variant="outline-primary"
                       >
                         <div
