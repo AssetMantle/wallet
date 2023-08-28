@@ -3,7 +3,7 @@ import { Button, Stack } from "react-bootstrap";
 
 export default function Error({ close, setStep }) {
   return (
-    <div className="bg-light-subtle p-4 rounded-4 w-100 my-auto">
+    <div className="bg-secondary p-4 rounded-4 w-100 my-auto">
       <Stack
         className="align-items-center justify-content-between"
         direction="horizontal"
