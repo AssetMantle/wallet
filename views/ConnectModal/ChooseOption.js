@@ -32,7 +32,7 @@ export default function ChooseOption({
   };
 
   return (
-    <div className="bg-light-subtle p-4 rounded-4 w-100 my-auto">
+    <div className="bg-secondary p-4 rounded-4 w-100 my-auto">
       <Stack className="d-flex align-items-center justify-content-between ">
         <h1 className="body1 text-primary m-0">Connect Wallet</h1>
         <button className="btn text-primary body1" onClick={() => close()}>
@@ -62,7 +62,11 @@ export default function ChooseOption({
                   {wallet.name}
                   <div
                     className="position-relative overflow-hidden"
-                    style={{ width: "28px", aspectRatio: "1/1" }}
+                    style={{
+                      width: "28px",
+                      aspectRatio: "1/1",
+                      borderRadius: "7px",
+                    }}
                   >
                     <img
                       layout="fill"
