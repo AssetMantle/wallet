@@ -10,7 +10,7 @@ import {
   UniswapDashboard,
   UniswapStakeContents,
   UniswapUnstakeContents,
-} from "../views";
+} from "../views/farm";
 
 export default function Farm3() {
   // HOOKS
