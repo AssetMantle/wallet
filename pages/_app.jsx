@@ -38,11 +38,11 @@ import {
   mantleTestChainConfig,
   mantleTestnetAssetConfig,
 } from "../config";
+import "@interchain-ui/react/styles";
 import "../config/styles/index.scss";
 import { ethereumClient, wagmiClient, walletConnectProjectID } from "../data";
 import { getSigningGravityClientOptions } from "../modules";
 import ConnectModal from "../views/ConnectModal/ConnectModal";
-import "@interchain-ui/react/styles";
 
 function CreateCosmosApp({ Component, pageProps }) {
   // useEffect for bootstrap js hydration
