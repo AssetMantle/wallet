@@ -1,10 +1,15 @@
 import { WalletStatus } from "@cosmos-kit/core";
 import Link from "next/link";
 import { useEffect } from "react";
+import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { toastConfig } from "../../config";
-import { ConnectOptionObject, WALLET_NOT_FOUND_ERROR_MSG } from "../../data";
-import { Button } from "react-bootstrap";
+import {
+  ConnectOptionObject,
+  WALLET_LEDGERAPP_ERROR_MSG,
+  WALLET_LOCKED_ERROR_MSG,
+  WALLET_NOT_FOUND_ERROR_MSG,
+} from "../../data";
 
 const CustomToastWithLink = ({ wallet }) => {
   console.log(
@@ -15,7 +20,7 @@ const CustomToastWithLink = ({ wallet }) => {
   );
   return (
     <p className="m-0">
-      Wallet not found. To install click
+      Wallet not found. To install click&nbsp;
       <Link href={ConnectOptionObject[wallet]?.installUrl}>
         <a style={{ color: "#ffc640" }} target="_blank">
           &nbsp; Here
@@ -176,7 +181,10 @@ export const NotExist = ({ buttonText, buttonIcon, onClick }) => {
 
 export const WalletConnectComponent = ({
   wallet,
+  walletName,
   walletStatus,
+  walletMessage,
+  disconnect,
   disconnected,
   connecting,
   connected,
@@ -185,6 +193,7 @@ export const WalletConnectComponent = ({
   notExist,
 }) => {
   useEffect(() => {
+    console.log("wallet status: ", walletStatus, " wallet name: ", walletName);
     if (walletStatus == WalletStatus.NotExist) {
       toast.error(
         wallet ? (
@@ -194,11 +203,37 @@ export const WalletConnectComponent = ({
         ),
         toastConfig
       );
+      disconnect(walletName);
     } else if (
       walletStatus == WalletStatus.Rejected ||
       walletStatus == WalletStatus.Error
     ) {
-      toast.error(WALLET_NOT_FOUND_ERROR_MSG, toastConfig);
+      if (walletMessage?.toString?.()?.includes?.("0x5515")) {
+        toast.error(WALLET_LOCKED_ERROR_MSG, toastConfig);
+        disconnect(walletName);
+      } else if (walletMessage?.toString?.()?.includes?.("0x6e01")) {
+        toast.error(WALLET_LEDGERAPP_ERROR_MSG, toastConfig);
+        disconnect(walletName);
+      } else if (walletMessage?.toString?.()?.includes?.("CLA_NOT_SUPPORTED")) {
+        toast.error(WALLET_LEDGERAPP_ERROR_MSG, toastConfig);
+        disconnect(walletName);
+      } else if (walletMessage?.toString?.()?.includes?.("INS_NOT_SUPPORTED")) {
+        toast.error(WALLET_LEDGERAPP_ERROR_MSG, toastConfig);
+        disconnect(walletName);
+      } else if (
+        walletMessage?.toString?.()?.includes?.("Failed to execute 'open'")
+      ) {
+        toast.error(WALLET_LEDGERAPP_ERROR_MSG, toastConfig);
+        disconnect(walletName);
+      } else if (
+        walletMessage?.toString?.()?.includes?.("The device was disconnected")
+      ) {
+        toast.error(WALLET_LEDGERAPP_ERROR_MSG, toastConfig);
+        disconnect(walletName);
+      } else {
+        toast.error(WALLET_NOT_FOUND_ERROR_MSG, toastConfig);
+        disconnect(walletName);
+      }
     }
 
     return () => {};

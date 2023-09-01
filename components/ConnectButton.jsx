@@ -14,7 +14,8 @@ import {
 } from "./react";
 
 export const ConnectButton = ({ children }) => {
-  const { wallet, status, connect, disconnect } = useChain(defaultChainName);
+  const { wallet, status, connect, disconnect, message } =
+    useChain(defaultChainName);
 
   const handleOnClickDisconnected = (e) => {
     e.preventDefault();
@@ -22,7 +23,7 @@ export const ConnectButton = ({ children }) => {
   };
 
   const onClickDisconnect = async (e) => {
-    e.preventDefault();
+    e?.preventDefault?.();
     try {
       await disconnect(wallet?.name);
     } catch (error) {
@@ -31,10 +32,15 @@ export const ConnectButton = ({ children }) => {
     }
   };
 
+  console.log("message: ", message, " wallet: ", wallet);
+
   return (
     <WalletConnectComponent
       wallet={cleanString(wallet?.prettyName)}
+      walletName={wallet?.name}
       walletStatus={status}
+      walletMessage={message}
+      disconnect={disconnect}
       disconnected={
         <Disconnected
           buttonText="Connect"
