@@ -4,6 +4,7 @@ import { cosmos } from "osmojs";
 import {
   defaultChainDenom,
   defaultChainName,
+  defaultChainRPCProxy,
   defaultFeeAmount,
   defaultFeeGas,
   defaultIBCSourceChannel,
@@ -22,7 +23,11 @@ import {
   ultraPremiumGas,
 } from "../config";
 import { toChainDenom, toDenom } from "../data";
-import { gravity, getSigningGravityClient } from "../modules";
+import {
+  getSigningCosmosClient,
+  getSigningGravityClient,
+  gravity,
+} from "../modules";
 
 // get the wallet properties and functions for that specific chain
 export const sendTokensTxn = async (
@@ -31,7 +36,7 @@ export const sendTokensTxn = async (
   amount,
   memo = "",
   {
-    getSigningStargateClient,
+    getOfflineSigner,
     chainName = defaultChainName,
     chainDenom = defaultChainDenom,
   }
@@ -43,16 +48,19 @@ export const sendTokensTxn = async (
     const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
     // get the amount in denom terms
     const amountInDenom = toChainDenom(amount, chainName, chainDenom);
-    // initialize stargate client and create txn
-    const stargateClient = await getSigningStargateClient();
+    // initialize stargate client using signer and create txn
+    let offlineSigner = await getOfflineSigner();
+    const stargateClient = await getSigningCosmosClient({
+      rpcEndpoint: defaultChainRPCProxy,
+      signer: offlineSigner,
+    });
+
     if (!stargateClient || !fromAddress) {
       throw new Error("stargateClient or from address undefined");
     }
+
     // create a message template from the composer
     const { send } = cosmos.bank.v1beta1.MessageComposer.withTypeUrl;
-    // const gasResponse = await stargateClient.simulate(fromAddress, [msg], memo);
-    // console.log("response:", gasResponse);
-    // populate the message with transaction arguments
     const msg = send({
       fromAddress,
       toAddress,
@@ -71,11 +79,9 @@ export const sendTokensTxn = async (
           amount: defaultFeeAmount,
         },
       ],
-      // gas: BigNumber(gasRespons).plus(BigNumber(100000)).toString(),
       gas: defaultFeeGas,
     };
 
-    // console.log("gas:", gasResponse, "fee", fee);
     // use the stargate client to dispatch the transaction
     const response = await stargateClient.signAndBroadcast(
       fromAddress,
