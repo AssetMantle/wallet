@@ -4,7 +4,7 @@ import Header from "../views/Header";
 // import Banner from "./Banner";s
 // import Vesting from "../views/Vesting";
 import ScrollableSectionContainer from "./ScrollableSectionContainer";
-import { Stack } from "react-bootstrap";
+import { Col, Row, Stack } from "react-bootstrap";
 
 export default function Layout({ children }) {
   const [leftCol, setLeftCol] = useState(false);
@@ -17,28 +17,32 @@ export default function Layout({ children }) {
           className="container-xxl pt-4 h-100"
           style={{ maxWidth: "1920px" }}
         >
-          <div className="row px-2 position-relative h-100 pb-2">
-            <ScrollableSectionContainer
-              className={`col-12 col-lg-3 d-none d-lg-flex flex-column gap-3 ${
-                leftCol
-                  ? "am_resp_right_ham w-50 top-0 start-0 bottom-0 d-flex align-items-center justify-content-center bg-black bg-opacity-75 p-4 p-lg-0 gap-5 gap-lg-3"
-                  : ""
-              }`}
-            >
-              <Balance />
-              {/* <Vesting /> */}
-              {leftCol && (
-                <div
-                  className="d-flex d-lg-none position-absolute top-0 end-0 p-3"
-                  role="button"
-                  onClick={() => setLeftCol(false)}
-                >
-                  <i className="bi bi-x-lg h2"></i>
-                </div>
-              )}
-            </ScrollableSectionContainer>
-            <div className="col-12 col-lg-9 h-100">{children}</div>
-          </div>
+          <Row className="px-3 position-relative h-100 pb-2 w-100 mx-auto">
+            <Col xs={12} lg={3} className="px-1">
+              <ScrollableSectionContainer
+                className={`d-none d-lg-flex flex-column gap-2 ${
+                  leftCol
+                    ? "am_resp_right_ham w-50 top-0 start-0 bottom-0 d-flex align-items-center justify-content-center bg-black bg-opacity-75 p-4 p-lg-0 gap-5 gap-lg-3"
+                    : ""
+                }`}
+              >
+                <Balance />
+                {/* <Vesting /> */}
+                {leftCol && (
+                  <div
+                    className="d-flex d-lg-none position-absolute top-0 end-0 p-3"
+                    role="button"
+                    onClick={() => setLeftCol(false)}
+                  >
+                    <i className="bi bi-x-lg h2"></i>
+                  </div>
+                )}
+              </ScrollableSectionContainer>
+            </Col>
+            <Col xs={12} lg={9} className="h-100 px-1">
+              {children}
+            </Col>
+          </Row>
         </main>
       </div>
       <div
@@ -46,7 +50,7 @@ export default function Layout({ children }) {
         style={{ height: "100dvh" }}
       >
         <Stack
-          className="rounded-3 bg-secondary overflow-hidden flex-grow-0 h-auto m-auto"
+          className="rounded-3 bg-am-gray-200 overflow-hidden flex-grow-0 h-auto m-auto"
           style={{ width: "min(400px,100%)" }}
         >
           <Stack
