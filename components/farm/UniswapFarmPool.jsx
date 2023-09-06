@@ -241,7 +241,7 @@ export function UniswapFarmPool({ poolIndex }) {
 
   const chainLogoJSX = (
     <div
-      className={`bg-secondary p-1 px-3 rounded-start ${
+      className={`bg-am-gray-700 p-1 px-3 rounded-start ${
         uniswapFarm?.from !== "polygon" && "py-2"
       }`}
     >
@@ -326,7 +326,7 @@ export function UniswapFarmPool({ poolIndex }) {
         </Stack>
 
         <Stack className="pe-3" gap={3}>
-          <Stack className="bg-secondary p-4 rounded-4" gap={3}>
+          <Stack className="bg-am-gray-700 p-4 rounded-4" gap={3}>
             <Stack
               className="align-items-center justify-content-between"
               direction="horizontal"
@@ -338,7 +338,9 @@ export function UniswapFarmPool({ poolIndex }) {
                 gap={3}
               >
                 {logoPairJSX}
-                <h2 className="h3 m-0">{selectedUniswapFarmPool?.tokens}</h2>
+                <h2 className=" body2 fw-medium color-am-white-400 m-0">
+                  {selectedUniswapFarmPool?.tokens}
+                </h2>
               </Stack>
               {isWalletEthConnected && (
                 <Button
@@ -354,12 +356,12 @@ export function UniswapFarmPool({ poolIndex }) {
               </Stack>
             </Stack>
 
-            <div className="border-bottom border-light" />
+            <div className="border-bottom  " />
 
             <Row>
               <Col xs={7} className="py-2">
                 <Row>
-                  <Col xs={5} className="text-light caption">
+                  <Col xs={5} className="color-am-white-300 caption">
                     Reward Pool
                   </Col>
                   <Col xs={7} className="caption">
@@ -369,7 +371,7 @@ export function UniswapFarmPool({ poolIndex }) {
               </Col>
               <Col xs={5} className="py-2">
                 <Row>
-                  <Col xs={4} className="text-light caption">
+                  <Col xs={4} className="color-am-white-300 caption">
                     TVL
                   </Col>
                   <Col xs={8} className="caption">
@@ -379,7 +381,7 @@ export function UniswapFarmPool({ poolIndex }) {
               </Col>
               <Col xs={7} className="py-2">
                 <Row>
-                  <Col xs={5} className="text-light caption">
+                  <Col xs={5} className="color-am-white-300 caption">
                     Duration
                   </Col>
                   <Col xs={7} className="caption">
@@ -389,7 +391,7 @@ export function UniswapFarmPool({ poolIndex }) {
               </Col>
               <Col xs={5} className="py-2">
                 <Row>
-                  <Col xs={4} className="text-light caption">
+                  <Col xs={4} className="color-am-white-300 caption">
                     APR
                   </Col>
                   <Col xs={8} className="caption">
@@ -399,7 +401,7 @@ export function UniswapFarmPool({ poolIndex }) {
               </Col>
             </Row>
 
-            <div className="border-bottom border-light" />
+            <div className="border-bottom  " />
 
             <Stack
               className="justify-content-end"

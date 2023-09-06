@@ -4,7 +4,7 @@ export const UniswapStakeEntryLoading = ({ tokenId, liquidity }) => {
   return (
     tokenId &&
     liquidity && (
-      <div className="bg-secondary p-3 rounded-4 d-flex gap-2 align-items-center justify-content-between">
+      <div className="bg-am-gray-200 p-3 rounded-4 d-flex gap-2 align-items-center justify-content-between">
         <div className="d-flex gap-3">
           <div className="spinner-border text-warning">
             <span className="visually-hidden">Loading...</span>
