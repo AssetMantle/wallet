@@ -27,7 +27,7 @@ export default function ICTransactionInfo({ title, chainFrom, chainTo }) {
     <Stack
       as="section"
       gap={3}
-      className="rounded-4 p-3 bg-secondary width-100"
+      className="rounded-4 p-3 bg-am-gray-200 width-100"
     >
       <h4 className="h3 text-primary m-0">{title}</h4>
       <Stack gap={2} className="bg-black p-2 rounded-4 align-items-center">

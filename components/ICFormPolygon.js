@@ -68,7 +68,7 @@ export default function ICFormPolygon() {
 
   return (
     <section className="bg-black d-flex flex-column gap-3 rounded-4 p-3">
-      <div className="bg-secondary p-3 rounded-4 d-flex flex-column gap-3">
+      <div className="bg-am-gray-200 p-3 rounded-4 d-flex flex-column gap-3">
         <div className="caption d-flex gap-2 align-items-center justify-content-between">
           <div className="d-flex gap-2 align-items-center position-relative">
             <div
@@ -123,7 +123,7 @@ export default function ICFormPolygon() {
           </button>
         </div>
       </div>
-      <div className="bg-secondary p-3 rounded-4 d-flex flex-column gap-3">
+      <div className="bg-am-gray-200 p-3 rounded-4 d-flex flex-column gap-3">
         <div className="caption d-flex gap-2 align-items-center justify-content-between">
           <div className="d-flex gap-2 align-items-center position-relative">
             <div
@@ -181,7 +181,7 @@ export default function ICFormPolygon() {
           </button>
         </div>
       </div>
-      <div className="bg-secondary p-3 rounded-4 d-flex flex-column gap-3">
+      <div className="bg-am-gray-200 p-3 rounded-4 d-flex flex-column gap-3">
         <div className="caption d-flex gap-2 align-items-center justify-content-between">
           <div className="d-flex gap-2 align-items-center position-relative">
             <div
@@ -248,7 +248,7 @@ export default function ICFormPolygon() {
           </button>
         </div>
       </div>
-      <div className="bg-secondary p-3 rounded-4 d-flex flex-column gap-3">
+      <div className="bg-am-gray-200 p-3 rounded-4 d-flex flex-column gap-3">
         <div className="caption d-flex gap-2 align-items-center justify-content-between">
           <div className="d-flex gap-2 align-items-center position-relative">
             <div

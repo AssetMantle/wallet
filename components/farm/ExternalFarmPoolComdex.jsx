@@ -44,7 +44,7 @@ export function ExternalFarmPoolComdex({ appIndex, poolIndex }) {
 
   const chainLogoJSX = (
     <div
-      className={`bg-secondary p-1 px-3 rounded-start ${
+      className={`bg-am-gray-700 p-1 px-3 rounded-start ${
         selectedApp?.from !== "polygon" && "py-2"
       }`}
     >
@@ -117,7 +117,7 @@ export function ExternalFarmPoolComdex({ appIndex, poolIndex }) {
       </Stack>
 
       <Stack className="pe-3" gap={3}>
-        <Stack className="bg-secondary p-4 rounded-4" gap={3}>
+        <Stack className="bg-am-gray-700 p-4 rounded-4" gap={3}>
           <Stack
             className="align-items-center justify-content-between"
             direction="horizontal"
@@ -129,14 +129,16 @@ export function ExternalFarmPoolComdex({ appIndex, poolIndex }) {
               gap={3}
             >
               {logoPairJSX}
-              <h2 className="h3 m-0">{selectedPool?.tokens}</h2>
+              <h2 className=" body2 fw-medium color-am-white-400 m-0">
+                {selectedPool?.tokens}
+              </h2>
             </Stack>
           </Stack>
-          <div className="border-bottom border-light" />
+          <div className="border-bottom  " />
           <Row>
             <Col xs={5} className="py-2">
               <Row>
-                <Col xs={3} className="text-light caption">
+                <Col xs={3} className="color-am-white-300 caption">
                   TVL
                 </Col>
                 <Col xs={9} className="caption">
@@ -146,7 +148,7 @@ export function ExternalFarmPoolComdex({ appIndex, poolIndex }) {
             </Col>
             <Col xs={5} className="py-2">
               <Row>
-                <Col xs={3} className="text-light caption">
+                <Col xs={3} className="color-am-white-300 caption">
                   APR
                 </Col>
                 <Col xs={9} className="caption">
@@ -155,7 +157,7 @@ export function ExternalFarmPoolComdex({ appIndex, poolIndex }) {
               </Row>
             </Col>
           </Row>
-          <div className="border-bottom border-light" />
+          <div className="border-bottom  " />
           <Stack className="justify-content-end" direction="horizontal" gap={2}>
             {ctaButtonsJSX}
           </Stack>
