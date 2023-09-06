@@ -309,7 +309,7 @@ export const QuickswapStakeModal = ({
         />
         <Button
           variant="link"
-          className={`bg-secondary p-1 px-2 text-primary text-decoration-none ${
+          className={`bg-am-gray-200 p-1 px-2 text-primary text-decoration-none ${
             status === "Disconnected" ? "bg-opacity-75" : ""
           }`}
           onClick={handleOnClickMax}
