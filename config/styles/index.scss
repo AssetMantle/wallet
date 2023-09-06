@@ -71,7 +71,6 @@ input {
   font-style: normal;
   line-height: 120%;
   font-feature-settings: "kern" off;
-  color: $am-primary-light;
   @media (max-width: 548px) {
     font-size: calc($size / 1.1);
   }
@@ -327,6 +326,7 @@ $primary: $assetmantle-yellow;
 
 body {
   font-family: $am-fontPrimary;
+  color: $am-primary-light;
 }
 // Style resets
 a {
@@ -379,7 +379,7 @@ input {
   font-feature-settings: "liga" off;
 }
 .subtitle2 {
-  @include fontRoot(700, 0.875rem);
+  @include fontRoot(500, 0.875rem);
 }
 .body1 {
   @include fontRoot(400, 1.375rem);
