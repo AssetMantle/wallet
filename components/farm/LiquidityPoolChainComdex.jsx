@@ -25,7 +25,7 @@ export const LiquidityPoolChainComdex = ({
           style={{ objectFit: "cover", objectPosition: "center" }}
         />
       </div>
-      <h1 className="caption2 text-primary m-0">{data?.name}</h1>
+      <h1 className="subtitle2 text-primary m-0">{data?.name}</h1>
     </Stack>
   );
 
@@ -49,12 +49,12 @@ export const LiquidityPoolChainComdex = ({
   return (
     <Stack className="bg-black rounded-4">
       <Stack
-        className="align-items-center justify-content-between p-3 pe-0"
+        className="align-items-center justify-content-between py-2 ps-3 pe-0"
         direction="horizontal"
       >
         {appLogoJSX}
         <div
-          className={`bg-secondary p-1 px-3 rounded-start ${
+          className={`bg-am-gray-200 p-1 px-3 rounded-start ${
             data?.from !== "polygon" && "py-2"
           }`}
         >

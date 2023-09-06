@@ -70,7 +70,11 @@ export function LiquidityPoolChainCardOsmosis({
     </div>
   );
 
-  const aprJSX = <p className="small m-0 text-light">APR: {displayApr}%</p>;
+  const aprJSX = (
+    <p className="small m-0 text-light">
+      <span className="color-am-white-300">APR:</span> {displayApr}%
+    </p>
+  );
 
   return (
     <Stack
