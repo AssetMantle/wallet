@@ -7,9 +7,11 @@ const TradePageTokenDetails = () => {
   const { allTrades, isLoadingTrades, errorTrades } = useTrade();
   const data = allTrades?.tokenDetails;
 
+  console.error(errorTrades);
+
   return (
-    <Stack gap={3} className="rounded-4 p-3 bg-secondary width-100">
-      <h4 className="body1 text-primary m-0">Token Details</h4>
+    <Stack gap={3} className="rounded-4 p-3 bg-am-gray-200 width-100">
+      <h3 className="h3 text-primary m-0">Token Details</h3>
       <Stack gap={1} className="bg-black p-3 rounded-4">
         <div>
           <p className="caption d-flex gap-2 align-items-center text-white-50 m-0">
