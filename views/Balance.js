@@ -16,8 +16,8 @@ export default function Balance() {
   const { status } = chainContext;
 
   return (
-    <Stack className="rounded-4 p-3 bg-secondary h-auto flex-grow-0" gap={3}>
-      <h4 className="body1 text-primary m-0">Wallet Balances</h4>
+    <Stack className="rounded-4 p-3 bg-am-gray-200 h-auto flex-grow-0" gap={3}>
+      <h3 className="h3 text-primary m-0">Wallet Balances</h3>
       <Stack className="bg-black p-3 rounded-4" gap={1}>
         <Stack
           gap={2}

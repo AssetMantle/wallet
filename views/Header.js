@@ -68,7 +68,7 @@ export default function Header({ setLeftCol }) {
       <a
         className={`d-flex gap-1 align-items-center ${
           router.asPath === navItem.href ? "active" : ""
-        } am-nav-item caption`}
+        } am-nav-item caption fw-medium`}
         target={navItem.target ? navItem.target : "_self"}
       >
         {navItem.icon && <span className="caption icon">{navItem.icon}</span>}
@@ -185,7 +185,7 @@ export default function Header({ setLeftCol }) {
       style={{ zIndex: "1000" }}
     >
       <Stack
-        className="align-items-center p-3 px-4 h-auto"
+        className="align-items-center p-3 px-4 h-auto mx-auto"
         gap={3}
         direction="horizontal"
         style={{ maxWidth: "1920px" }}
