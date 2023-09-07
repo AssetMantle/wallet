@@ -51,6 +51,9 @@ const ActiveProposals = ({
     },
   ];
 
+  console.info(status, isLoadingVote);
+  console.error(errorVote);
+
   return (
     <Col
       xs={12}
