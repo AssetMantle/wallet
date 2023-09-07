@@ -11,7 +11,7 @@ export default function Portfolio() {
     <Stack
       gap={3}
       as={"section"}
-      className="rounded-5 p-4 bg-secondary width-100 flex-grow-0"
+      className="rounded-5 p-4 bg-am-gray-200 width-100 flex-grow-0"
     >
       <h4 className="body1 text-primary">Portfolio</h4>
       <div className="bg-black p-3 rounded-4 gap-3">
