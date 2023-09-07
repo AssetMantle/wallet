@@ -6,7 +6,7 @@ import { Stack } from "react-bootstrap";
 const DisconnectedReceive = () => {
   return (
     <Stack
-      className="rounded-4 p-3 bg-secondary width-100 transitionAll flex-grow-0"
+      className="rounded-4 p-3 bg-am-gray-200 width-100 transitionAll flex-grow-0"
       gap={2}
     >
       <Stack
@@ -16,7 +16,7 @@ const DisconnectedReceive = () => {
         className="align-items-center justify-content-between"
       >
         <Stack className="align-items-center" direction="horizontal" gap={3}>
-          <button className={`body1 text-primary`}>Receive</button>
+          <button className={`h3 text-primary`}>Receive</button>
         </Stack>
       </Stack>
       <Stack
