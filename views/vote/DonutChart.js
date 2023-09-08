@@ -101,7 +101,7 @@ const DonutChart = ({ selectedProposal, isLoadingProposals }) => {
   return (
     <>
       {isDataZero ? (
-        <Stack className="rounded-4 p-3 my-2 bg-secondary width-100">
+        <Stack className="rounded-4 p-3 my-2 bg-am-gray-200 width-100">
           <p className="m-0">No votes yet</p>
         </Stack>
       ) : isLoadingProposals ? (
@@ -110,7 +110,7 @@ const DonutChart = ({ selectedProposal, isLoadingProposals }) => {
         <Stack
           style={{ height: "400px" }}
           gap={2}
-          className="rounded-4 p-3 bg-secondary width-100 mb-5"
+          className="rounded-4 p-3 bg-am-gray-200 width-100 mb-5"
         >
           <Stack
             as="nav"
@@ -123,9 +123,7 @@ const DonutChart = ({ selectedProposal, isLoadingProposals }) => {
               gap={3}
               className="align-items-center"
             >
-              <button className={`body2 text-primary`}>
-                Voting Statistics
-              </button>
+              <button className={`h3 text-primary`}>Voting Statistics</button>
             </Stack>
           </Stack>
 
