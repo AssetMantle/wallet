@@ -224,7 +224,7 @@ const PolygonBridge = () => {
   const connectButtonJSX = isWalletEthConnected ? (
     <>
       <button
-        className="caption2 d-flex gap-1"
+        className="caption2 d-flex gap-1 text-primary"
         onClick={handleCopyOnClick}
         style={{ wordBreak: "break-all" }}
       >
@@ -256,7 +256,7 @@ const PolygonBridge = () => {
 
   return (
     <>
-      <Stack gap={3} className={`bg-secondary p-3 rounded-4 ${""}`}>
+      <Stack gap={3} className={`bg-am-gray-200 p-3 rounded-4 ${""}`}>
         <Stack
           gap={2}
           direction="horizontal"

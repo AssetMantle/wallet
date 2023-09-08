@@ -261,7 +261,7 @@ const MntlToGravityBridge = () => {
   return (
     <Stack
       gap={2}
-      className={`bg-secondary p-3 rounded-4 ${"border border-primary"}`}
+      className={`bg-am-gray-200 p-3 rounded-4 ${"border border-primary"}`}
     >
       <Stack
         gap={2}
@@ -282,7 +282,7 @@ const MntlToGravityBridge = () => {
           <h5 className="caption2 text-primary m-0">AssetMantle</h5>
         </Stack>
         <button
-          className="caption2 d-flex gap-1"
+          className="caption2 d-flex gap-1 text-primary"
           onClick={handleCopyOnClick}
           style={{ wordBreak: "break-all" }}
         >
