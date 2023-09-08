@@ -32,7 +32,7 @@ export default function ChooseOption({
   };
 
   return (
-    <div className="bg-secondary p-4 rounded-4 w-100 my-auto">
+    <div className="bg-am-gray-200 p-4 rounded-4 w-100 my-auto">
       <Stack className="d-flex align-items-center justify-content-between ">
         <h1 className="body1 text-primary m-0">Connect Wallet</h1>
         <button className="btn text-primary body1" onClick={() => close()}>

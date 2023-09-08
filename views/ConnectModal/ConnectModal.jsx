@@ -20,7 +20,7 @@ const ConnectModal = ({ setOpen, walletRepo, Show }) => {
         aria-labelledby="wallet-connect-modal"
       >
         <Modal.Body className="p-0">
-          <div className="bg-secondary p-4 rounded-4 w-100 my-auto">
+          <div className="bg-am-gray-200 p-4 rounded-4 w-100 my-auto">
             <Stack
               direction="horizontal"
               className="align-items-center justify-content-between"
@@ -128,7 +128,7 @@ const ConnectModal = ({ setOpen, walletRepo, Show }) => {
           style={{ maxWidth: "min(100%, 600px)" }}
         >
           <div className="modal-content">
-            <div className="bg-secondary p-4 rounded-4 w-100 my-auto">
+            <div className="bg-am-gray-200 p-4 rounded-4 w-100 my-auto">
               <Stack
                 direction="horizontal"
                 className="align-items-center justify-content-between"

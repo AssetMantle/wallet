@@ -38,7 +38,7 @@ export default function Redirect({ byWallet, close, connected }) {
   }, []);
 
   return (
-    <div className="bg-secondary p-4 rounded-4 w-100 my-auto">
+    <div className="bg-am-gray-200 p-4 rounded-4 w-100 my-auto">
       <Stack
         className="align-items-center justify-content-between"
         direction="horizontal"
