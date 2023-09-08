@@ -58,12 +58,12 @@ export default function StakedToken({
     <>
       <section className="gap-3">
         {!stakeState?.selectedValidators?.length && status === "Connected" ? (
-          <Stack className="rounded-4 p-3 mb-3 bg-secondary width-100 text-white m-0">
+          <Stack className="rounded-4 p-3 mb-3 bg-am-gray-200 width-100 text-white m-0">
             <p>Please select the Validators you wish to take actions on.</p>
           </Stack>
         ) : null}
-        <Stack className="rounded-4 gap-3 p-3 bg-secondary w-100">
-          <h4 className="body1 text-primary m-0">Staked Tokens</h4>
+        <Stack className="rounded-4 gap-3 p-3 bg-am-gray-200 w-100">
+          <h4 className="h3 text-primary m-0">Staked Tokens</h4>
           <Suspense fallback={<p>Loading</p>}>
             <Delegations
               notify={notify}
