@@ -37,7 +37,7 @@ const ConnectModal = ({ setOpen, walletRepo, Show }) => {
             <div className="text-white body2 my-1 text-center">
               Connect With
             </div>
-            <p className="text-white-50 caption my-1 text-center">
+            <p className="color-am-white-300 caption my-1 text-center">
               Connect your wallet using any of the options below
             </p>
             <Stack className="mt-5" gap={3}>
@@ -147,7 +147,7 @@ const ConnectModal = ({ setOpen, walletRepo, Show }) => {
               <div className="text-white body2 my-1 text-center">
                 Connect With
               </div>
-              <p className="text-white-50 caption my-1 text-center">
+              <p className="color-am-white-300 caption my-1 text-center">
                 Connect your wallet using any of the options below
               </p>
               <Stack className="mt-5" gap={3}>

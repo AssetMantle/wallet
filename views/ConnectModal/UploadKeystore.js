@@ -31,7 +31,7 @@ export default function UploadKeystore({ close, setStep, setFile }) {
           <i className="bi bi-x-lg text-primary" />
         </Button>
       </Stack>
-      <p className="text-white-50 caption m-0 my-1 ps-2">
+      <p className="color-am-white-300 caption m-0 my-1 ps-2">
         Connect your wallet using any of the options below
       </p>
       <Stack
@@ -43,7 +43,7 @@ export default function UploadKeystore({ close, setStep, setFile }) {
             <i className="bi bi-upload" />
           </span>
           <p className="caption text-white">Drop file here</p>
-          <p className="caption text-white-50">or</p>
+          <p className="caption color-am-white-300">or</p>
           <Stack
             direction="horizontal"
             className="border border-primary py-2 px-5 align-items-center rounded-4"

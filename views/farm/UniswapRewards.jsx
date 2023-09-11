@@ -129,7 +129,7 @@ const StaticUniswapRewards = () => {
     <div className="d-flex gap-4 rounded-4 p-3 bg-am-gray-200 width-100 d-flex flex-column text-white">
       <h2 className="body1 text-primary">Rewards</h2>
       <div className="bg-black rounded-4 py-3 px-3 mx-0 d-flex flex-column gap-2">
-        <p className="caption text-body">Staking Rewards</p>
+        <p className="caption color-am-gray-100">Staking Rewards</p>
         <p className="caption text-white pb-1">{rewardsBalanceDisplay}</p>
       </div>
       <button

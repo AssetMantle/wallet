@@ -49,7 +49,7 @@ export default function WalletConnect({
           <i className="bi bi-x-lg text-primary" />
         </Button>
       </Stack>
-      <p className="text-white-50 caption m-0 my-1">
+      <p className="color-am-white-300 caption m-0 my-1">
         Click “Connect” to be redirected to {byWallet}.
       </p>
       <Stack className="align-items-center justify-content-end gap-3 flex-wrap mt-5">

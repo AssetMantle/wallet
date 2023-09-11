@@ -45,7 +45,7 @@ const StaticUniswapIncentiveList = () => {
                 <p
                   className={`${
                     incentiveObject?.endTime <= currentTimestamp
-                      ? "text-body"
+                      ? "color-am-gray-100"
                       : "text-success"
                   } small`}
                 >
