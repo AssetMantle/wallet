@@ -35,19 +35,15 @@ const VoteInfo = ({ isConnected }) => {
         </Stack>
       </Stack>
       <Stack gap={2} className="bg-black rounded-4 p-3 align-items-start">
-        <p className={`caption m-0 ${isConnected ? "" : "text-body"}`}>
+        <p className={`caption m-0 ${isConnected ? "" : "color-am-gray-100"}`}>
           Your Voting Power is{" "}
         </p>
-        {isConnected ? (
-          totalDelegatedAmount && allValidators ? (
-            <p className="text-white-50 m-0">
-              {((totalDelegatedAmount * 100) / totalTokens).toFixed(10)}%
-            </p>
-          ) : (
-            <p className="text-white-50 m-0">0%</p>
-          )
+        {isConnected && totalDelegatedAmount && allValidators ? (
+          <p className="color-am-white-300 m-0">
+            {((totalDelegatedAmount * 100) / totalTokens).toFixed(10)}%
+          </p>
         ) : (
-          <p className="text-white-50 m-0">0%</p>
+          <p className="color-am-white-300 m-0">0%</p>
         )}
       </Stack>
     </Stack>

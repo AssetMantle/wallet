@@ -1,9 +1,14 @@
 import React from "react";
 import { ResponsiveSunburst } from "@nivo/sunburst";
 import { useAllVotes } from "../../data";
-import { Col, Row, Stack } from "react-bootstrap";
+import { Button, Col, Row, Stack } from "react-bootstrap";
 
-const DonutChart = ({ selectedProposal, isLoadingProposals }) => {
+const DonutChart = ({
+  selectedProposal,
+  isLoadingProposals,
+  buttonClick,
+  buttonDisabled,
+}) => {
   const isDataZero =
     selectedProposal?.finalTallyResult?.yes == 0 &&
     selectedProposal?.finalTallyResult?.abstain == 0 &&
@@ -110,7 +115,7 @@ const DonutChart = ({ selectedProposal, isLoadingProposals }) => {
         <Stack
           style={{ height: "400px" }}
           gap={2}
-          className="rounded-4 p-3 bg-am-gray-200 width-100 mb-5"
+          className="rounded-4 p-3 bg-am-gray-200 width-100 mb-2"
         >
           <Stack
             as="nav"
@@ -123,50 +128,69 @@ const DonutChart = ({ selectedProposal, isLoadingProposals }) => {
               gap={3}
               className="align-items-center"
             >
-              <button className={`h3 text-primary`}>Voting Statistics</button>
+              <button className={`h3 text-primary`}>Vote Details</button>
             </Stack>
           </Stack>
 
-          <ResponsiveSunburst
-            data={chartData}
-            margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
-            id="name"
-            value="power"
-            cornerRadius={2}
-            borderColor={{ theme: "background" }}
-            colors={{ scheme: "set2" }}
-            childColor={{
-              from: "color",
-              modifiers: [["brighter", 0.1]],
-            }}
-            theme={{
-              tooltip: {
-                container: {
-                  background: "#333",
+          <Stack className="bg-black rounded-4 p-3 h-auto">
+            <ResponsiveSunburst
+              data={chartData}
+              margin={{ top: 0, right: 10, bottom: 0, left: 10 }}
+              id="name"
+              value="power"
+              cornerRadius={2}
+              borderColor={{ theme: "background" }}
+              colors={{ scheme: "set2" }}
+              childColor={{
+                from: "color",
+                modifiers: [["brighter", 0.1]],
+              }}
+              theme={{
+                tooltip: {
+                  container: {
+                    background: "#333",
+                  },
                 },
-              },
-            }}
-            enableArcLabels={true}
-            arcLabelsSkipAngle={10}
-            arcLabelsTextColor="black"
-          />
+              }}
+              enableArcLabels={true}
+              arcLabelsSkipAngle={10}
+              arcLabelsTextColor="black"
+            />
 
-          <Row className="justify-content-around mb-5">
-            {React.Children.toArray(
-              legend.map((item) => (
-                <Col className="d-flex flex-row align-items-center">
-                  <div
-                    style={{
-                      backgroundColor: item.color,
-                      height: "12px",
-                      width: "30px",
-                    }}
-                  ></div>
-                  <p className="m-0 ms-2">{item.title}</p>
-                </Col>
-              ))
-            )}
-          </Row>
+            <Row className="justify-content-around px-2" gap={2}>
+              {React.Children.toArray(
+                legend.map((item) => (
+                  <Col
+                    xs={6}
+                    className="d-flex flex-row align-items-start my-1"
+                  >
+                    <div
+                      style={{
+                        backgroundColor: item.color,
+                        height: "12px",
+                        width: "30px",
+                      }}
+                    ></div>
+                    <p className="m-0 ms-2 small color-am-white-300">
+                      {item.title}
+                    </p>
+                  </Col>
+                ))
+              )}
+            </Row>
+          </Stack>
+
+          <Button
+            variant="primary"
+            className="text-center fw-medium rounded-5 mt-1"
+            style={{ maxWidth: "100%" }}
+            onClick={() => {
+              buttonClick(true);
+            }}
+            disabled={buttonDisabled}
+          >
+            Vote
+          </Button>
         </Stack>
       )}
     </>
