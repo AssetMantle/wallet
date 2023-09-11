@@ -24,7 +24,7 @@ const DisconnectedReceive = () => {
         gap={3}
       >
         <Stack
-          className="text-body position-relative justify-content-center m-auto"
+          className="color-am-gray-100 position-relative justify-content-center m-auto"
           style={{
             width: "min(140px, 100%)",
             aspectRatio: "1/1",
@@ -35,11 +35,11 @@ const DisconnectedReceive = () => {
         <h4 className="body2 text-primary m-0">Wallet Address</h4>
         <Stack
           direction="horizontal"
-          className="align-items-center justify-content-center text-body text-center caption2 pt-1"
+          className="align-items-center justify-content-center color-am-gray-100 text-center caption2 pt-1"
           gap={2}
         >
           {placeholderAddress}
-          <span className="text-body">
+          <span className="color-am-gray-100">
             <i className="bi bi-clipboard" />
           </span>
         </Stack>

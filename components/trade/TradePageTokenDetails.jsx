@@ -14,7 +14,7 @@ const TradePageTokenDetails = () => {
       <h3 className="h3 text-primary m-0">Token Details</h3>
       <Stack gap={1} className="bg-black p-3 rounded-4">
         <div>
-          <p className="caption d-flex gap-2 align-items-center text-white-50 m-0">
+          <p className="caption d-flex gap-2 align-items-center color-am-white-300 m-0">
             Market Cap
           </p>
         </div>
@@ -26,7 +26,7 @@ const TradePageTokenDetails = () => {
           <p className="caption pb-3 m-0">${decimalize(data?.marketCap, 2)}</p>
         )}
         <div>
-          <p className="caption d-flex gap-2 align-items-center text-white-50 m-0">
+          <p className="caption d-flex gap-2 align-items-center color-am-white-300 m-0">
             Circulating Supply
           </p>
         </div>
@@ -44,7 +44,7 @@ const TradePageTokenDetails = () => {
           </p>
         )}
         <div>
-          <p className="caption d-flex gap-2 align-items-center text-white-50 m-0">
+          <p className="caption d-flex gap-2 align-items-center color-am-white-300 m-0">
             Total Supply
           </p>
         </div>
@@ -62,7 +62,7 @@ const TradePageTokenDetails = () => {
           </p>
         )}
         <div>
-          <p className="caption d-flex gap-2 align-items-center text-white-50 m-0">
+          <p className="caption d-flex gap-2 align-items-center color-am-white-300 m-0">
             Max Supply
           </p>
         </div>
@@ -74,7 +74,7 @@ const TradePageTokenDetails = () => {
           <p className="caption pb-3 m-0">${decimalize(data?.maxSupply, 0)}</p>
         )}
         <div>
-          <p className="caption d-flex gap-2 align-items-center text-white-50 m-0">
+          <p className="caption d-flex gap-2 align-items-center color-am-white-300 m-0">
             24 Hour Trading Volume
           </p>
           {isLoadingTrades ? (
@@ -93,7 +93,7 @@ const TradePageTokenDetails = () => {
           )}
         </div>
         <div>
-          <p className="caption d-flex gap-2 align-items-center text-white-50 m-0">
+          <p className="caption d-flex gap-2 align-items-center color-am-white-300 m-0">
             Fully Diluted Valuation
           </p>
           {isLoadingTrades ? (
