@@ -294,10 +294,10 @@ const MntlToGravityBridge = () => {
       </Stack>
       <label
         htmlFor="mntlAmount"
-        className="caption2 text-white-50 fw-normal d-flex align-items-center justify-content-between gap-2 pt-1"
+        className="caption2 color-am-white-300 fw-normal d-flex align-items-center justify-content-between gap-2 pt-1"
       >
         Amount{" "}
-        <small className="small text-white-50 fw-normal">
+        <small className="small color-am-white-300 fw-normal">
           Available Balance : {displayAvailableBalance}
           &nbsp;
           {displayAvailableBalanceDenom}
@@ -305,7 +305,7 @@ const MntlToGravityBridge = () => {
       </label>
       <Stack
         direction="horizontal"
-        className="border border-white py-2 px-3 rounded-2"
+        className="border border-secondary py-2 px-3 rounded-2"
       >
         <input
           type="number"

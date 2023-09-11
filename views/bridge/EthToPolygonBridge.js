@@ -602,20 +602,20 @@ const EthToPolygonBridge = () => {
         </Stack>
         <label
           htmlFor="GravityAmount"
-          className="caption2 text-white-50 d-flex align-items-center justify-content-between gap-2"
+          className="caption2 color-am-white-300 d-flex align-items-center justify-content-between gap-2"
         >
           Amount{" "}
-          <small className="small text-white-50">
+          <small className="small color-am-white-300">
             ETH Balance : {displayEthBalance} {displayEthBalanceDenom}
           </small>
-          <small className="small text-white-50">
+          <small className="small color-am-white-300">
             MNTL Balance : {displayAvailableBalance}{" "}
             {displayAvailableBalanceDenom}
           </small>
         </label>
         <Stack
           direction="horizontal"
-          className="border border-white py-2 px-3 rounded-2"
+          className="border border-secondary py-2 px-3 rounded-2"
         >
           <input
             type="number"
