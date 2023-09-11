@@ -63,8 +63,8 @@ const Rewards = ({
     ? getBalanceStyle(fromChainDenom(rewardsValue), "caption", "caption2")
     : getBalanceStyle(
         fromChainDenom(rewardsValue),
-        "caption text-body",
-        "caption2 text-body"
+        "caption color-am-gray-100",
+        "caption2 color-am-gray-100"
       );
 
   const rewardsInUSD = BigNumber(fromDenom(rewardsValue))
@@ -75,8 +75,8 @@ const Rewards = ({
     ? getBalanceStyle(decimalize(rewardsInUSD), "caption2", "small")
     : getBalanceStyle(
         decimalize(rewardsInUSD),
-        "caption2 text-body",
-        "small text-body"
+        "caption2 color-am-gray-100",
+        "small color-am-gray-100"
       );
 
   const handleSubmitClaim = async (e) => {
@@ -177,7 +177,9 @@ const Rewards = ({
 
   const delegationTableJSX = (
     <>
-      <p className="caption2 m-0 my-2 text-white-50 m-0">Selected Validator</p>
+      <p className="caption2 m-0 my-2 color-am-white-300 m-0">
+        Selected Validator
+      </p>
       <div
         className="bg-black p-2 rounded-4 w-100"
         style={{ overflowX: "auto" }}
@@ -318,8 +320,8 @@ const Rewards = ({
       <h6 className="caption m-0 my-2 mt-5">
         Current wallet address for claiming staking rewards:
       </h6>
-      <p className="caption2 m-0 my-2 text-white-50">{withdrawAddress}</p>
-      <p className="caption2 m-0 my-2 text-white-50">
+      <p className="caption2 m-0 my-2 color-am-white-300">{withdrawAddress}</p>
+      <p className="caption2 m-0 my-2 color-am-white-300">
         Want to claim your staking rewards to another wallet address?{" "}
         <a
           href="#"
@@ -358,7 +360,7 @@ const Rewards = ({
       <Stack className="py-4 text-white">
         <h6 className="caption2 m-0 my-1">Current Address</h6>
         <p className="caption2 m-0 my-1">{withdrawAddress}</p>
-        <p className="caption2 m-0 my-2 text-white-50">Revised Address</p>
+        <p className="caption2 m-0 my-2 color-am-white-300">Revised Address</p>
         <input
           type="text"
           className="py-1 px-3 border border-white rounded-2 bg-transparent"
@@ -401,19 +403,19 @@ const Rewards = ({
         ) : (
           <p
             className={`caption d-flex gap-2 align-items-center m-0 ${
-              isConnected ? null : "text-body"
+              isConnected ? null : "color-am-gray-100"
             }`}
           >
             {" "}
             Cumulative Rewards
           </p>
         )}
-        <p className={`caption m-0 ${isConnected ? "" : "text-body"}`}>
+        <p className={`caption m-0 ${isConnected ? "" : "color-am-gray-100"}`}>
           {rewardsDisplay}
           &nbsp;
           {denomDisplay}
         </p>
-        <p className={`caption2 m-0 ${isConnected ? "" : "text-body"}`}>
+        <p className={`caption2 m-0 ${isConnected ? "" : "color-am-gray-100"}`}>
           {rewardsInUSDDisplay}
           &nbsp;{usdSymbol}
         </p>

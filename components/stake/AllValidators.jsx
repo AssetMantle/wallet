@@ -46,7 +46,7 @@ const AllValidators = ({
                 .includes(searchValue.toLowerCase())
             )
             ?.map((item, index) => (
-              <tr key={index} className="caption2 text-white-50">
+              <tr key={index} className="caption2 color-am-white-300">
                 <td>
                   <input
                     type="checkbox"

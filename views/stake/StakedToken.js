@@ -20,7 +20,7 @@ export default function StakedToken({
   notify,
 }) {
   const { availableBalance } = useAvailableBalance();
-  const [openModal, setOpenModal] = useState(false);
+  // const [openModal, setOpenModal] = useState(false);
   const walletManager = useChain(defaultChainName);
   const { getSigningStargateClient, address, status } = walletManager;
 
@@ -59,7 +59,9 @@ export default function StakedToken({
       <section className="gap-3">
         {!stakeState?.selectedValidators?.length && status === "Connected" ? (
           <Stack className="rounded-4 p-3 mb-3 bg-am-gray-200 width-100 text-white m-0">
-            <p>Please select the Validators you wish to take actions on.</p>
+            <p className="m-0 color-am-white-300">
+              Please select the Validators you wish to take actions on.
+            </p>
           </Stack>
         ) : null}
         <Stack className="rounded-4 gap-3 p-3 bg-am-gray-200 w-100">
@@ -151,11 +153,11 @@ export default function StakedToken({
               >
                 <label
                   htmlFor="delegationAmount"
-                  className="caption text-white-50"
+                  className="caption color-am-white-300"
                 >
                   Delegation Amount
                 </label>{" "}
-                <small className="text-white-50 caption2">
+                <small className="color-am-white-300 caption2">
                   Balance : {fromDenom(availableBalance).toString()}&nbsp;
                   {defaultChainSymbol}
                 </small>

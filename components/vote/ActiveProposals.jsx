@@ -60,7 +60,7 @@ const ActiveProposals = ({
       md={6}
       onMouseOver={() => setOnVoteHover(proposal?.proposal_id)}
       onMouseOut={() => setOnVoteHover(null)}
-      // className={`col-12 col-md-6 p-2`}
+      className={`p-2`}
       onClick={() => {
         setOnVoteSelect(index);
         voteDispatch({
@@ -71,7 +71,7 @@ const ActiveProposals = ({
     >
       <div
         className={
-          hasVoted ? `bg-body-secondary rounded-3` : `bg-translucent rounded-3`
+          hasVoted ? `bg-am-gray-700 rounded-3` : `bg-am-gray-700 rounded-3`
         }
         // style={{ opacity: proposal.idIcon ? "1" : "0.6" }}
       >
@@ -117,11 +117,11 @@ const ActiveProposals = ({
                 </OverlayTrigger>
               ) : null}
             </h4>
-            <div className="border border-primary fw-400 caption bg-translucent px-2 py-1 text-truncate rounded-4">
+            <div className="border border-primary fw-normal caption bg-translucent px-2 py-1 text-primary rounded-4 text-wrap text-break text-center">
               {getTypeProposal(proposal?.content?.["@type"])}
             </div>
           </Stack>
-          <h5 className="caption2 text-primary text-truncate m-0">
+          <h5 className="caption2 text-primary m-0">
             {proposal?.content?.title}
           </h5>
           <p className="caption2 m-0">
@@ -139,7 +139,7 @@ const ActiveProposals = ({
           className="py-2 justify-content-between align-items-center position-relative"
         >
           <p
-            className="small bg-blue-100 p-2 pe-5 text-dark text-uppercase m-0"
+            className="small bg-am-blue-100 p-2 pe-5 text-dark text-uppercase m-0"
             style={{
               clipPath: "polygon(0% 0%, 80% 0%, 100% 50%, 80% 100%, 0% 100%)",
               width: "max-content",

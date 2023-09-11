@@ -58,8 +58,8 @@ const Unbonded = ({
     ? getBalanceStyle(fromChainDenom(unbondingValue), "caption", "caption2")
     : getBalanceStyle(
         fromChainDenom(unbondingValue),
-        "caption text-body",
-        "caption2 text-body"
+        "caption color-am-gray-100",
+        "caption2 color-am-gray-100"
       );
 
   const unbondingInUSD = BigNumber(fromDenom(unbondingValue))
@@ -70,8 +70,8 @@ const Unbonded = ({
     ? getBalanceStyle(decimalize(unbondingInUSD), "caption2", "small")
     : getBalanceStyle(
         decimalize(unbondingInUSD),
-        "caption2 text-body",
-        "small text-body"
+        "caption2 color-am-gray-100",
+        "small color-am-gray-100"
       );
 
   const secondsInADay = 86400;
@@ -89,15 +89,15 @@ const Unbonded = ({
       <Stack className="" gap={2}>
         <p
           className={`caption d-flex gap-2 align-items-center m-0
-          ${isConnected ? "null" : "text-body"}`}
+          ${isConnected ? "null" : "color-am-gray-100"}`}
         >
           Undelegating
         </p>
-        <p className={`caption m-0 ${isConnected ? "" : "text-body"}`}>
+        <p className={`caption m-0 ${isConnected ? "" : "color-am-gray-100"}`}>
           {unbondingDisplay}
           &nbsp;{denomDisplay}
         </p>
-        <p className={`caption2 m-0 ${isConnected ? "" : "text-body"}`}>
+        <p className={`caption2 m-0 ${isConnected ? "" : "color-am-gray-100"}`}>
           {unbondingInUSDDisplay}
           &nbsp;{usdSymbol}
         </p>

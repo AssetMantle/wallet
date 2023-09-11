@@ -134,10 +134,12 @@ export const UniswapUnstakeEntry = ({ tokenId, liquidity }) => {
         </div>
         <div className="d-flex flex-column gap-2">
           <h3 className="caption">
-            Token ID: <span className="text-body caption2">{tokenId}</span>
+            Token ID:{" "}
+            <span className="color-am-gray-100 caption2">{tokenId}</span>
           </h3>
           <p className="caption">
-            Liquidity: <span className="text-body caption2">{liquidity}</span>
+            Liquidity:{" "}
+            <span className="color-am-gray-100 caption2">{liquidity}</span>
           </p>
         </div>
       </div>

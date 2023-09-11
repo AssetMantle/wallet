@@ -77,8 +77,8 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
     ? getBalanceStyle(fromChainDenom(delegationsValue), "caption", "caption2")
     : getBalanceStyle(
         fromChainDenom(delegationsValue),
-        "caption text-body",
-        "caption2 text-body"
+        "caption color-am-gray-100",
+        "caption2 color-am-gray-100"
       );
 
   const delegationsInUSD = BigNumber(fromDenom(delegationsValue))
@@ -89,8 +89,8 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
     ? getBalanceStyle(decimalize(delegationsInUSD), "caption2 ", "small")
     : getBalanceStyle(
         decimalize(delegationsInUSD),
-        "caption2 text-body",
-        "small text-body"
+        "caption2 color-am-gray-100",
+        "small color-am-gray-100"
       );
 
   //Get number of validators delegated to out of selected validators
@@ -161,7 +161,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
   return (
     <>
       {stakeState?.selectedValidators?.length ? (
-        <p className="text-body-emphasis m-0">
+        <p className="color-am-gray-100 m-0">
           {delegatedOutOfSelectedValidators?.length} out of{" "}
           {stakeState?.selectedValidators?.length} selected are Delegated
           Validators
@@ -176,18 +176,22 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
           ) : (
             <p
               className={`caption d-flex gap-2 align-items-center m-0 ${
-                isConnected ? `` : `text-body`
+                isConnected ? `` : `color-am-gray-100`
               }`}
             >
               {" "}
               Cumulative Delegations
             </p>
           )}
-          <p className={`caption m-0 ${isConnected ? "" : "text-body"}`}>
+          <p
+            className={`caption m-0 ${isConnected ? "" : "color-am-gray-100"}`}
+          >
             {delegationsDisplay}
             &nbsp;{denomDisplay}
           </p>
-          <p className={`caption2 m-0 ${isConnected ? "" : "text-body"}`}>
+          <p
+            className={`caption2 m-0 ${isConnected ? "" : "color-am-gray-100"}`}
+          >
             {delegationsInUSDDisplay}
             &nbsp;{usdSymbol}
           </p>
@@ -271,7 +275,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
                   <label htmlFor="delegationAmount" className="caption2 mb-1">
                     Undelegate amount
                   </label>
-                  <small className="caption2 text-body">
+                  <small className="caption2 color-am-gray-100">
                     Delegated Amount:{" "}
                     {getBalanceStyle(
                       fromChainDenom(
@@ -281,8 +285,8 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
                             stakeState?.undelegationSrc
                         )?.delegatedAmount
                       ),
-                      "caption2 text-body",
-                      "small text-body"
+                      "caption2 color-am-gray-100",
+                      "small color-am-gray-100"
                     )}
                   </small>
                 </Stack>
@@ -382,7 +386,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
               </button>
             </Stack>
             <Stack className="py-4 text-center align-items-start">
-              <p className="text-muted caption2 text-body m-0 my-2">
+              <p className="text-muted caption2 color-am-gray-100 m-0 my-2">
                 Delegate From
               </p>{" "}
               <Stack
@@ -450,7 +454,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
                   "caption2"
                 )}
               </p>
-              <p className="text-muted caption2 text-body m-0 my-2">
+              <p className="text-muted caption2 color-am-gray-100 m-0 my-2">
                 Delegate To
               </p>
               <Stack className="bg-black p-2 rounded-3 w-100">
@@ -753,11 +757,11 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
               >
                 <label
                   htmlFor="redelegationAmount"
-                  className="caption text-white-50 my-2"
+                  className="caption color-am-white-300 my-2"
                 >
                   Delegation amount
                 </label>{" "}
-                <small className="caption2 text-white-50 my-2">
+                <small className="caption2 color-am-white-300 my-2">
                   Delegated Amount :{" "}
                   {getBalanceStyle(
                     fromChainDenom(
@@ -767,8 +771,8 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
                         )
                       )?.delegatedAmount
                     ),
-                    "caption2 text-white-50",
-                    "small text-white-50"
+                    "caption2 color-am-white-300",
+                    "small color-am-white-300"
                   )}
                   &nbsp;
                   {defaultChainSymbol}
