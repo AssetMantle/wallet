@@ -70,20 +70,20 @@ export default function Farm() {
       <Head>
         <title>Farm | MantleWallet</title>
       </Head>
-      <Row className="row h-100" as="section">
-        <Col xs={8} className="h-100 pb-2">
+      <Row className="h-100 m-0" as="section">
+        <Col xs={8} className="h-100 pb-2 px-1 pe-2">
           <ScrollableSectionContainer className="d-flex h-100">
             {/* New UI starts from here  */}
-            <Stack className="rounded-4 p-3 bg-secondary width-100 transitionAll flex-grow-0">
+            <Stack className="rounded-4 p-3 bg-am-gray-200 width-100 transitionAll flex-grow-0">
               {farmPoolJSX}
             </Stack>
           </ScrollableSectionContainer>
         </Col>
-        <Col xs={4} className="h-100 pb-2">
+        <Col xs={4} className="h-100 pb-2 px-1">
           <ScrollableSectionContainer>
             {/* New UI starts from here  */}
-            <Stack className="bg-secondary rounded-4 p-3" gap={3}>
-              <h2 className="body1 text-primary m-0">Chains</h2>
+            <Stack className="bg-am-gray-200 rounded-4 p-3" gap={3}>
+              <h2 className="h3 text-primary m-0">Chains</h2>
               <Suspense fallback={loadingJSX}>
                 <LiquidityPoolChainEthereum
                   setSelectedPool={setSelectedPool}
