@@ -14,12 +14,12 @@ export default function Bridge() {
       <Head>
         <title>Bridge | MantleWallet</title>
       </Head>
-      <Row as={`main`} className="h-100">
-        <Col xs={8} className="h-100 pb-2">
+      <Row as={`main`} className="h-100 m-0">
+        <Col xs={8} className="h-100 pb-2 px-1 pe-2">
           <ScrollableSectionContainer className="h-100">
             <Stack
               as={`section`}
-              className="rounded-4 p-3 bg-secondary width-100 flex-grow-0"
+              className="rounded-4 p-3 bg-am-gray-200 width-100 flex-grow-0"
               gap={3}
             >
               <Stack
@@ -29,7 +29,7 @@ export default function Bridge() {
                 className="align-items-center justify-content-between"
               >
                 <Stack gap={3} className="">
-                  <h1 className="body1 text-primary">Interchain</h1>
+                  <h1 className="h3 text-primary">Interchain</h1>
                 </Stack>
               </Stack>
               <Stack gap={3} className="bg-black rounded-4 p-3">
@@ -41,9 +41,9 @@ export default function Bridge() {
             </Stack>
           </ScrollableSectionContainer>
         </Col>
-        <Col xs={4} className="h-100 pb-2">
+        <Col xs={4} className="h-100 pb-2 px-1">
           <ScrollableSectionContainer className="d-flex flex-column gap-3">
-            <div className="rounded-4 p-3 bg-secondary width-100 text-white-50">
+            <div className="rounded-4 p-3 bg-am-gray-200 width-100 color-am-white-300">
               <OverlayTrigger
                 as="span"
                 overlay={<Tooltip as id={"transactionSequence"}></Tooltip>}
