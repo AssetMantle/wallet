@@ -95,7 +95,7 @@ export default function Transact() {
     switch (action.type) {
       // handle onChange for Recipient Address Input Box
       case "CHANGE_RECIPIENT_ADDRESS": {
-        console.log("inside CHANGE_RECIPIENT_ADDRESS");
+        // console.log("inside CHANGE_RECIPIENT_ADDRESS");
         // if invalid address is input, populate error message and updated recipient address
         if (!action.payload) {
           return {
@@ -201,12 +201,12 @@ export default function Transact() {
           isNaN(parseFloat(availableBalance)) ||
           parseFloat(availableBalance) < parseFloat(defaultChainGasFee)
         ) {
-          console.log(
-            "available balance: ",
-            parseFloat(availableBalance),
-            " gas: ",
-            parseFloat(defaultChainGasFee)
-          );
+          // console.log(
+          //   "available balance: ",
+          //   parseFloat(availableBalance),
+          //   " gas: ",
+          //   parseFloat(defaultChainGasFee)
+          // );
           return {
             ...state,
             transferAmount: fromDenom(availableBalance),
@@ -220,7 +220,7 @@ export default function Transact() {
         else {
           // delete the error message key if already exists
           delete state.errorMessages?.transferAmountErrorMsg;
-          console.log(
+          console.error(
             "state error message: ",
             state.errorMessages?.transferAmountErrorMsg
           );
@@ -234,9 +234,10 @@ export default function Transact() {
       }
 
       case "CHANGE_MEMO": {
-        console.log("inside CHANGE_MEMO");
+        // console.log("inside CHANGE_MEMO");
         // if the memo size limit is exceeded
-        console.log("memo: "), state.memo;
+        // console.log("memo: ")
+        state.memo;
         if (action?.payload?.toString()?.length < defaultChainMemoSize) {
           return {
             ...state,
@@ -310,7 +311,8 @@ export default function Transact() {
       }
 
       default:
-        console.log("default case");
+        // console.log("default case");
+        return false;
     }
   };
 
@@ -392,7 +394,8 @@ export default function Transact() {
       formDispatch({ type: "RESET" });
 
       // reset the form values
-      console.log("response: ", response, " error: ", error);
+      // console.log("response: ", response, " error: ", error);
+      error && console.error(" error: ", error);
       if (response) {
         notify(response?.transactionHash, id);
       } else {
@@ -412,11 +415,11 @@ export default function Transact() {
       <Head>
         <title>Transact | MantleWallet</title>
       </Head>
-      <Row className="row h-100" as="section">
-        <Col xs={8} className="h-100 pb-2">
+      <Row className="h-100 m-0" as="section">
+        <Col xs={8} className="h-100 pb-2 px-1 pe-2">
           <ScrollableSectionContainer>
             <Stack
-              className="rounded-4 p-3 bg-secondary width-100 transitionAll flex-grow-0"
+              className="rounded-4 p-3 bg-am-gray-200 width-100 transitionAll flex-grow-0"
               gap={2}
             >
               <Stack
@@ -433,7 +436,7 @@ export default function Transact() {
                   {tabs.map((tab, index) => (
                     <button
                       key={index}
-                      className={`body1 ${
+                      className={`h3 ${
                         Tab === index ? "text-primary" : "text-white"
                       }`}
                       onClick={() => setTab(index)}
@@ -446,7 +449,9 @@ export default function Transact() {
               <Stack gap={3} className="bg-black rounded-4 p-3">
                 <label
                   className={`caption d-flex gap-2 align-items-center ${
-                    status === "Connected" ? "" : "text-body"
+                    status === "Connected"
+                      ? "color-am-white-300"
+                      : "color-am-gray-100"
                   }`}
                   htmlFor="recipientAddress"
                 >
@@ -493,7 +498,9 @@ export default function Transact() {
 
                 <label
                   className={`caption d-flex gap-2 align-items-center ${
-                    status === "Connected" ? "" : "text-body"
+                    status === "Connected"
+                      ? "color-am-white-300"
+                      : "color-am-gray-100"
                   }`}
                   htmlFor="token"
                 >
@@ -502,7 +509,9 @@ export default function Transact() {
                 <input
                   disabled={status === "Disconnected"}
                   className={`bg-transparent p-3 py-2 rounded-2 border border-secondary w-100 ${
-                    status === "Connected" ? "" : "text-body"
+                    status === "Connected"
+                      ? "color-am-white-300"
+                      : "color-am-gray-100"
                   }`}
                   type="text"
                   name="token"
@@ -514,7 +523,9 @@ export default function Transact() {
 
                 <label
                   className={`caption d-flex gap-2 align-items-end justify-content-between ${
-                    status === "Connected" ? "" : "text-body"
+                    status === "Connected"
+                      ? "color-am-white-300"
+                      : "color-am-gray-100"
                   }`}
                   htmlFor="amount"
                 >
@@ -529,8 +540,8 @@ export default function Transact() {
                         )
                       : getBalanceStyle(
                           fromChainDenom(availableBalance),
-                          "caption text-body",
-                          "caption2 text-body"
+                          "caption color-am-gray-100",
+                          "caption2 color-am-gray-100"
                         )}
                     &nbsp;
                     {defaultChainSymbol}
@@ -561,7 +572,7 @@ export default function Transact() {
                     />
                     <Button
                       variant="link"
-                      className={`bg-secondary p-1 px-2 text-primary text-decoration-none ${
+                      className={`bg-am-gray-200 p-1 px-2 text-primary text-decoration-none ${
                         status === "Disconnected" ? "bg-opacity-75" : ""
                       }`}
                       disabled={status === "Disconnected"}
@@ -575,7 +586,7 @@ export default function Transact() {
                     </Button>
                     <Button
                       variant="link"
-                      className={`bg-secondary p-1 px-2 text-primary text-decoration-none ${
+                      className={`bg-am-gray-200 p-1 px-2 text-primary text-decoration-none ${
                         status === "Disconnected" ? "bg-opacity-75" : ""
                       }`}
                       disabled={status === "Disconnected"}
@@ -711,7 +722,7 @@ export default function Transact() {
             </Stack>
           </ScrollableSectionContainer>
         </Col>
-        <Col xs={4} className="h-100 pb-2">
+        <Col xs={4} className="h-100 pb-2 px-1">
           <ScrollableSectionContainer>
             {status === "Connected" ? (
               <ConnectedReceive displayAddress={displayAddress} />
