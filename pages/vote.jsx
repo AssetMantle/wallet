@@ -83,11 +83,11 @@ export default function Vote() {
       <Head>
         <title>Vote | MantleWallet</title>
       </Head>
-      <Row as="section" className="h-100">
-        <Col xs={8}>
+      <Row as="section" className="h-100 m-0">
+        <Col xs={8} className="px-1 pe-2">
           <ScrollableSectionContainer className="px-1">
             <Stack
-              className="rounded-4 p-3 bg-secondary width-100 flex-grow-0"
+              className="rounded-4 p-3 bg-am-gray-200 width-100 flex-grow-0"
               gap={2}
             >
               <Stack
@@ -95,7 +95,7 @@ export default function Vote() {
                 gap={3}
                 className="align-items-center justify-content-between"
               >
-                <h1 className="body2 text-primary">Proposals</h1>
+                <h1 className="h3 text-primary">Proposals</h1>
                 <Stack direction="horizontal" className="align-items-center">
                   <Button
                     variant="primary"
@@ -118,22 +118,24 @@ export default function Vote() {
                   </a>
                 </Stack>
               </Stack>
-              <Stack className="bg-black rounded-4 px-3 py-2" gap={3}>
-                <Row>
+              <Stack className="bg-black rounded-4 p-2" gap={3}>
+                <Row className="w-100 m-auto">
                   {isLoadingProposals ? (
                     <p className="m-0 text-primary">Loading ...</p>
                   ) : allProposals?.length ? (
                     allProposals?.map((proposal, index) => (
-                      <ActiveProposals
-                        key={index}
-                        proposal={proposal}
-                        index={index}
-                        status={status}
-                        voteDispatch={voteDispatch}
-                        voteState={voteState}
-                        allProposals={allProposals}
-                        isLoadingProposals={isLoadingProposals}
-                      />
+                      <>
+                        <ActiveProposals
+                          key={index}
+                          proposal={proposal}
+                          index={index}
+                          status={status}
+                          voteDispatch={voteDispatch}
+                          voteState={voteState}
+                          allProposals={allProposals}
+                          isLoadingProposals={isLoadingProposals}
+                        />
+                      </>
                     ))
                   ) : (
                     <p className="text-white m-0">
@@ -145,7 +147,7 @@ export default function Vote() {
             </Stack>
           </ScrollableSectionContainer>
         </Col>
-        <Col xs={4}>
+        <Col xs={4} className="px-1 h-100">
           <ScrollableSectionContainer className="d-flex flex-column">
             {voteState?.proposalID ? (
               <>
@@ -154,18 +156,9 @@ export default function Vote() {
                   selectedProposal={allProposals?.find?.(
                     (item) => item?.proposal_id == voteState.proposalID
                   )}
+                  buttonClick={setVoteModal}
+                  buttonDisabled={isSubmitDisabled}
                 />
-                <Button
-                  variant="primary"
-                  className="text-center"
-                  style={{ maxWidth: "100%" }}
-                  onClick={() => {
-                    setVoteModal(true);
-                  }}
-                  disabled={isSubmitDisabled}
-                >
-                  Vote
-                </Button>
               </>
             ) : (
               <VoteInfo
@@ -316,14 +309,14 @@ export default function Vote() {
               </Stack>
               <Stack className="bg-black p-3 rounded-4" gap={1}>
                 <button
-                  className="caption2 d-flex align-items-start justify-content-start gap-1"
+                  className="caption2 d-flex align-items-start justify-content-start gap-1 color-am-white-100"
                   onClick={() => setShowAdvanced(!ShowAdvanced)}
                 >
-                  <i className="bi bi-info-circle text-primary"></i> The
-                  following items summarize the voting options and what it means
-                  for this proposal
+                  <i className="bi bi-info-circle "></i> The following items
+                  summarize the voting options and what it means for this
+                  proposal
                   <span
-                    className="transitionAll ms-auto"
+                    className="transitionAll ms-auto text-primary"
                     style={{
                       transformOrigin: "center",
                       transform: ShowAdvanced
@@ -336,19 +329,19 @@ export default function Vote() {
                 </button>
                 {ShowAdvanced && (
                   <div className="accordion-body">
-                    <ul className="ps-3 pt-2 caption2 text-white-50">
+                    <ul className="ps-3 pt-2 caption2 color-am-white-300">
                       <li>
-                        <span className="text-white-300">YES</span> - You
+                        <span className="color-am-white-100">YES</span> - You
                         approve of and wish to ratify the contents of the
                         proposed paper.
                       </li>
                       <li>
-                        <span className="text-white-300">NO</span> - You don’t
-                        approve of the contents of paper.
+                        <span className="color-am-white-100">NO</span> - You
+                        don’t approve of the contents of paper.
                       </li>
                       <li>
-                        <span className="text-white-300">NO WITH VETO</span> - A
-                        ‘NoWithVeto’ vote indicates a proposal either (1) is
+                        <span className="color-am-white-100">NO WITH VETO</span>{" "}
+                        - A ‘NoWithVeto’ vote indicates a proposal either (1) is
                         deemed to be spam, i.e., irrelevant to Cosmos Hub, (2)
                         disproportionately infringes on minority interests, or
                         (3) violates or encourages violation of the rules of
@@ -358,9 +351,9 @@ export default function Vote() {
                         rejected and the deposits are burned.
                       </li>
                       <li>
-                        <span className="text-white-300">ABSTAIN</span> - You
-                        wish to contribute to quorum but you formally decline to
-                        vote either for or against the proposal.
+                        <span className="color-am-white-100">ABSTAIN</span> -
+                        You wish to contribute to quorum but you formally
+                        decline to vote either for or against the proposal.
                       </li>
                     </ul>
                   </div>
@@ -387,7 +380,10 @@ export default function Vote() {
                     </button>
                   ) : ( */}
                 <Button
-                  disabled={!isObjEmpty(voteState?.errorMessages)}
+                  disabled={
+                    !isObjEmpty(voteState?.errorMessages) ||
+                    !voteState.voteOption
+                  }
                   variant="primary"
                   className="fw-medium rounded-5 px-5 ms-auto"
                   onClick={handleSubmit}
