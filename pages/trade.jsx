@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Head from "next/head";
-import TradeTable from "../components/TradeTable";
-import TradePageTokenDetails from "../components/TradePageTokenDetails";
+import TradeTable from "../components/trade/TradeTable";
+import TradePageTokenDetails from "../components/trade/TradePageTokenDetails";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import { Col, Row, Stack } from "react-bootstrap";
 
@@ -13,16 +13,16 @@ export default function Trade() {
       <Head>
         <title>Trade | MantleWallet</title>
       </Head>
-      <Row as="section" className="h-100">
-        <Col xs={8} className="h-100">
+      <Row as="section" className="h-100 m-0">
+        <Col xs={8} className="h-100 px-1 pe-2">
           <ScrollableSectionContainer className="h-100">
             <Stack
               gap={2}
-              className="bg-light-subtle p-3 pb-5 rounded-4 flex-grow-0"
+              className="bg-am-gray-200 p-3 rounded-4 flex-grow-0"
               style={{ height: "90%" }}
             >
               <Stack className="justify-content-between w-100">
-                <h1 className="card-title body1 text-primary my-auto text-start">
+                <h1 className="card-title h3 text-primary my-auto text-start">
                   Markets
                 </h1>
               </Stack>
@@ -37,9 +37,9 @@ export default function Trade() {
             </Stack>
           </ScrollableSectionContainer>
         </Col>
-        <Col xs={4} className="h-100">
+        <Col xs={4} className="h-100 px-1">
           <ScrollableSectionContainer className="h-100">
-            <Stack className="rounded-4 p-3 mb-2 bg-light-subtle width-100 text-white">
+            <Stack className="rounded-4 p-3 mb-2 bg-am-gray-200 width-100 color-am-white-300">
               <p className="m-0">
                 To purchase MNTL, visit the exchanges (CEX & DEX) shown to swap
                 with your available tokens.

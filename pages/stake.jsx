@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import AllValidators from "../components/AllValidators";
-import DelegatedValidators from "../components/DelegatedValidators";
+import AllValidators from "../components/stake/AllValidators";
+import DelegatedValidators from "../components/stake/DelegatedValidators";
 import { useAllValidators, useDelegatedValidators } from "../data";
 import useStakeReducer from "../data/useStakeReducer";
-import StakedToken from "../views/StakedToken";
+import StakedToken from "../views/stake/StakedToken";
 import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import Head from "next/head";
 import { toast } from "react-toastify";
@@ -15,8 +15,6 @@ import {
   OverlayTrigger,
   Row,
   Stack,
-  // ToggleButton,
-  // ToggleButtonGroup,
   Tooltip,
 } from "react-bootstrap";
 
@@ -99,23 +97,24 @@ export default function Stake() {
       <Head>
         <title>Stake | MantleWallet</title>
       </Head>
-      <Row className="row h-100" as="section">
-        <Col xs={8} className="h-100 pb-2">
+      <Row className="h-100 m-0" as="section">
+        <Col xs={8} className="h-100 pb-2 px-1 pe-2">
           <Stack
             gap={2}
-            className="bg-light-subtle p-3 rounded-4"
+            className="bg-am-gray-200 p-3 rounded-4"
             style={{ height: "90%" }}
           >
             <Stack
               direction="horizontal"
               className="align-items-center justify-content-between w-100"
             >
-              <h1 className="card-title body1 text-primary m-0 my-auto">
+              <h1 className="card-title h3 text-primary m-0 my-auto">
                 Validators
               </h1>
               <div className="btn-group">
                 <Button
-                  variant={activeValidators ? "primary" : "outline-light"}
+                  variant={activeValidators ? "primary" : "outline-warning"}
+                  className="fw-medium"
                   onClick={() => {
                     setActiveValidators(true);
                     stakeDispatch({ type: "EMPTY_SELECTED_VALIDATORS" });
@@ -124,7 +123,8 @@ export default function Stake() {
                   Active
                 </Button>
                 <Button
-                  variant={!activeValidators ? "primary" : "outline-light"}
+                  variant={!activeValidators ? "primary" : "outline-warning"}
+                  className="fw-medium"
                   onClick={() => {
                     setActiveValidators(false);
                     stakeDispatch({ type: "EMPTY_SELECTED_VALIDATORS" });
@@ -146,7 +146,7 @@ export default function Stake() {
                 <Stack
                   gap={2}
                   direction="horizontal"
-                  className="border border-white rounded-3 py-1 px-3 align-items-center flex-grow-1"
+                  className="border border-white rounded-3 mt-1 py-1 px-3 align-items-center flex-grow-1"
                 >
                   <i className="bi bi-search text-white"></i>
                   <input
@@ -195,7 +195,7 @@ export default function Stake() {
                   </Stack>
                 </Stack>
               </Stack>
-              <div className="w-100 mt-3 h-100" style={{ overflow: "auto" }}>
+              <div className="w-100 mt-2 h-100" style={{ overflow: "auto" }}>
                 <table
                   className="table"
                   style={{ width: "max-content", minWidth: "100%" }}
@@ -288,7 +288,7 @@ export default function Stake() {
           </Stack>
         </Col>
 
-        <Col xs={4} className="h-100 pb-2">
+        <Col xs={4} className="h-100 pb-2 px-1">
           <ScrollableSectionContainer>
             <StakedToken
               delegated={delegated}

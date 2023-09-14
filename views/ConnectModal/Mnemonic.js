@@ -65,7 +65,7 @@ export default function Mnemonic({ MnemonicSeed, close, setStep }) {
   };
 
   return (
-    <div className="bg-light-subtle p-4 rounded-4 w-100 my-auto">
+    <div className="bg-am-gray-200 p-4 rounded-4 w-100 my-auto">
       <Stack
         className="align-items-center justify-content-between"
         direction="horizontal"

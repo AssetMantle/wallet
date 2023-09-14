@@ -12,7 +12,7 @@ export default function Success({ close, connect }) {
     close(0);
   };
   return (
-    <div className="bg-light-subtle p-4 rounded-4 w-100 my-auto">
+    <div className="bg-am-gray-200 p-4 rounded-4 w-100 my-auto">
       <Stack
         className="align-items-center justify-content-between"
         direction="horizontal"
@@ -44,7 +44,7 @@ export default function Success({ close, connect }) {
           className="bg-black align-items-center justify-content-between flex-wrap w-100 p-3 rounded-2 caption"
           direction="horizontal"
         >
-          <span className="text-body">Identity Address:</span>
+          <span className="color-am-gray-100">Identity Address:</span>
           {`${address.substring(0, 17)}-${address.substring(
             address.length - 9,
             address.length

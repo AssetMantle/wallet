@@ -1,60 +1,29 @@
-@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css");
-@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Work+Sans:wght@500;600;700&display=swap");
+@import "./colors";
 
-// variables
-$yellow-100: #ffc640;
-$yellow-200: #f2af13;
-$yellow-800: #624d19;
-$yellow-900: #f3af121a;
+$am-nav-bg: $am-dark-300;
+$am-primary-light: $am-white-100;
+$am-primary-main: $am-yellow-100;
+$am-primary-dark: $am-yellow-200;
+$am-primary-disabled: $am-yellow-800;
 
-$white-100: #fffdfa; //
-$white-200: #fffdfa80; //
-$white-300: #b0b0b0; //
-$white-400: #fffdfa80;
+$am-secondary-light: $am-white-200;
+$am-secondary-main: $am-white-300;
+$am-secondary-dark: $am-white-400;
+$am-secondary-disable: $am-gray-100;
 
-$gray-100: #5f5d5a;
-$gray-200: #252525;
-$gray-300: #2e2e2e;
-$gray-400: #282826;
-$gray-500: #2f2f2b;
-$gray-600: #2c2c2c;
-$gray-700: #21211e;
-$gray-800: #21211ed9;
-
-$dark-100: #050505d9;
-$dark-200: #111111;
-$dark-300: #040404cc;
-$dark-400: #030301;
-
-$blue-100: #6fb4b5;
-
-$success: #148919;
-$error: #e44651;
-
-$nav-bg: $dark-300;
-$primary-light: $white-100;
-$primary-main: $yellow-100;
-$primary-dark: $yellow-200;
-$primary-disabled: $yellow-800;
-
-$secondary-light: $white-200;
-$secondary-main: $white-300;
-$secondary-dark: $white-400;
-$secondary-disable: $gray-100;
-
-$background-default: $dark-200;
-$background-radial: radial-gradient(
+$am-background-default: $am-dark-200;
+$am-background-radial: radial-gradient(
   50% 50% at 50% 50%,
-  $yellow-100 47.4%,
-  $yellow-200 100%
+  $am-yellow-100 47.4%,
+  $am-yellow-200 100%
 );
-$background-selected-tag: $yellow-900;
-$card-bg: $gray-800;
-$modal-content-bg: $gray-400;
-$text-muted: $white-400;
+$am-background-selected-tag: $am-yellow-900;
+$am-card-bg: $am-gray-800;
+$am-modal-content-bg: $am-gray-400;
+$am-text-muted: $am-white-400;
 
-$fontPrimary: "Work Sans", sans-serif;
-$fontSecondary: "Lato", sans-serif;
+$am-fontPrimary: "Work Sans", sans-serif;
+$am-fontSecondary: "Lato", sans-serif;
 
 * {
   scroll-behavior: smooth;
@@ -63,22 +32,19 @@ $fontSecondary: "Lato", sans-serif;
     width: 5px;
     height: 5px;
     border-radius: 4px;
-    color: $primary-dark;
+    color: $am-primary-dark;
   }
   &::-webkit-scrollbar-thumb {
-    border: 5px solid $primary-dark;
+    border: 5px solid $am-primary-dark;
     border-radius: 4px;
     background: transparent;
   }
 }
-body {
-  font-family: $fontPrimary;
-}
 
 input {
-  color: $primary-light;
+  color: $am-primary-light;
   &::placeholder {
-    color: $gray-100 !important;
+    color: $am-gray-100 !important;
   }
 }
 
@@ -98,14 +64,13 @@ input {
   height: 100dvh;
 }
 // text sizes
-@mixin fontRoot($weight, $size, $fontFamily: $fontPrimary) {
+@mixin fontRoot($weight, $size, $fontFamily: $am-fontPrimary) {
   font-family: $fontFamily;
   font-weight: $weight;
   font-size: $size;
   font-style: normal;
   line-height: 120%;
   font-feature-settings: "kern" off;
-  color: $primary-light;
   @media (max-width: 548px) {
     font-size: calc($size / 1.1);
   }
@@ -114,14 +79,14 @@ input {
   }
 }
 .lato {
-  font-family: $fontSecondary;
+  font-family: $am-fontSecondary;
   line-height: 120%;
 }
 .label-primary {
   @include fontRoot(500, 0.75rem);
 }
 .label-secondary {
-  @include fontRoot(500, 0.75rem, $fontSecondary);
+  @include fontRoot(500, 0.75rem, $am-fontSecondary);
 }
 .gradient-text {
   font-feature-settings: "liga" off;
@@ -132,6 +97,7 @@ input {
 }
 .am-nav-item {
   position: relative;
+  color: $am-white-300;
   &::after {
     content: "";
     position: absolute;
@@ -142,37 +108,37 @@ input {
     margin: 0 !important;
     vertical-align: unset !important;
     border: 0 !important;
-    background-color: $primary-main;
+    background-color: $am-primary-main;
     transform: translateX(-50%) translateY(510%) scaleX(0);
     border-radius: 3px;
     transition: all 200ms ease-in-out;
     transform-origin: left;
   }
   &:hover {
-    color: $primary-main;
+    color: $am-primary-main;
     & > span {
-      color: $primary-main;
+      color: $am-primary-main;
     }
     &::after {
-      transform: translateX(-50%) translateY(510%) scaleX(1);
+      transform: translateX(-50%) translateY(20px) scaleX(1);
     }
   }
   &.active {
-    color: $primary-main !important;
+    color: $am-primary-main !important;
     & > span {
-      color: $primary-main !important;
+      color: $am-primary-main !important;
     }
     &::after {
-      transform: translateX(-50%) translateY(510%) scaleX(1);
+      transform: translateX(-50%) translateY(20px) scaleX(1);
     }
   }
 }
 .am-connect {
-  border-color: $primary-light;
-  color: $primary-light;
+  border-color: $am-primary-light;
+  color: $am-primary-light;
   &:hover {
-    border-color: $primary-main;
-    color: $primary-main;
+    border-color: $am-primary-main;
+    color: $am-primary-main;
   }
 }
 
@@ -186,8 +152,8 @@ input {
 
 .bg-yellow-100-hover {
   &:hover {
-    background-color: $yellow-100;
-    color: $dark-200 !important;
+    background-color: $am-yellow-100;
+    color: $am-dark-200 !important;
   }
 }
 .bg-translucent {
@@ -196,14 +162,14 @@ input {
 }
 .hover-dark-100 {
   &:hover {
-    background-color: $dark-100 !important;
+    background-color: $am-dark-100 !important;
   }
 }
 .border-color-primary-hover {
   border: 2px solid;
   border-color: transparent;
   &:hover {
-    border-color: $primary-main;
+    border-color: $am-primary-main;
   }
 }
 .card {
@@ -212,23 +178,23 @@ input {
 .am-select {
   padding: 8px 16px;
   background-color: transparent;
-  border: 1px solid $gray-200;
+  border: 1px solid $am-gray-200;
   outline: none;
-  color: $primary-main;
+  color: $am-primary-main;
   & > option {
-    background-color: $gray-800;
+    background-color: $am-gray-800;
     padding: 8px 16px;
     border-radius: 0;
     &:hover {
-      color: $gray-800;
-      background-color: $primary-main;
+      color: $am-gray-800;
+      background-color: $am-primary-main;
     }
   }
 }
 .table {
   & > thead {
-    border-top: 2px solid $gray-100;
-    border-bottom: 1px solid $gray-100;
+    border-top: 2px solid $am-gray-100;
+    border-bottom: 1px solid $am-gray-100;
     &.bt-0 {
       border-top: none;
     }
@@ -272,21 +238,21 @@ input {
   }
 }
 .dropdown-menu {
-  background-color: $nav-bg !important;
+  background-color: $am-nav-bg !important;
 }
 .box-nav {
-  border: 2px solid $gray-500;
+  border: 2px solid $am-gray-500;
   border-radius: 4px;
   &-item {
-    color: $primary-light;
+    color: $am-primary-light;
     &.active {
-      background-color: $primary-main;
-      color: $gray-600;
+      background-color: $am-primary-main;
+      color: $am-gray-600;
       &:hover {
-        color: $gray-600 !important;
+        color: $am-gray-600 !important;
       }
       & > span {
-        color: $gray-600 !important;
+        color: $am-gray-600 !important;
       }
     }
     &:first-child {
@@ -296,14 +262,14 @@ input {
       border-radius: 0 4px 4px 0;
     }
     &:not(:last-child) {
-      border-right: 2px solid $gray-500;
+      border-right: 2px solid $am-gray-500;
     }
   }
 }
 .select-gas {
-  background: $gray-800;
-  color: $primary-light;
-  border: 1px solid $gray-400;
+  background: $am-gray-800;
+  color: $am-primary-light;
+  border: 1px solid $am-gray-400;
   & > p {
     font-weight: 500;
   }
@@ -318,10 +284,10 @@ input {
   }
   &:hover,
   &.active {
-    background-color: $primary-main;
-    color: $dark-400;
+    background-color: $am-primary-main;
+    color: $am-dark-400;
     & > p {
-      color: $dark-400;
+      color: $am-dark-400;
     }
   }
 }
@@ -336,15 +302,15 @@ tbody {
 .vote_no_with_veto {
   &::before {
     border-radius: 50%;
-    border: 2px solid $gray-700;
-    background-color: $gray-700;
+    border: 2px solid $am-gray-700;
+    background-color: $am-gray-700;
     vertical-align: 0;
   }
 }
 .slick-prev::before,
 .slick-next::before {
   opacity: 1 !important;
-  color: $dark-200 !important;
+  color: $am-dark-200 !important;
 }
 
 // -------------------------------------------------------------------------
@@ -357,6 +323,35 @@ $primary: $assetmantle-yellow;
 // THIS SHOULD ALWAYS BE THE LAST LINE OF THIS FILE. DO NOT ADD ANY STYLE ATTRIBUTES
 // BELOW THIS IMPORT
 @import "~bootstrap/scss/bootstrap";
+
+body {
+  font-family: $am-fontPrimary;
+  color: $am-primary-light;
+}
+// Style resets
+a {
+  text-decoration: none;
+}
+button {
+  background: transparent;
+  border: none;
+  outline: none;
+}
+input {
+  accent-color: $assetmantle-yellow;
+  outline: none;
+  &[type="checkbox"] {
+    background-color: transparent;
+  }
+  &[type="number"] {
+    -moz-appearance: textfield;
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+}
 
 .h1 {
   @include fontRoot(500, 2.25rem);
@@ -384,7 +379,7 @@ $primary: $assetmantle-yellow;
   font-feature-settings: "liga" off;
 }
 .subtitle2 {
-  @include fontRoot(700, 0.875rem);
+  @include fontRoot(500, 0.875rem);
 }
 .body1 {
   @include fontRoot(400, 1.375rem);
@@ -447,15 +442,15 @@ $primary: $assetmantle-yellow;
 .am-select {
   padding: 8px 16px;
   background-color: transparent;
-  border: 1px solid $gray-200;
+  border: 1px solid $am-gray-200;
   outline: none;
   color: $primary;
   & > option {
-    background-color: $gray-800;
+    background-color: $am-gray-800;
     padding: 8px 16px;
     border-radius: 0;
     &:hover {
-      color: $gray-800;
+      color: $am-gray-800;
       background-color: $primary;
     }
   }

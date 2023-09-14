@@ -22,7 +22,7 @@ function GlobalFilter({ globalFilter, setGlobalFilter }) {
       <Stack
         gap={2}
         direction="horizontal"
-        className="border border-white rounded-3 py-1 px-3 align-items-center flex-grow-1"
+        className="border border-white rounded-3 py-1 mb-1 px-3 align-items-center flex-grow-1"
       >
         <span
           className="input-group-text p-0 h-100 bg-transparent"

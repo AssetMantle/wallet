@@ -1,6 +1,6 @@
 import Head from "next/head";
 import React from "react";
-import EarnTable from "../components/EarnTable";
+import EarnTable from "../components/earn/EarnTable";
 import { Col, Row, Stack } from "react-bootstrap";
 
 export default function Earn() {
@@ -9,18 +9,18 @@ export default function Earn() {
       <Head>
         <title>Earn | MantleWallet</title>
       </Head>
-      <Row as="section" className="h-100">
-        <Col xs={8} className="h-100">
+      <Row as="section" className="h-100 m-0">
+        <Col xs={8} className="h-100 px-1 pe-2">
           <Stack
             gap={2}
-            className="bg-light-subtle p-3 pb-5 rounded-4"
+            className="bg-am-gray-200 p-3 rounded-4"
             style={{ height: "90%" }}
           >
             <Stack
               direction="horizontal"
               className="align-items-center justify-content-between w-100"
             >
-              <h1 className="card-title body1 text-primary my-auto">Earn</h1>
+              <h1 className="card-title h3 text-primary my-auto">Earn</h1>
             </Stack>
             <Stack
               className="w-100 bg-black p-2 rounded-4 flex-grow-1"
@@ -32,8 +32,8 @@ export default function Earn() {
             </Stack>
           </Stack>
         </Col>
-        <Col xs={4}>
-          <Stack className="rounded-4 p-3 mb-2 bg-light-subtle width-100 text-white">
+        <Col xs={4} className="px-1">
+          <Stack className="rounded-4 p-3 mb-2 bg-am-gray-200 width-100 color-am-white-300">
             <p className="m-0">
               To earn yields, visit the listed DEXs to add $MNTL liquidity.
             </p>

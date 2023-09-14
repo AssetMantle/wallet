@@ -16,16 +16,14 @@ export default function Balance() {
   const { status } = chainContext;
 
   return (
-    <Stack className="rounded-4 p-3 bg-light-subtle h-auto flex-grow-0" gap={3}>
-      <h4 className="body1 text-primary m-0">Wallet Balances</h4>
+    <Stack className="rounded-4 p-3 bg-am-gray-200 h-auto flex-grow-0" gap={3}>
+      <h3 className="h3 text-primary m-0">Wallet Balances</h3>
       <Stack className="bg-black p-3 rounded-4" gap={1}>
         <Stack
           gap={2}
           direction="horizontal"
-          className={`caption align-items-center m-0 text-${
-            status === "Connected"
-              ? "white text-opacity-75"
-              : "secondary-emphasis"
+          className={`caption align-items-center m-0 color-am-white-300 ${
+            status === "Connected" ? "text-opacity-75" : ""
           }`}
         >
           Total Balance
@@ -48,10 +46,8 @@ export default function Balance() {
         <Stack
           gap={2}
           direction="horizontal"
-          className={`caption align-items-center m-0 text-${
-            status === "Connected"
-              ? "white text-opacity-75"
-              : "secondary-emphasis"
+          className={`caption align-items-center m-0 color-am-white-300 ${
+            status === "Connected" ? "text-opacity-75" : ""
           }`}
         >
           Available Balance
@@ -73,7 +69,7 @@ export default function Balance() {
       </Stack>
       <Stack className="bg-black p-3 rounded-4" gap={1}>
         <p
-          className={`caption d-flex gap-2 align-items-center m-0 text-white text-opacity-75`}
+          className={`caption d-flex gap-2 align-items-center m-0 color-am-white-300`}
         >
           Current Price of {denomDisplay}
         </p>
