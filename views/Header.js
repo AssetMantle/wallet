@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { Button, Stack } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { ConnectButton, Connected } from "../components";
-import { defaultChainName, toastConfig } from "../config";
+import { defaultChainName, toastConfig, useCompositeWallet } from "../config";
 import {
   ConnectOptionObject,
   NavBarData,
@@ -19,7 +19,7 @@ import { cleanString, shortenAddress } from "../lib";
 export default function Header({ setLeftCol }) {
   const chainContext = useChain(defaultChainName);
   const { username, address, wallet, disconnect } = chainContext;
-  // const [showModal, setShowModal] = useState(false);
+  const { disconnectCompositeWallet } = useCompositeWallet(defaultChainName);
 
   // menus ham
   const [rightHam, setRightHam] = useState(false);
@@ -31,7 +31,7 @@ export default function Header({ setLeftCol }) {
   const onClickDisconnect = async (e) => {
     e.preventDefault();
     try {
-      await disconnect(wallet?.name);
+      await disconnectCompositeWallet(wallet?.name);
     } catch (error) {
       console.error(error);
       toast.error(WALLET_DISCONNECT_ERROR_MSG, toastConfig);

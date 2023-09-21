@@ -35,6 +35,7 @@ export const sendTokensTxn = async (
   toAddress,
   amount,
   memo = "",
+  compositeWallet,
   {
     getOfflineSigner,
     chainName = defaultChainName,
@@ -48,11 +49,12 @@ export const sendTokensTxn = async (
     const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
     // get the amount in denom terms
     const amountInDenom = toChainDenom(amount, chainName, chainDenom);
+
     // initialize stargate client using signer and create txn
-    let offlineSigner = await getOfflineSigner();
+    let signer = compositeWallet?.signer;
     const stargateClient = await getSigningCosmosClient({
       rpcEndpoint: defaultChainRPCProxy,
-      signer: offlineSigner,
+      signer: signer,
     });
 
     if (!stargateClient || !fromAddress) {
@@ -71,6 +73,7 @@ export const sendTokensTxn = async (
         },
       ],
     });
+
     // populate the fee data
     const fee = {
       amount: [
@@ -89,6 +92,7 @@ export const sendTokensTxn = async (
       fee,
       memo
     );
+
     console.log("msg: ", msg, " amount: ", amountInDenom);
     return { response, error: null };
   } catch (error) {

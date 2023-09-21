@@ -1,4 +1,5 @@
 // MISC
+export const fastRefreshInterval = 2500;
 export const defaultRefreshInterval = 6000;
 export const slowRefreshInterval = 25000;
 export const defaultToastContainerId = "ToastContainerID1";

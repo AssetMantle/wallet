@@ -113,7 +113,29 @@ function CreateCosmosApp({ Component, pageProps }) {
         />
         {/* open graphs end */}
       </Head>
-      <SWRConfig value={{ fallback: { selectedIncentive: 0 } }}>
+      <SWRConfig
+        value={{
+          fallback: {
+            selectedIncentive: 0,
+            walletName: null,
+            walletType: null,
+            // compositeWallet: {
+            //   walletType: null,
+            //   walletName: null,
+            //   walletPrettyName: null,
+            //   status: null,
+            //   message: null,
+            //   address: null,
+            //   chain: null,
+            //   wallet: null,
+            //   username: null,
+            //   getOfflineSignerDirect: null,
+            //   openWalletModal: null,
+            //   disconnect: null,
+            // },
+          },
+        }}
+      >
         <ChainProvider
           chains={finalChains}
           assetLists={finalAssets}

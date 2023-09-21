@@ -45,7 +45,7 @@ export const WRITE_CONTRACT_ERROR = "Error during writing config of contract";
 // Wallet related constants
 
 export const WALLET_NOT_FOUND_ERROR_MSG =
-  "Wallet not found. Refresh MantleWallet and try a different one.";
+  "Wallet not found. Refresh App & try a different one.";
 export const WALLET_LOCKED_ERROR_MSG = "Wallet Device is Locked";
 export const WALLET_LEDGERAPP_ERROR_MSG =
   "Refresh MantleWallet and load Cosmos App in Ledger Device";
@@ -101,6 +101,17 @@ export const ConnectOptionObject = {
     icon: "/WalletIcons/ledger.png",
     name: "Ledger",
     installUrl: "https://www.ledger.com/",
+  },
+  generateonly: {
+    icon: "/WalletIcons/generateonly.png",
+    name: "Ledger",
+    installUrl: "https://www.ledger.com/",
+  },
+  keystore: {
+    icon: "/WalletIcons/keystore.png",
+    name: "Keystore",
+    installUrl:
+      "https://help.myetherwallet.com/en/articles/5449827-what-is-a-keystore-json-file-can-i-change-my-password",
   },
   xdefi: {
     icon: "/WalletIcons/xdefi.jpg",

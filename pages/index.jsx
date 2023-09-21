@@ -15,6 +15,7 @@ import {
   defaultChainSymbol,
   getBalanceStyle,
   toastConfig,
+  useCompositeWallet,
 } from "../config";
 import {
   formConstants,
@@ -42,9 +43,11 @@ export default function Transact() {
   const [advanced, setAdvanced] = useState(false);
   const { availableBalance } = useAvailableBalance();
   const chainContext = useChain(defaultChainName);
-  const { address, status, getOfflineSigner } = chainContext;
+  const { address, status, getOfflineSigner, getSigningStargateClient } =
+    chainContext;
   const router = useRouter();
   const { toAddress, toAmount } = router.query;
+  const { compositeWallet } = useCompositeWallet(defaultChainName);
 
   useEffect(() => {
     if (toAddress) {
@@ -389,6 +392,7 @@ export default function Transact() {
         localRecipientAddress,
         localTransferAmount,
         localMemo,
+        compositeWallet,
         { getOfflineSigner }
       );
       formDispatch({ type: "RESET" });

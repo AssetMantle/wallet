@@ -14,12 +14,12 @@ import {
 } from "./react";
 
 export const ConnectButton = ({ children }) => {
-  const { wallet, status, connect, disconnect, message } =
+  const { wallet, status, disconnect, message, openView } =
     useChain(defaultChainName);
 
   const handleOnClickDisconnected = (e) => {
     e.preventDefault();
-    connect();
+    openView();
   };
 
   const onClickDisconnect = async (e) => {

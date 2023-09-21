@@ -48,6 +48,8 @@
     "@cosmos-kit/xdefi": "^2.3.3",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
+    "@ledgerhq/hw-transport-webusb": "^6.27.19",
+    "@ledgerhq/logs": "^6.10.1",
     "@maticnetwork/maticjs": "^3.6.0-beta.3",
     "@maticnetwork/maticjs-web3": "^1.0.4",
     "@metamask/detect-provider": "^2.0.0",
