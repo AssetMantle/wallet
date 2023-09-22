@@ -146,7 +146,7 @@ export const useCompositeWallet = (chainName) => {
           break;
       }
     } catch (error) {
-      console.error(error);
+      console.error("caught in connectCompositeWallet: ", error);
       throw error;
     }
   };
@@ -178,7 +178,15 @@ export const useCompositeWallet = (chainName) => {
       "inside fetchCompositeWallet, type: ",
       walletType,
       " name: ",
-      walletName
+      walletName,
+      " wallet: ",
+      cosmosKitWallet,
+      " status: ",
+      cosmosKitStatus,
+      " message: ",
+      cosmosKitMessage,
+      " WalletStatus: ",
+      WalletStatus
     );
 
     let compositeWalletObject = {
@@ -198,8 +206,10 @@ export const useCompositeWallet = (chainName) => {
           compositeWalletObject.chainId = cosmosKitChain?.chain_id;
           compositeWalletObject.chainName = chainNameArg;
           compositeWalletObject.username = cosmosKitUsername;
-          compositeWalletObject.signer =
-            await cosmosKitGetOfflineSignerDirect?.();
+          if (cosmosKitStatus === WalletStatus?.Connected) {
+            compositeWalletObject.signer =
+              await cosmosKitGetOfflineSignerDirect?.();
+          }
 
           break;
 
@@ -260,7 +270,7 @@ export const useCompositeWallet = (chainName) => {
   };
 
   // implement useSwr for cached and revalidation enabled wallet data
-  const { data: compositeWalletObject, error } = useSwr(
+  const { data: compositeWalletObject } = useSwr(
     !!chainName && !!walletType
       ? [`compositeWallet`, chainName, walletType, walletName]
       : null,
@@ -270,8 +280,6 @@ export const useCompositeWallet = (chainName) => {
       refreshInterval: fastRefreshInterval,
     }
   );
-
-  console.log("chainName && walletType : ", !!chainName && !!walletType);
 
   return {
     compositeWallet: compositeWalletObject,

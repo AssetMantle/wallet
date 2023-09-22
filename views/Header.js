@@ -1,4 +1,3 @@
-import { useChain } from "@cosmos-kit/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -17,9 +16,9 @@ import {
 import { cleanString, shortenAddress } from "../lib";
 
 export default function Header({ setLeftCol }) {
-  const chainContext = useChain(defaultChainName);
-  const { username, address, wallet, disconnect } = chainContext;
-  const { disconnectCompositeWallet } = useCompositeWallet(defaultChainName);
+  const { disconnectCompositeWallet, compositeWallet } =
+    useCompositeWallet(defaultChainName);
+  const { username, address, walletPrettyName } = compositeWallet;
 
   // menus ham
   const [rightHam, setRightHam] = useState(false);
@@ -31,7 +30,7 @@ export default function Header({ setLeftCol }) {
   const onClickDisconnect = async (e) => {
     e.preventDefault();
     try {
-      await disconnectCompositeWallet(wallet?.name);
+      await disconnectCompositeWallet();
     } catch (error) {
       console.error(error);
       toast.error(WALLET_DISCONNECT_ERROR_MSG, toastConfig);
@@ -141,11 +140,11 @@ export default function Header({ setLeftCol }) {
           >
             <img
               layout="fill"
-              src={ConnectOptionObject[cleanString(wallet?.prettyName)]?.icon}
+              src={ConnectOptionObject[cleanString(walletPrettyName)]?.icon}
               alt={"♦︎"}
             />
           </div>
-          {ConnectOptionObject[cleanString(wallet?.prettyName)]?.name}
+          {ConnectOptionObject[cleanString(walletPrettyName)]?.name}
         </Stack>
         <Stack direction="horizontal" gap={1} className="align-items-center">
           <i className="bi bi-check-circle text-success" />
@@ -170,7 +169,7 @@ export default function Header({ setLeftCol }) {
       <Connected
         buttonText={address ? shortenAddress(address) : "Connected"}
         icon={
-          ConnectOptionObject?.[wallet?.prettyName.toLocaleLowerCase()]?.icon
+          ConnectOptionObject?.[walletPrettyName?.toLocaleLowerCase?.()]?.icon
         }
         onClick={handleOnClickConnected}
       >

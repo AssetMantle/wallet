@@ -32,12 +32,6 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
     },
   ];
 
-  /* console.log("walletRepo: ", walletRepo);
-  console.log("walletRepo2: ", getWalletRepo(defaultChainName));
-  console.log("walletRepos3: ", walletRepos); */
-
-  console.log("compositeWallet: ", compositeWallet);
-
   return (
     <>
       <div

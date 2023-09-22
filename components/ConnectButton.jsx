@@ -1,7 +1,6 @@
-import { useChain } from "@cosmos-kit/react";
 import React from "react";
 import { toast } from "react-toastify";
-import { defaultChainName, toastConfig } from "../config";
+import { defaultChainName, toastConfig, useCompositeWallet } from "../config";
 import { WALLET_DISCONNECT_ERROR_MSG } from "../data";
 import { cleanString } from "../lib";
 import {
@@ -14,8 +13,19 @@ import {
 } from "./react";
 
 export const ConnectButton = ({ children }) => {
-  const { wallet, status, disconnect, message, openView } =
-    useChain(defaultChainName);
+  // get the composite wallet
+  const { disconnectCompositeWallet: disconnect, compositeWallet } =
+    useCompositeWallet(defaultChainName);
+  const {
+    status,
+    message,
+    openWalletModal: openView,
+    walletName,
+    walletPrettyName,
+  } = compositeWallet;
+
+  /* const { wallet, status, disconnect, message, openView } =
+    useChain(defaultChainName); */
 
   const handleOnClickDisconnected = (e) => {
     e.preventDefault();
@@ -25,19 +35,19 @@ export const ConnectButton = ({ children }) => {
   const onClickDisconnect = async (e) => {
     e?.preventDefault?.();
     try {
-      await disconnect(wallet?.name);
+      await disconnect(walletName);
     } catch (error) {
       console.error(error);
       toast.error(WALLET_DISCONNECT_ERROR_MSG, toastConfig);
     }
   };
 
-  console.log("message: ", message, " wallet: ", wallet);
+  // console.log("message: ", message, " walletName: ", walletName);
 
   return (
     <WalletConnectComponent
-      wallet={cleanString(wallet?.prettyName)}
-      walletName={wallet?.name}
+      wallet={cleanString(walletPrettyName)}
+      walletName={walletName}
       walletStatus={status}
       walletMessage={message}
       disconnect={disconnect}
