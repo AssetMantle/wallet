@@ -35,20 +35,16 @@ export const sendTokensTxn = async (
   toAddress,
   amount,
   memo = "",
-  compositeWallet,
-  {
-    getOfflineSigner,
-    chainName = defaultChainName,
-    chainDenom = defaultChainDenom,
-  }
+  compositeWallet
 ) => {
   try {
-    // get the chain assets for the specified chain
-    const chainassets = assets.find((chain) => chain.chain_name === chainName);
-    // get the coin data from the chain assets data
-    const coin = chainassets.assets.find((asset) => asset.base === chainDenom);
+    const chainDenom = defaultChainDenom;
     // get the amount in denom terms
-    const amountInDenom = toChainDenom(amount, chainName, chainDenom);
+    const amountInDenom = toChainDenom(
+      amount,
+      compositeWallet?.chainName,
+      chainDenom
+    );
 
     // initialize stargate client using signer and create txn
     let signer = compositeWallet?.signer;
@@ -68,7 +64,7 @@ export const sendTokensTxn = async (
       toAddress,
       amount: [
         {
-          denom: coin.base,
+          denom: chainDenom,
           amount: amountInDenom,
         },
       ],
@@ -78,12 +74,14 @@ export const sendTokensTxn = async (
     const fee = {
       amount: [
         {
-          denom: coin.base,
+          denom: chainDenom,
           amount: defaultFeeAmount,
         },
       ],
       gas: defaultFeeGas,
     };
+
+    console.log("msg: ", msg, " amount: ", amountInDenom);
 
     // use the stargate client to dispatch the transaction
     const response = await stargateClient.signAndBroadcast(
@@ -93,7 +91,6 @@ export const sendTokensTxn = async (
       memo
     );
 
-    console.log("msg: ", msg, " amount: ", amountInDenom);
     return { response, error: null };
   } catch (error) {
     console.error("Error during transaction: ", error?.message);

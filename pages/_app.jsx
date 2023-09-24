@@ -43,6 +43,7 @@ import "../config/styles/index.scss";
 import { ethereumClient, wagmiClient, walletConnectProjectID } from "../data";
 import { getSigningGravityClientOptions } from "../modules";
 import ConnectModal from "../views/ConnectModal/ConnectModal";
+import { WalletStatus } from "@cosmos-kit/core";
 
 function CreateCosmosApp({ Component, pageProps }) {
   // useEffect for bootstrap js hydration
@@ -89,6 +90,8 @@ function CreateCosmosApp({ Component, pageProps }) {
     killOnTabClose: true,
   };
 
+  console.log("customAssets: ", customAssets, " chainList: ", chainList);
+
   return (
     <>
       <Head>
@@ -119,6 +122,22 @@ function CreateCosmosApp({ Component, pageProps }) {
             selectedIncentive: 0,
             walletName: null,
             walletType: null,
+            initialCompositeWallet: {
+              walletType: null,
+              walletName: null,
+              walletPrettyName: null,
+              status: WalletStatus.Disconnected,
+              message: null,
+              address: null,
+              chainId: null,
+              chainName: null,
+              username: null,
+              signer: null,
+              openWalletModal: null,
+              closeWalletModal: null,
+              connect: null,
+              disconnect: null,
+            },
             // compositeWallet: {
             //   walletType: null,
             //   walletName: null,

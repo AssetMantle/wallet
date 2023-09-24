@@ -1,4 +1,3 @@
-import { useChain } from "@cosmos-kit/react";
 import BigNumber from "bignumber.js";
 import Head from "next/head";
 import Link from "next/link";
@@ -42,12 +41,12 @@ export default function Transact() {
   // HOOKS
   const [advanced, setAdvanced] = useState(false);
   const { availableBalance } = useAvailableBalance();
-  const chainContext = useChain(defaultChainName);
-  const { address, status, getOfflineSigner, getSigningStargateClient } =
-    chainContext;
+  // const chainContext = useChain(defaultChainName);
+  // const { address, status, getOfflineSigner } = chainContext;
   const router = useRouter();
   const { toAddress, toAmount } = router.query;
   const { compositeWallet } = useCompositeWallet(defaultChainName);
+  const { status, address } = compositeWallet;
 
   useEffect(() => {
     if (toAddress) {
@@ -392,8 +391,7 @@ export default function Transact() {
         localRecipientAddress,
         localTransferAmount,
         localMemo,
-        compositeWallet,
-        { getOfflineSigner }
+        compositeWallet
       );
       formDispatch({ type: "RESET" });
 

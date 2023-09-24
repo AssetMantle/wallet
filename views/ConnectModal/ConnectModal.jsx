@@ -6,8 +6,7 @@ import { ConnectOptionObject, mantleWalletV1URL } from "../../data";
 import { cleanString } from "../../lib";
 
 const ConnectModal = ({ setOpen, walletRepo }) => {
-  const { compositeWallet, connectCompositeWallet } =
-    useCompositeWallet(defaultChainName);
+  const { connectCompositeWallet } = useCompositeWallet(defaultChainName);
 
   function handleCloseModal(e) {
     e.preventDefault();
@@ -124,7 +123,10 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
                         data-bs-dismiss="modal"
                         aria-label="Close"
                         onClick={async () => {
-                          await connect(walletType, walletName);
+                          await connectCompositeWallet?.(
+                            walletType,
+                            walletName
+                          );
                           setOpen(false);
                         }}
                       >

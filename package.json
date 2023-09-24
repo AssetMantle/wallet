@@ -24,9 +24,11 @@
     "pre-commit": "yarn lint && yarn format && git add -A ."
   },
   "dependencies": {
-    "@cosmjs/amino": "^0.30.1",
+    "@cosmjs/amino": "^0.31.1",
     "@cosmjs/cosmwasm-stargate": "^0.30.1",
+    "@cosmjs/crypto": "^0.31.1",
     "@cosmjs/encoding": "^0.30.1",
+    "@cosmjs/ledger-amino": "^0.31.1",
     "@cosmjs/math": "^0.30.1",
     "@cosmjs/proto-signing": "^0.30.1",
     "@cosmjs/stargate": "^0.30.1",
