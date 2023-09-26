@@ -193,7 +193,12 @@ export const WalletConnectComponent = ({
   notExist,
 }) => {
   useEffect(() => {
-    console.log("wallet status: ", walletStatus, " wallet name: ", walletName);
+    console.log(
+      "inside WalletConnectComponent, wallet status: ",
+      walletStatus,
+      " wallet name: ",
+      walletName
+    );
     if (walletStatus == WalletStatus.NotExist) {
       toast.error(
         wallet ? (
@@ -203,36 +208,36 @@ export const WalletConnectComponent = ({
         ),
         toastConfig
       );
-      disconnect(walletName);
+      disconnect();
     } else if (
       walletStatus == WalletStatus.Rejected ||
       walletStatus == WalletStatus.Error
     ) {
       if (walletMessage?.toString?.()?.includes?.("0x5515")) {
         toast.error(WALLET_LOCKED_ERROR_MSG, toastConfig);
-        disconnect(walletName);
+        disconnect();
       } else if (walletMessage?.toString?.()?.includes?.("0x6e01")) {
         toast.error(WALLET_LEDGERAPP_ERROR_MSG, toastConfig);
-        disconnect(walletName);
+        disconnect();
       } else if (walletMessage?.toString?.()?.includes?.("CLA_NOT_SUPPORTED")) {
         toast.error(WALLET_LEDGERAPP_ERROR_MSG, toastConfig);
-        disconnect(walletName);
+        disconnect();
       } else if (walletMessage?.toString?.()?.includes?.("INS_NOT_SUPPORTED")) {
         toast.error(WALLET_LEDGERAPP_ERROR_MSG, toastConfig);
-        disconnect(walletName);
+        disconnect();
       } else if (
         walletMessage?.toString?.()?.includes?.("Failed to execute 'open'")
       ) {
         toast.error(WALLET_LEDGERAPP_ERROR_MSG, toastConfig);
-        disconnect(walletName);
+        disconnect();
       } else if (
         walletMessage?.toString?.()?.includes?.("The device was disconnected")
       ) {
         toast.error(WALLET_LEDGERAPP_ERROR_MSG, toastConfig);
-        disconnect(walletName);
+        disconnect();
       } else {
         toast.error(WALLET_NOT_FOUND_ERROR_MSG, toastConfig);
-        disconnect(walletName);
+        disconnect();
       }
     }
 

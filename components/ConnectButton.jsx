@@ -14,7 +14,7 @@ import {
 
 export const ConnectButton = ({ children }) => {
   // get the composite wallet
-  const { disconnectCompositeWallet: disconnect, compositeWallet } =
+  const { disconnectCompositeWallet, compositeWallet } =
     useCompositeWallet(defaultChainName);
 
   const {
@@ -33,7 +33,7 @@ export const ConnectButton = ({ children }) => {
   const onClickDisconnect = async (e) => {
     e?.preventDefault?.();
     try {
-      await disconnect();
+      await disconnectCompositeWallet();
     } catch (error) {
       console.error(error);
       toast.error(WALLET_DISCONNECT_ERROR_MSG, toastConfig);
@@ -48,7 +48,7 @@ export const ConnectButton = ({ children }) => {
       walletName={walletName}
       walletStatus={status}
       walletMessage={message}
-      disconnect={disconnect}
+      disconnect={disconnectCompositeWallet}
       disconnected={
         <Disconnected
           buttonText="Connect"
