@@ -1,4 +1,5 @@
 // import { wallets as compass } from "@cosmos-kit/compass";
+import { WalletStatus } from "@cosmos-kit/core";
 import { wallets as cosmostationWallets } from "@cosmos-kit/cosmostation-extension";
 import { wallets as exodus } from "@cosmos-kit/exodus";
 import { wallets as frontier } from "@cosmos-kit/frontier";
@@ -12,8 +13,8 @@ import { wallets as station } from "@cosmos-kit/station";
 import { wallets as trust } from "@cosmos-kit/trust-extension";
 import { wallets as vectisWallets } from "@cosmos-kit/vectis";
 import { wallets as xdefi } from "@cosmos-kit/xdefi";
+import "@interchain-ui/react/styles";
 import { Web3Modal } from "@web3modal/react";
-import { assets, chains } from "chain-registry";
 import Head from "next/head";
 import { useEffect } from "react";
 import { ToastContainer } from "react-toastify";
@@ -29,21 +30,17 @@ import {
   defaultChainRPCProxy,
   defaultChainRPCProxy2,
   defaultToastContainerId,
+  getFinalAssetsList,
+  getFinalChainsList,
   gravityChainRESTProxy,
   gravityChainRESTProxy2,
   gravityChainRPCProxy,
   gravityChainRPCProxy2,
-  mantleAssetConfig,
-  mantleChainConfig,
-  mantleTestChainConfig,
-  mantleTestnetAssetConfig,
 } from "../config";
-import "@interchain-ui/react/styles";
 import "../config/styles/index.scss";
 import { ethereumClient, wagmiClient, walletConnectProjectID } from "../data";
 import { getSigningGravityClientOptions } from "../modules";
 import ConnectModal from "../views/ConnectModal/ConnectModal";
-import { WalletStatus } from "@cosmos-kit/core";
 
 function CreateCosmosApp({ Component, pageProps }) {
   // useEffect for bootstrap js hydration
@@ -51,27 +48,9 @@ function CreateCosmosApp({ Component, pageProps }) {
     require("bootstrap/dist/js/bootstrap.bundle.js");
   }, []);
 
-  const chainList = chains.filter(
-    (chain) => chain.chain_name !== "assetmantle"
-  );
+  const finalChains = getFinalChainsList();
 
-  // const chainList = chains;
-
-  const finalChains = [
-    ...mantleChainConfig,
-    ...chainList,
-    ...mantleTestChainConfig,
-  ];
-
-  const customAssets = assets.filter(
-    (assets) => assets.chain_name !== "assetmantle"
-  );
-
-  const finalAssets = [
-    ...customAssets,
-    ...mantleAssetConfig,
-    ...mantleTestnetAssetConfig,
-  ];
+  const finalAssets = getFinalAssetsList();
 
   // get custom signing options for the stargate client
   // construct signer options
@@ -89,8 +68,6 @@ function CreateCosmosApp({ Component, pageProps }) {
   const sessionOptions = {
     killOnTabClose: true,
   };
-
-  console.log("customAssets: ", customAssets, " chainList: ", chainList);
 
   return (
     <>
@@ -138,6 +115,7 @@ function CreateCosmosApp({ Component, pageProps }) {
               connect: null,
               disconnect: null,
             },
+            stateLedgerTransport: null,
             // compositeWallet: {
             //   walletType: null,
             //   walletName: null,
