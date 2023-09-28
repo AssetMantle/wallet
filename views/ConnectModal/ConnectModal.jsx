@@ -1,12 +1,13 @@
 import Link from "next/link";
-import React from "react";
-import { Button, Stack } from "react-bootstrap";
+import React, { useState } from "react";
+import { Button, Modal, Stack } from "react-bootstrap";
 import { defaultChainName, useCompositeWallet } from "../../config";
 import { ConnectOptionObject, mantleWalletV1URL } from "../../data";
 import { cleanString } from "../../lib";
 
 const ConnectModal = ({ setOpen, walletRepo }) => {
   const { connectCompositeWallet } = useCompositeWallet(defaultChainName);
+  const [setshowKeystoreModal, setSetshowKeystoreModal] = useState(false);
 
   function handleCloseModal(e) {
     e.preventDefault();
@@ -30,6 +31,73 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
       walletType: "generateonly",
     },
   ];
+
+  const keystoreModalJSX = (
+    <Modal
+      show={setshowKeystoreModal}
+      onHide={() => setSetshowKeystoreModal(false)}
+      centered
+      size="md"
+      aria-labelledby="delegation-modal"
+      scrollable
+    >
+      <Modal.Body className="p-0">
+        <Stack className="m-auto p-4 rounded-3 w-100">
+          <Stack
+            className="align-items-center justify-content-between"
+            direction="horizontal"
+          >
+            <h5 className="body2 text-primary d-flex align-items-center gap-2 m-0">
+              <button
+                className="primary bg-transparent"
+                onClick={() => setSetshowKeystoreModal(false)}
+              >
+                <i className="bi bi-chevron-left text-primary" />
+              </button>
+              Delegate
+            </h5>
+            <button
+              className="primary bg-transparent"
+              onClick={() => setSetshowKeystoreModal(false)}
+            >
+              <i className="bi bi-x-lg text-primary" />
+            </button>
+          </Stack>
+          <Stack className="py-4 text-center">
+            <div>
+              <Stack
+                className="p-3 border border-white py-2 rounded-2"
+                direction="horizontal"
+                gap={2}
+              >
+                <input
+                  className="bg-transparent flex-grow-1 border border-0"
+                  id="delegationAmount"
+                  type="text"
+                  // value={stakeState?.delegationAmount}
+                  placeholder="Enter Delegation Amount"
+                />
+                <button className="text-primary">Max</button>
+              </Stack>
+            </div>
+          </Stack>
+          <Stack
+            className="align-items-center justify-content-end"
+            gap={2}
+            direction="horizontal"
+          >
+            <Button
+              variant="primary"
+              className="rounded-5 px-5 py-2 fw-medium"
+              // onClick={}
+            >
+              Submit
+            </Button>
+          </Stack>
+        </Stack>
+      </Modal.Body>
+    </Modal>
+  );
 
   return (
     <>
@@ -114,48 +182,116 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
                   Connect with Custom Wallets
                 </h2>
                 <Stack direction="horizontal" gap={2} className="flex-wrap">
-                  {customWallets.map(
-                    ({ walletPrettyName, walletName, walletType }, index) => (
-                      <Button
-                        variant="outline-primary"
-                        className="d-flex align-items-center gap-2 py-2 px-3 rounded-2 fw-medium"
-                        key={index}
-                        data-bs-dismiss="modal"
-                        aria-label="Close"
-                        onClick={async () => {
-                          await connectCompositeWallet?.(
-                            walletType,
-                            walletName
-                          );
-                          setOpen(false);
+                  <Button
+                    variant="outline-primary"
+                    className="d-flex align-items-center gap-2 py-2 px-3 rounded-2 fw-medium"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                    onClick={async () => {
+                      await connectCompositeWallet?.(
+                        customWallets?.[0]?.walletType,
+                        customWallets?.[0]?.walletName
+                      );
+                      setOpen(false);
+                    }}
+                  >
+                    <div
+                      className="position-relative overflow-hidden"
+                      style={{
+                        width: "25px",
+                        aspectRatio: "1/1",
+                        borderRadius: "7px",
+                      }}
+                    >
+                      <img
+                        layout="fill"
+                        className="h-100 w-100"
+                        style={{
+                          objectFit: "cover",
+                          objectPosition: "center",
                         }}
-                      >
-                        <div
-                          className="position-relative overflow-hidden"
-                          style={{
-                            width: "25px",
-                            aspectRatio: "1/1",
-                            borderRadius: "7px",
-                          }}
-                        >
-                          <img
-                            layout="fill"
-                            className="h-100 w-100"
-                            style={{
-                              objectFit: "cover",
-                              objectPosition: "center",
-                            }}
-                            src={
-                              ConnectOptionObject[cleanString(walletPrettyName)]
-                                ?.icon
-                            }
-                            alt={walletPrettyName}
-                          />
-                        </div>
-                        {walletPrettyName}
-                      </Button>
-                    )
-                  )}
+                        src={
+                          ConnectOptionObject[
+                            cleanString(customWallets?.[0]?.walletPrettyName)
+                          ]?.icon
+                        }
+                        alt={customWallets?.[0]?.walletPrettyName}
+                      />
+                    </div>
+                    {customWallets?.[0]?.walletPrettyName}
+                  </Button>
+                  <Button
+                    variant="outline-primary"
+                    className="d-flex align-items-center gap-2 py-2 px-3 rounded-2 fw-medium"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                    onClick={async () => {
+                      setSetshowKeystoreModal(true);
+                    }}
+                  >
+                    <div
+                      className="position-relative overflow-hidden"
+                      style={{
+                        width: "25px",
+                        aspectRatio: "1/1",
+                        borderRadius: "7px",
+                      }}
+                    >
+                      <img
+                        layout="fill"
+                        className="h-100 w-100"
+                        style={{
+                          objectFit: "cover",
+                          objectPosition: "center",
+                        }}
+                        src={
+                          ConnectOptionObject[
+                            cleanString(customWallets?.[1]?.walletPrettyName)
+                          ]?.icon
+                        }
+                        alt={customWallets?.[1]?.walletPrettyName}
+                      />
+                    </div>
+                    {customWallets?.[1]?.walletPrettyName}
+                  </Button>
+                  <Button
+                    variant="outline-primary"
+                    className="d-flex align-items-center gap-2 py-2 px-3 rounded-2 fw-medium"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                    onClick={async () => {
+                      await connectCompositeWallet?.(
+                        customWallets?.[2]?.walletType,
+                        customWallets?.[2]?.walletName
+                      );
+                      setOpen(false);
+                    }}
+                  >
+                    <div
+                      className="position-relative overflow-hidden"
+                      style={{
+                        width: "25px",
+                        aspectRatio: "1/1",
+                        borderRadius: "7px",
+                      }}
+                    >
+                      <img
+                        layout="fill"
+                        className="h-100 w-100"
+                        style={{
+                          objectFit: "cover",
+                          objectPosition: "center",
+                        }}
+                        src={
+                          ConnectOptionObject[
+                            cleanString(customWallets?.[2]?.walletPrettyName)
+                          ]?.icon
+                        }
+                        alt={customWallets?.[2]?.walletPrettyName}
+                      />
+                    </div>
+                    {customWallets?.[2]?.walletPrettyName}
+                  </Button>
                 </Stack>
               </Stack>
 
@@ -190,6 +326,7 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
           </div>
         </div>
       </div>
+      {keystoreModalJSX}
     </>
   );
 };

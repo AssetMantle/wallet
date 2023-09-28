@@ -5,7 +5,6 @@ import { wallets as exodus } from "@cosmos-kit/exodus";
 import { wallets as frontier } from "@cosmos-kit/frontier";
 import { wallets as keplrWallets } from "@cosmos-kit/keplr-extension";
 import { wallets as leapWallets } from "@cosmos-kit/leap-extension";
-import { wallets as ledger } from "@cosmos-kit/ledger";
 import { wallets as okxwallet } from "@cosmos-kit/okxwallet-extension";
 import { ChainProvider } from "@cosmos-kit/react";
 import { wallets as shell } from "@cosmos-kit/shell-extension";
@@ -144,7 +143,6 @@ function CreateCosmosApp({ Component, pageProps }) {
             // ...compass,
             ...exodus,
             ...frontier,
-            ...ledger,
             ...okxwallet,
             ...shell,
             ...station,

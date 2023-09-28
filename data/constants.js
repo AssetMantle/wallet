@@ -105,7 +105,7 @@ export const ConnectOptionObject = {
   },
   generateonly: {
     icon: "/WalletIcons/generateonly.png",
-    name: "Ledger",
+    name: "Generate Only",
     installUrl: "https://www.ledger.com/",
   },
   keystore: {
