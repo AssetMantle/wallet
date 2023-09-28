@@ -94,6 +94,7 @@ export const useCompositeWallet = (chainName) => {
         chainName: chainNameArg,
         username: "Ledger",
         signer: ledgerSigner,
+        walletPrettyName: "Ledger",
         walletName: walletNameArg,
         walletType: walletTypeArg,
       };
@@ -260,6 +261,7 @@ export const useCompositeWallet = (chainName) => {
         break;
 
       case "ledger":
+        const ledgerChainId = getChainIdFromChainName(chainName);
         try {
           // set the connecting state
           mutateInitialCompositeWallet({
@@ -289,6 +291,31 @@ export const useCompositeWallet = (chainName) => {
             "Error during connectCompositeWallet of ledger: ",
             error
           );
+          if (
+            error?.message
+              ?.toString?.()
+              ?.includes?.("TransportOpenUserCancelled")
+          ) {
+            mutateInitialCompositeWallet({
+              ...initialCompositeWallet,
+              status: WalletStatus?.Rejected,
+              message: error?.message,
+              chainId: ledgerChainId,
+              chainName: chainName,
+              walletName: walletNameArg,
+              walletType: walletTypeArg,
+            });
+          } else {
+            mutateInitialCompositeWallet({
+              ...initialCompositeWallet,
+              status: WalletStatus?.Error,
+              message: error?.message,
+              chainId: ledgerChainId,
+              chainName: chainName,
+              walletName: walletNameArg,
+              walletType: walletTypeArg,
+            });
+          }
         }
 
         break;
@@ -360,12 +387,12 @@ export const useCompositeWallet = (chainName) => {
     if (initialCompositeWallet?.status == WalletStatus.Disconnected)
       return initialCompositeWallet;
 
-    let compositeWalletObject = {
+    /* let compositeWalletObject = {
       ...initialCompositeWallet,
       walletType: walletTypeArg,
       walletName: walletNameArg,
       chainName: chainNameArg,
-    };
+    }; */
     let newCompositeWalletObject = {};
 
     switch (walletTypeArg) {
@@ -393,7 +420,8 @@ export const useCompositeWallet = (chainName) => {
           // collect the wallet parameters from cosmos kit
           if (
             stateLedgerTransport &&
-            compositeWalletObject?.status == WalletStatus.Connected
+            compositeWalletObject?.status == WalletStatus.Connected &&
+            chainNameArg !== initialCompositeWallet?.chainName
           ) {
             // execute the populate function
             newCompositeWalletObject = await populateCompositeWalletWithLedger(

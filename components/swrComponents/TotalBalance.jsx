@@ -1,4 +1,3 @@
-import { useChain } from "@cosmos-kit/react";
 import BigNumber from "bignumber.js";
 import React from "react";
 import {
@@ -6,6 +5,7 @@ import {
   defaultChainSymbol,
   getBalanceStyle,
   usdSymbol,
+  useCompositeWallet,
 } from "../../config";
 import {
   decimalize,
@@ -19,8 +19,9 @@ export const TotalBalance = () => {
   const { totalBalance, isErrorTotalBalance, isLoadingTotalBalance } =
     useTotalBalance();
 
-  const chainContext = useChain(defaultChainName);
-  const { status } = chainContext;
+  const { compositeWallet } = useCompositeWallet(defaultChainName);
+  const { status } = compositeWallet;
+
   const isConnected = !(
     isLoadingTotalBalance ||
     isErrorTotalBalance ||
@@ -52,8 +53,8 @@ export const TotalBalanceInUSD = () => {
   const { totalBalance, isErrorTotalBalance, isLoadingTotalBalance } =
     useTotalBalance();
 
-  const chainContext = useChain(defaultChainName);
-  const { status } = chainContext;
+  const { compositeWallet } = useCompositeWallet(defaultChainName);
+  const { status } = compositeWallet;
 
   const { mntlUsdValue, errorMntlUsdValue } = useMntlUsd();
 

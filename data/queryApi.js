@@ -18,6 +18,7 @@ import {
   mntlUsdApi,
   placeholderAvailableBalance,
   slowRefreshInterval,
+  useCompositeWallet,
 } from "../config";
 import { convertBech32Address } from "../lib";
 import { cosmos as cosmosModule, gravity } from "../modules";
@@ -525,8 +526,8 @@ const fetchAvailableBalance = async ([url, address]) => {
 
 export const useAvailableBalance = () => {
   // get the connected wallet parameters from useChain hook
-  const walletManager = useChain(defaultChainName);
-  const { address } = walletManager;
+  const { compositeWallet } = useCompositeWallet(defaultChainName);
+  const { address } = compositeWallet;
   // implement useSwr for cached and revalidation enabled data retrieval
   const { data: balanceObject, error } = useSwr(
     address ? ["useAvailableBalance", address] : null,
@@ -765,8 +766,10 @@ export const useAllValidators = () => {
 
 export const useTotalBalance = () => {
   // get the connected wallet parameters from useChain hook
-  const chainContext = useChain(defaultChainName);
-  const { address } = chainContext;
+  // const chainContext = useChain(defaultChainName);
+  // const { address } = chainContext;
+  const { compositeWallet } = useCompositeWallet(defaultChainName);
+  const { address } = compositeWallet;
 
   // fetcher function for useSwr of useAvailableBalance()
   const fetchTotalBalance = async ([url, address]) => {

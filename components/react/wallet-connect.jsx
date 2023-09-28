@@ -231,6 +231,11 @@ export const WalletConnectComponent = ({
         toast.error(WALLET_LEDGERAPP_ERROR_MSG, toastConfig);
         disconnect();
       } else if (
+        walletMessage?.toString?.()?.includes?.("open the Cosmos Ledger app")
+      ) {
+        toast.error(WALLET_LEDGERAPP_ERROR_MSG, toastConfig);
+        disconnect();
+      } else if (
         walletMessage?.toString?.()?.includes?.("The device was disconnected")
       ) {
         toast.error(WALLET_LEDGERAPP_ERROR_MSG, toastConfig);
