@@ -47,6 +47,7 @@ export const WRITE_CONTRACT_ERROR = "Error during writing config of contract";
 export const WALLET_NOT_FOUND_ERROR_MSG =
   "Wallet not found. Refresh App & try a different one.";
 export const WALLET_LOCKED_ERROR_MSG = "Wallet Device is Locked";
+export const LEDGER_SCREENSAVER_ERROR_MSG = "Ledger’s screensaver mode is on";
 export const WALLET_LEDGERAPP_ERROR_MSG =
   "Refresh MantleWallet and load Cosmos App in Ledger Device";
 

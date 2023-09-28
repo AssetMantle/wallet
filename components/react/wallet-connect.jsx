@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { toastConfig } from "../../config";
 import {
   ConnectOptionObject,
+  LEDGER_SCREENSAVER_ERROR_MSG,
   WALLET_LEDGERAPP_ERROR_MSG,
   WALLET_LOCKED_ERROR_MSG,
   WALLET_NOT_FOUND_ERROR_MSG,
@@ -215,6 +216,13 @@ export const WalletConnectComponent = ({
     ) {
       if (walletMessage?.toString?.()?.includes?.("0x5515")) {
         toast.error(WALLET_LOCKED_ERROR_MSG, toastConfig);
+        disconnect();
+      } else if (
+        walletMessage
+          ?.toString?.()
+          ?.includes?.("Ledger’s screensaver mode is on")
+      ) {
+        toast.error(LEDGER_SCREENSAVER_ERROR_MSG, toastConfig);
         disconnect();
       } else if (walletMessage?.toString?.()?.includes?.("0x6e01")) {
         toast.error(WALLET_LEDGERAPP_ERROR_MSG, toastConfig);
