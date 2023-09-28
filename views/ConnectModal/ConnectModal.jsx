@@ -7,7 +7,9 @@ import { cleanString } from "../../lib";
 
 const ConnectModal = ({ setOpen, walletRepo }) => {
   const { connectCompositeWallet } = useCompositeWallet(defaultChainName);
-  const [setshowKeystoreModal, setSetshowKeystoreModal] = useState(false);
+  const [setShowKeystoreModal, setSetShowKeystoreModal] = useState(false);
+  const [setShowKeystoreConfirmModal, setSetShowKeystoreConfirmModal] =
+    useState(false);
 
   function handleCloseModal(e) {
     e.preventDefault();
@@ -34,8 +36,8 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
 
   const keystoreModalJSX = (
     <Modal
-      show={setshowKeystoreModal}
-      onHide={() => setSetshowKeystoreModal(false)}
+      show={setShowKeystoreModal}
+      onHide={() => setSetShowKeystoreModal(false)}
       centered
       size="md"
       aria-labelledby="delegation-modal"
@@ -50,7 +52,7 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
             <h5 className="body2 text-primary d-flex align-items-center gap-2 m-0">
               <button
                 className="primary bg-transparent"
-                onClick={() => setSetshowKeystoreModal(false)}
+                onClick={() => setSetShowKeystoreModal(false)}
               >
                 <i className="bi bi-chevron-left text-primary" />
               </button>
@@ -58,7 +60,74 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
             </h5>
             <button
               className="primary bg-transparent"
-              onClick={() => setSetshowKeystoreModal(false)}
+              onClick={() => setSetShowKeystoreModal(false)}
+            >
+              <i className="bi bi-x-lg text-primary" />
+            </button>
+          </Stack>
+          <Stack className="py-4 text-center">
+            <div>
+              <Stack
+                className="p-3 border border-white py-2 rounded-2"
+                direction="horizontal"
+                gap={2}
+              >
+                <input
+                  className="bg-transparent flex-grow-1 border border-0"
+                  id="delegationAmount"
+                  type="text"
+                  // value={stakeState?.delegationAmount}
+                  placeholder="Enter Delegation Amount"
+                />
+                <button className="text-primary">Max</button>
+              </Stack>
+            </div>
+          </Stack>
+          <Stack
+            className="align-items-center justify-content-end"
+            gap={2}
+            direction="horizontal"
+          >
+            <Button
+              variant="primary"
+              className="rounded-5 px-5 py-2 fw-medium"
+              // onClick={}
+            >
+              Submit
+            </Button>
+          </Stack>
+        </Stack>
+      </Modal.Body>
+    </Modal>
+  );
+
+  const keystoreConfirmModalJSX = (
+    <Modal
+      show={setShowKeystoreConfirmModal}
+      onHide={() => setSetShowKeystoreConfirmModal(false)}
+      centered
+      size="md"
+      aria-labelledby="delegation-modal"
+      scrollable
+    >
+      <Modal.Body className="p-0">
+        <Stack className="m-auto p-4 rounded-3 w-100">
+          <Stack
+            className="align-items-center justify-content-between"
+            direction="horizontal"
+          >
+            <h5 className="body2 text-primary d-flex align-items-center gap-2 m-0">
+              <button
+                className="primary bg-transparent"
+                onClick={() => setSetShowKeystoreConfirmModal(false)}
+              >
+                <i className="bi bi-chevron-left text-primary" />
+              </button>
+              Delegate
+            </h5>
+            <button
+              className="primary bg-transparent"
+              onClick={() => setSetShowKeystoreConfirmModal(false)}
             >
               <i className="bi bi-x-lg text-primary" />
             </button>
@@ -226,7 +295,7 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
                     data-bs-dismiss="modal"
                     aria-label="Close"
                     onClick={async () => {
-                      setSetshowKeystoreModal(true);
+                      setSetShowKeystoreModal(true);
                     }}
                   >
                     <div
@@ -327,6 +396,7 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
         </div>
       </div>
       {keystoreModalJSX}
+      {keystoreConfirmModalJSX}
     </>
   );
 };
