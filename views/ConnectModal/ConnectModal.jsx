@@ -1,15 +1,18 @@
 import Link from "next/link";
 import React, { useState } from "react";
-import { Button, Modal, Stack } from "react-bootstrap";
+import { Button, Col, Modal, Row, Stack } from "react-bootstrap";
 import { defaultChainName, useCompositeWallet } from "../../config";
 import { ConnectOptionObject, mantleWalletV1URL } from "../../data";
 import { cleanString } from "../../lib";
 
 const ConnectModal = ({ setOpen, walletRepo }) => {
   const { connectCompositeWallet } = useCompositeWallet(defaultChainName);
-  const [setShowKeystoreModal, setSetShowKeystoreModal] = useState(false);
-  const [setShowKeystoreConfirmModal, setSetShowKeystoreConfirmModal] =
-    useState(false);
+
+  const [ShowKeystoreModal, setShowKeystoreModal] = useState(false);
+  const [KeystoreAdvanced, setKeystoreAdvanced] = useState(false);
+  const [KeystoreShowPassword, setKeystoreShowPassword] = useState(false);
+
+  const [KeystoreConfirmModal, setKeystoreConfirmModal] = useState(false);
 
   function handleCloseModal(e) {
     e.preventDefault();
@@ -36,12 +39,11 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
 
   const keystoreModalJSX = (
     <Modal
-      show={setShowKeystoreModal}
-      onHide={() => setSetShowKeystoreModal(false)}
+      show={ShowKeystoreModal}
+      onHide={() => setShowKeystoreModal(false)}
       centered
       size="md"
-      aria-labelledby="delegation-modal"
-      scrollable
+      aria-labelledby="keystore-modal"
     >
       <Modal.Body className="p-0">
         <Stack className="m-auto p-4 rounded-3 w-100">
@@ -52,39 +54,109 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
             <h5 className="body2 text-primary d-flex align-items-center gap-2 m-0">
               <button
                 className="primary bg-transparent"
-                onClick={() => setSetShowKeystoreModal(false)}
+                onClick={() => setShowKeystoreModal(false)}
               >
                 <i className="bi bi-chevron-left text-primary" />
               </button>
-              Delegate
+              Login With KeyStore
             </h5>
             <button
               className="primary bg-transparent"
-              onClick={() => setSetShowKeystoreModal(false)}
+              onClick={() => setShowKeystoreModal(false)}
             >
               <i className="bi bi-x-lg text-primary" />
             </button>
           </Stack>
-          <Stack className="py-4 text-center">
-            <div>
-              <Stack
-                className="p-3 border border-white py-2 rounded-2"
-                direction="horizontal"
-                gap={2}
+          <Stack className="py-4" gap={3}>
+            <label htmlFor="keystore-file">KeyStore file</label>
+            <input
+              type="file"
+              name="keystore-file"
+              id="keystore-file"
+              required
+              accept=".json"
+              onChange={(e) => e.target.files[0]}
+            />
+            <label htmlFor="keystore-password">Password</label>
+            <Stack
+              className="p-3 border border-white py-2 rounded-2"
+              direction="horizontal"
+              gap={2}
+            >
+              <input
+                className="bg-transparent flex-grow-1 border border-0"
+                id="keystore-password"
+                name="keystore-password"
+                type={KeystoreShowPassword ? "text" : "password"}
+                // value={stakeState?.delegationAmount}
+                placeholder="Enter Password"
+                required
+              />
+              <button
+                className="text-primary"
+                onClick={() => setKeystoreShowPassword((el) => !el)}
               >
-                <input
-                  className="bg-transparent flex-grow-1 border border-0"
-                  id="delegationAmount"
-                  type="text"
-                  // value={stakeState?.delegationAmount}
-                  placeholder="Enter Delegation Amount"
+                <i
+                  className={`bi ${
+                    KeystoreShowPassword ? "bi-eye" : "by-eye-slash"
+                  }`}
                 />
-                <button className="text-primary">Max</button>
-              </Stack>
-            </div>
+              </button>
+            </Stack>
+            <small>
+              <i className="bi bi-exclamation-triangle body2 color-am-error" />{" "}
+              Password decrypts your Private Key (KeyStore file).
+            </small>
           </Stack>
           <Stack
-            className="align-items-center justify-content-end"
+            direction="horizontal"
+            className="align-items-center justify-content-between"
+            role="button"
+            onClick={() => setKeystoreAdvanced((el) => !el)}
+          >
+            <p className="fw-medium caption">Advanced</p>
+            <span
+              className="transitionAll d-flex align-items-center justify-content-center"
+              style={{
+                transform: KeystoreAdvanced ? "rotate(180deg)" : "rotate(0deg)",
+                transformOrigin: "center",
+              }}
+            >
+              <i className="bi bi-chevron-down" />
+            </span>
+          </Stack>
+          {KeystoreAdvanced && (
+            <Stack gap={3}>
+              <label htmlFor="accountNumber">Account Number</label>
+              <input
+                type="text"
+                name="accountNumber"
+                id="accountNumber"
+                placeholder="Account Number"
+                className="bg-transparent p-3 py-2 rounded-2 border border-secondary w-100 color-am-gray-100s"
+                onChange={(e) => !isNaN(e.target.value) && e.target.value}
+              />
+              <label htmlFor="accountIndex">Account Index</label>
+              <input
+                type="text"
+                name="accountIndex"
+                id="accountIndex"
+                placeholder="Account Index"
+                className="bg-transparent p-3 py-2 rounded-2 border border-secondary w-100 color-am-gray-100s"
+                onChange={(e) => !isNaN(e.target.value) && e.target.value}
+              />
+              <label htmlFor="accountBip32">bip39Passphrase</label>
+              <input
+                type="password"
+                name="accountBip32"
+                id="accountBip32"
+                placeholder="Enter bip39Passphrase (Optional)"
+                className="bg-transparent p-3 py-2 rounded-2 border border-secondary w-100 color-am-gray-100s"
+              />
+            </Stack>
+          )}
+          <Stack
+            className="align-items-center justify-content-end mt-3"
             gap={2}
             direction="horizontal"
           >
@@ -93,7 +165,7 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
               className="rounded-5 px-5 py-2 fw-medium"
               // onClick={}
             >
-              Submit
+              Next
             </Button>
           </Stack>
         </Stack>
@@ -103,8 +175,8 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
 
   const keystoreConfirmModalJSX = (
     <Modal
-      show={setShowKeystoreConfirmModal}
-      onHide={() => setSetShowKeystoreConfirmModal(false)}
+      show={KeystoreConfirmModal}
+      onHide={() => setKeystoreConfirmModal(false)}
       centered
       size="md"
       aria-labelledby="delegation-modal"
@@ -119,39 +191,38 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
             <h5 className="body2 text-primary d-flex align-items-center gap-2 m-0">
               <button
                 className="primary bg-transparent"
-                onClick={() => setSetShowKeystoreConfirmModal(false)}
+                onClick={() => {
+                  setShowKeystoreModal(true);
+                  setKeystoreConfirmModal(false);
+                }}
               >
                 <i className="bi bi-chevron-left text-primary" />
               </button>
-              Delegate
+              Login With KeyStore
             </h5>
             <button
               className="primary bg-transparent"
-              onClick={() => setSetShowKeystoreConfirmModal(false)}
+              onClick={() => setShowKeystoreModal(false)}
             >
               <i className="bi bi-x-lg text-primary" />
             </button>
           </Stack>
-          <Stack className="py-4 text-center">
-            <div>
-              <Stack
-                className="p-3 border border-white py-2 rounded-2"
-                direction="horizontal"
-                gap={2}
-              >
-                <input
-                  className="bg-transparent flex-grow-1 border border-0"
-                  id="delegationAmount"
-                  type="text"
-                  // value={stakeState?.delegationAmount}
-                  placeholder="Enter Delegation Amount"
-                />
-                <button className="text-primary">Max</button>
-              </Stack>
-            </div>
+          <Stack className="py-4" gap={3}>
+            <Row>
+              <Col xs={4} className="fw-medium caption text-end">
+                Wallet path:
+              </Col>
+              <Col xs={8} className="caption"></Col>
+            </Row>
+            <Row>
+              <Col xs={4} className="fw-medium caption text-end">
+                Address:
+              </Col>
+              <Col xs={8} className="caption"></Col>
+            </Row>
           </Stack>
           <Stack
-            className="align-items-center justify-content-end"
+            className="align-items-center justify-content-end "
             gap={2}
             direction="horizontal"
           >
@@ -160,7 +231,7 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
               className="rounded-5 px-5 py-2 fw-medium"
               // onClick={}
             >
-              Submit
+              Login
             </Button>
           </Stack>
         </Stack>
@@ -295,7 +366,7 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
                     data-bs-dismiss="modal"
                     aria-label="Close"
                     onClick={async () => {
-                      setSetShowKeystoreModal(true);
+                      setShowKeystoreModal(true);
                     }}
                   >
                     <div
