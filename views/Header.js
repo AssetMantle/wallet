@@ -18,6 +18,8 @@ import { cleanString, shortenAddress } from "../lib";
 export default function Header({ setLeftCol }) {
   const { disconnectCompositeWallet, compositeWallet } =
     useCompositeWallet(defaultChainName);
+
+  console.log("compositeWallet: ", compositeWallet);
   const { username, address, walletPrettyName } = compositeWallet;
 
   // menus ham

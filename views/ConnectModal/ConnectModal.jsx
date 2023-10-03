@@ -1,20 +1,43 @@
 import Link from "next/link";
-import React, { useState } from "react";
-import { Button, Modal, Stack } from "react-bootstrap";
+import React, { useRef, useState } from "react";
+import { Button, Form, Modal, Stack } from "react-bootstrap";
 import { defaultChainName, useCompositeWallet } from "../../config";
 import { ConnectOptionObject, mantleWalletV1URL } from "../../data";
 import { cleanString } from "../../lib";
+import useSwr from "swr";
 
 const ConnectModal = ({ setOpen, walletRepo }) => {
   const { connectCompositeWallet } = useCompositeWallet(defaultChainName);
   const [setShowKeystoreModal, setSetShowKeystoreModal] = useState(false);
   const [setShowKeystoreConfirmModal, setSetShowKeystoreConfirmModal] =
     useState(false);
+  const { mutate: mutateStateKeystoreJson } = useSwr("stateKeystoreJson");
+
+  const formControlFileRef = useRef(null);
+  const formControlPasswordRef = useRef(null);
 
   function handleCloseModal(e) {
     e.preventDefault();
     setOpen(false);
   }
+
+  const handleSubmitKeystore = async (e) => {
+    e.preventDefault();
+    setSetShowKeystoreModal(false);
+    const fileRaw = formControlFileRef.current.files[0];
+    const fileReader = new FileReader();
+    let keystoreJson;
+    fileReader.readAsText(fileRaw, "UTF-8");
+    fileReader.onload = (event) => {
+      keystoreJson = JSON.parse(event.target.result);
+      console.log("keystoreJson: ", keystoreJson);
+      mutateStateKeystoreJson({
+        keystoreJson,
+        keystorePassword: formControlPasswordRef.current.value,
+      });
+      connectCompositeWallet("keystore", "keystore");
+    };
+  };
 
   const customWallets = [
     {
@@ -56,7 +79,7 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
               >
                 <i className="bi bi-chevron-left text-primary" />
               </button>
-              Delegate
+              Keystore
             </h5>
             <button
               className="primary bg-transparent"
@@ -65,36 +88,28 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
               <i className="bi bi-x-lg text-primary" />
             </button>
           </Stack>
-          <Stack className="py-4 text-center">
-            <div>
-              <Stack
-                className="p-3 border border-white py-2 rounded-2"
-                direction="horizontal"
-                gap={2}
-              >
-                <input
-                  className="bg-transparent flex-grow-1 border border-0"
-                  id="delegationAmount"
-                  type="text"
-                  // value={stakeState?.delegationAmount}
-                  placeholder="Enter Delegation Amount"
-                />
-                <button className="text-primary">Max</button>
-              </Stack>
-            </div>
-          </Stack>
           <Stack
             className="align-items-center justify-content-end"
             gap={2}
             direction="horizontal"
           >
-            <Button
-              variant="primary"
-              className="rounded-5 px-5 py-2 fw-medium"
-              // onClick={}
-            >
-              Submit
-            </Button>
+            <Form onSubmit={handleSubmitKeystore}>
+              <Form.Group controlId="formFile" className="mb-3">
+                <Form.Label>Default file input example</Form.Label>
+                <Form.Control type="file" ref={formControlFileRef} />
+              </Form.Group>
+              <Form.Group controlId="formPassword" className="mb-3">
+                <Form.Label>Default file input example</Form.Label>
+                <Form.Control type="password" ref={formControlPasswordRef} />
+              </Form.Group>
+              <Button
+                variant="primary"
+                className="rounded-5 px-5 py-2 fw-medium"
+                type="submit"
+              >
+                Submit
+              </Button>
+            </Form>
           </Stack>
         </Stack>
       </Modal.Body>
