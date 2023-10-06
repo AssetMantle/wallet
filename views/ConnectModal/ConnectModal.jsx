@@ -163,7 +163,10 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
             <Button
               variant="primary"
               className="rounded-5 px-5 py-2 fw-medium"
-              // onClick={}
+              onClick={() => {
+                setShowKeystoreModal(false);
+                setKeystoreConfirmModal(true);
+              }}
             >
               Next
             </Button>
@@ -202,7 +205,7 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
             </h5>
             <button
               className="primary bg-transparent"
-              onClick={() => setShowKeystoreModal(false)}
+              onClick={() => setKeystoreConfirmModal(false)}
             >
               <i className="bi bi-x-lg text-primary" />
             </button>
