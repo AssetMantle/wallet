@@ -42,6 +42,9 @@ export const ALREADY_UNSTAKED_ERROR =
   "Token already unstaked. Withdraw Token manually";
 export const WRITE_CONTRACT_ERROR = "Error during writing config of contract";
 
+// Keystore related error
+export const KEYSTORE_JSON_INVALID = "Invalid Keystore JSON File";
+
 // Wallet related constants
 
 export const WALLET_NOT_FOUND_ERROR_MSG =

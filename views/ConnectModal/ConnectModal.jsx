@@ -1,10 +1,19 @@
 import Link from "next/link";
 import React, { useRef, useState } from "react";
 import { Button, Form, Modal, Stack } from "react-bootstrap";
-import { defaultChainName, useCompositeWallet } from "../../config";
-import { ConnectOptionObject, mantleWalletV1URL } from "../../data";
+import {
+  defaultChainName,
+  toastConfig,
+  useCompositeWallet,
+} from "../../config";
+import {
+  ConnectOptionObject,
+  KEYSTORE_JSON_INVALID,
+  mantleWalletV1URL,
+} from "../../data";
 import { cleanString } from "../../lib";
 import useSwr from "swr";
+import { toast } from "react-toastify";
 
 const ConnectModal = ({ setOpen, walletRepo }) => {
   const { connectCompositeWallet } = useCompositeWallet(defaultChainName);
@@ -25,18 +34,31 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
     e.preventDefault();
     setSetShowKeystoreModal(false);
     const fileRaw = formControlFileRef.current.files[0];
-    const fileReader = new FileReader();
-    let keystoreJson;
-    fileReader.readAsText(fileRaw, "UTF-8");
-    fileReader.onload = (event) => {
-      keystoreJson = JSON.parse(event.target.result);
-      console.log("keystoreJson: ", keystoreJson);
-      mutateStateKeystoreJson({
-        keystoreJson,
-        keystorePassword: formControlPasswordRef.current.value,
-      });
-      connectCompositeWallet("keystore", "keystore");
-    };
+    try {
+      const fileReader = new FileReader();
+      let keystoreJson;
+      fileReader.readAsText(fileRaw, "UTF-8");
+      fileReader.onload = (event) => {
+        try {
+          console.log("event.target.result: ", event.target.result);
+          keystoreJson = JSON.parse(event.target.result);
+          const stateKeystoreJson = {
+            keystoreJson: keystoreJson,
+            keystorePassword: formControlPasswordRef.current.value,
+          };
+          console.log("stateKeystoreJson: ", stateKeystoreJson);
+
+          mutateStateKeystoreJson(stateKeystoreJson);
+          connectCompositeWallet("keystore", "keystore");
+        } catch (error) {
+          console.error("Error during Keystore FileReader: ", error);
+          toast.error(KEYSTORE_JSON_INVALID, toastConfig);
+        }
+      };
+    } catch (error) {
+      console.error("Error during Keystore FileReader2: ", error);
+      toast.error(KEYSTORE_JSON_INVALID, toastConfig);
+    }
   };
 
   const customWallets = [

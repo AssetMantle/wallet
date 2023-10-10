@@ -18,7 +18,7 @@ import {
 const denomDisplay = defaultChainSymbol;
 
 export const AvailableBalance = () => {
-  console.log("inside AvailableBalance");
+  // console.log("inside AvailableBalance");
   const { compositeWallet } = useCompositeWallet(defaultChainName);
   const { status } = compositeWallet;
 

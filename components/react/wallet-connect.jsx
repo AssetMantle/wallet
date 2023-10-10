@@ -253,7 +253,7 @@ export const WalletConnectComponent = ({
         walletMessage?.toString?.()?.includes?.("IncorrectKeystorePassword")
       ) {
         toast.error(WALLET_KEYSTORE_PASSWORD_ERROR, toastConfig);
-        disconnect();
+        // disconnect();
       } else {
         toast.error(WALLET_NOT_FOUND_ERROR_MSG, toastConfig);
         disconnect();
