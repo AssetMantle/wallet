@@ -1,5 +1,4 @@
 // import { wallets as compass } from "@cosmos-kit/compass";
-import { WalletStatus } from "@cosmos-kit/core";
 import { wallets as cosmostationWallets } from "@cosmos-kit/cosmostation-extension";
 import { wallets as exodus } from "@cosmos-kit/exodus";
 import { wallets as frontier } from "@cosmos-kit/frontier";
@@ -98,23 +97,24 @@ function CreateCosmosApp({ Component, pageProps }) {
             selectedIncentive: 0,
             walletName: null,
             walletType: null,
-            initialCompositeWallet: {
-              walletType: null,
-              walletName: null,
-              walletPrettyName: null,
-              status: WalletStatus.Disconnected,
-              message: null,
-              address: null,
-              chainId: null,
-              chainName: null,
-              username: null,
-              signer: null,
-              openWalletModal: null,
-              closeWalletModal: null,
-              connect: null,
-              disconnect: null,
-            },
+            // initialCompositeWallet: {
+            //   walletType: null,
+            //   walletName: null,
+            //   walletPrettyName: null,
+            //   status: WalletStatus.Disconnected,
+            //   message: null,
+            //   address: null,
+            //   chainId: null,
+            //   chainName: null,
+            //   username: null,
+            //   signer: null,
+            //   openWalletModal: null,
+            //   closeWalletModal: null,
+            //   connect: null,
+            //   disconnect: null,
+            // },
             stateLedgerTransport: null,
+            stateKeystoreJson: null,
             // compositeWallet: {
             //   walletType: null,
             //   walletName: null,

@@ -7,6 +7,7 @@ import { toastConfig } from "../../config";
 import {
   ConnectOptionObject,
   LEDGER_SCREENSAVER_ERROR_MSG,
+  WALLET_KEYSTORE_PASSWORD_ERROR,
   WALLET_LEDGERAPP_ERROR_MSG,
   WALLET_LOCKED_ERROR_MSG,
   WALLET_NOT_FOUND_ERROR_MSG,
@@ -248,6 +249,11 @@ export const WalletConnectComponent = ({
       ) {
         toast.error(WALLET_LEDGERAPP_ERROR_MSG, toastConfig);
         disconnect();
+      } else if (
+        walletMessage?.toString?.()?.includes?.("IncorrectKeystorePassword")
+      ) {
+        toast.error(WALLET_KEYSTORE_PASSWORD_ERROR, toastConfig);
+        // disconnect();
       } else {
         toast.error(WALLET_NOT_FOUND_ERROR_MSG, toastConfig);
         disconnect();

@@ -42,6 +42,9 @@ export const ALREADY_UNSTAKED_ERROR =
   "Token already unstaked. Withdraw Token manually";
 export const WRITE_CONTRACT_ERROR = "Error during writing config of contract";
 
+// Keystore related error
+export const KEYSTORE_JSON_INVALID = "Invalid Keystore JSON File";
+
 // Wallet related constants
 
 export const WALLET_NOT_FOUND_ERROR_MSG =
@@ -50,9 +53,9 @@ export const WALLET_LOCKED_ERROR_MSG = "Wallet Device is Locked";
 export const LEDGER_SCREENSAVER_ERROR_MSG = "Ledger’s screensaver mode is on";
 export const WALLET_LEDGERAPP_ERROR_MSG =
   "Refresh MantleWallet and load Cosmos App in Ledger Device";
-
 export const WALLET_DISCONNECT_ERROR_MSG =
   "Error during disconnect. Try refreshing the page";
+export const WALLET_KEYSTORE_PASSWORD_ERROR = "Incorrect Keystore Password";
 
 export const mantleWalletV1URL = "https://v1.wallet.assetmantle.one/";
 

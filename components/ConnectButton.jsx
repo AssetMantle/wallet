@@ -40,7 +40,7 @@ export const ConnectButton = ({ children }) => {
     }
   };
 
-  // console.log("compositeWallet: ", compositeWallet);
+  console.log("compositeWallet: ", compositeWallet);
 
   return (
     <WalletConnectComponent

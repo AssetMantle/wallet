@@ -1,23 +1,65 @@
 import Link from "next/link";
-import React, { useState } from "react";
-import { Button, Col, Modal, Row, Stack } from "react-bootstrap";
-import { defaultChainName, useCompositeWallet } from "../../config";
-import { ConnectOptionObject, mantleWalletV1URL } from "../../data";
+import React, { useRef, useState } from "react";
+import { Button, Form, Modal, Stack } from "react-bootstrap";
+import {
+  defaultChainName,
+  toastConfig,
+  useCompositeWallet,
+} from "../../config";
+import {
+  ConnectOptionObject,
+  KEYSTORE_JSON_INVALID,
+  mantleWalletV1URL,
+} from "../../data";
 import { cleanString } from "../../lib";
+import useSwr from "swr";
+import { toast } from "react-toastify";
 
 const ConnectModal = ({ setOpen, walletRepo }) => {
   const { connectCompositeWallet } = useCompositeWallet(defaultChainName);
+  const [setShowKeystoreModal, setSetShowKeystoreModal] = useState(false);
+  const [setShowKeystoreConfirmModal, setSetShowKeystoreConfirmModal] =
+    useState(false);
+  const { mutate: mutateStateKeystoreJson } = useSwr("stateKeystoreJson");
 
-  const [ShowKeystoreModal, setShowKeystoreModal] = useState(false);
-  const [KeystoreAdvanced, setKeystoreAdvanced] = useState(false);
-  const [KeystoreShowPassword, setKeystoreShowPassword] = useState(false);
-
-  const [KeystoreConfirmModal, setKeystoreConfirmModal] = useState(false);
+  const formControlFileRef = useRef(null);
+  const formControlPasswordRef = useRef(null);
 
   function handleCloseModal(e) {
     e.preventDefault();
     setOpen(false);
   }
+
+  const handleSubmitKeystore = async (e) => {
+    e.preventDefault();
+    setSetShowKeystoreModal(false);
+    const fileRaw = formControlFileRef.current.files[0];
+    try {
+      const fileReader = new FileReader();
+      let keystoreJson;
+      fileReader.readAsText(fileRaw, "UTF-8");
+      fileReader.onload = (event) => {
+        try {
+          console.log("event.target.result: ", event.target.result);
+          keystoreJson = JSON.parse(event.target.result);
+          const stateKeystoreJson = {
+            keystoreJson: keystoreJson,
+            keystorePassword: formControlPasswordRef.current.value,
+          };
+          console.log("stateKeystoreJson: ", stateKeystoreJson);
+
+          mutateStateKeystoreJson(stateKeystoreJson);
+          connectCompositeWallet("keystore", "keystore");
+        } catch (error) {
+          console.error("Error during Keystore FileReader: ", error);
+          toast.error(KEYSTORE_JSON_INVALID, toastConfig);
+        }
+      };
+    } catch (error) {
+      console.error("Error during Keystore FileReader2: ", error);
+      toast.error(KEYSTORE_JSON_INVALID, toastConfig);
+    }
+  };
 
   const customWallets = [
     {
@@ -58,7 +100,7 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
               >
                 <i className="bi bi-chevron-left text-primary" />
               </button>
-              Login With KeyStore
+              Keystore
             </h5>
             <button
               className="primary bg-transparent"
@@ -66,47 +108,6 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
             >
               <i className="bi bi-x-lg text-primary" />
             </button>
-          </Stack>
-          <Stack className="py-4" gap={3}>
-            <label htmlFor="keystore-file">KeyStore file</label>
-            <input
-              type="file"
-              name="keystore-file"
-              id="keystore-file"
-              required
-              accept=".json"
-              onChange={(e) => e.target.files[0]}
-            />
-            <label htmlFor="keystore-password">Password</label>
-            <Stack
-              className="p-3 border border-white py-2 rounded-2"
-              direction="horizontal"
-              gap={2}
-            >
-              <input
-                className="bg-transparent flex-grow-1 border border-0"
-                id="keystore-password"
-                name="keystore-password"
-                type={KeystoreShowPassword ? "text" : "password"}
-                // value={stakeState?.delegationAmount}
-                placeholder="Enter Password"
-                required
-              />
-              <button
-                className="text-primary"
-                onClick={() => setKeystoreShowPassword((el) => !el)}
-              >
-                <i
-                  className={`bi ${
-                    KeystoreShowPassword ? "bi-eye" : "by-eye-slash"
-                  }`}
-                />
-              </button>
-            </Stack>
-            <small>
-              <i className="bi bi-exclamation-triangle body2 color-am-error" />{" "}
-              Password decrypts your Private Key (KeyStore file).
-            </small>
           </Stack>
           <Stack
             direction="horizontal"
@@ -160,16 +161,23 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
             gap={2}
             direction="horizontal"
           >
-            <Button
-              variant="primary"
-              className="rounded-5 px-5 py-2 fw-medium"
-              onClick={() => {
-                setShowKeystoreModal(false);
-                setKeystoreConfirmModal(true);
-              }}
-            >
-              Next
-            </Button>
+            <Form onSubmit={handleSubmitKeystore}>
+              <Form.Group controlId="formFile" className="mb-3">
+                <Form.Label>Default file input example</Form.Label>
+                <Form.Control type="file" ref={formControlFileRef} />
+              </Form.Group>
+              <Form.Group controlId="formPassword" className="mb-3">
+                <Form.Label>Default file input example</Form.Label>
+                <Form.Control type="password" ref={formControlPasswordRef} />
+              </Form.Group>
+              <Button
+                variant="primary"
+                className="rounded-5 px-5 py-2 fw-medium"
+                type="submit"
+              >
+                Submit
+              </Button>
+            </Form>
           </Stack>
         </Stack>
       </Modal.Body>

@@ -7,15 +7,87 @@ import { fastRefreshInterval } from "./defaults";
 import { connectLedger } from "./ledgerApi";
 import { getChainIdFromChainName, getPrefixFromChainName } from "../lib";
 import { stringToPath } from "@cosmjs/crypto";
+import { Secp256k1HdWallet } from "@cosmjs/amino";
+import crypto from "crypto";
 
-/* WalletStatus = {
-  Connected: "Connected",
-  Connecting: "Connecting",
-  Disconnected: "Disconnected",
-  Error: "Error",
-  NotExist: "NotExist",
-  Rejected: "Rejected",
-}; */
+export const mnemonicWalletWithPassphrase = async (
+  mnemonic,
+  passphrase,
+  chainNameArg
+) => {
+  const chainPrefix = getPrefixFromChainName(chainNameArg);
+  const wallet = await Secp256k1HdWallet.fromMnemonic(mnemonic, {
+    prefix: chainPrefix,
+    bip39Password: passphrase,
+    hdPaths: [stringToPath("m/44'/118'/0'/0/0")],
+  });
+  const [firstAccount] = await wallet?.getAccounts?.();
+  return { keystoreWallet: wallet, keystoreAddress: firstAccount.address };
+};
+
+export const mnemonicTrim = (mnemonic) => {
+  let mnemonicList = mnemonic.replace(/\s/g, " ").split(/\s/g);
+  let mnemonicWords = [];
+  for (let word of mnemonicList) {
+    if (word === "") {
+      throw Error("Invalid Mnemonic generated");
+    } else {
+      let trimmedWord = word.replace(/\s/g, "");
+      mnemonicWords.push(trimmedWord);
+    }
+  }
+  mnemonicWords = mnemonicWords.join(" ");
+  return mnemonicWords;
+};
+
+export const mnemonicWallet = async (chainNameArg) => {
+  const prefix = getPrefixFromChainName(chainNameArg);
+  const wallet = await Secp256k1HdWallet.generate(24, {
+    prefix: prefix,
+    hdPaths: [stringToPath("m/44'/118'/0'/0/0")],
+  });
+  const [firstAccount] = await wallet.getAccounts();
+  return { keystoreWallet: wallet, keystoreAddress: firstAccount.address };
+};
+
+export const decryptStore = (fileData, password) => {
+  console.log(
+    "inside decryptStore, fileData: ",
+    fileData,
+    " password: ",
+    password
+  );
+  let hashpwd = fileData.hashpwd;
+  let iv = fileData.iv;
+  let salt = fileData.salt;
+  let crypted = fileData.crypted;
+
+  if (hashpwd === crypto.createHash("sha512").update(password).digest("hex")) {
+    let ivText = Buffer.from(iv, "hex");
+    let encryptedText = Buffer.from(crypted, "hex");
+
+    let decipher = crypto.createDecipheriv(
+      "aes-256-cbc",
+      Buffer.from(salt, "hex"),
+      ivText
+    );
+    let decrypted = decipher.update(encryptedText);
+    decrypted = Buffer.concat([decrypted, decipher.final()]);
+    return decrypted?.toString?.();
+  } else {
+    throw new Error("IncorrectKeystorePassword" + " " + password);
+  }
+};
+
+export const makeHdPath = (
+  accountNumber = "0",
+  addressIndex = "0",
+  coinType = "118"
+) => {
+  return stringToPath(
+    "m/44'/" + coinType + "'/" + accountNumber + "'/0/" + addressIndex
+  );
+};
 
 export const useCompositeWallet = (chainName) => {
   // get the cosmos kit wallet hook
@@ -33,19 +105,172 @@ export const useCompositeWallet = (chainName) => {
   } = useChain(chainName);
 
   // create the wallet name and type context hooks
-  const { data: initialCompositeWallet, mutate: mutateInitialCompositeWallet } =
-    useSwr("initialCompositeWallet");
+
   const { data: stateLedgerTransport, mutate: mutateStateLedgerTransport } =
     useSwr("stateLedgerTransport");
 
-  const makeHdPath = (
-    accountNumber = "0",
-    addressIndex = "0",
-    coinType = "118"
-  ) => {
-    return stringToPath(
-      "m/44'/" + coinType + "'/" + accountNumber + "'/0/" + addressIndex
+  const { data: stateKeystoreJson, mutate: mutateStateKeystoreJson } =
+    useSwr("stateKeystoreJson");
+
+  let ledgerTransport;
+
+  const disconnectCompositeWallet = async () => {
+    let disconnectedCompositeWallet = {
+      ...zeroCompositeWallet,
+    };
+
+    console.log(
+      "inside disconnectCompositeWallet: ",
+      " cosmosKitDisconnect?.(): ",
+      cosmosKitDisconnect,
+      "disconnectedCompositeWallet: ",
+      disconnectedCompositeWallet,
+      " initialCompositeWallet: ",
+      initialCompositeWallet
     );
+
+    switch (initialCompositeWallet?.walletType) {
+      case "cosmosKit":
+        console.log("inside cosmosKit switch case");
+        // connect to the cosmos kit wallet
+        cosmosKitDisconnect?.();
+        // mutate the composite wallet to init state
+        mutateInitialCompositeWallet(disconnectedCompositeWallet);
+        break;
+
+      case "ledger":
+        mutateStateLedgerTransport(null);
+        // mutate the composite wallet to init state
+        mutateInitialCompositeWallet(disconnectedCompositeWallet);
+        break;
+
+      case "keystore":
+        // mutate the composite wallet to init state
+        console.log("inside switch case keystore of disconnectcompositewallet");
+        mutateStateKeystoreJson(null);
+        mutateInitialCompositeWallet(disconnectedCompositeWallet);
+        break;
+
+      case "generateonly":
+        // mutate the composite wallet to init state
+        mutateInitialCompositeWallet(disconnectedCompositeWallet);
+        break;
+
+      default:
+        console.info("CompositeWallet already disconnected");
+        break;
+    }
+  };
+
+  // implement the composite connect function
+  const connectCompositeWallet = async (walletTypeArg, walletNameArg) => {
+    console.log(
+      "inside connectCompositeWallet, walletTypeArg: ",
+      walletTypeArg,
+      " walletNameArg: ",
+      walletNameArg
+    );
+
+    await disconnectCompositeWallet();
+    switch (walletTypeArg) {
+      case "cosmosKit":
+        try {
+          // connect to the cosmos kit wallet
+          walletRepo?.connect(walletNameArg);
+          // set the new composite wallet state after populating wallet properties
+          mutateInitialCompositeWallet({
+            ...initialCompositeWallet,
+            walletName: walletNameArg,
+            walletType: walletTypeArg,
+            status: WalletStatus.Connecting,
+          });
+        } catch (error) {
+          console.log(
+            "Error during connectCompositeWallet of cosmosKit: ",
+            error
+          );
+          mutateInitialCompositeWallet({
+            ...initialCompositeWallet,
+            walletName: walletNameArg,
+            walletType: walletTypeArg,
+            status: WalletStatus.Error,
+            message: error?.message,
+          });
+        }
+
+        break;
+
+      case "ledger":
+        const ledgerChainId = getChainIdFromChainName(chainName);
+        try {
+          // set the connecting state
+          mutateInitialCompositeWallet({
+            ...initialCompositeWallet,
+            status: WalletStatus?.Connecting,
+            walletName: walletNameArg,
+            walletType: walletTypeArg,
+          });
+
+          // connect to ledger transport and store it in state
+          ledgerTransport = await connectLedger();
+          mutateStateLedgerTransport(ledgerTransport);
+        } catch (error) {
+          console.error(
+            "Error during connectCompositeWallet of ledger: ",
+            error
+          );
+          if (
+            error?.message
+              ?.toString?.()
+              ?.includes?.("TransportOpenUserCancelled")
+          ) {
+            mutateInitialCompositeWallet({
+              ...initialCompositeWallet,
+              status: WalletStatus?.Rejected,
+              message: error?.message,
+              chainId: ledgerChainId,
+              chainName: chainName,
+              walletName: walletNameArg,
+              walletType: walletTypeArg,
+            });
+          } else {
+            mutateInitialCompositeWallet({
+              ...initialCompositeWallet,
+              status: WalletStatus?.Error,
+              message: error?.message,
+              chainId: ledgerChainId,
+              chainName: chainName,
+              walletName: walletNameArg,
+              walletType: walletTypeArg,
+            });
+          }
+        }
+
+        break;
+
+      case "keystore":
+        // update the rest of the wallet properties
+        console.log(
+          "inside keystore switch case of connectCompositeWallet stateKeystoreJson: ",
+          walletNameArg,
+          " initialCompositeWallet: ",
+          initialCompositeWallet
+        );
+        mutateInitialCompositeWallet({
+          ...initialCompositeWallet,
+          status: WalletStatus?.Connecting,
+          walletName: walletNameArg,
+          walletType: walletTypeArg,
+        });
+        break;
+
+      case "generateonly":
+        // update the rest of the wallet properties
+        break;
+
+      default:
+        break;
+    }
   };
 
   const zeroCompositeWallet = {
@@ -56,18 +281,25 @@ export const useCompositeWallet = (chainName) => {
     message: null,
     address: null,
     chainId: null,
-    chainName: null,
+    chainName: chainName,
     username: null,
     signer: null,
+    openWalletModal: cosmosKitOpenView,
+    closeWalletModal: cosmosKitCloseView,
+    connect: connectCompositeWallet,
+    disconnect: disconnectCompositeWallet,
   };
 
-  let ledgerTransport;
+  const { data: initialCompositeWallet, mutate: mutateInitialCompositeWallet } =
+    useSwr(`initialCompositeWallet${chainName}`, {
+      fallbackData: zeroCompositeWallet,
+    });
 
   const populateCompositeWalletWithLedger = async (
-    ledgerTransport,
     chainNameArg,
     walletNameArg,
-    walletTypeArg
+    walletTypeArg,
+    ledgerTransport
   ) => {
     console.log("inside populateCompositeWalletWithLedger");
     console.log("initialCompositeWallet: ", initialCompositeWallet);
@@ -141,6 +373,102 @@ export const useCompositeWallet = (chainName) => {
     }
   };
 
+  const populateCompositeWalletWithKeystore = async (
+    chainNameArg,
+    walletNameArg,
+    walletTypeArg,
+    stateKeystoreJsonArg
+  ) => {
+    console.log("inside populateCompositeWalletWithKeystore");
+    console.log(
+      "initialCompositeWallet: ",
+      initialCompositeWallet,
+      " stateKeystoreJsonArg: ",
+      stateKeystoreJsonArg
+    );
+    const keystoreChainId = getChainIdFromChainName(chainNameArg);
+
+    try {
+      // get signer object
+      if (!stateKeystoreJsonArg) throw Error("KeystoreSelectCancelled");
+      const keystoreMnemonicUntrimmed = decryptStore(
+        stateKeystoreJsonArg?.keystoreJson,
+        stateKeystoreJsonArg?.keystorePassword
+      );
+
+      const keystoreMnemonic = mnemonicTrim(keystoreMnemonicUntrimmed);
+      const { keystoreAddress, keystoreWallet } =
+        await mnemonicWalletWithPassphrase(keystoreMnemonic, "", chainNameArg);
+      const keystoreMessage = "Keystore Connected";
+
+      console.log("keystoreWallet: ", keystoreWallet);
+
+      // set the connected state parameters
+      return {
+        ...initialCompositeWallet,
+        status: WalletStatus?.Connected,
+        message: keystoreMessage,
+        address: keystoreAddress,
+        chainId: keystoreChainId,
+        chainName: chainNameArg,
+        username: "Keystore",
+        signer: keystoreWallet,
+        walletPrettyName: "Keystore",
+        walletName: walletNameArg,
+        walletType: walletTypeArg,
+      };
+    } catch (error) {
+      console.error(
+        "Error during PopulateCompositeWalletWithKeystore: ",
+        error?.message,
+        " initialCompositeWallet: ",
+        initialCompositeWallet
+      );
+
+      if (
+        error?.message?.toString?.()?.includes?.("IncorrectKeystorePassword")
+      ) {
+        /*    mutateInitialCompositeWallet({
+          ...initialCompositeWallet,
+          status: WalletStatus?.Rejected,
+          message: error?.message,
+          chainId: keystoreChainId,
+          chainName: chainNameArg,
+          walletName: walletNameArg,
+          walletType: walletTypeArg,
+        }); */
+        return {
+          ...initialCompositeWallet,
+          status: WalletStatus?.Rejected,
+          message: error?.message,
+          chainId: keystoreChainId,
+          chainName: chainNameArg,
+          walletName: walletNameArg,
+          walletType: walletTypeArg,
+        };
+      } else {
+        /* mutateInitialCompositeWallet({
+          ...initialCompositeWallet,
+          status: WalletStatus?.Error,
+          message: error?.message,
+          chainId: keystoreChainId,
+          chainName: chainNameArg,
+          walletName: walletNameArg,
+          walletType: walletTypeArg,
+        }); */
+        return {
+          ...initialCompositeWallet,
+          status: WalletStatus?.Error,
+          message: error?.message,
+          chainId: keystoreChainId,
+          chainName: chainNameArg,
+          walletName: walletNameArg,
+          walletType: walletTypeArg,
+        };
+      }
+    }
+  };
+
   const populateCompositeWalletWithCosmosKit = async (
     chainNameArg,
     walletNameArg,
@@ -203,175 +531,6 @@ export const useCompositeWallet = (chainName) => {
     }
   };
 
-  const disconnectCompositeWallet = async () => {
-    let disconnectedCompositeWallet = {
-      ...initialCompositeWallet,
-      ...zeroCompositeWallet,
-    };
-
-    console.log(
-      "inside disconnectCompositeWallet: ",
-      " cosmosKitDisconnect?.(): ",
-      cosmosKitDisconnect,
-      "disconnectedCompositeWallet: ",
-      disconnectedCompositeWallet,
-      " initialCompositeWallet: ",
-      initialCompositeWallet
-    );
-
-    switch (initialCompositeWallet?.walletType) {
-      case "cosmosKit":
-        console.log("inside cosmosKit switch case");
-        // connect to the cosmos kit wallet
-        cosmosKitDisconnect?.();
-        // mutate the composite wallet to init state
-        mutateInitialCompositeWallet(disconnectedCompositeWallet);
-        break;
-
-      case "ledger":
-        mutateStateLedgerTransport(null);
-        // mutate the composite wallet to init state
-        mutateInitialCompositeWallet(disconnectedCompositeWallet);
-        break;
-
-      case "keystore":
-        // mutate the composite wallet to init state
-        mutateInitialCompositeWallet(disconnectedCompositeWallet);
-        break;
-
-      case "generateonly":
-        // mutate the composite wallet to init state
-        mutateInitialCompositeWallet(disconnectedCompositeWallet);
-        break;
-
-      default:
-        console.info("CompositeWallet already disconnected");
-        break;
-    }
-  };
-
-  // implement the composite connect function
-  const connectCompositeWallet = async (walletTypeArg, walletNameArg) => {
-    console.log(
-      "inside connectCompositeWallet, walletTypeArg: ",
-      walletTypeArg,
-      " walletNameArg: ",
-      walletNameArg
-    );
-
-    let newCompositeWalletObject = {};
-
-    await disconnectCompositeWallet();
-    switch (walletTypeArg) {
-      case "cosmosKit":
-        try {
-          // connect to the cosmos kit wallet
-          walletRepo?.connect(walletNameArg);
-          // set the new composite wallet state after populating wallet properties
-          /* newCompositeWalletObject = await populateCompositeWalletWithCosmosKit(
-            chainName,
-            walletNameArg,
-            walletTypeArg
-          ); */
-          mutateInitialCompositeWallet({
-            ...initialCompositeWallet,
-            walletName: walletNameArg,
-            walletType: walletTypeArg,
-            status: WalletStatus.Connected,
-          });
-          /* mutateInitialCompositeWallet({
-            ...initialCompositeWallet,
-            ...newCompositeWalletObject,
-          }); */
-        } catch (error) {
-          console.log(
-            "Error during connectCompositeWallet of cosmosKit: ",
-            error
-          );
-          mutateInitialCompositeWallet({
-            ...initialCompositeWallet,
-            walletName: walletNameArg,
-            walletType: walletTypeArg,
-            status: WalletStatus.Error,
-            message: error?.message,
-          });
-        }
-
-        break;
-
-      case "ledger":
-        const ledgerChainId = getChainIdFromChainName(chainName);
-        try {
-          // set the connecting state
-          mutateInitialCompositeWallet({
-            ...initialCompositeWallet,
-            status: WalletStatus?.Connecting,
-            walletName: walletNameArg,
-            walletType: walletTypeArg,
-          });
-
-          // connect to ledger transport and store it in state
-          ledgerTransport = await connectLedger();
-          mutateStateLedgerTransport(ledgerTransport);
-
-          // set the new composite wallet state after populating wallet properties
-          newCompositeWalletObject = await populateCompositeWalletWithLedger(
-            ledgerTransport,
-            chainName,
-            walletNameArg,
-            walletTypeArg
-          );
-          mutateInitialCompositeWallet({
-            ...initialCompositeWallet,
-            ...newCompositeWalletObject,
-          });
-        } catch (error) {
-          console.error(
-            "Error during connectCompositeWallet of ledger: ",
-            error
-          );
-          if (
-            error?.message
-              ?.toString?.()
-              ?.includes?.("TransportOpenUserCancelled")
-          ) {
-            mutateInitialCompositeWallet({
-              ...initialCompositeWallet,
-              status: WalletStatus?.Rejected,
-              message: error?.message,
-              chainId: ledgerChainId,
-              chainName: chainName,
-              walletName: walletNameArg,
-              walletType: walletTypeArg,
-            });
-          } else {
-            mutateInitialCompositeWallet({
-              ...initialCompositeWallet,
-              status: WalletStatus?.Error,
-              message: error?.message,
-              chainId: ledgerChainId,
-              chainName: chainName,
-              walletName: walletNameArg,
-              walletType: walletTypeArg,
-            });
-          }
-        }
-
-        break;
-
-      case "keystore":
-        // update the rest of the wallet properties
-        break;
-
-      case "generateonly":
-        // update the rest of the wallet properties
-        break;
-
-      default:
-        break;
-    }
-  };
-
   // get walletRepo for connect function of cosmos kit
   const { getWalletRepo } = useManager();
   const walletRepo = getWalletRepo(chainName);
@@ -382,141 +541,148 @@ export const useCompositeWallet = (chainName) => {
     if (cosmosKitStatus == WalletStatus.Connected) {
       cosmosKitDisconnect?.();
     }
-    mutateInitialCompositeWallet({
-      ...initialCompositeWallet,
+    /* mutateInitialCompositeWallet({
+      ...zeroCompositeWallet,
       openWalletModal: cosmosKitOpenView,
       closeWalletModal: cosmosKitCloseView,
       connect: connectCompositeWallet,
       disconnect: disconnectCompositeWallet,
-    });
+    }); */
   }, []);
 
   const fetchCompositeWallet = async ([
     url,
     chainNameArg,
-    walletTypeArg,
-    walletNameArg,
+    // walletTypeArg,
+    // walletNameArg,
+    walletStatusArg,
+    stateLedgerTransportArg,
+    stateKeystoreJsonArg,
   ]) => {
-    /* console.log(
-      "inside fetchCompositeWallet, walletTypeArg: ",
-      walletTypeArg,
-      " walletNameArg: ",
-      walletNameArg,
-      " chainNameArg: ",
-      chainNameArg,
-      " url: ",
-      url,
-      " initialCompositeWallet: ",
+    console.log(
+      "inside fetchCompositeWallet initialCompositeWallet",
       initialCompositeWallet
-    ); */
+    );
+    let newCompositeWalletObject = { ...initialCompositeWallet };
+    let walletTypeArg = initialCompositeWallet?.walletType;
+    let walletNameArg = initialCompositeWallet?.walletName;
+    // let walletStatusArg = initialCompositeWallet?.status;
 
-    /* let compositeWalletObject = {
-      ...initialCompositeWallet,
-      walletType: walletTypeArg,
-      walletName: walletNameArg,
-      chainName: chainNameArg,
-    }; */
-    let newCompositeWalletObject = {};
-
-    switch (walletTypeArg) {
-      case "cosmosKit":
-        try {
-          // collect the wallet parameters from cosmos kit
-          newCompositeWalletObject = await populateCompositeWalletWithCosmosKit(
-            chainNameArg,
-            walletNameArg,
-            walletTypeArg,
-            cosmosKitWallet,
-            cosmosKitStatus,
-            cosmosKitMessage,
-            cosmosKitAddress,
-            cosmosKitChain,
-            cosmosKitUsername
-          );
-          compositeWalletObject = {
-            ...compositeWalletObject,
-            ...newCompositeWalletObject,
-          };
-        } catch (error) {
-          console.error(`swr fetcher : url: ${url},  error: ${error}`);
-          throw error;
-        }
-        break;
-
-      case "ledger":
-        if (initialCompositeWallet?.status == WalletStatus.Disconnected)
-          return initialCompositeWallet;
-        console.log("inside ledger switch case");
-        try {
-          // collect the wallet parameters from cosmos kit
-          if (
-            stateLedgerTransport &&
-            compositeWalletObject?.status == WalletStatus.Connected &&
-            chainNameArg !== initialCompositeWallet?.chainName
-          ) {
-            // execute the populate function
-            newCompositeWalletObject = await populateCompositeWalletWithLedger(
-              stateLedgerTransport,
+    if (
+      walletStatusArg == WalletStatus.Connected ||
+      walletStatusArg == WalletStatus.Connecting
+    ) {
+      switch (walletTypeArg) {
+        case "cosmosKit":
+          try {
+            // collect the wallet parameters from cosmos kit
+            newCompositeWalletObject = populateCompositeWalletWithCosmosKit(
               chainNameArg,
               walletNameArg,
-              walletTypeArg
+              walletTypeArg,
+              cosmosKitWallet,
+              cosmosKitStatus,
+              cosmosKitMessage,
+              cosmosKitAddress,
+              cosmosKitChain,
+              cosmosKitUsername
             );
-
-            compositeWalletObject = {
-              ...compositeWalletObject,
-              ...newCompositeWalletObject,
-            };
+          } catch (error) {
+            console.error(`swr fetcher : url: ${url},  error: ${error}`);
+            throw error;
           }
-        } catch (error) {
-          console.error(`swr fetcher : url: ${url},  error: ${error}`);
-          throw error;
-        }
+          break;
 
-        break;
+        case "ledger":
+          console.log("inside ledger switch case");
+          try {
+            // collect the wallet parameters from cosmos kit
+            if (
+              stateLedgerTransport &&
+              walletStatusArg == WalletStatus.Connecting
+            ) {
+              // execute the populate function
+              newCompositeWalletObject =
+                await populateCompositeWalletWithLedger(
+                  chainNameArg,
+                  walletNameArg,
+                  walletTypeArg,
+                  stateLedgerTransportArg
+                );
+            }
+          } catch (error) {
+            console.error(`swr fetcher : url: ${url},  error: ${error}`);
+            throw error;
+          }
 
-      case "keystore":
-        console.log("inside keystore switch case");
-        // collect the wallet parameters from cosmos kit
-        compositeWalletObject.walletPrettyName = cosmosKitWallet?.prettyName;
-        compositeWalletObject.status = cosmosKitStatus;
-        compositeWalletObject.message = cosmosKitMessage;
-        compositeWalletObject.address = cosmosKitAddress;
-        compositeWalletObject.chainId = cosmosKitChain?.chain_id;
-        compositeWalletObject.chainName = chainNameArg;
-        compositeWalletObject.username = cosmosKitUsername;
-        compositeWalletObject.signer = await cosmosKitGetOfflineSignerDirect();
+          break;
 
-        break;
+        case "keystore":
+          console.log("inside keystore switch case of fetchCompositeWallet");
+          try {
+            // connect to keystore and store it in state
+            newCompositeWalletObject =
+              await populateCompositeWalletWithKeystore(
+                chainNameArg,
+                walletNameArg,
+                walletTypeArg,
+                stateKeystoreJsonArg
+              );
+          } catch (error) {
+            console.error(`swr fetcher : url: ${url},  error: ${error}`);
+            throw error;
+          }
 
-      case "generateonly":
-        console.log("inside cosmosKit switch case");
-        // collect the wallet parameters from cosmos kit
-        compositeWalletObject.walletPrettyName = cosmosKitWallet?.prettyName;
-        compositeWalletObject.status = cosmosKitStatus;
-        compositeWalletObject.message = cosmosKitMessage;
-        compositeWalletObject.address = cosmosKitAddress;
-        compositeWalletObject.chainId = cosmosKitChain?.chain_id;
-        compositeWalletObject.chainName = chainNameArg;
-        compositeWalletObject.username = cosmosKitUsername;
-        compositeWalletObject.signer = await cosmosKitGetOfflineSignerDirect();
+          break;
 
-        break;
+        case "generateonly":
+          console.log("inside cosmosKit switch case");
+          // collect the wallet parameters from cosmos kit
 
-      default:
-        true;
+          break;
+
+        default:
+          true;
+      }
+      // update initialCompositeWallet
+      if (
+        !(
+          initialCompositeWallet?.address ==
+            newCompositeWalletObject?.address &&
+          initialCompositeWallet?.chainId ==
+            newCompositeWalletObject?.chainId &&
+          initialCompositeWallet?.username ==
+            newCompositeWalletObject?.username &&
+          initialCompositeWallet?.status == newCompositeWalletObject?.status
+        )
+      ) {
+        mutateInitialCompositeWallet(newCompositeWalletObject);
+      }
+    } else {
+      newCompositeWalletObject = { ...initialCompositeWallet };
     }
 
-    return compositeWalletObject;
+    console.log(
+      "newCompositeWalletObject inside fetch: ",
+      newCompositeWalletObject
+    );
+
+    return newCompositeWalletObject;
   };
 
   // implement useSwr for cached and revalidation enabled wallet data
-  const { data: compositeWalletObject } = useSwr(
-    !!chainName && initialCompositeWallet?.status == WalletStatus.Connected
-      ? [
+  const { data: finalCompositeWalletObject } = useSwr(
+    !!chainName
+      ? // &&  (initialCompositeWallet?.status == WalletStatus.Connecting ||
+        //     initialCompositeWallet?.status == WalletStatus.Disconnected)
+        [
           `compositeWallet`,
           chainName,
-          initialCompositeWallet?.walletType,
-          initialCompositeWallet?.walletName,
+          // initialCompositeWallet?.walletType,
+          // initialCompositeWallet?.walletName,
+          initialCompositeWallet?.status,
+          stateLedgerTransport,
+          stateKeystoreJson,
         ]
       : null,
     fetchCompositeWallet,
@@ -526,16 +692,15 @@ export const useCompositeWallet = (chainName) => {
     }
   );
 
-  /* console.log({
-    cosmosKitAddress,
-    cosmosKitChain,
-    cosmosKitMessage,
-    cosmosKitStatus,
-    cosmosKitUsername,
-  }); */
+  console.log(
+    "stateLedgerTransport: ",
+    stateLedgerTransport,
+    " initialCompositeWallet: ",
+    initialCompositeWallet
+  );
 
   return {
-    compositeWallet: compositeWalletObject,
+    compositeWallet: finalCompositeWalletObject,
     connectCompositeWallet: connectCompositeWallet,
     disconnectCompositeWallet: disconnectCompositeWallet,
   };
