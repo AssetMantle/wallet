@@ -1,65 +1,23 @@
 import Link from "next/link";
-import React, { useRef, useState } from "react";
-import { Button, Form, Modal, Stack } from "react-bootstrap";
-import {
-  defaultChainName,
-  toastConfig,
-  useCompositeWallet,
-} from "../../config";
-import {
-  ConnectOptionObject,
-  KEYSTORE_JSON_INVALID,
-  mantleWalletV1URL,
-} from "../../data";
+import React, { useState } from "react";
+import { Button, Stack } from "react-bootstrap";
+import { defaultChainName, useCompositeWallet } from "../../config";
+import { ConnectOptionObject, mantleWalletV1URL } from "../../data";
 import { cleanString } from "../../lib";
-import useSwr from "swr";
-import { toast } from "react-toastify";
+import KeyStoreModal from "./KeyStoreModal";
+import GenerateOnlyModal from "./GenerateOnlyModal";
 
 const ConnectModal = ({ setOpen, walletRepo }) => {
   const { connectCompositeWallet } = useCompositeWallet(defaultChainName);
-  const [setShowKeystoreModal, setSetShowKeystoreModal] = useState(false);
-  const [setShowKeystoreConfirmModal, setSetShowKeystoreConfirmModal] =
-    useState(false);
-  const { mutate: mutateStateKeystoreJson } = useSwr("stateKeystoreJson");
 
-  const formControlFileRef = useRef(null);
-  const formControlPasswordRef = useRef(null);
+  const [ShowKeystoreModal, setShowKeystoreModal] = useState(false);
+
+  const [ShowGenerateOnlyModal, setShowGenerateOnlyModal] = useState(false);
 
   function handleCloseModal(e) {
     e.preventDefault();
     setOpen(false);
   }
-
-  const handleSubmitKeystore = async (e) => {
-    e.preventDefault();
-    setSetShowKeystoreModal(false);
-    const fileRaw = formControlFileRef.current.files[0];
-    try {
-      const fileReader = new FileReader();
-      let keystoreJson;
-      fileReader.readAsText(fileRaw, "UTF-8");
-      fileReader.onload = (event) => {
-        try {
-          console.log("event.target.result: ", event.target.result);
-          keystoreJson = JSON.parse(event.target.result);
-          const stateKeystoreJson = {
-            keystoreJson: keystoreJson,
-            keystorePassword: formControlPasswordRef.current.value,
-          };
-          console.log("stateKeystoreJson: ", stateKeystoreJson);
-
-          mutateStateKeystoreJson(stateKeystoreJson);
-          connectCompositeWallet("keystore", "keystore");
-        } catch (error) {
-          console.error("Error during Keystore FileReader: ", error);
-          toast.error(KEYSTORE_JSON_INVALID, toastConfig);
-        }
-      };
-    } catch (error) {
-      console.error("Error during Keystore FileReader2: ", error);
-      toast.error(KEYSTORE_JSON_INVALID, toastConfig);
-    }
-  };
 
   const customWallets = [
     {
@@ -78,132 +36,6 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
       walletType: "generateonly",
     },
   ];
-
-  const keystoreModalJSX = (
-    <Modal
-      show={setShowKeystoreModal}
-      onHide={() => setSetShowKeystoreModal(false)}
-      centered
-      size="md"
-      aria-labelledby="delegation-modal"
-      scrollable
-    >
-      <Modal.Body className="p-0">
-        <Stack className="m-auto p-4 rounded-3 w-100">
-          <Stack
-            className="align-items-center justify-content-between"
-            direction="horizontal"
-          >
-            <h5 className="body2 text-primary d-flex align-items-center gap-2 m-0">
-              <button
-                className="primary bg-transparent"
-                onClick={() => setSetShowKeystoreModal(false)}
-              >
-                <i className="bi bi-chevron-left text-primary" />
-              </button>
-              Keystore
-            </h5>
-            <button
-              className="primary bg-transparent"
-              onClick={() => setSetShowKeystoreModal(false)}
-            >
-              <i className="bi bi-x-lg text-primary" />
-            </button>
-          </Stack>
-          <Stack
-            className="align-items-center justify-content-end"
-            gap={2}
-            direction="horizontal"
-          >
-            <Form onSubmit={handleSubmitKeystore}>
-              <Form.Group controlId="formFile" className="mb-3">
-                <Form.Label>Default file input example</Form.Label>
-                <Form.Control type="file" ref={formControlFileRef} />
-              </Form.Group>
-              <Form.Group controlId="formPassword" className="mb-3">
-                <Form.Label>Default file input example</Form.Label>
-                <Form.Control type="password" ref={formControlPasswordRef} />
-              </Form.Group>
-              <Button
-                variant="primary"
-                className="rounded-5 px-5 py-2 fw-medium"
-                type="submit"
-              >
-                Submit
-              </Button>
-            </Form>
-          </Stack>
-        </Stack>
-      </Modal.Body>
-    </Modal>
-  );
-
-  const keystoreConfirmModalJSX = (
-    <Modal
-      show={setShowKeystoreConfirmModal}
-      onHide={() => setSetShowKeystoreConfirmModal(false)}
-      centered
-      size="md"
-      aria-labelledby="delegation-modal"
-      scrollable
-    >
-      <Modal.Body className="p-0">
-        <Stack className="m-auto p-4 rounded-3 w-100">
-          <Stack
-            className="align-items-center justify-content-between"
-            direction="horizontal"
-          >
-            <h5 className="body2 text-primary d-flex align-items-center gap-2 m-0">
-              <button
-                className="primary bg-transparent"
-                onClick={() => setSetShowKeystoreConfirmModal(false)}
-              >
-                <i className="bi bi-chevron-left text-primary" />
-              </button>
-              Delegate
-            </h5>
-            <button
-              className="primary bg-transparent"
-              onClick={() => setSetShowKeystoreConfirmModal(false)}
-            >
-              <i className="bi bi-x-lg text-primary" />
-            </button>
-          </Stack>
-          <Stack className="py-4 text-center">
-            <div>
-              <Stack
-                className="p-3 border border-white py-2 rounded-2"
-                direction="horizontal"
-                gap={2}
-              >
-                <input
-                  className="bg-transparent flex-grow-1 border border-0"
-                  id="delegationAmount"
-                  type="text"
-                  // value={stakeState?.delegationAmount}
-                  placeholder="Enter Delegation Amount"
-                />
-                <button className="text-primary">Max</button>
-              </Stack>
-            </div>
-          </Stack>
-          <Stack
-            className="align-items-center justify-content-end"
-            gap={2}
-            direction="horizontal"
-          >
-            <Button
-              variant="primary"
-              className="rounded-5 px-5 py-2 fw-medium"
-              // onClick={}
-            >
-              Submit
-            </Button>
-          </Stack>
-        </Stack>
-      </Modal.Body>
-    </Modal>
-  );
 
   return (
     <>
@@ -332,7 +164,7 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
                     data-bs-dismiss="modal"
                     aria-label="Close"
                     onClick={async () => {
-                      setSetShowKeystoreModal(true);
+                      setShowKeystoreModal(true);
                     }}
                   >
                     <div
@@ -366,11 +198,7 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
                     data-bs-dismiss="modal"
                     aria-label="Close"
                     onClick={async () => {
-                      await connectCompositeWallet?.(
-                        customWallets?.[2]?.walletType,
-                        customWallets?.[2]?.walletName
-                      );
-                      setOpen(false);
+                      await setShowGenerateOnlyModal(true);
                     }}
                   >
                     <div
@@ -402,9 +230,7 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
               </Stack>
 
               <Stack className="mt-5" gap={3}>
-                <h2 className="caption text-white m-0">
-                  Go to Old Wallet for Keystore
-                </h2>
+                <h2 className="caption text-white m-0">Go to Old Wallet</h2>
                 <Stack className="flex-wrap" direction="horizontal" gap={3}>
                   <Link href={mantleWalletV1URL}>
                     <a>
@@ -432,8 +258,17 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
           </div>
         </div>
       </div>
-      {keystoreModalJSX}
-      {keystoreConfirmModalJSX}
+
+      {/* Keystore Modal */}
+      <KeyStoreModal
+        ShowKeystoreModal={ShowKeystoreModal}
+        setShowKeystoreModal={setShowKeystoreModal}
+      />
+
+      <GenerateOnlyModal
+        ShowGenerateOnlyModal={ShowGenerateOnlyModal}
+        setShowGenerateOnlyModal={setShowGenerateOnlyModal}
+      />
     </>
   );
 };
