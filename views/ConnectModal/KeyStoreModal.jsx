@@ -1,17 +1,59 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Button, Col, Form, Modal, Row, Stack } from "react-bootstrap";
+import {
+  defaultChainName,
+  toastConfig,
+  useCompositeWallet,
+} from "../../config";
+import { KEYSTORE_JSON_INVALID } from "../../data";
+import useSwr from "swr";
+import { toast } from "react-toastify";
 
 export default function KeyStoreModal({
   ShowKeystoreModal,
   setShowKeystoreModal,
-  handleSubmitKeystore,
-  formControlFileRef,
-  formControlPasswordRef,
 }) {
+  const { connectCompositeWallet, compositeWallet } =
+    useCompositeWallet(defaultChainName);
   const [KeystoreAdvanced, setKeystoreAdvanced] = useState(false);
 
   const [KeystoreConfirmModal, setKeystoreConfirmModal] = useState(false);
 
+  const { mutate: mutateStateKeystoreJson } = useSwr("stateKeystoreJson");
+  const formControlFileRef = useRef(null);
+  const formControlPasswordRef = useRef(null);
+
+  const handleSubmitKeystore = async (e) => {
+    e.preventDefault();
+    setShowKeystoreModal(false);
+    const fileRaw = formControlFileRef.current.files[0];
+    try {
+      const fileReader = new FileReader();
+      let keystoreJson;
+      fileReader.readAsText(fileRaw, "UTF-8");
+      fileReader.onload = (event) => {
+        try {
+          keystoreJson = JSON.parse(event.target.result);
+          const stateKeystoreJson = {
+            keystoreJson: keystoreJson,
+            keystorePassword: formControlPasswordRef.current.value,
+          };
+
+          mutateStateKeystoreJson(stateKeystoreJson);
+          connectCompositeWallet("keystore", "keystore");
+          // setKeystoreConfirmModal(true);
+        } catch (error) {
+          console.error("Error during Keystore FileReader: ", error);
+          toast.error(KEYSTORE_JSON_INVALID, toastConfig);
+        }
+      };
+    } catch (error) {
+      console.error("Error during Keystore FileReader2: ", error);
+      toast.error(KEYSTORE_JSON_INVALID, toastConfig);
+    }
+  };
+
+  console.log("stateKeystoreJson: ", compositeWallet);
   return (
     <>
       <Modal
@@ -188,13 +230,19 @@ export default function KeyStoreModal({
                 <Col xs={4} className="fw-medium caption text-end">
                   Wallet path:
                 </Col>
-                <Col xs={8} className="caption"></Col>
+                <Col xs={8} className="caption">
+                  {compositeWallet?.status === "Connected" &&
+                    compositeWallet?.hdPath}
+                </Col>
               </Row>
               <Row>
                 <Col xs={4} className="fw-medium caption text-end">
                   Address:
                 </Col>
-                <Col xs={8} className="caption"></Col>
+                <Col xs={8} className="caption">
+                  {compositeWallet?.status === "Connected" &&
+                    compositeWallet?.address}
+                </Col>
               </Row>
             </Stack>
             <Stack
