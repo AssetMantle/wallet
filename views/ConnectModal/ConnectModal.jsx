@@ -230,9 +230,7 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
               </Stack>
 
               <Stack className="mt-5" gap={3}>
-                <h2 className="caption text-white m-0">
-                  Go to Old Wallet for Keystore
-                </h2>
+                <h2 className="caption text-white m-0">Go to Old Wallet</h2>
                 <Stack className="flex-wrap" direction="horizontal" gap={3}>
                   <Link href={mantleWalletV1URL}>
                     <a>
