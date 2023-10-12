@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React, { useRef, useState } from "react";
-import { Button, Form, Modal, Stack } from "react-bootstrap";
+import { Button, Stack } from "react-bootstrap";
 import {
   defaultChainName,
   toastConfig,
@@ -14,12 +14,15 @@ import {
 import { cleanString } from "../../lib";
 import useSwr from "swr";
 import { toast } from "react-toastify";
+import KeyStoreModal from "./KeyStoreModal";
+import GenerateOnlyModal from "./GenerateOnlyModal";
 
 const ConnectModal = ({ setOpen, walletRepo }) => {
   const { connectCompositeWallet } = useCompositeWallet(defaultChainName);
-  const [setShowKeystoreModal, setSetShowKeystoreModal] = useState(false);
-  const [setShowKeystoreConfirmModal, setSetShowKeystoreConfirmModal] =
-    useState(false);
+  const [ShowKeystoreModal, setShowKeystoreModal] = useState(false);
+
+  const [ShowGenerateOnlyModal, setShowGenerateOnlyModal] = useState(false);
+
   const { mutate: mutateStateKeystoreJson } = useSwr("stateKeystoreJson");
 
   const formControlFileRef = useRef(null);
@@ -32,7 +35,7 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
 
   const handleSubmitKeystore = async (e) => {
     e.preventDefault();
-    setSetShowKeystoreModal(false);
+    setShowKeystoreModal(false);
     const fileRaw = formControlFileRef.current.files[0];
     try {
       const fileReader = new FileReader();
@@ -78,177 +81,6 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
       walletType: "generateonly",
     },
   ];
-
-  const keystoreModalJSX = (
-    <Modal
-      show={ShowKeystoreModal}
-      onHide={() => setShowKeystoreModal(false)}
-      centered
-      size="md"
-      aria-labelledby="keystore-modal"
-    >
-      <Modal.Body className="p-0">
-        <Stack className="m-auto p-4 rounded-3 w-100">
-          <Stack
-            className="align-items-center justify-content-between"
-            direction="horizontal"
-          >
-            <h5 className="body2 text-primary d-flex align-items-center gap-2 m-0">
-              <button
-                className="primary bg-transparent"
-                onClick={() => setShowKeystoreModal(false)}
-              >
-                <i className="bi bi-chevron-left text-primary" />
-              </button>
-              Keystore
-            </h5>
-            <button
-              className="primary bg-transparent"
-              onClick={() => setShowKeystoreModal(false)}
-            >
-              <i className="bi bi-x-lg text-primary" />
-            </button>
-          </Stack>
-          <Stack
-            direction="horizontal"
-            className="align-items-center justify-content-between"
-            role="button"
-            onClick={() => setKeystoreAdvanced((el) => !el)}
-          >
-            <p className="fw-medium caption">Advanced</p>
-            <span
-              className="transitionAll d-flex align-items-center justify-content-center"
-              style={{
-                transform: KeystoreAdvanced ? "rotate(180deg)" : "rotate(0deg)",
-                transformOrigin: "center",
-              }}
-            >
-              <i className="bi bi-chevron-down" />
-            </span>
-          </Stack>
-          {KeystoreAdvanced && (
-            <Stack gap={3}>
-              <label htmlFor="accountNumber">Account Number</label>
-              <input
-                type="text"
-                name="accountNumber"
-                id="accountNumber"
-                placeholder="Account Number"
-                className="bg-transparent p-3 py-2 rounded-2 border border-secondary w-100 color-am-gray-100s"
-                onChange={(e) => !isNaN(e.target.value) && e.target.value}
-              />
-              <label htmlFor="accountIndex">Account Index</label>
-              <input
-                type="text"
-                name="accountIndex"
-                id="accountIndex"
-                placeholder="Account Index"
-                className="bg-transparent p-3 py-2 rounded-2 border border-secondary w-100 color-am-gray-100s"
-                onChange={(e) => !isNaN(e.target.value) && e.target.value}
-              />
-              <label htmlFor="accountBip32">bip39Passphrase</label>
-              <input
-                type="password"
-                name="accountBip32"
-                id="accountBip32"
-                placeholder="Enter bip39Passphrase (Optional)"
-                className="bg-transparent p-3 py-2 rounded-2 border border-secondary w-100 color-am-gray-100s"
-              />
-            </Stack>
-          )}
-          <Stack
-            className="align-items-center justify-content-end mt-3"
-            gap={2}
-            direction="horizontal"
-          >
-            <Form onSubmit={handleSubmitKeystore}>
-              <Form.Group controlId="formFile" className="mb-3">
-                <Form.Label>Default file input example</Form.Label>
-                <Form.Control type="file" ref={formControlFileRef} />
-              </Form.Group>
-              <Form.Group controlId="formPassword" className="mb-3">
-                <Form.Label>Default file input example</Form.Label>
-                <Form.Control type="password" ref={formControlPasswordRef} />
-              </Form.Group>
-              <Button
-                variant="primary"
-                className="rounded-5 px-5 py-2 fw-medium"
-                type="submit"
-              >
-                Submit
-              </Button>
-            </Form>
-          </Stack>
-        </Stack>
-      </Modal.Body>
-    </Modal>
-  );
-
-  const keystoreConfirmModalJSX = (
-    <Modal
-      show={KeystoreConfirmModal}
-      onHide={() => setKeystoreConfirmModal(false)}
-      centered
-      size="md"
-      aria-labelledby="delegation-modal"
-      scrollable
-    >
-      <Modal.Body className="p-0">
-        <Stack className="m-auto p-4 rounded-3 w-100">
-          <Stack
-            className="align-items-center justify-content-between"
-            direction="horizontal"
-          >
-            <h5 className="body2 text-primary d-flex align-items-center gap-2 m-0">
-              <button
-                className="primary bg-transparent"
-                onClick={() => {
-                  setShowKeystoreModal(true);
-                  setKeystoreConfirmModal(false);
-                }}
-              >
-                <i className="bi bi-chevron-left text-primary" />
-              </button>
-              Login With KeyStore
-            </h5>
-            <button
-              className="primary bg-transparent"
-              onClick={() => setKeystoreConfirmModal(false)}
-            >
-              <i className="bi bi-x-lg text-primary" />
-            </button>
-          </Stack>
-          <Stack className="py-4" gap={3}>
-            <Row>
-              <Col xs={4} className="fw-medium caption text-end">
-                Wallet path:
-              </Col>
-              <Col xs={8} className="caption"></Col>
-            </Row>
-            <Row>
-              <Col xs={4} className="fw-medium caption text-end">
-                Address:
-              </Col>
-              <Col xs={8} className="caption"></Col>
-            </Row>
-          </Stack>
-          <Stack
-            className="align-items-center justify-content-end "
-            gap={2}
-            direction="horizontal"
-          >
-            <Button
-              variant="primary"
-              className="rounded-5 px-5 py-2 fw-medium"
-              // onClick={}
-            >
-              Login
-            </Button>
-          </Stack>
-        </Stack>
-      </Modal.Body>
-    </Modal>
-  );
 
   return (
     <>
@@ -411,11 +243,7 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
                     data-bs-dismiss="modal"
                     aria-label="Close"
                     onClick={async () => {
-                      await connectCompositeWallet?.(
-                        customWallets?.[2]?.walletType,
-                        customWallets?.[2]?.walletName
-                      );
-                      setOpen(false);
+                      await setShowGenerateOnlyModal(true);
                     }}
                   >
                     <div
@@ -477,8 +305,20 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
           </div>
         </div>
       </div>
-      {keystoreModalJSX}
-      {keystoreConfirmModalJSX}
+
+      {/* Keystore Modal */}
+      <KeyStoreModal
+        ShowKeystoreModal={ShowKeystoreModal}
+        setShowKeystoreModal={setShowKeystoreModal}
+        handleSubmitKeystore={handleSubmitKeystore}
+        formControlFileRef={formControlFileRef}
+        formControlPasswordRef={formControlPasswordRef}
+      />
+
+      <GenerateOnlyModal
+        ShowGenerateOnlyModal={ShowGenerateOnlyModal}
+        setShowGenerateOnlyModal={setShowGenerateOnlyModal}
+      />
     </>
   );
 };
