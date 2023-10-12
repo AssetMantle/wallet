@@ -39,6 +39,7 @@ import "../config/styles/index.scss";
 import { ethereumClient, wagmiClient, walletConnectProjectID } from "../data";
 import { getSigningGravityClientOptions } from "../modules";
 import ConnectModal from "../views/ConnectModal/ConnectModal";
+import GenerateOnlyMsgModal from "../views/ConnectModal/GenerateOnlyMsgModal";
 
 function CreateCosmosApp({ Component, pageProps }) {
   // useEffect for bootstrap js hydration
@@ -97,38 +98,9 @@ function CreateCosmosApp({ Component, pageProps }) {
             selectedIncentive: 0,
             walletName: null,
             walletType: null,
-            // initialCompositeWallet: {
-            //   walletType: null,
-            //   walletName: null,
-            //   walletPrettyName: null,
-            //   status: WalletStatus.Disconnected,
-            //   message: null,
-            //   address: null,
-            //   chainId: null,
-            //   chainName: null,
-            //   username: null,
-            //   signer: null,
-            //   openWalletModal: null,
-            //   closeWalletModal: null,
-            //   connect: null,
-            //   disconnect: null,
-            // },
             stateLedgerTransport: null,
             stateKeystoreJson: null,
-            // compositeWallet: {
-            //   walletType: null,
-            //   walletName: null,
-            //   walletPrettyName: null,
-            //   status: null,
-            //   message: null,
-            //   address: null,
-            //   chain: null,
-            //   wallet: null,
-            //   username: null,
-            //   getOfflineSignerDirect: null,
-            //   openWalletModal: null,
-            //   disconnect: null,
-            // },
+            generateOnlyModal: { show: false, value: null },
           },
         }}
       >
@@ -174,6 +146,7 @@ function CreateCosmosApp({ Component, pageProps }) {
           <WagmiConfig client={wagmiClient}>
             <Layout>
               <Component {...pageProps} />
+              <GenerateOnlyMsgModal />
               <Web3Modal
                 projectId={walletConnectProjectID}
                 themeColor="orange"

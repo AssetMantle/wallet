@@ -1,16 +1,17 @@
 import React from "react";
-import { Button, Modal, Stack } from "react-bootstrap";
+import { Button, Form, Modal, Stack } from "react-bootstrap";
 import useSwr from "swr";
 
-export default function GenerateOnlyModal({
-  ShowGenerateOnlyModal,
-  setShowGenerateOnlyModal,
-}) {
-  const { mutate: mutateGenerateOnlyMsgModal } = useSwr("generateOnlyModal");
+export default function GenerateOnlyMsgModal() {
+  const {
+    data: { show: showModal, value: valueModal },
+    mutate: mutateModal,
+  } = useSwr("generateOnlyModal");
+  let msgDigestString = JSON.stringify(valueModal);
   return (
     <Modal
-      show={ShowGenerateOnlyModal}
-      onHide={() => setShowGenerateOnlyModal(false)}
+      show={showModal}
+      onHide={() => mutateModal({ show: false, value: null })}
       centered
       size="md"
       aria-labelledby="GenerateOnly-modal"
@@ -24,36 +25,28 @@ export default function GenerateOnlyModal({
             <h5 className="body2 text-primary d-flex align-items-center gap-2 m-0">
               <button
                 className="primary bg-transparent"
-                onClick={() => setShowGenerateOnlyModal(false)}
+                onClick={() => mutateModal({ show: false, value: null })}
               >
                 <i className="bi bi-chevron-left text-primary" />
               </button>
-              Generate Only Mode
+              Generate Only Mode Transaction
             </h5>
             <button
               className="primary bg-transparent"
-              onClick={() => setShowGenerateOnlyModal(false)}
+              onClick={() => mutateModal({ show: false, value: null })}
             >
               <i className="bi bi-x-lg text-primary" />
             </button>
           </Stack>
-          <Stack className="py-4" gap={1}>
-            <label htmlFor="GenerateOnly-address">Address</label>
-            <Stack
-              className="p-3 border border-white py-2 rounded-2"
-              direction="horizontal"
-              gap={2}
-            >
-              <input
-                className="bg-transparent flex-grow-1 border border-0"
-                id="GenerateOnly-address"
-                name="GenerateOnly-address"
-                type="text"
-                // value={e=>}
-                placeholder="Enter Address"
-                required
-              />
-            </Stack>
+          <Stack
+            className="p-3 border border-white py-2 rounded-2"
+            direction="horizontal"
+            gap={2}
+          >
+            <Form.Group className="mb-3" controlId="GenerateOnlyTextArea">
+              <Form.Label>Transaction Message</Form.Label>
+              <Form.Control as="textarea" rows={13} value={msgDigestString} />
+            </Form.Group>
           </Stack>
           <Stack gap={2} className="my-2">
             <a
@@ -73,11 +66,10 @@ export default function GenerateOnlyModal({
               variant="primary"
               className="rounded-5 px-5 py-2 fw-medium"
               onClick={() => {
-                setShowGenerateOnlyModal(false);
-                mutateGenerateOnlyMsgModal({ show: true, value: "some value" });
+                mutateModal({ show: false, value: null });
               }}
             >
-              OK
+              Close
             </Button>
           </Stack>
         </Stack>
