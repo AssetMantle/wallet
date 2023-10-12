@@ -121,6 +121,9 @@ input {
     }
     &::after {
       transform: translateX(-50%) translateY(20px) scaleX(1);
+      @media (max-width: 1200px) {
+        transform: translateX(-50%) translateY(10px) scaleX(1);
+      }
     }
   }
   &.active {
@@ -130,6 +133,9 @@ input {
     }
     &::after {
       transform: translateX(-50%) translateY(20px) scaleX(1);
+      @media (max-width: 1200px) {
+        transform: translateX(-50%) translateY(10px) scaleX(1);
+      }
     }
   }
 }
