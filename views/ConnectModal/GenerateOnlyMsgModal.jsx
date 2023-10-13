@@ -1,6 +1,8 @@
 import React from "react";
 import { Button, Form, Modal, Stack } from "react-bootstrap";
+import { toast } from "react-toastify";
 import useSwr from "swr";
+import { toastConfig } from "../../config";
 
 export default function GenerateOnlyMsgModal() {
   const {
@@ -31,21 +33,36 @@ export default function GenerateOnlyMsgModal() {
               </button>
               Generate Only Mode Transaction
             </h5>
-            <button
-              className="primary bg-transparent"
-              onClick={() => mutateModal({ show: false, value: null })}
-            >
-              <i className="bi bi-x-lg text-primary" />
-            </button>
+            <Stack direction="horizontal">
+              <button
+                className="primary bg-transparent"
+                onClick={() => {
+                  navigator.clipboard.writeText(msgDigestString);
+                  toast.info("Address Copied to clipboard", toastConfig);
+                }}
+              >
+                <i className="bi bi-files text-primary" />
+              </button>
+              <button
+                className="primary bg-transparent"
+                onClick={() => mutateModal({ show: false, value: null })}
+              >
+                <i className="bi bi-x-lg text-primary" />
+              </button>
+            </Stack>
           </Stack>
-          <Stack
-            className="p-3 border border-white py-2 rounded-2"
-            direction="horizontal"
-            gap={2}
-          >
-            <Form.Group className="mb-3" controlId="GenerateOnlyTextArea">
+          <Stack className="mt-3 py-2 rounded-2" direction="horizontal" gap={2}>
+            <Form.Group
+              className="mb-3 border-0 w-100"
+              controlId="GenerateOnlyTextArea"
+            >
               <Form.Label>Transaction Message</Form.Label>
-              <Form.Control as="textarea" rows={13} value={msgDigestString} />
+              <Form.Control
+                as="textarea"
+                className="w-100"
+                rows={13}
+                value={msgDigestString}
+              />
             </Form.Group>
           </Stack>
           <Stack gap={2} className="my-2">
@@ -53,7 +70,7 @@ export default function GenerateOnlyMsgModal() {
               href=""
               className="text-decoration-none caption2 text-primary fw-normal"
             >
-              what is Generate Only mode? &#8599;
+              What is Generate Only mode? &#8599;
             </a>
           </Stack>
 
