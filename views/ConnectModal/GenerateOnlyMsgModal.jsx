@@ -80,6 +80,13 @@ export default function GenerateOnlyMsgModal() {
             direction="horizontal"
           >
             <Button
+              variant="outline-primary"
+              className="rounded-5 px-5 py-2 fw-medium"
+              onClick={() => {}}
+            >
+              Download
+            </Button>
+            <Button
               variant="primary"
               className="rounded-5 px-5 py-2 fw-medium"
               onClick={() => {
