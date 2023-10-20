@@ -74,7 +74,7 @@ export default function GenerateOnlyModal({
               className="rounded-5 px-5 py-2 fw-medium"
               onClick={() => {
                 setShowGenerateOnlyModal(false);
-                mutateGenerateOnlyMsgModal({ show: true, value: "some value" });
+                // mutateGenerateOnlyMsgModal({ show: true, value: "some value" });
               }}
             >
               OK

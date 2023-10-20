@@ -22,10 +22,19 @@ export default function KeyStoreModal({
   const { mutate: mutateStateKeystoreJson } = useSwr("stateKeystoreJson");
   const formControlFileRef = useRef(null);
   const formControlPasswordRef = useRef(null);
+  const formControlAccountNumRef = useRef(null);
+  const formControlAccountIndexRef = useRef(null);
+  const formControlPassphraseRef = useRef(null);
+  let stateKeystoreJson = {};
+
+  const handleCloseKeystoreModal = () => {
+    // setKeystoreAdvanced(false);
+    setShowKeystoreModal(false);
+  };
 
   const handleSubmitKeystore = async (e) => {
+    console.log("inside handleSubmitKeystore");
     e.preventDefault();
-    setShowKeystoreModal(false);
     const fileRaw = formControlFileRef.current.files[0];
     try {
       const fileReader = new FileReader();
@@ -34,14 +43,16 @@ export default function KeyStoreModal({
       fileReader.onload = (event) => {
         try {
           keystoreJson = JSON.parse(event.target.result);
-          const stateKeystoreJson = {
+          stateKeystoreJson = {
             keystoreJson: keystoreJson,
-            keystorePassword: formControlPasswordRef.current.value,
+            keystorePassword: formControlPasswordRef?.current?.value,
+            accountNumber: formControlAccountNumRef?.current?.value,
+            addressIndex: formControlAccountIndexRef?.current?.value,
+            passphrase: formControlPassphraseRef?.current?.value,
           };
 
           mutateStateKeystoreJson(stateKeystoreJson);
           connectCompositeWallet("keystore", "keystore");
-          // setKeystoreConfirmModal(true);
         } catch (error) {
           console.error("Error during Keystore FileReader: ", error);
           toast.error(KEYSTORE_JSON_INVALID, toastConfig);
@@ -51,14 +62,15 @@ export default function KeyStoreModal({
       console.error("Error during Keystore FileReader2: ", error);
       toast.error(KEYSTORE_JSON_INVALID, toastConfig);
     }
+    handleCloseKeystoreModal();
   };
 
-  console.log("stateKeystoreJson: ", compositeWallet);
+  // console.log("stateKeystoreJson: ", stateKeystoreJson);
   return (
     <>
       <Modal
         show={ShowKeystoreModal}
-        onHide={() => setShowKeystoreModal(false)}
+        onHide={handleCloseKeystoreModal}
         centered
         size="md"
         aria-labelledby="keystore-modal"
@@ -72,7 +84,7 @@ export default function KeyStoreModal({
               <h5 className="body2 text-primary d-flex align-items-center gap-2 m-0">
                 <button
                   className="primary bg-transparent"
-                  onClick={() => setShowKeystoreModal(false)}
+                  onClick={handleCloseKeystoreModal}
                 >
                   <i className="bi bi-chevron-left text-primary" />
                 </button>
@@ -80,7 +92,7 @@ export default function KeyStoreModal({
               </h5>
               <button
                 className="primary bg-transparent"
-                onClick={() => setShowKeystoreModal(false)}
+                onClick={handleCloseKeystoreModal}
               >
                 <i className="bi bi-x-lg text-primary" />
               </button>
@@ -135,32 +147,49 @@ export default function KeyStoreModal({
                 </Stack>
                 {KeystoreAdvanced && (
                   <Stack gap={1} className="pb-2">
-                    <label htmlFor="accountNumber">Account Number</label>
-                    <input
-                      type="text"
-                      name="accountNumber"
-                      id="accountNumber"
-                      placeholder="Account Number"
-                      className="bg-transparent p-3 py-2 rounded-2 border border-secondary w-100 color-am-gray-100 mb-2"
-                      onChange={(e) => !isNaN(e.target.value) && e.target.value}
-                    />
-                    <label htmlFor="accountIndex">Account Index</label>
-                    <input
-                      type="text"
-                      name="accountIndex"
-                      id="accountIndex"
-                      placeholder="Account Index"
-                      className="bg-transparent p-3 py-2 rounded-2 border border-secondary w-100 color-am-gray-100 mb-2"
-                      onChange={(e) => !isNaN(e.target.value) && e.target.value}
-                    />
-                    <label htmlFor="accountBip32">bip39Passphrase</label>
-                    <input
-                      type="password"
-                      name="accountBip32"
-                      id="accountBip32"
-                      placeholder="Enter bip39Passphrase (Optional)"
-                      className="bg-transparent p-3 py-2 rounded-2 border border-secondary w-100 color-am-gray-100s"
-                    />
+                    <Form.Group controlId="formAccountNumber" className="mb-3">
+                      <Form.Label htmlFor="accountNumber">
+                        Account Number
+                      </Form.Label>
+                      <Form.Control
+                        ref={formControlAccountNumRef}
+                        type="number"
+                        name="accountNumber"
+                        id="accountNumber"
+                        placeholder="Account Number"
+                        min={0}
+                        max={2147483647}
+                      />
+                    </Form.Group>
+                    <Form.Group controlId="formAccountIndex" className="mb-3">
+                      <Form.Label htmlFor="accountIndex">
+                        Address Index
+                      </Form.Label>
+                      <Form.Control
+                        ref={formControlAccountIndexRef}
+                        type="number"
+                        name="accountIndex"
+                        id="accountIndex"
+                        placeholder="Address Index"
+                        min={0}
+                        max={2147483647}
+                      />
+                    </Form.Group>
+                    <Form.Group
+                      controlId="formBip39Passphrase"
+                      className="mb-3"
+                    >
+                      <Form.Label htmlFor="bip39Passphrase">
+                        BIP39 Passphrase
+                      </Form.Label>
+                      <Form.Control
+                        ref={formControlPassphraseRef}
+                        type="password"
+                        name="bip39Passphrase"
+                        id="bip39Passphrase"
+                        placeholder="Enter bip39Passphrase (Optional)"
+                      />
+                    </Form.Group>
                   </Stack>
                 )}
                 <Stack gap={2} className="my-2">

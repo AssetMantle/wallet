@@ -1,25 +1,54 @@
+import { Secp256k1HdWallet } from "@cosmjs/amino";
+import { stringToPath } from "@cosmjs/crypto";
 import { LedgerSigner } from "@cosmjs/ledger-amino";
 import { WalletStatus } from "@cosmos-kit/core";
 import { useChain, useManager } from "@cosmos-kit/react";
+import crypto from "crypto";
 import { useEffect } from "react";
 import useSwr from "swr";
+import { getChainIdFromChainName, getPrefixFromChainName } from "../lib";
 import { fastRefreshInterval } from "./defaults";
 import { connectLedger } from "./ledgerApi";
-import { getChainIdFromChainName, getPrefixFromChainName } from "../lib";
-import { stringToPath } from "@cosmjs/crypto";
-import { Secp256k1HdWallet } from "@cosmjs/amino";
-import crypto from "crypto";
+
+export const makeHdPath = (
+  accountNumber = "0",
+  addressIndex = "0",
+  coinType = "118"
+) => {
+  const hdString = stringToPath(
+    "m/44'/" + coinType + "'/" + accountNumber + "'/0/" + addressIndex
+  );
+  console.log("hdString: ", hdString);
+
+  return hdString;
+};
 
 export const mnemonicWalletWithPassphrase = async (
+  chainNameArg,
   mnemonic,
   passphrase,
-  chainNameArg
+  accountNumber = "0",
+  addressIndex = "0"
 ) => {
+  console.log(
+    "accountNumber: ",
+    accountNumber,
+    " addressIndex: ",
+    addressIndex,
+    " chainNameArg: ",
+    chainNameArg
+  );
+
+  const accountNumberArg = accountNumber?.length > 0 ? accountNumber : "0";
+  const addressIndexArg = addressIndex?.length > 0 ? addressIndex : "0";
+
   const chainPrefix = getPrefixFromChainName(chainNameArg);
+  const hdPath = makeHdPath(accountNumberArg, addressIndexArg);
+  console.log("hdPath: ", hdPath, " addressIndexArg: ", addressIndexArg);
   const wallet = await Secp256k1HdWallet.fromMnemonic(mnemonic, {
     prefix: chainPrefix,
     bip39Password: passphrase,
-    hdPaths: [stringToPath("m/44'/118'/0'/0/0")],
+    hdPaths: [hdPath],
   });
   const [firstAccount] = await wallet?.getAccounts?.();
   return { keystoreWallet: wallet, keystoreAddress: firstAccount.address };
@@ -77,16 +106,6 @@ export const decryptStore = (fileData, password) => {
   } else {
     throw new Error("IncorrectKeystorePassword" + " " + password);
   }
-};
-
-export const makeHdPath = (
-  accountNumber = "0",
-  addressIndex = "0",
-  coinType = "118"
-) => {
-  return stringToPath(
-    "m/44'/" + coinType + "'/" + accountNumber + "'/0/" + addressIndex
-  );
 };
 
 export const useCompositeWallet = (chainName) => {
@@ -172,6 +191,7 @@ export const useCompositeWallet = (chainName) => {
     );
 
     await disconnectCompositeWallet();
+
     switch (walletTypeArg) {
       case "cosmosKit":
         try {
@@ -251,7 +271,7 @@ export const useCompositeWallet = (chainName) => {
       case "keystore":
         // update the rest of the wallet properties
         console.log(
-          "inside keystore switch case of connectCompositeWallet stateKeystoreJson: ",
+          "inside keystore switch case of connectCompositeWallet walletNameArg: ",
           walletNameArg,
           " initialCompositeWallet: ",
           initialCompositeWallet
@@ -396,12 +416,26 @@ export const useCompositeWallet = (chainName) => {
         stateKeystoreJsonArg?.keystorePassword
       );
 
+      // trim the mnemonic of any random leading or trailing spaces
       const keystoreMnemonic = mnemonicTrim(keystoreMnemonicUntrimmed);
+      console.log("keystoreMnemonic: ", keystoreMnemonic);
+
       const { keystoreAddress, keystoreWallet } =
-        await mnemonicWalletWithPassphrase(keystoreMnemonic, "", chainNameArg);
+        await mnemonicWalletWithPassphrase(
+          chainNameArg,
+          keystoreMnemonic,
+          stateKeystoreJsonArg?.passphrase,
+          stateKeystoreJsonArg?.accountNumber,
+          stateKeystoreJsonArg?.addressIndex
+        );
       const keystoreMessage = "Keystore Connected";
 
-      console.log("keystoreWallet: ", keystoreWallet);
+      console.log(
+        "keystoreWallet: ",
+        keystoreWallet,
+        " keystoreAddress: ",
+        keystoreAddress
+      );
 
       // set the connected state parameters
       return {
@@ -541,20 +575,11 @@ export const useCompositeWallet = (chainName) => {
     if (cosmosKitStatus == WalletStatus.Connected) {
       cosmosKitDisconnect?.();
     }
-    /* mutateInitialCompositeWallet({
-      ...zeroCompositeWallet,
-      openWalletModal: cosmosKitOpenView,
-      closeWalletModal: cosmosKitCloseView,
-      connect: connectCompositeWallet,
-      disconnect: disconnectCompositeWallet,
-    }); */
   }, []);
 
   const fetchCompositeWallet = async ([
     url,
     chainNameArg,
-    // walletTypeArg,
-    // walletNameArg,
     walletStatusArg,
     stateLedgerTransportArg,
     stateKeystoreJsonArg,
@@ -566,7 +591,6 @@ export const useCompositeWallet = (chainName) => {
     let newCompositeWalletObject = { ...initialCompositeWallet };
     let walletTypeArg = initialCompositeWallet?.walletType;
     let walletNameArg = initialCompositeWallet?.walletName;
-    // let walletStatusArg = initialCompositeWallet?.status;
 
     if (
       walletStatusArg == WalletStatus.Connected ||
@@ -678,8 +702,6 @@ export const useCompositeWallet = (chainName) => {
         [
           `compositeWallet`,
           chainName,
-          // initialCompositeWallet?.walletType,
-          // initialCompositeWallet?.walletName,
           initialCompositeWallet?.status,
           stateLedgerTransport,
           stateKeystoreJson,
@@ -692,12 +714,12 @@ export const useCompositeWallet = (chainName) => {
     }
   );
 
-  console.log(
+  /* console.log(
     "stateLedgerTransport: ",
     stateLedgerTransport,
     " initialCompositeWallet: ",
     initialCompositeWallet
-  );
+  ); */
 
   return {
     compositeWallet: finalCompositeWalletObject,
