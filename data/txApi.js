@@ -37,6 +37,7 @@ export const sendTokensTxn = async (
   memo = "",
   compositeWallet
 ) => {
+  let response;
   try {
     const chainDenom = defaultChainDenom;
     // get the amount in denom terms
@@ -45,17 +46,6 @@ export const sendTokensTxn = async (
       compositeWallet?.chainName,
       chainDenom
     );
-
-    // initialize stargate client using signer and create txn
-    let signer = compositeWallet?.signer;
-    const stargateClient = await getSigningCosmosClient({
-      rpcEndpoint: defaultChainRPCProxy,
-      signer: signer,
-    });
-
-    if (!stargateClient || !fromAddress) {
-      throw new Error("stargateClient or from address undefined");
-    }
 
     // create a message template from the composer
     const { send } = cosmos.bank.v1beta1.MessageComposer.withTypeUrl;
@@ -69,6 +59,21 @@ export const sendTokensTxn = async (
         },
       ],
     });
+
+    if (compositeWallet.walletType == "generateOnly") {
+      return { response: msg, error: null };
+    }
+
+    // initialize stargate client using signer and create txn
+    let signer = compositeWallet?.signer;
+    const stargateClient = await getSigningCosmosClient({
+      rpcEndpoint: defaultChainRPCProxy,
+      signer: signer,
+    });
+
+    if (!stargateClient || !fromAddress) {
+      throw new Error("stargateClient or from address undefined");
+    }
 
     // populate the fee data
     const fee = {
@@ -84,7 +89,7 @@ export const sendTokensTxn = async (
     console.log("msg: ", msg, " amount: ", amountInDenom);
 
     // use the stargate client to dispatch the transaction
-    const response = await stargateClient.signAndBroadcast(
+    response = await stargateClient.signAndBroadcast(
       fromAddress,
       [msg],
       fee,

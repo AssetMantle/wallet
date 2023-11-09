@@ -131,6 +131,9 @@ export const useCompositeWallet = (chainName) => {
   const { data: stateKeystoreJson, mutate: mutateStateKeystoreJson } =
     useSwr("stateKeystoreJson");
 
+  const { data: stateGenerateOnly, mutate: mutateStateGenerateOnly } =
+    useSwr("stateGenerateOnly");
+
   let ledgerTransport;
 
   const disconnectCompositeWallet = async () => {
@@ -170,8 +173,11 @@ export const useCompositeWallet = (chainName) => {
         mutateInitialCompositeWallet(disconnectedCompositeWallet);
         break;
 
-      case "generateonly":
-        // mutate the composite wallet to init state
+      case "generateOnly":
+        console.log(
+          "inside switch case generateOnly of disconnectcompositewallet"
+        );
+        mutateStateGenerateOnly(null);
         mutateInitialCompositeWallet(disconnectedCompositeWallet);
         break;
 
@@ -276,6 +282,7 @@ export const useCompositeWallet = (chainName) => {
           " initialCompositeWallet: ",
           initialCompositeWallet
         );
+        // set to connecting mode
         mutateInitialCompositeWallet({
           ...initialCompositeWallet,
           status: WalletStatus?.Connecting,
@@ -284,8 +291,22 @@ export const useCompositeWallet = (chainName) => {
         });
         break;
 
-      case "generateonly":
+      case "generateOnly":
         // update the rest of the wallet properties
+        console.log(
+          "inside generateOnly switch case of connectCompositeWallet walletNameArg: ",
+          walletNameArg,
+          " initialCompositeWallet: ",
+          initialCompositeWallet
+        );
+
+        // set to connecting mode
+        mutateInitialCompositeWallet({
+          ...initialCompositeWallet,
+          status: WalletStatus?.Connecting,
+          walletName: walletNameArg,
+          walletType: walletTypeArg,
+        });
         break;
 
       default:
@@ -503,6 +524,61 @@ export const useCompositeWallet = (chainName) => {
     }
   };
 
+  const populateCompositeWalletWithGenerate = async (
+    chainNameArg,
+    walletNameArg,
+    walletTypeArg,
+    stateGenerateOnlyArg
+  ) => {
+    console.log("inside populateCompositeWalletWithGenerate");
+    console.log(
+      "initialCompositeWallet: ",
+      initialCompositeWallet,
+      " stateGenerateOnlyArg: ",
+      stateGenerateOnlyArg
+    );
+    const generateOnlyChainId = getChainIdFromChainName(chainNameArg);
+
+    try {
+      // get signer object
+      if (!stateGenerateOnlyArg) throw Error("GenerateSelectCancelled");
+
+      // trim the mnemonic of any random leading or trailing spaces
+      const generateOnlyMessage = "Generate Only Connected";
+
+      // set the connected state parameters
+      return {
+        ...initialCompositeWallet,
+        status: WalletStatus?.Connected,
+        message: generateOnlyMessage,
+        address: stateGenerateOnlyArg,
+        chainId: generateOnlyChainId,
+        chainName: chainNameArg,
+        username: "Generate Only",
+        walletPrettyName: "Generate Only",
+        walletName: walletNameArg,
+        walletType: walletTypeArg,
+      };
+    } catch (error) {
+      console.error(
+        "Error during populateCompositeWalletWithGenerate: ",
+        error?.message,
+        " initialCompositeWallet: ",
+        initialCompositeWallet
+      );
+
+      return {
+        ...initialCompositeWallet,
+        status: WalletStatus?.Error,
+        message: error?.message,
+        chainId: generateOnlyChainId,
+        chainName: chainNameArg,
+        walletName: walletNameArg,
+        walletType: walletTypeArg,
+      };
+    }
+  };
+
   const populateCompositeWalletWithCosmosKit = async (
     chainNameArg,
     walletNameArg,
@@ -583,11 +659,12 @@ export const useCompositeWallet = (chainName) => {
     walletStatusArg,
     stateLedgerTransportArg,
     stateKeystoreJsonArg,
+    stateGenerateOnly,
   ]) => {
-    console.log(
+    /* console.log(
       "inside fetchCompositeWallet initialCompositeWallet",
       initialCompositeWallet
-    );
+    ); */
     let newCompositeWalletObject = { ...initialCompositeWallet };
     let walletTypeArg = initialCompositeWallet?.walletType;
     let walletNameArg = initialCompositeWallet?.walletName;
@@ -659,9 +736,24 @@ export const useCompositeWallet = (chainName) => {
 
           break;
 
-        case "generateonly":
-          console.log("inside cosmosKit switch case");
-          // collect the wallet parameters from cosmos kit
+        case "generateOnly":
+          console.log(
+            "inside generateOnly switch case of fetchCompositeWallet"
+          );
+          // set the address for generate only
+          try {
+            // connect to keystore and store it in state
+            newCompositeWalletObject =
+              await populateCompositeWalletWithGenerate(
+                chainNameArg,
+                walletNameArg,
+                walletTypeArg,
+                stateGenerateOnly
+              );
+          } catch (error) {
+            console.error(`swr fetcher : url: ${url},  error: ${error}`);
+            throw error;
+          }
 
           break;
 
@@ -705,6 +797,7 @@ export const useCompositeWallet = (chainName) => {
           initialCompositeWallet?.status,
           stateLedgerTransport,
           stateKeystoreJson,
+          stateGenerateOnly,
         ]
       : null,
     fetchCompositeWallet,

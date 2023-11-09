@@ -100,6 +100,7 @@ function CreateCosmosApp({ Component, pageProps }) {
             walletType: null,
             stateLedgerTransport: null,
             stateKeystoreJson: null,
+            stateGenerateOnly: null,
             generateOnlyModal: { show: false, value: null },
           },
         }}

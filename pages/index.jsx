@@ -36,16 +36,19 @@ import {
   Stack,
   Tooltip,
 } from "react-bootstrap";
+import useSwr from "swr";
 
 export default function Transact() {
   // HOOKS
   const [advanced, setAdvanced] = useState(false);
   const { availableBalance } = useAvailableBalance();
-  // const chainContext = useChain(defaultChainName);
-  // const { address, status, getOfflineSigner } = chainContext;
   const router = useRouter();
   const { toAddress, toAmount } = router.query;
   const { compositeWallet } = useCompositeWallet(defaultChainName);
+  const {
+    data: { show: showModal, value: valueModal },
+    mutate: mutateModal,
+  } = useSwr("generateOnlyModal");
   const { status, address } = compositeWallet;
 
   useEffect(() => {
@@ -384,24 +387,28 @@ export default function Transact() {
       !isInvalidAddress(formState?.recipientAddress);
 
     if (isFormValid) {
-      const id = toast.loading("Transaction initiated ...", toastConfig);
-
-      const { response, error } = await sendTokensTxn(
-        address,
-        localRecipientAddress,
-        localTransferAmount,
-        localMemo,
-        compositeWallet
-      );
-      formDispatch({ type: "RESET" });
-
-      // reset the form values
-      // console.log("response: ", response, " error: ", error);
-      error && console.error(" error: ", error);
-      if (response) {
+      if (compositeWallet?.walletType !== "generateOnly") {
+        const id = toast.loading("Transaction initiated ...", toastConfig);
+        const { response, error } = await sendTokensTxn(
+          address,
+          localRecipientAddress,
+          localTransferAmount,
+          localMemo,
+          compositeWallet
+        );
+        formDispatch({ type: "RESET" });
+        error && console.error(" error: ", error);
         notify(response?.transactionHash, id);
       } else {
-        notify(null, id);
+        const { response } = await sendTokensTxn(
+          address,
+          localRecipientAddress,
+          localTransferAmount,
+          localMemo,
+          compositeWallet
+        );
+        formDispatch({ type: "RESET" });
+        mutateModal({ show: true, value: response });
       }
     }
   };

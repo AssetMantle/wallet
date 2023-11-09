@@ -192,7 +192,7 @@ export default function KeyStoreModal({
                     </Form.Group>
                   </Stack>
                 )}
-                <Stack gap={2} className="my-2">
+                {/*  <Stack gap={2} className="my-2">
                   <a
                     href=""
                     className="text-decoration-none caption2 text-primary fw-normal"
@@ -205,7 +205,7 @@ export default function KeyStoreModal({
                   >
                     Generate keystore from existing wallet &#8599;
                   </a>
-                </Stack>
+                </Stack> */}
                 <Stack>
                   <Button
                     variant="primary"

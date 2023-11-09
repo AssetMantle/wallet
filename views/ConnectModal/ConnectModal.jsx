@@ -15,7 +15,7 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
   const [ShowGenerateOnlyModal, setShowGenerateOnlyModal] = useState(false);
 
   function handleCloseModal(e) {
-    e.preventDefault();
+    // e.preventDefault();
     setOpen(false);
   }
 
