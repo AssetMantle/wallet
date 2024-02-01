@@ -532,7 +532,7 @@ const GravityToEthBridge = () => {
         <select
           name="gasFeeSelect"
           id="gasFeeSelect"
-          defaultValue="fast"
+          defaultValue="instant"
           className="am-select caption2"
           onChange={(e) => setGasFee(e.target.value)}
         >
