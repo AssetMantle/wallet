@@ -109,6 +109,11 @@ export const ConnectOptionObject = {
     name: "Frontier",
     installUrl: "https://www.frontier.xyz/browser-extension",
   },
+  leapcosmosmetamask: {
+    icon: "/metamask.png",
+    name: "MetaMask",
+    installUrl: "https://metamask.io/download/",
+  },
 };
 
 export const staticTradeData = [
