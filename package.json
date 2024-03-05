@@ -37,7 +37,7 @@
     "@cosmos-kit/cosmostation": "^0.14.28",
     "@cosmos-kit/keplr": "^0.32.28",
     "@cosmos-kit/leap": "^0.13.28",
-    "@cosmos-kit/leap-metamask-cosmos-snap": "^0.6.1",
+    "@cosmos-kit/leap-metamask-cosmos-snap": "^0.6.2",
     "@cosmos-kit/react": "^1.0.14",
     "@cosmos-kit/vectis": "^0.14.28",
     "@emotion/react": "11.10.5",
