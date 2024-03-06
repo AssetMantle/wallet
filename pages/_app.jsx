@@ -3,6 +3,7 @@ import { wallets as leapWallets } from "@cosmos-kit/leap";
 import { wallets as vectisWallets } from "@cosmos-kit/vectis";
 import { wallets as keplrWallets } from "@cosmos-kit/keplr";
 import { wallets as cosmostationWallets } from "@cosmos-kit/cosmostation";
+import { wallets as metamaskWallets } from "@cosmos-kit/leap-metamask-cosmos-snap";
 import { ChainProvider } from "@cosmos-kit/react";
 import { Web3Modal } from "@web3modal/react";
 import { assets, chains } from "chain-registry";
@@ -116,6 +117,7 @@ function CreateCosmosApp({ Component, pageProps }) {
               ...leapWallets,
               cosmostationWallets[0],
               ...vectisWallets,
+              ...metamaskWallets,
             ]}
             signerOptions={signerOptions}
             sessionOptions={sessionOptions}

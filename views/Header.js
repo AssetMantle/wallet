@@ -102,7 +102,12 @@ export default function Header({ setLeftCol }) {
     >
       <div className="d-flex gap-3">
         <div className="d-flex flex-column gap-0">
-          <h4 className="body2">{displayUserName}</h4>
+          <h4 className="body2">
+            {displayUserName.includes("mantle1") &&
+            displayUserName.length === 45
+              ? shortenAddress(displayUserName)
+              : displayUserName}
+          </h4>
         </div>
       </div>
       <hr className="my-3" />
@@ -166,9 +171,7 @@ export default function Header({ setLeftCol }) {
     <ConnectButton>
       <Connected
         buttonText={address ? shortenAddress(address) : "Connected"}
-        icon={
-          ConnectOptionObject?.[wallet?.prettyName.toLocaleLowerCase()]?.icon
-        }
+        icon={ConnectOptionObject?.[cleanString(wallet?.prettyName)]?.icon}
         onClick={handleOnClickConnected}
       >
         {connectedModalJSX}
