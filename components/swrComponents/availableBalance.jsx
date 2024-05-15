@@ -18,7 +18,7 @@ import {
 const denomDisplay = defaultChainSymbol;
 
 export const AvailableBalance = () => {
-  console.log("inside AvailableBalance");
+  // console.log("inside AvailableBalance");
   const walletManager = useChain(defaultChainName);
   const { status } = walletManager;
   const { availableBalance } = useAvailableBalance();
