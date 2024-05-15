@@ -466,7 +466,7 @@ export const useTotalDelegations = () => {
 export const useMntlUsd = () => {
   // fetcher function for useSwr of useAvailableBalance()
   const fetchMntlUsd = async (url) => {
-    console.log("inside fetchMntlUsd, url: ", url);
+    // console.log("inside fetchMntlUsd, url: ", url);
     let mntlUsdValue, mntlPerEthValue;
 
     // use a try catch block for creating rich Error object

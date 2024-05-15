@@ -49,7 +49,7 @@ export const sendTokensTxn = async (
     // create a message template from the composer
     const { send } = cosmos.bank.v1beta1.MessageComposer.withTypeUrl;
     // const gasResponse = await stargateClient.simulate(fromAddress, [msg], memo);
-    // console.log("response:", gasResponse);
+    console.log("response:", gasResponse);
     // populate the message with transaction arguments
     const msg = send({
       fromAddress,
@@ -81,7 +81,7 @@ export const sendTokensTxn = async (
       fee,
       memo
     );
-    console.log("msg: ", msg, " amount: ", amountInDenom);
+    // console.log("msg: ", msg, " amount: ", amountInDenom);
     return { response, error: null };
   } catch (error) {
     console.error("Error during transaction: ", error?.message);
@@ -147,7 +147,7 @@ export const sendRedelegation = async (
       fee,
       memo
     );
-    console.log("msg: ", msg, " amount: ", amountInDenom);
+    // console.log("msg: ", msg, " amount: ", amountInDenom);
     return { response, error: null };
   } catch (error) {
     console.error("Error during transaction: ", error?.message);
@@ -210,7 +210,7 @@ export const sendDelegation = async (
       fee,
       memo
     );
-    console.log("msg: ", msg, " amount: ", amountInDenom);
+    // console.log("msg: ", msg, " amount: ", amountInDenom);
     return { response, error: null };
   } catch (error) {
     console.error("Error during transaction: ", error?.message);
@@ -255,7 +255,7 @@ export const sendUndelegation = async (
         amount: amountInDenom,
       },
     });
-    console.log("msg: ", msg, " amount: ", amountInDenom);
+    // console.log("msg: ", msg, " amount: ", amountInDenom);
 
     // populate the fee data
     const fee = {
@@ -385,7 +385,7 @@ export const sendWithdrawAddress = async (
       fee,
       memo
     );
-    console.log("msg: ", msg);
+    // console.log("msg: ", msg);
     return { response, error: null };
   } catch (error) {
     console.error("Error during transaction: ", error?.message);
@@ -452,7 +452,7 @@ export const sendRewardsBatched = async (
       memo
     );
 
-    console.log("msgArray: ", msgArray);
+    // console.log("msgArray: ", msgArray);
     return { response, error: null };
   } catch (error) {
     console.error("Error during transaction: ", error?.message);
@@ -683,7 +683,7 @@ export const sendIbcTokenToEth = async (
       chainFee,
     });
 
-    console.log("msg: ", msg);
+    // console.log("msg: ", msg);
 
     // populate the fee data
     const fee = {

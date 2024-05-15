@@ -87,7 +87,7 @@ export default function Transact() {
     switch (action.type) {
       // handle onChange for Recipient Address Input Box
       case "CHANGE_RECIPIENT_ADDRESS": {
-        console.log("inside CHANGE_RECIPIENT_ADDRESS");
+        // console.log("inside CHANGE_RECIPIENT_ADDRESS");
         // if invalid address is input, populate error message and updated recipient address
         if (!action.payload) {
           return {
