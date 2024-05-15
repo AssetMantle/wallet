@@ -6,7 +6,7 @@ export const placeholderAvailableBalance = "0.0000";
 export const placeholderMntlUsdValue = "0.0000";
 export const placeholderRewards = "0.0000";
 export const mntlUsdApi =
-  "https://api.coingecko.com/api/v3/simple/price?ids=assetmantle&vs_currencies=usd%2Ceth&precision=18";
+  "/api/coingecko/price?ids=assetmantle&vs_currencies=usd%2Ceth&precision=18";
 
 export const placeholderTotalDelegations = "0.0000";
 export const placeholderTotalUnbonding = "0.0000";
@@ -29,15 +29,12 @@ const getExplorerLink = (chain, txHash) => {
   switch (chain) {
     case "ethereum":
       return `https://etherscan.io/tx/${txHash}`;
-      break;
 
     case "polygon":
       return `https://polygonscan.com/tx/${txHash}`;
-      break;
 
     default:
       return `https://etherscan.io/tx/${txHash}`;
-      break;
   }
 };
 

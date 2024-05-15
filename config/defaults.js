@@ -14,7 +14,7 @@ export const defaultFeeGas = "250000";
 
 export const defaultChainRPCProxy = "https://rpc.assetmantle.one";
 export const defaultChainRESTProxy = "https://rest.assetmantle.one";
-export const defaultChainRPCProxy2 = "https://rpc.cosmos.directory/assetmantle";
+export const defaultChainRPCProxy2 = "/api/assetmantle/cosmosdirectoryrpc";
 export const defaultChainRESTProxy2 =
   "https://rest.cosmos.directory/assetmantle";
 export const defaultChainGRPCProxy = "";
