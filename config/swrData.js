@@ -6,7 +6,9 @@ export const placeholderAvailableBalance = "0.0000";
 export const placeholderMntlUsdValue = "0.0000";
 export const placeholderRewards = "0.0000";
 export const mntlUsdApi =
-  "/api/coingecko/price?ids=assetmantle&vs_currencies=usd%2Ceth&precision=18";
+  "/api/coingecko/api/v3/simple/price?ids=assetmantle&vs_currencies=usd%2Ceth&precision=18";
+
+// "/api/coingecko/price?ids=assetmantle&vs_currencies=usd%2Ceth&precision=18";
 
 export const placeholderTotalDelegations = "0.0000";
 export const placeholderTotalUnbonding = "0.0000";
