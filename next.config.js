@@ -52,7 +52,7 @@ const nextConfig = {
       },
     ];
   },
-  staticPageGenerationTimeout: 180,
+  staticPageGenerationTimeout: 540,
   // swcMinify: true,
 };
 
