@@ -12,11 +12,10 @@ export const defaultChainMemoSize = 256;
 export const defaultFeeAmount = "2000";
 export const defaultFeeGas = "250000";
 
-export const defaultChainRPCProxy = "https://rpc.assetmantle.one";
-export const defaultChainRESTProxy = "https://rest.assetmantle.one";
+export const defaultChainRPCProxy = "/api/assetmantle/rpc";
+export const defaultChainRESTProxy = "/api/assetmantle/rest";
 export const defaultChainRPCProxy2 = "/api/assetmantle/cosmosdirectoryrpc";
-export const defaultChainRESTProxy2 =
-  "https://rest.cosmos.directory/assetmantle";
+export const defaultChainRESTProxy2 = "/api/assetmantle/cosmosdirectoryrest";
 export const defaultChainGRPCProxy = "";
 export const defaultIBCSourcePort = "transfer";
 export const defaultIBCSourceChannel = "channel-8";
@@ -40,12 +39,10 @@ export const assetmantleTestChainRESTProxy =
   "http://rest.testnet.assetmantle.one/";
 
 // GRAVITY CHAIN
-export const gravityChainRPCProxy = "https://gravitychain.io:26657/";
-export const gravityChainRESTProxy = "https://gravitychain.io:1317/";
-export const gravityChainRPCProxy2 =
-  "https://rpc.cosmos.directory:443/gravitybridge";
-export const gravityChainRESTProxy2 =
-  "https://rest.cosmos.directory/gravitybridge";
+export const gravityChainRPCProxy = "/api/gravitybridge/rpc";
+export const gravityChainRESTProxy = "/api/gravitybridge/rest";
+export const gravityChainRPCProxy2 = "/api/gravitybridge/cosmosdirectoryrpc";
+export const gravityChainRESTProxy2 = "/api/gravitybridge/cosmosdirectoryrest";
 
 export const gravityBasisPoints = 2;
 export const gravityBasisPointsScalingExponent = -4;
