@@ -489,7 +489,12 @@ const GravityToEthBridge = () => {
             className="position-relative"
             style={{ width: "21px", aspectRatio: "1/1" }}
           >
-            <img src="/chainLogos/grav.svg" alt="Gravity Bridge" />
+            <img
+              src="/chainLogos/grav.svg"
+              alt="Gravity Bridge"
+              className="w-100 h-100"
+              style={{ objectFit: "contain", objectPosition: "center" }}
+            />
           </div>
           <h5 className="caption2 text-primary">Gravity Bridge</h5>
         </div>
