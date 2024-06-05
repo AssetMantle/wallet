@@ -598,7 +598,12 @@ const EthToPolygonBridge = () => {
               className="position-relative"
               style={{ width: "21px", aspectRatio: "1/1" }}
             >
-              <img src="/chainLogos/eth.svg" alt="Ethereum Chain" />
+              <img
+                src="/chainLogos/eth.svg"
+                alt="Ethereum Chain"
+                className="w-100 h-100"
+                style={{ objectFit: "contain", objectPosition: "center" }}
+              />
             </div>
             <h5 className="caption2 text-primary">Ethereum Chain</h5>
           </div>
