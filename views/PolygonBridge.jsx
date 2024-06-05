@@ -265,7 +265,12 @@ const PolygonBridge = () => {
               className="position-relative"
               style={{ width: "21px", aspectRatio: "1/1" }}
             >
-              <img src="/chainLogos/polygon.svg" alt="Polygon Chain" />
+              <img
+                src="/chainLogos/polygon.svg"
+                alt="Polygon Chain"
+                className="w-100 h-100"
+                style={{ objectFit: "contain", objectPosition: "center" }}
+              />
             </div>
             <h5 className="caption2 text-primary">Polygon Chain</h5>
           </div>
