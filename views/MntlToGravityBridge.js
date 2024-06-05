@@ -267,7 +267,13 @@ const MntlToGravityBridge = () => {
             className="position-relative"
             style={{ width: "21px", aspectRatio: "1/1" }}
           >
-            <img src="/chainLogos/mntl.webp" alt="AssetMantle" layout="fill" />
+            <img
+              src="/chainLogos/mntl.webp"
+              alt="AssetMantle"
+              layout="fill"
+              className="w-100 h-100"
+              style={{ objectFit: "contain", objectPosition: "center" }}
+            />
           </div>
           <h5 className="caption2 text-primary">AssetMantle</h5>
         </div>
@@ -314,13 +320,13 @@ const MntlToGravityBridge = () => {
         {displayFormAmountErrorMsg}
       </small>
       <div className="d-flex align-items-center justify-content-end gap-2">
-        {/* <button
+        <button
           onClick={handleGravitySubmit}
           disabled={isSubmitDisabled}
-          className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
+          className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2"
         >
-          Send to AssetMantle <i className="bi bi-arrow-up" />
-        </button> */}
+          Send to Osmosis <i className="bi bi-arrow-down" />
+        </button>
         <button
           onClick={handleGravitySubmit}
           disabled={isSubmitDisabled}
