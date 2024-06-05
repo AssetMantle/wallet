@@ -7,6 +7,7 @@ import GravityToEthBridge from "../views/GravityToEthBridge";
 import MntlToGravityBridge from "../views/MntlToGravityBridge";
 import PolygonBridge from "../views/PolygonBridge";
 import Head from "next/head";
+import OsmosisToMntl from "../views/OsmosisToMntl";
 
 export default function Bridge() {
   return (
@@ -24,6 +25,7 @@ export default function Bridge() {
             </nav>
             <div className="nav-bg d-flex flex-column gap-3 rounded-4 p-3">
               <MntlToGravityBridge />
+              <OsmosisToMntl />
               <GravityToEthBridge />
               <EthToPolygonBridge />
               <PolygonBridge />
