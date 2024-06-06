@@ -6,8 +6,10 @@ import {
   defaultChainName,
   defaultFeeAmount,
   defaultFeeGas,
-  defaultIBCSourceChannel,
-  defaultIBCSourcePort,
+  defaultGravityIBCSourceChannel,
+  defaultGravityIBCSourcePort,
+  defaultOsmosisIBCSourceChannel,
+  defaultOsmosisIBCSourcePort,
   gravityBasisPoints,
   gravityBasisPointsScalingExponent,
   gravityChainDenom,
@@ -484,8 +486,8 @@ export const sendIbcTokenToGravity = async (
     }
 
     // get the sourcePort and sourceChannel values pertaining to IBC transaction from AssetMantle to Gravity Chain
-    const sourcePort = defaultIBCSourcePort;
-    const sourceChannel = defaultIBCSourceChannel;
+    const sourcePort = defaultGravityIBCSourcePort;
+    const sourceChannel = defaultGravityIBCSourceChannel;
 
     // get the amount object
     const transferAmount = {
@@ -508,6 +510,71 @@ export const sendIbcTokenToGravity = async (
     response = await stargateClient.sendIbcTokens(
       fromAddress,
       toGravityAddress,
+      transferAmount,
+      sourcePort,
+      sourceChannel,
+      undefined,
+      1773583353,
+      fee,
+      memo
+    );
+
+    return { response, error: null };
+  } catch (error) {
+    console.error("Error during transaction: ", error?.message);
+    return { response: null, error };
+  }
+};
+
+export const sendIbcTokenToOsmosis = async (
+  fromAddress,
+  toOsmosisAddress,
+  amount,
+  memo,
+  {
+    getSigningStargateClient,
+    chainName = defaultChainName,
+    chainDenom = defaultChainDenom,
+  }
+) => {
+  let response = null;
+  try {
+    console.log(fromAddress, toOsmosisAddress, amount);
+    // get the coin data
+    const denomOfAmount = defaultChainDenom;
+    // get the amount in denom terms
+    const amountInDenom = toChainDenom(amount, chainName, chainDenom);
+    // initialize stargate client and create txn
+    const stargateClient = await getSigningStargateClient();
+    if (!stargateClient || !fromAddress) {
+      throw new Error("stargateClient or from address undefined");
+    }
+
+    // get the sourcePort and sourceChannel values pertaining to IBC transaction from AssetMantle to Osmosis
+    const sourcePort = defaultOsmosisIBCSourcePort;
+    const sourceChannel = defaultOsmosisIBCSourceChannel;
+
+    // get the amount object
+    const transferAmount = {
+      denom: denomOfAmount,
+      amount: amountInDenom,
+    };
+
+    // populate the fee data
+    const fee = {
+      amount: [
+        {
+          denom: defaultChainDenom,
+          amount: defaultFeeAmount,
+        },
+      ],
+      gas: defaultFeeGas,
+    };
+
+    // directly call sendIbcTokens from the stargateclient
+    response = await stargateClient.sendIbcTokens(
+      fromAddress,
+      toOsmosisAddress,
       transferAmount,
       sourcePort,
       sourceChannel,

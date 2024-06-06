@@ -16,6 +16,10 @@ import {
   gravityChainRPCProxy,
   gravityIBCToken,
   mntlUsdApi,
+  osmosisChainDenom,
+  osmosisChainName,
+  osmosisChainRPCProxy,
+  osmosisIBCToken,
   placeholderAvailableBalance,
   slowRefreshInterval,
 } from "../config";
@@ -636,6 +640,86 @@ export const useAvailableBalanceGravity = () => {
     denomGravityIBCToken: availableBalanceIBCTokenObject?.denom,
     isLoadingAvailableBalanceGravity: !error && !balanceObjects,
     errorAvailableBalanceGravity: error,
+  };
+};
+
+export const useAvailableBalanceOsmosis = () => {
+  // get the connected wallet parameters from useChain hook
+  const { address } = useChain(defaultChainName);
+
+  const osmosisAddress = convertBech32Address(address, osmosisChainName);
+
+  let placeholderOsmosisCoin = {
+    amount: placeholderAvailableBalance,
+    denom: osmosisChainDenom,
+  };
+
+  let placeholderOsmosisIBCCoin = {
+    amount: placeholderAvailableBalance,
+    denom: osmosisIBCToken,
+  };
+
+  // fetcher function for useSwr of useAvailableBalance()
+  const fetchAllBalancesOsmosis = async (url, address) => {
+    const queryClientOsmosis = await cosmos.ClientFactory.createRPCQueryClient({
+      rpcEndpoint: osmosisChainRPCProxy,
+    });
+
+    let balanceValues;
+
+    // use a try catch block for creating rich Error object
+    try {
+      // get the data from cosmos queryClient
+      const { balances } =
+        await queryClientOsmosis.cosmos.bank.v1beta1.allBalances({
+          address: address,
+        });
+
+      balanceValues = balances;
+      // console.log("swr fetcher success: ", balances);
+    } catch (error) {
+      console.error(`swr fetcher error: ${url}`);
+      throw error;
+    }
+
+    // return the data
+    return balanceValues;
+  };
+
+  // implement useSwr for cached and revalidation enabled data retrieval
+  const { data: balanceObjects, error } = useSwr(
+    osmosisAddress ? ["osmosisbalance", osmosisAddress] : null,
+    fetchAllBalancesOsmosis,
+    {
+      fallbackData: [placeholderOsmosisCoin, placeholderOsmosisIBCCoin],
+      refreshInterval: defaultRefreshInterval,
+      suspense: true,
+    }
+  );
+
+  let availableBalanceOsmosisArray = balanceObjects?.filter?.(
+    (value) => value?.denom == osmosisChainDenom
+  );
+
+  let availableBalanceOsmosisObject =
+    availableBalanceOsmosisArray?.length != 0
+      ? availableBalanceOsmosisArray?.[0]
+      : placeholderOsmosisCoin;
+
+  let availableBalanceIBCTokenArray = balanceObjects?.filter?.(
+    (value) => value?.denom == osmosisIBCToken
+  );
+
+  let availableBalanceIBCTokenObject =
+    availableBalanceIBCTokenArray?.length != 0
+      ? availableBalanceIBCTokenArray?.[0]
+      : placeholderOsmosisIBCCoin;
+
+  return {
+    availableBalanceOsmosis: availableBalanceOsmosisObject?.amount,
+    availableBalanceOsmosisIBCToken: availableBalanceIBCTokenObject?.amount,
+    isLoadingAvailableBalanceOsmosis: !error && !balanceObjects,
+    errorAvailableBalanceOsmosis: error,
   };
 };
 

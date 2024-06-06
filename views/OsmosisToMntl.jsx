@@ -4,10 +4,11 @@ import Link from "next/link";
 import { useReducer } from "react";
 import { toast } from "react-toastify";
 import {
-  defaultChainGasFee,
   defaultChainName,
   defaultChainSymbol,
   gravityChainName,
+  osmosisChainGasFee,
+  osmosisChainSymbol,
   toastConfig,
 } from "../config";
 import {
@@ -16,7 +17,7 @@ import {
   fromDenom,
   sendIbcTokenToGravity,
   toDenom,
-  useAvailableBalance,
+  useAvailableBalanceOsmosis,
 } from "../data";
 import { convertBech32Address, shortenAddress } from "../lib";
 import { handleCopy, isObjEmpty } from "../lib/basicJavascript";
@@ -27,7 +28,15 @@ const OsmosisToMntl = () => {
   const { address, getSigningStargateClient, status } = walletManager;
 
   // SWR HOOKS
-  const { availableBalance } = useAvailableBalance();
+  const { availableBalanceOsmosisIBCToken, availableBalanceOsmosis } =
+    useAvailableBalanceOsmosis();
+
+  const displayAvailableBalanceOsmosisIBCToken = fromChainDenom(
+    availableBalanceOsmosisIBCToken
+  );
+  const displayAvailableBalanceOsmosis = fromChainDenom(
+    availableBalanceOsmosis
+  );
 
   // FORM REDUCER
   const initialState = {
@@ -40,16 +49,10 @@ const OsmosisToMntl = () => {
     switch (action.type) {
       case "CHANGE_AMOUNT": {
         // if amount is greater than current balance, populate error message and update amount
-        if (!action.payload) {
-          return {
-            ...state,
-            transferAmount: action.payload,
-            errorMessages: {
-              ...state.errorMessages,
-              transferAmountErrorMsg: formConstants.requiredErrorMsg,
-            },
-          };
-        } else if (BigNumber(action.payload).isNaN()) {
+        if (
+          BigNumber(action.payload).isNaN() ||
+          BigNumber(action.payload).isLessThanOrEqualTo(0)
+        ) {
           return {
             ...state,
             transferAmount: action.payload,
@@ -59,17 +62,17 @@ const OsmosisToMntl = () => {
             },
           };
         } else if (
-          BigNumber(availableBalance).isNaN() ||
-          BigNumber(toDenom(action.payload))
-            .plus(BigNumber(defaultChainGasFee))
-            .isGreaterThan(BigNumber(availableBalance))
+          BigNumber(availableBalanceOsmosisIBCToken).isNaN() ||
+          BigNumber(toDenom(action.payload)).isGreaterThan(
+            BigNumber(availableBalanceOsmosisIBCToken)
+          )
         ) {
           return {
             ...state,
             transferAmount: action.payload,
             errorMessages: {
               ...state.errorMessages,
-              transferAmountErrorMsg: formConstants.insufficientBalanceErrorMsg,
+              transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
             },
           };
         }
@@ -87,12 +90,14 @@ const OsmosisToMntl = () => {
       case "SET_MAX_AMOUNT": {
         // if available balance is invalid, set error message
         if (
-          isNaN(parseFloat(availableBalance)) ||
-          parseFloat(availableBalance) < parseFloat(defaultChainGasFee)
+          BigNumber(availableBalanceOsmosisIBCToken).isNaN() ||
+          BigNumber(availableBalanceOsmosis).isLessThan(
+            BigNumber(osmosisChainGasFee)
+          )
         ) {
           return {
             ...state,
-            transferAmount: 0,
+            transferAmount: availableBalanceOsmosisIBCToken,
             errorMessages: {
               ...state.errorMessages,
               transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
@@ -105,9 +110,7 @@ const OsmosisToMntl = () => {
           delete state.errorMessages?.transferAmountErrorMsg;
           return {
             ...state,
-            transferAmount: BigNumber(fromDenom(availableBalance))
-              .minus(BigNumber(fromDenom(defaultChainGasFee)))
-              .toString(),
+            transferAmount: fromDenom(availableBalanceOsmosisIBCToken),
           };
         }
       }
@@ -248,7 +251,6 @@ const OsmosisToMntl = () => {
 
   // DISPLAY VARIABLES
   const displayShortenedAddress = shortenAddress(address);
-  const displayAvailableBalance = fromChainDenom(availableBalance);
   const displayAvailableBalanceDenom = defaultChainSymbol;
   const isSubmitDisabled =
     status != "Connected" || !isObjEmpty(formState?.errorMessages);
@@ -292,9 +294,13 @@ const OsmosisToMntl = () => {
         htmlFor="osmoAmount"
         className="caption2 text-gray d-flex align-items-center justify-content-between gap-2"
       >
-        Amount{" "}
         <small className="small text-gray">
-          Available Balance : {displayAvailableBalance}
+          OSMO Balance : {displayAvailableBalanceOsmosis}
+          &nbsp;
+          {osmosisChainSymbol}
+        </small>
+        <small className="small text-gray">
+          Available Balance : {displayAvailableBalanceOsmosisIBCToken}
           &nbsp;
           {displayAvailableBalanceDenom}
         </small>

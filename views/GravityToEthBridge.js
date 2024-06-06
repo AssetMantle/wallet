@@ -504,9 +504,8 @@ const GravityToEthBridge = () => {
         htmlFor="GravityAmount"
         className="caption2 text-gray d-flex align-items-center justify-content-between gap-2"
       >
-        Amount{" "}
         <small className="small text-gray">
-          Gravity Balance : {displayAvailableBalanceGravity}{" "}
+          GRAV Balance : {displayAvailableBalanceGravity}{" "}
           {displayBalanceUnitGravity}
         </small>
         <small className="small text-gray">
