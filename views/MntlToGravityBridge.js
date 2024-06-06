@@ -8,6 +8,7 @@ import {
   defaultChainName,
   defaultChainSymbol,
   gravityChainName,
+  osmosisChainName,
   toastConfig,
 } from "../config";
 import {
@@ -15,6 +16,7 @@ import {
   fromChainDenom,
   fromDenom,
   sendIbcTokenToGravity,
+  sendIbcTokenToOsmosis,
   toDenom,
   useAvailableBalance,
 } from "../data";
@@ -234,6 +236,46 @@ const MntlToGravityBridge = () => {
     }
   };
 
+  const handleOsmosisSubmit = async (e) => {
+    e.preventDefault();
+
+    // execute the dispatch operations pertaining to submit
+    formDispatch({
+      type: "SUBMIT",
+    });
+
+    // if no validation errors, proceed to transaction processing
+    if (
+      formState?.transferAmount &&
+      !isNaN(parseFloat(formState?.transferAmount)) &&
+      isObjEmpty(formState?.errorMessages)
+    ) {
+      // define local variables
+      const localTransferAmount = formState?.transferAmount;
+      let memo;
+      const osmosisAddress = convertBech32Address(address, osmosisChainName);
+
+      // create transaction
+      const id = toast.loading("Transaction initiated ...", toastConfig);
+      const { response, error } = await sendIbcTokenToOsmosis(
+        address,
+        osmosisAddress,
+        localTransferAmount,
+        memo,
+        { getSigningStargateClient }
+      );
+      console.log("response: ", response, " error: ", error);
+      if (response) {
+        notify(response?.transactionHash, id);
+      } else {
+        notify(null, id);
+      }
+
+      // reset the form values
+      formDispatch({ type: "RESET" });
+    }
+  };
+
   const handleOnClickMax = (e) => {
     e.preventDefault();
     formDispatch({
@@ -321,7 +363,7 @@ const MntlToGravityBridge = () => {
       </small>
       <div className="d-flex align-items-center justify-content-end gap-2">
         <button
-          onClick={handleGravitySubmit}
+          onClick={handleOsmosisSubmit}
           disabled={isSubmitDisabled}
           className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2"
         >

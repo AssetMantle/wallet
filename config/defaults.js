@@ -18,8 +18,6 @@ export const defaultChainRPCProxy2 = "/api/assetmantle/cosmosdirectoryrpc";
 export const defaultChainRESTProxy2 =
   "https://rest.cosmos.directory/assetmantle";
 export const defaultChainGRPCProxy = "";
-export const defaultIBCSourcePort = "transfer";
-export const defaultIBCSourceChannel = "channel-8";
 export const defaultChainHost = "https://wallet.assetmantle.one";
 
 // ASSETMANTLE TESTNET CHAIN
@@ -40,13 +38,14 @@ export const assetmantleTestChainRESTProxy =
   "http://rest.testnet.assetmantle.one/";
 
 // GRAVITY CHAIN
+export const defaultGravityIBCSourcePort = "transfer";
+export const defaultGravityIBCSourceChannel = "channel-8";
 export const gravityChainRPCProxy = "https://gravitychain.io:26657/";
 export const gravityChainRESTProxy = "https://gravitychain.io:1317/";
 export const gravityChainRPCProxy2 =
   "https://rpc.cosmos.directory:443/gravitybridge";
 export const gravityChainRESTProxy2 =
   "https://rest.cosmos.directory/gravitybridge";
-
 export const gravityBasisPoints = 2;
 export const gravityBasisPointsScalingExponent = -4;
 export const gravityChainName = "gravitybridge";
@@ -59,6 +58,17 @@ export const gravityChainDenom = "ugraviton";
 export const gravityFeeAmount = "2000";
 export const gravityIBCSourcePort = "transfer";
 export const gravityIBCSourceChannel = "channel-82";
+
+// OSMOSIS CHAIN
+export const defaultOsmosisIBCSourcePort = "transfer";
+export const defaultOsmosisIBCSourceChannel = "channel-0";
+export const osmosisChainRPCProxy = "https://rpc.cosmos.directory/osmosis";
+export const osmosisChainSymbol = "$OSMO";
+export const osmosisChainName = "osmosis";
+export const osmosisChainDenom = "uosmo";
+export const osmosisIBCToken =
+  "ibc/CBA34207E969623D95D057D9B11B0C8B32B89A71F170577D982FDDE623813FFC";
+export const osmosisChainGasFee = 500000;
 
 // ETHEREUM CHAIN
 export const ethereumChainSymbol = "$ETH";
