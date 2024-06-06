@@ -22,7 +22,7 @@ import {
   fromChainDenom,
   fromDenom,
   sendIbcTokenToEth,
-  sendIbcTokenToMantle,
+  sendGravityIbcTokenToMantle,
   toDenom,
   useAvailableBalanceGravity,
   useMntlUsd,
@@ -247,7 +247,7 @@ const GravityToEthBridge = () => {
   const CustomToastWithLink = ({ txHash }) => (
     <p>
       Transaction Submitted. Check
-      <Link href={`https://www.mintscan.io/gravity-bridge/txs/${txHash}`}>
+      <Link href={`https://www.mintscan.io/gravity-bridge/tx/${txHash}`}>
         <a style={{ color: "#ffc640" }} target="_blank">
           &nbsp; Here
         </a>
@@ -373,7 +373,7 @@ const GravityToEthBridge = () => {
       const toastId = toast.loading("Transaction initiated ...", toastConfig);
 
       // initiate transaction from txn api
-      const { response, error } = await sendIbcTokenToMantle(
+      const { response, error } = await sendGravityIbcTokenToMantle(
         gravityAddress,
         mantleAddress,
         localTransferAmount,

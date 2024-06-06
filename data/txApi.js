@@ -20,9 +20,17 @@ import {
   gravityIBCSourceChannel,
   gravityIBCSourcePort,
   gravityIBCToken,
+  osmosisChainDenom,
+  osmosisChainId,
+  osmosisChainRPCProxy,
+  osmosisFeeAmount,
+  osmosisIBCSourceChannel,
+  osmosisIBCSourcePort,
+  osmosisIBCToken,
 } from "../config";
 import { toChainDenom, toDenom } from "../data";
 import { gravity, getSigningGravityClient } from "../modules";
+import { getSigningOsmosisClient } from "osmojs";
 
 // get the wallet properties and functions for that specific chain
 export const sendTokensTxn = async (
@@ -593,7 +601,7 @@ export const sendIbcTokenToOsmosis = async (
 
 // GRAVITY CHAIN
 
-export const sendIbcTokenToMantle = async (
+export const sendGravityIbcTokenToMantle = async (
   fromGravityAddress,
   toMantleAddress,
   amount,
@@ -608,7 +616,7 @@ export const sendIbcTokenToMantle = async (
 
   try {
     console.log(
-      "inside sendIbcTokenToMantle: ",
+      "inside sendGravityIbcTokenToMantle: ",
       fromGravityAddress,
       toMantleAddress,
       amount
@@ -660,6 +668,83 @@ export const sendIbcTokenToMantle = async (
     // directly call sendIbcTokens from the stargateclient
     response = await stargateClient.sendIbcTokens(
       fromGravityAddress,
+      toMantleAddress,
+      transferAmount,
+      sourcePort,
+      sourceChannel,
+      undefined,
+      1773583353,
+      fee,
+      memo
+    );
+
+    return { response, error: null };
+  } catch (error) {
+    console.error("Error during transaction: ", error?.message);
+    return { response: null, error };
+  }
+};
+
+export const sendOsmosisIbcTokenToMantle = async (
+  fromOsmosisAddress,
+  toMantleAddress,
+  amount,
+  memo,
+  {
+    getOfflineSigner,
+    chainName = defaultChainName,
+    chainDenom = defaultChainDenom,
+  }
+) => {
+  let response = null;
+
+  try {
+    console.log(
+      "inside sendOsmosisIbcTokenToMantle: ",
+      fromOsmosisAddress,
+      toMantleAddress,
+      amount
+    );
+    // get the coin data
+    const denomOfAmount = osmosisIBCToken;
+    // get the amount in denom terms
+    const amountInDenom = toChainDenom(amount);
+
+    // get the sourcePort and sourceChannel values pertaining to IBC transaction from AssetMantle to Gravity Chain
+    const sourcePort = osmosisIBCSourcePort;
+    const sourceChannel = osmosisIBCSourceChannel;
+
+    // get the amount object
+    const transferAmount = {
+      denom: denomOfAmount,
+      amount: amountInDenom,
+    };
+
+    // populate the fee data
+    const fee = {
+      amount: [
+        {
+          denom: osmosisChainDenom,
+          amount: osmosisFeeAmount,
+        },
+      ],
+      gas: defaultFeeGas,
+    };
+
+    // initialize stargate client using signer and create txn
+    let signer = await getOfflineSigner(osmosisChainId);
+    const stargateClient = await getSigningOsmosisClient({
+      rpcEndpoint: osmosisChainRPCProxy,
+      signer: signer,
+    });
+
+    if (!stargateClient || !fromOsmosisAddress) {
+      throw new Error("stargateClient or from address undefined");
+    }
+
+    // directly call sendIbcTokens from the stargateclient
+    response = await stargateClient.sendIbcTokens(
+      fromOsmosisAddress,
       toMantleAddress,
       transferAmount,
       sourcePort,

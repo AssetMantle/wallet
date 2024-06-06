@@ -6,8 +6,8 @@ import { toast } from "react-toastify";
 import {
   defaultChainName,
   defaultChainSymbol,
-  gravityChainName,
   osmosisChainGasFee,
+  osmosisChainName,
   osmosisChainSymbol,
   toastConfig,
 } from "../config";
@@ -15,7 +15,7 @@ import {
   formConstants,
   fromChainDenom,
   fromDenom,
-  sendIbcTokenToGravity,
+  sendOsmosisIbcTokenToMantle,
   toDenom,
   useAvailableBalanceOsmosis,
 } from "../data";
@@ -25,7 +25,9 @@ import { handleCopy, isObjEmpty } from "../lib/basicJavascript";
 const OsmosisToMntl = () => {
   // WALLET HOOKS
   const walletManager = useChain(defaultChainName);
-  const { address, getSigningStargateClient, status } = walletManager;
+  const { address: mantleAddress, getOfflineSigner, status } = walletManager;
+
+  const osmosisAddress = convertBech32Address(mantleAddress, osmosisChainName);
 
   // SWR HOOKS
   const { availableBalanceOsmosisIBCToken, availableBalanceOsmosis } =
@@ -89,18 +91,26 @@ const OsmosisToMntl = () => {
 
       case "SET_MAX_AMOUNT": {
         // if available balance is invalid, set error message
-        if (
-          BigNumber(availableBalanceOsmosisIBCToken).isNaN() ||
-          BigNumber(availableBalanceOsmosis).isLessThan(
-            BigNumber(osmosisChainGasFee)
-          )
-        ) {
+        if (BigNumber(availableBalanceOsmosisIBCToken).isNaN()) {
           return {
             ...state,
             transferAmount: availableBalanceOsmosisIBCToken,
             errorMessages: {
               ...state.errorMessages,
               transferAmountErrorMsg: formConstants.transferAmountErrorMsg,
+            },
+          };
+        } else if (
+          BigNumber(availableBalanceOsmosis).isLessThan(
+            BigNumber(osmosisChainGasFee)
+          )
+        ) {
+          return {
+            ...state,
+            transferAmount: fromDenom(availableBalanceOsmosisIBCToken),
+            errorMessages: {
+              ...state.errorMessages,
+              transferAmountErrorMsg: formConstants.gasErrorMsg,
             },
           };
         }
@@ -158,7 +168,7 @@ const OsmosisToMntl = () => {
   const CustomToastWithLink = ({ txHash }) => (
     <p>
       Transaction Submitted. Check
-      <Link href={`https://explorer.assetmantle.one/transactions/${txHash}`}>
+      <Link href={`https://www.mintscan.io/osmosis/tx/${txHash}`}>
         <a style={{ color: "#ffc640" }} target="_blank">
           {" "}
           Here
@@ -195,45 +205,49 @@ const OsmosisToMntl = () => {
     });
   };
 
-  const handleGravitySubmit = async (e) => {
-    console.log("inside handleSubmit()");
+  const handleSubmitMantle = async (e) => {
     e.preventDefault();
 
-    // execute the dispatch operations pertaining to submit
+    // define local variables
+    const localTransferAmount = formState?.transferAmount;
+    let memo;
+
+    // manually trigger form validation messages if any
     formDispatch({
-      type: "SUBMIT",
+      type: "CHANGE_AMOUNT",
+      payload: localTransferAmount,
     });
 
     // if no validation errors, proceed to transaction processing
     if (
-      formState?.transferAmount &&
-      !isNaN(parseFloat(formState?.transferAmount)) &&
+      localTransferAmount &&
+      !BigNumber(localTransferAmount).isNaN() &&
       isObjEmpty(formState?.errorMessages)
     ) {
-      // define local variables
-      const localTransferAmount = formState?.transferAmount;
-      let memo;
-      const gravityAddress = convertBech32Address(address, gravityChainName);
+      // initiate toast notification
+      const toastId = toast.loading("Transaction initiated ...", toastConfig);
 
-      // create transaction
-      const id = toast.loading("Transaction initiated ...", toastConfig);
-      const { response, error } = await sendIbcTokenToGravity(
-        address,
-        gravityAddress,
+      // initiate transaction from txn api
+      const { response, error } = await sendOsmosisIbcTokenToMantle(
+        osmosisAddress,
+        mantleAddress,
         localTransferAmount,
         memo,
-
-        { getSigningStargateClient }
+        {
+          getOfflineSigner,
+        }
       );
       console.log("response: ", response, " error: ", error);
-      if (response) {
-        notify(response?.transactionHash, id);
-      } else {
-        notify(null, id);
-      }
 
       // reset the form values
       formDispatch({ type: "RESET" });
+
+      // notify toast message on success or error
+      if (response) {
+        notify(response?.transactionHash, toastId);
+      } else {
+        notify(null, toastId);
+      }
     }
   };
 
@@ -246,11 +260,11 @@ const OsmosisToMntl = () => {
 
   const handleCopyOnClick = (e) => {
     e.preventDefault();
-    handleCopy(address);
+    handleCopy(osmosisAddress);
   };
 
   // DISPLAY VARIABLES
-  const displayShortenedAddress = shortenAddress(address);
+  const displayShortenedAddress = shortenAddress(osmosisAddress);
   const displayAvailableBalanceDenom = defaultChainSymbol;
   const isSubmitDisabled =
     status != "Connected" || !isObjEmpty(formState?.errorMessages);
@@ -326,15 +340,8 @@ const OsmosisToMntl = () => {
         {displayFormAmountErrorMsg}
       </small>
       <div className="d-flex align-items-center justify-content-end gap-2">
-        {/* <button
-          onClick={handleGravitySubmit}
-          disabled={isSubmitDisabled}
-          className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
-        >
-          Send to AssetMantle <i className="bi bi-arrow-up" />
-        </button> */}
         <button
-          onClick={handleGravitySubmit}
+          onClick={handleSubmitMantle}
           disabled={isSubmitDisabled}
           className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
         >
