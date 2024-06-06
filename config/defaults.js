@@ -62,13 +62,20 @@ export const gravityIBCSourceChannel = "channel-82";
 // OSMOSIS CHAIN
 export const defaultOsmosisIBCSourcePort = "transfer";
 export const defaultOsmosisIBCSourceChannel = "channel-0";
-export const osmosisChainRPCProxy = "https://rpc.cosmos.directory/osmosis";
+export const osmosisChainRPCProxy = "https://rpc.osmosis.zone/";
+export const osmosisChainRPCProxy2 = "https://rpc.cosmos.directory/osmosis";
+export const osmosisChainRESTProxy = "https://lcd.osmosis.zone/";
+export const osmosisChainRESTProxy2 = "https://rest.cosmos.directory/osmosis";
 export const osmosisChainSymbol = "$OSMO";
 export const osmosisChainName = "osmosis";
 export const osmosisChainDenom = "uosmo";
 export const osmosisIBCToken =
   "ibc/CBA34207E969623D95D057D9B11B0C8B32B89A71F170577D982FDDE623813FFC";
 export const osmosisChainGasFee = 500000;
+export const osmosisIBCSourcePort = "transfer";
+export const osmosisIBCSourceChannel = "channel-232";
+export const osmosisFeeAmount = "2000";
+export const osmosisChainId = "osmosis-1";
 
 // ETHEREUM CHAIN
 export const ethereumChainSymbol = "$ETH";

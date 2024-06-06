@@ -7,6 +7,7 @@ import lpMntlUsdcABI from "../data/contracts/lpMntlUsdcABI.json";
 export const formConstants = {
   recipientAddressErrorMsg: "Invalid Address",
   transferAmountErrorMsg: "Insufficient Balance",
+  gasErrorMsg: "Insufficient GAS",
   insufficientBalanceErrorMsg: (
     <span>
       Insufficient Balance. To get more tokens go to{" "}
