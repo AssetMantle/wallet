@@ -115,6 +115,11 @@ export const ConnectOptionObject = {
     name: "MetaMask",
     installUrl: "https://metamask.io/download/",
   },
+  cosmosmetamaskextension: {
+    icon: "/WalletIcons/metamask.png",
+    name: "MetaMask",
+    installUrl: "https://metamask.io/download/",
+  },
 };
 
 export const staticTradeData = [

@@ -264,7 +264,10 @@ const OsmosisToMntl = () => {
   };
 
   // DISPLAY VARIABLES
-  const displayShortenedAddress = shortenAddress(osmosisAddress);
+  const displayShortenedAddress = shortenAddress(
+    osmosisAddress,
+    osmosisChainName
+  );
   const displayAvailableBalanceDenom = defaultChainSymbol;
   const isSubmitDisabled =
     status != "Connected" || !isObjEmpty(formState?.errorMessages);

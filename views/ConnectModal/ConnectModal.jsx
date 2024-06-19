@@ -68,7 +68,7 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
                           alt={walletPrettyName}
                         />
                       </div>
-                      {walletPrettyName === "Leap Cosmos MetaMask"
+                      {walletPrettyName === "Cosmos Metamask Extension"
                         ? ConnectOptionObject[cleanString(walletPrettyName)]
                             ?.name
                         : walletPrettyName}
