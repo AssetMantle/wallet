@@ -25,8 +25,14 @@ export default function Bridge() {
             </nav>
             <div className="nav-bg d-flex flex-column gap-3 rounded-4 p-3">
               <MntlToGravityBridge />
-              <OsmosisToMntl />
-              <GravityToEthBridge />
+              <section className="row">
+                <div className="col-12 col-md-6 pe-0">
+                  <OsmosisToMntl />
+                </div>
+                <div className="col-12 col-md-6">
+                  <GravityToEthBridge />
+                </div>
+              </section>
               <EthToPolygonBridge />
               <PolygonBridge />
             </div>
