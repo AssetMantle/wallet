@@ -451,7 +451,7 @@ const GravityToEthBridge = () => {
   const connectEthWalletJSX = (
     <button
       onClick={handleOpenWeb3Modal}
-      className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
+      className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2 w-100 text-center justify-content-center"
     >
       Connect Ethereum Wallet <i className="bi bi-link-45deg" />
     </button>
@@ -462,7 +462,7 @@ const GravityToEthBridge = () => {
       <button
         onClick={handleSubmit}
         disabled={isSubmitDisabled}
-        className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
+        className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2 w-100 text-center justify-content-center"
       >
         Send to Ethereum <i className="bi bi-arrow-down" />
       </button>
@@ -483,7 +483,7 @@ const GravityToEthBridge = () => {
 
   return (
     <div className={`bg-gray-800 p-3 rounded-4 d-flex flex-column gap-3 ${""}`}>
-      <div className="caption d-flex gap-2 align-items-center justify-content-between">
+      <div className="caption d-flex flex-wrap gap-2 align-items-center justify-content-between">
         <div className="d-flex gap-2 align-items-center position-relative">
           <div
             className="position-relative"
@@ -502,7 +502,7 @@ const GravityToEthBridge = () => {
       </div>
       <label
         htmlFor="GravityAmount"
-        className="caption2 text-gray d-flex align-items-center justify-content-between gap-2"
+        className="caption2 text-gray d-flex flex-wrap align-items-center justify-content-between gap-2"
       >
         <small className="small text-gray">
           GRAV Balance : {displayAvailableBalanceGravity}{" "}
@@ -529,7 +529,7 @@ const GravityToEthBridge = () => {
       {isFormAmountError && (
         <small className="small text-error">{displayFormAmountErrorMsg}</small>
       )}
-      <div className="d-flex align-items-center justify-content-between gap-3">
+      <div className="d-flex flex-wrap align-items-center justify-content-between gap-3">
         <label className="caption2" htmlFor="gasFeeSelect">
           Select Chain Fee for Ethereum Transfer
         </label>
@@ -537,7 +537,7 @@ const GravityToEthBridge = () => {
           name="gasFeeSelect"
           id="gasFeeSelect"
           defaultValue="fast"
-          className="am-select caption2"
+          className="am-select caption2 flex-grow-1 w-100"
           onChange={(e) => setGasFee(e.target.value)}
         >
           <option value="instant">
@@ -549,9 +549,9 @@ const GravityToEthBridge = () => {
           </option>
         </select>
       </div>
-      <div className="d-flex align-items-center justify-content-end gap-3">
+      <div className="d-flex flex-wrap align-items-center justify-content-end gap-3">
         <button
-          className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2"
+          className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2 w-100 text-center justify-content-center"
           disabled={isSubmitDisabledGravity}
           onClick={handleSubmitMantle}
         >
