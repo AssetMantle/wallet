@@ -280,7 +280,7 @@ const OsmosisToMntl = () => {
     <div
       className={`bg-gray-800 p-3 rounded-4 d-flex flex-column gap-3 ${"border-color-primary"}`}
     >
-      <div className="caption d-flex gap-2 align-items-center justify-content-between">
+      <div className="caption d-flex flex-wrap gap-2 align-items-center justify-content-between">
         <div className="d-flex gap-2 align-items-center position-relative">
           <div
             className="position-relative"
@@ -309,7 +309,7 @@ const OsmosisToMntl = () => {
       </div>
       <label
         htmlFor="osmoAmount"
-        className="caption2 text-gray d-flex align-items-center justify-content-between gap-2"
+        className="caption2 text-gray d-flex flex-wrap align-items-center justify-content-between gap-2"
       >
         <small className="small text-gray">
           OSMO Balance : {displayAvailableBalanceOsmosis}
