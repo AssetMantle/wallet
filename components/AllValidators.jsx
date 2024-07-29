@@ -113,7 +113,7 @@ const AllValidators = ({
                 <td>
                   {shiftDecimalPlaces(
                     item?.commission?.commissionRates?.rate,
-                    -16
+                    2
                   )}
                   %
                 </td>
@@ -208,7 +208,7 @@ const AllValidators = ({
                 <td>
                   {shiftDecimalPlaces(
                     item?.commission?.commissionRates?.rate,
-                    -16
+                    2
                   )}{" "}
                   %
                 </td>

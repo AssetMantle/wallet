@@ -105,7 +105,7 @@ const DelegatedValidators = ({
                 <td>
                   {shiftDecimalPlaces(
                     item?.commission?.commissionRates?.rate,
-                    -16
+                    2
                   )}{" "}
                   %
                 </td>
@@ -191,7 +191,7 @@ const DelegatedValidators = ({
                 <td>
                   {shiftDecimalPlaces(
                     item?.commission?.commissionRates?.rate,
-                    -16
+                    2
                   )}
                   %
                 </td>

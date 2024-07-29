@@ -231,7 +231,7 @@ const Rewards = ({
                       <td className="caption2">
                         {shiftDecimalPlaces(
                           item?.commission?.commissionRates?.rate,
-                          -16
+                          2
                         )}{" "}
                         %
                       </td>
@@ -272,7 +272,7 @@ const Rewards = ({
                   <td className="caption2">
                     {shiftDecimalPlaces(
                       item?.commission?.commissionRates?.rate,
-                      -16
+                      2
                     )}{" "}
                     %
                   </td>

@@ -578,7 +578,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
                                 <td>
                                   {shiftDecimalPlaces(
                                     item?.commission?.commissionRates?.rate,
-                                    -16
+                                    2
                                   )}{" "}
                                   %
                                 </td>
@@ -670,7 +670,7 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
                                 <td>
                                   {shiftDecimalPlaces(
                                     item?.commission?.commissionRates?.rate,
-                                    -16
+                                    2
                                   )}{" "}
                                   %
                                 </td>
