@@ -451,7 +451,7 @@ const GravityToEthBridge = () => {
   const connectEthWalletJSX = (
     <button
       onClick={handleOpenWeb3Modal}
-      className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2 w-100 text-center justify-content-center"
+      className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2 w-100 mw-100 text-center justify-content-center"
     >
       Connect Ethereum Wallet <i className="bi bi-link-45deg" />
     </button>
@@ -462,7 +462,7 @@ const GravityToEthBridge = () => {
       <button
         onClick={handleSubmit}
         disabled={isSubmitDisabled}
-        className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2 w-100 text-center justify-content-center"
+        className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2 w-100 mw-100 text-center justify-content-center"
       >
         Send to Ethereum <i className="bi bi-arrow-down" />
       </button>
@@ -551,7 +551,7 @@ const GravityToEthBridge = () => {
       </div>
       <div className="d-flex flex-wrap align-items-center justify-content-end gap-3">
         <button
-          className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2 w-100 text-center justify-content-center"
+          className="button-secondary py-2 px-4 d-flex gap-2 align-items-center caption2 w-100 mw-100 text-center justify-content-center"
           disabled={isSubmitDisabledGravity}
           onClick={handleSubmitMantle}
         >
