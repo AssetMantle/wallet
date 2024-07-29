@@ -278,9 +278,9 @@ const OsmosisToMntl = () => {
 
   return (
     <div
-      className={`bg-gray-800 p-3 rounded-4 d-flex flex-column gap-3 ${"border-color-primary"}`}
+      className={`bg-gray-800 p-3 rounded-4 d-flex flex-column gap-3 ${"border-color-primary"} h-100`}
     >
-      <div className="caption d-flex flex-wrap gap-2 align-items-center justify-content-between">
+      <div className="caption d-flex flex-column flex-wrap gap-2 align-items-start justify-content-between">
         <div className="d-flex gap-2 align-items-center position-relative">
           <div
             className="position-relative"
@@ -342,7 +342,7 @@ const OsmosisToMntl = () => {
         {isFormAmountError && <i className="bi bi-info-circle" />}{" "}
         {displayFormAmountErrorMsg}
       </small>
-      <div className="d-flex align-items-center justify-content-end gap-2">
+      <div className="d-flex align-items-center justify-content-end gap-2 mt-auto">
         <button
           onClick={handleSubmitMantle}
           disabled={isSubmitDisabled}
