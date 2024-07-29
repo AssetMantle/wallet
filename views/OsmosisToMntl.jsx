@@ -335,18 +335,20 @@ const OsmosisToMntl = () => {
           Max
         </button>
       </div>
-      <small
-        id="addressInputErrorMsg"
-        className="form-text text-danger d-flex align-items-center gap-1"
-      >
-        {isFormAmountError && <i className="bi bi-info-circle" />}{" "}
-        {displayFormAmountErrorMsg}
-      </small>
+      {isFormAmountError && displayFormAmountErrorMsg && (
+        <small
+          id="addressInputErrorMsg"
+          className="form-text text-danger d-flex align-items-center gap-1"
+        >
+          {isFormAmountError && <i className="bi bi-info-circle" />}{" "}
+          {displayFormAmountErrorMsg}
+        </small>
+      )}
       <div className="d-flex align-items-center justify-content-end gap-2 mt-auto">
         <button
           onClick={handleSubmitMantle}
           disabled={isSubmitDisabled}
-          className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2"
+          className="button-primary py-2 px-4 d-flex gap-2 align-items-center caption2 w-100 mw-100 text-center justify-content-center"
         >
           Send to Mantle <i className="bi bi-arrow-up" />
         </button>
