@@ -17,10 +17,20 @@ export default function Stake() {
   const [showClaimError, setShowClaimError] = useState(false);
   const [activeValidators, setActiveValidators] = useState(true);
   const [delegated, setDelegated] = useState(false);
+  const [SortTableByField, setSortTableByField] = useState("tokens");
   const { allValidators } = useAllValidators();
   const { delegatedValidators } = useDelegatedValidators();
 
-  let validatorsArray = allValidators.sort((a, b) => b.tokens - a.tokens);
+  let validatorsArray = allValidators
+    .sort((a, b) => b.tokens - a.tokens)
+    .map((el, index) => ({ ...el, rank: index + 1 }));
+
+  const rankedDelegatedValidators = delegatedValidators?.map((el) => {
+    for (let item of validatorsArray) {
+      if (el?.description?.moniker === item?.description?.moniker)
+        return { ...el, rank: item?.rank };
+    }
+  });
 
   //Calculate total tokens to calculate voting power
   const totalTokens = validatorsArray.reduce(
@@ -60,30 +70,46 @@ export default function Stake() {
   };
 
   // transaction manifest modal states and functions
-  const GasOptions = [
-    {
-      name: "Zero",
-      usd: "0.0000",
-      mntl: "0.0000",
-    },
-    {
-      name: "Low",
-      usd: "0.0000",
-      mntl: "0.0000",
-    },
-    {
-      name: "High",
-      usd: "0.0000",
-      mntl: "0.0000",
-    },
-  ];
-  const [SelectedGasFee, setSelectedGasFee] = useState(GasOptions[0].name);
-  const [ManifestShowAdvanced, setManifestShowAdvanced] = useState(false);
-  const [ManifestKeystorePassword, setManifestKeystorePassword] = useState();
-  const [ManifestCustomGas, setManifestCustomGas] = useState();
-  const handleManifestConfirm = () => {
-    console.log("Confirming transaction manifest");
-  };
+  // const GasOptions = [
+  //   {
+  //     name: "Zero",
+  //     usd: "0.0000",
+  //     mntl: "0.0000",
+  //   },
+  //   {
+  //     name: "Low",
+  //     usd: "0.0000",
+  //     mntl: "0.0000",
+  //   },
+  //   {
+  //     name: "High",
+  //     usd: "0.0000",
+  //     mntl: "0.0000",
+  //   },
+  // ];
+  // const [SelectedGasFee, setSelectedGasFee] = useState(GasOptions[0].name);
+  // const [ManifestShowAdvanced, setManifestShowAdvanced] = useState(false);
+  // const [ManifestKeystorePassword, setManifestKeystorePassword] = useState();
+  // const [ManifestCustomGas, setManifestCustomGas] = useState();
+  // const handleManifestConfirm = () => {
+  //   console.log("Confirming transaction manifest");
+  // };
+
+  const THRank = (
+    <th
+      scope="col"
+      style={{ whiteSpace: "nowrap" }}
+      role="button"
+      tabIndex={0}
+      onClick={() =>
+        SortTableByField === "tokens"
+          ? setSortTableByField("-tokens")
+          : setSortTableByField("tokens")
+      }
+    >
+      Rank
+    </th>
+  );
 
   return (
     <>
@@ -187,18 +213,14 @@ export default function Stake() {
                       <th></th>
                       {activeValidators ? (
                         delegated ? (
-                          <th scope="col" style={{ whiteSpace: "nowrap" }}>
-                            Rank
-                          </th>
+                          THRank
                         ) : (
                           <>
                             <th
                               scope="col"
                               style={{ whiteSpace: "nowrap" }}
                             ></th>
-                            <th scope="col" style={{ whiteSpace: "nowrap" }}>
-                              Rank
-                            </th>
+                            {THRank}
                           </>
                         )
                       ) : delegated ? null : (
@@ -208,21 +230,68 @@ export default function Stake() {
                         colSpan="2"
                         scope="col"
                         style={{ whiteSpace: "nowrap", marginRight: "20px" }}
+                        role="button"
+                        tabIndex={0}
+                        onClick={() =>
+                          SortTableByField === "name"
+                            ? setSortTableByField("-name")
+                            : setSortTableByField("name")
+                        }
                       >
                         Validator Name
                       </th>
-                      <th scope="col" style={{ whiteSpace: "nowrap" }}>
+                      <th
+                        scope="col"
+                        style={{ whiteSpace: "nowrap" }}
+                        role="button"
+                        tabIndex={0}
+                        onClick={() =>
+                          SortTableByField === "tokens"
+                            ? setSortTableByField("-tokens")
+                            : setSortTableByField("tokens")
+                        }
+                      >
                         Voting Power
                       </th>
-                      <th scope="col" style={{ whiteSpace: "nowrap" }}>
+                      <th
+                        scope="col"
+                        style={{ whiteSpace: "nowrap" }}
+                        role="button"
+                        tabIndex={0}
+                        onClick={() =>
+                          SortTableByField === "commission"
+                            ? setSortTableByField("-commission")
+                            : setSortTableByField("commission")
+                        }
+                      >
                         Commission
                       </th>
                       {delegated ? null : (
-                        <th scope="col" style={{ whiteSpace: "nowrap" }}>
+                        <th
+                          scope="col"
+                          style={{ whiteSpace: "nowrap" }}
+                          role="button"
+                          tabIndex={0}
+                          onClick={() =>
+                            SortTableByField === "tokens"
+                              ? setSortTableByField("-tokens")
+                              : setSortTableByField("tokens")
+                          }
+                        >
                           Delegations
                         </th>
                       )}
-                      <th scope="col" style={{ whiteSpace: "nowrap" }}>
+                      <th
+                        scope="col"
+                        style={{ whiteSpace: "nowrap" }}
+                        // role="button"
+                        // tabIndex={0}
+                        // onClick={() =>
+                        //   SortTableByField === "delegatedAmount"
+                        //     ? setSortTableByField("-delegatedAmount")
+                        //     : setSortTableByField("delegatedAmount")
+                        // }
+                      >
                         Delegated Amount
                       </th>
                       {activeValidators ? null : (
@@ -235,7 +304,7 @@ export default function Stake() {
                   <tbody>
                     {delegated ? (
                       <DelegatedValidators
-                        delegatedValidators={delegatedValidators}
+                        delegatedValidators={rankedDelegatedValidators}
                         searchValue={searchValue}
                         setShowClaimError={setShowClaimError}
                         stakeDispatch={stakeDispatch}
@@ -255,6 +324,7 @@ export default function Stake() {
                           validatorsArray={validatorsArray}
                           activeValidators={activeValidators}
                           totalTokens={totalTokens}
+                          sortParam={SortTableByField}
                         />
                       )
                     )}
