@@ -14,31 +14,69 @@ const AllValidators = ({
   stakeDispatch,
   totalTokens,
   delegatedValidators,
+  sortParam = "tokens",
 }) => {
   const {
     allValidatorsBonded,
-    isLoadingValidatorsBonded,
-    errorValidatorsBonded,
+    // isLoadingValidatorsBonded,
+    // errorValidatorsBonded,
   } = useAllValidatorsBonded();
   const {
     allValidatorsUnbonded,
-    isLoadingValidatorsUnbonded,
-    errorValidatorsUnbonded,
+    // isLoadingValidatorsUnbonded,
+    // errorValidatorsUnbonded,
   } = useAllValidatorsUnbonded();
   // controller for onError
+  const allValidatorsBondedUsable = allValidatorsBonded.map((el, index) => ({
+    ...el,
+    rank: index + 1,
+  }));
+  const allValidatorsBondedUsableSorted = (sortBy) => {
+    let ascending = true;
+    let sortStr = `${sortBy}`;
+    if (sortBy[0] === "-") {
+      ascending = false;
+      let temp = sortBy.split("");
+      sortStr = "";
+      for (let i = 1; i < temp.length; i++) sortStr += temp[i];
+    }
+
+    switch (sortStr) {
+      case "name":
+        return allValidatorsBondedUsable?.sort((a, b) => {
+          let av = a?.description?.moniker.trim();
+          let bv = b?.description?.moniker.trim();
+          return ascending ? av?.localeCompare(bv) : bv?.localeCompare(av);
+        });
+      case "commission":
+        return allValidatorsBondedUsable?.sort((a, b) => {
+          let av =
+            !isNaN(a?.commission?.commissionRates?.rate) &&
+            Number(a?.commission?.commissionRates?.rate);
+          let bv =
+            !isNaN(b?.commission?.commissionRates?.rate) &&
+            Number(b?.commission?.commissionRates?.rate);
+          return ascending ? av - bv : bv - av;
+        });
+      case "tokens":
+      default:
+        return allValidatorsBondedUsable?.sort((a, b) =>
+          ascending ? b?.tokens - a?.tokens : a?.tokens - b?.tokens
+        );
+    }
+  };
+
   const handleOnError = (e) => {
     e.preventDefault();
-    // console.log("e: ", e);
     e.target.src = "/validatorAvatars/alt.png";
   };
 
-  const statusArray = [0, 1, 2, -1];
+  // const statusArray = [0, 1, 2, -1];
 
   return (
     <>
       {activeValidators
-        ? allValidatorsBonded
-            ?.sort((a, b) => b.tokens - a.tokens)
+        ? allValidatorsBondedUsableSorted(sortParam)
             ?.filter((item) =>
               item?.description?.moniker
                 .toLowerCase()
@@ -68,7 +106,7 @@ const AllValidators = ({
                     }}
                   ></input>
                 </td>
-                {index < 10 ? (
+                {item?.rank <= 10 ? (
                   <td>
                     <Tooltip
                       titlePrimary={"text-warning"}
@@ -82,7 +120,7 @@ const AllValidators = ({
                 ) : (
                   <td></td>
                 )}
-                {activeValidators ? <td>{index + 1}</td> : null}
+                {activeValidators ? <td>{item?.rank}</td> : null}
                 <td>
                   <div
                     className="d-flex position-relative rounded-circle"

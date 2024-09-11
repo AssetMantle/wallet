@@ -18,22 +18,21 @@ const DelegatedValidators = ({
 }) => {
   const {
     allValidatorsBonded,
-    isLoadingValidatorsBonded,
-    errorValidatorsBonded,
+    // isLoadingValidatorsBonded,
+    // errorValidatorsBonded,
   } = useAllValidatorsBonded();
   const {
     allValidatorsUnbonded,
-    isLoadingValidatorsUnbonded,
-    errorValidatorsUnbonded,
+    // isLoadingValidatorsUnbonded,
+    // errorValidatorsUnbonded,
   } = useAllValidatorsUnbonded();
   // controller for onError
   const handleOnError = (e) => {
     e.preventDefault();
-    // console.log("e: ", e);
     e.target.src = "/validatorAvatars/alt.png";
   };
 
-  const statusArray = [0, 1, 2, -1];
+  // const statusArray = [0, 1, 2, -1];
 
   return (
     <>
@@ -73,7 +72,7 @@ const DelegatedValidators = ({
                     }}
                   ></input>
                 </td>
-                {activeValidators ? <td>{index + 1}</td> : null}
+                {activeValidators ? <td>{item?.rank}</td> : null}
                 <td>
                   <div
                     className="d-flex position-relative rounded-circle gap-1"
