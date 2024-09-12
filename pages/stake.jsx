@@ -284,13 +284,13 @@ export default function Stake() {
                       <th
                         scope="col"
                         style={{ whiteSpace: "nowrap" }}
-                        // role="button"
-                        // tabIndex={0}
-                        // onClick={() =>
-                        //   SortTableByField === "delegatedAmount"
-                        //     ? setSortTableByField("-delegatedAmount")
-                        //     : setSortTableByField("delegatedAmount")
-                        // }
+                        role="button"
+                        tabIndex={0}
+                        onClick={() =>
+                        SortTableByField === "delegatedAmount"
+                             ? setSortTableByField("-delegatedAmount")
+                             : setSortTableByField("delegatedAmount")
+                         }
                       >
                         Delegated Amount
                       </th>
@@ -311,6 +311,7 @@ export default function Stake() {
                         stakeState={stakeState}
                         activeValidators={activeValidators}
                         totalTokens={totalTokens}
+                        sortParam={SortTableByField}
                       />
                     ) : (
                       allValidators.length !== 1 &&
