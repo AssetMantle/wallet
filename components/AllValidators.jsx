@@ -30,7 +30,11 @@ const AllValidators = ({
   const allValidatorsBondedUsable = allValidatorsBonded.map((el, index) => ({
     ...el,
     rank: index + 1,
+    am_delegatedAmount: delegatedValidators?.find(
+      (element) => element?.operatorAddress == el?.operatorAddress
+    )?.delegatedAmount,
   }));
+
   const allValidatorsBondedUsableSorted = (sortBy) => {
     let ascending = true;
     let sortStr = `${sortBy}`;
@@ -56,6 +60,14 @@ const AllValidators = ({
           let bv =
             !isNaN(b?.commission?.commissionRates?.rate) &&
             Number(b?.commission?.commissionRates?.rate);
+          return ascending ? av - bv : bv - av;
+        });
+      case "delegatedAmount":
+        return allValidatorsBondedUsable?.sort((a, b) => {
+          let av =
+            !isNaN(a?.am_delegatedAmount) && Number(a?.am_delegatedAmount);
+          let bv =
+            !isNaN(b?.am_delegatedAmount) && Number(b?.am_delegatedAmount);
           return ascending ? av - bv : bv - av;
         });
       case "tokens":
@@ -163,17 +175,9 @@ const AllValidators = ({
                   )}
                 </td>
                 <td>
-                  {delegatedValidators?.find(
-                    (element) =>
-                      element?.operatorAddress == item?.operatorAddress
-                  )
+                  {item?.am_delegatedAmount
                     ? getBalanceStyle(
-                        fromChainDenom(
-                          delegatedValidators?.find(
-                            (element) =>
-                              element?.operatorAddress == item?.operatorAddress
-                          )?.delegatedAmount
-                        ),
+                        fromChainDenom(item?.am_delegatedAmount),
                         "caption2 text-white-300",
                         "small text-white-300"
                       )
