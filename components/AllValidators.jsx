@@ -35,6 +35,13 @@ const AllValidators = ({
     )?.delegatedAmount,
   }));
 
+  const allValidatorsUnbondedUsable = allValidatorsBonded.map((el, index) => ({
+    ...el,
+    am_delegatedAmount: delegatedValidators?.find(
+      (element) => element?.operatorAddress == el?.operatorAddress
+    )?.delegatedAmount,
+  }));
+
   const allValidatorsBondedUsableSorted = (sortBy) => {
     let ascending = true;
     let sortStr = `${sortBy}`;
@@ -73,6 +80,49 @@ const AllValidators = ({
       case "tokens":
       default:
         return allValidatorsBondedUsable?.sort((a, b) =>
+          ascending ? b?.tokens - a?.tokens : a?.tokens - b?.tokens
+        );
+    }
+  };
+
+  const allValidatorsUnbondedUsableSorted = (sortBy) => {
+    let ascending = true;
+    let sortStr = `${sortBy}`;
+    if (sortBy[0] === "-") {
+      ascending = false;
+      let temp = sortBy.split("");
+      sortStr = "";
+      for (let i = 1; i < temp.length; i++) sortStr += temp[i];
+    }
+
+    switch (sortStr) {
+      case "name":
+        return allValidatorsUnbondedUsable?.sort((a, b) => {
+          let av = a?.description?.moniker.trim();
+          let bv = b?.description?.moniker.trim();
+          return ascending ? av?.localeCompare(bv) : bv?.localeCompare(av);
+        });
+      case "commission":
+        return allValidatorsUnbondedUsable?.sort((a, b) => {
+          let av =
+            !isNaN(a?.commission?.commissionRates?.rate) &&
+            Number(a?.commission?.commissionRates?.rate);
+          let bv =
+            !isNaN(b?.commission?.commissionRates?.rate) &&
+            Number(b?.commission?.commissionRates?.rate);
+          return ascending ? av - bv : bv - av;
+        });
+      case "delegatedAmount":
+        return allValidatorsUnbondedUsable?.sort((a, b) => {
+          let av =
+            !isNaN(a?.am_delegatedAmount) && Number(a?.am_delegatedAmount);
+          let bv =
+            !isNaN(b?.am_delegatedAmount) && Number(b?.am_delegatedAmount);
+          return ascending ? av - bv : bv - av;
+        });
+      case "tokens":
+      default:
+        return allValidatorsUnbondedUsable?.sort((a, b) =>
           ascending ? b?.tokens - a?.tokens : a?.tokens - b?.tokens
         );
     }
@@ -185,13 +235,12 @@ const AllValidators = ({
                 </td>
               </tr>
             ))
-        : allValidatorsUnbonded
+        : allValidatorsUnbondedUsableSorted(sortParam)
             ?.filter((item) =>
               item?.description?.moniker
                 .toLowerCase()
                 .includes(searchValue.toLowerCase())
             )
-
             ?.map((item, index) => (
               <tr key={index} className="caption2 text-white-300">
                 <td> </td>
@@ -263,18 +312,9 @@ const AllValidators = ({
                   )}
                 </td>
                 <td>
-                  {" "}
-                  {delegatedValidators?.find(
-                    (element) =>
-                      element?.operatorAddress == item?.operatorAddress
-                  )
+                  {item?.am_delegatedAmount
                     ? getBalanceStyle(
-                        fromChainDenom(
-                          delegatedValidators?.find(
-                            (element) =>
-                              element?.operatorAddress == item?.operatorAddress
-                          )?.delegatedAmount
-                        ),
+                        fromChainDenom(item?.am_delegatedAmount),
                         "caption2 text-white-300",
                         "small text-white-300"
                       )
