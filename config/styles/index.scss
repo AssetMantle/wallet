@@ -671,11 +671,18 @@ summary::marker {
 .no-text-wrap {
   white-space: nowrap !important;
 }
-tbody {
+tbody,
+thead {
   & > tr {
-    &:last-child td,
-    &:last-child th {
+    // &:last-child th,
+    &:last-child td {
       border: 0;
+    }
+    & > th,
+    & > td {
+      &.am-w-min-120 {
+        min-width: 120px;
+      }
     }
   }
 }
