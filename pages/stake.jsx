@@ -251,25 +251,26 @@ export default function Stake() {
                         }
                       >
                         Validator Name{" "}
-                        {(activeValidators ||
-                          (activeValidators && delegated)) && (
-                          <span
-                            className=""
-                            style={{
-                              opacity: SortTableByField.includes("name")
-                                ? "1"
-                                : "0.3",
-                            }}
-                          >
-                            {SortTableByField === "name" ? (
-                              <i className="bi bi-caret-up-fill" />
-                            ) : (
-                              <i className="bi bi-caret-down-fill" />
-                            )}
-                          </span>
-                        )}
+                        {/* {(activeValidators ||
+                          (activeValidators && delegated)) && ( */}
+                        <span
+                          className=""
+                          style={{
+                            opacity: SortTableByField.includes("name")
+                              ? "1"
+                              : "0.3",
+                          }}
+                        >
+                          {SortTableByField === "name" ? (
+                            <i className="bi bi-caret-up-fill" />
+                          ) : (
+                            <i className="bi bi-caret-down-fill" />
+                          )}
+                        </span>
+                        {/* )} */}
                       </th>
                       <th
+                        className="am-w-min-120"
                         scope="col"
                         style={{ whiteSpace: "nowrap" }}
                         role="button"
@@ -281,23 +282,23 @@ export default function Stake() {
                         }
                       >
                         Voting Power{" "}
-                        {(activeValidators ||
-                          (activeValidators && delegated)) && (
-                          <span
-                            className=""
-                            style={{
-                              opacity: SortTableByField.includes("tokens")
-                                ? "1"
-                                : "0.3",
-                            }}
-                          >
-                            {SortTableByField === "tokens" ? (
-                              <i className="bi bi-caret-up-fill" />
-                            ) : (
-                              <i className="bi bi-caret-down-fill" />
-                            )}
-                          </span>
-                        )}
+                        {/* {(activeValidators ||
+                          (activeValidators && delegated)) && ( */}
+                        <span
+                          className=""
+                          style={{
+                            opacity: SortTableByField.includes("tokens")
+                              ? "1"
+                              : "0.3",
+                          }}
+                        >
+                          {SortTableByField === "tokens" ? (
+                            <i className="bi bi-caret-up-fill" />
+                          ) : (
+                            <i className="bi bi-caret-down-fill" />
+                          )}
+                        </span>
+                        {/* )} */}
                       </th>
                       <th
                         scope="col"
@@ -311,23 +312,23 @@ export default function Stake() {
                         }
                       >
                         Commission{" "}
-                        {(activeValidators ||
-                          (activeValidators && delegated)) && (
-                          <span
-                            className=""
-                            style={{
-                              opacity: SortTableByField.includes("commission")
-                                ? "1"
-                                : "0.3",
-                            }}
-                          >
-                            {SortTableByField === "commission" ? (
-                              <i className="bi bi-caret-up-fill" />
-                            ) : (
-                              <i className="bi bi-caret-down-fill" />
-                            )}
-                          </span>
-                        )}
+                        {/* {(activeValidators ||
+                          (activeValidators && delegated)) && ( */}
+                        <span
+                          className=""
+                          style={{
+                            opacity: SortTableByField.includes("commission")
+                              ? "1"
+                              : "0.3",
+                          }}
+                        >
+                          {SortTableByField === "commission" ? (
+                            <i className="bi bi-caret-up-fill" />
+                          ) : (
+                            <i className="bi bi-caret-down-fill" />
+                          )}
+                        </span>
+                        {/* )} */}
                       </th>
                       {delegated ? null : (
                         <th
@@ -373,25 +374,25 @@ export default function Stake() {
                         }
                       >
                         Delegated Amount{" "}
-                        {(activeValidators ||
-                          (activeValidators && delegated)) && (
-                          <span
-                            className=""
-                            style={{
-                              opacity: SortTableByField.includes(
-                                "delegatedAmount"
-                              )
-                                ? "1"
-                                : "0.3",
-                            }}
-                          >
-                            {SortTableByField === "delegatedAmount" ? (
-                              <i className="bi bi-caret-up-fill" />
-                            ) : (
-                              <i className="bi bi-caret-down-fill" />
-                            )}
-                          </span>
-                        )}
+                        {/* {(activeValidators ||
+                          (activeValidators && delegated)) && ( */}
+                        <span
+                          className=""
+                          style={{
+                            opacity: SortTableByField.includes(
+                              "delegatedAmount"
+                            )
+                              ? "1"
+                              : "0.3",
+                          }}
+                        >
+                          {SortTableByField === "delegatedAmount" ? (
+                            <i className="bi bi-caret-up-fill" />
+                          ) : (
+                            <i className="bi bi-caret-down-fill" />
+                          )}
+                        </span>
+                        {/* )} */}
                       </th>
                       {activeValidators ? null : (
                         <th scope="col" style={{ whiteSpace: "nowrap" }}>
