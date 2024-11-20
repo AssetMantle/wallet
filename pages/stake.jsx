@@ -447,6 +447,7 @@ export default function Stake() {
             setShowClaimError={setShowClaimError}
             totalTokens={totalTokens}
             selectedValidators={stakeState?.selectedValidators}
+            forActiveValidators={activeValidators}
           />
         </ScrollableSectionContainer>
       </section>
