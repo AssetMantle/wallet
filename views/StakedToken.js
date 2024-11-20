@@ -18,6 +18,7 @@ export default function StakedToken({
   stakeState,
   stakeDispatch,
   notify,
+  forActiveValidators,
 }) {
   const { availableBalance } = useAvailableBalance();
   const [openModal, setOpenModal] = useState(false);
@@ -88,24 +89,26 @@ export default function StakedToken({
               stakeDispatch={stakeDispatch}
             />
           </Suspense>
-          {stakeState?.selectedValidators?.length === 1 ? (
-            <button
-              className="button-primary text-center px-3 py-2"
-              style={{ maxWidth: "100%" }}
-              disabled={isSubmitDisabled}
-              onClick={() => {
-                stakeDispatch({
-                  type: "SET_DELEGATION_ADDRESS",
-                  payload: stakeState?.selectedValidators[0],
-                });
-                setDelegateModal(true);
-              }}
-              // data-bs-toggle="modal"
-              // data-bs-target="#delegateModal"
-            >
-              Delegate
-            </button>
-          ) : null}
+          {stakeState?.selectedValidators?.length === 1
+            ? forActiveValidators === true && (
+                <button
+                  className="button-primary text-center px-3 py-2"
+                  style={{ maxWidth: "100%" }}
+                  disabled={isSubmitDisabled}
+                  onClick={() => {
+                    stakeDispatch({
+                      type: "SET_DELEGATION_ADDRESS",
+                      payload: stakeState?.selectedValidators[0],
+                    });
+                    setDelegateModal(true);
+                  }}
+                  // data-bs-toggle="modal"
+                  // data-bs-target="#delegateModal"
+                >
+                  Delegate
+                </button>
+              )
+            : null}
           {stakeState?.selectedValidators?.length > 5 || showClaimError ? (
             <div className="d-flex justify-content-between">
               <p className="text-error">
