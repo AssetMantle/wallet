@@ -97,6 +97,8 @@ export default function Stake() {
     </th>
   );
 
+  console.log("delegatedValidators: ", delegatedValidators);
+
   return (
     <>
       <Head>
