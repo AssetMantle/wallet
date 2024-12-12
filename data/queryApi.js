@@ -343,17 +343,18 @@ const fetchTotalDelegated = async (url, address) => {
     // get the data from cosmos queryClient
 
     //Fetch a list of all validators
-    const { validators: validators1 } =
-      await client.cosmos.staking.v1beta1.validators({
-        status: "",
-      });
-    const { validators: validators2 } =
-      await client.cosmos.staking.v1beta1.validators({
-        status: "BOND_STATUS_BONDED",
-      });
+    const pagination = {
+      key: new Uint8Array(), // Use an empty Uint8Array or set it to the key returned from a previous response
+      offset: BigInt(0), // Start from the first item
+      limit: BigInt(1000), // Fetch up to 20 items
+      countTotal: false, // Don't include the total count of items in the response
+      reverse: false, // Return results in ascending order
+    };
 
-    // Merge the arrays and remove duplicates based on `operator_address`
-    const validators = [...validators1, ...validators2];
+    const { validators } = await client.cosmos.staking.v1beta1.validators({
+      status: "",
+      pagination,
+    });
 
     //Fetch a list of all validators that have been delegated by the delegator
     const { delegationResponses } =
@@ -372,6 +373,16 @@ const fetchTotalDelegated = async (url, address) => {
         delegatedValidators?.push?.(match);
       }
     });
+
+    console.log(
+      "validators: ",
+      validators,
+      " delegationResponses: ",
+      delegationResponses,
+      " delegatedValidators: ",
+      delegatedValidators
+    );
+
     //Get total delegated amount
     totalDelegatedAmount = delegationResponses?.reduce?.(
       (total, currentValue) =>
