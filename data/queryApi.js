@@ -4,6 +4,7 @@ import BigNumber from "bignumber.js";
 import { assets, chains } from "chain-registry";
 import { cosmos } from "osmojs";
 import useSwr from "swr";
+import { fetchBalance, readContract } from "wagmi/actions";
 import {
   defaultChainDenom,
   defaultChainDenomExponent,
@@ -31,7 +32,6 @@ import {
   placeholderAddress,
   staticTradeData,
 } from "./constants";
-import { fetchBalance, readContract } from "wagmi/actions";
 
 const rpcEndpoint = defaultChainRPCProxy;
 const restEndpoint = defaultChainRESTProxy;
@@ -343,9 +343,18 @@ const fetchTotalDelegated = async (url, address) => {
     // get the data from cosmos queryClient
 
     //Fetch a list of all validators
-    const { validators } = await client.cosmos.staking.v1beta1.validators({
-      status: "",
-    });
+    const { validators: validators1 } =
+      await client.cosmos.staking.v1beta1.validators({
+        status: "",
+      });
+    const { validators: validators2 } =
+      await client.cosmos.staking.v1beta1.validators({
+        status: "BOND_STATUS_BONDED",
+      });
+
+    // Merge the arrays and remove duplicates based on `operator_address`
+    const validators = [...validators1, ...validators2];
+
     //Fetch a list of all validators that have been delegated by the delegator
     const { delegationResponses } =
       await client.cosmos.staking.v1beta1.delegatorDelegations({

@@ -1,15 +1,15 @@
+import Head from "next/head";
+import Link from "next/link";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import AllValidators from "../components/AllValidators";
 import DelegatedValidators from "../components/DelegatedValidators";
+import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
 import Tooltip from "../components/Tooltip";
+import { toastConfig } from "../config";
 import { useAllValidators, useDelegatedValidators } from "../data";
 import useStakeReducer from "../data/useStakeReducer";
 import StakedToken from "../views/StakedToken";
-import ScrollableSectionContainer from "../components/ScrollableSectionContainer";
-import Head from "next/head";
-import { toast } from "react-toastify";
-import Link from "next/link";
-import { toastConfig } from "../config";
 
 export default function Stake() {
   const [searchValue, setSearchValue] = useState("");
@@ -69,32 +69,6 @@ export default function Stake() {
     }
   };
 
-  // transaction manifest modal states and functions
-  // const GasOptions = [
-  //   {
-  //     name: "Zero",
-  //     usd: "0.0000",
-  //     mntl: "0.0000",
-  //   },
-  //   {
-  //     name: "Low",
-  //     usd: "0.0000",
-  //     mntl: "0.0000",
-  //   },
-  //   {
-  //     name: "High",
-  //     usd: "0.0000",
-  //     mntl: "0.0000",
-  //   },
-  // ];
-  // const [SelectedGasFee, setSelectedGasFee] = useState(GasOptions[0].name);
-  // const [ManifestShowAdvanced, setManifestShowAdvanced] = useState(false);
-  // const [ManifestKeystorePassword, setManifestKeystorePassword] = useState();
-  // const [ManifestCustomGas, setManifestCustomGas] = useState();
-  // const handleManifestConfirm = () => {
-  //   console.log("Confirming transaction manifest");
-  // };
-
   const THRank = (
     <th
       scope="col"
@@ -122,6 +96,8 @@ export default function Stake() {
       )}
     </th>
   );
+
+  console.log("delegatedValidators: ", delegatedValidators);
 
   return (
     <>
