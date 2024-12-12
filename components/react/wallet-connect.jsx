@@ -183,7 +183,6 @@ export const WalletConnectComponent = ({
   errored,
   notExist,
 }) => {
-  console.log("wallet status: ", walletStatus);
   useEffect(() => {
     if (walletStatus == WalletStatus.NotExist) {
       toast.error(
