@@ -80,7 +80,7 @@ export default function Header({ setLeftCol }) {
   const appLogoJSX = (
     <div
       className="d-flex position-relative"
-      style={{ width: "min(195.05px,30%)", aspectRatio: "195.05/33" }}
+      style={{ width: "min(195.05px,30%)", aspectRatio: "5591/900" }}
     >
       <Link href="/">
         <a>
