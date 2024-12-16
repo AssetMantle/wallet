@@ -33,6 +33,7 @@ export default function StakedToken({
       type: "SUBMIT_DELEGATE",
     });
     if (stakeState.delegationAmount) {
+      stakeDispatch({ type: "RESET_ALL_SELECTED_VALIDATORS" });
       setDelegateModal(false);
       const id = toast.loading("Transaction initiated ...", toastConfig);
       const { response, error } = await sendDelegation(
@@ -80,6 +81,7 @@ export default function StakedToken({
               notify={notify}
               stakeState={stakeState}
               setShowClaimError={setShowClaimError}
+              stakeDispatch={stakeDispatch}
             />
           </Suspense>
           <Suspense fallback={<p>Loading</p>}>
