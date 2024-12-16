@@ -32,6 +32,7 @@ const Rewards = ({
   notify,
   setDelegated,
   delegated,
+  stakeDispatch,
 }) => {
   const [ClaimModal, setClaimModal] = useState(false);
 
@@ -81,6 +82,7 @@ const Rewards = ({
 
   const handleSubmitClaim = async (e) => {
     e.preventDefault();
+    stakeDispatch({ type: "RESET_ALL_SELECTED_VALIDATORS" });
     setClaimModal(false);
 
     // notify toast for transaction initiation
