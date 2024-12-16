@@ -61,6 +61,9 @@ const useStakeReducer = () => {
         );
         return { ...state, selectedValidators: filteredValidators };
       }
+      case "RESET_ALL_SELECTED_VALIDATORS": {
+        return { ...state, selectedValidators: [] };
+      }
 
       case "SET_MAX_DELEGATION_AMOUNT": {
         if (
@@ -261,7 +264,7 @@ const useStakeReducer = () => {
             },
           };
         }
-        // if valid amount, remove any previous error message set and return updated amount
+        // if valid a mount, remove any previous error message set and return updated amount
         else {
           // delete the error message key if already exists
           delete state.errorMessages.undelegationAmountErrorMsg;
