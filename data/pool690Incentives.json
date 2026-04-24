@@ -11,7 +11,7 @@
     "total_budget_mntl": "56718627000000",
     "lock_split": { "1d": 0.4, "7d": 0.3, "14d": 0.3 },
     "operator_address": null,
-    "gauge_ids": { "1d": null, "7d": null, "14d": null },
+    "gauge_ids": { "1d": 3174, "7d": 3175, "14d": 3176 },
     "announce_urls": {
       "plan_doc": "https://github.com/AssetMantle/wallet/blob/main/data/pool690Incentives.json",
       "proposal": null,

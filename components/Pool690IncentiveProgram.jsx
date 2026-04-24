@@ -1,13 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import incentiveData from "../data/pool690Incentives.json";
 
-// Price constant used ONLY for USD display of the remaining MNTL budget.
-// Intentionally not fetched live — the JSON is the source of truth and the
-// bot that maintains it is responsible for recording per-week USD values.
-const MNTL_USD_PRICE = 0.00008354;
+// Used for pre-program USD display when the live CoinGecko fetch has not yet
+// resolved (or has failed). The live price, when available, overrides this.
+const FALLBACK_MNTL_USD_PRICE = 0.00008354;
 
-// 6-decimal denom (umntl). 10^6 micro-units per MNTL.
+// 6-decimal denom (umntl) and likewise uosmo. 10^6 micro-units per whole coin.
 const MNTL_DECIMALS = 6;
+const OSMO_DECIMALS = 6;
+
+// Endpoints for the one-shot client-side refresh of pool TVL + MNTL/OSMO
+// prices. Both endpoints serve CORS `Access-Control-Allow-Origin: *` headers
+// so the browser can reach them directly from any wallet.assetmantle.one
+// origin.
+const OSMOSIS_POOL_690_LCD =
+  "https://lcd.osmosis.zone/osmosis/gamm/v1beta1/pools/690";
+const COINGECKO_MNTL_OSMO_URL =
+  "https://api.coingecko.com/api/v3/simple/price?ids=assetmantle,osmosis&vs_currencies=usd";
+const MNTL_IBC_DENOM_ON_OSMOSIS =
+  "ibc/CBA34207E969623D95D057D9B11B0C8B32B89A71F170577D982FDDE623813FFC";
 
 const STATUS_META = {
   pending_start: { label: "Pending", symbol: "⏳", className: "text-warning" },
@@ -35,14 +46,15 @@ const formatUmntlToMntl = (umntl) => {
   return whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
-const umntlToUsd = (umntl) => {
+const umntlToUsd = (umntl, price) => {
   if (umntl === null || umntl === undefined) return null;
+  if (!Number.isFinite(price)) return null;
   const s = String(umntl);
   if (s === "0") return 0;
-  // Compute USD in JS number: budget in MNTL (~5.6e7) * price (~8.3e-5) ≈ $4,700 — safely in Number range.
+  // Budget in MNTL (~5.6e7) * price (~8.3e-5) ≈ $4,700 — safely in Number range.
   if (s.length <= MNTL_DECIMALS) return 0;
   const whole = Number(s.slice(0, -MNTL_DECIMALS));
-  return whole * MNTL_USD_PRICE;
+  return whole * price;
 };
 
 const formatUsd = (n, digits = 2) => {
@@ -69,6 +81,50 @@ const osmosisPoolUrl = (id) => `https://app.osmosis.zone/pool/${id}`;
 const Pool690IncentiveProgram = () => {
   const { program, summary, weekly_reports: weeklyReports } = incentiveData;
   const [showHistory, setShowHistory] = useState(false);
+  // Live TVL + spot prices fetched client-side on mount. `null` until the
+  // fetch resolves; if the fetch fails we fall back silently to the values
+  // in incentiveData (which the bot maintains).
+  const [live, setLive] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const [poolRes, priceRes] = await Promise.all([
+          fetch(OSMOSIS_POOL_690_LCD),
+          fetch(COINGECKO_MNTL_OSMO_URL),
+        ]);
+        if (!poolRes.ok || !priceRes.ok) return;
+        const [poolJson, priceJson] = await Promise.all([
+          poolRes.json(),
+          priceRes.json(),
+        ]);
+        const assets = poolJson?.pool?.pool_assets ?? [];
+        const mntlAsset = assets.find(
+          (a) => a?.token?.denom === MNTL_IBC_DENOM_ON_OSMOSIS
+        );
+        const osmoAsset = assets.find((a) => a?.token?.denom === "uosmo");
+        const mntlPrice = Number(priceJson?.assetmantle?.usd);
+        const osmoPrice = Number(priceJson?.osmosis?.usd);
+        if (!mntlAsset || !osmoAsset) return;
+        if (!Number.isFinite(mntlPrice) || !Number.isFinite(osmoPrice)) return;
+        const mntlAmount = Number(mntlAsset.token.amount) / 10 ** MNTL_DECIMALS;
+        const osmoAmount = Number(osmoAsset.token.amount) / 10 ** OSMO_DECIMALS;
+        if (!Number.isFinite(mntlAmount) || !Number.isFinite(osmoAmount))
+          return;
+        const tvlUsd = mntlAmount * mntlPrice + osmoAmount * osmoPrice;
+        if (!cancelled) {
+          setLive({ tvlUsd, mntlPrice, osmoPrice });
+        }
+      } catch (_) {
+        // Silent fallback to JSON-reported values. Any error in the live
+        // refresh path should not block rendering the card.
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const status = STATUS_META[summary.status] || STATUS_META.pending_start;
 
@@ -76,7 +132,15 @@ const Pool690IncentiveProgram = () => {
   const weeksCompleted = Math.min(summary.weeks_completed || 0, totalWeeks);
   const pctComplete = totalWeeks > 0 ? (weeksCompleted / totalWeeks) * 100 : 0;
 
-  const remainingUsd = umntlToUsd(summary.remaining_budget_mntl);
+  const effectiveMntlPrice = live?.mntlPrice ?? FALLBACK_MNTL_USD_PRICE;
+  const remainingUsd = umntlToUsd(
+    summary.remaining_budget_mntl,
+    effectiveMntlPrice
+  );
+
+  const displayedTvlUsd =
+    live?.tvlUsd != null ? live.tvlUsd : summary.last_tvl_usd;
+  const tvlCaption = live?.tvlUsd != null ? "live" : "last reported";
 
   const hasReports = Array.isArray(weeklyReports) && weeklyReports.length > 0;
 
@@ -133,13 +197,11 @@ const Pool690IncentiveProgram = () => {
           <div className="nav-bg rounded-3 p-2 h-100">
             <div className="caption2 text-white-300">Current TVL</div>
             <div className="body1 text-white">
-              {summary.last_tvl_usd === null ||
-              summary.last_tvl_usd === undefined
-                ? "—"
-                : formatUsd(summary.last_tvl_usd)}
+              {displayedTvlUsd == null ? "—" : formatUsd(displayedTvlUsd)}
             </div>
             <div className="caption2 text-white-300">
               pool #{program.pool.id}
+              {displayedTvlUsd != null && ` · ${tvlCaption}`}
             </div>
           </div>
         </div>
@@ -182,9 +244,17 @@ const Pool690IncentiveProgram = () => {
       {/* Lock-duration split summary */}
       <div className="d-flex flex-wrap gap-3 caption2 text-white-300">
         <span>
-          Lock-duration split: 1d {Math.round(program.lock_split["1d"] * 100)}%
-          / 7d {Math.round(program.lock_split["7d"] * 100)}% / 14d{" "}
-          {Math.round(program.lock_split["14d"] * 100)}%
+          Lock-duration split:{" "}
+          {["1d", "7d", "14d"].map((bucket, i) => {
+            const pct = Math.round(program.lock_split[bucket] * 100);
+            const gauge = program.gauge_ids?.[bucket];
+            return (
+              <React.Fragment key={bucket}>
+                {i > 0 && " / "}
+                {bucket} {pct}%{gauge != null && ` (gauge #${gauge})`}
+              </React.Fragment>
+            );
+          })}
         </span>
         <span>Top-up cadence: weekly (Mon 00:00 UTC)</span>
       </div>
