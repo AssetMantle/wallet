@@ -121,7 +121,6 @@ export const sendRedelegation = async (
     const fromAddress = delegatorAddress;
     // // initialize stargate client and create txn
     const stargateClient = await getSigningStargateClient();
-    console.log(amountInDenom);
     if (!stargateClient || !fromAddress) {
       throw new Error("stargateClient or from address undefined");
     }
@@ -418,7 +417,6 @@ export const sendRewardsBatched = async (
     // get the amount in denom terms
     // populate the optional argument fromAddress
     const fromAddress = address;
-    console.log(address, withdrawAddress);
     // initialize stargate client and create txn
     const stargateClient = await getSigningStargateClient();
     if (!stargateClient || !fromAddress) {
@@ -482,7 +480,6 @@ export const sendIbcTokenToGravity = async (
 ) => {
   let response = null;
   try {
-    console.log(fromAddress, toGravityAddress, amount);
     // get the coin data
     const denomOfAmount = defaultChainDenom;
     // get the amount in denom terms
@@ -547,7 +544,6 @@ export const sendIbcTokenToOsmosis = async (
 ) => {
   let response = null;
   try {
-    console.log(fromAddress, toOsmosisAddress, amount);
     // get the coin data
     const denomOfAmount = defaultChainDenom;
     // get the amount in denom terms
@@ -615,12 +611,6 @@ export const sendGravityIbcTokenToMantle = async (
   let response = null;
 
   try {
-    console.log(
-      "inside sendGravityIbcTokenToMantle: ",
-      fromGravityAddress,
-      toMantleAddress,
-      amount
-    );
     // get the coin data
     const denomOfAmount = gravityIBCToken;
     // get the amount in denom terms
@@ -699,12 +689,6 @@ export const sendOsmosisIbcTokenToMantle = async (
   let response = null;
 
   try {
-    console.log(
-      "inside sendOsmosisIbcTokenToMantle: ",
-      fromOsmosisAddress,
-      toMantleAddress,
-      amount
-    );
     // get the coin data
     const denomOfAmount = osmosisIBCToken;
     // get the amount in denom terms
@@ -774,16 +758,6 @@ export const sendIbcTokenToEth = async (
     chainDenom = defaultChainDenom,
   }
 ) => {
-  console.log(
-    "inside sendIcTokenToEth senderAdress: ",
-    senderAddress,
-    " ethDestAddress: ",
-    ethDestAddress,
-    " amount: ",
-    amount,
-    " bridgeFeeAmount: ",
-    bridgeFeeAmount
-  );
   try {
     // keep the values to defaultChain and defaultDenom since we are dealing with ibc tokens of default chain
     const amountInDenom = toChainDenom(amount, chainName, chainDenom);

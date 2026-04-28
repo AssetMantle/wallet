@@ -3,6 +3,25 @@ import { getBalanceStyle } from "../config";
 import { decimalize, staticEarnData, useOsmosis, useQuickswap } from "../data";
 import Table from "./Table";
 
+// Pool #690 (MNTL/OSMO) has an active liquidity incentive program,
+// details of which are rendered in <Pool690IncentiveProgram />. We tag the
+// corresponding row here with a small badge so users browsing the table
+// can spot the incentive at a glance.
+const isPool690Row = (row) => {
+  const url = row?.url || "";
+  return /app\.osmosis\.zone\/pool\/690(\b|\/|$)/.test(url);
+};
+
+const IncentiveBadge = () => (
+  <span
+    className="badge bg-primary text-dark caption2 ms-2"
+    title="Liquidity incentive program active"
+    style={{ fontSize: "0.7rem" }}
+  >
+    🎁 Incentive
+  </span>
+);
+
 const EarnTable = () => {
   const { allOsmosis, isLoadingOsmosis, errorOsmosis } = useOsmosis();
   const { allQuickswap, isLoadingQuickswap, errorQuickswap } = useQuickswap();
@@ -75,6 +94,7 @@ const EarnTable = () => {
             {tableProps.row.original.symbol}
           </a>{" "}
           <i className="bi bi-arrow-up-right"></i>
+          {isPool690Row(tableProps.row.original) && <IncentiveBadge />}
         </div>
       ),
     },
@@ -169,6 +189,7 @@ const EarnTable = () => {
             {tableProps.row.original.symbol}
           </a>{" "}
           <i className="bi bi-arrow-up-right"></i>
+          {isPool690Row(tableProps.row.original) && <IncentiveBadge />}
         </div>
       ),
     },

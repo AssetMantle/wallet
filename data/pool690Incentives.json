@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "program": {
+    "name": "Pool #690 Liquidity Bootstrap",
+    "pool": { "chain": "osmosis-1", "id": 690, "name": "MNTL / OSMO" },
+    "target_apr": 0.6,
+    "peg": "USD",
+    "duration_days": 90,
+    "start_date": "2026-04-30",
+    "end_date": "2026-07-29",
+    "total_budget_mntl": "56718627000000",
+    "lock_split": { "1d": 0.4, "7d": 0.3, "14d": 0.3 },
+    "operator_address": null,
+    "gauge_ids": { "1d": 3174, "7d": 3175, "14d": 3176 },
+    "announce_urls": {
+      "plan_doc": null,
+      "proposal": null,
+      "forum": null
+    }
+  },
+  "summary": {
+    "weeks_completed": 0,
+    "cumulative_spent_mntl": "0",
+    "cumulative_spent_usd": 0,
+    "last_tvl_usd": null,
+    "last_observed_apr": null,
+    "last_top_up_date": null,
+    "remaining_budget_mntl": "56718627000000",
+    "status": "pending_start"
+  },
+  "weekly_reports": []
+}

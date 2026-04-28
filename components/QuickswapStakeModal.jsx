@@ -196,9 +196,11 @@ export const QuickswapStakeModal = ({
     });
   };
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleSubmit = async (e) => {
-    console.log("inside handleSubmit()");
     e.preventDefault();
+    if (isSubmitting) return; // guard against double-click double-broadcast
 
     // copy form states to local variables
     const localTransferAmount = formState?.transferAmount;
@@ -220,6 +222,7 @@ export const QuickswapStakeModal = ({
       isObjEmpty(formState?.errorMessages);
 
     if (isFormValid) {
+      setIsSubmitting(true);
       try {
         // initiate the toast
         toastId1 = toast.loading("Transaction initiated ...", toastConfig);
@@ -240,6 +243,8 @@ export const QuickswapStakeModal = ({
         }
       } catch (error) {
         console.error("Runtime Error: ", error);
+      } finally {
+        setIsSubmitting(false);
       }
       formDispatch({ type: "RESET" });
     }
@@ -272,7 +277,9 @@ export const QuickswapStakeModal = ({
     </>
   );
   const isSubmitDisabled =
-    !isWalletEthConnected || !isObjEmpty(formState?.errorMessages);
+    isSubmitting ||
+    !isWalletEthConnected ||
+    !isObjEmpty(formState?.errorMessages);
   const displayInputAmountValue = formState?.transferAmount;
   const isFormAmountError = formState?.errorMessages?.transferAmountErrorMsg;
   const displayFormAmountErrorMsg =

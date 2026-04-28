@@ -219,10 +219,15 @@ const fetchTotalUnbonding = async (url, address) => {
             completion_time: ele?.completionTime,
           })
         );
+        // Sum micro-denom strings via BigNumber — these can exceed the
+        // 2^53 safe-integer ceiling for chains with high supply, where
+        // parseFloat would silently truncate.
         totalUnbondingAmount = allUnbonding?.reduce?.(
           (total, currentValue) =>
-            parseFloat(total) + parseFloat(currentValue?.balance),
-          parseFloat("0")
+            BigNumber(total)
+              .plus(currentValue?.balance ?? 0)
+              .toString(),
+          "0"
         );
       });
     }
@@ -383,11 +388,14 @@ const fetchTotalDelegated = async (url, address) => {
       delegatedValidators
     );
 
-    //Get total delegated amount
+    // Sum delegated micro-denom amounts via BigNumber — see note in
+    // useTotalUnbonding.
     totalDelegatedAmount = delegationResponses?.reduce?.(
       (total, currentValue) =>
-        parseFloat(total) + parseFloat(currentValue?.balance?.amount),
-      parseFloat("0")
+        BigNumber(total)
+          .plus(currentValue?.balance?.amount ?? 0)
+          .toString(),
+      "0"
     );
   } catch (error) {
     console.error(`swr fetcher : url: ${url},  error: ${error}`);
@@ -1104,9 +1112,11 @@ const fetchAllTrades = async (url) => {
   let tokenDetails = {};
 
   try {
-    const data = await fetch(
+    const cgRes = await fetch(
       "https://api.coingecko.com/api/v3/coins/assetmantle?localization=false&tickers=true&market_data=true&community_data=false&developer_data=false&sparkline=false"
-    ).then((res) => res.json());
+    );
+    if (!cgRes.ok) throw new Error(`coingecko ${cgRes.status}`);
+    const data = await cgRes.json();
 
     tokenDetails = {
       marketCap: data?.market_data?.market_cap?.usd,
@@ -1217,9 +1227,9 @@ export const useOsmosis = () => {
         },
       ];
 
-      const llamaData = await fetch("https://yields.llama.fi/pools").then(
-        (res) => res.json()
-      );
+      const llamaRes = await fetch("https://yields.llama.fi/pools");
+      if (!llamaRes.ok) throw new Error(`yields.llama.fi ${llamaRes.status}`);
+      const llamaData = await llamaRes.json();
 
       const filteredLlamaData = llamaData?.data?.filter(
         (item) =>
@@ -1227,9 +1237,12 @@ export const useOsmosis = () => {
       );
 
       osmosisData = filteredLlamaData?.map((item) => {
+        // url is optional — Llama may add a new MNTL/* pair we don't yet
+        // map. Fall back to the Osmosis app URL rather than throwing.
+        const matched = urlData.find((e) => item?.symbol.includes(e.symbol));
         return {
           ...item,
-          url: urlData.find((e) => item?.symbol.includes(e.symbol)).url,
+          url: matched?.url || "https://app.osmosis.zone/",
         };
       });
 
@@ -1333,9 +1346,9 @@ export const useQuickswap = () => {
       },
     ];
     try {
-      const llamaData = await fetch("https://yields.llama.fi/pools").then(
-        (res) => res.json()
-      );
+      const llamaRes = await fetch("https://yields.llama.fi/pools");
+      if (!llamaRes.ok) throw new Error(`yields.llama.fi ${llamaRes.status}`);
+      const llamaData = await llamaRes.json();
       const filteredLlamaData = llamaData?.data?.filter(
         (item) =>
           item?.symbol.includes("MNTL") &&
@@ -1343,9 +1356,11 @@ export const useQuickswap = () => {
       );
 
       quickswapData = filteredLlamaData?.map((item) => {
+        // See note in fetchOsmosisFarmData — fallback when symbol is unmapped.
+        const matched = urlData.find((e) => item?.symbol.includes(e.symbol));
         return {
           ...item,
-          url: urlData.find((e) => item?.symbol.includes(e.symbol)).url,
+          url: matched?.url || "https://quickswap.exchange/",
         };
       });
     } catch (error) {
@@ -1418,13 +1433,13 @@ export const useComdexFarm = (poolID) => {
     ];
     let comdexData;
     try {
-      const tvlData = await fetch(initialData[poolID].api).then((res) =>
-        res.json()
-      );
+      const tvlRes = await fetch(initialData[poolID].api);
+      if (!tvlRes.ok) throw new Error(`comdex tvl ${tvlRes.status}`);
+      const tvlData = await tvlRes.json();
 
-      const comdexAprData = await fetch(
-        "https://stat.comdex.one/api/v2/cswap/aprs"
-      ).then((res) => res.json());
+      const aprRes = await fetch("https://stat.comdex.one/api/v2/cswap/aprs");
+      if (!aprRes.ok) throw new Error(`comdex aprs ${aprRes.status}`);
+      const comdexAprData = await aprRes.json();
 
       comdexData = {
         pair: initialData[poolID].pair,

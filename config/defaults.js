@@ -32,10 +32,14 @@ export const assetmantleTestChainFeeGas = "250000";
 export const assetmantleTestChainChainHost =
   "https://testnet.wallet.assetmantle.one";
 
+// HTTPS-only — plaintext HTTP would let an on-path attacker rewrite tx
+// bytes between unsigned-build and signing. As of 2026-04-28 the testnet
+// RPC/REST are offline; HTTPS makes that fail visibly (TLS error) instead
+// of silently 301'ing to a broken endpoint serving an unrelated cert.
 export const assetmantleTestChainRPCProxy =
-  "http://rpc.testnet.assetmantle.one/";
+  "https://rpc.testnet.assetmantle.one/";
 export const assetmantleTestChainRESTProxy =
-  "http://rest.testnet.assetmantle.one/";
+  "https://rest.testnet.assetmantle.one/";
 
 // GRAVITY CHAIN
 export const defaultGravityIBCSourcePort = "transfer";

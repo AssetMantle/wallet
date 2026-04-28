@@ -87,14 +87,14 @@ const useStakeReducer = () => {
         }
         // if valid available balance then set half value
         else {
-          // delete the error message key if already exists
-          delete state.errorMessages?.transferAmountErrorMsg;
-          console.log(
-            "state error message: ",
-            state.errorMessages?.transferAmountErrorMsg
-          );
+          // Drop the transferAmount error without mutating prev state —
+          // useReducer reducers must be pure or rapid double-dispatch can
+          // corrupt the reference shared between renders.
+          const { transferAmountErrorMsg, ...errorMessages } =
+            state.errorMessages || {};
           return {
             ...state,
+            errorMessages,
             delegationAmount: fromDenom(
               parseFloat(availableBalance) - parseFloat(defaultChainGasFee)
             ).toString(),
@@ -129,10 +129,11 @@ const useStakeReducer = () => {
         }
         // if valid amount, remove any previous error message set and return updated amount
         else {
-          // delete the error message key if already exists
-          delete state.errorMessages.transferAmountErrorMsg;
+          const { transferAmountErrorMsg, ...errorMessages } =
+            state.errorMessages || {};
           return {
             ...state,
+            errorMessages,
             delegationAmount: action.payload,
           };
         }
@@ -170,14 +171,11 @@ const useStakeReducer = () => {
         }
         // if valid available balance then set half value
         else {
-          // delete the error message key if already exists
-          delete state.errorMessages?.undelegationAmountErrorMsg;
-          console.log(
-            "state error message: ",
-            state.errorMessages?.undelegationAmountErrorMsg
-          );
+          const { undelegationAmountErrorMsg, ...errorMessages } =
+            state.errorMessages || {};
           return {
             ...state,
+            errorMessages,
             undelegationAmount: fromDenom(
               parseFloat(delegatedAmount)
             ).toString(),
@@ -211,14 +209,11 @@ const useStakeReducer = () => {
         }
         // if valid available balance then set half value
         else {
-          // delete the error message key if already exists
-          delete state.errorMessages?.redelegationAmountErrorMsg;
-          console.log(
-            "state error message: ",
-            state.errorMessages?.redelegationAmountErrorMsg
-          );
+          const { redelegationAmountErrorMsg, ...errorMessages } =
+            state.errorMessages || {};
           return {
             ...state,
+            errorMessages,
             redelegationAmount: fromDenom(
               parseFloat(delegatedAmount)
             ).toString(),
@@ -264,12 +259,13 @@ const useStakeReducer = () => {
             },
           };
         }
-        // if valid a mount, remove any previous error message set and return updated amount
+        // if valid amount, remove any previous error message set and return updated amount
         else {
-          // delete the error message key if already exists
-          delete state.errorMessages.undelegationAmountErrorMsg;
+          const { undelegationAmountErrorMsg, ...errorMessages } =
+            state.errorMessages || {};
           return {
             ...state,
+            errorMessages,
             undelegationAmount: action.payload,
           };
         }
@@ -334,10 +330,13 @@ const useStakeReducer = () => {
             },
           };
         }
-        // if valid amount, remove any previous error message set and return updated amount
+        // if valid amount, clear all errors and return updated amount.
+        // (The previous code deleted `undelegationAmountErrorMsg` here,
+        // which was both a wrong-key copy-paste — this is the redelegation
+        // case — AND immediately overwritten by `errorMessages: {}` on
+        // the very next line. Removed the no-op delete; behaviour
+        // unchanged.)
         else {
-          // delete the error message key if already exists
-          delete state.errorMessages.undelegationAmountErrorMsg;
           return {
             ...state,
             redelegationAmount: action.payload,
