@@ -9,24 +9,28 @@ export default function Earn() {
       <Head>
         <title>Earn | MantleWallet</title>
       </Head>
-      <div className="d-flex flex-column h-100" style={{ overflowY: "auto" }}>
+      <section
+        className="d-flex flex-column gap-3 h-100"
+        style={{ overflowY: "auto" }}
+      >
+        <h1 className="visually-hidden">Earn</h1>
         <Pool690IncentiveProgram />
-        <section className="row flex-grow-1" style={{ minHeight: "600px" }}>
+        <div className="row" style={{ minHeight: "600px" }}>
           <div className="col-8 h-100">
             <div
               className="bg-gray-800 p-3 pb-5 rounded-4 d-flex flex-column gap-2"
               style={{ height: "90%" }}
             >
               <div className="d-flex align-items-center justify-content-between w-100">
-                <h1 className="card-title body1 text-primary my-auto">Earn</h1>
+                <h2 className="card-title body1 text-primary my-auto">
+                  Earn pools
+                </h2>
               </div>
               <div
                 className="d-flex flex-column w-100 nav-bg p-2 rounded-4 flex-grow-1"
                 style={{ height: "90%" }}
               >
-                <div className="w-100 h-100" style={{ overflow: "auto" }}>
-                  <EarnTable />
-                </div>
+                <EarnTable />
               </div>
             </div>
           </div>
@@ -42,8 +46,8 @@ export default function Earn() {
               </p>
             </div>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
     </>
   );
 }

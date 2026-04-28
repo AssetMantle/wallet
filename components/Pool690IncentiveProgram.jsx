@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import incentiveData from "../data/pool690Incentives.json";
 
 // Used for pre-program USD display when the live CoinGecko fetch has not yet
@@ -8,6 +8,9 @@ const FALLBACK_MNTL_USD_PRICE = 0.00008354;
 // 6-decimal denom (umntl) and likewise uosmo. 10^6 micro-units per whole coin.
 const MNTL_DECIMALS = 6;
 const OSMO_DECIMALS = 6;
+
+// Refresh cadence for live TVL/price + the time-elapsed clock.
+const LIVE_REFRESH_MS = 60_000;
 
 // Endpoints for the one-shot client-side refresh of pool TVL + MNTL/OSMO
 // prices. Both endpoints serve CORS `Access-Control-Allow-Origin: *` headers
@@ -81,14 +84,18 @@ const osmosisPoolUrl = (id) => `https://app.osmosis.zone/pool/${id}`;
 const Pool690IncentiveProgram = () => {
   const { program, summary, weekly_reports: weeklyReports } = incentiveData;
   const [showHistory, setShowHistory] = useState(false);
-  // Live TVL + spot prices fetched client-side on mount. `null` until the
-  // fetch resolves; if the fetch fails we fall back silently to the values
-  // in incentiveData (which the bot maintains).
+  // Live TVL + spot prices fetched client-side. `null` until the first fetch
+  // resolves; if the fetch fails we fall back silently to the values in
+  // incentiveData (which the bot maintains).
   const [live, setLive] = useState(null);
+  // Client-only wall-clock used for the time-elapsed progress bar. Held as
+  // null on the server / first render to avoid a hydration mismatch — the
+  // browser sets it on mount and re-ticks on `LIVE_REFRESH_MS`.
+  const [nowMs, setNowMs] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
-    (async () => {
+    const fetchLive = async () => {
       try {
         const [poolRes, priceRes] = await Promise.all([
           fetch(OSMOSIS_POOL_690_LCD),
@@ -120,9 +127,17 @@ const Pool690IncentiveProgram = () => {
         // Silent fallback to JSON-reported values. Any error in the live
         // refresh path should not block rendering the card.
       }
-    })();
+    };
+
+    setNowMs(Date.now());
+    fetchLive();
+    const tick = setInterval(() => {
+      setNowMs(Date.now());
+      fetchLive();
+    }, LIVE_REFRESH_MS);
     return () => {
       cancelled = true;
+      clearInterval(tick);
     };
   }, []);
 
@@ -130,7 +145,19 @@ const Pool690IncentiveProgram = () => {
 
   const totalWeeks = Math.round(program.duration_days / 7);
   const weeksCompleted = Math.min(summary.weeks_completed || 0, totalWeeks);
-  const pctComplete = totalWeeks > 0 ? (weeksCompleted / totalWeeks) * 100 : 0;
+
+  // True time-elapsed (% of the program duration that has passed). Distinct
+  // from `weeksCompleted`, which is the bot-reported count of completed
+  // weekly top-ups and lags real time when the bot is offline or behind.
+  const pctElapsed = useMemo(() => {
+    if (nowMs == null) return 0;
+    const start = Date.parse(`${program.start_date}T00:00:00Z`);
+    if (!Number.isFinite(start)) return 0;
+    const end = start + program.duration_days * 86_400_000;
+    if (nowMs <= start) return 0;
+    if (nowMs >= end) return 100;
+    return ((nowMs - start) / (end - start)) * 100;
+  }, [nowMs, program.start_date, program.duration_days]);
 
   const effectiveMntlPrice = live?.mntlPrice ?? FALLBACK_MNTL_USD_PRICE;
   const remainingUsd = umntlToUsd(
@@ -218,22 +245,28 @@ const Pool690IncentiveProgram = () => {
         </div>
       </div>
 
-      {/* Progress bar */}
+      {/* Progress bar — reflects real time elapsed (not weeks_completed). */}
       <div className="d-flex flex-column gap-1">
         <div className="d-flex justify-content-between caption2 text-white-300">
           <span>
             Week {weeksCompleted} of {totalWeeks}
           </span>
-          <span>{pctComplete.toFixed(0)}% elapsed</span>
+          <span>{pctElapsed.toFixed(0)}% elapsed</span>
         </div>
         <div
           className="nav-bg rounded-pill"
           style={{ height: "8px", overflow: "hidden" }}
+          role="progressbar"
+          aria-label={`Time elapsed in ${program.name}`}
+          aria-valuenow={Math.round(pctElapsed)}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuetext={`${pctElapsed.toFixed(0)}% elapsed`}
         >
           <div
             className="bg-primary"
             style={{
-              width: `${pctComplete}%`,
+              width: `${pctElapsed}%`,
               height: "100%",
               transition: "width 0.3s ease",
             }}
@@ -299,7 +332,7 @@ const Pool690IncentiveProgram = () => {
               </thead>
               <tbody>
                 {weeklyReports.map((r, idx) => (
-                  <tr key={`${r.week ?? idx}`}>
+                  <tr key={`row-${idx}-${r.week ?? "null"}`}>
                     <td>{r.week ?? idx + 1}</td>
                     <td>{r.date ?? "—"}</td>
                     <td>{r.tvl_usd == null ? "—" : formatUsd(r.tvl_usd)}</td>
