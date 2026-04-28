@@ -193,44 +193,6 @@ export const fallbackTradeVenues = [
 // should reference `fallbackTradeVenues`.
 export const staticTradeData = fallbackTradeVenues;
 
-export const staticEarnData = [
-  {
-    symbol: "MNTL-USDC",
-    logo: "osmosis",
-    project: "Osmosis",
-    chain: "osmosis",
-    apy: "0.000000",
-    tvlUsd: "0.00",
-    url: "https://app.osmosis.zone/pool/738",
-  },
-  {
-    symbol: "MNTL-OSMO",
-    logo: "osmosis",
-    project: "Osmosis",
-    chain: "osmosis",
-    apy: "0.000000",
-    tvlUsd: "0.00",
-    url: "https://app.osmosis.zone/pool/690",
-  },
-  {
-    symbol: "ATOM-MNTL",
-    logo: "osmosis",
-    project: "Osmosis",
-    chain: "osmosis",
-    apy: "0.000000",
-    tvlUsd: "0.00",
-    url: "https://app.osmosis.zone/pool/686",
-  },
-  {
-    symbol: "USDC-MNTL",
-    logo: "quickswap-dex",
-    project: "quickswap-dex",
-    chain: "polygon",
-    apy: "0.000000",
-    tvlUsd: "0.00",
-    url: "https://quickswap.exchange/#/pools/v2?currency0=0x2791bca1f2de4661ed88a30c99a7a9449aa84174&currency1=0x38a536a31ba4d8c1bcca016abbf786ecd25877e8",
-  },
-];
 
 // New UI related data
 export const farmPools = [
@@ -334,36 +296,6 @@ export const farmPools = [
         tvl: "$30,000",
         startTime: "1680353156",
         endTime: "1688211001",
-      },
-    ],
-  },
-  {
-    name: "Comdex cSwap",
-    from: "comdex",
-    pools: [
-      {
-        tokens: "MNTL – CMST",
-        rewardPool: "$0,000.0000",
-        duration: "00Days,00Hours",
-        tvl: "$10,370",
-        apr: "254.52%",
-        apr: "200%",
-        tvl: "$30,000",
-        startTime: "1680353156",
-        endTime: "1688211001",
-        extLink: "https://app.cswap.one/farm/31",
-      },
-      {
-        tokens: "MNTL – CMDX",
-        rewardPool: "$0,000.0000",
-        duration: "00Days,00Hours",
-        tvl: "$10,370",
-        apr: "254.52%",
-        apr: "200%",
-        tvl: "$30,000",
-        startTime: "1680353156",
-        endTime: "1688211001",
-        extLink: "https://app.cswap.one/farm/30",
       },
     ],
   },

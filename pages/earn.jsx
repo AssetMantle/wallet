@@ -1,6 +1,5 @@
 import Head from "next/head";
 import React from "react";
-import EarnTable from "../components/EarnTable";
 import Pool690IncentiveProgram from "../components/Pool690IncentiveProgram";
 
 export default function Earn() {
@@ -15,37 +14,47 @@ export default function Earn() {
       >
         <h1 className="visually-hidden">Earn</h1>
         <Pool690IncentiveProgram />
-        <div className="row" style={{ minHeight: "600px" }}>
-          <div className="col-8 h-100">
-            <div
-              className="bg-gray-800 p-3 pb-5 rounded-4 d-flex flex-column gap-2"
-              style={{ height: "90%" }}
-            >
-              <div className="d-flex align-items-center justify-content-between w-100">
-                <h2 className="card-title body1 text-primary my-auto">
-                  Earn pools
-                </h2>
-              </div>
-              <div
-                className="d-flex flex-column w-100 nav-bg p-2 rounded-4 flex-grow-1"
-                style={{ height: "90%" }}
+        <div className="bg-gray-800 p-3 rounded-4 d-flex flex-column gap-2">
+          <h2 className="card-title body1 text-primary m-0">Other venues</h2>
+          <p className="caption text-gray m-0">
+            AssetMantle is no longer indexed by CoinGecko / DefiLlama; pool data
+            is shown directly via on-chain reads above.
+          </p>
+          <ul className="list-unstyled m-0 d-flex flex-column gap-1">
+            <li>
+              <a
+                href="https://app.osmosis.zone/pool/690"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="am-link"
               >
-                <EarnTable />
-              </div>
-            </div>
-          </div>
-          <div className="col-4">
-            <div className="rounded-4 p-3 my-2 bg-gray-800 width-100 d-flex flex-column text-white">
-              <p>
-                To earn yields, visit the listed DEXs to add $MNTL liquidity.
-              </p>
-              <br></br>
-              <p>
-                Some listed entries might have additional reward tokens
-                available as incentive.
-              </p>
-            </div>
-          </div>
+                Osmosis pool 690 (MNTL/OSMO){" "}
+                <i className="bi bi-arrow-up-right"></i>
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://app.osmosis.zone/pool/738"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="am-link"
+              >
+                Osmosis pool 738 (MNTL/USDC){" "}
+                <i className="bi bi-arrow-up-right"></i>
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://app.osmosis.zone/pool/686"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="am-link"
+              >
+                Osmosis pool 686 (MNTL/ATOM){" "}
+                <i className="bi bi-arrow-up-right"></i>
+              </a>
+            </li>
+          </ul>
         </div>
       </section>
     </>
