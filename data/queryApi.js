@@ -40,14 +40,36 @@ const denom = assets.find(
   (assetObj) => assetObj?.chain_name === defaultChainName
 )?.assets[0]?.base;
 
-// get the RPC Query Client using Modules & Endpoint
-const client = await cosmos.ClientFactory.createRPCQueryClient({
-  rpcEndpoint,
-});
+// Lazy-init RPC + LCD clients so the build doesn't depend on RPC reachability.
+// Top-level await ran at "Collecting page data" time, so any 5xx/429 from
+// the upstream RPC failed the Vercel build.  Cache the promise so concurrent
+// callers share one connection; reset on failure so a transient error doesn't
+// poison every subsequent call for the lifetime of the process.
+let _rpcClientPromise;
+const getRpcClient = () => {
+  if (!_rpcClientPromise) {
+    _rpcClientPromise = cosmos.ClientFactory.createRPCQueryClient({
+      rpcEndpoint,
+    }).catch((err) => {
+      _rpcClientPromise = undefined;
+      throw err;
+    });
+  }
+  return _rpcClientPromise;
+};
 
-const queryClient = await cosmosModule.ClientFactory.createLCDClient({
-  restEndpoint: restEndpoint,
-});
+let _lcdClientPromise;
+const getLcdClient = () => {
+  if (!_lcdClientPromise) {
+    _lcdClientPromise = cosmosModule.ClientFactory.createLCDClient({
+      restEndpoint,
+    }).catch((err) => {
+      _lcdClientPromise = undefined;
+      throw err;
+    });
+  }
+  return _lcdClientPromise;
+};
 
 export const fromDenom = (value, exponent = defaultChainDenomExponent) => {
   if (isNaN(Number(exponent))) {
@@ -204,6 +226,7 @@ const fetchTotalUnbonding = async (url, address) => {
   let allUnbonding = [];
 
   try {
+    const client = await getRpcClient();
     const { unbondingResponses } =
       await client.cosmos.staking.v1beta1.delegatorUnbondingDelegations({
         delegatorAddr: address,
@@ -276,6 +299,7 @@ const fetchTotalRewards = async (url, address) => {
   let rewardsArray;
   let totalRewardsInWei;
   try {
+    const client = await getRpcClient();
     const { rewards } =
       await client.cosmos.distribution.v1beta1.delegationTotalRewards({
         delegatorAddress: address,
@@ -345,6 +369,7 @@ const fetchTotalDelegated = async (url, address) => {
 
   // use a try catch block for creating rich Error object
   try {
+    const client = await getRpcClient();
     // get the data from cosmos queryClient
 
     //Fetch a list of all validators
@@ -449,6 +474,7 @@ const fetchTotalDelegations = async (url, address) => {
 
   // use a try catch block for creating rich Error object
   try {
+    const client = await getRpcClient();
     // get the data from cosmos queryClient
     const { validators } =
       await client.cosmos.staking.v1beta1.delegatorValidators({
@@ -538,6 +564,7 @@ const fetchAvailableBalance = async (url, address) => {
 
   // use a try catch block for creating rich Error object
   try {
+    const client = await getRpcClient();
     // get the data from cosmos queryClient
     const { balance } = await client.cosmos.bank.v1beta1.balance({
       address,
@@ -758,6 +785,7 @@ const fetchAllValidatorsBonded = async (url) => {
 
   // use a try catch block for creating rich Error object
   try {
+    const client = await getRpcClient();
     // get the data from cosmos queryClient
     const { validators } = await client.cosmos.staking.v1beta1.validators({
       status: "BOND_STATUS_BONDED",
@@ -796,6 +824,7 @@ const fetchAllValidatorsUnbonded = async (url) => {
 
   // use a try catch block for creating rich Error object
   try {
+    const client = await getRpcClient();
     // get the data from cosmos queryClient
     const { validators } = await client.cosmos.staking.v1beta1.validators({
       status: "BOND_STATUS_UNBONDED",
@@ -961,6 +990,7 @@ export const useVote = (proposalId) => {
     let voteInfo;
     // use a try catch block for creating rich Error object
     try {
+      const queryClient = await getLcdClient();
       // get the data from cosmos queryClient
       const { vote } = await queryClient.cosmos.gov.v1beta1.vote({
         proposalId: proposalId,
@@ -1006,6 +1036,7 @@ export const useAllProposals = () => {
 
     // use a try catch block for creating rich Error object
     try {
+      const queryClient = await getLcdClient();
       // get the data from cosmos queryClient
       const { proposals } = await queryClient.cosmos.gov.v1beta1.proposals({
         depositor: "",
@@ -1043,6 +1074,7 @@ export const useAllVotes = (proposalId) => {
 
     // use a try catch block for creating rich Error object
     try {
+      const queryClient = await getLcdClient();
       const { votes } = await queryClient.cosmos.gov.v1beta1.votes({
         proposalId: proposalId?.toString(),
       });
@@ -1076,6 +1108,7 @@ export const useWithdrawAddress = () => {
 
     // use a try catch block for creating rich Error object
     try {
+      const client = await getRpcClient();
       // get the data from cosmos queryClient
       const { withdrawAddress } =
         await client.cosmos.distribution.v1beta1.delegatorWithdrawAddress({
