@@ -1,9 +1,7 @@
 import Head from "next/head";
 import React, { Suspense, useState } from "react";
 import {
-  ExternalFarmPoolComdex,
   ExternalFarmPoolOsmosis,
-  LiquidityPoolChainComdex,
   LiquidityPoolChainEthereum,
   LiquidityPoolChainOsmosis,
   LiquidityPoolChainPolygon,
@@ -46,16 +44,6 @@ export default function Farm() {
       farmPoolJSX = isMounted && (
         <Suspense fallback={loadingJSX}>
           <ExternalFarmPoolOsmosis
-            appIndex={selectedPool?.appIndex}
-            poolIndex={selectedPool?.poolIndex}
-          />
-        </Suspense>
-      );
-      break;
-    case 3:
-      farmPoolJSX = isMounted && (
-        <Suspense fallback={loadingJSX}>
-          <ExternalFarmPoolComdex
             appIndex={selectedPool?.appIndex}
             poolIndex={selectedPool?.poolIndex}
           />
@@ -108,13 +96,6 @@ export default function Farm() {
                 setSelectedPool={setSelectedPool}
                 selectedPool={selectedPool}
                 appIndex={2}
-              />
-            </Suspense>
-            <Suspense fallback={loadingJSX}>
-              <LiquidityPoolChainComdex
-                setSelectedPool={setSelectedPool}
-                selectedPool={selectedPool}
-                appIndex={3}
               />
             </Suspense>
           </div>

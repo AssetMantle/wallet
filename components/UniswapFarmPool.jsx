@@ -332,37 +332,11 @@ export function UniswapFarmPool({ poolIndex }) {
             </div>
           </div>
           <div className="border-bottom"></div>
-          <div className="row">
-            <div className="col-7 py-2">
-              <div className="row">
-                <div className="col-6 text-gray caption">Reward Pool</div>
-                <div className="col-6 caption">
-                  {selectedUniswapFarmPool?.rewardPool}
-                </div>
-              </div>
-            </div>
-            <div className="col-5 py-2">
-              <div className="row">
-                <div className="col-6 text-gray caption">TVL</div>
-                <div className="col-6 caption">
-                  {selectedUniswapFarmPool?.tvl}
-                </div>
-              </div>
-            </div>
-            <div className="col-7 py-2">
-              <div className="row">
-                <div className="col-6 text-gray caption">Duration</div>
-                <div className="col-6 caption">{durationRemaining}</div>
-              </div>
-            </div>
-            <div className="col-5 py-2">
-              <div className="row">
-                <div className="col-6 text-gray caption">APR</div>
-                <div className="col-6 caption">
-                  {selectedUniswapFarmPool?.apr}
-                </div>
-              </div>
-            </div>
+          <div className="d-flex align-items-center gap-2 py-2">
+            <span className="badge bg-secondary">Legacy</span>
+            <span className="caption text-gray">
+              Inactive — no live TVL / APR reported.
+            </span>
           </div>
           <div className="border-bottom"></div>
           <div className="d-flex justify-content-end gap-2">

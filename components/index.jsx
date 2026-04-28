@@ -12,7 +12,4 @@ export * from "./LiquidityPoolChainPolygon";
 export * from "./LiquidityPoolChainCardPolygon";
 export * from "./LiquidityPoolChainOsmosis";
 export * from "./LiquidityPoolChainCardOsmosis";
-export * from "./LiquidityPoolChainComdex";
-export * from "./LiquidityPoolChainCardComdex";
 export * from "./ExternalFarmPoolOsmosis";
-export * from "./ExternalFarmPoolComdex";

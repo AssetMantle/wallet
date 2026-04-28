@@ -1614,61 +1614,6 @@ export const useEthereumFarm = () => {
   };
 };
 
-export const useComdexFarm = (poolID) => {
-  // fetcher function for useSwr of useAvailableBalance()
-  const fetchAllComdex = async (url, poolID) => {
-    const initialData = [
-      {
-        api: "https://stat.comdex.one/api/v2/cswap/pairs/33",
-        pair: "MNTL/CMST",
-        poolNumber: "33",
-      },
-      {
-        api: "https://stat.comdex.one/api/v2/cswap/pairs/32",
-        pair: "MNTL/CMDX",
-        poolNumber: "32",
-      },
-    ];
-    let comdexData;
-    try {
-      const tvlRes = await fetch(initialData[poolID].api);
-      if (!tvlRes.ok) throw new Error(`comdex tvl ${tvlRes.status}`);
-      const tvlData = await tvlRes.json();
-
-      const aprRes = await fetch("https://stat.comdex.one/api/v2/cswap/aprs");
-      if (!aprRes.ok) throw new Error(`comdex aprs ${aprRes.status}`);
-      const comdexAprData = await aprRes.json();
-
-      comdexData = {
-        pair: initialData[poolID].pair,
-        tvlUsd: tvlData?.data?.total_liquidity,
-        apr: comdexAprData?.data?.[
-          initialData[poolID].poolNumber
-        ]?.incentive_rewards?.[0]?.apr?.toFixed(5),
-        // ?.incentive_rewards?.apr,
-      };
-    } catch (error) {
-      console.error(`swr fetcher : url: ${url},  error: ${error}`);
-      throw error;
-    }
-    // return the data
-    return comdexData;
-  };
-  // implement useSwr for cached and revalidation enabled data retrieval
-  const { data: comdexData, error } = useSwr(
-    ["useComdex", poolID],
-    fetchAllComdex,
-    {
-      suspense: true,
-    }
-  );
-  return {
-    comdexFarm: comdexData,
-    isLoadingComdexFarm: !error && !comdexData,
-    errorComdexFarm: error,
-  };
-};
-
 export const usePolygonFarm = (poolIndex) => {
   let polygonFarmData;
   const { mntlUsdValue } = useMntlUsd();
