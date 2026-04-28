@@ -35,12 +35,14 @@ const AllValidators = ({
     )?.delegatedAmount,
   }));
 
-  const allValidatorsUnbondedUsable = allValidatorsBonded.map((el, index) => ({
-    ...el,
-    am_delegatedAmount: delegatedValidators?.find(
-      (element) => element?.operatorAddress == el?.operatorAddress
-    )?.delegatedAmount,
-  }));
+  const allValidatorsUnbondedUsable = allValidatorsUnbonded.map(
+    (el, index) => ({
+      ...el,
+      am_delegatedAmount: delegatedValidators?.find(
+        (element) => element?.operatorAddress == el?.operatorAddress
+      )?.delegatedAmount,
+    })
+  );
 
   const allValidatorsBondedUsableSorted = (sortBy) => {
     let ascending = true;
@@ -266,7 +268,6 @@ const AllValidators = ({
                     }}
                   ></input>
                 </td>
-                {activeValidators ? <td>{index + 1}</td> : null}
                 <td>
                   <div
                     className="d-flex position-relative rounded-circle"

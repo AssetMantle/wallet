@@ -825,11 +825,16 @@ const fetchAllValidatorsUnbonded = async (url) => {
   // use a try catch block for creating rich Error object
   try {
     const client = await getRpcClient();
-    // get the data from cosmos queryClient
+    // The chain query takes a single status string, so we ask for all
+    // validators (status: "") and partition client-side.  Anything that
+    // isn't BOND_STATUS_BONDED (UNBONDING, UNBONDED, UNSPECIFIED) is
+    // surfaced in the Inactive set.
     const { validators } = await client.cosmos.staking.v1beta1.validators({
-      status: "BOND_STATUS_UNBONDED",
+      status: "",
     });
-    allValidatorsUnbonded = validators;
+    allValidatorsUnbonded = validators?.filter?.(
+      (validator) => validator?.status !== "BOND_STATUS_BONDED"
+    );
   } catch (error) {
     console.error(`swr fetcher : url: ${url},  error: ${error}`);
     throw error;

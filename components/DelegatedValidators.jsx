@@ -203,7 +203,6 @@ const DelegatedValidators = ({
                     }}
                   ></input>
                 </td>
-                {activeValidators ? <td>{index + 1}</td> : null}
                 <td>
                   <div
                     className="d-flex position-relative rounded-circle"
