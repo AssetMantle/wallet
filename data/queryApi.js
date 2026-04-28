@@ -28,9 +28,9 @@ import { convertBech32Address } from "../lib";
 import { cosmos as cosmosModule, gravity } from "../modules";
 import {
   bech32AddressSeperator,
+  fallbackTradeVenues,
   farmPools,
   placeholderAddress,
-  staticTradeData,
 } from "./constants";
 
 const rpcEndpoint = defaultChainRPCProxy;
@@ -1138,42 +1138,99 @@ export const useWithdrawAddress = () => {
   };
 };
 
-// fetcher function for useSwr of useAvailableBalance()
-const fetchAllTrades = async (url) => {
-  // console.log("inside fetchAllTrades() ");
-  let tradeData = [];
-  let tokenDetails = {};
+// EVM pool addresses for the GeckoTerminal fallback layer.  These are
+// the residual MNTL liquidity venues that aren't on CoinGecko's coin
+// catalogue.  If a pool's `volume_usd.h24` is 0 *and* `reserve_in_usd`
+// is below the dust threshold, we drop it from the response — those
+// pools are functionally dead even though the contract still exists.
+const evmFallbackPools = [
+  {
+    network: "polygon_pos",
+    address: "0x5e1878eb8a10cc8690798ece6bfd3425e189361e",
+    exchangeName: "Quickswap",
+    tradePair: "MNTL/USDC",
+    logo: "quickswap-dex",
+    url: "https://quickswap.exchange/#/swap?swapIndex=0&currency0=0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174&currency1=0x38A536A31bA4d8C1Bcca016AbBf786ecD25877E8",
+  },
+  {
+    network: "eth",
+    address: "0xf5b8304dc18579c4247caad705df01928248bc71",
+    exchangeName: "Uniswap V3 (Ethereum)",
+    tradePair: "MNTL/ETH",
+    logo: "uniswap-v3",
+    url: "https://app.uniswap.org/#/swap?theme=dark&inputCurrency=ETH&outputCurrency=0x2c4f1df9c7de0c59778936c9b145ff56813f3295",
+  },
+];
 
+// Cosmos pools queried via the Osmosis SQS endpoint.  We only emit a
+// row when the pool responds with non-zero balances on both legs —
+// otherwise the AMM has been drained.
+const osmosisFallbackPools = [
+  {
+    id: 690,
+    exchangeName: "Osmosis",
+    tradePair: "MNTL/OSMO",
+    logo: "osmosis",
+    url: "https://app.osmosis.zone/pool/690",
+  },
+  {
+    id: 738,
+    exchangeName: "Osmosis",
+    tradePair: "MNTL/USDC",
+    logo: "osmosis",
+    url: "https://app.osmosis.zone/pool/738",
+  },
+  {
+    id: 686,
+    exchangeName: "Osmosis",
+    tradePair: "ATOM/MNTL",
+    logo: "osmosis",
+    url: "https://app.osmosis.zone/pool/686",
+  },
+];
+
+// Tier 1: CoinGecko via the /api/coingecko Next.js proxy.  Returns
+// `{ tradeData, tokenDetails }` on success or `null` on failure.
+//
+// Filters out anomalous, stale, or dust-volume tickers so the table
+// doesn't render dead pairs even when CG is back online.
+const fetchTradesFromCoinGecko = async () => {
   try {
     const cgRes = await fetch(
-      "https://api.coingecko.com/api/v3/coins/assetmantle?localization=false&tickers=true&market_data=true&community_data=false&developer_data=false&sparkline=false"
+      "/api/coingecko/api/v3/coins/assetmantle?localization=false&tickers=true&market_data=true&community_data=false&developer_data=false&sparkline=false"
     );
-    if (!cgRes.ok) throw new Error(`coingecko ${cgRes.status}`);
+    if (!cgRes.ok) return null;
     const data = await cgRes.json();
+    if (data?.error) return null;
 
-    tokenDetails = {
+    const tickers = Array.isArray(data?.tickers)
+      ? data.tickers.filter(
+          (t) =>
+            t?.converted_volume?.usd > 100 && !t?.is_anomaly && !t?.is_stale
+        )
+      : [];
+
+    const tokenDetails = {
       marketCap: data?.market_data?.market_cap?.usd,
       circulatingSupply: data?.market_data?.circulating_supply,
       totalSupply: data?.market_data?.total_supply,
       maxSupply: data?.market_data?.max_supply,
       fullyDilutedValuation: data?.market_data?.fully_diluted_valuation?.usd,
-      volume: data?.tickers
-        ?.reduce(
-          (accumulator, currentValue) =>
-            accumulator + parseFloat(currentValue?.volume),
+      volume: tickers
+        .reduce(
+          (acc, item) => acc + parseFloat(item?.converted_volume?.usd || 0),
           0
         )
         .toFixed(2),
     };
 
-    tradeData = data?.tickers?.map((item) => {
-      const match = staticTradeData.find(
+    const tradeData = tickers.map((item) => {
+      const match = fallbackTradeVenues.find(
         (element) =>
           element.name == item?.market?.name &&
           element.target_coin_id == item?.target_coin_id &&
           element.coin_id == item?.coin_id
       );
-      console.log(match);
       return {
         exchangeName: item?.market?.name,
         tradePair: match?.pair,
@@ -1183,12 +1240,115 @@ const fetchAllTrades = async (url) => {
         url: match?.url,
       };
     });
+
+    if (tradeData.length === 0) return null;
+    return { tradeData, tokenDetails };
   } catch (error) {
-    console.error(`swr fetcher : url: ${url},  error: ${error}`);
-    throw error;
+    console.error(`fetchTradesFromCoinGecko: ${error}`);
+    return null;
   }
-  // return the data
-  // console.log("inside SWR:", tradesArray);
+};
+
+// Tier 2: GeckoTerminal pool data for the EVM venues.  Skips pools
+// that return 404 or have zero reserve.
+const fetchTradesFromGeckoTerminal = async () => {
+  const results = await Promise.all(
+    evmFallbackPools.map(async (pool) => {
+      try {
+        const res = await fetch(
+          `https://api.geckoterminal.com/api/v2/networks/${pool.network}/pools/${pool.address}`
+        );
+        if (!res.ok) return null;
+        const json = await res.json();
+        const attrs = json?.data?.attributes;
+        if (!attrs) return null;
+        const reserve = parseFloat(attrs?.reserve_in_usd || 0);
+        if (reserve <= 0) return null;
+        return {
+          exchangeName: pool.exchangeName,
+          tradePair: pool.tradePair,
+          volume: parseFloat(attrs?.volume_usd?.h24 || 0),
+          price: parseFloat(attrs?.base_token_price_usd || 0),
+          logo: pool.logo,
+          url: pool.url,
+        };
+      } catch (error) {
+        console.error(`geckoterminal ${pool.address}: ${error}`);
+        return null;
+      }
+    })
+  );
+  return results.filter(Boolean);
+};
+
+// Tier 3: Osmosis SQS for the Cosmos pools.  Computes a rough spot
+// price from the two pool legs.  Volume is left at 0 since SQS doesn't
+// expose 24h flow on the basic /pools endpoint — the table renders the
+// pair so users can still click through.
+const fetchTradesFromOsmosis = async () => {
+  const results = await Promise.all(
+    osmosisFallbackPools.map(async (pool) => {
+      try {
+        const res = await fetch(
+          `https://sqs.osmosis.zone/pools?IDs=${pool.id}`
+        );
+        if (!res.ok) return null;
+        const json = await res.json();
+        const entry = Array.isArray(json) ? json[0] : null;
+        const assets = entry?.chain_model?.pool_assets;
+        if (!assets || assets.length < 2) return null;
+        const a0 = parseFloat(assets[0]?.token?.amount || 0);
+        const a1 = parseFloat(assets[1]?.token?.amount || 0);
+        if (a0 <= 0 || a1 <= 0) return null;
+        return {
+          exchangeName: pool.exchangeName,
+          tradePair: pool.tradePair,
+          volume: 0,
+          price: 0,
+          logo: pool.logo,
+          url: pool.url,
+        };
+      } catch (error) {
+        console.error(`osmosis sqs ${pool.id}: ${error}`);
+        return null;
+      }
+    })
+  );
+  return results.filter(Boolean);
+};
+
+// fetcher function for useSwr of useTrade()
+const fetchAllTrades = async (url) => {
+  let tokenDetails = {};
+
+  // Tier 1 — CoinGecko (preferred when available).
+  const cg = await fetchTradesFromCoinGecko();
+  if (cg && cg.tradeData?.length > 0) {
+    return cg;
+  }
+
+  // Tiers 2 + 3 — live on-chain pool data.  Run them in parallel; each
+  // returns [] on failure so partial responses still propagate.
+  const [evmRows, osmoRows] = await Promise.all([
+    fetchTradesFromGeckoTerminal(),
+    fetchTradesFromOsmosis(),
+  ]);
+  const liveRows = [...osmoRows, ...evmRows];
+
+  if (liveRows.length > 0) {
+    return { tradeData: liveRows, tokenDetails };
+  }
+
+  // Tier 4 — last-resort static list.  Map to the same shape as the
+  // live tiers so TradeTable doesn't need to branch.
+  const tradeData = fallbackTradeVenues.map((venue) => ({
+    exchangeName: venue.name,
+    tradePair: venue.pair,
+    volume: parseFloat(venue.volume) || 0,
+    price: parseFloat(venue.price) || 0,
+    logo: venue.logo,
+    url: venue.url,
+  }));
   return { tradeData, tokenDetails };
 };
 

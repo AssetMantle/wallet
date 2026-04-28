@@ -122,17 +122,17 @@ export const ConnectOptionObject = {
   },
 };
 
-export const staticTradeData = [
-  {
-    logo: "lbank",
-    name: "LBank",
-    pair: "MNTL/USDT",
-    target_coin_id: "tether",
-    coin_id: "assetmantle",
-    url: "https://www.lbank.info/exchange/mntl/usdt",
-    price: "0.000000",
-    volume: "0.000000",
-  },
+// Last-resort static fallback for the Trade table.  CoinGecko delisted
+// `assetmantle` from its universe ("coin not found") and several CEX
+// listings (Bitrue, LBank, MEXC, Coinbase) have dropped MNTL — verified
+// 2026-04-28 against each venue's public ticker API.  Comdex chain is
+// halted, so cSwap MNTL/CMDX and MNTL/CMST are gone too.  Only entries
+// that resolve to a working trade page or pool URL today are retained.
+//
+// Live data is preferred — see `fetchAllTrades` in `queryApi.js` for the
+// CoinGecko proxy → GeckoTerminal → Osmosis SQS fallback chain.  This
+// list is rendered only when every live source is unreachable.
+export const fallbackTradeVenues = [
   {
     logo: "osmosis",
     project: "Osmosis",
@@ -140,7 +140,7 @@ export const staticTradeData = [
     target_coin_id: "osmosis",
     pair: "MNTL/OSMO",
     coin_id: "assetmantle",
-    url: "https://app.osmosis.zone/?from=OSMO&to=MNTL",
+    url: "https://app.osmosis.zone/pool/690",
     price: "0.000000",
     volume: "0.000000",
   },
@@ -150,30 +150,8 @@ export const staticTradeData = [
     name: "Osmosis",
     target_coin_id: "axlusdc",
     coin_id: "assetmantle",
-    pair: "MNTL/AXLUSDC",
-    coin_id: "assetmantle",
-    url: "https://app.osmosis.zone/?from=USDC&to=MNTL",
-    price: "0.000000",
-    volume: "0.000000",
-  },
-  {
-    logo: "uniswap-v3",
-    name: "Uniswap V3 (Ethereum)",
-    pair: "MNTL/ETH",
-    coin_id: "assetmantle",
-    target_coin_id: "weth",
-    subTitle: "(ETH Pool)",
-    url: "https://app.uniswap.org/#/swap?theme=dark&inputCurrency=ETH&outputCurrency=0x2c4f1df9c7de0c59778936c9b145ff56813f3295",
-    price: "0.000000",
-    volume: "0.000000",
-  },
-  {
-    logo: "mexc",
-    name: "MEXC Global",
-    pair: "MNTL/USDT",
-    target_coin_id: "tether",
-    coin_id: "assetmantle",
-    url: "https://www.mexc.com/exchange/MNTL_USDT?inviteCode=1498J",
+    pair: "MNTL/USDC",
+    url: "https://app.osmosis.zone/pool/738",
     price: "0.000000",
     volume: "0.000000",
   },
@@ -184,7 +162,7 @@ export const staticTradeData = [
     target_coin_id: "assetmantle",
     pair: "ATOM/MNTL",
     coin_id: "cosmos",
-    url: "https://app.osmosis.zone/?from=ATOM&to=MNTL",
+    url: "https://app.osmosis.zone/pool/686",
     price: "0.000000",
     volume: "0.000000",
   },
@@ -199,47 +177,21 @@ export const staticTradeData = [
     volume: "0.000000",
   },
   {
-    logo: "quickswap-dex",
-    name: "Quickswap",
-    pair: "MNTL/VERSA",
-    target_coin_id: "versagames",
+    logo: "uniswap-v3",
+    name: "Uniswap V3 (Ethereum)",
+    pair: "MNTL/ETH",
     coin_id: "assetmantle",
-    url: "https://quickswap.exchange/#/swap?inputCurrency=0x8497842420cfdbc97896c2353d75d89fc8d5be5d&outputCurrency=0x38a536a31ba4d8c1bcca016abbf786ecd25877e8&swapIndex=0",
-    price: "0.000000",
-    volume: "0.000000",
-  },
-  {
-    logo: "Bitrue",
-    name: "Bitrue",
-    pair: "MNTL/USDT",
-    target_coin_id: "tether",
-    coin_id: "assetmantle",
-    url: "https://www.bitrue.com/trade/mntl_usdt",
-    price: "0.000000",
-    volume: "0.000000",
-  },
-
-  {
-    logo: "cSwap",
-    name: "cSwap",
-    pair: "MNTL/CMDX",
-    target_coin_id: "assetmantle",
-    coin_id: "comdex",
-    url: "https://app.cswap.one/trade",
-    price: "0.000000",
-    volume: "0.000000",
-  },
-  {
-    logo: "cSwap",
-    name: "cSwap",
-    pair: "MNTL/CMST",
-    target_coin_id: "assetmantle",
-    coin_id: "composite",
-    url: "https://app.cswap.one/trade",
+    target_coin_id: "weth",
+    subTitle: "(ETH Pool)",
+    url: "https://app.uniswap.org/#/swap?theme=dark&inputCurrency=ETH&outputCurrency=0x2c4f1df9c7de0c59778936c9b145ff56813f3295",
     price: "0.000000",
     volume: "0.000000",
   },
 ];
+
+// Backwards-compat alias.  Old imports continue to work; new code
+// should reference `fallbackTradeVenues`.
+export const staticTradeData = fallbackTradeVenues;
 
 export const staticEarnData = [
   {
