@@ -5,11 +5,9 @@ export default function MnemonicPassword({
   setPassword,
   setStep,
   close,
-  Mnemonic,
 }) {
   // Mnemonic generate function here 👇
   const handleConfirm = () => {
-    console.log(Mnemonic, Password);
     setPassword();
     setStep(4);
   };

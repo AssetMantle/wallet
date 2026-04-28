@@ -5,11 +5,9 @@ export default function KeystorePassword({
   setPassword,
   setStep,
   close,
-  keyStore,
 }) {
   // Keystore connect function
   const handleConfirm = () => {
-    console.log(keyStore, Password);
     setTimeout(() => {
       setStep(6);
       // success is `6` error is `7`
@@ -41,7 +39,7 @@ export default function KeystorePassword({
         <button
           className="button-primary caption py-2 px-5"
           onClick={() => handleConfirm()}
-          disabled={!Password || !Password.length > 8 ? true : false}
+          disabled={!Password || Password.length <= 8}
         >
           Confirm
         </button>
