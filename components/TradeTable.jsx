@@ -1,13 +1,13 @@
 import React from "react";
 import { getBalanceStyle } from "../config";
-import { decimalize, staticTradeData, useTrade } from "../data";
+import { decimalize, fallbackTradeVenues, useTrade } from "../data";
 
 import Table from "./Table";
 
 const TradeTable = () => {
   const { allTrades, isLoadingTrades, errorTrades } = useTrade();
 
-  const placeHolderData = staticTradeData;
+  const placeHolderData = fallbackTradeVenues;
   // const tradeData =React.useMemo(()=>[],[])
   let tradeData = [];
   if (isLoadingTrades || errorTrades) {
