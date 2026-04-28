@@ -16,7 +16,7 @@ const OSMO_DECIMALS = 6;
 const OSMOSIS_POOL_690_LCD =
   "https://lcd.osmosis.zone/osmosis/gamm/v1beta1/pools/690";
 const COINGECKO_MNTL_OSMO_URL =
-  "https://api.coingecko.com/api/v3/simple/price?ids=assetmantle,osmosis&vs_currencies=usd";
+  "/api/coingecko/api/v3/simple/price?ids=assetmantle,osmosis&vs_currencies=usd";
 const MNTL_IBC_DENOM_ON_OSMOSIS =
   "ibc/CBA34207E969623D95D057D9B11B0C8B32B89A71F170577D982FDDE623813FFC";
 
@@ -71,10 +71,10 @@ const formatApr = (v) => {
 };
 
 const mintscanMantleTxUrl = (hash) =>
-  hash ? `https://www.mintscan.io/assetmantle/txs/${hash}` : null;
+  hash ? `https://www.mintscan.io/asset-mantle/tx/${hash}` : null;
 
 const mintscanOsmosisTxUrl = (hash) =>
-  hash ? `https://www.mintscan.io/osmosis/txs/${hash}` : null;
+  hash ? `https://www.mintscan.io/osmosis/tx/${hash}` : null;
 
 const osmosisPoolUrl = (id) => `https://app.osmosis.zone/pool/${id}`;
 
