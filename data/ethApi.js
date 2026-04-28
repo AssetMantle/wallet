@@ -132,18 +132,6 @@ export const ethConfig = {
     quickswap: {
       mntlUsdcPool: {},
     },
-    SYNCER_URL: "https://testnetv3-syncer.api.matic.network/api/v1", // Backend service which syncs the Matic sidechain state to a MySQL database which we use for faster querying. This comes in handy especially for constructing withdrawal proofs while exiting assets from Plasma.
-    WATCHER_URL: "https://testnetv3-watcher.api.matic.network/api/v1", // Backend service which syncs the Matic Plasma contract events on Ethereum mainchain to a MySQL database which we use for faster querying. This comes in handy especially for listening to asset deposits on the Plasma contract.
-    user1: {
-      // '<paste your private key here>' - A sample private key prefix with `0x`
-      privateKey: process.env.USER1_PRIVATE_KEY,
-      //'<paste address belonging to private key here>', Your address
-      address: process.env.USER1_FROM,
-    },
-    user2: {
-      address: process.env.USER2_FROM,
-    },
-    proofApi: process.env.PROOF_API || "https://apis.matic.network/",
   },
   testnet: {
     network: "testnet",
@@ -173,18 +161,6 @@ export const ethConfig = {
         //   erc1155: "0xA07e45A987F19E25176c877d98388878622623FA",
       },
     },
-    SYNCER_URL: "https://testnetv3-syncer.api.matic.network/api/v1", // Backend service which syncs the Matic sidechain state to a MySQL database which we use for faster querying. This comes in handy especially for constructing withdrawal proofs while exiting assets from Plasma.
-    WATCHER_URL: "https://testnetv3-watcher.api.matic.network/api/v1", // Backend service which syncs the Matic Plasma contract events on Ethereum mainchain to a MySQL database which we use for faster querying. This comes in handy especially for listening to asset deposits on the Plasma contract.
-    user1: {
-      // '<paste your private key here>' - A sample private key prefix with `0x`
-      privateKey: process.env.USER1_PRIVATE_KEY,
-      //'<paste address belonging to private key here>', Your address
-      address: process.env.USER1_FROM,
-    },
-    user2: {
-      address: process.env.USER2_FROM,
-    },
-    proofApi: process.env.PROOF_API || "https://apis.matic.network/",
   },
 };
 

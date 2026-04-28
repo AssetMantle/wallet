@@ -565,15 +565,16 @@ export const mantleTestChainConfig = [
       },
     },
     apis: {
+      // HTTPS-only — plaintext HTTP exposes tx bytes to MITM rewrite.
       rpc: [
         {
-          address: "http://rpc.testnet.assetmantle.one/",
+          address: "https://rpc.testnet.assetmantle.one/",
           provider: "AssetMantle",
         },
       ],
       rest: [
         {
-          address: "http://rest.testnet.assetmantle.one/",
+          address: "https://rest.testnet.assetmantle.one/",
           provider: "AssetMantle",
         },
       ],
