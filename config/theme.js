@@ -49,8 +49,12 @@ export const defaultThemeObject = {
   shadows: {
     largeSoft: "rgba(60, 64, 67, 0.15) 0px 2px 10px 6px;",
   },
-  initialColorMode: "dark",
-  config: { initialColorMode: "dark" },
+  // Default theme is light (matches assetmantle.one). The companion SCSS
+  // (config/styles/index.scss) repoints background/text tokens to light
+  // values; flipping Chakra's mode here keeps any Chakra-rendered
+  // components (modals, menus) in agreement with the global stylesheet.
+  initialColorMode: "light",
+  config: { initialColorMode: "light", useSystemColorMode: false },
 };
 
 export const defaultTheme = extendTheme(defaultThemeObject);

@@ -2,30 +2,51 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css");
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Work+Sans:wght@500;600;700&display=swap");
 
-// variables
-$yellow-100: #fbab30; // #ffc640;
+// Shared design tokens with assetmantle.one website
+// (see ../../../website/config/styles/index.scss :root block).
+:root {
+  --am-bg: #fcfbf9; // page background — matches website --white-200
+  --am-card: #f4f1ed; // card / panel surface
+  --am-card-strong: #ece8e2; // header / nav surface
+  --am-text: #201932; // default text — matches website --primary-dark
+  --am-text-muted: #565656; // muted text — matches website --gray-dark
+  --am-text-subtle: #8a8682; // subtle / placeholder text
+  --am-accent: #fbab30; // brand orange — matches website --am-theme
+  --am-accent-dark: #f2af13;
+}
+
+// Semantic SCSS variables. Names retained from the prior dark theme so
+// existing class consumers (`.bg-gray-800`, `.text-white`, `.nav-bg`,
+// `.bg-dark-200`, …) keep rendering correctly under the light palette.
+$yellow-100: #fbab30; // brand accent (unchanged — matches website --am-theme)
 $yellow-200: #f2af13;
-$yellow-800: #624d19;
+$yellow-800: #f8d68a; // soft accent (was #624d19 — used for hover glow)
 $yellow-900: #f3af121a;
 
-$white-100: #fffdfa; //
-$white-200: #fffdfa80; //
-$white-300: #b0b0b0; //
-$white-400: #fffdfa80;
+// "white" tokens previously denoted the default text colour on a dark bg.
+// In light mode they become the dark text colour on a light bg.
+$white-100: #201932; // default text (was #fffdfa)
+$white-200: #20193280; // semi-muted text
+$white-300: #4a4458; // mid-muted text (was #b0b0b0)
+$white-400: #20193280; // alias for muted
 
-$gray-100: #5f5d5a;
-$gray-200: #252525;
-$gray-300: #2e2e2e;
-$gray-400: #282826;
-$gray-500: #2f2f2b;
-$gray-600: #2c2c2c;
-$gray-700: #21211e;
-$gray-800: #21211ed9;
+// Gray scale: previously dark surfaces, now light surfaces.
+$gray-100: #6f6c69; // placeholder text — readable on light bg
+$gray-200: #d6d1c8; // input borders — visible on light bg without shouting
+$gray-300: #e6e1da;
+$gray-400: #f4f1ed; // modal/content bg
+$gray-500: #ede8e1;
+$gray-600: #201932; // dark on-button text — paired with yellow bg
+$gray-700: #ece8e2; // panel bg variant
+$gray-800: #f4f1edd9; // primary card surface (translucent)
 
-$dark-100: #050505d9;
-$dark-200: #111111;
-$dark-300: #040404cc;
-$dark-400: #030301;
+// "dark" tokens were the deepest darks. In light mode they become the
+// page bg + nav surface. Keep alpha-channels in some so the layered
+// translucency carries over.
+$dark-100: #00000014; // hover / overlay — light shadow (was near-black solid)
+$dark-200: #fcfbf9; // page background (was #111111)
+$dark-300: #ece8e2cc; // nav / inset surface — visibly recessed (was #040404cc)
+$dark-400: #201932; // strong dark text where intentionally dark-on-light
 
 $blue-100: #6fb4b5;
 
@@ -233,6 +254,41 @@ a:hover {
   );
 }
 
+// `.am-cta` mirrors the assetmantle.one button shape: a transparent outer
+// button with 2px padding wrapping an inner span that carries the
+// background fill. Use as `<button class="am-cta"><span>Label</span></button>`
+// for new CTAs that should visually match the website (e.g. wallet ↔ marketing
+// transitions).
+.am-cta {
+  border: none;
+  outline: none;
+  padding: 2px;
+  display: inline-flex;
+  background-color: transparent;
+  cursor: pointer;
+  & > span {
+    @include fontRoot(600, 0.9375rem, $fontSecondary);
+    background-color: var(--am-accent);
+    color: var(--am-text);
+    padding: 6px 24px;
+    border-radius: 4px;
+    transition: background-color 150ms ease-in-out;
+  }
+  &:hover > span {
+    background-color: var(--am-accent-dark);
+  }
+  &.am-cta--ghost > span {
+    background-color: transparent;
+    border: 2px dotted var(--am-accent);
+    padding: 4px 22px; // compensate for added border
+  }
+  &:disabled,
+  &.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
 .am-link {
   @include LinkRoot();
 }
@@ -295,8 +351,8 @@ a:hover {
 // globally
 .btn-inactive {
   background-color: $gray-800;
-  color: white !important;
-  border: 1px solid #383838 !important;
+  color: $primary-light !important;
+  border: 1px solid $secondary-disable !important;
 }
 .btn-primary {
   color: $gray-600;
@@ -730,11 +786,527 @@ thead {
   }
   & > svg {
     transform: scale(1.3) !important;
-    fill: $dark-200 !important;
+    fill: $primary-light !important;
   }
 }
 .slick-prev::before,
 .slick-next::before {
   opacity: 1 !important;
   color: $dark-200 !important;
+}
+
+// =============================================================
+// Editorial Almanac — earn-page design system
+// Distinct typographic + spatial language for the Pool #690
+// liquidity-bootstrap surface. Copy stays neutral / industry-
+// standard; the editorial flavour comes entirely from typography
+// (Fraunces serif for display, IBM Plex Mono for numerics) and
+// the 90-day tick strip that replaces a generic progress bar.
+// Self-contained: every selector below is prefixed `.am-` and is
+// only consumed by Pool690IncentiveProgram.jsx, so removing this
+// block reverts the earn page to standard wallet styling without
+// affecting any other route.
+// =============================================================
+
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap");
+
+:root {
+  --am-display-font: "Fraunces", "Georgia", serif;
+  --am-mono-font: "IBM Plex Mono", "SF Mono", "Menlo", monospace;
+  --am-hairline: rgba(32, 25, 50, 0.12);
+  --am-hairline-soft: rgba(32, 25, 50, 0.06);
+  --am-ink: #1a1812;
+  --am-ink-muted: rgba(26, 24, 18, 0.62);
+  --am-ink-subtle: rgba(26, 24, 18, 0.42);
+}
+
+// --- Cross-app reconciliation: global section-heading uplift ----
+// Every existing `card-title body1 text-primary` heading across the
+// wallet (stake "Validators", trade "Markets", vote, bridge, balance,
+// staked-tokens, rewards, etc.) inherits the editorial display
+// typeface in one declaration — zero JSX edits required. The
+// orange `text-primary` colour is preserved by the existing rule on
+// `.text-primary`; we just swap the family + weight + tracking.
+.card-title.body1.text-primary,
+h1.body1.text-primary,
+h2.body1.text-primary,
+h3.body1.text-primary,
+h4.body1.text-primary {
+  font-family: var(--am-display-font);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36, "SOFT" 30;
+  letter-spacing: -0.012em;
+}
+
+// --- Cross-app reconciliation: viewport paper grain -------------
+// The `.am-card` chrome already grains its own surface; this gives
+// the rest of the canvas (page bg, header, sidebar) the same paper
+// quality so cards don't sit on plastic. Fixed-position so it
+// doesn't repaint on scroll.
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.10  0 0 0 0 0.08  0 0 0 0 0.18  0 0 0 0.45 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: 0.022;
+  mix-blend-mode: multiply;
+  z-index: 0;
+}
+
+.am-card {
+  position: relative;
+  background-color: var(--am-card);
+  border: 1px solid var(--am-hairline-soft);
+  border-radius: 12px;
+  // No `overflow: hidden` here — the `::after` carries its own
+  // `border-radius: inherit` so the noise stays within the rounded
+  // shape, but Tooltip popovers (`Tooltip.jsx` renders position:
+  // absolute child of the trigger) can still escape the card edge
+  // when anchored near the top of a panel.
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.10  0 0 0 0 0.08  0 0 0 0 0.18  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    opacity: 0.04;
+    mix-blend-mode: multiply;
+    border-radius: inherit;
+    z-index: 0;
+  }
+  & > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.am-display {
+  font-family: var(--am-display-font);
+  font-weight: 500;
+  font-variation-settings: "opsz" 144, "SOFT" 50;
+  letter-spacing: -0.022em;
+  line-height: 1;
+  color: var(--am-ink);
+}
+.am-display-italic {
+  font-style: italic;
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: var(--am-ink-muted);
+}
+.am-mono {
+  font-family: var(--am-mono-font);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "ss01" 1;
+}
+.am-eyebrow {
+  font-family: var(--am-mono-font);
+  font-size: 10.5px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--am-ink-muted);
+}
+.am-eyebrow--accent {
+  color: var(--am-accent-dark, #f2af13);
+}
+.am-rule {
+  width: 100%;
+  height: 1px;
+  border: 0;
+  background: var(--am-hairline);
+  margin: 0;
+}
+
+.am-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--am-mono-font);
+  font-size: 10.5px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--am-ink-muted);
+  &-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  &--active {
+    color: #2c7a4b;
+  }
+  &--pending {
+    color: #b88114;
+  }
+  &--completed {
+    color: var(--am-ink-muted);
+  }
+}
+
+.am-block-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 22px 16px 26px;
+  background: var(--am-accent);
+  color: var(--am-ink);
+  border: 0;
+  border-radius: 4px;
+  font-family: var(--am-display-font);
+  font-weight: 600;
+  font-variation-settings: "opsz" 36, "SOFT" 0;
+  font-size: 1.0625rem;
+  letter-spacing: -0.012em;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+  box-shadow: 0 1px 0 rgba(26, 24, 18, 0.04),
+    0 0 0 1px rgba(26, 24, 18, 0.05) inset;
+  & .am-block-cta-arrow {
+    display: inline-block;
+    font-family: var(--am-mono-font);
+    font-weight: 400;
+    transition: transform 220ms ease;
+  }
+  &:hover {
+    color: var(--am-ink);
+    background: var(--am-accent-dark);
+    transform: translateY(-1px);
+    & .am-block-cta-arrow {
+      transform: translateX(4px);
+    }
+  }
+  &:active {
+    transform: translateY(0);
+  }
+}
+.am-cta-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  & > .am-mono {
+    font-size: 12px;
+    color: var(--am-ink);
+  }
+}
+
+.am-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 8px 2px;
+  &-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  &-track {
+    display: flex;
+    align-items: end;
+    gap: 2px;
+    height: 36px;
+    width: 100%;
+    // Baseline rule under the strip — subtle, anchors the taller
+    // Monday + today ticks so they don't appear to float.
+    border-bottom: 1px solid var(--am-hairline);
+  }
+  &-tick {
+    flex: 1 1 0;
+    min-width: 2px;
+    height: 14px;
+    background: var(--am-hairline);
+    border-radius: 1px;
+    transform-origin: bottom;
+    animation: amTickIn 520ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-delay: calc(var(--i, 0) * 6ms);
+    transition: background 200ms ease, height 200ms ease;
+    &.is-monday {
+      height: 28px;
+      background: rgba(32, 25, 50, 0.22);
+    }
+    &.is-past {
+      background: var(--am-ink-muted);
+    }
+    &.is-monday.is-past {
+      background: var(--am-ink);
+    }
+    &.is-monday.is-complete {
+      background: var(--am-accent);
+      box-shadow: 0 0 0 1px var(--am-accent-dark) inset;
+    }
+    &.is-today {
+      height: 36px;
+      background: var(--am-accent);
+      box-shadow: 0 0 0 3px rgba(251, 171, 48, 0.22);
+    }
+  }
+  &-axis {
+    position: relative;
+    height: 18px;
+    width: 100%;
+    & > span {
+      position: absolute;
+      transform: translateX(-50%);
+      top: 0;
+      font-family: var(--am-mono-font);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--am-ink-subtle);
+      &::before {
+        content: "";
+        display: block;
+        width: 1px;
+        height: 5px;
+        background: var(--am-hairline);
+        margin: 0 auto 4px;
+      }
+    }
+  }
+}
+@keyframes amTickIn {
+  from {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.am-specimen {
+  display: flex;
+  flex-direction: column;
+  padding: 0 4px;
+  margin: 0 -4px;
+  border-radius: 6px;
+  // A whisper-quiet lift on hover signals the Tooltip is reachable
+  // without competing with the value typography.
+  transition: background-color 180ms ease, transform 180ms ease;
+  &:hover {
+    background-color: rgba(26, 24, 18, 0.025);
+    transform: translateY(-1px);
+  }
+  & + & {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px dashed var(--am-hairline);
+  }
+  &-value {
+    font-family: var(--am-mono-font);
+    font-size: 26px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    color: var(--am-ink);
+    animation: amFadeUp 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  &-value-unit {
+    font-family: var(--am-mono-font);
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--am-ink-muted);
+    margin-left: 4px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  &-sub {
+    font-family: var(--am-mono-font);
+    font-size: 11.5px;
+    color: var(--am-ink-subtle);
+    margin-top: 4px;
+  }
+  &-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    font-family: var(--am-mono-font);
+    font-size: 10.5px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--am-ink-muted);
+  }
+  &:nth-of-type(1) .am-specimen-value {
+    animation-delay: 0ms;
+  }
+  &:nth-of-type(2) .am-specimen-value {
+    animation-delay: 80ms;
+  }
+  &:nth-of-type(3) .am-specimen-value {
+    animation-delay: 160ms;
+  }
+  &:nth-of-type(4) .am-specimen-value {
+    animation-delay: 240ms;
+  }
+}
+@keyframes amFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.am-pulse {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--am-accent);
+  margin-left: 2px;
+  animation: amPulse 2.4s ease-in-out infinite;
+}
+@keyframes amPulse {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.85);
+    box-shadow: 0 0 0 0 rgba(251, 171, 48, 0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 0 5px rgba(251, 171, 48, 0.18);
+  }
+}
+
+.am-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.am-list-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--am-hairline);
+  font-family: var(--am-mono-font);
+  font-size: 12.5px;
+  color: var(--am-ink);
+  text-decoration: none;
+  transition: color 150ms ease, transform 150ms ease;
+  &:last-child {
+    border-bottom: 0;
+  }
+  &:hover {
+    color: var(--am-accent-dark);
+    transform: translateX(2px);
+  }
+  & em {
+    font-style: italic;
+    font-family: var(--am-display-font);
+    font-weight: 400;
+    color: var(--am-ink-muted);
+    margin-left: 6px;
+  }
+  & .am-list-arrow {
+    color: var(--am-ink-subtle);
+    transition: transform 150ms ease, color 150ms ease;
+  }
+  &:hover .am-list-arrow {
+    color: var(--am-accent-dark);
+    transform: translateX(2px);
+  }
+}
+
+.am-ledger {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--am-mono-font);
+  font-size: 12px;
+  color: var(--am-ink);
+  & thead th {
+    font-family: var(--am-display-font);
+    font-style: italic;
+    font-weight: 500;
+    font-variation-settings: "opsz" 14;
+    font-size: 13px;
+    color: var(--am-ink);
+    text-align: left;
+    padding: 10px 10px 10px 0;
+    border-bottom: 1px solid var(--am-hairline);
+    white-space: nowrap;
+  }
+  & tbody td {
+    padding: 10px 10px 10px 0;
+    border-bottom: 1px dashed var(--am-hairline);
+    color: var(--am-ink-muted);
+    vertical-align: top;
+  }
+  & tbody tr:last-child td {
+    border-bottom: 0;
+  }
+  & a {
+    color: var(--am-accent-dark);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--am-accent-dark);
+    &:hover {
+      color: var(--am-ink);
+      border-bottom-color: var(--am-ink);
+    }
+  }
+}
+
+.am-toggle {
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--am-hairline);
+  border-radius: 4px;
+  padding: 5px 12px;
+  font-family: var(--am-mono-font);
+  font-size: 10.5px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--am-ink-muted);
+  cursor: pointer;
+  transition: all 150ms ease;
+  &:hover {
+    color: var(--am-ink);
+    border-color: var(--am-ink-muted);
+  }
+}
+
+.am-lockchip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 4px 10px;
+  border: 1px solid var(--am-hairline);
+  border-radius: 999px;
+  font-family: var(--am-mono-font);
+  font-size: 11px;
+  color: var(--am-ink);
+  & em {
+    font-family: var(--am-display-font);
+    font-style: italic;
+    color: var(--am-ink-muted);
+    font-size: 11.5px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .am-timeline-tick,
+  .am-specimen-value {
+    animation: none !important;
+  }
+  .am-pulse {
+    animation: none !important;
+    opacity: 1;
+  }
 }
