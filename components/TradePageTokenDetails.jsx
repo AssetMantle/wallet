@@ -7,7 +7,7 @@ const TradePageTokenDetails = () => {
   const data = allTrades?.tokenDetails;
 
   return (
-    <div className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-3">
+    <div className="am-card rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-3">
       <h4 className="body1 text-primary">Token Details</h4>
       <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-1">
         <div>

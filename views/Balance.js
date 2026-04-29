@@ -16,7 +16,7 @@ export default function Balance() {
   const { status } = chainContext;
 
   return (
-    <section className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-3">
+    <section className="am-card rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-3">
       <h4 className="body1 text-primary">Wallet Balances</h4>
       <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-1">
         <p
@@ -57,6 +57,11 @@ export default function Balance() {
       <div className="nav-bg p-3 rounded-4 d-flex flex-column gap-1">
         <p className={`caption d-flex gap-2 align-items-center text-white-300`}>
           Current Price of {denomDisplay}
+          {/* Live-data pulse dot mirrors the one on the earn page's
+              specimen panel — visual cue that the value is fetched,
+              not stale. CMC `quote/latest` refreshes every 25s via
+              SWR (slowRefreshInterval). */}
+          <span className="am-pulse" aria-hidden="true" />
         </p>
         <MntlUsdPrice />
       </div>

@@ -522,24 +522,27 @@ export const useTotalDelegations = () => {
 };
 
 export const useMntlUsd = () => {
-  // fetcher function for useSwr of useAvailableBalance()
+  // CMC's data-api response shape is:
+  //   { data: [ { id, symbol, quotes: [ { name: "<convertId>", price, ... } ] } ] }
+  // The `quotes[]` array preserves the order of the `convertId` query param,
+  // so quotes[0] is USD (2781) and quotes[1] is ETH (1027) — see
+  // mntlUsdApi in config/swrData.js for the exact request.
   const fetchMntlUsd = async (url) => {
-    // console.log("inside fetchMntlUsd, url: ", url);
     let mntlUsdValue, mntlPerEthValue;
 
-    // use a try catch block for creating rich Error object
     try {
-      // fetch the data from API
       const res = await fetch(mntlUsdApi);
       const resJson = await res?.json?.();
-      mntlUsdValue = resJson?.assetmantle?.usd;
-      mntlPerEthValue = resJson?.assetmantle?.eth;
+      const quotes = resJson?.data?.[0]?.quotes ?? [];
+      const usdQuote = quotes.find((q) => q?.name === "2781");
+      const ethQuote = quotes.find((q) => q?.name === "1027");
+      mntlUsdValue = usdQuote?.price;
+      mntlPerEthValue = ethQuote?.price;
     } catch (error) {
       console.error(`swr fetcher : url: ${url},  error: ${error}`);
       throw error;
     }
 
-    // return the data
     return { mntlUsdValue, mntlPerEthValue };
   };
 
@@ -1194,62 +1197,82 @@ const osmosisFallbackPools = [
   },
 ];
 
-// Tier 1: CoinGecko via the /api/coingecko Next.js proxy.  Returns
+// Tier 1: CoinMarketCap via the /api/cmc Next.js proxy. Returns
 // `{ tradeData, tokenDetails }` on success or `null` on failure.
 //
-// Filters out anomalous, stale, or dust-volume tickers so the table
-// doesn't render dead pairs even when CG is back online.
-const fetchTradesFromCoinGecko = async () => {
+// Two endpoints are needed: `/cryptocurrency/quote/latest` for token-level
+// supply + market cap data, and `/cryptocurrency/market-pairs/latest` for
+// the per-exchange ticker rows. Both are on the public data-api (no key
+// required) and are the same endpoints coinmarketcap.com itself uses.
+const fetchTradesFromCMC = async () => {
   try {
-    const cgRes = await fetch(
-      "/api/coingecko/api/v3/coins/assetmantle?localization=false&tickers=true&market_data=true&community_data=false&developer_data=false&sparkline=false"
-    );
-    if (!cgRes.ok) return null;
-    const data = await cgRes.json();
-    if (data?.error) return null;
+    const [quoteRes, pairsRes] = await Promise.all([
+      fetch("/api/cmc/cryptocurrency/quote/latest?id=19686&convertId=2781"),
+      fetch(
+        "/api/cmc/cryptocurrency/market-pairs/latest?slug=assetmantle&start=1&limit=50&category=all&centerType=all&sort=cmc_rank_advanced&direction=desc&convert=USD"
+      ),
+    ]);
+    if (!quoteRes.ok || !pairsRes.ok) return null;
+    const [quoteJson, pairsJson] = await Promise.all([
+      quoteRes.json(),
+      pairsRes.json(),
+    ]);
 
-    const tickers = Array.isArray(data?.tickers)
-      ? data.tickers.filter(
-          (t) =>
-            t?.converted_volume?.usd > 100 && !t?.is_anomaly && !t?.is_stale
-        )
+    const quoteRow = quoteJson?.data?.[0];
+    const usdQuote = quoteRow?.quotes?.find((q) => q?.name === "2781");
+    const marketPairs = Array.isArray(pairsJson?.data?.marketPairs)
+      ? pairsJson.data.marketPairs
       : [];
 
+    // Drop excluded / outlier pairs and dust-volume rows so the table
+    // doesn't render dead venues even when CMC keeps the listing.
+    const validPairs = marketPairs.filter(
+      (p) =>
+        p?.priceExcluded === 0 &&
+        p?.volumeExcluded === 0 &&
+        p?.outlierDetected === 0 &&
+        Number(p?.volumeUsd ?? p?.quotes?.[0]?.volume24h ?? 0) > 0
+    );
+
     const tokenDetails = {
-      marketCap: data?.market_data?.market_cap?.usd,
-      circulatingSupply: data?.market_data?.circulating_supply,
-      totalSupply: data?.market_data?.total_supply,
-      maxSupply: data?.market_data?.max_supply,
-      fullyDilutedValuation: data?.market_data?.fully_diluted_valuation?.usd,
-      volume: tickers
+      marketCap: usdQuote?.marketCap,
+      circulatingSupply: quoteRow?.circulatingSupply,
+      totalSupply: quoteRow?.totalSupply,
+      maxSupply: quoteRow?.maxSupply,
+      fullyDilutedValuation: usdQuote?.fullyDilutedMarketCap,
+      volume: validPairs
         .reduce(
-          (acc, item) => acc + parseFloat(item?.converted_volume?.usd || 0),
+          (acc, p) =>
+            acc + Number(p?.volumeUsd ?? p?.quotes?.[0]?.volume24h ?? 0),
           0
         )
         .toFixed(2),
     };
 
-    const tradeData = tickers.map((item) => {
+    const tradeData = validPairs.map((p) => {
+      const exchangeName = p?.exchangeName;
+      // Prefer the local fallback metadata (logo, curated URL) when CMC's
+      // exchange name matches a known venue; otherwise fall back to CMC's
+      // marketUrl + a derived logo slug from the exchange name.
       const match = fallbackTradeVenues.find(
-        (element) =>
-          element.name == item?.market?.name &&
-          element.target_coin_id == item?.target_coin_id &&
-          element.coin_id == item?.coin_id
+        (v) =>
+          v?.name?.toLowerCase() === exchangeName?.toLowerCase() &&
+          v?.pair === p?.marketPair
       );
       return {
-        exchangeName: item?.market?.name,
-        tradePair: match?.pair,
-        volume: item?.converted_volume?.usd,
-        price: item?.converted_last?.usd,
-        logo: match?.logo,
-        url: match?.url,
+        exchangeName,
+        tradePair: p?.marketPair,
+        volume: Number(p?.volumeUsd ?? p?.quotes?.[0]?.volume24h ?? 0),
+        price: Number(p?.price ?? p?.quotes?.[0]?.price ?? 0),
+        logo: match?.logo || p?.exchangeSlug,
+        url: match?.url || p?.marketUrl,
       };
     });
 
     if (tradeData.length === 0) return null;
     return { tradeData, tokenDetails };
   } catch (error) {
-    console.error(`fetchTradesFromCoinGecko: ${error}`);
+    console.error(`fetchTradesFromCMC: ${error}`);
     return null;
   }
 };
@@ -1326,10 +1349,10 @@ const fetchTradesFromOsmosis = async () => {
 const fetchAllTrades = async (url) => {
   let tokenDetails = {};
 
-  // Tier 1 — CoinGecko (preferred when available).
-  const cg = await fetchTradesFromCoinGecko();
-  if (cg && cg.tradeData?.length > 0) {
-    return cg;
+  // Tier 1 — CoinMarketCap (preferred when available).
+  const cmc = await fetchTradesFromCMC();
+  if (cmc && cmc.tradeData?.length > 0) {
+    return cmc;
   }
 
   // Tiers 2 + 3 — live on-chain pool data.  Run them in parallel; each

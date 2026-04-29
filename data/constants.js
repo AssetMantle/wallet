@@ -193,7 +193,6 @@ export const fallbackTradeVenues = [
 // should reference `fallbackTradeVenues`.
 export const staticTradeData = fallbackTradeVenues;
 
-
 // New UI related data
 export const farmPools = [
   {

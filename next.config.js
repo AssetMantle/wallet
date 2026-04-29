@@ -18,9 +18,14 @@ const nextConfig = {
         source: "/api/assetmantle/cosmosdirectoryrpc",
         destination: "https://rpc.cosmos.directory/assetmantle",
       },
+      // CoinMarketCap public data-api (the same backend coinmarketcap.com
+      // uses for its own pages). No API key required, CORS works through
+      // the rewrite, and it covers spot prices, market caps, supply, and
+      // market-pair tickers — see queries.coinmarketcap.GetTicker in the
+      // AssetMantle/client repo for the same approach on the server side.
       {
-        source: "/api/coingecko/:path*",
-        destination: "https://api.coingecko.com/:path*",
+        source: "/api/cmc/:path*",
+        destination: "https://api.coinmarketcap.com/data-api/v3/:path*",
       },
     ];
   },

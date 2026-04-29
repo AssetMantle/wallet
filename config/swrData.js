@@ -5,10 +5,17 @@ import { defaultToastContainerId } from "./defaults";
 export const placeholderAvailableBalance = "0.0000";
 export const placeholderMntlUsdValue = "0.0000";
 export const placeholderRewards = "0.0000";
-export const mntlUsdApi =
-  "/api/coingecko/api/v3/simple/price?ids=assetmantle&vs_currencies=usd%2Ceth&precision=18";
 
-// "/api/coingecko/price?ids=assetmantle&vs_currencies=usd%2Ceth&precision=18";
+// CoinMarketCap IDs:
+//   19686 = AssetMantle (MNTL)   12220 = Osmosis (OSMO)
+//    2781 = USD                   1027 = Ethereum (ETH)
+// `convertId` accepts a comma-separated list; the response embeds one
+// `quotes[]` entry per requested currency, in input order.
+export const cmcMntlId = "19686";
+export const cmcOsmoId = "12220";
+export const cmcUsdConvertId = "2781";
+export const cmcEthConvertId = "1027";
+export const mntlUsdApi = `/api/cmc/cryptocurrency/quote/latest?id=${cmcMntlId}&convertId=${cmcUsdConvertId},${cmcEthConvertId}`;
 
 export const placeholderTotalDelegations = "0.0000";
 export const placeholderTotalUnbonding = "0.0000";
