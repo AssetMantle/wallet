@@ -45,10 +45,20 @@ function detectKeystoreShape(json) {
 // ConnectModal.jsx in place of the old "Go to Old Wallet for Keystore" link.
 // Steps: menu (upload or unlock-with-passkey) -> upload -> password ->
 // [legacy only] forced upgrade-download -> success (download / enable
-// passkey). Every async primitive here is a prior, unit-tested module
-// (legacyV1/modern/account/keystoreStore/passkey/persist/download); this
-// component only sequences them and is build-verified - the interactive
-// walk-through is the manual browser pass in Task 6.
+// passkey, both via an exportPassword sub-step). Every async primitive here
+// is a prior, unit-tested module (legacyV1/modern/account/keystoreStore/
+// passkey/persist/download); this component only sequences them and is
+// build-verified - the interactive walk-through is the manual browser pass
+// in Task 6.
+//
+// Security-review hardening: the legacy mnemonic and the password that
+// unlocked it live only in refs, never React state, and are cleared the
+// moment the flow leaves the legacy-upgrade step (M1 - keeps them out of the
+// React fiber). Every user-facing export ("Download keystore", the forced
+// backup before enabling a passkey) is encrypted with a password freshly
+// typed in the exportPassword step, never the secret that unlocked this
+// session (M2) - after a passkey unlock that secret is a device-bound PRF
+// output nobody can type back in to decrypt a download elsewhere.
 export default function KeystoreConnect({ walletRepo, onBack, onClose }) {
   const [step, setStep] = useState("menu");
   const [busy, setBusy] = useState(false);
@@ -64,8 +74,12 @@ export default function KeystoreConnect({ walletRepo, onBack, onClose }) {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(null);
 
-  const [legacyMnemonic, setLegacyMnemonic] = useState(null);
-  const [unlockSecret, setUnlockSecret] = useState(null);
+  // Legacy mnemonic + the password that unlocked it: refs, not state, so
+  // they never enter the React fiber (M1). Only ever populated on the legacy
+  // path, only ever read for the forced upgrade download, and cleared the
+  // moment that step is left (see the "Continue" handler below).
+  const legacyMnemonicRef = useRef(null);
+  const legacyPasswordRef = useRef(null);
   const [upgradeError, setUpgradeError] = useState(null);
   const upgradeBlobRef = useRef(null);
   const upgradeTriggered = useRef(false);
@@ -73,7 +87,14 @@ export default function KeystoreConnect({ walletRepo, onBack, onClose }) {
   const [address, setAddress] = useState(null);
   const [actionError, setActionError] = useState(null);
   const [actionMessage, setActionMessage] = useState(null);
-  const [passkeyBusy, setPasskeyBusy] = useState(false);
+
+  // "Download keystore" / "Enable passkey unlock" both route through this
+  // sub-step so the export is always encrypted with a password the user just
+  // typed (M2), never the secret that unlocked the session. pendingExportActionRef
+  // records which of the two actions is in flight; it never needs to trigger
+  // a re-render so it's a ref rather than state.
+  const [exportPassword, setExportPassword] = useState("");
+  const pendingExportActionRef = useRef(null); // "download" | "enablePasskey"
 
   // Passkey availability + a previously-enrolled record (if any) only need
   // checking once per mount of this sub-flow.
@@ -91,12 +112,18 @@ export default function KeystoreConnect({ walletRepo, onBack, onClose }) {
   // "force" the upgrade download: fire it the moment the step is entered,
   // not gated behind an extra click. upgradeTriggered guards against a
   // second auto-fire (e.g. React StrictMode's double-invoke in dev).
+  // legacyMnemonicRef/legacyPasswordRef are refs (M1), so they're read
+  // directly rather than listed as effect deps - mutating a ref never needs
+  // to re-run this effect, only `step` changing does.
   useEffect(() => {
     if (step !== "legacyUpgrade" || upgradeTriggered.current) return;
     upgradeTriggered.current = true;
     (async () => {
       try {
-        const blob = await exportModern(legacyMnemonic, unlockSecret);
+        const blob = await exportModern(
+          legacyMnemonicRef.current,
+          legacyPasswordRef.current
+        );
         upgradeBlobRef.current = blob;
         downloadModernKeystore(blob, BACKUP_FILENAME);
       } catch {
@@ -105,7 +132,7 @@ export default function KeystoreConnect({ walletRepo, onBack, onClose }) {
         );
       }
     })();
-  }, [step, legacyMnemonic, unlockSecret]);
+  }, [step]);
 
   function handleBack() {
     if (step === "menu") {
@@ -199,8 +226,8 @@ export default function KeystoreConnect({ walletRepo, onBack, onClose }) {
           setPasswordError(err);
           return;
         }
-        setLegacyMnemonic(result.mnemonic);
-        setUnlockSecret(password);
+        legacyMnemonicRef.current = result.mnemonic;
+        legacyPasswordRef.current = password;
         setAddress(addr);
         setStep("legacyUpgrade");
       } else {
@@ -217,7 +244,6 @@ export default function KeystoreConnect({ walletRepo, onBack, onClose }) {
           setPasswordError(err);
           return;
         }
-        setUnlockSecret(password);
         setAddress(account.address);
         setStep("success");
       }
@@ -243,7 +269,9 @@ export default function KeystoreConnect({ walletRepo, onBack, onClose }) {
         setMenuError(err);
         return;
       }
-      setUnlockSecret(prfSecretHex);
+      // prfSecretHex is device-bound and deliberately not retained anywhere
+      // (M2): a passkey-unlocked session's user-facing exports always prompt
+      // for a fresh password instead (see the exportPassword step).
       setAddress(account.address);
       setStep("success");
     } catch (error) {
@@ -261,7 +289,10 @@ export default function KeystoreConnect({ walletRepo, onBack, onClose }) {
     try {
       let blob = upgradeBlobRef.current;
       if (!blob) {
-        blob = await exportModern(legacyMnemonic, unlockSecret);
+        blob = await exportModern(
+          legacyMnemonicRef.current,
+          legacyPasswordRef.current
+        );
         upgradeBlobRef.current = blob;
       }
       downloadModernKeystore(blob, BACKUP_FILENAME);
@@ -273,7 +304,15 @@ export default function KeystoreConnect({ walletRepo, onBack, onClose }) {
     }
   }
 
-  async function handleDownloadKeystore() {
+  // Both actions below need a keystore export, and every user-facing export
+  // must be encrypted with a password the user freshly types (M2) - never
+  // the secret that unlocked this session, which after a passkey unlock is a
+  // device-bound PRF secret the user could never type back in on another
+  // device. These two handlers just record which action was requested and
+  // open that prompt; the real export happens in
+  // handleExportPasswordConfirm once the password is in.
+  function handleDownloadKeystore() {
+    if (busy) return;
     setActionError(null);
     setActionMessage(null);
     const { signer } = getKeystoreSigner();
@@ -281,54 +320,93 @@ export default function KeystoreConnect({ walletRepo, onBack, onClose }) {
       setActionError("Keystore is locked. Reconnect and try again.");
       return;
     }
-    try {
-      const blob = await signer.serialize(unlockSecret);
-      downloadModernKeystore(blob, BACKUP_FILENAME);
-      setActionMessage("Keystore file downloaded.");
-    } catch {
-      setActionError("Could not prepare the keystore file for download.");
-    }
+    pendingExportActionRef.current = "download";
+    setExportPassword("");
+    setStep("exportPassword");
   }
 
   // TODO(manual-verify Task 6): this calls the real, already-unit-tested
   // passkey.js/persist.js primitives end-to-end (enroll -> re-serialize ->
   // persist) rather than a fake handler, but the interactive Touch-ID/PRF
   // round trip itself can only be exercised in a real browser.
-  async function handleEnablePasskey() {
-    if (passkeyBusy) return;
+  function handleEnablePasskey() {
+    if (busy) return;
+    setActionError(null);
+    setActionMessage(null);
     const { signer } = getKeystoreSigner();
     if (!signer) {
       setActionError("Keystore is locked. Reconnect and try again.");
       return;
     }
-    setPasskeyBusy(true);
-    setActionError(null);
-    setActionMessage(null);
-    try {
-      // Force a backup download first: never let the account become
-      // solely reliant on this browser's localStorage + passkey.
-      const backupBlob = await signer.serialize(unlockSecret);
-      downloadModernKeystore(backupBlob, BACKUP_FILENAME);
+    pendingExportActionRef.current = "enablePasskey";
+    setExportPassword("");
+    setStep("exportPassword");
+  }
 
-      const { credentialId, prfSalt, prfSecretHex } = await enrollPasskey({
-        rpId: window.location.hostname,
-        rpName: "AssetMantle Wallet",
-        userId: address,
-        userName: address,
-      });
-      const modernBlob = await signer.serialize(prfSecretHex);
-      savePasskeyKeystore({ credentialId, prfSalt, modernBlob });
-      setActionMessage(
-        "Passkey unlock enabled for this browser. A backup keystore file was downloaded too - keep it somewhere safe."
-      );
+  function handleCancelExportPassword() {
+    setExportPassword("");
+    pendingExportActionRef.current = null;
+    setStep("success");
+  }
+
+  // Confirm handler for the exportPassword step: performs whichever action
+  // was requested (plain download, or the forced backup + enroll for
+  // passkey unlock), always encrypting with the password just typed here.
+  async function handleExportPasswordConfirm() {
+    if (busy || !exportPassword || exportPassword.length <= 8) return;
+    const action = pendingExportActionRef.current;
+    const { signer } = getKeystoreSigner();
+    if (!signer) {
+      setStep("success");
+      setActionError("Keystore is locked. Reconnect and try again.");
+      return;
+    }
+    setBusy(true);
+    try {
+      if (action === "download") {
+        const blob = await signer.serialize(exportPassword);
+        downloadModernKeystore(blob, BACKUP_FILENAME);
+        setActionMessage("Keystore file downloaded.");
+        setActionError(null);
+      } else if (action === "enablePasskey") {
+        // Force a backup download first: never let the account become
+        // solely reliant on this browser's localStorage + passkey.
+        const backupBlob = await signer.serialize(exportPassword);
+        downloadModernKeystore(backupBlob, BACKUP_FILENAME);
+
+        const { credentialId, prfSalt, prfSecretHex } = await enrollPasskey({
+          rpId: window.location.hostname,
+          rpName: "AssetMantle Wallet",
+          userId: address,
+          userName: address,
+        });
+        // Unlike the user-facing backup above, this blob is never shown to
+        // or typed by the user - it's persisted so unlockPasskey() can
+        // re-derive this same prfSecretHex from the same authenticator next
+        // time, so reusing it here (instead of exportPassword) is correct
+        // and not the M2 issue.
+        const modernBlob = await signer.serialize(prfSecretHex);
+        savePasskeyKeystore({ credentialId, prfSalt, modernBlob });
+        setActionMessage(
+          "Passkey unlock enabled for this browser. A backup keystore file was downloaded too - keep it somewhere safe."
+        );
+        setActionError(null);
+      }
+      setStep("success");
     } catch (error) {
+      setActionMessage(null);
       setActionError(
-        error instanceof PrfUnsupportedError
+        action === "enablePasskey" && error instanceof PrfUnsupportedError
           ? "This device/browser does not support passkey unlock (PRF). Use your password instead."
+          : action === "download"
+          ? "Could not prepare the keystore file for download."
           : "Could not enable passkey unlock."
       );
+      setStep("success");
     } finally {
-      setPasskeyBusy(false);
+      setBusy(false);
+      setExportPassword("");
+      pendingExportActionRef.current = null;
     }
   }
 
@@ -340,6 +418,8 @@ export default function KeystoreConnect({ walletRepo, onBack, onClose }) {
       ? "Enter Password"
       : step === "legacyUpgrade"
       ? "Upgrade Your Keystore"
+      : step === "exportPassword"
+      ? "Set Export Password"
       : step === "success"
       ? "Keystore Connected"
       : "Connect with Keystore";
@@ -489,7 +569,8 @@ export default function KeystoreConnect({ walletRepo, onBack, onClose }) {
               type="button"
               className="am-link ms-auto px-3"
               onClick={() => {
-                setLegacyMnemonic(null);
+                legacyMnemonicRef.current = null;
+                legacyPasswordRef.current = null;
                 setStep("success");
               }}
             >
@@ -497,6 +578,44 @@ export default function KeystoreConnect({ walletRepo, onBack, onClose }) {
             </button>
           </div>
         </div>
+      )}
+
+      {step === "exportPassword" && (
+        <>
+          <p className="text-white-200 caption my-1">
+            Choose a password to encrypt this keystore export. You&apos;ll need
+            to type this same password to unlock the downloaded file later - it
+            isn&apos;t saved anywhere.
+          </p>
+          <input
+            type="password"
+            className="am-input w-100 my-3 py-2 px-3 rounded-1 bg-t border-color-white"
+            placeholder="******"
+            value={exportPassword}
+            onChange={(e) => setExportPassword(e.target.value)}
+            onKeyDown={(e) =>
+              e.key === "Enter" && handleExportPasswordConfirm()
+            }
+          />
+          <div className="d-flex align-items-center justify-content-end gap-3 flex-wrap mt-3">
+            <button
+              type="button"
+              className="am-link px-3"
+              disabled={busy}
+              onClick={handleCancelExportPassword}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="button-primary caption py-2 px-5"
+              onClick={handleExportPasswordConfirm}
+              disabled={busy || !exportPassword || exportPassword.length <= 8}
+            >
+              {busy ? "Preparing..." : "Confirm"}
+            </button>
+          </div>
+        </>
       )}
 
       {step === "success" && (
@@ -525,10 +644,9 @@ export default function KeystoreConnect({ walletRepo, onBack, onClose }) {
               <button
                 type="button"
                 className="button-secondary py-2 px-4 rounded-2"
-                disabled={passkeyBusy}
                 onClick={handleEnablePasskey}
               >
-                {passkeyBusy ? "Enabling..." : "Enable passkey unlock"}
+                Enable passkey unlock
               </button>
             )}
             {actionError && <p className="text-error caption">{actionError}</p>}
