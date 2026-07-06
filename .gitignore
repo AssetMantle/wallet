@@ -38,3 +38,4 @@ next-env.d.ts
 # local agent worktrees + design backups
 .claude/
 *.dark-mode-backup
+.superpowers/
