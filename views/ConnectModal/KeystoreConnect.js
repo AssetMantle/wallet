@@ -124,11 +124,17 @@ export default function KeystoreConnect({ walletRepo, onBack, onClose }) {
   // registered keystore wallet. Returns an error string on failure (never
   // throws), and always clears the in-memory signer again on failure so a
   // half-connected keystore never lingers.
+  //
+  // walletRepo.getWallet(name) is cosmos-kit's own lookup (WalletRepo.getWallet
+  // in @cosmos-kit/core, `this.wallets.find(w => w.walletName === name)`) -
+  // used here instead of a hand-rolled .find() for the same result. Its
+  // sibling walletRepo.connect(name) was deliberately NOT used: it also
+  // calls openView() and forwards the chain's configured sessionOptions,
+  // which would diverge from how every other wallet button in this same
+  // file connects (a bare wallet.connect() with no args).
   async function connectKeystoreWallet(signer, addr) {
     setKeystoreSigner(signer, addr);
-    const wallet = walletRepo?.wallets.find(
-      (w) => w.walletName === KEYSTORE_WALLET_NAME
-    );
+    const wallet = walletRepo?.getWallet(KEYSTORE_WALLET_NAME);
     if (!wallet) {
       clearKeystoreSigner();
       return "Keystore wallet is not registered. Refresh the page and try again.";
