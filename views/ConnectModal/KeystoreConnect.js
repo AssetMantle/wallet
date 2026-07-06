@@ -184,9 +184,16 @@ export default function KeystoreConnect({ walletRepo, onBack, onClose }) {
           setPasswordError(result.error);
           return;
         }
-        const { signer, address: addr } = await mnemonicToSigner(
-          result.mnemonic
-        );
+        // AES-CBC has no integrity check, so a file with a matching password
+        // hash but corrupted ciphertext decrypts to a garbage mnemonic that
+        // fails bip39 validation here. Surface it instead of throwing silently.
+        let signer, addr;
+        try {
+          ({ signer, address: addr } = await mnemonicToSigner(result.mnemonic));
+        } catch {
+          setPasswordError("Could not read this keystore file.");
+          return;
+        }
         const err = await connectKeystoreWallet(signer, addr);
         if (err) {
           setPasswordError(err);
