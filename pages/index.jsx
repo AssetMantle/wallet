@@ -404,8 +404,8 @@ export default function Transact() {
       <Head>
         <title>Transact | MantleWallet</title>
       </Head>
-      <section className="row h-100">
-        <ScrollableSectionContainer className="col-8">
+      <section className="row h-100 g-3">
+        <ScrollableSectionContainer className="col-12 col-lg-8">
           <div className="rounded-4 p-3 bg-gray-800 width-100 d-flex flex-column gap-2 transitionAll">
             <nav className="d-flex align-items-center justify-content-between gap-3">
               <div className="d-flex gap-3 align-items-center">
@@ -625,7 +625,7 @@ export default function Transact() {
             </div>
           </div>
         </ScrollableSectionContainer>
-        <ScrollableSectionContainer className="col-4">
+        <ScrollableSectionContainer className="col-12 col-lg-4">
           {status === "Connected" ? (
             <ConnectedRecieve displayAddress={displayAddress} />
           ) : (
