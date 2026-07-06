@@ -21,7 +21,7 @@
     "lint": "next lint --fix --dir .",
     "prepare": "husky install",
     "format": "prettier --write .",
-    "pre-commit": "yarn lint && yarn format && git add -A ."
+    "pre-commit": "lint-staged"
   },
   "dependencies": {
     "@chakra-ui/icons": "2.0.11",
@@ -84,6 +84,16 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-unused-imports": "^2.0.0",
     "husky": "^8.0.3",
+    "lint-staged": "^17.0.8",
     "typescript": "4.8.4"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,css,scss}": [
+      "prettier --write"
+    ]
   }
 }
