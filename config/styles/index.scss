@@ -1386,3 +1386,12 @@ body::before {
     height: auto !important;
   }
 }
+
+// Data tables (validators, proposals) keep their column widths on phone/tablet
+// and scroll horizontally inside their existing overflow wrapper, instead of
+// squishing columns until content clips.
+@media (max-width: 991.98px) {
+  .am_app_container table.table {
+    min-width: 620px;
+  }
+}

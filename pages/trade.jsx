@@ -13,7 +13,7 @@ export default function Trade() {
         <title>Trade | MantleWallet</title>
       </Head>
       <section className="row h-100">
-        <ScrollableSectionContainer className="col-8 h-100">
+        <ScrollableSectionContainer className="col-12 col-lg-8 h-100">
           <div
             className="bg-gray-800 p-3 pb-5 rounded-4 d-flex flex-column gap-2"
             style={{ height: "90%" }}
@@ -31,7 +31,7 @@ export default function Trade() {
             </div>
           </div>
         </ScrollableSectionContainer>
-        <ScrollableSectionContainer className="col-4">
+        <ScrollableSectionContainer className="col-12 col-lg-4">
           <div className="rounded-4 p-3 my-2 bg-gray-800 width-100 d-flex flex-column text-white">
             <p>
               To purchase MNTL, visit the exchanges (CEX & DEX) shown to swap
