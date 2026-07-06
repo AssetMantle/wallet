@@ -32,7 +32,7 @@ export default function ICTransactionInfo({ title, chainFrom, chainTo }) {
               className="position-relative"
               style={{ width: "20px", aspectRatio: "1/1" }}
             >
-              <img layout="fill" src={ChainImage(chainFrom)} alt={chainFrom} />
+              <img src={ChainImage(chainFrom)} alt={chainFrom} />
             </div>
             <p className="caption2 text-primary">{chainFrom}</p>
           </div>
@@ -46,7 +46,7 @@ export default function ICTransactionInfo({ title, chainFrom, chainTo }) {
               className="position-relative"
               style={{ width: "20px", aspectRatio: "1/1" }}
             >
-              <img layout="fill" src={ChainImage(chainTo)} alt={chainTo} />
+              <img src={ChainImage(chainTo)} alt={chainTo} />
             </div>
             <p className="caption2 text-primary">{chainTo}</p>
           </div>

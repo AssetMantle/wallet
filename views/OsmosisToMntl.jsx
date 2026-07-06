@@ -289,7 +289,6 @@ const OsmosisToMntl = () => {
             <img
               src="/chainLogos/osmosis.svg"
               alt="Osmosis"
-              layout="fill"
               className="w-100 h-100"
               style={{ objectFit: "contain", objectPosition: "center" }}
             />

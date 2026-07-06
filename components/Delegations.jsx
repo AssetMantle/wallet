@@ -369,7 +369,6 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
                   style={{ width: "20px", aspectRatio: "1/1" }}
                 >
                   <img
-                    layout="fill"
                     alt={
                       delegatedValidators?.find(
                         (item) =>
@@ -549,7 +548,6 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
                                     }}
                                   >
                                     <img
-                                      layout="fill"
                                       alt={item?.description?.moniker}
                                       className="rounded-circle"
                                       src={`/validatorAvatars/${item?.operatorAddress}.png`}
@@ -641,7 +639,6 @@ const Delegations = ({ totalTokens, stakeState, stakeDispatch, notify }) => {
                                     }}
                                   >
                                     <img
-                                      layout="fill"
                                       alt={item?.description?.moniker}
                                       className="rounded-circle"
                                       src={`/validatorAvatars/${item?.operatorAddress}.png`}

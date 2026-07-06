@@ -18,7 +18,7 @@ const DisconnecedRecieve = () => {
             aspectRatio: "1/1",
           }}
         >
-          <Image src="/qr-code.svg" layout="fill" alt="qr code place holder" />
+          <Image src="/qr-code.svg" alt="qr code place holder" />
         </div>
         <h4 className="body2 text-primary">Wallet Address</h4>
         <div className="d-flex align-items-center justify-content-center gap-2 text-gray text-center caption2 pt-1">

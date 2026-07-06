@@ -191,7 +191,6 @@ const AllValidators = ({
                     style={{ width: "25px", aspectRatio: "1/1" }}
                   >
                     <img
-                      layout="fill"
                       alt={item?.description?.moniker}
                       className="rounded-circle"
                       src={`/validatorAvatars/${item?.operatorAddress}.png`}
@@ -274,7 +273,6 @@ const AllValidators = ({
                     style={{ width: "25px", aspectRatio: "1/1" }}
                   >
                     <img
-                      layout="fill"
                       alt={item?.description?.moniker}
                       className="rounded-circle"
                       src={`/validatorAvatars/${item?.operatorAddress}.png`}

@@ -84,12 +84,7 @@ export default function Header({ setLeftCol }) {
     >
       <Link href="/">
         <a>
-          <Image
-            layout="fill"
-            src={NavBarData.logo}
-            alt={NavBarData.title}
-            priority={true}
-          />
+          <Image src={NavBarData.logo} alt={NavBarData.title} priority={true} />
         </a>
       </Link>
     </div>
@@ -139,7 +134,6 @@ export default function Header({ setLeftCol }) {
             style={{ width: "25px", aspectRatio: "1/1" }}
           >
             <img
-              layout="fill"
               src={ConnectOptionObject[cleanString(wallet?.prettyName)]?.icon}
               alt={"♦︎"}
             />

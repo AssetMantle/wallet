@@ -15,7 +15,6 @@ export default function WalletConnect({
             style={{ width: "28px", aspectRatio: "1/1" }}
           >
             <img
-              layout="fill"
               src={
                 ExistingWallet.filter(
                   (el) => el.name.toLowerCase() === byWallet

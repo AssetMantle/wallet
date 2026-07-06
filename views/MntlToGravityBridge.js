@@ -312,7 +312,6 @@ const MntlToGravityBridge = () => {
             <img
               src="/chainLogos/mntl.webp"
               alt="AssetMantle"
-              layout="fill"
               className="w-100 h-100"
               style={{ objectFit: "contain", objectPosition: "center" }}
             />

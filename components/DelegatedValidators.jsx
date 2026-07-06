@@ -135,7 +135,6 @@ const DelegatedValidators = ({
                   <img
                     alt={item?.description?.moniker}
                     className="rounded-circle"
-                    layout="fill"
                     src={`/validatorAvatars/${item?.operatorAddress}.png`}
                     onError={handleOnError}
                   />
@@ -211,7 +210,6 @@ const DelegatedValidators = ({
                     <img
                       alt={item?.description?.moniker}
                       className="rounded-circle"
-                      layout="fill"
                       src={`/validatorAvatars/${item?.operatorAddress}.png`}
                       onError={handleOnError}
                     />
