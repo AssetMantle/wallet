@@ -84,7 +84,12 @@ export default function Header({ setLeftCol }) {
     >
       <Link href="/">
         <a>
-          <Image src={NavBarData.logo} alt={NavBarData.title} priority={true} />
+          <Image
+            layout="fill"
+            src={NavBarData.logo}
+            alt={NavBarData.title}
+            priority={true}
+          />
         </a>
       </Link>
     </div>
