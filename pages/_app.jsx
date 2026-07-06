@@ -4,6 +4,7 @@ import { wallets as vectisWallets } from "@cosmos-kit/vectis";
 import { wallets as keplrWallets } from "@cosmos-kit/keplr";
 import { wallets as cosmostationWallets } from "@cosmos-kit/cosmostation";
 import { ChainProvider } from "@cosmos-kit/react";
+import { wallets as keystoreWallets } from "../lib/keystore/keystoreWallet";
 import { Web3Modal } from "@web3modal/react";
 import { assets, chains } from "chain-registry";
 import Head from "next/head";
@@ -116,6 +117,7 @@ function CreateCosmosApp({ Component, pageProps }) {
               ...leapWallets,
               cosmostationWallets[0],
               ...vectisWallets,
+              ...keystoreWallets,
             ]}
             signerOptions={signerOptions}
             sessionOptions={sessionOptions}
