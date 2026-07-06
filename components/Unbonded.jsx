@@ -240,7 +240,6 @@ const Unbonded = ({
                                     }}
                                   >
                                     <img
-                                      layout="fill"
                                       alt={item?.description?.moniker}
                                       className="rounded-circle"
                                       src={`/validatorAvatars/${item?.address}.png`}
@@ -320,7 +319,6 @@ const Unbonded = ({
                                     }}
                                   >
                                     <img
-                                      layout="fill"
                                       alt={item?.description?.moniker}
                                       className="rounded-circle"
                                       src={`/validatorAvatars/${item?.address}.png`}

@@ -75,11 +75,7 @@ export default function ICFormPolygon() {
               className="position-relative"
               style={{ width: "21px", aspectRatio: "1/1" }}
             >
-              <img
-                src="/chainLogos/mntl.webp"
-                alt="AssetMantle"
-                layout="fill"
-              />
+              <img src="/chainLogos/mntl.webp" alt="AssetMantle" />
             </div>
             <h5 className="caption2 text-primary">MNTL</h5>
           </div>
@@ -130,11 +126,7 @@ export default function ICFormPolygon() {
               className="position-relative"
               style={{ width: "21px", aspectRatio: "1/1" }}
             >
-              <Image
-                src="/chainLogos/grav.svg"
-                alt="Gravity Bridge"
-                layout="fill"
-              />
+              <Image src="/chainLogos/grav.svg" alt="Gravity Bridge" />
             </div>
             <h5 className="caption2 text-primary">Gravity Bridge</h5>
           </div>
@@ -188,11 +180,7 @@ export default function ICFormPolygon() {
               className="position-relative"
               style={{ width: "21px", aspectRatio: "1/1" }}
             >
-              <Image
-                src="/chainLogos/eth.svg"
-                alt="Ethereum Chain"
-                layout="fill"
-              />
+              <Image src="/chainLogos/eth.svg" alt="Ethereum Chain" />
             </div>
             <h5 className="caption2 text-primary">Ethereum Chain</h5>
           </div>
@@ -255,11 +243,7 @@ export default function ICFormPolygon() {
               className="position-relative"
               style={{ width: "21px", aspectRatio: "1/1" }}
             >
-              <Image
-                src="/chainLogos/polygon.svg"
-                alt="Polygon Chain"
-                layout="fill"
-              />
+              <Image src="/chainLogos/polygon.svg" alt="Polygon Chain" />
             </div>
             <h5 className="caption2 text-primary">Polygon Chain</h5>
           </div>

@@ -60,7 +60,6 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
                         style={{ width: "25px", aspectRatio: "1/1" }}
                       >
                         <img
-                          layout="fill"
                           src={
                             ConnectOptionObject[cleanString(walletPrettyName)]
                               ?.icon
@@ -90,11 +89,7 @@ const ConnectModal = ({ setOpen, walletRepo }) => {
                         className="position-relative"
                         style={{ width: "25px", aspectRatio: "1/1" }}
                       >
-                        <img
-                          layout="fill"
-                          src={"/favicon.png"}
-                          alt={"v1_wallet"}
-                        />
+                        <img src={"/favicon.png"} alt={"v1_wallet"} />
                       </div>
                       MantleWallet V1 (Old)
                     </button>

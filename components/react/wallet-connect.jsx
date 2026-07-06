@@ -50,7 +50,7 @@ export const ConnectWalletButton = ({
           className="position-relative rounded-circle"
           style={{ width: "23px", aspectRatio: "1/1" }}
         >
-          <img layout="fill" className="rounded-circle" src={icon} alt="#" />
+          <img className="rounded-circle" src={icon} alt="#" />
         </div>
       )}
       {buttonIcon && <i className={`bi ${buttonIcon}`}></i>}
@@ -79,7 +79,7 @@ export const ConnectWalletButton = ({
             className="position-relative rounded-circle"
             style={{ width: "20px", aspectRatio: "1/1" }}
           >
-            <img layout="fill" className="rounded-circle" src={icon} alt="#" />
+            <img className="rounded-circle" src={icon} alt="#" />
           </div>
         )}
         {buttonIcon && <i className={`bi ${buttonIcon}`}></i>}
