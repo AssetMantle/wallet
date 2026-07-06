@@ -65,7 +65,7 @@ export default function Farm() {
         <title>Farm | MantleWallet</title>
       </Head>
       <section className="row h-100">
-        <div className="col-8 h-100">
+        <div className="col-12 col-lg-8 h-100">
           <ScrollableSectionContainer className="d-flex h-100">
             {/* New UI starts from here  */}
             <div className="bg-gray-800 rounded-4 p-3 d-flex flex-column gap-3">
@@ -73,7 +73,7 @@ export default function Farm() {
             </div>
           </ScrollableSectionContainer>
         </div>
-        <ScrollableSectionContainer className="col-4 d-flex flex-column gap-3 h-90">
+        <ScrollableSectionContainer className="col-12 col-lg-4 d-flex flex-column gap-3 h-90">
           {/* New UI starts from here  */}
           <div className="bg-gray-800 rounded-4 p-3 d-flex flex-column gap-3 mt-2">
             <h2 className="body1 text-primary">Chains</h2>

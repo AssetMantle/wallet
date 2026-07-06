@@ -13,10 +13,10 @@ export default function Earn() {
       </Head>
       <h1 className="visually-hidden">Earn</h1>
       <section className="row h-100">
-        <ScrollableSectionContainer className="col-8 h-100">
+        <ScrollableSectionContainer className="col-12 col-lg-8 h-100">
           <Pool690IncentiveProgram />
         </ScrollableSectionContainer>
-        <ScrollableSectionContainer className="col-4 d-flex flex-column gap-3">
+        <ScrollableSectionContainer className="col-12 col-lg-4 d-flex flex-column gap-3">
           <Pool690MetricsPanel />
         </ScrollableSectionContainer>
       </section>

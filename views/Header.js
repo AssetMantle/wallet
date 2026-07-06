@@ -15,13 +15,10 @@ import {
 } from "../data";
 import { cleanString, shortenAddress } from "../lib";
 
-export default function Header({ setLeftCol }) {
+export default function Header() {
   const chainContext = useChain(defaultChainName);
   const { username, address, wallet, disconnect } = chainContext;
   const [showModal, setShowModal] = useState(false);
-
-  // menus ham
-  const [rightHam, setRightHam] = useState(false);
 
   const router = useRouter();
 
@@ -187,46 +184,21 @@ export default function Header({ setLeftCol }) {
         className="container-xxl d-flex align-items-center gap-3 p-3 px-4"
         style={{ maxWidth: "1920px" }}
       >
-        <div
-          className="d-flex d-lg-none my-auto"
-          role="button"
-          onClick={() => setLeftCol(true)}
-        >
-          <i className="bi bi-list h2"></i>
-        </div>
         {appLogoJSX}
-        <nav
-          className={`navbar-nav d-none d-xl-flex align-items-center gap-3 flex-row gap-3 flex-grow-1 justify-content-center justify-content-xl-between ${
-            rightHam
-              ? "am_resp_right_ham w-50 top-0 end-0 bottom-0 d-flex flex-column flex-xl-row nav-bg p-4 p-xl-0 gap-5 gap-xl-3 of_auto"
-              : ""
-          }`}
-        >
-          <div
-            className={`d-flex gap-4 flex-column flex-xl-row align-items-center`}
-          >
+        {/* Desktop nav (xl+): full horizontal menu. Below xl the sections live
+            in the bottom tab bar (components/MobileTabBar.jsx). */}
+        <nav className="navbar-nav d-none d-xl-flex align-items-center gap-3 flex-row flex-grow-1 justify-content-between">
+          <div className="d-flex gap-4 flex-row align-items-center">
             {navigationMenusLeftJSX}
           </div>
           <div className="d-flex gap-3 flex-row align-items-center">
             {navigationMenusRightJSX}
             {connectWalletButton}
           </div>
-          {rightHam && (
-            <div
-              className="d-flex d-xl-none position-absolute top-0 start-0 p-3"
-              role="button"
-              onClick={() => setRightHam(false)}
-            >
-              <i className="bi bi-x-lg h2"></i>
-            </div>
-          )}
         </nav>
-        <div
-          className="d-flex d-xl-none ms-auto my-auto"
-          role="button"
-          onClick={() => setRightHam(true)}
-        >
-          <i className="bi bi-list h2 text-white"></i>
+        {/* Mobile/tablet (< xl): keep Connect always reachable in the header. */}
+        <div className="d-flex d-xl-none ms-auto align-items-center">
+          {connectWalletButton}
         </div>
       </div>
     </header>

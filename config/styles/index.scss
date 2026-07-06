@@ -1310,3 +1310,88 @@ body::before {
     opacity: 1;
   }
 }
+
+// Mobile bottom tab bar + "More" sheet (< xl). Surface + active accent reuse
+// .nav-bg / .text-primary from the theme; only layout/animation live here.
+.am-tab-bar {
+  border-top: 1px solid $white-400;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  min-height: 56px;
+}
+.am-tab {
+  padding: 0.5rem 0.25rem;
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  transition: color 150ms ease;
+  .caption2 {
+    line-height: 1;
+  }
+  &:focus-visible {
+    outline: 2px solid $primary-main;
+    outline-offset: -2px;
+  }
+}
+.am-tab-scrim {
+  background: rgba(0, 0, 0, 0.5);
+}
+.am-tab-sheet {
+  bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid $white-400;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  max-height: 70vh;
+  overflow-y: auto;
+  transform: translateY(150%);
+  transition: transform 220ms ease;
+  &.open {
+    transform: translateY(0);
+  }
+}
+.am-tab-row {
+  text-decoration: none;
+  &:active {
+    background: rgba(255, 255, 255, 0.06);
+  }
+}
+// keep page content clear of the fixed bar on < xl
+@media (max-width: 1199.98px) {
+  .am_app_container {
+    padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .am-tab-sheet {
+    transition: none;
+  }
+}
+
+// Desktop uses a fixed-viewport-height shell where each section scrolls on its
+// own (.am-scroll-section). On phone/tablet (< lg) that fights natural reading:
+// relax the height chain so the PAGE flows and scrolls, and sections size to
+// their content and stack.
+.am-scroll-section {
+  overflow-y: auto;
+}
+@media (max-width: 991.98px) {
+  .am_app_container .am-scroll-section {
+    height: auto !important;
+    overflow-y: visible;
+    padding-bottom: 1rem;
+  }
+  .am_app_container main.h-100,
+  .am_app_container .row.h-100,
+  .am_app_container .col-lg-9.h-100,
+  .am_app_container .col-lg-3 {
+    height: auto !important;
+  }
+}
+
+// Data tables (validators, proposals) keep their column widths on phone/tablet
+// and scroll horizontally inside their existing overflow wrapper, instead of
+// squishing columns until content clips.
+@media (max-width: 991.98px) {
+  .am_app_container table.table {
+    min-width: 620px;
+  }
+}
