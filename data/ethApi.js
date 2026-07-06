@@ -176,7 +176,15 @@ const { provider } = configureChains(chains, [
 // create the wagmiClient
 export const wagmiClient = createClient({
   autoConnect: true,
-  connectors: modalConnectors({ appName: "web3Modal", chains }),
+  connectors: modalConnectors({
+    appName: "web3Modal",
+    chains,
+    // web3modal 2.1.x defaults to WalletConnect v1, whose public bridge
+    // servers were shut down in 2023 (wss://*.bridge.walletconnect.org no
+    // longer resolves). Pin v2, which uses the live relay.walletconnect.com.
+    version: "2",
+    projectId: walletConnectProjectID,
+  }),
   provider,
 });
 // now create ethereum client using wagmi client
